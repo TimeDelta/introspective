@@ -35,7 +35,16 @@ func validateData(url: URL) throws {
 let questionLabelsDataFileUrl = URL(fileURLWithPath: "/Users/bryannova/development/Data Integration/Training Data/questionLabelsTrainingData.json")
 try validateData(url: questionLabelsDataFileUrl)
 
+print("Validated Data")
+
 let data = try MLDataTable(contentsOf: questionLabelsDataFileUrl)
 
+print("Created MLDataTable")
+
 let model = try MLWordTagger(trainingData: data, tokenColumn: "tokens", labelColumn: "labels")
+
+print("Created MLWordTagger model")
+
 try model.write(to: URL(fileURLWithPath: "/Users/bryannova/development/Data Integration/Models/questionLabels.mlmodel"))
+
+print("Wrote MLWordTagger model to disk")
