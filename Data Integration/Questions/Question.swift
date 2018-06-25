@@ -21,6 +21,7 @@ class Question: NSObject {
 	func parse() {
 		normalizeNumbers()
 		expandContractions()
+		removePunctuation()
 	}
 
 	func answer() {
@@ -44,5 +45,11 @@ class Question: NSObject {
 	}
 
 	fileprivate func expandContractions() {
+	}
+
+	fileprivate func removePunctuation() {
+		let punctuationRegex = try! NSRegularExpression(pattern: "[^a-zA-Z0-9]+")
+		let questionTextLength = questionText.count
+		questionText = punctuationRegex.stringByReplacingMatches(in: questionText, options: [], range: NSMakeRange(0, questionTextLength), withTemplate: "")
 	}
 }
