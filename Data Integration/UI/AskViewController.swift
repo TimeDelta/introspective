@@ -51,6 +51,10 @@ class AskViewController: UIViewController {
 		processQuestion()
 	}
 
+	@IBAction func userPressedGoButton(_ sender: Any) {
+		processQuestion()
+	}
+
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
 		// Dispose of any resources that can be recreated.
@@ -118,6 +122,7 @@ class AskViewController: UIViewController {
 
 	func processQuestion() {
 		os_log("Processing Question", type: .info)
+		disableNewQuestion()
 
 		let questionText = questionTextView.text
 		if questionText == nil {
@@ -139,10 +144,12 @@ class AskViewController: UIViewController {
 			if error != nil {
 				os_log("Failed to answer question (%@): %@", type: .error, self.questionTextView.text, error!.localizedDescription)
 				self.displayError(error!.localizedDescription)
+				self.enableNewQuestion()
 				return
 			}
 
 			// TODO - tell user that their question is being answered
+			self.enableNewQuestion()
 		}
 	}
 
@@ -151,14 +158,26 @@ class AskViewController: UIViewController {
 			if error != nil {
 				os_log("Failed to answer question (%@): %@", type: .error, self.questionTextView.text, error!.localizedDescription)
 				self.displayError(error!.localizedDescription)
+				self.enableNewQuestion()
 				return
 			}
 
 			// TODO - display answer
+			self.enableNewQuestion()
 		}
 	}
 
 	fileprivate func displayError(_ message: String) {
 		// TODO
+	}
+
+	fileprivate func disableNewQuestion() {
+		questionTextView.isEditable = false
+		micButton.isEnabled = false
+	}
+
+	fileprivate func enableNewQuestion() {
+		questionTextView.isEditable = true
+		micButton.isEnabled = true
 	}
 }

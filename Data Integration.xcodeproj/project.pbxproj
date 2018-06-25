@@ -38,6 +38,7 @@
 		A2A428F820E0602F00E36DD4 /* questionLabelsTrainingData.json in Resources */ = {isa = PBXBuildFile; fileRef = A2A428F720E0602F00E36DD4 /* questionLabelsTrainingData.json */; };
 		A2AA667B20E13372005C57DA /* Answer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AA667A20E13372005C57DA /* Answer.swift */; };
 		A2AA667E20E13E44005C57DA /* ContractionsReplacementUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AA667D20E13E44005C57DA /* ContractionsReplacementUtil.swift */; };
+		A2AA668420E17586005C57DA /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AA668320E17586005C57DA /* Labels.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,6 +112,7 @@
 		A2A428F720E0602F00E36DD4 /* questionLabelsTrainingData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = questionLabelsTrainingData.json; sourceTree = "<group>"; };
 		A2AA667A20E13372005C57DA /* Answer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Answer.swift; sourceTree = "<group>"; };
 		A2AA667D20E13E44005C57DA /* ContractionsReplacementUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractionsReplacementUtil.swift; sourceTree = "<group>"; };
+		A2AA668320E17586005C57DA /* Labels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -263,6 +265,7 @@
 				A2A428F120E05D7800E36DD4 /* Question.swift */,
 				A2A428F520E05F8100E36DD4 /* QuestionLabels.playground */,
 				A2AA667A20E13372005C57DA /* Answer.swift */,
+				A2AA668320E17586005C57DA /* Labels.swift */,
 			);
 			path = Questions;
 			sourceTree = "<group>";
@@ -447,6 +450,7 @@
 				A20E61C520DD452B00FEA820 /* DatabaseConnector.swift in Sources */,
 				A2A428EC20E05A3100E36DD4 /* Mood.swift in Sources */,
 				A2AA667B20E13372005C57DA /* Answer.swift in Sources */,
+				A2AA668420E17586005C57DA /* Labels.swift in Sources */,
 				A20E358C20DD339900C260A0 /* SourcesTableViewController.swift in Sources */,
 				A210555A20CF5DAE00E8D68B /* AppDelegate.swift in Sources */,
 				A2507E9920D880B300DCB35B /* Activity.swift in Sources */,

@@ -8,6 +8,7 @@
 
 import Foundation
 import NaturalLanguage
+import os
 
 class Question: NSObject {
 
@@ -16,11 +17,11 @@ class Question: NSObject {
 	}
 
 	fileprivate(set) var questionText: String
-	fileprivate var questionParts: [String]
+	fileprivate var labels: Labels
 
 	init(text: String) {
 		questionText = text
-		questionParts = [String]()
+		labels = Labels()
 	}
 
 	func parse(callback: (Error?) -> ()) {
@@ -38,14 +39,18 @@ class Question: NSObject {
 				tagger.string = questionText.lowercased()
 				tagger.enumerateTags(in: Range(NSMakeRange(0, questionText.count), in: questionText.lowercased())!, unit: NLTokenUnit.word, scheme: labelsTagScheme, options: []) {
 					(tag, tokenRange) -> Bool in
+
+					let token = String(questionText[Range(uncheckedBounds: (lower: tokenRange.lowerBound, upper: tokenRange.upperBound))])
+					self.labels.addLabel(Labels.Label(tag: tag!, token: token))
+
 					return true
 				}
-				callback(answer, nil)
+				callback(nil)
 			} else {
-				callback(nil, ErrorTypes.CouldNotLoadModel)
+				callback(ErrorTypes.CouldNotLoadModel)
 			}
 		} catch {
-			callback(nil, error)
+			callback(error)
 		}
 	}
 

@@ -29,6 +29,9 @@
                                 <rect key="frame" x="172" y="557" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <state key="normal" title="Go"/>
+                                <connections>
+                                    <action selector="userPressedGoButton:" destination="9pv-A4-QxB" eventType="touchUpInside" id="UuV-3E-eyE"/>
+                                </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" text="Hold the Microphone to talk out loud or type below and then press &quot;Go&quot;:" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q4P-TC-T6O">
                                 <rect key="frame" x="16" y="263" width="343" height="71"/>
