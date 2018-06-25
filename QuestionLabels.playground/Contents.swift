@@ -3,6 +3,10 @@ import CreateML
 
 enum Errors: Error {
 	case countMismatch
+	case tokensLineBadStart
+	case tokensLineBadEnd
+	case labelsLineBadStart
+	case labelsLineBadEnd
 }
 
 func validateData(url: URL) throws {
@@ -25,8 +29,24 @@ func validateData(url: URL) throws {
 		if line.contains("tokens") {
 			tokenCount = line.split(separator: ",").count - 1 // tokens line contains an extra comma after the tokens array
 			tokensLine = line.lowercased()
+			if !line.contains("\"tokens\": [") {
+				print("Bad line start for tokens line:\n" + line)
+				throw Errors.tokensLineBadStart
+			}
+			if !line.hasSuffix("],") {
+				print("Bad line ending for tokens line:\n" + line)
+				throw Errors.tokensLineBadEnd
+			}
 		} else if line.contains("labels") {
 			labelCount = line.split(separator: ",").count
+			if !line.contains("\"labels\": [") {
+				print("Bad line start for labels line:\n" + line)
+				throw Errors.labelsLineBadStart
+			}
+			if !line.hasSuffix("]") {
+				print("Bad line ending for labels line:\n" + line)
+				throw Errors.labelsLineBadEnd
+			}
 		}
 	}
 }
