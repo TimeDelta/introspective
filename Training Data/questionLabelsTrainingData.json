@@ -1,0 +1,106 @@
+[
+	{
+		"tokens": ["What", "do", "I", "usually", "do", "in", "the", "morning"],
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "NONE", "ACTIVITY_DATA", "TIME_CONSTRAINT", "NONE", "NONE" ]
+	},
+	{
+		"tokens": ["What", "do", "I", "usually", "do", "between", "9", "and", "11", "in", "the", "morning"],
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "NONE", "ACTIVITY_DATA", "TIME_CONSTRAINT", "TIME_OF_DAY", "NONE", "TIME_OF_DAY", "TIME_CONSTRAINT", "NONE", "NONE"]
+	},
+	{
+		"tokens": ["How", "do", "I", "usually", "spend", "my", "time", "on", "Tuesdays"],
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "NONE", "ACTIVITY_DATA", "NONE", "NONE", "TIME_CONSTRAINT", "NONE"]
+	},
+	{
+		"tokens": ["How", "do", "I", "usually", "spend", "my", "time", "on", "Tuesday", "mornings"],
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "NONE", "ACTIVITY_DATA", "NONE", "NONE", "TIME_CONSTRAINT", "NONE", "NONE"]
+	},
+	{
+		"tokens": ["How", "often", "do", "I", "go", "to", "the", "grocery", "store"],
+		"labels": ["QUESTION_WORD", "FREQUENCY", "NONE", "NONE", "LOCATION_DATA", "NONE", "LOCATION_TYPE", "LOCATION_TYPE"]
+	},
+	{
+		"tokens": ["In", "the", "past", "2", "months", "how", "much", "time", "have", "I", "spent", "working", "out"],
+		"labels": ["NONE", "NONE", "NONE", "QUANTITY", "TIME_UNIT", "QUESTION_WORD", "SUM", "ATTRIBUTE", "NONE", "NONE", "ACTIVITY_DATA", "WORKOUT_DATA", "WORKOUT_DATA"]
+	},
+	{
+		"tokens": ["What", "is", "my", "average", "mood", "like", "on", "days", "that", "I", "spend", "at", "least", "two", "hours", "watching", "tv"],
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "AVERAGE", "MOOD_DATA", "NONE", "NONE", "TEMPORAL_AGGREGATION", "NONE", "NONE", "ACTIVITY_DATA", "NONE", "MINIMUM", "QUANTITY", "TIME_UNIT", "NONE", "NONE"]
+	},
+	{
+		"tokens": ["How", "much", "time", "per", "week", "do", "I", "spend", "doing", "chores"],
+		"labels": ["QUESTION_WORD", "SUM", "ATTRIBUTE", "NONE", "TEMPORAL_AGGREGATION", "NONE", "NONE", "ACTIVITY_DATA", "NONE", "NONE"]
+	},
+	{
+		"tokens": ["How", "much", "time", "do", "I", "spend", "doing", "chores", "each", "week"],
+		"labels": ["QUESTION_WORD", "SUM", "ATTRIBUTE", "NONE", "NONE", "ACTIVITY_DATA", "NONE", "NONE", "NONE", "TEMPORAL_AGGREGATION"]
+	},
+	{
+		"tokens": ["How", "much", "time", "do", "I", "usually", "spend", "doing", "chores", "in", "a", "given", "week"],
+		"labels": ["QUESTION_WORD", "SUM", "ATTRIBUTE", "NONE", "NONE", "NONE", "ACTIVITY_DATA", "NONE", "NONE", "NONE", "NONE", "NONE", "TEMPORAL_AGGREGATION"]
+	},
+	{
+		"tokens": ["How", "much", "time", "did", "I", "spend", "working", "last", "week",
+		"labels": ["QUESTION_WORD", "SUM", "ATTRIBUTE", "NONE", "ACTIVITY_DATA", "NONE", "WHICH", "TIME_UNIT"]
+	},
+	{
+		"tokens": ["How", "much", "do", "I", "work"],
+		"labels": ["QUESTION_WORD", "SUM", "ACTIVITY_DATA", "NONE", "NONE"]
+	},
+	{
+		"tokens": ["How", "much", "did", "I", "work", "last", "year"],
+		"labels": ["QUESTION_WORD", "SUM", "ACTIVITY_DATA", "NONE", "NONE", "WHICH", "TIME_UNIT"]
+	},
+	{
+		"tokens": ["How", "does", "my", "heart", "rate", "at", "work", "compare", "to", "when", "I", "am", "home"],
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "HEART_RATE_DATA", "HEART_RATE_DATA", "LOCATION_RESTRICTION", "LOCATION", "COMPARISON", "NONE", "QUESTION_WORD", "NONE", "LOCATION_RESTRICTION", "LOCATION"]
+	},
+	{
+		"tokens": ["What", "is", "the", "difference", "between", "my", "mood", "at", "work", "and", "my", "mood", "at", "home"],
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "COMPARISON", "NONE", "NONE", "MOOD_DATA", "LOCATION_RESTRICTION", "LOCATION", "NONE", "NONE", "MOOD_DATA", "LOCATION_RESTRICTION", "LOCATION"]
+	},
+	{
+		"tokens": ["How", "does", "my", "mood", "at", "work", "compare", "to", "my", "mood", "at", "home"],
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "MOOD_DATA", "LOCATION_RESTRICTION", "LOCATION", "COMPARISON", "NONE", "NONE", "MOOD_DATA", "LOCATION_RESTRICTION", "LOCATION"]
+	},
+	{
+		"tokens": ["Do", "I", "spend", "more", "time", "working", "out", "at", "the", "gym", "or", "at", "home"],
+		"labels": ["QUESTION_WORD", "NONE", "ACTIVITY_DATA", "COMPARISON", "ATTRIBUTE", "WORKOUT_DATA", "WORKOUT_DATA", "LOCATION_RESTRICTION", "NONE", "LOCATION_TYPE", "NONE", "LOCATION_RESTRICTION", "LOCATION"]
+	},
+	{
+		"tokens": ["Do", "I", "spend", "more", "time", "working", "or", "playing"],
+		"labels": ["QUESTION_WORD", "NONE", "ACTIVITY_DATA", "COMPARISON", "ATTRIBUTE", "NONE", "NONE", "NONE"]
+	},
+	{
+		"tokens": ["How", "do", "I", "spend", "my", "time"],
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "ACTIVITY_DATA", "NONE", "NONE"]
+	},
+	{
+		"tokens": ["How", "do", "I", "use", "my", "time"],
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "ACTIVITY_DATA", "NONE", "NONE"]
+	},
+	{
+		"tokens": ["Is", "there", "a", "correlation", "between", "my", "mood", "and", "the", "amount", "of", "time", "I", "spend", "watching", "tv"],
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "CORRELATION", "NONE", "NONE", "MOOD_DATA", "NONE", "NONE", "SUM", "NONE", "ATTRIBUTE", "NONE", "ACTIVITY_DATA", "NONE", "NONE"]
+	},
+	{
+		"tokens": ["What", "did", "I", "do", "on", "the", "23rd"],
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "ACTIVITY_DATA", "TIME_CONSTRAINT", "NONE", "DAY_OF_MONTH"]
+	},
+	{
+		"tokens": ["What", "was", "my", "mood", "like", "last", "Monday",
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "MOOD_DATA", "NONE", "WHICH", "DAY_OF_WEEK"]
+	},
+	{
+		"tokens": ["Do", "I", "spend", "more", "time", "working", "on", "Thursdays", "or", "Wednesdays"],
+		"labels": ["QUESTION_WORD", "NONE", "ACTIVITY_DATA", "COMPARISON", "ATTRIBUTE", "NONE", "TIME_CONSTRAINT", "DAY_OF_WEEK", "NONE", "DAY_OF_WEEK"]
+	},
+	{
+		"tokens": ["Have", "I", "ever", "gone", "a", "whole", "week", "without", "watching", "TV"],
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "NONE", "NONE", "NONE", "TIME_UNIT", "NEGATION", "NONE", "NONE"]
+	},
+	{
+		"tokens": ["When", "was", "the", "last", "time", "I", "massaged", "Nicole"],
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "WHICH", "ATTRIBUTE", "NONE", "NONE", "NONE"]
+	}
+]
