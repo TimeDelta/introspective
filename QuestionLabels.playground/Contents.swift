@@ -1,35 +1,39 @@
 import Cocoa
 import CreateML
 
-enum Errors {
+enum Errors: Error {
 	case countMismatch
 }
 
-let questionLabelsDataFileUrl = URL(fileURLWithPath: "/Users/bryannova/development/Data Integration/Training Data/questionLabelsTrainingData.json")
 func validateData(url: URL) throws {
 	let text = try String(contentsOf: url, encoding: .utf8)
 
 	var tokenCount: Int = -1
 	var labelCount: Int = -1
 	var checkedCounts: Bool = false
-	var tokensLine: String
+	var tokensLine = String()
 
 	for line in text.split(separator: "\n") {
 		if !checkedCounts {
 			if tokenCount != labelCount {
-				print("Mismatch of number of elements between following lines:\n" + "(" + tokenCount + ")" + tokensLine + "\n(" + labelCount + ")" + line)
+				let message = "Mismatch of number of elements between following lines:\n(" + String(tokenCount) + ")" + tokensLine + "\n(" + String(labelCount) + ")" + line
+				print(message)
 				throw Errors.countMismatch
 			}
+			checkedCounts = true
 		}
 		if line.contains("tokens") {
 			tokenCount = line.split(separator: ",").count - 1 // tokens line contains an extra comma after the tokens array
+			tokensLine = line.lowercased()
 		} else if line.contains("labels") {
 			labelCount = line.split(separator: ",").count
 		}
 	}
 }
 
-validateData(url: questionLabelsDataFileUrl)
+
+let questionLabelsDataFileUrl = URL(fileURLWithPath: "/Users/bryannova/development/Data Integration/Training Data/questionLabelsTrainingData.json")
+try validateData(url: questionLabelsDataFileUrl)
 
 let data = try MLDataTable(contentsOf: questionLabelsDataFileUrl)
 
