@@ -7,8 +7,13 @@
 //
 
 import Foundation
+import NaturalLanguage
 
 class Question: NSObject {
+
+	enum ErrorTypes: Error {
+		case CouldNotLoadModel
+	}
 
 	fileprivate(set) var questionText: String
 	fileprivate var questionParts: [String]
@@ -24,8 +29,20 @@ class Question: NSObject {
 		removePunctuation()
 	}
 
-	func answer() {
-
+	func answer() throws {
+		if let modelUrl = Bundle.main.url(forResource: "questionLabels", withExtension: "mlmodel") {
+			let labelsModel = try NLModel(contentsOf: modelUrl)
+			let labelsTagScheme = NLTagScheme("QuestionLabelsTagScheme")
+			let tagger = NLTagger(tagSchemes: [labelsTagScheme])
+			tagger.setModels([labelsModel], forTagScheme: labelsTagScheme)
+			tagger.string = questionText.lowercased()
+			tagger.enumerateTags(in: Range(NSMakeRange(0, questionText.count), in: questionText.lowercased())!, unit: NLTokenUnit.word, scheme: labelsTagScheme, options: []) {
+				(tag, tokenRange) -> Bool in
+				return true
+			}
+		} else {
+			throw ErrorTypes.CouldNotLoadModel
+		}
 	}
 
 	fileprivate func normalizeNumbers() {

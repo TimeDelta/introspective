@@ -131,7 +131,15 @@ class AskViewController: UIViewController {
 			// TODO - tell user that their question is being analyzed
 			question.parse()
 			// TODO - tell user that their question is being answered
-			question.answer()
+			do {
+				try question.answer()
+			} catch Question.ErrorTypes.CouldNotLoadModel {
+				os_log("Failed to load model", type: .error)
+				self.displayError("Sorry. There was an issue loading the Machine Learning model.")
+			} catch {
+				os_log("Failed to answer question (%@): %@", type: .error, question.questionText, error.localizedDescription)
+				self.displayError(error.localizedDescription)
+			}
 		}
 	}
 
