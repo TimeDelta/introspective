@@ -37,6 +37,7 @@
 		A2A428F420E05EF500E36DD4 /* CoreML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2A428F320E05EF500E36DD4 /* CoreML.framework */; };
 		A2A428F820E0602F00E36DD4 /* questionLabelsTrainingData.json in Resources */ = {isa = PBXBuildFile; fileRef = A2A428F720E0602F00E36DD4 /* questionLabelsTrainingData.json */; };
 		A2AA667B20E13372005C57DA /* Answer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AA667A20E13372005C57DA /* Answer.swift */; };
+		A2AA667E20E13E44005C57DA /* ContractionsReplacementUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AA667D20E13E44005C57DA /* ContractionsReplacementUtil.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,6 +110,7 @@
 		A2A428F520E05F8100E36DD4 /* QuestionLabels.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = QuestionLabels.playground; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		A2A428F720E0602F00E36DD4 /* questionLabelsTrainingData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = questionLabelsTrainingData.json; sourceTree = "<group>"; };
 		A2AA667A20E13372005C57DA /* Answer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Answer.swift; sourceTree = "<group>"; };
+		A2AA667D20E13E44005C57DA /* ContractionsReplacementUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractionsReplacementUtil.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +173,7 @@
 				A2A428E020DD930800E36DD4 /* Storage */,
 				A2A428EF20E05D1F00E36DD4 /* Questions */,
 				A2A428D320DD83A100E36DD4 /* Sources */,
+				A2AA667C20E13E0A005C57DA /* Util */,
 				A210555920CF5DAE00E8D68B /* AppDelegate.swift */,
 				A210556220CF5DAF00E8D68B /* Assets.xcassets */,
 				A210556720CF5DAF00E8D68B /* Info.plist */,
@@ -285,6 +288,14 @@
 			children = (
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		A2AA667C20E13E0A005C57DA /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				A2AA667D20E13E44005C57DA /* ContractionsReplacementUtil.swift */,
+			);
+			path = Util;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -443,6 +454,7 @@
 				A2A428DB20DD8D6000E36DD4 /* MoodSource.swift in Sources */,
 				A2507EE220D9343900DCB35B /* HeartRate.swift in Sources */,
 				A2A428F220E05D7800E36DD4 /* Question.swift in Sources */,
+				A2AA667E20E13E44005C57DA /* ContractionsReplacementUtil.swift in Sources */,
 				A2A428D020DD82C300E36DD4 /* Source.swift in Sources */,
 				A210555C20CF5DAE00E8D68B /* AskViewController.swift in Sources */,
 				A2A428DF20DD927100E36DD4 /* CodableStorage.swift in Sources */,
