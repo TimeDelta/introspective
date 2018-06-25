@@ -23,20 +23,16 @@ class Question: NSObject {
 		questionParts = [String]()
 	}
 
-	func parse() {
+	func parse(callback: (Error?) -> ()) {
 		normalizeNumbers()
 		questionText = ContractionsReplacementUtil.expand(questionText)
 		removePunctuation()
-	}
 
-	func answer(callback: (Answer?, Error?) -> ()) {
 		do {
 			if let modelUrl = Bundle.main.url(forResource: "questionLabels", withExtension: "mlmodel") {
 				let labelsModel = try NLModel(contentsOf: modelUrl)
 				let labelsTagScheme = NLTagScheme("QuestionLabelsTagScheme")
 				let tagger = NLTagger(tagSchemes: [labelsTagScheme])
-
-				let answer = Answer()
 
 				tagger.setModels([labelsModel], forTagScheme: labelsTagScheme)
 				tagger.string = questionText.lowercased()
@@ -48,6 +44,14 @@ class Question: NSObject {
 			} else {
 				callback(nil, ErrorTypes.CouldNotLoadModel)
 			}
+		} catch {
+			callback(nil, error)
+		}
+	}
+
+	func answer(callback: (Answer?, Error?) -> ()) {
+		do {
+
 		} catch {
 			callback(nil, error)
 		}

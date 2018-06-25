@@ -127,11 +127,22 @@ class AskViewController: UIViewController {
 		}
 
 		let question = Question(text: questionText!)
+		// TODO - tell user their question is being analyzed
 		DispatchQueue.global(qos: .userInitiated).async {
-			// TODO - tell user that their question is being analyzed
-			question.parse()
-			// TODO - tell user that their question is being answered
+			question.parse(callback: self.questionParsed)
 			question.answer(callback: self.questionAnswered)
+		}
+	}
+
+	fileprivate func questionParsed(error: Error?) {
+		DispatchQueue.main.async { // have to run on main thread to access UI
+			if error != nil {
+				os_log("Failed to answer question (%@): %@", type: .error, self.questionTextView.text, error!.localizedDescription)
+				self.displayError(error!.localizedDescription)
+				return
+			}
+
+			// TODO - tell user that their question is being answered
 		}
 	}
 
