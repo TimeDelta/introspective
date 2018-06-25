@@ -1,3 +1,6 @@
 **/Cartfile.Resolved
 **/Carthage
 **/.build
+**/*.xcsettings
+**/xcuserdata/
+**/xcdebugger/
