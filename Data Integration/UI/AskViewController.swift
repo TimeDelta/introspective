@@ -118,8 +118,24 @@ class AskViewController: UIViewController {
 
 	func processQuestion() {
 		os_log("Processing Question", type: .info)
-//		let numberFormatter:NumberFormatter = NumberFormatter()
-//		numberFormatter.numberStyle = NumberFormatter.Style.spellOut
-//		numberFormatter.number(from: "")
+
+		let questionText = questionTextView.text
+		if questionText == nil {
+			os_log("User tried asking a question without any text", type: .debug)
+			displayError("You must ask your question for it to be answered.")
+			return
+		}
+
+		let question = Question(text: questionText!)
+		DispatchQueue.global(qos: .userInitiated).async {
+			// TODO - tell user that their question is being analyzed
+			question.parse()
+			// TODO - tell user that their question is being answered
+			question.answer()
+		}
+	}
+
+	func displayError(_ message: String) {
+		// TODO
 	}
 }
