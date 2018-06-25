@@ -29,19 +29,27 @@ class Question: NSObject {
 		removePunctuation()
 	}
 
-	func answer() throws {
-		if let modelUrl = Bundle.main.url(forResource: "questionLabels", withExtension: "mlmodel") {
-			let labelsModel = try NLModel(contentsOf: modelUrl)
-			let labelsTagScheme = NLTagScheme("QuestionLabelsTagScheme")
-			let tagger = NLTagger(tagSchemes: [labelsTagScheme])
-			tagger.setModels([labelsModel], forTagScheme: labelsTagScheme)
-			tagger.string = questionText.lowercased()
-			tagger.enumerateTags(in: Range(NSMakeRange(0, questionText.count), in: questionText.lowercased())!, unit: NLTokenUnit.word, scheme: labelsTagScheme, options: []) {
-				(tag, tokenRange) -> Bool in
-				return true
+	func answer(callback: (Answer?, Error?) -> ()) {
+		do {
+			if let modelUrl = Bundle.main.url(forResource: "questionLabels", withExtension: "mlmodel") {
+				let labelsModel = try NLModel(contentsOf: modelUrl)
+				let labelsTagScheme = NLTagScheme("QuestionLabelsTagScheme")
+				let tagger = NLTagger(tagSchemes: [labelsTagScheme])
+
+				let answer = Answer()
+
+				tagger.setModels([labelsModel], forTagScheme: labelsTagScheme)
+				tagger.string = questionText.lowercased()
+				tagger.enumerateTags(in: Range(NSMakeRange(0, questionText.count), in: questionText.lowercased())!, unit: NLTokenUnit.word, scheme: labelsTagScheme, options: []) {
+					(tag, tokenRange) -> Bool in
+					return true
+				}
+				callback(answer, nil)
+			} else {
+				callback(nil, ErrorTypes.CouldNotLoadModel)
 			}
-		} else {
-			throw ErrorTypes.CouldNotLoadModel
+		} catch {
+			callback(nil, error)
 		}
 	}
 

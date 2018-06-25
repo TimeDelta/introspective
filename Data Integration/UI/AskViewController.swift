@@ -131,19 +131,23 @@ class AskViewController: UIViewController {
 			// TODO - tell user that their question is being analyzed
 			question.parse()
 			// TODO - tell user that their question is being answered
-			do {
-				try question.answer()
-			} catch Question.ErrorTypes.CouldNotLoadModel {
-				os_log("Failed to load model", type: .error)
-				self.displayError("Sorry. There was an issue loading the Machine Learning model.")
-			} catch {
-				os_log("Failed to answer question (%@): %@", type: .error, question.questionText, error.localizedDescription)
-				self.displayError(error.localizedDescription)
-			}
+			question.answer(callback: self.questionAnswered)
 		}
 	}
 
-	func displayError(_ message: String) {
+	fileprivate func questionAnswered(answer: Answer?, error: Error?) {
+		DispatchQueue.main.async { // have to run on main thread to access UI
+			if error != nil {
+				os_log("Failed to answer question (%@): %@", type: .error, self.questionTextView.text, error!.localizedDescription)
+				self.displayError(error!.localizedDescription)
+				return
+			}
+
+			// TODO - display answer
+		}
+	}
+
+	fileprivate func displayError(_ message: String) {
 		// TODO
 	}
 }
