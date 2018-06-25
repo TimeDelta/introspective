@@ -10,8 +10,8 @@ import Foundation
 
 class Question: NSObject {
 
-	var questionText: String
-	var questionParts: [String]
+	fileprivate(set) var questionText: String
+	fileprivate var questionParts: [String]
 
 	init(text: String) {
 		questionText = text
@@ -19,10 +19,30 @@ class Question: NSObject {
 	}
 
 	func parse() {
-
+		normalizeNumbers()
+		expandContractions()
 	}
 
 	func answer() {
 
+	}
+
+	fileprivate func normalizeNumbers() {
+		let numberFormatter:NumberFormatter = NumberFormatter()
+		numberFormatter.numberStyle = NumberFormatter.Style.spellOut
+		let numberWords = Set(["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "sixteen", "seventeen", "eighteen", "nineteen", "twenty", "thirty", "fourty", "fifty", "sixty", "seventy", "eighty", "ninety", "hundred", "thousand", "million", "billion", "trillion", "quadrillion", "quintillion"])
+		var englishNumber = String()
+		for word in questionText.split(separator: " ") {
+			if numberWords.contains(word.lowercased()) {
+				englishNumber.append(contentsOf: word.lowercased())
+			} else if !englishNumber.isEmpty {
+				let number = String(numberFormatter.number(from: englishNumber)!.doubleValue)
+				questionText = questionText.replacingOccurrences(of: englishNumber, with: number)
+				englishNumber = String()
+			}
+		}
+	}
+
+	fileprivate func expandContractions() {
 	}
 }
