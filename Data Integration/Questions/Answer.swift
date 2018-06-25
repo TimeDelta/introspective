@@ -7,3 +7,16 @@
 //
 
 import Foundation
+
+class Answer: NSObject {
+
+	fileprivate(set) var parts: [String: [NSObject]]
+
+	override init() {
+		self.parts = [String: [NSObject]]()
+	}
+
+	func addPart(_ partName: String, _ partValues: [NSObject]) {
+		parts[partName] = partValues
+	}
+}
