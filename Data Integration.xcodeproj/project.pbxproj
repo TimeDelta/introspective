@@ -22,6 +22,7 @@
 		A2507E9920D880B300DCB35B /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2507E9820D880B300DCB35B /* Activity.swift */; };
 		A2507E9B20D8840200DCB35B /* ActivityInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2507E9A20D8840200DCB35B /* ActivityInstance.swift */; };
 		A2507EE220D9343900DCB35B /* HeartRate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2507EE120D9343900DCB35B /* HeartRate.swift */; };
+		A26DBA5E20E2C15E0018AC3F /* Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26DBA5D20E2C15E0018AC3F /* Tags.swift */; };
 		A293936A20DD6E5600C577E3 /* SourceDefinitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A293936920DD6E5600C577E3 /* SourceDefinitionViewController.swift */; };
 		A2A428D020DD82C300E36DD4 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A428CF20DD82C300E36DD4 /* Source.swift */; };
 		A2A428D220DD839200E36DD4 /* SourceField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A428D120DD839200E36DD4 /* SourceField.swift */; };
@@ -94,6 +95,7 @@
 		A2507E9D20D91CB600DCB35B /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		A2507EDF20D92FF100DCB35B /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = "Data Integration/Carthage/Build/iOS/SQLite.framework"; sourceTree = "<group>"; };
 		A2507EE120D9343900DCB35B /* HeartRate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRate.swift; sourceTree = "<group>"; };
+		A26DBA5D20E2C15E0018AC3F /* Tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tags.swift; sourceTree = "<group>"; };
 		A293936920DD6E5600C577E3 /* SourceDefinitionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceDefinitionViewController.swift; sourceTree = "<group>"; };
 		A2A428CF20DD82C300E36DD4 /* Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
 		A2A428D120DD839200E36DD4 /* SourceField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceField.swift; sourceTree = "<group>"; };
@@ -266,6 +268,7 @@
 				A2A428F520E05F8100E36DD4 /* QuestionLabels.playground */,
 				A2AA667A20E13372005C57DA /* Answer.swift */,
 				A2AA668320E17586005C57DA /* Labels.swift */,
+				A26DBA5D20E2C15E0018AC3F /* Tags.swift */,
 			);
 			path = Questions;
 			sourceTree = "<group>";
@@ -444,6 +447,7 @@
 			files = (
 				A2507E9B20D8840200DCB35B /* ActivityInstance.swift in Sources */,
 				A2A428EE20E05C2000E36DD4 /* MedicationSource.swift in Sources */,
+				A26DBA5E20E2C15E0018AC3F /* Tags.swift in Sources */,
 				A2A428D520DD853F00E36DD4 /* HeartRateSource.swift in Sources */,
 				A210555E20CF5DAE00E8D68B /* SecondViewController.swift in Sources */,
 				A2A428D220DD839200E36DD4 /* SourceField.swift in Sources */,
