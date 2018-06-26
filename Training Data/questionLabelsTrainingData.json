@@ -1,7 +1,7 @@
 [
 	{
 		"tokens": ["what", "do", "i", "usually", "do", "in", "the", "morning"],
-		"labels": ["QUESTION_WORD", "NONE", "NONE", "NONE", "ACTIVITY_DATA", "TIME_CONSTRAINT", "NONE", "TIME_OF_DAY" ]
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "NONE", "ACTIVITY_DATA", "TIME_CONSTRAINT", "NONE", "TIME_OF_DAY"]
 	},
 	{
 		"tokens": ["what", "do", "i", "usually", "do", "between", "9", "and", "11", "in", "the", "morning"],
@@ -13,19 +13,19 @@
 	},
 	{
 		"tokens": ["how", "do", "i", "usually", "spend", "my", "time", "on", "tuesday", "mornings"],
-		"labels": ["QUESTION_WORD", "NONE", "NONE", "NONE", "ACTIVITY_DATA", "NONE", "NONE", "TIME_CONSTRAINT", "NONE", "TIME_OF_DAY"]
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "NONE", "ACTIVITY_DATA", "NONE", "NONE", "TIME_CONSTRAINT", "DAY_OF_WEEK", "TIME_OF_DAY"]
 	},
 	{
 		"tokens": ["how", "often", "do", "i", "go", "to", "the", "grocery", "store"],
-		"labels": ["QUESTION_WORD", "FREQUENCY", "NONE", "NONE", "LOCATION_DATA", "NONE", "LOCATION_TYPE", "LOCATION_TYPE"]
+		"labels": ["QUESTION_WORD", "FREQUENCY", "NONE", "NONE", "LOCATION_DATA", "NONE", "NONE", "LOCATION_TYPE", "LOCATION_TYPE"]
 	},
 	{
 		"tokens": ["in", "the", "past", "2", "months", "how", "much", "time", "have", "i", "spent", "working", "out"],
-		"labels": ["NONE", "NONE", "NONE", "QUANTITY", "TIME_UNIT", "QUESTION_WORD", "SUM", "ATTRIBUTE", "NONE", "NONE", "NONE", "WORKOUT_DATA", "WORKOUT_DATA"]
+		"labels": ["NONE", "NONE", "WHICH", "QUANTITY", "TIME_UNIT", "QUESTION_WORD", "SUM", "ATTRIBUTE", "NONE", "NONE", "NONE", "WORKOUT_DATA", "WORKOUT_DATA"]
 	},
 	{
 		"tokens": ["what", "is", "my", "average", "mood", "like", "on", "days", "that", "i", "spend", "at", "least", "two", "hours", "watching", "tv"],
-		"labels": ["QUESTION_WORD", "NONE", "NONE", "AVERAGE", "MOOD_DATA", "NONE", "NONE", "TEMPORAL_AGGREGATION", "NONE", "NONE", "ACTIVITY_DATA", "NONE", "MINIMUM", "QUANTITY", "TIME_UNIT", "NONE", "NONE"]
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "AVERAGE", "MOOD_DATA", "NONE", "TIME_CONSTRAINT", "TEMPORAL_AGGREGATION", "NONE", "NONE", "ACTIVITY_DATA", "GREATER_THAN_OR_EQUAL", "GREATER_THAN_OR_EQUAL", "QUANTITY", "TIME_UNIT", "NONE", "NONE"]
 	},
 	{
 		"tokens": ["how", "much", "time", "per", "week", "do", "i", "spend", "doing", "chores"],
@@ -41,7 +41,7 @@
 	},
 	{
 		"tokens": ["how", "much", "time", "did", "i", "spend", "working", "last", "week"],
-		"labels": ["QUESTION_WORD", "SUM", "ATTRIBUTE", "NONE", "ACTIVITY_DATA", "NONE", "WHICH", "TIME_UNIT"]
+		"labels": ["QUESTION_WORD", "SUM", "ATTRIBUTE", "NONE", "NONE", "ACTIVITY_DATA", "NONE", "WHICH", "TIME_UNIT"]
 	},
 	{
 		"tokens": ["how", "much", "do", "i", "work"],
@@ -130,5 +130,9 @@
     {
         "tokens": ["how", "does", "that", "compare", "to", "when", "i", "lift", "weights"],
         "labels": ["QUESTION_WORD", "NONE", "PREVIOUS_CONTEXT", "COMPARISON", "NONE", "QUESTION_WORD", "NONE", "WORKOUT_TYPE", "WORKOUT_TYPE"]
+    },
+    {
+        "tokens": ["what", "is", "the", "least", "amount", "of", "sleep", "i", "have", "ever", "gotten"],
+        "labels": ["QUESTION_WORD", "NONE", "NONE", "MINIMUM", "NONE", "NONE", "SLEEP_DATA", "NONE", "NONE", "NONE", "NONE"]
     }
 ]
