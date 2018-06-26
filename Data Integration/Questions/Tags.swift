@@ -54,7 +54,7 @@ class Tags: NSObject {
 	/// negate condition for current constraint
 	static let negation = NLTag("NEGATION")
 	/// underlying token is not important
-	static let noneToken = NLTag("NONE")
+	static let none = NLTag("NONE")
 	/// underlying token is a quantity
 	static let quantity = NLTag("QUANTITY")
 	/// underlying token will determine what kind of question is being asked
@@ -71,6 +71,8 @@ class Tags: NSObject {
 	static let timeOfDay = NLTag("TIME_OF_DAY")
 	/// underlying token is a unit of time
 	static let timeUnit = NLTag("TIME_UNIT")
+	/// underlying token is a verb
+	static let verb = NLTag("VERB")
 	/// underlying token determines which of something to use
 	static let which = NLTag("WHICH")
 	/// use workout data in general
