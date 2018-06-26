@@ -9,7 +9,7 @@
 import Foundation
 import NaturalLanguage
 
-class Labels: NSObject {
+class Labels: NSObject, IteratorProtocol {
 
 	struct Label {
 		fileprivate(set) var tag: NLTag
@@ -21,12 +21,16 @@ class Labels: NSObject {
 		}
 	}
 
+	typealias Element = Label
+
 	fileprivate var labelsByTag: [NLTag: [Label]]
 	fileprivate var labelsByIndex: [Label]
+	fileprivate var currentIndex: Int
 
 	override init() {
 		labelsByTag = [NLTag: [Label]]()
 		labelsByIndex = [Label]()
+		currentIndex = 0
 	}
 
 	func addLabel(_ label: Label) {
@@ -50,5 +54,58 @@ class Labels: NSObject {
 
 	func labels(_ tag: NLTag) -> [Label]? {
 		return labelsByTag[tag]
+	}
+
+	func hasLabels() -> Bool {
+		return !labelsByIndex.isEmpty
+	}
+
+	/// This function guarantees that fevery Labels object in the returned array will contain at least one label
+	func splitBeforeTag(_ tag: NLTag) -> [Labels] {
+		if labelsByTag[tag] == nil {
+			return [self]
+		}
+
+		var labelsArray = [Labels]()
+
+		var labelsForCurrentPart = Labels()
+		for label in labelsByIndex {
+			if label.tag == tag && labelsForCurrentPart.hasLabels() {
+				labelsArray.append(labelsForCurrentPart)
+				labelsForCurrentPart = Labels()
+			}
+			labelsForCurrentPart.addLabel(label)
+		}
+
+		return labelsArray
+	}
+
+	/// This function guarantees that fevery Labels object in the returned array will contain at least one label
+	func splitAfterTag(_ tag: NLTag) -> [Labels] {
+		if labelsByTag[tag] == nil {
+			return [self]
+		}
+
+		var labelsArray = [Labels]()
+
+		var labelsForCurrentPart = Labels()
+		for label in labelsByIndex {
+			labelsForCurrentPart.addLabel(label)
+			if label.tag == tag && labelsForCurrentPart.hasLabels() {
+				labelsArray.append(labelsForCurrentPart)
+				labelsForCurrentPart = Labels()
+			}
+		}
+
+		return labelsArray
+	}
+
+	func next() -> Labels.Label? {
+		if currentIndex == labelsByIndex.count {
+			return nil
+		}
+		let nextLabel = labelsByIndex[currentIndex]
+		currentIndex += 1
+		return nextLabel
 	}
 }
