@@ -121,7 +121,7 @@
 	},
 	{
 		"tokens": ["how", "much", "time", "did", "i", "spend", "at", "the", "library", "yesterday"],
-		"labels": ["QUESTION_WORD", "SUM", "ATTRIBUTE", "NONE", "NONE", "NONE", "LOCATION_RESTRICTION", "NONE", "LOCATION_TYPE", "DAY"]
+		"labels": ["QUESTION_WORD", "SUM", "ATTRIBUTE", "NONE", "NONE", "NONE", "LOCATION_RESTRICTION", "NONE", "LOCATION_TYPE", "DATE"]
 	},
     {
         "tokens": ["how", "long", "do", "i", "usually", "work", "out"],
