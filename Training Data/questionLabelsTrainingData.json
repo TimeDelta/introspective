@@ -1,19 +1,19 @@
 [
 	{
 		"tokens": ["what", "do", "i", "usually", "do", "in", "the", "morning"],
-		"labels": ["QUESTION_WORD", "NONE", "NONE", "NONE", "ACTIVITY_DATA", "TIME_CONSTRAINT", "NONE", "NONE" ]
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "NONE", "ACTIVITY_DATA", "TIME_CONSTRAINT", "NONE", "TIME_OF_DAY" ]
 	},
 	{
 		"tokens": ["what", "do", "i", "usually", "do", "between", "9", "and", "11", "in", "the", "morning"],
-		"labels": ["QUESTION_WORD", "NONE", "NONE", "NONE", "ACTIVITY_DATA", "TIME_CONSTRAINT", "TIME_OF_DAY", "NONE", "TIME_OF_DAY", "TIME_CONSTRAINT", "NONE", "NONE"]
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "NONE", "ACTIVITY_DATA", "TIME_CONSTRAINT", "TIME_OF_DAY", "NONE", "TIME_OF_DAY", "TIME_CONSTRAINT", "NONE", "TIME_OF_DAY"]
 	},
 	{
 		"tokens": ["how", "do", "i", "usually", "spend", "my", "time", "on", "tuesdays"],
-		"labels": ["QUESTION_WORD", "NONE", "NONE", "NONE", "ACTIVITY_DATA", "NONE", "NONE", "TIME_CONSTRAINT", "NONE"]
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "NONE", "ACTIVITY_DATA", "NONE", "NONE", "TIME_CONSTRAINT", "DAY_OF_WEEK"]
 	},
 	{
 		"tokens": ["how", "do", "i", "usually", "spend", "my", "time", "on", "tuesday", "mornings"],
-		"labels": ["QUESTION_WORD", "NONE", "NONE", "NONE", "ACTIVITY_DATA", "NONE", "NONE", "TIME_CONSTRAINT", "NONE", "NONE"]
+		"labels": ["QUESTION_WORD", "NONE", "NONE", "NONE", "ACTIVITY_DATA", "NONE", "NONE", "TIME_CONSTRAINT", "NONE", "TIME_OF_DAY"]
 	},
 	{
 		"tokens": ["how", "often", "do", "i", "go", "to", "the", "grocery", "store"],
