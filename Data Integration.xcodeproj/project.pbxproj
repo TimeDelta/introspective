@@ -23,6 +23,11 @@
 		A2507E9B20D8840200DCB35B /* ActivityInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2507E9A20D8840200DCB35B /* ActivityInstance.swift */; };
 		A2507EE220D9343900DCB35B /* HeartRate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2507EE120D9343900DCB35B /* HeartRate.swift */; };
 		A26DBA5E20E2C15E0018AC3F /* Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26DBA5D20E2C15E0018AC3F /* Tags.swift */; };
+		A26DBA6020E303440018AC3F /* HeartRateQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26DBA5F20E303440018AC3F /* HeartRateQuery.swift */; };
+		A26DBA6220E307810018AC3F /* Operations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26DBA6120E307810018AC3F /* Operations.swift */; };
+		A26DBA6620E30D730018AC3F /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26DBA6520E30D730018AC3F /* Query.swift */; };
+		A26DBA6E20E319950018AC3F /* DayOfWeek.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26DBA6D20E319950018AC3F /* DayOfWeek.swift */; };
+		A26DBA7020E3DEAE0018AC3F /* QuantityRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26DBA6F20E3DEAE0018AC3F /* QuantityRestriction.swift */; };
 		A293936A20DD6E5600C577E3 /* SourceDefinitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A293936920DD6E5600C577E3 /* SourceDefinitionViewController.swift */; };
 		A2A428D020DD82C300E36DD4 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A428CF20DD82C300E36DD4 /* Source.swift */; };
 		A2A428D220DD839200E36DD4 /* SourceField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A428D120DD839200E36DD4 /* SourceField.swift */; };
@@ -96,6 +101,11 @@
 		A2507EDF20D92FF100DCB35B /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = "Data Integration/Carthage/Build/iOS/SQLite.framework"; sourceTree = "<group>"; };
 		A2507EE120D9343900DCB35B /* HeartRate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRate.swift; sourceTree = "<group>"; };
 		A26DBA5D20E2C15E0018AC3F /* Tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tags.swift; sourceTree = "<group>"; };
+		A26DBA5F20E303440018AC3F /* HeartRateQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateQuery.swift; sourceTree = "<group>"; };
+		A26DBA6120E307810018AC3F /* Operations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operations.swift; sourceTree = "<group>"; };
+		A26DBA6520E30D730018AC3F /* Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
+		A26DBA6D20E319950018AC3F /* DayOfWeek.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeek.swift; sourceTree = "<group>"; };
+		A26DBA6F20E3DEAE0018AC3F /* QuantityRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuantityRestriction.swift; sourceTree = "<group>"; };
 		A293936920DD6E5600C577E3 /* SourceDefinitionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceDefinitionViewController.swift; sourceTree = "<group>"; };
 		A2A428CF20DD82C300E36DD4 /* Source.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
 		A2A428D120DD839200E36DD4 /* SourceField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceField.swift; sourceTree = "<group>"; };
@@ -277,6 +287,11 @@
 			isa = PBXGroup;
 			children = (
 				A2A428E620E00BF100E36DD4 /* HeartRateQuerier.swift */,
+				A26DBA5F20E303440018AC3F /* HeartRateQuery.swift */,
+				A26DBA6120E307810018AC3F /* Operations.swift */,
+				A26DBA6520E30D730018AC3F /* Query.swift */,
+				A26DBA6D20E319950018AC3F /* DayOfWeek.swift */,
+				A26DBA6F20E3DEAE0018AC3F /* QuantityRestriction.swift */,
 			);
 			path = Queriers;
 			sourceTree = "<group>";
@@ -449,7 +464,9 @@
 				A2A428EE20E05C2000E36DD4 /* MedicationSource.swift in Sources */,
 				A26DBA5E20E2C15E0018AC3F /* Tags.swift in Sources */,
 				A2A428D520DD853F00E36DD4 /* HeartRateSource.swift in Sources */,
+				A26DBA7020E3DEAE0018AC3F /* QuantityRestriction.swift in Sources */,
 				A210555E20CF5DAE00E8D68B /* SecondViewController.swift in Sources */,
+				A26DBA6020E303440018AC3F /* HeartRateQuery.swift in Sources */,
 				A2A428D220DD839200E36DD4 /* SourceField.swift in Sources */,
 				A20E61C520DD452B00FEA820 /* DatabaseConnector.swift in Sources */,
 				A2A428EC20E05A3100E36DD4 /* Mood.swift in Sources */,
@@ -461,8 +478,11 @@
 				A293936A20DD6E5600C577E3 /* SourceDefinitionViewController.swift in Sources */,
 				A2A428DB20DD8D6000E36DD4 /* MoodSource.swift in Sources */,
 				A2507EE220D9343900DCB35B /* HeartRate.swift in Sources */,
+				A26DBA6E20E319950018AC3F /* DayOfWeek.swift in Sources */,
 				A2A428F220E05D7800E36DD4 /* Question.swift in Sources */,
 				A2AA667E20E13E44005C57DA /* ContractionsReplacementUtil.swift in Sources */,
+				A26DBA6220E307810018AC3F /* Operations.swift in Sources */,
+				A26DBA6620E30D730018AC3F /* Query.swift in Sources */,
 				A2A428D020DD82C300E36DD4 /* Source.swift in Sources */,
 				A210555C20CF5DAE00E8D68B /* AskViewController.swift in Sources */,
 				A2A428DF20DD927100E36DD4 /* CodableStorage.swift in Sources */,

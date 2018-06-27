@@ -16,38 +16,19 @@ class HeartRateQuerier: NSObject {
 	static let HEART_RATE = HKObjectType.quantityType(forIdentifier: .heartRate)!
 	static let SAMPLE_TYPE = HKSampleType.quantityType(forIdentifier: .heartRate)!
 
-	static func getHeartRates(
-		from start: Date,
-		to end: Date,
-		predicateOptions: HKQueryOptions,
-		callback:@escaping (Array<HKQuantitySample>?, Error?)->())
-	{
-		let predicate = HKQuery.predicateForSamples(withStart: start, end: end, options: predicateOptions)
-
+	static func getHeartRates(predicate: NSPredicate, callback:@escaping (Array<HKQuantitySample>?, Error?)->()) {
 		let query = HKSampleQuery(sampleType: SAMPLE_TYPE, predicate: predicate, limit: Int(HKObjectQueryNoLimit), sortDescriptors: nil) {
 			query, results, error in
 
-			let samples = results as? [HKQuantitySample]
-//			os_log("Could not fetch heart rates from %@ to %@: %@", type: .error, start.description, end.description, (error?.localizedDescription)!)
-
-			callback(samples, error)
+			callback(results as? [HKQuantitySample], error)
 		}
 
 		HEALTH_STORE.execute(query)
 	}
 
-	static func getStatisticsFromHeartRates(
-		from start: Date,
-		to end: Date,
-		predicateOptions: HKQueryOptions,
-		statsOptions: HKStatisticsOptions,
-		callback:@escaping (HKStatistics?, Error?)->())
-	{
-		let predicate = HKQuery.predicateForSamples(withStart: start, end: end, options: [])
-
+	static func getStatisticsFromHeartRates(predicate: NSPredicate, statsOptions: HKStatisticsOptions, callback:@escaping (HKStatistics?, Error?)->()) {
 		let query = HKStatisticsQuery(quantityType: SAMPLE_TYPE, quantitySamplePredicate: predicate, options: statsOptions) {
 			query, result, error in
-//			os_log("Could not fetch average heart rate from %@ to %@: %@", type: .error, start.description, end.description, (error?.localizedDescription)!)
 
 			callback(result, error)
 		}
@@ -55,22 +36,32 @@ class HeartRateQuerier: NSObject {
 		HEALTH_STORE.execute(query)
 	}
 
-	static func ensureAuthorization(callback: @escaping (Bool, Error?) -> ()) {
+	/// Returns true if authorized or false if unauthorized.
+	static func getAuthorization() throws -> Bool {
+		os_log("Checking authorization to read heart rate data", type: .info)
+
 		let authStatus = HEALTH_STORE.authorizationStatus(for: HEART_RATE)
+		var authorized = Bool()
+		var errorDuringAuthorization: Error? = nil
 
 		switch (authStatus) {
 			case HKAuthorizationStatus.notDetermined:
+				os_log("Requesting authorization to read heart rate data", type: .info)
+
 				let READ_PERMISSIONS = Set<HKObjectType>([HEART_RATE])
 				HEALTH_STORE.requestAuthorization(toShare: nil, read: READ_PERMISSIONS) { (result: Bool, error: Error?) in
-					callback(result, error)
+
+					authorized = result
+					errorDuringAuthorization = error
 				}
-				break
+				if errorDuringAuthorization != nil {
+					throw errorDuringAuthorization!
+				}
+				return authorized
 			case HKAuthorizationStatus.sharingDenied:
-				callback(false, nil)
-				break
+				return false
 			case HKAuthorizationStatus.sharingAuthorized:
-				callback(true, nil)
-				break
+				return true
 		}
 	}
 }

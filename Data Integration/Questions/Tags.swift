@@ -47,14 +47,18 @@ class Tags: NSObject {
 	static let locationRestriction = NLTag("LOCATION_RESTRICTION")
 	/// underlying token is a type of place (library, grocery store, etc.)
 	static let locationType = NLTag("LOCATION_TYPE")
+	/// maximum operation needs to be applied before returning
+	static let max = NLTag("MAXIMUM")
 	/// minimum operation needs to be applied before returning
-	static let minimum = NLTag("MINIMUM")
+	static let min = NLTag("MINIMUM")
 	/// need to pull something from mood data
 	static let moodData = NLTag("MOOD_DATA")
 	/// negate condition for current constraint
 	static let negation = NLTag("NEGATION")
 	/// underlying token is not important
 	static let none = NLTag("NONE")
+	/// must use the context from the previous question in order to answer this question
+	static let previousContext = NLTag("PREVIOUS_CONTEXT")
 	/// underlying token is a quantity
 	static let quantity = NLTag("QUANTITY")
 	/// underlying token will determine what kind of question is being asked
@@ -83,7 +87,7 @@ class Tags: NSObject {
 	}
 
 	static func operationTags() -> Set<NLTag> {
-		return Set([average, count, minimum, sum])
+		return Set([average, count, max, min, sum])
 	}
 
 	static func quantityRetrictionTags() -> Set<NLTag> {
@@ -92,5 +96,9 @@ class Tags: NSObject {
 
 	static func restrictionTypeTags() -> Set<NLTag> {
 		return Set([locationRestriction, timeConstraint])
+	}
+
+	static func returnTypeTags() -> Set<NLTag> {
+		return Set([attribute, comparison, frequency, ])
 	}
 }

@@ -14,10 +14,12 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 	struct Label {
 		fileprivate(set) var tag: NLTag
 		fileprivate(set) var token: String
+		fileprivate(set) var tokenRange: Range<String.Index>
 
-		init(tag: NLTag, token: String) {
+		init(tag: NLTag, token: String, tokenRange: Range<String.Index>) {
 			self.tag = tag
 			self.token = token
+			self.tokenRange = tokenRange
 		}
 	}
 
@@ -25,18 +27,22 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 
 	fileprivate(set) var byTag: [NLTag: [Label]]
 	fileprivate(set) var byIndex: [Label]
-	fileprivate var currentIndex: Int
+	fileprivate var currentIteratorIndex: Int
+	fileprivate var lastSetVerbIndex: Int
 
 	override init() {
 		byTag = [NLTag: [Label]]()
 		byIndex = [Label]()
-		currentIndex = 0
+		currentIteratorIndex = 0
+		lastSetVerbIndex = 0
 	}
 
+	/// Add the specified `Label` as the next in the underlying sequence.
+	/// All consecutive `Label`s with a tag type other than `Tags.none` that have identical tags will be consolidated into one `Label`.
 	func addLabel(_ label: Label) {
 		// concatenate identical consecutive tags
 		var lastLabel = byIndex.last
-		if lastLabel?.tag == label.tag {
+		if lastLabel?.tag == label.tag && label.tag != Tags.none {
 			lastLabel!.token.append(label.token)
 			var labelsForTag = byTag[lastLabel!.tag]
 			labelsForTag!.removeLast()
@@ -56,6 +62,18 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 	/// Return true if at least one `Label` has been added else false
 	func hasLabels() -> Bool {
 		return !byIndex.isEmpty
+	}
+
+	/// Get all labels for each specified tag
+	func labelsFor(tags: Set<NLTag>) -> [Label] {
+		var labels = [Label]()
+		for tag in tags {
+			let labelsForCurrentTag = byTag[tag]
+			if labelsForCurrentTag != nil {
+				labels.append(contentsOf: labelsForCurrentTag!)
+			}
+		}
+		return labels
 	}
 
 	/// Right before each instance of the specified tag, create a new `Labels` object and add it to an array that will be returned.
@@ -154,6 +172,7 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 		if byTag[tag] == nil {
 			return nil
 		}
+		// at this point, it is guaranteed that the returned Label array will not be empty
 
 		// put this here instead of starting for loop at 0 to avoid double adding same Label if match at given index
 		if byIndex[index].tag == tag {
@@ -161,7 +180,7 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 		}
 
 		var closestLabels = [Label]()
-		for i in 1..<byIndex.count {
+		for i in 1 ..< byIndex.count {
 			if index - i > 0 { // protect against index out of bounds
 				if byIndex[index - i].tag == tag {
 					closestLabels.append(byIndex[index - i])
@@ -192,7 +211,7 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 				return byIndex[index]
 			}
 		}
-		return nil // this should NEVER happen but need to make compiler happy
+		return nil
 	}
 
 	/// Looks for the nearest `Label` with a specific tag to a given index.
@@ -208,15 +227,46 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 				return byIndex[index]
 			}
 		}
-		return nil // this should NEVER happen but need to make comnpiler happy
+		return nil
+	}
+
+	/// Mark the `Label` in the given range as the specified `NLTag` type only if it is currently a `Tags.none` type.
+	/// If the `Label` in the given range is not currently a `Tags.none` type, this method will do nothing.
+	/// If no `Label` has an exact match for the given token range, this method will do nothing.
+	func markTokenIn(range: Range<String.Index>, asTag: NLTag) {
+		var index = 0
+		while byIndex[index].tokenRange != range {
+			index += 1
+		}
+
+		byIndex[index].tag = asTag
+	}
+
+	/// Get the shortest distance from a `Label` tagged as `between` to a `Label` tagged as `and`.
+	/// If the two tags given are equal to each other, this function will return 0.
+	func shortestDistance(between tag1: NLTag, and tag2: NLTag) -> Int {
+		var shortestDistance = Int.max
+		var tag1Index = -1
+		for index in 0 ..< byIndex.count {
+			if byIndex[index].tag == tag1 {
+				tag1Index = index
+			}
+			if byIndex[index].tag == tag2 && tag1Index != -1 {
+				let currentDistance = index - tag1Index
+				if currentDistance < shortestDistance {
+					shortestDistance = currentDistance
+				}
+			}
+		}
+		return shortestDistance
 	}
 
 	func next() -> Labels.Label? {
-		if currentIndex == byIndex.count {
+		if currentIteratorIndex == byIndex.count {
 			return nil
 		}
-		let nextLabel = byIndex[currentIndex]
-		currentIndex += 1
+		let nextLabel = byIndex[currentIteratorIndex]
+		currentIteratorIndex += 1
 		return nextLabel
 	}
 
