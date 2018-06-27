@@ -27,38 +27,38 @@ class HeartRateQuery: NSObject, Query {
 		quantityRestrictions = [QuantityRestriction]()
 	}
 
-	func runQuery(callback: @escaping ([String: NSObject]?, Error?) -> ()) throws {
-		let authorized = try HeartRateQuerier.getAuthorization()
-		if !authorized {
-			throw ErrorTypes.Unauthorized
-		}
+	func runQuery(callback: @escaping ([String: NSObject]?, Error?) -> ()) {
+		do {
+			let predicate = getPredicate()
 
-		let predicate = getPredicate()
+			if finalOperation != nil && finalOperation != Operations.Count {
+				let statsOptions: HKStatisticsOptions = try getStatsOptions()
 
-		if finalOperation != nil && finalOperation != Operations.Count {
-			let statsOptions: HKStatisticsOptions = try getStatsOptions()
+				HeartRateQuerier.getStatisticsFromHeartRates(predicate: predicate, statsOptions: statsOptions) {
+					(stats: HKStatistics?, error: Error?) in
 
-			HeartRateQuerier.getStatisticsFromHeartRates(predicate: predicate, statsOptions: statsOptions) {
-				(stats: HKStatistics?, error: Error?) in
+					if error != nil {
+						callback(nil, error)
+					}
 
-				if error != nil {
-					callback(nil, error)
+					var returnValues = [String: NSObject]()
+					if self.finalOperation == Operations.Average {
+						returnValues[self.finalOperation!.stringRepresenation] = stats!.averageQuantity()
+					} else if self.finalOperation == Operations.Max {
+						returnValues[self.finalOperation!.stringRepresenation] = stats!.maximumQuantity()
+					} else if self.finalOperation == Operations.Min {
+						returnValues[self.finalOperation!.stringRepresenation] = stats!.minimumQuantity()
+					} else if self.finalOperation == Operations.Sum {
+						returnValues[self.finalOperation!.stringRepresenation] = stats!.sumQuantity()
+					}
+
+					callback(returnValues, nil)
 				}
-
-				var returnValues = [String: NSObject]()
-				if self.finalOperation == Operations.Average {
-					returnValues[self.finalOperation!.stringRepresenation] = stats!.averageQuantity()
-				} else if self.finalOperation == Operations.Max {
-					returnValues[self.finalOperation!.stringRepresenation] = stats!.maximumQuantity()
-				} else if self.finalOperation == Operations.Min {
-					returnValues[self.finalOperation!.stringRepresenation] = stats!.minimumQuantity()
-				} else if self.finalOperation == Operations.Sum {
-					returnValues[self.finalOperation!.stringRepresenation] = stats!.sumQuantity()
-				}
-
-				callback(returnValues, nil)
+			} else {
+				// TODO
 			}
-		} else {
+		} catch {
+			callback(nil, error)
 		}
 	}
 

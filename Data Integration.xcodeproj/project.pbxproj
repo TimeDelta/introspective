@@ -120,7 +120,7 @@
 		A2A428ED20E05C2000E36DD4 /* MedicationSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationSource.swift; sourceTree = "<group>"; };
 		A2A428F120E05D7800E36DD4 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		A2A428F320E05EF500E36DD4 /* CoreML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreML.framework; path = System/Library/Frameworks/CoreML.framework; sourceTree = SDKROOT; };
-		A2A428F520E05F8100E36DD4 /* QuestionLabels.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = QuestionLabels.playground; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		A2A428F520E05F8100E36DD4 /* QuestionLabels.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = QuestionLabels.playground; path = "Model Training/QuestionLabels.playground"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		A2A428F720E0602F00E36DD4 /* questionLabelsTrainingData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = questionLabelsTrainingData.json; sourceTree = "<group>"; };
 		A2AA667A20E13372005C57DA /* Answer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Answer.swift; sourceTree = "<group>"; };
 		A2AA667D20E13E44005C57DA /* ContractionsReplacementUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractionsReplacementUtil.swift; sourceTree = "<group>"; };
@@ -159,7 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				A2AA667920E0EA5D005C57DA /* Models */,
-				A2A428F620E05FF200E36DD4 /* Training Data */,
+				A2A428F620E05FF200E36DD4 /* Model Training */,
 				A210555820CF5DAE00E8D68B /* Data Integration */,
 				A210556F20CF5DB000E8D68B /* Data IntegrationTests */,
 				A210557A20CF5DB000E8D68B /* Data IntegrationUITests */,
@@ -275,7 +275,6 @@
 			children = (
 				A2A428F020E05D5700E36DD4 /* Queriers */,
 				A2A428F120E05D7800E36DD4 /* Question.swift */,
-				A2A428F520E05F8100E36DD4 /* QuestionLabels.playground */,
 				A2AA667A20E13372005C57DA /* Answer.swift */,
 				A2AA668320E17586005C57DA /* Labels.swift */,
 				A26DBA5D20E2C15E0018AC3F /* Tags.swift */,
@@ -296,12 +295,13 @@
 			path = Queriers;
 			sourceTree = "<group>";
 		};
-		A2A428F620E05FF200E36DD4 /* Training Data */ = {
+		A2A428F620E05FF200E36DD4 /* Model Training */ = {
 			isa = PBXGroup;
 			children = (
 				A2A428F720E0602F00E36DD4 /* questionLabelsTrainingData.json */,
+				A2A428F520E05F8100E36DD4 /* QuestionLabels.playground */,
 			);
-			path = "Training Data";
+			path = "Model Training";
 			sourceTree = "<group>";
 		};
 		A2AA667920E0EA5D005C57DA /* Models */ = {

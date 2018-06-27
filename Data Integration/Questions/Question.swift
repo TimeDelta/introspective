@@ -16,14 +16,21 @@ class Question: NSObject {
 		case CouldNotLoadModel
 		case NotImplemented
 		case ForgottenDataType
+		case DataTypeAccessDenied(_ dataType: String)
 	}
 
 	fileprivate(set) var questionText: String
 	fileprivate var labels: Labels
+	fileprivate var questionParts: [Labels]
+	fileprivate var currentQuestionPartIndex: Int
+	fileprivate var finalAnswerCallback: (Answer?, Error?) -> ()
 
 	init(text: String) {
 		questionText = text
 		labels = Labels()
+		questionParts = [Labels]()
+		currentQuestionPartIndex = 0
+		finalAnswerCallback = { (_, _) in }
 	}
 
 	func parse(callback: (Error?) -> ()) {
@@ -32,118 +39,161 @@ class Question: NSObject {
 		removePunctuation()
 
 		do {
-			if let modelUrl = Bundle.main.url(forResource: "questionLabels", withExtension: "mlmodel") {
-				let labelsModel = try NLModel(contentsOf: modelUrl)
-				let labelsTagScheme = NLTagScheme("QuestionLabelsTagScheme")
-				let tagger = NLTagger(tagSchemes: [labelsTagScheme, .lexicalClass])
-				let entireQuestionRange = Range(NSMakeRange(0, questionText.count), in: questionText.lowercased())!
+//			if let modelUrl = Bundle.main.url(forResource: "questionLabels", withExtension: "mlmodel") {
+//				let labelsModel = try NLModel(contentsOf: modelUrl)
+//				let labelsTagScheme = NLTagScheme("QuestionLabelsTagScheme")
+//				let tagger = NLTagger(tagSchemes: [labelsTagScheme, .lexicalClass])
+//				let entireQuestionRange = Range(NSMakeRange(0, questionText.count), in: questionText.lowercased())!
+//
+//				tagger.setModels([labelsModel], forTagScheme: labelsTagScheme)
+//				tagger.string = questionText.lowercased()
+//
+//				tagger.enumerateTags(in: entireQuestionRange, unit: .word, scheme: labelsTagScheme, options: []) { (tag, tokenRange) -> Bool in
+//					let token = String(questionText[Range(uncheckedBounds: (lower: tokenRange.lowerBound, upper: tokenRange.upperBound))])
+//					self.labels.addLabel(Labels.Label(tag: tag!, token: token, tokenRange: tokenRange))
+//					return true
+//				}
+//
+//				tagger.enumerateTags(in: entireQuestionRange, unit: .word, scheme: .lexicalClass, options: []) { (tag, tokenRange) -> Bool in
+//					if tag == .verb {
+//						self.labels.markTokenIn(range: tokenRange, asTag: Tags.verb)
+//					}
+//					return true
+//				}
+//
+//				callback(nil)
+//			} else {
+//				callback(ErrorTypes.CouldNotLoadModel)
+//			}
+			let range = Range(NSMakeRange(0, questionText.count), in: questionText.lowercased())!
 
-				tagger.setModels([labelsModel], forTagScheme: labelsTagScheme)
-				tagger.string = questionText.lowercased()
+			labels.addLabel(Labels.Label(tag: Tags.questionWord, token: "what", tokenRange: range))
+			labels.addLabel(Labels.Label(tag: Tags.verb, token: "is", tokenRange: range))
+			labels.addLabel(Labels.Label(tag: Tags.none, token: "my", tokenRange: range))
+			labels.addLabel(Labels.Label(tag: Tags.average, token: "average", tokenRange: range))
+			labels.addLabel(Labels.Label(tag: Tags.heartRateData, token: "heart", tokenRange: range))
+			labels.addLabel(Labels.Label(tag: Tags.heartRateData, token: "rate", tokenRange: range))
+			labels.addLabel(Labels.Label(tag: Tags.timeConstraint, token: "on", tokenRange: range))
+			labels.addLabel(Labels.Label(tag: Tags.dayOfWeek, token: "tuesdays", tokenRange: range))
 
-				tagger.enumerateTags(in: entireQuestionRange, unit: .word, scheme: labelsTagScheme, options: []) { (tag, tokenRange) -> Bool in
-					let token = String(questionText[Range(uncheckedBounds: (lower: tokenRange.lowerBound, upper: tokenRange.upperBound))])
-					self.labels.addLabel(Labels.Label(tag: tag!, token: token, tokenRange: tokenRange))
-					return true
-				}
-
-				tagger.enumerateTags(in: entireQuestionRange, unit: .word, scheme: .lexicalClass, options: []) { (tag, tokenRange) -> Bool in
-					if tag == .verb {
-						self.labels.markTokenIn(range: tokenRange, asTag: Tags.verb)
-					}
-					return true
-				}
-
-				callback(nil)
-			} else {
-				callback(ErrorTypes.CouldNotLoadModel)
-			}
+			callback(nil)
 		} catch {
 			callback(error)
 		}
 	}
 
 	func answer(callback: @escaping (Answer?, Error?) -> ()) {
+		self.finalAnswerCallback = callback
+		questionParts = labels.splitBefore(tag: Tags.questionWord)
+
+		// the question part with the verb next to the question word is the one containing the final return type
+		questionParts = sort(questionParts, byShortestDistanceBetween: Tags.questionWord, and: Tags.verb).reversed()
+		answerNextQuestionPart(resultsFromPreviousPart: nil, error: nil)
+	}
+
+	fileprivate func answerNextQuestionPart(resultsFromPreviousPart: [String : NSObject]?, error: Error?) {
+		if currentQuestionPartIndex == questionParts.count {
+			// TODO - construct real Answer object
+			var answer = Answer()
+			finalAnswerCallback(answer, nil)
+		}
+
+		let questionPart = questionParts[currentQuestionPartIndex]
+		currentQuestionPartIndex += 1
+
+		let dataTypeLabels = questionPart.labelsFor(tags: Tags.dataTypeTags())
+		if dataTypeLabels.count != 1 {
+			finalAnswerCallback(nil, ErrorTypes.NotImplemented)
+		}
+
 		do {
-			var questionParts = labels.splitBefore(tag: Tags.questionWord)
+			let dataTypeLabel = dataTypeLabels[0]
+			switch (dataTypeLabel.tag) {
+				case Tags.activityData:
+					answerActivityQuestionPart(questionPart)
+					break
+				case Tags.heartRateData:
+					answerHeartRateQuestionPart(questionPart)
+					break
+				case Tags.locationData:
+					answerLocationQuestionPart(questionPart)
+					break
+				case Tags.moodData:
+					answerMoodQuestionPart(questionPart)
+					break
+				case Tags.sleepData:
+					answerSleepQuestionPart(questionPart)
+					break
+				case Tags.workoutData:
+					answerWorkoutQuestionPart(questionPart)
+					break
+				default:
+					os_log("if this ever happens, it means I missed a data type in this case statement: $@", type: .error, dataTypeLabel.tag.rawValue)
+					throw ErrorTypes.ForgottenDataType
+			}
+		} catch {
+			finalAnswerCallback(nil, error)
+		}
+	}
 
-			// the question part with the verb next to the question word is the one containing the final return type
-			questionParts = sort(questionParts, byShortestDistanceBetween: Tags.questionWord, and: Tags.verb).reversed()
+	fileprivate func answerActivityQuestionPart(_ questionPart: Labels) {
 
-			for questionPart in questionParts {
-				let dataTypeLabels = questionPart.labelsFor(tags: Tags.dataTypeTags())
-				if dataTypeLabels.count != 1 {
+	}
+
+	fileprivate func answerLocationQuestionPart(_ questionPart: Labels) {
+
+	}
+
+	fileprivate func answerMoodQuestionPart(_ questionPart: Labels) {
+
+	}
+
+	fileprivate func answerSleepQuestionPart(_ questionPart: Labels) {
+
+	}
+
+	fileprivate func answerWorkoutQuestionPart(_ questionPart: Labels) {
+
+	}
+
+	fileprivate func answerHeartRateQuestionPart(_ questionPart: Labels) {
+		HeartRateQuerier.getAuthorization() { (authorized: Bool?, error: Error?) in
+			do {
+				if error != nil {
+					throw error!
+				}
+				if !authorized! {
+					throw ErrorTypes.DataTypeAccessDenied("heart rate")
+				}
+
+				let query = HeartRateQuery()
+
+//				let restrictionLabels = questionPart.labelsFor(tags: Tags.restrictionTypeTags())
+
+				let operationLabels = questionPart.labelsFor(tags: Tags.operationTags())
+				if operationLabels.count == 1 {
+					query.finalOperation = try Operations.from(tag: operationLabels[0].tag)
+				} else if operationLabels.count > 1 {
 					throw ErrorTypes.NotImplemented
 				}
-				let dataTypeLabel = dataTypeLabels[0]
-				switch (dataTypeLabel.tag) {
-					case Tags.activityData:
-						try answerActivityQuestionPart(questionPart)
-						break
-					case Tags.heartRateData:
-						try answerHeartRateQuestionPart(questionPart)
-						break
-					case Tags.locationData:
-						try answerLocationQuestionPart(questionPart)
-						break
-					case Tags.moodData:
-						try answerMoodQuestionPart(questionPart)
-						break
-					case Tags.sleepData:
-						try answerSleepQuestionPart(questionPart)
-						break
-					case Tags.workoutData:
-						try answerWorkoutQuestionPart(questionPart)
-						break
-					default:
-						os_log("if this ever happens, it means I missed a data type in this case statement: $@", type: .error, dataTypeLabel.tag.rawValue)
-						throw ErrorTypes.ForgottenDataType
+
+				let returnTypeLabels = questionPart.labelsFor(tags: Tags.returnTypeTags())
+				if !returnTypeLabels.isEmpty {
+					// TODO
 				}
+
+				let dayOfWeekLabels = questionPart.byTag[Tags.dayOfWeek]
+				if dayOfWeekLabels != nil {
+					for dayOfWeekLabel in dayOfWeekLabels! {
+						let dayOfWeek = try DayOfWeek.fromString(dayOfWeekLabel.token)
+						query.daysOfWeek.insert(dayOfWeek!)
+					}
+				}
+
+				query.runQuery(callback: self.answerNextQuestionPart)
+			} catch {
+				self.finalAnswerCallback(nil, error)
 			}
-
-			// TODO
-			callback(Answer(), nil)
-		} catch {
-			callback(nil, error)
-		}
-	}
-
-
-	fileprivate func answerActivityQuestionPart(_ questionPart: Labels) throws {
-
-	}
-
-	fileprivate func answerLocationQuestionPart(_ questionPart: Labels) throws {
-
-	}
-
-	fileprivate func answerMoodQuestionPart(_ questionPart: Labels) throws {
-
-	}
-
-	fileprivate func answerSleepQuestionPart(_ questionPart: Labels) throws {
-
-	}
-
-	fileprivate func answerWorkoutQuestionPart(_ questionPart: Labels) throws {
-
-	}
-
-	fileprivate func answerHeartRateQuestionPart(_ questionPart: Labels) throws {
-		var query = HeartRateQuery()
-
-		let restrictionLabels = questionPart.labelsFor(tags: Tags.restrictionTypeTags())
-
-		let operationLabels = questionPart.labelsFor(tags: Tags.operationTags())
-		if operationLabels.count == 1 {
-			query.finalOperation = try Operations.from(tag: operationLabels[0].tag)
-		} else if operationLabels.count > 1 {
-			throw ErrorTypes.NotImplemented
-		}
-
-		let returnTypeLabels = questionPart.labelsFor(tags: Tags.returnTypeTags())
-		if !returnTypeLabels.isEmpty {
-
 		}
 	}
 

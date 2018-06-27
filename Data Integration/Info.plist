@@ -24,6 +24,8 @@
 	<string>This is used to allow you to simply ask a question out loud.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>This is used to allow you to simply ask a question out loud.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>In order to answer questions about your heart rate.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

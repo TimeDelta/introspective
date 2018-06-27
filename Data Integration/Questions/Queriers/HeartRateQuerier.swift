@@ -12,9 +12,14 @@ import os
 
 class HeartRateQuerier: NSObject {
 
-	static let HEALTH_STORE = HKHealthStore()
-	static let HEART_RATE = HKObjectType.quantityType(forIdentifier: .heartRate)!
-	static let SAMPLE_TYPE = HKSampleType.quantityType(forIdentifier: .heartRate)!
+	enum ErrorTypes: Error {
+
+	}
+
+	fileprivate static let HEALTH_STORE = HKHealthStore()
+	fileprivate static let HEART_RATE = HKObjectType.quantityType(forIdentifier: .heartRate)!
+	fileprivate static let SAMPLE_TYPE = HKSampleType.quantityType(forIdentifier: .heartRate)!
+	fileprivate static let READ_PERMISSIONS = Set<HKObjectType>([HEART_RATE])
 
 	static func getHeartRates(predicate: NSPredicate, callback:@escaping (Array<HKQuantitySample>?, Error?)->()) {
 		let query = HKSampleQuery(sampleType: SAMPLE_TYPE, predicate: predicate, limit: Int(HKObjectQueryNoLimit), sortDescriptors: nil) {
@@ -37,31 +42,27 @@ class HeartRateQuerier: NSObject {
 	}
 
 	/// Returns true if authorized or false if unauthorized.
-	static func getAuthorization() throws -> Bool {
+	static func getAuthorization(callback: @escaping (Error?) -> ()) {
 		os_log("Checking authorization to read heart rate data", type: .info)
 
-		let authStatus = HEALTH_STORE.authorizationStatus(for: HEART_RATE)
-		var authorized = Bool()
-		var errorDuringAuthorization: Error? = nil
+		HEALTH_STORE.getRequestStatusForAuthorization(toShare: [], read: READ_PERMISSIONS) {
+			(status: HKAuthorizationRequestStatus, error: Error?) in
 
-		switch (authStatus) {
-			case HKAuthorizationStatus.notDetermined:
-				os_log("Requesting authorization to read heart rate data", type: .info)
+			if error != nil {
+				callback(error)
+			}
 
-				let READ_PERMISSIONS = Set<HKObjectType>([HEART_RATE])
-				HEALTH_STORE.requestAuthorization(toShare: nil, read: READ_PERMISSIONS) { (result: Bool, error: Error?) in
-
-					authorized = result
-					errorDuringAuthorization = error
-				}
-				if errorDuringAuthorization != nil {
-					throw errorDuringAuthorization!
-				}
-				return authorized
-			case HKAuthorizationStatus.sharingDenied:
-				return false
-			case HKAuthorizationStatus.sharingAuthorized:
-				return true
+			switch (status) {
+				case HKAuthorizationRequestStatus.shouldRequest:
+					os_log("Requesting authorization to read heart rate data", type: .info)
+					HEALTH_STORE.requestAuthorization(toShare: nil, read: READ_PERMISSIONS) { (result: Bool, error: Error?) in
+						callback(error)
+					}
+				case HKAuthorizationRequestStatus.unnecessary:
+					callback(nil)
+				case HKAuthorizationRequestStatus.unknown:
+					callback(nil)
+			}
 		}
 	}
 }

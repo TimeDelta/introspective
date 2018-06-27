@@ -43,13 +43,18 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 		// concatenate identical consecutive tags
 		var lastLabel = byIndex.last
 		if lastLabel?.tag == label.tag && label.tag != Tags.none {
-			lastLabel!.token.append(label.token)
+			lastLabel!.token.append(" " + label.token)
+			// TODO - construct new token range
+//			lastLabel!.tokenRange = Range(NSRange(lastLabel!.tokenRange.lowerBound...label.tokenRange.upperBound, in: ""))
 			var labelsForTag = byTag[lastLabel!.tag]
 			labelsForTag!.removeLast()
 			labelsForTag!.append(lastLabel!)
 			byTag[lastLabel!.tag] = labelsForTag
 		} else {
-			byTag[label.tag]?.append(label)
+			if byTag[label.tag] == nil {
+				byTag[label.tag] = [Label]()
+			}
+			byTag[label.tag]!.append(label)
 			byIndex.append(label)
 		}
 	}
@@ -94,6 +99,7 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 			}
 			labelsForCurrentPart.addLabel(label)
 		}
+		labelsArray.append(labelsForCurrentPart)
 
 		return labelsArray
 	}
@@ -116,6 +122,7 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 			}
 			labelsForCurrentPart.addLabel(label)
 		}
+		labelsArray.append(labelsForCurrentPart)
 
 		return labelsArray
 	}
@@ -138,6 +145,7 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 				labelsForCurrentPart = Labels()
 			}
 		}
+		labelsArray.append(labelsForCurrentPart)
 
 		return labelsArray
 	}
@@ -160,6 +168,7 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 				labelsForCurrentPart = Labels()
 			}
 		}
+		labelsArray.append(labelsForCurrentPart)
 
 		return labelsArray
 	}
