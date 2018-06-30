@@ -99,3 +99,36 @@ labels: QUESTION_WORD NONE PREVIOUS_CONTEXT COMPARISON NONE QUESTION_WORD NONE W
 
 tokens: what is the least amount of sleep i have ever gotten
 labels: QUESTION_WORD NONE NONE MINIMUM NONE NONE SLEEP_DATA NONE NONE NONE NONE
+
+tokens: what is the least heart rate i have ever had
+labels: QUESTION_WORD NONE NONE MINIMUM HEART_RATE_DATA HEART_RATE_DATA NONE NONE NONE NONE
+
+tokens: what is the lowest heart rate i have ever had
+labels: QUESTION_WORD NONE NONE MINIMUM HEART_RATE_DATA HEART_RATE_DATA NONE NONE NONE NONE
+
+tokens: what is the highest heart rate i have ever had
+labels: QUESTION_WORD NONE NONE MAXIMUM HEART_RATE_DATA HEART_RATE_DATA NONE NONE NONE NONE
+
+tokens: what was my heart rate last tuesday
+labels: QUESTION_WORD NONE NONE HEART_RATE_DATA HEART_RATE_DATA WHICH DAY_OF_WEEK
+
+tokens: when was the last time my heart rate went below 50
+labels: QUESTION_WORD NONE NONE WHICH ATTRIBUTE NONE HEART_RATE_DATA HEART_RATE_DATA NONE LESS_THAN QUANTITY
+
+tokens: when was the last time my heart rate dipped below 60
+labels: QUESTION_WORD NONE NONE WHICH ATTRIBUTE NONE HEART_RATE_DATA HEART_RATE_DATA NONE LESS_THAN QUANTITY
+
+tokens: has my heart rate ever gone below 55
+labels: QUESTION_WORD NONE HEART_RATE_DATA HEART_RATE_DATA NONE NONE LESS_THAN QUANTITY
+
+tokens: has my heart ever beat at less than 57 beats per minute
+labels: QUESTION_WORD NONE HEART_RATE_DATA NONE NONE NONE LESS_THAN LESS_THAN QUANTITY NONE NONE NONE
+
+tokens: has my heart rate ever been faster than 150 beats per minute
+labels: QUESTION_WORD NONE HEART_RATE_DATA HEART_RATE_DATA NONE NONE GREATER_THAN GREATER_THAN QUANTITY NONE NONE NONE
+
+tokens: what is my average heart rate on sundays
+labels: QUESTION_WORD NONE NONE AVERAGE HEART_RATE_DATA HEART_RATE_DATA TIME_CONSTRAINT DAY_OF_WEEK
+
+tokens: when was the last time my heart rate went above 173
+labels: QUESTION_WORD NONE NONE WHICH ATTRIBUTE NONE HEART_RATE_DATA HEART_RATE_DATA NONE GREATER_THAN QUANTITY
