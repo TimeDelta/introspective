@@ -125,6 +125,12 @@ class LabelsTests: UnitTest {
 		XCTAssertFalse(hasLabelFor)
 	}
 
+	// TODO - write tests for this method
+	func testGiven_labelHasBeenAdded_() {
+		// then
+		assert(false)
+	}
+
 	func testGivenNoLabelsPreviouslyAdded_labelsInAnyOrderFor_returnsEmptyArray() {
 		// when
 		let labelsFor = labels.labelsInAnyOrderFor(tags: [Tags.activityData])
@@ -1137,6 +1143,12 @@ class LabelsTests: UnitTest {
 
 		// then
 		assert(distance == 3)
+	}
+
+	// TODO - write tests for this method
+	func testGiven_shortestDistanceFromLabelToLabelWithTag_() {
+		// then
+		assert(false)
 	}
 
 	fileprivate func createLabelFor(_ tag: NLTag) -> Labels.Label {

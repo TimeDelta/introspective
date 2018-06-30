@@ -15,8 +15,8 @@ class Question: NSObject {
 	enum ErrorTypes: Error {
 		case CouldNotLoadModel
 		case NotImplemented
-		case ForgottenDataType
-		case DataTypeAccessDenied(_ dataType: String)
+		case ForgottenDataType // i forgot to add a data type
+		case MultipleDaysOfWeekNotSupported
 	}
 
 	fileprivate(set) var questionText: String
@@ -181,10 +181,16 @@ class Question: NSObject {
 
 				let dayOfWeekLabels = questionPart.byTag[Tags.dayOfWeek]
 				if dayOfWeekLabels != nil {
-					for dayOfWeekLabel in dayOfWeekLabels! {
-						let dayOfWeek = try DayOfWeek.fromString(dayOfWeekLabel.token)
-						query.daysOfWeek.insert(dayOfWeek!)
+					if dayOfWeekLabels!.count != 1 {
+						self.finalAnswerCallback(nil, ErrorTypes.MultipleDaysOfWeekNotSupported)
 					}
+					let dayOfWeekLabel = dayOfWeekLabels![0]
+					let distanceToNearestWhichTag = questionPart.shortestDistance(from: dayOfWeekLabel, toLabelWith: Tags.which)!
+					if distanceToNearestWhichTag < 3 {
+
+					}
+					let dayOfWeek = try DayOfWeek.fromString(dayOfWeekLabel.token)
+					query.daysOfWeek.insert(dayOfWeek!)
 				}
 
 				query.runQuery(callback: self.answerNextQuestionPart)
