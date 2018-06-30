@@ -36,7 +36,7 @@ func getData(from: URL) throws -> [(tokens: [MLWordTagger.Token], labels: [Strin
 	return data
 }
 
-let questionLabelsDataFileUrl = URL(fileURLWithPath: "/Users/bryannova/development/DataIntegration/ModelTraining/questionLabelsTrainingData.json")
+let questionLabelsDataFileUrl = URL(fileURLWithPath: "/Users/bryannova/development/DataIntegration/ModelTraining/questionLabelsTrainingData.txt")
 let data = try getData(from: questionLabelsDataFileUrl)
 
 print("Finished getting training data: " + String(data.count))

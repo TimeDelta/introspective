@@ -57,7 +57,7 @@
 		A255D53720E5690F00BDD57B /* MockQuestionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A255D53320E5690F00BDD57B /* MockQuestionFactory.swift */; };
 		A255D53820E5690F00BDD57B /* MockQueryFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A255D53420E5690F00BDD57B /* MockQueryFactory.swift */; };
 		A255D53920E5690F00BDD57B /* MockDataTypesFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A255D53520E5690F00BDD57B /* MockDataTypesFactory.swift */; };
-		A255D53C20E5697B00BDD57B /* questionLabelsTrainingData.json in Resources */ = {isa = PBXBuildFile; fileRef = A255D53A20E5697B00BDD57B /* questionLabelsTrainingData.json */; };
+		A255D53C20E5697B00BDD57B /* questionLabelsTrainingData.txt in Resources */ = {isa = PBXBuildFile; fileRef = A255D53A20E5697B00BDD57B /* questionLabelsTrainingData.txt */; };
 		A255D53F20E5A7EE00BDD57B /* Cuckoo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A255D53E20E5A7EE00BDD57B /* Cuckoo.framework */; };
 		A255D54020E5A7EE00BDD57B /* Cuckoo.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A255D53E20E5A7EE00BDD57B /* Cuckoo.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A255D54620E5A9D600BDD57B /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A255D54520E5A9D600BDD57B /* HealthKit.framework */; };
@@ -160,8 +160,8 @@
 		A255D53320E5690F00BDD57B /* MockQuestionFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockQuestionFactory.swift; sourceTree = "<group>"; };
 		A255D53420E5690F00BDD57B /* MockQueryFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockQueryFactory.swift; sourceTree = "<group>"; };
 		A255D53520E5690F00BDD57B /* MockDataTypesFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockDataTypesFactory.swift; sourceTree = "<group>"; };
-		A255D53A20E5697B00BDD57B /* questionLabelsTrainingData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = questionLabelsTrainingData.json; sourceTree = "<group>"; };
-		A255D53B20E5697B00BDD57B /* QuestionLabels.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = QuestionLabels.playground; sourceTree = "<group>"; };
+		A255D53A20E5697B00BDD57B /* questionLabelsTrainingData.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = questionLabelsTrainingData.txt; sourceTree = "<group>"; };
+		A255D53B20E5697B00BDD57B /* QuestionLabels.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = QuestionLabels.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		A255D53E20E5A7EE00BDD57B /* Cuckoo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cuckoo.framework; path = DataIntegration/Carthage/Build/iOS/Cuckoo.framework; sourceTree = "<group>"; };
 		A255D54120E5A84700BDD57B /* DataIntegration.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = DataIntegration.entitlements; sourceTree = "<group>"; };
 		A255D54520E5A9D600BDD57B /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
@@ -442,7 +442,7 @@
 			isa = PBXGroup;
 			children = (
 				A255D53B20E5697B00BDD57B /* QuestionLabels.playground */,
-				A255D53A20E5697B00BDD57B /* questionLabelsTrainingData.json */,
+				A255D53A20E5697B00BDD57B /* questionLabelsTrainingData.txt */,
 			);
 			path = ModelTraining;
 			sourceTree = "<group>";
@@ -581,7 +581,7 @@
 			files = (
 				A238FEFE20E541950025307F /* Main.storyboard in Resources */,
 				A238FF0020E541AE0025307F /* LaunchScreen.storyboard in Resources */,
-				A255D53C20E5697B00BDD57B /* questionLabelsTrainingData.json in Resources */,
+				A255D53C20E5697B00BDD57B /* questionLabelsTrainingData.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
