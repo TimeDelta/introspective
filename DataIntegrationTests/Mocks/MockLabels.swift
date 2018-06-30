@@ -64,7 +64,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
     
 
     
-    // ["name": "addLabel", "returnSignature": "", "fullyQualifiedName": "addLabel(_: Label)", "parameterSignature": "_ label: Label", "parameterSignatureWithoutNames": "label: Label", "inputTypes": "Label", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "label", "call": "label", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "label", type: "Label", range: CountableRange(1637..<1651), nameRange: CountableRange(0..<0))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
+    // ["name": "addLabel", "returnSignature": "", "fullyQualifiedName": "addLabel(_: Label)", "parameterSignature": "_ label: Label", "parameterSignatureWithoutNames": "label: Label", "inputTypes": "Label", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "label", "call": "label", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "label", type: "Label", range: CountableRange(1697..<1711), nameRange: CountableRange(0..<0))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
     public override func addLabel(_ label: Label)  {
         
             return cuckoo_manager.call("addLabel(_: Label)",
@@ -76,7 +76,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "hasLabelFor", "returnSignature": " -> Bool", "fullyQualifiedName": "hasLabelFor(_: NLTag) -> Bool", "parameterSignature": "_ tag: NLTag", "parameterSignatureWithoutNames": "tag: NLTag", "inputTypes": "NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag", "call": "tag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "tag", type: "NLTag", range: CountableRange(2385..<2397), nameRange: CountableRange(0..<0))], "returnType": "Bool", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "hasLabelFor", "returnSignature": " -> Bool", "fullyQualifiedName": "hasLabelFor(_: NLTag) -> Bool", "parameterSignature": "_ tag: NLTag", "parameterSignatureWithoutNames": "tag: NLTag", "inputTypes": "NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag", "call": "tag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "tag", type: "NLTag", range: CountableRange(2445..<2457), nameRange: CountableRange(0..<0))], "returnType": "Bool", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func hasLabelFor(_ tag: NLTag)  -> Bool {
         
             return cuckoo_manager.call("hasLabelFor(_: NLTag) -> Bool",
@@ -100,7 +100,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "labelsInAnyOrderFor", "returnSignature": " -> [Label]", "fullyQualifiedName": "labelsInAnyOrderFor(tags: Set<NLTag>) -> [Label]", "parameterSignature": "tags: Set<NLTag>", "parameterSignatureWithoutNames": "tags: Set<NLTag>", "inputTypes": "Set<NLTag>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tags", "call": "tags: tags", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tags"), name: "tags", type: "Set<NLTag>", range: CountableRange(2652..<2668), nameRange: CountableRange(2652..<2656))], "returnType": "[Label]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "labelsInAnyOrderFor", "returnSignature": " -> [Label]", "fullyQualifiedName": "labelsInAnyOrderFor(tags: Set<NLTag>) -> [Label]", "parameterSignature": "tags: Set<NLTag>", "parameterSignatureWithoutNames": "tags: Set<NLTag>", "inputTypes": "Set<NLTag>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tags", "call": "tags: tags", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tags"), name: "tags", type: "Set<NLTag>", range: CountableRange(2712..<2728), nameRange: CountableRange(2712..<2716))], "returnType": "[Label]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func labelsInAnyOrderFor(tags: Set<NLTag>)  -> [Label] {
         
             return cuckoo_manager.call("labelsInAnyOrderFor(tags: Set<NLTag>) -> [Label]",
@@ -112,7 +112,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "labelsFor", "returnSignature": " -> [Label]", "fullyQualifiedName": "labelsFor(tags: Set<NLTag>) -> [Label]", "parameterSignature": "tags: Set<NLTag>", "parameterSignatureWithoutNames": "tags: Set<NLTag>", "inputTypes": "Set<NLTag>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tags", "call": "tags: tags", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tags"), name: "tags", type: "Set<NLTag>", range: CountableRange(3022..<3038), nameRange: CountableRange(3022..<3026))], "returnType": "[Label]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "labelsFor", "returnSignature": " -> [Label]", "fullyQualifiedName": "labelsFor(tags: Set<NLTag>) -> [Label]", "parameterSignature": "tags: Set<NLTag>", "parameterSignatureWithoutNames": "tags: Set<NLTag>", "inputTypes": "Set<NLTag>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tags", "call": "tags: tags", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tags"), name: "tags", type: "Set<NLTag>", range: CountableRange(3082..<3098), nameRange: CountableRange(3082..<3086))], "returnType": "[Label]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func labelsFor(tags: Set<NLTag>)  -> [Label] {
         
             return cuckoo_manager.call("labelsFor(tags: Set<NLTag>) -> [Label]",
@@ -124,7 +124,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "splitBefore", "returnSignature": " -> [Labels]", "fullyQualifiedName": "splitBefore(tag: NLTag) -> [Labels]", "parameterSignature": "tag: NLTag", "parameterSignatureWithoutNames": "tag: NLTag", "inputTypes": "NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag", "call": "tag: tag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(3527..<3537), nameRange: CountableRange(3527..<3530))], "returnType": "[Labels]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "splitBefore", "returnSignature": " -> [Labels]", "fullyQualifiedName": "splitBefore(tag: NLTag) -> [Labels]", "parameterSignature": "tag: NLTag", "parameterSignatureWithoutNames": "tag: NLTag", "inputTypes": "NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag", "call": "tag: tag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(3587..<3597), nameRange: CountableRange(3587..<3590))], "returnType": "[Labels]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func splitBefore(tag: NLTag)  -> [Labels] {
         
             return cuckoo_manager.call("splitBefore(tag: NLTag) -> [Labels]",
@@ -136,7 +136,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "splitBefore", "returnSignature": " -> [Labels]", "fullyQualifiedName": "splitBefore(tags: Set<NLTag>) -> [Labels]", "parameterSignature": "tags: Set<NLTag>", "parameterSignatureWithoutNames": "tags: Set<NLTag>", "inputTypes": "Set<NLTag>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tags", "call": "tags: tags", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tags"), name: "tags", type: "Set<NLTag>", range: CountableRange(4293..<4309), nameRange: CountableRange(4293..<4297))], "returnType": "[Labels]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "splitBefore", "returnSignature": " -> [Labels]", "fullyQualifiedName": "splitBefore(tags: Set<NLTag>) -> [Labels]", "parameterSignature": "tags: Set<NLTag>", "parameterSignatureWithoutNames": "tags: Set<NLTag>", "inputTypes": "Set<NLTag>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tags", "call": "tags: tags", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tags"), name: "tags", type: "Set<NLTag>", range: CountableRange(4353..<4369), nameRange: CountableRange(4353..<4357))], "returnType": "[Labels]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func splitBefore(tags: Set<NLTag>)  -> [Labels] {
         
             return cuckoo_manager.call("splitBefore(tags: Set<NLTag>) -> [Labels]",
@@ -148,7 +148,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "splitAfter", "returnSignature": " -> [Labels]", "fullyQualifiedName": "splitAfter(tag: NLTag) -> [Labels]", "parameterSignature": "tag: NLTag", "parameterSignatureWithoutNames": "tag: NLTag", "inputTypes": "NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag", "call": "tag: tag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(5123..<5133), nameRange: CountableRange(5123..<5126))], "returnType": "[Labels]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "splitAfter", "returnSignature": " -> [Labels]", "fullyQualifiedName": "splitAfter(tag: NLTag) -> [Labels]", "parameterSignature": "tag: NLTag", "parameterSignatureWithoutNames": "tag: NLTag", "inputTypes": "NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag", "call": "tag: tag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(5220..<5230), nameRange: CountableRange(5220..<5223))], "returnType": "[Labels]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func splitAfter(tag: NLTag)  -> [Labels] {
         
             return cuckoo_manager.call("splitAfter(tag: NLTag) -> [Labels]",
@@ -160,7 +160,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "splitAfter", "returnSignature": " -> [Labels]", "fullyQualifiedName": "splitAfter(tags: Set<NLTag>) -> [Labels]", "parameterSignature": "tags: Set<NLTag>", "parameterSignatureWithoutNames": "tags: Set<NLTag>", "inputTypes": "Set<NLTag>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tags", "call": "tags: tags", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tags"), name: "tags", type: "Set<NLTag>", range: CountableRange(5929..<5945), nameRange: CountableRange(5929..<5933))], "returnType": "[Labels]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "splitAfter", "returnSignature": " -> [Labels]", "fullyQualifiedName": "splitAfter(tags: Set<NLTag>) -> [Labels]", "parameterSignature": "tags: Set<NLTag>", "parameterSignatureWithoutNames": "tags: Set<NLTag>", "inputTypes": "Set<NLTag>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tags", "call": "tags: tags", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tags"), name: "tags", type: "Set<NLTag>", range: CountableRange(6026..<6042), nameRange: CountableRange(6026..<6030))], "returnType": "[Labels]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func splitAfter(tags: Set<NLTag>)  -> [Labels] {
         
             return cuckoo_manager.call("splitAfter(tags: Set<NLTag>) -> [Labels]",
@@ -172,10 +172,10 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "findNearestLabelWith", "returnSignature": " -> [Label]?", "fullyQualifiedName": "findNearestLabelWith(tag: NLTag, to: Int) -> [Label]?", "parameterSignature": "tag: NLTag, to index: Int", "parameterSignatureWithoutNames": "tag: NLTag, index: Int", "inputTypes": "NLTag, Int", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag, index", "call": "tag: tag, to: index", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(6753..<6763), nameRange: CountableRange(6753..<6756)), CuckooGeneratorFramework.MethodParameter(label: Optional("to"), name: "index", type: "Int", range: CountableRange(6765..<6778), nameRange: CountableRange(6765..<6767))], "returnType": "Optional<[Label]>", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func findNearestLabelWith(tag: NLTag, to index: Int)  -> [Label]? {
+    // ["name": "findNearestLabelWith", "returnSignature": " throws -> [Label]?", "fullyQualifiedName": "findNearestLabelWith(tag: NLTag, to: Int) throws -> [Label]?", "parameterSignature": "tag: NLTag, to index: Int", "parameterSignatureWithoutNames": "tag: NLTag, index: Int", "inputTypes": "NLTag, Int", "isThrowing": true, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag, index", "call": "tag: tag, to: index", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(6929..<6939), nameRange: CountableRange(6929..<6932)), CuckooGeneratorFramework.MethodParameter(label: Optional("to"), name: "index", type: "Int", range: CountableRange(6941..<6954), nameRange: CountableRange(6941..<6943))], "returnType": "Optional<[Label]>", "isOptional": false, "stubFunction": "Cuckoo.ClassStubThrowingFunction"]
+    public override func findNearestLabelWith(tag: NLTag, to index: Int)  throws -> [Label]? {
         
-            return cuckoo_manager.call("findNearestLabelWith(tag: NLTag, to: Int) -> [Label]?",
+            return try cuckoo_manager.callThrows("findNearestLabelWith(tag: NLTag, to: Int) throws -> [Label]?",
                 parameters: (tag, index),
                 superclassCall:
                     
@@ -184,10 +184,10 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "findNearestLabelWith", "returnSignature": " -> Label?", "fullyQualifiedName": "findNearestLabelWith(tag: NLTag, before: Int) -> Label?", "parameterSignature": "tag: NLTag, before index: Int", "parameterSignatureWithoutNames": "tag: NLTag, index: Int", "inputTypes": "NLTag, Int", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag, index", "call": "tag: tag, before: index", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(7822..<7832), nameRange: CountableRange(7822..<7825)), CuckooGeneratorFramework.MethodParameter(label: Optional("before"), name: "index", type: "Int", range: CountableRange(7834..<7851), nameRange: CountableRange(7834..<7840))], "returnType": "Optional<Label>", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func findNearestLabelWith(tag: NLTag, before index: Int)  -> Label? {
+    // ["name": "findNearestLabelWith", "returnSignature": " throws -> Label?", "fullyQualifiedName": "findNearestLabelWith(tag: NLTag, before: Int) throws -> Label?", "parameterSignature": "tag: NLTag, before index: Int", "parameterSignatureWithoutNames": "tag: NLTag, index: Int", "inputTypes": "NLTag, Int", "isThrowing": true, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag, index", "call": "tag: tag, before: index", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(8080..<8090), nameRange: CountableRange(8080..<8083)), CuckooGeneratorFramework.MethodParameter(label: Optional("before"), name: "index", type: "Int", range: CountableRange(8092..<8109), nameRange: CountableRange(8092..<8098))], "returnType": "Optional<Label>", "isOptional": false, "stubFunction": "Cuckoo.ClassStubThrowingFunction"]
+    public override func findNearestLabelWith(tag: NLTag, before index: Int)  throws -> Label? {
         
-            return cuckoo_manager.call("findNearestLabelWith(tag: NLTag, before: Int) -> Label?",
+            return try cuckoo_manager.callThrows("findNearestLabelWith(tag: NLTag, before: Int) throws -> Label?",
                 parameters: (tag, index),
                 superclassCall:
                     
@@ -196,10 +196,10 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "findNearestLabelWith", "returnSignature": " -> Label?", "fullyQualifiedName": "findNearestLabelWith(tag: NLTag, after: Int) -> Label?", "parameterSignature": "tag: NLTag, after index: Int", "parameterSignatureWithoutNames": "tag: NLTag, index: Int", "inputTypes": "NLTag, Int", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag, index", "call": "tag: tag, after: index", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(8269..<8279), nameRange: CountableRange(8269..<8272)), CuckooGeneratorFramework.MethodParameter(label: Optional("after"), name: "index", type: "Int", range: CountableRange(8281..<8297), nameRange: CountableRange(8281..<8286))], "returnType": "Optional<Label>", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func findNearestLabelWith(tag: NLTag, after index: Int)  -> Label? {
+    // ["name": "findNearestLabelWith", "returnSignature": " throws -> Label?", "fullyQualifiedName": "findNearestLabelWith(tag: NLTag, after: Int) throws -> Label?", "parameterSignature": "tag: NLTag, after index: Int", "parameterSignatureWithoutNames": "tag: NLTag, index: Int", "inputTypes": "NLTag, Int", "isThrowing": true, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag, index", "call": "tag: tag, after: index", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(8609..<8619), nameRange: CountableRange(8609..<8612)), CuckooGeneratorFramework.MethodParameter(label: Optional("after"), name: "index", type: "Int", range: CountableRange(8621..<8637), nameRange: CountableRange(8621..<8626))], "returnType": "Optional<Label>", "isOptional": false, "stubFunction": "Cuckoo.ClassStubThrowingFunction"]
+    public override func findNearestLabelWith(tag: NLTag, after index: Int)  throws -> Label? {
         
-            return cuckoo_manager.call("findNearestLabelWith(tag: NLTag, after: Int) -> Label?",
+            return try cuckoo_manager.callThrows("findNearestLabelWith(tag: NLTag, after: Int) throws -> Label?",
                 parameters: (tag, index),
                 superclassCall:
                     
@@ -208,7 +208,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "markTokenIn", "returnSignature": "", "fullyQualifiedName": "markTokenIn(range: Range<String.Index>, asTag: NLTag)", "parameterSignature": "range: Range<String.Index>, asTag: NLTag", "parameterSignatureWithoutNames": "range: Range<String.Index>, asTag: NLTag", "inputTypes": "Range<String.Index>, NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "range, asTag", "call": "range: range, asTag: asTag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("range"), name: "range", type: "Range<String.Index>", range: CountableRange(8812..<8838), nameRange: CountableRange(8812..<8817)), CuckooGeneratorFramework.MethodParameter(label: Optional("asTag"), name: "asTag", type: "NLTag", range: CountableRange(8840..<8852), nameRange: CountableRange(8840..<8845))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
+    // ["name": "markTokenIn", "returnSignature": "", "fullyQualifiedName": "markTokenIn(range: Range<String.Index>, asTag: NLTag)", "parameterSignature": "range: Range<String.Index>, asTag: NLTag", "parameterSignatureWithoutNames": "range: Range<String.Index>, asTag: NLTag", "inputTypes": "Range<String.Index>, NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "range, asTag", "call": "range: range, asTag: asTag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("range"), name: "range", type: "Range<String.Index>", range: CountableRange(9234..<9260), nameRange: CountableRange(9234..<9239)), CuckooGeneratorFramework.MethodParameter(label: Optional("asTag"), name: "asTag", type: "NLTag", range: CountableRange(9262..<9274), nameRange: CountableRange(9262..<9267))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
     public override func markTokenIn(range: Range<String.Index>, asTag: NLTag)  {
         
             return cuckoo_manager.call("markTokenIn(range: Range<String.Index>, asTag: NLTag)",
@@ -220,7 +220,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "shortestDistance", "returnSignature": " -> Int", "fullyQualifiedName": "shortestDistance(between: NLTag, and: NLTag) -> Int", "parameterSignature": "between tag1: NLTag, and tag2: NLTag", "parameterSignatureWithoutNames": "tag1: NLTag, tag2: NLTag", "inputTypes": "NLTag, NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag1, tag2", "call": "between: tag1, and: tag2", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("between"), name: "tag1", type: "NLTag", range: CountableRange(9176..<9195), nameRange: CountableRange(9176..<9183)), CuckooGeneratorFramework.MethodParameter(label: Optional("and"), name: "tag2", type: "NLTag", range: CountableRange(9197..<9212), nameRange: CountableRange(9197..<9200))], "returnType": "Int", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "shortestDistance", "returnSignature": " -> Int", "fullyQualifiedName": "shortestDistance(between: NLTag, and: NLTag) -> Int", "parameterSignature": "between tag1: NLTag, and tag2: NLTag", "parameterSignatureWithoutNames": "tag1: NLTag, tag2: NLTag", "inputTypes": "NLTag, NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag1, tag2", "call": "between: tag1, and: tag2", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("between"), name: "tag1", type: "NLTag", range: CountableRange(9598..<9617), nameRange: CountableRange(9598..<9605)), CuckooGeneratorFramework.MethodParameter(label: Optional("and"), name: "tag2", type: "NLTag", range: CountableRange(9619..<9634), nameRange: CountableRange(9619..<9622))], "returnType": "Int", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func shortestDistance(between tag1: NLTag, and tag2: NLTag)  -> Int {
         
             return cuckoo_manager.call("shortestDistance(between: NLTag, and: NLTag) -> Int",
@@ -314,19 +314,19 @@ class MockLabels: Labels, Cuckoo.ClassMock {
 	        return .init(stub: cuckoo_manager.createStub(for: MockLabels.self, method: "splitAfter(tags: Set<NLTag>) -> [Labels]", parameterMatchers: matchers))
 	    }
 	    
-	    func findNearestLabelWith<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(tag: M1, to index: M2) -> Cuckoo.ClassStubFunction<(NLTag, Int), Optional<[Label]>> where M1.MatchedType == NLTag, M2.MatchedType == Int {
+	    func findNearestLabelWith<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(tag: M1, to index: M2) -> Cuckoo.ClassStubThrowingFunction<(NLTag, Int), Optional<[Label]>> where M1.MatchedType == NLTag, M2.MatchedType == Int {
 	        let matchers: [Cuckoo.ParameterMatcher<(NLTag, Int)>] = [wrap(matchable: tag) { $0.0 }, wrap(matchable: index) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockLabels.self, method: "findNearestLabelWith(tag: NLTag, to: Int) -> [Label]?", parameterMatchers: matchers))
+	        return .init(stub: cuckoo_manager.createStub(for: MockLabels.self, method: "findNearestLabelWith(tag: NLTag, to: Int) throws -> [Label]?", parameterMatchers: matchers))
 	    }
 	    
-	    func findNearestLabelWith<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(tag: M1, before index: M2) -> Cuckoo.ClassStubFunction<(NLTag, Int), Optional<Label>> where M1.MatchedType == NLTag, M2.MatchedType == Int {
+	    func findNearestLabelWith<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(tag: M1, before index: M2) -> Cuckoo.ClassStubThrowingFunction<(NLTag, Int), Optional<Label>> where M1.MatchedType == NLTag, M2.MatchedType == Int {
 	        let matchers: [Cuckoo.ParameterMatcher<(NLTag, Int)>] = [wrap(matchable: tag) { $0.0 }, wrap(matchable: index) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockLabels.self, method: "findNearestLabelWith(tag: NLTag, before: Int) -> Label?", parameterMatchers: matchers))
+	        return .init(stub: cuckoo_manager.createStub(for: MockLabels.self, method: "findNearestLabelWith(tag: NLTag, before: Int) throws -> Label?", parameterMatchers: matchers))
 	    }
 	    
-	    func findNearestLabelWith<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(tag: M1, after index: M2) -> Cuckoo.ClassStubFunction<(NLTag, Int), Optional<Label>> where M1.MatchedType == NLTag, M2.MatchedType == Int {
+	    func findNearestLabelWith<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(tag: M1, after index: M2) -> Cuckoo.ClassStubThrowingFunction<(NLTag, Int), Optional<Label>> where M1.MatchedType == NLTag, M2.MatchedType == Int {
 	        let matchers: [Cuckoo.ParameterMatcher<(NLTag, Int)>] = [wrap(matchable: tag) { $0.0 }, wrap(matchable: index) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockLabels.self, method: "findNearestLabelWith(tag: NLTag, after: Int) -> Label?", parameterMatchers: matchers))
+	        return .init(stub: cuckoo_manager.createStub(for: MockLabels.self, method: "findNearestLabelWith(tag: NLTag, after: Int) throws -> Label?", parameterMatchers: matchers))
 	    }
 	    
 	    func markTokenIn<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(range: M1, asTag: M2) -> Cuckoo.ClassStubNoReturnFunction<(Range<String.Index>, NLTag)> where M1.MatchedType == Range<String.Index>, M2.MatchedType == NLTag {
@@ -433,19 +433,19 @@ class MockLabels: Labels, Cuckoo.ClassMock {
 	    @discardableResult
 	    func findNearestLabelWith<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(tag: M1, to index: M2) -> Cuckoo.__DoNotUse<Optional<[Label]>> where M1.MatchedType == NLTag, M2.MatchedType == Int {
 	        let matchers: [Cuckoo.ParameterMatcher<(NLTag, Int)>] = [wrap(matchable: tag) { $0.0 }, wrap(matchable: index) { $0.1 }]
-	        return cuckoo_manager.verify("findNearestLabelWith(tag: NLTag, to: Int) -> [Label]?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	        return cuckoo_manager.verify("findNearestLabelWith(tag: NLTag, to: Int) throws -> [Label]?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	    @discardableResult
 	    func findNearestLabelWith<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(tag: M1, before index: M2) -> Cuckoo.__DoNotUse<Optional<Label>> where M1.MatchedType == NLTag, M2.MatchedType == Int {
 	        let matchers: [Cuckoo.ParameterMatcher<(NLTag, Int)>] = [wrap(matchable: tag) { $0.0 }, wrap(matchable: index) { $0.1 }]
-	        return cuckoo_manager.verify("findNearestLabelWith(tag: NLTag, before: Int) -> Label?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	        return cuckoo_manager.verify("findNearestLabelWith(tag: NLTag, before: Int) throws -> Label?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	    @discardableResult
 	    func findNearestLabelWith<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(tag: M1, after index: M2) -> Cuckoo.__DoNotUse<Optional<Label>> where M1.MatchedType == NLTag, M2.MatchedType == Int {
 	        let matchers: [Cuckoo.ParameterMatcher<(NLTag, Int)>] = [wrap(matchable: tag) { $0.0 }, wrap(matchable: index) { $0.1 }]
-	        return cuckoo_manager.verify("findNearestLabelWith(tag: NLTag, after: Int) -> Label?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	        return cuckoo_manager.verify("findNearestLabelWith(tag: NLTag, after: Int) throws -> Label?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	    @discardableResult
@@ -540,15 +540,15 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         return DefaultValueRegistry.defaultValue(for: [Labels].self)
     }
     
-    public override func findNearestLabelWith(tag: NLTag, to index: Int)  -> [Label]? {
+    public override func findNearestLabelWith(tag: NLTag, to index: Int)  throws -> [Label]? {
         return DefaultValueRegistry.defaultValue(for: Optional<[Label]>.self)
     }
     
-    public override func findNearestLabelWith(tag: NLTag, before index: Int)  -> Label? {
+    public override func findNearestLabelWith(tag: NLTag, before index: Int)  throws -> Label? {
         return DefaultValueRegistry.defaultValue(for: Optional<Label>.self)
     }
     
-    public override func findNearestLabelWith(tag: NLTag, after index: Int)  -> Label? {
+    public override func findNearestLabelWith(tag: NLTag, after index: Int)  throws -> Label? {
         return DefaultValueRegistry.defaultValue(for: Optional<Label>.self)
     }
     

@@ -39,6 +39,10 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 		return true
 	}
 
+	public enum ErrorTypes: Error {
+		case IndexOutOfRange
+	}
+
 	typealias Element = Label
 
 	public var count: Int { get { return byIndex.count } }
@@ -138,6 +142,9 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 	/// This function guarantees that every `Labels` object in the returned array will contain at least one `Label`.
 	/// This function preserves ordering of underlying `Label` objects.
 	public func splitBefore(tags: Set<NLTag>) -> [Labels] {
+		if self.isEmpty {
+			return []
+		}
 		if !haveAtLeastOneTagFrom(tags) {
 			return [self]
 		}
@@ -188,6 +195,9 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 	/// This function guarantees that every `Labels` object in the returned array will contain at least one `Label`.
 	/// This function preserves ordering of underlying `Label` objects.
 	public func splitAfter(tags: Set<NLTag>) -> [Labels] {
+		if self.isEmpty {
+			return []
+		}
 		if !haveAtLeastOneTagFrom(tags) {
 			return [self]
 		}
@@ -202,7 +212,9 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 				labelsForCurrentPart = Labels()
 			}
 		}
-		labelsArray.append(labelsForCurrentPart)
+		if !labelsForCurrentPart.isEmpty {
+			labelsArray.append(labelsForCurrentPart)
+		}
 
 		return labelsArray
 	}
@@ -211,7 +223,10 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 	/// If no `Label` with the specified tag exists, returns nil.
 	/// If the `Label` at the given index has the specified tag, it will be returned.
 	/// In the case of a tie, both of the closest labels will be returned with the one having a lower index being first.
-	public func findNearestLabelWith(tag: NLTag, to index: Int) -> [Label]? {
+	public func findNearestLabelWith(tag: NLTag, to index: Int) throws -> [Label]? {
+		if index >= count || index < 0 {
+			throw ErrorTypes.IndexOutOfRange
+		}
 		if byTag[tag] == nil {
 			return nil
 		}
@@ -244,7 +259,10 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 	/// Looks for the nearest `Label` with a specific tag to a given index.
 	/// If no `Label` with the specified tag exists, returns nil.
 	/// If the `Label` at the given index has the specified tag, it will be returned.
-	public func findNearestLabelWith(tag: NLTag, before index: Int) -> Label? {
+	public func findNearestLabelWith(tag: NLTag, before index: Int) throws -> Label? {
+		if index >= count || index < 0 {
+			throw ErrorTypes.IndexOutOfRange
+		}
 		if byTag[tag] == nil {
 			return nil
 		}
@@ -260,7 +278,10 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 	/// Looks for the nearest `Label` with a specific tag to a given index.
 	/// If no `Label` with the specified tag exists, returns nil.
 	/// If the `Label` at the given index has the specified tag, it will be returned.
-	public func findNearestLabelWith(tag: NLTag, after index: Int) -> Label? {
+	public func findNearestLabelWith(tag: NLTag, after index: Int) throws -> Label? {
+		if index >= count || index < 0 {
+			throw ErrorTypes.IndexOutOfRange
+		}
 		if byTag[tag] == nil {
 			return nil
 		}

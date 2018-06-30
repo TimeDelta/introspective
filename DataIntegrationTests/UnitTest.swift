@@ -6,6 +6,7 @@
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
+import Cuckoo
 import XCTest
 @testable import DataIntegration
 
