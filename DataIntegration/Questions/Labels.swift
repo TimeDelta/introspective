@@ -11,6 +11,7 @@ import NaturalLanguage
 
 class Labels: NSObject, IteratorProtocol, Sequence {
 
+	// TODO - might need to allow a Label to have multiple tags with activity parsing, location parsing, etc.
 	struct Label: Equatable {
 		public fileprivate(set) var tag: NLTag
 		public fileprivate(set) var token: String
@@ -302,13 +303,17 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 	/// Mark the `Label` in the given range as the specified `NLTag` type only if it is currently a `Tags.none` type.
 	/// If the `Label` in the given range is not currently a `Tags.none` type, this method will do nothing.
 	/// If no `Label` has an exact match for the given token range, this method will do nothing.
-	public func markTokenIn(range: Range<String.Index>, asTag: NLTag) {
-		var index = 0
-		while byIndex[index].tokenRange != range {
-			index += 1
-		}
+	public func ifNotTaggedTagLabelAt(range: Range<String.Index>, asTag: NLTag) {
+		if count > 0 {
+			var index = 0
+			while index < count && byIndex[index].tokenRange != range {
+				index += 1
+			}
 
-		byIndex[index].tag = asTag
+			if index < count && byIndex[index].tag == Tags.none {
+				byIndex[index].tag = asTag
+			}
+		}
 	}
 
 	/// Get the shortest distance from a `Label` tagged as `between` to a `Label` tagged as `and`.

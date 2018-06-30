@@ -56,7 +56,7 @@ class Question: NSObject {
 //
 //				tagger.enumerateTags(in: entireQuestionRange, unit: .word, scheme: .lexicalClass, options: []) { (tag, tokenRange) -> Bool in
 //					if tag == .verb {
-//						self.labels.markTokenIn(range: tokenRange, asTag: Tags.verb)
+//						self.labels.ifNotTaggedTagLabelAt(range: tokenRange, asTag: Tags.verb)
 //					}
 //					return true
 //				}

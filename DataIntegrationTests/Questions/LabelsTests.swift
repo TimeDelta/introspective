@@ -940,6 +940,61 @@ class LabelsTests: UnitTest {
 		assert(result?.token == correctToken)
 	}
 
+	func testGivenNoLabelsAdded_ifNotTaggedTagLabelAtRangeAsTag_doesNothing() {
+		// given
+		let targetToken = "target token"
+		let targetRange = createTokenRange(targetToken)
+		let newTag = NLTag("new tag")
+
+		// when
+		labels.ifNotTaggedTagLabelAt(range: targetRange, asTag: newTag)
+
+		// then
+		assert(labels.count == 0)
+	}
+
+	func testGivenNoLabelWithTargetRange_ifNotTaggedTagLabelAtRangeAsTag_doesNotReTagLabel() {
+		// given
+		let targetToken = "target token"
+		let targetRange = createTokenRange(targetToken)
+		let newTag = NLTag("new tag")
+		labels.addLabel(createLabelFor(Tags.none, "not the target token")) // specifying a different token will create a different range for the Label
+
+		// when
+		labels.ifNotTaggedTagLabelAt(range: targetRange, asTag: newTag)
+
+		// then
+		assert(labels.byIndex[0].tag != newTag)
+	}
+
+	func testGivenLabelWithTargetRangeAlreadyTagged_ifNotTaggedTagLabelAtRangeAsTag_doesNotReTagLabel() {
+		// given
+		let targetToken = "target token"
+		let targetRange = createTokenRange(targetToken)
+		let newTag = NLTag("new tag")
+		labels.addLabel(createLabelFor(Tags.activityData, targetToken)) // specifying same token will create same range for the Label
+
+		// when
+		labels.ifNotTaggedTagLabelAt(range: targetRange, asTag: newTag)
+
+		// then
+		assert(labels.byIndex[0].tag != newTag)
+	}
+
+	func testGivenUntaggedLabelWithTargetRange_ifNotTaggedTagLabelAtRangeAsTag_reTagsLabelWithNewTag() {
+		// given
+		let targetToken = "target token"
+		let targetRange = createTokenRange(targetToken)
+		let newTag = NLTag("new tag")
+		labels.addLabel(createLabelFor(Tags.none, targetToken)) // specifying same token will create same range for the Label
+
+		// when
+		labels.ifNotTaggedTagLabelAt(range: targetRange, asTag: newTag)
+
+		// then
+		assert(labels.byIndex[0].tag == newTag)
+	}
+
 	func testGivenNoLabelsAdded_shortestDistance_returnsMaxInt() {
 		// when
 		let distance = labels.shortestDistance(between: Tags.none, and: Tags.activityData)
