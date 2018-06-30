@@ -25,31 +25,53 @@ class LabelsTests: UnitTest {
 		// Put teardown code here. This method is called after the invocation of each test method in the class.
 	}
 
-// TODO - fix compiler issue with this test
-//	func testGivenValidLabel_addLabel_storesLabelByIndex() {
-//		// given
-//		let token = "token"
-//		let label = Labels.Label(tag: Tags.activityData, token: token, tokenRange: createTokenRange(token))
-//
-//		// when
-//		labels.addLabel(label)
-//
-//		// then
-//		assert(labels.byIndex[0] == label)
-//	}
+	func testGivenValidLabel_addLabel_storesLabelByIndex() {
+		// given
+		let label = createLabelFor(Tags.activityData)
 
-// TODO - fix compiler issue with this test
-//	func testGValidLabel_addLabel_storesLabelByTag() {
-//		// given
-//		let token = "token"
-//		let label = Labels.Label(tag: Tags.activityData, token: token, tokenRange: createTokenRange(token))
-//
-//		// when
-//		labels.addLabel(label)
-//
-//		// then
-//		assert(labels.byTag[label.tag] == [label])
-//	}
+		// when
+		labels.addLabel(label)
+
+		// then
+		assert(labels.byIndex[0] == label)
+	}
+
+	func testGivenValidLabel_addLabel_storesLabelByTag() {
+		// given
+		let label = createLabelFor(Tags.activityData)
+
+		// when
+		labels.addLabel(label)
+
+		// then
+		assert(labels.byTag[label.tag] == [label])
+	}
+
+	func testGivenLabelWithSameTagJustAdded_addLabel_combinesNewLabelWithMostRecentOne() {
+		// given
+		let tag = Tags.activityData
+		let token1 = "token1"
+		let token2 = "token2"
+		labels.addLabel(createLabelFor(tag, token1))
+
+		// when
+		labels.addLabel(createLabelFor(tag, token2))
+
+		// then
+		assert(labels.count == 1)
+		assert(labels.byIndex[0].token == token1 + " " + token2)
+	}
+
+	func testGivenLabelWithNoneTagJustAdded_addLabel_doesNotCombineNewLabelWithMostRecentOne() {
+		// given
+		labels.addLabel(createLabelFor(Tags.none))
+
+		// when
+		labels.addLabel(createLabelFor(Tags.none))
+
+		// then
+		assert(labels.count == 2)
+	}
 
 	func testGivenNoLabelsPreviouslyAdded_hasLabels_returnsFalse() {
 		// when
@@ -611,10 +633,11 @@ class LabelsTests: UnitTest {
 		let correctToken = "correctToken"
 		let incorrectToken = "incorrectToken"
 		labels.addLabel(createLabelFor(findTag, incorrectToken))
+		labels.addLabel(createLabelFor(NLTag("not the find tag")))
 		labels.addLabel(createLabelFor(findTag, correctToken))
 
 		// when
-		let result = try labels.findNearestLabelWith(tag: findTag, to: 1)
+		let result = try labels.findNearestLabelWith(tag: findTag, to: 2)
 
 		// then
 		assert(result?.count == 1)

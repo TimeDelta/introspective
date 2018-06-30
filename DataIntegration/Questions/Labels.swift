@@ -72,6 +72,7 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 			labelsForTag!.removeLast()
 			labelsForTag!.append(lastLabel!)
 			byTag[lastLabel!.tag] = labelsForTag
+			byIndex[byIndex.count - 1] = lastLabel!
 		} else {
 			if byTag[label.tag] == nil {
 				byTag[label.tag] = [Label]()
@@ -239,7 +240,7 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 
 		var closestLabels = [Label]()
 		for i in 1 ..< byIndex.count {
-			if index - i > 0 { // protect against index out of bounds
+			if index - i >= 0 { // protect against index out of bounds
 				if byIndex[index - i].tag == tag {
 					closestLabels.append(byIndex[index - i])
 				}
@@ -267,10 +268,12 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 			return nil
 		}
 
-		while index >= 0 {
-			if byIndex[index].tag == tag {
-				return byIndex[index]
+		var i = index
+		while i >= 0 {
+			if byIndex[i].tag == tag {
+				return byIndex[i]
 			}
+			i -= 1
 		}
 		return nil
 	}
@@ -286,10 +289,12 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 			return nil
 		}
 
-		while index < byIndex.count {
-			if byIndex[index].tag == tag {
-				return byIndex[index]
+		var i = index
+		while i < byIndex.count {
+			if byIndex[i].tag == tag {
+				return byIndex[i]
 			}
+			i += 1
 		}
 		return nil
 	}
