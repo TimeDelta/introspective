@@ -940,6 +940,150 @@ class LabelsTests: UnitTest {
 		assert(result?.token == correctToken)
 	}
 
+	func testGivenNoLabelsAdded_shortestDistance_returnsMaxInt() {
+		// when
+		let distance = labels.shortestDistance(between: Tags.none, and: Tags.activityData)
+
+		// then
+		assert(distance == Int.max)
+	}
+
+	func testGivenNoLabelWithTag1_shortestDistance_returnsMaxInt() {
+		// given
+		let tag1 = Tags.activityData
+		let tag2 = Tags.attribute
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(tag2))
+
+		// when
+		let distance = labels.shortestDistance(between: tag1, and: tag2)
+
+		// then
+		assert(distance == Int.max)
+	}
+
+	func testGivenNoLabelWithTag2_shortestDistance_returnsMaxInt() {
+		// given
+		let tag1 = Tags.activityData
+		let tag2 = Tags.attribute
+		labels.addLabel(createLabelFor(tag1))
+		labels.addLabel(createLabelFor(Tags.none))
+
+		// when
+		let distance = labels.shortestDistance(between: tag1, and: tag2)
+
+		// then
+		assert(distance == Int.max)
+	}
+
+	func testGivenNoLabelWithEitherTag_shortestDistance_returnsMaxInt() {
+		// given
+		let tag1 = Tags.activityData
+		let tag2 = Tags.attribute
+		labels.addLabel(createLabelFor(NLTag("different tag")))
+		labels.addLabel(createLabelFor(NLTag("other different tag")))
+
+		// when
+		let distance = labels.shortestDistance(between: tag1, and: tag2)
+
+		// then
+		assert(distance == Int.max)
+	}
+
+	func testGivenOnlyOneLabelAdded_shortestDistance_returnsMaxInt() {
+		// given
+		let tag1 = Tags.activityData
+		let tag2 = Tags.average
+		labels.addLabel(createLabelFor(tag1))
+
+		// when
+		let distance = labels.shortestDistance(between: tag1, and: tag2)
+
+		// then
+		assert(distance == Int.max)
+	}
+
+	func testGivenSpecifiedTagsAreEqual_shortestDistance_returnsCorrectDistance() {
+		// given
+		let tag = Tags.activityData
+		labels.addLabel(createLabelFor(tag))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(tag))
+
+		// when
+		let distance = labels.shortestDistance(between: tag, and: tag)
+
+		// assert
+		assert(distance == 2)
+	}
+
+	func testGivenLabelsWithSpecifiedTagsExistAndTagsAreNotEqual_shortestDistance_returnsCorrectDistance() {
+		// given
+		let tag1 = Tags.activityData
+		let tag2 = Tags.attribute
+		labels.addLabel(createLabelFor(tag1))
+		labels.addLabel(createLabelFor(tag2))
+
+		// when
+		let distance = labels.shortestDistance(between: tag1, and: tag2)
+
+		// then
+		assert(distance == 1)
+	}
+
+	func testGivenMultipleLabelPairsWithSpecifiedTagsAndTagsAreNotEqual_shortestDistance_returnsShortestDistanceBetweenViableLabels() {
+		// given
+		let tag1 = Tags.activityData
+		let tag2 = Tags.attribute
+		labels.addLabel(createLabelFor(tag1))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(tag2))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(tag1))
+
+		// when
+		let distance = labels.shortestDistance(between: tag1, and: tag2)
+
+		// then
+		assert(distance == 2)
+	}
+
+	func testGivenMultipleLabelPairsWithSpecifiedTagsAndTagsAreEqual_shortestDistance_returnsShortestDistanceBetweenViableLabels() {
+		// given
+		let tag = Tags.activityData
+		labels.addLabel(createLabelFor(tag))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(tag))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(tag))
+
+		// when
+		let distance = labels.shortestDistance(between: tag, and: tag)
+
+		// then
+		assert(distance == 2)
+	}
+
+	func testGivenSpecifiedTagsAreNotEqualAndTwoLabelsWithSameTagAreCloserThanCorrectDistance_shortestDistance_returnsCorrectDistance() {
+		// given
+		let tag1 = Tags.activityData
+		let tag2 = Tags.attribute
+		labels.addLabel(createLabelFor(tag1))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(tag1))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(tag2))
+
+		// when
+		let distance = labels.shortestDistance(between: tag1, and: tag2)
+
+		// then
+		assert(distance == 3)
+	}
+
 	fileprivate func createLabelFor(_ tag: NLTag) -> Labels.Label {
 		return createLabelFor(tag, "token")
 	}

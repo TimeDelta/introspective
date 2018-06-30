@@ -312,19 +312,29 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 	}
 
 	/// Get the shortest distance from a `Label` tagged as `between` to a `Label` tagged as `and`.
-	/// If the two tags given are equal to each other, this function will return 0.
+	/// If the two tags given are equal to each other, this function will not use the same `Label` for both and return a distance of 0.
+	/// If one or both of the specified tags have not been added, this will return `Int.max`.
+	/// This method does not require that the tags appear in the same order they were given.
 	public func shortestDistance(between tag1: NLTag, and tag2: NLTag) -> Int {
 		var shortestDistance = Int.max
-		var tag1Index = -1
+		var lastIndex = -1
+		var lastTagWasTag1: Bool? = nil
 		for index in 0 ..< byIndex.count {
-			if byIndex[index].tag == tag1 {
-				tag1Index = index
-			}
-			if byIndex[index].tag == tag2 && tag1Index != -1 {
-				let currentDistance = index - tag1Index
-				if currentDistance < shortestDistance {
-					shortestDistance = currentDistance
+			let currentTag = byIndex[index].tag
+			if lastTagWasTag1 != nil {
+				if (currentTag == tag1 && (!lastTagWasTag1! || tag1 == tag2)) || (currentTag == tag2 && (lastTagWasTag1! || tag1 == tag2)) {
+					let currentDistance = index - lastIndex
+					if currentDistance < shortestDistance {
+						shortestDistance = currentDistance
+					}
 				}
+			}
+			if currentTag == tag1 {
+				lastTagWasTag1 = true
+				lastIndex = index
+			} else if currentTag == tag2 {
+				lastTagWasTag1 = false
+				lastIndex = index
 			}
 		}
 		return shortestDistance
