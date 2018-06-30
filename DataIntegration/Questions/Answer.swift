@@ -10,13 +10,11 @@ import Foundation
 
 class Answer: NSObject {
 
-	fileprivate(set) var parts: [String: [NSObject]]
+	var finalAnswer: String
+	var otherRelevantInformation: [String: [NSObject]]
 
 	public override init() {
-		self.parts = [String: [NSObject]]()
-	}
-
-	public func addPart(_ partName: String, _ partValues: [NSObject]) {
-		parts[partName] = partValues
+		finalAnswer = "Unknown"
+		otherRelevantInformation = [String: [NSObject]]()
 	}
 }

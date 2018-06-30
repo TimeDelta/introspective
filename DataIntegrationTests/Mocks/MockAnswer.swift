@@ -19,11 +19,33 @@ class MockAnswer: Answer, Cuckoo.ClassMock {
     let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
 
     
-    // ["name": "parts", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "[String: [NSObject]]", "isReadOnly": true, "accessibility": ""]
-     override var parts: [String: [NSObject]] {
+    // ["name": "finalAnswer", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "String", "isReadOnly": false, "accessibility": ""]
+     override var finalAnswer: String {
         get {
             
-            return cuckoo_manager.getter("parts", superclassCall: super.parts)
+            return cuckoo_manager.getter("finalAnswer", superclassCall: super.finalAnswer)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("finalAnswer", value: newValue, superclassCall: super.finalAnswer = newValue)
+            
+        }
+        
+    }
+    
+    // ["name": "otherRelevantInformation", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "[String: [NSObject]]", "isReadOnly": false, "accessibility": ""]
+     override var otherRelevantInformation: [String: [NSObject]] {
+        get {
+            
+            return cuckoo_manager.getter("otherRelevantInformation", superclassCall: super.otherRelevantInformation)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("otherRelevantInformation", value: newValue, superclassCall: super.otherRelevantInformation = newValue)
             
         }
         
@@ -33,18 +55,6 @@ class MockAnswer: Answer, Cuckoo.ClassMock {
     
 
     
-    // ["name": "addPart", "returnSignature": "", "fullyQualifiedName": "addPart(_: String, _: [NSObject])", "parameterSignature": "_ partName: String, _ partValues: [NSObject]", "parameterSignatureWithoutNames": "partName: String, partValues: [NSObject]", "inputTypes": "String, [NSObject]", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "partName, partValues", "call": "partName, partValues", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "partName", type: "String", range: CountableRange(326..<344), nameRange: CountableRange(0..<0)), CuckooGeneratorFramework.MethodParameter(label: nil, name: "partValues", type: "[NSObject]", range: CountableRange(346..<370), nameRange: CountableRange(0..<0))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
-    public override func addPart(_ partName: String, _ partValues: [NSObject])  {
-        
-            return cuckoo_manager.call("addPart(_: String, _: [NSObject])",
-                parameters: (partName, partValues),
-                superclassCall:
-                    
-                    super.addPart(partName, partValues)
-                    )
-        
-    }
-    
 
 	struct __StubbingProxy_Answer: Cuckoo.StubbingProxy {
 	    private let cuckoo_manager: Cuckoo.MockManager
@@ -53,15 +63,14 @@ class MockAnswer: Answer, Cuckoo.ClassMock {
 	        self.cuckoo_manager = manager
 	    }
 	    
-	    var parts: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockAnswer, [String: [NSObject]]> {
-	        return .init(manager: cuckoo_manager, name: "parts")
+	    var finalAnswer: Cuckoo.ClassToBeStubbedProperty<MockAnswer, String> {
+	        return .init(manager: cuckoo_manager, name: "finalAnswer")
 	    }
 	    
-	    
-	    func addPart<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ partName: M1, _ partValues: M2) -> Cuckoo.ClassStubNoReturnFunction<(String, [NSObject])> where M1.MatchedType == String, M2.MatchedType == [NSObject] {
-	        let matchers: [Cuckoo.ParameterMatcher<(String, [NSObject])>] = [wrap(matchable: partName) { $0.0 }, wrap(matchable: partValues) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockAnswer.self, method: "addPart(_: String, _: [NSObject])", parameterMatchers: matchers))
+	    var otherRelevantInformation: Cuckoo.ClassToBeStubbedProperty<MockAnswer, [String: [NSObject]]> {
+	        return .init(manager: cuckoo_manager, name: "otherRelevantInformation")
 	    }
+	    
 	    
 	}
 
@@ -77,17 +86,15 @@ class MockAnswer: Answer, Cuckoo.ClassMock {
 	    }
 	
 	    
-	    var parts: Cuckoo.VerifyReadOnlyProperty<[String: [NSObject]]> {
-	        return .init(manager: cuckoo_manager, name: "parts", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    var finalAnswer: Cuckoo.VerifyProperty<String> {
+	        return .init(manager: cuckoo_manager, name: "finalAnswer", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var otherRelevantInformation: Cuckoo.VerifyProperty<[String: [NSObject]]> {
+	        return .init(manager: cuckoo_manager, name: "otherRelevantInformation", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
 	    
 	
-	    
-	    @discardableResult
-	    func addPart<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ partName: M1, _ partValues: M2) -> Cuckoo.__DoNotUse<Void> where M1.MatchedType == String, M2.MatchedType == [NSObject] {
-	        let matchers: [Cuckoo.ParameterMatcher<(String, [NSObject])>] = [wrap(matchable: partName) { $0.0 }, wrap(matchable: partValues) { $0.1 }]
-	        return cuckoo_manager.verify("addPart(_: String, _: [NSObject])", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
 	    
 	}
 
@@ -95,20 +102,27 @@ class MockAnswer: Answer, Cuckoo.ClassMock {
 
  class AnswerStub: Answer {
     
-     override var parts: [String: [NSObject]] {
+     override var finalAnswer: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+        
+        set { }
+        
+    }
+    
+     override var otherRelevantInformation: [String: [NSObject]] {
         get {
             return DefaultValueRegistry.defaultValue(for: ([String: [NSObject]]).self)
         }
+        
+        set { }
         
     }
     
 
     
 
-    
-    public override func addPart(_ partName: String, _ partValues: [NSObject])  {
-        return DefaultValueRegistry.defaultValue(for: Void.self)
-    }
     
 }
 
