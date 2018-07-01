@@ -18,11 +18,65 @@ class LabelsTests: UnitTest {
 	override func setUp() {
 		super.setUp()
 		labels = Labels()
-		// Put setup code here. This method is called before the invocation of each test method in the class.
 	}
 
-	override func tearDown() {
-		// Put teardown code here. This method is called after the invocation of each test method in the class.
+	func testGivenTwoLabelsObjectsWithDifferentCounts_equalsOperator_returnsFalse() {
+		// given
+		let otherLabels = Labels()
+		labels.addLabel(createLabelFor(Tags.none))
+		otherLabels.addLabel(createLabelFor(Tags.none))
+		otherLabels.addLabel(createLabelFor(Tags.none))
+
+		// when
+		let equal = labels == otherLabels
+
+		// then
+		XCTAssert(!equal)
+	}
+
+	func testGivenTwoLabelsObjectsWithSameCountsButDifferentLabels_equalsOperator_returnsFalse() {
+		// given
+		let otherLabels = Labels()
+		labels.addLabel(createLabelFor(Tags.none))
+		otherLabels.addLabel(createLabelFor(NLTag("some other tag")))
+
+		// when
+		let equal = labels == otherLabels
+
+		// then
+		XCTAssert(!equal)
+	}
+
+	func testGivenTwoLabelsObjectsWithSameCountsAndEqualLabelsInSameOrder_equalsOperator_returnsTrue() {
+		// given
+		let tag = Tags.activityData
+		let otherLabels = Labels()
+		labels.addLabel(createLabelFor(tag))
+		labels.addLabel(createLabelFor(Tags.none))
+		otherLabels.addLabel(createLabelFor(tag))
+		otherLabels.addLabel(createLabelFor(Tags.none))
+
+		// when
+		let equal = labels == otherLabels
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenTwoLabelsObjectsWithSameCountsAndEqualLabelsInDifferentOrder_equalsOperator_returnsFalse() {
+		// given
+		let tag = Tags.activityData
+		let otherLabels = Labels()
+		labels.addLabel(createLabelFor(tag))
+		labels.addLabel(createLabelFor(Tags.none))
+		otherLabels.addLabel(createLabelFor(Tags.none))
+		otherLabels.addLabel(createLabelFor(tag))
+
+		// when
+		let equal = labels == otherLabels
+
+		// then
+		XCTAssert(!equal)
 	}
 
 	func testGivenValidLabel_addLabel_storesLabelByIndex() {
@@ -330,6 +384,28 @@ class LabelsTests: UnitTest {
 		}
 	}
 
+	func testGivenNoLabelsAdded_splitBeforeTag_returnsArrayWithJustOriginalLabelsObject() {
+		// when
+		let split = labels.splitBefore(tag: Tags.none)
+
+		// then
+		XCTAssert(split.count == 1)
+		XCTAssert(split[0] == labels)
+	}
+
+	func testGivenNoLabelsWithSpecifiedTag_splitBeforeTag_returnsArrayWithJustOriginalLabelsObject() {
+		// given
+		let tag = Tags.activityData
+		labels.addLabel(createLabelFor(NLTag("definitely not the specified tag")))
+
+		// when
+		let split = labels.splitBefore(tag: tag)
+
+		// then
+		XCTAssert(split.count == 1)
+		XCTAssert(split[0] == labels)
+	}
+
 	func testGivenOnlyOneLabelWithSpecifiedTag_splitBeforeTag_splitsBeforeThatTag() {
 		// given
 		let splitTag = Tags.questionWord
@@ -391,6 +467,28 @@ class LabelsTests: UnitTest {
 		// then
 		XCTAssert(split.count == 1)
 		XCTAssertFalse(split[0].isEmpty)
+	}
+
+	func testGivenNoLabelsAdded_splitAfterTag_returnsArrayWithJustOriginalLabelsObject() {
+		// when
+		let split = labels.splitAfter(tag: Tags.none)
+
+		// then
+		XCTAssert(split.count == 1)
+		XCTAssert(split[0] == labels)
+	}
+
+	func testGivenNoLabelsWithSpecifiedTag_splitAfterTag_returnsArrayWithJustOriginalLabelsObject() {
+		// given
+		let tag = Tags.activityData
+		labels.addLabel(createLabelFor(NLTag("definitely not the specified tag")))
+
+		// when
+		let split = labels.splitAfter(tag: tag)
+
+		// then
+		XCTAssert(split.count == 1)
+		XCTAssert(split[0] == labels)
 	}
 
 	func testGivenOnlyOneLabelWithSpecifiedTag_splitAfterTag_splitsAfterThatTag() {
@@ -1208,10 +1306,114 @@ class LabelsTests: UnitTest {
 		XCTAssert(distance == 3)
 	}
 
-	// TODO - write tests for this method
-	func testGiven_shortestDistanceFromLabelToLabelWithTag_() {
+	func testGivenNoLabelsAdded_shortestDistanceFromLabelToLabelWithTag_returnsNil() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(Tags.activityData)
+
+		// when
+		let distance = labels.shortestDistance(from: label, toLabelWith: tag)
+
 		// then
-		XCTAssert(false)
+		XCTAssert(distance == nil)
+	}
+
+	func testGivenSpecifiedLabelNotAdded_shortestDistanceFromLabelToLabelWithTag_returnsNil() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(tag)
+		labels.addLabel(createLabelFor(Tags.none))
+
+		// when
+		let distance = labels.shortestDistance(from: label, toLabelWith: tag)
+
+		// then
+		XCTAssert(distance == nil)
+	}
+
+	func testGivenNoLabelsWithSpecifiedTag_shortestDistanceFromLabelToLabelWithTag_returnsNegativeOne() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(Tags.none)
+		labels.addLabel(label)
+
+		// when
+		let distance = labels.shortestDistance(from: label, toLabelWith: tag)
+
+		// then
+		XCTAssert(distance == -1)
+	}
+
+	func testGivenMultipleLabelsWithSpecifiedTag_shortestDistanceFromLabelToLabelWithTag_returnsDistanceToClosestMatchingLabel() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(Tags.which)
+		labels.addLabel(createLabelFor(tag))
+		labels.addLabel(createLabelFor(tag))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(label)
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(tag))
+
+		// when
+		let distance = labels.shortestDistance(from: label, toLabelWith: tag)
+
+		// then
+		XCTAssert(distance == 2)
+	}
+
+	func testGivenShortestDistanceIsBeforeSpecifiedLabel_shortestDistanceFromLabelToLabelWithTag_returnsCorrectDistance() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(Tags.which)
+		labels.addLabel(createLabelFor(tag))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(label)
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(tag))
+
+		// when
+		let distance = labels.shortestDistance(from: label, toLabelWith: tag)
+
+		// then
+		XCTAssert(distance == 2)
+	}
+
+	func testGivenShortestDistanceIsAfterSpecifiedLabel_shortestDistanceFromLabelToLabelWithTag_returnsCorrectDistance() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(Tags.which)
+		labels.addLabel(createLabelFor(tag))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(label)
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(tag))
+
+		// when
+		let distance = labels.shortestDistance(from: label, toLabelWith: tag)
+
+		// then
+		XCTAssert(distance == 2)
+	}
+
+	func testGivenOnlyLabelWithSpecifiedTagIsSpecifiedLabel_shortestDistanceFromLabelToLabelWithTag_returnsNegativeOne() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(tag)
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(label)
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(Tags.none))
+
+		// when
+		let distance = labels.shortestDistance(from: label, toLabelWith: tag)
+
+		// then
+		XCTAssert(distance == -1)
 	}
 
 	fileprivate func createLabelFor(_ tag: NLTag) -> Labels.Label {

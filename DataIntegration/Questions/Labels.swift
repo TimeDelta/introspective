@@ -9,7 +9,7 @@
 import Foundation
 import NaturalLanguage
 
-class Labels: NSObject, IteratorProtocol, Sequence {
+class Labels: IteratorProtocol, Sequence, Equatable {
 
 	// TODO - might need to allow a Label to have multiple tags with activity parsing, location parsing, etc.
 	struct Label: Equatable {
@@ -53,7 +53,7 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 	fileprivate var currentIteratorIndex: Int
 	fileprivate var lastSetVerbIndex: Int
 
-	public override init() {
+	public init() {
 		byTag = [NLTag: [Label]]()
 		byIndex = [Label]()
 		currentIteratorIndex = 0
@@ -95,17 +95,9 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 
 	/// Return the index of the specified `Label`. If the `Label` is not found -1 will be returned.
 	public func indexOf(label: Label) -> Int {
-		if count > 0 {
-			var index = 0
-			while index < count && (byIndex[index].tokenRange != label.tokenRange || byIndex[index].token != label.token || byIndex[index].tag != label.tag) {
-				index += 1
-			}
-
-			if index < count {
-				return index
-			}
-		}
-		return -1
+		return indexOfLabelWith(conditions: { (currentLabel: Label) in
+			return currentLabel == label
+		})
 	}
 
 	/// Get all `Label`s for each specified tag.
@@ -360,15 +352,37 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 		return shortestDistance
 	}
 
-	public func shortestDistance(from: Label, toLabelWith: NLTag) -> Int? {
-		var shortestDistance = Int.max
-		if indexOf(label: from) == -1 {
+	/// Get the shortest distance in either direction from the specified `Label` to a `Label` with the given `NLTag`.
+	/// If the specified `Label` cannot be found, nil is returned.
+	/// If there are no `Label`s with the specified tag, -1 will be returned.
+	public func shortestDistance(from: Label, toLabelWith tag: NLTag) -> Int? {
+		let indexOfStartLabel = indexOf(label: from)
+		if indexOfStartLabel == -1 {
 			return nil
 		}
 
-		// TODO finish this method
+		if byTag[tag] == nil {
+			return -1
+		}
 
-		return shortestDistance
+		for i in 1 ..< byIndex.count {
+			if indexOfStartLabel - i >= 0 { // protect against index out of bounds
+				if byIndex[indexOfStartLabel - i].tag == tag {
+					return i
+				}
+			}
+			if indexOfStartLabel + i < byIndex.count { // protect against index out of bounds
+				if byIndex[indexOfStartLabel + i].tag == tag {
+					return i
+				}
+			}
+
+			if indexOfStartLabel - i < 0 && indexOfStartLabel + i >= byIndex.count {
+				break // no more valid indices to check
+			}
+		}
+
+		return -1
 	}
 
 	public func next() -> Labels.Label? {
@@ -389,5 +403,19 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 			}
 		}
 		return foundTag
+	}
+
+	fileprivate func indexOfLabelWith(conditions: (Label) -> Bool) -> Int {
+		if count > 0 {
+			var index = 0
+			while index < count && !conditions(byIndex[index]) {
+				index += 1
+			}
+
+			if index < count {
+				return index
+			}
+		}
+		return -1
 	}
 }
