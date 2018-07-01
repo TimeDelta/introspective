@@ -93,17 +93,19 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 		return !byIndex.isEmpty
 	}
 
-	/// Return true if a label with the same range, tag and token has been previously added otherwise false.
-	public func labelHasBeenAdded(_ label: Label) -> Bool {
+	/// Return the index of the specified `Label`. If the `Label` is not found -1 will be returned.
+	public func indexOf(label: Label) -> Int {
 		if count > 0 {
 			var index = 0
-			while index < count && byIndex[index].tokenRange != label.tokenRange && byIndex[index].token != label.token {
+			while index < count && (byIndex[index].tokenRange != label.tokenRange || byIndex[index].token != label.token || byIndex[index].tag != label.tag) {
 				index += 1
 			}
 
-			return index < count
+			if index < count {
+				return index
+			}
 		}
-		return false
+		return -1
 	}
 
 	/// Get all `Label`s for each specified tag.
@@ -360,7 +362,7 @@ class Labels: NSObject, IteratorProtocol, Sequence {
 
 	public func shortestDistance(from: Label, toLabelWith: NLTag) -> Int? {
 		var shortestDistance = Int.max
-		if !labelHasBeenAdded(from) {
+		if indexOf(label: from) == -1 {
 			return nil
 		}
 

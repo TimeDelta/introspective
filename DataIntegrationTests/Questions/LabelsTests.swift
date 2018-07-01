@@ -33,7 +33,7 @@ class LabelsTests: UnitTest {
 		labels.addLabel(label)
 
 		// then
-		assert(labels.byIndex[0] == label)
+		XCTAssert(labels.byIndex[0] == label)
 	}
 
 	func testGivenValidLabel_addLabel_storesLabelByTag() {
@@ -44,7 +44,7 @@ class LabelsTests: UnitTest {
 		labels.addLabel(label)
 
 		// then
-		assert(labels.byTag[label.tag] == [label])
+		XCTAssert(labels.byTag[label.tag] == [label])
 	}
 
 	func testGivenLabelWithSameTagJustAdded_addLabel_combinesNewLabelWithMostRecentOne() {
@@ -58,8 +58,8 @@ class LabelsTests: UnitTest {
 		labels.addLabel(createLabelFor(tag, token2))
 
 		// then
-		assert(labels.count == 1)
-		assert(labels.byIndex[0].token == token1 + " " + token2)
+		XCTAssert(labels.count == 1)
+		XCTAssert(labels.byIndex[0].token == token1 + " " + token2)
 	}
 
 	func testGivenLabelWithNoneTagJustAdded_addLabel_doesNotCombineNewLabelWithMostRecentOne() {
@@ -70,7 +70,7 @@ class LabelsTests: UnitTest {
 		labels.addLabel(createLabelFor(Tags.none))
 
 		// then
-		assert(labels.count == 2)
+		XCTAssert(labels.count == 2)
 	}
 
 	func testGivenNoLabelsPreviouslyAdded_hasLabels_returnsFalse() {
@@ -90,7 +90,7 @@ class LabelsTests: UnitTest {
 		let hasLabels = labels.hasLabels()
 
 		// then
-		assert(hasLabels)
+		XCTAssert(hasLabels)
 	}
 
 	func testGivenNoLabelsPreviouslyAdded_hasLabelFor_returnsFalse() {
@@ -110,7 +110,7 @@ class LabelsTests: UnitTest {
 		let hasLabelFor = labels.hasLabelFor(label.tag)
 
 		// then
-		assert(hasLabelFor)
+		XCTAssert(hasLabelFor)
 	}
 
 	func testGivenLabelWithDifferentTagPreviouslyAdded_hasLabelFor_returnsFalse() {
@@ -125,10 +125,73 @@ class LabelsTests: UnitTest {
 		XCTAssertFalse(hasLabelFor)
 	}
 
-	// TODO - write tests for this method
-	func testGiven_labelHasBeenAdded_() {
+	func testGivenNoLabelsAdded_indexOfLabel_returnsNegativeOne() {
+		// when
+		let index = labels.indexOf(label: createLabelFor(Tags.activityData))
+
 		// then
-		assert(false)
+		XCTAssert(index == -1)
+	}
+
+	func testGivenLabelWithSameTagAndTokenButDifferentRange_indexOfLabel_returnsNegativeOne() {
+		// given
+		let token = "token"
+		let range = createTokenRange(token + "some other stuff")
+		let tag = Tags.activityData
+		let targetLabel = createLabelFor(tag, token, range)
+		labels.addLabel(createLabelFor(tag, token))
+
+		// when
+		let index = labels.indexOf(label: targetLabel)
+
+		// then
+		XCTAssert(index == -1)
+	}
+
+	func testGivenLabelWithSameTagAndRangeButDifferentToken_indexOfLabel_returnsNegativeOne() {
+		// given
+		let token = "token"
+		let targetToken = token + "some other stuff"
+		let tag = Tags.activityData
+		let range = createTokenRange(targetToken)
+		let targetLabel = createLabelFor(tag, targetToken, range)
+		labels.addLabel(createLabelFor(tag, token, range))
+
+		// when
+		let index = labels.indexOf(label: targetLabel)
+
+		// then
+		XCTAssert(index == -1)
+	}
+
+	func testGivenLabelWithSameTokenAndRangeButDifferentTag_indexOfLabel_returnsNegativeOne() {
+		// given
+		let token = "token"
+		let tag = Tags.activityData
+		let targetTag = NLTag("definitely not the same tag")
+		let targetLabel = createLabelFor(targetTag, token)
+		labels.addLabel(createLabelFor(tag, token))
+
+		// when
+		let index = labels.indexOf(label: targetLabel)
+
+		// then
+		XCTAssert(index == -1)
+	}
+
+	func testGivenLabelWithSameTokenSameRangeAndSameTag_indexOfLabel_returnsCorrectIndex() {
+		// given
+		let label = createLabelFor(Tags.activityData)
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(label)
+		labels.addLabel(createLabelFor(Tags.none))
+
+		// when
+		let index = labels.indexOf(label: label)
+
+		// then
+		XCTAssert(index == 2)
 	}
 
 	func testGivenNoLabelsPreviouslyAdded_labelsInAnyOrderFor_returnsEmptyArray() {
@@ -136,7 +199,7 @@ class LabelsTests: UnitTest {
 		let labelsFor = labels.labelsInAnyOrderFor(tags: [Tags.activityData])
 
 		// then
-		assert(labelsFor.isEmpty)
+		XCTAssert(labelsFor.isEmpty)
 	}
 
 	func testGivenOnlyLabelsWithRequestedTagsPreviouslyAdded_labelsInAnyOrderFor_returnsAllLabelsForGivenTags() {
@@ -154,9 +217,9 @@ class LabelsTests: UnitTest {
 		let labelsFor = labels.labelsInAnyOrderFor(tags: tags)
 
 		// then
-		assert(2 * tags.count == labelsFor.count)
+		XCTAssert(2 * tags.count == labelsFor.count)
 		for label in labelsFor {
-			assert(tags.contains(label.tag))
+			XCTAssert(tags.contains(label.tag))
 		}
 	}
 
@@ -174,7 +237,7 @@ class LabelsTests: UnitTest {
 
 		// then
 		for label in labelsFor {
-			assert(label.tag != otherTag)
+			XCTAssert(label.tag != otherTag)
 		}
 	}
 
@@ -188,7 +251,7 @@ class LabelsTests: UnitTest {
 		let labelsFor = labels.labelsInAnyOrderFor(tags: tags)
 
 		// then
-		assert(labelsFor.isEmpty)
+		XCTAssert(labelsFor.isEmpty)
 	}
 
 	func testGivenNoLabelsPreviouslyAdded_labelsFor_returnsEmptyArray() {
@@ -196,7 +259,7 @@ class LabelsTests: UnitTest {
 		let labelsFor = labels.labelsFor(tags: [Tags.activityData])
 
 		// then
-		assert(labelsFor.isEmpty)
+		XCTAssert(labelsFor.isEmpty)
 	}
 
 	func testGivenOnlyLabelsWithRequestedTagsPreviouslyAdded_labelsFor_returnsAllLabelsForGivenTags() {
@@ -214,9 +277,9 @@ class LabelsTests: UnitTest {
 		let labelsFor = labels.labelsFor(tags: tags)
 
 		// then
-		assert(2 * tags.count == labelsFor.count)
+		XCTAssert(2 * tags.count == labelsFor.count)
 		for label in labelsFor {
-			assert(tags.contains(label.tag))
+			XCTAssert(tags.contains(label.tag))
 		}
 	}
 
@@ -234,7 +297,7 @@ class LabelsTests: UnitTest {
 
 		// then
 		for label in labelsFor {
-			assert(label.tag != otherTag)
+			XCTAssert(label.tag != otherTag)
 		}
 	}
 
@@ -248,7 +311,7 @@ class LabelsTests: UnitTest {
 		let labelsFor = labels.labelsFor(tags: tags)
 
 		// then
-		assert(labelsFor.isEmpty)
+		XCTAssert(labelsFor.isEmpty)
 	}
 
 	func testGivenLabelsWithRequestedTags_labelsFor_returnsLabelsInOrderTheyWereAdded() {
@@ -263,7 +326,7 @@ class LabelsTests: UnitTest {
 
 		// then
 		for i in 0 ..< tags.count {
-			assert(labelsFor[labelsFor.count - i - 1].tag == tags[i])
+			XCTAssert(labelsFor[labelsFor.count - i - 1].tag == tags[i])
 		}
 	}
 
@@ -284,9 +347,9 @@ class LabelsTests: UnitTest {
 		let split = labels.splitBefore(tag: splitTag)
 
 		// then
-		assert(split.count == 2)
-		assert(split[0] == expectedFirst)
-		assert(split[1] == expectedSecond)
+		XCTAssert(split.count == 2)
+		XCTAssert(split[0] == expectedFirst)
+		XCTAssert(split[1] == expectedSecond)
 	}
 
 	func testGivenMultipleLabelsWithSpecifiedTag_splitBeforeTag_splitsBeforeEachLabelWithSpecifiedTag() {
@@ -311,10 +374,10 @@ class LabelsTests: UnitTest {
 		let split = labels.splitBefore(tag: splitTag)
 
 		// then
-		assert(split.count == 3)
-		assert(split[0] == expectedFirst)
-		assert(split[1] == expectedSecond)
-		assert(split[2] == expectedThird)
+		XCTAssert(split.count == 3)
+		XCTAssert(split[0] == expectedFirst)
+		XCTAssert(split[1] == expectedSecond)
+		XCTAssert(split[2] == expectedThird)
 	}
 
 	func testGivenLabelWithSpecifiedTagAtBeggining_splitBeforeTag_doesNotIncludeEmptyLabelsObjectInReturnValue() {
@@ -326,7 +389,7 @@ class LabelsTests: UnitTest {
 		let split = labels.splitBefore(tag: splitTag)
 
 		// then
-		assert(split.count == 1)
+		XCTAssert(split.count == 1)
 		XCTAssertFalse(split[0].isEmpty)
 	}
 
@@ -347,9 +410,9 @@ class LabelsTests: UnitTest {
 		let split = labels.splitAfter(tag: splitTag)
 
 		// then
-		assert(split.count == 2)
-		assert(split[0] == expectedFirst)
-		assert(split[1] == expectedSecond)
+		XCTAssert(split.count == 2)
+		XCTAssert(split[0] == expectedFirst)
+		XCTAssert(split[1] == expectedSecond)
 	}
 
 	func testGivenMultipleLabelsWithSpecifiedTag_splitAfterTag_splitsAfterEachLabelWithSpecifiedTag() {
@@ -374,10 +437,10 @@ class LabelsTests: UnitTest {
 		let split = labels.splitAfter(tag: splitTag)
 
 		// then
-		assert(split.count == 3)
-		assert(split[0] == expectedFirst)
-		assert(split[1] == expectedSecond)
-		assert(split[2] == expectedThird)
+		XCTAssert(split.count == 3)
+		XCTAssert(split[0] == expectedFirst)
+		XCTAssert(split[1] == expectedSecond)
+		XCTAssert(split[2] == expectedThird)
 	}
 
 	func testGivenLabelWithSpecifiedTagAtEnd_splitAfterTag_doesNotIncludeEmptyLabelsObjectInReturnValue() {
@@ -390,7 +453,7 @@ class LabelsTests: UnitTest {
 		let split = labels.splitAfter(tag: splitTag)
 
 		// then
-		assert(split.count == 1)
+		XCTAssert(split.count == 1)
 		XCTAssertFalse(split[0].isEmpty)
 	}
 
@@ -403,8 +466,8 @@ class LabelsTests: UnitTest {
 		let split = labels.splitBefore(tags: Set<NLTag>())
 
 		// then
-		assert(split.count == 1)
-		assert(split[0] == labels)
+		XCTAssert(split.count == 1)
+		XCTAssert(split[0] == labels)
 	}
 
 	func testGivenEmptyLabelsObject_splitBeforeTags_returnsEmptyArray() {
@@ -415,7 +478,7 @@ class LabelsTests: UnitTest {
 		let split = labels.splitBefore(tags: splitTags)
 
 		// then
-		assert(split.isEmpty)
+		XCTAssert(split.isEmpty)
 	}
 
 	func testGivenLabelWithSpecifiedTagAtBeggining_splitBeforeTags_doesNotIncludeEmptyLabelsObjectInReturnValue() {
@@ -427,7 +490,7 @@ class LabelsTests: UnitTest {
 		let split = labels.splitBefore(tags: Set<NLTag>([splitTag]))
 
 		// then
-		assert(split.count == 1)
+		XCTAssert(split.count == 1)
 		XCTAssertFalse(split.isEmpty)
 	}
 
@@ -452,10 +515,10 @@ class LabelsTests: UnitTest {
 		let split = labels.splitBefore(tags: splitTags)
 
 		// then
-		assert(split.count == 3)
-		assert(split[0] == expected0)
-		assert(split[1] == expected1)
-		assert(split[2] == expected2)
+		XCTAssert(split.count == 3)
+		XCTAssert(split[0] == expected0)
+		XCTAssert(split[1] == expected1)
+		XCTAssert(split[2] == expected2)
 	}
 
 	func testGivenMultipleTagsWithMultipleMatchingLabels_splitBeforeTags_splitsBeforeEachLabelWithMatchingTag() {
@@ -476,9 +539,9 @@ class LabelsTests: UnitTest {
 		let split = labels.splitBefore(tags: Set<NLTag>([splitTag1, splitTag2]))
 
 		// then
-		assert(split.count == 2)
-		assert(split[0] == expected0)
-		assert(split[1] == expected1)
+		XCTAssert(split.count == 2)
+		XCTAssert(split[0] == expected0)
+		XCTAssert(split[1] == expected1)
 	}
 
 	func testGivenNoLabelsHaveAnyOfTheSpecifiedTags_splitBeforeTags_returnsArrayWithJustTheOriginalLabelsObject() {
@@ -490,8 +553,8 @@ class LabelsTests: UnitTest {
 		let split = labels.splitBefore(tags: Set<NLTag>([Tags.none, Tags.frequency]))
 
 		// then
-		assert(split.count == 1)
-		assert(split[0] == labels)
+		XCTAssert(split.count == 1)
+		XCTAssert(split[0] == labels)
 	}
 
 	func testGivenEmptySet_splitAfterTags_returnsArrayWithJustOriginalLabelsObject() {
@@ -503,8 +566,8 @@ class LabelsTests: UnitTest {
 		let split = labels.splitAfter(tags: Set<NLTag>())
 
 		// then
-		assert(split.count == 1)
-		assert(split[0] == labels)
+		XCTAssert(split.count == 1)
+		XCTAssert(split[0] == labels)
 	}
 
 	func testGivenEmptyLabelsObject_splitAfterTags_returnsEmptyArray() {
@@ -515,7 +578,7 @@ class LabelsTests: UnitTest {
 		let split = labels.splitAfter(tags: splitTags)
 
 		// then
-		assert(split.isEmpty)
+		XCTAssert(split.isEmpty)
 	}
 
 	func testGivenLabelWithSpecifiedTagAtEnd_splitAfterTags_doesNotIncludeEmptyLabelsObjectInReturnValue() {
@@ -529,7 +592,7 @@ class LabelsTests: UnitTest {
 		let split = labels.splitAfter(tags: Set<NLTag>([splitTag]))
 
 		// then
-		assert(split.count == 1)
+		XCTAssert(split.count == 1)
 		XCTAssertFalse(split.isEmpty)
 	}
 
@@ -553,9 +616,9 @@ class LabelsTests: UnitTest {
 		let split = labels.splitAfter(tags: splitTags)
 
 		// then
-		assert(split.count == 2)
-		assert(split[0] == expected0)
-		assert(split[1] == expected1)
+		XCTAssert(split.count == 2)
+		XCTAssert(split[0] == expected0)
+		XCTAssert(split[1] == expected1)
 	}
 
 	func testGivenMultipleTagsWithMultipleMatchingLabels_splitAfterTags_splitsAfterEachLabelWithMatchingTag() {
@@ -576,9 +639,9 @@ class LabelsTests: UnitTest {
 		let split = labels.splitAfter(tags: Set<NLTag>([splitTag1, splitTag2]))
 
 		// then
-		assert(split.count == 2)
-		assert(split[0] == expected0)
-		assert(split[1] == expected1)
+		XCTAssert(split.count == 2)
+		XCTAssert(split[0] == expected0)
+		XCTAssert(split[1] == expected1)
 	}
 
 	func testGivenNoLabelsHaveAnyOfTheSpecifiedTags_splitAfterTags_returnsArrayWithJustTheOriginalLabelsObject() {
@@ -590,8 +653,8 @@ class LabelsTests: UnitTest {
 		let split = labels.splitAfter(tags: Set<NLTag>([Tags.none, Tags.frequency]))
 
 		// then
-		assert(split.count == 1)
-		assert(split[0] == labels)
+		XCTAssert(split.count == 1)
+		XCTAssert(split[0] == labels)
 	}
 
 	func testGivenIndexLessThanZero_findNearestLabelWithTagTo_throwsIndexOutOfRange() throws {
@@ -630,7 +693,7 @@ class LabelsTests: UnitTest {
 		let result = try labels.findNearestLabelWith(tag: NLTag("DoesNotExist"), to: 0)
 
 		// then
-		assert(result == nil)
+		XCTAssert(result == nil)
 	}
 
 	func testGivenLabelWithSpecifiedTagAtSpecifiedIndex_findNearestLabelWithTagTo_returnsArrayWithOnlyLabelAtGivenIndex() throws {
@@ -646,8 +709,8 @@ class LabelsTests: UnitTest {
 		let result = try labels.findNearestLabelWith(tag: findTag, to: 2)
 
 		// then
-		assert(result?.count == 1)
-		assert(result?[0].token == correctToken)
+		XCTAssert(result?.count == 1)
+		XCTAssert(result?[0].token == correctToken)
 	}
 
 	func testGivenOnlyOneLabelWithSpecifiedTag_findNearestLabelWithTagTo_returnsArrayWithOnlyThatLabel() throws {
@@ -661,8 +724,8 @@ class LabelsTests: UnitTest {
 		let result = try labels.findNearestLabelWith(tag: findTag, to: labels.count - 1)
 
 		// then
-		assert(result?.count == 1)
-		assert(result?[0] == createLabelFor(findTag))
+		XCTAssert(result?.count == 1)
+		XCTAssert(result?[0] == createLabelFor(findTag))
 	}
 
 	func testGivenMultipleLabelsAtDifferentDistancesWithSpecifiedTag_findNearestLabelWithTagTo_returnsArrayWithOnlyClosestLabel() throws {
@@ -682,8 +745,8 @@ class LabelsTests: UnitTest {
 		let result = try labels.findNearestLabelWith(tag: findTag, to: startIndex)
 
 		// then
-		assert(result?.count == 1)
-		assert(result?[0].token == correctToken)
+		XCTAssert(result?.count == 1)
+		XCTAssert(result?[0].token == correctToken)
 	}
 
 	func testGivenMultipleLabelsWithSpecifiedTagAtSameDistanceFromStartIndex_findNBearestLabelWithTagTo_returnsArrayWithBothMatchingLabels() throws {
@@ -700,8 +763,8 @@ class LabelsTests: UnitTest {
 		let result = try labels.findNearestLabelWith(tag: findTag, to: startIndex)
 
 		// then
-		assert(result?.count == 2)
-		assert(
+		XCTAssert(result?.count == 2)
+		XCTAssert(
 			(result?[0].token == token1 && result?[1].token == token2) ||
 			(result?[0].token == token2 && result?[1].token == token1))
 	}
@@ -742,7 +805,7 @@ class LabelsTests: UnitTest {
 		let result = try labels.findNearestLabelWith(tag: NLTag("DoesNotExist"), before: 0)
 
 		// then
-		assert(result == nil)
+		XCTAssert(result == nil)
 	}
 
 	func testGivenLabelWithSpecifiedTagAtSpecifiedIndex_findNearestLabelWithTagBefore_returnsLabelAtGivenIndex() throws {
@@ -758,7 +821,7 @@ class LabelsTests: UnitTest {
 		let result = try labels.findNearestLabelWith(tag: findTag, before: 1)
 
 		// then
-		assert(result?.token == correctToken)
+		XCTAssert(result?.token == correctToken)
 	}
 
 	func testGivenOnlyOneLabelWithSpecifiedTag_findNearestLabelWithTagBefore_returnsThatLabel() throws {
@@ -772,7 +835,7 @@ class LabelsTests: UnitTest {
 		let result = try labels.findNearestLabelWith(tag: findTag, before: labels.count - 1)
 
 		// then
-		assert(result == createLabelFor(findTag))
+		XCTAssert(result == createLabelFor(findTag))
 	}
 
 	func testGivenMultipleLabelsAtDifferentDistancesWithSpecifiedTag_findNearestLabelWithTagBefore_returnsClosestLabel() throws {
@@ -792,7 +855,7 @@ class LabelsTests: UnitTest {
 		let result = try labels.findNearestLabelWith(tag: findTag, before: startIndex)
 
 		// then
-		assert(result?.token == correctToken)
+		XCTAssert(result?.token == correctToken)
 	}
 
 	func testGivenOnlyLabelWithSpecifiedTagIsAfterSpecifiedIndex_findNearestLabelWithTagBefore_returnsNil() throws {
@@ -806,7 +869,7 @@ class LabelsTests: UnitTest {
 		let result = try labels.findNearestLabelWith(tag: findTag, before: 1)
 
 		// then
-		assert(result == nil)
+		XCTAssert(result == nil)
 	}
 
 	func testGivenClosestLabelWithSpecifiedTagIsAfterSpecifiedIndex_findNearestLabelWithTagBefore_returnsLabelBeforeSpecifiedIndex() throws {
@@ -823,7 +886,7 @@ class LabelsTests: UnitTest {
 		let result = try labels.findNearestLabelWith(tag: findTag, before: 2)
 
 		// then
-		assert(result?.token == correctToken)
+		XCTAssert(result?.token == correctToken)
 	}
 
 	func testGivenIndexLessThanZero_findNearestLabelWithTagAfter_throwsIndexOutOfRange() throws {
@@ -862,7 +925,7 @@ class LabelsTests: UnitTest {
 		let result = try labels.findNearestLabelWith(tag: NLTag("DoesNotExist"), after: 0)
 
 		// then
-		assert(result == nil)
+		XCTAssert(result == nil)
 	}
 
 	func testGivenLabelWithSpecifiedTagAtSpecifiedIndex_findNearestLabelWithTagAfter_returnsLabelAtGivenIndex() throws {
@@ -878,7 +941,7 @@ class LabelsTests: UnitTest {
 		let result = try labels.findNearestLabelWith(tag: findTag, after: 1)
 
 		// then
-		assert(result?.token == correctToken)
+		XCTAssert(result?.token == correctToken)
 	}
 
 	func testGivenOnlyOneLabelWithSpecifiedTag_findNearestLabelWithTagAfter_returnsThatLabel() throws {
@@ -892,7 +955,7 @@ class LabelsTests: UnitTest {
 		let result = try labels.findNearestLabelWith(tag: findTag, after: 0)
 
 		// then
-		assert(result == createLabelFor(findTag))
+		XCTAssert(result == createLabelFor(findTag))
 	}
 
 	func testGivenMultipleLabelsAtDifferentDistancesWithSpecifiedTag_findNearestLabelWithTagAfter_returnsClosestLabel() throws {
@@ -912,7 +975,7 @@ class LabelsTests: UnitTest {
 		let result = try labels.findNearestLabelWith(tag: findTag, after: startIndex)
 
 		// then
-		assert(result?.token == correctToken)
+		XCTAssert(result?.token == correctToken)
 	}
 
 	func testGivenOnlyLabelWithSpecifiedTagIsBeforeSpecifiedIndex_findNearestLabelWithTagAfter_returnsNil() throws {
@@ -926,7 +989,7 @@ class LabelsTests: UnitTest {
 		let result = try labels.findNearestLabelWith(tag: findTag, after: 1)
 
 		// then
-		assert(result == nil)
+		XCTAssert(result == nil)
 	}
 
 	func testGivenClosestLabelWithSpecifiedTagIsBeforeSpecifiedIndex_findNearestLabelWithTagAfter_returnsLabelBeforeSpecifiedIndex() throws {
@@ -943,7 +1006,7 @@ class LabelsTests: UnitTest {
 		let result = try labels.findNearestLabelWith(tag: findTag, after: 1)
 
 		// then
-		assert(result?.token == correctToken)
+		XCTAssert(result?.token == correctToken)
 	}
 
 	func testGivenNoLabelsAdded_ifNotTaggedTagLabelAtRangeAsTag_doesNothing() {
@@ -956,7 +1019,7 @@ class LabelsTests: UnitTest {
 		labels.ifNotTaggedTagLabelAt(range: targetRange, asTag: newTag)
 
 		// then
-		assert(labels.count == 0)
+		XCTAssert(labels.count == 0)
 	}
 
 	func testGivenNoLabelWithTargetRange_ifNotTaggedTagLabelAtRangeAsTag_doesNotReTagLabel() {
@@ -970,7 +1033,7 @@ class LabelsTests: UnitTest {
 		labels.ifNotTaggedTagLabelAt(range: targetRange, asTag: newTag)
 
 		// then
-		assert(labels.byIndex[0].tag != newTag)
+		XCTAssert(labels.byIndex[0].tag != newTag)
 	}
 
 	func testGivenLabelWithTargetRangeAlreadyTagged_ifNotTaggedTagLabelAtRangeAsTag_doesNotReTagLabel() {
@@ -984,7 +1047,7 @@ class LabelsTests: UnitTest {
 		labels.ifNotTaggedTagLabelAt(range: targetRange, asTag: newTag)
 
 		// then
-		assert(labels.byIndex[0].tag != newTag)
+		XCTAssert(labels.byIndex[0].tag != newTag)
 	}
 
 	func testGivenUntaggedLabelWithTargetRange_ifNotTaggedTagLabelAtRangeAsTag_reTagsLabelWithNewTag() {
@@ -998,7 +1061,7 @@ class LabelsTests: UnitTest {
 		labels.ifNotTaggedTagLabelAt(range: targetRange, asTag: newTag)
 
 		// then
-		assert(labels.byIndex[0].tag == newTag)
+		XCTAssert(labels.byIndex[0].tag == newTag)
 	}
 
 	func testGivenNoLabelsAdded_shortestDistance_returnsMaxInt() {
@@ -1006,7 +1069,7 @@ class LabelsTests: UnitTest {
 		let distance = labels.shortestDistance(between: Tags.none, and: Tags.activityData)
 
 		// then
-		assert(distance == Int.max)
+		XCTAssert(distance == Int.max)
 	}
 
 	func testGivenNoLabelWithTag1_shortestDistance_returnsMaxInt() {
@@ -1020,7 +1083,7 @@ class LabelsTests: UnitTest {
 		let distance = labels.shortestDistance(between: tag1, and: tag2)
 
 		// then
-		assert(distance == Int.max)
+		XCTAssert(distance == Int.max)
 	}
 
 	func testGivenNoLabelWithTag2_shortestDistance_returnsMaxInt() {
@@ -1034,7 +1097,7 @@ class LabelsTests: UnitTest {
 		let distance = labels.shortestDistance(between: tag1, and: tag2)
 
 		// then
-		assert(distance == Int.max)
+		XCTAssert(distance == Int.max)
 	}
 
 	func testGivenNoLabelWithEitherTag_shortestDistance_returnsMaxInt() {
@@ -1048,7 +1111,7 @@ class LabelsTests: UnitTest {
 		let distance = labels.shortestDistance(between: tag1, and: tag2)
 
 		// then
-		assert(distance == Int.max)
+		XCTAssert(distance == Int.max)
 	}
 
 	func testGivenOnlyOneLabelAdded_shortestDistance_returnsMaxInt() {
@@ -1061,7 +1124,7 @@ class LabelsTests: UnitTest {
 		let distance = labels.shortestDistance(between: tag1, and: tag2)
 
 		// then
-		assert(distance == Int.max)
+		XCTAssert(distance == Int.max)
 	}
 
 	func testGivenSpecifiedTagsAreEqual_shortestDistance_returnsCorrectDistance() {
@@ -1075,7 +1138,7 @@ class LabelsTests: UnitTest {
 		let distance = labels.shortestDistance(between: tag, and: tag)
 
 		// assert
-		assert(distance == 2)
+		XCTAssert(distance == 2)
 	}
 
 	func testGivenLabelsWithSpecifiedTagsExistAndTagsAreNotEqual_shortestDistance_returnsCorrectDistance() {
@@ -1089,7 +1152,7 @@ class LabelsTests: UnitTest {
 		let distance = labels.shortestDistance(between: tag1, and: tag2)
 
 		// then
-		assert(distance == 1)
+		XCTAssert(distance == 1)
 	}
 
 	func testGivenMultipleLabelPairsWithSpecifiedTagsAndTagsAreNotEqual_shortestDistance_returnsShortestDistanceBetweenViableLabels() {
@@ -1107,7 +1170,7 @@ class LabelsTests: UnitTest {
 		let distance = labels.shortestDistance(between: tag1, and: tag2)
 
 		// then
-		assert(distance == 2)
+		XCTAssert(distance == 2)
 	}
 
 	func testGivenMultipleLabelPairsWithSpecifiedTagsAndTagsAreEqual_shortestDistance_returnsShortestDistanceBetweenViableLabels() {
@@ -1124,7 +1187,7 @@ class LabelsTests: UnitTest {
 		let distance = labels.shortestDistance(between: tag, and: tag)
 
 		// then
-		assert(distance == 2)
+		XCTAssert(distance == 2)
 	}
 
 	func testGivenSpecifiedTagsAreNotEqualAndTwoLabelsWithSameTagAreCloserThanCorrectDistance_shortestDistance_returnsCorrectDistance() {
@@ -1142,13 +1205,13 @@ class LabelsTests: UnitTest {
 		let distance = labels.shortestDistance(between: tag1, and: tag2)
 
 		// then
-		assert(distance == 3)
+		XCTAssert(distance == 3)
 	}
 
 	// TODO - write tests for this method
 	func testGiven_shortestDistanceFromLabelToLabelWithTag_() {
 		// then
-		assert(false)
+		XCTAssert(false)
 	}
 
 	fileprivate func createLabelFor(_ tag: NLTag) -> Labels.Label {
@@ -1157,6 +1220,10 @@ class LabelsTests: UnitTest {
 
 	fileprivate func createLabelFor(_ tag: NLTag, _ token: String) -> Labels.Label {
 		return Labels.Label(tag: tag, token: token, tokenRange: createTokenRange(token))
+	}
+
+	fileprivate func createLabelFor(_ tag: NLTag, _ token: String, _ range: Range<String.Index>) -> Labels.Label {
+		return Labels.Label(tag: tag, token: token, tokenRange: range)
 	}
 
 	fileprivate func createTokenRange(_ token: String) -> Range<String.Index> {
