@@ -116,7 +116,7 @@ class LabelsTests: UnitTest {
 		XCTAssert(labels.byIndex[0].token == token1 + " " + token2)
 	}
 
-	func testGivenLabelWithNoneTagJustAdded_addLabel_doesNotCombineNewLabelWithMostRecentOne() {
+	func testGivenLabelWithNoneTagJustAddedAndNewLabelWithNoneTagBeingAdded_addLabel_doesNotCombineNewLabelWithMostRecentOne() {
 		// given
 		labels.addLabel(createLabelFor(Tags.none))
 
@@ -753,6 +753,30 @@ class LabelsTests: UnitTest {
 		// then
 		XCTAssert(split.count == 1)
 		XCTAssert(split[0] == labels)
+	}
+
+	func testGivenOtherLabelsAfterFinalLabelWithSpecifiedTag_splitAfterTags_includesLabelsObjectWithThoseLabelsAtEndOfReturnedArray() {
+		// given
+		let splitTag = Tags.activityData
+		let otherTag = Tags.attribute
+		labels.addLabel(createLabelFor(otherTag))
+		labels.addLabel(createLabelFor(splitTag))
+		labels.addLabel(createLabelFor(otherTag))
+		labels.addLabel(createLabelFor(Tags.none))
+		let expected0 = Labels()
+		expected0.addLabel(createLabelFor(otherTag))
+		expected0.addLabel(createLabelFor(splitTag))
+		let expected1 = Labels()
+		expected1.addLabel(createLabelFor(otherTag))
+		expected1.addLabel(createLabelFor(Tags.none))
+
+		// when
+		let split = labels.splitAfter(tags: Set<NLTag>([splitTag]))
+
+		// then
+		XCTAssert(split.count == 2)
+		XCTAssert(split[0] == expected0)
+		XCTAssert(split[1] == expected1)
 	}
 
 	func testGivenIndexLessThanZero_findNearestLabelWithTagTo_throwsIndexOutOfRange() throws {
@@ -1414,6 +1438,65 @@ class LabelsTests: UnitTest {
 
 		// then
 		XCTAssert(distance == -1)
+	}
+
+	func testGivenNonEmptyLabelsObject_iteration_givesElementsInCorrectOrder() {
+		// given
+		let label0 = createLabelFor(Tags.activityData)
+		let label1 = createLabelFor(Tags.attribute)
+		let label2 = createLabelFor(Tags.average)
+		labels.addLabel(label0)
+		labels.addLabel(label1)
+		labels.addLabel(label2)
+		var iteratedLabels = [Labels.Label]()
+
+		// when
+		for label in labels {
+			iteratedLabels.append(label)
+		}
+
+		// then
+		XCTAssert(iteratedLabels[0] == label0)
+		XCTAssert(iteratedLabels[1] == label1)
+		XCTAssert(iteratedLabels[2] == label2)
+	}
+
+	func testGivenNonEmptyLabelsObject_iteration_stopsAfterCorrectNumberOfElementsReturned() {
+		// given
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(Tags.none))
+		var iteratedLabels = [Labels.Label]()
+
+		// when
+		for label in labels {
+			iteratedLabels.append(label)
+		}
+
+		// then
+		XCTAssert(iteratedLabels.count == 3)
+	}
+
+	func testGivenIteratedOverPreviously_iteration_givesElementsInCorrectOrder() {
+		// given
+		let label0 = createLabelFor(Tags.activityData)
+		let label1 = createLabelFor(Tags.attribute)
+		let label2 = createLabelFor(Tags.average)
+		labels.addLabel(label0)
+		labels.addLabel(label1)
+		labels.addLabel(label2)
+		var iteratedLabels = [Labels.Label]()
+		for _ in labels {}
+
+		// when
+		for label in labels {
+			iteratedLabels.append(label)
+		}
+
+		// then
+		XCTAssert(iteratedLabels[0] == label0)
+		XCTAssert(iteratedLabels[1] == label1)
+		XCTAssert(iteratedLabels[2] == label2)
 	}
 
 	fileprivate func createLabelFor(_ tag: NLTag) -> Labels.Label {

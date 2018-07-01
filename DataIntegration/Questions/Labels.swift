@@ -387,6 +387,7 @@ class Labels: IteratorProtocol, Sequence, Equatable {
 
 	public func next() -> Labels.Label? {
 		if currentIteratorIndex == byIndex.count {
+			currentIteratorIndex = 0
 			return nil
 		}
 		let nextLabel = byIndex[currentIteratorIndex]
