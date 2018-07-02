@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A21780EB20E9796700A8F9BA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21780EA20E9796700A8F9BA /* DateExtension.swift */; };
+		A21780F020E9ACD800A8F9BA /* TextNormalizationUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilTests.swift */; };
 		A238FECD20E53E820025307F /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FECC20E53E820025307F /* Question.swift */; };
 		A238FECF20E53E8A0025307F /* Answer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FECE20E53E8A0025307F /* Answer.swift */; };
 		A238FED120E53E900025307F /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FED020E53E900025307F /* Labels.swift */; };
@@ -29,7 +31,7 @@
 		A238FEF520E540700025307F /* HeartRateQuerier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FEF420E540700025307F /* HeartRateQuerier.swift */; };
 		A238FEF820E5412B0025307F /* CodableStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FEF720E5412B0025307F /* CodableStorage.swift */; };
 		A238FEFA20E541420025307F /* DatabaseConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FEF920E541420025307F /* DatabaseConnector.swift */; };
-		A238FEFC20E541600025307F /* ContractionsReplacementUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FEFB20E541600025307F /* ContractionsReplacementUtil.swift */; };
+		A238FEFC20E541600025307F /* TextNormalizationUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FEFB20E541600025307F /* TextNormalizationUtil.swift */; };
 		A238FEFE20E541950025307F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A238FEFD20E541950025307F /* Main.storyboard */; };
 		A238FF0020E541AE0025307F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A238FEFF20E541AE0025307F /* LaunchScreen.storyboard */; };
 		A238FF0220E541F80025307F /* AskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FF0120E541F80025307F /* AskViewController.swift */; };
@@ -111,6 +113,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A21780EA20E9796700A8F9BA /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
+		A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNormalizationUtilTests.swift; sourceTree = "<group>"; };
 		A238FECC20E53E820025307F /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		A238FECE20E53E8A0025307F /* Answer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Answer.swift; sourceTree = "<group>"; };
 		A238FED020E53E900025307F /* Labels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
@@ -133,7 +137,7 @@
 		A238FEF420E540700025307F /* HeartRateQuerier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateQuerier.swift; sourceTree = "<group>"; };
 		A238FEF720E5412B0025307F /* CodableStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableStorage.swift; sourceTree = "<group>"; };
 		A238FEF920E541420025307F /* DatabaseConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseConnector.swift; sourceTree = "<group>"; };
-		A238FEFB20E541600025307F /* ContractionsReplacementUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractionsReplacementUtil.swift; sourceTree = "<group>"; };
+		A238FEFB20E541600025307F /* TextNormalizationUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNormalizationUtil.swift; sourceTree = "<group>"; };
 		A238FEFD20E541950025307F /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		A238FEFF20E541AE0025307F /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A238FF0120E541F80025307F /* AskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskViewController.swift; sourceTree = "<group>"; };
@@ -226,6 +230,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A21780EE20E9AC9A00A8F9BA /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilTests.swift */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
 		A238FEC720E53E360025307F /* DataTypes */ = {
 			isa = PBXGroup;
 			children = (
@@ -254,7 +266,8 @@
 		A238FEC920E53E560025307F /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				A238FEFB20E541600025307F /* ContractionsReplacementUtil.swift */,
+				A238FEFB20E541600025307F /* TextNormalizationUtil.swift */,
+				A21780EA20E9796700A8F9BA /* DateExtension.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -406,6 +419,7 @@
 			children = (
 				A255D53D20E5A30100BDD57B /* Mocks */,
 				A2E4E85C20E5548500631398 /* Questions */,
+				A21780EE20E9AC9A00A8F9BA /* Util */,
 				A2ABEA1720E53A4F00142C00 /* Info.plist */,
 				A255D54720E5AAC600BDD57B /* UnitTest.swift */,
 			);
@@ -627,7 +641,7 @@
 				A2ABEA2F20E53BEB00142C00 /* AppDelegate.swift in Sources */,
 				A238FEF820E5412B0025307F /* CodableStorage.swift in Sources */,
 				A2E4E8A420E5584D00631398 /* InjectionProvider.swift in Sources */,
-				A238FEFC20E541600025307F /* ContractionsReplacementUtil.swift in Sources */,
+				A238FEFC20E541600025307F /* TextNormalizationUtil.swift in Sources */,
 				A238FED120E53E900025307F /* Labels.swift in Sources */,
 				A2E4E8A820E5589400631398 /* UnitTestInjectionProvider.swift in Sources */,
 				A238FEEF20E53F850025307F /* MoodSource.swift in Sources */,
@@ -640,6 +654,7 @@
 				A2E4E8A220E5584200631398 /* InjectionType.swift in Sources */,
 				A2E4E8AE20E55AE400631398 /* QueryFactory.swift in Sources */,
 				A238FEDF20E53EFB0025307F /* QuantityRestriction.swift in Sources */,
+				A21780EB20E9796700A8F9BA /* DateExtension.swift in Sources */,
 				A238FED720E53EAD0025307F /* Query.swift in Sources */,
 				A255D53820E5690F00BDD57B /* MockQueryFactory.swift in Sources */,
 				A238FEFA20E541420025307F /* DatabaseConnector.swift in Sources */,
@@ -686,6 +701,7 @@
 				A23AB7B320E6CE250082794B /* MockMood.swift in Sources */,
 				A23AB7AD20E6CE1C0082794B /* MockAnswer.swift in Sources */,
 				A23AB7BC20E6CE300082794B /* MockQuery.swift in Sources */,
+				A21780F020E9ACD800A8F9BA /* TextNormalizationUtilTests.swift in Sources */,
 				A23AB7BB20E6CE300082794B /* MockOperations.swift in Sources */,
 				A23AB7BD20E6CE300082794B /* MockQuestion.swift in Sources */,
 			);
