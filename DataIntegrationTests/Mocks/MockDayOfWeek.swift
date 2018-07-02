@@ -19,6 +19,26 @@ class MockDayOfWeek: DayOfWeek, Cuckoo.ClassMock {
     let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
 
     
+    // ["name": "fullDayName", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "String", "isReadOnly": true, "accessibility": "public"]
+    public override var fullDayName: String {
+        get {
+            
+            return cuckoo_manager.getter("fullDayName", superclassCall: super.fullDayName)
+            
+        }
+        
+    }
+    
+    // ["name": "intValue", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "Int", "isReadOnly": true, "accessibility": "public"]
+    public override var intValue: Int {
+        get {
+            
+            return cuckoo_manager.getter("intValue", superclassCall: super.intValue)
+            
+        }
+        
+    }
+    
 
     
 
@@ -29,6 +49,14 @@ class MockDayOfWeek: DayOfWeek, Cuckoo.ClassMock {
 	
 	    init(manager: Cuckoo.MockManager) {
 	        self.cuckoo_manager = manager
+	    }
+	    
+	    var fullDayName: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockDayOfWeek, String> {
+	        return .init(manager: cuckoo_manager, name: "fullDayName")
+	    }
+	    
+	    var intValue: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockDayOfWeek, Int> {
+	        return .init(manager: cuckoo_manager, name: "intValue")
 	    }
 	    
 	    
@@ -46,6 +74,14 @@ class MockDayOfWeek: DayOfWeek, Cuckoo.ClassMock {
 	    }
 	
 	    
+	    var fullDayName: Cuckoo.VerifyReadOnlyProperty<String> {
+	        return .init(manager: cuckoo_manager, name: "fullDayName", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var intValue: Cuckoo.VerifyReadOnlyProperty<Int> {
+	        return .init(manager: cuckoo_manager, name: "intValue", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
 	
 	    
 	}
@@ -53,6 +89,20 @@ class MockDayOfWeek: DayOfWeek, Cuckoo.ClassMock {
 }
 
  class DayOfWeekStub: DayOfWeek {
+    
+    public override var fullDayName: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+        
+    }
+    
+    public override var intValue: Int {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (Int).self)
+        }
+        
+    }
     
 
     

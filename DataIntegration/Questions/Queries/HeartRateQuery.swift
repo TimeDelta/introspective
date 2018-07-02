@@ -16,15 +16,22 @@ class HeartRateQuery: NSObject, Query {
 		case UnknownOperationType
 	}
 
+	public enum CombinationType {
+		case And
+		case Or
+	}
+
 	public var finalOperation: Operations?
 	public var startDate: Date?
 	public var endDate: Date?
 	public var daysOfWeek: Set<DayOfWeek>
+	public var daysOfWeekCombinationType: CombinationType
 	public var quantityRestrictions: [QuantityRestriction<Double>]
 
 	public override init() {
 		daysOfWeek = Set<DayOfWeek>()
-		quantityRestrictions = [QuantityRestriction]()
+		quantityRestrictions = [QuantityRestriction<Double>]()
+		daysOfWeekCombinationType = .Or
 	}
 
 	public func runQuery(callback: @escaping ([String: NSObject]?, Error?) -> ()) {
@@ -97,7 +104,12 @@ class HeartRateQuery: NSObject, Query {
 				}
 				predicates.append(predicate)
 			}
-			daysOfWeekPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
+
+			if daysOfWeekCombinationType == .Or {
+				daysOfWeekPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
+			} else {
+				daysOfWeekPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+			}
 		}
 
 		var allSubpredicates = [NSPredicate]()

@@ -84,6 +84,22 @@ class MockHeartRateQuery: HeartRateQuery, Cuckoo.ClassMock {
         
     }
     
+    // ["name": "daysOfWeekCombinationType", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "CombinationType", "isReadOnly": false, "accessibility": "public"]
+    public override var daysOfWeekCombinationType: CombinationType {
+        get {
+            
+            return cuckoo_manager.getter("daysOfWeekCombinationType", superclassCall: super.daysOfWeekCombinationType)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("daysOfWeekCombinationType", value: newValue, superclassCall: super.daysOfWeekCombinationType = newValue)
+            
+        }
+        
+    }
+    
     // ["name": "quantityRestrictions", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "[QuantityRestriction<Double>]", "isReadOnly": false, "accessibility": "public"]
     public override var quantityRestrictions: [QuantityRestriction<Double>] {
         get {
@@ -104,7 +120,7 @@ class MockHeartRateQuery: HeartRateQuery, Cuckoo.ClassMock {
     
 
     
-    // ["name": "runQuery", "returnSignature": "", "fullyQualifiedName": "runQuery(callback: @escaping ([String: NSObject]?, Error?) -> ())", "parameterSignature": "callback: @escaping ([String: NSObject]?, Error?) -> ()", "parameterSignatureWithoutNames": "callback: @escaping ([String: NSObject]?, Error?) -> ()", "inputTypes": "([String: NSObject]?, Error?) -> ()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping ([String: NSObject]?, Error?) -> ()", range: CountableRange(644..<699), nameRange: CountableRange(644..<652))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
+    // ["name": "runQuery", "returnSignature": "", "fullyQualifiedName": "runQuery(callback: @escaping ([String: NSObject]?, Error?) -> ())", "parameterSignature": "callback: @escaping ([String: NSObject]?, Error?) -> ()", "parameterSignatureWithoutNames": "callback: @escaping ([String: NSObject]?, Error?) -> ()", "inputTypes": "([String: NSObject]?, Error?) -> ()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping ([String: NSObject]?, Error?) -> ()", range: CountableRange(797..<852), nameRange: CountableRange(797..<805))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
     public override func runQuery(callback: @escaping ([String: NSObject]?, Error?) -> ())  {
         
             return cuckoo_manager.call("runQuery(callback: @escaping ([String: NSObject]?, Error?) -> ())",
@@ -138,6 +154,10 @@ class MockHeartRateQuery: HeartRateQuery, Cuckoo.ClassMock {
 	    
 	    var daysOfWeek: Cuckoo.ClassToBeStubbedProperty<MockHeartRateQuery, Set<DayOfWeek>> {
 	        return .init(manager: cuckoo_manager, name: "daysOfWeek")
+	    }
+	    
+	    var daysOfWeekCombinationType: Cuckoo.ClassToBeStubbedProperty<MockHeartRateQuery, CombinationType> {
+	        return .init(manager: cuckoo_manager, name: "daysOfWeekCombinationType")
 	    }
 	    
 	    var quantityRestrictions: Cuckoo.ClassToBeStubbedProperty<MockHeartRateQuery, [QuantityRestriction<Double>]> {
@@ -178,6 +198,10 @@ class MockHeartRateQuery: HeartRateQuery, Cuckoo.ClassMock {
 	    
 	    var daysOfWeek: Cuckoo.VerifyProperty<Set<DayOfWeek>> {
 	        return .init(manager: cuckoo_manager, name: "daysOfWeek", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var daysOfWeekCombinationType: Cuckoo.VerifyProperty<CombinationType> {
+	        return .init(manager: cuckoo_manager, name: "daysOfWeekCombinationType", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
 	    
 	    var quantityRestrictions: Cuckoo.VerifyProperty<[QuantityRestriction<Double>]> {
@@ -228,6 +252,15 @@ class MockHeartRateQuery: HeartRateQuery, Cuckoo.ClassMock {
     public override var daysOfWeek: Set<DayOfWeek> {
         get {
             return DefaultValueRegistry.defaultValue(for: (Set<DayOfWeek>).self)
+        }
+        
+        set { }
+        
+    }
+    
+    public override var daysOfWeekCombinationType: CombinationType {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (CombinationType).self)
         }
         
         set { }

@@ -23,20 +23,19 @@ class Question: NSObject {
 	fileprivate var labels: Labels
 	fileprivate var questionParts: [Labels]
 	fileprivate var currentQuestionPartIndex: Int
-	fileprivate var finalAnswerCallback: (Answer?, Error?) -> ()
+	fileprivate var finalAnswerCallback: ((Answer?, Error?) -> ())!
 
 	public init(text: String) {
 		questionText = text
 		labels = Labels()
 		questionParts = [Labels]()
 		currentQuestionPartIndex = 0
-		finalAnswerCallback = { (_, _) in }
 	}
 
 	public func parse(callback: (Error?) -> ()) {
-		normalizeNumbers()
-		questionText = ContractionsReplacementUtil.expand(questionText)
-		removePunctuation()
+		questionText = TextNormalizationUtil.normalizeNumbers(questionText)
+		questionText = TextNormalizationUtil.expandContractions(questionText)
+		questionText = TextNormalizationUtil.removePunctuation(questionText)
 
 		do {
 //			if let modelUrl = Bundle.main.url(forResource: "questionLabels", withExtension: "mlmodel") {
@@ -179,18 +178,14 @@ class Question: NSObject {
 					// TODO
 				}
 
-				let dayOfWeekLabels = questionPart.byTag[Tags.dayOfWeek]
-				if dayOfWeekLabels != nil {
-					if dayOfWeekLabels!.count != 1 {
-						self.finalAnswerCallback(nil, ErrorTypes.MultipleDaysOfWeekNotSupported)
-					}
-					let dayOfWeekLabel = dayOfWeekLabels![0]
-					let distanceToNearestWhichTag = questionPart.shortestDistance(from: dayOfWeekLabel, toLabelWith: Tags.which)!
-					if distanceToNearestWhichTag < 3 {
-
-					}
-					let dayOfWeek = try DayOfWeek.fromString(dayOfWeekLabel.token)
-					query.daysOfWeek.insert(dayOfWeek!)
+				// TODO - "between last tuesday and today/now" cases
+				// TODO - "since last wednesday" cases
+				let dayOfWeekRestriction: (date: Date?, dayOfWeek: DayOfWeek?) = try self.resolveDayOfWeekRestrictions(questionPart)
+				if dayOfWeekRestriction.date != nil {
+					query.startDate = dayOfWeekRestriction.date
+					query.endDate = dayOfWeekRestriction.date
+				} else if dayOfWeekRestriction.dayOfWeek != nil {
+					query.daysOfWeek.insert(dayOfWeekRestriction.dayOfWeek!)
 				}
 
 				query.runQuery(callback: self.answerNextQuestionPart)
@@ -200,31 +195,37 @@ class Question: NSObject {
 		}
 	}
 
+	fileprivate func resolveDayOfWeekRestrictions(_ questionPart: Labels) throws -> (Date?, DayOfWeek?) {
+		let dayOfWeekLabels = questionPart.byTag[Tags.dayOfWeek]
+		if dayOfWeekLabels != nil {
+			if dayOfWeekLabels!.count != 1 {
+				self.finalAnswerCallback(nil, ErrorTypes.MultipleDaysOfWeekNotSupported)
+			}
+			let dayOfWeekLabel = dayOfWeekLabels![0]
+			let distanceToNearestWhichTag = questionPart.shortestDistance(from: dayOfWeekLabel, toLabelWith: Tags.which)!
+			if distanceToNearestWhichTag == 1 {
+				let dayOfWeekLabelIndex = self.labels.indexOf(label: dayOfWeekLabel)
+				let nearestWhichLabels = try self.labels.findNearestLabelWith(tag: Tags.which, to: dayOfWeekLabelIndex)!
+				let nearestWhichLabel = nearestWhichLabels[0]
+				if whichTokenRepresentsMostRecent(nearestWhichLabel.token) {
+					let dayOfWeek = try DayOfWeek.fromString(dayOfWeekLabel.token)!
+					return (Date().previous(dayOfWeek), nil)
+				} else {
+					// TODO - this is the "2 sundays ago" type case
+				}
+			}
+			return (nil, try DayOfWeek.fromString(dayOfWeekLabel.token))
+		}
+		return (nil, nil)
+	}
+
 	fileprivate func sort(_ questionParts: [Labels], byShortestDistanceBetween tag1: NLTag, and tag2: NLTag) -> [Labels] {
 		return questionParts.sorted(by: { (part1, part2) -> Bool in
 			part1.shortestDistance(between: tag1, and: tag2) < part2.shortestDistance(between: tag1, and: tag2)
 		})
 	}
 
-	fileprivate func normalizeNumbers() {
-		let numberFormatter:NumberFormatter = NumberFormatter()
-		numberFormatter.numberStyle = NumberFormatter.Style.spellOut
-		let numberWords = Set(["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "sixteen", "seventeen", "eighteen", "nineteen", "twenty", "thirty", "fourty", "fifty", "sixty", "seventy", "eighty", "ninety", "hundred", "thousand", "million", "billion", "trillion", "quadrillion", "quintillion"])
-		var englishNumber = String()
-		for word in questionText.split(separator: " ") {
-			if numberWords.contains(word.lowercased()) {
-				englishNumber.append(contentsOf: word.lowercased())
-			} else if !englishNumber.isEmpty {
-				let number = String(numberFormatter.number(from: englishNumber)!.doubleValue)
-				questionText = questionText.replacingOccurrences(of: englishNumber, with: number)
-				englishNumber = String()
-			}
-		}
-	}
-
-	fileprivate func removePunctuation() {
-		let punctuationRegex = try! NSRegularExpression(pattern: "[^a-zA-Z0-9]+")
-		let questionTextLength = questionText.count
-		questionText = punctuationRegex.stringByReplacingMatches(in: questionText, options: [], range: NSMakeRange(0, questionTextLength), withTemplate: "")
+	fileprivate func whichTokenRepresentsMostRecent(_ token: String) -> Bool {
+		return token == "most recent" || token == "last" || token.contains("this")
 	}
 }
