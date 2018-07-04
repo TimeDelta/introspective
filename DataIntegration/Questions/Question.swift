@@ -90,7 +90,7 @@ public class Question: NSObject {
 		answerNextQuestionPart(resultsFromPreviousPart: nil, error: nil)
 	}
 
-	fileprivate func answerNextQuestionPart(resultsFromPreviousPart: Result?, error: Error?) {
+	fileprivate func answerNextQuestionPart(resultsFromPreviousPart: QueryResult?, error: Error?) {
 		if currentQuestionPartIndex == questionParts.count {
 			// TODO - construct real Answer object
 			var answer = Answer()
@@ -169,7 +169,7 @@ public class Question: NSObject {
 				// TODO - "on days that my heart rate goes abova 175" cases
 				let operationLabels = questionPart.labelsInAnyOrderFor(tags: Tags.operationTags())
 				if operationLabels.count == 1 {
-					query.finalOperation = try Operation.from(tag: operationLabels[0].tag)
+					query.finalOperation = try QueryOperation.from(tag: operationLabels[0].tag)
 				} else if operationLabels.count > 1 {
 					throw ErrorTypes.NotImplemented
 				}

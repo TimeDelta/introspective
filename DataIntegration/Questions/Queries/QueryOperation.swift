@@ -9,7 +9,7 @@
 import Foundation
 import NaturalLanguage
 
-public class Operation: NSObject {
+public class QueryOperation: NSObject {
 
 	public enum Kind {
 		case average
@@ -32,11 +32,11 @@ public class Operation: NSObject {
 		self.kind = kind
 	}
 
-	public static func from(tag: NLTag) throws -> Operation {
+	public static func from(tag: NLTag) throws -> QueryOperation {
 		let operationKind = map[tag]
 		if operationKind == nil {
 			throw ErrorTypes.UnknownOperationType
 		}
-		return Operation(operationKind!)
+		return QueryOperation(operationKind!)
 	}
 }

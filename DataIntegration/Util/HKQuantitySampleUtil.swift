@@ -11,7 +11,7 @@ import HealthKit
 
 public class HKQuantitySampleUtil {
 
-	public func compute(operation: Operation, over samples: [HKQuantitySample], withUnit unit: HKUnit) -> [Double] {
+	public func compute(operation: QueryOperation, over samples: [HKQuantitySample], withUnit unit: HKUnit) -> [Double] {
 		switch(operation.kind) {
 			case .average:
 				return average(over: samples, per: operation.aggregationUnit, withUnit: unit)

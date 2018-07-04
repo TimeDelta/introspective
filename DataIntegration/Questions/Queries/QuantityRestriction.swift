@@ -44,7 +44,7 @@ public class QuantityRestriction: NSObject {
 	public fileprivate(set) var comparison: ComparisonType
 	public fileprivate(set) var value: Double
 	public fileprivate(set) var aggregationUnit: Calendar.Component?
-	public fileprivate(set) var operation: Operation?
+	public fileprivate(set) var operation: QueryOperation?
 
 	public init(attribute: String, _ comparison: ComparisonType, value: Double) {
 		self.attribute = attribute

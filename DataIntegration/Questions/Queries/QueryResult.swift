@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class Result: NSObject {
+public class QueryResult: NSObject {
 
 	public fileprivate(set) var finalAnswer: Any
 	public fileprivate(set) var returnType: ReturnType

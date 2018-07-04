@@ -10,7 +10,7 @@ import Foundation
 
 protocol Query {
 
-	var finalOperation: Operation? {get set}
+	var finalOperation: QueryOperation? {get set}
 	/// Ignore everything before this date.
 	var startDate: Date? {get set}
 	/// Ignore everything after this date.
@@ -24,5 +24,5 @@ protocol Query {
 	/// When returning, only give the `returnType` for the most recent entry
 	var mostRecentEntryOnly: Bool {get set}
 
-	func runQuery(callback: @escaping (Result?, Error?) -> ()) throws
+	func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) throws
 }

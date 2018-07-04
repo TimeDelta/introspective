@@ -20,7 +20,7 @@ public class HeartRateQuery: NSObject, Query {
 		case ReturnTypeIsFinalOperationButNoOperationSpecified
 	}
 
-	public var finalOperation: Operation?
+	public var finalOperation: QueryOperation?
 	public var startDate: Date?
 	public var endDate: Date?
 	public var daysOfWeek: Set<DayOfWeek>
@@ -34,7 +34,7 @@ public class HeartRateQuery: NSObject, Query {
 		mostRecentEntryOnly = false
 	}
 
-	public func runQuery(callback: @escaping (Result?, Error?) -> ()) {
+	public func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
 		if returnType == nil {
 			callback(nil, ErrorTypes.NoReturnTypeSpecified)
 		}
@@ -74,7 +74,7 @@ public class HeartRateQuery: NSObject, Query {
 				callback(nil, error)
 			}
 
-			callback(Result(finalAnswer!, self.returnType!), nil)
+			callback(QueryResult(finalAnswer!, self.returnType!), nil)
 		}
 	}
 
