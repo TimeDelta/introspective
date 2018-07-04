@@ -10,6 +10,8 @@ import Foundation
 
 public class TextNormalizationUtil: NSObject {
 
+	fileprivate typealias Me = TextNormalizationUtil
+
 	static let contractions = [
 		"ain't": "am not",
 		"aren't": "are not",
@@ -140,15 +142,15 @@ public class TextNormalizationUtil: NSObject {
 	fileprivate static let numberOrderTokens = Set<String>(numberOrderTokensArray)
 	fileprivate static let hyphenatedNumberWords = Set<String>(["twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" ])
 
-	public static func expandContractions(_ text: String) -> String {
+	public func expandContractions(_ text: String) -> String {
 		var expandedText = text
-		for contractionReplacement in contractions {
+		for contractionReplacement in Me.contractions {
 			expandedText = expandedText.replacingOccurrences(of: contractionReplacement.key, with: contractionReplacement.value)
 		}
 		return expandedText
 	}
 
-	public static func normalizeNumbers(_ text: String) -> String {
+	public func normalizeNumbers(_ text: String) -> String {
 		var previousNumberWordShouldBeHyphenated = false
 		var englishNumber = String()
 		var finalText = text
@@ -158,20 +160,20 @@ public class TextNormalizationUtil: NSObject {
 		})
 		for word in words {
 			let token = String(word)
-			if numberWords.contains(token.lowercased()) {
+			if Me.numberWords.contains(token.lowercased()) {
 				appendAppropriateSeparatorToEnglishNumber(&englishNumber, &previousNumberWordShouldBeHyphenated)
 				englishNumber.append(token.lowercased())
-				if hyphenatedNumberWords.contains(token) {
+				if Me.hyphenatedNumberWords.contains(token) {
 					previousNumberWordShouldBeHyphenated = true
 				}
-			} else if numberOrderTokens.contains(token) {
+			} else if Me.numberOrderTokens.contains(token) {
 				let replacement = convertNumberOrderTokenToEnglishNumberWord(token.lowercased())
 				finalText = finalText.replacingOccurrences(of: token, with: replacement)
 
 				appendAppropriateSeparatorToEnglishNumber(&englishNumber, &previousNumberWordShouldBeHyphenated)
 				englishNumber.append(replacement.lowercased())
 
-				let endingMatch = numberOrderTokenEndingRegex.firstMatch(in: token, options: [], range: NSMakeRange(0, token.count))
+				let endingMatch = Me.numberOrderTokenEndingRegex.firstMatch(in: token, options: [], range: NSMakeRange(0, token.count))
 				additionalEnding = String(token[Range(endingMatch!.range, in: token)!])
 			} else if !englishNumber.isEmpty {
 				finalText = replaceEnglishNumber(text: finalText, englishNum: englishNumber, additionalEnding)
@@ -186,11 +188,11 @@ public class TextNormalizationUtil: NSObject {
 		return finalText
 	}
 
-	public static func removePunctuation(_ text: String) -> String {
-		return punctuationRegex.stringByReplacingMatches(in: text, options: [], range: NSMakeRange(0, text.count), withTemplate: "")
+	public func removePunctuation(_ text: String) -> String {
+		return Me.punctuationRegex.stringByReplacingMatches(in: text, options: [], range: NSMakeRange(0, text.count), withTemplate: "")
 	}
 
-	fileprivate static func appendAppropriateSeparatorToEnglishNumber(_ englishNumber: inout String, _ previousNumberWordShouldBeHyphenated: inout Bool) {
+	fileprivate func appendAppropriateSeparatorToEnglishNumber(_ englishNumber: inout String, _ previousNumberWordShouldBeHyphenated: inout Bool) {
 		if previousNumberWordShouldBeHyphenated {
 			englishNumber.append("-")
 			previousNumberWordShouldBeHyphenated = false
@@ -199,13 +201,13 @@ public class TextNormalizationUtil: NSObject {
 		}
 	}
 
-	fileprivate static func replaceEnglishNumber(text: String, englishNum: String, _ additionalEnding: String? = nil) -> String {
+	fileprivate func replaceEnglishNumber(text: String, englishNum: String, _ additionalEnding: String? = nil) -> String {
 		let numberFormatter:NumberFormatter = NumberFormatter()
 		numberFormatter.numberStyle = NumberFormatter.Style.spellOut
 
 		var englishNumber = englishNum.trimmingCharacters(in: CharacterSet([" "]))
 		var number = String(numberFormatter.number(from: englishNumber)!.doubleValue)
-		number = decimalEndingReplacementRegex.stringByReplacingMatches(in: number, options: [], range: NSMakeRange(0, number.count), withTemplate: "")
+		number = Me.decimalEndingReplacementRegex.stringByReplacingMatches(in: number, options: [], range: NSMakeRange(0, number.count), withTemplate: "")
 
 		if additionalEnding != nil {
 			number.append(additionalEnding!)
@@ -217,10 +219,10 @@ public class TextNormalizationUtil: NSObject {
 		return englishNumberRegex.stringByReplacingMatches(in: text, options: [], range: NSMakeRange(0, text.count), withTemplate: number)
 	}
 
-	fileprivate static func convertNumberOrderTokenToEnglishNumberWord(_ token: String) -> String {
-		for i in 0 ..< numberOrderTokensArray.count {
-			if numberOrderTokensArray[i] == token {
-				return numberWordsArray[i]
+	fileprivate func convertNumberOrderTokenToEnglishNumberWord(_ token: String) -> String {
+		for i in 0 ..< Me.numberOrderTokensArray.count {
+			if Me.numberOrderTokensArray[i] == token {
+				return Me.numberWordsArray[i]
 			}
 		}
 		return token

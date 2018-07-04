@@ -1,5 +1,5 @@
 //
-//  TextNormalizationUtilTests.swift
+//  utilTests.swift
 //  DataIntegrationTests
 //
 //  Created by Bryan Nova on 7/1/18.
@@ -11,13 +11,20 @@ import XCTest
 
 class TextNormalizationUtilTests: UnitTest {
 
+	fileprivate var util: TextNormalizationUtil!
+
+	override func setUp() {
+        super.setUp()
+		util = TextNormalizationUtil()
+    }
+
     func testGivenTheOneHundredTwentiethGame_normalizeNumbers_replacesOneHundredTwentiethWith120th() {
 		// given
 		let text = "the one hundred twentieth game"
 		let expectedResult = "the 120th game"
 
 		// when
-		let result = TextNormalizationUtil.normalizeNumbers(text)
+		let result = util.normalizeNumbers(text)
 
 		// then
 		XCTAssert(result == expectedResult)
@@ -29,7 +36,7 @@ class TextNormalizationUtilTests: UnitTest {
 		let expectedResult = "on the 12th"
 
 		// when
-		let result = TextNormalizationUtil.normalizeNumbers(text)
+		let result = util.normalizeNumbers(text)
 
 		// then
 		XCTAssert(result == expectedResult)
@@ -40,7 +47,7 @@ class TextNormalizationUtilTests: UnitTest {
 		let text = "there are no numbers in this text to normalize"
 
 		// when
-		let result = TextNormalizationUtil.normalizeNumbers(text)
+		let result = util.normalizeNumbers(text)
 
 		// then
 		XCTAssert(result == text)
@@ -52,7 +59,7 @@ class TextNormalizationUtilTests: UnitTest {
 		let expectedResult = "on the 13th of last month"
 
 		// when
-		let result = TextNormalizationUtil.normalizeNumbers(text)
+		let result = util.normalizeNumbers(text)
 
 		// then
 		XCTAssert(result == expectedResult)
@@ -64,7 +71,7 @@ class TextNormalizationUtilTests: UnitTest {
 		let expectedResult = "there were 99 of them"
 
 		// when
-		let result = TextNormalizationUtil.normalizeNumbers(text)
+		let result = util.normalizeNumbers(text)
 
 		// then
 		XCTAssert(result == expectedResult)
@@ -76,7 +83,7 @@ class TextNormalizationUtilTests: UnitTest {
 		let expectedResult = "greater than 87"
 
 		// when
-		let result = TextNormalizationUtil.normalizeNumbers(text)
+		let result = util.normalizeNumbers(text)
 
 		// then
 		XCTAssert(result == expectedResult)
@@ -88,7 +95,7 @@ class TextNormalizationUtilTests: UnitTest {
 		let expectedResult = "it was the 9th innning with 2 outs and 1 strike"
 
 		// when
-		let result = TextNormalizationUtil.normalizeNumbers(text)
+		let result = util.normalizeNumbers(text)
 
 		// then
 		XCTAssert(result == expectedResult)
@@ -100,7 +107,7 @@ class TextNormalizationUtilTests: UnitTest {
 		let expectedResult = "on the 99th day at 230"
 
 		// when
-		let result = TextNormalizationUtil.normalizeNumbers(text)
+		let result = util.normalizeNumbers(text)
 
 		// then
 		XCTAssert(result == expectedResult)
@@ -112,7 +119,7 @@ class TextNormalizationUtilTests: UnitTest {
 		let expectedResult = "at 1st there were only 2 of them but soon there were 14"
 
 		// when
-		let result = TextNormalizationUtil.normalizeNumbers(text)
+		let result = util.normalizeNumbers(text)
 
 		// then
 		XCTAssert(result == expectedResult)

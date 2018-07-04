@@ -33,9 +33,9 @@ public class Question: NSObject {
 	}
 
 	public func parse(callback: (Error?) -> ()) {
-		questionText = TextNormalizationUtil.normalizeNumbers(questionText)
-		questionText = TextNormalizationUtil.expandContractions(questionText)
-		questionText = TextNormalizationUtil.removePunctuation(questionText)
+		questionText = DependencyInjector.util.textNormalizationUtil.normalizeNumbers(questionText)
+		questionText = DependencyInjector.util.textNormalizationUtil.expandContractions(questionText)
+		questionText = DependencyInjector.util.textNormalizationUtil.removePunctuation(questionText)
 
 		do {
 //			if let modelUrl = Bundle.main.url(forResource: "questionLabels", withExtension: "mlmodel") {

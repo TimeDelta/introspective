@@ -10,11 +10,15 @@ import Foundation
 
 public class UtilFactory {
 
+	fileprivate typealias Me = UtilFactory
+
 	fileprivate static let realCalendarUtil = CalendarUtil()
 	fileprivate static let realHKQuantitySampleUtil = HKQuantitySampleUtil()
 	fileprivate static let realHKSampleUtil = HKSampleUtil()
+	fileprivate static let realTextNormalizationUtil = TextNormalizationUtil()
 
-	public var calendarUtil: CalendarUtil { return UtilFactory.realCalendarUtil }
-	public var hkQuantitySampleUtil: HKQuantitySampleUtil { return UtilFactory.realHKQuantitySampleUtil }
-	public var hkSampleUtil: HKSampleUtil { return UtilFactory.realHKSampleUtil }
+	public var calendarUtil: CalendarUtil { return Me.realCalendarUtil }
+	public var hkQuantitySampleUtil: HKQuantitySampleUtil { return Me.realHKQuantitySampleUtil }
+	public var hkSampleUtil: HKSampleUtil { return Me.realHKSampleUtil }
+	public var textNormalizationUtil: TextNormalizationUtil { return Me.realTextNormalizationUtil }
 }

@@ -3120,7 +3120,7 @@ class MockQuestion: Question, Cuckoo.ClassMock {
 
     }
     
-    // ["name": "answer", "returnSignature": "", "fullyQualifiedName": "answer(callback: @escaping (Answer?, Error?) -> ())", "parameterSignature": "callback: @escaping (Answer?, Error?) -> ()", "parameterSignatureWithoutNames": "callback: @escaping (Answer?, Error?) -> ()", "inputTypes": "(Answer?, Error?) -> ()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping (Answer?, Error?) -> ()", range: CountableRange(3185..<3228), nameRange: CountableRange(3185..<3193))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
+    // ["name": "answer", "returnSignature": "", "fullyQualifiedName": "answer(callback: @escaping (Answer?, Error?) -> ())", "parameterSignature": "callback: @escaping (Answer?, Error?) -> ()", "parameterSignatureWithoutNames": "callback: @escaping (Answer?, Error?) -> ()", "inputTypes": "(Answer?, Error?) -> ()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping (Answer?, Error?) -> ()", range: CountableRange(3257..<3300), nameRange: CountableRange(3257..<3265))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
     public override func answer(callback: @escaping (Answer?, Error?) -> ())  {
         
             return cuckoo_manager.call("answer(callback: @escaping (Answer?, Error?) -> ())",
@@ -5429,6 +5429,42 @@ class MockTextNormalizationUtil: TextNormalizationUtil, Cuckoo.ClassMock {
     
 
     
+    // ["name": "expandContractions", "returnSignature": " -> String", "fullyQualifiedName": "expandContractions(_: String) -> String", "parameterSignature": "_ text: String", "parameterSignatureWithoutNames": "text: String", "inputTypes": "String", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "text", "call": "text", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "text", type: "String", range: CountableRange(4849..<4863), nameRange: CountableRange(0..<0))], "returnType": "String", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func expandContractions(_ text: String)  -> String {
+        
+            return cuckoo_manager.call("expandContractions(_: String) -> String",
+                parameters: (text),
+                superclassCall:
+                    
+                    super.expandContractions(text)
+                    )
+        
+    }
+    
+    // ["name": "normalizeNumbers", "returnSignature": " -> String", "fullyQualifiedName": "normalizeNumbers(_: String) -> String", "parameterSignature": "_ text: String", "parameterSignatureWithoutNames": "text: String", "inputTypes": "String", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "text", "call": "text", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "text", type: "String", range: CountableRange(5133..<5147), nameRange: CountableRange(0..<0))], "returnType": "String", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func normalizeNumbers(_ text: String)  -> String {
+        
+            return cuckoo_manager.call("normalizeNumbers(_: String) -> String",
+                parameters: (text),
+                superclassCall:
+                    
+                    super.normalizeNumbers(text)
+                    )
+        
+    }
+    
+    // ["name": "removePunctuation", "returnSignature": " -> String", "fullyQualifiedName": "removePunctuation(_: String) -> String", "parameterSignature": "_ text: String", "parameterSignatureWithoutNames": "text: String", "inputTypes": "String", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "text", "call": "text", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "text", type: "String", range: CountableRange(6773..<6787), nameRange: CountableRange(0..<0))], "returnType": "String", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func removePunctuation(_ text: String)  -> String {
+        
+            return cuckoo_manager.call("removePunctuation(_: String) -> String",
+                parameters: (text),
+                superclassCall:
+                    
+                    super.removePunctuation(text)
+                    )
+        
+    }
+    
 
 	struct __StubbingProxy_TextNormalizationUtil: Cuckoo.StubbingProxy {
 	    private let cuckoo_manager: Cuckoo.MockManager
@@ -5437,6 +5473,21 @@ class MockTextNormalizationUtil: TextNormalizationUtil, Cuckoo.ClassMock {
 	        self.cuckoo_manager = manager
 	    }
 	    
+	    
+	    func expandContractions<M1: Cuckoo.Matchable>(_ text: M1) -> Cuckoo.ClassStubFunction<(String), String> where M1.MatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: text) { $0 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTextNormalizationUtil.self, method: "expandContractions(_: String) -> String", parameterMatchers: matchers))
+	    }
+	    
+	    func normalizeNumbers<M1: Cuckoo.Matchable>(_ text: M1) -> Cuckoo.ClassStubFunction<(String), String> where M1.MatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: text) { $0 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTextNormalizationUtil.self, method: "normalizeNumbers(_: String) -> String", parameterMatchers: matchers))
+	    }
+	    
+	    func removePunctuation<M1: Cuckoo.Matchable>(_ text: M1) -> Cuckoo.ClassStubFunction<(String), String> where M1.MatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: text) { $0 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTextNormalizationUtil.self, method: "removePunctuation(_: String) -> String", parameterMatchers: matchers))
+	    }
 	    
 	}
 
@@ -5454,6 +5505,24 @@ class MockTextNormalizationUtil: TextNormalizationUtil, Cuckoo.ClassMock {
 	    
 	
 	    
+	    @discardableResult
+	    func expandContractions<M1: Cuckoo.Matchable>(_ text: M1) -> Cuckoo.__DoNotUse<String> where M1.MatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: text) { $0 }]
+	        return cuckoo_manager.verify("expandContractions(_: String) -> String", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func normalizeNumbers<M1: Cuckoo.Matchable>(_ text: M1) -> Cuckoo.__DoNotUse<String> where M1.MatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: text) { $0 }]
+	        return cuckoo_manager.verify("normalizeNumbers(_: String) -> String", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func removePunctuation<M1: Cuckoo.Matchable>(_ text: M1) -> Cuckoo.__DoNotUse<String> where M1.MatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: text) { $0 }]
+	        return cuckoo_manager.verify("removePunctuation(_: String) -> String", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
 	}
 
 }
@@ -5463,6 +5532,18 @@ class MockTextNormalizationUtil: TextNormalizationUtil, Cuckoo.ClassMock {
 
     
 
+    
+    public override func expandContractions(_ text: String)  -> String {
+        return DefaultValueRegistry.defaultValue(for: String.self)
+    }
+    
+    public override func normalizeNumbers(_ text: String)  -> String {
+        return DefaultValueRegistry.defaultValue(for: String.self)
+    }
+    
+    public override func removePunctuation(_ text: String)  -> String {
+        return DefaultValueRegistry.defaultValue(for: String.self)
+    }
     
 }
 
@@ -5518,6 +5599,16 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
         
     }
     
+    // ["name": "textNormalizationUtil", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "TextNormalizationUtil", "isReadOnly": true, "accessibility": "public"]
+    public override var textNormalizationUtil: TextNormalizationUtil {
+        get {
+            
+            return cuckoo_manager.getter("textNormalizationUtil", superclassCall: super.textNormalizationUtil)
+            
+        }
+        
+    }
+    
 
     
 
@@ -5540,6 +5631,10 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
 	    
 	    var hkSampleUtil: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockUtilFactory, HKSampleUtil> {
 	        return .init(manager: cuckoo_manager, name: "hkSampleUtil")
+	    }
+	    
+	    var textNormalizationUtil: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockUtilFactory, TextNormalizationUtil> {
+	        return .init(manager: cuckoo_manager, name: "textNormalizationUtil")
 	    }
 	    
 	    
@@ -5569,6 +5664,10 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
 	        return .init(manager: cuckoo_manager, name: "hkSampleUtil", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
 	    
+	    var textNormalizationUtil: Cuckoo.VerifyReadOnlyProperty<TextNormalizationUtil> {
+	        return .init(manager: cuckoo_manager, name: "textNormalizationUtil", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
 	
 	    
 	}
@@ -5594,6 +5693,13 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
     public override var hkSampleUtil: HKSampleUtil {
         get {
             return DefaultValueRegistry.defaultValue(for: (HKSampleUtil).self)
+        }
+        
+    }
+    
+    public override var textNormalizationUtil: TextNormalizationUtil {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (TextNormalizationUtil).self)
         }
         
     }
