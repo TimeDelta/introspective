@@ -9,13 +9,19 @@
 /* Begin PBXBuildFile section */
 		A21780EB20E9796700A8F9BA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21780EA20E9796700A8F9BA /* DateExtension.swift */; };
 		A21780F020E9ACD800A8F9BA /* TextNormalizationUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilTests.swift */; };
+		A217810720EBA25300A8F9BA /* ReturnType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A217810620EBA25300A8F9BA /* ReturnType.swift */; };
+		A217810920EBA51400A8F9BA /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = A217810820EBA51400A8F9BA /* Result.swift */; };
+		A217810B20EC258B00A8F9BA /* CalendarUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A217810A20EC258B00A8F9BA /* CalendarUtil.swift */; };
+		A217810D20ED0F8400A8F9BA /* UtilFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A217810C20ED0F8400A8F9BA /* UtilFactory.swift */; };
+		A217810F20ED2F0A00A8F9BA /* HKQuantitySampleUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A217810E20ED2F0A00A8F9BA /* HKQuantitySampleUtil.swift */; };
+		A217811120ED34BE00A8F9BA /* HKSampleUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A217811020ED34BE00A8F9BA /* HKSampleUtil.swift */; };
 		A238FECD20E53E820025307F /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FECC20E53E820025307F /* Question.swift */; };
 		A238FECF20E53E8A0025307F /* Answer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FECE20E53E8A0025307F /* Answer.swift */; };
 		A238FED120E53E900025307F /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FED020E53E900025307F /* Labels.swift */; };
 		A238FED320E53E970025307F /* Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FED220E53E970025307F /* Tags.swift */; };
 		A238FED720E53EAD0025307F /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FED620E53EAD0025307F /* Query.swift */; };
 		A238FED920E53EB70025307F /* HeartRateQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FED820E53EB70025307F /* HeartRateQuery.swift */; };
-		A238FEDB20E53EE10025307F /* Operations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FEDA20E53EE10025307F /* Operations.swift */; };
+		A238FEDB20E53EE10025307F /* Operation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FEDA20E53EE10025307F /* Operation.swift */; };
 		A238FEDD20E53EED0025307F /* DayOfWeek.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FEDC20E53EED0025307F /* DayOfWeek.swift */; };
 		A238FEDF20E53EFB0025307F /* QuantityRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FEDE20E53EFB0025307F /* QuantityRestriction.swift */; };
 		A238FEE120E53F1D0025307F /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FEE020E53F1D0025307F /* Activity.swift */; };
@@ -38,20 +44,6 @@
 		A238FF0420E542710025307F /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FF0320E542710025307F /* SecondViewController.swift */; };
 		A238FF0620E542880025307F /* SourceDefinitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FF0520E542880025307F /* SourceDefinitionViewController.swift */; };
 		A238FF0820E5429A0025307F /* SourcesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FF0720E5429A0025307F /* SourcesTableViewController.swift */; };
-		A23AB7A320E6CE0B0082794B /* MockActivityInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23AB7A220E6CE0A0082794B /* MockActivityInstance.swift */; };
-		A23AB7A720E6CE130082794B /* MockDayOfWeek.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23AB7A420E6CE120082794B /* MockDayOfWeek.swift */; };
-		A23AB7A820E6CE130082794B /* MockHeartRateQuerier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23AB7A520E6CE130082794B /* MockHeartRateQuerier.swift */; };
-		A23AB7A920E6CE130082794B /* MockHeartRate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23AB7A620E6CE130082794B /* MockHeartRate.swift */; };
-		A23AB7AD20E6CE1C0082794B /* MockAnswer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23AB7AA20E6CE1C0082794B /* MockAnswer.swift */; };
-		A23AB7AE20E6CE1C0082794B /* MockDatabaseConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23AB7AB20E6CE1C0082794B /* MockDatabaseConnector.swift */; };
-		A23AB7AF20E6CE1C0082794B /* MockActivitySource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23AB7AC20E6CE1C0082794B /* MockActivitySource.swift */; };
-		A23AB7B320E6CE250082794B /* MockMood.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23AB7B020E6CE250082794B /* MockMood.swift */; };
-		A23AB7B420E6CE250082794B /* MockLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23AB7B120E6CE250082794B /* MockLabels.swift */; };
-		A23AB7B520E6CE250082794B /* MockMedicationSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23AB7B220E6CE250082794B /* MockMedicationSource.swift */; };
-		A23AB7BA20E6CE300082794B /* MockSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23AB7B620E6CE2F0082794B /* MockSource.swift */; };
-		A23AB7BB20E6CE300082794B /* MockOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23AB7B720E6CE300082794B /* MockOperations.swift */; };
-		A23AB7BC20E6CE300082794B /* MockQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23AB7B820E6CE300082794B /* MockQuery.swift */; };
-		A23AB7BD20E6CE300082794B /* MockQuestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23AB7B920E6CE300082794B /* MockQuestion.swift */; };
 		A23AB7BE20E6D41D0082794B /* Cuckoo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A255D53E20E5A7EE00BDD57B /* Cuckoo.framework */; };
 		A255D52420E55E0000BDD57B /* QuestionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A255D52320E55E0000BDD57B /* QuestionFactory.swift */; };
 		A255D52C20E5636E00BDD57B /* DataTypesFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A255D52B20E5636E00BDD57B /* DataTypesFactory.swift */; };
@@ -68,6 +60,7 @@
 		A2ABEA2F20E53BEB00142C00 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2ABEA2E20E53BEB00142C00 /* AppDelegate.swift */; };
 		A2CFA08C20E54F2E0083C5C5 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2CFA08B20E54F2E0083C5C5 /* SQLite.framework */; };
 		A2CFA08D20E54F2E0083C5C5 /* SQLite.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2CFA08B20E54F2E0083C5C5 /* SQLite.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A2E0B5D320ED4BE600B9FD8A /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E0B5D220ED4BE600B9FD8A /* Mocks.swift */; };
 		A2E4E85E20E5549900631398 /* LabelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E85D20E5549900631398 /* LabelsTests.swift */; };
 		A2E4E86120E554F000631398 /* Cuckoo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2E4E86020E554F000631398 /* Cuckoo.framework */; };
 		A2E4E8A020E5583200631398 /* DependencyInjector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E89F20E5583200631398 /* DependencyInjector.swift */; };
@@ -115,13 +108,19 @@
 /* Begin PBXFileReference section */
 		A21780EA20E9796700A8F9BA /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNormalizationUtilTests.swift; sourceTree = "<group>"; };
+		A217810620EBA25300A8F9BA /* ReturnType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnType.swift; sourceTree = "<group>"; };
+		A217810820EBA51400A8F9BA /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		A217810A20EC258B00A8F9BA /* CalendarUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUtil.swift; sourceTree = "<group>"; };
+		A217810C20ED0F8400A8F9BA /* UtilFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilFactory.swift; sourceTree = "<group>"; };
+		A217810E20ED2F0A00A8F9BA /* HKQuantitySampleUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKQuantitySampleUtil.swift; sourceTree = "<group>"; };
+		A217811020ED34BE00A8F9BA /* HKSampleUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKSampleUtil.swift; sourceTree = "<group>"; };
 		A238FECC20E53E820025307F /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		A238FECE20E53E8A0025307F /* Answer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Answer.swift; sourceTree = "<group>"; };
 		A238FED020E53E900025307F /* Labels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
 		A238FED220E53E970025307F /* Tags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tags.swift; sourceTree = "<group>"; };
 		A238FED620E53EAD0025307F /* Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
 		A238FED820E53EB70025307F /* HeartRateQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateQuery.swift; sourceTree = "<group>"; };
-		A238FEDA20E53EE10025307F /* Operations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operations.swift; sourceTree = "<group>"; };
+		A238FEDA20E53EE10025307F /* Operation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operation.swift; sourceTree = "<group>"; };
 		A238FEDC20E53EED0025307F /* DayOfWeek.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeek.swift; sourceTree = "<group>"; };
 		A238FEDE20E53EFB0025307F /* QuantityRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuantityRestriction.swift; sourceTree = "<group>"; };
 		A238FEE020E53F1D0025307F /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
@@ -144,20 +143,6 @@
 		A238FF0320E542710025307F /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		A238FF0520E542880025307F /* SourceDefinitionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceDefinitionViewController.swift; sourceTree = "<group>"; };
 		A238FF0720E5429A0025307F /* SourcesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesTableViewController.swift; sourceTree = "<group>"; };
-		A23AB7A220E6CE0A0082794B /* MockActivityInstance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockActivityInstance.swift; sourceTree = "<group>"; };
-		A23AB7A420E6CE120082794B /* MockDayOfWeek.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockDayOfWeek.swift; sourceTree = "<group>"; };
-		A23AB7A520E6CE130082794B /* MockHeartRateQuerier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockHeartRateQuerier.swift; sourceTree = "<group>"; };
-		A23AB7A620E6CE130082794B /* MockHeartRate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockHeartRate.swift; sourceTree = "<group>"; };
-		A23AB7AA20E6CE1C0082794B /* MockAnswer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAnswer.swift; sourceTree = "<group>"; };
-		A23AB7AB20E6CE1C0082794B /* MockDatabaseConnector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockDatabaseConnector.swift; sourceTree = "<group>"; };
-		A23AB7AC20E6CE1C0082794B /* MockActivitySource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockActivitySource.swift; sourceTree = "<group>"; };
-		A23AB7B020E6CE250082794B /* MockMood.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockMood.swift; sourceTree = "<group>"; };
-		A23AB7B120E6CE250082794B /* MockLabels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockLabels.swift; sourceTree = "<group>"; };
-		A23AB7B220E6CE250082794B /* MockMedicationSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockMedicationSource.swift; sourceTree = "<group>"; };
-		A23AB7B620E6CE2F0082794B /* MockSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockSource.swift; sourceTree = "<group>"; };
-		A23AB7B720E6CE300082794B /* MockOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockOperations.swift; sourceTree = "<group>"; };
-		A23AB7B820E6CE300082794B /* MockQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockQuery.swift; sourceTree = "<group>"; };
-		A23AB7B920E6CE300082794B /* MockQuestion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockQuestion.swift; sourceTree = "<group>"; };
 		A255D52320E55E0000BDD57B /* QuestionFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionFactory.swift; sourceTree = "<group>"; };
 		A255D52B20E5636E00BDD57B /* DataTypesFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTypesFactory.swift; sourceTree = "<group>"; };
 		A255D53220E5690F00BDD57B /* MockQuerierFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockQuerierFactory.swift; sourceTree = "<group>"; };
@@ -179,15 +164,8 @@
 		A2ABEA2E20E53BEB00142C00 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A2ABEA3320E53C0900142C00 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A2ABEA3420E53C0900142C00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A2B5A51420E6CDF2001C5CAB /* MockCodableStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCodableStorage.swift; sourceTree = "<group>"; };
-		A2B5A51520E6CDF3001C5CAB /* MockSourceField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSourceField.swift; sourceTree = "<group>"; };
-		A2B5A51620E6CDF3001C5CAB /* MockHeartRateSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHeartRateSource.swift; sourceTree = "<group>"; };
-		A2B5A51720E6CDF3001C5CAB /* MockTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTags.swift; sourceTree = "<group>"; };
-		A2B5A51820E6CDF3001C5CAB /* MockActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockActivity.swift; sourceTree = "<group>"; };
-		A2B5A51920E6CDF3001C5CAB /* MockHeartRateQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHeartRateQuery.swift; sourceTree = "<group>"; };
-		A2B5A51A20E6CDF3001C5CAB /* MockQuantityRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockQuantityRestriction.swift; sourceTree = "<group>"; };
-		A2B5A51B20E6CDF3001C5CAB /* MockMoodSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMoodSource.swift; sourceTree = "<group>"; };
 		A2CFA08B20E54F2E0083C5C5 /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = DataIntegration/Carthage/Build/iOS/SQLite.framework; sourceTree = "<group>"; };
+		A2E0B5D220ED4BE600B9FD8A /* Mocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
 		A2E4E85D20E5549900631398 /* LabelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelsTests.swift; sourceTree = "<group>"; };
 		A2E4E86020E554F000631398 /* Cuckoo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cuckoo.framework; path = DataIntegration/Carthage/Build/iOS/Cuckoo.framework; sourceTree = "<group>"; };
 		A2E4E89F20E5583200631398 /* DependencyInjector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyInjector.swift; sourceTree = "<group>"; };
@@ -266,8 +244,12 @@
 		A238FEC920E53E560025307F /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				A217810C20ED0F8400A8F9BA /* UtilFactory.swift */,
 				A238FEFB20E541600025307F /* TextNormalizationUtil.swift */,
 				A21780EA20E9796700A8F9BA /* DateExtension.swift */,
+				A217810A20EC258B00A8F9BA /* CalendarUtil.swift */,
+				A217810E20ED2F0A00A8F9BA /* HKQuantitySampleUtil.swift */,
+				A217811020ED34BE00A8F9BA /* HKSampleUtil.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -288,12 +270,12 @@
 		A238FECB20E53E700025307F /* Questions */ = {
 			isa = PBXGroup;
 			children = (
+				A255D52320E55E0000BDD57B /* QuestionFactory.swift */,
 				A238FED420E53E9A0025307F /* Queries */,
 				A238FECC20E53E820025307F /* Question.swift */,
 				A238FECE20E53E8A0025307F /* Answer.swift */,
 				A238FED020E53E900025307F /* Labels.swift */,
 				A238FED220E53E970025307F /* Tags.swift */,
-				A255D52320E55E0000BDD57B /* QuestionFactory.swift */,
 			);
 			path = Questions;
 			sourceTree = "<group>";
@@ -301,13 +283,15 @@
 		A238FED420E53E9A0025307F /* Queries */ = {
 			isa = PBXGroup;
 			children = (
+				A2E4E8AD20E55AE400631398 /* QueryFactory.swift */,
 				A238FED520E53EA40025307F /* Queriers */,
 				A238FED620E53EAD0025307F /* Query.swift */,
 				A238FED820E53EB70025307F /* HeartRateQuery.swift */,
-				A238FEDA20E53EE10025307F /* Operations.swift */,
+				A238FEDA20E53EE10025307F /* Operation.swift */,
 				A238FEDC20E53EED0025307F /* DayOfWeek.swift */,
 				A238FEDE20E53EFB0025307F /* QuantityRestriction.swift */,
-				A2E4E8AD20E55AE400631398 /* QueryFactory.swift */,
+				A217810620EBA25300A8F9BA /* ReturnType.swift */,
+				A217810820EBA51400A8F9BA /* Result.swift */,
 			);
 			path = Queries;
 			sourceTree = "<group>";
@@ -315,8 +299,8 @@
 		A238FED520E53EA40025307F /* Queriers */ = {
 			isa = PBXGroup;
 			children = (
-				A238FEF420E540700025307F /* HeartRateQuerier.swift */,
 				A2E4E8AB20E559A600631398 /* QuerierFactory.swift */,
+				A238FEF420E540700025307F /* HeartRateQuerier.swift */,
 			);
 			path = Queriers;
 			sourceTree = "<group>";
@@ -339,35 +323,6 @@
 				A255D53320E5690F00BDD57B /* MockQuestionFactory.swift */,
 			);
 			path = FactoryMocks;
-			sourceTree = "<group>";
-		};
-		A255D53D20E5A30100BDD57B /* Mocks */ = {
-			isa = PBXGroup;
-			children = (
-				A23AB7B720E6CE300082794B /* MockOperations.swift */,
-				A23AB7B820E6CE300082794B /* MockQuery.swift */,
-				A23AB7B920E6CE300082794B /* MockQuestion.swift */,
-				A23AB7B620E6CE2F0082794B /* MockSource.swift */,
-				A23AB7B120E6CE250082794B /* MockLabels.swift */,
-				A23AB7B220E6CE250082794B /* MockMedicationSource.swift */,
-				A23AB7B020E6CE250082794B /* MockMood.swift */,
-				A23AB7AC20E6CE1C0082794B /* MockActivitySource.swift */,
-				A23AB7AA20E6CE1C0082794B /* MockAnswer.swift */,
-				A23AB7AB20E6CE1C0082794B /* MockDatabaseConnector.swift */,
-				A23AB7A420E6CE120082794B /* MockDayOfWeek.swift */,
-				A23AB7A620E6CE130082794B /* MockHeartRate.swift */,
-				A23AB7A520E6CE130082794B /* MockHeartRateQuerier.swift */,
-				A23AB7A220E6CE0A0082794B /* MockActivityInstance.swift */,
-				A2B5A51820E6CDF3001C5CAB /* MockActivity.swift */,
-				A2B5A51420E6CDF2001C5CAB /* MockCodableStorage.swift */,
-				A2B5A51920E6CDF3001C5CAB /* MockHeartRateQuery.swift */,
-				A2B5A51620E6CDF3001C5CAB /* MockHeartRateSource.swift */,
-				A2B5A51B20E6CDF3001C5CAB /* MockMoodSource.swift */,
-				A2B5A51A20E6CDF3001C5CAB /* MockQuantityRestriction.swift */,
-				A2B5A51520E6CDF3001C5CAB /* MockSourceField.swift */,
-				A2B5A51720E6CDF3001C5CAB /* MockTags.swift */,
-			);
-			path = Mocks;
 			sourceTree = "<group>";
 		};
 		A2ABE9F220E53A4E00142C00 = {
@@ -417,7 +372,7 @@
 		A2ABEA1420E53A4F00142C00 /* DataIntegrationTests */ = {
 			isa = PBXGroup;
 			children = (
-				A255D53D20E5A30100BDD57B /* Mocks */,
+				A2E0B5D220ED4BE600B9FD8A /* Mocks.swift */,
 				A2E4E85C20E5548500631398 /* Questions */,
 				A21780EE20E9AC9A00A8F9BA /* Util */,
 				A2ABEA1720E53A4F00142C00 /* Info.plist */,
@@ -628,7 +583,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Define input directory. Change \"${PROJECT_DIR}/${PROJECT_NAME}\" to your project's root source folder, if it's not the default name.\nINPUT_DIR=\"${PROJECT_DIR}/${PROJECT_NAME}\"\nOUTPUT_DIR=\"${INPUT_DIR}Tests/Mocks\"\necho \"Mocks Input Directory = $INPUT_DIR\"\n\nEXCLUSION_PATTERN=\"Delegate|\\\nViewController|\\\nInject|\\\nMock|\\\nTextNormalizationUtil|\\\nDateExtension\"\n\nOLD_IFS=\"$IFS\"\nexport IFS=$'\\n'\nINPUT_FILES=\"\"\nfor file in `find \"${INPUT_DIR}\" -type f -name \\*.swift | grep -v Carthage | egrep -v \"${EXCLUSION_PATTERN}\"`; do\n    INPUT_FILES=\"${INPUT_FILES} ${file}\"\ndone\nexport IFS=\"$OLD_IFS\"\n\necho \"Done gathering input files\"\n\n# Generate mock files, include as many input files as you'd like to create mocks for.\n\"${INPUT_DIR}/Carthage/Checkouts/Cuckoo/run\" generate --testable \"$PROJECT_NAME\" --output \"$OUTPUT_DIR/\" --file-prefix Mock --no-timestamp ${INPUT_FILES}\n\necho \"Done generating mocks\"\n\nOLD_IFS=\"$IFS\"\nexport IFS=$'\\n'\nfor file in `find \"${OUTPUT_DIR}\" -type f -maxdepth 1 -name \\*Factory.swift`; do\n    mv \"${file}\" \"${INPUT_DIR}/FactoryMocks/\"\ndone\nexport IFS=\"$OLD_IFS\"\necho \"Done\"\n";
+			shellScript = "# Define input directory. Change \"${PROJECT_DIR}/${PROJECT_NAME}\" to your project's root source folder, if it's not the default name.\nINPUT_DIR=\"${PROJECT_DIR}/${PROJECT_NAME}\"\nNORMAL_MOCKS_FILE=\"${INPUT_DIR}Tests/Mocks.swift\"\nFACTORY_MOCKS_DIR=\"${INPUT_DIR}/FactoryMocks\"\necho \"Mocks Input Directory = ${INPUT_DIR}\"\n\nEXCLUSION_PATTERN=\"Delegate|\\\nViewController|\\\nInject|\\\nMock|\\\nDateExtension\"\n\nOLD_IFS=\"$IFS\"\nexport IFS=$'\\n'\n\nINPUT_FILES=\"\"\nfor file in `find \"${INPUT_DIR}\" -type f -name \\*.swift | grep -v Carthage | egrep -v \"${EXCLUSION_PATTERN}\"`; do\n    INPUT_FILES=\"${INPUT_FILES} ${file}\"\ndone\n\nFACTORY_FILES=\"\"\nfor file in `find \"${OUTPUT_DIR}\" -type f -maxdepth 1 -name \\*Factory.swift`; do\n    FACTORY_FILES=\"${FACTORY_FILES} ${file}\"\ndone\n\nexport IFS=\"$OLD_IFS\"\n\necho \"Done gathering input files\"\n\n\"${INPUT_DIR}/Carthage/Checkouts/Cuckoo/run\" generate --testable \"${PROJECT_NAME}\" --output \"${NORMAL_MOCKS_FILE}\" --no-timestamp ${INPUT_FILES}\n\"${INPUT_DIR}/Carthage/Checkouts/Cuckoo/run\" generate --testable \"${PROJECT_NAME}\" --output \"${FACTORY_MOCKS_DIR}/\" --no-timestamp ${FACTORY_FILES}\n\necho \"Done generating mocks\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -642,10 +597,13 @@
 				A238FEF820E5412B0025307F /* CodableStorage.swift in Sources */,
 				A2E4E8A420E5584D00631398 /* InjectionProvider.swift in Sources */,
 				A238FEFC20E541600025307F /* TextNormalizationUtil.swift in Sources */,
+				A217810B20EC258B00A8F9BA /* CalendarUtil.swift in Sources */,
 				A238FED120E53E900025307F /* Labels.swift in Sources */,
+				A217810F20ED2F0A00A8F9BA /* HKQuantitySampleUtil.swift in Sources */,
 				A2E4E8A820E5589400631398 /* UnitTestInjectionProvider.swift in Sources */,
 				A238FEEF20E53F850025307F /* MoodSource.swift in Sources */,
 				A255D53920E5690F00BDD57B /* MockDataTypesFactory.swift in Sources */,
+				A217810720EBA25300A8F9BA /* ReturnType.swift in Sources */,
 				A238FF0420E542710025307F /* SecondViewController.swift in Sources */,
 				A238FED320E53E970025307F /* Tags.swift in Sources */,
 				A238FEE520E53F3D0025307F /* HeartRate.swift in Sources */,
@@ -672,11 +630,14 @@
 				A238FEDD20E53EED0025307F /* DayOfWeek.swift in Sources */,
 				A238FECD20E53E820025307F /* Question.swift in Sources */,
 				A238FEF120E53F8D0025307F /* SourceField.swift in Sources */,
+				A217810920EBA51400A8F9BA /* Result.swift in Sources */,
 				A238FEE720E53F430025307F /* Mood.swift in Sources */,
 				A238FEF520E540700025307F /* HeartRateQuerier.swift in Sources */,
 				A238FEE120E53F1D0025307F /* Activity.swift in Sources */,
-				A238FEDB20E53EE10025307F /* Operations.swift in Sources */,
+				A217810D20ED0F8400A8F9BA /* UtilFactory.swift in Sources */,
+				A238FEDB20E53EE10025307F /* Operation.swift in Sources */,
 				A255D52C20E5636E00BDD57B /* DataTypesFactory.swift in Sources */,
+				A217811120ED34BE00A8F9BA /* HKSampleUtil.swift in Sources */,
 				A238FEE320E53F2A0025307F /* ActivityInstance.swift in Sources */,
 				A255D53720E5690F00BDD57B /* MockQuestionFactory.swift in Sources */,
 				A238FEEB20E53F5F0025307F /* ActivitySource.swift in Sources */,
@@ -687,23 +648,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A23AB7AE20E6CE1C0082794B /* MockDatabaseConnector.swift in Sources */,
-				A23AB7B520E6CE250082794B /* MockMedicationSource.swift in Sources */,
-				A23AB7A920E6CE130082794B /* MockHeartRate.swift in Sources */,
-				A23AB7A320E6CE0B0082794B /* MockActivityInstance.swift in Sources */,
 				A255D54820E5AAC600BDD57B /* UnitTest.swift in Sources */,
 				A2E4E85E20E5549900631398 /* LabelsTests.swift in Sources */,
-				A23AB7B420E6CE250082794B /* MockLabels.swift in Sources */,
-				A23AB7A820E6CE130082794B /* MockHeartRateQuerier.swift in Sources */,
-				A23AB7A720E6CE130082794B /* MockDayOfWeek.swift in Sources */,
-				A23AB7BA20E6CE300082794B /* MockSource.swift in Sources */,
-				A23AB7AF20E6CE1C0082794B /* MockActivitySource.swift in Sources */,
-				A23AB7B320E6CE250082794B /* MockMood.swift in Sources */,
-				A23AB7AD20E6CE1C0082794B /* MockAnswer.swift in Sources */,
-				A23AB7BC20E6CE300082794B /* MockQuery.swift in Sources */,
 				A21780F020E9ACD800A8F9BA /* TextNormalizationUtilTests.swift in Sources */,
-				A23AB7BB20E6CE300082794B /* MockOperations.swift in Sources */,
-				A23AB7BD20E6CE300082794B /* MockQuestion.swift in Sources */,
+				A2E0B5D320ED4BE600B9FD8A /* Mocks.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

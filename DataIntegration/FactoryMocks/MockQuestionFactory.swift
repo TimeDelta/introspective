@@ -23,7 +23,7 @@ class MockQuestionFactory: QuestionFactory, Cuckoo.ClassMock {
     
 
     
-    // ["name": "question", "returnSignature": " -> Question", "fullyQualifiedName": "question(text: String) -> Question", "parameterSignature": "text: String", "parameterSignatureWithoutNames": "text: String", "inputTypes": "String", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "text", "call": "text: text", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("text"), name: "text", type: "String", range: CountableRange(218..<230), nameRange: CountableRange(218..<222))], "returnType": "Question", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "question", "returnSignature": " -> Question", "fullyQualifiedName": "question(text: String) -> Question", "parameterSignature": "text: String", "parameterSignatureWithoutNames": "text: String", "inputTypes": "String", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "text", "call": "text: text", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("text"), name: "text", type: "String", range: CountableRange(225..<237), nameRange: CountableRange(225..<229))], "returnType": "Question", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
      override func question(text: String)  -> Question {
         
             return cuckoo_manager.call("question(text: String) -> Question",

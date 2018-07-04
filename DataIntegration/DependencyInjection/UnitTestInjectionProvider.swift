@@ -14,9 +14,11 @@ class UnitTestInjectionProvider: InjectionProvider {
 	fileprivate let mockQuerierFactory = MockQuerierFactory()
 	fileprivate let mockQuestionFactory = MockQuestionFactory()
 	fileprivate let mockDataTypesFactory = MockDataTypesFactory()
+	fileprivate let mockUtilFactory = UtilFactory()
 
 	var queryFactory: QueryFactory { get { return mockQueryFactory } }
 	var querierFactory: QuerierFactory { get { return mockQuerierFactory } }
 	var questionFactory: QuestionFactory { get { return mockQuestionFactory } }
 	var dataTypesFactory: DataTypesFactory { get { return mockDataTypesFactory } }
+	var utilFactory: UtilFactory { get { return mockUtilFactory } }
 }

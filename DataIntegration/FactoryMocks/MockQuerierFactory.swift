@@ -19,21 +19,19 @@ class MockQuerierFactory: QuerierFactory, Cuckoo.ClassMock {
     let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
 
     
-
-    
-
-    
-    // ["name": "heartRateQuerier", "returnSignature": " -> HeartRateQuerier", "fullyQualifiedName": "heartRateQuerier() -> HeartRateQuerier", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "", "call": "", "parameters": [], "returnType": "HeartRateQuerier", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-     override func heartRateQuerier()  -> HeartRateQuerier {
-        
-            return cuckoo_manager.call("heartRateQuerier() -> HeartRateQuerier",
-                parameters: (),
-                superclassCall:
-                    
-                    super.heartRateQuerier()
-                    )
+    // ["name": "heartRateQuerier", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "HeartRateQuerier", "isReadOnly": true, "accessibility": "public"]
+    public override var heartRateQuerier: HeartRateQuerier {
+        get {
+            
+            return cuckoo_manager.getter("heartRateQuerier", superclassCall: super.heartRateQuerier)
+            
+        }
         
     }
+    
+
+    
+
     
 
 	struct __StubbingProxy_QuerierFactory: Cuckoo.StubbingProxy {
@@ -43,11 +41,10 @@ class MockQuerierFactory: QuerierFactory, Cuckoo.ClassMock {
 	        self.cuckoo_manager = manager
 	    }
 	    
-	    
-	    func heartRateQuerier() -> Cuckoo.ClassStubFunction<(), HeartRateQuerier> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return .init(stub: cuckoo_manager.createStub(for: MockQuerierFactory.self, method: "heartRateQuerier() -> HeartRateQuerier", parameterMatchers: matchers))
+	    var heartRateQuerier: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockQuerierFactory, HeartRateQuerier> {
+	        return .init(manager: cuckoo_manager, name: "heartRateQuerier")
 	    }
+	    
 	    
 	}
 
@@ -63,13 +60,11 @@ class MockQuerierFactory: QuerierFactory, Cuckoo.ClassMock {
 	    }
 	
 	    
-	
-	    
-	    @discardableResult
-	    func heartRateQuerier() -> Cuckoo.__DoNotUse<HeartRateQuerier> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return cuckoo_manager.verify("heartRateQuerier() -> HeartRateQuerier", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    var heartRateQuerier: Cuckoo.VerifyReadOnlyProperty<HeartRateQuerier> {
+	        return .init(manager: cuckoo_manager, name: "heartRateQuerier", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
+	    
+	
 	    
 	}
 
@@ -77,13 +72,16 @@ class MockQuerierFactory: QuerierFactory, Cuckoo.ClassMock {
 
  class QuerierFactoryStub: QuerierFactory {
     
-
-    
-
-    
-     override func heartRateQuerier()  -> HeartRateQuerier {
-        return DefaultValueRegistry.defaultValue(for: HeartRateQuerier.self)
+    public override var heartRateQuerier: HeartRateQuerier {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (HeartRateQuerier).self)
+        }
+        
     }
+    
+
+    
+
     
 }
 

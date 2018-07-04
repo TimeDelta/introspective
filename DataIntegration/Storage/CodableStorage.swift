@@ -12,7 +12,7 @@ public class CodableStorage {
 
 	fileprivate init() { }
 
-	enum Directory {
+	public enum Directory {
 		// Only documents and other data that is user-generated, or that cannot otherwise be recreated by your application, should be stored in the <Application_Home>/Documents directory and will be automatically backed up by iCloud.
 		case documents
 
@@ -21,7 +21,7 @@ public class CodableStorage {
 	}
 
 	/// Returns URL constructed from specified directory
-	static fileprivate func getURL(for directory: Directory) -> URL {
+	fileprivate static func getURL(for directory: Directory) -> URL {
 		var searchPathDirectory: FileManager.SearchPathDirectory
 
 		switch directory {
@@ -44,7 +44,7 @@ public class CodableStorage {
 	///   - object: the encodable struct to store
 	///   - directory: where to store the struct
 	///   - fileName: what to name the file where the struct data will be stored
-	static func store<T: Encodable>(_ object: T, to directory: Directory, as fileName: String) {
+	public static func store<T: Encodable>(_ object: T, to directory: Directory, as fileName: String) {
 		let url = getURL(for: directory).appendingPathComponent(fileName, isDirectory: false)
 
 		let encoder = JSONEncoder()
@@ -66,7 +66,7 @@ public class CodableStorage {
 	///   - directory: directory where struct data is stored
 	///   - type: struct type (i.e. Message.self)
 	/// - Returns: decoded struct model(s) of data
-	static func retrieve<T: Decodable>(_ fileName: String, from directory: Directory, as type: T.Type) -> T {
+	public static func retrieve<T: Decodable>(_ fileName: String, from directory: Directory, as type: T.Type) -> T {
 		let url = getURL(for: directory).appendingPathComponent(fileName, isDirectory: false)
 
 		if !FileManager.default.fileExists(atPath: url.path) {
@@ -87,7 +87,7 @@ public class CodableStorage {
 	}
 
 	/// Remove all files at specified directory
-	static func clear(_ directory: Directory) {
+	public static func clear(_ directory: Directory) {
 		let url = getURL(for: directory)
 		do {
 			let contents = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: [])
@@ -100,7 +100,7 @@ public class CodableStorage {
 	}
 
 	/// Remove specified file from specified directory
-	static func remove(_ fileName: String, from directory: Directory) {
+	public static func remove(_ fileName: String, from directory: Directory) {
 		let url = getURL(for: directory).appendingPathComponent(fileName, isDirectory: false)
 		if FileManager.default.fileExists(atPath: url.path) {
 			do {
@@ -112,7 +112,7 @@ public class CodableStorage {
 	}
 
 	/// Returns BOOL indicating whether file exists at specified directory with specified file name
-	static func fileExists(_ fileName: String, in directory: Directory) -> Bool {
+	public static func fileExists(_ fileName: String, in directory: Directory) -> Bool {
 		let url = getURL(for: directory).appendingPathComponent(fileName, isDirectory: false)
 		return FileManager.default.fileExists(atPath: url.path)
 	}

@@ -8,10 +8,10 @@
 
 import Foundation
 
-class Answer: NSObject {
+public class Answer: NSObject {
 
-	var finalAnswer: String
-	var otherRelevantInformation: [String: [NSObject]]
+	public var finalAnswer: String
+	public var otherRelevantInformation: [String: [NSObject]]
 
 	public override init() {
 		finalAnswer = "Unknown"

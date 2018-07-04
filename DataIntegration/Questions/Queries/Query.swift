@@ -10,10 +10,19 @@ import Foundation
 
 protocol Query {
 
-	var finalOperation: Operations? {get set}
+	var finalOperation: Operation? {get set}
+	/// Ignore everything before this date.
 	var startDate: Date? {get set}
+	/// Ignore everything after this date.
 	var endDate: Date? {get set}
-	var daysOfWeek: Set<DayOfWeek> {get}
+	/// Ignore everything that did not occur on one of the given days of the week unless no days of the week are given.
+	var daysOfWeek: Set<DayOfWeek> {get set}
+	///
+	var quantityRestrictions: [QuantityRestriction] {get set}
+	/// 
+	var returnType: ReturnType? {get set}
+	/// When returning, only give the `returnType` for the most recent entry
+	var mostRecentEntryOnly: Bool {get set}
 
-	func runQuery(callback: @escaping ([String: NSObject]?, Error?) -> ()) throws
+	func runQuery(callback: @escaping (Result?, Error?) -> ()) throws
 }

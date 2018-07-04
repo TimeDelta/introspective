@@ -8,13 +8,13 @@
 
 import Foundation
 
-extension Date {
+public extension Date {
 
-	func next(_ dayOfWeek: DayOfWeek) -> Date {
+	public func next(_ dayOfWeek: DayOfWeek) -> Date {
 		return get(.forward, dayOfWeek)
 	}
 
-	func previous(_ dayOfWeek: DayOfWeek) -> Date {
+	public func previous(_ dayOfWeek: DayOfWeek) -> Date {
 		return get(.backward, dayOfWeek)
 	}
 

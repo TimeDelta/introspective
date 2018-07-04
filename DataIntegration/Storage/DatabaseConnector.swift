@@ -9,16 +9,13 @@
 import Foundation
 import SQLite
 
-class DatabaseConnector: NSObject {
+public class DatabaseConnector: NSObject {
 
 	let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
 
 	var db: Connection?
 
-	override init() {
-	}
-
-	func connect() throws {
+	public func connect() throws {
 		do {
 			self.db = try Connection("\(path)/db.sqlite3")
 		}

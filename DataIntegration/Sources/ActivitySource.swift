@@ -8,9 +8,9 @@
 
 import Foundation
 
-class ActivitySource: Source {
+public class ActivitySource: Source {
 
-	override init() {
+	public override init() {
 		super.init()
 		requiredFields.append(SourceField(name: "Activity Name", type: SourceField.FieldType.DateTime))
 		requiredFields.append(SourceField(name: "Start", type: SourceField.FieldType.DateTime))

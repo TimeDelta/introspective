@@ -17,4 +17,5 @@ class FunctionalTestInjectionProvider: InjectionProvider {
 	var querierFactory: QuerierFactory { get { return productionInjectionProvider.querierFactory } }
 	var questionFactory: QuestionFactory { get { return productionInjectionProvider.questionFactory } }
 	var dataTypesFactory: DataTypesFactory { get { return productionInjectionProvider.dataTypesFactory } }
+	var utilFactory: UtilFactory { get { return productionInjectionProvider.utilFactory } }
 }

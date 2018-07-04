@@ -10,7 +10,7 @@ import Foundation
 import os
 
 // for storage purposes, cannot use protocol here because protocols do not conform to themselves so have to use a type-eraser that just holds the protocol properties
-class Source: NSObject, Codable {
+public class Source: NSObject, Codable {
 
 	enum CodingKeys: CodingKey {
 		case name
@@ -19,12 +19,12 @@ class Source: NSObject, Codable {
 		case mappedColumnNames
 	}
 
-	var name: String
+	public internal(set) var name: String
 	public internal(set) var requiredFields: Array<SourceField>
 	public internal(set) var optionalFields: Array<SourceField>
 	public internal(set) var mappedColumnNames: [String: String]
 
-	override init() {
+	public override init() {
 		name = ""
 		requiredFields = Array<SourceField>()
 		optionalFields = Array<SourceField>()
@@ -32,7 +32,7 @@ class Source: NSObject, Codable {
 		super.init()
 	}
 
-	required convenience init(from decoder: Decoder) {
+	public required convenience init(from decoder: Decoder) {
 		self.init()
 		do {
 			let CONTAINER = try decoder.container(keyedBy: CodingKeys.self)
@@ -45,7 +45,7 @@ class Source: NSObject, Codable {
 		}
 	}
 
-	func encode(to encoder: Encoder) {
+	public func encode(to encoder: Encoder) {
 		do {
 			var container = encoder.container(keyedBy: CodingKeys.self)
 			try container.encode(name, forKey: .name)

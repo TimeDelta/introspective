@@ -9,15 +9,15 @@
 import Foundation
 import NaturalLanguage
 
-class Labels: IteratorProtocol, Sequence, Equatable {
+public class Labels: IteratorProtocol, Sequence, Equatable {
 
 	// TODO - might need to allow a Label to have multiple tags with activity parsing, location parsing, etc.
-	struct Label: Equatable {
+	public struct Label: Equatable {
 		public fileprivate(set) var tag: NLTag
 		public fileprivate(set) var token: String
 		public fileprivate(set) var tokenRange: Range<String.Index>
 
-		static func ==(left: Label, right: Label) -> Bool {
+		public static func ==(left: Label, right: Label) -> Bool {
 			return left.tag == right.tag && left.token == right.token && left.tokenRange == right.tokenRange
 		}
 
@@ -28,7 +28,7 @@ class Labels: IteratorProtocol, Sequence, Equatable {
 		}
 	}
 
-	static func ==(left: Labels, right: Labels) -> Bool {
+	public static func ==(left: Labels, right: Labels) -> Bool {
 		if left.count != right.count {
 			return false
 		}
@@ -44,7 +44,7 @@ class Labels: IteratorProtocol, Sequence, Equatable {
 		case IndexOutOfRange
 	}
 
-	typealias Element = Label
+	public typealias Element = Label
 
 	public var count: Int { get { return byIndex.count } }
 	public var isEmpty: Bool { get { return byIndex.isEmpty } }

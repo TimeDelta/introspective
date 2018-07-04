@@ -14,9 +14,11 @@ class ProductionInjectionProvider: InjectionProvider {
 	fileprivate let realQuerierFactory = QuerierFactory()
 	fileprivate let realQuestionFactory = QuestionFactory()
 	fileprivate let realDataTypesFactory = DataTypesFactory()
+	fileprivate let realUtilFactory = UtilFactory()
 
 	var queryFactory: QueryFactory { get { return realQueryFactory } }
 	var querierFactory: QuerierFactory { get { return realQuerierFactory } }
 	var questionFactory: QuestionFactory { get { return realQuestionFactory } }
 	var dataTypesFactory: DataTypesFactory { get { return realDataTypesFactory } }
+	var utilFactory: UtilFactory { get { return realUtilFactory } }
 }

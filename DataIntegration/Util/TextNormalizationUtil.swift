@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TextNormalizationUtil: NSObject {
+public class TextNormalizationUtil: NSObject {
 
 	static let contractions = [
 		"ain't": "am not",
@@ -190,12 +190,12 @@ class TextNormalizationUtil: NSObject {
 		return punctuationRegex.stringByReplacingMatches(in: text, options: [], range: NSMakeRange(0, text.count), withTemplate: "")
 	}
 
-	fileprivate static func appendAppropriateSeparatorToEnglishNumber(_ englishNumber: UnsafeMutablePointer<String>, _ previousNumberWordShouldBeHyphenated: UnsafeMutablePointer<Bool>) {
-		if previousNumberWordShouldBeHyphenated.pointee {
-			englishNumber.pointee.append("-")
-			previousNumberWordShouldBeHyphenated.pointee = false
+	fileprivate static func appendAppropriateSeparatorToEnglishNumber(_ englishNumber: inout String, _ previousNumberWordShouldBeHyphenated: inout Bool) {
+		if previousNumberWordShouldBeHyphenated {
+			englishNumber.append("-")
+			previousNumberWordShouldBeHyphenated = false
 		} else {
-			englishNumber.pointee.append(" ")
+			englishNumber.append(" ")
 		}
 	}
 

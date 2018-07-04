@@ -8,7 +8,7 @@
 
 import Foundation
 
-class QueryFactory: NSObject {
+public class QueryFactory: NSObject {
 
 	public func heartRateQuery() -> HeartRateQuery {
 		return HeartRateQuery()

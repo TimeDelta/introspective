@@ -10,7 +10,7 @@ import Foundation
 
 class QuerierFactory: NSObject {
 
-	func heartRateQuerier() -> HeartRateQuerier {
-		return HeartRateQuerier()
-	}
+	fileprivate static let realHeartRateQuerier = HeartRateQuerier()
+
+	public var heartRateQuerier: HeartRateQuerier { return QuerierFactory.realHeartRateQuerier }
 }

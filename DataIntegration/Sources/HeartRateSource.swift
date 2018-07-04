@@ -8,7 +8,7 @@
 
 import Foundation
 
-class HeartRateSource: Source {
+public class HeartRateSource: Source {
 
 	override init() {
 		super.init()

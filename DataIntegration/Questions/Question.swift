@@ -10,9 +10,9 @@ import Foundation
 import NaturalLanguage
 import os
 
-class Question: NSObject {
+public class Question: NSObject {
 
-	enum ErrorTypes: Error {
+	public enum ErrorTypes: Error {
 		case CouldNotLoadModel
 		case NotImplemented
 		case ForgottenDataType // i forgot to add a data type
@@ -90,7 +90,7 @@ class Question: NSObject {
 		answerNextQuestionPart(resultsFromPreviousPart: nil, error: nil)
 	}
 
-	fileprivate func answerNextQuestionPart(resultsFromPreviousPart: [String : NSObject]?, error: Error?) {
+	fileprivate func answerNextQuestionPart(resultsFromPreviousPart: Result?, error: Error?) {
 		if currentQuestionPartIndex == questionParts.count {
 			// TODO - construct real Answer object
 			var answer = Answer()
@@ -156,7 +156,7 @@ class Question: NSObject {
 	}
 
 	fileprivate func answerHeartRateQuestionPart(_ questionPart: Labels) {
-		DependencyInjector.querierFactory().heartRateQuerier().getAuthorization() { (error: Error?) in
+		DependencyInjector.querier.heartRateQuerier.getAuthorization() { (error: Error?) in
 			do {
 				if error != nil {
 					throw error!
@@ -166,9 +166,10 @@ class Question: NSObject {
 
 //				let restrictionLabels = questionPart.labelsFor(tags: Tags.restrictionTypeTags())
 
+				// TODO - "on days that my heart rate goes abova 175" cases
 				let operationLabels = questionPart.labelsInAnyOrderFor(tags: Tags.operationTags())
 				if operationLabels.count == 1 {
-					query.finalOperation = try Operations.from(tag: operationLabels[0].tag)
+					query.finalOperation = try Operation.from(tag: operationLabels[0].tag)
 				} else if operationLabels.count > 1 {
 					throw ErrorTypes.NotImplemented
 				}

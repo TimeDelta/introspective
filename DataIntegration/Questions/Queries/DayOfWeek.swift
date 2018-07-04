@@ -8,9 +8,9 @@
 
 import Foundation
 
-class DayOfWeek: NSObject {
+public class DayOfWeek: NSObject {
 
-	enum ErrorTypes: Error {
+	public enum ErrorTypes: Error {
 		case UnknownDayOfWeek
 	}
 

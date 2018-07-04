@@ -27,6 +27,8 @@ class Tags: NSObject {
 	public static let dayOfMonth = NLTag("DAY_OF_MONTH")
 	/// underlying token is a day of the week (could be plural)
 	public static let dayOfWeek = NLTag("DAY_OF_WEEK")
+	/// nearby quantity is a restriction
+	public static let equal = NLTag("EQUAL")
 	/// frequency return type needed for at least part of the question
 	public static let frequency = NLTag("FREQUENCY")
 	/// nearby quantity is a restriction

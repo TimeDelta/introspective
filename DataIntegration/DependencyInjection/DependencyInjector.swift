@@ -23,19 +23,9 @@ class DependencyInjector: NSObject {
 
 	fileprivate static var injectionProvider: InjectionProvider = ProductionInjectionProvider()
 
-	static func questionFactory() -> QuestionFactory {
-		return injectionProvider.questionFactory
-	}
-
-	static func queryFactory() -> QueryFactory {
-		return injectionProvider.queryFactory
-	}
-
-	static func querierFactory() -> QuerierFactory {
-		return injectionProvider.querierFactory
-	}
-
-	static func dataTypesFactory() -> DataTypesFactory {
-		return injectionProvider.dataTypesFactory
-	}
+	public static var question: QuestionFactory { get { return injectionProvider.questionFactory } }
+	public static var query: QueryFactory { get { return injectionProvider.queryFactory } }
+	public static var querier: QuerierFactory { get { return injectionProvider.querierFactory } }
+	public static var dataType: DataTypesFactory { get { return injectionProvider.dataTypesFactory } }
+	public static var util: UtilFactory { get { return injectionProvider.utilFactory } }
 }

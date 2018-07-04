@@ -8,7 +8,7 @@
 
 import Foundation
 
-class MoodSource: Source {
+public class MoodSource: Source {
 
 	override init() {
 		super.init()

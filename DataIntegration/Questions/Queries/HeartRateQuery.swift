@@ -9,126 +9,103 @@
 import Foundation
 import HealthKit
 
-class HeartRateQuery: NSObject, Query {
+public class HeartRateQuery: NSObject, Query {
+
+	fileprivate static let countPerMinute = HKUnit(from: "count/min")
 
 	public enum ErrorTypes: Error {
 		case Unauthorized
-		case UnknownOperationType
+		case NoSamplesFound
+		case NoReturnTypeSpecified
+		case ReturnTypeIsFinalOperationButNoOperationSpecified
 	}
 
-	public enum CombinationType {
-		case And
-		case Or
-	}
-
-	public var finalOperation: Operations?
+	public var finalOperation: Operation?
 	public var startDate: Date?
 	public var endDate: Date?
 	public var daysOfWeek: Set<DayOfWeek>
-	public var daysOfWeekCombinationType: CombinationType
-	public var quantityRestrictions: [QuantityRestriction<Double>]
+	public var quantityRestrictions: [QuantityRestriction]
+	public var returnType: ReturnType?
+	public var mostRecentEntryOnly: Bool
 
 	public override init() {
 		daysOfWeek = Set<DayOfWeek>()
-		quantityRestrictions = [QuantityRestriction<Double>]()
-		daysOfWeekCombinationType = .Or
+		quantityRestrictions = [QuantityRestriction]()
+		mostRecentEntryOnly = false
 	}
 
-	public func runQuery(callback: @escaping ([String: NSObject]?, Error?) -> ()) {
-		do {
-			let predicate = getPredicate()
+	public func runQuery(callback: @escaping (Result?, Error?) -> ()) {
+		if returnType == nil {
+			callback(nil, ErrorTypes.NoReturnTypeSpecified)
+		}
+		let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
 
-			if finalOperation != nil && finalOperation != Operations.Count {
-				let statsOptions: HKStatisticsOptions = try getStatsOptions()
+		DependencyInjector.querier.heartRateQuerier.getHeartRates(predicate: predicate) {
+			(originalSamples: Array<HKQuantitySample>?, error: Error?) in
 
-				DependencyInjector.querierFactory().heartRateQuerier().getStatisticsFromHeartRates(predicate: predicate, statsOptions: statsOptions) {
-					(stats: HKStatistics?, error: Error?) in
+			if error != nil {
+				callback(nil, error)
+			}
+			if originalSamples == nil || originalSamples!.count == 0 {
+				callback(nil, ErrorTypes.NoSamplesFound)
+			}
 
-					if error != nil {
-						callback(nil, error)
-					}
+			let samples = originalSamples!.filter({ (sample: HKQuantitySample) in
+				return self.matchesQuantityRestrictionCriteria(sample) && DependencyInjector.util.hkSampleUtil.sample(sample, occursOnOneOf: self.daysOfWeek)
+			})
 
-					var returnValues = [String: NSObject]()
-					if self.finalOperation == Operations.Average {
-						returnValues[self.finalOperation!.stringRepresenation] = stats!.averageQuantity()
-					} else if self.finalOperation == Operations.Max {
-						returnValues[self.finalOperation!.stringRepresenation] = stats!.maximumQuantity()
-					} else if self.finalOperation == Operations.Min {
-						returnValues[self.finalOperation!.stringRepresenation] = stats!.minimumQuantity()
-					} else if self.finalOperation == Operations.Sum {
-						returnValues[self.finalOperation!.stringRepresenation] = stats!.sumQuantity()
-					}
-
-					callback(returnValues, nil)
+			var finalAnswer: Any? = nil
+			do {
+				switch(self.returnType!) {
+					case .finalOperation:
+						finalAnswer = try self.computeFinalOperation(samples)
+						break
+					case .startDates:
+						finalAnswer = self.getStartDates(samples)
+						break
+					case .endDates:
+						finalAnswer = self.getEndDates(samples)
+						break
+					case let .times(aggregationUnit):
+						finalAnswer = self.getTimeIntervals(samples, aggregationUnit)
+						break
 				}
-			} else {
-				// TODO
-			}
-		} catch {
-			callback(nil, error)
-		}
-	}
-
-	fileprivate func getStatsOptions() throws -> HKStatisticsOptions {
-		switch (finalOperation) {
-			case Operations.Average:
-				return .discreteAverage
-			case Operations.Max:
-				return .discreteMax
-			case Operations.Min:
-				return .discreteMin
-			case Operations.Sum:
-				return .cumulativeSum
-			default:
-				throw ErrorTypes.UnknownOperationType
-		}
-	}
-
-	fileprivate func getPredicate() -> NSPredicate {
-		let datePredicate = getDatePredicate()
-		let quantityPredicate = getQuantityPredicate()
-
-		return NSCompoundPredicate(andPredicateWithSubpredicates: [datePredicate, quantityPredicate])
-	}
-
-	fileprivate func getDatePredicate() -> NSPredicate {
-		let startEndDatePredicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
-
-		var daysOfWeekPredicate: NSCompoundPredicate?
-		if !daysOfWeek.isEmpty {
-			var predicates = [NSPredicate]()
-			for dayOfWeek in daysOfWeek {
-				let predicate = NSPredicate { (evaluatedObject, _) in
-					print((evaluatedObject as! HKQuantitySample))
-					return true
-				}
-				predicates.append(predicate)
+			} catch {
+				callback(nil, error)
 			}
 
-			if daysOfWeekCombinationType == .Or {
-				daysOfWeekPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: predicates)
-			} else {
-				daysOfWeekPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-			}
+			callback(Result(finalAnswer!, self.returnType!), nil)
 		}
-
-		var allSubpredicates = [NSPredicate]()
-		allSubpredicates.append(startEndDatePredicate)
-		if daysOfWeekPredicate != nil {
-			allSubpredicates.append(daysOfWeekPredicate!)
-		}
-
-		return NSCompoundPredicate(andPredicateWithSubpredicates: allSubpredicates)
 	}
 
-	fileprivate func getQuantityPredicate() -> NSPredicate {
-		var quantityPredicates = [NSComparisonPredicate]()
-		for quantityRestriction in quantityRestrictions {
-			let leftHandSide = NSExpression(forKeyPath: quantityRestriction.attribute)
-			let rightHandSide = NSExpression(forConstantValue: quantityRestriction.value)
-			let quantityPredicate = NSComparisonPredicate(leftExpression: leftHandSide, rightExpression: rightHandSide, modifier: .all, type: quantityRestriction.comparison, options: [])
-			quantityPredicates.append(quantityPredicate)
+	fileprivate func matchesQuantityRestrictionCriteria(_ sample: HKQuantitySample) -> Bool {
+		return true // TODO
+	}
+
+	fileprivate func computeFinalOperation(_ samples: [HKQuantitySample]) throws -> [Double] {
+		if self.finalOperation != nil {
+			return DependencyInjector.util.hkQuantitySampleUtil.compute(operation: finalOperation!, over: samples, withUnit: HeartRateQuery.countPerMinute)
+		} else {
+			throw ErrorTypes.ReturnTypeIsFinalOperationButNoOperationSpecified
 		}
-		return NSCompoundPredicate(andPredicateWithSubpredicates: quantityPredicates)
+	}
+
+	fileprivate func getStartDates(_ samples: [HKQuantitySample]) -> [Date] {
+		return samples.map({ (sample: HKQuantitySample) in
+			return sample.startDate
+		})
+	}
+
+	fileprivate func getEndDates(_ samples: [HKQuantitySample]) -> [Date] {
+		return samples.map({ (sample: HKQuantitySample) in
+			return sample.endDate
+		})
+	}
+
+	fileprivate func getTimeIntervals(_ samples: [HKQuantitySample], _ aggregationUnit: Calendar.Component) -> [DateInterval] {
+		return samples.map({ (sample: HKQuantitySample) in
+			let calendar = Calendar.current
+			return calendar.dateInterval(of: aggregationUnit, for: sample.endDate)!
+		})
 	}
 }

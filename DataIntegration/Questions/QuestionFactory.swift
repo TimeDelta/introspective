@@ -8,7 +8,7 @@
 
 import Foundation
 
-class QuestionFactory: NSObject {
+public class QuestionFactory: NSObject {
 
 	func question(text: String) -> Question {
 		return Question(text: text)
