@@ -71,6 +71,7 @@
 		A2E4E8AA20E5589F00631398 /* FunctionalTestInjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E8A920E5589F00631398 /* FunctionalTestInjectionProvider.swift */; };
 		A2E4E8AC20E559A600631398 /* QuerierFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E8AB20E559A600631398 /* QuerierFactory.swift */; };
 		A2E4E8AE20E55AE400631398 /* QueryFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E8AD20E55AE400631398 /* QueryFactory.swift */; };
+		A2EF75A020ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EF759F20ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -176,6 +177,7 @@
 		A2E4E8A920E5589F00631398 /* FunctionalTestInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionalTestInjectionProvider.swift; sourceTree = "<group>"; };
 		A2E4E8AB20E559A600631398 /* QuerierFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuerierFactory.swift; sourceTree = "<group>"; };
 		A2E4E8AD20E55AE400631398 /* QueryFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryFactory.swift; sourceTree = "<group>"; };
+		A2EF759F20ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKQuantitySampleUtilTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,6 +214,7 @@
 			isa = PBXGroup;
 			children = (
 				A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilTests.swift */,
+				A2EF759F20ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -648,6 +651,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2EF75A020ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift in Sources */,
 				A255D54820E5AAC600BDD57B /* UnitTest.swift in Sources */,
 				A2E4E85E20E5549900631398 /* LabelsTests.swift in Sources */,
 				A21780F020E9ACD800A8F9BA /* TextNormalizationUtilTests.swift in Sources */,

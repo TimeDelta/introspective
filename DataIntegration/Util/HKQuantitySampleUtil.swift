@@ -11,7 +11,10 @@ import HealthKit
 
 public class HKQuantitySampleUtil {
 
+	/// - Precondition: The provided samples array is not empty.
 	public func compute(operation: QueryOperation, over samples: [HKQuantitySample], withUnit unit: HKUnit) -> [Double] {
+		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+
 		switch(operation.kind) {
 			case .average:
 				return average(over: samples, per: operation.aggregationUnit, withUnit: unit)
@@ -26,7 +29,10 @@ public class HKQuantitySampleUtil {
 		}
 	}
 
+	/// - Precondition: The provided samples array is not empty.
 	public func average(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit) -> [Double] {
+		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+
 		if aggregationUnit == nil {
 			return [average(over: samples, withUnit: unit)]
 		} else {
@@ -38,7 +44,10 @@ public class HKQuantitySampleUtil {
 		}
 	}
 
+	/// - Precondition: The provided samples array is not empty.
 	public func average(over samples: [HKQuantitySample], withUnit unit: HKUnit) -> Double {
+		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+
 		var average: Double = 0.0
 		for sample in samples {
 			average += quantityValue(sample, unit)
@@ -46,7 +55,10 @@ public class HKQuantitySampleUtil {
 		return average / Double(samples.count)
 	}
 
+	/// - Precondition: The provided samples array is not empty.
 	public func count(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit) -> [Double] {
+		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+
 		if aggregationUnit == nil {
 			return [Double(samples.count)]
 		} else {
@@ -58,7 +70,10 @@ public class HKQuantitySampleUtil {
 		}
 	}
 
+	/// - Precondition: The provided samples array is not empty.
 	public func max(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit) -> [Double] {
+		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+
 		if aggregationUnit == nil {
 			return [max(over: samples, withUnit: unit)]
 		} else {
@@ -70,7 +85,10 @@ public class HKQuantitySampleUtil {
 		}
 	}
 
+	/// - Precondition: The provided samples array is not empty.
 	public func max(over samples: [HKQuantitySample], withUnit unit: HKUnit) -> Double{
+		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+
 		return quantityValue(
 			samples.max(by: { (sample1: HKQuantitySample, sample2: HKQuantitySample) -> Bool in
 				return quantityValue(sample1, unit) < quantityValue(sample2, unit)
@@ -78,7 +96,10 @@ public class HKQuantitySampleUtil {
 			unit)
 	}
 
+	/// - Precondition: The provided samples array is not empty.
 	public func min(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit) -> [Double] {
+		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+
 		if aggregationUnit == nil {
 			return [min(over: samples, withUnit: unit)]
 		} else {
@@ -90,7 +111,10 @@ public class HKQuantitySampleUtil {
 		}
 	}
 
+	/// - Precondition: The provided samples array is not empty.
 	public func min(over samples: [HKQuantitySample], withUnit unit: HKUnit) -> Double {
+		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+
 		return quantityValue(
 			samples.min(by: { (sample1: HKQuantitySample, sample2: HKQuantitySample) -> Bool in
 				return quantityValue(sample1, unit) < quantityValue(sample2, unit)
@@ -98,7 +122,10 @@ public class HKQuantitySampleUtil {
 			unit)
 	}
 
+	/// - Precondition: The provided samples array is not empty.
 	public func sum(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit) -> [Double] {
+		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+
 		if aggregationUnit == nil {
 			return [sum(over: samples, withUnit: unit)]
 		} else {
@@ -110,7 +137,10 @@ public class HKQuantitySampleUtil {
 		}
 	}
 
+	/// - Precondition: The provided samples array is not empty.
 	public func sum(over samples: [HKQuantitySample], withUnit unit: HKUnit) -> Double {
+		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+
 		var sum = 0.0
 		for sample in samples {
 			sum += quantityValue(sample, unit)
