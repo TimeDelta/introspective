@@ -10,15 +10,17 @@ import Foundation
 
 class UnitTestInjectionProvider: InjectionProvider {
 
-	fileprivate let mockQueryFactory = MockQueryFactory()
-	fileprivate let mockQuerierFactory = MockQuerierFactory()
-	fileprivate let mockQuestionFactory = MockQuestionFactory()
-	fileprivate let mockDataTypesFactory = MockDataTypesFactory()
-	fileprivate let mockUtilFactory = UtilFactory()
+	typealias Me = UnitTestInjectionProvider
 
-	var queryFactory: QueryFactory { get { return mockQueryFactory } }
-	var querierFactory: QuerierFactory { get { return mockQuerierFactory } }
-	var questionFactory: QuestionFactory { get { return mockQuestionFactory } }
-	var dataTypesFactory: DataTypesFactory { get { return mockDataTypesFactory } }
-	var utilFactory: UtilFactory { get { return mockUtilFactory } }
+	public static let mockQueryFactory = MockQueryFactory()
+	public static let mockQuerierFactory = MockQuerierFactory()
+	public static let mockQuestionFactory = MockQuestionFactory()
+	public static let mockDataTypesFactory = MockDataTypesFactory()
+	public static let mockUtilFactory = MockUtilFactory()
+
+	var queryFactory: QueryFactory { get { return Me.mockQueryFactory } }
+	var querierFactory: QuerierFactory { get { return Me.mockQuerierFactory } }
+	var questionFactory: QuestionFactory { get { return Me.mockQuestionFactory } }
+	var dataTypesFactory: DataTypesFactory { get { return Me.mockDataTypesFactory } }
+	var utilFactory: UtilFactory { get { return Me.mockUtilFactory } }
 }

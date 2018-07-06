@@ -5641,6 +5641,18 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
     
 
     
+    // ["name": "giveMeACalendarUtil", "returnSignature": " -> CalendarUtil", "fullyQualifiedName": "giveMeACalendarUtil() -> CalendarUtil", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "", "call": "", "parameters": [], "returnType": "CalendarUtil", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func giveMeACalendarUtil()  -> CalendarUtil {
+        
+            return cuckoo_manager.call("giveMeACalendarUtil() -> CalendarUtil",
+                parameters: (),
+                superclassCall:
+                    
+                    super.giveMeACalendarUtil()
+                    )
+        
+    }
+    
 
 	struct __StubbingProxy_UtilFactory: Cuckoo.StubbingProxy {
 	    private let cuckoo_manager: Cuckoo.MockManager
@@ -5665,6 +5677,11 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
 	        return .init(manager: cuckoo_manager, name: "textNormalizationUtil")
 	    }
 	    
+	    
+	    func giveMeACalendarUtil() -> Cuckoo.ClassStubFunction<(), CalendarUtil> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return .init(stub: cuckoo_manager.createStub(for: MockUtilFactory.self, method: "giveMeACalendarUtil() -> CalendarUtil", parameterMatchers: matchers))
+	    }
 	    
 	}
 
@@ -5697,6 +5714,12 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
 	    }
 	    
 	
+	    
+	    @discardableResult
+	    func giveMeACalendarUtil() -> Cuckoo.__DoNotUse<CalendarUtil> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return cuckoo_manager.verify("giveMeACalendarUtil() -> CalendarUtil", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
 	    
 	}
 
@@ -5735,6 +5758,10 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
 
     
 
+    
+    public override func giveMeACalendarUtil()  -> CalendarUtil {
+        return DefaultValueRegistry.defaultValue(for: CalendarUtil.self)
+    }
     
 }
 

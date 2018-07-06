@@ -10,6 +10,9 @@
 		A2092D7C20EE488700A182AA /* CalendarUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2092D7B20EE488700A182AA /* CalendarUtilTests.swift */; };
 		A2092D7E20EFA9C100A182AA /* SwiftDate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2092D7D20EFA9C000A182AA /* SwiftDate.framework */; };
 		A2092D7F20EFA9C100A182AA /* SwiftDate.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2092D7D20EFA9C000A182AA /* SwiftDate.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A2092D8120EFB7DB00A182AA /* MockUtilFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2092D8020EFB7DB00A182AA /* MockUtilFactory.swift */; };
+		A2092D8420F00E3A00A182AA /* Matchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2092D8320F00E3A00A182AA /* Matchers.swift */; };
+		A2092D8620F0159600A182AA /* HKSampleUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2092D8520F0159600A182AA /* HKSampleUtilTests.swift */; };
 		A21780EB20E9796700A8F9BA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21780EA20E9796700A8F9BA /* DateExtension.swift */; };
 		A21780F020E9ACD800A8F9BA /* TextNormalizationUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilTests.swift */; };
 		A217810720EBA25300A8F9BA /* ReturnType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A217810620EBA25300A8F9BA /* ReturnType.swift */; };
@@ -113,6 +116,9 @@
 /* Begin PBXFileReference section */
 		A2092D7B20EE488700A182AA /* CalendarUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUtilTests.swift; sourceTree = "<group>"; };
 		A2092D7D20EFA9C000A182AA /* SwiftDate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftDate.framework; path = DataIntegration/Carthage/Build/iOS/SwiftDate.framework; sourceTree = "<group>"; };
+		A2092D8020EFB7DB00A182AA /* MockUtilFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockUtilFactory.swift; sourceTree = "<group>"; };
+		A2092D8320F00E3A00A182AA /* Matchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Matchers.swift; sourceTree = "<group>"; };
+		A2092D8520F0159600A182AA /* HKSampleUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKSampleUtilTests.swift; sourceTree = "<group>"; };
 		A21780EA20E9796700A8F9BA /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNormalizationUtilTests.swift; sourceTree = "<group>"; };
 		A217810620EBA25300A8F9BA /* ReturnType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnType.swift; sourceTree = "<group>"; };
@@ -223,6 +229,7 @@
 				A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilTests.swift */,
 				A2EF759F20ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift */,
 				A2092D7B20EE488700A182AA /* CalendarUtilTests.swift */,
+				A2092D8520F0159600A182AA /* HKSampleUtilTests.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -332,6 +339,7 @@
 				A255D53220E5690F00BDD57B /* MockQuerierFactory.swift */,
 				A255D53420E5690F00BDD57B /* MockQueryFactory.swift */,
 				A255D53320E5690F00BDD57B /* MockQuestionFactory.swift */,
+				A2092D8020EFB7DB00A182AA /* MockUtilFactory.swift */,
 			);
 			path = FactoryMocks;
 			sourceTree = "<group>";
@@ -384,6 +392,7 @@
 		A2ABEA1420E53A4F00142C00 /* DataIntegrationTests */ = {
 			isa = PBXGroup;
 			children = (
+				A2092D8320F00E3A00A182AA /* Matchers.swift */,
 				A2E0B5D220ED4BE600B9FD8A /* Mocks.swift */,
 				A2E4E85C20E5548500631398 /* Questions */,
 				A21780EE20E9AC9A00A8F9BA /* Util */,
@@ -616,6 +625,7 @@
 				A238FEEF20E53F850025307F /* MoodSource.swift in Sources */,
 				A255D53920E5690F00BDD57B /* MockDataTypesFactory.swift in Sources */,
 				A217810720EBA25300A8F9BA /* ReturnType.swift in Sources */,
+				A2092D8120EFB7DB00A182AA /* MockUtilFactory.swift in Sources */,
 				A238FF0420E542710025307F /* SecondViewController.swift in Sources */,
 				A238FED320E53E970025307F /* Tags.swift in Sources */,
 				A238FEE520E53F3D0025307F /* HeartRate.swift in Sources */,
@@ -660,6 +670,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2092D8620F0159600A182AA /* HKSampleUtilTests.swift in Sources */,
+				A2092D8420F00E3A00A182AA /* Matchers.swift in Sources */,
 				A2EF75A020ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift in Sources */,
 				A2092D7C20EE488700A182AA /* CalendarUtilTests.swift in Sources */,
 				A255D54820E5AAC600BDD57B /* UnitTest.swift in Sources */,

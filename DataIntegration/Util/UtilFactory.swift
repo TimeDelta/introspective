@@ -17,6 +17,9 @@ public class UtilFactory {
 	fileprivate static let realHKSampleUtil = HKSampleUtil()
 	fileprivate static let realTextNormalizationUtil = TextNormalizationUtil()
 
+	public func giveMeACalendarUtil() -> CalendarUtil {
+		return Me.realCalendarUtil
+	}
 	public var calendarUtil: CalendarUtil { return Me.realCalendarUtil }
 	public var hkQuantitySampleUtil: HKQuantitySampleUtil { return Me.realHKQuantitySampleUtil }
 	public var hkSampleUtil: HKSampleUtil { return Me.realHKSampleUtil }

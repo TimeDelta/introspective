@@ -153,7 +153,12 @@ public class HKQuantitySampleUtil {
 		var samplesByAggregation = [Date: [HKQuantitySample]]()
 		for sample in samples {
 			let aggregationDate = DependencyInjector.util.calendarUtil.start(of: aggregationUnit, in: sample.endDate)
-			samplesByAggregation[aggregationDate]?.append(sample)
+			var samplesForAggregationDate = samplesByAggregation[aggregationDate]
+			if samplesForAggregationDate == nil {
+				samplesForAggregationDate = [HKQuantitySample]()
+			}
+			samplesForAggregationDate!.append(sample)
+			samplesByAggregation[aggregationDate] = samplesForAggregationDate
 		}
 		let sortedSamplesByAggregation = samplesByAggregation.sorted { (entry1: (key: Date, value: [HKQuantitySample]), entry2: (key: Date, value: [HKQuantitySample])) -> Bool in
 			return entry1.key.compare(entry2.key) == ComparisonResult.orderedAscending
