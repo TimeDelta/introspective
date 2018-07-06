@@ -53,6 +53,18 @@ class HKQuantitySampleUtilTests: UnitTest {
 		XCTAssert(average == expectedAverage)
 	}
 
+	func testGivenOnlyOneSampleWithYearlyAggregation_averagePer_returnsValueForThatSample() {
+		// given
+		let values = [5.0]
+		let samples = createSamples(withValues: values)
+
+		// when
+		let averages = util.average(over: samples, per: .year, withUnit: Me.defaultUnit)
+
+		// then
+		XCTAssert(averages == values)
+	}
+
     fileprivate func createSamples(withValues values: [Double]) -> [HKQuantitySample] {
 		var samples = [HKQuantitySample]()
 		for value in values {

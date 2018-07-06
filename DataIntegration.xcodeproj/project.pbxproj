@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A2092D7C20EE488700A182AA /* CalendarUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2092D7B20EE488700A182AA /* CalendarUtilTests.swift */; };
+		A2092D7E20EFA9C100A182AA /* SwiftDate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2092D7D20EFA9C000A182AA /* SwiftDate.framework */; };
+		A2092D7F20EFA9C100A182AA /* SwiftDate.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2092D7D20EFA9C000A182AA /* SwiftDate.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A21780EB20E9796700A8F9BA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21780EA20E9796700A8F9BA /* DateExtension.swift */; };
 		A21780F020E9ACD800A8F9BA /* TextNormalizationUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilTests.swift */; };
 		A217810720EBA25300A8F9BA /* ReturnType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A217810620EBA25300A8F9BA /* ReturnType.swift */; };
@@ -99,6 +102,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				A255D54020E5A7EE00BDD57B /* Cuckoo.framework in Embed Frameworks */,
+				A2092D7F20EFA9C100A182AA /* SwiftDate.framework in Embed Frameworks */,
 				A2CFA08D20E54F2E0083C5C5 /* SQLite.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -107,6 +111,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A2092D7B20EE488700A182AA /* CalendarUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUtilTests.swift; sourceTree = "<group>"; };
+		A2092D7D20EFA9C000A182AA /* SwiftDate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftDate.framework; path = DataIntegration/Carthage/Build/iOS/SwiftDate.framework; sourceTree = "<group>"; };
 		A21780EA20E9796700A8F9BA /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNormalizationUtilTests.swift; sourceTree = "<group>"; };
 		A217810620EBA25300A8F9BA /* ReturnType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnType.swift; sourceTree = "<group>"; };
@@ -186,6 +192,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2E4E86120E554F000631398 /* Cuckoo.framework in Frameworks */,
+				A2092D7E20EFA9C100A182AA /* SwiftDate.framework in Frameworks */,
 				A255D54620E5A9D600BDD57B /* HealthKit.framework in Frameworks */,
 				A255D53F20E5A7EE00BDD57B /* Cuckoo.framework in Frameworks */,
 				A2CFA08C20E54F2E0083C5C5 /* SQLite.framework in Frameworks */,
@@ -215,6 +222,7 @@
 			children = (
 				A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilTests.swift */,
 				A2EF759F20ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift */,
+				A2092D7B20EE488700A182AA /* CalendarUtilTests.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -339,6 +347,7 @@
 				A2ABE9FC20E53A4E00142C00 /* Products */,
 				A2E4E85F20E554EF00631398 /* Frameworks */,
 				A255D53E20E5A7EE00BDD57B /* Cuckoo.framework */,
+				A2092D7D20EFA9C000A182AA /* SwiftDate.framework */,
 				A2CFA08B20E54F2E0083C5C5 /* SQLite.framework */,
 			);
 			sourceTree = "<group>";
@@ -652,6 +661,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2EF75A020ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift in Sources */,
+				A2092D7C20EE488700A182AA /* CalendarUtilTests.swift in Sources */,
 				A255D54820E5AAC600BDD57B /* UnitTest.swift in Sources */,
 				A2E4E85E20E5549900631398 /* LabelsTests.swift in Sources */,
 				A21780F020E9ACD800A8F9BA /* TextNormalizationUtilTests.swift in Sources */,

@@ -12,6 +12,7 @@ import HealthKit
 public class HKQuantitySampleUtil {
 
 	/// - Precondition: The provided samples array is not empty.
+	/// - Remark:
 	public func compute(operation: QueryOperation, over samples: [HKQuantitySample], withUnit unit: HKUnit) -> [Double] {
 		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
@@ -151,7 +152,7 @@ public class HKQuantitySampleUtil {
 	public func sortSamplesByAggregation(_ samples: [HKQuantitySample], _ aggregationUnit: Calendar.Component) -> [(date: Date, samples: [HKQuantitySample])] {
 		var samplesByAggregation = [Date: [HKQuantitySample]]()
 		for sample in samples {
-			let aggregationDate = DependencyInjector.util.calendarUtil.zeroAllComponents(toBeginningOf: aggregationUnit, in: sample.endDate)
+			let aggregationDate = DependencyInjector.util.calendarUtil.start(of: aggregationUnit, in: sample.endDate)
 			samplesByAggregation[aggregationDate]?.append(sample)
 		}
 		let sortedSamplesByAggregation = samplesByAggregation.sorted { (entry1: (key: Date, value: [HKQuantitySample]), entry2: (key: Date, value: [HKQuantitySample])) -> Bool in

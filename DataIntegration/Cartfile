@@ -1,2 +1,3 @@
 github "stephencelis/SQLite.swift" ~> 0.11.5
 github "SwiftKit/Cuckoo"
+github "malcommac/SwiftDate" ~> 5.0.1
