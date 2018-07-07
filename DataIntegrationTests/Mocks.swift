@@ -289,258 +289,6 @@ class MockActivityInstance: ActivityInstance, Cuckoo.ClassMock {
 }
 
 
-// MARK: - Mocks generated from file: DataIntegration/DataTypes/DataTypesFactory.swift
-//
-//  DataTypesFactory.swift
-//  DataIntegration
-//
-//  Created by Bryan Nova on 6/28/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
-//
-
-import Cuckoo
-@testable import DataIntegration
-
-import Foundation
-
-class MockDataTypesFactory: DataTypesFactory, Cuckoo.ClassMock {
-    typealias MocksType = DataTypesFactory
-    typealias Stubbing = __StubbingProxy_DataTypesFactory
-    typealias Verification = __VerificationProxy_DataTypesFactory
-    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
-
-    
-
-    
-
-    
-    // ["name": "activity", "returnSignature": " -> Activity", "fullyQualifiedName": "activity() -> Activity", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "", "call": "", "parameters": [], "returnType": "Activity", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-     override func activity()  -> Activity {
-        
-            return cuckoo_manager.call("activity() -> Activity",
-                parameters: (),
-                superclassCall:
-                    
-                    super.activity()
-                    )
-        
-    }
-    
-    // ["name": "activityInstance", "returnSignature": " -> ActivityInstance", "fullyQualifiedName": "activityInstance(activity: Activity) -> ActivityInstance", "parameterSignature": "activity: Activity", "parameterSignatureWithoutNames": "activity: Activity", "inputTypes": "Activity", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "activity", "call": "activity: activity", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("activity"), name: "activity", type: "Activity", range: CountableRange(283..<301), nameRange: CountableRange(283..<291))], "returnType": "ActivityInstance", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-     override func activityInstance(activity: Activity)  -> ActivityInstance {
-        
-            return cuckoo_manager.call("activityInstance(activity: Activity) -> ActivityInstance",
-                parameters: (activity),
-                superclassCall:
-                    
-                    super.activityInstance(activity: activity)
-                    )
-        
-    }
-    
-    // ["name": "heartRate", "returnSignature": " -> HeartRate", "fullyQualifiedName": "heartRate(value: Double) -> HeartRate", "parameterSignature": "value: Double", "parameterSignatureWithoutNames": "value: Double", "inputTypes": "Double", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "value", "call": "value: value", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("value"), name: "value", type: "Double", range: CountableRange(391..<404), nameRange: CountableRange(391..<396))], "returnType": "HeartRate", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-     override func heartRate(value: Double)  -> HeartRate {
-        
-            return cuckoo_manager.call("heartRate(value: Double) -> HeartRate",
-                parameters: (value),
-                superclassCall:
-                    
-                    super.heartRate(value: value)
-                    )
-        
-    }
-    
-    // ["name": "heartRate", "returnSignature": " -> HeartRate", "fullyQualifiedName": "heartRate(value: Double, timestamp: Date) -> HeartRate", "parameterSignature": "value: Double, timestamp: Date", "parameterSignatureWithoutNames": "value: Double, timestamp: Date", "inputTypes": "Double, Date", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "value, timestamp", "call": "value: value, timestamp: timestamp", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("value"), name: "value", type: "Double", range: CountableRange(474..<487), nameRange: CountableRange(474..<479)), CuckooGeneratorFramework.MethodParameter(label: Optional("timestamp"), name: "timestamp", type: "Date", range: CountableRange(489..<504), nameRange: CountableRange(489..<498))], "returnType": "HeartRate", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-     override func heartRate(value: Double, timestamp: Date)  -> HeartRate {
-        
-            return cuckoo_manager.call("heartRate(value: Double, timestamp: Date) -> HeartRate",
-                parameters: (value, timestamp),
-                superclassCall:
-                    
-                    super.heartRate(value: value, timestamp: timestamp)
-                    )
-        
-    }
-    
-    // ["name": "mood", "returnSignature": " -> Mood", "fullyQualifiedName": "mood() -> Mood", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "", "call": "", "parameters": [], "returnType": "Mood", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-     override func mood()  -> Mood {
-        
-            return cuckoo_manager.call("mood() -> Mood",
-                parameters: (),
-                superclassCall:
-                    
-                    super.mood()
-                    )
-        
-    }
-    
-    // ["name": "mood", "returnSignature": " -> Mood", "fullyQualifiedName": "mood(rating: Double) -> Mood", "parameterSignature": "rating: Double", "parameterSignatureWithoutNames": "rating: Double", "inputTypes": "Double", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "rating", "call": "rating: rating", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("rating"), name: "rating", type: "Double", range: CountableRange(634..<648), nameRange: CountableRange(634..<640))], "returnType": "Mood", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-     override func mood(rating: Double)  -> Mood {
-        
-            return cuckoo_manager.call("mood(rating: Double) -> Mood",
-                parameters: (rating),
-                superclassCall:
-                    
-                    super.mood(rating: rating)
-                    )
-        
-    }
-    
-    // ["name": "mood", "returnSignature": " -> Mood", "fullyQualifiedName": "mood(timestamp: Date) -> Mood", "parameterSignature": "timestamp: Date", "parameterSignatureWithoutNames": "timestamp: Date", "inputTypes": "Date", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "timestamp", "call": "timestamp: timestamp", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("timestamp"), name: "timestamp", type: "Date", range: CountableRange(705..<720), nameRange: CountableRange(705..<714))], "returnType": "Mood", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-     override func mood(timestamp: Date)  -> Mood {
-        
-            return cuckoo_manager.call("mood(timestamp: Date) -> Mood",
-                parameters: (timestamp),
-                superclassCall:
-                    
-                    super.mood(timestamp: timestamp)
-                    )
-        
-    }
-    
-
-	struct __StubbingProxy_DataTypesFactory: Cuckoo.StubbingProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	
-	    init(manager: Cuckoo.MockManager) {
-	        self.cuckoo_manager = manager
-	    }
-	    
-	    
-	    func activity() -> Cuckoo.ClassStubFunction<(), Activity> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return .init(stub: cuckoo_manager.createStub(for: MockDataTypesFactory.self, method: "activity() -> Activity", parameterMatchers: matchers))
-	    }
-	    
-	    func activityInstance<M1: Cuckoo.Matchable>(activity: M1) -> Cuckoo.ClassStubFunction<(Activity), ActivityInstance> where M1.MatchedType == Activity {
-	        let matchers: [Cuckoo.ParameterMatcher<(Activity)>] = [wrap(matchable: activity) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockDataTypesFactory.self, method: "activityInstance(activity: Activity) -> ActivityInstance", parameterMatchers: matchers))
-	    }
-	    
-	    func heartRate<M1: Cuckoo.Matchable>(value: M1) -> Cuckoo.ClassStubFunction<(Double), HeartRate> where M1.MatchedType == Double {
-	        let matchers: [Cuckoo.ParameterMatcher<(Double)>] = [wrap(matchable: value) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockDataTypesFactory.self, method: "heartRate(value: Double) -> HeartRate", parameterMatchers: matchers))
-	    }
-	    
-	    func heartRate<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(value: M1, timestamp: M2) -> Cuckoo.ClassStubFunction<(Double, Date), HeartRate> where M1.MatchedType == Double, M2.MatchedType == Date {
-	        let matchers: [Cuckoo.ParameterMatcher<(Double, Date)>] = [wrap(matchable: value) { $0.0 }, wrap(matchable: timestamp) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockDataTypesFactory.self, method: "heartRate(value: Double, timestamp: Date) -> HeartRate", parameterMatchers: matchers))
-	    }
-	    
-	    func mood() -> Cuckoo.ClassStubFunction<(), Mood> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return .init(stub: cuckoo_manager.createStub(for: MockDataTypesFactory.self, method: "mood() -> Mood", parameterMatchers: matchers))
-	    }
-	    
-	    func mood<M1: Cuckoo.Matchable>(rating: M1) -> Cuckoo.ClassStubFunction<(Double), Mood> where M1.MatchedType == Double {
-	        let matchers: [Cuckoo.ParameterMatcher<(Double)>] = [wrap(matchable: rating) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockDataTypesFactory.self, method: "mood(rating: Double) -> Mood", parameterMatchers: matchers))
-	    }
-	    
-	    func mood<M1: Cuckoo.Matchable>(timestamp: M1) -> Cuckoo.ClassStubFunction<(Date), Mood> where M1.MatchedType == Date {
-	        let matchers: [Cuckoo.ParameterMatcher<(Date)>] = [wrap(matchable: timestamp) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockDataTypesFactory.self, method: "mood(timestamp: Date) -> Mood", parameterMatchers: matchers))
-	    }
-	    
-	}
-
-	struct __VerificationProxy_DataTypesFactory: Cuckoo.VerificationProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	    private let callMatcher: Cuckoo.CallMatcher
-	    private let sourceLocation: Cuckoo.SourceLocation
-	
-	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-	        self.cuckoo_manager = manager
-	        self.callMatcher = callMatcher
-	        self.sourceLocation = sourceLocation
-	    }
-	
-	    
-	
-	    
-	    @discardableResult
-	    func activity() -> Cuckoo.__DoNotUse<Activity> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return cuckoo_manager.verify("activity() -> Activity", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func activityInstance<M1: Cuckoo.Matchable>(activity: M1) -> Cuckoo.__DoNotUse<ActivityInstance> where M1.MatchedType == Activity {
-	        let matchers: [Cuckoo.ParameterMatcher<(Activity)>] = [wrap(matchable: activity) { $0 }]
-	        return cuckoo_manager.verify("activityInstance(activity: Activity) -> ActivityInstance", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func heartRate<M1: Cuckoo.Matchable>(value: M1) -> Cuckoo.__DoNotUse<HeartRate> where M1.MatchedType == Double {
-	        let matchers: [Cuckoo.ParameterMatcher<(Double)>] = [wrap(matchable: value) { $0 }]
-	        return cuckoo_manager.verify("heartRate(value: Double) -> HeartRate", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func heartRate<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(value: M1, timestamp: M2) -> Cuckoo.__DoNotUse<HeartRate> where M1.MatchedType == Double, M2.MatchedType == Date {
-	        let matchers: [Cuckoo.ParameterMatcher<(Double, Date)>] = [wrap(matchable: value) { $0.0 }, wrap(matchable: timestamp) { $0.1 }]
-	        return cuckoo_manager.verify("heartRate(value: Double, timestamp: Date) -> HeartRate", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func mood() -> Cuckoo.__DoNotUse<Mood> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return cuckoo_manager.verify("mood() -> Mood", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func mood<M1: Cuckoo.Matchable>(rating: M1) -> Cuckoo.__DoNotUse<Mood> where M1.MatchedType == Double {
-	        let matchers: [Cuckoo.ParameterMatcher<(Double)>] = [wrap(matchable: rating) { $0 }]
-	        return cuckoo_manager.verify("mood(rating: Double) -> Mood", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func mood<M1: Cuckoo.Matchable>(timestamp: M1) -> Cuckoo.__DoNotUse<Mood> where M1.MatchedType == Date {
-	        let matchers: [Cuckoo.ParameterMatcher<(Date)>] = [wrap(matchable: timestamp) { $0 }]
-	        return cuckoo_manager.verify("mood(timestamp: Date) -> Mood", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	}
-
-}
-
- class DataTypesFactoryStub: DataTypesFactory {
-    
-
-    
-
-    
-     override func activity()  -> Activity {
-        return DefaultValueRegistry.defaultValue(for: Activity.self)
-    }
-    
-     override func activityInstance(activity: Activity)  -> ActivityInstance {
-        return DefaultValueRegistry.defaultValue(for: ActivityInstance.self)
-    }
-    
-     override func heartRate(value: Double)  -> HeartRate {
-        return DefaultValueRegistry.defaultValue(for: HeartRate.self)
-    }
-    
-     override func heartRate(value: Double, timestamp: Date)  -> HeartRate {
-        return DefaultValueRegistry.defaultValue(for: HeartRate.self)
-    }
-    
-     override func mood()  -> Mood {
-        return DefaultValueRegistry.defaultValue(for: Mood.self)
-    }
-    
-     override func mood(rating: Double)  -> Mood {
-        return DefaultValueRegistry.defaultValue(for: Mood.self)
-    }
-    
-     override func mood(timestamp: Date)  -> Mood {
-        return DefaultValueRegistry.defaultValue(for: Mood.self)
-    }
-    
-}
-
-
 // MARK: - Mocks generated from file: DataIntegration/DataTypes/HeartRate.swift
 //
 //  HeartRate.swift
@@ -950,6 +698,16 @@ class MockLabels: Labels, Cuckoo.ClassMock {
     let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
 
     
+    // ["name": "description", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "String", "isReadOnly": true, "accessibility": "public"]
+    public override var description: String {
+        get {
+            
+            return cuckoo_manager.getter("description", superclassCall: super.description)
+            
+        }
+        
+    }
+    
     // ["name": "count", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "Int", "isReadOnly": true, "accessibility": "public"]
     public override var count: Int {
         get {
@@ -994,7 +752,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
     
 
     
-    // ["name": "addLabel", "returnSignature": "", "fullyQualifiedName": "addLabel(_: Label)", "parameterSignature": "_ label: Label", "parameterSignatureWithoutNames": "label: Label", "inputTypes": "Label", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "label", "call": "label", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "label", type: "Label", range: CountableRange(1839..<1853), nameRange: CountableRange(0..<0))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
+    // ["name": "addLabel", "returnSignature": "", "fullyQualifiedName": "addLabel(_: Label)", "parameterSignature": "_ label: Label", "parameterSignatureWithoutNames": "label: Label", "inputTypes": "Label", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "label", "call": "label", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "label", type: "Label", range: CountableRange(2105..<2119), nameRange: CountableRange(0..<0))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
     public override func addLabel(_ label: Label)  {
         
             return cuckoo_manager.call("addLabel(_: Label)",
@@ -1006,7 +764,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "hasLabelFor", "returnSignature": " -> Bool", "fullyQualifiedName": "hasLabelFor(_: NLTag) -> Bool", "parameterSignature": "_ tag: NLTag", "parameterSignatureWithoutNames": "tag: NLTag", "inputTypes": "NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag", "call": "tag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "tag", type: "NLTag", range: CountableRange(2634..<2646), nameRange: CountableRange(0..<0))], "returnType": "Bool", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "hasLabelFor", "returnSignature": " -> Bool", "fullyQualifiedName": "hasLabelFor(_: NLTag) -> Bool", "parameterSignature": "_ tag: NLTag", "parameterSignatureWithoutNames": "tag: NLTag", "inputTypes": "NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag", "call": "tag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "tag", type: "NLTag", range: CountableRange(2900..<2912), nameRange: CountableRange(0..<0))], "returnType": "Bool", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func hasLabelFor(_ tag: NLTag)  -> Bool {
         
             return cuckoo_manager.call("hasLabelFor(_: NLTag) -> Bool",
@@ -1030,7 +788,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "indexOf", "returnSignature": " -> Int", "fullyQualifiedName": "indexOf(label: Label) -> Int", "parameterSignature": "label: Label", "parameterSignatureWithoutNames": "label: Label", "inputTypes": "Label", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "label", "call": "label: label", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("label"), name: "label", type: "Label", range: CountableRange(2948..<2960), nameRange: CountableRange(2948..<2953))], "returnType": "Int", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "indexOf", "returnSignature": " -> Int", "fullyQualifiedName": "indexOf(label: Label) -> Int", "parameterSignature": "label: Label", "parameterSignatureWithoutNames": "label: Label", "inputTypes": "Label", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "label", "call": "label: label", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("label"), name: "label", type: "Label", range: CountableRange(3214..<3226), nameRange: CountableRange(3214..<3219))], "returnType": "Int", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func indexOf(label: Label)  -> Int {
         
             return cuckoo_manager.call("indexOf(label: Label) -> Int",
@@ -1042,7 +800,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "labelsInAnyOrderFor", "returnSignature": " -> [Label]", "fullyQualifiedName": "labelsInAnyOrderFor(tags: Set<NLTag>) -> [Label]", "parameterSignature": "tags: Set<NLTag>", "parameterSignatureWithoutNames": "tags: Set<NLTag>", "inputTypes": "Set<NLTag>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tags", "call": "tags: tags", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tags"), name: "tags", type: "Set<NLTag>", range: CountableRange(3196..<3212), nameRange: CountableRange(3196..<3200))], "returnType": "[Label]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "labelsInAnyOrderFor", "returnSignature": " -> [Label]", "fullyQualifiedName": "labelsInAnyOrderFor(tags: Set<NLTag>) -> [Label]", "parameterSignature": "tags: Set<NLTag>", "parameterSignatureWithoutNames": "tags: Set<NLTag>", "inputTypes": "Set<NLTag>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tags", "call": "tags: tags", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tags"), name: "tags", type: "Set<NLTag>", range: CountableRange(3462..<3478), nameRange: CountableRange(3462..<3466))], "returnType": "[Label]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func labelsInAnyOrderFor(tags: Set<NLTag>)  -> [Label] {
         
             return cuckoo_manager.call("labelsInAnyOrderFor(tags: Set<NLTag>) -> [Label]",
@@ -1054,7 +812,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "labelsFor", "returnSignature": " -> [Label]", "fullyQualifiedName": "labelsFor(tags: Set<NLTag>) -> [Label]", "parameterSignature": "tags: Set<NLTag>", "parameterSignatureWithoutNames": "tags: Set<NLTag>", "inputTypes": "Set<NLTag>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tags", "call": "tags: tags", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tags"), name: "tags", type: "Set<NLTag>", range: CountableRange(3591..<3607), nameRange: CountableRange(3591..<3595))], "returnType": "[Label]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "labelsFor", "returnSignature": " -> [Label]", "fullyQualifiedName": "labelsFor(tags: Set<NLTag>) -> [Label]", "parameterSignature": "tags: Set<NLTag>", "parameterSignatureWithoutNames": "tags: Set<NLTag>", "inputTypes": "Set<NLTag>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tags", "call": "tags: tags", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tags"), name: "tags", type: "Set<NLTag>", range: CountableRange(3857..<3873), nameRange: CountableRange(3857..<3861))], "returnType": "[Label]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func labelsFor(tags: Set<NLTag>)  -> [Label] {
         
             return cuckoo_manager.call("labelsFor(tags: Set<NLTag>) -> [Label]",
@@ -1066,7 +824,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "splitBefore", "returnSignature": " -> [Labels]", "fullyQualifiedName": "splitBefore(tag: NLTag) -> [Labels]", "parameterSignature": "tag: NLTag", "parameterSignatureWithoutNames": "tag: NLTag", "inputTypes": "NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag", "call": "tag: tag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(4113..<4123), nameRange: CountableRange(4113..<4116))], "returnType": "[Labels]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "splitBefore", "returnSignature": " -> [Labels]", "fullyQualifiedName": "splitBefore(tag: NLTag) -> [Labels]", "parameterSignature": "tag: NLTag", "parameterSignatureWithoutNames": "tag: NLTag", "inputTypes": "NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag", "call": "tag: tag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(4379..<4389), nameRange: CountableRange(4379..<4382))], "returnType": "[Labels]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func splitBefore(tag: NLTag)  -> [Labels] {
         
             return cuckoo_manager.call("splitBefore(tag: NLTag) -> [Labels]",
@@ -1078,7 +836,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "splitBefore", "returnSignature": " -> [Labels]", "fullyQualifiedName": "splitBefore(tags: Set<NLTag>) -> [Labels]", "parameterSignature": "tags: Set<NLTag>", "parameterSignatureWithoutNames": "tags: Set<NLTag>", "inputTypes": "Set<NLTag>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tags", "call": "tags: tags", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tags"), name: "tags", type: "Set<NLTag>", range: CountableRange(4903..<4919), nameRange: CountableRange(4903..<4907))], "returnType": "[Labels]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "splitBefore", "returnSignature": " -> [Labels]", "fullyQualifiedName": "splitBefore(tags: Set<NLTag>) -> [Labels]", "parameterSignature": "tags: Set<NLTag>", "parameterSignatureWithoutNames": "tags: Set<NLTag>", "inputTypes": "Set<NLTag>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tags", "call": "tags: tags", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tags"), name: "tags", type: "Set<NLTag>", range: CountableRange(5169..<5185), nameRange: CountableRange(5169..<5173))], "returnType": "[Labels]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func splitBefore(tags: Set<NLTag>)  -> [Labels] {
         
             return cuckoo_manager.call("splitBefore(tags: Set<NLTag>) -> [Labels]",
@@ -1090,7 +848,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "splitAfter", "returnSignature": " -> [Labels]", "fullyQualifiedName": "splitAfter(tag: NLTag) -> [Labels]", "parameterSignature": "tag: NLTag", "parameterSignatureWithoutNames": "tag: NLTag", "inputTypes": "NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag", "call": "tag: tag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(5787..<5797), nameRange: CountableRange(5787..<5790))], "returnType": "[Labels]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "splitAfter", "returnSignature": " -> [Labels]", "fullyQualifiedName": "splitAfter(tag: NLTag) -> [Labels]", "parameterSignature": "tag: NLTag", "parameterSignatureWithoutNames": "tag: NLTag", "inputTypes": "NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag", "call": "tag: tag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(6053..<6063), nameRange: CountableRange(6053..<6056))], "returnType": "[Labels]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func splitAfter(tag: NLTag)  -> [Labels] {
         
             return cuckoo_manager.call("splitAfter(tag: NLTag) -> [Labels]",
@@ -1102,7 +860,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "splitAfter", "returnSignature": " -> [Labels]", "fullyQualifiedName": "splitAfter(tags: Set<NLTag>) -> [Labels]", "parameterSignature": "tags: Set<NLTag>", "parameterSignatureWithoutNames": "tags: Set<NLTag>", "inputTypes": "Set<NLTag>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tags", "call": "tags: tags", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tags"), name: "tags", type: "Set<NLTag>", range: CountableRange(6629..<6645), nameRange: CountableRange(6629..<6633))], "returnType": "[Labels]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "splitAfter", "returnSignature": " -> [Labels]", "fullyQualifiedName": "splitAfter(tags: Set<NLTag>) -> [Labels]", "parameterSignature": "tags: Set<NLTag>", "parameterSignatureWithoutNames": "tags: Set<NLTag>", "inputTypes": "Set<NLTag>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tags", "call": "tags: tags", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tags"), name: "tags", type: "Set<NLTag>", range: CountableRange(6895..<6911), nameRange: CountableRange(6895..<6899))], "returnType": "[Labels]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func splitAfter(tags: Set<NLTag>)  -> [Labels] {
         
             return cuckoo_manager.call("splitAfter(tags: Set<NLTag>) -> [Labels]",
@@ -1114,7 +872,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "findNearestLabelWith", "returnSignature": " throws -> [Label]?", "fullyQualifiedName": "findNearestLabelWith(tag: NLTag, to: Int) throws -> [Label]?", "parameterSignature": "tag: NLTag, to index: Int", "parameterSignatureWithoutNames": "tag: NLTag, index: Int", "inputTypes": "NLTag, Int", "isThrowing": true, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag, index", "call": "tag: tag, to: index", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(7616..<7626), nameRange: CountableRange(7616..<7619)), CuckooGeneratorFramework.MethodParameter(label: Optional("to"), name: "index", type: "Int", range: CountableRange(7628..<7641), nameRange: CountableRange(7628..<7630))], "returnType": "Optional<[Label]>", "isOptional": false, "stubFunction": "Cuckoo.ClassStubThrowingFunction"]
+    // ["name": "findNearestLabelWith", "returnSignature": " throws -> [Label]?", "fullyQualifiedName": "findNearestLabelWith(tag: NLTag, to: Int) throws -> [Label]?", "parameterSignature": "tag: NLTag, to index: Int", "parameterSignatureWithoutNames": "tag: NLTag, index: Int", "inputTypes": "NLTag, Int", "isThrowing": true, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag, index", "call": "tag: tag, to: index", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(7882..<7892), nameRange: CountableRange(7882..<7885)), CuckooGeneratorFramework.MethodParameter(label: Optional("to"), name: "index", type: "Int", range: CountableRange(7894..<7907), nameRange: CountableRange(7894..<7896))], "returnType": "Optional<[Label]>", "isOptional": false, "stubFunction": "Cuckoo.ClassStubThrowingFunction"]
     public override func findNearestLabelWith(tag: NLTag, to index: Int)  throws -> [Label]? {
         
             return try cuckoo_manager.callThrows("findNearestLabelWith(tag: NLTag, to: Int) throws -> [Label]?",
@@ -1126,7 +884,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "findNearestLabelWith", "returnSignature": " throws -> Label?", "fullyQualifiedName": "findNearestLabelWith(tag: NLTag, before: Int) throws -> Label?", "parameterSignature": "tag: NLTag, before index: Int", "parameterSignatureWithoutNames": "tag: NLTag, index: Int", "inputTypes": "NLTag, Int", "isThrowing": true, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag, index", "call": "tag: tag, before: index", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(8883..<8893), nameRange: CountableRange(8883..<8886)), CuckooGeneratorFramework.MethodParameter(label: Optional("before"), name: "index", type: "Int", range: CountableRange(8895..<8912), nameRange: CountableRange(8895..<8901))], "returnType": "Optional<Label>", "isOptional": false, "stubFunction": "Cuckoo.ClassStubThrowingFunction"]
+    // ["name": "findNearestLabelWith", "returnSignature": " throws -> Label?", "fullyQualifiedName": "findNearestLabelWith(tag: NLTag, before: Int) throws -> Label?", "parameterSignature": "tag: NLTag, before index: Int", "parameterSignatureWithoutNames": "tag: NLTag, index: Int", "inputTypes": "NLTag, Int", "isThrowing": true, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag, index", "call": "tag: tag, before: index", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(9149..<9159), nameRange: CountableRange(9149..<9152)), CuckooGeneratorFramework.MethodParameter(label: Optional("before"), name: "index", type: "Int", range: CountableRange(9161..<9178), nameRange: CountableRange(9161..<9167))], "returnType": "Optional<Label>", "isOptional": false, "stubFunction": "Cuckoo.ClassStubThrowingFunction"]
     public override func findNearestLabelWith(tag: NLTag, before index: Int)  throws -> Label? {
         
             return try cuckoo_manager.callThrows("findNearestLabelWith(tag: NLTag, before: Int) throws -> Label?",
@@ -1138,7 +896,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "findNearestLabelWith", "returnSignature": " throws -> Label?", "fullyQualifiedName": "findNearestLabelWith(tag: NLTag, after: Int) throws -> Label?", "parameterSignature": "tag: NLTag, after index: Int", "parameterSignatureWithoutNames": "tag: NLTag, index: Int", "inputTypes": "NLTag, Int", "isThrowing": true, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag, index", "call": "tag: tag, after: index", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(9538..<9548), nameRange: CountableRange(9538..<9541)), CuckooGeneratorFramework.MethodParameter(label: Optional("after"), name: "index", type: "Int", range: CountableRange(9550..<9566), nameRange: CountableRange(9550..<9555))], "returnType": "Optional<Label>", "isOptional": false, "stubFunction": "Cuckoo.ClassStubThrowingFunction"]
+    // ["name": "findNearestLabelWith", "returnSignature": " throws -> Label?", "fullyQualifiedName": "findNearestLabelWith(tag: NLTag, after: Int) throws -> Label?", "parameterSignature": "tag: NLTag, after index: Int", "parameterSignatureWithoutNames": "tag: NLTag, index: Int", "inputTypes": "NLTag, Int", "isThrowing": true, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag, index", "call": "tag: tag, after: index", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("tag"), name: "tag", type: "NLTag", range: CountableRange(9804..<9814), nameRange: CountableRange(9804..<9807)), CuckooGeneratorFramework.MethodParameter(label: Optional("after"), name: "index", type: "Int", range: CountableRange(9816..<9832), nameRange: CountableRange(9816..<9821))], "returnType": "Optional<Label>", "isOptional": false, "stubFunction": "Cuckoo.ClassStubThrowingFunction"]
     public override func findNearestLabelWith(tag: NLTag, after index: Int)  throws -> Label? {
         
             return try cuckoo_manager.callThrows("findNearestLabelWith(tag: NLTag, after: Int) throws -> Label?",
@@ -1150,7 +908,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "ifNotTaggedTagLabelAt", "returnSignature": "", "fullyQualifiedName": "ifNotTaggedTagLabelAt(range: Range<String.Index>, asTag: NLTag)", "parameterSignature": "range: Range<String.Index>, asTag: NLTag", "parameterSignatureWithoutNames": "range: Range<String.Index>, asTag: NLTag", "inputTypes": "Range<String.Index>, NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "range, asTag", "call": "range: range, asTag: asTag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("range"), name: "range", type: "Range<String.Index>", range: CountableRange(10191..<10217), nameRange: CountableRange(10191..<10196)), CuckooGeneratorFramework.MethodParameter(label: Optional("asTag"), name: "asTag", type: "NLTag", range: CountableRange(10219..<10231), nameRange: CountableRange(10219..<10224))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
+    // ["name": "ifNotTaggedTagLabelAt", "returnSignature": "", "fullyQualifiedName": "ifNotTaggedTagLabelAt(range: Range<String.Index>, asTag: NLTag)", "parameterSignature": "range: Range<String.Index>, asTag: NLTag", "parameterSignatureWithoutNames": "range: Range<String.Index>, asTag: NLTag", "inputTypes": "Range<String.Index>, NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "range, asTag", "call": "range: range, asTag: asTag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("range"), name: "range", type: "Range<String.Index>", range: CountableRange(10457..<10483), nameRange: CountableRange(10457..<10462)), CuckooGeneratorFramework.MethodParameter(label: Optional("asTag"), name: "asTag", type: "NLTag", range: CountableRange(10485..<10497), nameRange: CountableRange(10485..<10490))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
     public override func ifNotTaggedTagLabelAt(range: Range<String.Index>, asTag: NLTag)  {
         
             return cuckoo_manager.call("ifNotTaggedTagLabelAt(range: Range<String.Index>, asTag: NLTag)",
@@ -1162,7 +920,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "shortestDistance", "returnSignature": " -> Int", "fullyQualifiedName": "shortestDistance(between: NLTag, and: NLTag) -> Int", "parameterSignature": "between tag1: NLTag, and tag2: NLTag", "parameterSignatureWithoutNames": "tag1: NLTag, tag2: NLTag", "inputTypes": "NLTag, NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag1, tag2", "call": "between: tag1, and: tag2", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("between"), name: "tag1", type: "NLTag", range: CountableRange(10932..<10951), nameRange: CountableRange(10932..<10939)), CuckooGeneratorFramework.MethodParameter(label: Optional("and"), name: "tag2", type: "NLTag", range: CountableRange(10953..<10968), nameRange: CountableRange(10953..<10956))], "returnType": "Int", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "shortestDistance", "returnSignature": " -> Int", "fullyQualifiedName": "shortestDistance(between: NLTag, and: NLTag) -> Int", "parameterSignature": "between tag1: NLTag, and tag2: NLTag", "parameterSignatureWithoutNames": "tag1: NLTag, tag2: NLTag", "inputTypes": "NLTag, NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "tag1, tag2", "call": "between: tag1, and: tag2", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("between"), name: "tag1", type: "NLTag", range: CountableRange(11198..<11217), nameRange: CountableRange(11198..<11205)), CuckooGeneratorFramework.MethodParameter(label: Optional("and"), name: "tag2", type: "NLTag", range: CountableRange(11219..<11234), nameRange: CountableRange(11219..<11222))], "returnType": "Int", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func shortestDistance(between tag1: NLTag, and tag2: NLTag)  -> Int {
         
             return cuckoo_manager.call("shortestDistance(between: NLTag, and: NLTag) -> Int",
@@ -1174,7 +932,7 @@ class MockLabels: Labels, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "shortestDistance", "returnSignature": " -> Int?", "fullyQualifiedName": "shortestDistance(from: Label, toLabelWith: NLTag) -> Int?", "parameterSignature": "from: Label, toLabelWith tag: NLTag", "parameterSignatureWithoutNames": "from: Label, tag: NLTag", "inputTypes": "Label, NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "from, tag", "call": "from: from, toLabelWith: tag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("from"), name: "from", type: "Label", range: CountableRange(11948..<11959), nameRange: CountableRange(11948..<11952)), CuckooGeneratorFramework.MethodParameter(label: Optional("toLabelWith"), name: "tag", type: "NLTag", range: CountableRange(11961..<11983), nameRange: CountableRange(11961..<11972))], "returnType": "Optional<Int>", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "shortestDistance", "returnSignature": " -> Int?", "fullyQualifiedName": "shortestDistance(from: Label, toLabelWith: NLTag) -> Int?", "parameterSignature": "from: Label, toLabelWith tag: NLTag", "parameterSignatureWithoutNames": "from: Label, tag: NLTag", "inputTypes": "Label, NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "from, tag", "call": "from: from, toLabelWith: tag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("from"), name: "from", type: "Label", range: CountableRange(12210..<12221), nameRange: CountableRange(12210..<12214)), CuckooGeneratorFramework.MethodParameter(label: Optional("toLabelWith"), name: "tag", type: "NLTag", range: CountableRange(12223..<12245), nameRange: CountableRange(12223..<12234))], "returnType": "Optional<Int>", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func shortestDistance(from: Label, toLabelWith tag: NLTag)  -> Int? {
         
             return cuckoo_manager.call("shortestDistance(from: Label, toLabelWith: NLTag) -> Int?",
@@ -1182,6 +940,30 @@ class MockLabels: Labels, Cuckoo.ClassMock {
                 superclassCall:
                     
                     super.shortestDistance(from: from, toLabelWith: tag)
+                    )
+        
+    }
+    
+    // ["name": "shortestDistance", "returnSignature": " -> Int?", "fullyQualifiedName": "shortestDistance(from: Label, toPreceedingLabelWith: NLTag) -> Int?", "parameterSignature": "from: Label, toPreceedingLabelWith tag: NLTag", "parameterSignatureWithoutNames": "from: Label, tag: NLTag", "inputTypes": "Label, NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "from, tag", "call": "from: from, toPreceedingLabelWith: tag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("from"), name: "from", type: "Label", range: CountableRange(13200..<13211), nameRange: CountableRange(13200..<13204)), CuckooGeneratorFramework.MethodParameter(label: Optional("toPreceedingLabelWith"), name: "tag", type: "NLTag", range: CountableRange(13213..<13245), nameRange: CountableRange(13213..<13234))], "returnType": "Optional<Int>", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func shortestDistance(from: Label, toPreceedingLabelWith tag: NLTag)  -> Int? {
+        
+            return cuckoo_manager.call("shortestDistance(from: Label, toPreceedingLabelWith: NLTag) -> Int?",
+                parameters: (from, tag),
+                superclassCall:
+                    
+                    super.shortestDistance(from: from, toPreceedingLabelWith: tag)
+                    )
+        
+    }
+    
+    // ["name": "shortestDistance", "returnSignature": " -> Int?", "fullyQualifiedName": "shortestDistance(from: Label, toSuccessiveLabelWith: NLTag) -> Int?", "parameterSignature": "from: Label, toSuccessiveLabelWith tag: NLTag", "parameterSignatureWithoutNames": "from: Label, tag: NLTag", "inputTypes": "Label, NLTag", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "from, tag", "call": "from: from, toSuccessiveLabelWith: tag", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("from"), name: "from", type: "Label", range: CountableRange(13838..<13849), nameRange: CountableRange(13838..<13842)), CuckooGeneratorFramework.MethodParameter(label: Optional("toSuccessiveLabelWith"), name: "tag", type: "NLTag", range: CountableRange(13851..<13883), nameRange: CountableRange(13851..<13872))], "returnType": "Optional<Int>", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func shortestDistance(from: Label, toSuccessiveLabelWith tag: NLTag)  -> Int? {
+        
+            return cuckoo_manager.call("shortestDistance(from: Label, toSuccessiveLabelWith: NLTag) -> Int?",
+                parameters: (from, tag),
+                superclassCall:
+                    
+                    super.shortestDistance(from: from, toSuccessiveLabelWith: tag)
                     )
         
     }
@@ -1204,6 +986,10 @@ class MockLabels: Labels, Cuckoo.ClassMock {
 	
 	    init(manager: Cuckoo.MockManager) {
 	        self.cuckoo_manager = manager
+	    }
+	    
+	    var description: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockLabels, String> {
+	        return .init(manager: cuckoo_manager, name: "description")
 	    }
 	    
 	    var count: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockLabels, Int> {
@@ -1303,6 +1089,16 @@ class MockLabels: Labels, Cuckoo.ClassMock {
 	        return .init(stub: cuckoo_manager.createStub(for: MockLabels.self, method: "shortestDistance(from: Label, toLabelWith: NLTag) -> Int?", parameterMatchers: matchers))
 	    }
 	    
+	    func shortestDistance<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(from: M1, toPreceedingLabelWith tag: M2) -> Cuckoo.ClassStubFunction<(Label, NLTag), Optional<Int>> where M1.MatchedType == Label, M2.MatchedType == NLTag {
+	        let matchers: [Cuckoo.ParameterMatcher<(Label, NLTag)>] = [wrap(matchable: from) { $0.0 }, wrap(matchable: tag) { $0.1 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockLabels.self, method: "shortestDistance(from: Label, toPreceedingLabelWith: NLTag) -> Int?", parameterMatchers: matchers))
+	    }
+	    
+	    func shortestDistance<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(from: M1, toSuccessiveLabelWith tag: M2) -> Cuckoo.ClassStubFunction<(Label, NLTag), Optional<Int>> where M1.MatchedType == Label, M2.MatchedType == NLTag {
+	        let matchers: [Cuckoo.ParameterMatcher<(Label, NLTag)>] = [wrap(matchable: from) { $0.0 }, wrap(matchable: tag) { $0.1 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockLabels.self, method: "shortestDistance(from: Label, toSuccessiveLabelWith: NLTag) -> Int?", parameterMatchers: matchers))
+	    }
+	    
 	    func next() -> Cuckoo.ClassStubFunction<(), Optional<Labels.Label>> {
 	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
 	        return .init(stub: cuckoo_manager.createStub(for: MockLabels.self, method: "next() -> Labels.Label?", parameterMatchers: matchers))
@@ -1321,6 +1117,10 @@ class MockLabels: Labels, Cuckoo.ClassMock {
 	        self.sourceLocation = sourceLocation
 	    }
 	
+	    
+	    var description: Cuckoo.VerifyReadOnlyProperty<String> {
+	        return .init(manager: cuckoo_manager, name: "description", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
 	    
 	    var count: Cuckoo.VerifyReadOnlyProperty<Int> {
 	        return .init(manager: cuckoo_manager, name: "count", callMatcher: callMatcher, sourceLocation: sourceLocation)
@@ -1437,6 +1237,18 @@ class MockLabels: Labels, Cuckoo.ClassMock {
 	    }
 	    
 	    @discardableResult
+	    func shortestDistance<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(from: M1, toPreceedingLabelWith tag: M2) -> Cuckoo.__DoNotUse<Optional<Int>> where M1.MatchedType == Label, M2.MatchedType == NLTag {
+	        let matchers: [Cuckoo.ParameterMatcher<(Label, NLTag)>] = [wrap(matchable: from) { $0.0 }, wrap(matchable: tag) { $0.1 }]
+	        return cuckoo_manager.verify("shortestDistance(from: Label, toPreceedingLabelWith: NLTag) -> Int?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func shortestDistance<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(from: M1, toSuccessiveLabelWith tag: M2) -> Cuckoo.__DoNotUse<Optional<Int>> where M1.MatchedType == Label, M2.MatchedType == NLTag {
+	        let matchers: [Cuckoo.ParameterMatcher<(Label, NLTag)>] = [wrap(matchable: from) { $0.0 }, wrap(matchable: tag) { $0.1 }]
+	        return cuckoo_manager.verify("shortestDistance(from: Label, toSuccessiveLabelWith: NLTag) -> Int?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
 	    func next() -> Cuckoo.__DoNotUse<Optional<Labels.Label>> {
 	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
 	        return cuckoo_manager.verify("next() -> Labels.Label?", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
@@ -1447,6 +1259,13 @@ class MockLabels: Labels, Cuckoo.ClassMock {
 }
 
  class LabelsStub: Labels {
+    
+    public override var description: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+        
+    }
     
     public override var count: Int {
         get {
@@ -1541,6 +1360,14 @@ class MockLabels: Labels, Cuckoo.ClassMock {
     }
     
     public override func shortestDistance(from: Label, toLabelWith tag: NLTag)  -> Int? {
+        return DefaultValueRegistry.defaultValue(for: Optional<Int>.self)
+    }
+    
+    public override func shortestDistance(from: Label, toPreceedingLabelWith tag: NLTag)  -> Int? {
+        return DefaultValueRegistry.defaultValue(for: Optional<Int>.self)
+    }
+    
+    public override func shortestDistance(from: Label, toSuccessiveLabelWith tag: NLTag)  -> Int? {
         return DefaultValueRegistry.defaultValue(for: Optional<Int>.self)
     }
     
@@ -2321,94 +2148,6 @@ class MockHeartRateQuerier: HeartRateQuerier, Cuckoo.ClassMock {
 }
 
 
-// MARK: - Mocks generated from file: DataIntegration/Questions/Queries/Queriers/QuerierFactory.swift
-//
-//  QuerierFactory.swift
-//  DataIntegration
-//
-//  Created by Bryan Nova on 6/28/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
-//
-
-import Cuckoo
-@testable import DataIntegration
-
-import Foundation
-
-class MockQuerierFactory: QuerierFactory, Cuckoo.ClassMock {
-    typealias MocksType = QuerierFactory
-    typealias Stubbing = __StubbingProxy_QuerierFactory
-    typealias Verification = __VerificationProxy_QuerierFactory
-    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
-
-    
-    // ["name": "heartRateQuerier", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "HeartRateQuerier", "isReadOnly": true, "accessibility": "public"]
-    public override var heartRateQuerier: HeartRateQuerier {
-        get {
-            
-            return cuckoo_manager.getter("heartRateQuerier", superclassCall: super.heartRateQuerier)
-            
-        }
-        
-    }
-    
-
-    
-
-    
-
-	struct __StubbingProxy_QuerierFactory: Cuckoo.StubbingProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	
-	    init(manager: Cuckoo.MockManager) {
-	        self.cuckoo_manager = manager
-	    }
-	    
-	    var heartRateQuerier: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockQuerierFactory, HeartRateQuerier> {
-	        return .init(manager: cuckoo_manager, name: "heartRateQuerier")
-	    }
-	    
-	    
-	}
-
-	struct __VerificationProxy_QuerierFactory: Cuckoo.VerificationProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	    private let callMatcher: Cuckoo.CallMatcher
-	    private let sourceLocation: Cuckoo.SourceLocation
-	
-	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-	        self.cuckoo_manager = manager
-	        self.callMatcher = callMatcher
-	        self.sourceLocation = sourceLocation
-	    }
-	
-	    
-	    var heartRateQuerier: Cuckoo.VerifyReadOnlyProperty<HeartRateQuerier> {
-	        return .init(manager: cuckoo_manager, name: "heartRateQuerier", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	
-	    
-	}
-
-}
-
- class QuerierFactoryStub: QuerierFactory {
-    
-    public override var heartRateQuerier: HeartRateQuerier {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (HeartRateQuerier).self)
-        }
-        
-    }
-    
-
-    
-
-    
-}
-
-
 // MARK: - Mocks generated from file: DataIntegration/Questions/Queries/Query.swift
 //
 //  Query.swift
@@ -2725,96 +2464,6 @@ class MockQuery: Query, Cuckoo.ProtocolMock {
     
      func runQuery(callback: @escaping (QueryResult?, Error?) -> ())  throws {
         return DefaultValueRegistry.defaultValue(for: Void.self)
-    }
-    
-}
-
-
-// MARK: - Mocks generated from file: DataIntegration/Questions/Queries/QueryFactory.swift
-//
-//  QueryFactory.swift
-//  DataIntegration
-//
-//  Created by Bryan Nova on 6/28/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
-//
-
-import Cuckoo
-@testable import DataIntegration
-
-import Foundation
-
-class MockQueryFactory: QueryFactory, Cuckoo.ClassMock {
-    typealias MocksType = QueryFactory
-    typealias Stubbing = __StubbingProxy_QueryFactory
-    typealias Verification = __VerificationProxy_QueryFactory
-    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
-
-    
-
-    
-
-    
-    // ["name": "heartRateQuery", "returnSignature": " -> HeartRateQuery", "fullyQualifiedName": "heartRateQuery() -> HeartRateQuery", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "", "call": "", "parameters": [], "returnType": "HeartRateQuery", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func heartRateQuery()  -> HeartRateQuery {
-        
-            return cuckoo_manager.call("heartRateQuery() -> HeartRateQuery",
-                parameters: (),
-                superclassCall:
-                    
-                    super.heartRateQuery()
-                    )
-        
-    }
-    
-
-	struct __StubbingProxy_QueryFactory: Cuckoo.StubbingProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	
-	    init(manager: Cuckoo.MockManager) {
-	        self.cuckoo_manager = manager
-	    }
-	    
-	    
-	    func heartRateQuery() -> Cuckoo.ClassStubFunction<(), HeartRateQuery> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return .init(stub: cuckoo_manager.createStub(for: MockQueryFactory.self, method: "heartRateQuery() -> HeartRateQuery", parameterMatchers: matchers))
-	    }
-	    
-	}
-
-	struct __VerificationProxy_QueryFactory: Cuckoo.VerificationProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	    private let callMatcher: Cuckoo.CallMatcher
-	    private let sourceLocation: Cuckoo.SourceLocation
-	
-	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-	        self.cuckoo_manager = manager
-	        self.callMatcher = callMatcher
-	        self.sourceLocation = sourceLocation
-	    }
-	
-	    
-	
-	    
-	    @discardableResult
-	    func heartRateQuery() -> Cuckoo.__DoNotUse<HeartRateQuery> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return cuckoo_manager.verify("heartRateQuery() -> HeartRateQuery", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	}
-
-}
-
- class QueryFactoryStub: QueryFactory {
-    
-
-    
-
-    
-    public override func heartRateQuery()  -> HeartRateQuery {
-        return DefaultValueRegistry.defaultValue(for: HeartRateQuery.self)
     }
     
 }
@@ -3215,12 +2864,12 @@ class MockQuestion: Question, Cuckoo.ClassMock {
 }
 
 
-// MARK: - Mocks generated from file: DataIntegration/Questions/QuestionFactory.swift
+// MARK: - Mocks generated from file: DataIntegration/Questions/RestrictionParsers/DayOfWeekRestrictionParser.swift
 //
-//  QuestionFactory.swift
+//  DayOfWeekRestrictionParser.swift
 //  DataIntegration
 //
-//  Created by Bryan Nova on 6/28/18.
+//  Created by Bryan Nova on 7/7/18.
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
@@ -3228,11 +2877,12 @@ import Cuckoo
 @testable import DataIntegration
 
 import Foundation
+import os
 
-class MockQuestionFactory: QuestionFactory, Cuckoo.ClassMock {
-    typealias MocksType = QuestionFactory
-    typealias Stubbing = __StubbingProxy_QuestionFactory
-    typealias Verification = __VerificationProxy_QuestionFactory
+class MockDayOfWeekRestrictionParser: DayOfWeekRestrictionParser, Cuckoo.ClassMock {
+    typealias MocksType = DayOfWeekRestrictionParser
+    typealias Stubbing = __StubbingProxy_DayOfWeekRestrictionParser
+    typealias Verification = __VerificationProxy_DayOfWeekRestrictionParser
     let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
 
     
@@ -3240,44 +2890,20 @@ class MockQuestionFactory: QuestionFactory, Cuckoo.ClassMock {
     
 
     
-    // ["name": "question", "returnSignature": " -> Question", "fullyQualifiedName": "question(text: String) -> Question", "parameterSignature": "text: String", "parameterSignatureWithoutNames": "text: String", "inputTypes": "String", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "text", "call": "text: text", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("text"), name: "text", type: "String", range: CountableRange(225..<237), nameRange: CountableRange(225..<229))], "returnType": "Question", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-     override func question(text: String)  -> Question {
+    // ["name": "resolveDayOfWeekRestrictions", "returnSignature": " throws -> (date: Date?, dayOfWeek: DayOfWeek?)", "fullyQualifiedName": "resolveDayOfWeekRestrictions(_: Labels) throws -> (date: Date?, dayOfWeek: DayOfWeek?)", "parameterSignature": "_ questionPart: Labels", "parameterSignatureWithoutNames": "questionPart: Labels", "inputTypes": "Labels", "isThrowing": true, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "questionPart", "call": "questionPart", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "questionPart", type: "Labels", range: CountableRange(374..<396), nameRange: CountableRange(0..<0))], "returnType": "(date: Date?, dayOfWeek: DayOfWeek?)", "isOptional": false, "stubFunction": "Cuckoo.ClassStubThrowingFunction"]
+    public override func resolveDayOfWeekRestrictions(_ questionPart: Labels)  throws -> (date: Date?, dayOfWeek: DayOfWeek?) {
         
-            return cuckoo_manager.call("question(text: String) -> Question",
-                parameters: (text),
+            return try cuckoo_manager.callThrows("resolveDayOfWeekRestrictions(_: Labels) throws -> (date: Date?, dayOfWeek: DayOfWeek?)",
+                parameters: (questionPart),
                 superclassCall:
                     
-                    super.question(text: text)
-                    )
-        
-    }
-    
-    // ["name": "answer", "returnSignature": " -> Answer", "fullyQualifiedName": "answer() -> Answer", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "", "call": "", "parameters": [], "returnType": "Answer", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-     override func answer()  -> Answer {
-        
-            return cuckoo_manager.call("answer() -> Answer",
-                parameters: (),
-                superclassCall:
-                    
-                    super.answer()
-                    )
-        
-    }
-    
-    // ["name": "labels", "returnSignature": " -> Labels", "fullyQualifiedName": "labels() -> Labels", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "", "call": "", "parameters": [], "returnType": "Labels", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-     override func labels()  -> Labels {
-        
-            return cuckoo_manager.call("labels() -> Labels",
-                parameters: (),
-                superclassCall:
-                    
-                    super.labels()
+                    super.resolveDayOfWeekRestrictions(questionPart)
                     )
         
     }
     
 
-	struct __StubbingProxy_QuestionFactory: Cuckoo.StubbingProxy {
+	struct __StubbingProxy_DayOfWeekRestrictionParser: Cuckoo.StubbingProxy {
 	    private let cuckoo_manager: Cuckoo.MockManager
 	
 	    init(manager: Cuckoo.MockManager) {
@@ -3285,24 +2911,14 @@ class MockQuestionFactory: QuestionFactory, Cuckoo.ClassMock {
 	    }
 	    
 	    
-	    func question<M1: Cuckoo.Matchable>(text: M1) -> Cuckoo.ClassStubFunction<(String), Question> where M1.MatchedType == String {
-	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: text) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockQuestionFactory.self, method: "question(text: String) -> Question", parameterMatchers: matchers))
-	    }
-	    
-	    func answer() -> Cuckoo.ClassStubFunction<(), Answer> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return .init(stub: cuckoo_manager.createStub(for: MockQuestionFactory.self, method: "answer() -> Answer", parameterMatchers: matchers))
-	    }
-	    
-	    func labels() -> Cuckoo.ClassStubFunction<(), Labels> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return .init(stub: cuckoo_manager.createStub(for: MockQuestionFactory.self, method: "labels() -> Labels", parameterMatchers: matchers))
+	    func resolveDayOfWeekRestrictions<M1: Cuckoo.Matchable>(_ questionPart: M1) -> Cuckoo.ClassStubThrowingFunction<(Labels), (date: Date?, dayOfWeek: DayOfWeek?)> where M1.MatchedType == Labels {
+	        let matchers: [Cuckoo.ParameterMatcher<(Labels)>] = [wrap(matchable: questionPart) { $0 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockDayOfWeekRestrictionParser.self, method: "resolveDayOfWeekRestrictions(_: Labels) throws -> (date: Date?, dayOfWeek: DayOfWeek?)", parameterMatchers: matchers))
 	    }
 	    
 	}
 
-	struct __VerificationProxy_QuestionFactory: Cuckoo.VerificationProxy {
+	struct __VerificationProxy_DayOfWeekRestrictionParser: Cuckoo.VerificationProxy {
 	    private let cuckoo_manager: Cuckoo.MockManager
 	    private let callMatcher: Cuckoo.CallMatcher
 	    private let sourceLocation: Cuckoo.SourceLocation
@@ -3317,43 +2933,23 @@ class MockQuestionFactory: QuestionFactory, Cuckoo.ClassMock {
 	
 	    
 	    @discardableResult
-	    func question<M1: Cuckoo.Matchable>(text: M1) -> Cuckoo.__DoNotUse<Question> where M1.MatchedType == String {
-	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: text) { $0 }]
-	        return cuckoo_manager.verify("question(text: String) -> Question", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func answer() -> Cuckoo.__DoNotUse<Answer> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return cuckoo_manager.verify("answer() -> Answer", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func labels() -> Cuckoo.__DoNotUse<Labels> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return cuckoo_manager.verify("labels() -> Labels", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    func resolveDayOfWeekRestrictions<M1: Cuckoo.Matchable>(_ questionPart: M1) -> Cuckoo.__DoNotUse<(date: Date?, dayOfWeek: DayOfWeek?)> where M1.MatchedType == Labels {
+	        let matchers: [Cuckoo.ParameterMatcher<(Labels)>] = [wrap(matchable: questionPart) { $0 }]
+	        return cuckoo_manager.verify("resolveDayOfWeekRestrictions(_: Labels) throws -> (date: Date?, dayOfWeek: DayOfWeek?)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	}
 
 }
 
- class QuestionFactoryStub: QuestionFactory {
+ class DayOfWeekRestrictionParserStub: DayOfWeekRestrictionParser {
     
 
     
 
     
-     override func question(text: String)  -> Question {
-        return DefaultValueRegistry.defaultValue(for: Question.self)
-    }
-    
-     override func answer()  -> Answer {
-        return DefaultValueRegistry.defaultValue(for: Answer.self)
-    }
-    
-     override func labels()  -> Labels {
-        return DefaultValueRegistry.defaultValue(for: Labels.self)
+    public override func resolveDayOfWeekRestrictions(_ questionPart: Labels)  throws -> (date: Date?, dayOfWeek: DayOfWeek?) {
+        return DefaultValueRegistry.defaultValue(for: (date: Date?, dayOfWeek: DayOfWeek?).self)
     }
     
 }
@@ -5571,196 +5167,6 @@ class MockTextNormalizationUtil: TextNormalizationUtil, Cuckoo.ClassMock {
     
     public override func removePunctuation(_ text: String)  -> String {
         return DefaultValueRegistry.defaultValue(for: String.self)
-    }
-    
-}
-
-
-// MARK: - Mocks generated from file: DataIntegration/Util/UtilFactory.swift
-//
-//  UtilFactory.swift
-//  DataIntegration
-//
-//  Created by Bryan Nova on 7/4/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
-//
-
-import Cuckoo
-@testable import DataIntegration
-
-import Foundation
-
-class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
-    typealias MocksType = UtilFactory
-    typealias Stubbing = __StubbingProxy_UtilFactory
-    typealias Verification = __VerificationProxy_UtilFactory
-    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
-
-    
-    // ["name": "calendarUtil", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "CalendarUtil", "isReadOnly": true, "accessibility": "public"]
-    public override var calendarUtil: CalendarUtil {
-        get {
-            
-            return cuckoo_manager.getter("calendarUtil", superclassCall: super.calendarUtil)
-            
-        }
-        
-    }
-    
-    // ["name": "hkQuantitySampleUtil", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "HKQuantitySampleUtil", "isReadOnly": true, "accessibility": "public"]
-    public override var hkQuantitySampleUtil: HKQuantitySampleUtil {
-        get {
-            
-            return cuckoo_manager.getter("hkQuantitySampleUtil", superclassCall: super.hkQuantitySampleUtil)
-            
-        }
-        
-    }
-    
-    // ["name": "hkSampleUtil", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "HKSampleUtil", "isReadOnly": true, "accessibility": "public"]
-    public override var hkSampleUtil: HKSampleUtil {
-        get {
-            
-            return cuckoo_manager.getter("hkSampleUtil", superclassCall: super.hkSampleUtil)
-            
-        }
-        
-    }
-    
-    // ["name": "textNormalizationUtil", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "TextNormalizationUtil", "isReadOnly": true, "accessibility": "public"]
-    public override var textNormalizationUtil: TextNormalizationUtil {
-        get {
-            
-            return cuckoo_manager.getter("textNormalizationUtil", superclassCall: super.textNormalizationUtil)
-            
-        }
-        
-    }
-    
-
-    
-
-    
-    // ["name": "giveMeACalendarUtil", "returnSignature": " -> CalendarUtil", "fullyQualifiedName": "giveMeACalendarUtil() -> CalendarUtil", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "", "call": "", "parameters": [], "returnType": "CalendarUtil", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func giveMeACalendarUtil()  -> CalendarUtil {
-        
-            return cuckoo_manager.call("giveMeACalendarUtil() -> CalendarUtil",
-                parameters: (),
-                superclassCall:
-                    
-                    super.giveMeACalendarUtil()
-                    )
-        
-    }
-    
-
-	struct __StubbingProxy_UtilFactory: Cuckoo.StubbingProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	
-	    init(manager: Cuckoo.MockManager) {
-	        self.cuckoo_manager = manager
-	    }
-	    
-	    var calendarUtil: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockUtilFactory, CalendarUtil> {
-	        return .init(manager: cuckoo_manager, name: "calendarUtil")
-	    }
-	    
-	    var hkQuantitySampleUtil: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockUtilFactory, HKQuantitySampleUtil> {
-	        return .init(manager: cuckoo_manager, name: "hkQuantitySampleUtil")
-	    }
-	    
-	    var hkSampleUtil: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockUtilFactory, HKSampleUtil> {
-	        return .init(manager: cuckoo_manager, name: "hkSampleUtil")
-	    }
-	    
-	    var textNormalizationUtil: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockUtilFactory, TextNormalizationUtil> {
-	        return .init(manager: cuckoo_manager, name: "textNormalizationUtil")
-	    }
-	    
-	    
-	    func giveMeACalendarUtil() -> Cuckoo.ClassStubFunction<(), CalendarUtil> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return .init(stub: cuckoo_manager.createStub(for: MockUtilFactory.self, method: "giveMeACalendarUtil() -> CalendarUtil", parameterMatchers: matchers))
-	    }
-	    
-	}
-
-	struct __VerificationProxy_UtilFactory: Cuckoo.VerificationProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	    private let callMatcher: Cuckoo.CallMatcher
-	    private let sourceLocation: Cuckoo.SourceLocation
-	
-	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-	        self.cuckoo_manager = manager
-	        self.callMatcher = callMatcher
-	        self.sourceLocation = sourceLocation
-	    }
-	
-	    
-	    var calendarUtil: Cuckoo.VerifyReadOnlyProperty<CalendarUtil> {
-	        return .init(manager: cuckoo_manager, name: "calendarUtil", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var hkQuantitySampleUtil: Cuckoo.VerifyReadOnlyProperty<HKQuantitySampleUtil> {
-	        return .init(manager: cuckoo_manager, name: "hkQuantitySampleUtil", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var hkSampleUtil: Cuckoo.VerifyReadOnlyProperty<HKSampleUtil> {
-	        return .init(manager: cuckoo_manager, name: "hkSampleUtil", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var textNormalizationUtil: Cuckoo.VerifyReadOnlyProperty<TextNormalizationUtil> {
-	        return .init(manager: cuckoo_manager, name: "textNormalizationUtil", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	
-	    
-	    @discardableResult
-	    func giveMeACalendarUtil() -> Cuckoo.__DoNotUse<CalendarUtil> {
-	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-	        return cuckoo_manager.verify("giveMeACalendarUtil() -> CalendarUtil", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	}
-
-}
-
- class UtilFactoryStub: UtilFactory {
-    
-    public override var calendarUtil: CalendarUtil {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (CalendarUtil).self)
-        }
-        
-    }
-    
-    public override var hkQuantitySampleUtil: HKQuantitySampleUtil {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (HKQuantitySampleUtil).self)
-        }
-        
-    }
-    
-    public override var hkSampleUtil: HKSampleUtil {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (HKSampleUtil).self)
-        }
-        
-    }
-    
-    public override var textNormalizationUtil: TextNormalizationUtil {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (TextNormalizationUtil).self)
-        }
-        
-    }
-    
-
-    
-
-    
-    public override func giveMeACalendarUtil()  -> CalendarUtil {
-        return DefaultValueRegistry.defaultValue(for: CalendarUtil.self)
     }
     
 }

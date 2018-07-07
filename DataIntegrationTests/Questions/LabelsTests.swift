@@ -1440,6 +1440,174 @@ class LabelsTests: UnitTest {
 		XCTAssert(distance == -1)
 	}
 
+	func testGivenNoLabelsAdded_shortestDistanceFromLabelToPreceedingLabelWithTag_returnsNil() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(Tags.activityData)
+
+		// when
+		let distance = labels.shortestDistance(from: label, toPreceedingLabelWith: tag)
+
+		// then
+		XCTAssert(distance == nil)
+	}
+
+	func testGivenSpecifiedLabelNotAdded_shortestDistanceFromLabelToPreceedingLabelWithTag_returnsNil() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(tag)
+		labels.addLabel(createLabelFor(Tags.none))
+
+		// when
+		let distance = labels.shortestDistance(from: label, toPreceedingLabelWith: tag)
+
+		// then
+		XCTAssert(distance == nil)
+	}
+
+	func testGivenNoLabelsWithSpecifiedTag_shortestDistanceFromLabelToPreceedingLabelWithTag_returnsNegativeOne() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(Tags.none)
+		labels.addLabel(label)
+
+		// when
+		let distance = labels.shortestDistance(from: label, toPreceedingLabelWith: tag)
+
+		// then
+		XCTAssert(distance == -1)
+	}
+
+	func testGivenNoLabelsWithSpecifiedTagOccurBeforeSpecifiedLabel_shortestDistanceFromLabelToPreceedingLabelWithTag_returnsNegativeOne() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(Tags.none)
+		labels.addLabel(label)
+		labels.addLabel(createLabelFor(tag))
+
+		// when
+		let distance = labels.shortestDistance(from: label, toPreceedingLabelWith: tag)
+
+		// then
+		XCTAssert(distance == -1)
+	}
+
+	func testGivenMultiplePreceedingLabelsWithSpecifiedTag_shortestDistanceFromLabelToPreceedingLabelWithTag_returnsDistanceToClosestMatchingLabel() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(Tags.which)
+		labels.addLabel(createLabelFor(tag))
+		labels.addLabel(createLabelFor(tag))
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(label)
+
+		// when
+		let distance = labels.shortestDistance(from: label, toPreceedingLabelWith: tag)
+
+		// then
+		XCTAssert(distance == 2)
+	}
+
+	func testGivenOnlyLabelWithSpecifiedTagIsSpecifiedLabel_shortestDistanceFromLabelToPreceedingLabelWithTag_returnsNegativeOne() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(tag)
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(label)
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(Tags.none))
+
+		// when
+		let distance = labels.shortestDistance(from: label, toPreceedingLabelWith: tag)
+
+		// then
+		XCTAssert(distance == -1)
+	}
+
+	func testGivenNoLabelsAdded_shortestDistanceFromLabelToSuccessiveLabelWithTag_returnsNil() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(Tags.activityData)
+
+		// when
+		let distance = labels.shortestDistance(from: label, toSuccessiveLabelWith: tag)
+
+		// then
+		XCTAssert(distance == nil)
+	}
+
+	func testGivenSpecifiedLabelNotAdded_shortestDistanceFromLabelToSuccessiveLabelWithTag_returnsNil() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(tag)
+		labels.addLabel(createLabelFor(Tags.none))
+
+		// when
+		let distance = labels.shortestDistance(from: label, toSuccessiveLabelWith: tag)
+
+		// then
+		XCTAssert(distance == nil)
+	}
+
+	func testGivenNoLabelsWithSpecifiedTag_shortestDistanceFromLabelToSuccessiveLabelWithTag_returnsNegativeOne() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(Tags.none)
+		labels.addLabel(label)
+
+		// when
+		let distance = labels.shortestDistance(from: label, toSuccessiveLabelWith: tag)
+
+		// then
+		XCTAssert(distance == -1)
+	}
+
+	func testGivenNoLabelsWithSpecifiedTagOccurAfterSpecifiedLabel_shortestDistanceFromLabelToSuccessiveLabelWithTag_returnsNegativeOne() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(Tags.none)
+		labels.addLabel(createLabelFor(tag))
+		labels.addLabel(label)
+
+		// when
+		let distance = labels.shortestDistance(from: label, toSuccessiveLabelWith: tag)
+
+		// then
+		XCTAssert(distance == -1)
+	}
+
+	func testGivenMultipleSuccessiveLabelsWithSpecifiedTag_shortestDistanceFromLabelToSuccessiveLabelWithTag_returnsDistanceToClosestMatchingLabel() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(Tags.which)
+		labels.addLabel(label)
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(tag))
+		labels.addLabel(createLabelFor(tag))
+
+		// when
+		let distance = labels.shortestDistance(from: label, toSuccessiveLabelWith: tag)
+
+		// then
+		XCTAssert(distance == 2)
+	}
+
+	func testGivenOnlyLabelWithSpecifiedTagIsSpecifiedLabel_shortestDistanceFromLabelToSuccessiveLabelWithTag_returnsNegativeOne() {
+		// given
+		let tag = Tags.activityData
+		let label = createLabelFor(tag)
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(label)
+		labels.addLabel(createLabelFor(Tags.none))
+		labels.addLabel(createLabelFor(Tags.none))
+
+		// when
+		let distance = labels.shortestDistance(from: label, toSuccessiveLabelWith: tag)
+
+		// then
+		XCTAssert(distance == -1)
+	}
+
 	func testGivenNonEmptyLabelsObject_iteration_givesElementsInCorrectOrder() {
 		// given
 		let label0 = createLabelFor(Tags.activityData)

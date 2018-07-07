@@ -15,4 +15,5 @@ protocol InjectionProvider {
 	var questionFactory: QuestionFactory {get}
 	var dataTypesFactory: DataTypesFactory {get}
 	var utilFactory: UtilFactory {get}
+	var restrictionParserFactory: RestrictionParserFactory {get}
 }

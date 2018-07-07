@@ -9,13 +9,19 @@
 import Foundation
 import NaturalLanguage
 
-public class Labels: IteratorProtocol, Sequence, Equatable {
+public class Labels: IteratorProtocol, Sequence, Equatable, CustomStringConvertible {
 
 	// TODO - might need to allow a Label to have multiple tags with activity parsing, location parsing, etc.
-	public struct Label: Equatable {
+	public struct Label: Equatable, CustomStringConvertible {
 		public fileprivate(set) var tag: NLTag
 		public fileprivate(set) var token: String
 		public fileprivate(set) var tokenRange: Range<String.Index>
+
+		public var description: String {
+			get {
+				return token
+			}
+		}
 
 		public static func ==(left: Label, right: Label) -> Bool {
 			return left.tag == right.tag && left.token == right.token && left.tokenRange == right.tokenRange
@@ -45,6 +51,16 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 	}
 
 	public typealias Element = Label
+
+	public var description: String {
+		get {
+			var str = ""
+			for label in byIndex {
+				str.append(label.token + " ")
+			}
+			return str
+		}
+	}
 
 	public var count: Int { get { return byIndex.count } }
 	public var isEmpty: Bool { get { return byIndex.isEmpty } }
@@ -364,7 +380,7 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 		return shortestDistance
 	}
 
-	/// Get the shortest distance in either direction from the specified `Label` to a `Label` with the given `NLTag`.
+	/// Get the shortest distance in either direction from the specified `Label` to a `Label` with the given tag.
 	/// - Returns:
 	/// If the specified `Label` cannot be found, nil is returned.
 	/// If there are no `Label`s with the specified tag, -1 will be returned.
@@ -392,6 +408,52 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 
 			if indexOfStartLabel - i < 0 && indexOfStartLabel + i >= byIndex.count {
 				break // no more valid indices to check
+			}
+		}
+
+		return -1
+	}
+
+	/// Get the shortest distance from the specified `Label` to a preceeding `Label` with the given tag.
+	/// - Returns:
+	/// If the specified `Label` cannot be found, nil is returned.
+	/// If there are no `Label`s with the specified tag before the given `Label`, -1 will be returned.
+	public func shortestDistance(from: Label, toPreceedingLabelWith tag: NLTag) -> Int? {
+		let indexOfStartLabel = indexOf(label: from)
+		if indexOfStartLabel == -1 {
+			return nil
+		}
+
+		if byTag[tag] == nil {
+			return -1
+		}
+
+		for i in 1 ..< indexOfStartLabel + 1 {
+			if byIndex[indexOfStartLabel - i].tag == tag {
+				return i
+			}
+		}
+
+		return -1
+	}
+
+	/// Get the shortest distance from the specified `Label` to a successive `Label` with the given tag.
+	/// - Returns:
+	/// If the specified `Label` cannot be found, nil is returned.
+	/// If there are no `Label`s with the specified tag after the given `Label`, -1 will be returned.
+	public func shortestDistance(from: Label, toSuccessiveLabelWith tag: NLTag) -> Int? {
+		let indexOfStartLabel = indexOf(label: from)
+		if indexOfStartLabel == -1 {
+			return nil
+		}
+
+		if byTag[tag] == nil {
+			return -1
+		}
+
+		for i in 1 ..< byIndex.count - indexOfStartLabel {
+			if byIndex[indexOfStartLabel + i].tag == tag {
+				return i
 			}
 		}
 

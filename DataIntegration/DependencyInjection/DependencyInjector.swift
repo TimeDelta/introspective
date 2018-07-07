@@ -28,4 +28,5 @@ class DependencyInjector: NSObject {
 	public static var querier: QuerierFactory { get { return injectionProvider.querierFactory } }
 	public static var dataType: DataTypesFactory { get { return injectionProvider.dataTypesFactory } }
 	public static var util: UtilFactory { get { return injectionProvider.utilFactory } }
+	public static var restrictionParser: RestrictionParserFactory { get { return injectionProvider.restrictionParserFactory } }
 }

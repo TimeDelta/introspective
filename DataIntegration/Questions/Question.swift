@@ -181,7 +181,7 @@ public class Question: NSObject {
 
 				// TODO - "between last tuesday and today/now" cases
 				// TODO - "since last wednesday" cases
-				let dayOfWeekRestriction = try self.resolveDayOfWeekRestrictions(questionPart)
+				let dayOfWeekRestriction = try DependencyInjector.restrictionParser.dayOfWeekRestrictionParser.resolveDayOfWeekRestrictions(questionPart)
 				if dayOfWeekRestriction.date != nil {
 					query.startDate = dayOfWeekRestriction.date
 					query.endDate = dayOfWeekRestriction.date
@@ -196,37 +196,9 @@ public class Question: NSObject {
 		}
 	}
 
-	fileprivate func resolveDayOfWeekRestrictions(_ questionPart: Labels) throws -> (date: Date?, dayOfWeek: DayOfWeek?) {
-		let dayOfWeekLabels = questionPart.byTag[Tags.dayOfWeek]
-		if dayOfWeekLabels != nil {
-			if dayOfWeekLabels!.count != 1 {
-				self.finalAnswerCallback(nil, ErrorTypes.MultipleDaysOfWeekNotSupported)
-			}
-			let dayOfWeekLabel = dayOfWeekLabels![0]
-			let distanceToNearestWhichTag = questionPart.shortestDistance(from: dayOfWeekLabel, toLabelWith: Tags.which)!
-			if distanceToNearestWhichTag == 1 {
-				let dayOfWeekLabelIndex = self.labels.indexOf(label: dayOfWeekLabel)
-				let nearestWhichLabels = try self.labels.findNearestLabelWith(tag: Tags.which, to: dayOfWeekLabelIndex)!
-				let nearestWhichLabel = nearestWhichLabels[0]
-				if whichTokenRepresentsMostRecent(nearestWhichLabel.token) {
-					let dayOfWeek = try DayOfWeek.fromString(dayOfWeekLabel.token)!
-					return (Date().previous(dayOfWeek), nil)
-				} else {
-					// TODO - this is the "2 sundays ago" type case
-				}
-			}
-			return (nil, try DayOfWeek.fromString(dayOfWeekLabel.token))
-		}
-		return (nil, nil)
-	}
-
 	fileprivate func sort(_ questionParts: [Labels], byShortestDistanceBetween tag1: NLTag, and tag2: NLTag) -> [Labels] {
 		return questionParts.sorted(by: { (part1, part2) -> Bool in
 			part1.shortestDistance(between: tag1, and: tag2) < part2.shortestDistance(between: tag1, and: tag2)
 		})
-	}
-
-	fileprivate func whichTokenRepresentsMostRecent(_ token: String) -> Bool {
-		return token == "most recent" || token == "last" || token.contains("this")
 	}
 }

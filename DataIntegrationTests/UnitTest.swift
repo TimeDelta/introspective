@@ -25,6 +25,7 @@ class UnitTest: XCTestCase {
 
     override func tearDown() {
         DependencyInjector.setType(newType: .Production)
+        UnitTestInjectionProvider.resetMocks()
         super.tearDown()
     }
 
