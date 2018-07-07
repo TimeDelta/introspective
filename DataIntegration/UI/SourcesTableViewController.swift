@@ -32,8 +32,8 @@ class SourcesTableViewController: UITableViewController {
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.destination is SourceDefinitionViewController {
 			// TODO
-//			let controller = segue.destination as? SourceDefinitionViewController
-//			controller?.source =
+//			let controller = (segue.destination as! SourceDefinitionViewController)
+//			controller.source =
 		}
 	}
 

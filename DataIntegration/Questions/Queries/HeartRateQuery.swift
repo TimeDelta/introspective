@@ -11,6 +11,8 @@ import HealthKit
 
 public class HeartRateQuery: NSObject, Query {
 
+	fileprivate typealias Me = HeartRateQuery
+
 	fileprivate static let countPerMinute = HKUnit(from: "count/min")
 
 	public enum ErrorTypes: Error {
@@ -24,13 +26,13 @@ public class HeartRateQuery: NSObject, Query {
 	public var startDate: Date?
 	public var endDate: Date?
 	public var daysOfWeek: Set<DayOfWeek>
-	public var quantityRestrictions: [QuantityRestriction]
+	public var attributeRestrictions: [AttributeRestriction]
 	public var returnType: ReturnType?
 	public var mostRecentEntryOnly: Bool
 
 	public override init() {
 		daysOfWeek = Set<DayOfWeek>()
-		quantityRestrictions = [QuantityRestriction]()
+		attributeRestrictions = [AttributeRestriction]()
 		mostRecentEntryOnly = false
 	}
 
@@ -51,7 +53,7 @@ public class HeartRateQuery: NSObject, Query {
 			}
 
 			let samples = originalSamples!.filter({ (sample: HKQuantitySample) in
-				return self.matchesQuantityRestrictionCriteria(sample) && DependencyInjector.util.hkSampleUtil.sample(sample, occursOnOneOf: self.daysOfWeek)
+				return self.matchesAttributeRestrictionCriteria(sample) && DependencyInjector.util.hkSampleUtil.sample(sample, occursOnOneOf: self.daysOfWeek)
 			})
 
 			var finalAnswer: Any? = nil
@@ -69,6 +71,9 @@ public class HeartRateQuery: NSObject, Query {
 					case let .times(aggregationUnit):
 						finalAnswer = self.getTimeIntervals(samples, aggregationUnit)
 						break
+					case .attributes:
+						finalAnswer = self.getAttributes(samples)
+						break
 				}
 			} catch {
 				callback(nil, error)
@@ -78,13 +83,13 @@ public class HeartRateQuery: NSObject, Query {
 		}
 	}
 
-	fileprivate func matchesQuantityRestrictionCriteria(_ sample: HKQuantitySample) -> Bool {
+	fileprivate func matchesAttributeRestrictionCriteria(_ sample: HKQuantitySample) -> Bool {
 		return true // TODO
 	}
 
 	fileprivate func computeFinalOperation(_ samples: [HKQuantitySample]) throws -> [(date: Date?, value: Double)] {
 		if self.finalOperation != nil {
-			return DependencyInjector.util.hkQuantitySampleUtil.compute(operation: finalOperation!, over: samples, withUnit: HeartRateQuery.countPerMinute)
+			return DependencyInjector.util.hkQuantitySampleUtil.compute(operation: finalOperation!, over: samples, withUnit: Me.countPerMinute)
 		} else {
 			throw ErrorTypes.ReturnTypeIsFinalOperationButNoOperationSpecified
 		}
@@ -107,5 +112,18 @@ public class HeartRateQuery: NSObject, Query {
 			let calendar = Calendar.current
 			return calendar.dateInterval(of: aggregationUnit, for: sample.endDate)!
 		})
+	}
+
+	fileprivate func getAttributes(_ samples: [HKQuantitySample]) -> [[String: String]]{
+		var sampleAttributeMaps = [[String: String]]()
+		for sample in samples {
+			let attributeMap: [String: String] = [
+				"Start Date": String(describing: sample.startDate),
+				"End Date": String(describing: sample.endDate),
+				"Heart Rate": String(sample.quantity.doubleValue(for: Me.countPerMinute)),
+			]
+			sampleAttributeMaps.append(attributeMap)
+		}
+		return sampleAttributeMaps
 	}
 }

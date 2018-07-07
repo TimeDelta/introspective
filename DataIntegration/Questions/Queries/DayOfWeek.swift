@@ -14,30 +14,30 @@ public class DayOfWeek: NSObject {
 		case UnknownDayOfWeek
 	}
 
-	public static let Sunday = DayOfWeek(0, "sun", "Sunday")
-	public static let Monday = DayOfWeek(1, "mon", "Monday")
-	public static let Tuesday = DayOfWeek(2, "tues", "Tuesday")
-	public static let Wednesday = DayOfWeek(3, "wed", "Wednesday")
-	public static let Thursday = DayOfWeek(4, "thur", "Thursday")
-	public static let Friday = DayOfWeek(5, "fri", "Friday")
-	public static let Saturday = DayOfWeek(6, "sat", "Saturday")
+	public static let Sunday = DayOfWeek(0, "Sun", "Sunday")
+	public static let Monday = DayOfWeek(1, "Mon", "Monday")
+	public static let Tuesday = DayOfWeek(2, "Tues", "Tuesday")
+	public static let Wednesday = DayOfWeek(3, "Wed", "Wednesday")
+	public static let Thursday = DayOfWeek(4, "Thurs", "Thursday")
+	public static let Friday = DayOfWeek(5, "Fri", "Friday")
+	public static let Saturday = DayOfWeek(6, "Sat", "Saturday")
 
 	static fileprivate let allDays = [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
 
 	public fileprivate(set) var fullDayName: String
 	public fileprivate(set) var intValue: Int
-	fileprivate var minRequiredString: String
+	public fileprivate(set) var abbreviation: String
 
 	fileprivate init(_ intValue: Int, _ minRequiredString: String, _ fullDayName: String) {
 		self.intValue = intValue
-		self.minRequiredString = minRequiredString
+		self.abbreviation = minRequiredString
 		self.fullDayName = fullDayName
 	}
 
 	public static func fromString(_ str: String) throws -> DayOfWeek? {
 		let dayName = str.lowercased()
 		for day in allDays {
-			if dayName.contains(day.minRequiredString) {
+			if dayName.contains(day.abbreviation.lowercased()) {
 				return day
 			}
 		}

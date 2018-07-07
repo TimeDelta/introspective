@@ -131,7 +131,7 @@ class AskViewController: UIViewController {
 			return
 		}
 
-		let question = Question(text: questionText!)
+		let question = TextQuestion(text: questionText!)
 		// TODO - tell user their question is being analyzed
 		DispatchQueue.global(qos: .userInitiated).async {
 			question.parse(callback: self.questionParsed)

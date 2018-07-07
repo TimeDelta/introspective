@@ -18,7 +18,7 @@ protocol Query {
 	/// Ignore everything that did not occur on one of the given days of the week unless no days of the week are given.
 	var daysOfWeek: Set<DayOfWeek> {get set}
 	///
-	var quantityRestrictions: [QuantityRestriction] {get set}
+	var attributeRestrictions: [AttributeRestriction] {get set}
 	/// 
 	var returnType: ReturnType? {get set}
 	/// When returning, only give the `returnType` for the most recent entry

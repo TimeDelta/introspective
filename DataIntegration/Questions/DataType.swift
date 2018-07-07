@@ -1,5 +1,5 @@
 //
-//  Question.swift
+//  AdvancedQuestionPart.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 7/7/18.
@@ -8,8 +8,7 @@
 
 import Foundation
 
-protocol Question {
+public struct DataType {
 
-	func parse(callback: (Error?) -> ())
-	func answer(callback: @escaping (Answer?, Error?) -> ())
+	public var dataType: DataTypes
 }

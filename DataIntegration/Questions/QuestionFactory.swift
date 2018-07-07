@@ -10,8 +10,8 @@ import Foundation
 
 public class QuestionFactory: NSObject {
 
-	func question(text: String) -> Question {
-		return Question(text: text)
+	func question(text: String) -> TextQuestion {
+		return TextQuestion(text: text)
 	}
 
 	func answer() -> Answer {

@@ -449,10 +449,10 @@ class MockQuestionFactory: QuestionFactory, Cuckoo.ClassMock {
     
 
     
-    // ["name": "question", "returnSignature": " -> Question", "fullyQualifiedName": "question(text: String) -> Question", "parameterSignature": "text: String", "parameterSignatureWithoutNames": "text: String", "inputTypes": "String", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "text", "call": "text: text", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("text"), name: "text", type: "String", range: CountableRange(225..<237), nameRange: CountableRange(225..<229))], "returnType": "Question", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-     override func question(text: String)  -> Question {
+    // ["name": "question", "returnSignature": " -> TextQuestion", "fullyQualifiedName": "question(text: String) -> TextQuestion", "parameterSignature": "text: String", "parameterSignatureWithoutNames": "text: String", "inputTypes": "String", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "text", "call": "text: text", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("text"), name: "text", type: "String", range: CountableRange(225..<237), nameRange: CountableRange(225..<229))], "returnType": "TextQuestion", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+     override func question(text: String)  -> TextQuestion {
         
-            return cuckoo_manager.call("question(text: String) -> Question",
+            return cuckoo_manager.call("question(text: String) -> TextQuestion",
                 parameters: (text),
                 superclassCall:
                     
@@ -494,9 +494,9 @@ class MockQuestionFactory: QuestionFactory, Cuckoo.ClassMock {
 	    }
 	    
 	    
-	    func question<M1: Cuckoo.Matchable>(text: M1) -> Cuckoo.ClassStubFunction<(String), Question> where M1.MatchedType == String {
+	    func question<M1: Cuckoo.Matchable>(text: M1) -> Cuckoo.ClassStubFunction<(String), TextQuestion> where M1.MatchedType == String {
 	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: text) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockQuestionFactory.self, method: "question(text: String) -> Question", parameterMatchers: matchers))
+	        return .init(stub: cuckoo_manager.createStub(for: MockQuestionFactory.self, method: "question(text: String) -> TextQuestion", parameterMatchers: matchers))
 	    }
 	    
 	    func answer() -> Cuckoo.ClassStubFunction<(), Answer> {
@@ -526,9 +526,9 @@ class MockQuestionFactory: QuestionFactory, Cuckoo.ClassMock {
 	
 	    
 	    @discardableResult
-	    func question<M1: Cuckoo.Matchable>(text: M1) -> Cuckoo.__DoNotUse<Question> where M1.MatchedType == String {
+	    func question<M1: Cuckoo.Matchable>(text: M1) -> Cuckoo.__DoNotUse<TextQuestion> where M1.MatchedType == String {
 	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: text) { $0 }]
-	        return cuckoo_manager.verify("question(text: String) -> Question", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	        return cuckoo_manager.verify("question(text: String) -> TextQuestion", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	    @discardableResult
@@ -553,8 +553,8 @@ class MockQuestionFactory: QuestionFactory, Cuckoo.ClassMock {
     
 
     
-     override func question(text: String)  -> Question {
-        return DefaultValueRegistry.defaultValue(for: Question.self)
+     override func question(text: String)  -> TextQuestion {
+        return DefaultValueRegistry.defaultValue(for: TextQuestion.self)
     }
     
      override func answer()  -> Answer {

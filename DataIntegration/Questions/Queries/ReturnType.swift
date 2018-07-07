@@ -18,18 +18,17 @@ public enum ReturnType {
 	case startDates
 	/// returned value is [Date], with each elemend representing the end date of one matched entry
 	case endDates
+	/// return all attributes in a map of [String: String]
+	case attributes
 
 	public var type: Any.Type {
 		get {
 			switch(self) {
-				case .finalOperation:
-					return [(date: Date?, value: Double)].self
-				case .times:
-					return [DateInterval].self
-				case .startDates:
-					return [Date].self
-				case .endDates:
-					return [Date].self
+				case .finalOperation: return [(date: Date?, value: Double)].self
+				case .times: return [DateInterval].self
+				case .startDates: return [Date].self
+				case .endDates: return [Date].self
+				case .attributes: return [String: String].self
 			}
 		}
 	}
