@@ -1,5 +1,5 @@
 //
-//  utilTests.swift
+//  TextNormalizationUtilTests.swift
 //  DataIntegrationTests
 //
 //  Created by Bryan Nova on 7/1/18.
