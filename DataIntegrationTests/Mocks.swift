@@ -5006,10 +5006,10 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
     
 
     
-    // ["name": "compute", "returnSignature": " -> [Double]", "fullyQualifiedName": "compute(operation: QueryOperation, over: [HKQuantitySample], withUnit: HKUnit) -> [Double]", "parameterSignature": "operation: QueryOperation, over samples: [HKQuantitySample], withUnit unit: HKUnit", "parameterSignatureWithoutNames": "operation: QueryOperation, samples: [HKQuantitySample], unit: HKUnit", "inputTypes": "QueryOperation, [HKQuantitySample], HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "operation, samples, unit", "call": "operation: operation, over: samples, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("operation"), name: "operation", type: "QueryOperation", range: CountableRange(309..<334), nameRange: CountableRange(309..<318)), CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(336..<368), nameRange: CountableRange(336..<340)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(370..<391), nameRange: CountableRange(370..<378))], "returnType": "[Double]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func compute(operation: QueryOperation, over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> [Double] {
+    // ["name": "compute", "returnSignature": " -> [(date: Date?, value: Double)]", "fullyQualifiedName": "compute(operation: QueryOperation, over: [HKQuantitySample], withUnit: HKUnit) -> [(date: Date?, value: Double)]", "parameterSignature": "operation: QueryOperation, over samples: [HKQuantitySample], withUnit unit: HKUnit", "parameterSignatureWithoutNames": "operation: QueryOperation, samples: [HKQuantitySample], unit: HKUnit", "inputTypes": "QueryOperation, [HKQuantitySample], HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "operation, samples, unit", "call": "operation: operation, over: samples, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("operation"), name: "operation", type: "QueryOperation", range: CountableRange(309..<334), nameRange: CountableRange(309..<318)), CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(336..<368), nameRange: CountableRange(336..<340)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(370..<391), nameRange: CountableRange(370..<378))], "returnType": "[(date: Date?, value: Double)]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func compute(operation: QueryOperation, over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
         
-            return cuckoo_manager.call("compute(operation: QueryOperation, over: [HKQuantitySample], withUnit: HKUnit) -> [Double]",
+            return cuckoo_manager.call("compute(operation: QueryOperation, over: [HKQuantitySample], withUnit: HKUnit) -> [(date: Date?, value: Double)]",
                 parameters: (operation, samples, unit),
                 superclassCall:
                     
@@ -5018,10 +5018,10 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "average", "returnSignature": " -> [Double]", "fullyQualifiedName": "average(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]", "parameterSignature": "over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component?, unit: HKUnit", "inputTypes": "[HKQuantitySample], Calendar.Component?, HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit, unit", "call": "over: samples, per: aggregationUnit, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(1093..<1125), nameRange: CountableRange(1093..<1097)), CuckooGeneratorFramework.MethodParameter(label: Optional("per"), name: "aggregationUnit", type: "Calendar.Component?", range: CountableRange(1127..<1167), nameRange: CountableRange(1127..<1130)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(1169..<1190), nameRange: CountableRange(1169..<1177))], "returnType": "[Double]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func average(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [Double] {
+    // ["name": "average", "returnSignature": " -> [(date: Date?, value: Double)]", "fullyQualifiedName": "average(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", "parameterSignature": "over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component?, unit: HKUnit", "inputTypes": "[HKQuantitySample], Calendar.Component?, HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit, unit", "call": "over: samples, per: aggregationUnit, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(1115..<1147), nameRange: CountableRange(1115..<1119)), CuckooGeneratorFramework.MethodParameter(label: Optional("per"), name: "aggregationUnit", type: "Calendar.Component?", range: CountableRange(1149..<1189), nameRange: CountableRange(1149..<1152)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(1191..<1212), nameRange: CountableRange(1191..<1199))], "returnType": "[(date: Date?, value: Double)]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func average(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
         
-            return cuckoo_manager.call("average(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]",
+            return cuckoo_manager.call("average(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]",
                 parameters: (samples, aggregationUnit, unit),
                 superclassCall:
                     
@@ -5030,7 +5030,7 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "average", "returnSignature": " -> Double", "fullyQualifiedName": "average(over: [HKQuantitySample], withUnit: HKUnit) -> Double", "parameterSignature": "over samples: [HKQuantitySample], withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], unit: HKUnit", "inputTypes": "[HKQuantitySample], HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, unit", "call": "over: samples, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(1726..<1758), nameRange: CountableRange(1726..<1730)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(1760..<1781), nameRange: CountableRange(1760..<1768))], "returnType": "Double", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "average", "returnSignature": " -> Double", "fullyQualifiedName": "average(over: [HKQuantitySample], withUnit: HKUnit) -> Double", "parameterSignature": "over samples: [HKQuantitySample], withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], unit: HKUnit", "inputTypes": "[HKQuantitySample], HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, unit", "call": "over: samples, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(1858..<1890), nameRange: CountableRange(1858..<1862)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(1892..<1913), nameRange: CountableRange(1892..<1900))], "returnType": "Double", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func average(over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> Double {
         
             return cuckoo_manager.call("average(over: [HKQuantitySample], withUnit: HKUnit) -> Double",
@@ -5042,10 +5042,10 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "count", "returnSignature": " -> [Double]", "fullyQualifiedName": "count(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]", "parameterSignature": "over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component?, unit: HKUnit", "inputTypes": "[HKQuantitySample], Calendar.Component?, HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit, unit", "call": "over: samples, per: aggregationUnit, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(2117..<2149), nameRange: CountableRange(2117..<2121)), CuckooGeneratorFramework.MethodParameter(label: Optional("per"), name: "aggregationUnit", type: "Calendar.Component?", range: CountableRange(2151..<2191), nameRange: CountableRange(2151..<2154)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(2193..<2214), nameRange: CountableRange(2193..<2201))], "returnType": "[Double]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func count(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [Double] {
+    // ["name": "count", "returnSignature": " -> [(date: Date?, value: Double)]", "fullyQualifiedName": "count(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", "parameterSignature": "over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component?, unit: HKUnit", "inputTypes": "[HKQuantitySample], Calendar.Component?, HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit, unit", "call": "over: samples, per: aggregationUnit, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(2249..<2281), nameRange: CountableRange(2249..<2253)), CuckooGeneratorFramework.MethodParameter(label: Optional("per"), name: "aggregationUnit", type: "Calendar.Component?", range: CountableRange(2283..<2323), nameRange: CountableRange(2283..<2286)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(2325..<2346), nameRange: CountableRange(2325..<2333))], "returnType": "[(date: Date?, value: Double)]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func count(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
         
-            return cuckoo_manager.call("count(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]",
+            return cuckoo_manager.call("count(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]",
                 parameters: (samples, aggregationUnit, unit),
                 superclassCall:
                     
@@ -5054,10 +5054,10 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "max", "returnSignature": " -> [Double]", "fullyQualifiedName": "max(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]", "parameterSignature": "over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component?, unit: HKUnit", "inputTypes": "[HKQuantitySample], Calendar.Component?, HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit, unit", "call": "over: samples, per: aggregationUnit, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(2706..<2738), nameRange: CountableRange(2706..<2710)), CuckooGeneratorFramework.MethodParameter(label: Optional("per"), name: "aggregationUnit", type: "Calendar.Component?", range: CountableRange(2740..<2780), nameRange: CountableRange(2740..<2743)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(2782..<2803), nameRange: CountableRange(2782..<2790))], "returnType": "[Double]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func max(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [Double] {
+    // ["name": "max", "returnSignature": " -> [(date: Date?, value: Double)]", "fullyQualifiedName": "max(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", "parameterSignature": "over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component?, unit: HKUnit", "inputTypes": "[HKQuantitySample], Calendar.Component?, HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit, unit", "call": "over: samples, per: aggregationUnit, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(2948..<2980), nameRange: CountableRange(2948..<2952)), CuckooGeneratorFramework.MethodParameter(label: Optional("per"), name: "aggregationUnit", type: "Calendar.Component?", range: CountableRange(2982..<3022), nameRange: CountableRange(2982..<2985)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(3024..<3045), nameRange: CountableRange(3024..<3032))], "returnType": "[(date: Date?, value: Double)]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func max(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
         
-            return cuckoo_manager.call("max(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]",
+            return cuckoo_manager.call("max(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]",
                 parameters: (samples, aggregationUnit, unit),
                 superclassCall:
                     
@@ -5066,7 +5066,7 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "max", "returnSignature": " -> Double", "fullyQualifiedName": "max(over: [HKQuantitySample], withUnit: HKUnit) -> Double", "parameterSignature": "over samples: [HKQuantitySample], withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], unit: HKUnit", "inputTypes": "[HKQuantitySample], HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, unit", "call": "over: samples, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(3315..<3347), nameRange: CountableRange(3315..<3319)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(3349..<3370), nameRange: CountableRange(3349..<3357))], "returnType": "Double", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "max", "returnSignature": " -> Double", "fullyQualifiedName": "max(over: [HKQuantitySample], withUnit: HKUnit) -> Double", "parameterSignature": "over samples: [HKQuantitySample], withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], unit: HKUnit", "inputTypes": "[HKQuantitySample], HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, unit", "call": "over: samples, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(3667..<3699), nameRange: CountableRange(3667..<3671)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(3701..<3722), nameRange: CountableRange(3701..<3709))], "returnType": "Double", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func max(over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> Double {
         
             return cuckoo_manager.call("max(over: [HKQuantitySample], withUnit: HKUnit) -> Double",
@@ -5078,10 +5078,10 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "min", "returnSignature": " -> [Double]", "fullyQualifiedName": "min(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]", "parameterSignature": "over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component?, unit: HKUnit", "inputTypes": "[HKQuantitySample], Calendar.Component?, HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit, unit", "call": "over: samples, per: aggregationUnit, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(3761..<3793), nameRange: CountableRange(3761..<3765)), CuckooGeneratorFramework.MethodParameter(label: Optional("per"), name: "aggregationUnit", type: "Calendar.Component?", range: CountableRange(3795..<3835), nameRange: CountableRange(3795..<3798)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(3837..<3858), nameRange: CountableRange(3837..<3845))], "returnType": "[Double]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func min(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [Double] {
+    // ["name": "min", "returnSignature": " -> [(date: Date?, value: Double)]", "fullyQualifiedName": "min(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", "parameterSignature": "over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component?, unit: HKUnit", "inputTypes": "[HKQuantitySample], Calendar.Component?, HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit, unit", "call": "over: samples, per: aggregationUnit, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(4114..<4146), nameRange: CountableRange(4114..<4118)), CuckooGeneratorFramework.MethodParameter(label: Optional("per"), name: "aggregationUnit", type: "Calendar.Component?", range: CountableRange(4148..<4188), nameRange: CountableRange(4148..<4151)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(4190..<4211), nameRange: CountableRange(4190..<4198))], "returnType": "[(date: Date?, value: Double)]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func min(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
         
-            return cuckoo_manager.call("min(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]",
+            return cuckoo_manager.call("min(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]",
                 parameters: (samples, aggregationUnit, unit),
                 superclassCall:
                     
@@ -5090,7 +5090,7 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "min", "returnSignature": " -> Double", "fullyQualifiedName": "min(over: [HKQuantitySample], withUnit: HKUnit) -> Double", "parameterSignature": "over samples: [HKQuantitySample], withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], unit: HKUnit", "inputTypes": "[HKQuantitySample], HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, unit", "call": "over: samples, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(4370..<4402), nameRange: CountableRange(4370..<4374)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(4404..<4425), nameRange: CountableRange(4404..<4412))], "returnType": "Double", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "min", "returnSignature": " -> Double", "fullyQualifiedName": "min(over: [HKQuantitySample], withUnit: HKUnit) -> Double", "parameterSignature": "over samples: [HKQuantitySample], withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], unit: HKUnit", "inputTypes": "[HKQuantitySample], HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, unit", "call": "over: samples, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(4833..<4865), nameRange: CountableRange(4833..<4837)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(4867..<4888), nameRange: CountableRange(4867..<4875))], "returnType": "Double", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func min(over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> Double {
         
             return cuckoo_manager.call("min(over: [HKQuantitySample], withUnit: HKUnit) -> Double",
@@ -5102,10 +5102,10 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "sum", "returnSignature": " -> [Double]", "fullyQualifiedName": "sum(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]", "parameterSignature": "over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component?, unit: HKUnit", "inputTypes": "[HKQuantitySample], Calendar.Component?, HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit, unit", "call": "over: samples, per: aggregationUnit, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(4817..<4849), nameRange: CountableRange(4817..<4821)), CuckooGeneratorFramework.MethodParameter(label: Optional("per"), name: "aggregationUnit", type: "Calendar.Component?", range: CountableRange(4851..<4891), nameRange: CountableRange(4851..<4854)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(4893..<4914), nameRange: CountableRange(4893..<4901))], "returnType": "[Double]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func sum(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [Double] {
+    // ["name": "sum", "returnSignature": " -> [(date: Date?, value: Double)]", "fullyQualifiedName": "sum(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", "parameterSignature": "over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component?, unit: HKUnit", "inputTypes": "[HKQuantitySample], Calendar.Component?, HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit, unit", "call": "over: samples, per: aggregationUnit, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(5280..<5312), nameRange: CountableRange(5280..<5284)), CuckooGeneratorFramework.MethodParameter(label: Optional("per"), name: "aggregationUnit", type: "Calendar.Component?", range: CountableRange(5314..<5354), nameRange: CountableRange(5314..<5317)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(5356..<5377), nameRange: CountableRange(5356..<5364))], "returnType": "[(date: Date?, value: Double)]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func sum(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
         
-            return cuckoo_manager.call("sum(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]",
+            return cuckoo_manager.call("sum(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]",
                 parameters: (samples, aggregationUnit, unit),
                 superclassCall:
                     
@@ -5114,7 +5114,7 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "sum", "returnSignature": " -> Double", "fullyQualifiedName": "sum(over: [HKQuantitySample], withUnit: HKUnit) -> Double", "parameterSignature": "over samples: [HKQuantitySample], withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], unit: HKUnit", "inputTypes": "[HKQuantitySample], HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, unit", "call": "over: samples, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(5426..<5458), nameRange: CountableRange(5426..<5430)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(5460..<5481), nameRange: CountableRange(5460..<5468))], "returnType": "Double", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "sum", "returnSignature": " -> Double", "fullyQualifiedName": "sum(over: [HKQuantitySample], withUnit: HKUnit) -> Double", "parameterSignature": "over samples: [HKQuantitySample], withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], unit: HKUnit", "inputTypes": "[HKQuantitySample], HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, unit", "call": "over: samples, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(5999..<6031), nameRange: CountableRange(5999..<6003)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(6033..<6054), nameRange: CountableRange(6033..<6041))], "returnType": "Double", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func sum(over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> Double {
         
             return cuckoo_manager.call("sum(over: [HKQuantitySample], withUnit: HKUnit) -> Double",
@@ -5126,7 +5126,7 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "sortSamplesByAggregation", "returnSignature": " -> [(date: Date, samples: [HKQuantitySample])]", "fullyQualifiedName": "sortSamplesByAggregation(_: [HKQuantitySample], _: Calendar.Component) -> [(date: Date, samples: [HKQuantitySample])]", "parameterSignature": "_ samples: [HKQuantitySample], _ aggregationUnit: Calendar.Component", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component", "inputTypes": "[HKQuantitySample], Calendar.Component", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit", "call": "samples, aggregationUnit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "samples", type: "[HKQuantitySample]", range: CountableRange(5730..<5759), nameRange: CountableRange(0..<0)), CuckooGeneratorFramework.MethodParameter(label: nil, name: "aggregationUnit", type: "Calendar.Component", range: CountableRange(5761..<5798), nameRange: CountableRange(0..<0))], "returnType": "[(date: Date, samples: [HKQuantitySample])]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "sortSamplesByAggregation", "returnSignature": " -> [(date: Date, samples: [HKQuantitySample])]", "fullyQualifiedName": "sortSamplesByAggregation(_: [HKQuantitySample], _: Calendar.Component) -> [(date: Date, samples: [HKQuantitySample])]", "parameterSignature": "_ samples: [HKQuantitySample], _ aggregationUnit: Calendar.Component", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component", "inputTypes": "[HKQuantitySample], Calendar.Component", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit", "call": "samples, aggregationUnit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "samples", type: "[HKQuantitySample]", range: CountableRange(6303..<6332), nameRange: CountableRange(0..<0)), CuckooGeneratorFramework.MethodParameter(label: nil, name: "aggregationUnit", type: "Calendar.Component", range: CountableRange(6334..<6371), nameRange: CountableRange(0..<0))], "returnType": "[(date: Date, samples: [HKQuantitySample])]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func sortSamplesByAggregation(_ samples: [HKQuantitySample], _ aggregationUnit: Calendar.Component)  -> [(date: Date, samples: [HKQuantitySample])] {
         
             return cuckoo_manager.call("sortSamplesByAggregation(_: [HKQuantitySample], _: Calendar.Component) -> [(date: Date, samples: [HKQuantitySample])]",
@@ -5147,14 +5147,14 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
 	    }
 	    
 	    
-	    func compute<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(operation: M1, over samples: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<(QueryOperation, [HKQuantitySample], HKUnit), [Double]> where M1.MatchedType == QueryOperation, M2.MatchedType == [HKQuantitySample], M3.MatchedType == HKUnit {
+	    func compute<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(operation: M1, over samples: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<(QueryOperation, [HKQuantitySample], HKUnit), [(date: Date?, value: Double)]> where M1.MatchedType == QueryOperation, M2.MatchedType == [HKQuantitySample], M3.MatchedType == HKUnit {
 	        let matchers: [Cuckoo.ParameterMatcher<(QueryOperation, [HKQuantitySample], HKUnit)>] = [wrap(matchable: operation) { $0.0 }, wrap(matchable: samples) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "compute(operation: QueryOperation, over: [HKQuantitySample], withUnit: HKUnit) -> [Double]", parameterMatchers: matchers))
+	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "compute(operation: QueryOperation, over: [HKQuantitySample], withUnit: HKUnit) -> [(date: Date?, value: Double)]", parameterMatchers: matchers))
 	    }
 	    
-	    func average<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<([HKQuantitySample], Calendar.Component?, HKUnit), [Double]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
+	    func average<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<([HKQuantitySample], Calendar.Component?, HKUnit), [(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
 	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "average(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]", parameterMatchers: matchers))
+	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "average(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", parameterMatchers: matchers))
 	    }
 	    
 	    func average<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(over samples: M1, withUnit unit: M2) -> Cuckoo.ClassStubFunction<([HKQuantitySample], HKUnit), Double> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == HKUnit {
@@ -5162,14 +5162,14 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
 	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "average(over: [HKQuantitySample], withUnit: HKUnit) -> Double", parameterMatchers: matchers))
 	    }
 	    
-	    func count<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<([HKQuantitySample], Calendar.Component?, HKUnit), [Double]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
+	    func count<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<([HKQuantitySample], Calendar.Component?, HKUnit), [(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
 	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "count(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]", parameterMatchers: matchers))
+	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "count(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", parameterMatchers: matchers))
 	    }
 	    
-	    func max<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<([HKQuantitySample], Calendar.Component?, HKUnit), [Double]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
+	    func max<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<([HKQuantitySample], Calendar.Component?, HKUnit), [(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
 	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "max(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]", parameterMatchers: matchers))
+	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "max(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", parameterMatchers: matchers))
 	    }
 	    
 	    func max<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(over samples: M1, withUnit unit: M2) -> Cuckoo.ClassStubFunction<([HKQuantitySample], HKUnit), Double> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == HKUnit {
@@ -5177,9 +5177,9 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
 	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "max(over: [HKQuantitySample], withUnit: HKUnit) -> Double", parameterMatchers: matchers))
 	    }
 	    
-	    func min<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<([HKQuantitySample], Calendar.Component?, HKUnit), [Double]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
+	    func min<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<([HKQuantitySample], Calendar.Component?, HKUnit), [(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
 	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "min(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]", parameterMatchers: matchers))
+	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "min(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", parameterMatchers: matchers))
 	    }
 	    
 	    func min<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(over samples: M1, withUnit unit: M2) -> Cuckoo.ClassStubFunction<([HKQuantitySample], HKUnit), Double> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == HKUnit {
@@ -5187,9 +5187,9 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
 	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "min(over: [HKQuantitySample], withUnit: HKUnit) -> Double", parameterMatchers: matchers))
 	    }
 	    
-	    func sum<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<([HKQuantitySample], Calendar.Component?, HKUnit), [Double]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
+	    func sum<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<([HKQuantitySample], Calendar.Component?, HKUnit), [(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
 	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "sum(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]", parameterMatchers: matchers))
+	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "sum(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", parameterMatchers: matchers))
 	    }
 	    
 	    func sum<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(over samples: M1, withUnit unit: M2) -> Cuckoo.ClassStubFunction<([HKQuantitySample], HKUnit), Double> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == HKUnit {
@@ -5219,15 +5219,15 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
 	
 	    
 	    @discardableResult
-	    func compute<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(operation: M1, over samples: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[Double]> where M1.MatchedType == QueryOperation, M2.MatchedType == [HKQuantitySample], M3.MatchedType == HKUnit {
+	    func compute<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(operation: M1, over samples: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[(date: Date?, value: Double)]> where M1.MatchedType == QueryOperation, M2.MatchedType == [HKQuantitySample], M3.MatchedType == HKUnit {
 	        let matchers: [Cuckoo.ParameterMatcher<(QueryOperation, [HKQuantitySample], HKUnit)>] = [wrap(matchable: operation) { $0.0 }, wrap(matchable: samples) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return cuckoo_manager.verify("compute(operation: QueryOperation, over: [HKQuantitySample], withUnit: HKUnit) -> [Double]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	        return cuckoo_manager.verify("compute(operation: QueryOperation, over: [HKQuantitySample], withUnit: HKUnit) -> [(date: Date?, value: Double)]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	    @discardableResult
-	    func average<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[Double]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
+	    func average<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
 	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return cuckoo_manager.verify("average(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	        return cuckoo_manager.verify("average(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	    @discardableResult
@@ -5237,15 +5237,15 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
 	    }
 	    
 	    @discardableResult
-	    func count<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[Double]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
+	    func count<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
 	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return cuckoo_manager.verify("count(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	        return cuckoo_manager.verify("count(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	    @discardableResult
-	    func max<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[Double]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
+	    func max<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
 	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return cuckoo_manager.verify("max(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	        return cuckoo_manager.verify("max(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	    @discardableResult
@@ -5255,9 +5255,9 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
 	    }
 	    
 	    @discardableResult
-	    func min<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[Double]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
+	    func min<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
 	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return cuckoo_manager.verify("min(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	        return cuckoo_manager.verify("min(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	    @discardableResult
@@ -5267,9 +5267,9 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
 	    }
 	    
 	    @discardableResult
-	    func sum<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[Double]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
+	    func sum<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
 	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return cuckoo_manager.verify("sum(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [Double]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	        return cuckoo_manager.verify("sum(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	    @discardableResult
@@ -5294,40 +5294,40 @@ class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
     
 
     
-    public override func compute(operation: QueryOperation, over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> [Double] {
-        return DefaultValueRegistry.defaultValue(for: [Double].self)
+    public override func compute(operation: QueryOperation, over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
+        return DefaultValueRegistry.defaultValue(for: [(date: Date?, value: Double)].self)
     }
     
-    public override func average(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [Double] {
-        return DefaultValueRegistry.defaultValue(for: [Double].self)
+    public override func average(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
+        return DefaultValueRegistry.defaultValue(for: [(date: Date?, value: Double)].self)
     }
     
     public override func average(over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> Double {
         return DefaultValueRegistry.defaultValue(for: Double.self)
     }
     
-    public override func count(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [Double] {
-        return DefaultValueRegistry.defaultValue(for: [Double].self)
+    public override func count(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
+        return DefaultValueRegistry.defaultValue(for: [(date: Date?, value: Double)].self)
     }
     
-    public override func max(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [Double] {
-        return DefaultValueRegistry.defaultValue(for: [Double].self)
+    public override func max(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
+        return DefaultValueRegistry.defaultValue(for: [(date: Date?, value: Double)].self)
     }
     
     public override func max(over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> Double {
         return DefaultValueRegistry.defaultValue(for: Double.self)
     }
     
-    public override func min(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [Double] {
-        return DefaultValueRegistry.defaultValue(for: [Double].self)
+    public override func min(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
+        return DefaultValueRegistry.defaultValue(for: [(date: Date?, value: Double)].self)
     }
     
     public override func min(over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> Double {
         return DefaultValueRegistry.defaultValue(for: Double.self)
     }
     
-    public override func sum(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [Double] {
-        return DefaultValueRegistry.defaultValue(for: [Double].self)
+    public override func sum(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
+        return DefaultValueRegistry.defaultValue(for: [(date: Date?, value: Double)].self)
     }
     
     public override func sum(over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> Double {

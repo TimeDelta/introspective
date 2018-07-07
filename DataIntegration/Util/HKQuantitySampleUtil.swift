@@ -12,7 +12,7 @@ import HealthKit
 public class HKQuantitySampleUtil {
 
 	/// - Precondition: The provided samples array is not empty.
-	public func compute(operation: QueryOperation, over samples: [HKQuantitySample], withUnit unit: HKUnit) -> [Double] {
+	public func compute(operation: QueryOperation, over samples: [HKQuantitySample], withUnit unit: HKUnit) -> [(date: Date?, value: Double)] {
 		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		switch(operation.kind) {
@@ -30,15 +30,15 @@ public class HKQuantitySampleUtil {
 	}
 
 	/// - Precondition: The provided samples array is not empty.
-	public func average(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit) -> [Double] {
+	public func average(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit) -> [(date: Date?, value: Double)] {
 		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		if aggregationUnit == nil {
-			return [average(over: samples, withUnit: unit)]
+			return [(date: nil, value: average(over: samples, withUnit: unit))]
 		} else {
-			var sampleAggregationAverages = [Double]()
-			for (_, samples) in sortSamplesByAggregation(samples, aggregationUnit!) {
-				sampleAggregationAverages.append(average(over: samples, withUnit: unit))
+			var sampleAggregationAverages = [(date: Date?, value: Double)]()
+			for (aggregationDate, samples) in sortSamplesByAggregation(samples, aggregationUnit!) {
+				sampleAggregationAverages.append((date: aggregationDate, value: average(over: samples, withUnit: unit)))
 			}
 			return sampleAggregationAverages
 		}
@@ -56,37 +56,37 @@ public class HKQuantitySampleUtil {
 	}
 
 	/// - Precondition: The provided samples array is not empty.
-	public func count(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit) -> [Double] {
+	public func count(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit) -> [(date: Date?, value: Double)] {
 		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		if aggregationUnit == nil {
-			return [Double(samples.count)]
+			return [(date: nil, value: Double(samples.count))]
 		} else {
-			var sampleAggregationCounts = [Double]()
-			for (_, samples) in sortSamplesByAggregation(samples, aggregationUnit!) {
-				sampleAggregationCounts.append(Double(samples.count))
+			var sampleAggregationCounts = [(date: Date?, value: Double)]()
+			for (aggregationDate, samples) in sortSamplesByAggregation(samples, aggregationUnit!) {
+				sampleAggregationCounts.append((date: aggregationDate, value: Double(samples.count)))
 			}
 			return sampleAggregationCounts
 		}
 	}
 
 	/// - Precondition: The provided samples array is not empty.
-	public func max(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit) -> [Double] {
+	public func max(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit) -> [(date: Date?, value: Double)] {
 		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		if aggregationUnit == nil {
-			return [max(over: samples, withUnit: unit)]
+			return [(date: nil, value: max(over: samples, withUnit: unit))]
 		} else {
-			var sampleAggregationMaxs = [Double]()
-			for (_, samples) in sortSamplesByAggregation(samples, aggregationUnit!) {
-				sampleAggregationMaxs.append(max(over: samples, withUnit: unit))
+			var sampleAggregationMaxs = [(date: Date?, value: Double)]()
+			for (aggregationDate, samples) in sortSamplesByAggregation(samples, aggregationUnit!) {
+				sampleAggregationMaxs.append((date: aggregationDate, value: max(over: samples, withUnit: unit)))
 			}
 			return sampleAggregationMaxs
 		}
 	}
 
 	/// - Precondition: The provided samples array is not empty.
-	public func max(over samples: [HKQuantitySample], withUnit unit: HKUnit) -> Double{
+	public func max(over samples: [HKQuantitySample], withUnit unit: HKUnit) -> Double {
 		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		return quantityValue(
@@ -97,15 +97,15 @@ public class HKQuantitySampleUtil {
 	}
 
 	/// - Precondition: The provided samples array is not empty.
-	public func min(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit) -> [Double] {
+	public func min(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit) -> [(date: Date?, value: Double)] {
 		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		if aggregationUnit == nil {
-			return [min(over: samples, withUnit: unit)]
+			return [(date: nil, value: min(over: samples, withUnit: unit))]
 		} else {
-			var sampleAggregationMins = [Double]()
-			for (_, samples) in sortSamplesByAggregation(samples, aggregationUnit!) {
-				sampleAggregationMins.append(min(over: samples, withUnit: unit))
+			var sampleAggregationMins = [(date: Date?, value: Double)]()
+			for (aggregationDate, samples) in sortSamplesByAggregation(samples, aggregationUnit!) {
+				sampleAggregationMins.append((date: aggregationDate, value: min(over: samples, withUnit: unit)))
 			}
 			return sampleAggregationMins
 		}
@@ -123,15 +123,15 @@ public class HKQuantitySampleUtil {
 	}
 
 	/// - Precondition: The provided samples array is not empty.
-	public func sum(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit) -> [Double] {
+	public func sum(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit) -> [(date: Date?, value: Double)] {
 		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		if aggregationUnit == nil {
-			return [sum(over: samples, withUnit: unit)]
+			return [(date: nil, value: sum(over: samples, withUnit: unit))]
 		} else {
-			var sampleAggregationSums = [Double]()
-			for (_, samples) in sortSamplesByAggregation(samples, aggregationUnit!) {
-				sampleAggregationSums.append(sum(over: samples, withUnit: unit))
+			var sampleAggregationSums = [(date: Date?, value: Double)]()
+			for (aggregationDate, samples) in sortSamplesByAggregation(samples, aggregationUnit!) {
+				sampleAggregationSums.append((date: aggregationDate, value: sum(over: samples, withUnit: unit)))
 			}
 			return sampleAggregationSums
 		}

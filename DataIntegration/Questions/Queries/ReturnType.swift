@@ -10,18 +10,20 @@ import Foundation
 
 public enum ReturnType {
 
-	/// returned value is a number based on an operation such as: average, count, max, min, sum
+	/// returned value is [(date: Date?, value: Double)], with the value based on an operation such as: average, count, max, min, sum
 	case finalOperation
-	/// 
+	/// returned value is [DateInterval], with each element of the array representing the start and end time of one matched entry
 	case times(aggregationUnit: Calendar.Component)
+	/// returned value is [Date], with each elemend representing the start date of one matched entry
 	case startDates
+	/// returned value is [Date], with each elemend representing the end date of one matched entry
 	case endDates
 
 	public var type: Any.Type {
 		get {
 			switch(self) {
 				case .finalOperation:
-					return [Double].self
+					return [(date: Date?, value: Double)].self
 				case .times:
 					return [DateInterval].self
 				case .startDates:

@@ -82,7 +82,7 @@ public class HeartRateQuery: NSObject, Query {
 		return true // TODO
 	}
 
-	fileprivate func computeFinalOperation(_ samples: [HKQuantitySample]) throws -> [Double] {
+	fileprivate func computeFinalOperation(_ samples: [HKQuantitySample]) throws -> [(date: Date?, value: Double)] {
 		if self.finalOperation != nil {
 			return DependencyInjector.util.hkQuantitySampleUtil.compute(operation: finalOperation!, over: samples, withUnit: HeartRateQuery.countPerMinute)
 		} else {
