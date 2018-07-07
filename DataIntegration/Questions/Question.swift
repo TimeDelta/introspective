@@ -27,7 +27,7 @@ public class Question: NSObject {
 
 	public init(text: String) {
 		questionText = text
-		labels = Labels()
+		labels = DependencyInjector.question.labels()
 		questionParts = [Labels]()
 		currentQuestionPartIndex = 0
 	}
@@ -162,7 +162,7 @@ public class Question: NSObject {
 					throw error!
 				}
 
-				let query = HeartRateQuery()
+				let query = DependencyInjector.query.heartRateQuery()
 
 //				let restrictionLabels = questionPart.labelsFor(tags: Tags.restrictionTypeTags())
 
@@ -181,7 +181,7 @@ public class Question: NSObject {
 
 				// TODO - "between last tuesday and today/now" cases
 				// TODO - "since last wednesday" cases
-				let dayOfWeekRestriction: (date: Date?, dayOfWeek: DayOfWeek?) = try self.resolveDayOfWeekRestrictions(questionPart)
+				let dayOfWeekRestriction = try self.resolveDayOfWeekRestrictions(questionPart)
 				if dayOfWeekRestriction.date != nil {
 					query.startDate = dayOfWeekRestriction.date
 					query.endDate = dayOfWeekRestriction.date
@@ -196,7 +196,7 @@ public class Question: NSObject {
 		}
 	}
 
-	fileprivate func resolveDayOfWeekRestrictions(_ questionPart: Labels) throws -> (Date?, DayOfWeek?) {
+	fileprivate func resolveDayOfWeekRestrictions(_ questionPart: Labels) throws -> (date: Date?, dayOfWeek: DayOfWeek?) {
 		let dayOfWeekLabels = questionPart.byTag[Tags.dayOfWeek]
 		if dayOfWeekLabels != nil {
 			if dayOfWeekLabels!.count != 1 {

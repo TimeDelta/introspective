@@ -12,7 +12,6 @@ import HealthKit
 public class HKQuantitySampleUtil {
 
 	/// - Precondition: The provided samples array is not empty.
-	/// - Remark:
 	public func compute(operation: QueryOperation, over samples: [HKQuantitySample], withUnit unit: HKUnit) -> [Double] {
 		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 

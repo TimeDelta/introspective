@@ -61,7 +61,7 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 	}
 
 	/// Add the specified `Label` as the next in the underlying sequence.
-	/// All consecutive `Label`s with a tag type other than `Tags.none` that have identical tags will be consolidated into one `Label`.
+	/// - Note: All consecutive `Label`s with a tag type other than `Tags.none` that have identical tags will be consolidated into one `Label`.
 	public func addLabel(_ label: Label) {
 		// concatenate identical consecutive tags
 		var lastLabel = byIndex.last
@@ -83,17 +83,17 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 		}
 	}
 
-	/// Return true if at least one `Label` of type tag has been added.
+	/// - Returns: true if at least one `Label` of type tag has been added.
 	public func hasLabelFor(_ tag: NLTag) -> Bool {
 		return byTag[tag] != nil
 	}
 
-	/// Return true if at least one `Label` has been added else false.
+	/// - Returns: true if at least one `Label` has been added else false.
 	public func hasLabels() -> Bool {
 		return !byIndex.isEmpty
 	}
 
-	/// Return the index of the specified `Label`. If the `Label` is not found -1 will be returned.
+	/// - Returns: the index of the specified `Label`. If the `Label` is not found -1 will be returned.
 	public func indexOf(label: Label) -> Int {
 		return indexOfLabelWith(conditions: { (currentLabel: Label) in
 			return currentLabel == label
@@ -101,6 +101,7 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 	}
 
 	/// Get all `Label`s for each specified tag.
+	/// - Complexity: time - O(tags.count)
 	public func labelsInAnyOrderFor(tags: Set<NLTag>) -> [Label] {
 		var labels = [Label]()
 		for tag in tags {
@@ -112,8 +113,8 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 		return labels
 	}
 
-	/// Get all `Label`s for each specified tag.
-	/// This function preserves ordering of underlying `Label` objects.
+	/// Get all `Label`s for each specified tag, preserving the order of underlying `Label` objects.
+	/// - Complexity: time - O(labels.count)
 	public func labelsFor(tags: Set<NLTag>) -> [Label] {
 		var labels = [Label]()
 		for label in byIndex {
@@ -125,8 +126,9 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 	}
 
 	/// Right before each instance of the specified tag, create a new `Labels` object and add it to an array that will be returned.
-	/// This function guarantees that every `Labels` object in the returned array will contain at least one `Label`.
-	/// This function preserves ordering of underlying `Label` objects.
+	/// - Note:
+	/// - This function guarantees that every `Labels` object in the returned array will contain at least one `Label`.
+	/// - This function preserves ordering of underlying `Label` objects.
 	public func splitBefore(tag: NLTag) -> [Labels] {
 		if byTag[tag] == nil {
 			return [self]
@@ -147,9 +149,10 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 		return labelsArray
 	}
 
-	/// Right before each instance of the specified tags, create a new `Labels` object and add it to an array that will be returned.
-	/// This function guarantees that every `Labels` object in the returned array will contain at least one `Label`.
-	/// This function preserves ordering of underlying `Label` objects.
+	/// Right before each instance of one of the specified tags, create a new `Labels` object and add it to an array that will be returned.
+	/// - Note:
+	/// - This function guarantees that every `Labels` object in the returned array will contain at least one `Label`.
+	/// - This function preserves ordering of underlying `Label` objects.
 	public func splitBefore(tags: Set<NLTag>) -> [Labels] {
 		if self.isEmpty {
 			return []
@@ -176,8 +179,9 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 	}
 
 	/// Right after each instance of the specified tag, create a new `Labels` object and add it to an array that will be returned.
-	/// This function guarantees that every `Labels` object in the returned array will contain at least one `Label`.
-	/// This function preserves ordering of underlying `Label` objects.
+	/// - Note:
+	/// - This function guarantees that every `Labels` object in the returned array will contain at least one `Label`.
+	/// - This function preserves ordering of underlying `Label` objects.
 	public func splitAfter(tag: NLTag) -> [Labels] {
 		if byTag[tag] == nil {
 			return [self]
@@ -201,8 +205,9 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 	}
 
 	/// Right after each instance of the specified tags, create a new `Labels` object and add it to an array that will be returned.
+	/// - Returns:
 	/// This function guarantees that every `Labels` object in the returned array will contain at least one `Label`.
-	/// This function preserves ordering of underlying `Label` objects.
+	/// This function preserves ordering of underlying `Label` objects in the return value.
 	public func splitAfter(tags: Set<NLTag>) -> [Labels] {
 		if self.isEmpty {
 			return []
@@ -229,6 +234,8 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 	}
 
 	/// Looks for the nearest `Label` with a specific tag to a given index.
+	/// - Returns:
+	/// The nearest `Label` with the specified tag to the given index.
 	/// If no `Label` with the specified tag exists, returns nil.
 	/// If the `Label` at the given index has the specified tag, it will be returned.
 	/// In the case of a tie, both of the closest labels will be returned with the one having a lower index being first.
@@ -265,8 +272,10 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 		return closestLabels
 	}
 
-	/// Looks for the nearest `Label` with a specific tag to a given index.
-	/// If no `Label` with the specified tag exists, returns nil.
+	/// Looks for the nearest `Label` with a specific tag before a given index.
+	/// - Returns:
+	/// The nearest `Label` with the specified tag before the given index.
+	/// If no `Label` with the specified tag exists before the given index, returns nil.
 	/// If the `Label` at the given index has the specified tag, it will be returned.
 	public func findNearestLabelWith(tag: NLTag, before index: Int) throws -> Label? {
 		if index >= count || index < 0 {
@@ -286,8 +295,10 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 		return nil
 	}
 
-	/// Looks for the nearest `Label` with a specific tag to a given index.
-	/// If no `Label` with the specified tag exists, returns nil.
+	/// Looks for the nearest `Label` with a specific tag after a given index.
+	/// - Returns:
+	/// The nearest `Label` with the specified tag after the given index.
+	/// If no `Label` with the specified tag exists after the given index, returns nil.
 	/// If the `Label` at the given index has the specified tag, it will be returned.
 	public func findNearestLabelWith(tag: NLTag, after index: Int) throws -> Label? {
 		if index >= count || index < 0 {
@@ -308,8 +319,8 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 	}
 
 	/// Mark the `Label` in the given range as the specified `NLTag` type only if it is currently a `Tags.none` type.
-	/// If the `Label` in the given range is not currently a `Tags.none` type, this method will do nothing.
-	/// If no `Label` has an exact match for the given token range, this method will do nothing.
+	/// - If the `Label` in the given range is not currently a `Tags.none` type, this method will do nothing.
+	/// - If no `Label` has an exact match for the given token range, this method will do nothing.
 	public func ifNotTaggedTagLabelAt(range: Range<String.Index>, asTag: NLTag) {
 		if count > 0 {
 			var index = 0
@@ -324,9 +335,10 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 	}
 
 	/// Get the shortest distance from a `Label` tagged as `between` to a `Label` tagged as `and`.
-	/// If the two tags given are equal to each other, this function will not use the same `Label` for both and return a distance of 0.
+	/// - Note: This method does not require that the tags appear in the same order they were given.
+	/// - Returns:
+	/// If the two tags given are equal to each other, this function will not use the same `Label` for both and thus will not return a distance of 0.
 	/// If one or both of the specified tags have not been added, this will return `Int.max`.
-	/// This method does not require that the tags appear in the same order they were given.
 	public func shortestDistance(between tag1: NLTag, and tag2: NLTag) -> Int {
 		var shortestDistance = Int.max
 		var lastIndex = -1
@@ -353,6 +365,7 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 	}
 
 	/// Get the shortest distance in either direction from the specified `Label` to a `Label` with the given `NLTag`.
+	/// - Returns:
 	/// If the specified `Label` cannot be found, nil is returned.
 	/// If there are no `Label`s with the specified tag, -1 will be returned.
 	public func shortestDistance(from: Label, toLabelWith tag: NLTag) -> Int? {
@@ -385,6 +398,7 @@ public class Labels: IteratorProtocol, Sequence, Equatable {
 		return -1
 	}
 
+	/// Iterate over the `Label` objects in the order that they were added.
 	public func next() -> Labels.Label? {
 		if currentIteratorIndex == byIndex.count {
 			currentIteratorIndex = 0
