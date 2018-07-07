@@ -24,7 +24,6 @@ class HKQuantitySampleUtilTests: UnitTest {
 
 		let mockCalUtil = MockCalendarUtil()
 		mockCalendarUtil = mockCalUtil
-		// TODO - fixing compilation error with following code should fix some of the failing tests here
 		stub(UnitTestInjectionProvider.mockUtilFactory) { stub in
 			when(stub.calendarUtil.get).thenReturn(mockCalUtil)
 		}
@@ -69,6 +68,179 @@ class HKQuantitySampleUtilTests: UnitTest {
 		for index in 0 ..< averages.count {
 			XCTAssert(averages[index].date == expectedAverages[index].date)
 			XCTAssert(averages[index].value == expectedAverages[index].value)
+		}
+	}
+
+	func testGivenCountOperationOverMultipleSamplesPerAggregationInMultipleAggregations_compute_returnsCorrectValues() throws {
+		// given
+		let aggregationUnit: Calendar.Component = .day
+		let date1 = Date("2018-01-01")!
+		let date2 = Date("2018-01-02")!
+		let date3 = Date("2018-01-03")!
+		let samples = createSamples(withValues: [
+			(start: date1, end: date1, value: 0.0),
+			(start: date2, end: date2, value: 0.0),
+			(start: date3, end: date3, value: 0.0),
+			(start: date2, end: date2, value: 0.0),
+			(start: date3, end: date3, value: 0.0),
+			(start: date1, end: date1, value: 0.0),
+			(start: date3, end: date3, value: 0.0),
+			(start: date2, end: date2, value: 0.0),
+			(start: date3, end: date3, value: 0.0),
+		])
+		stub(mockCalendarUtil) { stub in
+			for sample in samples {
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+			}
+		}
+		let expectedCounts: [(date: Date?, value: Double)] = [
+			(date: date1, value: 2),
+			(date: date2, value: 3),
+			(date: date3, value: 4),
+		]
+		let queryOperation = try QueryOperation.from(tag: Tags.count)
+		queryOperation.aggregationUnit = aggregationUnit
+
+		// when
+		let counts = util.compute(operation: queryOperation, over: samples, withUnit: Me.defaultUnit)
+
+		// then
+		XCTAssert(counts.count == expectedCounts.count)
+		for index in 0 ..< counts.count {
+			XCTAssert(counts[index].date == expectedCounts[index].date)
+			XCTAssert(counts[index].value == expectedCounts[index].value)
+		}
+	}
+
+	func testGivenMaxOperationOverMultipleSamplesPerAggregationInMultipleAggregations_compute_returnsCorrectValues() throws {
+		// given
+		let aggregationUnit: Calendar.Component = .day
+		let date1 = Date("2018-01-01")!
+		let date2 = Date("2018-01-02")!
+		let date3 = Date("2018-01-03")!
+		let value1 = 4.3
+		let value2 = 54.2
+		let value3 = 43.2
+		let samples = createSamples(withValues: [
+			(start: date1, end: date1, value: value1),
+			(start: date3, end: date3, value: value3 - 3),
+			(start: date2, end: date2, value: value2 - 1),
+			(start: date3, end: date3, value: value3),
+			(start: date1, end: date1, value: value1 - 1),
+			(start: date2, end: date2, value: value2),
+			(start: date3, end: date3, value: value3 - 1),
+			(start: date3, end: date3, value: value3 - 2),
+			(start: date2, end: date2, value: value2 - 2),
+		])
+		stub(mockCalendarUtil) { stub in
+			for sample in samples {
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+			}
+		}
+		let expectedMaxs: [(date: Date?, value: Double)] = [
+			(date: date1, value: value1),
+			(date: date2, value: value2),
+			(date: date3, value: value3),
+		]
+		let queryOperation = try QueryOperation.from(tag: Tags.max)
+		queryOperation.aggregationUnit = aggregationUnit
+
+		// when
+		let maxs = util.compute(operation: queryOperation, over: samples, withUnit: Me.defaultUnit)
+
+		// then
+		XCTAssert(maxs.count == expectedMaxs.count)
+		for index in 0 ..< maxs.count {
+			XCTAssert(maxs[index].date == expectedMaxs[index].date)
+			XCTAssert(maxs[index].value == expectedMaxs[index].value)
+		}
+	}
+
+	func testGivenMinOperationOverMultipleSamplesPerAggregationInMultipleAggregations_compute_returnsCorrectValues() throws {
+		// given
+		let aggregationUnit: Calendar.Component = .day
+		let date1 = Date("2018-01-01")!
+		let date2 = Date("2018-01-02")!
+		let date3 = Date("2018-01-03")!
+		let value1 = 3.2
+		let value2 = 534.2
+		let value3 = 32.2
+		let samples = createSamples(withValues: [
+			(start: date1, end: date1, value: value1 + 1),
+			(start: date3, end: date3, value: value3),
+			(start: date2, end: date2, value: value2 + 1),
+			(start: date3, end: date3, value: value3 + 3),
+			(start: date3, end: date3, value: value3 + 2),
+			(start: date3, end: date3, value: value3 + 1),
+			(start: date1, end: date1, value: value1),
+			(start: date2, end: date2, value: value2 + 2),
+			(start: date2, end: date2, value: value2),
+		])
+		stub(mockCalendarUtil) { stub in
+			for sample in samples {
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+			}
+		}
+		let expectedMins: [(date: Date?, value: Double)] = [
+			(date: date1, value: value1),
+			(date: date2, value: value2),
+			(date: date3, value: value3),
+		]
+		let queryOperation = try QueryOperation.from(tag: Tags.min)
+		queryOperation.aggregationUnit = aggregationUnit
+
+		// when
+		let mins = util.compute(operation: queryOperation, over: samples, withUnit: Me.defaultUnit)
+
+		// then
+		XCTAssert(mins.count == expectedMins.count)
+		for index in 0 ..< mins.count {
+			XCTAssert(mins[index].date == expectedMins[index].date)
+			XCTAssert(mins[index].value == expectedMins[index].value)
+		}
+	}
+
+	func testGivenSumOperationOverMultipleSamplesPerAggregationInMultipleAggregations_compute_returnsCorrectValues() throws {
+		// given
+		let aggregationUnit: Calendar.Component = .day
+		let date1 = Date("2018-01-01")!
+		let date2 = Date("2018-01-02")!
+		let date3 = Date("2018-01-03")!
+		let value1 = 3.2
+		let value2 = 534.2
+		let value3 = 32.2
+		let samples = createSamples(withValues: [
+			(start: date2, end: date2, value: value2),
+			(start: date2, end: date2, value: value2 + 2),
+			(start: date3, end: date3, value: value3 + 3),
+			(start: date3, end: date3, value: value3),
+			(start: date1, end: date1, value: value1 + 1),
+			(start: date2, end: date2, value: value2 + 1),
+			(start: date3, end: date3, value: value3 + 1),
+			(start: date1, end: date1, value: value1),
+			(start: date3, end: date3, value: value3 + 2),
+		])
+		stub(mockCalendarUtil) { stub in
+			for sample in samples {
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+			}
+		}
+		let expectedSums: [(date: Date?, value: Double)] = [
+			(date: date1, value: 2 * value1 + 1),
+			(date: date2, value: 3 * value2 + 3),
+			(date: date3, value: 4 * value3 + 6),
+		]
+		let queryOperation = try QueryOperation.from(tag: Tags.sum)
+		queryOperation.aggregationUnit = aggregationUnit
+
+		// when
+		let sums = util.compute(operation: queryOperation, over: samples, withUnit: Me.defaultUnit)
+
+		// then
+		XCTAssert(sums.count == expectedSums.count)
+		for index in 0 ..< sums.count {
+			XCTAssert(sums[index].date == expectedSums[index].date)
+			XCTAssert(sums[index].value == expectedSums[index].value)
 		}
 	}
 

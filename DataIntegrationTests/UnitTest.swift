@@ -25,6 +25,7 @@ class UnitTest: XCTestCase {
 
     override func tearDown() {
         DependencyInjector.setType(newType: .Production)
+        super.tearDown()
     }
 
 	func createSample(_ value: Double) -> HKQuantitySample {
