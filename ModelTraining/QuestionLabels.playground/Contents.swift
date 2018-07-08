@@ -3,6 +3,8 @@ import CreateML
 
 enum Errors: Error {
 	case NumberOfTokensDoesNotMatchNumberOfLabels
+	case EmptyTokenList
+	case EmptyLabelList
 }
 
 func getData(from: URL) throws -> [(tokens: [MLWordTagger.Token], labels: [String])] {
@@ -18,12 +20,20 @@ func getData(from: URL) throws -> [(tokens: [MLWordTagger.Token], labels: [Strin
 			for token in tokensOnly.split(separator: " ") {
 				tokens.append(String(token))
 			}
+			if tokens.count == 0 {
+				throw Errors.EmptyTokenList
+			}
 		} else if line.contains("labels:") {
 			let labelsOnly = line.replacingOccurrences(of: "labels: ", with: "")
 			var labels = [MLWordTagger.Token]()
 			for label in labelsOnly.split(separator: " ") {
 				labels.append(String(label))
 			}
+
+			if labels.count == 0 {
+				throw Errors.EmptyLabelList
+			}
+
 			if tokens.count != labels.count {
 				print("tokens(" + String(tokens.count) + "): " + tokensOnly)
 				print("labels(" + String(labels.count) + "): " + labelsOnly)
