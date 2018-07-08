@@ -11,12 +11,22 @@ import NaturalLanguage
 
 public class QueryOperation: NSObject {
 
-	public enum Kind {
+	public enum Kind: CustomStringConvertible {
 		case average
 		case count
 		case max
 		case min
 		case sum
+
+		public var description: String {
+			switch (self) {
+				case .average: return "average"
+				case .count: return "count"
+				case .max: return "maximum"
+				case .min: return "minimum"
+				case .sum: return "sum of"
+			}
+		}
 	}
 
 	fileprivate static let map: [NLTag: Kind] = [Tags.average: .average, Tags.count: .count, Tags.max: .max, Tags.min: .min, Tags.sum: .sum]

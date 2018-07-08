@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum Attributes {
+public enum Attributes: CustomStringConvertible {
 
 	public enum AttributeType {
 		case string
@@ -22,6 +22,12 @@ public enum Attributes {
 	public var type: AttributeType {
 		switch (self) {
 			case .heartRate: return .quantity
+		}
+	}
+
+	public var description: String {
+		switch (self) {
+			case .heartRate: return "heart rate"
 		}
 	}
 }

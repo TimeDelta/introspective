@@ -16,25 +16,32 @@ class AddToAdvancedQuestionViewController: UIViewController, UIPickerViewDataSou
 		return type.description
 	}
 
-	@IBOutlet weak var dataTypeSelector: UIPickerView!
+	@IBOutlet weak var questionPartSelector: UIPickerView!
+
+	var cellType: AdvancedQuestionViewController.CellType!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		dataTypeSelector.dataSource = self
+		questionPartSelector.dataSource = self
+		questionPartSelector.delegate = self
 	}
 
-	func numberOfComponents(in pickerView: UIPickerView) -> Int {
+	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
 	}
 
-	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 		return AdvancedQuestionViewController.CellType.allTypes.count
 	}
 
-	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		return Me.values[row]
 	}
 
-	@IBAction func accepted(_ sender: Any) {
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if segue.identifier == "addQuestionPart" {
+			let index = questionPartSelector.selectedRow(inComponent: 0)
+			cellType = AdvancedQuestionViewController.CellType.allTypes[index]
+		}
 	}
 }

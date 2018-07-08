@@ -12,10 +12,7 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 
 	fileprivate typealias Me = AdvancedQuestionViewController
 
-	static let addDataTypeAccepted = Notification.Name("addDataTypeAccepted")
-	static let editDataTypeAccepted = Notification.Name("editDataTypeAccepted")
-
-	enum CellType: CustomStringConvertible {
+	public enum CellType: CustomStringConvertible {
 		case dataType
 		case timeConstraint
 		case attributeRestriction
@@ -32,7 +29,7 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 	}
 
 	fileprivate struct DataTypeInfo {
-		var dataType: DataTypes
+		var dataType: DataTypes = .heartRate
 	}
 
 	fileprivate var parts: [Any]!
@@ -42,8 +39,16 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		super.viewDidLoad()
 		cellTypes = [CellType]()
 		parts = [Any]()
-		NotificationCenter.default.addObserver(forName: Me.addDataTypeAccepted, object: nil, queue: OperationQueue.main, using: addDataTypeAccepted)
-		NotificationCenter.default.addObserver(forName: Me.editDataTypeAccepted, object: nil, queue: OperationQueue.main, using: editDataTypeAccepted)
+
+		cellTypes.append(.dataType)
+		parts.append(DataTypeInfo())
+
+		partWasAdded()
+		// TODO - disallow deletion of topmost data type (will always be at index 0)
+	}
+
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return parts.count
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -61,6 +66,7 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 				(cell as! TimeConstraintTableViewCell).timeConstraint = (parts[index] as! TimeConstraint)
 				break
 			case .attributeRestriction:
+				(cell as! AttributeRestrictionTableViewCell).attributeRestriction = (parts[index] as! AttributeRestriction)
 				break
 		}
 
@@ -74,7 +80,9 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		}
 
 		if segue.destination is EditDataTypeViewController {
-			let controller = (segue.destination as! SourceDefinitionViewController)
+			let controller = (segue.destination as! EditDataTypeViewController)
+			let source = (sender as! UITableViewCell)
+			controller.selectedIndex = EditDataTypeViewController.indexFor(type: source.textLabel!.text!)
 		}
 	}
 
@@ -85,9 +93,44 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 	@IBAction func runButtonPressed(_ sender: Any) {
 	}
 
-	fileprivate func addDataTypeAccepted(_ notification: Notification) {
+	@IBAction func saveEditedDataType(_ segue: UIStoryboardSegue) {
 	}
 
-	fileprivate func editDataTypeAccepted(_ notification: Notification) {
+	@IBAction func addQuestionPart(_ segue: UIStoryboardSegue) {
+		if segue.identifier == "addQuestionPart" {
+			let controller = (segue.source as! AddToAdvancedQuestionViewController)
+			let cellType = controller.cellType!
+			cellTypes.append(cellType)
+			switch (cellType) {
+				case .dataType:
+					parts.append(DataTypeInfo())
+					break
+				case .timeConstraint:
+					var timeConstraint = TimeConstraint()
+					timeConstraint.specificDate = Date()
+					parts.append(timeConstraint)
+					break
+				case .attributeRestriction:
+					let lastDataType = bottomMostDataType()
+					let attributeRestriction = AttributeRestriction(lastDataType.defaultAttribute)
+					parts.append(attributeRestriction)
+					break
+			}
+
+			partWasAdded()
+		}
+	}
+
+	fileprivate func bottomMostDataType() -> DataTypes {
+		var index = cellTypes.count - 1
+		while index >= 0 && cellTypes[index] != .dataType {
+			index -= 1
+		}
+		return (parts[index] as! DataTypeInfo).dataType
+	}
+
+	fileprivate func partWasAdded() {
+		let indexPath = IndexPath(row: cellTypes.count - 1, section: 0)
+		tableView.insertRows(at: [indexPath], with: .automatic)
 	}
 }

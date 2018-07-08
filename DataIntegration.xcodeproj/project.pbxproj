@@ -15,6 +15,7 @@
 		A2092D8B20F130FF00A182AA /* DayOfWeekRestrictionParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2092D8A20F130FF00A182AA /* DayOfWeekRestrictionParser.swift */; };
 		A2092D8D20F1313200A182AA /* RestrictionParserFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2092D8C20F1313200A182AA /* RestrictionParserFactory.swift */; };
 		A2092D8F20F1345200A182AA /* FactoryMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2092D8E20F1345200A182AA /* FactoryMocks.swift */; };
+		A20A5A7720F2635900EADEC5 /* AttributeRestrictionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A5A7620F2635900EADEC5 /* AttributeRestrictionTableViewCell.swift */; };
 		A21780EB20E9796700A8F9BA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21780EA20E9796700A8F9BA /* DateExtension.swift */; };
 		A21780F020E9ACD800A8F9BA /* TextNormalizationUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilTests.swift */; };
 		A217810720EBA25300A8F9BA /* ReturnType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A217810620EBA25300A8F9BA /* ReturnType.swift */; };
@@ -82,7 +83,6 @@
 		A2E4E8AE20E55AE400631398 /* QueryFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E8AD20E55AE400631398 /* QueryFactory.swift */; };
 		A2EF75A020ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EF759F20ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift */; };
 		A2FA034120F165F80049E40D /* AdvancedQuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034020F165F80049E40D /* AdvancedQuestionViewController.swift */; };
-		A2FA034320F166D60049E40D /* DataType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034220F166D60049E40D /* DataType.swift */; };
 		A2FA034520F169C30049E40D /* TimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034420F169C30049E40D /* TimeConstraint.swift */; };
 		A2FA034720F16B480049E40D /* Attributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034620F16B480049E40D /* Attributes.swift */; };
 		A2FA034B20F17FC50049E40D /* QuestionPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034A20F17FC50049E40D /* QuestionPart.swift */; };
@@ -131,6 +131,7 @@
 		A2092D8A20F130FF00A182AA /* DayOfWeekRestrictionParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayOfWeekRestrictionParser.swift; sourceTree = "<group>"; };
 		A2092D8C20F1313200A182AA /* RestrictionParserFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictionParserFactory.swift; sourceTree = "<group>"; };
 		A2092D8E20F1345200A182AA /* FactoryMocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FactoryMocks.swift; sourceTree = "<group>"; };
+		A20A5A7620F2635900EADEC5 /* AttributeRestrictionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeRestrictionTableViewCell.swift; sourceTree = "<group>"; };
 		A21780EA20E9796700A8F9BA /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNormalizationUtilTests.swift; sourceTree = "<group>"; };
 		A217810620EBA25300A8F9BA /* ReturnType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnType.swift; sourceTree = "<group>"; };
@@ -204,7 +205,6 @@
 		A2E4E8AD20E55AE400631398 /* QueryFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryFactory.swift; sourceTree = "<group>"; };
 		A2EF759F20ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKQuantitySampleUtilTests.swift; sourceTree = "<group>"; };
 		A2FA034020F165F80049E40D /* AdvancedQuestionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedQuestionViewController.swift; sourceTree = "<group>"; };
-		A2FA034220F166D60049E40D /* DataType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataType.swift; sourceTree = "<group>"; };
 		A2FA034420F169C30049E40D /* TimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeConstraint.swift; sourceTree = "<group>"; };
 		A2FA034620F16B480049E40D /* Attributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attributes.swift; sourceTree = "<group>"; };
 		A2FA034A20F17FC50049E40D /* QuestionPart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionPart.swift; sourceTree = "<group>"; };
@@ -329,7 +329,6 @@
 				A238FECE20E53E8A0025307F /* Answer.swift */,
 				A238FED020E53E900025307F /* Labels.swift */,
 				A238FED220E53E970025307F /* Tags.swift */,
-				A2FA034220F166D60049E40D /* DataType.swift */,
 				A2FA034620F16B480049E40D /* Attributes.swift */,
 			);
 			path = Questions;
@@ -491,6 +490,7 @@
 				A248CFAC20F15004000FE34E /* EditDataTypeViewController.swift */,
 				A2FA034D20F18FE20049E40D /* TimeConstraintTableViewCell.swift */,
 				A2FA035120F1AB0A0049E40D /* AddToAdvancedQuestionViewController.swift */,
+				A20A5A7620F2635900EADEC5 /* AttributeRestrictionTableViewCell.swift */,
 			);
 			path = AdvancedQuestion;
 			sourceTree = "<group>";
@@ -686,11 +686,11 @@
 				A238FF0220E541F80025307F /* AskViewController.swift in Sources */,
 				A255D52420E55E0000BDD57B /* QuestionFactory.swift in Sources */,
 				A2E4E8AA20E5589F00631398 /* FunctionalTestInjectionProvider.swift in Sources */,
+				A20A5A7720F2635900EADEC5 /* AttributeRestrictionTableViewCell.swift in Sources */,
 				A238FF0620E542880025307F /* SourceDefinitionViewController.swift in Sources */,
 				A2E4E8A020E5583200631398 /* DependencyInjector.swift in Sources */,
 				A2FA034720F16B480049E40D /* Attributes.swift in Sources */,
 				A238FF0820E5429A0025307F /* SourcesTableViewController.swift in Sources */,
-				A2FA034320F166D60049E40D /* DataType.swift in Sources */,
 				A238FEED20E53F770025307F /* MedicationSource.swift in Sources */,
 				A2092D8B20F130FF00A182AA /* DayOfWeekRestrictionParser.swift in Sources */,
 				A238FEE920E53F570025307F /* Source.swift in Sources */,
