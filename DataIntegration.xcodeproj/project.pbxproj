@@ -17,6 +17,8 @@
 		A2092D8F20F1345200A182AA /* FactoryMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2092D8E20F1345200A182AA /* FactoryMocks.swift */; };
 		A20A5A7720F2635900EADEC5 /* AttributeRestrictionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A5A7620F2635900EADEC5 /* AttributeRestrictionTableViewCell.swift */; };
 		A20A5A7920F2CE3600EADEC5 /* EditTimeConstraintViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A5A7820F2CE3600EADEC5 /* EditTimeConstraintViewController.swift */; };
+		A20A5A7A20F403C300EADEC5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2ABEA3320E53C0900142C00 /* Assets.xcassets */; };
+		A20A5A7B20F403C600EADEC5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2ABEA3320E53C0900142C00 /* Assets.xcassets */; };
 		A21780EB20E9796700A8F9BA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21780EA20E9796700A8F9BA /* DateExtension.swift */; };
 		A21780F020E9ACD800A8F9BA /* TextNormalizationUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilTests.swift */; };
 		A217810720EBA25300A8F9BA /* ReturnType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A217810620EBA25300A8F9BA /* ReturnType.swift */; };
@@ -325,10 +327,10 @@
 				A238FED420E53E9A0025307F /* Queries */,
 				A2092D8720F122AA00A182AA /* RestrictionParsers */,
 				A248CFB420F1649D000FE34E /* Question.swift */,
+				A238FECE20E53E8A0025307F /* Answer.swift */,
 				A238FECC20E53E820025307F /* TextQuestion.swift */,
 				A248CFB620F16538000FE34E /* AdvancedQuestion.swift */,
 				A2FA034A20F17FC50049E40D /* QuestionPart.swift */,
-				A238FECE20E53E8A0025307F /* Answer.swift */,
 				A238FED020E53E900025307F /* Labels.swift */,
 				A238FED220E53E970025307F /* Tags.swift */,
 				A2FA034620F16B480049E40D /* Attributes.swift */,
@@ -614,6 +616,7 @@
 				A238FF0020E541AE0025307F /* LaunchScreen.storyboard in Resources */,
 				A255D53C20E5697B00BDD57B /* questionLabelsTrainingData.txt in Resources */,
 				A248CFAB20F14F80000FE34E /* Main.storyboard in Resources */,
+				A20A5A7A20F403C300EADEC5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -628,6 +631,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A20A5A7B20F403C600EADEC5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
