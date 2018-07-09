@@ -7,38 +7,47 @@
 //
 
 import UIKit
+import os
+import SwiftDate
 
 class TimeConstraintTableViewCell: UITableViewCell {
 
-	@IBOutlet weak var startsEndsLabel: UILabel!
-	@IBOutlet weak var onAfterBeforeLabel: UILabel!
-	@IBOutlet weak var specificDateOrDaysOfWeekLabel: UILabel!
+	@IBOutlet weak var label: UILabel!
 
 	var timeConstraint: TimeConstraint! {
 		didSet {
 			guard let timeConstraint = timeConstraint else { return }
 
 			let constraintType = timeConstraint.constraintType
-			onAfterBeforeLabel.text = constraintType.description
-			startsEndsLabel.text = timeConstraint.useStartOrEndDate.description
+			var text = timeConstraint.useStartOrEndDate.description + " "
+			text += constraintType.description + " "
 
 			switch(constraintType) {
 				case .after, .before:
-					specificDateOrDaysOfWeekLabel.text = String(describing: timeConstraint.specificDate)
+					if timeConstraint.specificDate != nil {
+						let calendar = Calendar.autoupdatingCurrent
+						let dateInRegion = DateInRegion(timeConstraint.specificDate!, region: Region(calendar: calendar, zone: calendar.timeZone))
+						text += dateInRegion.toFormat("YYYY-MM-dd HH:mm:ss")
+					} else {
+						os_log("No date for time constraint being displayed", type: .error)
+					}
 					break
 				case .on:
 					if !timeConstraint.daysOfWeek.isEmpty {
-						var labelText = ""
+						var daysOfWeekText = ""
 						for dayOfWeek in timeConstraint.daysOfWeek {
-							labelText += dayOfWeek.abbreviation + ", "
+							daysOfWeekText += dayOfWeek.abbreviation + ", "
 						}
-						labelText.removeLast()
-						specificDateOrDaysOfWeekLabel.text = labelText
+						daysOfWeekText.removeLast()
+						text += daysOfWeekText
 					} else if timeConstraint.specificDate != nil {
-						specificDateOrDaysOfWeekLabel.text = String(describing: timeConstraint.specificDate)
+						text += timeConstraint.specificDate!.toFormat("YYYY-MM-dd")
+					} else {
+						os_log("No date or days of week for time constraint being displayed", type: .error)
 					}
 					break
 			}
+			label.text = text
 		}
 	}
 }

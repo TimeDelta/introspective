@@ -848,20 +848,6 @@ import Cuckoo
 
 import Foundation
 
-// MARK: - Mocks generated from file: DataIntegration/Questions/DataType.swift
-//
-//  AdvancedQuestionPart.swift
-//  DataIntegration
-//
-//  Created by Bryan Nova on 7/7/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
-//
-
-import Cuckoo
-@testable import DataIntegration
-
-import Foundation
-
 // MARK: - Mocks generated from file: DataIntegration/Questions/Labels.swift
 //
 //  Labels.swift
@@ -4642,6 +4628,162 @@ class MockDatabaseConnector: DatabaseConnector, Cuckoo.ClassMock {
 }
 
 
+// MARK: - Mocks generated from file: DataIntegration/UI/AdvancedQuestion/AttributeRestrictionTableViewCell.swift
+//
+//  AttributeRestrictionTableViewCell.swift
+//  DataIntegration
+//
+//  Created by Bryan Nova on 7/8/18.
+//  Copyright © 2018 Bryan Nova. All rights reserved.
+//
+
+import Cuckoo
+@testable import DataIntegration
+
+import UIKit
+
+class MockAttributeRestrictionTableViewCell: AttributeRestrictionTableViewCell, Cuckoo.ClassMock {
+    typealias MocksType = AttributeRestrictionTableViewCell
+    typealias Stubbing = __StubbingProxy_AttributeRestrictionTableViewCell
+    typealias Verification = __VerificationProxy_AttributeRestrictionTableViewCell
+    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
+
+    
+    // ["name": "label", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "UILabel!", "isReadOnly": false, "accessibility": ""]
+     override var label: UILabel! {
+        get {
+            
+            return cuckoo_manager.getter("label", superclassCall: super.label)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("label", value: newValue, superclassCall: super.label = newValue)
+            
+        }
+        
+    }
+    
+    // ["name": "attributeRestriction", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "AttributeRestriction!", "isReadOnly": false, "accessibility": ""]
+     override var attributeRestriction: AttributeRestriction! {
+        get {
+            
+            return cuckoo_manager.getter("attributeRestriction", superclassCall: super.attributeRestriction)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("attributeRestriction", value: newValue, superclassCall: super.attributeRestriction = newValue)
+            
+        }
+        
+    }
+    
+
+    
+
+    
+    // ["name": "awakeFromNib", "returnSignature": "", "fullyQualifiedName": "awakeFromNib()", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "", "call": "", "parameters": [], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
+     override func awakeFromNib()  {
+        
+            return cuckoo_manager.call("awakeFromNib()",
+                parameters: (),
+                superclassCall:
+                    
+                    super.awakeFromNib()
+                    )
+        
+    }
+    
+
+	struct __StubbingProxy_AttributeRestrictionTableViewCell: Cuckoo.StubbingProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	
+	    init(manager: Cuckoo.MockManager) {
+	        self.cuckoo_manager = manager
+	    }
+	    
+	    var label: Cuckoo.ClassToBeStubbedProperty<MockAttributeRestrictionTableViewCell, UILabel?> {
+	        return .init(manager: cuckoo_manager, name: "label")
+	    }
+	    
+	    var attributeRestriction: Cuckoo.ClassToBeStubbedProperty<MockAttributeRestrictionTableViewCell, AttributeRestriction?> {
+	        return .init(manager: cuckoo_manager, name: "attributeRestriction")
+	    }
+	    
+	    
+	    func awakeFromNib() -> Cuckoo.ClassStubNoReturnFunction<()> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return .init(stub: cuckoo_manager.createStub(for: MockAttributeRestrictionTableViewCell.self, method: "awakeFromNib()", parameterMatchers: matchers))
+	    }
+	    
+	}
+
+	struct __VerificationProxy_AttributeRestrictionTableViewCell: Cuckoo.VerificationProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	    private let callMatcher: Cuckoo.CallMatcher
+	    private let sourceLocation: Cuckoo.SourceLocation
+	
+	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+	        self.cuckoo_manager = manager
+	        self.callMatcher = callMatcher
+	        self.sourceLocation = sourceLocation
+	    }
+	
+	    
+	    var label: Cuckoo.VerifyProperty<UILabel?> {
+	        return .init(manager: cuckoo_manager, name: "label", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var attributeRestriction: Cuckoo.VerifyProperty<AttributeRestriction?> {
+	        return .init(manager: cuckoo_manager, name: "attributeRestriction", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	
+	    
+	    @discardableResult
+	    func awakeFromNib() -> Cuckoo.__DoNotUse<Void> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return cuckoo_manager.verify("awakeFromNib()", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	}
+
+}
+
+ class AttributeRestrictionTableViewCellStub: AttributeRestrictionTableViewCell {
+    
+     override var label: UILabel! {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (UILabel!).self)
+        }
+        
+        set { }
+        
+    }
+    
+     override var attributeRestriction: AttributeRestriction! {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (AttributeRestriction!).self)
+        }
+        
+        set { }
+        
+    }
+    
+
+    
+
+    
+     override func awakeFromNib()  {
+        return DefaultValueRegistry.defaultValue(for: Void.self)
+    }
+    
+}
+
+
 // MARK: - Mocks generated from file: DataIntegration/UI/AdvancedQuestion/TimeConstraintTableViewCell.swift
 //
 //  TimeConstraintTableViewCell.swift
@@ -4654,7 +4796,9 @@ class MockDatabaseConnector: DatabaseConnector, Cuckoo.ClassMock {
 import Cuckoo
 @testable import DataIntegration
 
+import SwiftDate
 import UIKit
+import os
 
 class MockTimeConstraintTableViewCell: TimeConstraintTableViewCell, Cuckoo.ClassMock {
     typealias MocksType = TimeConstraintTableViewCell
@@ -4663,49 +4807,17 @@ class MockTimeConstraintTableViewCell: TimeConstraintTableViewCell, Cuckoo.Class
     let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
 
     
-    // ["name": "startsEndsLabel", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "UILabel!", "isReadOnly": false, "accessibility": ""]
-     override var startsEndsLabel: UILabel! {
+    // ["name": "label", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "UILabel!", "isReadOnly": false, "accessibility": ""]
+     override var label: UILabel! {
         get {
             
-            return cuckoo_manager.getter("startsEndsLabel", superclassCall: super.startsEndsLabel)
+            return cuckoo_manager.getter("label", superclassCall: super.label)
             
         }
         
         set {
             
-            cuckoo_manager.setter("startsEndsLabel", value: newValue, superclassCall: super.startsEndsLabel = newValue)
-            
-        }
-        
-    }
-    
-    // ["name": "onAfterBeforeLabel", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "UILabel!", "isReadOnly": false, "accessibility": ""]
-     override var onAfterBeforeLabel: UILabel! {
-        get {
-            
-            return cuckoo_manager.getter("onAfterBeforeLabel", superclassCall: super.onAfterBeforeLabel)
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("onAfterBeforeLabel", value: newValue, superclassCall: super.onAfterBeforeLabel = newValue)
-            
-        }
-        
-    }
-    
-    // ["name": "specificDateOrDaysOfWeekLabel", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "UILabel!", "isReadOnly": false, "accessibility": ""]
-     override var specificDateOrDaysOfWeekLabel: UILabel! {
-        get {
-            
-            return cuckoo_manager.getter("specificDateOrDaysOfWeekLabel", superclassCall: super.specificDateOrDaysOfWeekLabel)
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("specificDateOrDaysOfWeekLabel", value: newValue, superclassCall: super.specificDateOrDaysOfWeekLabel = newValue)
+            cuckoo_manager.setter("label", value: newValue, superclassCall: super.label = newValue)
             
         }
         
@@ -4739,16 +4851,8 @@ class MockTimeConstraintTableViewCell: TimeConstraintTableViewCell, Cuckoo.Class
 	        self.cuckoo_manager = manager
 	    }
 	    
-	    var startsEndsLabel: Cuckoo.ClassToBeStubbedProperty<MockTimeConstraintTableViewCell, UILabel?> {
-	        return .init(manager: cuckoo_manager, name: "startsEndsLabel")
-	    }
-	    
-	    var onAfterBeforeLabel: Cuckoo.ClassToBeStubbedProperty<MockTimeConstraintTableViewCell, UILabel?> {
-	        return .init(manager: cuckoo_manager, name: "onAfterBeforeLabel")
-	    }
-	    
-	    var specificDateOrDaysOfWeekLabel: Cuckoo.ClassToBeStubbedProperty<MockTimeConstraintTableViewCell, UILabel?> {
-	        return .init(manager: cuckoo_manager, name: "specificDateOrDaysOfWeekLabel")
+	    var label: Cuckoo.ClassToBeStubbedProperty<MockTimeConstraintTableViewCell, UILabel?> {
+	        return .init(manager: cuckoo_manager, name: "label")
 	    }
 	    
 	    var timeConstraint: Cuckoo.ClassToBeStubbedProperty<MockTimeConstraintTableViewCell, TimeConstraint?> {
@@ -4770,16 +4874,8 @@ class MockTimeConstraintTableViewCell: TimeConstraintTableViewCell, Cuckoo.Class
 	    }
 	
 	    
-	    var startsEndsLabel: Cuckoo.VerifyProperty<UILabel?> {
-	        return .init(manager: cuckoo_manager, name: "startsEndsLabel", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var onAfterBeforeLabel: Cuckoo.VerifyProperty<UILabel?> {
-	        return .init(manager: cuckoo_manager, name: "onAfterBeforeLabel", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var specificDateOrDaysOfWeekLabel: Cuckoo.VerifyProperty<UILabel?> {
-	        return .init(manager: cuckoo_manager, name: "specificDateOrDaysOfWeekLabel", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    var label: Cuckoo.VerifyProperty<UILabel?> {
+	        return .init(manager: cuckoo_manager, name: "label", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
 	    
 	    var timeConstraint: Cuckoo.VerifyProperty<TimeConstraint?> {
@@ -4794,25 +4890,7 @@ class MockTimeConstraintTableViewCell: TimeConstraintTableViewCell, Cuckoo.Class
 
  class TimeConstraintTableViewCellStub: TimeConstraintTableViewCell {
     
-     override var startsEndsLabel: UILabel! {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (UILabel!).self)
-        }
-        
-        set { }
-        
-    }
-    
-     override var onAfterBeforeLabel: UILabel! {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (UILabel!).self)
-        }
-        
-        set { }
-        
-    }
-    
-     override var specificDateOrDaysOfWeekLabel: UILabel! {
+     override var label: UILabel! {
         get {
             return DefaultValueRegistry.defaultValue(for: (UILabel!).self)
         }

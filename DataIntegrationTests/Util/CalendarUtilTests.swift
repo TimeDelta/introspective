@@ -74,7 +74,7 @@ class CalendarUtilTests: UnitTest {
 		let date = Date()
 		let expectedYear = calendar.component(.year, from: date)
 		let expectedWeekOfYear = calendar.component(.weekOfYear, from: date)
-		let expectedDay = 1
+		let expectedWeekday = 1
 		let expectedHour = 0
 		let expectedMinute = 0
 		let expectedSecond = 0
@@ -86,7 +86,7 @@ class CalendarUtilTests: UnitTest {
 		// then
 		XCTAssert(calendar.component(.year, from: zeroedDate) == expectedYear)
 		XCTAssert(calendar.component(.weekOfYear, from: zeroedDate) == expectedWeekOfYear)
-		XCTAssert(calendar.component(.day, from: zeroedDate) == expectedDay)
+		XCTAssert(calendar.component(.weekday, from: zeroedDate) == expectedWeekday)
 		XCTAssert(calendar.component(.hour, from: zeroedDate) == expectedHour)
 		XCTAssert(calendar.component(.minute, from: zeroedDate) == expectedMinute)
 		XCTAssert(calendar.component(.second, from: zeroedDate) == expectedSecond)
