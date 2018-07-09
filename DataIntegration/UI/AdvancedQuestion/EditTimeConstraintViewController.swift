@@ -85,6 +85,22 @@ class EditTimeConstraintViewController: UIViewController, UIPickerViewDataSource
 		let selectedConstraintTypeIndex = mainPicker.selectedRow(inComponent: 1)
 		let constraintType = TimeConstraint.ConstraintType.allTypes[selectedConstraintTypeIndex]
 		timeConstraint.constraintType = constraintType
+
+		switch (constraintType) {
+			case .before, .after:
+				timeConstraint.specificDate = datePicker.date
+				timeConstraint.daysOfWeek = Set<DayOfWeek>()
+				break
+			case .on:
+				if dayOfWeekToggle.isOn {
+					timeConstraint.specificDate = nil
+					let dayOfWeek = DayOfWeek.allDays[dayOfWeekPicker.selectedRow(inComponent: 0)]
+					timeConstraint.daysOfWeek = Set<DayOfWeek>([dayOfWeek])
+				} else {
+					timeConstraint.specificDate = datePicker.date
+				}
+				break
+		}
 	}
 
 	@IBAction func dayOfWeekToggleChanged(_ sender: Any) {
