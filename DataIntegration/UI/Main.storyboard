@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14269.14" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14295.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14252.5"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14270.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -155,10 +155,10 @@
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                     </tabBar>
                     <connections>
-                        <segue destination="Hic-qX-oaF" kind="relationship" relationship="viewControllers" id="BH7-IB-YM9"/>
+                        <segue destination="Ao7-vM-4TA" kind="relationship" relationship="viewControllers" id="Dhw-ur-MzM"/>
                         <segue destination="TUt-v2-iRM" kind="relationship" relationship="viewControllers" id="WVs-V4-mBZ"/>
                         <segue destination="f8f-RT-Q3K" kind="relationship" relationship="viewControllers" id="ElL-nK-BXf"/>
-                        <segue destination="Ao7-vM-4TA" kind="relationship" relationship="viewControllers" id="Dhw-ur-MzM"/>
+                        <segue destination="Hic-qX-oaF" kind="relationship" relationship="viewControllers" id="BH7-IB-YM9"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
@@ -244,6 +244,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="microphone-2104091_1280" width="640" height="640"/>
+        <image name="microphone-2104091_1280" width="1280" height="1280"/>
     </resources>
 </document>
