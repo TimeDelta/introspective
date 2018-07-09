@@ -22,7 +22,7 @@ public class DayOfWeek: NSObject {
 	public static let Friday = DayOfWeek(5, "Fri", "Friday")
 	public static let Saturday = DayOfWeek(6, "Sat", "Saturday")
 
-	static fileprivate let allDays = [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
+	public static let allDays = [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
 
 	public fileprivate(set) var fullDayName: String
 	public fileprivate(set) var intValue: Int

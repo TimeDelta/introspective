@@ -30,10 +30,15 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 
 	fileprivate struct DataTypeInfo {
 		var dataType: DataTypes = .heartRate
+		init() {}
+		init(_ dataType: DataTypes) {
+			self.dataType = dataType
+		}
 	}
 
 	fileprivate var parts: [Any]!
 	fileprivate var cellTypes: [CellType]!
+	fileprivate var editedIndex: Int!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -74,15 +79,19 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.destination is EditDataTypeViewController || segue.destination is AddToAdvancedQuestionViewController {
+		if segue.destination is AddToAdvancedQuestionViewController {
             segue.destination.modalPresentationStyle = UIModalPresentationStyle.popover
             segue.destination.popoverPresentationController!.delegate = self
-		}
-
-		if segue.destination is EditDataTypeViewController {
+		} else if segue.destination is EditDataTypeViewController {
 			let controller = (segue.destination as! EditDataTypeViewController)
 			let source = (sender as! UITableViewCell)
+			editedIndex = tableView.indexPath(for: source)!.row
 			controller.selectedIndex = EditDataTypeViewController.indexFor(type: source.textLabel!.text!)
+		} else if segue.destination is EditTimeConstraintViewController {
+			let controller = (segue.destination as! EditTimeConstraintViewController)
+			let source = (sender as! UITableViewCell)
+			editedIndex = tableView.indexPath(for: source)!.row
+			controller.timeConstraint = (parts[editedIndex] as! TimeConstraint)
 		}
 	}
 
@@ -94,6 +103,16 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 	}
 
 	@IBAction func saveEditedDataType(_ segue: UIStoryboardSegue) {
+		let controller = (segue.source as! EditDataTypeViewController)
+		let index = controller.dataTypeSelector.selectedRow(inComponent: 0)
+		parts[editedIndex] = DataTypeInfo(DataTypes.allTypes[index])
+		tableView.reloadData()
+	}
+
+	@IBAction func saveEditedTimeConstraint(_ segue: UIStoryboardSegue) {
+		let controller = (segue.source as! EditTimeConstraintViewController)
+		parts[editedIndex] = controller.timeConstraint
+		tableView.reloadData()
 	}
 
 	@IBAction func addQuestionPart(_ segue: UIStoryboardSegue) {
@@ -120,6 +139,8 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 			partWasAdded()
 		}
 	}
+
+	@IBAction func cancel(_ segue: UIStoryboardSegue) {} // do nothing
 
 	fileprivate func bottomMostDataType() -> DataTypes {
 		var index = cellTypes.count - 1

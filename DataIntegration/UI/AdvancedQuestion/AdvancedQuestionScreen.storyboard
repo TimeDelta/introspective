@@ -67,8 +67,8 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="date or days of week" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k1w-C1-GVu" userLabel="Specific Date Or Days Of Week Label">
-                                            <rect key="frame" x="151" y="11" width="208" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="starts" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M4g-zI-ns5">
+                                            <rect key="frame" x="33" y="11" width="49" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -81,8 +81,8 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="starts" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M4g-zI-ns5">
-                                            <rect key="frame" x="33" y="11" width="49" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="date or days of week" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k1w-C1-GVu" userLabel="Specific Date Or Days Of Week Label">
+                                            <rect key="frame" x="151" y="11" width="208" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -94,6 +94,7 @@
                                     <outlet property="onAfterBeforeLabel" destination="xTK-Te-6Ir" id="OXB-fa-BsO"/>
                                     <outlet property="specificDateOrDaysOfWeekLabel" destination="k1w-C1-GVu" id="1UD-6i-lek"/>
                                     <outlet property="startsEndsLabel" destination="M4g-zI-ns5" id="4ct-RV-WCP"/>
+                                    <segue destination="2R1-jD-cW8" kind="show" id="bpX-UE-Y65"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Attribute Restriction" id="MNv-3c-tDo" customClass="AttributeRestrictionTableViewCell" customModule="DataIntegration" customModuleProvider="target">
@@ -136,11 +137,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xNY-Co-nb9">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="162"/>
+                                <rect key="frame" x="0.0" y="447" width="375" height="162"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             </pickerView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yOT-6R-m4h">
-                                <rect key="frame" x="0.0" y="170" width="375" height="30"/>
+                                <rect key="frame" x="0.0" y="617" width="375" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
                                 <state key="normal" title="Accept"/>
                                 <connections>
@@ -158,7 +159,85 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K3S-q8-CRC" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="a8C-dW-ADL" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2895" y="-1510"/>
+            <point key="canvasLocation" x="2893.5999999999999" y="-1510.7946026986508"/>
+        </scene>
+        <!--Edit Time Constraint View Controller-->
+        <scene sceneID="hBi-Yx-atw">
+            <objects>
+                <viewController id="2R1-jD-cW8" customClass="EditTimeConstraintViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ltQ-OD-Jcl">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Time Constraint" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tv3-ia-PZs">
+                                <rect key="frame" x="16" y="164" width="343" height="21"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <pickerView contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="mainPicker" translatesAutoresizingMaskIntoConstraints="NO" id="DNK-oJ-fUB">
+                                <rect key="frame" x="0.0" y="193" width="375" height="162"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            </pickerView>
+                            <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="Rgz-GU-oYc">
+                                <rect key="frame" x="0.0" y="402" width="375" height="162"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <date key="date" timeIntervalSinceReferenceDate="552782793.59566903">
+                                    <!--2018-07-08 22:46:33 +0000-->
+                                </date>
+                            </datePicker>
+                            <pickerView contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="dayOfWeekPicker" translatesAutoresizingMaskIntoConstraints="NO" id="ZaW-Wq-BrU">
+                                <rect key="frame" x="0.0" y="402" width="375" height="162"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            </pickerView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kvz-f1-tKD">
+                                <rect key="frame" x="16" y="572" width="343" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Accept"/>
+                                <connections>
+                                    <action selector="accepted:" destination="2R1-jD-cW8" eventType="touchUpInside" id="B0X-NM-kJn"/>
+                                    <segue destination="H2d-z5-sCl" kind="unwind" unwindAction="saveEditedTimeConstraint:" id="rV2-zn-7Ce"/>
+                                </connections>
+                            </button>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Ap-Bj-UfI">
+                                <rect key="frame" x="164" y="363" width="49" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <connections>
+                                    <action selector="dayOfWeekToggleChanged:" destination="2R1-jD-cW8" eventType="valueChanged" id="vao-Et-1eY"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Day Of Week" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Lo-EG-T7q">
+                                <rect key="frame" x="219" y="368" width="105" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Date" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z2q-0s-yUO">
+                                <rect key="frame" x="119" y="368" width="37" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="H8t-YV-w3R"/>
+                    </view>
+                    <connections>
+                        <outlet property="dateLabel" destination="Z2q-0s-yUO" id="wjf-4E-JNo"/>
+                        <outlet property="datePicker" destination="Rgz-GU-oYc" id="Eyl-YO-fRU"/>
+                        <outlet property="dayOfWeekLabel" destination="2Lo-EG-T7q" id="vVQ-ZU-QCs"/>
+                        <outlet property="dayOfWeekPicker" destination="ZaW-Wq-BrU" id="Rv2-Jc-Xu5"/>
+                        <outlet property="dayOfWeekToggle" destination="2Ap-Bj-UfI" id="TYh-MU-SVX"/>
+                        <outlet property="mainPicker" destination="DNK-oJ-fUB" id="2BB-bW-mRw"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lig-82-j1z" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="H2d-z5-sCl" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="2893.5999999999999" y="-814.54272863568224"/>
         </scene>
         <!--Add-->
         <scene sceneID="rAh-zt-9l6">

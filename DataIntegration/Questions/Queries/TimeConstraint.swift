@@ -15,7 +15,7 @@ public struct TimeConstraint {
 		case after
 		case on
 
-		public static func types() -> [ConstraintType] {
+		public static var allTypes: [ConstraintType] {
 			return [before, after, on]
 		}
 
@@ -31,6 +31,10 @@ public struct TimeConstraint {
 	public enum StartOrEnd: CustomStringConvertible {
 		case start
 		case end
+
+		public static var allTypes: [StartOrEnd] {
+			return [start, end]
+		}
 
 		public var description: String {
 			switch(self) {
