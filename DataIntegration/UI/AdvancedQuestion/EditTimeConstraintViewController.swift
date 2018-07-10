@@ -55,6 +55,8 @@ class EditTimeConstraintViewController: UIViewController, UIPickerViewDataSource
 		let constraintTypeIndex = Me.values[Me.mainPickerId]![1].firstIndex(of: constraintTypeName)!
 		mainPicker.selectRow(constraintTypeIndex, inComponent: 1, animated: false)
 
+		dayOfWeekToggle.isOn = timeConstraint.constraintType == .on && (!timeConstraint.daysOfWeek.isEmpty || timeConstraint.specificDate == nil)
+
 		dayOfWeekButtons = [
 			DayOfWeek.Sunday: sundayButton!,
 			DayOfWeek.Monday: mondayButton!,
@@ -132,7 +134,6 @@ class EditTimeConstraintViewController: UIViewController, UIPickerViewDataSource
 	fileprivate func setDayOfWeekToggleEnabled(_ enabled: Bool) {
 		dayOfWeekToggle.isHidden = !enabled
 		dayOfWeekToggle.isUserInteractionEnabled = enabled
-		dayOfWeekToggle.isOn = enabled
 		dateLabel.isHidden = !enabled
 		dateLabel.isUserInteractionEnabled = enabled
 		dayOfWeekLabel.isHidden = !enabled
