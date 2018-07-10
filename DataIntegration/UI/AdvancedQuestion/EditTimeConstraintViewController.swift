@@ -13,7 +13,6 @@ class EditTimeConstraintViewController: UIViewController, UIPickerViewDataSource
 	fileprivate typealias Me = EditTimeConstraintViewController
 
 	fileprivate static let mainPickerId = "mainPicker"
-	fileprivate static let dayOfWeekPickerId = "dayOfWeekPicker"
 
 	fileprivate static let values: [String: [[String]]] = [
 		mainPickerId: [
@@ -24,17 +23,22 @@ class EditTimeConstraintViewController: UIViewController, UIPickerViewDataSource
 				return type.description
 			}),
 		],
-		dayOfWeekPickerId: [DayOfWeek.allDays.map({ (day: DayOfWeek) -> String in
-			return day.fullDayName
-		})],
 	]
 
 	@IBOutlet weak var mainPicker: UIPickerView!
 	@IBOutlet weak var datePicker: UIDatePicker!
-	@IBOutlet weak var dayOfWeekPicker: UIPickerView!
 	@IBOutlet weak var dayOfWeekToggle: UISwitch!
 	@IBOutlet weak var dateLabel: UILabel!
 	@IBOutlet weak var dayOfWeekLabel: UILabel!
+
+	@IBOutlet weak var sundayButton: UIButton!
+	@IBOutlet weak var mondayButton: UIButton!
+	@IBOutlet weak var tuesdayButton: UIButton!
+	@IBOutlet weak var wednesdayButton: UIButton!
+	@IBOutlet weak var thursdayButton: UIButton!
+	@IBOutlet weak var fridayButton: UIButton!
+	@IBOutlet weak var saturdayButton: UIButton!
+	fileprivate var dayOfWeekButtons: [DayOfWeek: UIButton]!
 
 	public var timeConstraint: TimeConstraint!
 
@@ -42,8 +46,6 @@ class EditTimeConstraintViewController: UIViewController, UIPickerViewDataSource
         super.viewDidLoad()
 		mainPicker.dataSource = self
 		mainPicker.delegate = self
-		dayOfWeekPicker.dataSource = self
-		dayOfWeekPicker.delegate = self
 
 		let startOrEndDate = timeConstraint.useStartOrEndDate.description
 		let startOrEndDateIndex = Me.values[Me.mainPickerId]![0].firstIndex(of: startOrEndDate)!
@@ -53,10 +55,20 @@ class EditTimeConstraintViewController: UIViewController, UIPickerViewDataSource
 		let constraintTypeIndex = Me.values[Me.mainPickerId]![1].firstIndex(of: constraintTypeName)!
 		mainPicker.selectRow(constraintTypeIndex, inComponent: 1, animated: false)
 
-		// TODO
-//		if timeConstraint.constraintType == .on {
-//			timeConstraint.daysOfWeek.first
-//		}
+		dayOfWeekButtons = [
+			DayOfWeek.Sunday: sundayButton!,
+			DayOfWeek.Monday: mondayButton!,
+			DayOfWeek.Tuesday: tuesdayButton!,
+			DayOfWeek.Wednesday: wednesdayButton!,
+			DayOfWeek.Thursday: thursdayButton!,
+			DayOfWeek.Friday: fridayButton!,
+			DayOfWeek.Saturday: saturdayButton!,
+		]
+
+		for dayOfWeek in timeConstraint.daysOfWeek {
+			let button = dayOfWeekButtons[dayOfWeek]!
+			button.isSelected = true
+		}
 
 		updateView()
     }
@@ -94,8 +106,7 @@ class EditTimeConstraintViewController: UIViewController, UIPickerViewDataSource
 			case .on:
 				if dayOfWeekToggle.isOn {
 					timeConstraint.specificDate = nil
-					let dayOfWeek = DayOfWeek.allDays[dayOfWeekPicker.selectedRow(inComponent: 0)]
-					timeConstraint.daysOfWeek = Set<DayOfWeek>([dayOfWeek])
+					timeConstraint.daysOfWeek = getSelectedDaysOfWeek()
 				} else {
 					timeConstraint.specificDate = datePicker.date
 				}
@@ -105,6 +116,10 @@ class EditTimeConstraintViewController: UIViewController, UIPickerViewDataSource
 
 	@IBAction func dayOfWeekToggleChanged(_ sender: Any) {
 		setDayOfWeekPickerEnabled(dayOfWeekToggle.isOn)
+	}
+
+	@IBAction func buttonPushed(_ button: UIButton) {
+		button.isSelected = !button.isSelected
 	}
 
 	fileprivate func updateView() {
@@ -130,9 +145,21 @@ class EditTimeConstraintViewController: UIViewController, UIPickerViewDataSource
 	}
 
 	fileprivate func setDayOfWeekPickerEnabled(_ enabled: Bool) {
-		dayOfWeekPicker.isHidden = !enabled
-		dayOfWeekPicker.isUserInteractionEnabled = enabled
+		for (_, button) in dayOfWeekButtons {
+			button.isHidden = !enabled
+			button.isUserInteractionEnabled = enabled
+		}
 		datePicker.isHidden = enabled
 		datePicker.isUserInteractionEnabled = !enabled
+	}
+
+	fileprivate func getSelectedDaysOfWeek() -> Set<DayOfWeek> {
+		var selectedDaysOfWeek = Set<DayOfWeek>()
+		for (dayOfWeek, button) in dayOfWeekButtons {
+			if button.isSelected {
+				selectedDaysOfWeek.insert(dayOfWeek)
+			}
+		}
+		return selectedDaysOfWeek
 	}
 }

@@ -19,6 +19,7 @@
 		A20A5A7920F2CE3600EADEC5 /* EditTimeConstraintViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A5A7820F2CE3600EADEC5 /* EditTimeConstraintViewController.swift */; };
 		A20A5A7A20F403C300EADEC5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2ABEA3320E53C0900142C00 /* Assets.xcassets */; };
 		A20A5A7B20F403C600EADEC5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2ABEA3320E53C0900142C00 /* Assets.xcassets */; };
+		A20A5A7F20F4162200EADEC5 /* DaysOfWeekChooser.xib in Resources */ = {isa = PBXBuildFile; fileRef = A20A5A7E20F4162200EADEC5 /* DaysOfWeekChooser.xib */; };
 		A21780EB20E9796700A8F9BA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21780EA20E9796700A8F9BA /* DateExtension.swift */; };
 		A21780F020E9ACD800A8F9BA /* TextNormalizationUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilTests.swift */; };
 		A217810720EBA25300A8F9BA /* ReturnType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A217810620EBA25300A8F9BA /* ReturnType.swift */; };
@@ -84,6 +85,7 @@
 		A2E4E8AA20E5589F00631398 /* FunctionalTestInjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E8A920E5589F00631398 /* FunctionalTestInjectionProvider.swift */; };
 		A2E4E8AC20E559A600631398 /* QuerierFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E8AB20E559A600631398 /* QuerierFactory.swift */; };
 		A2E4E8AE20E55AE400631398 /* QueryFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E8AD20E55AE400631398 /* QueryFactory.swift */; };
+		A2E50A2A20F4CEB500C89DE3 /* DaysOfWeekChooserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E50A2920F4CEB400C89DE3 /* DaysOfWeekChooserViewController.swift */; };
 		A2EF75A020ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EF759F20ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift */; };
 		A2FA034120F165F80049E40D /* AdvancedQuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034020F165F80049E40D /* AdvancedQuestionViewController.swift */; };
 		A2FA034520F169C30049E40D /* TimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034420F169C30049E40D /* TimeConstraint.swift */; };
@@ -136,6 +138,7 @@
 		A2092D8E20F1345200A182AA /* FactoryMocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FactoryMocks.swift; sourceTree = "<group>"; };
 		A20A5A7620F2635900EADEC5 /* AttributeRestrictionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeRestrictionTableViewCell.swift; sourceTree = "<group>"; };
 		A20A5A7820F2CE3600EADEC5 /* EditTimeConstraintViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTimeConstraintViewController.swift; sourceTree = "<group>"; };
+		A20A5A7E20F4162200EADEC5 /* DaysOfWeekChooser.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DaysOfWeekChooser.xib; sourceTree = "<group>"; };
 		A21780EA20E9796700A8F9BA /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNormalizationUtilTests.swift; sourceTree = "<group>"; };
 		A217810620EBA25300A8F9BA /* ReturnType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnType.swift; sourceTree = "<group>"; };
@@ -207,6 +210,7 @@
 		A2E4E8A920E5589F00631398 /* FunctionalTestInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionalTestInjectionProvider.swift; sourceTree = "<group>"; };
 		A2E4E8AB20E559A600631398 /* QuerierFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuerierFactory.swift; sourceTree = "<group>"; };
 		A2E4E8AD20E55AE400631398 /* QueryFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryFactory.swift; sourceTree = "<group>"; };
+		A2E50A2920F4CEB400C89DE3 /* DaysOfWeekChooserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DaysOfWeekChooserViewController.swift; sourceTree = "<group>"; };
 		A2EF759F20ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKQuantitySampleUtilTests.swift; sourceTree = "<group>"; };
 		A2FA034020F165F80049E40D /* AdvancedQuestionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedQuestionViewController.swift; sourceTree = "<group>"; };
 		A2FA034420F169C30049E40D /* TimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeConstraint.swift; sourceTree = "<group>"; };
@@ -256,6 +260,15 @@
 			path = RestrictionParsers;
 			sourceTree = "<group>";
 		};
+		A20A5A7D20F415F400EADEC5 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				A2E50A2920F4CEB400C89DE3 /* DaysOfWeekChooserViewController.swift */,
+				A20A5A7E20F4162200EADEC5 /* DaysOfWeekChooser.xib */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
 		A21780EE20E9AC9A00A8F9BA /* Util */ = {
 			isa = PBXGroup;
 			children = (
@@ -283,6 +296,7 @@
 		A238FEC820E53E450025307F /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				A20A5A7D20F415F400EADEC5 /* Util */,
 				A2FA034C20F18FA40049E40D /* AdvancedQuestion */,
 				A238FEFF20E541AE0025307F /* LaunchScreen.storyboard */,
 				A248CFAA20F14F80000FE34E /* Main.storyboard */,
@@ -615,6 +629,7 @@
 				A248CFA920F14ECD000FE34E /* AdvancedQuestionScreen.storyboard in Resources */,
 				A238FF0020E541AE0025307F /* LaunchScreen.storyboard in Resources */,
 				A255D53C20E5697B00BDD57B /* questionLabelsTrainingData.txt in Resources */,
+				A20A5A7F20F4162200EADEC5 /* DaysOfWeekChooser.xib in Resources */,
 				A248CFAB20F14F80000FE34E /* Main.storyboard in Resources */,
 				A20A5A7A20F403C300EADEC5 /* Assets.xcassets in Resources */,
 			);
@@ -694,6 +709,7 @@
 				A238FF0220E541F80025307F /* AskViewController.swift in Sources */,
 				A255D52420E55E0000BDD57B /* QuestionFactory.swift in Sources */,
 				A2E4E8AA20E5589F00631398 /* FunctionalTestInjectionProvider.swift in Sources */,
+				A2E50A2A20F4CEB500C89DE3 /* DaysOfWeekChooserViewController.swift in Sources */,
 				A20A5A7720F2635900EADEC5 /* AttributeRestrictionTableViewCell.swift in Sources */,
 				A238FF0620E542880025307F /* SourceDefinitionViewController.swift in Sources */,
 				A2E4E8A020E5583200631398 /* DependencyInjector.swift in Sources */,

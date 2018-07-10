@@ -154,57 +154,113 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Time Constraint" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tv3-ia-PZs">
-                                <rect key="frame" x="16" y="164" width="343" height="21"/>
+                                <rect key="frame" x="16" y="68" width="343" height="21"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="mainPicker" translatesAutoresizingMaskIntoConstraints="NO" id="DNK-oJ-fUB">
-                                <rect key="frame" x="0.0" y="193" width="375" height="162"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            </pickerView>
-                            <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="Rgz-GU-oYc">
-                                <rect key="frame" x="0.0" y="402" width="375" height="162"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <date key="date" timeIntervalSinceReferenceDate="552782793.59566903">
-                                    <!--2018-07-08 22:46:33 +0000-->
-                                </date>
-                            </datePicker>
-                            <pickerView contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="dayOfWeekPicker" translatesAutoresizingMaskIntoConstraints="NO" id="ZaW-Wq-BrU">
-                                <rect key="frame" x="0.0" y="402" width="375" height="162"/>
+                                <rect key="frame" x="0.0" y="97" width="375" height="162"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             </pickerView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kvz-f1-tKD">
                                 <rect key="frame" x="16" y="572" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <state key="normal" title="Accept"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Accept">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="accepted:" destination="2R1-jD-cW8" eventType="touchUpInside" id="B0X-NM-kJn"/>
                                     <segue destination="H2d-z5-sCl" kind="unwind" unwindAction="saveEditedTimeConstraint:" id="rV2-zn-7Ce"/>
                                 </connections>
                             </button>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Ap-Bj-UfI">
-                                <rect key="frame" x="164" y="363" width="49" height="31"/>
+                                <rect key="frame" x="164" y="267" width="49" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <action selector="dayOfWeekToggleChanged:" destination="2R1-jD-cW8" eventType="valueChanged" id="vao-Et-1eY"/>
                                 </connections>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Day Of Week" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Lo-EG-T7q">
-                                <rect key="frame" x="219" y="368" width="105" height="21"/>
+                                <rect key="frame" x="219" y="272" width="105" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Date" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z2q-0s-yUO">
-                                <rect key="frame" x="119" y="368" width="37" height="21"/>
+                                <rect key="frame" x="119" y="272" width="37" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JZp-hg-qMr">
+                                <rect key="frame" x="161" y="306" width="52" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Sunday"/>
+                                <connections>
+                                    <action selector="buttonPushed:" destination="2R1-jD-cW8" eventType="touchDown" id="dIL-tL-Lno"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fRU-Od-MHN">
+                                <rect key="frame" x="160" y="344" width="55" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Monday"/>
+                                <connections>
+                                    <action selector="buttonPushed:" destination="2R1-jD-cW8" eventType="touchDown" id="umC-Fe-DbS"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0k2-Ux-AC7">
+                                <rect key="frame" x="158" y="382" width="58" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Tuesday"/>
+                                <connections>
+                                    <action selector="buttonPushed:" destination="2R1-jD-cW8" eventType="touchDown" id="laP-KW-eFl"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WUv-yz-1Zw">
+                                <rect key="frame" x="147" y="420" width="80" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Wednesday"/>
+                                <connections>
+                                    <action selector="buttonPushed:" destination="2R1-jD-cW8" eventType="touchDown" id="RSB-0x-Tya"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HYE-dX-Pre">
+                                <rect key="frame" x="155" y="458" width="65" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Thursday"/>
+                                <connections>
+                                    <action selector="buttonPushed:" destination="2R1-jD-cW8" eventType="touchDown" id="QKl-NP-hPB"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xuc-4d-ZHr">
+                                <rect key="frame" x="166" y="496" width="43" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Friday"/>
+                                <connections>
+                                    <action selector="buttonPushed:" destination="2R1-jD-cW8" eventType="touchDown" id="7Oe-K7-lbA"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZQi-US-Xvs">
+                                <rect key="frame" x="156" y="534" width="62" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Saturday"/>
+                                <connections>
+                                    <action selector="buttonPushed:" destination="2R1-jD-cW8" eventType="touchDown" id="EWt-X1-47P"/>
+                                </connections>
+                            </button>
+                            <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="Rgz-GU-oYc">
+                                <rect key="frame" x="-6" y="354" width="375" height="162"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <date key="date" timeIntervalSinceReferenceDate="552782793.59566903">
+                                    <!--2018-07-08 22:46:33 +0000-->
+                                </date>
+                            </datePicker>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="H8t-YV-w3R"/>
@@ -213,9 +269,15 @@
                         <outlet property="dateLabel" destination="Z2q-0s-yUO" id="wjf-4E-JNo"/>
                         <outlet property="datePicker" destination="Rgz-GU-oYc" id="Eyl-YO-fRU"/>
                         <outlet property="dayOfWeekLabel" destination="2Lo-EG-T7q" id="vVQ-ZU-QCs"/>
-                        <outlet property="dayOfWeekPicker" destination="ZaW-Wq-BrU" id="Rv2-Jc-Xu5"/>
                         <outlet property="dayOfWeekToggle" destination="2Ap-Bj-UfI" id="TYh-MU-SVX"/>
+                        <outlet property="fridayButton" destination="xuc-4d-ZHr" id="gS8-mC-oMz"/>
                         <outlet property="mainPicker" destination="DNK-oJ-fUB" id="2BB-bW-mRw"/>
+                        <outlet property="mondayButton" destination="fRU-Od-MHN" id="T7R-mq-fEj"/>
+                        <outlet property="saturdayButton" destination="ZQi-US-Xvs" id="Q53-iq-cuR"/>
+                        <outlet property="sundayButton" destination="JZp-hg-qMr" id="tT9-VP-wYZ"/>
+                        <outlet property="thursdayButton" destination="HYE-dX-Pre" id="WuS-B6-RP9"/>
+                        <outlet property="tuesdayButton" destination="0k2-Ux-AC7" id="pTh-ne-Agg"/>
+                        <outlet property="wednesdayButton" destination="WUv-yz-1Zw" id="qQu-Le-n7G"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lig-82-j1z" userLabel="First Responder" sceneMemberID="firstResponder"/>
