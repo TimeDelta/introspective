@@ -76,11 +76,11 @@ public struct AttributeRestriction: CustomStringConvertible {
 	public var operation: QueryOperation?
 	public var attribute: Attributes
 	public var comparison: ComparisonType = .equals
-	public var value: [Any]
+	public var values: [Any]
 
 	public init(_ attribute: Attributes) {
 		self.attribute = attribute
-		self.value = [Any]()
+		self.values = [Any]()
 	}
 
 	public var description: String {
@@ -98,7 +98,7 @@ public struct AttributeRestriction: CustomStringConvertible {
 
 		description += comparison.description + " "
 
-		for v in value {
+		for v in values {
 			if attribute.type == .string {
 				description += "\""
 			}

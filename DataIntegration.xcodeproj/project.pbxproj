@@ -86,6 +86,8 @@
 		A2E4E8AC20E559A600631398 /* QuerierFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E8AB20E559A600631398 /* QuerierFactory.swift */; };
 		A2E4E8AE20E55AE400631398 /* QueryFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E8AD20E55AE400631398 /* QueryFactory.swift */; };
 		A2E50A2A20F4CEB500C89DE3 /* DaysOfWeekChooserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E50A2920F4CEB400C89DE3 /* DaysOfWeekChooserViewController.swift */; };
+		A2E50A2C20F548AB00C89DE3 /* EditAttributeRestrictionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E50A2B20F548AB00C89DE3 /* EditAttributeRestrictionViewController.swift */; };
+		A2E50A2E20F555CC00C89DE3 /* EditOperationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E50A2D20F555CC00C89DE3 /* EditOperationViewController.swift */; };
 		A2EF75A020ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EF759F20ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift */; };
 		A2FA034120F165F80049E40D /* AdvancedQuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034020F165F80049E40D /* AdvancedQuestionViewController.swift */; };
 		A2FA034520F169C30049E40D /* TimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034420F169C30049E40D /* TimeConstraint.swift */; };
@@ -211,6 +213,8 @@
 		A2E4E8AB20E559A600631398 /* QuerierFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuerierFactory.swift; sourceTree = "<group>"; };
 		A2E4E8AD20E55AE400631398 /* QueryFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryFactory.swift; sourceTree = "<group>"; };
 		A2E50A2920F4CEB400C89DE3 /* DaysOfWeekChooserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DaysOfWeekChooserViewController.swift; sourceTree = "<group>"; };
+		A2E50A2B20F548AB00C89DE3 /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
+		A2E50A2D20F555CC00C89DE3 /* EditOperationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditOperationViewController.swift; sourceTree = "<group>"; };
 		A2EF759F20ED539B00B0B2FB /* HKQuantitySampleUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKQuantitySampleUtilTests.swift; sourceTree = "<group>"; };
 		A2FA034020F165F80049E40D /* AdvancedQuestionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedQuestionViewController.swift; sourceTree = "<group>"; };
 		A2FA034420F169C30049E40D /* TimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeConstraint.swift; sourceTree = "<group>"; };
@@ -510,6 +514,8 @@
 				A2FA035120F1AB0A0049E40D /* AddToAdvancedQuestionViewController.swift */,
 				A248CFAC20F15004000FE34E /* EditDataTypeViewController.swift */,
 				A20A5A7820F2CE3600EADEC5 /* EditTimeConstraintViewController.swift */,
+				A2E50A2B20F548AB00C89DE3 /* EditAttributeRestrictionViewController.swift */,
+				A2E50A2D20F555CC00C89DE3 /* EditOperationViewController.swift */,
 			);
 			path = AdvancedQuestion;
 			sourceTree = "<group>";
@@ -692,6 +698,7 @@
 				A238FEE520E53F3D0025307F /* HeartRate.swift in Sources */,
 				A238FED920E53EB70025307F /* HeartRateQuery.swift in Sources */,
 				A2FA034520F169C30049E40D /* TimeConstraint.swift in Sources */,
+				A2E50A2C20F548AB00C89DE3 /* EditAttributeRestrictionViewController.swift in Sources */,
 				A2E4E8AC20E559A600631398 /* QuerierFactory.swift in Sources */,
 				A2E4E8A220E5584200631398 /* InjectionType.swift in Sources */,
 				A2FA034120F165F80049E40D /* AdvancedQuestionViewController.swift in Sources */,
@@ -730,6 +737,7 @@
 				A238FEDB20E53EE10025307F /* QueryOperation.swift in Sources */,
 				A255D52C20E5636E00BDD57B /* DataTypesFactory.swift in Sources */,
 				A217811120ED34BE00A8F9BA /* HKSampleUtil.swift in Sources */,
+				A2E50A2E20F555CC00C89DE3 /* EditOperationViewController.swift in Sources */,
 				A2092D8F20F1345200A182AA /* FactoryMocks.swift in Sources */,
 				A2092D8D20F1313200A182AA /* RestrictionParserFactory.swift in Sources */,
 				A238FEE320E53F2A0025307F /* ActivityInstance.swift in Sources */,

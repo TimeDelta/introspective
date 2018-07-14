@@ -11,6 +11,8 @@ import NaturalLanguage
 
 public class QueryOperation: NSObject {
 
+	fileprivate typealias Me = QueryOperation
+
 	public enum Kind: CustomStringConvertible {
 		case average
 		case count
@@ -18,27 +20,53 @@ public class QueryOperation: NSObject {
 		case min
 		case sum
 
+		public static var allTypes: [Kind] {
+			return [average, count, max, min, sum]
+		}
+
 		public var description: String {
 			switch (self) {
-				case .average: return "average"
-				case .count: return "count"
-				case .max: return "maximum"
-				case .min: return "minimum"
-				case .sum: return "sum of"
+				case .average: return "Average"
+				case .count: return "Count"
+				case .max: return "Maximum"
+				case .min: return "Minimum"
+				case .sum: return "Sum of"
 			}
 		}
 	}
-
-	fileprivate static let map: [NLTag: Kind] = [Tags.average: .average, Tags.count: .count, Tags.max: .max, Tags.min: .min, Tags.sum: .sum]
 
 	public enum ErrorTypes: Error {
 		case UnknownOperationType
 	}
 
-	public fileprivate(set) var kind: Kind
+	public static let supportedAggregationUnits: [(aggregation: Calendar.Component, description: String)] = [
+		(.year, "Year"),
+		(.month, "Month"),
+		(.weekOfYear, "Week"),
+		(.day, "Day"),
+		(.hour, "Hour"),
+		(.minute, "Minute"),
+		(.second, "Second"),
+	]
+
+	fileprivate static let map: [NLTag: Kind] = [Tags.average: .average, Tags.count: .count, Tags.max: .max, Tags.min: .min, Tags.sum: .sum]
+
+	public var kind: Kind
 	public var aggregationUnit: Calendar.Component?
 
-	fileprivate init(_ kind: Kind) {
+	override public var description: String {
+		var str = kind.description
+		if aggregationUnit != nil {
+			for entry in Me.supportedAggregationUnits {
+				if entry.aggregation == aggregationUnit {
+					str += " per " + entry.description
+				}
+			}
+		}
+		return str
+	}
+
+	public init(_ kind: Kind) {
 		self.kind = kind
 	}
 

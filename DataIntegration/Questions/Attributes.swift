@@ -19,6 +19,12 @@ public enum Attributes: CustomStringConvertible {
 
 	public static let heartRateAttributes: [Attributes] = [heartRate]
 
+	public static func attributesFor(dataType: DataTypes) -> [Attributes] {
+		switch (dataType) {
+			case .heartRate: return heartRateAttributes
+		}
+	}
+
 	public var type: AttributeType {
 		switch (self) {
 			case .heartRate: return .quantity

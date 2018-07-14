@@ -2514,11 +2514,17 @@ class MockQueryOperation: QueryOperation, Cuckoo.ClassMock {
     let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
 
     
-    // ["name": "kind", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "Kind", "isReadOnly": true, "accessibility": "public"]
+    // ["name": "kind", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Kind", "isReadOnly": false, "accessibility": "public"]
     public override var kind: Kind {
         get {
             
             return cuckoo_manager.getter("kind", superclassCall: super.kind)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("kind", value: newValue, superclassCall: super.kind = newValue)
             
         }
         
@@ -2540,6 +2546,16 @@ class MockQueryOperation: QueryOperation, Cuckoo.ClassMock {
         
     }
     
+    // ["name": "description", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "String", "isReadOnly": true, "accessibility": "public"]
+    public override var description: String {
+        get {
+            
+            return cuckoo_manager.getter("description", superclassCall: super.description)
+            
+        }
+        
+    }
+    
 
     
 
@@ -2552,12 +2568,16 @@ class MockQueryOperation: QueryOperation, Cuckoo.ClassMock {
 	        self.cuckoo_manager = manager
 	    }
 	    
-	    var kind: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockQueryOperation, Kind> {
+	    var kind: Cuckoo.ClassToBeStubbedProperty<MockQueryOperation, Kind> {
 	        return .init(manager: cuckoo_manager, name: "kind")
 	    }
 	    
 	    var aggregationUnit: Cuckoo.ClassToBeStubbedProperty<MockQueryOperation, Calendar.Component?> {
 	        return .init(manager: cuckoo_manager, name: "aggregationUnit")
+	    }
+	    
+	    var description: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockQueryOperation, String> {
+	        return .init(manager: cuckoo_manager, name: "description")
 	    }
 	    
 	    
@@ -2575,12 +2595,16 @@ class MockQueryOperation: QueryOperation, Cuckoo.ClassMock {
 	    }
 	
 	    
-	    var kind: Cuckoo.VerifyReadOnlyProperty<Kind> {
+	    var kind: Cuckoo.VerifyProperty<Kind> {
 	        return .init(manager: cuckoo_manager, name: "kind", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
 	    
 	    var aggregationUnit: Cuckoo.VerifyProperty<Calendar.Component?> {
 	        return .init(manager: cuckoo_manager, name: "aggregationUnit", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var description: Cuckoo.VerifyReadOnlyProperty<String> {
+	        return .init(manager: cuckoo_manager, name: "description", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
 	    
 	
@@ -2596,6 +2620,8 @@ class MockQueryOperation: QueryOperation, Cuckoo.ClassMock {
             return DefaultValueRegistry.defaultValue(for: (Kind).self)
         }
         
+        set { }
+        
     }
     
     public override var aggregationUnit: Calendar.Component? {
@@ -2604,6 +2630,13 @@ class MockQueryOperation: QueryOperation, Cuckoo.ClassMock {
         }
         
         set { }
+        
+    }
+    
+    public override var description: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
         
     }
     

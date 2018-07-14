@@ -92,6 +92,12 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 			let source = (sender as! UITableViewCell)
 			editedIndex = tableView.indexPath(for: source)!.row
 			controller.timeConstraint = (parts[editedIndex] as! TimeConstraint)
+		} else if segue.destination is EditAttributeRestrictionViewController {
+			let controller = (segue.destination as! EditAttributeRestrictionViewController)
+			let source = (sender as! UITableViewCell)
+			editedIndex = tableView.indexPath(for: source)!.row
+			controller.attributeRestriction = (parts[editedIndex] as! AttributeRestriction)
+			controller.dataType = closestDataType(aboveIndex: editedIndex)
 		}
 	}
 
@@ -112,6 +118,12 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 	@IBAction func saveEditedTimeConstraint(_ segue: UIStoryboardSegue) {
 		let controller = (segue.source as! EditTimeConstraintViewController)
 		parts[editedIndex] = controller.timeConstraint
+		tableView.reloadData()
+	}
+
+	@IBAction func saveEditedAttributeRestriction(_ segue: UIStoryboardSegue) {
+		let controller = (segue.source as! EditAttributeRestrictionViewController)
+		parts[editedIndex] = controller.attributeRestriction
 		tableView.reloadData()
 	}
 
@@ -144,6 +156,14 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 
 	fileprivate func bottomMostDataType() -> DataTypes {
 		var index = cellTypes.count - 1
+		while index >= 0 && cellTypes[index] != .dataType {
+			index -= 1
+		}
+		return (parts[index] as! DataTypeInfo).dataType
+	}
+
+	fileprivate func closestDataType(aboveIndex: Int) -> DataTypes {
+		var index = aboveIndex
 		while index >= 0 && cellTypes[index] != .dataType {
 			index -= 1
 		}
