@@ -45,7 +45,7 @@ class EditOperationViewController: UIViewController, UIPickerViewDataSource, UIP
 		if operation.aggregationUnit != nil {
 			useAggregationToggle.isOn = true
 			var selectedAggregationUnitIndex = 0
-			for (aggregation, _) in QueryOperation.supportedAggregationUnits {
+			for aggregation in QueryOperation.supportedAggregationUnits {
 				if aggregation == operation.aggregationUnit {
 					break
 				}
@@ -76,7 +76,8 @@ class EditOperationViewController: UIViewController, UIPickerViewDataSource, UIP
 		if pickerView.restorationIdentifier! == Me.operationTypePickerId {
 			return QueryOperation.Kind.allTypes[row].description
 		} else if pickerView.restorationIdentifier! == Me.aggregationUnitPickerId {
-			return QueryOperation.supportedAggregationUnits[row].description
+			let component = QueryOperation.supportedAggregationUnits[row]
+			return CalendarUtil.componentNames[component]!
 		}
 		return "" // This should never happen
 	}
@@ -94,7 +95,7 @@ class EditOperationViewController: UIViewController, UIPickerViewDataSource, UIP
 			operation.aggregationUnit = nil
 		} else {
 			let selectedAggregationUnitIndex = aggregationUnitPicker.selectedRow(inComponent: 0)
-			operation.aggregationUnit = QueryOperation.supportedAggregationUnits[selectedAggregationUnitIndex].aggregation
+			operation.aggregationUnit = QueryOperation.supportedAggregationUnits[selectedAggregationUnitIndex]
 		}
 	}
 }

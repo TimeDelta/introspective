@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Mood: NSObject {
+public class Mood: NSObject {
 
 	let NOT_RATED: Double = Double.nan
 

@@ -449,18 +449,6 @@ class MockQuestionFactory: QuestionFactory, Cuckoo.ClassMock {
     
 
     
-    // ["name": "question", "returnSignature": " -> TextQuestion", "fullyQualifiedName": "question(text: String) -> TextQuestion", "parameterSignature": "text: String", "parameterSignatureWithoutNames": "text: String", "inputTypes": "String", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "text", "call": "text: text", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("text"), name: "text", type: "String", range: CountableRange(225..<237), nameRange: CountableRange(225..<229))], "returnType": "TextQuestion", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-     override func question(text: String)  -> TextQuestion {
-        
-            return cuckoo_manager.call("question(text: String) -> TextQuestion",
-                parameters: (text),
-                superclassCall:
-                    
-                    super.question(text: text)
-                    )
-        
-    }
-    
     // ["name": "answer", "returnSignature": " -> Answer", "fullyQualifiedName": "answer() -> Answer", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "", "call": "", "parameters": [], "returnType": "Answer", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
      override func answer()  -> Answer {
         
@@ -494,11 +482,6 @@ class MockQuestionFactory: QuestionFactory, Cuckoo.ClassMock {
 	    }
 	    
 	    
-	    func question<M1: Cuckoo.Matchable>(text: M1) -> Cuckoo.ClassStubFunction<(String), TextQuestion> where M1.MatchedType == String {
-	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: text) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockQuestionFactory.self, method: "question(text: String) -> TextQuestion", parameterMatchers: matchers))
-	    }
-	    
 	    func answer() -> Cuckoo.ClassStubFunction<(), Answer> {
 	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
 	        return .init(stub: cuckoo_manager.createStub(for: MockQuestionFactory.self, method: "answer() -> Answer", parameterMatchers: matchers))
@@ -526,12 +509,6 @@ class MockQuestionFactory: QuestionFactory, Cuckoo.ClassMock {
 	
 	    
 	    @discardableResult
-	    func question<M1: Cuckoo.Matchable>(text: M1) -> Cuckoo.__DoNotUse<TextQuestion> where M1.MatchedType == String {
-	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: text) { $0 }]
-	        return cuckoo_manager.verify("question(text: String) -> TextQuestion", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
 	    func answer() -> Cuckoo.__DoNotUse<Answer> {
 	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
 	        return cuckoo_manager.verify("answer() -> Answer", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
@@ -552,10 +529,6 @@ class MockQuestionFactory: QuestionFactory, Cuckoo.ClassMock {
 
     
 
-    
-     override func question(text: String)  -> TextQuestion {
-        return DefaultValueRegistry.defaultValue(for: TextQuestion.self)
-    }
     
      override func answer()  -> Answer {
         return DefaultValueRegistry.defaultValue(for: Answer.self)
@@ -685,11 +658,11 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "hkQuantitySampleUtil", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "HKQuantitySampleUtil", "isReadOnly": true, "accessibility": "public"]
-    public override var hkQuantitySampleUtil: HKQuantitySampleUtil {
+    // ["name": "numericSampleUtil", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "NumericSampleUtil", "isReadOnly": true, "accessibility": "public"]
+    public override var numericSampleUtil: NumericSampleUtil {
         get {
             
-            return cuckoo_manager.getter("hkQuantitySampleUtil", superclassCall: super.hkQuantitySampleUtil)
+            return cuckoo_manager.getter("numericSampleUtil", superclassCall: super.numericSampleUtil)
             
         }
         
@@ -715,6 +688,16 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
         
     }
     
+    // ["name": "sampleUtil", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "SampleUtil", "isReadOnly": true, "accessibility": "public"]
+    public override var sampleUtil: SampleUtil {
+        get {
+            
+            return cuckoo_manager.getter("sampleUtil", superclassCall: super.sampleUtil)
+            
+        }
+        
+    }
+    
 
     
 
@@ -731,8 +714,8 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
 	        return .init(manager: cuckoo_manager, name: "calendarUtil")
 	    }
 	    
-	    var hkQuantitySampleUtil: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockUtilFactory, HKQuantitySampleUtil> {
-	        return .init(manager: cuckoo_manager, name: "hkQuantitySampleUtil")
+	    var numericSampleUtil: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockUtilFactory, NumericSampleUtil> {
+	        return .init(manager: cuckoo_manager, name: "numericSampleUtil")
 	    }
 	    
 	    var hkSampleUtil: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockUtilFactory, HKSampleUtil> {
@@ -741,6 +724,10 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
 	    
 	    var textNormalizationUtil: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockUtilFactory, TextNormalizationUtil> {
 	        return .init(manager: cuckoo_manager, name: "textNormalizationUtil")
+	    }
+	    
+	    var sampleUtil: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockUtilFactory, SampleUtil> {
+	        return .init(manager: cuckoo_manager, name: "sampleUtil")
 	    }
 	    
 	    
@@ -762,8 +749,8 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
 	        return .init(manager: cuckoo_manager, name: "calendarUtil", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
 	    
-	    var hkQuantitySampleUtil: Cuckoo.VerifyReadOnlyProperty<HKQuantitySampleUtil> {
-	        return .init(manager: cuckoo_manager, name: "hkQuantitySampleUtil", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    var numericSampleUtil: Cuckoo.VerifyReadOnlyProperty<NumericSampleUtil> {
+	        return .init(manager: cuckoo_manager, name: "numericSampleUtil", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
 	    
 	    var hkSampleUtil: Cuckoo.VerifyReadOnlyProperty<HKSampleUtil> {
@@ -772,6 +759,10 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
 	    
 	    var textNormalizationUtil: Cuckoo.VerifyReadOnlyProperty<TextNormalizationUtil> {
 	        return .init(manager: cuckoo_manager, name: "textNormalizationUtil", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var sampleUtil: Cuckoo.VerifyReadOnlyProperty<SampleUtil> {
+	        return .init(manager: cuckoo_manager, name: "sampleUtil", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
 	    
 	
@@ -789,9 +780,9 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
         
     }
     
-    public override var hkQuantitySampleUtil: HKQuantitySampleUtil {
+    public override var numericSampleUtil: NumericSampleUtil {
         get {
-            return DefaultValueRegistry.defaultValue(for: (HKQuantitySampleUtil).self)
+            return DefaultValueRegistry.defaultValue(for: (NumericSampleUtil).self)
         }
         
     }
@@ -806,6 +797,13 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
     public override var textNormalizationUtil: TextNormalizationUtil {
         get {
             return DefaultValueRegistry.defaultValue(for: (TextNormalizationUtil).self)
+        }
+        
+    }
+    
+    public override var sampleUtil: SampleUtil {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (SampleUtil).self)
         }
         
     }

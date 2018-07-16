@@ -12,7 +12,7 @@ import os
 
 class HeartRateQuerier: NSObject {
 
-	typealias Me = HeartRateQuerier
+	fileprivate typealias Me = HeartRateQuerier
 
 	fileprivate static let HEALTH_STORE = HKHealthStore()
 	fileprivate static let HEART_RATE = HKObjectType.quantityType(forIdentifier: .heartRate)!

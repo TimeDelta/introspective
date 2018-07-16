@@ -10,15 +10,13 @@ import Foundation
 
 public class AdvancedQuestion: Question {
 
-	public fileprivate(set) var questionParts: [QuestionPart]
+	public var questionParts: [Query<AnySample>]
 
 	public init() {
-		questionParts = [QuestionPart]()
+		questionParts = [Query<AnySample>]()
 	}
 
-	func parse(callback: (Error?) -> ()) {
-
-	}
+	func parse(callback: (Error?) -> ()) {} // no need to do anything
 
 	func answer(callback: @escaping (Answer?, Error?) -> ()) {
 

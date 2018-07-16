@@ -303,6 +303,22 @@ import Cuckoo
 
 import Foundation
 
+// MARK: - Mocks generated from file: DataIntegration/DataTypes/HKQuantitySampleExtension.swift
+//
+//  HKQuantitySampleExtension.swift
+//  DataIntegration
+//
+//  Created by Bryan Nova on 7/14/18.
+//  Copyright © 2018 Bryan Nova. All rights reserved.
+//
+
+import Cuckoo
+@testable import DataIntegration
+
+import Foundation
+import HealthKit
+import os
+
 // MARK: - Mocks generated from file: DataIntegration/DataTypes/HeartRate.swift
 //
 //  HeartRate.swift
@@ -316,6 +332,7 @@ import Cuckoo
 @testable import DataIntegration
 
 import Foundation
+import HealthKit
 
 class MockHeartRate: HeartRate, Cuckoo.ClassMock {
     typealias MocksType = HeartRate
@@ -324,8 +341,8 @@ class MockHeartRate: HeartRate, Cuckoo.ClassMock {
     let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
 
     
-    // ["name": "value", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Double", "isReadOnly": false, "accessibility": ""]
-     override var value: Double {
+    // ["name": "value", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Double", "isReadOnly": false, "accessibility": "public"]
+    public override var value: Double {
         get {
             
             return cuckoo_manager.getter("value", superclassCall: super.value)
@@ -340,17 +357,17 @@ class MockHeartRate: HeartRate, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "timestamp", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Date", "isReadOnly": false, "accessibility": ""]
-     override var timestamp: Date {
+    // ["name": "dates", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "[DateType: Date]", "isReadOnly": false, "accessibility": "public"]
+    public override var dates: [DateType: Date] {
         get {
             
-            return cuckoo_manager.getter("timestamp", superclassCall: super.timestamp)
+            return cuckoo_manager.getter("dates", superclassCall: super.dates)
             
         }
         
         set {
             
-            cuckoo_manager.setter("timestamp", value: newValue, superclassCall: super.timestamp = newValue)
+            cuckoo_manager.setter("dates", value: newValue, superclassCall: super.dates = newValue)
             
         }
         
@@ -372,8 +389,8 @@ class MockHeartRate: HeartRate, Cuckoo.ClassMock {
 	        return .init(manager: cuckoo_manager, name: "value")
 	    }
 	    
-	    var timestamp: Cuckoo.ClassToBeStubbedProperty<MockHeartRate, Date> {
-	        return .init(manager: cuckoo_manager, name: "timestamp")
+	    var dates: Cuckoo.ClassToBeStubbedProperty<MockHeartRate, [DateType: Date]> {
+	        return .init(manager: cuckoo_manager, name: "dates")
 	    }
 	    
 	    
@@ -395,8 +412,8 @@ class MockHeartRate: HeartRate, Cuckoo.ClassMock {
 	        return .init(manager: cuckoo_manager, name: "value", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
 	    
-	    var timestamp: Cuckoo.VerifyProperty<Date> {
-	        return .init(manager: cuckoo_manager, name: "timestamp", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    var dates: Cuckoo.VerifyProperty<[DateType: Date]> {
+	        return .init(manager: cuckoo_manager, name: "dates", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
 	    
 	
@@ -407,7 +424,7 @@ class MockHeartRate: HeartRate, Cuckoo.ClassMock {
 
  class HeartRateStub: HeartRate {
     
-     override var value: Double {
+    public override var value: Double {
         get {
             return DefaultValueRegistry.defaultValue(for: (Double).self)
         }
@@ -416,9 +433,9 @@ class MockHeartRate: HeartRate, Cuckoo.ClassMock {
         
     }
     
-     override var timestamp: Date {
+    public override var dates: [DateType: Date] {
         get {
-            return DefaultValueRegistry.defaultValue(for: (Date).self)
+            return DefaultValueRegistry.defaultValue(for: ([DateType: Date]).self)
         }
         
         set { }
@@ -561,6 +578,404 @@ class MockMood: Mood, Cuckoo.ClassMock {
 }
 
 
+// MARK: - Mocks generated from file: DataIntegration/DataTypes/NumericSample.swift
+//
+//  Averagable.swift
+//  DataIntegration
+//
+//  Created by Bryan Nova on 7/14/18.
+//  Copyright © 2018 Bryan Nova. All rights reserved.
+//
+
+import Cuckoo
+@testable import DataIntegration
+
+import Foundation
+
+class MockNumericSample: NumericSample, Cuckoo.ProtocolMock {
+    typealias MocksType = NumericSample
+    typealias Stubbing = __StubbingProxy_NumericSample
+    typealias Verification = __VerificationProxy_NumericSample
+    let cuckoo_manager = Cuckoo.MockManager(hasParent: false)
+
+    
+    // ["name": "value", "stubType": "ProtocolToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "Double", "isReadOnly": true, "accessibility": "public"]
+    public var value: Double {
+        get {
+            
+            return cuckoo_manager.getter("value", superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
+            
+        }
+        
+    }
+    
+    // ["name": "dates", "stubType": "ProtocolToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "[DateType: Date]", "isReadOnly": true, "accessibility": "public"]
+    public var dates: [DateType: Date] {
+        get {
+            
+            return cuckoo_manager.getter("dates", superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
+            
+        }
+        
+    }
+    
+
+    
+
+    
+
+	struct __StubbingProxy_NumericSample: Cuckoo.StubbingProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	
+	    init(manager: Cuckoo.MockManager) {
+	        self.cuckoo_manager = manager
+	    }
+	    
+	    var value: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockNumericSample, Double> {
+	        return .init(manager: cuckoo_manager, name: "value")
+	    }
+	    
+	    var dates: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockNumericSample, [DateType: Date]> {
+	        return .init(manager: cuckoo_manager, name: "dates")
+	    }
+	    
+	    
+	}
+
+	struct __VerificationProxy_NumericSample: Cuckoo.VerificationProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	    private let callMatcher: Cuckoo.CallMatcher
+	    private let sourceLocation: Cuckoo.SourceLocation
+	
+	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+	        self.cuckoo_manager = manager
+	        self.callMatcher = callMatcher
+	        self.sourceLocation = sourceLocation
+	    }
+	
+	    
+	    var value: Cuckoo.VerifyReadOnlyProperty<Double> {
+	        return .init(manager: cuckoo_manager, name: "value", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var dates: Cuckoo.VerifyReadOnlyProperty<[DateType: Date]> {
+	        return .init(manager: cuckoo_manager, name: "dates", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	
+	    
+	}
+
+}
+
+ class NumericSampleStub: NumericSample {
+    
+    public var value: Double {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (Double).self)
+        }
+        
+    }
+    
+    public var dates: [DateType: Date] {
+        get {
+            return DefaultValueRegistry.defaultValue(for: ([DateType: Date]).self)
+        }
+        
+    }
+    
+
+    
+
+    
+}
+
+
+class MockDoubleValueSample: DoubleValueSample, Cuckoo.ClassMock {
+    typealias MocksType = DoubleValueSample
+    typealias Stubbing = __StubbingProxy_DoubleValueSample
+    typealias Verification = __VerificationProxy_DoubleValueSample
+    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
+
+    
+    // ["name": "value", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Double", "isReadOnly": false, "accessibility": "public"]
+    public override var value: Double {
+        get {
+            
+            return cuckoo_manager.getter("value", superclassCall: super.value)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("value", value: newValue, superclassCall: super.value = newValue)
+            
+        }
+        
+    }
+    
+    // ["name": "dates", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "[DateType: Date]", "isReadOnly": false, "accessibility": "public"]
+    public override var dates: [DateType: Date] {
+        get {
+            
+            return cuckoo_manager.getter("dates", superclassCall: super.dates)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("dates", value: newValue, superclassCall: super.dates = newValue)
+            
+        }
+        
+    }
+    
+
+    
+
+    
+
+	struct __StubbingProxy_DoubleValueSample: Cuckoo.StubbingProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	
+	    init(manager: Cuckoo.MockManager) {
+	        self.cuckoo_manager = manager
+	    }
+	    
+	    var value: Cuckoo.ClassToBeStubbedProperty<MockDoubleValueSample, Double> {
+	        return .init(manager: cuckoo_manager, name: "value")
+	    }
+	    
+	    var dates: Cuckoo.ClassToBeStubbedProperty<MockDoubleValueSample, [DateType: Date]> {
+	        return .init(manager: cuckoo_manager, name: "dates")
+	    }
+	    
+	    
+	}
+
+	struct __VerificationProxy_DoubleValueSample: Cuckoo.VerificationProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	    private let callMatcher: Cuckoo.CallMatcher
+	    private let sourceLocation: Cuckoo.SourceLocation
+	
+	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+	        self.cuckoo_manager = manager
+	        self.callMatcher = callMatcher
+	        self.sourceLocation = sourceLocation
+	    }
+	
+	    
+	    var value: Cuckoo.VerifyProperty<Double> {
+	        return .init(manager: cuckoo_manager, name: "value", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var dates: Cuckoo.VerifyProperty<[DateType: Date]> {
+	        return .init(manager: cuckoo_manager, name: "dates", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	
+	    
+	}
+
+}
+
+ class DoubleValueSampleStub: DoubleValueSample {
+    
+    public override var value: Double {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (Double).self)
+        }
+        
+        set { }
+        
+    }
+    
+    public override var dates: [DateType: Date] {
+        get {
+            return DefaultValueRegistry.defaultValue(for: ([DateType: Date]).self)
+        }
+        
+        set { }
+        
+    }
+    
+
+    
+
+    
+}
+
+
+// MARK: - Mocks generated from file: DataIntegration/DataTypes/Sample.swift
+//
+//  Sample.swift
+//  DataIntegration
+//
+//  Created by Bryan Nova on 7/14/18.
+//  Copyright © 2018 Bryan Nova. All rights reserved.
+//
+
+import Cuckoo
+@testable import DataIntegration
+
+import Foundation
+
+class MockSample: Sample, Cuckoo.ProtocolMock {
+    typealias MocksType = Sample
+    typealias Stubbing = __StubbingProxy_Sample
+    typealias Verification = __VerificationProxy_Sample
+    let cuckoo_manager = Cuckoo.MockManager(hasParent: false)
+
+    
+    // ["name": "dates", "stubType": "ProtocolToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "[DateType: Date]", "isReadOnly": true, "accessibility": "public"]
+    public var dates: [DateType: Date] {
+        get {
+            
+            return cuckoo_manager.getter("dates", superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
+            
+        }
+        
+    }
+    
+
+    
+
+    
+
+	struct __StubbingProxy_Sample: Cuckoo.StubbingProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	
+	    init(manager: Cuckoo.MockManager) {
+	        self.cuckoo_manager = manager
+	    }
+	    
+	    var dates: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockSample, [DateType: Date]> {
+	        return .init(manager: cuckoo_manager, name: "dates")
+	    }
+	    
+	    
+	}
+
+	struct __VerificationProxy_Sample: Cuckoo.VerificationProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	    private let callMatcher: Cuckoo.CallMatcher
+	    private let sourceLocation: Cuckoo.SourceLocation
+	
+	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+	        self.cuckoo_manager = manager
+	        self.callMatcher = callMatcher
+	        self.sourceLocation = sourceLocation
+	    }
+	
+	    
+	    var dates: Cuckoo.VerifyReadOnlyProperty<[DateType: Date]> {
+	        return .init(manager: cuckoo_manager, name: "dates", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	
+	    
+	}
+
+}
+
+ class SampleStub: Sample {
+    
+    public var dates: [DateType: Date] {
+        get {
+            return DefaultValueRegistry.defaultValue(for: ([DateType: Date]).self)
+        }
+        
+    }
+    
+
+    
+
+    
+}
+
+
+class MockAnySample: AnySample, Cuckoo.ClassMock {
+    typealias MocksType = AnySample
+    typealias Stubbing = __StubbingProxy_AnySample
+    typealias Verification = __VerificationProxy_AnySample
+    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
+
+    
+    // ["name": "dates", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "[DateType: Date]", "isReadOnly": false, "accessibility": "public"]
+    public override var dates: [DateType: Date] {
+        get {
+            
+            return cuckoo_manager.getter("dates", superclassCall: super.dates)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("dates", value: newValue, superclassCall: super.dates = newValue)
+            
+        }
+        
+    }
+    
+
+    
+
+    
+
+	struct __StubbingProxy_AnySample: Cuckoo.StubbingProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	
+	    init(manager: Cuckoo.MockManager) {
+	        self.cuckoo_manager = manager
+	    }
+	    
+	    var dates: Cuckoo.ClassToBeStubbedProperty<MockAnySample, [DateType: Date]> {
+	        return .init(manager: cuckoo_manager, name: "dates")
+	    }
+	    
+	    
+	}
+
+	struct __VerificationProxy_AnySample: Cuckoo.VerificationProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	    private let callMatcher: Cuckoo.CallMatcher
+	    private let sourceLocation: Cuckoo.SourceLocation
+	
+	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+	        self.cuckoo_manager = manager
+	        self.callMatcher = callMatcher
+	        self.sourceLocation = sourceLocation
+	    }
+	
+	    
+	    var dates: Cuckoo.VerifyProperty<[DateType: Date]> {
+	        return .init(manager: cuckoo_manager, name: "dates", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	
+	    
+	}
+
+}
+
+ class AnySampleStub: AnySample {
+    
+    public override var dates: [DateType: Date] {
+        get {
+            return DefaultValueRegistry.defaultValue(for: ([DateType: Date]).self)
+        }
+        
+        set { }
+        
+    }
+    
+
+    
+
+    
+}
+
+
 // MARK: - Mocks generated from file: DataIntegration/Questions/AdvancedQuestion.swift
 //
 //  AdvancedQuestion.swift
@@ -582,11 +997,17 @@ class MockAdvancedQuestion: AdvancedQuestion, Cuckoo.ClassMock {
     let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
 
     
-    // ["name": "questionParts", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "[QuestionPart]", "isReadOnly": true, "accessibility": "public"]
-    public override var questionParts: [QuestionPart] {
+    // ["name": "questionParts", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "[Query<AnySample>]", "isReadOnly": false, "accessibility": "public"]
+    public override var questionParts: [Query<AnySample>] {
         get {
             
             return cuckoo_manager.getter("questionParts", superclassCall: super.questionParts)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("questionParts", value: newValue, superclassCall: super.questionParts = newValue)
             
         }
         
@@ -596,7 +1017,7 @@ class MockAdvancedQuestion: AdvancedQuestion, Cuckoo.ClassMock {
     
 
     
-    // ["name": "parse", "returnSignature": "", "fullyQualifiedName": "parse(callback: (Error?) -> ())", "parameterSignature": "callback: (Error?) -> ()", "parameterSignatureWithoutNames": "callback: (Error?) -> ()", "inputTypes": "(Error?) -> ()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "(Error?) -> ()", range: CountableRange(339..<363), nameRange: CountableRange(339..<347))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
+    // ["name": "parse", "returnSignature": "", "fullyQualifiedName": "parse(callback: (Error?) -> ())", "parameterSignature": "callback: (Error?) -> ()", "parameterSignatureWithoutNames": "callback: (Error?) -> ()", "inputTypes": "(Error?) -> ()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "(Error?) -> ()", range: CountableRange(330..<354), nameRange: CountableRange(330..<338))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
      override func parse(callback: (Error?) -> ())  {
         	return withoutActuallyEscaping(callback, do: { (callback) in
 
@@ -610,7 +1031,7 @@ class MockAdvancedQuestion: AdvancedQuestion, Cuckoo.ClassMock {
 
     }
     
-    // ["name": "answer", "returnSignature": "", "fullyQualifiedName": "answer(callback: @escaping (Answer?, Error?) -> ())", "parameterSignature": "callback: @escaping (Answer?, Error?) -> ()", "parameterSignatureWithoutNames": "callback: @escaping (Answer?, Error?) -> ()", "inputTypes": "(Answer?, Error?) -> ()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping (Answer?, Error?) -> ()", range: CountableRange(385..<428), nameRange: CountableRange(385..<393))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
+    // ["name": "answer", "returnSignature": "", "fullyQualifiedName": "answer(callback: @escaping (Answer?, Error?) -> ())", "parameterSignature": "callback: @escaping (Answer?, Error?) -> ()", "parameterSignatureWithoutNames": "callback: @escaping (Answer?, Error?) -> ()", "inputTypes": "(Answer?, Error?) -> ()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping (Answer?, Error?) -> ()", range: CountableRange(399..<442), nameRange: CountableRange(399..<407))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
      override func answer(callback: @escaping (Answer?, Error?) -> ())  {
         
             return cuckoo_manager.call("answer(callback: @escaping (Answer?, Error?) -> ())",
@@ -630,7 +1051,7 @@ class MockAdvancedQuestion: AdvancedQuestion, Cuckoo.ClassMock {
 	        self.cuckoo_manager = manager
 	    }
 	    
-	    var questionParts: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockAdvancedQuestion, [QuestionPart]> {
+	    var questionParts: Cuckoo.ClassToBeStubbedProperty<MockAdvancedQuestion, [Query<AnySample>]> {
 	        return .init(manager: cuckoo_manager, name: "questionParts")
 	    }
 	    
@@ -659,7 +1080,7 @@ class MockAdvancedQuestion: AdvancedQuestion, Cuckoo.ClassMock {
 	    }
 	
 	    
-	    var questionParts: Cuckoo.VerifyReadOnlyProperty<[QuestionPart]> {
+	    var questionParts: Cuckoo.VerifyProperty<[Query<AnySample>]> {
 	        return .init(manager: cuckoo_manager, name: "questionParts", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
 	    
@@ -683,10 +1104,12 @@ class MockAdvancedQuestion: AdvancedQuestion, Cuckoo.ClassMock {
 
  class AdvancedQuestionStub: AdvancedQuestion {
     
-    public override var questionParts: [QuestionPart] {
+    public override var questionParts: [Query<AnySample>] {
         get {
-            return DefaultValueRegistry.defaultValue(for: ([QuestionPart]).self)
+            return DefaultValueRegistry.defaultValue(for: ([Query<AnySample>]).self)
         }
+        
+        set { }
         
     }
     
@@ -1725,65 +2148,17 @@ class MockHeartRateQuery: HeartRateQuery, Cuckoo.ClassMock {
     let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
 
     
-    // ["name": "finalOperation", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "QueryOperation?", "isReadOnly": false, "accessibility": "public"]
-    public override var finalOperation: QueryOperation? {
+    // ["name": "timeConstraints", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Set<TimeConstraint>", "isReadOnly": false, "accessibility": "public"]
+    public override var timeConstraints: Set<TimeConstraint> {
         get {
             
-            return cuckoo_manager.getter("finalOperation", superclassCall: super.finalOperation)
+            return cuckoo_manager.getter("timeConstraints", superclassCall: super.timeConstraints)
             
         }
         
         set {
             
-            cuckoo_manager.setter("finalOperation", value: newValue, superclassCall: super.finalOperation = newValue)
-            
-        }
-        
-    }
-    
-    // ["name": "startDate", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Date?", "isReadOnly": false, "accessibility": "public"]
-    public override var startDate: Date? {
-        get {
-            
-            return cuckoo_manager.getter("startDate", superclassCall: super.startDate)
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("startDate", value: newValue, superclassCall: super.startDate = newValue)
-            
-        }
-        
-    }
-    
-    // ["name": "endDate", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Date?", "isReadOnly": false, "accessibility": "public"]
-    public override var endDate: Date? {
-        get {
-            
-            return cuckoo_manager.getter("endDate", superclassCall: super.endDate)
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("endDate", value: newValue, superclassCall: super.endDate = newValue)
-            
-        }
-        
-    }
-    
-    // ["name": "daysOfWeek", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Set<DayOfWeek>", "isReadOnly": false, "accessibility": "public"]
-    public override var daysOfWeek: Set<DayOfWeek> {
-        get {
-            
-            return cuckoo_manager.getter("daysOfWeek", superclassCall: super.daysOfWeek)
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("daysOfWeek", value: newValue, superclassCall: super.daysOfWeek = newValue)
+            cuckoo_manager.setter("timeConstraints", value: newValue, superclassCall: super.timeConstraints = newValue)
             
         }
         
@@ -1805,22 +2180,6 @@ class MockHeartRateQuery: HeartRateQuery, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "returnType", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "ReturnType?", "isReadOnly": false, "accessibility": "public"]
-    public override var returnType: ReturnType? {
-        get {
-            
-            return cuckoo_manager.getter("returnType", superclassCall: super.returnType)
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("returnType", value: newValue, superclassCall: super.returnType = newValue)
-            
-        }
-        
-    }
-    
     // ["name": "mostRecentEntryOnly", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Bool", "isReadOnly": false, "accessibility": "public"]
     public override var mostRecentEntryOnly: Bool {
         get {
@@ -1837,14 +2196,24 @@ class MockHeartRateQuery: HeartRateQuery, Cuckoo.ClassMock {
         
     }
     
-
-    
-
-    
-    // ["name": "runQuery", "returnSignature": "", "fullyQualifiedName": "runQuery(callback: @escaping (QueryResult?, Error?) -> ())", "parameterSignature": "callback: @escaping (QueryResult?, Error?) -> ()", "parameterSignatureWithoutNames": "callback: @escaping (QueryResult?, Error?) -> ()", "inputTypes": "(QueryResult?, Error?) -> ()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping (QueryResult?, Error?) -> ()", range: CountableRange(947..<995), nameRange: CountableRange(947..<955))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
-    public override func runQuery(callback: @escaping (QueryResult?, Error?) -> ())  {
+    // ["name": "numberOfDatesPerSample", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "Int", "isReadOnly": true, "accessibility": "public"]
+    public override var numberOfDatesPerSample: Int {
+        get {
+            
+            return cuckoo_manager.getter("numberOfDatesPerSample", superclassCall: super.numberOfDatesPerSample)
+            
+        }
         
-            return cuckoo_manager.call("runQuery(callback: @escaping (QueryResult?, Error?) -> ())",
+    }
+    
+
+    
+
+    
+    // ["name": "runQuery", "returnSignature": "", "fullyQualifiedName": "runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ())", "parameterSignature": "callback: @escaping (QueryResult<SampleType>?, Error?) -> ()", "parameterSignatureWithoutNames": "callback: @escaping (QueryResult<SampleType>?, Error?) -> ()", "inputTypes": "(QueryResult<SampleType>?, Error?) -> ()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping (QueryResult<SampleType>?, Error?) -> ()", range: CountableRange(742..<802), nameRange: CountableRange(742..<750))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
+    public override func runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ())  {
+        
+            return cuckoo_manager.call("runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ())",
                 parameters: (callback),
                 superclassCall:
                     
@@ -1861,38 +2230,26 @@ class MockHeartRateQuery: HeartRateQuery, Cuckoo.ClassMock {
 	        self.cuckoo_manager = manager
 	    }
 	    
-	    var finalOperation: Cuckoo.ClassToBeStubbedProperty<MockHeartRateQuery, QueryOperation?> {
-	        return .init(manager: cuckoo_manager, name: "finalOperation")
-	    }
-	    
-	    var startDate: Cuckoo.ClassToBeStubbedProperty<MockHeartRateQuery, Date?> {
-	        return .init(manager: cuckoo_manager, name: "startDate")
-	    }
-	    
-	    var endDate: Cuckoo.ClassToBeStubbedProperty<MockHeartRateQuery, Date?> {
-	        return .init(manager: cuckoo_manager, name: "endDate")
-	    }
-	    
-	    var daysOfWeek: Cuckoo.ClassToBeStubbedProperty<MockHeartRateQuery, Set<DayOfWeek>> {
-	        return .init(manager: cuckoo_manager, name: "daysOfWeek")
+	    var timeConstraints: Cuckoo.ClassToBeStubbedProperty<MockHeartRateQuery, Set<TimeConstraint>> {
+	        return .init(manager: cuckoo_manager, name: "timeConstraints")
 	    }
 	    
 	    var attributeRestrictions: Cuckoo.ClassToBeStubbedProperty<MockHeartRateQuery, [AttributeRestriction]> {
 	        return .init(manager: cuckoo_manager, name: "attributeRestrictions")
 	    }
 	    
-	    var returnType: Cuckoo.ClassToBeStubbedProperty<MockHeartRateQuery, ReturnType?> {
-	        return .init(manager: cuckoo_manager, name: "returnType")
-	    }
-	    
 	    var mostRecentEntryOnly: Cuckoo.ClassToBeStubbedProperty<MockHeartRateQuery, Bool> {
 	        return .init(manager: cuckoo_manager, name: "mostRecentEntryOnly")
 	    }
 	    
+	    var numberOfDatesPerSample: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockHeartRateQuery, Int> {
+	        return .init(manager: cuckoo_manager, name: "numberOfDatesPerSample")
+	    }
 	    
-	    func runQuery<M1: Cuckoo.Matchable>(callback: M1) -> Cuckoo.ClassStubNoReturnFunction<((QueryResult?, Error?) -> ())> where M1.MatchedType == (QueryResult?, Error?) -> () {
-	        let matchers: [Cuckoo.ParameterMatcher<((QueryResult?, Error?) -> ())>] = [wrap(matchable: callback) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHeartRateQuery.self, method: "runQuery(callback: @escaping (QueryResult?, Error?) -> ())", parameterMatchers: matchers))
+	    
+	    func runQuery<M1: Cuckoo.Matchable>(callback: M1) -> Cuckoo.ClassStubNoReturnFunction<((QueryResult<SampleType>?, Error?) -> ())> where M1.MatchedType == (QueryResult<SampleType>?, Error?) -> () {
+	        let matchers: [Cuckoo.ParameterMatcher<((QueryResult<SampleType>?, Error?) -> ())>] = [wrap(matchable: callback) { $0 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockHeartRateQuery.self, method: "runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ())", parameterMatchers: matchers))
 	    }
 	    
 	}
@@ -1909,40 +2266,28 @@ class MockHeartRateQuery: HeartRateQuery, Cuckoo.ClassMock {
 	    }
 	
 	    
-	    var finalOperation: Cuckoo.VerifyProperty<QueryOperation?> {
-	        return .init(manager: cuckoo_manager, name: "finalOperation", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var startDate: Cuckoo.VerifyProperty<Date?> {
-	        return .init(manager: cuckoo_manager, name: "startDate", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var endDate: Cuckoo.VerifyProperty<Date?> {
-	        return .init(manager: cuckoo_manager, name: "endDate", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var daysOfWeek: Cuckoo.VerifyProperty<Set<DayOfWeek>> {
-	        return .init(manager: cuckoo_manager, name: "daysOfWeek", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    var timeConstraints: Cuckoo.VerifyProperty<Set<TimeConstraint>> {
+	        return .init(manager: cuckoo_manager, name: "timeConstraints", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
 	    
 	    var attributeRestrictions: Cuckoo.VerifyProperty<[AttributeRestriction]> {
 	        return .init(manager: cuckoo_manager, name: "attributeRestrictions", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
 	    
-	    var returnType: Cuckoo.VerifyProperty<ReturnType?> {
-	        return .init(manager: cuckoo_manager, name: "returnType", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
 	    var mostRecentEntryOnly: Cuckoo.VerifyProperty<Bool> {
 	        return .init(manager: cuckoo_manager, name: "mostRecentEntryOnly", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var numberOfDatesPerSample: Cuckoo.VerifyReadOnlyProperty<Int> {
+	        return .init(manager: cuckoo_manager, name: "numberOfDatesPerSample", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
 	    
 	
 	    
 	    @discardableResult
-	    func runQuery<M1: Cuckoo.Matchable>(callback: M1) -> Cuckoo.__DoNotUse<Void> where M1.MatchedType == (QueryResult?, Error?) -> () {
-	        let matchers: [Cuckoo.ParameterMatcher<((QueryResult?, Error?) -> ())>] = [wrap(matchable: callback) { $0 }]
-	        return cuckoo_manager.verify("runQuery(callback: @escaping (QueryResult?, Error?) -> ())", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    func runQuery<M1: Cuckoo.Matchable>(callback: M1) -> Cuckoo.__DoNotUse<Void> where M1.MatchedType == (QueryResult<SampleType>?, Error?) -> () {
+	        let matchers: [Cuckoo.ParameterMatcher<((QueryResult<SampleType>?, Error?) -> ())>] = [wrap(matchable: callback) { $0 }]
+	        return cuckoo_manager.verify("runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ())", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	}
@@ -1951,36 +2296,9 @@ class MockHeartRateQuery: HeartRateQuery, Cuckoo.ClassMock {
 
  class HeartRateQueryStub: HeartRateQuery {
     
-    public override var finalOperation: QueryOperation? {
+    public override var timeConstraints: Set<TimeConstraint> {
         get {
-            return DefaultValueRegistry.defaultValue(for: (QueryOperation?).self)
-        }
-        
-        set { }
-        
-    }
-    
-    public override var startDate: Date? {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Date?).self)
-        }
-        
-        set { }
-        
-    }
-    
-    public override var endDate: Date? {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Date?).self)
-        }
-        
-        set { }
-        
-    }
-    
-    public override var daysOfWeek: Set<DayOfWeek> {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Set<DayOfWeek>).self)
+            return DefaultValueRegistry.defaultValue(for: (Set<TimeConstraint>).self)
         }
         
         set { }
@@ -1996,15 +2314,6 @@ class MockHeartRateQuery: HeartRateQuery, Cuckoo.ClassMock {
         
     }
     
-    public override var returnType: ReturnType? {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (ReturnType?).self)
-        }
-        
-        set { }
-        
-    }
-    
     public override var mostRecentEntryOnly: Bool {
         get {
             return DefaultValueRegistry.defaultValue(for: (Bool).self)
@@ -2014,11 +2323,18 @@ class MockHeartRateQuery: HeartRateQuery, Cuckoo.ClassMock {
         
     }
     
-
+    public override var numberOfDatesPerSample: Int {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (Int).self)
+        }
+        
+    }
     
 
     
-    public override func runQuery(callback: @escaping (QueryResult?, Error?) -> ())  {
+
+    
+    public override func runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ())  {
         return DefaultValueRegistry.defaultValue(for: Void.self)
     }
     
@@ -2052,7 +2368,7 @@ class MockHeartRateQuerier: HeartRateQuerier, Cuckoo.ClassMock {
     
 
     
-    // ["name": "getHeartRates", "returnSignature": "", "fullyQualifiedName": "getHeartRates(predicate: NSPredicate, callback: @escaping (Array<HKQuantitySample>?, Error?)->())", "parameterSignature": "predicate: NSPredicate, callback: @escaping (Array<HKQuantitySample>?, Error?)->()", "parameterSignatureWithoutNames": "predicate: NSPredicate, callback: @escaping (Array<HKQuantitySample>?, Error?)->()", "inputTypes": "NSPredicate, (Array<HKQuantitySample>?, Error?)->()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "predicate, callback", "call": "predicate: predicate, callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("predicate"), name: "predicate", type: "NSPredicate", range: CountableRange(627..<649), nameRange: CountableRange(627..<636)), CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping (Array<HKQuantitySample>?, Error?)->()", range: CountableRange(651..<708), nameRange: CountableRange(651..<659))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
+    // ["name": "getHeartRates", "returnSignature": "", "fullyQualifiedName": "getHeartRates(predicate: NSPredicate, callback: @escaping (Array<HKQuantitySample>?, Error?)->())", "parameterSignature": "predicate: NSPredicate, callback: @escaping (Array<HKQuantitySample>?, Error?)->()", "parameterSignatureWithoutNames": "predicate: NSPredicate, callback: @escaping (Array<HKQuantitySample>?, Error?)->()", "inputTypes": "NSPredicate, (Array<HKQuantitySample>?, Error?)->()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "predicate, callback", "call": "predicate: predicate, callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("predicate"), name: "predicate", type: "NSPredicate", range: CountableRange(639..<661), nameRange: CountableRange(639..<648)), CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping (Array<HKQuantitySample>?, Error?)->()", range: CountableRange(663..<720), nameRange: CountableRange(663..<671))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
     public override func getHeartRates(predicate: NSPredicate, callback: @escaping (Array<HKQuantitySample>?, Error?)->())  {
         
             return cuckoo_manager.call("getHeartRates(predicate: NSPredicate, callback: @escaping (Array<HKQuantitySample>?, Error?)->())",
@@ -2064,7 +2380,7 @@ class MockHeartRateQuerier: HeartRateQuerier, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "getStatisticsFromHeartRates", "returnSignature": "", "fullyQualifiedName": "getStatisticsFromHeartRates(predicate: NSPredicate, statsOptions: HKStatisticsOptions, callback: @escaping (HKStatistics?, Error?)->())", "parameterSignature": "predicate: NSPredicate, statsOptions: HKStatisticsOptions, callback: @escaping (HKStatistics?, Error?)->()", "parameterSignatureWithoutNames": "predicate: NSPredicate, statsOptions: HKStatisticsOptions, callback: @escaping (HKStatistics?, Error?)->()", "inputTypes": "NSPredicate, HKStatisticsOptions, (HKStatistics?, Error?)->()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "predicate, statsOptions, callback", "call": "predicate: predicate, statsOptions: statsOptions, callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("predicate"), name: "predicate", type: "NSPredicate", range: CountableRange(1011..<1033), nameRange: CountableRange(1011..<1020)), CuckooGeneratorFramework.MethodParameter(label: Optional("statsOptions"), name: "statsOptions", type: "HKStatisticsOptions", range: CountableRange(1035..<1068), nameRange: CountableRange(1035..<1047)), CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping (HKStatistics?, Error?)->()", range: CountableRange(1070..<1116), nameRange: CountableRange(1070..<1078))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
+    // ["name": "getStatisticsFromHeartRates", "returnSignature": "", "fullyQualifiedName": "getStatisticsFromHeartRates(predicate: NSPredicate, statsOptions: HKStatisticsOptions, callback: @escaping (HKStatistics?, Error?)->())", "parameterSignature": "predicate: NSPredicate, statsOptions: HKStatisticsOptions, callback: @escaping (HKStatistics?, Error?)->()", "parameterSignatureWithoutNames": "predicate: NSPredicate, statsOptions: HKStatisticsOptions, callback: @escaping (HKStatistics?, Error?)->()", "inputTypes": "NSPredicate, HKStatisticsOptions, (HKStatistics?, Error?)->()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "predicate, statsOptions, callback", "call": "predicate: predicate, statsOptions: statsOptions, callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("predicate"), name: "predicate", type: "NSPredicate", range: CountableRange(1023..<1045), nameRange: CountableRange(1023..<1032)), CuckooGeneratorFramework.MethodParameter(label: Optional("statsOptions"), name: "statsOptions", type: "HKStatisticsOptions", range: CountableRange(1047..<1080), nameRange: CountableRange(1047..<1059)), CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping (HKStatistics?, Error?)->()", range: CountableRange(1082..<1128), nameRange: CountableRange(1082..<1090))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
     public override func getStatisticsFromHeartRates(predicate: NSPredicate, statsOptions: HKStatisticsOptions, callback: @escaping (HKStatistics?, Error?)->())  {
         
             return cuckoo_manager.call("getStatisticsFromHeartRates(predicate: NSPredicate, statsOptions: HKStatisticsOptions, callback: @escaping (HKStatistics?, Error?)->())",
@@ -2076,7 +2392,7 @@ class MockHeartRateQuerier: HeartRateQuerier, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "getAuthorization", "returnSignature": "", "fullyQualifiedName": "getAuthorization(callback: @escaping (Error?) -> ())", "parameterSignature": "callback: @escaping (Error?) -> ()", "parameterSignatureWithoutNames": "callback: @escaping (Error?) -> ()", "inputTypes": "(Error?) -> ()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping (Error?) -> ()", range: CountableRange(1428..<1462), nameRange: CountableRange(1428..<1436))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
+    // ["name": "getAuthorization", "returnSignature": "", "fullyQualifiedName": "getAuthorization(callback: @escaping (Error?) -> ())", "parameterSignature": "callback: @escaping (Error?) -> ()", "parameterSignatureWithoutNames": "callback: @escaping (Error?) -> ()", "inputTypes": "(Error?) -> ()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping (Error?) -> ()", range: CountableRange(1440..<1474), nameRange: CountableRange(1440..<1448))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
     public override func getAuthorization(callback: @escaping (Error?) -> ())  {
         
             return cuckoo_manager.call("getAuthorization(callback: @escaping (Error?) -> ())",
@@ -2171,595 +2487,6 @@ class MockHeartRateQuerier: HeartRateQuerier, Cuckoo.ClassMock {
 }
 
 
-// MARK: - Mocks generated from file: DataIntegration/Questions/Queries/Query.swift
-//
-//  Query.swift
-//  Data Integration
-//
-//  Created by Bryan Nova on 6/26/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
-//
-
-import Cuckoo
-@testable import DataIntegration
-
-import Foundation
-
-class MockQuery: Query, Cuckoo.ProtocolMock {
-    typealias MocksType = Query
-    typealias Stubbing = __StubbingProxy_Query
-    typealias Verification = __VerificationProxy_Query
-    let cuckoo_manager = Cuckoo.MockManager(hasParent: false)
-
-    
-    // ["name": "finalOperation", "stubType": "ProtocolToBeStubbedProperty", "@type": "InstanceVariable", "type": "QueryOperation?", "isReadOnly": false, "accessibility": ""]
-     var finalOperation: QueryOperation? {
-        get {
-            
-            return cuckoo_manager.getter("finalOperation", superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("finalOperation", value: newValue, superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
-            
-        }
-        
-    }
-    
-    // ["name": "startDate", "stubType": "ProtocolToBeStubbedProperty", "@type": "InstanceVariable", "type": "Date?", "isReadOnly": false, "accessibility": ""]
-     var startDate: Date? {
-        get {
-            
-            return cuckoo_manager.getter("startDate", superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("startDate", value: newValue, superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
-            
-        }
-        
-    }
-    
-    // ["name": "endDate", "stubType": "ProtocolToBeStubbedProperty", "@type": "InstanceVariable", "type": "Date?", "isReadOnly": false, "accessibility": ""]
-     var endDate: Date? {
-        get {
-            
-            return cuckoo_manager.getter("endDate", superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("endDate", value: newValue, superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
-            
-        }
-        
-    }
-    
-    // ["name": "daysOfWeek", "stubType": "ProtocolToBeStubbedProperty", "@type": "InstanceVariable", "type": "Set<DayOfWeek>", "isReadOnly": false, "accessibility": ""]
-     var daysOfWeek: Set<DayOfWeek> {
-        get {
-            
-            return cuckoo_manager.getter("daysOfWeek", superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("daysOfWeek", value: newValue, superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
-            
-        }
-        
-    }
-    
-    // ["name": "attributeRestrictions", "stubType": "ProtocolToBeStubbedProperty", "@type": "InstanceVariable", "type": "[AttributeRestriction]", "isReadOnly": false, "accessibility": ""]
-     var attributeRestrictions: [AttributeRestriction] {
-        get {
-            
-            return cuckoo_manager.getter("attributeRestrictions", superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("attributeRestrictions", value: newValue, superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
-            
-        }
-        
-    }
-    
-    // ["name": "returnType", "stubType": "ProtocolToBeStubbedProperty", "@type": "InstanceVariable", "type": "ReturnType?", "isReadOnly": false, "accessibility": ""]
-     var returnType: ReturnType? {
-        get {
-            
-            return cuckoo_manager.getter("returnType", superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("returnType", value: newValue, superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
-            
-        }
-        
-    }
-    
-    // ["name": "mostRecentEntryOnly", "stubType": "ProtocolToBeStubbedProperty", "@type": "InstanceVariable", "type": "Bool", "isReadOnly": false, "accessibility": ""]
-     var mostRecentEntryOnly: Bool {
-        get {
-            
-            return cuckoo_manager.getter("mostRecentEntryOnly", superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("mostRecentEntryOnly", value: newValue, superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
-            
-        }
-        
-    }
-    
-
-    
-
-    
-    // ["name": "runQuery", "returnSignature": " throws", "fullyQualifiedName": "runQuery(callback: @escaping (QueryResult?, Error?) -> ()) throws", "parameterSignature": "callback: @escaping (QueryResult?, Error?) -> ()", "parameterSignatureWithoutNames": "callback: @escaping (QueryResult?, Error?) -> ()", "inputTypes": "(QueryResult?, Error?) -> ()", "isThrowing": true, "isInit": false, "isOverriding": false, "hasClosureParams": true, "@type": "ProtocolMethod", "accessibility": "", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping (QueryResult?, Error?) -> ()", range: CountableRange(768..<816), nameRange: CountableRange(768..<776))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ProtocolStubNoReturnThrowingFunction"]
-     func runQuery(callback: @escaping (QueryResult?, Error?) -> ())  throws {
-        
-            return try cuckoo_manager.callThrows("runQuery(callback: @escaping (QueryResult?, Error?) -> ()) throws",
-                parameters: (callback),
-                superclassCall:
-                    
-                    Cuckoo.MockManager.crashOnProtocolSuperclassCall()
-                    )
-        
-    }
-    
-
-	struct __StubbingProxy_Query: Cuckoo.StubbingProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	
-	    init(manager: Cuckoo.MockManager) {
-	        self.cuckoo_manager = manager
-	    }
-	    
-	    var finalOperation: Cuckoo.ProtocolToBeStubbedProperty<MockQuery, QueryOperation?> {
-	        return .init(manager: cuckoo_manager, name: "finalOperation")
-	    }
-	    
-	    var startDate: Cuckoo.ProtocolToBeStubbedProperty<MockQuery, Date?> {
-	        return .init(manager: cuckoo_manager, name: "startDate")
-	    }
-	    
-	    var endDate: Cuckoo.ProtocolToBeStubbedProperty<MockQuery, Date?> {
-	        return .init(manager: cuckoo_manager, name: "endDate")
-	    }
-	    
-	    var daysOfWeek: Cuckoo.ProtocolToBeStubbedProperty<MockQuery, Set<DayOfWeek>> {
-	        return .init(manager: cuckoo_manager, name: "daysOfWeek")
-	    }
-	    
-	    var attributeRestrictions: Cuckoo.ProtocolToBeStubbedProperty<MockQuery, [AttributeRestriction]> {
-	        return .init(manager: cuckoo_manager, name: "attributeRestrictions")
-	    }
-	    
-	    var returnType: Cuckoo.ProtocolToBeStubbedProperty<MockQuery, ReturnType?> {
-	        return .init(manager: cuckoo_manager, name: "returnType")
-	    }
-	    
-	    var mostRecentEntryOnly: Cuckoo.ProtocolToBeStubbedProperty<MockQuery, Bool> {
-	        return .init(manager: cuckoo_manager, name: "mostRecentEntryOnly")
-	    }
-	    
-	    
-	    func runQuery<M1: Cuckoo.Matchable>(callback: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<((QueryResult?, Error?) -> ())> where M1.MatchedType == (QueryResult?, Error?) -> () {
-	        let matchers: [Cuckoo.ParameterMatcher<((QueryResult?, Error?) -> ())>] = [wrap(matchable: callback) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockQuery.self, method: "runQuery(callback: @escaping (QueryResult?, Error?) -> ()) throws", parameterMatchers: matchers))
-	    }
-	    
-	}
-
-	struct __VerificationProxy_Query: Cuckoo.VerificationProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	    private let callMatcher: Cuckoo.CallMatcher
-	    private let sourceLocation: Cuckoo.SourceLocation
-	
-	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-	        self.cuckoo_manager = manager
-	        self.callMatcher = callMatcher
-	        self.sourceLocation = sourceLocation
-	    }
-	
-	    
-	    var finalOperation: Cuckoo.VerifyProperty<QueryOperation?> {
-	        return .init(manager: cuckoo_manager, name: "finalOperation", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var startDate: Cuckoo.VerifyProperty<Date?> {
-	        return .init(manager: cuckoo_manager, name: "startDate", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var endDate: Cuckoo.VerifyProperty<Date?> {
-	        return .init(manager: cuckoo_manager, name: "endDate", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var daysOfWeek: Cuckoo.VerifyProperty<Set<DayOfWeek>> {
-	        return .init(manager: cuckoo_manager, name: "daysOfWeek", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var attributeRestrictions: Cuckoo.VerifyProperty<[AttributeRestriction]> {
-	        return .init(manager: cuckoo_manager, name: "attributeRestrictions", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var returnType: Cuckoo.VerifyProperty<ReturnType?> {
-	        return .init(manager: cuckoo_manager, name: "returnType", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var mostRecentEntryOnly: Cuckoo.VerifyProperty<Bool> {
-	        return .init(manager: cuckoo_manager, name: "mostRecentEntryOnly", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	
-	    
-	    @discardableResult
-	    func runQuery<M1: Cuckoo.Matchable>(callback: M1) -> Cuckoo.__DoNotUse<Void> where M1.MatchedType == (QueryResult?, Error?) -> () {
-	        let matchers: [Cuckoo.ParameterMatcher<((QueryResult?, Error?) -> ())>] = [wrap(matchable: callback) { $0 }]
-	        return cuckoo_manager.verify("runQuery(callback: @escaping (QueryResult?, Error?) -> ()) throws", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	}
-
-}
-
- class QueryStub: Query {
-    
-     var finalOperation: QueryOperation? {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (QueryOperation?).self)
-        }
-        
-        set { }
-        
-    }
-    
-     var startDate: Date? {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Date?).self)
-        }
-        
-        set { }
-        
-    }
-    
-     var endDate: Date? {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Date?).self)
-        }
-        
-        set { }
-        
-    }
-    
-     var daysOfWeek: Set<DayOfWeek> {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Set<DayOfWeek>).self)
-        }
-        
-        set { }
-        
-    }
-    
-     var attributeRestrictions: [AttributeRestriction] {
-        get {
-            return DefaultValueRegistry.defaultValue(for: ([AttributeRestriction]).self)
-        }
-        
-        set { }
-        
-    }
-    
-     var returnType: ReturnType? {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (ReturnType?).self)
-        }
-        
-        set { }
-        
-    }
-    
-     var mostRecentEntryOnly: Bool {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Bool).self)
-        }
-        
-        set { }
-        
-    }
-    
-
-    
-
-    
-     func runQuery(callback: @escaping (QueryResult?, Error?) -> ())  throws {
-        return DefaultValueRegistry.defaultValue(for: Void.self)
-    }
-    
-}
-
-
-// MARK: - Mocks generated from file: DataIntegration/Questions/Queries/QueryOperation.swift
-//
-//  Operations.swift
-//  Data Integration
-//
-//  Created by Bryan Nova on 6/26/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
-//
-
-import Cuckoo
-@testable import DataIntegration
-
-import Foundation
-import NaturalLanguage
-
-class MockQueryOperation: QueryOperation, Cuckoo.ClassMock {
-    typealias MocksType = QueryOperation
-    typealias Stubbing = __StubbingProxy_QueryOperation
-    typealias Verification = __VerificationProxy_QueryOperation
-    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
-
-    
-    // ["name": "kind", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Kind", "isReadOnly": false, "accessibility": "public"]
-    public override var kind: Kind {
-        get {
-            
-            return cuckoo_manager.getter("kind", superclassCall: super.kind)
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("kind", value: newValue, superclassCall: super.kind = newValue)
-            
-        }
-        
-    }
-    
-    // ["name": "aggregationUnit", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Calendar.Component?", "isReadOnly": false, "accessibility": "public"]
-    public override var aggregationUnit: Calendar.Component? {
-        get {
-            
-            return cuckoo_manager.getter("aggregationUnit", superclassCall: super.aggregationUnit)
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("aggregationUnit", value: newValue, superclassCall: super.aggregationUnit = newValue)
-            
-        }
-        
-    }
-    
-    // ["name": "description", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "String", "isReadOnly": true, "accessibility": "public"]
-    public override var description: String {
-        get {
-            
-            return cuckoo_manager.getter("description", superclassCall: super.description)
-            
-        }
-        
-    }
-    
-
-    
-
-    
-
-	struct __StubbingProxy_QueryOperation: Cuckoo.StubbingProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	
-	    init(manager: Cuckoo.MockManager) {
-	        self.cuckoo_manager = manager
-	    }
-	    
-	    var kind: Cuckoo.ClassToBeStubbedProperty<MockQueryOperation, Kind> {
-	        return .init(manager: cuckoo_manager, name: "kind")
-	    }
-	    
-	    var aggregationUnit: Cuckoo.ClassToBeStubbedProperty<MockQueryOperation, Calendar.Component?> {
-	        return .init(manager: cuckoo_manager, name: "aggregationUnit")
-	    }
-	    
-	    var description: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockQueryOperation, String> {
-	        return .init(manager: cuckoo_manager, name: "description")
-	    }
-	    
-	    
-	}
-
-	struct __VerificationProxy_QueryOperation: Cuckoo.VerificationProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	    private let callMatcher: Cuckoo.CallMatcher
-	    private let sourceLocation: Cuckoo.SourceLocation
-	
-	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-	        self.cuckoo_manager = manager
-	        self.callMatcher = callMatcher
-	        self.sourceLocation = sourceLocation
-	    }
-	
-	    
-	    var kind: Cuckoo.VerifyProperty<Kind> {
-	        return .init(manager: cuckoo_manager, name: "kind", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var aggregationUnit: Cuckoo.VerifyProperty<Calendar.Component?> {
-	        return .init(manager: cuckoo_manager, name: "aggregationUnit", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var description: Cuckoo.VerifyReadOnlyProperty<String> {
-	        return .init(manager: cuckoo_manager, name: "description", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	
-	    
-	}
-
-}
-
- class QueryOperationStub: QueryOperation {
-    
-    public override var kind: Kind {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Kind).self)
-        }
-        
-        set { }
-        
-    }
-    
-    public override var aggregationUnit: Calendar.Component? {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Calendar.Component?).self)
-        }
-        
-        set { }
-        
-    }
-    
-    public override var description: String {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (String).self)
-        }
-        
-    }
-    
-
-    
-
-    
-}
-
-
-// MARK: - Mocks generated from file: DataIntegration/Questions/Queries/QueryResult.swift
-//
-//  Result.swift
-//  DataIntegration
-//
-//  Created by Bryan Nova on 7/3/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
-//
-
-import Cuckoo
-@testable import DataIntegration
-
-import Foundation
-
-class MockQueryResult: QueryResult, Cuckoo.ClassMock {
-    typealias MocksType = QueryResult
-    typealias Stubbing = __StubbingProxy_QueryResult
-    typealias Verification = __VerificationProxy_QueryResult
-    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
-
-    
-    // ["name": "finalAnswer", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "Any", "isReadOnly": true, "accessibility": "public"]
-    public override var finalAnswer: Any {
-        get {
-            
-            return cuckoo_manager.getter("finalAnswer", superclassCall: super.finalAnswer)
-            
-        }
-        
-    }
-    
-    // ["name": "returnType", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "ReturnType", "isReadOnly": true, "accessibility": "public"]
-    public override var returnType: ReturnType {
-        get {
-            
-            return cuckoo_manager.getter("returnType", superclassCall: super.returnType)
-            
-        }
-        
-    }
-    
-
-    
-
-    
-
-	struct __StubbingProxy_QueryResult: Cuckoo.StubbingProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	
-	    init(manager: Cuckoo.MockManager) {
-	        self.cuckoo_manager = manager
-	    }
-	    
-	    var finalAnswer: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockQueryResult, Any> {
-	        return .init(manager: cuckoo_manager, name: "finalAnswer")
-	    }
-	    
-	    var returnType: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockQueryResult, ReturnType> {
-	        return .init(manager: cuckoo_manager, name: "returnType")
-	    }
-	    
-	    
-	}
-
-	struct __VerificationProxy_QueryResult: Cuckoo.VerificationProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	    private let callMatcher: Cuckoo.CallMatcher
-	    private let sourceLocation: Cuckoo.SourceLocation
-	
-	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-	        self.cuckoo_manager = manager
-	        self.callMatcher = callMatcher
-	        self.sourceLocation = sourceLocation
-	    }
-	
-	    
-	    var finalAnswer: Cuckoo.VerifyReadOnlyProperty<Any> {
-	        return .init(manager: cuckoo_manager, name: "finalAnswer", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var returnType: Cuckoo.VerifyReadOnlyProperty<ReturnType> {
-	        return .init(manager: cuckoo_manager, name: "returnType", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	
-	    
-	}
-
-}
-
- class QueryResultStub: QueryResult {
-    
-    public override var finalAnswer: Any {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Any).self)
-        }
-        
-    }
-    
-    public override var returnType: ReturnType {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (ReturnType).self)
-        }
-        
-    }
-    
-
-    
-
-    
-}
-
-
 // MARK: - Mocks generated from file: DataIntegration/Questions/Queries/ReturnType.swift
 //
 //  ReturnType.swift
@@ -2787,6 +2514,240 @@ import Cuckoo
 @testable import DataIntegration
 
 import Foundation
+import os
+
+class MockTimeConstraint: TimeConstraint, Cuckoo.ClassMock {
+    typealias MocksType = TimeConstraint
+    typealias Stubbing = __StubbingProxy_TimeConstraint
+    typealias Verification = __VerificationProxy_TimeConstraint
+    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
+
+    
+    // ["name": "description", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "String", "isReadOnly": true, "accessibility": "public"]
+    public override var description: String {
+        get {
+            
+            return cuckoo_manager.getter("description", superclassCall: super.description)
+            
+        }
+        
+    }
+    
+    // ["name": "useStartOrEndDate", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "StartOrEnd", "isReadOnly": false, "accessibility": "public"]
+    public override var useStartOrEndDate: StartOrEnd {
+        get {
+            
+            return cuckoo_manager.getter("useStartOrEndDate", superclassCall: super.useStartOrEndDate)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("useStartOrEndDate", value: newValue, superclassCall: super.useStartOrEndDate = newValue)
+            
+        }
+        
+    }
+    
+    // ["name": "daysOfWeek", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Set<DayOfWeek>", "isReadOnly": false, "accessibility": "public"]
+    public override var daysOfWeek: Set<DayOfWeek> {
+        get {
+            
+            return cuckoo_manager.getter("daysOfWeek", superclassCall: super.daysOfWeek)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("daysOfWeek", value: newValue, superclassCall: super.daysOfWeek = newValue)
+            
+        }
+        
+    }
+    
+    // ["name": "specificDate", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Date?", "isReadOnly": false, "accessibility": "public"]
+    public override var specificDate: Date? {
+        get {
+            
+            return cuckoo_manager.getter("specificDate", superclassCall: super.specificDate)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("specificDate", value: newValue, superclassCall: super.specificDate = newValue)
+            
+        }
+        
+    }
+    
+    // ["name": "constraintType", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "ConstraintType", "isReadOnly": false, "accessibility": "public"]
+    public override var constraintType: ConstraintType {
+        get {
+            
+            return cuckoo_manager.getter("constraintType", superclassCall: super.constraintType)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("constraintType", value: newValue, superclassCall: super.constraintType = newValue)
+            
+        }
+        
+    }
+    
+
+    
+
+    
+    // ["name": "isValid", "returnSignature": " -> Bool", "fullyQualifiedName": "isValid() -> Bool", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "", "call": "", "parameters": [], "returnType": "Bool", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func isValid()  -> Bool {
+        
+            return cuckoo_manager.call("isValid() -> Bool",
+                parameters: (),
+                superclassCall:
+                    
+                    super.isValid()
+                    )
+        
+    }
+    
+
+	struct __StubbingProxy_TimeConstraint: Cuckoo.StubbingProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	
+	    init(manager: Cuckoo.MockManager) {
+	        self.cuckoo_manager = manager
+	    }
+	    
+	    var description: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockTimeConstraint, String> {
+	        return .init(manager: cuckoo_manager, name: "description")
+	    }
+	    
+	    var useStartOrEndDate: Cuckoo.ClassToBeStubbedProperty<MockTimeConstraint, StartOrEnd> {
+	        return .init(manager: cuckoo_manager, name: "useStartOrEndDate")
+	    }
+	    
+	    var daysOfWeek: Cuckoo.ClassToBeStubbedProperty<MockTimeConstraint, Set<DayOfWeek>> {
+	        return .init(manager: cuckoo_manager, name: "daysOfWeek")
+	    }
+	    
+	    var specificDate: Cuckoo.ClassToBeStubbedProperty<MockTimeConstraint, Date?> {
+	        return .init(manager: cuckoo_manager, name: "specificDate")
+	    }
+	    
+	    var constraintType: Cuckoo.ClassToBeStubbedProperty<MockTimeConstraint, ConstraintType> {
+	        return .init(manager: cuckoo_manager, name: "constraintType")
+	    }
+	    
+	    
+	    func isValid() -> Cuckoo.ClassStubFunction<(), Bool> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return .init(stub: cuckoo_manager.createStub(for: MockTimeConstraint.self, method: "isValid() -> Bool", parameterMatchers: matchers))
+	    }
+	    
+	}
+
+	struct __VerificationProxy_TimeConstraint: Cuckoo.VerificationProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	    private let callMatcher: Cuckoo.CallMatcher
+	    private let sourceLocation: Cuckoo.SourceLocation
+	
+	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+	        self.cuckoo_manager = manager
+	        self.callMatcher = callMatcher
+	        self.sourceLocation = sourceLocation
+	    }
+	
+	    
+	    var description: Cuckoo.VerifyReadOnlyProperty<String> {
+	        return .init(manager: cuckoo_manager, name: "description", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var useStartOrEndDate: Cuckoo.VerifyProperty<StartOrEnd> {
+	        return .init(manager: cuckoo_manager, name: "useStartOrEndDate", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var daysOfWeek: Cuckoo.VerifyProperty<Set<DayOfWeek>> {
+	        return .init(manager: cuckoo_manager, name: "daysOfWeek", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var specificDate: Cuckoo.VerifyProperty<Date?> {
+	        return .init(manager: cuckoo_manager, name: "specificDate", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var constraintType: Cuckoo.VerifyProperty<ConstraintType> {
+	        return .init(manager: cuckoo_manager, name: "constraintType", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	
+	    
+	    @discardableResult
+	    func isValid() -> Cuckoo.__DoNotUse<Bool> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return cuckoo_manager.verify("isValid() -> Bool", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	}
+
+}
+
+ class TimeConstraintStub: TimeConstraint {
+    
+    public override var description: String {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (String).self)
+        }
+        
+    }
+    
+    public override var useStartOrEndDate: StartOrEnd {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (StartOrEnd).self)
+        }
+        
+        set { }
+        
+    }
+    
+    public override var daysOfWeek: Set<DayOfWeek> {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (Set<DayOfWeek>).self)
+        }
+        
+        set { }
+        
+    }
+    
+    public override var specificDate: Date? {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (Date?).self)
+        }
+        
+        set { }
+        
+    }
+    
+    public override var constraintType: ConstraintType {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (ConstraintType).self)
+        }
+        
+        set { }
+        
+    }
+    
+
+    
+
+    
+    public override func isValid()  -> Bool {
+        return DefaultValueRegistry.defaultValue(for: Bool.self)
+    }
+    
+}
+
 
 // MARK: - Mocks generated from file: DataIntegration/Questions/Question.swift
 //
@@ -3077,12 +3038,13 @@ class MockTags: Tags, Cuckoo.ClassMock {
 
 
 // MARK: - Mocks generated from file: DataIntegration/Questions/TextQuestion.swift
-//
-//  Question.swift
-//  Data Integration
-//
-//  Created by Bryan Nova on 6/24/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
+////
+////  Question.swift
+////  Data Integration
+////
+////  Created by Bryan Nova on 6/24/18.
+////  Copyright © 2018 Bryan Nova. All rights reserved.
+////
 //
 
 import Cuckoo
@@ -3091,136 +3053,6 @@ import Cuckoo
 import Foundation
 import NaturalLanguage
 import os
-
-class MockTextQuestion: TextQuestion, Cuckoo.ClassMock {
-    typealias MocksType = TextQuestion
-    typealias Stubbing = __StubbingProxy_TextQuestion
-    typealias Verification = __VerificationProxy_TextQuestion
-    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
-
-    
-    // ["name": "questionText", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "String", "isReadOnly": true, "accessibility": ""]
-     override var questionText: String {
-        get {
-            
-            return cuckoo_manager.getter("questionText", superclassCall: super.questionText)
-            
-        }
-        
-    }
-    
-
-    
-
-    
-    // ["name": "parse", "returnSignature": "", "fullyQualifiedName": "parse(callback: (Error?) -> ())", "parameterSignature": "callback: (Error?) -> ()", "parameterSignatureWithoutNames": "callback: (Error?) -> ()", "inputTypes": "(Error?) -> ()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "(Error?) -> ()", range: CountableRange(833..<857), nameRange: CountableRange(833..<841))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
-    public override func parse(callback: (Error?) -> ())  {
-        	return withoutActuallyEscaping(callback, do: { (callback) in
-
-            return cuckoo_manager.call("parse(callback: (Error?) -> ())",
-                parameters: (callback),
-                superclassCall:
-                    
-                    super.parse(callback: callback)
-                    )
-        	})
-
-    }
-    
-    // ["name": "answer", "returnSignature": "", "fullyQualifiedName": "answer(callback: @escaping (Answer?, Error?) -> ())", "parameterSignature": "callback: @escaping (Answer?, Error?) -> ()", "parameterSignatureWithoutNames": "callback: @escaping (Answer?, Error?) -> ()", "inputTypes": "(Answer?, Error?) -> ()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping (Answer?, Error?) -> ()", range: CountableRange(3299..<3342), nameRange: CountableRange(3299..<3307))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
-    public override func answer(callback: @escaping (Answer?, Error?) -> ())  {
-        
-            return cuckoo_manager.call("answer(callback: @escaping (Answer?, Error?) -> ())",
-                parameters: (callback),
-                superclassCall:
-                    
-                    super.answer(callback: callback)
-                    )
-        
-    }
-    
-
-	struct __StubbingProxy_TextQuestion: Cuckoo.StubbingProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	
-	    init(manager: Cuckoo.MockManager) {
-	        self.cuckoo_manager = manager
-	    }
-	    
-	    var questionText: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockTextQuestion, String> {
-	        return .init(manager: cuckoo_manager, name: "questionText")
-	    }
-	    
-	    
-	    func parse<M1: Cuckoo.Matchable>(callback: M1) -> Cuckoo.ClassStubNoReturnFunction<((Error?) -> ())> where M1.MatchedType == (Error?) -> () {
-	        let matchers: [Cuckoo.ParameterMatcher<((Error?) -> ())>] = [wrap(matchable: callback) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTextQuestion.self, method: "parse(callback: (Error?) -> ())", parameterMatchers: matchers))
-	    }
-	    
-	    func answer<M1: Cuckoo.Matchable>(callback: M1) -> Cuckoo.ClassStubNoReturnFunction<((Answer?, Error?) -> ())> where M1.MatchedType == (Answer?, Error?) -> () {
-	        let matchers: [Cuckoo.ParameterMatcher<((Answer?, Error?) -> ())>] = [wrap(matchable: callback) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockTextQuestion.self, method: "answer(callback: @escaping (Answer?, Error?) -> ())", parameterMatchers: matchers))
-	    }
-	    
-	}
-
-	struct __VerificationProxy_TextQuestion: Cuckoo.VerificationProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	    private let callMatcher: Cuckoo.CallMatcher
-	    private let sourceLocation: Cuckoo.SourceLocation
-	
-	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-	        self.cuckoo_manager = manager
-	        self.callMatcher = callMatcher
-	        self.sourceLocation = sourceLocation
-	    }
-	
-	    
-	    var questionText: Cuckoo.VerifyReadOnlyProperty<String> {
-	        return .init(manager: cuckoo_manager, name: "questionText", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	
-	    
-	    @discardableResult
-	    func parse<M1: Cuckoo.Matchable>(callback: M1) -> Cuckoo.__DoNotUse<Void> where M1.MatchedType == (Error?) -> () {
-	        let matchers: [Cuckoo.ParameterMatcher<((Error?) -> ())>] = [wrap(matchable: callback) { $0 }]
-	        return cuckoo_manager.verify("parse(callback: (Error?) -> ())", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func answer<M1: Cuckoo.Matchable>(callback: M1) -> Cuckoo.__DoNotUse<Void> where M1.MatchedType == (Answer?, Error?) -> () {
-	        let matchers: [Cuckoo.ParameterMatcher<((Answer?, Error?) -> ())>] = [wrap(matchable: callback) { $0 }]
-	        return cuckoo_manager.verify("answer(callback: @escaping (Answer?, Error?) -> ())", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	}
-
-}
-
- class TextQuestionStub: TextQuestion {
-    
-     override var questionText: String {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (String).self)
-        }
-        
-    }
-    
-
-    
-
-    
-    public override func parse(callback: (Error?) -> ())  {
-        return DefaultValueRegistry.defaultValue(for: Void.self)
-    }
-    
-    public override func answer(callback: @escaping (Answer?, Error?) -> ())  {
-        return DefaultValueRegistry.defaultValue(for: Void.self)
-    }
-    
-}
-
 
 // MARK: - Mocks generated from file: DataIntegration/Sources/ActivitySource.swift
 //
@@ -4948,6 +4780,169 @@ class MockTimeConstraintTableViewCell: TimeConstraintTableViewCell, Cuckoo.Class
 }
 
 
+// MARK: - Mocks generated from file: DataIntegration/UI/Results/HeartRateTableViewCell.swift
+//
+//  HeartRateTableViewCell.swift
+//  DataIntegration
+//
+//  Created by Bryan Nova on 7/13/18.
+//  Copyright © 2018 Bryan Nova. All rights reserved.
+//
+
+import Cuckoo
+@testable import DataIntegration
+
+import SwiftDate
+import UIKit
+
+class MockHeartRateTableViewCell: HeartRateTableViewCell, Cuckoo.ClassMock {
+    typealias MocksType = HeartRateTableViewCell
+    typealias Stubbing = __StubbingProxy_HeartRateTableViewCell
+    typealias Verification = __VerificationProxy_HeartRateTableViewCell
+    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
+
+    
+    // ["name": "heartRate", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "HeartRate!", "isReadOnly": false, "accessibility": "public"]
+    public override var heartRate: HeartRate! {
+        get {
+            
+            return cuckoo_manager.getter("heartRate", superclassCall: super.heartRate)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("heartRate", value: newValue, superclassCall: super.heartRate = newValue)
+            
+        }
+        
+    }
+    
+    // ["name": "valueLabel", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "UILabel!", "isReadOnly": false, "accessibility": ""]
+     override var valueLabel: UILabel! {
+        get {
+            
+            return cuckoo_manager.getter("valueLabel", superclassCall: super.valueLabel)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("valueLabel", value: newValue, superclassCall: super.valueLabel = newValue)
+            
+        }
+        
+    }
+    
+    // ["name": "timestampLabel", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "UILabel!", "isReadOnly": false, "accessibility": ""]
+     override var timestampLabel: UILabel! {
+        get {
+            
+            return cuckoo_manager.getter("timestampLabel", superclassCall: super.timestampLabel)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("timestampLabel", value: newValue, superclassCall: super.timestampLabel = newValue)
+            
+        }
+        
+    }
+    
+
+    
+
+    
+
+	struct __StubbingProxy_HeartRateTableViewCell: Cuckoo.StubbingProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	
+	    init(manager: Cuckoo.MockManager) {
+	        self.cuckoo_manager = manager
+	    }
+	    
+	    var heartRate: Cuckoo.ClassToBeStubbedProperty<MockHeartRateTableViewCell, HeartRate?> {
+	        return .init(manager: cuckoo_manager, name: "heartRate")
+	    }
+	    
+	    var valueLabel: Cuckoo.ClassToBeStubbedProperty<MockHeartRateTableViewCell, UILabel?> {
+	        return .init(manager: cuckoo_manager, name: "valueLabel")
+	    }
+	    
+	    var timestampLabel: Cuckoo.ClassToBeStubbedProperty<MockHeartRateTableViewCell, UILabel?> {
+	        return .init(manager: cuckoo_manager, name: "timestampLabel")
+	    }
+	    
+	    
+	}
+
+	struct __VerificationProxy_HeartRateTableViewCell: Cuckoo.VerificationProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	    private let callMatcher: Cuckoo.CallMatcher
+	    private let sourceLocation: Cuckoo.SourceLocation
+	
+	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+	        self.cuckoo_manager = manager
+	        self.callMatcher = callMatcher
+	        self.sourceLocation = sourceLocation
+	    }
+	
+	    
+	    var heartRate: Cuckoo.VerifyProperty<HeartRate?> {
+	        return .init(manager: cuckoo_manager, name: "heartRate", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var valueLabel: Cuckoo.VerifyProperty<UILabel?> {
+	        return .init(manager: cuckoo_manager, name: "valueLabel", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var timestampLabel: Cuckoo.VerifyProperty<UILabel?> {
+	        return .init(manager: cuckoo_manager, name: "timestampLabel", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	
+	    
+	}
+
+}
+
+ class HeartRateTableViewCellStub: HeartRateTableViewCell {
+    
+    public override var heartRate: HeartRate! {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (HeartRate!).self)
+        }
+        
+        set { }
+        
+    }
+    
+     override var valueLabel: UILabel! {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (UILabel!).self)
+        }
+        
+        set { }
+        
+    }
+    
+     override var timestampLabel: UILabel! {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (UILabel!).self)
+        }
+        
+        set { }
+        
+    }
+    
+
+    
+
+    
+}
+
+
 // MARK: - Mocks generated from file: DataIntegration/Util/CalendarUtil.swift
 //
 //  CalendarUtil.swift
@@ -4974,7 +4969,7 @@ class MockCalendarUtil: CalendarUtil, Cuckoo.ClassMock {
     
 
     
-    // ["name": "start", "returnSignature": " -> Date", "fullyQualifiedName": "start(of: Calendar.Component, in: Date) -> Date", "parameterSignature": "of component: Calendar.Component, in date: Date", "parameterSignatureWithoutNames": "component: Calendar.Component, date: Date", "inputTypes": "Calendar.Component, Date", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "component, date", "call": "of: component, in: date", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("of"), name: "component", type: "Calendar.Component", range: CountableRange(516..<548), nameRange: CountableRange(516..<518)), CuckooGeneratorFramework.MethodParameter(label: Optional("in"), name: "date", type: "Date", range: CountableRange(550..<563), nameRange: CountableRange(550..<552))], "returnType": "Date", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "start", "returnSignature": " -> Date", "fullyQualifiedName": "start(of: Calendar.Component, in: Date) -> Date", "parameterSignature": "of component: Calendar.Component, in date: Date", "parameterSignatureWithoutNames": "component: Calendar.Component, date: Date", "inputTypes": "Calendar.Component, Date", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "component, date", "call": "of: component, in: date", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("of"), name: "component", type: "Calendar.Component", range: CountableRange(979..<1011), nameRange: CountableRange(979..<981)), CuckooGeneratorFramework.MethodParameter(label: Optional("in"), name: "date", type: "Date", range: CountableRange(1013..<1026), nameRange: CountableRange(1013..<1015))], "returnType": "Date", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func start(of component: Calendar.Component, in date: Date)  -> Date {
         
             return cuckoo_manager.call("start(of: Calendar.Component, in: Date) -> Date",
@@ -4986,7 +4981,7 @@ class MockCalendarUtil: CalendarUtil, Cuckoo.ClassMock {
         
     }
     
-    // ["name": "end", "returnSignature": " -> Date", "fullyQualifiedName": "end(of: Calendar.Component, in: Date) -> Date", "parameterSignature": "of component: Calendar.Component, in date: Date", "parameterSignatureWithoutNames": "component: Calendar.Component, date: Date", "inputTypes": "Calendar.Component, Date", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "component, date", "call": "of: component, in: date", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("of"), name: "component", type: "Calendar.Component", range: CountableRange(1092..<1124), nameRange: CountableRange(1092..<1094)), CuckooGeneratorFramework.MethodParameter(label: Optional("in"), name: "date", type: "Date", range: CountableRange(1126..<1139), nameRange: CountableRange(1126..<1128))], "returnType": "Date", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    // ["name": "end", "returnSignature": " -> Date", "fullyQualifiedName": "end(of: Calendar.Component, in: Date) -> Date", "parameterSignature": "of component: Calendar.Component, in date: Date", "parameterSignatureWithoutNames": "component: Calendar.Component, date: Date", "inputTypes": "Calendar.Component, Date", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "component, date", "call": "of: component, in: date", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("of"), name: "component", type: "Calendar.Component", range: CountableRange(1555..<1587), nameRange: CountableRange(1555..<1557)), CuckooGeneratorFramework.MethodParameter(label: Optional("in"), name: "date", type: "Date", range: CountableRange(1589..<1602), nameRange: CountableRange(1589..<1591))], "returnType": "Date", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
     public override func end(of component: Calendar.Component, in date: Date)  -> Date {
         
             return cuckoo_manager.call("end(of: Calendar.Component, in: Date) -> Date",
@@ -4994,6 +4989,30 @@ class MockCalendarUtil: CalendarUtil, Cuckoo.ClassMock {
                 superclassCall:
                     
                     super.end(of: component, in: date)
+                    )
+        
+    }
+    
+    // ["name": "string", "returnSignature": " -> String", "fullyQualifiedName": "string(for: Date, inFormat: String) -> String", "parameterSignature": "for date: Date, inFormat format: String", "parameterSignatureWithoutNames": "date: Date, format: String", "inputTypes": "Date, String", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "date, format", "call": "for: date, inFormat: format", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("for"), name: "date", type: "Date", range: CountableRange(1851..<1865), nameRange: CountableRange(1851..<1854)), CuckooGeneratorFramework.MethodParameter(label: Optional("inFormat"), name: "format", type: "String", range: CountableRange(1867..<1914), nameRange: CountableRange(1867..<1875))], "returnType": "String", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func string(for date: Date, inFormat format: String)  -> String {
+        
+            return cuckoo_manager.call("string(for: Date, inFormat: String) -> String",
+                parameters: (date, format),
+                superclassCall:
+                    
+                    super.string(for: date, inFormat: format)
+                    )
+        
+    }
+    
+    // ["name": "date", "returnSignature": " -> Bool", "fullyQualifiedName": "date(_: Date, occursOnSame: Calendar.Component, as: Date) -> Bool", "parameterSignature": "_ date1: Date, occursOnSame component: Calendar.Component, as date2: Date", "parameterSignatureWithoutNames": "date1: Date, component: Calendar.Component, date2: Date", "inputTypes": "Date, Calendar.Component, Date", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "date1, component, date2", "call": "date1, occursOnSame: component, as: date2", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "date1", type: "Date", range: CountableRange(2136..<2149), nameRange: CountableRange(0..<0)), CuckooGeneratorFramework.MethodParameter(label: Optional("occursOnSame"), name: "component", type: "Calendar.Component", range: CountableRange(2151..<2193), nameRange: CountableRange(2151..<2163)), CuckooGeneratorFramework.MethodParameter(label: Optional("as"), name: "date2", type: "Date", range: CountableRange(2195..<2209), nameRange: CountableRange(2195..<2197))], "returnType": "Bool", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func date(_ date1: Date, occursOnSame component: Calendar.Component, as date2: Date)  -> Bool {
+        
+            return cuckoo_manager.call("date(_: Date, occursOnSame: Calendar.Component, as: Date) -> Bool",
+                parameters: (date1, component, date2),
+                superclassCall:
+                    
+                    super.date(date1, occursOnSame: component, as: date2)
                     )
         
     }
@@ -5015,6 +5034,16 @@ class MockCalendarUtil: CalendarUtil, Cuckoo.ClassMock {
 	    func end<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(of component: M1, in date: M2) -> Cuckoo.ClassStubFunction<(Calendar.Component, Date), Date> where M1.MatchedType == Calendar.Component, M2.MatchedType == Date {
 	        let matchers: [Cuckoo.ParameterMatcher<(Calendar.Component, Date)>] = [wrap(matchable: component) { $0.0 }, wrap(matchable: date) { $0.1 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockCalendarUtil.self, method: "end(of: Calendar.Component, in: Date) -> Date", parameterMatchers: matchers))
+	    }
+	    
+	    func string<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(for date: M1, inFormat format: M2) -> Cuckoo.ClassStubFunction<(Date, String), String> where M1.MatchedType == Date, M2.MatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(Date, String)>] = [wrap(matchable: date) { $0.0 }, wrap(matchable: format) { $0.1 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockCalendarUtil.self, method: "string(for: Date, inFormat: String) -> String", parameterMatchers: matchers))
+	    }
+	    
+	    func date<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(_ date1: M1, occursOnSame component: M2, as date2: M3) -> Cuckoo.ClassStubFunction<(Date, Calendar.Component, Date), Bool> where M1.MatchedType == Date, M2.MatchedType == Calendar.Component, M3.MatchedType == Date {
+	        let matchers: [Cuckoo.ParameterMatcher<(Date, Calendar.Component, Date)>] = [wrap(matchable: date1) { $0.0 }, wrap(matchable: component) { $0.1 }, wrap(matchable: date2) { $0.2 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockCalendarUtil.self, method: "date(_: Date, occursOnSame: Calendar.Component, as: Date) -> Bool", parameterMatchers: matchers))
 	    }
 	    
 	}
@@ -5045,6 +5074,18 @@ class MockCalendarUtil: CalendarUtil, Cuckoo.ClassMock {
 	        return cuckoo_manager.verify("end(of: Calendar.Component, in: Date) -> Date", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
+	    @discardableResult
+	    func string<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(for date: M1, inFormat format: M2) -> Cuckoo.__DoNotUse<String> where M1.MatchedType == Date, M2.MatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(Date, String)>] = [wrap(matchable: date) { $0.0 }, wrap(matchable: format) { $0.1 }]
+	        return cuckoo_manager.verify("string(for: Date, inFormat: String) -> String", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func date<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(_ date1: M1, occursOnSame component: M2, as date2: M3) -> Cuckoo.__DoNotUse<Bool> where M1.MatchedType == Date, M2.MatchedType == Calendar.Component, M3.MatchedType == Date {
+	        let matchers: [Cuckoo.ParameterMatcher<(Date, Calendar.Component, Date)>] = [wrap(matchable: date1) { $0.0 }, wrap(matchable: component) { $0.1 }, wrap(matchable: date2) { $0.2 }]
+	        return cuckoo_manager.verify("date(_: Date, occursOnSame: Calendar.Component, as: Date) -> Bool", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
 	}
 
 }
@@ -5063,455 +5104,11 @@ class MockCalendarUtil: CalendarUtil, Cuckoo.ClassMock {
         return DefaultValueRegistry.defaultValue(for: Date.self)
     }
     
-}
-
-
-// MARK: - Mocks generated from file: DataIntegration/Util/HKQuantitySampleUtil.swift
-//
-//  HKQuantitySampleUtil.swift
-//  DataIntegration
-//
-//  Created by Bryan Nova on 7/4/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
-//
-
-import Cuckoo
-@testable import DataIntegration
-
-import Foundation
-import HealthKit
-
-class MockHKQuantitySampleUtil: HKQuantitySampleUtil, Cuckoo.ClassMock {
-    typealias MocksType = HKQuantitySampleUtil
-    typealias Stubbing = __StubbingProxy_HKQuantitySampleUtil
-    typealias Verification = __VerificationProxy_HKQuantitySampleUtil
-    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
-
-    
-
-    
-
-    
-    // ["name": "compute", "returnSignature": " -> [(date: Date?, value: Double)]", "fullyQualifiedName": "compute(operation: QueryOperation, over: [HKQuantitySample], withUnit: HKUnit) -> [(date: Date?, value: Double)]", "parameterSignature": "operation: QueryOperation, over samples: [HKQuantitySample], withUnit unit: HKUnit", "parameterSignatureWithoutNames": "operation: QueryOperation, samples: [HKQuantitySample], unit: HKUnit", "inputTypes": "QueryOperation, [HKQuantitySample], HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "operation, samples, unit", "call": "operation: operation, over: samples, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("operation"), name: "operation", type: "QueryOperation", range: CountableRange(309..<334), nameRange: CountableRange(309..<318)), CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(336..<368), nameRange: CountableRange(336..<340)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(370..<391), nameRange: CountableRange(370..<378))], "returnType": "[(date: Date?, value: Double)]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func compute(operation: QueryOperation, over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
-        
-            return cuckoo_manager.call("compute(operation: QueryOperation, over: [HKQuantitySample], withUnit: HKUnit) -> [(date: Date?, value: Double)]",
-                parameters: (operation, samples, unit),
-                superclassCall:
-                    
-                    super.compute(operation: operation, over: samples, withUnit: unit)
-                    )
-        
+    public override func string(for date: Date, inFormat format: String)  -> String {
+        return DefaultValueRegistry.defaultValue(for: String.self)
     }
     
-    // ["name": "average", "returnSignature": " -> [(date: Date?, value: Double)]", "fullyQualifiedName": "average(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", "parameterSignature": "over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component?, unit: HKUnit", "inputTypes": "[HKQuantitySample], Calendar.Component?, HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit, unit", "call": "over: samples, per: aggregationUnit, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(1115..<1147), nameRange: CountableRange(1115..<1119)), CuckooGeneratorFramework.MethodParameter(label: Optional("per"), name: "aggregationUnit", type: "Calendar.Component?", range: CountableRange(1149..<1189), nameRange: CountableRange(1149..<1152)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(1191..<1212), nameRange: CountableRange(1191..<1199))], "returnType": "[(date: Date?, value: Double)]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func average(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
-        
-            return cuckoo_manager.call("average(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]",
-                parameters: (samples, aggregationUnit, unit),
-                superclassCall:
-                    
-                    super.average(over: samples, per: aggregationUnit, withUnit: unit)
-                    )
-        
-    }
-    
-    // ["name": "average", "returnSignature": " -> Double", "fullyQualifiedName": "average(over: [HKQuantitySample], withUnit: HKUnit) -> Double", "parameterSignature": "over samples: [HKQuantitySample], withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], unit: HKUnit", "inputTypes": "[HKQuantitySample], HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, unit", "call": "over: samples, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(1858..<1890), nameRange: CountableRange(1858..<1862)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(1892..<1913), nameRange: CountableRange(1892..<1900))], "returnType": "Double", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func average(over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> Double {
-        
-            return cuckoo_manager.call("average(over: [HKQuantitySample], withUnit: HKUnit) -> Double",
-                parameters: (samples, unit),
-                superclassCall:
-                    
-                    super.average(over: samples, withUnit: unit)
-                    )
-        
-    }
-    
-    // ["name": "count", "returnSignature": " -> [(date: Date?, value: Double)]", "fullyQualifiedName": "count(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", "parameterSignature": "over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component?, unit: HKUnit", "inputTypes": "[HKQuantitySample], Calendar.Component?, HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit, unit", "call": "over: samples, per: aggregationUnit, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(2249..<2281), nameRange: CountableRange(2249..<2253)), CuckooGeneratorFramework.MethodParameter(label: Optional("per"), name: "aggregationUnit", type: "Calendar.Component?", range: CountableRange(2283..<2323), nameRange: CountableRange(2283..<2286)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(2325..<2346), nameRange: CountableRange(2325..<2333))], "returnType": "[(date: Date?, value: Double)]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func count(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
-        
-            return cuckoo_manager.call("count(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]",
-                parameters: (samples, aggregationUnit, unit),
-                superclassCall:
-                    
-                    super.count(over: samples, per: aggregationUnit, withUnit: unit)
-                    )
-        
-    }
-    
-    // ["name": "max", "returnSignature": " -> [(date: Date?, value: Double)]", "fullyQualifiedName": "max(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", "parameterSignature": "over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component?, unit: HKUnit", "inputTypes": "[HKQuantitySample], Calendar.Component?, HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit, unit", "call": "over: samples, per: aggregationUnit, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(2948..<2980), nameRange: CountableRange(2948..<2952)), CuckooGeneratorFramework.MethodParameter(label: Optional("per"), name: "aggregationUnit", type: "Calendar.Component?", range: CountableRange(2982..<3022), nameRange: CountableRange(2982..<2985)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(3024..<3045), nameRange: CountableRange(3024..<3032))], "returnType": "[(date: Date?, value: Double)]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func max(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
-        
-            return cuckoo_manager.call("max(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]",
-                parameters: (samples, aggregationUnit, unit),
-                superclassCall:
-                    
-                    super.max(over: samples, per: aggregationUnit, withUnit: unit)
-                    )
-        
-    }
-    
-    // ["name": "max", "returnSignature": " -> Double", "fullyQualifiedName": "max(over: [HKQuantitySample], withUnit: HKUnit) -> Double", "parameterSignature": "over samples: [HKQuantitySample], withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], unit: HKUnit", "inputTypes": "[HKQuantitySample], HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, unit", "call": "over: samples, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(3667..<3699), nameRange: CountableRange(3667..<3671)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(3701..<3722), nameRange: CountableRange(3701..<3709))], "returnType": "Double", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func max(over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> Double {
-        
-            return cuckoo_manager.call("max(over: [HKQuantitySample], withUnit: HKUnit) -> Double",
-                parameters: (samples, unit),
-                superclassCall:
-                    
-                    super.max(over: samples, withUnit: unit)
-                    )
-        
-    }
-    
-    // ["name": "min", "returnSignature": " -> [(date: Date?, value: Double)]", "fullyQualifiedName": "min(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", "parameterSignature": "over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component?, unit: HKUnit", "inputTypes": "[HKQuantitySample], Calendar.Component?, HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit, unit", "call": "over: samples, per: aggregationUnit, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(4114..<4146), nameRange: CountableRange(4114..<4118)), CuckooGeneratorFramework.MethodParameter(label: Optional("per"), name: "aggregationUnit", type: "Calendar.Component?", range: CountableRange(4148..<4188), nameRange: CountableRange(4148..<4151)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(4190..<4211), nameRange: CountableRange(4190..<4198))], "returnType": "[(date: Date?, value: Double)]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func min(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
-        
-            return cuckoo_manager.call("min(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]",
-                parameters: (samples, aggregationUnit, unit),
-                superclassCall:
-                    
-                    super.min(over: samples, per: aggregationUnit, withUnit: unit)
-                    )
-        
-    }
-    
-    // ["name": "min", "returnSignature": " -> Double", "fullyQualifiedName": "min(over: [HKQuantitySample], withUnit: HKUnit) -> Double", "parameterSignature": "over samples: [HKQuantitySample], withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], unit: HKUnit", "inputTypes": "[HKQuantitySample], HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, unit", "call": "over: samples, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(4833..<4865), nameRange: CountableRange(4833..<4837)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(4867..<4888), nameRange: CountableRange(4867..<4875))], "returnType": "Double", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func min(over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> Double {
-        
-            return cuckoo_manager.call("min(over: [HKQuantitySample], withUnit: HKUnit) -> Double",
-                parameters: (samples, unit),
-                superclassCall:
-                    
-                    super.min(over: samples, withUnit: unit)
-                    )
-        
-    }
-    
-    // ["name": "sum", "returnSignature": " -> [(date: Date?, value: Double)]", "fullyQualifiedName": "sum(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", "parameterSignature": "over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component?, unit: HKUnit", "inputTypes": "[HKQuantitySample], Calendar.Component?, HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit, unit", "call": "over: samples, per: aggregationUnit, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(5280..<5312), nameRange: CountableRange(5280..<5284)), CuckooGeneratorFramework.MethodParameter(label: Optional("per"), name: "aggregationUnit", type: "Calendar.Component?", range: CountableRange(5314..<5354), nameRange: CountableRange(5314..<5317)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(5356..<5377), nameRange: CountableRange(5356..<5364))], "returnType": "[(date: Date?, value: Double)]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func sum(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
-        
-            return cuckoo_manager.call("sum(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]",
-                parameters: (samples, aggregationUnit, unit),
-                superclassCall:
-                    
-                    super.sum(over: samples, per: aggregationUnit, withUnit: unit)
-                    )
-        
-    }
-    
-    // ["name": "sum", "returnSignature": " -> Double", "fullyQualifiedName": "sum(over: [HKQuantitySample], withUnit: HKUnit) -> Double", "parameterSignature": "over samples: [HKQuantitySample], withUnit unit: HKUnit", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], unit: HKUnit", "inputTypes": "[HKQuantitySample], HKUnit", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, unit", "call": "over: samples, withUnit: unit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("over"), name: "samples", type: "[HKQuantitySample]", range: CountableRange(5999..<6031), nameRange: CountableRange(5999..<6003)), CuckooGeneratorFramework.MethodParameter(label: Optional("withUnit"), name: "unit", type: "HKUnit", range: CountableRange(6033..<6054), nameRange: CountableRange(6033..<6041))], "returnType": "Double", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func sum(over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> Double {
-        
-            return cuckoo_manager.call("sum(over: [HKQuantitySample], withUnit: HKUnit) -> Double",
-                parameters: (samples, unit),
-                superclassCall:
-                    
-                    super.sum(over: samples, withUnit: unit)
-                    )
-        
-    }
-    
-    // ["name": "sortSamplesByAggregation", "returnSignature": " -> [(date: Date, samples: [HKQuantitySample])]", "fullyQualifiedName": "sortSamplesByAggregation(_: [HKQuantitySample], _: Calendar.Component) -> [(date: Date, samples: [HKQuantitySample])]", "parameterSignature": "_ samples: [HKQuantitySample], _ aggregationUnit: Calendar.Component", "parameterSignatureWithoutNames": "samples: [HKQuantitySample], aggregationUnit: Calendar.Component", "inputTypes": "[HKQuantitySample], Calendar.Component", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "samples, aggregationUnit", "call": "samples, aggregationUnit", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "samples", type: "[HKQuantitySample]", range: CountableRange(6303..<6332), nameRange: CountableRange(0..<0)), CuckooGeneratorFramework.MethodParameter(label: nil, name: "aggregationUnit", type: "Calendar.Component", range: CountableRange(6334..<6371), nameRange: CountableRange(0..<0))], "returnType": "[(date: Date, samples: [HKQuantitySample])]", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func sortSamplesByAggregation(_ samples: [HKQuantitySample], _ aggregationUnit: Calendar.Component)  -> [(date: Date, samples: [HKQuantitySample])] {
-        
-            return cuckoo_manager.call("sortSamplesByAggregation(_: [HKQuantitySample], _: Calendar.Component) -> [(date: Date, samples: [HKQuantitySample])]",
-                parameters: (samples, aggregationUnit),
-                superclassCall:
-                    
-                    super.sortSamplesByAggregation(samples, aggregationUnit)
-                    )
-        
-    }
-    
-
-	struct __StubbingProxy_HKQuantitySampleUtil: Cuckoo.StubbingProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	
-	    init(manager: Cuckoo.MockManager) {
-	        self.cuckoo_manager = manager
-	    }
-	    
-	    
-	    func compute<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(operation: M1, over samples: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<(QueryOperation, [HKQuantitySample], HKUnit), [(date: Date?, value: Double)]> where M1.MatchedType == QueryOperation, M2.MatchedType == [HKQuantitySample], M3.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<(QueryOperation, [HKQuantitySample], HKUnit)>] = [wrap(matchable: operation) { $0.0 }, wrap(matchable: samples) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "compute(operation: QueryOperation, over: [HKQuantitySample], withUnit: HKUnit) -> [(date: Date?, value: Double)]", parameterMatchers: matchers))
-	    }
-	    
-	    func average<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<([HKQuantitySample], Calendar.Component?, HKUnit), [(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "average(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", parameterMatchers: matchers))
-	    }
-	    
-	    func average<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(over samples: M1, withUnit unit: M2) -> Cuckoo.ClassStubFunction<([HKQuantitySample], HKUnit), Double> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: unit) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "average(over: [HKQuantitySample], withUnit: HKUnit) -> Double", parameterMatchers: matchers))
-	    }
-	    
-	    func count<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<([HKQuantitySample], Calendar.Component?, HKUnit), [(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "count(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", parameterMatchers: matchers))
-	    }
-	    
-	    func max<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<([HKQuantitySample], Calendar.Component?, HKUnit), [(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "max(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", parameterMatchers: matchers))
-	    }
-	    
-	    func max<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(over samples: M1, withUnit unit: M2) -> Cuckoo.ClassStubFunction<([HKQuantitySample], HKUnit), Double> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: unit) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "max(over: [HKQuantitySample], withUnit: HKUnit) -> Double", parameterMatchers: matchers))
-	    }
-	    
-	    func min<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<([HKQuantitySample], Calendar.Component?, HKUnit), [(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "min(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", parameterMatchers: matchers))
-	    }
-	    
-	    func min<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(over samples: M1, withUnit unit: M2) -> Cuckoo.ClassStubFunction<([HKQuantitySample], HKUnit), Double> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: unit) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "min(over: [HKQuantitySample], withUnit: HKUnit) -> Double", parameterMatchers: matchers))
-	    }
-	    
-	    func sum<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.ClassStubFunction<([HKQuantitySample], Calendar.Component?, HKUnit), [(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "sum(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", parameterMatchers: matchers))
-	    }
-	    
-	    func sum<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(over samples: M1, withUnit unit: M2) -> Cuckoo.ClassStubFunction<([HKQuantitySample], HKUnit), Double> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: unit) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "sum(over: [HKQuantitySample], withUnit: HKUnit) -> Double", parameterMatchers: matchers))
-	    }
-	    
-	    func sortSamplesByAggregation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ samples: M1, _ aggregationUnit: M2) -> Cuckoo.ClassStubFunction<([HKQuantitySample], Calendar.Component), [(date: Date, samples: [HKQuantitySample])]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKQuantitySampleUtil.self, method: "sortSamplesByAggregation(_: [HKQuantitySample], _: Calendar.Component) -> [(date: Date, samples: [HKQuantitySample])]", parameterMatchers: matchers))
-	    }
-	    
-	}
-
-	struct __VerificationProxy_HKQuantitySampleUtil: Cuckoo.VerificationProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	    private let callMatcher: Cuckoo.CallMatcher
-	    private let sourceLocation: Cuckoo.SourceLocation
-	
-	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-	        self.cuckoo_manager = manager
-	        self.callMatcher = callMatcher
-	        self.sourceLocation = sourceLocation
-	    }
-	
-	    
-	
-	    
-	    @discardableResult
-	    func compute<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(operation: M1, over samples: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[(date: Date?, value: Double)]> where M1.MatchedType == QueryOperation, M2.MatchedType == [HKQuantitySample], M3.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<(QueryOperation, [HKQuantitySample], HKUnit)>] = [wrap(matchable: operation) { $0.0 }, wrap(matchable: samples) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return cuckoo_manager.verify("compute(operation: QueryOperation, over: [HKQuantitySample], withUnit: HKUnit) -> [(date: Date?, value: Double)]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func average<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return cuckoo_manager.verify("average(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func average<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(over samples: M1, withUnit unit: M2) -> Cuckoo.__DoNotUse<Double> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: unit) { $0.1 }]
-	        return cuckoo_manager.verify("average(over: [HKQuantitySample], withUnit: HKUnit) -> Double", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func count<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return cuckoo_manager.verify("count(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func max<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return cuckoo_manager.verify("max(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func max<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(over samples: M1, withUnit unit: M2) -> Cuckoo.__DoNotUse<Double> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: unit) { $0.1 }]
-	        return cuckoo_manager.verify("max(over: [HKQuantitySample], withUnit: HKUnit) -> Double", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func min<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return cuckoo_manager.verify("min(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func min<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(over samples: M1, withUnit unit: M2) -> Cuckoo.__DoNotUse<Double> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: unit) { $0.1 }]
-	        return cuckoo_manager.verify("min(over: [HKQuantitySample], withUnit: HKUnit) -> Double", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func sum<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(over samples: M1, per aggregationUnit: M2, withUnit unit: M3) -> Cuckoo.__DoNotUse<[(date: Date?, value: Double)]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component?, M3.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component?, HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }, wrap(matchable: unit) { $0.2 }]
-	        return cuckoo_manager.verify("sum(over: [HKQuantitySample], per: Calendar.Component?, withUnit: HKUnit) -> [(date: Date?, value: Double)]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func sum<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(over samples: M1, withUnit unit: M2) -> Cuckoo.__DoNotUse<Double> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == HKUnit {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], HKUnit)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: unit) { $0.1 }]
-	        return cuckoo_manager.verify("sum(over: [HKQuantitySample], withUnit: HKUnit) -> Double", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func sortSamplesByAggregation<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ samples: M1, _ aggregationUnit: M2) -> Cuckoo.__DoNotUse<[(date: Date, samples: [HKQuantitySample])]> where M1.MatchedType == [HKQuantitySample], M2.MatchedType == Calendar.Component {
-	        let matchers: [Cuckoo.ParameterMatcher<([HKQuantitySample], Calendar.Component)>] = [wrap(matchable: samples) { $0.0 }, wrap(matchable: aggregationUnit) { $0.1 }]
-	        return cuckoo_manager.verify("sortSamplesByAggregation(_: [HKQuantitySample], _: Calendar.Component) -> [(date: Date, samples: [HKQuantitySample])]", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	}
-
-}
-
- class HKQuantitySampleUtilStub: HKQuantitySampleUtil {
-    
-
-    
-
-    
-    public override func compute(operation: QueryOperation, over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
-        return DefaultValueRegistry.defaultValue(for: [(date: Date?, value: Double)].self)
-    }
-    
-    public override func average(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
-        return DefaultValueRegistry.defaultValue(for: [(date: Date?, value: Double)].self)
-    }
-    
-    public override func average(over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> Double {
-        return DefaultValueRegistry.defaultValue(for: Double.self)
-    }
-    
-    public override func count(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
-        return DefaultValueRegistry.defaultValue(for: [(date: Date?, value: Double)].self)
-    }
-    
-    public override func max(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
-        return DefaultValueRegistry.defaultValue(for: [(date: Date?, value: Double)].self)
-    }
-    
-    public override func max(over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> Double {
-        return DefaultValueRegistry.defaultValue(for: Double.self)
-    }
-    
-    public override func min(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
-        return DefaultValueRegistry.defaultValue(for: [(date: Date?, value: Double)].self)
-    }
-    
-    public override func min(over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> Double {
-        return DefaultValueRegistry.defaultValue(for: Double.self)
-    }
-    
-    public override func sum(over samples: [HKQuantitySample], per aggregationUnit: Calendar.Component?, withUnit unit: HKUnit)  -> [(date: Date?, value: Double)] {
-        return DefaultValueRegistry.defaultValue(for: [(date: Date?, value: Double)].self)
-    }
-    
-    public override func sum(over samples: [HKQuantitySample], withUnit unit: HKUnit)  -> Double {
-        return DefaultValueRegistry.defaultValue(for: Double.self)
-    }
-    
-    public override func sortSamplesByAggregation(_ samples: [HKQuantitySample], _ aggregationUnit: Calendar.Component)  -> [(date: Date, samples: [HKQuantitySample])] {
-        return DefaultValueRegistry.defaultValue(for: [(date: Date, samples: [HKQuantitySample])].self)
-    }
-    
-}
-
-
-// MARK: - Mocks generated from file: DataIntegration/Util/HKSampleUtil.swift
-//
-//  HKSampleUtil.swift
-//  DataIntegration
-//
-//  Created by Bryan Nova on 7/4/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
-//
-
-import Cuckoo
-@testable import DataIntegration
-
-import Foundation
-import HealthKit
-
-class MockHKSampleUtil: HKSampleUtil, Cuckoo.ClassMock {
-    typealias MocksType = HKSampleUtil
-    typealias Stubbing = __StubbingProxy_HKSampleUtil
-    typealias Verification = __VerificationProxy_HKSampleUtil
-    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
-
-    
-
-    
-
-    
-    // ["name": "sample", "returnSignature": " -> Bool", "fullyQualifiedName": "sample(_: HKSample, occursOnOneOf: Set<DayOfWeek>) -> Bool", "parameterSignature": "_ sample: HKSample, occursOnOneOf daysOfWeek: Set<DayOfWeek>", "parameterSignatureWithoutNames": "sample: HKSample, daysOfWeek: Set<DayOfWeek>", "inputTypes": "HKSample, Set<DayOfWeek>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "sample, daysOfWeek", "call": "sample, occursOnOneOf: daysOfWeek", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "sample", type: "HKSample", range: CountableRange(487..<505), nameRange: CountableRange(0..<0)), CuckooGeneratorFramework.MethodParameter(label: Optional("occursOnOneOf"), name: "daysOfWeek", type: "Set<DayOfWeek>", range: CountableRange(507..<547), nameRange: CountableRange(507..<520))], "returnType": "Bool", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
-    public override func sample(_ sample: HKSample, occursOnOneOf daysOfWeek: Set<DayOfWeek>)  -> Bool {
-        
-            return cuckoo_manager.call("sample(_: HKSample, occursOnOneOf: Set<DayOfWeek>) -> Bool",
-                parameters: (sample, daysOfWeek),
-                superclassCall:
-                    
-                    super.sample(sample, occursOnOneOf: daysOfWeek)
-                    )
-        
-    }
-    
-
-	struct __StubbingProxy_HKSampleUtil: Cuckoo.StubbingProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	
-	    init(manager: Cuckoo.MockManager) {
-	        self.cuckoo_manager = manager
-	    }
-	    
-	    
-	    func sample<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ sample: M1, occursOnOneOf daysOfWeek: M2) -> Cuckoo.ClassStubFunction<(HKSample, Set<DayOfWeek>), Bool> where M1.MatchedType == HKSample, M2.MatchedType == Set<DayOfWeek> {
-	        let matchers: [Cuckoo.ParameterMatcher<(HKSample, Set<DayOfWeek>)>] = [wrap(matchable: sample) { $0.0 }, wrap(matchable: daysOfWeek) { $0.1 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHKSampleUtil.self, method: "sample(_: HKSample, occursOnOneOf: Set<DayOfWeek>) -> Bool", parameterMatchers: matchers))
-	    }
-	    
-	}
-
-	struct __VerificationProxy_HKSampleUtil: Cuckoo.VerificationProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	    private let callMatcher: Cuckoo.CallMatcher
-	    private let sourceLocation: Cuckoo.SourceLocation
-	
-	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-	        self.cuckoo_manager = manager
-	        self.callMatcher = callMatcher
-	        self.sourceLocation = sourceLocation
-	    }
-	
-	    
-	
-	    
-	    @discardableResult
-	    func sample<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ sample: M1, occursOnOneOf daysOfWeek: M2) -> Cuckoo.__DoNotUse<Bool> where M1.MatchedType == HKSample, M2.MatchedType == Set<DayOfWeek> {
-	        let matchers: [Cuckoo.ParameterMatcher<(HKSample, Set<DayOfWeek>)>] = [wrap(matchable: sample) { $0.0 }, wrap(matchable: daysOfWeek) { $0.1 }]
-	        return cuckoo_manager.verify("sample(_: HKSample, occursOnOneOf: Set<DayOfWeek>) -> Bool", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	}
-
-}
-
- class HKSampleUtilStub: HKSampleUtil {
-    
-
-    
-
-    
-    public override func sample(_ sample: HKSample, occursOnOneOf daysOfWeek: Set<DayOfWeek>)  -> Bool {
+    public override func date(_ date1: Date, occursOnSame component: Calendar.Component, as date2: Date)  -> Bool {
         return DefaultValueRegistry.defaultValue(for: Bool.self)
     }
     
@@ -5657,6 +5254,123 @@ class MockTextNormalizationUtil: TextNormalizationUtil, Cuckoo.ClassMock {
     
     public override func removePunctuation(_ text: String)  -> String {
         return DefaultValueRegistry.defaultValue(for: String.self)
+    }
+    
+}
+
+
+// MARK: - Mocks generated from file: DataIntegration/Util/TimeConstraintUtil.swift
+//
+//  TimeConstraintUtil.swift
+//  DataIntegration
+//
+//  Created by Bryan Nova on 7/15/18.
+//  Copyright © 2018 Bryan Nova. All rights reserved.
+//
+
+import Cuckoo
+@testable import DataIntegration
+
+import Foundation
+
+class MockTimeConstraintUtil: TimeConstraintUtil, Cuckoo.ClassMock {
+    typealias MocksType = TimeConstraintUtil
+    typealias Stubbing = __StubbingProxy_TimeConstraintUtil
+    typealias Verification = __VerificationProxy_TimeConstraintUtil
+    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
+
+    
+
+    
+
+    
+    // ["name": "getStartAndEndDatesFrom", "returnSignature": " -> (start: Date?, end: Date?)", "fullyQualifiedName": "getStartAndEndDatesFrom(timeConstraints: Set<TimeConstraint>) -> (start: Date?, end: Date?)", "parameterSignature": "timeConstraints: Set<TimeConstraint>", "parameterSignatureWithoutNames": "timeConstraints: Set<TimeConstraint>", "inputTypes": "Set<TimeConstraint>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "timeConstraints", "call": "timeConstraints: timeConstraints", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("timeConstraints"), name: "timeConstraints", type: "Set<TimeConstraint>", range: CountableRange(243..<279), nameRange: CountableRange(243..<258))], "returnType": "(start: Date?, end: Date?)", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func getStartAndEndDatesFrom(timeConstraints: Set<TimeConstraint>)  -> (start: Date?, end: Date?) {
+        
+            return cuckoo_manager.call("getStartAndEndDatesFrom(timeConstraints: Set<TimeConstraint>) -> (start: Date?, end: Date?)",
+                parameters: (timeConstraints),
+                superclassCall:
+                    
+                    super.getStartAndEndDatesFrom(timeConstraints: timeConstraints)
+                    )
+        
+    }
+    
+    // ["name": "getDaysOfWeekFrom", "returnSignature": " -> Set<DayOfWeek>", "fullyQualifiedName": "getDaysOfWeekFrom(timeConstraints: Set<TimeConstraint>) -> Set<DayOfWeek>", "parameterSignature": "timeConstraints: Set<TimeConstraint>", "parameterSignatureWithoutNames": "timeConstraints: Set<TimeConstraint>", "inputTypes": "Set<TimeConstraint>", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "timeConstraints", "call": "timeConstraints: timeConstraints", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("timeConstraints"), name: "timeConstraints", type: "Set<TimeConstraint>", range: CountableRange(744..<780), nameRange: CountableRange(744..<759))], "returnType": "Set<DayOfWeek>", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func getDaysOfWeekFrom(timeConstraints: Set<TimeConstraint>)  -> Set<DayOfWeek> {
+        
+            return cuckoo_manager.call("getDaysOfWeekFrom(timeConstraints: Set<TimeConstraint>) -> Set<DayOfWeek>",
+                parameters: (timeConstraints),
+                superclassCall:
+                    
+                    super.getDaysOfWeekFrom(timeConstraints: timeConstraints)
+                    )
+        
+    }
+    
+
+	struct __StubbingProxy_TimeConstraintUtil: Cuckoo.StubbingProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	
+	    init(manager: Cuckoo.MockManager) {
+	        self.cuckoo_manager = manager
+	    }
+	    
+	    
+	    func getStartAndEndDatesFrom<M1: Cuckoo.Matchable>(timeConstraints: M1) -> Cuckoo.ClassStubFunction<(Set<TimeConstraint>), (start: Date?, end: Date?)> where M1.MatchedType == Set<TimeConstraint> {
+	        let matchers: [Cuckoo.ParameterMatcher<(Set<TimeConstraint>)>] = [wrap(matchable: timeConstraints) { $0 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTimeConstraintUtil.self, method: "getStartAndEndDatesFrom(timeConstraints: Set<TimeConstraint>) -> (start: Date?, end: Date?)", parameterMatchers: matchers))
+	    }
+	    
+	    func getDaysOfWeekFrom<M1: Cuckoo.Matchable>(timeConstraints: M1) -> Cuckoo.ClassStubFunction<(Set<TimeConstraint>), Set<DayOfWeek>> where M1.MatchedType == Set<TimeConstraint> {
+	        let matchers: [Cuckoo.ParameterMatcher<(Set<TimeConstraint>)>] = [wrap(matchable: timeConstraints) { $0 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockTimeConstraintUtil.self, method: "getDaysOfWeekFrom(timeConstraints: Set<TimeConstraint>) -> Set<DayOfWeek>", parameterMatchers: matchers))
+	    }
+	    
+	}
+
+	struct __VerificationProxy_TimeConstraintUtil: Cuckoo.VerificationProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	    private let callMatcher: Cuckoo.CallMatcher
+	    private let sourceLocation: Cuckoo.SourceLocation
+	
+	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+	        self.cuckoo_manager = manager
+	        self.callMatcher = callMatcher
+	        self.sourceLocation = sourceLocation
+	    }
+	
+	    
+	
+	    
+	    @discardableResult
+	    func getStartAndEndDatesFrom<M1: Cuckoo.Matchable>(timeConstraints: M1) -> Cuckoo.__DoNotUse<(start: Date?, end: Date?)> where M1.MatchedType == Set<TimeConstraint> {
+	        let matchers: [Cuckoo.ParameterMatcher<(Set<TimeConstraint>)>] = [wrap(matchable: timeConstraints) { $0 }]
+	        return cuckoo_manager.verify("getStartAndEndDatesFrom(timeConstraints: Set<TimeConstraint>) -> (start: Date?, end: Date?)", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func getDaysOfWeekFrom<M1: Cuckoo.Matchable>(timeConstraints: M1) -> Cuckoo.__DoNotUse<Set<DayOfWeek>> where M1.MatchedType == Set<TimeConstraint> {
+	        let matchers: [Cuckoo.ParameterMatcher<(Set<TimeConstraint>)>] = [wrap(matchable: timeConstraints) { $0 }]
+	        return cuckoo_manager.verify("getDaysOfWeekFrom(timeConstraints: Set<TimeConstraint>) -> Set<DayOfWeek>", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	}
+
+}
+
+ class TimeConstraintUtilStub: TimeConstraintUtil {
+    
+
+    
+
+    
+    public override func getStartAndEndDatesFrom(timeConstraints: Set<TimeConstraint>)  -> (start: Date?, end: Date?) {
+        return DefaultValueRegistry.defaultValue(for: (start: Date?, end: Date?).self)
+    }
+    
+    public override func getDaysOfWeekFrom(timeConstraints: Set<TimeConstraint>)  -> Set<DayOfWeek> {
+        return DefaultValueRegistry.defaultValue(for: Set<DayOfWeek>.self)
     }
     
 }

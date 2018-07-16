@@ -39,14 +39,14 @@ public class QueryOperation: NSObject {
 		case UnknownOperationType
 	}
 
-	public static let supportedAggregationUnits: [(aggregation: Calendar.Component, description: String)] = [
-		(.year, "Year"),
-		(.month, "Month"),
-		(.weekOfYear, "Week"),
-		(.day, "Day"),
-		(.hour, "Hour"),
-		(.minute, "Minute"),
-		(.second, "Second"),
+	public static let supportedAggregationUnits: [Calendar.Component] = [
+		.year,
+		.month,
+		.weekOfYear,
+		.day,
+		.hour,
+		.minute,
+		.second,
 	]
 
 	fileprivate static let map: [NLTag: Kind] = [Tags.average: .average, Tags.count: .count, Tags.max: .max, Tags.min: .min, Tags.sum: .sum]
@@ -57,9 +57,9 @@ public class QueryOperation: NSObject {
 	override public var description: String {
 		var str = kind.description
 		if aggregationUnit != nil {
-			for entry in Me.supportedAggregationUnits {
-				if entry.aggregation == aggregationUnit {
-					str += " per " + entry.description
+			for component in Me.supportedAggregationUnits {
+				if component == aggregationUnit {
+					str += " per " + CalendarUtil.componentNames[component]!
 				}
 			}
 		}

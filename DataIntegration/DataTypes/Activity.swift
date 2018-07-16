@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Activity: NSObject {
+public class Activity: NSObject {
 
 	var name: String
 	var tags: NSArray

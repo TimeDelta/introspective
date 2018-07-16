@@ -131,12 +131,12 @@ class AskViewController: UIViewController {
 			return
 		}
 
-		let question = TextQuestion(text: questionText!)
-		// TODO - tell user their question is being analyzed
-		DispatchQueue.global(qos: .userInitiated).async {
-			question.parse(callback: self.questionParsed)
-			question.answer(callback: self.questionAnswered)
-		}
+//		let question = TextQuestion(text: questionText!)
+//		// TODO - tell user their question is being analyzed
+//		DispatchQueue.global(qos: .userInitiated).async {
+//			question.parse(callback: self.questionParsed)
+//			question.answer(callback: self.questionAnswered)
+//		}
 	}
 
 	fileprivate func questionParsed(error: Error?) {

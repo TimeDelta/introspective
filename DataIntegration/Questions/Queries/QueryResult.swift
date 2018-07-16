@@ -8,13 +8,32 @@
 
 import Foundation
 
-public class QueryResult: NSObject {
+public class QueryResult<SampleType: Sample>: NSObject {
 
-	public fileprivate(set) var finalAnswer: Any
-	public fileprivate(set) var returnType: ReturnType
+	public fileprivate(set) var samples: [SampleType]
+	public fileprivate(set) var extraInformation: [ExtraInformation<SampleType>]
 
-	public init(_ finalAnswer: Any, _ returnType: ReturnType) {
-		self.finalAnswer = finalAnswer
-		self.returnType = returnType
+	fileprivate var extraInformationByType: [InformationType: [ExtraInformation<SampleType>]]
+
+	public init(_ samples: [SampleType]) {
+		self.samples = samples
+		self.extraInformation = [ExtraInformation]()
+		self.extraInformationByType = [InformationType: [ExtraInformation]]()
+	}
+
+	public func addExtraInformation(_ info: ExtraInformation<SampleType>) {
+		extraInformation.append(info)
+		var currentInfoForType = extraInformationByType[info.informationType]
+		if currentInfoForType == nil {
+			currentInfoForType = [ExtraInformation]()
+		}
+		currentInfoForType?.append(info)
+		extraInformationByType[info.informationType] = currentInfoForType!
+	}
+
+	/// - Returns: `nil` if no information of that type is found else all extra information of the specified type
+	/// - Complexity: Amortized constant time complexity
+	public func information(ofType type: InformationType) -> [ExtraInformation<SampleType>]? {
+		return extraInformationByType[type]
 	}
 }

@@ -7,19 +7,23 @@
 //
 
 import Foundation
+import HealthKit
 
-class HeartRate: NSObject {
+public class HeartRate: DoubleValueSample {
 
-	var value: Double
-	var timestamp: Date
-
-	init(value: Double) {
-		self.value = value
-		self.timestamp = Date()
+	public override init(_ value: Double) {
+		super.init(value)
 	}
 
-	init(value: Double, timestamp: Date) {
-		self.value = value
-		self.timestamp = timestamp
+	public override init(_ value: Double, _ dateType: DateType, _ date: Date) {
+		super.init(value, dateType, date)
+	}
+
+	public override init(_ value: Double, _ dates: [DateType: Date]) {
+		super.init(value, dates)
+	}
+
+	public init(_ sample: HKQuantitySample) {
+		super.init(sample.value, sample.dates)
 	}
 }

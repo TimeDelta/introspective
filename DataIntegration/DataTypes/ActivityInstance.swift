@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ActivityInstance: NSObject {
+public class ActivityInstance: NSObject {
 
 	var activity: Activity
 	var startTimestamp: Date

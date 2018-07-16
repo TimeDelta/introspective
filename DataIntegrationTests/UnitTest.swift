@@ -13,7 +13,7 @@ import HealthKit
 
 class UnitTest: XCTestCase {
 
-	fileprivate typealias Me = HKQuantitySampleUtilTests
+	fileprivate typealias Me = NumericSampleUtilTests
 
 	static let defaultUnit = HKUnit(from: "count/min")
 	static let defaultType = HKQuantityType.quantityType(forIdentifier: .heartRate)!
@@ -29,26 +29,26 @@ class UnitTest: XCTestCase {
         super.tearDown()
     }
 
-	func createSample(_ value: Double) -> HKQuantitySample {
-		return HKQuantitySample(type: Me.defaultType, quantity: HKQuantity(unit: Me.defaultUnit, doubleValue: value), start: Date(), end: Date())
+	func createNumericSample(_ value: Double) -> DoubleValueSample {
+		return DoubleValueSample(value)
 	}
 
-	func createSample(_ value: Double, start: Date, end: Date) -> HKQuantitySample {
-		return HKQuantitySample(type: Me.defaultType, quantity: HKQuantity(unit: Me.defaultUnit, doubleValue: value), start: start, end: end)
+	func createNumericSample(_ value: Double, _ date: Date) -> DoubleValueSample {
+		return DoubleValueSample(value, .start, date)
 	}
 
-	func createSamples(withValues values: [Double]) -> [HKQuantitySample] {
-		var samples = [HKQuantitySample]()
+	func createNumericSamples(withValues values: [Double]) -> [DoubleValueSample] {
+		var samples = [DoubleValueSample]()
 		for value in values {
-			samples.append(createSample(value))
+			samples.append(createNumericSample(value))
 		}
 		return samples
 	}
 
-	func createSamples(withValues values: [(start: Date, end: Date, value: Double)]) -> [HKQuantitySample] {
-		var samples = [HKQuantitySample]()
-		for (start, end, value) in values {
-			samples.append(createSample(value, start: start, end: end))
+	func createNumericSamples(withValues values: [(date: Date, value: Double)]) -> [DoubleValueSample] {
+		var samples = [DoubleValueSample]()
+		for (date, value) in values {
+			samples.append(createNumericSample(value, date))
 		}
 		return samples
 	}

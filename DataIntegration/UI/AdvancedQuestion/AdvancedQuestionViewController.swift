@@ -98,6 +98,18 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 			editedIndex = tableView.indexPath(for: source)!.row
 			controller.attributeRestriction = (parts[editedIndex] as! AttributeRestriction)
 			controller.dataType = closestDataType(aboveIndex: editedIndex)
+		} else if segue.destination is ResultsViewController<HeartRate> {
+//			let controller = (segue.destination as! ResultsViewController<HeartRate>)
+//			controller.dataType = .heartRate
+//			let query = HeartRateQuery()
+//			query.runQuery { (result: QueryResult<HeartRateQuery.SampleType>?, error: Error?) in
+//				if error != nil {
+//					controller.error = error
+//					return
+//				}
+//				controller.samples = result?.samples
+//				controller.extraInformation = result?.extraInformation
+//			}
 		}
 	}
 
@@ -106,6 +118,14 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
     }
 
 	@IBAction func runButtonPressed(_ sender: Any) {
+		let dataType = (parts[0] as! DataTypeInfo).dataType
+		switch (dataType) {
+			case .heartRate:
+				var query = Query(HeartRateQuery())
+				let controller = ResultsViewController<HeartRate>()
+				buildAndRunQuery(&query, controller)
+				break
+		}
 	}
 
 	@IBAction func saveEditedDataType(_ segue: UIStoryboardSegue) {
@@ -137,7 +157,7 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 					parts.append(DataTypeInfo())
 					break
 				case .timeConstraint:
-					var timeConstraint = TimeConstraint()
+					let timeConstraint = TimeConstraint()
 					timeConstraint.specificDate = Date()
 					parts.append(timeConstraint)
 					break
@@ -173,5 +193,20 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 	fileprivate func partWasAdded() {
 		let indexPath = IndexPath(row: cellTypes.count - 1, section: 0)
 		tableView.insertRows(at: [indexPath], with: .automatic)
+	}
+
+	fileprivate func buildAndRunQuery<SampleType: Sample>(_ query: inout Query<SampleType>, _ controller: ResultsViewController<SampleType>) {
+
+		// TODO - build the query
+
+		query.runQuery { (result: QueryResult<SampleType>?, error: Error?) in
+			if error != nil {
+				controller.error = error
+				return
+			}
+			controller.samples = result?.samples
+			controller.extraInformation = result?.extraInformation
+		}
+		present(controller, animated: true, completion: nil)
 	}
 }

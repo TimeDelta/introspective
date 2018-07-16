@@ -1,0 +1,44 @@
+//
+//  SearchUtil.swift
+//  DataIntegration
+//
+//  Created by Bryan Nova on 7/16/18.
+//  Copyright © 2018 Bryan Nova. All rights reserved.
+//
+
+import Foundation
+
+public class SearchUtil {
+
+	/// - Precondition: input array is sorted in ascending order
+	public func binarySearch<T:Comparable>(for targetItem: T, in items:Array<T>) -> Int? {
+		var lowerIndex = 0
+		var upperIndex = items.count - 1
+
+		while (true) {
+			let currentIndex = (lowerIndex + upperIndex) / 2
+			if (items[currentIndex] == targetItem) {
+				return currentIndex
+			}
+
+			if (lowerIndex > upperIndex) {
+				return nil
+			}
+
+			if (items[currentIndex] > targetItem) {
+				upperIndex = currentIndex - 1
+			} else {
+				lowerIndex = currentIndex + 1
+			}
+		}
+	}
+
+	/// - Precondition: input array has at least one element
+	public func closestItem<T>(to targetItem: T, in items: Array<T>, distance: (T, T) -> Int) -> T {
+		assert(items.count > 0, "Precondition violated: input array must have at least one element")
+
+		return items.sorted { (item1: T, item2: T) -> Bool in
+			return distance(item1, targetItem) < distance(item2, targetItem)
+		}[0]
+	}
+}

@@ -9,6 +9,14 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Results-->
+        <scene sceneID="zEc-BJ-2ZU">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Results" id="dVV-R4-kJA" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NLU-Jr-D4i" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1527" y="-357"/>
+        </scene>
         <!--Advanced Question-->
         <scene sceneID="BuD-iL-Y85">
             <objects>
@@ -32,8 +40,7 @@
                                 <barButtonItem style="plain" systemItem="flexibleSpace" id="1Qw-Ks-v0I"/>
                                 <barButtonItem title="Run" id="3Kp-MA-kPR">
                                     <connections>
-                                        <action selector="runButtonPressed:" destination="WJ9-gy-FSd" id="y5I-u1-QYq"/>
-                                        <segue destination="m2Z-Ql-1UR" kind="show" id="Lp4-3W-ibS"/>
+                                        <action selector="runButtonPressed:" destination="WJ9-gy-FSd" id="tqV-jn-vHU"/>
                                     </connections>
                                 </barButtonItem>
                                 <barButtonItem style="plain" systemItem="flexibleSpace" id="dGc-G1-3ad"/>
@@ -113,34 +120,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oNl-5P-b6T" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2108" y="-814.54272863568224"/>
-        </scene>
-        <!--Table View Controller-->
-        <scene sceneID="B8J-lN-sgX">
-            <objects>
-                <tableViewController id="m2Z-Ql-1UR" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="qYi-C9-Q0j">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="xbI-YV-7Zh">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="xbI-YV-7Zh" id="0zE-UQ-WRf">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="m2Z-Ql-1UR" id="flz-3C-Rbm"/>
-                            <outlet property="delegate" destination="m2Z-Ql-1UR" id="q0o-B7-hjr"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="lDr-gg-FVx" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2108" y="-1511"/>
         </scene>
         <!--Edit Data Type View Controller-->
         <scene sceneID="25k-Cb-uw0">
@@ -547,7 +526,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JRO-5e-ok4" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="bTJ-PX-zJS" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2069" y="-87"/>
+            <point key="canvasLocation" x="2107" y="-87"/>
         </scene>
     </scenes>
 </document>

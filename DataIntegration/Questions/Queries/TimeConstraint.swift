@@ -7,8 +7,9 @@
 //
 
 import Foundation
+import os
 
-public struct TimeConstraint {
+public class TimeConstraint: NSObject {
 
 	public enum ConstraintType: CustomStringConvertible {
 		case before
@@ -42,6 +43,35 @@ public struct TimeConstraint {
 				case .end: return "Ends"
 			}
 		}
+	}
+
+	override public var description: String {
+		var text = useStartOrEndDate.description + " " + constraintType.description + " "
+		switch (constraintType) {
+			case .after, .before:
+				if specificDate != nil {
+					text += DependencyInjector.util.calendarUtil.string(for: specificDate!)
+				} else {
+					os_log("No date for time constraint being displayed", type: .error)
+				}
+				break
+			case .on:
+				if !daysOfWeek.isEmpty {
+					var daysOfWeekText = ""
+					for dayOfWeek in daysOfWeek {
+						daysOfWeekText += dayOfWeek.abbreviation + ", "
+					}
+					daysOfWeekText.removeLast()
+					daysOfWeekText.removeLast()
+					text += daysOfWeekText
+				} else if specificDate != nil {
+					text += DependencyInjector.util.calendarUtil.string(for: specificDate!, inFormat: "YYYY-MM-dd")
+				} else {
+					os_log("No date or days of week for time constraint being displayed", type: .error)
+				}
+				break
+		}
+		return text
 	}
 
 	public var useStartOrEndDate: StartOrEnd = .start

@@ -11,16 +11,16 @@ import HealthKit
 import Cuckoo
 @testable import DataIntegration
 
-class HKQuantitySampleUtilTests: UnitTest {
+class NumericSampleUtilTests: UnitTest {
 
-	fileprivate typealias Me = HKQuantitySampleUtilTests
+	fileprivate typealias Me = NumericSampleUtilTests
 
-	fileprivate var util: HKQuantitySampleUtil!
+	fileprivate var util: NumericSampleUtil!
 	fileprivate var mockCalendarUtil: MockCalendarUtil!
 
 	override func setUp() {
 		super.setUp()
-		util = HKQuantitySampleUtil()
+		util = NumericSampleUtil()
 
 		let mockCalUtil = MockCalendarUtil()
 		mockCalendarUtil = mockCalUtil
@@ -35,21 +35,21 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let date2 = Date("2019-01-01")!
 		let date3 = Date("2020-01-01")!
 		let entries = [
-			(start: date3, end: date3, value: 2.0),
-			(start: date2, end: date2, value: 1.0),
-			(start: date2, end: date2, value: 3.0),
-			(start: date3, end: date3, value: 4.0),
-			(start: date3, end: date3, value: 1.0),
-			(start: date1, end: date1, value: 7.0),
-			(start: date2, end: date2, value: 2.0),
-			(start: date3, end: date3, value: 3.0),
-			(start: date1, end: date1, value: 5.0),
+			(date: date3, value: 2.0),
+			(date: date2, value: 1.0),
+			(date: date2, value: 3.0),
+			(date: date3, value: 4.0),
+			(date: date3, value: 1.0),
+			(date: date1, value: 7.0),
+			(date: date2, value: 2.0),
+			(date: date3, value: 3.0),
+			(date: date1, value: 5.0),
 		]
-		let samples = createSamples(withValues: entries)
+		let samples = createNumericSamples(withValues: entries)
 		let aggregationUnit: Calendar.Component = .year
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedAverages: [(date: Date?, value: Double)] = [
@@ -61,7 +61,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		queryOperation.aggregationUnit = aggregationUnit
 
 		// when
-		let averages = util.compute(operation: queryOperation, over: samples, withUnit: Me.defaultUnit)
+		let averages = util.compute(operation: queryOperation, over: samples)
 
 		// then
 		XCTAssert(averages.count == expectedAverages.count)
@@ -77,20 +77,20 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let date1 = Date("2018-01-01")!
 		let date2 = Date("2018-01-02")!
 		let date3 = Date("2018-01-03")!
-		let samples = createSamples(withValues: [
-			(start: date1, end: date1, value: 0.0),
-			(start: date2, end: date2, value: 0.0),
-			(start: date3, end: date3, value: 0.0),
-			(start: date2, end: date2, value: 0.0),
-			(start: date3, end: date3, value: 0.0),
-			(start: date1, end: date1, value: 0.0),
-			(start: date3, end: date3, value: 0.0),
-			(start: date2, end: date2, value: 0.0),
-			(start: date3, end: date3, value: 0.0),
+		let samples = createNumericSamples(withValues: [
+			(date: date1, value: 0.0),
+			(date: date2, value: 0.0),
+			(date: date3, value: 0.0),
+			(date: date2, value: 0.0),
+			(date: date3, value: 0.0),
+			(date: date1, value: 0.0),
+			(date: date3, value: 0.0),
+			(date: date2, value: 0.0),
+			(date: date3, value: 0.0),
 		])
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedCounts: [(date: Date?, value: Double)] = [
@@ -102,7 +102,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		queryOperation.aggregationUnit = aggregationUnit
 
 		// when
-		let counts = util.compute(operation: queryOperation, over: samples, withUnit: Me.defaultUnit)
+		let counts = util.compute(operation: queryOperation, over: samples)
 
 		// then
 		XCTAssert(counts.count == expectedCounts.count)
@@ -121,20 +121,20 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let value1 = 4.3
 		let value2 = 54.2
 		let value3 = 43.2
-		let samples = createSamples(withValues: [
-			(start: date1, end: date1, value: value1),
-			(start: date3, end: date3, value: value3 - 3),
-			(start: date2, end: date2, value: value2 - 1),
-			(start: date3, end: date3, value: value3),
-			(start: date1, end: date1, value: value1 - 1),
-			(start: date2, end: date2, value: value2),
-			(start: date3, end: date3, value: value3 - 1),
-			(start: date3, end: date3, value: value3 - 2),
-			(start: date2, end: date2, value: value2 - 2),
+		let samples = createNumericSamples(withValues: [
+			(date: date1, value: value1),
+			(date: date3, value: value3 - 3),
+			(date: date2, value: value2 - 1),
+			(date: date3, value: value3),
+			(date: date1, value: value1 - 1),
+			(date: date2, value: value2),
+			(date: date3, value: value3 - 1),
+			(date: date3, value: value3 - 2),
+			(date: date2, value: value2 - 2),
 		])
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedMaxs: [(date: Date?, value: Double)] = [
@@ -146,7 +146,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		queryOperation.aggregationUnit = aggregationUnit
 
 		// when
-		let maxs = util.compute(operation: queryOperation, over: samples, withUnit: Me.defaultUnit)
+		let maxs = util.compute(operation: queryOperation, over: samples)
 
 		// then
 		XCTAssert(maxs.count == expectedMaxs.count)
@@ -165,20 +165,20 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let value1 = 3.2
 		let value2 = 534.2
 		let value3 = 32.2
-		let samples = createSamples(withValues: [
-			(start: date1, end: date1, value: value1 + 1),
-			(start: date3, end: date3, value: value3),
-			(start: date2, end: date2, value: value2 + 1),
-			(start: date3, end: date3, value: value3 + 3),
-			(start: date3, end: date3, value: value3 + 2),
-			(start: date3, end: date3, value: value3 + 1),
-			(start: date1, end: date1, value: value1),
-			(start: date2, end: date2, value: value2 + 2),
-			(start: date2, end: date2, value: value2),
+		let samples = createNumericSamples(withValues: [
+			(date: date1, value: value1 + 1),
+			(date: date3, value: value3),
+			(date: date2, value: value2 + 1),
+			(date: date3, value: value3 + 3),
+			(date: date3, value: value3 + 2),
+			(date: date3, value: value3 + 1),
+			(date: date1, value: value1),
+			(date: date2, value: value2 + 2),
+			(date: date2, value: value2),
 		])
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedMins: [(date: Date?, value: Double)] = [
@@ -190,7 +190,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		queryOperation.aggregationUnit = aggregationUnit
 
 		// when
-		let mins = util.compute(operation: queryOperation, over: samples, withUnit: Me.defaultUnit)
+		let mins = util.compute(operation: queryOperation, over: samples)
 
 		// then
 		XCTAssert(mins.count == expectedMins.count)
@@ -209,20 +209,20 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let value1 = 3.2
 		let value2 = 534.2
 		let value3 = 32.2
-		let samples = createSamples(withValues: [
-			(start: date2, end: date2, value: value2),
-			(start: date2, end: date2, value: value2 + 2),
-			(start: date3, end: date3, value: value3 + 3),
-			(start: date3, end: date3, value: value3),
-			(start: date1, end: date1, value: value1 + 1),
-			(start: date2, end: date2, value: value2 + 1),
-			(start: date3, end: date3, value: value3 + 1),
-			(start: date1, end: date1, value: value1),
-			(start: date3, end: date3, value: value3 + 2),
+		let samples = createNumericSamples(withValues: [
+			(date: date2, value: value2),
+			(date: date2, value: value2 + 2),
+			(date: date3, value: value3 + 3),
+			(date: date3, value: value3),
+			(date: date1, value: value1 + 1),
+			(date: date2, value: value2 + 1),
+			(date: date3, value: value3 + 1),
+			(date: date1, value: value1),
+			(date: date3, value: value3 + 2),
 		])
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedSums: [(date: Date?, value: Double)] = [
@@ -234,7 +234,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		queryOperation.aggregationUnit = aggregationUnit
 
 		// when
-		let sums = util.compute(operation: queryOperation, over: samples, withUnit: Me.defaultUnit)
+		let sums = util.compute(operation: queryOperation, over: samples)
 
 		// then
 		XCTAssert(sums.count == expectedSums.count)
@@ -247,10 +247,10 @@ class HKQuantitySampleUtilTests: UnitTest {
 	func testGivenOneSample_average_returnsValueOfThatSample() {
 		// given
 		let expectedAverage = 5.0
-		let samples = createSamples(withValues: [expectedAverage])
+		let samples = createNumericSamples(withValues: [expectedAverage])
 
 		// when
-		let average = util.average(over: samples, withUnit: Me.defaultUnit)
+		let average = util.average(over: samples)
 
 		// then
 		XCTAssert(average == expectedAverage)
@@ -264,10 +264,10 @@ class HKQuantitySampleUtilTests: UnitTest {
 			expectedAverage += value
 		}
 		expectedAverage /= Double(values.count)
-		let samples = createSamples(withValues: values)
+		let samples = createNumericSamples(withValues: values)
 
 		// when
-		let average = util.average(over: samples, withUnit: Me.defaultUnit)
+		let average = util.average(over: samples)
 
 		// then
 		XCTAssert(average == expectedAverage)
@@ -276,11 +276,11 @@ class HKQuantitySampleUtilTests: UnitTest {
 	func testGivenOnlyOneSampleWithNilAggregation_averagePer_returnsValueForThatSample() {
 		// given
 		let values = [5.0]
-		let samples = createSamples(withValues: values)
+		let samples = createNumericSamples(withValues: values)
 		let expectedAverages: [(date: Date?, value: Double)] = [(date: nil, value: 5.0)]
 
 		// when
-		let averages = util.average(over: samples, per: nil, withUnit: Me.defaultUnit)
+		let averages = util.average(over: samples, per: nil)
 
 		// then
 		XCTAssert(averages.count == expectedAverages.count)
@@ -298,10 +298,10 @@ class HKQuantitySampleUtilTests: UnitTest {
 			expectedAverage += value
 		}
 		expectedAverage /= Double(values.count)
-		let samples = createSamples(withValues: values)
+		let samples = createNumericSamples(withValues: values)
 
 		// when
-		let averages = util.average(over: samples, per: nil, withUnit: Me.defaultUnit)
+		let averages = util.average(over: samples, per: nil)
 
 		// then
 		XCTAssert(averages.count == 1)
@@ -312,17 +312,17 @@ class HKQuantitySampleUtilTests: UnitTest {
 	func testGivenOnlyOneSampleInOneAggregationUnit_averagePer_returnsValueForThatSample() {
 		// given
 		let values = [5.0]
-		let samples = createSamples(withValues: values)
+		let samples = createNumericSamples(withValues: values)
 		let aggregationUnit: Calendar.Component = .year
 		let aggregationDate = Date()
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(aggregationDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(aggregationDate)
 			}
 		}
 
 		// when
-		let averages = util.average(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let averages = util.average(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(averages.count == 1)
@@ -334,11 +334,11 @@ class HKQuantitySampleUtilTests: UnitTest {
 		// given
 		let date = Date("2018-01-01")!
 		let entries = [
-			(start: date, end: date, value: 5.0),
-			(start: date, end: date, value: 2.0),
-			(start: date, end: date, value: 1.0),
+			(date: date, value: 5.0),
+			(date: date, value: 2.0),
+			(date: date, value: 1.0),
 		]
-		let samples = createSamples(withValues: entries)
+		let samples = createNumericSamples(withValues: entries)
 		let aggregationUnit: Calendar.Component = .year
 		let aggregationDate = Date()
 		stub(mockCalendarUtil) { stub in
@@ -351,7 +351,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		expectedAverage /= Double(entries.count)
 
 		// when
-		let averages = util.average(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let averages = util.average(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(averages.count == 1)
@@ -368,15 +368,15 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let value2 = 43.3
 		let value3 = 53.3
 		let entries = [
-			(start: date1, end: date1, value: value1),
-			(start: date2, end: date2, value: value2),
-			(start: date3, end: date3, value: value3),
+			(date: date1, value: value1),
+			(date: date2, value: value2),
+			(date: date3, value: value3),
 		]
-		let samples = createSamples(withValues: entries)
+		let samples = createNumericSamples(withValues: entries)
 		let aggregationUnit: Calendar.Component = .year
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedAverages: [(date: Date?, value: Double)] = [
@@ -386,7 +386,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		]
 
 		// when
-		let averages = util.average(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let averages = util.average(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(averages.count == expectedAverages.count)
@@ -402,21 +402,21 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let date2 = Date("2019-01-01")!
 		let date3 = Date("2020-01-01")!
 		let entries = [
-			(start: date1, end: date1, value: 5.0),
-			(start: date1, end: date1, value: 7.0),
-			(start: date2, end: date2, value: 1.0),
-			(start: date2, end: date2, value: 2.0),
-			(start: date2, end: date2, value: 3.0),
-			(start: date3, end: date3, value: 1.0),
-			(start: date3, end: date3, value: 2.0),
-			(start: date3, end: date3, value: 3.0),
-			(start: date3, end: date3, value: 4.0),
+			(date: date1, value: 5.0),
+			(date: date1, value: 7.0),
+			(date: date2, value: 1.0),
+			(date: date2, value: 2.0),
+			(date: date2, value: 3.0),
+			(date: date3, value: 1.0),
+			(date: date3, value: 2.0),
+			(date: date3, value: 3.0),
+			(date: date3, value: 4.0),
 		]
-		let samples = createSamples(withValues: entries)
+		let samples = createNumericSamples(withValues: entries)
 		let aggregationUnit: Calendar.Component = .year
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedAverages: [(date: Date?, value: Double)] = [
@@ -426,7 +426,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		]
 
 		// when
-		let averages = util.average(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let averages = util.average(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(averages.count == expectedAverages.count)
@@ -442,21 +442,21 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let date2 = Date("2019-01-01")!
 		let date3 = Date("2020-01-01")!
 		let entries = [
-			(start: date3, end: date3, value: 2.0),
-			(start: date2, end: date2, value: 1.0),
-			(start: date2, end: date2, value: 3.0),
-			(start: date3, end: date3, value: 4.0),
-			(start: date3, end: date3, value: 1.0),
-			(start: date1, end: date1, value: 7.0),
-			(start: date2, end: date2, value: 2.0),
-			(start: date3, end: date3, value: 3.0),
-			(start: date1, end: date1, value: 5.0),
+			(date: date3, value: 2.0),
+			(date: date2, value: 1.0),
+			(date: date2, value: 3.0),
+			(date: date3, value: 4.0),
+			(date: date3, value: 1.0),
+			(date: date1, value: 7.0),
+			(date: date2, value: 2.0),
+			(date: date3, value: 3.0),
+			(date: date1, value: 5.0),
 		]
-		let samples = createSamples(withValues: entries)
+		let samples = createNumericSamples(withValues: entries)
 		let aggregationUnit: Calendar.Component = .year
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedAverages: [(date: Date?, value: Double)] = [
@@ -466,7 +466,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		]
 
 		// when
-		let averages = util.average(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let averages = util.average(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(averages.count == expectedAverages.count)
@@ -478,10 +478,10 @@ class HKQuantitySampleUtilTests: UnitTest {
 
 	func testGivenSampleArrayWithOnlyOneSampleAndNilAggregation_countPer_returnsOne() {
 		// given
-		let samples = createSamples(withValues: [0.0])
+		let samples = createNumericSamples(withValues: [0.0])
 
 		// when
-		let counts = util.count(over: samples, per: nil, withUnit: Me.defaultUnit)
+		let counts = util.count(over: samples, per: nil)
 
 		// then
 		XCTAssert(counts.count == 1)
@@ -491,10 +491,10 @@ class HKQuantitySampleUtilTests: UnitTest {
 
 	func testGivenSampleArrayWithMultipleSamplesAndNilAggregation_countPer_returnsCorrectValue() {
 		// given
-		let samples = createSamples(withValues: [0.0, 1.0, 2.0])
+		let samples = createNumericSamples(withValues: [0.0, 1.0, 2.0])
 
 		// when
-		let counts = util.count(over: samples, per: nil, withUnit: Me.defaultUnit)
+		let counts = util.count(over: samples, per: nil)
 
 		// then
 		XCTAssert(counts.count == 1)
@@ -505,16 +505,16 @@ class HKQuantitySampleUtilTests: UnitTest {
 	func testGivenSampleArrayWithOnlyOneSample_countPer_returnsOne() {
 		// given
 		let aggregationUnit: Calendar.Component = .year
-		let samples = [createSample(0.0)]
+		let samples = [createNumericSample(0.0)]
 		let aggregationDate = Date()
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(aggregationDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(aggregationDate)
 			}
 		}
 
 		// when
-		let counts = util.count(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let counts = util.count(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(counts.count == 1)
@@ -528,14 +528,14 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let date1 = Date("2018-01-01")!
 		let date2 = Date("2018-02-01")!
 		let date3 = Date("2018-03-01")!
-		let samples = createSamples(withValues: [
-			(start: date1, end: date1, value: 0.0),
-			(start: date2, end: date2, value: 0.0),
-			(start: date3, end: date3, value: 0.0),
+		let samples = createNumericSamples(withValues: [
+			(date: date1, value: 0.0),
+			(date: date2, value: 0.0),
+			(date: date3, value: 0.0),
 		])
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedCounts: [(date: Date?, value: Double)] = [
@@ -545,7 +545,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		]
 
 		// when
-		let counts = util.count(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let counts = util.count(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(counts.count == expectedCounts.count)
@@ -561,20 +561,20 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let date1 = Date("2018-01-01")!
 		let date2 = Date("2018-01-02")!
 		let date3 = Date("2018-01-03")!
-		let samples = createSamples(withValues: [
-			(start: date1, end: date1, value: 0.0),
-			(start: date1, end: date1, value: 0.0),
-			(start: date2, end: date2, value: 0.0),
-			(start: date2, end: date2, value: 0.0),
-			(start: date2, end: date2, value: 0.0),
-			(start: date3, end: date3, value: 0.0),
-			(start: date3, end: date3, value: 0.0),
-			(start: date3, end: date3, value: 0.0),
-			(start: date3, end: date3, value: 0.0),
+		let samples = createNumericSamples(withValues: [
+			(date: date1, value: 0.0),
+			(date: date1, value: 0.0),
+			(date: date2, value: 0.0),
+			(date: date2, value: 0.0),
+			(date: date2, value: 0.0),
+			(date: date3, value: 0.0),
+			(date: date3, value: 0.0),
+			(date: date3, value: 0.0),
+			(date: date3, value: 0.0),
 		])
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedCounts: [(date: Date?, value: Double)] = [
@@ -584,7 +584,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		]
 
 		// when
-		let counts = util.count(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let counts = util.count(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(counts.count == expectedCounts.count)
@@ -600,20 +600,20 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let date1 = Date("2018-01-01")!
 		let date2 = Date("2018-01-02")!
 		let date3 = Date("2018-01-03")!
-		let samples = createSamples(withValues: [
-			(start: date1, end: date1, value: 0.0),
-			(start: date2, end: date2, value: 0.0),
-			(start: date3, end: date3, value: 0.0),
-			(start: date2, end: date2, value: 0.0),
-			(start: date3, end: date3, value: 0.0),
-			(start: date1, end: date1, value: 0.0),
-			(start: date3, end: date3, value: 0.0),
-			(start: date2, end: date2, value: 0.0),
-			(start: date3, end: date3, value: 0.0),
+		let samples = createNumericSamples(withValues: [
+			(date: date1, value: 0.0),
+			(date: date2, value: 0.0),
+			(date: date3, value: 0.0),
+			(date: date2, value: 0.0),
+			(date: date3, value: 0.0),
+			(date: date1, value: 0.0),
+			(date: date3, value: 0.0),
+			(date: date2, value: 0.0),
+			(date: date3, value: 0.0),
 		])
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedCounts: [(date: Date?, value: Double)] = [
@@ -623,7 +623,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		]
 
 		// when
-		let counts = util.count(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let counts = util.count(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(counts.count == expectedCounts.count)
@@ -636,10 +636,10 @@ class HKQuantitySampleUtilTests: UnitTest {
 	func testGivenSampleArrayWithOnlyOneValue_max_returnsThatValue() {
 		// given
 		let value = 3.4
-		let samples = [createSample(value)]
+		let samples = [createNumericSample(value)]
 
 		// when
-		let max = util.max(over: samples, withUnit: Me.defaultUnit)
+		let max = util.max(over: samples)
 
 		// then
 		XCTAssert(max == value)
@@ -648,10 +648,10 @@ class HKQuantitySampleUtilTests: UnitTest {
 	func testGivenSampleArrayWithMultipleValues_max_returnsMaximumValue() {
 		// given
 		let expectedMax = 3.4
-		let samples = createSamples(withValues: [expectedMax - 1, expectedMax, expectedMax - 2])
+		let samples = createNumericSamples(withValues: [expectedMax - 1, expectedMax, expectedMax - 2])
 
 		// when
-		let max = util.max(over: samples, withUnit: Me.defaultUnit)
+		let max = util.max(over: samples)
 
 		// then
 		XCTAssert(max == expectedMax)
@@ -660,10 +660,10 @@ class HKQuantitySampleUtilTests: UnitTest {
 	func testGivenSampleArrayWithOnlyOneSampleAndNilAggregation_maxPer_returnsValueForThatSample() {
 		// given
 		let value = 5.2
-		let samples = createSamples(withValues: [value])
+		let samples = createNumericSamples(withValues: [value])
 
 		// when
-		let maxs = util.max(over: samples, per: nil, withUnit: Me.defaultUnit)
+		let maxs = util.max(over: samples, per: nil)
 
 		// then
 		XCTAssert(maxs.count == 1)
@@ -674,10 +674,10 @@ class HKQuantitySampleUtilTests: UnitTest {
 	func testGivenSampleArrayWithMultipleSamplesAndNilAggregation_maxPer_returnsCorrectValue() {
 		// given
 		let maxValue = 2.0
-		let samples = createSamples(withValues: [maxValue - 1, maxValue - 2, maxValue])
+		let samples = createNumericSamples(withValues: [maxValue - 1, maxValue - 2, maxValue])
 
 		// when
-		let maxs = util.max(over: samples, per: nil, withUnit: Me.defaultUnit)
+		let maxs = util.max(over: samples, per: nil)
 
 		// then
 		XCTAssert(maxs.count == 1)
@@ -689,16 +689,16 @@ class HKQuantitySampleUtilTests: UnitTest {
 		// given
 		let aggregationUnit: Calendar.Component = .year
 		let value = 5.4
-		let samples = [createSample(value)]
+		let samples = [createNumericSample(value)]
 		let aggregationDate = Date()
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(aggregationDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(aggregationDate)
 			}
 		}
 
 		// when
-		let maxs = util.max(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let maxs = util.max(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(maxs.count == 1)
@@ -715,14 +715,14 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let value1 = 4.3
 		let value2 = 5.3
 		let value3 = 43.4
-		let samples = createSamples(withValues: [
-			(start: date1, end: date1, value: value1),
-			(start: date2, end: date2, value: value2),
-			(start: date3, end: date3, value: value3),
+		let samples = createNumericSamples(withValues: [
+			(date: date1, value: value1),
+			(date: date2, value: value2),
+			(date: date3, value: value3),
 		])
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedMaxs: [(date: Date?, value: Double)] = [
@@ -732,7 +732,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		]
 
 		// when
-		let maxs = util.max(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let maxs = util.max(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(maxs.count == expectedMaxs.count)
@@ -751,20 +751,20 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let value1 = 4.3
 		let value2 = 54.2
 		let value3 = 43.2
-		let samples = createSamples(withValues: [
-			(start: date1, end: date1, value: value1),
-			(start: date1, end: date1, value: value1 - 1),
-			(start: date2, end: date2, value: value2 - 2),
-			(start: date2, end: date2, value: value2 - 1),
-			(start: date2, end: date2, value: value2),
-			(start: date3, end: date3, value: value3),
-			(start: date3, end: date3, value: value3 - 2),
-			(start: date3, end: date3, value: value3 - 1),
-			(start: date3, end: date3, value: value3 - 3)
+		let samples = createNumericSamples(withValues: [
+			(date: date1, value: value1),
+			(date: date1, value: value1 - 1),
+			(date: date2, value: value2 - 2),
+			(date: date2, value: value2 - 1),
+			(date: date2, value: value2),
+			(date: date3, value: value3),
+			(date: date3, value: value3 - 2),
+			(date: date3, value: value3 - 1),
+			(date: date3, value: value3 - 3)
 		])
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedMaxs: [(date: Date?, value: Double)] = [
@@ -774,7 +774,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		]
 
 		// when
-		let maxs = util.max(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let maxs = util.max(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(maxs.count == expectedMaxs.count)
@@ -793,20 +793,20 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let value1 = 4.3
 		let value2 = 54.2
 		let value3 = 43.2
-		let samples = createSamples(withValues: [
-			(start: date1, end: date1, value: value1),
-			(start: date3, end: date3, value: value3 - 3),
-			(start: date2, end: date2, value: value2 - 1),
-			(start: date3, end: date3, value: value3),
-			(start: date1, end: date1, value: value1 - 1),
-			(start: date2, end: date2, value: value2),
-			(start: date3, end: date3, value: value3 - 1),
-			(start: date3, end: date3, value: value3 - 2),
-			(start: date2, end: date2, value: value2 - 2),
+		let samples = createNumericSamples(withValues: [
+			(date: date1, value: value1),
+			(date: date3, value: value3 - 3),
+			(date: date2, value: value2 - 1),
+			(date: date3, value: value3),
+			(date: date1, value: value1 - 1),
+			(date: date2, value: value2),
+			(date: date3, value: value3 - 1),
+			(date: date3, value: value3 - 2),
+			(date: date2, value: value2 - 2),
 		])
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedMaxs: [(date: Date?, value: Double)] = [
@@ -816,7 +816,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		]
 
 		// when
-		let maxs = util.max(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let maxs = util.max(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(maxs.count == expectedMaxs.count)
@@ -829,10 +829,10 @@ class HKQuantitySampleUtilTests: UnitTest {
 	func testGivenSampleArrayWithOnlyOneValue_min_returnsThatValue() {
 		// given
 		let value = 3.4
-		let samples = [createSample(value)]
+		let samples = [createNumericSample(value)]
 
 		// when
-		let min = util.min(over: samples, withUnit: Me.defaultUnit)
+		let min = util.min(over: samples)
 
 		// then
 		XCTAssert(min == value)
@@ -841,10 +841,10 @@ class HKQuantitySampleUtilTests: UnitTest {
 	func testGivenSampleArrayWithMultipleValues_min_returnsMinimumValue() {
 		// given
 		let expectedMin = 3.4
-		let samples = createSamples(withValues: [expectedMin + 1, expectedMin, expectedMin + 2])
+		let samples = createNumericSamples(withValues: [expectedMin + 1, expectedMin, expectedMin + 2])
 
 		// when
-		let min = util.min(over: samples, withUnit: Me.defaultUnit)
+		let min = util.min(over: samples)
 
 		// then
 		XCTAssert(min == expectedMin)
@@ -853,10 +853,10 @@ class HKQuantitySampleUtilTests: UnitTest {
 	func testGivenSampleArrayWithOnlyOneSampleAndNilAggregation_minPer_returnsValueForThatSample() {
 		// given
 		let value = 4.3
-		let samples = createSamples(withValues: [value])
+		let samples = createNumericSamples(withValues: [value])
 
 		// when
-		let mins = util.min(over: samples, per: nil, withUnit: Me.defaultUnit)
+		let mins = util.min(over: samples, per: nil)
 
 		// then
 		XCTAssert(mins.count == 1)
@@ -867,10 +867,10 @@ class HKQuantitySampleUtilTests: UnitTest {
 	func testGivenSampleArrayWithMultipleSamplesAndNilAggregation_minPer_returnsCorrectValue() {
 		// given
 		let minValue = 4.2432
-		let samples = createSamples(withValues: [minValue + 1, minValue, minValue + 2])
+		let samples = createNumericSamples(withValues: [minValue + 1, minValue, minValue + 2])
 
 		// when
-		let mins = util.min(over: samples, per: nil, withUnit: Me.defaultUnit)
+		let mins = util.min(over: samples, per: nil)
 
 		// then
 		XCTAssert(mins.count == 1)
@@ -882,16 +882,16 @@ class HKQuantitySampleUtilTests: UnitTest {
 		// given
 		let aggregationUnit: Calendar.Component = .year
 		let value = 23.5
-		let samples = [createSample(value)]
+		let samples = [createNumericSample(value)]
 		let aggregationDate = Date()
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(aggregationDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(aggregationDate)
 			}
 		}
 
 		// when
-		let mins = util.min(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let mins = util.min(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(mins.count == 1)
@@ -908,14 +908,14 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let value1 = 3.2
 		let value2 = 534.2
 		let value3 = 32.2
-		let samples = createSamples(withValues: [
-			(start: date1, end: date1, value: value1),
-			(start: date2, end: date2, value: value2),
-			(start: date3, end: date3, value: value3),
+		let samples = createNumericSamples(withValues: [
+			(date: date1, value: value1),
+			(date: date2, value: value2),
+			(date: date3, value: value3),
 		])
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedMins: [(date: Date?, value: Double)] = [
@@ -925,7 +925,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		]
 
 		// when
-		let mins = util.min(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let mins = util.min(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(mins.count == expectedMins.count)
@@ -944,20 +944,20 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let value1 = 3.2
 		let value2 = 534.2
 		let value3 = 32.2
-		let samples = createSamples(withValues: [
-			(start: date1, end: date1, value: value1 + 1),
-			(start: date1, end: date1, value: value1),
-			(start: date2, end: date2, value: value2),
-			(start: date2, end: date2, value: value2 + 1),
-			(start: date2, end: date2, value: value2 + 2),
-			(start: date3, end: date3, value: value3 + 3),
-			(start: date3, end: date3, value: value3 + 1),
-			(start: date3, end: date3, value: value3 + 2),
-			(start: date3, end: date3, value: value3),
+		let samples = createNumericSamples(withValues: [
+			(date: date1, value: value1 + 1),
+			(date: date1, value: value1),
+			(date: date2, value: value2),
+			(date: date2, value: value2 + 1),
+			(date: date2, value: value2 + 2),
+			(date: date3, value: value3 + 3),
+			(date: date3, value: value3 + 1),
+			(date: date3, value: value3 + 2),
+			(date: date3, value: value3),
 		])
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedMins: [(date: Date?, value: Double)] = [
@@ -967,7 +967,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		]
 
 		// when
-		let mins = util.min(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let mins = util.min(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(mins.count == expectedMins.count)
@@ -986,20 +986,20 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let value1 = 3.2
 		let value2 = 534.2
 		let value3 = 32.2
-		let samples = createSamples(withValues: [
-			(start: date1, end: date1, value: value1 + 1),
-			(start: date3, end: date3, value: value3),
-			(start: date2, end: date2, value: value2 + 1),
-			(start: date3, end: date3, value: value3 + 3),
-			(start: date3, end: date3, value: value3 + 2),
-			(start: date3, end: date3, value: value3 + 1),
-			(start: date1, end: date1, value: value1),
-			(start: date2, end: date2, value: value2 + 2),
-			(start: date2, end: date2, value: value2),
+		let samples = createNumericSamples(withValues: [
+			(date: date1, value: value1 + 1),
+			(date: date3, value: value3),
+			(date: date2, value: value2 + 1),
+			(date: date3, value: value3 + 3),
+			(date: date3, value: value3 + 2),
+			(date: date3, value: value3 + 1),
+			(date: date1, value: value1),
+			(date: date2, value: value2 + 2),
+			(date: date2, value: value2),
 		])
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedMins: [(date: Date?, value: Double)] = [
@@ -1009,7 +1009,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		]
 
 		// when
-		let mins = util.min(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let mins = util.min(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(mins.count == expectedMins.count)
@@ -1022,10 +1022,10 @@ class HKQuantitySampleUtilTests: UnitTest {
 	func testGivenSampleArrayWithOnlyOneValue_sum_returnsThatValue() {
 		// given
 		let value = 3.4
-		let samples = [createSample(value)]
+		let samples = [createNumericSample(value)]
 
 		// when
-		let sum = util.sum(over: samples, withUnit: Me.defaultUnit)
+		let sum = util.sum(over: samples)
 
 		// then
 		XCTAssert(sum == value)
@@ -1036,11 +1036,11 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let value1 = 1.0
 		let value2 = 4.3
 		let value3 = 87.2
-		let samples = createSamples(withValues: [value1, value2, value3])
+		let samples = createNumericSamples(withValues: [value1, value2, value3])
 		let expectedSum = value1 + value2 + value3
 
 		// when
-		let sum = util.sum(over: samples, withUnit: Me.defaultUnit)
+		let sum = util.sum(over: samples)
 
 		// then
 		XCTAssert(sum == expectedSum)
@@ -1049,10 +1049,10 @@ class HKQuantitySampleUtilTests: UnitTest {
 	func testGivenSampleArrayWithOnlyOneSampleAndNilAggregation_sumPer_returnsValueForThatSample() {
 		// given
 		let value = 23.3
-		let samples = createSamples(withValues: [value])
+		let samples = createNumericSamples(withValues: [value])
 
 		// when
-		let sums = util.sum(over: samples, per: nil, withUnit: Me.defaultUnit)
+		let sums = util.sum(over: samples, per: nil)
 
 		// then
 		XCTAssert(sums.count == 1)
@@ -1065,11 +1065,11 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let value1 = 6.4
 		let value2 = 1005.4
 		let value3 = 23.45
-		let samples = createSamples(withValues: [value1, value2, value3])
+		let samples = createNumericSamples(withValues: [value1, value2, value3])
 		let expectedSum = value1 + value2 + value3
 
 		// when
-		let sums = util.sum(over: samples, per: nil, withUnit: Me.defaultUnit)
+		let sums = util.sum(over: samples, per: nil)
 
 		// then
 		XCTAssert(sums.count == 1)
@@ -1081,16 +1081,16 @@ class HKQuantitySampleUtilTests: UnitTest {
 		// given
 		let aggregationUnit: Calendar.Component = .year
 		let value = 4.2
-		let samples = [createSample(value)]
+		let samples = [createNumericSample(value)]
 		let aggregationDate = Date()
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(aggregationDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(aggregationDate)
 			}
 		}
 
 		// when
-		let sums = util.sum(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let sums = util.sum(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(sums.count == 1)
@@ -1107,14 +1107,14 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let value1 = 3.2
 		let value2 = 534.2
 		let value3 = 32.2
-		let samples = createSamples(withValues: [
-			(start: date1, end: date1, value: value1),
-			(start: date2, end: date2, value: value2),
-			(start: date3, end: date3, value: value3)
+		let samples = createNumericSamples(withValues: [
+			(date: date1, value: value1),
+			(date: date2, value: value2),
+			(date: date3, value: value3)
 		])
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedSums: [(date: Date?, value: Double)] = [
@@ -1124,7 +1124,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		]
 
 		// when
-		let sums = util.sum(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let sums = util.sum(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(sums.count == expectedSums.count)
@@ -1143,20 +1143,20 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let value1 = 3.2
 		let value2 = 534.2
 		let value3 = 32.2
-		let samples = createSamples(withValues: [
-			(start: date1, end: date1, value: value1),
-			(start: date1, end: date1, value: value1 + 1),
-			(start: date2, end: date2, value: value2),
-			(start: date2, end: date2, value: value2 + 2),
-			(start: date2, end: date2, value: value2 + 1),
-			(start: date3, end: date3, value: value3 + 2),
-			(start: date3, end: date3, value: value3),
-			(start: date3, end: date3, value: value3 + 1),
-			(start: date3, end: date3, value: value3 + 3),
+		let samples = createNumericSamples(withValues: [
+			(date: date1, value: value1),
+			(date: date1, value: value1 + 1),
+			(date: date2, value: value2),
+			(date: date2, value: value2 + 2),
+			(date: date2, value: value2 + 1),
+			(date: date3, value: value3 + 2),
+			(date: date3, value: value3),
+			(date: date3, value: value3 + 1),
+			(date: date3, value: value3 + 3),
 		])
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedSums: [(date: Date?, value: Double)] = [
@@ -1166,7 +1166,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		]
 
 		// when
-		let sums = util.sum(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let sums = util.sum(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(sums.count == expectedSums.count)
@@ -1185,20 +1185,20 @@ class HKQuantitySampleUtilTests: UnitTest {
 		let value1 = 3.2
 		let value2 = 534.2
 		let value3 = 32.2
-		let samples = createSamples(withValues: [
-			(start: date2, end: date2, value: value2),
-			(start: date2, end: date2, value: value2 + 2),
-			(start: date3, end: date3, value: value3 + 3),
-			(start: date3, end: date3, value: value3),
-			(start: date1, end: date1, value: value1 + 1),
-			(start: date2, end: date2, value: value2 + 1),
-			(start: date3, end: date3, value: value3 + 1),
-			(start: date1, end: date1, value: value1),
-			(start: date3, end: date3, value: value3 + 2),
+		let samples = createNumericSamples(withValues: [
+			(date: date2, value: value2),
+			(date: date2, value: value2 + 2),
+			(date: date3, value: value3 + 3),
+			(date: date3, value: value3),
+			(date: date1, value: value1 + 1),
+			(date: date2, value: value2 + 1),
+			(date: date3, value: value3 + 1),
+			(date: date1, value: value1),
+			(date: date3, value: value3 + 2),
 		])
 		stub(mockCalendarUtil) { stub in
 			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.endDate))).thenReturn(sample.endDate)
+				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
 			}
 		}
 		let expectedSums: [(date: Date?, value: Double)] = [
@@ -1208,7 +1208,7 @@ class HKQuantitySampleUtilTests: UnitTest {
 		]
 
 		// when
-		let sums = util.sum(over: samples, per: aggregationUnit, withUnit: Me.defaultUnit)
+		let sums = util.sum(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(sums.count == expectedSums.count)
