@@ -17,7 +17,7 @@ protocol SampleQuery {
 	var mostRecentEntryOnly: Bool { get set }
 	var numberOfDatesPerSample: Int { get }
 	/// The timestamps from the results of the sub-query will be used to limit the results of this query
-//	var subQuery: Query<AnySample>? { get set }
+	var subQuery: (matcher: SubQueryMatcher, query: Query<AnySample>)? { get set }
 
 	func runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ())
 }
@@ -39,10 +39,10 @@ public final class Query<SampleType: Sample>: SampleQuery {
 	public var numberOfDatesPerSample: Int {
 		get { return box.numberOfDatesPerSample }
 	}
-//	public var subQuery: Query<AnySample>? {
-//		get { return box.subQuery }
-//		set { box.subQuery = subQuery }
-//	}
+	public var subQuery: (matcher: SubQueryMatcher, query: Query<AnySample>)? {
+		get { return box.subQuery }
+		set { box.subQuery = subQuery }
+	}
 
 	fileprivate let box: QueryBase<SampleType>
 
@@ -72,6 +72,10 @@ fileprivate class QueryBase<SampleType: Sample>: SampleQuery {
 	}
 	var numberOfDatesPerSample: Int {
 		get { fatalError("Must override") }
+	}
+	var subQuery: (matcher: SubQueryMatcher, query: Query<AnySample>)? {
+		get { fatalError("Must override") }
+		set { fatalError("Must override") }
 	}
 
 	init() {
@@ -108,6 +112,10 @@ fileprivate final class QueryBox<ConcreteType: SampleQuery>: QueryBase<ConcreteT
 	}
 	override var numberOfDatesPerSample: Int {
 		get { return concrete.numberOfDatesPerSample }
+	}
+	override var subQuery: (matcher: SubQueryMatcher, query: Query<AnySample>)? {
+		get { return concrete.subQuery }
+		set { concrete.subQuery = subQuery }
 	}
 
 	override func runQuery(callback: @escaping (QueryResult<ConcreteType.SampleType>?, Error?) -> ()) {

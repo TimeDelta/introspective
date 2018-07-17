@@ -59,4 +59,16 @@ public class CalendarUtil: NSObject {
 		let startOfDate2 = start(of: component, in: date2)
 		return startOfDate1 == startOfDate2
 	}
+
+	public func compare(_ date1: Date?, _ date2: Date?) -> ComparisonResult {
+		if date1 != nil && date2 != nil {
+			return date1!.compare(date2!)
+		} else if date1 != nil {
+			return .orderedAscending
+		} else if date2 != nil {
+			return .orderedDescending
+		} else {
+			return .orderedSame
+		}
+	}
 }

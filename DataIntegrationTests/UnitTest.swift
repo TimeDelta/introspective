@@ -37,6 +37,10 @@ class UnitTest: XCTestCase {
 		return DoubleValueSample(value, .start, date)
 	}
 
+	func createNumericSample(start: Date, end: Date, value: Double) -> DoubleValueSample {
+		return DoubleValueSample(value, [.start : start, .end: end])
+	}
+
 	func createNumericSamples(withValues values: [Double]) -> [DoubleValueSample] {
 		var samples = [DoubleValueSample]()
 		for value in values {
@@ -49,6 +53,14 @@ class UnitTest: XCTestCase {
 		var samples = [DoubleValueSample]()
 		for (date, value) in values {
 			samples.append(createNumericSample(value, date))
+		}
+		return samples
+	}
+
+	func createNumericSamples(withValues values: [(start: Date, end: Date, value: Double)]) -> [DoubleValueSample] {
+		var samples = [DoubleValueSample]()
+		for (start, end, value) in values {
+			samples.append(createNumericSample(start: start, end: end, value: value))
 		}
 		return samples
 	}

@@ -10,17 +10,21 @@ import Foundation
 
 class ProductionInjectionProvider: InjectionProvider {
 
-	fileprivate let realQueryFactory = QueryFactory()
-	fileprivate let realQuerierFactory = QuerierFactory()
-	fileprivate let realQuestionFactory = QuestionFactory()
-	fileprivate let realDataTypesFactory = DataTypesFactory()
-	fileprivate let realUtilFactory = UtilFactory()
-	fileprivate let realRestrictionParserFactory = RestrictionParserFactory()
+	fileprivate typealias Me = ProductionInjectionProvider
 
-	var queryFactory: QueryFactory { get { return realQueryFactory } }
-	var querierFactory: QuerierFactory { get { return realQuerierFactory } }
-	var questionFactory: QuestionFactory { get { return realQuestionFactory } }
-	var dataTypesFactory: DataTypesFactory { get { return realDataTypesFactory } }
-	var utilFactory: UtilFactory { get { return realUtilFactory } }
-	var restrictionParserFactory: RestrictionParserFactory { get { return realRestrictionParserFactory } }
+	fileprivate static let realQueryFactory = QueryFactory()
+	fileprivate static let realQuerierFactory = QuerierFactory()
+	fileprivate static let realQuestionFactory = QuestionFactory()
+	fileprivate static let realDataTypesFactory = DataTypesFactory()
+	fileprivate static let realUtilFactory = UtilFactory()
+	fileprivate static let realRestrictionParserFactory = RestrictionParserFactory()
+	fileprivate static let realSubQueryMatcherFactory = SubQueryMatcherFactory()
+
+	var queryFactory: QueryFactory { get { return Me.realQueryFactory } }
+	var querierFactory: QuerierFactory { get { return Me.realQuerierFactory } }
+	var questionFactory: QuestionFactory { get { return Me.realQuestionFactory } }
+	var dataTypesFactory: DataTypesFactory { get { return Me.realDataTypesFactory } }
+	var utilFactory: UtilFactory { get { return Me.realUtilFactory } }
+	var restrictionParserFactory: RestrictionParserFactory { get { return Me.realRestrictionParserFactory } }
+	var subQueryMatcherFactory: SubQueryMatcherFactory { get { return Me.realSubQueryMatcherFactory } }
 }

@@ -29,4 +29,5 @@ class DependencyInjector: NSObject {
 	public static var dataType: DataTypesFactory { get { return injectionProvider.dataTypesFactory } }
 	public static var util: UtilFactory { get { return injectionProvider.utilFactory } }
 	public static var restrictionParser: RestrictionParserFactory { get { return injectionProvider.restrictionParserFactory } }
+	public static var subQueryMatcherFactory: SubQueryMatcherFactory { get { return injectionProvider.subQueryMatcherFactory } }
 }

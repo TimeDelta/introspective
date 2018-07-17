@@ -10,10 +10,11 @@ import Foundation
 
 protocol InjectionProvider {
 
-	var queryFactory: QueryFactory {get}
-	var querierFactory: QuerierFactory {get}
-	var questionFactory: QuestionFactory {get}
-	var dataTypesFactory: DataTypesFactory {get}
-	var utilFactory: UtilFactory {get}
-	var restrictionParserFactory: RestrictionParserFactory {get}
+	var queryFactory: QueryFactory { get }
+	var querierFactory: QuerierFactory { get }
+	var questionFactory: QuestionFactory { get }
+	var dataTypesFactory: DataTypesFactory { get }
+	var utilFactory: UtilFactory { get }
+	var restrictionParserFactory: RestrictionParserFactory { get }
+	var subQueryMatcherFactory: SubQueryMatcherFactory { get }
 }

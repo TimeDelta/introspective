@@ -480,6 +480,203 @@ class MockQueryFactory: QueryFactory, Cuckoo.ClassMock {
 }
 
 
+// MARK: - Mocks generated from file: DataIntegration/Questions/Queries/SubQueryMatching/SubQueryMatcherFactory.swift
+//
+//  SubQueryMatcherFactory.swift
+//  DataIntegration
+//
+//  Created by Bryan Nova on 7/17/18.
+//  Copyright © 2018 Bryan Nova. All rights reserved.
+//
+
+import Cuckoo
+
+import Foundation
+
+class MockSubQueryMatcherFactory: SubQueryMatcherFactory, Cuckoo.ClassMock {
+    typealias MocksType = SubQueryMatcherFactory
+    typealias Stubbing = __StubbingProxy_SubQueryMatcherFactory
+    typealias Verification = __VerificationProxy_SubQueryMatcherFactory
+    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
+
+    
+
+    
+
+    
+    // ["name": "withinXCalendarUnitsSubQueryMatcher", "returnSignature": " -> WithinXCalendarUnitsSubQueryMatcher", "fullyQualifiedName": "withinXCalendarUnitsSubQueryMatcher() -> WithinXCalendarUnitsSubQueryMatcher", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "", "call": "", "parameters": [], "returnType": "WithinXCalendarUnitsSubQueryMatcher", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func withinXCalendarUnitsSubQueryMatcher()  -> WithinXCalendarUnitsSubQueryMatcher {
+        
+            return cuckoo_manager.call("withinXCalendarUnitsSubQueryMatcher() -> WithinXCalendarUnitsSubQueryMatcher",
+                parameters: (),
+                superclassCall:
+                    
+                    super.withinXCalendarUnitsSubQueryMatcher()
+                    )
+        
+    }
+    
+    // ["name": "inSameCalendarUnitSubQueryMatcher", "returnSignature": " -> InSameCalendarUnitSubQueryMatcher", "fullyQualifiedName": "inSameCalendarUnitSubQueryMatcher() -> InSameCalendarUnitSubQueryMatcher", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "", "call": "", "parameters": [], "returnType": "InSameCalendarUnitSubQueryMatcher", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func inSameCalendarUnitSubQueryMatcher()  -> InSameCalendarUnitSubQueryMatcher {
+        
+            return cuckoo_manager.call("inSameCalendarUnitSubQueryMatcher() -> InSameCalendarUnitSubQueryMatcher",
+                parameters: (),
+                superclassCall:
+                    
+                    super.inSameCalendarUnitSubQueryMatcher()
+                    )
+        
+    }
+    
+    // ["name": "sameDatesSubQueryMatcher", "returnSignature": " -> SameDatesSubQueryMatcher", "fullyQualifiedName": "sameDatesSubQueryMatcher() -> SameDatesSubQueryMatcher", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "", "call": "", "parameters": [], "returnType": "SameDatesSubQueryMatcher", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func sameDatesSubQueryMatcher()  -> SameDatesSubQueryMatcher {
+        
+            return cuckoo_manager.call("sameDatesSubQueryMatcher() -> SameDatesSubQueryMatcher",
+                parameters: (),
+                superclassCall:
+                    
+                    super.sameDatesSubQueryMatcher()
+                    )
+        
+    }
+    
+    // ["name": "sameStartDatesSubQueryMatcher", "returnSignature": " -> SameStartDatesSubQueryMatcher", "fullyQualifiedName": "sameStartDatesSubQueryMatcher() -> SameStartDatesSubQueryMatcher", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "", "call": "", "parameters": [], "returnType": "SameStartDatesSubQueryMatcher", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func sameStartDatesSubQueryMatcher()  -> SameStartDatesSubQueryMatcher {
+        
+            return cuckoo_manager.call("sameStartDatesSubQueryMatcher() -> SameStartDatesSubQueryMatcher",
+                parameters: (),
+                superclassCall:
+                    
+                    super.sameStartDatesSubQueryMatcher()
+                    )
+        
+    }
+    
+    // ["name": "sameEndDatesSubQueryMatcher", "returnSignature": " -> SameEndDatesSubQueryMatcher", "fullyQualifiedName": "sameEndDatesSubQueryMatcher() -> SameEndDatesSubQueryMatcher", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "", "call": "", "parameters": [], "returnType": "SameEndDatesSubQueryMatcher", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func sameEndDatesSubQueryMatcher()  -> SameEndDatesSubQueryMatcher {
+        
+            return cuckoo_manager.call("sameEndDatesSubQueryMatcher() -> SameEndDatesSubQueryMatcher",
+                parameters: (),
+                superclassCall:
+                    
+                    super.sameEndDatesSubQueryMatcher()
+                    )
+        
+    }
+    
+
+	struct __StubbingProxy_SubQueryMatcherFactory: Cuckoo.StubbingProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	
+	    init(manager: Cuckoo.MockManager) {
+	        self.cuckoo_manager = manager
+	    }
+	    
+	    
+	    func withinXCalendarUnitsSubQueryMatcher() -> Cuckoo.ClassStubFunction<(), WithinXCalendarUnitsSubQueryMatcher> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return .init(stub: cuckoo_manager.createStub(for: MockSubQueryMatcherFactory.self, method: "withinXCalendarUnitsSubQueryMatcher() -> WithinXCalendarUnitsSubQueryMatcher", parameterMatchers: matchers))
+	    }
+	    
+	    func inSameCalendarUnitSubQueryMatcher() -> Cuckoo.ClassStubFunction<(), InSameCalendarUnitSubQueryMatcher> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return .init(stub: cuckoo_manager.createStub(for: MockSubQueryMatcherFactory.self, method: "inSameCalendarUnitSubQueryMatcher() -> InSameCalendarUnitSubQueryMatcher", parameterMatchers: matchers))
+	    }
+	    
+	    func sameDatesSubQueryMatcher() -> Cuckoo.ClassStubFunction<(), SameDatesSubQueryMatcher> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return .init(stub: cuckoo_manager.createStub(for: MockSubQueryMatcherFactory.self, method: "sameDatesSubQueryMatcher() -> SameDatesSubQueryMatcher", parameterMatchers: matchers))
+	    }
+	    
+	    func sameStartDatesSubQueryMatcher() -> Cuckoo.ClassStubFunction<(), SameStartDatesSubQueryMatcher> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return .init(stub: cuckoo_manager.createStub(for: MockSubQueryMatcherFactory.self, method: "sameStartDatesSubQueryMatcher() -> SameStartDatesSubQueryMatcher", parameterMatchers: matchers))
+	    }
+	    
+	    func sameEndDatesSubQueryMatcher() -> Cuckoo.ClassStubFunction<(), SameEndDatesSubQueryMatcher> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return .init(stub: cuckoo_manager.createStub(for: MockSubQueryMatcherFactory.self, method: "sameEndDatesSubQueryMatcher() -> SameEndDatesSubQueryMatcher", parameterMatchers: matchers))
+	    }
+	    
+	}
+
+	struct __VerificationProxy_SubQueryMatcherFactory: Cuckoo.VerificationProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	    private let callMatcher: Cuckoo.CallMatcher
+	    private let sourceLocation: Cuckoo.SourceLocation
+	
+	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+	        self.cuckoo_manager = manager
+	        self.callMatcher = callMatcher
+	        self.sourceLocation = sourceLocation
+	    }
+	
+	    
+	
+	    
+	    @discardableResult
+	    func withinXCalendarUnitsSubQueryMatcher() -> Cuckoo.__DoNotUse<WithinXCalendarUnitsSubQueryMatcher> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return cuckoo_manager.verify("withinXCalendarUnitsSubQueryMatcher() -> WithinXCalendarUnitsSubQueryMatcher", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func inSameCalendarUnitSubQueryMatcher() -> Cuckoo.__DoNotUse<InSameCalendarUnitSubQueryMatcher> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return cuckoo_manager.verify("inSameCalendarUnitSubQueryMatcher() -> InSameCalendarUnitSubQueryMatcher", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func sameDatesSubQueryMatcher() -> Cuckoo.__DoNotUse<SameDatesSubQueryMatcher> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return cuckoo_manager.verify("sameDatesSubQueryMatcher() -> SameDatesSubQueryMatcher", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func sameStartDatesSubQueryMatcher() -> Cuckoo.__DoNotUse<SameStartDatesSubQueryMatcher> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return cuckoo_manager.verify("sameStartDatesSubQueryMatcher() -> SameStartDatesSubQueryMatcher", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func sameEndDatesSubQueryMatcher() -> Cuckoo.__DoNotUse<SameEndDatesSubQueryMatcher> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return cuckoo_manager.verify("sameEndDatesSubQueryMatcher() -> SameEndDatesSubQueryMatcher", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	}
+
+}
+
+ class SubQueryMatcherFactoryStub: SubQueryMatcherFactory {
+    
+
+    
+
+    
+    public override func withinXCalendarUnitsSubQueryMatcher()  -> WithinXCalendarUnitsSubQueryMatcher {
+        return DefaultValueRegistry.defaultValue(for: WithinXCalendarUnitsSubQueryMatcher.self)
+    }
+    
+    public override func inSameCalendarUnitSubQueryMatcher()  -> InSameCalendarUnitSubQueryMatcher {
+        return DefaultValueRegistry.defaultValue(for: InSameCalendarUnitSubQueryMatcher.self)
+    }
+    
+    public override func sameDatesSubQueryMatcher()  -> SameDatesSubQueryMatcher {
+        return DefaultValueRegistry.defaultValue(for: SameDatesSubQueryMatcher.self)
+    }
+    
+    public override func sameStartDatesSubQueryMatcher()  -> SameStartDatesSubQueryMatcher {
+        return DefaultValueRegistry.defaultValue(for: SameStartDatesSubQueryMatcher.self)
+    }
+    
+    public override func sameEndDatesSubQueryMatcher()  -> SameEndDatesSubQueryMatcher {
+        return DefaultValueRegistry.defaultValue(for: SameEndDatesSubQueryMatcher.self)
+    }
+    
+}
+
+
 // MARK: - Mocks generated from file: DataIntegration/Questions/QuestionFactory.swift
 //
 //  QuestionFactory.swift

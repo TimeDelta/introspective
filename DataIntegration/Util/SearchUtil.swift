@@ -10,22 +10,22 @@ import Foundation
 
 public class SearchUtil {
 
-	/// - Precondition: input array is sorted in ascending order
-	public func binarySearch<T:Comparable>(for targetItem: T, in items:Array<T>) -> Int? {
+	/// - Precondition: input array is sorted in ascending order.
+	public func binarySearch<T:Comparable>(for targetItem: T, in items: Array<T>) -> Int? {
 		var lowerIndex = 0
 		var upperIndex = items.count - 1
 
-		while (true) {
+		while true {
 			let currentIndex = (lowerIndex + upperIndex) / 2
-			if (items[currentIndex] == targetItem) {
+			if items[currentIndex] == targetItem {
 				return currentIndex
 			}
 
-			if (lowerIndex > upperIndex) {
+			if lowerIndex > upperIndex {
 				return nil
 			}
 
-			if (items[currentIndex] > targetItem) {
+			if items[currentIndex] > targetItem {
 				upperIndex = currentIndex - 1
 			} else {
 				lowerIndex = currentIndex + 1
@@ -33,7 +33,31 @@ public class SearchUtil {
 		}
 	}
 
-	/// - Precondition: input array has at least one element
+	/// - Precondition: input array is sorted in ascending order based on the given compare function.
+	public func binarySearch<T>(for targetItem: T, in items: Array<T>, compare: (T, T) -> ComparisonResult) -> Int? {
+		var lowerIndex = 0
+		var upperIndex = items.count - 1
+
+		while true {
+			let currentIndex = (lowerIndex + upperIndex) / 2
+			let comparison = compare(items[currentIndex], targetItem)
+			if comparison == .orderedSame {
+				return currentIndex
+			}
+
+			if lowerIndex > upperIndex {
+				return nil
+			}
+
+			if comparison == .orderedDescending {
+				upperIndex = currentIndex - 1
+			} else {
+				lowerIndex = currentIndex + 1
+			}
+		}
+	}
+
+	/// - Precondition: input array has at least one element.
 	public func closestItem<T>(to targetItem: T, in items: Array<T>, distance: (T, T) -> Int) -> T {
 		assert(items.count > 0, "Precondition violated: input array must have at least one element")
 

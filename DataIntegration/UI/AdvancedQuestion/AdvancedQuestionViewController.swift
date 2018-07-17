@@ -175,6 +175,10 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 	@IBAction func cancel(_ segue: UIStoryboardSegue) {} // do nothing
 
 	fileprivate func bottomMostDataType() -> DataTypes {
+		return bottomMostDataType(in: parts)
+	}
+
+	fileprivate func bottomMostDataType(in parts: [Any]) -> DataTypes {
 		var index = cellTypes.count - 1
 		while index >= 0 && cellTypes[index] != .dataType {
 			index -= 1
@@ -195,8 +199,73 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		tableView.insertRows(at: [indexPath], with: .automatic)
 	}
 
-	fileprivate func buildAndRunQuery<SampleType: Sample>(_ query: inout Query<SampleType>, _ controller: ResultsViewController<SampleType>) {
+	fileprivate func buildQuery() -> Query<AnySample> {
+		let partsSplitByQuery = splitPartsByQuery()
+		var finalQuery: Query<AnySample>
+		for parts in partsSplitByQuery.reversed() {
+			let dataType = (parts[0] as! DataTypeInfo).dataType
+			switch (dataType) {
+				case .heartRate:
+					let query: Query<HeartRate> = buildQuery(from: parts)
+					break
+			}
+		}
+	}
 
+	fileprivate func abc() {
+		var dataTypes = [DataTypes]()
+		var dataType: DataTypes?
+		for part in parts {
+			if part is DataTypeInfo {
+				dataTypes.append((part as! DataTypeInfo).dataType)
+			}
+		}
+
+
+		for index in 0 ..< dataTypes.count - 1 {
+
+		}
+	}
+
+	fileprivate func splitPartsByQuery() -> [[Any]] {
+		var partsSplitByQuery = [[Any]]()
+		var currentParts = [Any]()
+		for part in parts {
+			if part is DataTypeInfo && !currentParts.isEmpty {
+				partsSplitByQuery.append(currentParts)
+				currentParts = [Any]()
+			}
+			currentParts.append(part)
+		}
+		return partsSplitByQuery
+	}
+
+	fileprivate func buildQuery<SampleType: Sample>(from parts: [Any]) -> Query<SampleType> {
+		var query = try! DependencyInjector.query.queryFor(sampleType: SampleType.self)
+		for index in 0 ..< parts.count {
+			let part = parts[index]
+
+			if part is DataTypeInfo {
+				let partsLeft = Array(parts.dropFirst(index + 1))
+				let dataType = (part as! DataTypeInfo).dataType
+				switch (dataType) {
+					case .heartRate:
+						let subQuery: Query<HeartRate> = buildQuery(from: partsLeft)
+						query.subQuery = (matcher: SameDatesSubQueryMatcher(), query: subQuery)
+						return query
+				}
+			} else if part is TimeConstraint {
+				query.timeConstraints.insert((part as! TimeConstraint))
+			} else if part is AttributeRestriction {
+				query.attributeRestrictions.append((part as! AttributeRestriction))
+			} else {
+				fatalError("query part is of unknown type")
+			}
+		}
+		return query
+	}
+
+	fileprivate func buildAndRunQuery<SampleType: Sample>(_ query: inout Query<SampleType>, _ controller: ResultsViewController<SampleType>) {
 		// TODO - build the query
 
 		query.runQuery { (result: QueryResult<SampleType>?, error: Error?) in

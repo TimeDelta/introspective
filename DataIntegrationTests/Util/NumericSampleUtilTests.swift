@@ -17,6 +17,7 @@ class NumericSampleUtilTests: UnitTest {
 
 	fileprivate var util: NumericSampleUtil!
 	fileprivate var mockCalendarUtil: MockCalendarUtil!
+	fileprivate var mockSampleUtil: MockSampleUtil!
 
 	override func setUp() {
 		super.setUp()
@@ -26,6 +27,12 @@ class NumericSampleUtilTests: UnitTest {
 		mockCalendarUtil = mockCalUtil
 		stub(UnitTestInjectionProvider.mockUtilFactory) { stub in
 			when(stub.calendarUtil.get).thenReturn(mockCalUtil)
+		}
+
+		let mockSampleUtil = MockSampleUtil()
+		self.mockSampleUtil = mockSampleUtil
+		stub(UnitTestInjectionProvider.mockUtilFactory) { stub in
+			when(stub.sampleUtil.get).thenReturn(mockSampleUtil)
 		}
 	}
 

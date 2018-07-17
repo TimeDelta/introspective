@@ -37,7 +37,7 @@ public class NumericSampleUtil {
 			return [(date: nil, value: average(over: samples))]
 		} else {
 			var sampleAggregationAverages = [(date: Date?, value: Double)]()
-			for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sortSamplesByAggregation(samples, aggregationUnit!) {
+			for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sort(samples: samples, by: aggregationUnit!) {
 				sampleAggregationAverages.append((date: aggregationDate, value: average(over: samples)))
 			}
 			return sampleAggregationAverages
@@ -63,7 +63,7 @@ public class NumericSampleUtil {
 			return [(date: nil, value: Double(samples.count))]
 		} else {
 			var sampleAggregationCounts = [(date: Date?, value: Double)]()
-			for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sortSamplesByAggregation(samples, aggregationUnit!) {
+			for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sort(samples: samples, by: aggregationUnit!) {
 				sampleAggregationCounts.append((date: aggregationDate, value: Double(samples.count)))
 			}
 			return sampleAggregationCounts
@@ -78,7 +78,7 @@ public class NumericSampleUtil {
 			return [(date: nil, value: max(over: samples))]
 		} else {
 			var sampleAggregationMaxs = [(date: Date?, value: Double)]()
-			for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sortSamplesByAggregation(samples, aggregationUnit!) {
+			for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sort(samples: samples, by: aggregationUnit!) {
 				sampleAggregationMaxs.append((date: aggregationDate, value: max(over: samples)))
 			}
 			return sampleAggregationMaxs
@@ -102,7 +102,7 @@ public class NumericSampleUtil {
 			return [(date: nil, value: min(over: samples))]
 		} else {
 			var sampleAggregationMins = [(date: Date?, value: Double)]()
-			for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sortSamplesByAggregation(samples, aggregationUnit!) {
+			for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sort(samples: samples, by: aggregationUnit!) {
 				sampleAggregationMins.append((date: aggregationDate, value: min(over: samples)))
 			}
 			return sampleAggregationMins
@@ -126,7 +126,7 @@ public class NumericSampleUtil {
 			return [(date: nil, value: sum(over: samples))]
 		} else {
 			var sampleAggregationSums = [(date: Date?, value: Double)]()
-			for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sortSamplesByAggregation(samples, aggregationUnit!) {
+			for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sort(samples: samples, by: aggregationUnit!) {
 				sampleAggregationSums.append((date: aggregationDate, value: sum(over: samples)))
 			}
 			return sampleAggregationSums

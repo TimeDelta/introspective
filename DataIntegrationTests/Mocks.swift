@@ -5017,6 +5017,18 @@ class MockCalendarUtil: CalendarUtil, Cuckoo.ClassMock {
         
     }
     
+    // ["name": "compare", "returnSignature": " -> ComparisonResult", "fullyQualifiedName": "compare(_: Date?, _: Date?) -> ComparisonResult", "parameterSignature": "_ date1: Date?, _ date2: Date?", "parameterSignatureWithoutNames": "date1: Date?, date2: Date?", "inputTypes": "Date?, Date?", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "date1, date2", "call": "date1, date2", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "date1", type: "Date?", range: CountableRange(2390..<2404), nameRange: CountableRange(0..<0)), CuckooGeneratorFramework.MethodParameter(label: nil, name: "date2", type: "Date?", range: CountableRange(2406..<2420), nameRange: CountableRange(0..<0))], "returnType": "ComparisonResult", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func compare(_ date1: Date?, _ date2: Date?)  -> ComparisonResult {
+        
+            return cuckoo_manager.call("compare(_: Date?, _: Date?) -> ComparisonResult",
+                parameters: (date1, date2),
+                superclassCall:
+                    
+                    super.compare(date1, date2)
+                    )
+        
+    }
+    
 
 	struct __StubbingProxy_CalendarUtil: Cuckoo.StubbingProxy {
 	    private let cuckoo_manager: Cuckoo.MockManager
@@ -5044,6 +5056,11 @@ class MockCalendarUtil: CalendarUtil, Cuckoo.ClassMock {
 	    func date<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable, M3: Cuckoo.Matchable>(_ date1: M1, occursOnSame component: M2, as date2: M3) -> Cuckoo.ClassStubFunction<(Date, Calendar.Component, Date), Bool> where M1.MatchedType == Date, M2.MatchedType == Calendar.Component, M3.MatchedType == Date {
 	        let matchers: [Cuckoo.ParameterMatcher<(Date, Calendar.Component, Date)>] = [wrap(matchable: date1) { $0.0 }, wrap(matchable: component) { $0.1 }, wrap(matchable: date2) { $0.2 }]
 	        return .init(stub: cuckoo_manager.createStub(for: MockCalendarUtil.self, method: "date(_: Date, occursOnSame: Calendar.Component, as: Date) -> Bool", parameterMatchers: matchers))
+	    }
+	    
+	    func compare<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ date1: M1, _ date2: M2) -> Cuckoo.ClassStubFunction<(Date?, Date?), ComparisonResult> where M1.MatchedType == Date?, M2.MatchedType == Date? {
+	        let matchers: [Cuckoo.ParameterMatcher<(Date?, Date?)>] = [wrap(matchable: date1) { $0.0 }, wrap(matchable: date2) { $0.1 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockCalendarUtil.self, method: "compare(_: Date?, _: Date?) -> ComparisonResult", parameterMatchers: matchers))
 	    }
 	    
 	}
@@ -5086,6 +5103,12 @@ class MockCalendarUtil: CalendarUtil, Cuckoo.ClassMock {
 	        return cuckoo_manager.verify("date(_: Date, occursOnSame: Calendar.Component, as: Date) -> Bool", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
+	    @discardableResult
+	    func compare<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(_ date1: M1, _ date2: M2) -> Cuckoo.__DoNotUse<ComparisonResult> where M1.MatchedType == Date?, M2.MatchedType == Date? {
+	        let matchers: [Cuckoo.ParameterMatcher<(Date?, Date?)>] = [wrap(matchable: date1) { $0.0 }, wrap(matchable: date2) { $0.1 }]
+	        return cuckoo_manager.verify("compare(_: Date?, _: Date?) -> ComparisonResult", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
 	}
 
 }
@@ -5110,6 +5133,10 @@ class MockCalendarUtil: CalendarUtil, Cuckoo.ClassMock {
     
     public override func date(_ date1: Date, occursOnSame component: Calendar.Component, as date2: Date)  -> Bool {
         return DefaultValueRegistry.defaultValue(for: Bool.self)
+    }
+    
+    public override func compare(_ date1: Date?, _ date2: Date?)  -> ComparisonResult {
+        return DefaultValueRegistry.defaultValue(for: ComparisonResult.self)
     }
     
 }

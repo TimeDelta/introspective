@@ -30,5 +30,49 @@ class SampleUtilTests: UnitTest {
 		XCTAssert(occurs)
 	}
 
+	func testGivenEmptySamplesArray_convertOneDateSamplesToTwoDateSamples_returnsEmptyArray() {
+		// given
+		let samples = [DoubleValueSample]()
+
+		// when
+		let convertedSamples = util.convertOneDateSamplesToTwoDateSamples(
+			samples,
+			samplesShouldNotBeJoined: { (_, _) -> Bool in
+				return true
+			},
+			joinSamples: { (_ , _, _) -> DoubleValueSample in
+				return DoubleValueSample(0.0)
+			}
+		)
+
+		// then
+		XCTAssert(convertedSamples.count == 0)
+	}
+
+	func testGivenTwoSamplesThatShouldBeCombined_convertOneDateSamplesToTwoDateSamples_combinesThemWithCorrectDates() {
+		// given
+		let expectedStartDate = Date()
+		let expectedEndDate = Calendar.autoupdatingCurrent.date(byAdding: .year, value: 1, to: expectedStartDate)!
+		let samples = createNumericSamples(withValues: [
+			(date: expectedStartDate, value: 0.0),
+			(date: expectedEndDate, value: 0.0),
+		])
+
+		// when
+		let convertedSamples = util.convertOneDateSamplesToTwoDateSamples(
+			samples,
+			samplesShouldNotBeJoined: { (_, _) -> Bool in
+				return true
+			},
+			joinSamples: { (_, start: Date, end: Date) -> DoubleValueSample in
+				return createNumericSample(start: start, end: end, value: 0.0)
+			}
+		)
+
+		// then
+		XCTAssert(convertedSamples[0].dates[.start] == expectedStartDate)
+		XCTAssert(convertedSamples[0].dates[.end] == expectedEndDate)
+	}
+
 	// TODO - finish writing unit tests
 }

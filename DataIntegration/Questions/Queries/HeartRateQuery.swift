@@ -9,27 +9,14 @@
 import Foundation
 import HealthKit
 
-public class HeartRateQuery: NSObject, SampleQuery {
-
-	public typealias SampleType = HeartRate
+public class HeartRateQuery: BaseSampleQuery<HeartRate> {
 
 	public enum ErrorTypes: Error {
 		case Unauthorized
 		case NoSamplesFound
 	}
 
-	public var timeConstraints: Set<TimeConstraint>
-	public var attributeRestrictions: [AttributeRestriction]
-	public var mostRecentEntryOnly: Bool
-	public fileprivate(set) var numberOfDatesPerSample: Int = 2
-
-	public override init() {
-		timeConstraints = Set<TimeConstraint>()
-		attributeRestrictions = [AttributeRestriction]()
-		mostRecentEntryOnly = false
-	}
-
-	public func runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ()) {
+	override func run() {
 		let (startDate, endDate) = DependencyInjector.util.timeConstraintUtil.getStartAndEndDatesFrom(timeConstraints: timeConstraints)
 
 		let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
@@ -38,10 +25,10 @@ public class HeartRateQuery: NSObject, SampleQuery {
 			(originalSamples: Array<HKQuantitySample>?, error: Error?) in
 
 			if error != nil {
-				callback(nil, error)
+				self.queryDone(nil, error)
 			}
 			if originalSamples == nil || originalSamples!.count == 0 {
-				callback(nil, ErrorTypes.NoSamplesFound)
+				self.queryDone(nil, ErrorTypes.NoSamplesFound)
 			}
 
 			let daysOfWeek = DependencyInjector.util.timeConstraintUtil.getDaysOfWeekFrom(timeConstraints: self.timeConstraints)
@@ -58,7 +45,7 @@ public class HeartRateQuery: NSObject, SampleQuery {
 			result.addExtraInformation(ExtraInformation(MinimumInformation<HeartRate>()))
 			result.addExtraInformation(ExtraInformation(SumInformation<HeartRate>()))
 
-			callback(result, nil)
+			self.queryDone(result, nil)
 		}
 	}
 

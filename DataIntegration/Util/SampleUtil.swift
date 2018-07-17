@@ -54,17 +54,25 @@ public class SampleUtil {
 		return true
 	}
 
-	public func sortSamplesByAggregation<SampleType: Sample>(_ samples: [SampleType], _ aggregationUnit: Calendar.Component) -> [(date: Date, samples: [SampleType])] {
+	public func aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, dateType: DateType = .start) -> [Date: [SampleType]] {
 		var samplesByAggregation = [Date: [SampleType]]()
 		for sample in samples {
-			let aggregationDate = DependencyInjector.util.calendarUtil.start(of: aggregationUnit, in: sample.dates[.start]!)
-			var samplesForAggregationDate = samplesByAggregation[aggregationDate]
-			if samplesForAggregationDate == nil {
-				samplesForAggregationDate = [SampleType]()
+			let date = sample.dates[dateType]
+			if date != nil {
+				let aggregationDate = DependencyInjector.util.calendarUtil.start(of: aggregationUnit, in: date!)
+				var samplesForAggregationDate = samplesByAggregation[aggregationDate]
+				if samplesForAggregationDate == nil {
+					samplesForAggregationDate = [SampleType]()
+				}
+				samplesForAggregationDate!.append(sample)
+				samplesByAggregation[aggregationDate] = samplesForAggregationDate
 			}
-			samplesForAggregationDate!.append(sample)
-			samplesByAggregation[aggregationDate] = samplesForAggregationDate
 		}
+		return samplesByAggregation
+	}
+
+	public func sort<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component) -> [(date: Date, samples: [SampleType])] {
+		let samplesByAggregation = aggregate(samples: samples, by: aggregationUnit)
 		let sortedSamplesByAggregation = samplesByAggregation.sorted { (entry1: (key: Date, value: [SampleType]), entry2: (key: Date, value: [SampleType])) -> Bool in
 			return entry1.key.compare(entry2.key) == ComparisonResult.orderedAscending
 		}
@@ -77,16 +85,8 @@ public class SampleUtil {
 		return samples.sorted(by: { (sample1: SampleType, sample2: SampleType) -> Bool in
 			let date1 = sample1.dates[dateType]
 			let date2 = sample2.dates[dateType]
-			if date1 == nil && date2 == nil {
-				return true
-			}
-			if date1 == nil {
-				return false
-			}
-			if date2 == nil {
-				return true
-			}
-			return date1!.compare(date2!) == ComparisonResult.orderedAscending
+
+			return DependencyInjector.util.calendarUtil.compare(date1, date2) == .orderedAscending
 		})
 	}
 
