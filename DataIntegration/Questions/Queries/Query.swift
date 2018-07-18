@@ -8,117 +8,31 @@
 
 import Foundation
 
-protocol SampleQuery {
-
-	associatedtype SampleType: Sample
+public protocol Query {
 
 	var timeConstraints: Set<TimeConstraint> { get set }
 	var attributeRestrictions: [AttributeRestriction] { get set }
 	var mostRecentEntryOnly: Bool { get set }
 	var numberOfDatesPerSample: Int { get }
+
 	/// The timestamps from the results of the sub-query will be used to limit the results of this query
-	var subQuery: (matcher: SubQueryMatcher, query: Query<AnySample>)? { get set }
+	var subQuery: (matcher: SubQueryMatcher, query: Query)? { get set }
 
-	func runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ())
+	func runQuery(callback: @escaping (QueryResult?, Error?) -> ())
 }
 
-public final class Query<SampleType: Sample>: SampleQuery {
+public protocol TypedQuery: Query {
 
-	public var timeConstraints: Set<TimeConstraint> {
-		get { return box.timeConstraints }
-		set { box.timeConstraints = timeConstraints }
-	}
-	public var attributeRestrictions: [AttributeRestriction] {
-		get { return box.attributeRestrictions }
-		set { box.attributeRestrictions = attributeRestrictions }
-	}
-	public var mostRecentEntryOnly: Bool {
-		get { return box.mostRecentEntryOnly }
-		set { box.mostRecentEntryOnly = mostRecentEntryOnly }
-	}
-	public var numberOfDatesPerSample: Int {
-		get { return box.numberOfDatesPerSample }
-	}
-	public var subQuery: (matcher: SubQueryMatcher, query: Query<AnySample>)? {
-		get { return box.subQuery }
-		set { box.subQuery = subQuery }
-	}
+	associatedtype SampleType: Sample
 
-	fileprivate let box: QueryBase<SampleType>
-
-	init<ConcreteType: SampleQuery>(_ concrete: ConcreteType) where ConcreteType.SampleType == SampleType {
-        box = QueryBox(concrete)
-    }
-
-    public func runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ()) {
-		box.runQuery(callback: callback)
-	}
+	func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> ())
 }
 
+extension TypedQuery {
 
-fileprivate class QueryBase<SampleType: Sample>: SampleQuery {
-
-	var timeConstraints: Set<TimeConstraint> {
-		get { fatalError("Must override") }
-		set { fatalError("Must override") }
-	}
-	var attributeRestrictions: [AttributeRestriction] {
-		get { fatalError("Must override") }
-		set { fatalError("Must override") }
-	}
-	var mostRecentEntryOnly: Bool {
-		get { fatalError("Must override") }
-		set { fatalError("Must override") }
-	}
-	var numberOfDatesPerSample: Int {
-		get { fatalError("Must override") }
-	}
-	var subQuery: (matcher: SubQueryMatcher, query: Query<AnySample>)? {
-		get { fatalError("Must override") }
-		set { fatalError("Must override") }
-	}
-
-	init() {
-		guard type(of: self) != QueryBase.self else {
-			fatalError("Must subclass QueryBase")
+	public func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+		runQuery { (result: SampleQueryResult<SampleType>?, error: Error?) in
+			callback(result, error)
 		}
-	}
-
-	func runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ()) {
-		fatalError("Must override")
-	}
-}
-
-
-fileprivate final class QueryBox<ConcreteType: SampleQuery>: QueryBase<ConcreteType.SampleType> {
-
-	var concrete: ConcreteType
-
-	init(_ concrete: ConcreteType) {
-		self.concrete = concrete
-	}
-
-	override var timeConstraints: Set<TimeConstraint> {
-		get { return concrete.timeConstraints }
-		set { concrete.timeConstraints = timeConstraints }
-	}
-	override var attributeRestrictions: [AttributeRestriction] {
-		get { return concrete.attributeRestrictions }
-		set { concrete.attributeRestrictions = attributeRestrictions }
-	}
-	override var mostRecentEntryOnly: Bool {
-		get { return concrete.mostRecentEntryOnly }
-		set { concrete.mostRecentEntryOnly = mostRecentEntryOnly }
-	}
-	override var numberOfDatesPerSample: Int {
-		get { return concrete.numberOfDatesPerSample }
-	}
-	override var subQuery: (matcher: SubQueryMatcher, query: Query<AnySample>)? {
-		get { return concrete.subQuery }
-		set { concrete.subQuery = subQuery }
-	}
-
-	override func runQuery(callback: @escaping (QueryResult<ConcreteType.SampleType>?, Error?) -> ()) {
-		concrete.runQuery(callback: callback)
 	}
 }

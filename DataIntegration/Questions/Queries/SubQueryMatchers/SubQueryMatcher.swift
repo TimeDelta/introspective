@@ -11,5 +11,8 @@ import Foundation
 public protocol SubQueryMatcher: CustomStringConvertible {
 
 	static var genericDescription: String { get }
-	func getSamples<QuerySampleType: Sample, SubQuerySampleType: Sample>(from querySamples: [QuerySampleType], matching subQuerySamples: [SubQuerySampleType]) -> [QuerySampleType]
+	func getSamples<QuerySampleType: Sample, SubQuerySampleType: Sample>(
+		from querySamples: [QuerySampleType],
+		matching subQuerySamples: [SubQuerySampleType]
+	) -> [QuerySampleType]
 }

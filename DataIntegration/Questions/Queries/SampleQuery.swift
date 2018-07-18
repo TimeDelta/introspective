@@ -8,30 +8,28 @@
 
 import Foundation
 
-public class BaseSampleQuery<TypeOfSample: Sample>: NSObject, SampleQuery {
-
-	public typealias SampleType = TypeOfSample
+public class SampleQuery<SampleType: Sample>: TypedQuery {
 
 	public var timeConstraints: Set<TimeConstraint>
 	public var attributeRestrictions: [AttributeRestriction]
 	public var mostRecentEntryOnly: Bool
-	public fileprivate(set) var numberOfDatesPerSample: Int = 2
-	public var subQuery: (matcher: SubQueryMatcher, query: Query<AnySample>)?
+	public let numberOfDatesPerSample: Int = 2
+	public var subQuery: (matcher: SubQueryMatcher, query: Query)?
 
-	fileprivate var callback: ((QueryResult<SampleType>?, Error?) -> ())!
+	fileprivate var callback: ((SampleQueryResult<SampleType>?, Error?) -> ())!
 
-	fileprivate var subQueryCallbackParameters: (result: QueryResult<AnySample>?, error: Error?)? = nil
-	fileprivate var queryCallbackParameters: (result: QueryResult<TypeOfSample>?, error: Error?)? = nil
+	fileprivate var subQueryCallbackParameters: (result: QueryResult?, error: Error?)? = nil
+	fileprivate var queryCallbackParameters: (result: SampleQueryResult<SampleType>?, error: Error?)? = nil
 
-	public override init() {
+	public init() {
 		timeConstraints = Set<TimeConstraint>()
 		attributeRestrictions = [AttributeRestriction]()
 		mostRecentEntryOnly = false
 	}
 
-	public func runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ()) {
+	public func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> ()) {
 		self.callback = callback
-		subQuery?.query.runQuery(callback: { (result: QueryResult<AnySample>?, error: Error?) in
+		subQuery?.query.runQuery(callback: { (result: QueryResult?, error: Error?) in
 			self.subQueryCallbackParameters = (result, error)
 			if self.queryCallbackParameters != nil {
 				self.filterAndCallBack()
@@ -44,7 +42,7 @@ public class BaseSampleQuery<TypeOfSample: Sample>: NSObject, SampleQuery {
 		fatalError("Must override and call queryDone() when finished")
 	}
 
-	func queryDone(_ result: QueryResult<TypeOfSample>?, _ error: Error?) {
+	func queryDone(_ result: SampleQueryResult<SampleType>?, _ error: Error?) {
 		assert(subQueryCallbackParameters != nil, "sub-query callback parameters is nil")
 		assert(queryCallbackParameters != nil, "query callback parameters is nil")
 
@@ -64,19 +62,19 @@ public class BaseSampleQuery<TypeOfSample: Sample>: NSObject, SampleQuery {
 		callback(filterResults(), nil)
 	}
 
-	fileprivate func filterResults() -> QueryResult<TypeOfSample>? {
+	fileprivate func filterResults() -> SampleQueryResult<SampleType>? {
 		assert(queryCallbackParameters!.result != nil, "query result is nil")
 
 		if subQuery == nil {
 			return queryCallbackParameters!.result
 		}
 		let queryResult = queryCallbackParameters!.result!
-		let querySamples = queryResult.samples
-		let subQuerySamples = subQueryCallbackParameters!.result!.samples
+		let querySamples = queryResult.typedSamples
+		let subQuerySamples = subQueryCallbackParameters!.result!.samples as! [AnySample]
 
-		let filteredSamples = subQuery!.matcher.getSamples(from: querySamples, matching: subQuerySamples)
-		let filteredResult = QueryResult<TypeOfSample>(filteredSamples)
-		for information in queryResult.extraInformation {
+		let filteredSamples: [SampleType] = subQuery!.matcher.getSamples(from: querySamples, matching: subQuerySamples)
+		let filteredResult = SampleQueryResult<SampleType>(filteredSamples)
+		for information in queryResult.sampleInformation {
 			filteredResult.addExtraInformation(information)
 		}
 

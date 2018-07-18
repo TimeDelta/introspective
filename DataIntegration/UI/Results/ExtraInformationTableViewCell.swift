@@ -10,7 +10,7 @@ import UIKit
 
 class ExtraInformationTableViewCell<SampleType: Sample>: UITableViewCell {
 
-	public var extraInformation: ExtraInformation<SampleType>! {
+	public var extraInformation: ExtraInformation! {
 		didSet {
 			if extraInformation == nil { return }
 			var text = ""

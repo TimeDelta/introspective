@@ -17,7 +17,7 @@ class ResultsViewController<SampleType: Sample>: UITableViewController, UIPopove
 		}
 	}
 
-	public var extraInformation: [ExtraInformation<SampleType>]! {
+	public var extraInformation: [SampleInformation<SampleType>]! {
 		didSet {
 			if extraInformation != nil && samples != nil {
 				viewIsReady()
@@ -134,7 +134,7 @@ class ResultsViewController<SampleType: Sample>: UITableViewController, UIPopove
 		reloadInputViews()
 	}
 
-	fileprivate func getExtraInformation(forRow row: Int) -> ExtraInformation<SampleType> {
+	fileprivate func getExtraInformation(forRow row: Int) -> SampleInformation<SampleType> {
 		return extraInformation[row]
 	}
 

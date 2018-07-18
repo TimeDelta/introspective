@@ -976,158 +976,6 @@ class MockAnySample: AnySample, Cuckoo.ClassMock {
 }
 
 
-// MARK: - Mocks generated from file: DataIntegration/Questions/AdvancedQuestion.swift
-//
-//  AdvancedQuestion.swift
-//  DataIntegration
-//
-//  Created by Bryan Nova on 7/7/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
-//
-
-import Cuckoo
-@testable import DataIntegration
-
-import Foundation
-
-class MockAdvancedQuestion: AdvancedQuestion, Cuckoo.ClassMock {
-    typealias MocksType = AdvancedQuestion
-    typealias Stubbing = __StubbingProxy_AdvancedQuestion
-    typealias Verification = __VerificationProxy_AdvancedQuestion
-    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
-
-    
-    // ["name": "questionParts", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "[Query<AnySample>]", "isReadOnly": false, "accessibility": "public"]
-    public override var questionParts: [Query<AnySample>] {
-        get {
-            
-            return cuckoo_manager.getter("questionParts", superclassCall: super.questionParts)
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("questionParts", value: newValue, superclassCall: super.questionParts = newValue)
-            
-        }
-        
-    }
-    
-
-    
-
-    
-    // ["name": "parse", "returnSignature": "", "fullyQualifiedName": "parse(callback: (Error?) -> ())", "parameterSignature": "callback: (Error?) -> ()", "parameterSignatureWithoutNames": "callback: (Error?) -> ()", "inputTypes": "(Error?) -> ()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "(Error?) -> ()", range: CountableRange(330..<354), nameRange: CountableRange(330..<338))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
-     override func parse(callback: (Error?) -> ())  {
-        	return withoutActuallyEscaping(callback, do: { (callback) in
-
-            return cuckoo_manager.call("parse(callback: (Error?) -> ())",
-                parameters: (callback),
-                superclassCall:
-                    
-                    super.parse(callback: callback)
-                    )
-        	})
-
-    }
-    
-    // ["name": "answer", "returnSignature": "", "fullyQualifiedName": "answer(callback: @escaping (Answer?, Error?) -> ())", "parameterSignature": "callback: @escaping (Answer?, Error?) -> ()", "parameterSignatureWithoutNames": "callback: @escaping (Answer?, Error?) -> ()", "inputTypes": "(Answer?, Error?) -> ()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping (Answer?, Error?) -> ()", range: CountableRange(399..<442), nameRange: CountableRange(399..<407))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
-     override func answer(callback: @escaping (Answer?, Error?) -> ())  {
-        
-            return cuckoo_manager.call("answer(callback: @escaping (Answer?, Error?) -> ())",
-                parameters: (callback),
-                superclassCall:
-                    
-                    super.answer(callback: callback)
-                    )
-        
-    }
-    
-
-	struct __StubbingProxy_AdvancedQuestion: Cuckoo.StubbingProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	
-	    init(manager: Cuckoo.MockManager) {
-	        self.cuckoo_manager = manager
-	    }
-	    
-	    var questionParts: Cuckoo.ClassToBeStubbedProperty<MockAdvancedQuestion, [Query<AnySample>]> {
-	        return .init(manager: cuckoo_manager, name: "questionParts")
-	    }
-	    
-	    
-	    func parse<M1: Cuckoo.Matchable>(callback: M1) -> Cuckoo.ClassStubNoReturnFunction<((Error?) -> ())> where M1.MatchedType == (Error?) -> () {
-	        let matchers: [Cuckoo.ParameterMatcher<((Error?) -> ())>] = [wrap(matchable: callback) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockAdvancedQuestion.self, method: "parse(callback: (Error?) -> ())", parameterMatchers: matchers))
-	    }
-	    
-	    func answer<M1: Cuckoo.Matchable>(callback: M1) -> Cuckoo.ClassStubNoReturnFunction<((Answer?, Error?) -> ())> where M1.MatchedType == (Answer?, Error?) -> () {
-	        let matchers: [Cuckoo.ParameterMatcher<((Answer?, Error?) -> ())>] = [wrap(matchable: callback) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockAdvancedQuestion.self, method: "answer(callback: @escaping (Answer?, Error?) -> ())", parameterMatchers: matchers))
-	    }
-	    
-	}
-
-	struct __VerificationProxy_AdvancedQuestion: Cuckoo.VerificationProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	    private let callMatcher: Cuckoo.CallMatcher
-	    private let sourceLocation: Cuckoo.SourceLocation
-	
-	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-	        self.cuckoo_manager = manager
-	        self.callMatcher = callMatcher
-	        self.sourceLocation = sourceLocation
-	    }
-	
-	    
-	    var questionParts: Cuckoo.VerifyProperty<[Query<AnySample>]> {
-	        return .init(manager: cuckoo_manager, name: "questionParts", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	
-	    
-	    @discardableResult
-	    func parse<M1: Cuckoo.Matchable>(callback: M1) -> Cuckoo.__DoNotUse<Void> where M1.MatchedType == (Error?) -> () {
-	        let matchers: [Cuckoo.ParameterMatcher<((Error?) -> ())>] = [wrap(matchable: callback) { $0 }]
-	        return cuckoo_manager.verify("parse(callback: (Error?) -> ())", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	    @discardableResult
-	    func answer<M1: Cuckoo.Matchable>(callback: M1) -> Cuckoo.__DoNotUse<Void> where M1.MatchedType == (Answer?, Error?) -> () {
-	        let matchers: [Cuckoo.ParameterMatcher<((Answer?, Error?) -> ())>] = [wrap(matchable: callback) { $0 }]
-	        return cuckoo_manager.verify("answer(callback: @escaping (Answer?, Error?) -> ())", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
-	    }
-	    
-	}
-
-}
-
- class AdvancedQuestionStub: AdvancedQuestion {
-    
-    public override var questionParts: [Query<AnySample>] {
-        get {
-            return DefaultValueRegistry.defaultValue(for: ([Query<AnySample>]).self)
-        }
-        
-        set { }
-        
-    }
-    
-
-    
-
-    
-     override func parse(callback: (Error?) -> ())  {
-        return DefaultValueRegistry.defaultValue(for: Void.self)
-    }
-    
-     override func answer(callback: @escaping (Answer?, Error?) -> ())  {
-        return DefaultValueRegistry.defaultValue(for: Void.self)
-    }
-    
-}
-
-
 // MARK: - Mocks generated from file: DataIntegration/Questions/Answer.swift
 //
 //  Answer.swift
@@ -2148,76 +1996,18 @@ class MockHeartRateQuery: HeartRateQuery, Cuckoo.ClassMock {
     let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
 
     
-    // ["name": "timeConstraints", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Set<TimeConstraint>", "isReadOnly": false, "accessibility": "public"]
-    public override var timeConstraints: Set<TimeConstraint> {
-        get {
-            
-            return cuckoo_manager.getter("timeConstraints", superclassCall: super.timeConstraints)
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("timeConstraints", value: newValue, superclassCall: super.timeConstraints = newValue)
-            
-        }
-        
-    }
-    
-    // ["name": "attributeRestrictions", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "[AttributeRestriction]", "isReadOnly": false, "accessibility": "public"]
-    public override var attributeRestrictions: [AttributeRestriction] {
-        get {
-            
-            return cuckoo_manager.getter("attributeRestrictions", superclassCall: super.attributeRestrictions)
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("attributeRestrictions", value: newValue, superclassCall: super.attributeRestrictions = newValue)
-            
-        }
-        
-    }
-    
-    // ["name": "mostRecentEntryOnly", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Bool", "isReadOnly": false, "accessibility": "public"]
-    public override var mostRecentEntryOnly: Bool {
-        get {
-            
-            return cuckoo_manager.getter("mostRecentEntryOnly", superclassCall: super.mostRecentEntryOnly)
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("mostRecentEntryOnly", value: newValue, superclassCall: super.mostRecentEntryOnly = newValue)
-            
-        }
-        
-    }
-    
-    // ["name": "numberOfDatesPerSample", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "Int", "isReadOnly": true, "accessibility": "public"]
-    public override var numberOfDatesPerSample: Int {
-        get {
-            
-            return cuckoo_manager.getter("numberOfDatesPerSample", superclassCall: super.numberOfDatesPerSample)
-            
-        }
-        
-    }
-    
 
     
 
     
-    // ["name": "runQuery", "returnSignature": "", "fullyQualifiedName": "runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ())", "parameterSignature": "callback: @escaping (QueryResult<SampleType>?, Error?) -> ()", "parameterSignatureWithoutNames": "callback: @escaping (QueryResult<SampleType>?, Error?) -> ()", "inputTypes": "(QueryResult<SampleType>?, Error?) -> ()", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": true, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "callback", "call": "callback: callback", "parameters": [CuckooGeneratorFramework.MethodParameter(label: Optional("callback"), name: "callback", type: "@escaping (QueryResult<SampleType>?, Error?) -> ()", range: CountableRange(742..<802), nameRange: CountableRange(742..<750))], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
-    public override func runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ())  {
+    // ["name": "run", "returnSignature": "", "fullyQualifiedName": "run()", "parameterSignature": "", "parameterSignatureWithoutNames": "", "inputTypes": "", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "", "parameterNames": "", "call": "", "parameters": [], "returnType": "Void", "isOptional": false, "stubFunction": "Cuckoo.ClassStubNoReturnFunction"]
+     override func run()  {
         
-            return cuckoo_manager.call("runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ())",
-                parameters: (callback),
+            return cuckoo_manager.call("run()",
+                parameters: (),
                 superclassCall:
                     
-                    super.runQuery(callback: callback)
+                    super.run()
                     )
         
     }
@@ -2230,26 +2020,10 @@ class MockHeartRateQuery: HeartRateQuery, Cuckoo.ClassMock {
 	        self.cuckoo_manager = manager
 	    }
 	    
-	    var timeConstraints: Cuckoo.ClassToBeStubbedProperty<MockHeartRateQuery, Set<TimeConstraint>> {
-	        return .init(manager: cuckoo_manager, name: "timeConstraints")
-	    }
 	    
-	    var attributeRestrictions: Cuckoo.ClassToBeStubbedProperty<MockHeartRateQuery, [AttributeRestriction]> {
-	        return .init(manager: cuckoo_manager, name: "attributeRestrictions")
-	    }
-	    
-	    var mostRecentEntryOnly: Cuckoo.ClassToBeStubbedProperty<MockHeartRateQuery, Bool> {
-	        return .init(manager: cuckoo_manager, name: "mostRecentEntryOnly")
-	    }
-	    
-	    var numberOfDatesPerSample: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockHeartRateQuery, Int> {
-	        return .init(manager: cuckoo_manager, name: "numberOfDatesPerSample")
-	    }
-	    
-	    
-	    func runQuery<M1: Cuckoo.Matchable>(callback: M1) -> Cuckoo.ClassStubNoReturnFunction<((QueryResult<SampleType>?, Error?) -> ())> where M1.MatchedType == (QueryResult<SampleType>?, Error?) -> () {
-	        let matchers: [Cuckoo.ParameterMatcher<((QueryResult<SampleType>?, Error?) -> ())>] = [wrap(matchable: callback) { $0 }]
-	        return .init(stub: cuckoo_manager.createStub(for: MockHeartRateQuery.self, method: "runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ())", parameterMatchers: matchers))
+	    func run() -> Cuckoo.ClassStubNoReturnFunction<()> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return .init(stub: cuckoo_manager.createStub(for: MockHeartRateQuery.self, method: "run()", parameterMatchers: matchers))
 	    }
 	    
 	}
@@ -2266,28 +2040,12 @@ class MockHeartRateQuery: HeartRateQuery, Cuckoo.ClassMock {
 	    }
 	
 	    
-	    var timeConstraints: Cuckoo.VerifyProperty<Set<TimeConstraint>> {
-	        return .init(manager: cuckoo_manager, name: "timeConstraints", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var attributeRestrictions: Cuckoo.VerifyProperty<[AttributeRestriction]> {
-	        return .init(manager: cuckoo_manager, name: "attributeRestrictions", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var mostRecentEntryOnly: Cuckoo.VerifyProperty<Bool> {
-	        return .init(manager: cuckoo_manager, name: "mostRecentEntryOnly", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var numberOfDatesPerSample: Cuckoo.VerifyReadOnlyProperty<Int> {
-	        return .init(manager: cuckoo_manager, name: "numberOfDatesPerSample", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
 	
 	    
 	    @discardableResult
-	    func runQuery<M1: Cuckoo.Matchable>(callback: M1) -> Cuckoo.__DoNotUse<Void> where M1.MatchedType == (QueryResult<SampleType>?, Error?) -> () {
-	        let matchers: [Cuckoo.ParameterMatcher<((QueryResult<SampleType>?, Error?) -> ())>] = [wrap(matchable: callback) { $0 }]
-	        return cuckoo_manager.verify("runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ())", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    func run() -> Cuckoo.__DoNotUse<Void> {
+	        let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+	        return cuckoo_manager.verify("run()", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
 	    }
 	    
 	}
@@ -2296,45 +2054,11 @@ class MockHeartRateQuery: HeartRateQuery, Cuckoo.ClassMock {
 
  class HeartRateQueryStub: HeartRateQuery {
     
-    public override var timeConstraints: Set<TimeConstraint> {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Set<TimeConstraint>).self)
-        }
-        
-        set { }
-        
-    }
-    
-    public override var attributeRestrictions: [AttributeRestriction] {
-        get {
-            return DefaultValueRegistry.defaultValue(for: ([AttributeRestriction]).self)
-        }
-        
-        set { }
-        
-    }
-    
-    public override var mostRecentEntryOnly: Bool {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Bool).self)
-        }
-        
-        set { }
-        
-    }
-    
-    public override var numberOfDatesPerSample: Int {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Int).self)
-        }
-        
-    }
-    
 
     
 
     
-    public override func runQuery(callback: @escaping (QueryResult<SampleType>?, Error?) -> ())  {
+     override func run()  {
         return DefaultValueRegistry.defaultValue(for: Void.self)
     }
     

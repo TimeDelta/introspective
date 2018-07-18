@@ -121,10 +121,8 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		let dataType = (parts[0] as! DataTypeInfo).dataType
 		switch (dataType) {
 			case .heartRate:
-				var query = Query(HeartRateQuery())
-				let controller = ResultsViewController<HeartRate>()
-				buildAndRunQuery(&query, controller)
-				break
+				let controller: ResultsViewController<HeartRate> = buildAndRunQuery()
+				present(controller, animated: true, completion: nil)
 		}
 	}
 
@@ -199,32 +197,26 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		tableView.insertRows(at: [indexPath], with: .automatic)
 	}
 
-	fileprivate func buildQuery() -> Query<AnySample> {
+	fileprivate func buildQuery<SampleType: Sample>() -> SampleQuery<SampleType> {
 		let partsSplitByQuery = splitPartsByQuery()
-		var finalQuery: Query<AnySample>
+		var currentTopmostQuery: Query? = nil
 		for parts in partsSplitByQuery.reversed() {
+			var currentQuery: Query
+
 			let dataType = (parts[0] as! DataTypeInfo).dataType
 			switch (dataType) {
 				case .heartRate:
-					let query: Query<HeartRate> = buildQuery(from: parts)
+					currentQuery = (buildQuery(from: parts) as SampleQuery<HeartRate>)
 					break
 			}
-		}
-	}
 
-	fileprivate func abc() {
-		var dataTypes = [DataTypes]()
-		var dataType: DataTypes?
-		for part in parts {
-			if part is DataTypeInfo {
-				dataTypes.append((part as! DataTypeInfo).dataType)
+			if currentTopmostQuery != nil {
+				currentTopmostQuery?.subQuery = (matcher: SameDatesSubQueryMatcher(), query: currentQuery)
+			} else {
+				currentTopmostQuery = currentQuery
 			}
 		}
-
-
-		for index in 0 ..< dataTypes.count - 1 {
-
-		}
+		return currentTopmostQuery! as! SampleQuery<SampleType>
 	}
 
 	fileprivate func splitPartsByQuery() -> [[Any]] {
@@ -240,20 +232,11 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		return partsSplitByQuery
 	}
 
-	fileprivate func buildQuery<SampleType: Sample>(from parts: [Any]) -> Query<SampleType> {
-		var query = try! DependencyInjector.query.queryFor(sampleType: SampleType.self)
-		for index in 0 ..< parts.count {
-			let part = parts[index]
-
+	fileprivate func buildQuery<SampleType: Sample>(from parts: [Any]) -> SampleQuery<SampleType> {
+		let query = try! DependencyInjector.query.queryFor(sampleType: SampleType.self)
+		for part in parts {
 			if part is DataTypeInfo {
-				let partsLeft = Array(parts.dropFirst(index + 1))
-				let dataType = (part as! DataTypeInfo).dataType
-				switch (dataType) {
-					case .heartRate:
-						let subQuery: Query<HeartRate> = buildQuery(from: partsLeft)
-						query.subQuery = (matcher: SameDatesSubQueryMatcher(), query: subQuery)
-						return query
-				}
+				return query
 			} else if part is TimeConstraint {
 				query.timeConstraints.insert((part as! TimeConstraint))
 			} else if part is AttributeRestriction {
@@ -265,17 +248,19 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		return query
 	}
 
-	fileprivate func buildAndRunQuery<SampleType: Sample>(_ query: inout Query<SampleType>, _ controller: ResultsViewController<SampleType>) {
+	fileprivate func buildAndRunQuery<SampleType: Sample>() -> ResultsViewController<SampleType> {
 		// TODO - build the query
+		let query: SampleQuery<SampleType> = buildQuery()
+		let controller = ResultsViewController<SampleType>()
 
-		query.runQuery { (result: QueryResult<SampleType>?, error: Error?) in
+		query.runQuery { (result: SampleQueryResult<SampleType>?, error: Error?) in
 			if error != nil {
 				controller.error = error
 				return
 			}
-			controller.samples = result?.samples
-			controller.extraInformation = result?.extraInformation
+			controller.samples = result?.typedSamples
+			controller.extraInformation = result?.sampleInformation
 		}
-		present(controller, animated: true, completion: nil)
+		return controller
 	}
 }

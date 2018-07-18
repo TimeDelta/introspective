@@ -18,9 +18,9 @@ public class QueryFactory: NSObject {
 		return HeartRateQuery()
 	}
 
-	public func queryFor<SampleType: Sample>(sampleType: SampleType.Type) throws -> Query<SampleType> {
+	public func queryFor<SampleType: Sample>(sampleType: SampleType.Type) throws -> SampleQuery<SampleType> {
 		if (sampleType == HeartRate.self) {
-			return Query<HeartRate>(HeartRateQuery()) as! Query<SampleType>
+			return HeartRateQuery() as! SampleQuery<SampleType>
 		}
 		throw Errors.UnknownSampleType
 	}

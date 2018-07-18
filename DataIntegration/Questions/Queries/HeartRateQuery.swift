@@ -9,7 +9,7 @@
 import Foundation
 import HealthKit
 
-public class HeartRateQuery: BaseSampleQuery<HeartRate> {
+public class HeartRateQuery: SampleQuery<HeartRate> {
 
 	public enum ErrorTypes: Error {
 		case Unauthorized
@@ -38,12 +38,12 @@ public class HeartRateQuery: BaseSampleQuery<HeartRate> {
 				return HeartRate(sample)
 			})
 
-			let result = QueryResult<HeartRate>(samples)
-			result.addExtraInformation(ExtraInformation(AverageInformation<HeartRate>()))
-			result.addExtraInformation(ExtraInformation(CountInformation<HeartRate>()))
-			result.addExtraInformation(ExtraInformation(MaximumInformation<HeartRate>()))
-			result.addExtraInformation(ExtraInformation(MinimumInformation<HeartRate>()))
-			result.addExtraInformation(ExtraInformation(SumInformation<HeartRate>()))
+			let result = SampleQueryResult<HeartRate>(samples)
+			result.addExtraInformation(AverageInformation<HeartRate>())
+			result.addExtraInformation(CountInformation<HeartRate>())
+			result.addExtraInformation(MaximumInformation<HeartRate>())
+			result.addExtraInformation(MinimumInformation<HeartRate>())
+			result.addExtraInformation(SumInformation<HeartRate>())
 
 			self.queryDone(result, nil)
 		}
