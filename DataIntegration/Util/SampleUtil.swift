@@ -8,9 +8,44 @@
 
 import Foundation
 
-public class SampleUtil {
+//sourcery: AutoMockable
+public protocol SampleUtil {
+	func getOnly(samples: [Sample], from startDate: Date?, to endDate: Date?) -> [Sample]
+	func getOnly<SampleType: Sample>(samples: [SampleType], from startDate: Date?, to endDate: Date?) -> [SampleType]
+	func sample(_ sample: Sample, occursOnOneOf daysOfWeek: Set<DayOfWeek>) -> Bool
+	func aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, dateType: DateType) -> [Date: [Sample]]
+	func aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, dateType: DateType) -> [Date: [SampleType]]
+	func sort(samples: [Sample], by aggregationUnit: Calendar.Component) -> [(date: Date, samples: [Sample])]
+	func sort<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component) -> [(date: Date, samples: [SampleType])]
+	func sort(samples: [Sample], by dateType: DateType, in order: ComparisonResult) -> [Sample]
+	func sort<SampleType: Sample>(samples: [SampleType], by dateType: DateType, in order: ComparisonResult) -> [SampleType]
+	func convertOneDateSamplesToTwoDateSamples(_ samples: [Sample], samplesShouldNotBeJoined: (Sample, Sample) -> Bool, joinSamples: ([Sample], Date, Date) -> Sample) -> [Sample]
+	func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(_ samples: [SampleType], samplesShouldNotBeJoined: (SampleType, SampleType) -> Bool, joinSamples: ([SampleType], Date, Date) -> SampleType) -> [SampleType]
+	func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2]) -> SampleType2
+	func distance(between sample1: Sample, and sample2: Sample, in unit: Calendar.Component) -> Int
+}
 
-	// need this because for some stupid reason, protocols don't conform to themselves
+extension SampleUtil {
+	func aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, dateType: DateType = .start) -> [Date: [Sample]] {
+		return aggregate(samples: samples, by: aggregationUnit, dateType: dateType)
+	}
+	func aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, dateType: DateType = .start) -> [Date: [SampleType]] {
+		return aggregate(samples: samples, by: aggregationUnit, dateType: dateType)
+	}
+	func sort(samples: [Sample], by dateType: DateType, in order: ComparisonResult = .orderedAscending) -> [Sample] {
+		return sort(samples: samples, by: dateType, in: order)
+	}
+	func sort<SampleType: Sample>(samples: [SampleType], by dateType: DateType, in order: ComparisonResult = .orderedAscending) -> [SampleType] {
+		return sort(samples: samples, by: dateType, in: order)
+	}
+	func distance(between sample1: Sample, and sample2: Sample, in unit: Calendar.Component = .nanosecond) -> Int {
+		return distance(between: sample1, and: sample2, in: unit)
+	}
+}
+
+public class SampleUtilImpl: SampleUtil {
+
+	// need this because protocols don't conform to themselves
 	public func getOnly(samples: [Sample], from startDate: Date?, to endDate: Date?) -> [Sample] {
 		return getOnly(samples, startDate, endDate)
 	}
@@ -44,7 +79,7 @@ public class SampleUtil {
 		return true
 	}
 
-	// need this because for some stupid reason, protocols don't conform to themselves
+	// need this because protocols don't conform to themselves
 	public func aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, dateType: DateType = .start) -> [Date: [Sample]] {
 		return aggregate(samples, aggregationUnit, dateType)
 	}
@@ -74,7 +109,7 @@ public class SampleUtil {
 		})
 	}
 
-	// need this because for some stupid reason, protocols don't conform to themselves
+	// need this because protocols don't conform to themselves
 	/// - Note: behavior is undefined when passing `ComparisonResult.orderedSame`
 	public func sort(samples: [Sample], by dateType: DateType, in order: ComparisonResult = .orderedAscending) -> [Sample] {
 		return sort(samples, dateType, order)
@@ -85,7 +120,7 @@ public class SampleUtil {
 		return sort(samples, dateType, order) as! [SampleType]
 	}
 
-	// need this because for some stupid reason, protocols don't conform to themselves
+	// need this because protocols don't conform to themselves
 	public func convertOneDateSamplesToTwoDateSamples(
 		_ samples: [Sample],
 		samplesShouldNotBeJoined: (Sample, Sample) -> Bool,
@@ -97,7 +132,9 @@ public class SampleUtil {
 		var start: Date = Date() // have to initialize this here to make the compiler happy even though it would still always be initialized before getting used even without this
 		var end: Date
 		var samplesToJoin = [Sample]()
+		var samplesJoined = false
 		for sample in sortedSamples {
+			samplesJoined = false
 			if lastSample == nil {
 				start = sample.dates[.start]!
 			} else if samplesShouldNotBeJoined(lastSample!, sample) {
@@ -106,9 +143,15 @@ public class SampleUtil {
 				twoDateSamples.append(twoDateSample)
 				start = sample.dates[.start]!
 				samplesToJoin = [Sample]()
+				samplesJoined = true
 			}
 			samplesToJoin.append(sample)
 			lastSample = sample
+		}
+		if sortedSamples.count > 0 && !samplesJoined && !samplesShouldNotBeJoined(lastSample!, sortedSamples.last!) {
+			end = sortedSamples.last!.dates[.start]!
+			let twoDateSample = joinSamples(samplesToJoin, start, end)
+			twoDateSamples.append(twoDateSample)
 		}
 		return twoDateSamples
 	}

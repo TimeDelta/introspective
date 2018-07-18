@@ -8,9 +8,15 @@
 
 import Foundation
 
-public class SampleGroupCombinerFactory {
+//sourcery: AutoMockable
+public protocol SampleGroupCombinerFactory {
+	func typesFor(attribute: Attribute) -> [SampleGroupCombiner.Type]
+	func initialize(type: SampleGroupCombiner.Type) -> SampleGroupCombiner
+}
 
-	fileprivate typealias Me = SampleGroupCombinerFactory
+public class SampleGroupCombinerFactoryImpl: SampleGroupCombinerFactory {
+
+	fileprivate typealias Me = SampleGroupCombinerFactoryImpl
 
 	public static let genericTypes: [SampleGroupCombiner.Type] = [
 		CountSampleGroupCombiner.self,

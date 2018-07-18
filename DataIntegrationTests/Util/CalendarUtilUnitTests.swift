@@ -11,11 +11,11 @@ import XCTest
 
 class CalendarUtilUnitTests: UnitTest {
 
-	fileprivate var util: CalendarUtil!
+	fileprivate var util: CalendarUtilImpl!
 
     override func setUp() {
         super.setUp()
-        util = CalendarUtil()
+        util = CalendarUtilImpl()
     }
 
     func testGivenYear_startOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {

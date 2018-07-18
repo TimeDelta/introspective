@@ -8,29 +8,29 @@
 
 import Foundation
 
-class ProductionInjectionProvider: InjectionProvider {
+public class ProductionInjectionProvider: InjectionProvider {
 
 	fileprivate typealias Me = ProductionInjectionProvider
 
-	fileprivate static let realQueryFactory = QueryFactory()
-	fileprivate static let realQuerierFactory = QuerierFactory()
+	fileprivate static let realQueryFactory = QueryFactoryImpl()
+	fileprivate static let realQuerierFactory = QuerierFactoryImpl()
 	fileprivate static let realQuestionFactory = QuestionFactory()
-	fileprivate static let realDataTypesFactory = DataTypesFactory()
+	fileprivate static let realDataTypeFactory = DataTypeFactoryImpl()
 	fileprivate static let realUtilFactory = UtilFactory()
 	fileprivate static let realRestrictionParserFactory = RestrictionParserFactory()
-	fileprivate static let realSubQueryMatcherFactory = SubQueryMatcherFactory()
-	fileprivate static let realExtraInformationFactory = ExtraInformationFactory()
-	fileprivate static let realSampleGrouperFactory = SampleGrouperFactory()
-	fileprivate static let realSampleGroupCombinerFactory = SampleGroupCombinerFactory()
+	fileprivate static let realSubQueryMatcherFactory = SubQueryMatcherFactoryImpl()
+	fileprivate static let realExtraInformationFactory = ExtraInformationFactoryImpl()
+	fileprivate static let realSampleGrouperFactory = SampleGrouperFactoryImpl()
+	fileprivate static let realSampleGroupCombinerFactory = SampleGroupCombinerFactoryImpl()
 
-	var queryFactory: QueryFactory { get { return Me.realQueryFactory } }
-	var querierFactory: QuerierFactory { get { return Me.realQuerierFactory } }
-	var questionFactory: QuestionFactory { get { return Me.realQuestionFactory } }
-	var dataTypesFactory: DataTypesFactory { get { return Me.realDataTypesFactory } }
-	var utilFactory: UtilFactory { get { return Me.realUtilFactory } }
-	var restrictionParserFactory: RestrictionParserFactory { get { return Me.realRestrictionParserFactory } }
-	var subQueryMatcherFactory: SubQueryMatcherFactory { get { return Me.realSubQueryMatcherFactory } }
-	var extraInformationFactory: ExtraInformationFactory { get { return Me.realExtraInformationFactory } }
-	var sampleGrouperFactory: SampleGrouperFactory { get { return Me.realSampleGrouperFactory } }
-	var sampleGroupCombinerFactory: SampleGroupCombinerFactory { get { return Me.realSampleGroupCombinerFactory } }
+	public func queryFactory() -> QueryFactory { return Me.realQueryFactory }
+	public func querierFactory() -> QuerierFactory { return Me.realQuerierFactory }
+	public func questionFactory() -> QuestionFactory { return Me.realQuestionFactory }
+	public func dataTypeFactory() -> DataTypeFactory { return Me.realDataTypeFactory }
+	public func utilFactory() -> UtilFactory { return Me.realUtilFactory }
+	public func restrictionParserFactory() -> RestrictionParserFactory { return Me.realRestrictionParserFactory }
+	public func subQueryMatcherFactory() -> SubQueryMatcherFactory { return Me.realSubQueryMatcherFactory }
+	public func extraInformationFactory() -> ExtraInformationFactory { return Me.realExtraInformationFactory }
+	public func sampleGrouperFactory() -> SampleGrouperFactory { return Me.realSampleGrouperFactory }
+	public func sampleGroupCombinerFactory() -> SampleGroupCombinerFactory { return Me.realSampleGroupCombinerFactory }
 }

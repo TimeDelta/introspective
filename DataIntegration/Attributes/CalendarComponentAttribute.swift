@@ -61,6 +61,6 @@ public class CalendarComponentAttribute: AnyAttribute, SelectOneAttribute {
 		guard let castedValue = possibleValue as? Calendar.Component else {
 			return nil
 		}
-		return Me.supportedComponents.firstIndex(of: castedValue)
+		return Me.supportedComponents.index(of: castedValue)
 	}
 }

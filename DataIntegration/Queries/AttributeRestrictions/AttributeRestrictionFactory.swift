@@ -8,7 +8,12 @@
 
 import Foundation
 
-public class AttributeRestrictionFactory {
+//sourcery: AutoMockable
+public protocol AttributeRestrictionFactory {
+	func initialize(type: AttributeRestriction.Type, forAttribute attribute: Attribute) -> AttributeRestriction
+}
+
+public class AttributeRestrictionFactoryImpl: AttributeRestrictionFactory {
 
 	public static let textTypes: [AttributeRestriction.Type] = [
 	]
@@ -31,4 +36,8 @@ public class AttributeRestrictionFactory {
 		OnDayOfWeekAttributeRestriction.self,
 		OnDateAttributeRestriction.self,
 	]
+
+	public func initialize(type: AttributeRestriction.Type, forAttribute attribute: Attribute) -> AttributeRestriction {
+		return type.init(attribute: attribute)
+	}
 }

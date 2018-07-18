@@ -8,7 +8,12 @@
 
 import Foundation
 
-public class AttributeFactory {
+//sourcery: AutoMockable
+public protocol AttributeFactory {
+
+}
+
+public class AttributeFactoryImpl: AttributeFactory {
 
 	public static let allTypes: [Attribute.Type] = [
 		TextAttribute.self,

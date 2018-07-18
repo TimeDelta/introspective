@@ -1,5 +1,5 @@
 //
-//  TimeConstraintUtil.swift
+//  AttributeRestrictionUtil.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 7/15/18.
@@ -9,7 +9,13 @@
 import Foundation
 import os
 
-public class TimeConstraintUtil {
+//sourcery: AutoMockable
+public protocol AttributeRestrictionUtil {
+	func getMostRestrictiveStartAndEndDates(from attributeRestrictions: [AttributeRestriction]) -> (start: Date?, end: Date?)
+	func getDaysOfWeekFrom(attributeRestrictions: [AttributeRestriction]) -> Set<DayOfWeek>
+}
+
+public class AttributeRestrictionUtilImpl: AttributeRestrictionUtil {
 
 	public func getMostRestrictiveStartAndEndDates(from attributeRestrictions: [AttributeRestriction]) -> (start: Date?, end: Date?) {
 		var latestStartDate: Date? = nil

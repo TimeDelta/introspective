@@ -8,9 +8,16 @@
 
 import Foundation
 
-class QuerierFactory: NSObject {
+//sourcery: AutoMockable
+public protocol QuerierFactory {
+	var heartRateQuerier: HeartRateQuerier { get }
+}
+
+public class QuerierFactoryImpl: QuerierFactory {
+
+	fileprivate typealias Me = QuerierFactoryImpl
 
 	fileprivate static let realHeartRateQuerier = HeartRateQuerier()
 
-	public var heartRateQuerier: HeartRateQuerier { return QuerierFactory.realHeartRateQuerier }
+	public var heartRateQuerier: HeartRateQuerier { return Me.realHeartRateQuerier }
 }

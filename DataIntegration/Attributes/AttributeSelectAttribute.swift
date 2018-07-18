@@ -46,6 +46,6 @@ public class AttributeSelectAttribute: AnyAttribute, SelectOneAttribute {
 
 	public func indexOf(possibleValue: Any) -> Int? {
 		guard let castedValue = possibleValue as? AnyAttribute else { return nil }
-		return (possibleValues as! [Attribute]).firstIndex(where: { attribute in return attribute.name == castedValue.name })
+		return (possibleValues as! [Attribute]).index(where: { attribute in return attribute.name == castedValue.name })
 	}
 }

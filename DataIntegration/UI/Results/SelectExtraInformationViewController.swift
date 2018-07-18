@@ -29,13 +29,13 @@ class SelectExtraInformationViewController: UIViewController, UIPickerViewDelega
 		if selectedAttribute == nil {
 			selectedAttribute = attributes[0]
 		}
-		let selectedAttributeIndex = attributes.firstIndex(where: { attribute in return attribute.name == selectedAttribute.name })!
+		let selectedAttributeIndex = attributes.index(where: { attribute in return attribute.name == selectedAttribute.name })!
 		attributePicker.selectRow(selectedAttributeIndex, inComponent: 0, animated: false)
 
 		if selectedInformation == nil {
 			selectedInformation = getApplicableInformationTypesForSelectedAttribute()[0].init(selectedAttribute)
 		};
-		let selectedInformationIndex = getApplicableInformationTypesForSelectedAttribute().firstIndex(where: { type in return type.init(selectedAttribute).key == selectedInformation.key })!
+		let selectedInformationIndex = getApplicableInformationTypesForSelectedAttribute().index(where: { type in return type.init(selectedAttribute).key == selectedInformation.key })!
 		informationPicker.selectRow(selectedInformationIndex, inComponent: 0, animated: false)
 	}
 

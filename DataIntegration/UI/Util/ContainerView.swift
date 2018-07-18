@@ -18,7 +18,7 @@ public class ContainerView<T: UIViewController>: UIView {
 		super.init(frame: CGRect.zero)
 	}
 
-	required init?(coder aDecoder: NSCoder) {
+	public required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
@@ -34,18 +34,18 @@ public class ContainerView<T: UIViewController>: UIView {
 
 	fileprivate func setUpViewController(_ targetController: T?, animated: Bool) {
 		if let controller = targetController {
-			parentController.addChild(controller)
+			parentController.addChildViewController(controller)
 			controller.view.frame = self.bounds
 			self.addSubview(controller.view)
-			controller.didMove(toParent: parentController)
+			controller.didMove(toParentViewController: parentController)
 		}
 	}
 
 	fileprivate func removeCurrentController() {
 		if let _viewController = currentController {
-			_viewController.willMove(toParent: nil)
+			_viewController.willMove(toParentViewController: nil)
 			_viewController.view.removeFromSuperview()
-			_viewController.removeFromParent()
+			_viewController.removeFromParentViewController()
 			currentController = nil
 		}
 	}

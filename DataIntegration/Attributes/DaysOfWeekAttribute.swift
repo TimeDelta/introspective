@@ -68,7 +68,7 @@ public class DaysOfWeekAttribute: AnyMultiSelectAttribute {
 		guard let castedValue = possibleValue as? DayOfWeek else {
 			return nil
 		}
-		return DayOfWeek.allDays.firstIndex(of: castedValue)
+		return DayOfWeek.allDays.index(of: castedValue)
 	}
 
 	public override func valueAsArray(_ value: Any) throws -> [Any] {

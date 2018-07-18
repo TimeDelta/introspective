@@ -40,7 +40,7 @@ class EditSampleAggregationViewController: UIViewController, UIPickerViewDelegat
 			currentAggregator.groupCombiner = validCombinerTypes()[0].init()
 		}
 		let currentType = type(of: currentAggregator.groupCombiner!)
-		let currentTypeIndex = validCombinerTypes().firstIndex(where: { type in type.name == currentType.name })
+		let currentTypeIndex = validCombinerTypes().index(where: { type in type.name == currentType.name })
 		if currentTypeIndex == nil {
 			currentAggregator.groupCombiner = validCombinerTypes()[0].init()
 			valueCombinationMethodPicker.selectRow(0, inComponent: 0, animated: false)

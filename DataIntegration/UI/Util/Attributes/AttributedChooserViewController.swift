@@ -83,7 +83,7 @@ class AttributedChooserViewController: UIViewController {
 			controller.view.frame = CGRect(x: x, y: yPos, width: subViewWidth(), height: height)
 			attributeViewControllers.append(controller)
 			attributeScrollView.addSubview(controller.view)
-			controller.didMove(toParent: self)
+			controller.didMove(toParentViewController: self)
 			yPos += height + verticalSpacing
 		}
 	}
@@ -94,7 +94,7 @@ class AttributedChooserViewController: UIViewController {
 		controller.view.frame = CGRect(x: x, y: getNextYPosForScrollView(), width: subViewWidth(), height: 30)
 		controller.acceptButton.addTarget(self, action: #selector(accepted), for: .touchUpInside)
 		attributeScrollView.addSubview(controller.view)
-		controller.didMove(toParent: self)
+		controller.didMove(toParentViewController: self)
 	}
 
 	fileprivate func getNextYPosForScrollView() -> CGFloat {

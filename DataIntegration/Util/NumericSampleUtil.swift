@@ -9,7 +9,26 @@
 import Foundation
 import HealthKit
 
-public class NumericSampleUtil {
+//sourcery: AutoMockable
+public protocol NumericSampleUtil {
+	func average(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Double)]
+	func average(for attribute: Attribute, over samples: [Sample]) -> Double
+	func count(over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Int)]
+	func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Type)]
+	func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample]) -> Type
+	func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Type)]
+	func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample]) -> Type
+	func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Type)]
+	func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample]) -> Type
+}
+
+extension NumericSampleUtil {
+	func count(over samples: [Sample], per aggregationUnit: Calendar.Component? = nil) -> [(date: Date?, value: Int)] {
+		return count(over: samples, per: aggregationUnit)
+	}
+}
+
+public class NumericSampleUtilImpl: NumericSampleUtil {
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to a `Double`
 	/// - Precondition: The provided samples array is not empty.

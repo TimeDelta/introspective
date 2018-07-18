@@ -12,19 +12,19 @@ public class UtilFactory {
 
 	fileprivate typealias Me = UtilFactory
 
-	fileprivate static let realCalendarUtil = CalendarUtil()
-	fileprivate static let realHKQuantitySampleUtil = NumericSampleUtil()
-	fileprivate static let realTextNormalizationUtil = TextNormalizationUtil()
-	fileprivate static let realSampleUtil = SampleUtil()
-	fileprivate static let realTimeConstraintUtil = TimeConstraintUtil()
-	fileprivate static let realSearchUtil = SearchUtil()
-	fileprivate static let realStringUtil = StringUtil()
+	fileprivate static let realCalendarUtil = CalendarUtilImpl()
+	fileprivate static let realHKQuantitySampleUtil = NumericSampleUtilImpl()
+	fileprivate static let realTextNormalizationUtil = TextNormalizationUtilImpl()
+	fileprivate static let realSampleUtil = SampleUtilImpl()
+	fileprivate static let realTimeConstraintUtil = AttributeRestrictionUtilImpl()
+	fileprivate static let realSearchUtil = SearchUtilImpl()
+	fileprivate static let realStringUtil = StringUtilImpl()
 
-	public var calendarUtil: CalendarUtil { get { return Me.realCalendarUtil } }
-	public var numericSampleUtil: NumericSampleUtil { get { return Me.realHKQuantitySampleUtil } }
-	public var textNormalizationUtil: TextNormalizationUtil { get { return Me.realTextNormalizationUtil } }
-	public var sampleUtil: SampleUtil { get { return Me.realSampleUtil } }
-	public var timeConstraintUtil: TimeConstraintUtil { get { return Me.realTimeConstraintUtil } }
-	public var searchUtil: SearchUtil { get { return Me.realSearchUtil } }
-	public var stringUtil: StringUtil { get { return Me.realStringUtil } }
+	public var calendarUtil: CalendarUtil = Me.realCalendarUtil
+	public var numericSampleUtil: NumericSampleUtil = Me.realHKQuantitySampleUtil
+	public var textNormalizationUtil: TextNormalizationUtil = Me.realTextNormalizationUtil
+	public var sampleUtil: SampleUtil = Me.realSampleUtil
+	public var attributeRestrictionUtil: AttributeRestrictionUtil = Me.realTimeConstraintUtil
+	public var searchUtil: SearchUtil = Me.realSearchUtil
+	public var stringUtil: StringUtil = Me.realStringUtil
 }

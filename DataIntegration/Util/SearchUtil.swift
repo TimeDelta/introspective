@@ -8,7 +8,14 @@
 
 import Foundation
 
-public class SearchUtil {
+//sourcery: AutoMockable
+public protocol SearchUtil {
+	func binarySearch<T:Comparable>(for targetItem: T, in items: Array<T>) -> Int?
+	func binarySearch<T>(for targetItem: T, in items: Array<T>, compare: (T, T) -> ComparisonResult) -> Int?
+	func closestItem<T>(to targetItem: T, in items: Array<T>, distance: (T, T) -> Int) -> T
+}
+
+public class SearchUtilImpl: SearchUtil {
 
 	/// - Precondition: input array is sorted in ascending order.
 	public func binarySearch<T:Comparable>(for targetItem: T, in items: Array<T>) -> Int? {

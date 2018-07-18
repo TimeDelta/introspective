@@ -25,7 +25,7 @@ public class DateAttributeBase: AnyAttribute, DateAttribute {
 		pluralName: String? = nil,
 		description: String? = nil,
 		includeTime: Bool = true,
-		format: String = CalendarUtil.defaultDateFormat,
+		format: String = defaultDateFormat,
 		earliestDate: Date? = nil,
 		latestDate: Date? = nil)
 	{

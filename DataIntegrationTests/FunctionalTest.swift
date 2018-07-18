@@ -7,18 +7,41 @@
 //
 
 import XCTest
+import SwiftyMocky
 @testable import DataIntegration
 
 class FunctionalTest: XCTestCase {
 
-    override func setUp() {
-        super.setUp()
-		DependencyInjector.setType(newType: .FunctionalTest)
-    }
+	let injectionProvider = InjectionProviderMock()
 
-    override func tearDown() {
-        DependencyInjector.setType(newType: .Production)
-        UnitTestInjectionProvider.resetMocks()
-        super.tearDown()
-    }
+	let queryFactory = QueryFactoryImpl()
+	let querierFactory = QuerierFactoryImpl()
+	let questionFactory = QuestionFactory()
+	let dataTypeFactory = DataTypeFactoryImpl()
+	let utilFactory = UtilFactory()
+	let restrictionParserFactory = RestrictionParserFactory()
+	let subQueryMatcherFactory = SubQueryMatcherFactoryImpl()
+	let extraInformationFactory = ExtraInformationFactoryImpl()
+	let sampleGrouperFactory = SampleGrouperFactoryImpl()
+	let sampleGroupCombinerFactory = SampleGroupCombinerFactoryImpl()
+
+	override func setUp() {
+		super.setUp()
+		DependencyInjector.injectionProvider = injectionProvider
+		Given(injectionProvider, .queryFactory(willReturn: queryFactory))
+		Given(injectionProvider, .querierFactory(willReturn: querierFactory))
+		Given(injectionProvider, .questionFactory(willReturn: questionFactory))
+		Given(injectionProvider, .dataTypeFactory(willReturn: dataTypeFactory))
+		Given(injectionProvider, .utilFactory(willReturn: utilFactory))
+		Given(injectionProvider, .restrictionParserFactory(willReturn: restrictionParserFactory))
+		Given(injectionProvider, .subQueryMatcherFactory(willReturn: subQueryMatcherFactory))
+		Given(injectionProvider, .extraInformationFactory(willReturn: extraInformationFactory))
+		Given(injectionProvider, .sampleGrouperFactory(willReturn: sampleGrouperFactory))
+		Given(injectionProvider, .sampleGroupCombinerFactory(willReturn: sampleGroupCombinerFactory))
+	}
+
+	override func tearDown() {
+		DependencyInjector.injectionProvider = ProductionInjectionProvider()
+		super.tearDown()
+	}
 }

@@ -10,7 +10,11 @@ import Foundation
 import HealthKit
 import os
 
-class HeartRateQuerier: NSObject {
+public class HeartRateQuerier: NSObject {
+
+	enum Errors: Error {
+		case unauthorized
+	}
 
 	fileprivate typealias Me = HeartRateQuerier
 
@@ -43,24 +47,15 @@ class HeartRateQuerier: NSObject {
 	public func getAuthorization(callback: @escaping (Error?) -> ()) {
 		os_log("Checking authorization to read heart rate data", type: .info)
 
-		Me.HEALTH_STORE.getRequestStatusForAuthorization(toShare: [], read: Me.READ_PERMISSIONS) {
-			(status: HKAuthorizationRequestStatus, error: Error?) in
+		let status = Me.HEALTH_STORE.authorizationStatus(for: Me.HEART_RATE)
 
-			if error != nil {
+		if status == .notDetermined {
+			os_log("Requesting authorization to read heart rate data", type: .info)
+			Me.HEALTH_STORE.requestAuthorization(toShare: nil, read: Me.READ_PERMISSIONS) { (result: Bool, error: Error?) in
 				callback(error)
 			}
-
-			switch (status) {
-				case HKAuthorizationRequestStatus.shouldRequest:
-					os_log("Requesting authorization to read heart rate data", type: .info)
-					Me.HEALTH_STORE.requestAuthorization(toShare: nil, read: Me.READ_PERMISSIONS) { (result: Bool, error: Error?) in
-						callback(error)
-					}
-				case HKAuthorizationRequestStatus.unnecessary:
-					callback(nil)
-				case HKAuthorizationRequestStatus.unknown:
-					callback(nil)
-			}
+		} else {
+			callback(nil)
 		}
 	}
 }

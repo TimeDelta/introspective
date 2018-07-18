@@ -71,7 +71,7 @@ class EditSubDataTypeViewController: UIViewController, UIPickerViewDelegate, UIP
 			return DataTypes.allTypes.count
 		}
 		if pickerView == matcherTypePicker {
-			return SubQueryMatcherFactory.allMatchers.count
+			return SubQueryMatcherFactoryImpl.allMatchers.count
 		}
 		if pickerView == timeUnitPicker {
 			return Me.supportedTimeUnits.count
@@ -92,12 +92,12 @@ class EditSubDataTypeViewController: UIViewController, UIPickerViewDelegate, UIP
 			label!.text = DataTypes.allTypes[row].description
 			label!.font = UIFont(name: "System", size: CGFloat(15))
 		} else if pickerView == matcherTypePicker {
-			label!.text = SubQueryMatcherFactory.allMatchers[row].genericDescription
+			label!.text = SubQueryMatcherFactoryImpl.allMatchers[row].genericDescription
 			label!.font = UIFont(name: "System", size: CGFloat(19))
 		} else if pickerView == timeUnitPicker {
 			label!.text = Me.supportedTimeUnits[row].description
 			let selectedMatcherIndex = matcherTypePicker.selectedRow(inComponent: 0)
-			if SubQueryMatcherFactory.allMatchers[selectedMatcherIndex] == WithinXCalendarUnitsSubQueryMatcher.self {
+			if SubQueryMatcherFactoryImpl.allMatchers[selectedMatcherIndex] == WithinXCalendarUnitsSubQueryMatcher.self {
 				label!.text! += "s"
 			}
 			label!.font = UIFont(name: "System", size: CGFloat(19))
@@ -110,7 +110,7 @@ class EditSubDataTypeViewController: UIViewController, UIPickerViewDelegate, UIP
 
 	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 		if pickerView == matcherTypePicker {
-			let type: SubQueryMatcher.Type = SubQueryMatcherFactory.allMatchers[row]
+			let type: SubQueryMatcher.Type = SubQueryMatcherFactoryImpl.allMatchers[row]
 			matcher = type.init()
 			updateAttributeViews()
 		} else if pickerView == timeUnitPicker {
@@ -143,7 +143,7 @@ class EditSubDataTypeViewController: UIViewController, UIPickerViewDelegate, UIP
 
 		let matcherTypeIndex = getIndexForMatcher()
 
-		let parameters = SubQueryMatcherFactory.allMatchers[matcherTypeIndex].parameters
+		let parameters = SubQueryMatcherFactoryImpl.allMatchers[matcherTypeIndex].parameters
 		for (id, type) in parameters {
 			switch (type) {
 				case .integer:
@@ -176,8 +176,8 @@ class EditSubDataTypeViewController: UIViewController, UIPickerViewDelegate, UIP
 	}
 
 	fileprivate func getIndexForMatcher() -> Int {
-		for index in 0 ..< SubQueryMatcherFactory.allMatchers.count {
-			if SubQueryMatcherFactory.allMatchers[index] == type(of: matcher!) {
+		for index in 0 ..< SubQueryMatcherFactoryImpl.allMatchers.count {
+			if SubQueryMatcherFactoryImpl.allMatchers[index] == type(of: matcher!) {
 				return index
 			}
 		}

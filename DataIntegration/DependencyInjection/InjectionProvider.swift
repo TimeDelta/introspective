@@ -8,16 +8,17 @@
 
 import Foundation
 
-protocol InjectionProvider {
+//sourcery: AutoMockable
+public protocol InjectionProvider {
 
-	var queryFactory: QueryFactory { get }
-	var querierFactory: QuerierFactory { get }
-	var questionFactory: QuestionFactory { get }
-	var dataTypesFactory: DataTypesFactory { get }
-	var utilFactory: UtilFactory { get }
-	var restrictionParserFactory: RestrictionParserFactory { get }
-	var subQueryMatcherFactory: SubQueryMatcherFactory { get }
-	var extraInformationFactory: ExtraInformationFactory { get }
-	var sampleGrouperFactory: SampleGrouperFactory { get }
-	var sampleGroupCombinerFactory: SampleGroupCombinerFactory { get }
+	func queryFactory() -> QueryFactory
+	func querierFactory() -> QuerierFactory
+	func questionFactory() -> QuestionFactory
+	func dataTypeFactory() -> DataTypeFactory
+	func utilFactory() -> UtilFactory
+	func restrictionParserFactory() -> RestrictionParserFactory
+	func subQueryMatcherFactory() -> SubQueryMatcherFactory
+	func extraInformationFactory() -> ExtraInformationFactory
+	func sampleGrouperFactory() -> SampleGrouperFactory
+	func sampleGroupCombinerFactory() -> SampleGroupCombinerFactory
 }

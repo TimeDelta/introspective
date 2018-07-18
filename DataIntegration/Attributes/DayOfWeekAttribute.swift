@@ -42,6 +42,6 @@ public class DayOfWeekAttribute: AnyAttribute, SelectOneAttribute {
 		guard let castedValue = possibleValue as? DayOfWeek else {
 			return nil
 		}
-		return DayOfWeek.allDays.firstIndex(of: castedValue)
+		return DayOfWeek.allDays.index(of: castedValue)
 	}
 }

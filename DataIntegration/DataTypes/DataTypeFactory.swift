@@ -1,5 +1,5 @@
 //
-//  DataTypesFactory.swift
+//  DataTypeFactory.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 6/28/18.
@@ -9,7 +9,20 @@
 import Foundation
 import HealthKit
 
-public class DataTypesFactory: NSObject {
+//sourcery: AutoMockable
+public protocol DataTypeFactory {
+	func activity() -> Activity
+	func activityInstance(activity: Activity) -> ActivityInstance
+	func heartRate(value: Double) -> HeartRate
+	func heartRate(_ value: Double, _ dateType: DateType, _ date: Date) -> HeartRate
+	func heartRate(_ value: Double, _ dates: [DateType: Date]) -> HeartRate
+	func heartRate(_ sample: HKQuantitySample) -> HeartRate
+	func mood() -> Mood
+	func mood(rating: Double) -> Mood
+	func mood(timestamp: Date) -> Mood
+}
+
+public class DataTypeFactoryImpl: DataTypeFactory {
 
 	public func activity() -> Activity {
 		return Activity()

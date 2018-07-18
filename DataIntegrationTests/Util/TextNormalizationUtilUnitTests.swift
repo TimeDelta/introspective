@@ -11,11 +11,11 @@ import XCTest
 
 class TextNormalizationUtilUnitTests: UnitTest {
 
-	fileprivate var util: TextNormalizationUtil!
+	fileprivate var util: TextNormalizationUtilImpl!
 
 	override func setUp() {
         super.setUp()
-		util = TextNormalizationUtil()
+		util = TextNormalizationUtilImpl()
     }
 
     func testGivenTheOneHundredTwentiethGame_normalizeNumbers_replacesOneHundredTwentiethWith120th() {

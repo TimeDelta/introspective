@@ -8,6 +8,7 @@
 
 import Foundation
 
+//sourcery: AutoMockable
 public protocol Query {
 
 	var attributeRestrictions: [AttributeRestriction] { get set }
@@ -18,20 +19,4 @@ public protocol Query {
 	var subQuery: (matcher: SubQueryMatcher, query: Query)? { get set }
 
 	func runQuery(callback: @escaping (QueryResult?, Error?) -> ())
-}
-
-public protocol TypedQuery: Query {
-
-	associatedtype SampleType: Sample
-
-	func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> ())
-}
-
-extension TypedQuery {
-
-	public func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
-		runQuery { (result: SampleQueryResult<SampleType>?, error: Error?) in
-			callback(result, error)
-		}
-	}
 }

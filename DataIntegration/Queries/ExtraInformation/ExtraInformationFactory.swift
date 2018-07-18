@@ -8,9 +8,14 @@
 
 import Foundation
 
-public class ExtraInformationFactory {
+public protocol ExtraInformationFactory {
 
-	fileprivate typealias Me = ExtraInformationFactory
+	func getApplicableInformationTypes(forAttribute attribute: Attribute) -> [ExtraInformation.Type]
+}
+
+public class ExtraInformationFactoryImpl: ExtraInformationFactory {
+
+	fileprivate typealias Me = ExtraInformationFactoryImpl
 
 	public static let numericInformationTypes: [ExtraInformation.Type] = [
 		AverageInformation.self,

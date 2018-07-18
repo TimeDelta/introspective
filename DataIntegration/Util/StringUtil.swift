@@ -8,9 +8,15 @@
 
 import Foundation
 
-public class StringUtil {
+//sourcery: AutoMockable
+public protocol StringUtil {
+	func isNumber(_ str: String) -> Bool
+	func isInteger(_ str: String) -> Bool
+}
 
-	fileprivate typealias Me = StringUtil
+public class StringUtilImpl: StringUtil {
+
+	fileprivate typealias Me = StringUtilImpl
 
 	fileprivate static let numberRegex = "^[0-9]*.?[0-9]+$"
 	fileprivate static let integerRegex = "^[0-9]+$"

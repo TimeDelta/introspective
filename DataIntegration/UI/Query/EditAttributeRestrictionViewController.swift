@@ -48,12 +48,12 @@ public class EditAttributeRestrictionViewController: UIViewController {
 		var applicableAttributeRestrictionTypes: [AttributeRestriction.Type] = []
 		var currentRestriction: AttributeRestriction? = nil
 		if selectedAttribute is DateAttribute {
-			applicableAttributeRestrictionTypes = AttributeRestrictionFactory.dateTypes
+			applicableAttributeRestrictionTypes = AttributeRestrictionFactoryImpl.dateTypes
 			if attributeRestriction is DateAttributeRestriction {
 				currentRestriction = attributeRestriction
 			}
 		} else if selectedAttribute is NumericAttribute {
-			applicableAttributeRestrictionTypes = AttributeRestrictionFactory.numberTypes
+			applicableAttributeRestrictionTypes = AttributeRestrictionFactoryImpl.numberTypes
 			if attributeRestriction is NumericAttributeRestriction {
 				currentRestriction = attributeRestriction
 			}

@@ -8,7 +8,17 @@
 
 import Foundation
 
-public class SubQueryMatcherFactory {
+//sourcery: AutoMockable
+public protocol SubQueryMatcherFactory {
+
+	func withinXCalendarUnitsSubQueryMatcher() -> WithinXCalendarUnitsSubQueryMatcher
+	func inSameCalendarUnitSubQueryMatcher() -> InSameCalendarUnitSubQueryMatcher
+	func sameDatesSubQueryMatcher() -> SameDatesSubQueryMatcher
+	func sameStartDatesSubQueryMatcher() -> SameStartDatesSubQueryMatcher
+	func sameEndDatesSubQueryMatcher() -> SameEndDatesSubQueryMatcher
+}
+
+public class SubQueryMatcherFactoryImpl: SubQueryMatcherFactory {
 
 	public static var allMatchers: [SubQueryMatcher.Type] = [
 		WithinXCalendarUnitsSubQueryMatcher.self,

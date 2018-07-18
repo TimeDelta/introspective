@@ -8,15 +8,16 @@
 
 import XCTest
 import HealthKit
+import SwiftyMocky
 @testable import DataIntegration
 
 class SampleUtilUnitTests: UnitTest {
 
-	fileprivate var util: SampleUtil!
+	fileprivate var util: SampleUtilImpl!
 
     override func setUp() {
         super.setUp()
-		util = SampleUtil()
+		util = SampleUtilImpl()
     }
 
 	func testGivenEmptyDayOfWeekSet_sampleOccursOnOneOf_returnsTrue() {
@@ -57,12 +58,14 @@ class SampleUtilUnitTests: UnitTest {
 			(date: expectedStartDate, value: 0.0),
 			(date: expectedEndDate, value: 0.0),
 		])
+		Given(mockCalendarUtil, .compare(date1: .value(expectedStartDate), date2: .value(expectedEndDate), willReturn: .orderedAscending))
+		Given(mockCalendarUtil, .compare(date1: .value(expectedEndDate), date2: .value(expectedStartDate), willReturn: .orderedDescending))
 
 		// when
 		let convertedSamples = util.convertOneDateSamplesToTwoDateSamples(
 			samples,
 			samplesShouldNotBeJoined: { (_, _) -> Bool in
-				return true
+				return false
 			},
 			joinSamples: { (_, start: Date, end: Date) -> Sample in
 				return createSample(start: start, end: end, value: 0.0)
@@ -70,6 +73,7 @@ class SampleUtilUnitTests: UnitTest {
 		)
 
 		// then
+		XCTAssert(convertedSamples.count == 1)
 		XCTAssert(convertedSamples[0].dates[.start] == expectedStartDate)
 		XCTAssert(convertedSamples[0].dates[.end] == expectedEndDate)
 	}

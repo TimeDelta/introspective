@@ -9,11 +9,30 @@
 import Foundation
 import SwiftDate
 
-public class CalendarUtil: NSObject {
+public let defaultDateFormat = "MMMM dd YYYY 'at' HH:mm:ss"
 
-	fileprivate typealias Me = CalendarUtil
+//sourcery: AutoMockable
+public protocol CalendarUtil {
+	func start(of component: Calendar.Component, in date: Date) -> Date
+	func end(of component: Calendar.Component, in date: Date) -> Date
+	func string(for date: Date, inFormat format: String) -> String
+	func date(_ date1: Date, occursOnSame component: Calendar.Component, as date2: Date) -> Bool
+	func compare(_ date1: Date?, _ date2: Date?) -> ComparisonResult
+	func date<CollectionType: Collection>(_ date: Date, isOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek
+	func date(_ date: Date, isA dayOfWeek: DayOfWeek) -> Bool
+	func date(from dateStr: String, format: String) -> Date?
+}
 
-	public static let defaultDateFormat = "MMMM dd YYYY 'at' HH:mm:ss"
+extension CalendarUtil {
+	func string(for date: Date, inFormat format: String = defaultDateFormat) -> String {
+		return string(for: date, inFormat: format)
+	}
+	func date(from dateStr: String, format: String = defaultDateFormat) -> Date? {
+		return date(from: dateStr, format: format)
+	}
+}
+
+public class CalendarUtilImpl: CalendarUtil {
 
 	/// Set all components of the specified date less than the specified component to the minimum value for that component.
 	/// - Parameter toBeginningOf: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
@@ -33,7 +52,7 @@ public class CalendarUtil: NSObject {
 		return end.date
 	}
 
-	public func string(for date: Date, inFormat format: String = Me.defaultDateFormat) -> String {
+	public func string(for date: Date, inFormat format: String) -> String {
 		let calendar = Calendar.autoupdatingCurrent
 		let dateInRegion = DateInRegion(date, region: Region(calendar: calendar, zone: calendar.timeZone))
 		return dateInRegion.toFormat(format)
@@ -71,7 +90,7 @@ public class CalendarUtil: NSObject {
 		return dayOfWeekForDate == dayOfWeek
 	}
 
-	public func date(from dateStr: String, format: String = Me.defaultDateFormat) -> Date? {
+	public func date(from dateStr: String, format: String) -> Date? {
 		let calendar = Calendar.autoupdatingCurrent
 		let region = Region(calendar: calendar, zone: calendar.timeZone)
 		return Date(dateStr, format: format, region: region)

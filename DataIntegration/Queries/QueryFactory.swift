@@ -8,7 +8,13 @@
 
 import Foundation
 
-public class QueryFactory: NSObject {
+//sourcery: AutoMockable
+public protocol QueryFactory {
+	func heartRateQuery() -> HeartRateQuery
+	func queryFor<SampleType: Sample>(sampleType: SampleType.Type) throws -> SampleQuery<SampleType>
+}
+
+public class QueryFactoryImpl: QueryFactory {
 
 	public enum Errors: Error {
 		case UnknownSampleType

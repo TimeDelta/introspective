@@ -30,6 +30,7 @@ public protocol Attribute {
 	func convertToValue(from strValue: String) throws -> Any
 	func convertToString(from value: Any) throws -> String
 	func convertToDisplayableString(from value: Any) throws -> String
+	func equalTo(_ otherAttribute: Attribute) -> Bool
 }
 
 extension Attribute {
@@ -44,6 +45,14 @@ extension Attribute {
     ///   - rhs: Another value to compare.
     public static func == (lhs: Attribute, rhs: Attribute) -> Bool {
 		return lhs.name == rhs.name && lhs.extendedDescription == rhs.extendedDescription
+	}
+
+	public static func != (lhs: Attribute, rhs: Attribute) -> Bool {
+		return lhs.name != rhs.name || lhs.extendedDescription != rhs.extendedDescription
+	}
+
+	public func equalTo(_ otherAttribute: Attribute) -> Bool {
+		return name == otherAttribute.name && extendedDescription == otherAttribute.extendedDescription
 	}
 }
 

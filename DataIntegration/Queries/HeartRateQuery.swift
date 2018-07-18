@@ -12,7 +12,7 @@ import HealthKit
 public class HeartRateQuery: SampleQuery<HeartRate> {
 
 	override func run() {
-		let dateConstraints = DependencyInjector.util.timeConstraintUtil.getMostRestrictiveStartAndEndDates(from: attributeRestrictions)
+		let dateConstraints = DependencyInjector.util.attributeRestrictionUtil.getMostRestrictiveStartAndEndDates(from: attributeRestrictions)
 		let predicate = HKQuery.predicateForSamples(withStart: dateConstraints.start, end: dateConstraints.end, options: [])
 
 		DependencyInjector.querier.heartRateQuerier.getAuthorization {

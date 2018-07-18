@@ -8,20 +8,42 @@
 
 import XCTest
 import HealthKit
+import SwiftyMocky
 @testable import DataIntegration
 
 class UnitTest: XCTestCase {
 
-    override func setUp() {
-        super.setUp()
-		DependencyInjector.setType(newType: .UnitTest)
-    }
+	let injectionProvider = InjectionProviderMock()
 
-    override func tearDown() {
-        DependencyInjector.setType(newType: .Production)
-        UnitTestInjectionProvider.resetMocks()
-        super.tearDown()
-    }
+	let utilFactory = UtilFactory()
+	let mockAttributeRestrictionUtil = AttributeRestrictionUtilMock()
+	let mockCalendarUtil = CalendarUtilMock()
+	let mockNumericSampleUtil = NumericSampleUtilMock()
+	let mockSampleUtil = SampleUtilMock()
+	let mockSearchUtil = SearchUtilMock()
+	let mockStringUtil = StringUtilMock()
+	let mockTextNormalizationUtil = TextNormalizationUtilMock()
+
+	override func setUp() {
+		super.setUp()
+		DependencyInjector.injectionProvider = injectionProvider
+		Given(injectionProvider, .utilFactory(willReturn: utilFactory))
+		utilFactory.attributeRestrictionUtil = mockAttributeRestrictionUtil
+		utilFactory.calendarUtil = mockCalendarUtil
+		utilFactory.numericSampleUtil = mockNumericSampleUtil
+		utilFactory.sampleUtil = mockSampleUtil
+		utilFactory.searchUtil = mockSearchUtil
+		utilFactory.stringUtil = mockStringUtil
+		utilFactory.textNormalizationUtil = mockTextNormalizationUtil
+
+		Matcher.default.register(Sample.self) { lhs,rhs in return lhs.equalTo(rhs) }
+		Matcher.default.register(Attribute.self) { lhs,rhs in return lhs.equalTo(rhs) }
+	}
+
+	override func tearDown() {
+		DependencyInjector.injectionProvider = ProductionInjectionProvider()
+		super.tearDown()
+	}
 
 	func createSample(_ value: Double) -> Sample {
 		return HeartRate(value)

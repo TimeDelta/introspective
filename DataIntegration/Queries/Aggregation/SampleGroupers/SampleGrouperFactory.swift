@@ -8,9 +8,15 @@
 
 import Foundation
 
-public class SampleGrouperFactory {
+public protocol SampleGrouperFactory {
+	func typesFor(attribute: Attribute) -> [SampleGrouper.Type]
+	func groupersFor(attribute: Attribute) -> [SampleGrouper]
+	func initialize(type: SampleGrouper.Type) -> SampleGrouper
+}
 
-	fileprivate typealias Me = SampleGrouperFactory
+public class SampleGrouperFactoryImpl: SampleGrouperFactory {
+
+	fileprivate typealias Me = SampleGrouperFactoryImpl
 
 	public static let dateTypes: [SampleGrouper.Type] = [
 		SameTimeUnitSampleGrouper.self,

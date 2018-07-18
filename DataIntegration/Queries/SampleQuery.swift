@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class SampleQuery<SampleType: Sample>: TypedQuery {
+public class SampleQuery<SampleType: Sample>: Query {
 
 	public var attributeRestrictions: [AttributeRestriction]
 	public var mostRecentEntryOnly: Bool
@@ -34,6 +34,12 @@ public class SampleQuery<SampleType: Sample>: TypedQuery {
 			}
 		})
 		run()
+	}
+
+	public func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+		runQuery { (result: SampleQueryResult<SampleType>?, error: Error?) in
+			callback(result, error)
+		}
 	}
 
 	func run() {

@@ -68,7 +68,7 @@ open class MultiSelectSegmentedControl: UISegmentedControl {
     }
 
     fileprivate func selectSegmentsOfSelectedIndexes() {
-		super.selectedSegmentIndex = UISegmentedControl.noSegment
+		super.selectedSegmentIndex = UISegmentedControlNoSegment
         var isPrevSelected = false
         for i in 0...numberOfSegments {
             let isSelected = selectedIndexes.contains(i)
@@ -131,13 +131,13 @@ open class MultiSelectSegmentedControl: UISegmentedControl {
 
     open override var selectedSegmentIndex: Int {
         get {
-			return selectedIndexes.count == 0 ? UISegmentedControl.noSegment : selectedIndexes.first!
+			return selectedIndexes.count == 0 ? UISegmentedControlNoSegment : selectedIndexes.first!
         }
         set {
             if selectedIndexes.count == 0 {
                 super.selectedSegmentIndex = newValue
             }
-			selectedSegmentIndexes = newValue == UISegmentedControl.noSegment ? IndexSet() : IndexSet(integer: selectedSegmentIndex)
+			selectedSegmentIndexes = newValue == UISegmentedControlNoSegment ? IndexSet() : IndexSet(integer: selectedSegmentIndex)
         }
     }
 

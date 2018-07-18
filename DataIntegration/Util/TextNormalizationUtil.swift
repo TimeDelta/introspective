@@ -8,11 +8,18 @@
 
 import Foundation
 
-public class TextNormalizationUtil: NSObject {
+//sourcery: AutoMockable
+public protocol TextNormalizationUtil {
+	func expandContractions(_ text: String) -> String
+	func normalizeNumbers(_ text: String) -> String
+	func removePunctuation(_ text: String) -> String
+}
 
-	fileprivate typealias Me = TextNormalizationUtil
+public class TextNormalizationUtilImpl: TextNormalizationUtil {
 
-	static let contractions = [
+	fileprivate typealias Me = TextNormalizationUtilImpl
+
+	fileprivate static let contractions = [
 		"ain't": "am not",
 		"aren't": "are not",
 		"can't've": "cannot have",

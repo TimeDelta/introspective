@@ -22,6 +22,8 @@ public protocol Sample: Attributed {
 
 	var dates: [DateType: Date] { get }
 	var dataType: DataTypes { get }
+
+	func equalTo(_ otherSample: Sample) -> Bool
 }
 
 
@@ -56,6 +58,10 @@ public class SampleBase: Sample {
 	}
 
 	public func set(attribute: Attribute, to value: Any) throws {
+		fatalError("Must override")
+	}
+
+	public func equalTo(_ otherSample: Sample) -> Bool {
 		fatalError("Must override")
 	}
 }
