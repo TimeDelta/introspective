@@ -14,7 +14,7 @@ class TimeConstraintTableViewCell: UITableViewCell {
 
 	@IBOutlet weak var label: UILabel!
 
-	var timeConstraint: TimeConstraint! {
+	public var timeConstraint: TimeConstraint! {
 		didSet {
 			guard let timeConstraint = timeConstraint else { return }
 			label.text = timeConstraint.description

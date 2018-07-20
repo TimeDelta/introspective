@@ -13,21 +13,36 @@ public class SameDatesSubQueryMatcher: SubQueryMatcher {
 	fileprivate typealias Me = SameDatesSubQueryMatcher
 
 	public static let genericDescription: String = "Start and end timestamps are the same as"
+	public static let parameters: [(id: Int, type: ParamType)] = []
 
 	public var description: String {
-		return Me.genericDescription
+		var text = Me.genericDescription
+		if mostRecentOnly {
+			text += " most recent"
+		}
+		return text
 	}
+
+	public var mostRecentOnly: Bool = false
+
+	public required init() {} // do nothing
 
 	public func getSamples<QuerySampleType: Sample, SubQuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
 		matching subQuerySamples: [SubQuerySampleType])
 	-> [QuerySampleType] {
 		var matchingSamples = [QuerySampleType]()
-		let subQuerySamplesSortedByStartDate = subQuerySamples.sorted { (s1: Sample, s2: Sample) -> Bool in
+
+		var applicableSubQuerySamples = subQuerySamples
+		if mostRecentOnly {
+			applicableSubQuerySamples = [subQuerySamples[0]]
+		}
+
+		let subQuerySamplesSortedByStartAndEndDates = applicableSubQuerySamples.sorted { (s1: Sample, s2: Sample) -> Bool in
 			return compare(s1, s2) == .orderedAscending
 		}
 		for sample in querySamples {
-			let matchingSampleIndex = DependencyInjector.util.searchUtil.binarySearch(for: sample, in: subQuerySamplesSortedByStartDate, compare: compare)
+			let matchingSampleIndex = DependencyInjector.util.searchUtil.binarySearch(for: sample, in: subQuerySamplesSortedByStartAndEndDates, compare: compare)
 			if matchingSampleIndex != nil {
 				matchingSamples.append(sample)
 			}
@@ -45,5 +60,13 @@ public class SameDatesSubQueryMatcher: SubQueryMatcher {
 		}
 
 		return DependencyInjector.util.calendarUtil.compare(s1.dates[.end], s2.dates[.end])
+	}
+
+	public func setParameter<T>(id: Int, value: T) throws {
+		throw ParamErrors.invalidIdentifier // no paremeters
+	}
+
+	public func getParameterValue<T>(id: Int) throws -> T {
+		throw ParamErrors.invalidIdentifier // no paremeters
 	}
 }

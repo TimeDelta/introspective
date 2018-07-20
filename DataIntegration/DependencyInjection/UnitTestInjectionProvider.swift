@@ -13,7 +13,7 @@ class UnitTestInjectionProvider: InjectionProvider {
 
 	typealias Me = UnitTestInjectionProvider
 
-	public static let mockQueryFactory = MockQueryFactory()
+	public static let mockQueryFactory = QueryFactory()
 	public static let mockQuerierFactory = MockQuerierFactory()
 	public static let mockQuestionFactory = MockQuestionFactory()
 	public static let mockDataTypesFactory = MockDataTypesFactory()
@@ -23,12 +23,14 @@ class UnitTestInjectionProvider: InjectionProvider {
 
 	public static func resetMocks() {
 		reset(
-			mockQueryFactory,
+//			mockQueryFactory,
 			mockQuerierFactory,
 			mockQuestionFactory,
 			mockDataTypesFactory,
 			mockUtilFactory,
-			mockRestrictionParserFactory)
+			mockRestrictionParserFactory
+//			mockSubQueryMatcherFactory,
+		)
 	}
 
 	public var queryFactory: QueryFactory { get { return Me.mockQueryFactory } }

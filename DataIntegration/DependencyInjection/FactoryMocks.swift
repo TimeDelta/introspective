@@ -871,6 +871,16 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
         
     }
     
+    // ["name": "stringUtil", "stubType": "ClassToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "StringUtil", "isReadOnly": true, "accessibility": "public"]
+    public override var stringUtil: StringUtil {
+        get {
+            
+            return cuckoo_manager.getter("stringUtil", superclassCall: super.stringUtil)
+            
+        }
+        
+    }
+    
 
     
 
@@ -905,6 +915,10 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
 	    
 	    var searchUtil: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockUtilFactory, SearchUtil> {
 	        return .init(manager: cuckoo_manager, name: "searchUtil")
+	    }
+	    
+	    var stringUtil: Cuckoo.ClassToBeStubbedReadOnlyProperty<MockUtilFactory, StringUtil> {
+	        return .init(manager: cuckoo_manager, name: "stringUtil")
 	    }
 	    
 	    
@@ -944,6 +958,10 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
 	    
 	    var searchUtil: Cuckoo.VerifyReadOnlyProperty<SearchUtil> {
 	        return .init(manager: cuckoo_manager, name: "searchUtil", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var stringUtil: Cuckoo.VerifyReadOnlyProperty<StringUtil> {
+	        return .init(manager: cuckoo_manager, name: "stringUtil", callMatcher: callMatcher, sourceLocation: sourceLocation)
 	    }
 	    
 	
@@ -992,6 +1010,13 @@ class MockUtilFactory: UtilFactory, Cuckoo.ClassMock {
     public override var searchUtil: SearchUtil {
         get {
             return DefaultValueRegistry.defaultValue(for: (SearchUtil).self)
+        }
+        
+    }
+    
+    public override var stringUtil: StringUtil {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (StringUtil).self)
         }
         
     }

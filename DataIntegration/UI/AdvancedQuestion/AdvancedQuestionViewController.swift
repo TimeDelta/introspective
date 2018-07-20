@@ -16,23 +16,31 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		case dataType
 		case timeConstraint
 		case attributeRestriction
+		case subDataType
 
 		public static let allTypes: [CellType] = [dataType, timeConstraint, attributeRestriction]
 
 		var description: String {
-			switch(self) {
+			switch (self) {
 				case .dataType: return "Data Type"
 				case .timeConstraint: return "Time Constraint"
 				case .attributeRestriction: return "Attribute Restriction"
+				case .subDataType: return "Sub Data Type"
 			}
 		}
 	}
 
 	fileprivate struct DataTypeInfo {
 		var dataType: DataTypes = .heartRate
+		var matcher: SubQueryMatcher? = SameDatesSubQueryMatcher()
+
 		init() {}
 		init(_ dataType: DataTypes) {
 			self.dataType = dataType
+		}
+		init(_ dataType: DataTypes, _ matcher: SubQueryMatcher) {
+			self.dataType = dataType
+			self.matcher = matcher
 		}
 	}
 
@@ -50,6 +58,7 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 
 		partWasAdded()
 		// TODO - disallow deletion of topmost data type (will always be at index 0)
+		// TODO - allow reordering
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -58,20 +67,29 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let index = indexPath.row
+		let part = parts[index]
+
+		if index == 0 {
+			let cell = tableView.dequeueReusableCell(withIdentifier: "Data Type", for: indexPath)
+			cell.textLabel?.text = (part as! DataTypeInfo).dataType.description
+			return cell
+		}
+
 		let cellType = cellTypes[index]
 		let identifier = cellType.description
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
 
-		let part = parts[index]
-        switch(cellType) {
-			case .dataType:
-				cell.textLabel?.text = (part as! DataTypeInfo).dataType.description
+        switch (cellType) {
+			case .dataType, .subDataType:
+				let typedCell = (cell as! SubDataTypeTableViewCell)
+				typedCell.matcher = (part as! DataTypeInfo).matcher
+				typedCell.dataType = (part as! DataTypeInfo).dataType
 				break
 			case .timeConstraint:
-				(cell as! TimeConstraintTableViewCell).timeConstraint = (parts[index] as! TimeConstraint)
+				(cell as! TimeConstraintTableViewCell).timeConstraint = (part as! TimeConstraint)
 				break
 			case .attributeRestriction:
-				(cell as! AttributeRestrictionTableViewCell).attributeRestriction = (parts[index] as! AttributeRestriction)
+				(cell as! AttributeRestrictionTableViewCell).attributeRestriction = (part as! AttributeRestriction)
 				break
 		}
 
@@ -98,18 +116,12 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 			editedIndex = tableView.indexPath(for: source)!.row
 			controller.attributeRestriction = (parts[editedIndex] as! AttributeRestriction)
 			controller.dataType = closestDataType(aboveIndex: editedIndex)
-		} else if segue.destination is ResultsViewController<HeartRate> {
-//			let controller = (segue.destination as! ResultsViewController<HeartRate>)
-//			controller.dataType = .heartRate
-//			let query = HeartRateQuery()
-//			query.runQuery { (result: QueryResult<HeartRateQuery.SampleType>?, error: Error?) in
-//				if error != nil {
-//					controller.error = error
-//					return
-//				}
-//				controller.samples = result?.samples
-//				controller.extraInformation = result?.extraInformation
-//			}
+		} else if segue.destination is EditSubDataTypeViewController {
+			let controller = (segue.destination as! EditSubDataTypeViewController)
+			let source = (sender as! UITableViewCell)
+			editedIndex = tableView.indexPath(for: source)!.row
+			controller.dataType = (parts[editedIndex] as! DataTypeInfo).dataType
+			controller.matcher = (parts[editedIndex] as! DataTypeInfo).matcher
 		}
 	}
 
@@ -145,13 +157,19 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		tableView.reloadData()
 	}
 
+	@IBAction func saveEditedSubQueryDataType(_ segue: UIStoryboardSegue) {
+		let controller = (segue.source as! EditSubDataTypeViewController)
+		parts[editedIndex] = DataTypeInfo(controller.dataType, controller.matcher)
+		tableView.reloadData()
+	}
+
 	@IBAction func addQuestionPart(_ segue: UIStoryboardSegue) {
 		if segue.identifier == "addQuestionPart" {
 			let controller = (segue.source as! AddToAdvancedQuestionViewController)
 			let cellType = controller.cellType!
 			cellTypes.append(cellType)
 			switch (cellType) {
-				case .dataType:
+				case .dataType, .subDataType:
 					parts.append(DataTypeInfo())
 					break
 				case .timeConstraint:
@@ -197,6 +215,21 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		tableView.insertRows(at: [indexPath], with: .automatic)
 	}
 
+	fileprivate func buildAndRunQuery<SampleType: Sample>() -> ResultsViewController<SampleType> {
+		let query: SampleQuery<SampleType> = buildQuery()
+		let controller = ResultsViewController<SampleType>()
+
+		query.runQuery { (result: SampleQueryResult<SampleType>?, error: Error?) in
+			if error != nil {
+				controller.error = error
+				return
+			}
+			controller.samples = result?.typedSamples
+			controller.extraInformation = result?.sampleInformation
+		}
+		return controller
+	}
+
 	fileprivate func buildQuery<SampleType: Sample>() -> SampleQuery<SampleType> {
 		let partsSplitByQuery = splitPartsByQuery()
 		var currentTopmostQuery: Query? = nil
@@ -219,19 +252,6 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		return currentTopmostQuery! as! SampleQuery<SampleType>
 	}
 
-	fileprivate func splitPartsByQuery() -> [[Any]] {
-		var partsSplitByQuery = [[Any]]()
-		var currentParts = [Any]()
-		for part in parts {
-			if part is DataTypeInfo && !currentParts.isEmpty {
-				partsSplitByQuery.append(currentParts)
-				currentParts = [Any]()
-			}
-			currentParts.append(part)
-		}
-		return partsSplitByQuery
-	}
-
 	fileprivate func buildQuery<SampleType: Sample>(from parts: [Any]) -> SampleQuery<SampleType> {
 		let query = try! DependencyInjector.query.queryFor(sampleType: SampleType.self)
 		for part in parts {
@@ -248,19 +268,28 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		return query
 	}
 
-	fileprivate func buildAndRunQuery<SampleType: Sample>() -> ResultsViewController<SampleType> {
-		// TODO - build the query
-		let query: SampleQuery<SampleType> = buildQuery()
-		let controller = ResultsViewController<SampleType>()
-
-		query.runQuery { (result: SampleQueryResult<SampleType>?, error: Error?) in
-			if error != nil {
-				controller.error = error
-				return
+	fileprivate func splitPartsByQuery() -> [[Any]] {
+		var partsSplitByQuery = [[Any]]()
+		var currentParts = [Any]()
+		for part in parts {
+			if part is DataTypeInfo && !currentParts.isEmpty {
+				partsSplitByQuery.append(currentParts)
+				currentParts = [Any]()
 			}
-			controller.samples = result?.typedSamples
-			controller.extraInformation = result?.sampleInformation
+			currentParts.append(part)
 		}
-		return controller
+		return partsSplitByQuery
+	}
+
+	// TODO - use this function to determine if data type cell should include "where" after data type name
+	fileprivate func distanceToNextDataType(index: Int) -> Int {
+		var distance = 0
+		for part in parts {
+			if part is DataTypeInfo {
+				return distance
+			}
+			distance += 1
+		}
+		return distance
 	}
 }

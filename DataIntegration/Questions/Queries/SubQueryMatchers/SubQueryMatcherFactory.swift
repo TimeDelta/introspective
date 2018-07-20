@@ -10,6 +10,14 @@ import Foundation
 
 public class SubQueryMatcherFactory {
 
+	public static var allMatchers: [SubQueryMatcher.Type] = [
+		WithinXCalendarUnitsSubQueryMatcher.self,
+		InSameCalendarUnitSubQueryMatcher.self,
+		SameDatesSubQueryMatcher.self,
+		SameStartDatesSubQueryMatcher.self,
+		SameEndDatesSubQueryMatcher.self,
+	]
+
 	public func withinXCalendarUnitsSubQueryMatcher() -> WithinXCalendarUnitsSubQueryMatcher {
 		return WithinXCalendarUnitsSubQueryMatcher()
 	}

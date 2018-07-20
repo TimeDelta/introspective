@@ -8,11 +8,31 @@
 
 import Foundation
 
+public enum ParamType {
+	case integer
+	case timeUnit
+}
+
+public enum ParamErrors: Error {
+	case invalidIdentifier
+	case typeMismatch
+}
+
 public protocol SubQueryMatcher: CustomStringConvertible {
 
 	static var genericDescription: String { get }
+	static var parameters: [(id: Int, type: ParamType)] { get }
+
+	var mostRecentOnly: Bool { get set }
+
+	init()
+
 	func getSamples<QuerySampleType: Sample, SubQuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
 		matching subQuerySamples: [SubQuerySampleType]
 	) -> [QuerySampleType]
+
+	func setParameter<T>(id: Int, value: T) throws
+
+	func getParameterValue<T>(id: Int) throws -> T
 }

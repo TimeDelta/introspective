@@ -117,13 +117,13 @@ public class SampleUtil {
 		return twoDateSamples
 	}
 
-	public func closestInTimeTo<SampleType: Sample>(sample: SampleType, in samples: [SampleType]) -> SampleType {
-		return DependencyInjector.util.searchUtil.closestItem(to: sample, in: samples) { (sample1: SampleType, sample2: SampleType) -> Int in
+	public func closestInTimeTo<SampleType: Sample, SubQuerySampleType: Sample>(sample: SampleType, in samples: [SubQuerySampleType]) -> SubQuerySampleType {
+		return DependencyInjector.util.searchUtil.closestItem(to: sample, in: samples) { (sample1: Sample, sample2: Sample) -> Int in
 			return distance(between: sample1, and: sample2)
-		}
+		} as! SubQuerySampleType
 	}
 
-	public func distance<SampleType: Sample>(between sample1: SampleType, and sample2: SampleType, in unit: Calendar.Component = .nanosecond) -> Int {
+	public func distance(between sample1: Sample, and sample2: Sample, in unit: Calendar.Component = .nanosecond) -> Int {
 		let start1 = sample1.dates[.start]!
 		let start2 = sample2.dates[.start]!
 		let end1 = sample2.dates[.end]

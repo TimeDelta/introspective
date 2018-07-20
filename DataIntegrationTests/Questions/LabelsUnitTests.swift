@@ -1,5 +1,5 @@
 //
-//  LabelsTests.swift
+//  LabelsUnitTests.swift
 //  DataIntegrationTests
 //
 //  Created by Bryan Nova on 6/28/18.
@@ -11,7 +11,7 @@ import XCTest
 import NaturalLanguage
 @testable import DataIntegration
 
-class LabelsTests: UnitTest {
+class LabelsUnitTests: UnitTest {
 
 	fileprivate var labels: Labels!
 

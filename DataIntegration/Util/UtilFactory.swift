@@ -18,6 +18,7 @@ public class UtilFactory {
 	fileprivate static let realSampleUtil = SampleUtil()
 	fileprivate static let realTimeConstraintUtil = TimeConstraintUtil()
 	fileprivate static let realSearchUtil = SearchUtil()
+	fileprivate static let realStringUtil = StringUtil()
 
 	public var calendarUtil: CalendarUtil { get { return Me.realCalendarUtil } }
 	public var numericSampleUtil: NumericSampleUtil { get { return Me.realHKQuantitySampleUtil } }
@@ -25,4 +26,5 @@ public class UtilFactory {
 	public var sampleUtil: SampleUtil { get { return Me.realSampleUtil } }
 	public var timeConstraintUtil: TimeConstraintUtil { get { return Me.realTimeConstraintUtil } }
 	public var searchUtil: SearchUtil { get { return Me.realSearchUtil } }
+	public var stringUtil: StringUtil { get { return Me.realStringUtil } }
 }

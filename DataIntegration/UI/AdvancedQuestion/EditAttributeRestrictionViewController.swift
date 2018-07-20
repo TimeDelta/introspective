@@ -149,10 +149,6 @@ class EditAttributeRestrictionViewController: UIViewController, UIPickerViewData
 		})
 	}
 
-	fileprivate func isNumber(_ str: String) -> Bool {
-		return str.range(of: Me.numberRegex, options: .regularExpression, range: nil, locale: nil) != nil
-	}
-
 	fileprivate func validate() {
 		let values = getValues()
 		if values.count == 0 {
@@ -169,7 +165,7 @@ class EditAttributeRestrictionViewController: UIViewController, UIPickerViewData
 		let selectedAttribute = getSelectedAttribute()
 		if selectedAttribute.type == .quantity {
 			for value in values {
-				if !isNumber(value) {
+				if !DependencyInjector.util.stringUtil.isNumber(value) {
 					setInvalidState("Invalid number: \"\(value)\"")
 					return
 				}
@@ -193,11 +189,13 @@ class EditAttributeRestrictionViewController: UIViewController, UIPickerViewData
 	fileprivate func disableAcceptButton() {
 		acceptButton.isEnabled = false
 		acceptButton.isUserInteractionEnabled = false
+		acceptButton.backgroundColor = UIColor.gray
 	}
 
 	fileprivate func enableAcceptButton() {
 		acceptButton.isEnabled = true
 		acceptButton.isUserInteractionEnabled = true
+		acceptButton.backgroundColor = UIColor.black
 	}
 
 	fileprivate func setOperationSelection(enabled: Bool) {

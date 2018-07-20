@@ -12,8 +12,9 @@ class AttributeRestrictionTableViewCell: UITableViewCell {
 
 	@IBOutlet weak var label: UILabel!
 
-	var attributeRestriction: AttributeRestriction! {
+	public var attributeRestriction: AttributeRestriction! {
 		didSet {
+			guard let attributeRestriction = attributeRestriction else { return }
 			label.text = attributeRestriction.description
 		}
 	}

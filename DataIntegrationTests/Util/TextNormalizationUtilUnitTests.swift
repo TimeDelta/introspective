@@ -1,5 +1,5 @@
 //
-//  TextNormalizationUtilTests.swift
+//  TextNormalizationUtilUnitTests.swift
 //  DataIntegrationTests
 //
 //  Created by Bryan Nova on 7/1/18.
@@ -9,7 +9,7 @@
 import XCTest
 @testable import DataIntegration
 
-class TextNormalizationUtilTests: UnitTest {
+class TextNormalizationUtilUnitTests: UnitTest {
 
 	fileprivate var util: TextNormalizationUtil!
 

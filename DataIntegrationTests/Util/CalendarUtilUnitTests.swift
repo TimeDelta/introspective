@@ -1,5 +1,5 @@
 //
-//  CalendarUtilTests.swift
+//  CalendarUtilUnitTests.swift
 //  DataIntegrationTests
 //
 //  Created by Bryan Nova on 7/5/18.
@@ -9,7 +9,7 @@
 import XCTest
 @testable import DataIntegration
 
-class CalendarUtilTests: UnitTest {
+class CalendarUtilUnitTests: UnitTest {
 
 	fileprivate var util: CalendarUtil!
 

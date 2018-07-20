@@ -1,5 +1,5 @@
 //
-//  HKQuantitySampleUtilTests.swift
+//  NumericSampleUtilUnitTests.swift
 //  DataIntegrationTests
 //
 //  Created by Bryan Nova on 7/4/18.
@@ -11,13 +11,12 @@ import HealthKit
 import Cuckoo
 @testable import DataIntegration
 
-class NumericSampleUtilTests: UnitTest {
+class NumericSampleUtilUnitTests: UnitTest {
 
-	fileprivate typealias Me = NumericSampleUtilTests
+	fileprivate typealias Me = NumericSampleUtilUnitTests
 
 	fileprivate var util: NumericSampleUtil!
 	fileprivate var mockCalendarUtil: MockCalendarUtil!
-	fileprivate var mockSampleUtil: MockSampleUtil!
 
 	override func setUp() {
 		super.setUp()
@@ -27,12 +26,6 @@ class NumericSampleUtilTests: UnitTest {
 		mockCalendarUtil = mockCalUtil
 		stub(UnitTestInjectionProvider.mockUtilFactory) { stub in
 			when(stub.calendarUtil.get).thenReturn(mockCalUtil)
-		}
-
-		let mockSampleUtil = MockSampleUtil()
-		self.mockSampleUtil = mockSampleUtil
-		stub(UnitTestInjectionProvider.mockUtilFactory) { stub in
-			when(stub.sampleUtil.get).thenReturn(mockSampleUtil)
 		}
 	}
 

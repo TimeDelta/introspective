@@ -13,11 +13,6 @@ import HealthKit
 
 class UnitTest: XCTestCase {
 
-	fileprivate typealias Me = NumericSampleUtilTests
-
-	static let defaultUnit = HKUnit(from: "count/min")
-	static let defaultType = HKQuantityType.quantityType(forIdentifier: .heartRate)!
-
     override func setUp() {
         super.setUp()
 		DependencyInjector.setType(newType: .UnitTest)

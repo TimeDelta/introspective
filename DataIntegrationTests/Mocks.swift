@@ -4254,8 +4254,8 @@ class MockAttributeRestrictionTableViewCell: AttributeRestrictionTableViewCell, 
         
     }
     
-    // ["name": "attributeRestriction", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "AttributeRestriction!", "isReadOnly": false, "accessibility": ""]
-     override var attributeRestriction: AttributeRestriction! {
+    // ["name": "attributeRestriction", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "AttributeRestriction!", "isReadOnly": false, "accessibility": "public"]
+    public override var attributeRestriction: AttributeRestriction! {
         get {
             
             return cuckoo_manager.getter("attributeRestriction", superclassCall: super.attributeRestriction)
@@ -4353,7 +4353,7 @@ class MockAttributeRestrictionTableViewCell: AttributeRestrictionTableViewCell, 
         
     }
     
-     override var attributeRestriction: AttributeRestriction! {
+    public override var attributeRestriction: AttributeRestriction! {
         get {
             return DefaultValueRegistry.defaultValue(for: (AttributeRestriction!).self)
         }
@@ -4369,6 +4369,201 @@ class MockAttributeRestrictionTableViewCell: AttributeRestrictionTableViewCell, 
      override func awakeFromNib()  {
         return DefaultValueRegistry.defaultValue(for: Void.self)
     }
+    
+}
+
+
+// MARK: - Mocks generated from file: DataIntegration/UI/AdvancedQuestion/SubDataTypeTableViewCell.swift
+//
+//  SubDataTypeTableViewCell.swift
+//  DataIntegration
+//
+//  Created by Bryan Nova on 7/19/18.
+//  Copyright © 2018 Bryan Nova. All rights reserved.
+//
+
+import Cuckoo
+@testable import DataIntegration
+
+import UIKit
+
+class MockSubDataTypeTableViewCell: SubDataTypeTableViewCell, Cuckoo.ClassMock {
+    typealias MocksType = SubDataTypeTableViewCell
+    typealias Stubbing = __StubbingProxy_SubDataTypeTableViewCell
+    typealias Verification = __VerificationProxy_SubDataTypeTableViewCell
+    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
+
+    
+    // ["name": "matcher", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "SubQueryMatcher!", "isReadOnly": false, "accessibility": "public"]
+    public override var matcher: SubQueryMatcher! {
+        get {
+            
+            return cuckoo_manager.getter("matcher", superclassCall: super.matcher)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("matcher", value: newValue, superclassCall: super.matcher = newValue)
+            
+        }
+        
+    }
+    
+    // ["name": "dataType", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "DataTypes!", "isReadOnly": false, "accessibility": "public"]
+    public override var dataType: DataTypes! {
+        get {
+            
+            return cuckoo_manager.getter("dataType", superclassCall: super.dataType)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("dataType", value: newValue, superclassCall: super.dataType = newValue)
+            
+        }
+        
+    }
+    
+    // ["name": "dataTypeLabel", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "UILabel!", "isReadOnly": false, "accessibility": ""]
+     override var dataTypeLabel: UILabel! {
+        get {
+            
+            return cuckoo_manager.getter("dataTypeLabel", superclassCall: super.dataTypeLabel)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("dataTypeLabel", value: newValue, superclassCall: super.dataTypeLabel = newValue)
+            
+        }
+        
+    }
+    
+    // ["name": "subQueryMatcherDescriptionLabel", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "UILabel!", "isReadOnly": false, "accessibility": ""]
+     override var subQueryMatcherDescriptionLabel: UILabel! {
+        get {
+            
+            return cuckoo_manager.getter("subQueryMatcherDescriptionLabel", superclassCall: super.subQueryMatcherDescriptionLabel)
+            
+        }
+        
+        set {
+            
+            cuckoo_manager.setter("subQueryMatcherDescriptionLabel", value: newValue, superclassCall: super.subQueryMatcherDescriptionLabel = newValue)
+            
+        }
+        
+    }
+    
+
+    
+
+    
+
+	struct __StubbingProxy_SubDataTypeTableViewCell: Cuckoo.StubbingProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	
+	    init(manager: Cuckoo.MockManager) {
+	        self.cuckoo_manager = manager
+	    }
+	    
+	    var matcher: Cuckoo.ClassToBeStubbedProperty<MockSubDataTypeTableViewCell, SubQueryMatcher?> {
+	        return .init(manager: cuckoo_manager, name: "matcher")
+	    }
+	    
+	    var dataType: Cuckoo.ClassToBeStubbedProperty<MockSubDataTypeTableViewCell, DataTypes?> {
+	        return .init(manager: cuckoo_manager, name: "dataType")
+	    }
+	    
+	    var dataTypeLabel: Cuckoo.ClassToBeStubbedProperty<MockSubDataTypeTableViewCell, UILabel?> {
+	        return .init(manager: cuckoo_manager, name: "dataTypeLabel")
+	    }
+	    
+	    var subQueryMatcherDescriptionLabel: Cuckoo.ClassToBeStubbedProperty<MockSubDataTypeTableViewCell, UILabel?> {
+	        return .init(manager: cuckoo_manager, name: "subQueryMatcherDescriptionLabel")
+	    }
+	    
+	    
+	}
+
+	struct __VerificationProxy_SubDataTypeTableViewCell: Cuckoo.VerificationProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	    private let callMatcher: Cuckoo.CallMatcher
+	    private let sourceLocation: Cuckoo.SourceLocation
+	
+	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+	        self.cuckoo_manager = manager
+	        self.callMatcher = callMatcher
+	        self.sourceLocation = sourceLocation
+	    }
+	
+	    
+	    var matcher: Cuckoo.VerifyProperty<SubQueryMatcher?> {
+	        return .init(manager: cuckoo_manager, name: "matcher", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var dataType: Cuckoo.VerifyProperty<DataTypes?> {
+	        return .init(manager: cuckoo_manager, name: "dataType", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var dataTypeLabel: Cuckoo.VerifyProperty<UILabel?> {
+	        return .init(manager: cuckoo_manager, name: "dataTypeLabel", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	    var subQueryMatcherDescriptionLabel: Cuckoo.VerifyProperty<UILabel?> {
+	        return .init(manager: cuckoo_manager, name: "subQueryMatcherDescriptionLabel", callMatcher: callMatcher, sourceLocation: sourceLocation)
+	    }
+	    
+	
+	    
+	}
+
+}
+
+ class SubDataTypeTableViewCellStub: SubDataTypeTableViewCell {
+    
+    public override var matcher: SubQueryMatcher! {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (SubQueryMatcher!).self)
+        }
+        
+        set { }
+        
+    }
+    
+    public override var dataType: DataTypes! {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (DataTypes!).self)
+        }
+        
+        set { }
+        
+    }
+    
+     override var dataTypeLabel: UILabel! {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (UILabel!).self)
+        }
+        
+        set { }
+        
+    }
+    
+     override var subQueryMatcherDescriptionLabel: UILabel! {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (UILabel!).self)
+        }
+        
+        set { }
+        
+    }
+    
+
+    
+
     
 }
 
@@ -4412,8 +4607,8 @@ class MockTimeConstraintTableViewCell: TimeConstraintTableViewCell, Cuckoo.Class
         
     }
     
-    // ["name": "timeConstraint", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "TimeConstraint!", "isReadOnly": false, "accessibility": ""]
-     override var timeConstraint: TimeConstraint! {
+    // ["name": "timeConstraint", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "TimeConstraint!", "isReadOnly": false, "accessibility": "public"]
+    public override var timeConstraint: TimeConstraint! {
         get {
             
             return cuckoo_manager.getter("timeConstraint", superclassCall: super.timeConstraint)
@@ -4488,7 +4683,7 @@ class MockTimeConstraintTableViewCell: TimeConstraintTableViewCell, Cuckoo.Class
         
     }
     
-     override var timeConstraint: TimeConstraint! {
+    public override var timeConstraint: TimeConstraint! {
         get {
             return DefaultValueRegistry.defaultValue(for: (TimeConstraint!).self)
         }
@@ -4861,6 +5056,123 @@ class MockCalendarUtil: CalendarUtil, Cuckoo.ClassMock {
     
     public override func compare(_ date1: Date?, _ date2: Date?)  -> ComparisonResult {
         return DefaultValueRegistry.defaultValue(for: ComparisonResult.self)
+    }
+    
+}
+
+
+// MARK: - Mocks generated from file: DataIntegration/Util/StringUtil.swift
+//
+//  StringUtil.swift
+//  DataIntegration
+//
+//  Created by Bryan Nova on 7/19/18.
+//  Copyright © 2018 Bryan Nova. All rights reserved.
+//
+
+import Cuckoo
+@testable import DataIntegration
+
+import Foundation
+
+class MockStringUtil: StringUtil, Cuckoo.ClassMock {
+    typealias MocksType = StringUtil
+    typealias Stubbing = __StubbingProxy_StringUtil
+    typealias Verification = __VerificationProxy_StringUtil
+    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
+
+    
+
+    
+
+    
+    // ["name": "isNumber", "returnSignature": " -> Bool", "fullyQualifiedName": "isNumber(_: String) -> Bool", "parameterSignature": "_ str: String", "parameterSignatureWithoutNames": "str: String", "inputTypes": "String", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "str", "call": "str", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "str", type: "String", range: CountableRange(360..<373), nameRange: CountableRange(0..<0))], "returnType": "Bool", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func isNumber(_ str: String)  -> Bool {
+        
+            return cuckoo_manager.call("isNumber(_: String) -> Bool",
+                parameters: (str),
+                superclassCall:
+                    
+                    super.isNumber(str)
+                    )
+        
+    }
+    
+    // ["name": "isInteger", "returnSignature": " -> Bool", "fullyQualifiedName": "isInteger(_: String) -> Bool", "parameterSignature": "_ str: String", "parameterSignatureWithoutNames": "str: String", "inputTypes": "String", "isThrowing": false, "isInit": false, "isOverriding": true, "hasClosureParams": false, "@type": "ClassMethod", "accessibility": "public", "parameterNames": "str", "call": "str", "parameters": [CuckooGeneratorFramework.MethodParameter(label: nil, name: "str", type: "String", range: CountableRange(512..<525), nameRange: CountableRange(0..<0))], "returnType": "Bool", "isOptional": false, "stubFunction": "Cuckoo.ClassStubFunction"]
+    public override func isInteger(_ str: String)  -> Bool {
+        
+            return cuckoo_manager.call("isInteger(_: String) -> Bool",
+                parameters: (str),
+                superclassCall:
+                    
+                    super.isInteger(str)
+                    )
+        
+    }
+    
+
+	struct __StubbingProxy_StringUtil: Cuckoo.StubbingProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	
+	    init(manager: Cuckoo.MockManager) {
+	        self.cuckoo_manager = manager
+	    }
+	    
+	    
+	    func isNumber<M1: Cuckoo.Matchable>(_ str: M1) -> Cuckoo.ClassStubFunction<(String), Bool> where M1.MatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: str) { $0 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockStringUtil.self, method: "isNumber(_: String) -> Bool", parameterMatchers: matchers))
+	    }
+	    
+	    func isInteger<M1: Cuckoo.Matchable>(_ str: M1) -> Cuckoo.ClassStubFunction<(String), Bool> where M1.MatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: str) { $0 }]
+	        return .init(stub: cuckoo_manager.createStub(for: MockStringUtil.self, method: "isInteger(_: String) -> Bool", parameterMatchers: matchers))
+	    }
+	    
+	}
+
+	struct __VerificationProxy_StringUtil: Cuckoo.VerificationProxy {
+	    private let cuckoo_manager: Cuckoo.MockManager
+	    private let callMatcher: Cuckoo.CallMatcher
+	    private let sourceLocation: Cuckoo.SourceLocation
+	
+	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+	        self.cuckoo_manager = manager
+	        self.callMatcher = callMatcher
+	        self.sourceLocation = sourceLocation
+	    }
+	
+	    
+	
+	    
+	    @discardableResult
+	    func isNumber<M1: Cuckoo.Matchable>(_ str: M1) -> Cuckoo.__DoNotUse<Bool> where M1.MatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: str) { $0 }]
+	        return cuckoo_manager.verify("isNumber(_: String) -> Bool", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	    @discardableResult
+	    func isInteger<M1: Cuckoo.Matchable>(_ str: M1) -> Cuckoo.__DoNotUse<Bool> where M1.MatchedType == String {
+	        let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: str) { $0 }]
+	        return cuckoo_manager.verify("isInteger(_: String) -> Bool", callMatcher: callMatcher, parameterMatchers: matchers, sourceLocation: sourceLocation)
+	    }
+	    
+	}
+
+}
+
+ class StringUtilStub: StringUtil {
+    
+
+    
+
+    
+    public override func isNumber(_ str: String)  -> Bool {
+        return DefaultValueRegistry.defaultValue(for: Bool.self)
+    }
+    
+    public override func isInteger(_ str: String)  -> Bool {
+        return DefaultValueRegistry.defaultValue(for: Bool.self)
     }
     
 }

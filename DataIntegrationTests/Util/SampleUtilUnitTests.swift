@@ -1,5 +1,5 @@
 //
-//  SampleUtilTests.swift
+//  SampleUtilUnitTests.swift
 //  DataIntegrationTests
 //
 //  Created by Bryan Nova on 7/6/18.
@@ -10,7 +10,7 @@ import XCTest
 import HealthKit
 @testable import DataIntegration
 
-class SampleUtilTests: UnitTest {
+class SampleUtilUnitTests: UnitTest {
 
 	fileprivate var util: SampleUtil!
 

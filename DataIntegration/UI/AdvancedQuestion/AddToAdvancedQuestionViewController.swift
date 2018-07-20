@@ -41,7 +41,11 @@ class AddToAdvancedQuestionViewController: UIViewController, UIPickerViewDataSou
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == "addQuestionPart" {
 			let index = questionPartSelector.selectedRow(inComponent: 0)
-			cellType = AdvancedQuestionViewController.CellType.allTypes[index]
+			if index == 0 {
+				cellType = .subDataType
+			} else {
+				cellType = AdvancedQuestionViewController.CellType.allTypes[index]
+			}
 		}
 	}
 }
