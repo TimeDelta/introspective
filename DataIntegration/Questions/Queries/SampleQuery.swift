@@ -43,9 +43,6 @@ public class SampleQuery<SampleType: Sample>: TypedQuery {
 	}
 
 	func queryDone(_ result: SampleQueryResult<SampleType>?, _ error: Error?) {
-		assert(subQueryCallbackParameters != nil, "sub-query callback parameters is nil")
-		assert(queryCallbackParameters != nil, "query callback parameters is nil")
-
 		queryCallbackParameters = (result, error)
 		if subQuery == nil || subQueryCallbackParameters != nil {
 			filterAndCallBack()

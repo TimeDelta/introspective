@@ -9,7 +9,7 @@
 import UIKit
 import os
 
-class ResultsViewController<SampleType: Sample>: UITableViewController, UIPopoverPresentationControllerDelegate {
+class ResultsViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
 
 	public var dataType: DataTypes! {
 		didSet {
@@ -17,7 +17,7 @@ class ResultsViewController<SampleType: Sample>: UITableViewController, UIPopove
 		}
 	}
 
-	public var extraInformation: [SampleInformation<SampleType>]! {
+	public var extraInformation: [ExtraInformation]! {
 		didSet {
 			if extraInformation != nil && samples != nil {
 				viewIsReady()
@@ -26,7 +26,7 @@ class ResultsViewController<SampleType: Sample>: UITableViewController, UIPopove
 	}
 	fileprivate var extraInformationValues: [String]!
 
-	public var samples: [SampleType]! {
+	public var samples: [Sample]! {
 		didSet {
 			if extraInformation != nil && samples != nil  {
 				viewIsReady()
@@ -40,7 +40,7 @@ class ResultsViewController<SampleType: Sample>: UITableViewController, UIPopove
 		}
 	}
 
-	fileprivate var filteredSamples: [SampleType]!
+	fileprivate var filteredSamples: [Sample]!
 	fileprivate var lastSelectedRowIndex: Int!
 
     // MARK: - Table view data source
@@ -51,7 +51,7 @@ class ResultsViewController<SampleType: Sample>: UITableViewController, UIPopove
 
 	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == 0 {
-			return "Statistics"
+			return "Extra Information"
 		} else if section == 1 {
 			if dataType != nil {
 				return dataType.description
@@ -76,12 +76,13 @@ class ResultsViewController<SampleType: Sample>: UITableViewController, UIPopove
 			return filteredSamples.count
 		}
 
-		os_log("Unexpected section index ($@) while instantiating cell", type: .error, String(section))
+		os_log("Unexpected section index ($@) while determining number of rows in section", type: .error, String(section))
 		return 0
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let row = indexPath.row
+		let section = indexPath.section
 
 		if error != nil {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "errorCell", for: indexPath)
@@ -92,32 +93,37 @@ class ResultsViewController<SampleType: Sample>: UITableViewController, UIPopove
 			return tableView.dequeueReusableCell(withIdentifier: "waitingCell", for: indexPath)
 		}
 
-		if row <= extraInformation.count {
-			let cell = (tableView.dequeueReusableCell(withIdentifier: "extraInformationCell", for: indexPath) as! ExtraInformationTableViewCell<SampleType>)
+		if section == 0 {
+			let cell = (tableView.dequeueReusableCell(withIdentifier: "statisticsCell", for: indexPath) as! ExtraInformationTableViewCell)
 			cell.extraInformation = getExtraInformation(forRow: row)
 			cell.value = getExtraInformationValue(forRow: row)
 			return cell
-		} else {
+		}
+
+		if section == 1 {
 			switch (dataType!) {
 				case .heartRate:
-					let sample = getSample(forRow: row)
+					let sample = filteredSamples[row]
 					let cell = (tableView.dequeueReusableCell(withIdentifier: "heartRateSampleCell", for: indexPath) as! HeartRateTableViewCell)
 					cell.heartRate = (sample as! HeartRate)
 					return cell
 			}
 		}
+
+		os_log("Unexpected section index ($@) while instantiating cell", type: .error, String(section))
+		return UITableViewCell()
 	}
 
 	// MARK: - Navigation
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.destination is TimestampClickChoiceViewController {
-            let source = (sender as! UITableViewCell)
-			lastSelectedRowIndex = tableView.indexPath(for: source)!.row
-
-            segue.destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            segue.destination.popoverPresentationController!.delegate = self
-		}
+//		if segue.destination is TimestampClickChoiceViewController {
+//            let source = (sender as! UITableViewCell)
+//			lastSelectedRowIndex = tableView.indexPath(for: source)!.row
+//
+//            segue.destination.modalPresentationStyle = UIModalPresentationStyle.popover
+//            segue.destination.popoverPresentationController!.delegate = self
+//		}
 	}
 
 	// MARK: - Popover delegation
@@ -129,30 +135,17 @@ class ResultsViewController<SampleType: Sample>: UITableViewController, UIPopove
 	// MARK: - Helper functions
 
 	fileprivate func viewIsReady() {
+		resetFilteredSamples()
 		recomputeExtraInformation()
-		filteredSamples = samples
 		reloadInputViews()
 	}
 
-	fileprivate func getExtraInformation(forRow row: Int) -> SampleInformation<SampleType> {
+	fileprivate func getExtraInformation(forRow row: Int) -> ExtraInformation {
 		return extraInformation[row]
 	}
 
 	fileprivate func getExtraInformationValue(forRow row: Int) -> String {
 		return extraInformationValues[row]
-	}
-
-	fileprivate func getSample(forRow row: Int) -> Sample {
-		let sampleIndex = row - filteredSamples.count
-		return filteredSamples[sampleIndex]
-	}
-
-	fileprivate func getMinExtraInformationIndex() -> Int {
-		return 0
-	}
-
-	fileprivate func getMaxExtraInformationIndex() -> Int {
-		return extraInformation.count - 1
 	}
 
 	fileprivate func waiting() -> Bool {
@@ -161,7 +154,7 @@ class ResultsViewController<SampleType: Sample>: UITableViewController, UIPopove
 
 	fileprivate func resetFilteredSamples() {
 		if samples == nil {
-			filteredSamples = [SampleType]()
+			filteredSamples = [Sample]()
 		} else {
 			filteredSamples = samples
 		}
@@ -171,7 +164,7 @@ class ResultsViewController<SampleType: Sample>: UITableViewController, UIPopove
 	fileprivate func recomputeExtraInformation() {
 		extraInformationValues = [String]()
 		for index in 0 ..< extraInformation.count {
-			extraInformationValues[index].append(extraInformation[index].compute(forSamples: filteredSamples))
+			extraInformationValues.append(try! extraInformation[index].compute(forSamples: filteredSamples))
 		}
 	}
 }

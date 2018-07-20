@@ -92,8 +92,7 @@ public struct AttributeRestriction: CustomStringConvertible {
 		description += attribute.description + " "
 
 		if operation != nil && operation!.aggregationUnit != nil {
-			description += "per "
-			description += String(describing: operation!.aggregationUnit!) + " "
+			description += "per " + CalendarUtil.componentNames[operation!.aggregationUnit!]! + " "
 		}
 
 		description += comparison.description + " "

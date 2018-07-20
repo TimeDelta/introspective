@@ -50,6 +50,9 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		self.navigationItem.rightBarButtonItem = self.editButtonItem
+
 		cellTypes = [CellType]()
 		parts = [Any]()
 
@@ -57,8 +60,6 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		parts.append(DataTypeInfo())
 
 		partWasAdded()
-		// TODO - disallow deletion of topmost data type (will always be at index 0)
-		// TODO - allow reordering
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -96,6 +97,30 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
         return cell
     }
 
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return indexPath.row != 0
+    }
+
+	override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+		return indexPath.row != 0
+	}
+
+	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+		parts.swapAt(fromIndexPath.row, to.row)
+		cellTypes.swapAt(fromIndexPath.row, to.row)
+    }
+
+	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
+			self.parts.remove(at: indexPath.row)
+			self.cellTypes.remove(at: indexPath.row)
+			tableView.deleteRows(at: [indexPath], with: .fade)
+			tableView.reloadData()
+		}
+
+		return [delete]
+	}
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.destination is AddToAdvancedQuestionViewController {
             segue.destination.modalPresentationStyle = UIModalPresentationStyle.popover
@@ -122,21 +147,16 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 			editedIndex = tableView.indexPath(for: source)!.row
 			controller.dataType = (parts[editedIndex] as! DataTypeInfo).dataType
 			controller.matcher = (parts[editedIndex] as! DataTypeInfo).matcher
+		} else if segue.destination is ResultsViewController {
+			let controller = (segue.destination as! ResultsViewController)
+			controller.dataType = (parts[0] as! DataTypeInfo).dataType
+			buildAndRunQuery(controller)
 		}
 	}
 
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         return UIModalPresentationStyle.none
     }
-
-	@IBAction func runButtonPressed(_ sender: Any) {
-		let dataType = (parts[0] as! DataTypeInfo).dataType
-		switch (dataType) {
-			case .heartRate:
-				let controller: ResultsViewController<HeartRate> = buildAndRunQuery()
-				present(controller, animated: true, completion: nil)
-		}
-	}
 
 	@IBAction func saveEditedDataType(_ segue: UIStoryboardSegue) {
 		let controller = (segue.source as! EditDataTypeViewController)
@@ -215,22 +235,20 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		tableView.insertRows(at: [indexPath], with: .automatic)
 	}
 
-	fileprivate func buildAndRunQuery<SampleType: Sample>() -> ResultsViewController<SampleType> {
-		let query: SampleQuery<SampleType> = buildQuery()
-		let controller = ResultsViewController<SampleType>()
+	fileprivate func buildAndRunQuery(_ controller: ResultsViewController) {
+		let query = buildQuery()
 
-		query.runQuery { (result: SampleQueryResult<SampleType>?, error: Error?) in
+		query.runQuery { (result: QueryResult?, error: Error?) in
 			if error != nil {
 				controller.error = error
 				return
 			}
-			controller.samples = result?.typedSamples
-			controller.extraInformation = result?.sampleInformation
+			controller.samples = result?.samples
+			controller.extraInformation = result?.extraInformation
 		}
-		return controller
 	}
 
-	fileprivate func buildQuery<SampleType: Sample>() -> SampleQuery<SampleType> {
+	fileprivate func buildQuery() -> Query {
 		let partsSplitByQuery = splitPartsByQuery()
 		var currentTopmostQuery: Query? = nil
 		for parts in partsSplitByQuery.reversed() {
@@ -249,7 +267,7 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 				currentTopmostQuery = currentQuery
 			}
 		}
-		return currentTopmostQuery! as! SampleQuery<SampleType>
+		return currentTopmostQuery!
 	}
 
 	fileprivate func buildQuery<SampleType: Sample>(from parts: [Any]) -> SampleQuery<SampleType> {
@@ -277,6 +295,9 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 				currentParts = [Any]()
 			}
 			currentParts.append(part)
+		}
+		if !currentParts.isEmpty {
+			partsSplitByQuery.append(currentParts)
 		}
 		return partsSplitByQuery
 	}

@@ -18,10 +18,17 @@ public protocol ExtraInformation {
 	var key: String { get }
 	var startDate: Date? { get set }
 	var endDate: Date? { get set }
+
+
+	func compute(forSamples: [Sample]) throws -> String
 }
 
 // An abstract base class for everything that implements ExtraInformation
 public class SampleInformation<SampleType: Sample>: ExtraInformation {
+
+	public enum Errors: Error {
+		case typeMismatch
+	}
 
 	public var informationType: InformationType { get { fatalError("Must override") } }
 	public var key: String { get { fatalError("Must override") } }
@@ -31,5 +38,15 @@ public class SampleInformation<SampleType: Sample>: ExtraInformation {
 
 	public func compute(forSamples: [SampleType]) -> String {
 		fatalError("Must override")
+	}
+}
+
+extension SampleInformation {
+
+	public func compute(forSamples samples: [Sample]) throws -> String {
+		guard let typedSamples = samples as? [SampleType] else {
+			throw Errors.typeMismatch
+		}
+		return compute(forSamples: typedSamples)
 	}
 }

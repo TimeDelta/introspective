@@ -16,7 +16,7 @@ class HeartRateTableViewCell: UITableViewCell {
 			guard let heartRate = heartRate else { return }
 
 			let valueFormatter = NumberFormatter()
-			valueFormatter.numberStyle = .ordinal
+			valueFormatter.numberStyle = .decimal
 			valueLabel.text = valueFormatter.string(from: NSNumber(value: heartRate.value))
 
 			let dateString = DependencyInjector.util.calendarUtil.string(for: heartRate.dates[.start]!)

@@ -11,7 +11,7 @@ import Foundation
 public class MinimumInformation<SampleType: DoubleValueSample>: SampleInformation<SampleType> {
 
 	public override var informationType: InformationType { get { return .statistics } }
-	public override var key: String { get { return "Average" } }
+	public override var key: String { get { return "Minimum" } }
 
 	public override func compute(forSamples samples: [SampleType]) -> String {
 		let filteredSamples = DependencyInjector.util.sampleUtil.getOnly(samples: samples, from: startDate, to: endDate)

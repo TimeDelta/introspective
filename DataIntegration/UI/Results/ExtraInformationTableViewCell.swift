@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ExtraInformationTableViewCell<SampleType: Sample>: UITableViewCell {
+class ExtraInformationTableViewCell: UITableViewCell {
 
 	public var extraInformation: ExtraInformation! {
 		didSet {
@@ -44,8 +44,9 @@ class ExtraInformationTableViewCell<SampleType: Sample>: UITableViewCell {
 			return DependencyInjector.util.calendarUtil.string(for: extraInformation.startDate!) + " to " + DependencyInjector.util.calendarUtil.string(for: extraInformation.endDate!)
 		} else if extraInformation.startDate != nil {
 			return "starting at " + DependencyInjector.util.calendarUtil.string(for: extraInformation.startDate!)
-		} else {
+		} else if extraInformation.endDate != nil {
 			return "until " + DependencyInjector.util.calendarUtil.string(for: extraInformation.endDate!)
 		}
+		return ""
 	}
 }
