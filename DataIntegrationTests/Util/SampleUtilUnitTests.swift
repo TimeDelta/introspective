@@ -21,7 +21,7 @@ class SampleUtilUnitTests: UnitTest {
 
 	func testGivenEmptyDayOfWeekSet_sampleOccursOnOneOf_returnsTrue() {
 		// given
-		let sample = createNumericSample(5.0)
+		let sample = createSample(5.0)
 
 		// when
 		let occurs = util.sample(sample, occursOnOneOf: Set<DayOfWeek>())
@@ -32,7 +32,7 @@ class SampleUtilUnitTests: UnitTest {
 
 	func testGivenEmptySamplesArray_convertOneDateSamplesToTwoDateSamples_returnsEmptyArray() {
 		// given
-		let samples = [DoubleValueSample]()
+		let samples = [Sample]()
 
 		// when
 		let convertedSamples = util.convertOneDateSamplesToTwoDateSamples(
@@ -40,8 +40,8 @@ class SampleUtilUnitTests: UnitTest {
 			samplesShouldNotBeJoined: { (_, _) -> Bool in
 				return true
 			},
-			joinSamples: { (_ , _, _) -> DoubleValueSample in
-				return DoubleValueSample(0.0)
+			joinSamples: { (_ , _, _) -> Sample in
+				return createSample(0.0)
 			}
 		)
 
@@ -53,7 +53,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let expectedStartDate = Date()
 		let expectedEndDate = Calendar.autoupdatingCurrent.date(byAdding: .year, value: 1, to: expectedStartDate)!
-		let samples = createNumericSamples(withValues: [
+		let samples = createSamples(withValues: [
 			(date: expectedStartDate, value: 0.0),
 			(date: expectedEndDate, value: 0.0),
 		])
@@ -64,8 +64,8 @@ class SampleUtilUnitTests: UnitTest {
 			samplesShouldNotBeJoined: { (_, _) -> Bool in
 				return true
 			},
-			joinSamples: { (_, start: Date, end: Date) -> DoubleValueSample in
-				return createNumericSample(start: start, end: end, value: 0.0)
+			joinSamples: { (_, start: Date, end: Date) -> Sample in
+				return createSample(start: start, end: end, value: 0.0)
 			}
 		)
 

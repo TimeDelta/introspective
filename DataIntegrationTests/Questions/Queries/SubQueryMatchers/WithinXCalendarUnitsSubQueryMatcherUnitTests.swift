@@ -19,8 +19,8 @@ class WithinXCalendarUnitsSubQueryMatcherUnitTests: UnitTest {
 
 	func testGivenEmptyArrayOfQuerySamplesAndEmptyArrayOfSubQuerySamples_getSamples_returnsEmptyArray() {
 		// given
-		let querySamples = [DoubleValueSample]()
-		let subQuerySamples = [DoubleValueSample]()
+		let querySamples = [AnySample]()
+		let subQuerySamples = [AnySample]()
 
 		// when
 		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
@@ -31,8 +31,8 @@ class WithinXCalendarUnitsSubQueryMatcherUnitTests: UnitTest {
 
 	func testGivenEmptyArrayOfQuerySamplesAndNonEmptyArrayOfSubQuerySamples_getSamples_returnsEmptyArray() {
 		// given
-		let querySamples = [DoubleValueSample]()
-		let subQuerySamples = createNumericSamples(withValues: [1.1, 2.2])
+		let querySamples = [AnySample]()
+		let subQuerySamples = createSamples(withValues: [1.1, 2.2]) as! [AnySample]
 
 		// when
 		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
@@ -43,8 +43,8 @@ class WithinXCalendarUnitsSubQueryMatcherUnitTests: UnitTest {
 
 	func testGivenEmptyArrayOfSubQuerySamplesAndNonEmptyArrayOfQuerySamples_getSamples_returnsEmptyArray() {
 		// given
-		let querySamples = createNumericSamples(withValues: [8.0, 1.2])
-		let subQuerySamples = [DoubleValueSample]()
+		let querySamples = createSamples(withValues: [8.0, 1.2]) as! [AnySample]
+		let subQuerySamples = [AnySample]()
 
 		// when
 		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)

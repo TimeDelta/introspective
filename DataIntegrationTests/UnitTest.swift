@@ -24,38 +24,38 @@ class UnitTest: XCTestCase {
         super.tearDown()
     }
 
-	func createNumericSample(_ value: Double) -> DoubleValueSample {
-		return DoubleValueSample(value)
+	func createSample(_ value: Double) -> Sample {
+		return HeartRate(value)
 	}
 
-	func createNumericSample(_ value: Double, _ date: Date) -> DoubleValueSample {
-		return DoubleValueSample(value, .start, date)
+	func createSample(_ value: Double, _ date: Date) -> Sample {
+		return HeartRate(value, .start, date)
 	}
 
-	func createNumericSample(start: Date, end: Date, value: Double) -> DoubleValueSample {
-		return DoubleValueSample(value, [.start : start, .end: end])
+	func createSample(start: Date, end: Date, value: Double) -> Sample {
+		return HeartRate(value, [.start : start, .end: end])
 	}
 
-	func createNumericSamples(withValues values: [Double]) -> [DoubleValueSample] {
-		var samples = [DoubleValueSample]()
+	func createSamples(withValues values: [Double]) -> [Sample] {
+		var samples = [Sample]()
 		for value in values {
-			samples.append(createNumericSample(value))
+			samples.append(createSample(value))
 		}
 		return samples
 	}
 
-	func createNumericSamples(withValues values: [(date: Date, value: Double)]) -> [DoubleValueSample] {
-		var samples = [DoubleValueSample]()
+	func createSamples(withValues values: [(date: Date, value: Double)]) -> [Sample] {
+		var samples = [Sample]()
 		for (date, value) in values {
-			samples.append(createNumericSample(value, date))
+			samples.append(createSample(value, date))
 		}
 		return samples
 	}
 
-	func createNumericSamples(withValues values: [(start: Date, end: Date, value: Double)]) -> [DoubleValueSample] {
-		var samples = [DoubleValueSample]()
+	func createSamples(withValues values: [(start: Date, end: Date, value: Double)]) -> [Sample] {
+		var samples = [Sample]()
 		for (start, end, value) in values {
-			samples.append(createNumericSample(start: start, end: end, value: value))
+			samples.append(createSample(start: start, end: end, value: value))
 		}
 		return samples
 	}

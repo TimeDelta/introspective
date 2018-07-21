@@ -289,6 +289,20 @@ class MockActivityInstance: ActivityInstance, Cuckoo.ClassMock {
 }
 
 
+// MARK: - Mocks generated from file: DataIntegration/DataTypes/Attribute.swift
+//
+//  Attributes.swift
+//  DataIntegration
+//
+//  Created by Bryan Nova on 7/7/18.
+//  Copyright © 2018 Bryan Nova. All rights reserved.
+//
+
+import Cuckoo
+@testable import DataIntegration
+
+import Foundation
+
 // MARK: - Mocks generated from file: DataIntegration/DataTypes/DataTypes.swift
 //
 //  DataTypes.swift
@@ -302,152 +316,6 @@ import Cuckoo
 @testable import DataIntegration
 
 import Foundation
-
-// MARK: - Mocks generated from file: DataIntegration/DataTypes/HKQuantitySampleExtension.swift
-//
-//  HKQuantitySampleExtension.swift
-//  DataIntegration
-//
-//  Created by Bryan Nova on 7/14/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
-//
-
-import Cuckoo
-@testable import DataIntegration
-
-import Foundation
-import HealthKit
-import os
-
-// MARK: - Mocks generated from file: DataIntegration/DataTypes/HeartRate.swift
-//
-//  HeartRate.swift
-//  Data Integration
-//
-//  Created by Bryan Nova on 6/19/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
-//
-
-import Cuckoo
-@testable import DataIntegration
-
-import Foundation
-import HealthKit
-
-class MockHeartRate: HeartRate, Cuckoo.ClassMock {
-    typealias MocksType = HeartRate
-    typealias Stubbing = __StubbingProxy_HeartRate
-    typealias Verification = __VerificationProxy_HeartRate
-    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
-
-    
-    // ["name": "value", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Double", "isReadOnly": false, "accessibility": "public"]
-    public override var value: Double {
-        get {
-            
-            return cuckoo_manager.getter("value", superclassCall: super.value)
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("value", value: newValue, superclassCall: super.value = newValue)
-            
-        }
-        
-    }
-    
-    // ["name": "dates", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "[DateType: Date]", "isReadOnly": false, "accessibility": "public"]
-    public override var dates: [DateType: Date] {
-        get {
-            
-            return cuckoo_manager.getter("dates", superclassCall: super.dates)
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("dates", value: newValue, superclassCall: super.dates = newValue)
-            
-        }
-        
-    }
-    
-
-    
-
-    
-
-	struct __StubbingProxy_HeartRate: Cuckoo.StubbingProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	
-	    init(manager: Cuckoo.MockManager) {
-	        self.cuckoo_manager = manager
-	    }
-	    
-	    var value: Cuckoo.ClassToBeStubbedProperty<MockHeartRate, Double> {
-	        return .init(manager: cuckoo_manager, name: "value")
-	    }
-	    
-	    var dates: Cuckoo.ClassToBeStubbedProperty<MockHeartRate, [DateType: Date]> {
-	        return .init(manager: cuckoo_manager, name: "dates")
-	    }
-	    
-	    
-	}
-
-	struct __VerificationProxy_HeartRate: Cuckoo.VerificationProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	    private let callMatcher: Cuckoo.CallMatcher
-	    private let sourceLocation: Cuckoo.SourceLocation
-	
-	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-	        self.cuckoo_manager = manager
-	        self.callMatcher = callMatcher
-	        self.sourceLocation = sourceLocation
-	    }
-	
-	    
-	    var value: Cuckoo.VerifyProperty<Double> {
-	        return .init(manager: cuckoo_manager, name: "value", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var dates: Cuckoo.VerifyProperty<[DateType: Date]> {
-	        return .init(manager: cuckoo_manager, name: "dates", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	
-	    
-	}
-
-}
-
- class HeartRateStub: HeartRate {
-    
-    public override var value: Double {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Double).self)
-        }
-        
-        set { }
-        
-    }
-    
-    public override var dates: [DateType: Date] {
-        get {
-            return DefaultValueRegistry.defaultValue(for: ([DateType: Date]).self)
-        }
-        
-        set { }
-        
-    }
-    
-
-    
-
-    
-}
-
 
 // MARK: - Mocks generated from file: DataIntegration/DataTypes/Mood.swift
 //
@@ -565,404 +433,6 @@ class MockMood: Mood, Cuckoo.ClassMock {
      override var rating: Double {
         get {
             return DefaultValueRegistry.defaultValue(for: (Double).self)
-        }
-        
-        set { }
-        
-    }
-    
-
-    
-
-    
-}
-
-
-// MARK: - Mocks generated from file: DataIntegration/DataTypes/NumericSample.swift
-//
-//  Averagable.swift
-//  DataIntegration
-//
-//  Created by Bryan Nova on 7/14/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
-//
-
-import Cuckoo
-@testable import DataIntegration
-
-import Foundation
-
-class MockNumericSample: NumericSample, Cuckoo.ProtocolMock {
-    typealias MocksType = NumericSample
-    typealias Stubbing = __StubbingProxy_NumericSample
-    typealias Verification = __VerificationProxy_NumericSample
-    let cuckoo_manager = Cuckoo.MockManager(hasParent: false)
-
-    
-    // ["name": "value", "stubType": "ProtocolToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "Double", "isReadOnly": true, "accessibility": "public"]
-    public var value: Double {
-        get {
-            
-            return cuckoo_manager.getter("value", superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
-            
-        }
-        
-    }
-    
-    // ["name": "dates", "stubType": "ProtocolToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "[DateType: Date]", "isReadOnly": true, "accessibility": "public"]
-    public var dates: [DateType: Date] {
-        get {
-            
-            return cuckoo_manager.getter("dates", superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
-            
-        }
-        
-    }
-    
-
-    
-
-    
-
-	struct __StubbingProxy_NumericSample: Cuckoo.StubbingProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	
-	    init(manager: Cuckoo.MockManager) {
-	        self.cuckoo_manager = manager
-	    }
-	    
-	    var value: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockNumericSample, Double> {
-	        return .init(manager: cuckoo_manager, name: "value")
-	    }
-	    
-	    var dates: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockNumericSample, [DateType: Date]> {
-	        return .init(manager: cuckoo_manager, name: "dates")
-	    }
-	    
-	    
-	}
-
-	struct __VerificationProxy_NumericSample: Cuckoo.VerificationProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	    private let callMatcher: Cuckoo.CallMatcher
-	    private let sourceLocation: Cuckoo.SourceLocation
-	
-	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-	        self.cuckoo_manager = manager
-	        self.callMatcher = callMatcher
-	        self.sourceLocation = sourceLocation
-	    }
-	
-	    
-	    var value: Cuckoo.VerifyReadOnlyProperty<Double> {
-	        return .init(manager: cuckoo_manager, name: "value", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var dates: Cuckoo.VerifyReadOnlyProperty<[DateType: Date]> {
-	        return .init(manager: cuckoo_manager, name: "dates", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	
-	    
-	}
-
-}
-
- class NumericSampleStub: NumericSample {
-    
-    public var value: Double {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Double).self)
-        }
-        
-    }
-    
-    public var dates: [DateType: Date] {
-        get {
-            return DefaultValueRegistry.defaultValue(for: ([DateType: Date]).self)
-        }
-        
-    }
-    
-
-    
-
-    
-}
-
-
-class MockDoubleValueSample: DoubleValueSample, Cuckoo.ClassMock {
-    typealias MocksType = DoubleValueSample
-    typealias Stubbing = __StubbingProxy_DoubleValueSample
-    typealias Verification = __VerificationProxy_DoubleValueSample
-    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
-
-    
-    // ["name": "value", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "Double", "isReadOnly": false, "accessibility": "public"]
-    public override var value: Double {
-        get {
-            
-            return cuckoo_manager.getter("value", superclassCall: super.value)
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("value", value: newValue, superclassCall: super.value = newValue)
-            
-        }
-        
-    }
-    
-    // ["name": "dates", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "[DateType: Date]", "isReadOnly": false, "accessibility": "public"]
-    public override var dates: [DateType: Date] {
-        get {
-            
-            return cuckoo_manager.getter("dates", superclassCall: super.dates)
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("dates", value: newValue, superclassCall: super.dates = newValue)
-            
-        }
-        
-    }
-    
-
-    
-
-    
-
-	struct __StubbingProxy_DoubleValueSample: Cuckoo.StubbingProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	
-	    init(manager: Cuckoo.MockManager) {
-	        self.cuckoo_manager = manager
-	    }
-	    
-	    var value: Cuckoo.ClassToBeStubbedProperty<MockDoubleValueSample, Double> {
-	        return .init(manager: cuckoo_manager, name: "value")
-	    }
-	    
-	    var dates: Cuckoo.ClassToBeStubbedProperty<MockDoubleValueSample, [DateType: Date]> {
-	        return .init(manager: cuckoo_manager, name: "dates")
-	    }
-	    
-	    
-	}
-
-	struct __VerificationProxy_DoubleValueSample: Cuckoo.VerificationProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	    private let callMatcher: Cuckoo.CallMatcher
-	    private let sourceLocation: Cuckoo.SourceLocation
-	
-	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-	        self.cuckoo_manager = manager
-	        self.callMatcher = callMatcher
-	        self.sourceLocation = sourceLocation
-	    }
-	
-	    
-	    var value: Cuckoo.VerifyProperty<Double> {
-	        return .init(manager: cuckoo_manager, name: "value", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	    var dates: Cuckoo.VerifyProperty<[DateType: Date]> {
-	        return .init(manager: cuckoo_manager, name: "dates", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	
-	    
-	}
-
-}
-
- class DoubleValueSampleStub: DoubleValueSample {
-    
-    public override var value: Double {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Double).self)
-        }
-        
-        set { }
-        
-    }
-    
-    public override var dates: [DateType: Date] {
-        get {
-            return DefaultValueRegistry.defaultValue(for: ([DateType: Date]).self)
-        }
-        
-        set { }
-        
-    }
-    
-
-    
-
-    
-}
-
-
-// MARK: - Mocks generated from file: DataIntegration/DataTypes/Sample.swift
-//
-//  Sample.swift
-//  DataIntegration
-//
-//  Created by Bryan Nova on 7/14/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
-//
-
-import Cuckoo
-@testable import DataIntegration
-
-import Foundation
-
-class MockSample: Sample, Cuckoo.ProtocolMock {
-    typealias MocksType = Sample
-    typealias Stubbing = __StubbingProxy_Sample
-    typealias Verification = __VerificationProxy_Sample
-    let cuckoo_manager = Cuckoo.MockManager(hasParent: false)
-
-    
-    // ["name": "dates", "stubType": "ProtocolToBeStubbedReadOnlyProperty", "@type": "InstanceVariable", "type": "[DateType: Date]", "isReadOnly": true, "accessibility": "public"]
-    public var dates: [DateType: Date] {
-        get {
-            
-            return cuckoo_manager.getter("dates", superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall())
-            
-        }
-        
-    }
-    
-
-    
-
-    
-
-	struct __StubbingProxy_Sample: Cuckoo.StubbingProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	
-	    init(manager: Cuckoo.MockManager) {
-	        self.cuckoo_manager = manager
-	    }
-	    
-	    var dates: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockSample, [DateType: Date]> {
-	        return .init(manager: cuckoo_manager, name: "dates")
-	    }
-	    
-	    
-	}
-
-	struct __VerificationProxy_Sample: Cuckoo.VerificationProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	    private let callMatcher: Cuckoo.CallMatcher
-	    private let sourceLocation: Cuckoo.SourceLocation
-	
-	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-	        self.cuckoo_manager = manager
-	        self.callMatcher = callMatcher
-	        self.sourceLocation = sourceLocation
-	    }
-	
-	    
-	    var dates: Cuckoo.VerifyReadOnlyProperty<[DateType: Date]> {
-	        return .init(manager: cuckoo_manager, name: "dates", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	
-	    
-	}
-
-}
-
- class SampleStub: Sample {
-    
-    public var dates: [DateType: Date] {
-        get {
-            return DefaultValueRegistry.defaultValue(for: ([DateType: Date]).self)
-        }
-        
-    }
-    
-
-    
-
-    
-}
-
-
-class MockAnySample: AnySample, Cuckoo.ClassMock {
-    typealias MocksType = AnySample
-    typealias Stubbing = __StubbingProxy_AnySample
-    typealias Verification = __VerificationProxy_AnySample
-    let cuckoo_manager = Cuckoo.MockManager(hasParent: true)
-
-    
-    // ["name": "dates", "stubType": "ClassToBeStubbedProperty", "@type": "InstanceVariable", "type": "[DateType: Date]", "isReadOnly": false, "accessibility": "public"]
-    public override var dates: [DateType: Date] {
-        get {
-            
-            return cuckoo_manager.getter("dates", superclassCall: super.dates)
-            
-        }
-        
-        set {
-            
-            cuckoo_manager.setter("dates", value: newValue, superclassCall: super.dates = newValue)
-            
-        }
-        
-    }
-    
-
-    
-
-    
-
-	struct __StubbingProxy_AnySample: Cuckoo.StubbingProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	
-	    init(manager: Cuckoo.MockManager) {
-	        self.cuckoo_manager = manager
-	    }
-	    
-	    var dates: Cuckoo.ClassToBeStubbedProperty<MockAnySample, [DateType: Date]> {
-	        return .init(manager: cuckoo_manager, name: "dates")
-	    }
-	    
-	    
-	}
-
-	struct __VerificationProxy_AnySample: Cuckoo.VerificationProxy {
-	    private let cuckoo_manager: Cuckoo.MockManager
-	    private let callMatcher: Cuckoo.CallMatcher
-	    private let sourceLocation: Cuckoo.SourceLocation
-	
-	    init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
-	        self.cuckoo_manager = manager
-	        self.callMatcher = callMatcher
-	        self.sourceLocation = sourceLocation
-	    }
-	
-	    
-	    var dates: Cuckoo.VerifyProperty<[DateType: Date]> {
-	        return .init(manager: cuckoo_manager, name: "dates", callMatcher: callMatcher, sourceLocation: sourceLocation)
-	    }
-	    
-	
-	    
-	}
-
-}
-
- class AnySampleStub: AnySample {
-    
-    public override var dates: [DateType: Date] {
-        get {
-            return DefaultValueRegistry.defaultValue(for: ([DateType: Date]).self)
         }
         
         set { }
@@ -1105,12 +575,12 @@ class MockAnswer: Answer, Cuckoo.ClassMock {
 }
 
 
-// MARK: - Mocks generated from file: DataIntegration/Questions/Attributes.swift
+// MARK: - Mocks generated from file: DataIntegration/Questions/AttributeComparisonType.swift
 //
-//  Attributes.swift
+//  AttributeComparisonType.swift
 //  DataIntegration
 //
-//  Created by Bryan Nova on 7/7/18.
+//  Created by Bryan Nova on 7/21/18.
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
@@ -1118,6 +588,8 @@ import Cuckoo
 @testable import DataIntegration
 
 import Foundation
+import NaturalLanguage
+import os
 
 // MARK: - Mocks generated from file: DataIntegration/Questions/Labels.swift
 //
@@ -1835,6 +1307,7 @@ import Cuckoo
 
 import Foundation
 import NaturalLanguage
+import os
 
 // MARK: - Mocks generated from file: DataIntegration/Questions/Queries/DayOfWeek.swift
 //

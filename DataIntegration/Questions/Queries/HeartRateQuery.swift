@@ -32,24 +32,24 @@ public class HeartRateQuery: SampleQuery<HeartRate> {
 			}
 
 			let daysOfWeek = DependencyInjector.util.timeConstraintUtil.getDaysOfWeekFrom(timeConstraints: self.timeConstraints)
-			let samples = originalSamples!.filter({ (sample: HKQuantitySample) in
-				return self.matchesAttributeRestrictionCriteria(sample) && DependencyInjector.util.sampleUtil.sample(sample, occursOnOneOf: daysOfWeek)
-			}).map({ (sample: HKQuantitySample) -> HeartRate in
+			let samples = originalSamples!.map({ (sample: HKQuantitySample) -> HeartRate in
 				return HeartRate(sample)
+			}).filter({ (sample: HeartRate) in
+				return self.matchesAttributeRestrictionCriteria(sample) && DependencyInjector.util.sampleUtil.sample(sample, occursOnOneOf: daysOfWeek)
 			})
 
 			let result = SampleQueryResult<HeartRate>(samples)
-			result.addExtraInformation(AverageInformation<HeartRate>())
-			result.addExtraInformation(CountInformation<HeartRate>())
-			result.addExtraInformation(MaximumInformation<HeartRate>())
-			result.addExtraInformation(MinimumInformation<HeartRate>())
-			result.addExtraInformation(SumInformation<HeartRate>())
+			result.addExtraInformation(AverageInformation<HeartRate>(.heartRate))
+			result.addExtraInformation(CountInformation<HeartRate>(.heartRate))
+			result.addExtraInformation(MaximumInformation<HeartRate, Double>(.heartRate))
+			result.addExtraInformation(MinimumInformation<HeartRate, Double>(.heartRate))
+			result.addExtraInformation(SumInformation<HeartRate>(.heartRate))
 
 			self.queryDone(result, nil)
 		}
 	}
 
-	fileprivate func matchesAttributeRestrictionCriteria(_ sample: HKQuantitySample) -> Bool {
+	fileprivate func matchesAttributeRestrictionCriteria(_ sample: HeartRate) -> Bool {
 		return true // TODO
 	}
 }

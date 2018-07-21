@@ -35,7 +35,7 @@ public class QueryOperation: NSObject {
 		}
 	}
 
-	public enum ErrorTypes: Error {
+	public enum Errors: Error {
 		case UnknownOperationType
 	}
 
@@ -49,9 +49,18 @@ public class QueryOperation: NSObject {
 		.second,
 	]
 
+	public static func from(tag: NLTag, for attribute: Attribute) throws -> QueryOperation {
+		let operationKind = map[tag]
+		if operationKind == nil {
+			throw Errors.UnknownOperationType
+		}
+		return QueryOperation(operationKind!, attribute)
+	}
+
 	fileprivate static let map: [NLTag: Kind] = [Tags.average: .average, Tags.count: .count, Tags.max: .max, Tags.min: .min, Tags.sum: .sum]
 
 	public var kind: Kind
+	public var attribute: Attribute
 	public var aggregationUnit: Calendar.Component?
 
 	override public var description: String {
@@ -66,15 +75,8 @@ public class QueryOperation: NSObject {
 		return str
 	}
 
-	public init(_ kind: Kind) {
+	public init(_ kind: Kind, _ attribute: Attribute) {
 		self.kind = kind
-	}
-
-	public static func from(tag: NLTag) throws -> QueryOperation {
-		let operationKind = map[tag]
-		if operationKind == nil {
-			throw ErrorTypes.UnknownOperationType
-		}
-		return QueryOperation(operationKind!)
+		self.attribute = attribute
 	}
 }

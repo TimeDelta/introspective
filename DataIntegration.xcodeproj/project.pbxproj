@@ -32,8 +32,6 @@
 		A2333B6020FA39290072736A /* ExtraInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2333B5F20FA39290072736A /* ExtraInformation.swift */; };
 		A2333B6220FA3FA60072736A /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2333B6120FA3FA60072736A /* Sample.swift */; };
 		A2333B6520FA53A40072736A /* AverageInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2333B6420FA53A40072736A /* AverageInformation.swift */; };
-		A2333B6920FA56590072736A /* NumericSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2333B6820FA56590072736A /* NumericSample.swift */; };
-		A2333B6B20FA5B5D0072736A /* HKQuantitySampleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2333B6A20FA5B5D0072736A /* HKQuantitySampleExtension.swift */; };
 		A2333B7C20FAC4950072736A /* MinimumInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2333B7B20FAC4950072736A /* MinimumInformation.swift */; };
 		A2333B7E20FAC4A20072736A /* MaximumInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2333B7D20FAC4A20072736A /* MaximumInformation.swift */; };
 		A2333B8020FAC4AD0072736A /* CountInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2333B7F20FAC4AD0072736A /* CountInformation.swift */; };
@@ -99,6 +97,10 @@
 		A2C2A98820FE1AB900402D3D /* SampleQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C2A98720FE1AB900402D3D /* SampleQuery.swift */; };
 		A2CFA08C20E54F2E0083C5C5 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2CFA08B20E54F2E0083C5C5 /* SQLite.framework */; };
 		A2CFA08D20E54F2E0083C5C5 /* SQLite.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2CFA08B20E54F2E0083C5C5 /* SQLite.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A2DCAC052102B4E9003F91AD /* ResultsGraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC042102B4E9003F91AD /* ResultsGraphViewController.swift */; };
+		A2DCAC072102C98E003F91AD /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2DCAC062102C98E003F91AD /* Charts.framework */; };
+		A2DCAC082102C98E003F91AD /* Charts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2DCAC062102C98E003F91AD /* Charts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A2DCAC0E2103D26F003F91AD /* AttributeComparisonType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC0D2103D26F003F91AD /* AttributeComparisonType.swift */; };
 		A2E0B5D320ED4BE600B9FD8A /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E0B5D220ED4BE600B9FD8A /* Mocks.swift */; };
 		A2E4E85E20E5549900631398 /* LabelsUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E85D20E5549900631398 /* LabelsUnitTests.swift */; };
 		A2E4E8A020E5583200631398 /* DependencyInjector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E89F20E5583200631398 /* DependencyInjector.swift */; };
@@ -118,7 +120,7 @@
 		A2EF75A020ED539B00B0B2FB /* NumericSampleUtilUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EF759F20ED539B00B0B2FB /* NumericSampleUtilUnitTests.swift */; };
 		A2FA034120F165F80049E40D /* AdvancedQuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034020F165F80049E40D /* AdvancedQuestionViewController.swift */; };
 		A2FA034520F169C30049E40D /* TimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034420F169C30049E40D /* TimeConstraint.swift */; };
-		A2FA034720F16B480049E40D /* Attributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034620F16B480049E40D /* Attributes.swift */; };
+		A2FA034720F16B480049E40D /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034620F16B480049E40D /* Attribute.swift */; };
 		A2FA034B20F17FC50049E40D /* QuestionPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034A20F17FC50049E40D /* QuestionPart.swift */; };
 		A2FA034E20F18FE20049E40D /* TimeConstraintTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034D20F18FE20049E40D /* TimeConstraintTableViewCell.swift */; };
 		A2FA035220F1AB0A0049E40D /* AddToAdvancedQuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA035120F1AB0A0049E40D /* AddToAdvancedQuestionViewController.swift */; };
@@ -149,6 +151,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				A2092D7F20EFA9C100A182AA /* SwiftDate.framework in Embed Frameworks */,
+				A2DCAC082102C98E003F91AD /* Charts.framework in Embed Frameworks */,
 				A23BF2B920FF900500116407 /* Cuckoo.framework in Embed Frameworks */,
 				A2CFA08D20E54F2E0083C5C5 /* SQLite.framework in Embed Frameworks */,
 			);
@@ -180,8 +183,6 @@
 		A2333B5F20FA39290072736A /* ExtraInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtraInformation.swift; sourceTree = "<group>"; };
 		A2333B6120FA3FA60072736A /* Sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample.swift; sourceTree = "<group>"; };
 		A2333B6420FA53A40072736A /* AverageInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AverageInformation.swift; sourceTree = "<group>"; };
-		A2333B6820FA56590072736A /* NumericSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumericSample.swift; sourceTree = "<group>"; };
-		A2333B6A20FA5B5D0072736A /* HKQuantitySampleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKQuantitySampleExtension.swift; sourceTree = "<group>"; };
 		A2333B7B20FAC4950072736A /* MinimumInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimumInformation.swift; sourceTree = "<group>"; };
 		A2333B7D20FAC4A20072736A /* MaximumInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaximumInformation.swift; sourceTree = "<group>"; };
 		A2333B7F20FAC4AD0072736A /* CountInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountInformation.swift; sourceTree = "<group>"; };
@@ -254,6 +255,9 @@
 		A2C2A98520FE149D00402D3D /* SubQueryMatcherFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubQueryMatcherFactory.swift; sourceTree = "<group>"; };
 		A2C2A98720FE1AB900402D3D /* SampleQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleQuery.swift; sourceTree = "<group>"; };
 		A2CFA08B20E54F2E0083C5C5 /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = DataIntegration/Carthage/Build/iOS/SQLite.framework; sourceTree = "<group>"; };
+		A2DCAC042102B4E9003F91AD /* ResultsGraphViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsGraphViewController.swift; sourceTree = "<group>"; };
+		A2DCAC062102C98E003F91AD /* Charts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Charts.framework; path = DataIntegration/Carthage/Build/iOS/Charts.framework; sourceTree = "<group>"; };
+		A2DCAC0D2103D26F003F91AD /* AttributeComparisonType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AttributeComparisonType.swift; path = DataIntegration/Questions/AttributeComparisonType.swift; sourceTree = SOURCE_ROOT; };
 		A2E0B5D220ED4BE600B9FD8A /* Mocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
 		A2E4E85D20E5549900631398 /* LabelsUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelsUnitTests.swift; sourceTree = "<group>"; };
 		A2E4E89F20E5583200631398 /* DependencyInjector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyInjector.swift; sourceTree = "<group>"; };
@@ -273,7 +277,7 @@
 		A2EF759F20ED539B00B0B2FB /* NumericSampleUtilUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericSampleUtilUnitTests.swift; sourceTree = "<group>"; };
 		A2FA034020F165F80049E40D /* AdvancedQuestionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedQuestionViewController.swift; sourceTree = "<group>"; };
 		A2FA034420F169C30049E40D /* TimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeConstraint.swift; sourceTree = "<group>"; };
-		A2FA034620F16B480049E40D /* Attributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attributes.swift; sourceTree = "<group>"; };
+		A2FA034620F16B480049E40D /* Attribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
 		A2FA034A20F17FC50049E40D /* QuestionPart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionPart.swift; sourceTree = "<group>"; };
 		A2FA034D20F18FE20049E40D /* TimeConstraintTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeConstraintTableViewCell.swift; sourceTree = "<group>"; };
 		A2FA035120F1AB0A0049E40D /* AddToAdvancedQuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToAdvancedQuestionViewController.swift; sourceTree = "<group>"; };
@@ -286,6 +290,7 @@
 			files = (
 				A23BF2B820FF900500116407 /* Cuckoo.framework in Frameworks */,
 				A2092D7E20EFA9C100A182AA /* SwiftDate.framework in Frameworks */,
+				A2DCAC072102C98E003F91AD /* Charts.framework in Frameworks */,
 				A255D54620E5A9D600BDD57B /* HealthKit.framework in Frameworks */,
 				A2CFA08C20E54F2E0083C5C5 /* SQLite.framework in Frameworks */,
 			);
@@ -374,8 +379,7 @@
 				A238FEE420E53F3D0025307F /* HeartRate.swift */,
 				A238FEE620E53F430025307F /* Mood.swift */,
 				A2333B6120FA3FA60072736A /* Sample.swift */,
-				A2333B6820FA56590072736A /* NumericSample.swift */,
-				A2333B6A20FA5B5D0072736A /* HKQuantitySampleExtension.swift */,
+				A2FA034620F16B480049E40D /* Attribute.swift */,
 			);
 			path = DataTypes;
 			sourceTree = "<group>";
@@ -437,7 +441,6 @@
 				A2FA034A20F17FC50049E40D /* QuestionPart.swift */,
 				A238FED020E53E900025307F /* Labels.swift */,
 				A238FED220E53E970025307F /* Tags.swift */,
-				A2FA034620F16B480049E40D /* Attributes.swift */,
 			);
 			path = Questions;
 			sourceTree = "<group>";
@@ -456,6 +459,7 @@
 				A238FEDC20E53EED0025307F /* DayOfWeek.swift */,
 				A2FA034420F169C30049E40D /* TimeConstraint.swift */,
 				A238FEDE20E53EFB0025307F /* AttributeRestriction.swift */,
+				A2DCAC0D2103D26F003F91AD /* AttributeComparisonType.swift */,
 				A217810620EBA25300A8F9BA /* ReturnType.swift */,
 				A217810820EBA51400A8F9BA /* SampleQueryResult.swift */,
 			);
@@ -508,6 +512,7 @@
 				A2E4E85F20E554EF00631398 /* Frameworks */,
 				A2092D7D20EFA9C000A182AA /* SwiftDate.framework */,
 				A2CFA08B20E54F2E0083C5C5 /* SQLite.framework */,
+				A2DCAC062102C98E003F91AD /* Charts.framework */,
 				A23BF2B720FF900400116407 /* Cuckoo.framework */,
 			);
 			sourceTree = "<group>";
@@ -619,6 +624,7 @@
 				A2E50A3220F9A33100C89DE3 /* ResultsViewController.swift */,
 				A2E50A3620F9A4D600C89DE3 /* ExtraInformationTableViewCell.swift */,
 				A2333B5B20FA34A00072736A /* TimestampClickChoiceViewController.swift */,
+				A2DCAC042102B4E9003F91AD /* ResultsGraphViewController.swift */,
 			);
 			path = Results;
 			sourceTree = "<group>";
@@ -793,7 +799,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Define input directory. Change \"${PROJECT_DIR}/${PROJECT_NAME}\" to your project's root source folder, if it's not the default name.\nINPUT_DIR=\"${PROJECT_DIR}/${PROJECT_NAME}\"\nNORMAL_MOCKS_FILE=\"${INPUT_DIR}Tests/Mocks.swift\"\nFACTORY_MOCKS_FILE=\"${INPUT_DIR}/DependencyInjection/FactoryMocks.swift\"\necho \"Mocks Input Directory = ${INPUT_DIR}\"\n\nNORMAL_EXCLUSION_PATTERN=\"\\\nDelegate|\\\nViewController|\\\nInject|\\\nMock|\\\nDateExtension|\\\nFactory|\\\n.+Information|\\\n/Query|\\\n/SampleQuery|\\\n/SampleUtil|\\\n/NumericSampleUtil|\\\nSubQueryMatch|\\\nSearchUtil\"\n\nFACTORY_EXCLUSION_PATTERN=\"\\\nMock|\\\n/QueryFactory\"\n\nOLD_IFS=\"$IFS\"\nexport IFS=$'\\n'\n\nNORMAL_FILES=\"\"\nfor file in `find \"${INPUT_DIR}\" -type f -name \\*.swift | grep -v Carthage | egrep -v \"${NORMAL_EXCLUSION_PATTERN}\"`; do\n    NORMAL_FILES=\"${NORMAL_FILES} ${file}\"\ndone\n\nFACTORY_FILES=\"\"\nfor file in `find \"${INPUT_DIR}\" -type f -name \\*Factory.swift | grep -v Carthage | egrep -v \"${FACTORY_EXCLUSION_PATTERN}\"`; do\n    FACTORY_FILES=\"${FACTORY_FILES} ${file}\"\ndone\n\nexport IFS=\"$OLD_IFS\"\n\necho \"Done gathering input files\"\n\n\"${INPUT_DIR}/Carthage/Checkouts/Cuckoo/run\" generate --testable \"${PROJECT_NAME}\" --output \"${NORMAL_MOCKS_FILE}\" --no-timestamp ${NORMAL_FILES}\n\"${INPUT_DIR}/Carthage/Checkouts/Cuckoo/run\" generate --output \"${FACTORY_MOCKS_FILE}\" --no-timestamp ${FACTORY_FILES}\n\necho \"Done generating mocks\"\n";
+			shellScript = "# Define input directory. Change \"${PROJECT_DIR}/${PROJECT_NAME}\" to your project's root source folder, if it's not the default name.\nINPUT_DIR=\"${PROJECT_DIR}/${PROJECT_NAME}\"\nNORMAL_MOCKS_FILE=\"${INPUT_DIR}Tests/Mocks.swift\"\nFACTORY_MOCKS_FILE=\"${INPUT_DIR}/DependencyInjection/FactoryMocks.swift\"\necho \"Mocks Input Directory = ${INPUT_DIR}\"\n\nNORMAL_EXCLUSION_PATTERN=\"\\\nDelegate|\\\nViewController|\\\nInject|\\\nMock|\\\nDateExtension|\\\nFactory|\\\n.+Information|\\\n/Query|\\\n/SampleQuery|\\\n/SampleUtil|\\\n/NumericSampleUtil|\\\nSubQueryMatch|\\\nSearchUtil|\\\n/Sample|\\\n/HeartRate.swift\"\n\nFACTORY_EXCLUSION_PATTERN=\"\\\nMock|\\\n/QueryFactory\"\n\nOLD_IFS=\"$IFS\"\nexport IFS=$'\\n'\n\nNORMAL_FILES=\"\"\nfor file in `find \"${INPUT_DIR}\" -type f -name \\*.swift | grep -v Carthage | egrep -v \"${NORMAL_EXCLUSION_PATTERN}\"`; do\n    NORMAL_FILES=\"${NORMAL_FILES} ${file}\"\ndone\n\nFACTORY_FILES=\"\"\nfor file in `find \"${INPUT_DIR}\" -type f -name \\*Factory.swift | grep -v Carthage | egrep -v \"${FACTORY_EXCLUSION_PATTERN}\"`; do\n    FACTORY_FILES=\"${FACTORY_FILES} ${file}\"\ndone\n\nexport IFS=\"$OLD_IFS\"\n\necho \"Done gathering input files\"\n\n\"${INPUT_DIR}/Carthage/Checkouts/Cuckoo/run\" generate --testable \"${PROJECT_NAME}\" --output \"${NORMAL_MOCKS_FILE}\" --no-timestamp ${NORMAL_FILES}\n\"${INPUT_DIR}/Carthage/Checkouts/Cuckoo/run\" generate --output \"${FACTORY_MOCKS_FILE}\" --no-timestamp ${FACTORY_FILES}\n\necho \"Done generating mocks\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -814,7 +820,6 @@
 				A2333B8020FAC4AD0072736A /* CountInformation.swift in Sources */,
 				A2333B8B20FCF8200072736A /* WithinXCalendarUnitsSubQueryMatcher.swift in Sources */,
 				A2333B6020FA39290072736A /* ExtraInformation.swift in Sources */,
-				A2333B6920FA56590072736A /* NumericSample.swift in Sources */,
 				A2333B8620FBF7C60072736A /* TimeConstraintUtil.swift in Sources */,
 				A248CFAD20F15004000FE34E /* EditDataTypeViewController.swift in Sources */,
 				A238FED120E53E900025307F /* Labels.swift in Sources */,
@@ -845,7 +850,6 @@
 				A248CFB520F1649D000FE34E /* Question.swift in Sources */,
 				A248CFB120F16352000FE34E /* DataTypes.swift in Sources */,
 				A238FED720E53EAD0025307F /* Query.swift in Sources */,
-				A2333B6B20FA5B5D0072736A /* HKQuantitySampleExtension.swift in Sources */,
 				A238FEFA20E541420025307F /* DatabaseConnector.swift in Sources */,
 				A2FA034B20F17FC50049E40D /* QuestionPart.swift in Sources */,
 				A2333B5C20FA34A00072736A /* TimestampClickChoiceViewController.swift in Sources */,
@@ -861,7 +865,7 @@
 				A2E50A3720F9A4D600C89DE3 /* ExtraInformationTableViewCell.swift in Sources */,
 				A290534520FFF34C00191A34 /* EditSubDataTypeViewController.swift in Sources */,
 				A2E4E8A020E5583200631398 /* DependencyInjector.swift in Sources */,
-				A2FA034720F16B480049E40D /* Attributes.swift in Sources */,
+				A2FA034720F16B480049E40D /* Attribute.swift in Sources */,
 				A238FF0820E5429A0025307F /* SourcesTableViewController.swift in Sources */,
 				A29053472101106100191A34 /* SubDataTypeTableViewCell.swift in Sources */,
 				A238FEED20E53F770025307F /* MedicationSource.swift in Sources */,
@@ -869,8 +873,10 @@
 				A238FEE920E53F570025307F /* Source.swift in Sources */,
 				A2E4E8A620E5588800631398 /* ProductionInjectionProvider.swift in Sources */,
 				A238FEDD20E53EED0025307F /* DayOfWeek.swift in Sources */,
+				A2DCAC0E2103D26F003F91AD /* AttributeComparisonType.swift in Sources */,
 				A238FECD20E53E820025307F /* TextQuestion.swift in Sources */,
 				A238FEF120E53F8D0025307F /* SourceField.swift in Sources */,
+				A2DCAC052102B4E9003F91AD /* ResultsGraphViewController.swift in Sources */,
 				A217810920EBA51400A8F9BA /* SampleQueryResult.swift in Sources */,
 				A238FEE720E53F430025307F /* Mood.swift in Sources */,
 				A2C2A98020FE0BDE00402D3D /* SameDatesSubQueryMatcher.swift in Sources */,

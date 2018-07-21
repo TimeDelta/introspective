@@ -24,10 +24,6 @@ class EditOperationViewController: UIViewController, UIPickerViewDataSource, UIP
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if operation == nil {
-			operation = QueryOperation(.average)
-		}
-
         operationTypePicker.dataSource = self
         operationTypePicker.delegate = self
 		aggregationUnitPicker.dataSource = self

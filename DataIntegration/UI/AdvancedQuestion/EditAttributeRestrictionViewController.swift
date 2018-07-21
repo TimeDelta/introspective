@@ -48,6 +48,9 @@ class EditAttributeRestrictionViewController: UIViewController, UIPickerViewData
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.destination is EditOperationViewController {
 			let controller = (segue.destination as! EditOperationViewController)
+			if attributeRestriction.operation == nil {
+				attributeRestriction.operation = QueryOperation(.sum, dataType.defaultAttribute)
+			}
 			controller.operation = attributeRestriction.operation
 		}
 
@@ -67,7 +70,7 @@ class EditAttributeRestrictionViewController: UIViewController, UIPickerViewData
 
 	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 		if pickerView.restorationIdentifier! == Me.attributePickerId {
-			return Attributes.attributesFor(dataType: dataType).count
+			return Attribute.attributesFor(dataType: dataType).count
 		} else if pickerView.restorationIdentifier! == Me.comparisonPickerId {
 			return getComparisonTypesForSelectedAttribute().count
 		}
@@ -76,7 +79,7 @@ class EditAttributeRestrictionViewController: UIViewController, UIPickerViewData
 
 	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		if pickerView.restorationIdentifier! == Me.attributePickerId {
-			return Attributes.attributesFor(dataType: dataType)[row].description
+			return Attribute.attributesFor(dataType: dataType)[row].description
 		} else if pickerView.restorationIdentifier! == Me.comparisonPickerId {
 			return getComparisonTypesForSelectedAttribute()[row].description
 		}
@@ -86,7 +89,7 @@ class EditAttributeRestrictionViewController: UIViewController, UIPickerViewData
 	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 		updateComparisonTypeOptions()
 		let selectedAttribute = getSelectedAttribute()
-		setOperationSelection(enabled: selectedAttribute.type == .quantity)
+		setOperationSelection(enabled: selectedAttribute.isQuantity)
 		validate()
 	}
 
@@ -108,7 +111,7 @@ class EditAttributeRestrictionViewController: UIViewController, UIPickerViewData
 		}
 
 		let strValues = getValues()
-		if attributeRestriction.attribute.type == .quantity {
+		if attributeRestriction.attribute.isQuantity {
 			var values = [Double]()
 			for value in strValues {
 				values.append(Double(value)!)
@@ -128,17 +131,17 @@ class EditAttributeRestrictionViewController: UIViewController, UIPickerViewData
 		comparisonTypePicker.reloadInputViews()
 	}
 
-	fileprivate func getComparisonTypesForSelectedAttribute() -> [AttributeRestriction.ComparisonType] {
+	fileprivate func getComparisonTypesForSelectedAttribute() -> [AttributeComparisonType] {
 		let attribute = getSelectedAttribute()
-		return AttributeRestriction.ComparisonType.typesFor(attribute: attribute)
+		return AttributeComparisonType.typesFor(attribute: attribute)
 	}
 
-	fileprivate func getSelectedAttribute() -> Attributes {
+	fileprivate func getSelectedAttribute() -> Attribute {
 		let selectedAttributeIndex = attributePicker.selectedRow(inComponent: 0)
-		return Attributes.attributesFor(dataType: dataType)[selectedAttributeIndex]
+		return Attribute.attributesFor(dataType: dataType)[selectedAttributeIndex]
 	}
 
-	fileprivate func getSelectedComparisonType() -> AttributeRestriction.ComparisonType {
+	fileprivate func getSelectedComparisonType() -> AttributeComparisonType {
 		let selectedComparisonTypeIndex = comparisonTypePicker.selectedRow(inComponent: 0)
 		return getComparisonTypesForSelectedAttribute()[selectedComparisonTypeIndex]
 	}
@@ -163,7 +166,7 @@ class EditAttributeRestrictionViewController: UIViewController, UIPickerViewData
 		}
 
 		let selectedAttribute = getSelectedAttribute()
-		if selectedAttribute.type == .quantity {
+		if selectedAttribute.isQuantity {
 			for value in values {
 				if !DependencyInjector.util.stringUtil.isNumber(value) {
 					setInvalidState("Invalid number: \"\(value)\"")

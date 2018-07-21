@@ -18,7 +18,7 @@ public protocol ExtraInformation {
 	var key: String { get }
 	var startDate: Date? { get set }
 	var endDate: Date? { get set }
-
+	var attribute: Attribute { get set }
 
 	func compute(forSamples: [Sample]) throws -> String
 }
@@ -32,9 +32,14 @@ public class SampleInformation<SampleType: Sample>: ExtraInformation {
 
 	public var informationType: InformationType { get { fatalError("Must override") } }
 	public var key: String { get { fatalError("Must override") } }
+	public var attribute: Attribute
 
 	public var startDate: Date?
 	public var endDate: Date?
+
+	public init() {
+		attribute = .heartRate
+	}
 
 	public func compute(forSamples: [SampleType]) -> String {
 		fatalError("Must override")

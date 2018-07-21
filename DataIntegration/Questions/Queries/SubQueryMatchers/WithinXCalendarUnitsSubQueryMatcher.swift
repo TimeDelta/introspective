@@ -40,6 +40,10 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher {
 		from querySamples: [QuerySampleType],
 		matching subQuerySamples: [SubQuerySampleType])
 	-> [QuerySampleType] {
+		if subQuerySamples.count == 0 {
+			return []
+		}
+
 		var matchingSamples = [QuerySampleType]()
 
 		var applicableSubQuerySamples = subQuerySamples

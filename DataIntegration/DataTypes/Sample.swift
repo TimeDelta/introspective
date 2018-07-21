@@ -13,14 +13,26 @@ public enum DateType {
 	case end
 }
 
+public enum SampleError: Error {
+	case typeMismatch
+	case unknownAttribute
+}
+
 public protocol Sample {
 
 	var dates: [DateType: Date] { get }
+	var attributes: [Attribute] { get }
+
+	func value<ValueType>(of attribute: Attribute) throws -> ValueType
+	func setValue<ValueType>(of attribute: Attribute, to value: ValueType) throws
 }
 
+
+/// An abstract base class for everything that implements the Sample protocol
 public class AnySample: Sample {
 
 	public var dates: [DateType: Date]
+	public var attributes: [Attribute] { get { fatalError("Must override") } }
 
 	public init() {
 		dates = [.start: Date()]
@@ -33,5 +45,13 @@ public class AnySample: Sample {
 
 	public init(_ dates: [DateType: Date]) {
 		self.dates = dates
+	}
+
+	public func value<ValueType>(of attribute: Attribute) throws -> ValueType {
+		fatalError("Must override")
+	}
+
+	public func setValue<ValueType>(of attribute: Attribute, to value: ValueType) throws {
+		fatalError("Must override")
 	}
 }
