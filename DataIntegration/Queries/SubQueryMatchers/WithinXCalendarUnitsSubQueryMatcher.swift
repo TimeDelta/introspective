@@ -22,7 +22,7 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher {
 	]
 
 	public var description: String {
-		var text = "Within " + String(numberOfTimeUnits) + " " + CalendarUtil.componentNames[timeUnit]!.lowercased() + "s of"
+		var text = "Within " + String(numberOfTimeUnits) + " " + timeUnit.description.lowercased() + "s of"
 		if mostRecentOnly {
 			text += " most recent"
 		}

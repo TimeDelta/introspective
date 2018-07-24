@@ -73,7 +73,7 @@ class EditOperationViewController: UIViewController, UIPickerViewDataSource, UIP
 			return QueryOperation.Kind.allTypes[row].description
 		} else if pickerView.restorationIdentifier! == Me.aggregationUnitPickerId {
 			let component = QueryOperation.supportedAggregationUnits[row]
-			return CalendarUtil.componentNames[component]!
+			return component.description
 		}
 		return "" // This should never happen
 	}

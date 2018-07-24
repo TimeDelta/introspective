@@ -117,13 +117,11 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 	// MARK: - Navigation
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//		if segue.destination is TimestampClickChoiceViewController {
-//            let source = (sender as! UITableViewCell)
-//			lastSelectedRowIndex = tableView.indexPath(for: source)!.row
-//
-//            segue.destination.modalPresentationStyle = UIModalPresentationStyle.popover
-//            segue.destination.popoverPresentationController!.delegate = self
-//		}
+		if segue.destination is GraphCustomizationViewController {
+            let controller = segue.destination as! GraphCustomizationViewController
+            controller.samples = filteredSamples
+            controller.dataType = dataType
+		}
 	}
 
 	// MARK: - Popover delegation

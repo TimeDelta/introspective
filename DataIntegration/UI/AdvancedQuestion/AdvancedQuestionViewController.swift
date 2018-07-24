@@ -199,7 +199,7 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 					break
 				case .attributeRestriction:
 					let lastDataType = bottomMostDataType()
-					let attributeRestriction = AttributeRestriction(lastDataType.defaultAttribute)
+					let attributeRestriction = AttributeRestriction(lastDataType.defaultDependentAttribute)
 					parts.append(attributeRestriction)
 					break
 			}

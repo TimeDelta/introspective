@@ -11,25 +11,6 @@ import SwiftDate
 
 public class CalendarUtil: NSObject {
 
-	public static let componentNames: [Calendar.Component: String] = [
-		.calendar: "Calendar",
-		.era: "Era",
-		.year: "Year",
-		.yearForWeekOfYear: "Year For Week Of Year",
-		.quarter: "Quarter",
-		.month: "Month",
-		.weekOfMonth: "Week Of Month",
-		.weekOfYear: "Week",
-		.weekday: "Weekday",
-		.weekdayOrdinal: "Weekday Ordinal",
-		.timeZone: "TimeZone",
-		.day: "Day",
-		.hour: "Hour",
-		.minute: "Minute",
-		.second: "Second",
-		.nanosecond: "Nanosecond",
-	]
-
 	/// Set all components of the specified date less than the specified component to the minimum value for that component.
 	/// - Parameter toBeginningOf: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
 	public func start(of component: Calendar.Component, in date: Date) -> Date {
@@ -69,6 +50,29 @@ public class CalendarUtil: NSObject {
 			return .orderedDescending
 		} else {
 			return .orderedSame
+		}
+	}
+}
+
+extension Calendar.Component: CustomStringConvertible {
+	public var description: String {
+		switch (self) {
+			case .calendar: return "Calendar"
+			case .era: return "Era"
+			case .year: return "Year"
+			case .yearForWeekOfYear: return "Year For Week Of Year"
+			case .quarter: return "Quarter"
+			case .month: return "Month"
+			case .weekOfMonth: return "Week Of Month"
+			case .weekOfYear: return "Week"
+			case .weekday: return "Weekday"
+			case .weekdayOrdinal: return "Weekday Ordinal"
+			case .timeZone: return "TimeZone"
+			case .day: return "Day"
+			case .hour: return "Hour"
+			case .minute: return "Minute"
+			case .second: return "Second"
+			case .nanosecond: return "Nanosecond"
 		}
 	}
 }

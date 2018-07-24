@@ -95,7 +95,7 @@ class EditSubDataTypeViewController: UIViewController, UIPickerViewDelegate, UIP
 			label!.text = SubQueryMatcherFactory.allMatchers[row].genericDescription
 			label!.font = UIFont(name: "System", size: CGFloat(19))
 		} else if pickerView == timeUnitPicker {
-			label!.text = CalendarUtil.componentNames[Me.supportedTimeUnits[row]]!
+			label!.text = Me.supportedTimeUnits[row].description
 			let selectedMatcherIndex = matcherTypePicker.selectedRow(inComponent: 0)
 			if SubQueryMatcherFactory.allMatchers[selectedMatcherIndex] == WithinXCalendarUnitsSubQueryMatcher.self {
 				label!.text! += "s"

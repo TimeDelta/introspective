@@ -26,7 +26,7 @@ public class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher {
 		} else {
 			text = "In"
 		}
-		text += " the same " + CalendarUtil.componentNames[timeUnit]! + " as"
+		text += " the same " + timeUnit.description.lowercased() + " as"
 		if mostRecentOnly {
 			text += " most recent"
 		}

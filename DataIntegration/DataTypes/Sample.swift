@@ -21,6 +21,7 @@ public enum SampleError: Error {
 public protocol Sample {
 
 	var dates: [DateType: Date] { get }
+	var dataType: DataTypes { get }
 	var attributes: [Attribute] { get }
 
 	func value<ValueType>(of attribute: Attribute) throws -> ValueType
@@ -32,6 +33,7 @@ public protocol Sample {
 public class AnySample: Sample {
 
 	public var dates: [DateType: Date]
+	public var dataType: DataTypes { get { fatalError("Must override") } }
 	public var attributes: [Attribute] { get { fatalError("Must override") } }
 
 	public init() {

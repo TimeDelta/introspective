@@ -12,8 +12,6 @@ class EditAttributeRestrictionViewController: UIViewController, UIPickerViewData
 
 	fileprivate typealias Me = EditAttributeRestrictionViewController
 
-	fileprivate static let attributePickerId = "attribute"
-	fileprivate static let comparisonPickerId = "comparison"
 	fileprivate static let numberRegex = "[0-9]*.?[0-9]+"
 
 	@IBOutlet weak var operationInfoButton: UIButton!
@@ -42,26 +40,31 @@ class EditAttributeRestrictionViewController: UIViewController, UIPickerViewData
         acceptButton.setTitle("Must fix issues", for: .disabled)
         acceptButton.setTitle("Accept", for: .normal)
 
-        validate()
-    }
+        if attributeRestriction.operation != nil {
+			useOperationToggle.setOn(true, animated: false)
+		}
+		updateChooseOperationButtonDisplay()
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.destination is EditOperationViewController {
-			let controller = (segue.destination as! EditOperationViewController)
-			if attributeRestriction.operation == nil {
-				attributeRestriction.operation = QueryOperation(.sum, dataType.defaultAttribute)
+		let comparisonTypes = getComparisonTypesForSelectedAttribute()
+		var index: Int = 0
+		for type in comparisonTypes {
+			if type == attributeRestriction.comparison {
+				comparisonTypePicker.selectRow(index, inComponent: 0, animated: false)
+				break
 			}
-			controller.operation = attributeRestriction.operation
+			index += 1
 		}
 
-		if !(segue.destination is AdvancedQuestionViewController) {
-			segue.destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            segue.destination.popoverPresentationController!.delegate = self
+		var valueText = ""
+		for value in attributeRestriction.values {
+			if !valueText.isEmpty {
+				valueText += "\n"
+			}
+			valueText += String(describing: value)
 		}
-	}
+		valuesTextView.text = valueText
 
-	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-        return UIModalPresentationStyle.none
+        validate()
     }
 
 	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -69,18 +72,20 @@ class EditAttributeRestrictionViewController: UIViewController, UIPickerViewData
 	}
 
 	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		if pickerView.restorationIdentifier! == Me.attributePickerId {
+		if pickerView == attributePicker {
 			return Attribute.attributesFor(dataType: dataType).count
-		} else if pickerView.restorationIdentifier! == Me.comparisonPickerId {
+		}
+		if pickerView == comparisonTypePicker {
 			return getComparisonTypesForSelectedAttribute().count
 		}
 		return 0 // This should never happen
 	}
 
 	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		if pickerView.restorationIdentifier! == Me.attributePickerId {
+		if pickerView == attributePicker {
 			return Attribute.attributesFor(dataType: dataType)[row].description
-		} else if pickerView.restorationIdentifier! == Me.comparisonPickerId {
+		}
+		if pickerView == comparisonTypePicker {
 			return getComparisonTypesForSelectedAttribute()[row].description
 		}
 		return "" // This should never happen
@@ -97,9 +102,27 @@ class EditAttributeRestrictionViewController: UIViewController, UIPickerViewData
 		validate()
 	}
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if segue.destination is EditOperationViewController {
+			let controller = (segue.destination as! EditOperationViewController)
+			if attributeRestriction.operation == nil {
+				attributeRestriction.operation = QueryOperation(.sum, dataType.defaultDependentAttribute)
+			}
+			controller.operation = attributeRestriction.operation
+		}
+
+		if !(segue.destination is AdvancedQuestionViewController) {
+			segue.destination.modalPresentationStyle = UIModalPresentationStyle.popover
+            segue.destination.popoverPresentationController!.delegate = self
+		}
+	}
+
+	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return UIModalPresentationStyle.none
+    }
+
 	@IBAction func useOperationToggleValueChanged(_ sender: Any) {
-		chooseOperationButton.isHidden = !useOperationToggle.isOn
-		chooseOperationButton.isEnabled = useOperationToggle.isOn
+		updateChooseOperationButtonDisplay()
 	}
 
 	@IBAction func accepted(_ sender: Any) {
@@ -123,8 +146,16 @@ class EditAttributeRestrictionViewController: UIViewController, UIPickerViewData
 	@IBAction func saveEditedOperation(_ segue: UIStoryboardSegue) {
 		let controller = (segue.source as! EditOperationViewController)
 		attributeRestriction.operation = controller.operation
-		chooseOperationButton.setTitle(controller.operation.description, for: UIControl.State.normal)
-		chooseOperationButton.titleLabel!.text = controller.operation.description
+		updateChooseOperationButtonDisplay()
+	}
+
+	fileprivate func updateChooseOperationButtonDisplay() {
+		chooseOperationButton.isHidden = !useOperationToggle.isOn
+		chooseOperationButton.isEnabled = useOperationToggle.isOn
+		if chooseOperationButton.isEnabled {
+			let text: String = attributeRestriction.operation?.description ?? "Choose Operation"
+			chooseOperationButton.setTitle(text, for: UIControl.State.normal)
+		}
 	}
 
 	fileprivate func updateComparisonTypeOptions() {
@@ -174,6 +205,12 @@ class EditAttributeRestrictionViewController: UIViewController, UIPickerViewData
 				}
 			}
 		}
+
+		if attributeRestriction.operation == nil && useOperationToggle.isOn {
+			setInvalidState("Must choose operation or specify that no operation is to be used")
+			return
+		}
+
 		setValidState()
 	}
 

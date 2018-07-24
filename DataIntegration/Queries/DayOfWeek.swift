@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class DayOfWeek: NSObject {
+public class DayOfWeek: NSObject, Aggregatable {
 
 	public enum ErrorTypes: Error {
 		case UnknownDayOfWeek
@@ -24,16 +24,6 @@ public class DayOfWeek: NSObject {
 
 	public static let allDays = [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
 
-	public fileprivate(set) var fullDayName: String
-	public fileprivate(set) var intValue: Int
-	public fileprivate(set) var abbreviation: String
-
-	fileprivate init(_ intValue: Int, _ minRequiredString: String, _ fullDayName: String) {
-		self.intValue = intValue
-		self.abbreviation = minRequiredString
-		self.fullDayName = fullDayName
-	}
-
 	public static func fromString(_ str: String) throws -> DayOfWeek? {
 		let dayName = str.lowercased()
 		for day in allDays {
@@ -46,5 +36,19 @@ public class DayOfWeek: NSObject {
 
 	public static func fromInt(_ intValue: Int) -> DayOfWeek {
 		return allDays[intValue]
+	}
+
+	public override var description: String {
+		return fullDayName
+	}
+
+	public fileprivate(set) var fullDayName: String
+	public fileprivate(set) var intValue: Int
+	public fileprivate(set) var abbreviation: String
+
+	fileprivate init(_ intValue: Int, _ minRequiredString: String, _ fullDayName: String) {
+		self.intValue = intValue
+		self.abbreviation = minRequiredString
+		self.fullDayName = fullDayName
 	}
 }

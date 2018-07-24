@@ -14,9 +14,15 @@ public enum DataTypes: CustomStringConvertible {
 
 	public static let allTypes: [DataTypes] = [heartRate]
 
-	public var defaultAttribute: Attribute {
+	public var defaultDependentAttribute: Attribute {
 		switch (self) {
 			case .heartRate: return .heartRate
+		}
+	}
+
+	public var defaultIndependentAttribute: Attribute {
+		switch (self) {
+			case .heartRate: return .startDate
 		}
 	}
 

@@ -41,15 +41,29 @@ public class HeartRate: AnySample {
 	}
 
 	public override func value<ValueType>(of attribute: Attribute) throws -> ValueType {
-		guard let value = heartRate as? ValueType else { throw SampleError.typeMismatch }
-		return value
+		switch (attribute) {
+			case .heartRate:
+				guard let value = heartRate as? ValueType else { throw SampleError.typeMismatch }
+				return value
+			case .startDate:
+				guard let value = dates[.start] as? ValueType else { throw SampleError.typeMismatch }
+				return value
+			default:
+				throw SampleError.unknownAttribute
+		}
 	}
 
 	public override func setValue<ValueType>(of attribute: Attribute, to value: ValueType) throws {
-		if attribute != .heartRate {
-			throw SampleError.unknownAttribute
+		switch (attribute) {
+			case .heartRate:
+				guard let castedValue = value as? Double else { throw SampleError.typeMismatch }
+				heartRate = castedValue
+				break
+			case .startDate:
+				guard let castedValue = value as? Date else { throw SampleError.typeMismatch }
+				dates[.start] = castedValue
+			default:
+				throw SampleError.unknownAttribute
 		}
-		guard let castedValue = value as? Double else { throw SampleError.typeMismatch }
-		heartRate = castedValue
 	}
 }

@@ -68,7 +68,7 @@ public class QueryOperation: NSObject {
 		if aggregationUnit != nil {
 			for component in Me.supportedAggregationUnits {
 				if component == aggregationUnit {
-					str += " per " + CalendarUtil.componentNames[component]!
+					str += " per " + component.description.lowercased()
 				}
 			}
 		}

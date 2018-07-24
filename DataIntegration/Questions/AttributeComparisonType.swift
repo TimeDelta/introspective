@@ -47,7 +47,7 @@ public enum AttributeComparisonType: CustomStringConvertible {
 	}
 
 	public static func typesFor(attribute: Attribute) -> [AttributeComparisonType] {
-		return typesFor(attributeType: attribute.type)
+		return typesFor(attributeType: attribute.classType)
 	}
 
 	public static func typesFor(attributeType: Any.Type) -> [AttributeComparisonType] {
