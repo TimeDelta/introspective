@@ -81,6 +81,7 @@
 		A255D53C20E5697B00BDD57B /* questionLabelsTrainingData.txt in Resources */ = {isa = PBXBuildFile; fileRef = A255D53A20E5697B00BDD57B /* questionLabelsTrainingData.txt */; };
 		A255D54620E5A9D600BDD57B /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A255D54520E5A9D600BDD57B /* HealthKit.framework */; };
 		A255D54820E5AAC600BDD57B /* UnitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A255D54720E5AAC600BDD57B /* UnitTest.swift */; };
+		A28F9D702107DD0F0066579D /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D6F2107DD0F0066579D /* BalloonMarker.swift */; };
 		A290534520FFF34C00191A34 /* EditSubDataTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A290534420FFF34C00191A34 /* EditSubDataTypeViewController.swift */; };
 		A29053472101106100191A34 /* SubDataTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29053462101106100191A34 /* SubDataTypeTableViewCell.swift */; };
 		A29053492101233600191A34 /* StringUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29053482101233600191A34 /* StringUtil.swift */; };
@@ -113,6 +114,9 @@
 		A2DCAC292104FAEB003F91AD /* AggregationParameterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC282104FAEB003F91AD /* AggregationParameterViewController.swift */; };
 		A2DCAC2B2104FDF7003F91AD /* AggregationParameterDescriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC2A2104FDF7003F91AD /* AggregationParameterDescriptionViewController.swift */; };
 		A2DCAC2D210500E7003F91AD /* AggregationParameterValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC2C210500E7003F91AD /* AggregationParameterValueViewController.swift */; };
+		A2DCAC3021078D4F003F91AD /* LineChart.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A2DCAC2F21078D4F003F91AD /* LineChart.storyboard */; };
+		A2DCAC3221078DDD003F91AD /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC3121078DDD003F91AD /* ChartViewController.swift */; };
+		A2DCAC3421078DF4003F91AD /* LineChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC3321078DF4003F91AD /* LineChartViewController.swift */; };
 		A2E0B5D320ED4BE600B9FD8A /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E0B5D220ED4BE600B9FD8A /* Mocks.swift */; };
 		A2E4E85E20E5549900631398 /* LabelsUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E85D20E5549900631398 /* LabelsUnitTests.swift */; };
 		A2E4E8A020E5583200631398 /* DependencyInjector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E89F20E5583200631398 /* DependencyInjector.swift */; };
@@ -245,6 +249,7 @@
 		A255D54120E5A84700BDD57B /* DataIntegration.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = DataIntegration.entitlements; sourceTree = "<group>"; };
 		A255D54520E5A9D600BDD57B /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		A255D54720E5AAC600BDD57B /* UnitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitTest.swift; sourceTree = "<group>"; };
+		A28F9D6F2107DD0F0066579D /* BalloonMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
 		A290534420FFF34C00191A34 /* EditSubDataTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSubDataTypeViewController.swift; sourceTree = "<group>"; };
 		A29053462101106100191A34 /* SubDataTypeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubDataTypeTableViewCell.swift; sourceTree = "<group>"; };
 		A29053482101233600191A34 /* StringUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringUtil.swift; sourceTree = "<group>"; };
@@ -282,6 +287,9 @@
 		A2DCAC282104FAEB003F91AD /* AggregationParameterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregationParameterViewController.swift; sourceTree = "<group>"; };
 		A2DCAC2A2104FDF7003F91AD /* AggregationParameterDescriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregationParameterDescriptionViewController.swift; sourceTree = "<group>"; };
 		A2DCAC2C210500E7003F91AD /* AggregationParameterValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregationParameterValueViewController.swift; sourceTree = "<group>"; };
+		A2DCAC2F21078D4F003F91AD /* LineChart.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LineChart.storyboard; sourceTree = "<group>"; };
+		A2DCAC3121078DDD003F91AD /* ChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
+		A2DCAC3321078DF4003F91AD /* LineChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineChartViewController.swift; sourceTree = "<group>"; };
 		A2E0B5D220ED4BE600B9FD8A /* Mocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
 		A2E4E85D20E5549900631398 /* LabelsUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelsUnitTests.swift; sourceTree = "<group>"; };
 		A2E4E89F20E5583200631398 /* DependencyInjector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyInjector.swift; sourceTree = "<group>"; };
@@ -351,6 +359,7 @@
 			children = (
 				A2E50A2920F4CEB400C89DE3 /* DaysOfWeekChooserViewController.swift */,
 				A20A5A7E20F4162200EADEC5 /* DaysOfWeekChooser.xib */,
+				A28F9D6F2107DD0F0066579D /* BalloonMarker.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -599,6 +608,7 @@
 		A2DCAC0F2103DFAF003F91AD /* Graphing */ = {
 			isa = PBXGroup;
 			children = (
+				A2DCAC2E21078CF7003F91AD /* Graphs */,
 				A2DCAC112103DFDF003F91AD /* Graph.storyboard */,
 				A2DCAC132103E020003F91AD /* GraphCustomizationViewController.swift */,
 				A2DCAC192104BD27003F91AD /* AxisAttributeViewController.swift */,
@@ -620,6 +630,16 @@
 				A2DCAC262104EC81003F91AD /* CalendarComponentAggregationParameter.swift */,
 			);
 			path = Aggregation;
+			sourceTree = "<group>";
+		};
+		A2DCAC2E21078CF7003F91AD /* Graphs */ = {
+			isa = PBXGroup;
+			children = (
+				A2DCAC2F21078D4F003F91AD /* LineChart.storyboard */,
+				A2DCAC3121078DDD003F91AD /* ChartViewController.swift */,
+				A2DCAC3321078DF4003F91AD /* LineChartViewController.swift */,
+			);
+			path = Graphs;
 			sourceTree = "<group>";
 		};
 		A2E4E85C20E5548500631398 /* Questions */ = {
@@ -817,6 +837,7 @@
 				A2333B5E20FA352A0072736A /* Results.storyboard in Resources */,
 				A255D53C20E5697B00BDD57B /* questionLabelsTrainingData.txt in Resources */,
 				A20A5A7F20F4162200EADEC5 /* DaysOfWeekChooser.xib in Resources */,
+				A2DCAC3021078D4F003F91AD /* LineChart.storyboard in Resources */,
 				A248CFAB20F14F80000FE34E /* Main.storyboard in Resources */,
 				A20A5A7A20F403C300EADEC5 /* Assets.xcassets in Resources */,
 			);
@@ -930,11 +951,13 @@
 				A238FF0820E5429A0025307F /* SourcesTableViewController.swift in Sources */,
 				A29053472101106100191A34 /* SubDataTypeTableViewCell.swift in Sources */,
 				A238FEED20E53F770025307F /* MedicationSource.swift in Sources */,
+				A2DCAC3221078DDD003F91AD /* ChartViewController.swift in Sources */,
 				A2DCAC2B2104FDF7003F91AD /* AggregationParameterDescriptionViewController.swift in Sources */,
 				A2092D8B20F130FF00A182AA /* DayOfWeekRestrictionParser.swift in Sources */,
 				A238FEE920E53F570025307F /* Source.swift in Sources */,
 				A2E4E8A620E5588800631398 /* ProductionInjectionProvider.swift in Sources */,
 				A238FEDD20E53EED0025307F /* DayOfWeek.swift in Sources */,
+				A28F9D702107DD0F0066579D /* BalloonMarker.swift in Sources */,
 				A2DCAC0E2103D26F003F91AD /* AttributeComparisonType.swift in Sources */,
 				A238FECD20E53E820025307F /* TextQuestion.swift in Sources */,
 				A2DCAC1C2104CFAC003F91AD /* GraphAggregationViewController.swift in Sources */,
@@ -949,6 +972,7 @@
 				A217810D20ED0F8400A8F9BA /* UtilFactory.swift in Sources */,
 				A238FEDB20E53EE10025307F /* QueryOperation.swift in Sources */,
 				A255D52C20E5636E00BDD57B /* DataTypesFactory.swift in Sources */,
+				A2DCAC3421078DF4003F91AD /* LineChartViewController.swift in Sources */,
 				A2E50A2E20F555CC00C89DE3 /* EditOperationViewController.swift in Sources */,
 				A2333B8220FAC4B80072736A /* SumInformation.swift in Sources */,
 				A2E50A3020F99A6100C89DE3 /* HeartRateTableViewCell.swift in Sources */,

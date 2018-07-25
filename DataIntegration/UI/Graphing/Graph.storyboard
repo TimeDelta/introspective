@@ -12,7 +12,6 @@
         <!--Graph Customization View Controller-->
         <scene sceneID="ClC-Tw-W6e">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="tqq-wF-01f" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="i85-gb-gSr" customClass="GraphCustomizationViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="UWT-yU-geP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
@@ -79,7 +78,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <segue destination="4qZ-7W-Ef2" kind="show" id="Uac-Tg-8D9"/>
+                                    <action selector="showGraph:" destination="i85-gb-gSr" eventType="touchUpInside" id="Y96-L5-xml"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -93,6 +92,7 @@
                         <outlet property="yAxisButton" destination="N2u-jm-Ax7" id="gFh-H6-NsW"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tqq-wF-01f" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3636" y="-2231.3343328335832"/>
         </scene>
@@ -214,21 +214,6 @@
                 <exit id="MLt-54-gZU" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="4416" y="-2012"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="NTg-p2-dCK">
-            <objects>
-                <viewController id="4qZ-7W-Ef2" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="HYf-wQ-wL9">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="hpP-Mn-8Wc"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="B0I-15-cmj" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3636" y="-1480"/>
         </scene>
         <!--Aggregation Parameter Description View Controller-->
         <scene sceneID="a9s-Eo-OLC">

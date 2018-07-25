@@ -44,6 +44,13 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 				case .radarChart: return "Radar chart"
 			}
 		}
+
+		public var viewControllerClass: ChartViewController.Type {
+			switch (self) {
+				case .lineGraph: return LineChartViewController.self
+				default: fatalError("Missing controller class for chart type: \(self)")
+			}
+		}
 	}
 
 	public var samples: [Sample]!
@@ -114,6 +121,17 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 		}
     }
 
+	@IBAction func showGraph(_ sender: Any) {
+		let chartType = getSelectedChartType()
+		let controllerType = chartType.viewControllerClass
+		let controller = UIStoryboard(name: "LineChart", bundle: nil).instantiateViewController(withIdentifier: String(describing: controllerType)) as! ChartViewController
+		controller.properties[.xAxisAttribute] = xAxisAttribute
+		controller.properties[.yAxisAttribute] = yAxisAttribute
+		controller.samples = samples
+
+		navigationController!.pushViewController(controller, animated: true)
+	}
+
     @IBAction func xAxisChanged(_ segue: UIStoryboardSegue) {
 		let controller = segue.source as! AxisAttributeViewController
 		xAxisAttribute = controller.selectedAttribute
@@ -138,5 +156,10 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 
 	fileprivate func updateYAttributeDisplay() {
 		yAxisButton.setTitle(yAxisAttribute.description, for: .normal)
+	}
+
+	fileprivate func getSelectedChartType() -> ChartType {
+		let selectedIndex = graphTypePicker.selectedRow(inComponent: 0)
+		return ChartType.allTypes[selectedIndex]
 	}
 }
