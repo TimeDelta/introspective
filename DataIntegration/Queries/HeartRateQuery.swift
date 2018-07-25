@@ -17,9 +17,7 @@ public class HeartRateQuery: SampleQuery<HeartRate> {
 	}
 
 	override func run() {
-		let (startDate, endDate) = DependencyInjector.util.timeConstraintUtil.getStartAndEndDatesFrom(timeConstraints: timeConstraints)
-
-		let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
+		let predicate = HKQuery.predicateForSamples(withStart: nil, end: nil, options: [])
 
 		DependencyInjector.querier.heartRateQuerier.getHeartRates(predicate: predicate) {
 			(originalSamples: Array<HKQuantitySample>?, error: Error?) in
@@ -31,11 +29,10 @@ public class HeartRateQuery: SampleQuery<HeartRate> {
 				self.queryDone(nil, ErrorTypes.NoSamplesFound)
 			}
 
-			let daysOfWeek = DependencyInjector.util.timeConstraintUtil.getDaysOfWeekFrom(timeConstraints: self.timeConstraints)
 			let samples = originalSamples!.map({ (sample: HKQuantitySample) -> HeartRate in
 				return HeartRate(sample)
 			}).filter({ (sample: HeartRate) in
-				return self.matchesAttributeRestrictionCriteria(sample) && DependencyInjector.util.sampleUtil.sample(sample, occursOnOneOf: daysOfWeek)
+				return self.matchesAttributeRestrictionCriteria(sample) && DependencyInjector.util.timeConstraintUtil.sample(sample, meets: self.timeConstraints)
 			})
 
 			let result = SampleQueryResult<HeartRate>(samples)

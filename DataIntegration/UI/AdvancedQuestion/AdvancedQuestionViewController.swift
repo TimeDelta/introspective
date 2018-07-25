@@ -272,7 +272,7 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 
 	fileprivate func buildQuery<SampleType: Sample>(from parts: [Any]) -> SampleQuery<SampleType> {
 		let query = try! DependencyInjector.query.queryFor(sampleType: SampleType.self)
-		for part in parts {
+		for part in parts.reversed() {
 			if part is DataTypeInfo {
 				return query
 			} else if part is TimeConstraint {
