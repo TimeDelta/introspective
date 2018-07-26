@@ -8,7 +8,6 @@
 
 import XCTest
 import HealthKit
-import Cuckoo
 @testable import DataIntegration
 
 class NumericSampleUtilUnitTests: UnitTest {
@@ -16,17 +15,16 @@ class NumericSampleUtilUnitTests: UnitTest {
 	fileprivate typealias Me = NumericSampleUtilUnitTests
 
 	fileprivate var util: NumericSampleUtil!
-	fileprivate var mockCalendarUtil: MockCalendarUtil!
+//	fileprivate var mockCalendarUtil: MockCalendarUtil!
 
 	override func setUp() {
 		super.setUp()
 		util = NumericSampleUtil()
 
-		let mockCalUtil = MockCalendarUtil()
-		mockCalendarUtil = mockCalUtil
-		stub(UnitTestInjectionProvider.mockUtilFactory) { stub in
-			when(stub.calendarUtil.get).thenReturn(mockCalUtil)
-		}
+//		mockCalendarUtil = MockCalendarUtil()
+//		stub(UnitTestInjectionProvider.mockUtilFactory) { stub in
+//			when(stub.calendarUtil.get).thenReturn(mockCalUtil)
+//		}
 	}
 
 	func testGivenOneSample_average_returnsValueOfThatSample() {
@@ -100,11 +98,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let samples = createSamples(withValues: values)
 		let aggregationUnit: Calendar.Component = .year
 		let aggregationDate = Date()
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(aggregationDate)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(aggregationDate)
+//			}
+//		}
 
 		// when
 		let averages = util.average(for: .heartRate, over: samples, per: aggregationUnit)
@@ -126,9 +124,9 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let samples = createSamples(withValues: entries)
 		let aggregationUnit: Calendar.Component = .year
 		let aggregationDate = Date()
-		stub(mockCalendarUtil) { stub in
-			when(stub.start(of: equal(to: aggregationUnit), in: any())).thenReturn(aggregationDate)
-		}
+//		stub(mockCalendarUtil) { stub in
+//			when(stub.start(of: equal(to: aggregationUnit), in: any())).thenReturn(aggregationDate)
+//		}
 		var expectedAverage = 0.0
 		for entry in entries {
 			expectedAverage += entry.value
@@ -159,11 +157,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 		let samples = createSamples(withValues: entries)
 		let aggregationUnit: Calendar.Component = .year
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
+//			}
+//		}
 		let expectedAverages: [(date: Date?, value: Double)] = [
 			(date: date1, value: value1),
 			(date: date2, value: value2),
@@ -199,11 +197,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 		let samples = createSamples(withValues: entries)
 		let aggregationUnit: Calendar.Component = .year
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
+//			}
+//		}
 		let expectedAverages: [(date: Date?, value: Double)] = [
 			(date: date1, value: 6.0),
 			(date: date2, value: 2.0),
@@ -239,11 +237,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 		let samples = createSamples(withValues: entries)
 		let aggregationUnit: Calendar.Component = .year
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
+//			}
+//		}
 		let expectedAverages: [(date: Date?, value: Double)] = [
 			(date: date1, value: 6.0),
 			(date: date2, value: 2.0),
@@ -292,11 +290,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let aggregationUnit: Calendar.Component = .year
 		let samples = [createSample(0.0)]
 		let aggregationDate = Date()
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(aggregationDate)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(aggregationDate)
+//			}
+//		}
 
 		// when
 		let counts = util.count(over: samples, per: aggregationUnit)
@@ -318,11 +316,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 			(date: date2, value: 0.0),
 			(date: date3, value: 0.0),
 		])
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
+//			}
+//		}
 		let expectedCounts: [(date: Date?, value: Int)] = [
 			(date: date1, value: 1),
 			(date: date2, value: 1),
@@ -357,11 +355,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 			(date: date3, value: 0.0),
 			(date: date3, value: 0.0),
 		])
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
+//			}
+//		}
 		let expectedCounts: [(date: Date?, value: Int)] = [
 			(date: date1, value: 2),
 			(date: date2, value: 3),
@@ -396,11 +394,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 			(date: date2, value: 0.0),
 			(date: date3, value: 0.0),
 		])
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
+//			}
+//		}
 		let expectedCounts: [(date: Date?, value: Int)] = [
 			(date: date1, value: 2),
 			(date: date2, value: 3),
@@ -476,11 +474,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let value = 5.4
 		let samples = [createSample(value)]
 		let aggregationDate = Date()
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(aggregationDate)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(aggregationDate)
+//			}
+//		}
 
 		// when
 		let maxs: [(date: Date?, value: Double)] = util.max(for: .heartRate, over: samples, per: aggregationUnit)
@@ -505,11 +503,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 			(date: date2, value: value2),
 			(date: date3, value: value3),
 		])
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
+//			}
+//		}
 		let expectedMaxs: [(date: Date?, value: Double)] = [
 			(date: date1, value: value1),
 			(date: date2, value: value2),
@@ -547,11 +545,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 			(date: date3, value: value3 - 1),
 			(date: date3, value: value3 - 3)
 		])
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
+//			}
+//		}
 		let expectedMaxs: [(date: Date?, value: Double)] = [
 			(date: date1, value: value1),
 			(date: date2, value: value2),
@@ -589,11 +587,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 			(date: date3, value: value3 - 2),
 			(date: date2, value: value2 - 2),
 		])
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
+//			}
+//		}
 		let expectedMaxs: [(date: Date?, value: Double)] = [
 			(date: date1, value: value1),
 			(date: date2, value: value2),
@@ -669,11 +667,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let value = 23.5
 		let samples = [createSample(value)]
 		let aggregationDate = Date()
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(aggregationDate)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(aggregationDate)
+//			}
+//		}
 
 		// when
 		let mins: [(date: Date?, value: Double)] = util.min(for: .heartRate, over: samples, per: aggregationUnit)
@@ -698,11 +696,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 			(date: date2, value: value2),
 			(date: date3, value: value3),
 		])
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
+//			}
+//		}
 		let expectedMins: [(date: Date?, value: Double)] = [
 			(date: date1, value: value1),
 			(date: date2, value: value2),
@@ -740,11 +738,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 			(date: date3, value: value3 + 2),
 			(date: date3, value: value3),
 		])
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
+//			}
+//		}
 		let expectedMins: [(date: Date?, value: Double)] = [
 			(date: date1, value: value1),
 			(date: date2, value: value2),
@@ -782,11 +780,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 			(date: date2, value: value2 + 2),
 			(date: date2, value: value2),
 		])
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
+//			}
+//		}
 		let expectedMins: [(date: Date?, value: Double)] = [
 			(date: date1, value: value1),
 			(date: date2, value: value2),
@@ -868,11 +866,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let value = 4.2
 		let samples = [createSample(value)]
 		let aggregationDate = Date()
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(aggregationDate)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(aggregationDate)
+//			}
+//		}
 
 		// when
 		let sums: [(date: Date?, value: Double)] = util.sum(for: .heartRate, over: samples, per: aggregationUnit)
@@ -897,11 +895,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 			(date: date2, value: value2),
 			(date: date3, value: value3)
 		])
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
+//			}
+//		}
 		let expectedSums: [(date: Date?, value: Double)] = [
 			(date: date1, value: value1),
 			(date: date2, value: value2),
@@ -939,11 +937,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 			(date: date3, value: value3 + 1),
 			(date: date3, value: value3 + 3),
 		])
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
+//			}
+//		}
 		let expectedSums: [(date: Date?, value: Double)] = [
 			(date: date1, value: 2 * value1 + 1),
 			(date: date2, value: 3 * value2 + 3),
@@ -981,11 +979,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 			(date: date1, value: value1),
 			(date: date3, value: value3 + 2),
 		])
-		stub(mockCalendarUtil) { stub in
-			for sample in samples {
-				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
-			}
-		}
+//		stub(mockCalendarUtil) { stub in
+//			for sample in samples {
+//				when(stub.start(of: equal(to: aggregationUnit), in: equal(to: sample.dates[.start]!))).thenReturn(sample.dates[.start]!)
+//			}
+//		}
 		let expectedSums: [(date: Date?, value: Double)] = [
 			(date: date1, value: 2 * value1 + 1),
 			(date: date2, value: 3 * value2 + 3),

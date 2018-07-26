@@ -10,7 +10,6 @@
 		A2092D7C20EE488700A182AA /* CalendarUtilUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2092D7B20EE488700A182AA /* CalendarUtilUnitTests.swift */; };
 		A2092D7E20EFA9C100A182AA /* SwiftDate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2092D7D20EFA9C000A182AA /* SwiftDate.framework */; };
 		A2092D7F20EFA9C100A182AA /* SwiftDate.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2092D7D20EFA9C000A182AA /* SwiftDate.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		A2092D8420F00E3A00A182AA /* Matchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2092D8320F00E3A00A182AA /* Matchers.swift */; };
 		A2092D8620F0159600A182AA /* SampleUtilUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2092D8520F0159600A182AA /* SampleUtilUnitTests.swift */; };
 		A2092D8B20F130FF00A182AA /* DayOfWeekRestrictionParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2092D8A20F130FF00A182AA /* DayOfWeekRestrictionParser.swift */; };
 		A2092D8D20F1313200A182AA /* RestrictionParserFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2092D8C20F1313200A182AA /* RestrictionParserFactory.swift */; };
@@ -69,8 +68,6 @@
 		A238FF0420E542710025307F /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FF0320E542710025307F /* SecondViewController.swift */; };
 		A238FF0620E542880025307F /* SourceDefinitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FF0520E542880025307F /* SourceDefinitionViewController.swift */; };
 		A238FF0820E5429A0025307F /* SourcesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A238FF0720E5429A0025307F /* SourcesTableViewController.swift */; };
-		A23BF2B820FF900500116407 /* Cuckoo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A23BF2B720FF900400116407 /* Cuckoo.framework */; };
-		A23BF2B920FF900500116407 /* Cuckoo.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A23BF2B720FF900400116407 /* Cuckoo.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A248CFA920F14ECD000FE34E /* AdvancedQuestionScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A248CFA820F14ECD000FE34E /* AdvancedQuestionScreen.storyboard */; };
 		A248CFAB20F14F80000FE34E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A248CFAA20F14F80000FE34E /* Main.storyboard */; };
 		A248CFAD20F15004000FE34E /* EditDataTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A248CFAC20F15004000FE34E /* EditDataTypeViewController.swift */; };
@@ -89,7 +86,6 @@
 		A290534F21018E3300191A34 /* WithinXCalendarUnitsSubQueryMatcherUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A290534E21018E3300191A34 /* WithinXCalendarUnitsSubQueryMatcherUnitTests.swift */; };
 		A2ABEA2120E53A4F00142C00 /* DataIntegrationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2ABEA2020E53A4F00142C00 /* DataIntegrationUITests.swift */; };
 		A2ABEA2F20E53BEB00142C00 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2ABEA2E20E53BEB00142C00 /* AppDelegate.swift */; };
-		A2C2A97C20FD608400402D3D /* MockSampleUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C2A97B20FD608400402D3D /* MockSampleUtil.swift */; };
 		A2C2A97E20FE030E00402D3D /* InSameCalendarUnitSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C2A97D20FE030E00402D3D /* InSameCalendarUnitSubQueryMatcher.swift */; };
 		A2C2A98020FE0BDE00402D3D /* SameDatesSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C2A97F20FE0BDE00402D3D /* SameDatesSubQueryMatcher.swift */; };
 		A2C2A98220FE0CA200402D3D /* SameStartDatesSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C2A98120FE0CA200402D3D /* SameStartDatesSubQueryMatcher.swift */; };
@@ -168,7 +164,6 @@
 			files = (
 				A2092D7F20EFA9C100A182AA /* SwiftDate.framework in Embed Frameworks */,
 				A2DCAC082102C98E003F91AD /* Charts.framework in Embed Frameworks */,
-				A23BF2B920FF900500116407 /* Cuckoo.framework in Embed Frameworks */,
 				A2CFA08D20E54F2E0083C5C5 /* SQLite.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -179,7 +174,6 @@
 /* Begin PBXFileReference section */
 		A2092D7B20EE488700A182AA /* CalendarUtilUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUtilUnitTests.swift; sourceTree = "<group>"; };
 		A2092D7D20EFA9C000A182AA /* SwiftDate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftDate.framework; path = DataIntegration/Carthage/Build/iOS/SwiftDate.framework; sourceTree = "<group>"; };
-		A2092D8320F00E3A00A182AA /* Matchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Matchers.swift; sourceTree = "<group>"; };
 		A2092D8520F0159600A182AA /* SampleUtilUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleUtilUnitTests.swift; sourceTree = "<group>"; };
 		A2092D8A20F130FF00A182AA /* DayOfWeekRestrictionParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayOfWeekRestrictionParser.swift; sourceTree = "<group>"; };
 		A2092D8C20F1313200A182AA /* RestrictionParserFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictionParserFactory.swift; sourceTree = "<group>"; };
@@ -236,7 +230,6 @@
 		A238FF0320E542710025307F /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		A238FF0520E542880025307F /* SourceDefinitionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceDefinitionViewController.swift; sourceTree = "<group>"; };
 		A238FF0720E5429A0025307F /* SourcesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourcesTableViewController.swift; sourceTree = "<group>"; };
-		A23BF2B720FF900400116407 /* Cuckoo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cuckoo.framework; path = DataIntegration/Carthage/Build/iOS/Cuckoo.framework; sourceTree = "<group>"; };
 		A248CFA820F14ECD000FE34E /* AdvancedQuestionScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AdvancedQuestionScreen.storyboard; sourceTree = "<group>"; };
 		A248CFAA20F14F80000FE34E /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		A248CFAC20F15004000FE34E /* EditDataTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDataTypeViewController.swift; sourceTree = "<group>"; };
@@ -264,7 +257,6 @@
 		A2ABEA2E20E53BEB00142C00 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A2ABEA3320E53C0900142C00 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A2ABEA3420E53C0900142C00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A2C2A97B20FD608400402D3D /* MockSampleUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockSampleUtil.swift; sourceTree = "<group>"; };
 		A2C2A97D20FE030E00402D3D /* InSameCalendarUnitSubQueryMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InSameCalendarUnitSubQueryMatcher.swift; sourceTree = "<group>"; };
 		A2C2A97F20FE0BDE00402D3D /* SameDatesSubQueryMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SameDatesSubQueryMatcher.swift; sourceTree = "<group>"; };
 		A2C2A98120FE0CA200402D3D /* SameStartDatesSubQueryMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SameStartDatesSubQueryMatcher.swift; sourceTree = "<group>"; };
@@ -320,7 +312,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A23BF2B820FF900500116407 /* Cuckoo.framework in Frameworks */,
 				A2092D7E20EFA9C100A182AA /* SwiftDate.framework in Frameworks */,
 				A2DCAC072102C98E003F91AD /* Charts.framework in Frameworks */,
 				A255D54620E5A9D600BDD57B /* HealthKit.framework in Frameworks */,
@@ -547,7 +538,6 @@
 				A2092D7D20EFA9C000A182AA /* SwiftDate.framework */,
 				A2CFA08B20E54F2E0083C5C5 /* SQLite.framework */,
 				A2DCAC062102C98E003F91AD /* Charts.framework */,
-				A23BF2B720FF900400116407 /* Cuckoo.framework */,
 			);
 			sourceTree = "<group>";
 		};
@@ -583,8 +573,6 @@
 		A2ABEA1420E53A4F00142C00 /* DataIntegrationTests */ = {
 			isa = PBXGroup;
 			children = (
-				A2C2A97B20FD608400402D3D /* MockSampleUtil.swift */,
-				A2092D8320F00E3A00A182AA /* Matchers.swift */,
 				A2E0B5D220ED4BE600B9FD8A /* Mocks.swift */,
 				A290534C21018DED00191A34 /* Queries */,
 				A2E4E85C20E5548500631398 /* Questions */,
@@ -744,7 +732,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A2ABEA2820E53A4F00142C00 /* Build configuration list for PBXNativeTarget "DataIntegrationTests" */;
 			buildPhases = (
-				A2CFA08920E543E10083C5C5 /* Run Cuckoo */,
 				A2ABEA0D20E53A4F00142C00 /* Sources */,
 				A2ABEA0E20E53A4F00142C00 /* Frameworks */,
 				A2ABEA0F20E53A4F00142C00 /* Resources */,
@@ -859,23 +846,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		A2CFA08920E543E10083C5C5 /* Run Cuckoo */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Run Cuckoo";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Define input directory. Change \"${PROJECT_DIR}/${PROJECT_NAME}\" to your project's root source folder, if it's not the default name.\nINPUT_DIR=\"${PROJECT_DIR}/${PROJECT_NAME}\"\nNORMAL_MOCKS_FILE=\"${INPUT_DIR}Tests/Mocks.swift\"\nFACTORY_MOCKS_FILE=\"${INPUT_DIR}/DependencyInjection/FactoryMocks.swift\"\necho \"Mocks Input Directory = ${INPUT_DIR}\"\n\nNORMAL_EXCLUSION_PATTERN=\"\\\nDelegate|\\\nViewController|\\\nInject|\\\nMock|\\\nDateExtension|\\\nFactory|\\\n.+Information|\\\n/Query|\\\n/SampleQuery|\\\n/SampleUtil|\\\n/NumericSampleUtil|\\\nSubQueryMatch|\\\nSearchUtil|\\\n/Sample|\\\n/HeartRate.swift\"\n\nFACTORY_EXCLUSION_PATTERN=\"\\\nMock|\\\n/QueryFactory\"\n\nOLD_IFS=\"$IFS\"\nexport IFS=$'\\n'\n\nNORMAL_FILES=\"\"\nfor file in `find \"${INPUT_DIR}\" -type f -name \\*.swift | grep -v Carthage | egrep -v \"${NORMAL_EXCLUSION_PATTERN}\"`; do\n    NORMAL_FILES=\"${NORMAL_FILES} ${file}\"\ndone\n\nFACTORY_FILES=\"\"\nfor file in `find \"${INPUT_DIR}\" -type f -name \\*Factory.swift | grep -v Carthage | egrep -v \"${FACTORY_EXCLUSION_PATTERN}\"`; do\n    FACTORY_FILES=\"${FACTORY_FILES} ${file}\"\ndone\n\nexport IFS=\"$OLD_IFS\"\n\necho \"Done gathering input files\"\n\n\"${INPUT_DIR}/Carthage/Checkouts/Cuckoo/run\" generate --testable \"${PROJECT_NAME}\" --output \"${NORMAL_MOCKS_FILE}\" --no-timestamp ${NORMAL_FILES}\n\"${INPUT_DIR}/Carthage/Checkouts/Cuckoo/run\" generate --output \"${FACTORY_MOCKS_FILE}\" --no-timestamp ${FACTORY_FILES}\n\necho \"Done generating mocks\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		A2ABE9F720E53A4E00142C00 /* Sources */ = {
@@ -994,14 +964,12 @@
 				A290534B21018C6700191A34 /* FunctionalTest.swift in Sources */,
 				A290534F21018E3300191A34 /* WithinXCalendarUnitsSubQueryMatcherUnitTests.swift in Sources */,
 				A2092D8620F0159600A182AA /* SampleUtilUnitTests.swift in Sources */,
-				A2092D8420F00E3A00A182AA /* Matchers.swift in Sources */,
 				A2EF75A020ED539B00B0B2FB /* NumericSampleUtilUnitTests.swift in Sources */,
 				A2092D7C20EE488700A182AA /* CalendarUtilUnitTests.swift in Sources */,
 				A255D54820E5AAC600BDD57B /* UnitTest.swift in Sources */,
 				A2E4E85E20E5549900631398 /* LabelsUnitTests.swift in Sources */,
 				A21780F020E9ACD800A8F9BA /* TextNormalizationUtilUnitTests.swift in Sources */,
 				A2E0B5D320ED4BE600B9FD8A /* Mocks.swift in Sources */,
-				A2C2A97C20FD608400402D3D /* MockSampleUtil.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

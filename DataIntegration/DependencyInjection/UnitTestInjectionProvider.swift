@@ -7,31 +7,21 @@
 //
 
 import Foundation
-import Cuckoo
 
+// TODO
 class UnitTestInjectionProvider: InjectionProvider {
 
 	typealias Me = UnitTestInjectionProvider
 
 	public static let mockQueryFactory = QueryFactory()
-	public static let mockQuerierFactory = MockQuerierFactory()
-	public static let mockQuestionFactory = MockQuestionFactory()
-	public static let mockDataTypesFactory = MockDataTypesFactory()
-	public static let mockUtilFactory = MockUtilFactory()
-	public static let mockRestrictionParserFactory = MockRestrictionParserFactory()
+	public static let mockQuerierFactory = QuerierFactory()
+	public static let mockQuestionFactory = QuestionFactory()
+	public static let mockDataTypesFactory = DataTypesFactory()
+	public static let mockUtilFactory = UtilFactory()
+	public static let mockRestrictionParserFactory = RestrictionParserFactory()
 	public static let mockSubQueryMatcherFactory = SubQueryMatcherFactory()
 
-	public static func resetMocks() {
-		reset(
-//			mockQueryFactory,
-			mockQuerierFactory,
-			mockQuestionFactory,
-			mockDataTypesFactory,
-			mockUtilFactory,
-			mockRestrictionParserFactory
-//			mockSubQueryMatcherFactory,
-		)
-	}
+	public static func resetMocks() {} // TODO
 
 	public var queryFactory: QueryFactory { get { return Me.mockQueryFactory } }
 	public var querierFactory: QuerierFactory { get { return Me.mockQuerierFactory } }
