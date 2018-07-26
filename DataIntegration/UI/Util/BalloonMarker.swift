@@ -18,18 +18,19 @@ open class BalloonMarker: MarkerImage {
 	open var insets: UIEdgeInsets
 	open var minimumSize = CGSize()
 
+	public var xAttributeType: Any.Type?
+	public var earliestDate: Date?
+
 	fileprivate var label: String?
-	fileprivate var xAttributeType: Any.Type
 	fileprivate var _labelSize: CGSize = CGSize()
 	fileprivate var _paragraphStyle: NSMutableParagraphStyle?
 	fileprivate var _drawAttributes = [NSAttributedString.Key : AnyObject]()
 
-	public init(color: UIColor, font: UIFont, textColor: UIColor, insets: UIEdgeInsets, xAttributeType: Any.Type) {
+	public init(color: UIColor, font: UIFont, textColor: UIColor, insets: UIEdgeInsets) {
 		self.color = color
 		self.font = font
 		self.textColor = textColor
 		self.insets = insets
-		self.xAttributeType = xAttributeType
 
 		_paragraphStyle = NSParagraphStyle.default.mutableCopy() as? NSMutableParagraphStyle
 		_paragraphStyle?.alignment = .center
@@ -164,7 +165,14 @@ open class BalloonMarker: MarkerImage {
 	}
 
 	open override func refreshContent(entry: ChartDataEntry, highlight: Highlight) {
-		setLabel(String(entry.y))
+		var text: String = String(entry.x)
+		if xAttributeType is Date.Type {
+			let numberOfSecondsSinceEarliestDate: UInt64 = entry.x.bitPattern
+			let calendar = Calendar.autoupdatingCurrent
+			let date = calendar.date(byAdding: .second, value: Int(numberOfSecondsSinceEarliestDate), to: earliestDate!)!
+			text = DependencyInjector.util.calendarUtil.string(for: date, inFormat: "dd MMM yyyy 'at' HH:mm")
+		}
+		setLabel(text)
 	}
 
 	open func setLabel(_ newLabel: String) {

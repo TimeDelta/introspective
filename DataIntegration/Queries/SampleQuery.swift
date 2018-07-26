@@ -52,9 +52,11 @@ public class SampleQuery<SampleType: Sample>: TypedQuery {
 	fileprivate func filterAndCallBack() {
 		if subQueryCallbackParameters?.error != nil {
 			callback(nil, subQueryCallbackParameters!.error)
+			return
 		}
 		if queryCallbackParameters!.error != nil {
 			callback(nil, queryCallbackParameters!.error)
+			return
 		}
 		callback(filterResults(), nil)
 	}

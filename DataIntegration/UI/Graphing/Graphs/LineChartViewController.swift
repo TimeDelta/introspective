@@ -15,8 +15,6 @@ class LineChartViewController: ChartViewController {
 	fileprivate var xAxisAttribute: Attribute!
 	fileprivate var yAxisAttribute: Attribute!
 
-	fileprivate var firstSample: Sample?
-
 	@IBOutlet weak var chartView: LineChartView!
 
 	override func viewDidLoad() {
@@ -24,10 +22,6 @@ class LineChartViewController: ChartViewController {
 
 		xAxisAttribute = (properties[.xAxisAttribute]! as! Attribute)
 		yAxisAttribute = (properties[.yAxisAttribute]! as! Attribute)
-
-		if xAxisAttribute.classType is Date.Type {
-			firstSample = samples[0]
-		}
 
 		setUp(chartView: chartView)
 		chartView.setViewPortOffsets(left: 20, top: 20, right: 20, bottom: 0)
@@ -48,8 +42,12 @@ class LineChartViewController: ChartViewController {
 			color: UIColor(white: 180/255, alpha: 1),
 			font: .systemFont(ofSize: 12),
 			textColor: .white,
-			insets: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8),
-			xAttributeType: xAxisAttribute.classType)
+			insets: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
+		marker.xAttributeType = xAxisAttribute.classType
+		if xAxisAttribute.classType is Date.Type {
+			let firstSampleValue: Any = try! samples[0].value(of: xAxisAttribute)
+			marker.earliestDate = (firstSampleValue as! Date)
+		}
         marker.chartView = chartView
         marker.minimumSize = CGSize(width: 80, height: 40)
         chartView.marker = marker
@@ -93,7 +91,7 @@ class LineChartViewController: ChartViewController {
 	fileprivate func getDouble(for attribute: Attribute, from sample: Sample) -> Double {
 		let value: Any = try! sample.value(of: attribute)
 		if value is Date {
-			let firstSampleValue: Any = try! firstSample!.value(of: attribute)
+			let firstSampleValue: Any = try! samples[0].value(of: attribute)
 			let earliestDate = firstSampleValue as! Date
 
 			let date = value as! Date

@@ -87,6 +87,7 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 		if error != nil {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "errorCell", for: indexPath)
 			cell.textLabel!.text = error!.localizedDescription
+			return cell
 		}
 
 		if waiting() {
