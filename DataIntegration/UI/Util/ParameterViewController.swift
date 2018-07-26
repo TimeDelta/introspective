@@ -1,5 +1,5 @@
 //
-//  AggregationParameterViewController.swift
+//  ParameterViewController.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 7/22/18.
@@ -8,9 +8,9 @@
 
 import UIKit
 
-class AggregationParameterViewController: UIViewController, UIPopoverPresentationControllerDelegate {
+class ParameterViewController: UIViewController, UIPopoverPresentationControllerDelegate {
 
-	public var parameter: AggregationParameter!
+	public var parameter: Parameter!
 	public var parameterValue: Any!
 
 	@IBOutlet weak var parameterDescriptionButton: UIButton!
@@ -39,18 +39,18 @@ class AggregationParameterViewController: UIViewController, UIPopoverPresentatio
 		segue.destination.modalPresentationStyle = UIModalPresentationStyle.popover
 		segue.destination.popoverPresentationController!.delegate = self
 
-		if segue.destination is AggregationParameterDescriptionViewController {
-			let controller = segue.destination as! AggregationParameterDescriptionViewController
+		if segue.destination is ParameterDescriptionViewController {
+			let controller = segue.destination as! ParameterDescriptionViewController
 			controller.descriptionText = parameter.extendedDescription
-		} else if segue.destination is AggregationParameterValueViewController {
-			let controller = segue.destination as! AggregationParameterValueViewController
+		} else if segue.destination is ParameterValueViewController {
+			let controller = segue.destination as! ParameterValueViewController
 			controller.parameter = parameter
 			controller.parameterValue = String(describing: parameterValue)
 		}
 	}
 
-	@IBAction func saveAggregationParameterValue(_ segue: UIStoryboardSegue) {
-		let controller = (segue.source as! AggregationParameterValueViewController)
+	@IBAction func saveParameterValue(_ segue: UIStoryboardSegue) {
+		let controller = (segue.source as! ParameterValueViewController)
 		let valueString = controller.parameterValue!
 		parameterValue = try! parameter.convertToValue(from: valueString)
 		updateDisplay()

@@ -67,7 +67,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Choose Aggregation"/>
                                 <connections>
-                                    <segue destination="p4v-ID-4d4" kind="show" id="whN-v2-N5k"/>
+                                    <segue destination="WrQ-wj-kjv" kind="show" id="QIg-aG-eQc"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="71L-ng-zLn">
@@ -137,42 +137,13 @@
             </objects>
             <point key="canvasLocation" x="4416" y="-2458.4707646176912"/>
         </scene>
-        <!--Graph Aggregation View Controller-->
-        <scene sceneID="uuI-A2-Ulc">
+        <!--ParameterList-->
+        <scene sceneID="DCO-OQ-Vsi">
             <objects>
-                <viewController id="p4v-ID-4d4" customClass="GraphAggregationViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="JDC-ec-hoQ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rOd-yg-TdM">
-                                <rect key="frame" x="0.0" y="579" width="375" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Accept">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="accepted:" destination="p4v-ID-4d4" eventType="touchUpInside" id="Gwj-UI-yqG"/>
-                                    <segue destination="uf4-Td-bSx" kind="unwind" unwindAction="aggregationChanged:" id="ieV-bb-Fr8"/>
-                                </connections>
-                            </button>
-                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="9IR-lF-o5x">
-                                <rect key="frame" x="0.0" y="50" width="375" height="521"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </stackView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="mDP-h9-Tvg"/>
-                    </view>
-                    <connections>
-                        <outlet property="parameterStackView" destination="9IR-lF-o5x" id="rX6-5H-Xpn"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dHv-ge-kq0" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="uf4-Td-bSx" userLabel="Exit" sceneMemberID="exit"/>
+                <viewControllerPlaceholder storyboardName="ParameterList" id="WrQ-wj-kjv" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KjZ-j5-TPR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5136.8000000000002" y="-2231.3343328335832"/>
+            <point key="canvasLocation" x="4398" y="-2231"/>
         </scene>
         <!--Axis Attribute View Controller-->
         <scene sceneID="Wg0-MW-KAz">
@@ -214,148 +185,6 @@
                 <exit id="MLt-54-gZU" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="4416" y="-2012"/>
-        </scene>
-        <!--Aggregation Parameter Description View Controller-->
-        <scene sceneID="a9s-Eo-OLC">
-            <objects>
-                <viewController autoresizesArchivedViewToFullSize="NO" id="k9R-jp-Nh9" customClass="AggregationParameterDescriptionViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="la7-EJ-S2A">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="100"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="iej-pE-DXc">
-                                <rect key="frame" x="0.0" y="0.0" width="300" height="100"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="ehF-tK-DRD"/>
-                    </view>
-                    <value key="contentSizeForViewInPopover" type="size" width="300" height="100"/>
-                    <nil key="simulatedTopBarMetrics"/>
-                    <nil key="simulatedBottomBarMetrics"/>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="300" height="100"/>
-                    <connections>
-                        <outlet property="descriptionTextView" destination="iej-pE-DXc" id="nzd-qN-9lu"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="LjO-Vp-EZp" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="5894" y="-2828"/>
-        </scene>
-        <!--Aggregation Parameter View Controller-->
-        <scene sceneID="Ved-VR-nvP">
-            <objects>
-                <viewController restorationIdentifier="parameterView" storyboardIdentifier="parameterView" autoresizesArchivedViewToFullSize="NO" modalPresentationStyle="currentContext" id="mEn-RT-CPg" customClass="AggregationParameterViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="caf-Td-NeR">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DgQ-HW-eSV">
-                                <rect key="frame" x="187" y="20" width="172" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Parameter Value"/>
-                                <connections>
-                                    <segue destination="TWq-Eg-Skc" kind="popoverPresentation" popoverAnchorView="DgQ-HW-eSV" id="jzM-Fx-JLK">
-                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                    </segue>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoDark" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cHf-1A-RGs">
-                                <rect key="frame" x="16" y="25" width="22" height="22"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <connections>
-                                    <segue destination="k9R-jp-Nh9" kind="popoverPresentation" popoverAnchorView="cHf-1A-RGs" id="kCO-Hp-MJv">
-                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                    </segue>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Parameter Name:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zgU-6p-45t">
-                                <rect key="frame" x="46" y="25" width="133" height="21"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="lQe-S3-iC7"/>
-                    </view>
-                    <nil key="simulatedTopBarMetrics"/>
-                    <nil key="simulatedBottomBarMetrics"/>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="375" height="70"/>
-                    <connections>
-                        <outlet property="parameterDescriptionButton" destination="cHf-1A-RGs" id="JyI-3I-QcP"/>
-                        <outlet property="parameterNameLabel" destination="zgU-6p-45t" id="ush-pn-uJk"/>
-                        <outlet property="parameterValueButton" destination="DgQ-HW-eSV" id="kG6-c5-lHj"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="6WY-nO-xI7" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="5137" y="-2765"/>
-        </scene>
-        <!--Aggregation Parameter Value View Controller-->
-        <scene sceneID="k2t-iA-MnO">
-            <objects>
-                <viewController autoresizesArchivedViewToFullSize="NO" id="TWq-Eg-Skc" customClass="AggregationParameterValueViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Geq-ek-fZB">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="150"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jfo-qT-qyA">
-                                <rect key="frame" x="0.0" y="0.0" width="300" height="112"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                            </pickerView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="86r-cT-Nei">
-                                <rect key="frame" x="0.0" y="120" width="300" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Accept">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <segue destination="RZd-su-HPf" kind="unwind" unwindAction="saveAggregationParameterValue:" id="xk9-a6-ipx"/>
-                                </connections>
-                            </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Enter Value Here." textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="j1z-gG-p14">
-                                <rect key="frame" x="0.0" y="0.0" width="300" height="83"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oh8-As-OHU">
-                                <rect key="frame" x="0.0" y="91" width="300" height="21"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="1" green="0.058155415100000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="oU1-BW-jfB"/>
-                    </view>
-                    <value key="contentSizeForViewInPopover" type="size" width="300" height="150"/>
-                    <nil key="simulatedTopBarMetrics"/>
-                    <nil key="simulatedBottomBarMetrics"/>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="300" height="150"/>
-                    <connections>
-                        <outlet property="acceptButton" destination="86r-cT-Nei" id="ibY-PS-yLT"/>
-                        <outlet property="picker" destination="Jfo-qT-qyA" id="UtR-q2-oYJ"/>
-                        <outlet property="textView" destination="j1z-gG-p14" id="lYH-kb-m2F"/>
-                        <outlet property="validationLabel" destination="Oh8-As-OHU" id="hCG-nV-evH"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="EpW-TA-RWY" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="RZd-su-HPf" userLabel="Exit" sceneMemberID="exit"/>
-            </objects>
-            <point key="canvasLocation" x="5894" y="-2675"/>
         </scene>
     </scenes>
 </document>

@@ -8,9 +8,9 @@
 
 import UIKit
 
-class AggregationParameterValueViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextViewDelegate {
+class ParameterValueViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextViewDelegate {
 
-	public var parameter: AggregationParameter!
+	public var parameter: Parameter!
 	public var parameterValue: String!
 
 	@IBOutlet weak var picker: UIPickerView!

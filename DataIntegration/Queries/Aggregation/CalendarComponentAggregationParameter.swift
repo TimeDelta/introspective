@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class CalendarComponentAggregationParameter: AggregationParameter {
+public class CalendarComponentAggregationParameter: Parameter {
 
 	fileprivate typealias Me = CalendarComponentAggregationParameter
 

@@ -114,10 +114,15 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 				controller.selectedAttribute = yAxisAttribute
 			}
 			controller.attributes = Attribute.attributesFor(dataType: dataType)
-		} else if segue.destination is GraphAggregationViewController {
-			let controller = segue.destination as! GraphAggregationViewController
-			controller.aggregationAttribute = xAxisAttribute
-			controller.aggregator = aggregator
+		} else if segue.destination is ParameterizedChooserViewController {
+			let controller = segue.destination as! ParameterizedChooserViewController
+			var possibleAggregators: [Aggregator]
+			switch (xAxisAttribute.type) {
+				case .date: possibleAggregators = [DateAggregator()]; break
+				case .quantity: possibleAggregators = []; break
+				case .string: possibleAggregators = []; break
+			}
+			controller.possibleValues = possibleAggregators
 		}
     }
 
@@ -145,8 +150,8 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 	}
 
 	@IBAction func aggregationChanged(_ segue: UIStoryboardSegue) {
-		let controller = segue.source as! GraphAggregationViewController
-		aggregator = controller.aggregator
+		let controller = segue.source as! ParameterizedChooserViewController
+		aggregator = (controller.currentValue as! Aggregator)
 		aggregationButton.setTitle(aggregator.description, for: .normal)
 	}
 

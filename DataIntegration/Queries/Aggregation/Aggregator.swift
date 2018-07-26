@@ -14,13 +14,7 @@ public enum AggregationError: Error {
 	case unknownParameter
 }
 
-public protocol Aggregator: CustomStringConvertible {
-
-	static var parameters: [AggregationParameter] { get }
-
-	init()
+public protocol Aggregator: Parameterized {
 
 	func aggregate(samples: [Sample]) throws -> [(Aggregatable, [Sample])]
-	func get(parameter: AggregationParameter) throws -> String
-	func set(parameter: AggregationParameter, to value: Any) throws
 }

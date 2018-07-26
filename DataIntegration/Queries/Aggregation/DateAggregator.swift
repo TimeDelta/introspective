@@ -16,7 +16,8 @@ public class DateAggregator: NSObject, Aggregator {
 		name: "Time Unit",
 		description: "Combine all samples within the same _")
 
-	public static let parameters: [AggregationParameter] = [
+	public static let name = "Per time unit"
+	public static let parameters: [Parameter] = [
 		timeUnitParam,
 	]
 
@@ -32,7 +33,7 @@ public class DateAggregator: NSObject, Aggregator {
 		return []
 	}
 
-	public func get(parameter: AggregationParameter) throws -> String {
+	public func get(parameter: Parameter) throws -> String {
 		if parameter.name == Me.timeUnitParam.name {
 			return timeUnit.description
 		} else {
@@ -40,7 +41,7 @@ public class DateAggregator: NSObject, Aggregator {
 		}
 	}
 
-	public func set(parameter: AggregationParameter, to value: Any) throws {
+	public func set(parameter: Parameter, to value: Any) throws {
 		if parameter.name == Me.timeUnitParam.name {
 			guard let castedValue = value as? Calendar.Component else { throw AggregationError.typeMismatch }
 			timeUnit = castedValue

@@ -1,5 +1,5 @@
 //
-//  AggregationParameterDescriptionViewController.swift
+//  ParameterDescriptionViewController.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 7/22/18.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AggregationParameterDescriptionViewController: UIViewController {
+class ParameterDescriptionViewController: UIViewController {
 
 	public var descriptionText: String!
 
