@@ -45,14 +45,13 @@ class ParameterViewController: UIViewController, UIPopoverPresentationController
 		} else if segue.destination is ParameterValueViewController {
 			let controller = segue.destination as! ParameterValueViewController
 			controller.parameter = parameter
-			controller.parameterValue = String(describing: parameterValue)
+			controller.parameterValue = parameterValue
 		}
 	}
 
 	@IBAction func saveParameterValue(_ segue: UIStoryboardSegue) {
 		let controller = (segue.source as! ParameterValueViewController)
-		let valueString = controller.parameterValue!
-		parameterValue = try! parameter.convertToValue(from: valueString)
+		parameterValue = controller.parameterValue!
 		updateDisplay()
 	}
 
@@ -60,7 +59,11 @@ class ParameterViewController: UIViewController, UIPopoverPresentationController
 		if parameterValue == nil {
 			parameterValueButton.setTitle("Set value", for: .normal)
 		} else {
-			parameterValueButton.setTitle(String(describing: parameterValue!), for: .normal)
+			var parameterValueDescription = try! parameter.convertToDisplayableString(from: parameterValue)
+			if parameterValueDescription.isEmpty {
+				parameterValueDescription = "Set value"
+			}
+			parameterValueButton.setTitle(parameterValueDescription, for: .normal)
 		}
 	}
 }

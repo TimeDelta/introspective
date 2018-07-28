@@ -20,4 +20,5 @@ class FunctionalTestInjectionProvider: InjectionProvider {
 	public var utilFactory: UtilFactory { get { return productionInjectionProvider.utilFactory } }
 	public var restrictionParserFactory: RestrictionParserFactory { get { return productionInjectionProvider.restrictionParserFactory } }
 	public var subQueryMatcherFactory: SubQueryMatcherFactory { get { return productionInjectionProvider.subQueryMatcherFactory } }
+	public var timeConstraintFactory: TimeConstraintFactory { get { return productionInjectionProvider.timeConstraintFactory } }
 }

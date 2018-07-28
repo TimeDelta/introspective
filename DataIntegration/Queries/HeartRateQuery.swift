@@ -11,13 +11,9 @@ import HealthKit
 
 public class HeartRateQuery: SampleQuery<HeartRate> {
 
-	public enum ErrorTypes: Error {
-		case Unauthorized
-		case NoSamplesFound
-	}
-
 	override func run() {
-		let predicate = HKQuery.predicateForSamples(withStart: nil, end: nil, options: [])
+		let dateConstraints = DependencyInjector.util.timeConstraintUtil.getMostRestrictiveStartAndEndDates(from: timeConstraints)
+		let predicate = HKQuery.predicateForSamples(withStart: dateConstraints.start, end: dateConstraints.end, options: [])
 
 		DependencyInjector.querier.heartRateQuerier.getAuthorization {
 			(error: Error?) in
@@ -35,15 +31,13 @@ public class HeartRateQuery: SampleQuery<HeartRate> {
 					return
 				}
 				if originalSamples == nil || originalSamples!.count == 0 {
-					self.queryDone(nil, ErrorTypes.NoSamplesFound)
+					self.queryDone(nil, NoSamplesFoundQueryError(dataType: .heartRate))
 					return
 				}
 
 				let samples = originalSamples!.map({ (sample: HKQuantitySample) -> HeartRate in
 					return HeartRate(sample)
-				}).filter({ (sample: HeartRate) in
-					return self.matchesAttributeRestrictionCriteria(sample) && DependencyInjector.util.timeConstraintUtil.sample(sample, meets: self.timeConstraints)
-				})
+				}).filter(self.samplePassesFilters)
 
 				let result = SampleQueryResult<HeartRate>(samples)
 				result.addExtraInformation(AverageInformation<HeartRate>(.heartRate))
@@ -55,6 +49,20 @@ public class HeartRateQuery: SampleQuery<HeartRate> {
 				self.queryDone(result, nil)
 			}
 		}
+	}
+
+	fileprivate func samplePassesFilters(_ heartRate: HeartRate) -> Bool {
+		if !self.matchesAttributeRestrictionCriteria(heartRate) {
+			return false
+		}
+
+		for timeConstraint in self.timeConstraints {
+			if !timeConstraint.sampleAdheres(heartRate) {
+				return false
+			}
+		}
+
+		return true
 	}
 
 	fileprivate func matchesAttributeRestrictionCriteria(_ sample: HeartRate) -> Bool {

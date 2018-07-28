@@ -10,7 +10,7 @@ import Foundation
 
 public class SampleQuery<SampleType: Sample>: TypedQuery {
 
-	public var timeConstraints: Set<TimeConstraint>
+	public var timeConstraints: [TimeConstraint]
 	public var attributeRestrictions: [AttributeRestriction]
 	public var mostRecentEntryOnly: Bool
 	public let numberOfDatesPerSample: Int = 2
@@ -22,7 +22,7 @@ public class SampleQuery<SampleType: Sample>: TypedQuery {
 	fileprivate var queryCallbackParameters: (result: SampleQueryResult<SampleType>?, error: Error?)? = nil
 
 	public init() {
-		timeConstraints = Set<TimeConstraint>()
+		timeConstraints = [TimeConstraint]()
 		attributeRestrictions = [AttributeRestriction]()
 		mostRecentEntryOnly = false
 	}

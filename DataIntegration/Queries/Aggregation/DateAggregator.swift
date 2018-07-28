@@ -12,11 +12,11 @@ public class DateAggregator: NSObject, Aggregator {
 
 	fileprivate typealias Me = DateAggregator
 
-	fileprivate static let timeUnitParam = CalendarComponentAggregationParameter(
+	public static let name = "Per time unit"
+
+	public static let timeUnitParam = CalendarComponentParameter(
 		name: "Time Unit",
 		description: "Combine all samples within the same _")
-
-	public static let name = "Per time unit"
 	public static let parameters: [Parameter] = [
 		timeUnitParam,
 	]
@@ -33,20 +33,18 @@ public class DateAggregator: NSObject, Aggregator {
 		return []
 	}
 
-	public func get(parameter: Parameter) throws -> String {
+	public func get(parameter: Parameter) throws -> Any {
 		if parameter.name == Me.timeUnitParam.name {
-			return timeUnit.description
-		} else {
-			throw AggregationError.unknownParameter
+			return timeUnit
 		}
+		throw ParameterError.unknownParameter
 	}
 
 	public func set(parameter: Parameter, to value: Any) throws {
-		if parameter.name == Me.timeUnitParam.name {
-			guard let castedValue = value as? Calendar.Component else { throw AggregationError.typeMismatch }
-			timeUnit = castedValue
-		} else {
-			throw AggregationError.unknownParameter
+		if parameter.name != Me.timeUnitParam.name {
+			throw ParameterError.unknownParameter
 		}
+		guard let castedValue = value as? Calendar.Component else { throw ParameterError.typeMismatch }
+		timeUnit = castedValue
 	}
 }

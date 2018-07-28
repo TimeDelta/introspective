@@ -19,7 +19,7 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 
 	public var extraInformation: [ExtraInformation]! {
 		didSet {
-			if extraInformation != nil && samples != nil {
+			if error == nil && extraInformation != nil && samples != nil {
 				viewIsReady()
 			}
 		}
@@ -28,7 +28,7 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 
 	public var samples: [Sample]! {
 		didSet {
-			if extraInformation != nil && samples != nil  {
+			if error == nil && extraInformation != nil && samples != nil  {
 				viewIsReady()
 			}
 		}
@@ -64,6 +64,14 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+		if error != nil {
+			if section == 1 {
+				return 1
+			}
+			return 0
+		}
+
 		if waiting() {
 			return 1
 		}
@@ -86,7 +94,11 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 
 		if error != nil {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "errorCell", for: indexPath)
-			cell.textLabel!.text = error!.localizedDescription
+			var errorText = error!.localizedDescription
+			if error is DisplayableError {
+				errorText = (error as! DisplayableError).displayableDescription
+			}
+			cell.textLabel!.text = errorText
 			return cell
 		}
 

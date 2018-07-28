@@ -11,8 +11,9 @@ import os
 
 class ParameterizedChooserViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 
-	public var possibleValues: [Parameterized]!
+	public var possibleValues: [Parameterized.Type]!
 	public var currentValue: Parameterized!
+	public var notificationToSendWhenAccepted: Notification.Name!
 
 	@IBOutlet weak var valuePicker: UIPickerView!
 	@IBOutlet weak var parameterStackView: UIStackView!
@@ -20,22 +21,22 @@ class ParameterizedChooserViewController: UIViewController, UIPickerViewDelegate
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		valuePicker.delegate = self
+		valuePicker.dataSource = self
+
 		if currentValue == nil {
-			currentValue = possibleValues![0]
+			currentValue = possibleValues[0].init()
 			valuePicker.selectRow(0, inComponent: 0, animated: false)
 		} else {
 			var index = 0
 			for value in possibleValues {
-				if type(of: value).name == type(of: currentValue).name {
+				if value.name == type(of: currentValue).name {
 					valuePicker.selectRow(index, inComponent: 0, animated: false)
 					break
 				}
 				index += 1
 			}
 		}
-
-		valuePicker.delegate = self
-		valuePicker.dataSource = self
 
 		populateParameters()
 	}
@@ -49,11 +50,11 @@ class ParameterizedChooserViewController: UIViewController, UIPickerViewDelegate
 	}
 
 	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return type(of: possibleValues[row]).name
+		return possibleValues[row].name
 	}
 
 	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-		currentValue = possibleValues[row]
+		currentValue = possibleValues[row].init()
 		resetParameters()
 		populateParameters()
 	}
@@ -66,6 +67,8 @@ class ParameterizedChooserViewController: UIViewController, UIPickerViewDelegate
 			let parameterValue = controller.parameterValue!
 			try! currentValue.set(parameter: parameter, to: parameterValue)
 		}
+		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: currentValue, userInfo: nil)
+		_ = navigationController?.popViewController(animated: true)
 	}
 
 	fileprivate func resetParameters() {
@@ -78,52 +81,10 @@ class ParameterizedChooserViewController: UIViewController, UIPickerViewDelegate
 		for parameter in type(of: currentValue).parameters {
 			let controller = UIStoryboard(name: "ParameterList", bundle: nil).instantiateViewController(withIdentifier: "parameterView") as! ParameterViewController
 			controller.parameter = parameter
+			controller.parameterValue = try! currentValue.get(parameter: parameter)
 			let containerView: ContainerView<ParameterViewController> = ContainerView(parentController: self)
 			containerView.install(controller)
 			parameterStackView.addArrangedSubview(containerView)
-		}
-	}
-}
-
-class ContainerView<T: UIViewController>: UIView {
-
-	unowned var parentController: UIViewController
-	weak var currentController: T?
-
-	init(parentController: UIViewController) {
-		self.parentController = parentController
-		super.init(frame: CGRect.zero)
-	}
-
-	required init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-
-	func install(_ controller: T) {
-		removeCurrentController()
-		currentController = controller
-		setUpViewController(controller, animated: false)
-	}
-
-	func uninstall() {
-		removeCurrentController()
-	}
-
-	fileprivate func setUpViewController(_ targetController: T?, animated: Bool) {
-		if let controller = targetController {
-			parentController.addChild(controller)
-			controller.view.frame = self.bounds
-			self.addSubview(controller.view)
-			controller.didMove(toParent: parentController)
-		}
-	}
-
-	fileprivate func removeCurrentController() {
-		if let _viewController = currentController {
-			_viewController.willMove(toParent: nil)
-			_viewController.view.removeFromSuperview()
-			_viewController.removeFromParent()
-			currentController = nil
 		}
 	}
 }

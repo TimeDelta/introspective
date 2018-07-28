@@ -8,12 +8,6 @@
 
 import Foundation
 
-public enum AggregationError: Error {
-	case typeMismatch
-	case unsupportedValue
-	case unknownParameter
-}
-
 public protocol Aggregator: Parameterized {
 
 	func aggregate(samples: [Sample]) throws -> [(Aggregatable, [Sample])]

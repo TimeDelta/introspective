@@ -19,6 +19,7 @@ class ProductionInjectionProvider: InjectionProvider {
 	fileprivate static let realUtilFactory = UtilFactory()
 	fileprivate static let realRestrictionParserFactory = RestrictionParserFactory()
 	fileprivate static let realSubQueryMatcherFactory = SubQueryMatcherFactory()
+	fileprivate static let realTimeConstraintFactory = TimeConstraintFactory()
 
 	var queryFactory: QueryFactory { get { return Me.realQueryFactory } }
 	var querierFactory: QuerierFactory { get { return Me.realQuerierFactory } }
@@ -27,4 +28,5 @@ class ProductionInjectionProvider: InjectionProvider {
 	var utilFactory: UtilFactory { get { return Me.realUtilFactory } }
 	var restrictionParserFactory: RestrictionParserFactory { get { return Me.realRestrictionParserFactory } }
 	var subQueryMatcherFactory: SubQueryMatcherFactory { get { return Me.realSubQueryMatcherFactory } }
+	var timeConstraintFactory: TimeConstraintFactory { get { return Me.realTimeConstraintFactory } }
 }

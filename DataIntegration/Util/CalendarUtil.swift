@@ -11,6 +11,10 @@ import SwiftDate
 
 public class CalendarUtil: NSObject {
 
+	fileprivate typealias Me = CalendarUtil
+
+	public static let defaultDateFormat = "MMMM dd YYYY 'at' HH:mm:ss"
+
 	/// Set all components of the specified date less than the specified component to the minimum value for that component.
 	/// - Parameter toBeginningOf: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
 	public func start(of component: Calendar.Component, in date: Date) -> Date {
@@ -29,7 +33,7 @@ public class CalendarUtil: NSObject {
 		return end.date
 	}
 
-	public func string(for date: Date, inFormat format: String = "YYYY-MM-dd HH:mm:ss") -> String {
+	public func string(for date: Date, inFormat format: String = Me.defaultDateFormat) -> String {
 		let calendar = Calendar.autoupdatingCurrent
 		let dateInRegion = DateInRegion(date, region: Region(calendar: calendar, zone: calendar.timeZone))
 		return dateInRegion.toFormat(format)
@@ -52,9 +56,34 @@ public class CalendarUtil: NSObject {
 			return .orderedSame
 		}
 	}
+
+	public func date<CollectionType: Collection>(_ date: Date, isOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek {
+		let calendar = Calendar.current
+		let dayOfWeekIntForDate = calendar.component(.weekday, from: date)
+		let dayOfWeekForDate = DayOfWeek.fromInt(dayOfWeekIntForDate)
+		return daysOfWeek.contains(dayOfWeekForDate)
+	}
+
+	public func date(_ date: Date, isA dayOfWeek: DayOfWeek) -> Bool {
+		let calendar = Calendar.current
+		let dayOfWeekIntForDate = calendar.component(.weekday, from: date)
+		let dayOfWeekForDate = DayOfWeek.fromInt(dayOfWeekIntForDate)
+		return dayOfWeekForDate == dayOfWeek
+	}
+
+	public func date(from dateStr: String, format: String = Me.defaultDateFormat) -> Date? {
+		let calendar = Calendar.autoupdatingCurrent
+		let region = Region(calendar: calendar, zone: calendar.timeZone)
+		return Date(dateStr, format: format, region: region)
+	}
 }
 
 extension Calendar.Component: CustomStringConvertible {
+
+	public enum Errors: Error {
+		case unkownComponentName
+	}
+
 	public var description: String {
 		switch (self) {
 			case .calendar: return "Calendar"
@@ -73,6 +102,28 @@ extension Calendar.Component: CustomStringConvertible {
 			case .minute: return "Minute"
 			case .second: return "Second"
 			case .nanosecond: return "Nanosecond"
+		}
+	}
+
+	public static func from(string: String) throws -> Calendar.Component {
+		switch (string.lowercased()) {
+			case "calendar": return .calendar
+			case "era": return .era
+			case "year": return .year
+			case "year for week of year": return .yearForWeekOfYear
+			case "quarter": return .quarter
+			case "month": return .month
+			case "week of month": return .weekOfMonth
+			case "week": return .weekOfYear
+			case "weekday": return .weekday
+			case "weekday ordinal": return .weekdayOrdinal
+			case "timezone": return .timeZone
+			case "day": return .day
+			case "hour": return .hour
+			case "minute": return .minute
+			case "second": return .second
+			case "nanosecond": return .nanosecond
+			default: throw Errors.unkownComponentName
 		}
 	}
 }

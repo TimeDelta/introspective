@@ -15,10 +15,8 @@
 		A2092D8D20F1313200A182AA /* RestrictionParserFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2092D8C20F1313200A182AA /* RestrictionParserFactory.swift */; };
 		A2092D8F20F1345200A182AA /* FactoryMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2092D8E20F1345200A182AA /* FactoryMocks.swift */; };
 		A20A5A7720F2635900EADEC5 /* AttributeRestrictionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A5A7620F2635900EADEC5 /* AttributeRestrictionTableViewCell.swift */; };
-		A20A5A7920F2CE3600EADEC5 /* EditTimeConstraintViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A5A7820F2CE3600EADEC5 /* EditTimeConstraintViewController.swift */; };
 		A20A5A7A20F403C300EADEC5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2ABEA3320E53C0900142C00 /* Assets.xcassets */; };
 		A20A5A7B20F403C600EADEC5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2ABEA3320E53C0900142C00 /* Assets.xcassets */; };
-		A20A5A7F20F4162200EADEC5 /* DaysOfWeekChooser.xib in Resources */ = {isa = PBXBuildFile; fileRef = A20A5A7E20F4162200EADEC5 /* DaysOfWeekChooser.xib */; };
 		A21780EB20E9796700A8F9BA /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21780EA20E9796700A8F9BA /* DateExtension.swift */; };
 		A21780F020E9ACD800A8F9BA /* TextNormalizationUtilUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilUnitTests.swift */; };
 		A217810720EBA25300A8F9BA /* ReturnType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A217810620EBA25300A8F9BA /* ReturnType.swift */; };
@@ -78,10 +76,38 @@
 		A255D53C20E5697B00BDD57B /* questionLabelsTrainingData.txt in Resources */ = {isa = PBXBuildFile; fileRef = A255D53A20E5697B00BDD57B /* questionLabelsTrainingData.txt */; };
 		A255D54620E5A9D600BDD57B /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A255D54520E5A9D600BDD57B /* HealthKit.framework */; };
 		A255D54820E5AAC600BDD57B /* UnitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A255D54720E5AAC600BDD57B /* UnitTest.swift */; };
+		A2769F27210BE6E700261C98 /* ParameterValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F26210BE6E700261C98 /* ParameterValueViewController.swift */; };
+		A2769F29210BF18500261C98 /* DateParameterBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F28210BF18500261C98 /* DateParameterBase.swift */; };
+		A2769F2B210BF1D900261C98 /* DateOnlyParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F2A210BF1D900261C98 /* DateOnlyParameter.swift */; };
+		A2769F2D210BF25D00261C98 /* DateTimeParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F2C210BF25D00261C98 /* DateTimeParameter.swift */; };
+		A2769F2F210C99EE00261C98 /* StartsBeforeDateOnlyTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F2E210C99EE00261C98 /* StartsBeforeDateOnlyTimeConstraint.swift */; };
+		A2769F31210C9A2B00261C98 /* StartsAfterDateOnlyTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F30210C9A2B00261C98 /* StartsAfterDateOnlyTimeConstraint.swift */; };
+		A2769F33210C9B2600261C98 /* EndsAfterDateOnlyTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F32210C9B2600261C98 /* EndsAfterDateOnlyTimeConstraint.swift */; };
+		A2769F35210C9BE400261C98 /* EndsBeforeDateOnlyTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F34210C9BE400261C98 /* EndsBeforeDateOnlyTimeConstraint.swift */; };
+		A2769F39210CD73A00261C98 /* QueryError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F38210CD73A00261C98 /* QueryError.swift */; };
+		A2769F3B210CD8D500261C98 /* DisplayableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F3A210CD8D500261C98 /* DisplayableError.swift */; };
 		A28F9D702107DD0F0066579D /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D6F2107DD0F0066579D /* BalloonMarker.swift */; };
 		A28F9D76210A6C410066579D /* Parameterized.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D75210A6C410066579D /* Parameterized.swift */; };
 		A28F9D78210A6CE60066579D /* Parameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D77210A6CE60066579D /* Parameter.swift */; };
 		A28F9D7A210A6E8C0066579D /* ParameterList.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A28F9D79210A6E8C0066579D /* ParameterList.storyboard */; };
+		A28F9D7D210A7FE20066579D /* StartsAfterTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D7C210A7FE20066579D /* StartsAfterTimeConstraint.swift */; };
+		A28F9D7F210A80910066579D /* DateParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D7E210A80910066579D /* DateParameter.swift */; };
+		A28F9D81210B88790066579D /* StartsBeforeTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D80210B88790066579D /* StartsBeforeTimeConstraint.swift */; };
+		A28F9D83210B89520066579D /* EndsBeforeTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D82210B89520066579D /* EndsBeforeTimeConstraint.swift */; };
+		A28F9D85210B89C70066579D /* EndsAfterTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D84210B89C70066579D /* EndsAfterTimeConstraint.swift */; };
+		A28F9D87210B8A070066579D /* StartsOnDayOfWeekTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D86210B8A070066579D /* StartsOnDayOfWeekTimeConstraint.swift */; };
+		A28F9D89210B8A4D0066579D /* DaysOfWeekParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D88210B8A4D0066579D /* DaysOfWeekParameter.swift */; };
+		A28F9D8B210B8B360066579D /* MultiSelectSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D8A210B8B360066579D /* MultiSelectSegmentedControl.swift */; };
+		A28F9D8D210B8F780066579D /* DayOfWeekParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D8C210B8F780066579D /* DayOfWeekParameter.swift */; };
+		A28F9D8F210B907A0066579D /* StartsOnDateTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D8E210B907A0066579D /* StartsOnDateTimeConstraint.swift */; };
+		A28F9D91210B91340066579D /* EndsOnDateTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D90210B91340066579D /* EndsOnDateTimeConstraint.swift */; };
+		A28F9D93210B931F0066579D /* TimeConstraintFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D92210B931F0066579D /* TimeConstraintFactory.swift */; };
+		A28F9D95210B94350066579D /* EndsOnDayOfWeekTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D94210B94350066579D /* EndsOnDayOfWeekTimeConstraint.swift */; };
+		A28F9D99210BCE240066579D /* MultiSelectParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D98210BCE240066579D /* MultiSelectParameter.swift */; };
+		A28F9D9B210BCEB10066579D /* SelectParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D9A210BCEB10066579D /* SelectParameter.swift */; };
+		A28F9D9D210BCEF00066579D /* SelectOneParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D9C210BCEF00066579D /* SelectOneParameter.swift */; };
+		A28F9D9F210BDAD40066579D /* TextFieldParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D9E210BDAD40066579D /* TextFieldParameter.swift */; };
+		A28F9DA3210BE63E0066579D /* ContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9DA2210BE63E0066579D /* ContainerView.swift */; };
 		A290534520FFF34C00191A34 /* EditSubDataTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A290534420FFF34C00191A34 /* EditSubDataTypeViewController.swift */; };
 		A29053472101106100191A34 /* SubDataTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29053462101106100191A34 /* SubDataTypeTableViewCell.swift */; };
 		A29053492101233600191A34 /* StringUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29053482101233600191A34 /* StringUtil.swift */; };
@@ -108,10 +134,9 @@
 		A2DCAC1E2104D368003F91AD /* Aggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC1D2104D368003F91AD /* Aggregator.swift */; };
 		A2DCAC212104D67F003F91AD /* DateAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC202104D67F003F91AD /* DateAggregator.swift */; };
 		A2DCAC232104D87C003F91AD /* Aggregatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC222104D87C003F91AD /* Aggregatable.swift */; };
-		A2DCAC272104EC81003F91AD /* CalendarComponentAggregationParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC262104EC81003F91AD /* CalendarComponentAggregationParameter.swift */; };
+		A2DCAC272104EC81003F91AD /* CalendarComponentParameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC262104EC81003F91AD /* CalendarComponentParameter.swift */; };
 		A2DCAC292104FAEB003F91AD /* ParameterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC282104FAEB003F91AD /* ParameterViewController.swift */; };
 		A2DCAC2B2104FDF7003F91AD /* ParameterDescriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC2A2104FDF7003F91AD /* ParameterDescriptionViewController.swift */; };
-		A2DCAC2D210500E7003F91AD /* ParameterValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC2C210500E7003F91AD /* ParameterValueViewController.swift */; };
 		A2DCAC3021078D4F003F91AD /* LineChart.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A2DCAC2F21078D4F003F91AD /* LineChart.storyboard */; };
 		A2DCAC3221078DDD003F91AD /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC3121078DDD003F91AD /* ChartViewController.swift */; };
 		A2DCAC3421078DF4003F91AD /* LineChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC3321078DF4003F91AD /* LineChartViewController.swift */; };
@@ -125,7 +150,6 @@
 		A2E4E8AA20E5589F00631398 /* FunctionalTestInjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E8A920E5589F00631398 /* FunctionalTestInjectionProvider.swift */; };
 		A2E4E8AC20E559A600631398 /* QuerierFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E8AB20E559A600631398 /* QuerierFactory.swift */; };
 		A2E4E8AE20E55AE400631398 /* QueryFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E4E8AD20E55AE400631398 /* QueryFactory.swift */; };
-		A2E50A2A20F4CEB500C89DE3 /* DaysOfWeekChooserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E50A2920F4CEB400C89DE3 /* DaysOfWeekChooserViewController.swift */; };
 		A2E50A2C20F548AB00C89DE3 /* EditAttributeRestrictionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E50A2B20F548AB00C89DE3 /* EditAttributeRestrictionViewController.swift */; };
 		A2E50A2E20F555CC00C89DE3 /* EditOperationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E50A2D20F555CC00C89DE3 /* EditOperationViewController.swift */; };
 		A2E50A3020F99A6100C89DE3 /* HeartRateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E50A2F20F99A6100C89DE3 /* HeartRateTableViewCell.swift */; };
@@ -181,8 +205,6 @@
 		A2092D8C20F1313200A182AA /* RestrictionParserFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictionParserFactory.swift; sourceTree = "<group>"; };
 		A2092D8E20F1345200A182AA /* FactoryMocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FactoryMocks.swift; sourceTree = "<group>"; };
 		A20A5A7620F2635900EADEC5 /* AttributeRestrictionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeRestrictionTableViewCell.swift; sourceTree = "<group>"; };
-		A20A5A7820F2CE3600EADEC5 /* EditTimeConstraintViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTimeConstraintViewController.swift; sourceTree = "<group>"; };
-		A20A5A7E20F4162200EADEC5 /* DaysOfWeekChooser.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DaysOfWeekChooser.xib; sourceTree = "<group>"; };
 		A21780EA20E9796700A8F9BA /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		A21780EF20E9ACD800A8F9BA /* TextNormalizationUtilUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNormalizationUtilUnitTests.swift; sourceTree = "<group>"; };
 		A217810620EBA25300A8F9BA /* ReturnType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnType.swift; sourceTree = "<group>"; };
@@ -244,10 +266,38 @@
 		A255D54120E5A84700BDD57B /* DataIntegration.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = DataIntegration.entitlements; sourceTree = "<group>"; };
 		A255D54520E5A9D600BDD57B /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		A255D54720E5AAC600BDD57B /* UnitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitTest.swift; sourceTree = "<group>"; };
+		A2769F26210BE6E700261C98 /* ParameterValueViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParameterValueViewController.swift; sourceTree = "<group>"; };
+		A2769F28210BF18500261C98 /* DateParameterBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParameterBase.swift; sourceTree = "<group>"; };
+		A2769F2A210BF1D900261C98 /* DateOnlyParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOnlyParameter.swift; sourceTree = "<group>"; };
+		A2769F2C210BF25D00261C98 /* DateTimeParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTimeParameter.swift; sourceTree = "<group>"; };
+		A2769F2E210C99EE00261C98 /* StartsBeforeDateOnlyTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartsBeforeDateOnlyTimeConstraint.swift; sourceTree = "<group>"; };
+		A2769F30210C9A2B00261C98 /* StartsAfterDateOnlyTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartsAfterDateOnlyTimeConstraint.swift; sourceTree = "<group>"; };
+		A2769F32210C9B2600261C98 /* EndsAfterDateOnlyTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndsAfterDateOnlyTimeConstraint.swift; sourceTree = "<group>"; };
+		A2769F34210C9BE400261C98 /* EndsBeforeDateOnlyTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndsBeforeDateOnlyTimeConstraint.swift; sourceTree = "<group>"; };
+		A2769F38210CD73A00261C98 /* QueryError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryError.swift; sourceTree = "<group>"; };
+		A2769F3A210CD8D500261C98 /* DisplayableError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayableError.swift; sourceTree = "<group>"; };
 		A28F9D6F2107DD0F0066579D /* BalloonMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
 		A28F9D75210A6C410066579D /* Parameterized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parameterized.swift; sourceTree = "<group>"; };
 		A28F9D77210A6CE60066579D /* Parameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parameter.swift; sourceTree = "<group>"; };
 		A28F9D79210A6E8C0066579D /* ParameterList.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ParameterList.storyboard; sourceTree = "<group>"; };
+		A28F9D7C210A7FE20066579D /* StartsAfterTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartsAfterTimeConstraint.swift; sourceTree = "<group>"; };
+		A28F9D7E210A80910066579D /* DateParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParameter.swift; sourceTree = "<group>"; };
+		A28F9D80210B88790066579D /* StartsBeforeTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartsBeforeTimeConstraint.swift; sourceTree = "<group>"; };
+		A28F9D82210B89520066579D /* EndsBeforeTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndsBeforeTimeConstraint.swift; sourceTree = "<group>"; };
+		A28F9D84210B89C70066579D /* EndsAfterTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndsAfterTimeConstraint.swift; sourceTree = "<group>"; };
+		A28F9D86210B8A070066579D /* StartsOnDayOfWeekTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartsOnDayOfWeekTimeConstraint.swift; sourceTree = "<group>"; };
+		A28F9D88210B8A4D0066579D /* DaysOfWeekParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaysOfWeekParameter.swift; sourceTree = "<group>"; };
+		A28F9D8A210B8B360066579D /* MultiSelectSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSelectSegmentedControl.swift; sourceTree = "<group>"; };
+		A28F9D8C210B8F780066579D /* DayOfWeekParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeekParameter.swift; sourceTree = "<group>"; };
+		A28F9D8E210B907A0066579D /* StartsOnDateTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartsOnDateTimeConstraint.swift; sourceTree = "<group>"; };
+		A28F9D90210B91340066579D /* EndsOnDateTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndsOnDateTimeConstraint.swift; sourceTree = "<group>"; };
+		A28F9D92210B931F0066579D /* TimeConstraintFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeConstraintFactory.swift; sourceTree = "<group>"; };
+		A28F9D94210B94350066579D /* EndsOnDayOfWeekTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndsOnDayOfWeekTimeConstraint.swift; sourceTree = "<group>"; };
+		A28F9D98210BCE240066579D /* MultiSelectParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSelectParameter.swift; sourceTree = "<group>"; };
+		A28F9D9A210BCEB10066579D /* SelectParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectParameter.swift; sourceTree = "<group>"; };
+		A28F9D9C210BCEF00066579D /* SelectOneParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectOneParameter.swift; sourceTree = "<group>"; };
+		A28F9D9E210BDAD40066579D /* TextFieldParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldParameter.swift; sourceTree = "<group>"; };
+		A28F9DA2210BE63E0066579D /* ContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerView.swift; sourceTree = "<group>"; };
 		A290534420FFF34C00191A34 /* EditSubDataTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSubDataTypeViewController.swift; sourceTree = "<group>"; };
 		A29053462101106100191A34 /* SubDataTypeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubDataTypeTableViewCell.swift; sourceTree = "<group>"; };
 		A29053482101233600191A34 /* StringUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringUtil.swift; sourceTree = "<group>"; };
@@ -279,10 +329,9 @@
 		A2DCAC1D2104D368003F91AD /* Aggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aggregator.swift; sourceTree = "<group>"; };
 		A2DCAC202104D67F003F91AD /* DateAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateAggregator.swift; sourceTree = "<group>"; };
 		A2DCAC222104D87C003F91AD /* Aggregatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aggregatable.swift; sourceTree = "<group>"; };
-		A2DCAC262104EC81003F91AD /* CalendarComponentAggregationParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarComponentAggregationParameter.swift; sourceTree = "<group>"; };
+		A2DCAC262104EC81003F91AD /* CalendarComponentParameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarComponentParameter.swift; sourceTree = "<group>"; };
 		A2DCAC282104FAEB003F91AD /* ParameterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterViewController.swift; sourceTree = "<group>"; };
 		A2DCAC2A2104FDF7003F91AD /* ParameterDescriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterDescriptionViewController.swift; sourceTree = "<group>"; };
-		A2DCAC2C210500E7003F91AD /* ParameterValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParameterValueViewController.swift; sourceTree = "<group>"; };
 		A2DCAC2F21078D4F003F91AD /* LineChart.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LineChart.storyboard; sourceTree = "<group>"; };
 		A2DCAC3121078DDD003F91AD /* ChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
 		A2DCAC3321078DF4003F91AD /* LineChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineChartViewController.swift; sourceTree = "<group>"; };
@@ -296,7 +345,6 @@
 		A2E4E8A920E5589F00631398 /* FunctionalTestInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionalTestInjectionProvider.swift; sourceTree = "<group>"; };
 		A2E4E8AB20E559A600631398 /* QuerierFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuerierFactory.swift; sourceTree = "<group>"; };
 		A2E4E8AD20E55AE400631398 /* QueryFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryFactory.swift; sourceTree = "<group>"; };
-		A2E50A2920F4CEB400C89DE3 /* DaysOfWeekChooserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DaysOfWeekChooserViewController.swift; sourceTree = "<group>"; };
 		A2E50A2B20F548AB00C89DE3 /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A2E50A2D20F555CC00C89DE3 /* EditOperationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditOperationViewController.swift; sourceTree = "<group>"; };
 		A2E50A2F20F99A6100C89DE3 /* HeartRateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateTableViewCell.swift; sourceTree = "<group>"; };
@@ -352,14 +400,10 @@
 		A20A5A7D20F415F400EADEC5 /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				A2E50A2920F4CEB400C89DE3 /* DaysOfWeekChooserViewController.swift */,
-				A20A5A7E20F4162200EADEC5 /* DaysOfWeekChooser.xib */,
+				A28F9DA4210BE6640066579D /* Parameters */,
 				A28F9D6F2107DD0F0066579D /* BalloonMarker.swift */,
-				A28F9D79210A6E8C0066579D /* ParameterList.storyboard */,
-				A2DCAC1B2104CFAC003F91AD /* ParameterizedChooserViewController.swift */,
-				A2DCAC282104FAEB003F91AD /* ParameterViewController.swift */,
-				A2DCAC2A2104FDF7003F91AD /* ParameterDescriptionViewController.swift */,
-				A2DCAC2C210500E7003F91AD /* ParameterValueViewController.swift */,
+				A28F9D8A210B8B360066579D /* MultiSelectSegmentedControl.swift */,
+				A28F9DA2210BE63E0066579D /* ContainerView.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -447,6 +491,7 @@
 				A2333B8520FBF7C60072736A /* TimeConstraintUtil.swift */,
 				A2333B8C20FD15230072736A /* SearchUtil.swift */,
 				A29053482101233600191A34 /* StringUtil.swift */,
+				A2769F3A210CD8D500261C98 /* DisplayableError.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -485,14 +530,15 @@
 				A2E4E8AD20E55AE400631398 /* QueryFactory.swift */,
 				A238FED520E53EA40025307F /* Queriers */,
 				A2DCAC1F2104D65C003F91AD /* Aggregation */,
+				A28F9D7B210A7F280066579D /* TimeConstraints */,
 				A2333B6320FA53770072736A /* ExtraInformation */,
 				A2333B8920FCF79F0072736A /* SubQueryMatchers */,
 				A238FED620E53EAD0025307F /* Query.swift */,
+				A2769F38210CD73A00261C98 /* QueryError.swift */,
 				A238FED820E53EB70025307F /* HeartRateQuery.swift */,
 				A2C2A98720FE1AB900402D3D /* SampleQuery.swift */,
 				A238FEDA20E53EE10025307F /* QueryOperation.swift */,
 				A238FEDC20E53EED0025307F /* DayOfWeek.swift */,
-				A2FA034420F169C30049E40D /* TimeConstraint.swift */,
 				A238FEDE20E53EFB0025307F /* AttributeRestriction.swift */,
 				A2DCAC0D2103D26F003F91AD /* AttributeComparisonType.swift */,
 				A217810620EBA25300A8F9BA /* ReturnType.swift */,
@@ -524,6 +570,50 @@
 			children = (
 				A28F9D75210A6C410066579D /* Parameterized.swift */,
 				A28F9D77210A6CE60066579D /* Parameter.swift */,
+				A28F9D9A210BCEB10066579D /* SelectParameter.swift */,
+				A28F9D9C210BCEF00066579D /* SelectOneParameter.swift */,
+				A28F9D98210BCE240066579D /* MultiSelectParameter.swift */,
+				A28F9D9E210BDAD40066579D /* TextFieldParameter.swift */,
+				A28F9D7E210A80910066579D /* DateParameter.swift */,
+				A2769F28210BF18500261C98 /* DateParameterBase.swift */,
+				A2769F2A210BF1D900261C98 /* DateOnlyParameter.swift */,
+				A2769F2C210BF25D00261C98 /* DateTimeParameter.swift */,
+				A2DCAC262104EC81003F91AD /* CalendarComponentParameter.swift */,
+				A28F9D88210B8A4D0066579D /* DaysOfWeekParameter.swift */,
+				A28F9D8C210B8F780066579D /* DayOfWeekParameter.swift */,
+			);
+			path = Parameters;
+			sourceTree = "<group>";
+		};
+		A28F9D7B210A7F280066579D /* TimeConstraints */ = {
+			isa = PBXGroup;
+			children = (
+				A28F9D92210B931F0066579D /* TimeConstraintFactory.swift */,
+				A2FA034420F169C30049E40D /* TimeConstraint.swift */,
+				A2769F2E210C99EE00261C98 /* StartsBeforeDateOnlyTimeConstraint.swift */,
+				A28F9D80210B88790066579D /* StartsBeforeTimeConstraint.swift */,
+				A2769F30210C9A2B00261C98 /* StartsAfterDateOnlyTimeConstraint.swift */,
+				A28F9D7C210A7FE20066579D /* StartsAfterTimeConstraint.swift */,
+				A2769F34210C9BE400261C98 /* EndsBeforeDateOnlyTimeConstraint.swift */,
+				A28F9D82210B89520066579D /* EndsBeforeTimeConstraint.swift */,
+				A2769F32210C9B2600261C98 /* EndsAfterDateOnlyTimeConstraint.swift */,
+				A28F9D84210B89C70066579D /* EndsAfterTimeConstraint.swift */,
+				A28F9D86210B8A070066579D /* StartsOnDayOfWeekTimeConstraint.swift */,
+				A28F9D94210B94350066579D /* EndsOnDayOfWeekTimeConstraint.swift */,
+				A28F9D8E210B907A0066579D /* StartsOnDateTimeConstraint.swift */,
+				A28F9D90210B91340066579D /* EndsOnDateTimeConstraint.swift */,
+			);
+			path = TimeConstraints;
+			sourceTree = "<group>";
+		};
+		A28F9DA4210BE6640066579D /* Parameters */ = {
+			isa = PBXGroup;
+			children = (
+				A28F9D79210A6E8C0066579D /* ParameterList.storyboard */,
+				A2DCAC1B2104CFAC003F91AD /* ParameterizedChooserViewController.swift */,
+				A2DCAC282104FAEB003F91AD /* ParameterViewController.swift */,
+				A2769F26210BE6E700261C98 /* ParameterValueViewController.swift */,
+				A2DCAC2A2104FDF7003F91AD /* ParameterDescriptionViewController.swift */,
 			);
 			path = Parameters;
 			sourceTree = "<group>";
@@ -629,7 +719,6 @@
 				A2DCAC1D2104D368003F91AD /* Aggregator.swift */,
 				A2DCAC202104D67F003F91AD /* DateAggregator.swift */,
 				A2DCAC222104D87C003F91AD /* Aggregatable.swift */,
-				A2DCAC262104EC81003F91AD /* CalendarComponentAggregationParameter.swift */,
 			);
 			path = Aggregation;
 			sourceTree = "<group>";
@@ -713,7 +802,6 @@
 				A29053462101106100191A34 /* SubDataTypeTableViewCell.swift */,
 				A2FA035120F1AB0A0049E40D /* AddToAdvancedQuestionViewController.swift */,
 				A248CFAC20F15004000FE34E /* EditDataTypeViewController.swift */,
-				A20A5A7820F2CE3600EADEC5 /* EditTimeConstraintViewController.swift */,
 				A2E50A2B20F548AB00C89DE3 /* EditAttributeRestrictionViewController.swift */,
 				A2E50A2D20F555CC00C89DE3 /* EditOperationViewController.swift */,
 				A290534420FFF34C00191A34 /* EditSubDataTypeViewController.swift */,
@@ -838,7 +926,6 @@
 				A238FF0020E541AE0025307F /* LaunchScreen.storyboard in Resources */,
 				A2333B5E20FA352A0072736A /* Results.storyboard in Resources */,
 				A255D53C20E5697B00BDD57B /* questionLabelsTrainingData.txt in Resources */,
-				A20A5A7F20F4162200EADEC5 /* DaysOfWeekChooser.xib in Resources */,
 				A2DCAC3021078D4F003F91AD /* LineChart.storyboard in Resources */,
 				A248CFAB20F14F80000FE34E /* Main.storyboard in Resources */,
 				A20A5A7A20F403C300EADEC5 /* Assets.xcassets in Resources */,
@@ -869,7 +956,6 @@
 			files = (
 				A238FECF20E53E8A0025307F /* Answer.swift in Sources */,
 				A2ABEA2F20E53BEB00142C00 /* AppDelegate.swift in Sources */,
-				A20A5A7920F2CE3600EADEC5 /* EditTimeConstraintViewController.swift in Sources */,
 				A238FEF820E5412B0025307F /* CodableStorage.swift in Sources */,
 				A2C2A97E20FE030E00402D3D /* InSameCalendarUnitSubQueryMatcher.swift in Sources */,
 				A2DCAC232104D87C003F91AD /* Aggregatable.swift in Sources */,
@@ -880,23 +966,35 @@
 				A2333B8020FAC4AD0072736A /* CountInformation.swift in Sources */,
 				A2333B8B20FCF8200072736A /* WithinXCalendarUnitsSubQueryMatcher.swift in Sources */,
 				A2333B6020FA39290072736A /* ExtraInformation.swift in Sources */,
+				A28F9D89210B8A4D0066579D /* DaysOfWeekParameter.swift in Sources */,
+				A2769F31210C9A2B00261C98 /* StartsAfterDateOnlyTimeConstraint.swift in Sources */,
 				A2DCAC1E2104D368003F91AD /* Aggregator.swift in Sources */,
+				A28F9D9D210BCEF00066579D /* SelectOneParameter.swift in Sources */,
+				A28F9D99210BCE240066579D /* MultiSelectParameter.swift in Sources */,
 				A2333B8620FBF7C60072736A /* TimeConstraintUtil.swift in Sources */,
 				A248CFAD20F15004000FE34E /* EditDataTypeViewController.swift in Sources */,
 				A238FED120E53E900025307F /* Labels.swift in Sources */,
 				A217810F20ED2F0A00A8F9BA /* NumericSampleUtil.swift in Sources */,
+				A28F9DA3210BE63E0066579D /* ContainerView.swift in Sources */,
+				A28F9D8D210B8F780066579D /* DayOfWeekParameter.swift in Sources */,
 				A2C2A98620FE149D00402D3D /* SubQueryMatcherFactory.swift in Sources */,
 				A28F9D78210A6CE60066579D /* Parameter.swift in Sources */,
+				A28F9D91210B91340066579D /* EndsOnDateTimeConstraint.swift in Sources */,
 				A2DCAC212104D67F003F91AD /* DateAggregator.swift in Sources */,
+				A28F9D95210B94350066579D /* EndsOnDayOfWeekTimeConstraint.swift in Sources */,
 				A2E4E8A820E5589400631398 /* UnitTestInjectionProvider.swift in Sources */,
 				A238FEEF20E53F850025307F /* MoodSource.swift in Sources */,
 				A217810720EBA25300A8F9BA /* ReturnType.swift in Sources */,
 				A238FF0420E542710025307F /* SecondViewController.swift in Sources */,
 				A238FED320E53E970025307F /* Tags.swift in Sources */,
+				A2769F33210C9B2600261C98 /* EndsAfterDateOnlyTimeConstraint.swift in Sources */,
+				A28F9D87210B8A070066579D /* StartsOnDayOfWeekTimeConstraint.swift in Sources */,
 				A238FEE520E53F3D0025307F /* HeartRate.swift in Sources */,
 				A238FED920E53EB70025307F /* HeartRateQuery.swift in Sources */,
 				A2333B6520FA53A40072736A /* AverageInformation.swift in Sources */,
-				A2DCAC272104EC81003F91AD /* CalendarComponentAggregationParameter.swift in Sources */,
+				A2DCAC272104EC81003F91AD /* CalendarComponentParameter.swift in Sources */,
+				A28F9D9B210BCEB10066579D /* SelectParameter.swift in Sources */,
+				A28F9D93210B931F0066579D /* TimeConstraintFactory.swift in Sources */,
 				A2FA034520F169C30049E40D /* TimeConstraint.swift in Sources */,
 				A2E50A2C20F548AB00C89DE3 /* EditAttributeRestrictionViewController.swift in Sources */,
 				A2333B8820FCF65B0072736A /* SubQueryMatcher.swift in Sources */,
@@ -904,38 +1002,46 @@
 				A2E4E8A220E5584200631398 /* InjectionType.swift in Sources */,
 				A2FA034120F165F80049E40D /* AdvancedQuestionViewController.swift in Sources */,
 				A2E4E8AE20E55AE400631398 /* QueryFactory.swift in Sources */,
+				A2769F2D210BF25D00261C98 /* DateTimeParameter.swift in Sources */,
 				A2C2A98820FE1AB900402D3D /* SampleQuery.swift in Sources */,
+				A28F9D81210B88790066579D /* StartsBeforeTimeConstraint.swift in Sources */,
 				A2333B8D20FD15230072736A /* SearchUtil.swift in Sources */,
 				A2E50A3320F9A33100C89DE3 /* ResultsViewController.swift in Sources */,
 				A238FEDF20E53EFB0025307F /* AttributeRestriction.swift in Sources */,
+				A2769F27210BE6E700261C98 /* ParameterValueViewController.swift in Sources */,
 				A2DCAC142103E020003F91AD /* GraphCustomizationViewController.swift in Sources */,
 				A2FA035220F1AB0A0049E40D /* AddToAdvancedQuestionViewController.swift in Sources */,
 				A21780EB20E9796700A8F9BA /* DateExtension.swift in Sources */,
+				A2769F2F210C99EE00261C98 /* StartsBeforeDateOnlyTimeConstraint.swift in Sources */,
 				A2333B6220FA3FA60072736A /* Sample.swift in Sources */,
 				A248CFB520F1649D000FE34E /* Question.swift in Sources */,
 				A248CFB120F16352000FE34E /* DataTypes.swift in Sources */,
 				A238FED720E53EAD0025307F /* Query.swift in Sources */,
 				A238FEFA20E541420025307F /* DatabaseConnector.swift in Sources */,
+				A28F9D8F210B907A0066579D /* StartsOnDateTimeConstraint.swift in Sources */,
 				A2FA034B20F17FC50049E40D /* QuestionPart.swift in Sources */,
 				A2333B5C20FA34A00072736A /* TimestampClickChoiceViewController.swift in Sources */,
-				A2DCAC2D210500E7003F91AD /* ParameterValueViewController.swift in Sources */,
 				A2C2A98420FE128700402D3D /* SameEndDatesSubQueryMatcher.swift in Sources */,
+				A2769F29210BF18500261C98 /* DateParameterBase.swift in Sources */,
 				A238FEF320E53FA20025307F /* HeartRateSource.swift in Sources */,
 				A238FF0220E541F80025307F /* AskViewController.swift in Sources */,
+				A28F9D8B210B8B360066579D /* MultiSelectSegmentedControl.swift in Sources */,
 				A2DCAC292104FAEB003F91AD /* ParameterViewController.swift in Sources */,
 				A2333B7E20FAC4A20072736A /* MaximumInformation.swift in Sources */,
 				A255D52420E55E0000BDD57B /* QuestionFactory.swift in Sources */,
 				A2E4E8AA20E5589F00631398 /* FunctionalTestInjectionProvider.swift in Sources */,
-				A2E50A2A20F4CEB500C89DE3 /* DaysOfWeekChooserViewController.swift in Sources */,
 				A20A5A7720F2635900EADEC5 /* AttributeRestrictionTableViewCell.swift in Sources */,
 				A238FF0620E542880025307F /* SourceDefinitionViewController.swift in Sources */,
 				A2E50A3720F9A4D600C89DE3 /* ExtraInformationTableViewCell.swift in Sources */,
 				A290534520FFF34C00191A34 /* EditSubDataTypeViewController.swift in Sources */,
 				A2E4E8A020E5583200631398 /* DependencyInjector.swift in Sources */,
+				A28F9D83210B89520066579D /* EndsBeforeTimeConstraint.swift in Sources */,
 				A2FA034720F16B480049E40D /* Attribute.swift in Sources */,
 				A238FF0820E5429A0025307F /* SourcesTableViewController.swift in Sources */,
 				A29053472101106100191A34 /* SubDataTypeTableViewCell.swift in Sources */,
+				A28F9D7F210A80910066579D /* DateParameter.swift in Sources */,
 				A238FEED20E53F770025307F /* MedicationSource.swift in Sources */,
+				A28F9D85210B89C70066579D /* EndsAfterTimeConstraint.swift in Sources */,
 				A2DCAC3221078DDD003F91AD /* ChartViewController.swift in Sources */,
 				A2DCAC2B2104FDF7003F91AD /* ParameterDescriptionViewController.swift in Sources */,
 				A2092D8B20F130FF00A182AA /* DayOfWeekRestrictionParser.swift in Sources */,
@@ -949,14 +1055,19 @@
 				A238FEF120E53F8D0025307F /* SourceField.swift in Sources */,
 				A2DCAC052102B4E9003F91AD /* ResultsGraphViewController.swift in Sources */,
 				A217810920EBA51400A8F9BA /* SampleQueryResult.swift in Sources */,
+				A2769F3B210CD8D500261C98 /* DisplayableError.swift in Sources */,
 				A238FEE720E53F430025307F /* Mood.swift in Sources */,
+				A2769F35210C9BE400261C98 /* EndsBeforeDateOnlyTimeConstraint.swift in Sources */,
 				A2C2A98020FE0BDE00402D3D /* SameDatesSubQueryMatcher.swift in Sources */,
 				A29053492101233600191A34 /* StringUtil.swift in Sources */,
 				A238FEF520E540700025307F /* HeartRateQuerier.swift in Sources */,
 				A238FEE120E53F1D0025307F /* Activity.swift in Sources */,
+				A2769F2B210BF1D900261C98 /* DateOnlyParameter.swift in Sources */,
 				A217810D20ED0F8400A8F9BA /* UtilFactory.swift in Sources */,
 				A238FEDB20E53EE10025307F /* QueryOperation.swift in Sources */,
+				A28F9D7D210A7FE20066579D /* StartsAfterTimeConstraint.swift in Sources */,
 				A255D52C20E5636E00BDD57B /* DataTypesFactory.swift in Sources */,
+				A2769F39210CD73A00261C98 /* QueryError.swift in Sources */,
 				A2DCAC3421078DF4003F91AD /* LineChartViewController.swift in Sources */,
 				A2E50A2E20F555CC00C89DE3 /* EditOperationViewController.swift in Sources */,
 				A2333B8220FAC4B80072736A /* SumInformation.swift in Sources */,
@@ -965,6 +1076,7 @@
 				A2092D8F20F1345200A182AA /* FactoryMocks.swift in Sources */,
 				A2092D8D20F1313200A182AA /* RestrictionParserFactory.swift in Sources */,
 				A238FEE320E53F2A0025307F /* ActivityInstance.swift in Sources */,
+				A28F9D9F210BDAD40066579D /* TextFieldParameter.swift in Sources */,
 				A28F9D76210A6C410066579D /* Parameterized.swift in Sources */,
 				A2DCAC1A2104BD27003F91AD /* AxisAttributeViewController.swift in Sources */,
 				A2C2A98220FE0CA200402D3D /* SameStartDatesSubQueryMatcher.swift in Sources */,

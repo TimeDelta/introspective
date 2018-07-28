@@ -10,6 +10,8 @@ import UIKit
 
 class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
 
+	fileprivate static let acceptedTimeConstraintEdit = Notification.Name("acceptedTimeConstraint")
+
 	fileprivate typealias Me = AdvancedQuestionViewController
 
 	public enum CellType: CustomStringConvertible {
@@ -60,6 +62,8 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		parts.append(DataTypeInfo())
 
 		partWasAdded()
+
+		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedTimeConstraint), name: Me.acceptedTimeConstraintEdit, object: nil)
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -130,11 +134,13 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 			let source = (sender as! UITableViewCell)
 			editedIndex = tableView.indexPath(for: source)!.row
 			controller.selectedIndex = EditDataTypeViewController.indexFor(type: source.textLabel!.text!)
-		} else if segue.destination is EditTimeConstraintViewController {
-			let controller = (segue.destination as! EditTimeConstraintViewController)
+		} else if segue.destination is ParameterizedChooserViewController {
+			let controller = (segue.destination as! ParameterizedChooserViewController)
 			let source = (sender as! UITableViewCell)
 			editedIndex = tableView.indexPath(for: source)!.row
-			controller.timeConstraint = (parts[editedIndex] as! TimeConstraint)
+			controller.possibleValues = TimeConstraintFactory.allTypes
+			controller.currentValue = (parts[editedIndex] as! TimeConstraint)
+			controller.notificationToSendWhenAccepted = Me.acceptedTimeConstraintEdit
 		} else if segue.destination is EditAttributeRestrictionViewController {
 			let controller = (segue.destination as! EditAttributeRestrictionViewController)
 			let source = (sender as! UITableViewCell)
@@ -165,9 +171,8 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		tableView.reloadData()
 	}
 
-	@IBAction func saveEditedTimeConstraint(_ segue: UIStoryboardSegue) {
-		let controller = (segue.source as! EditTimeConstraintViewController)
-		parts[editedIndex] = controller.timeConstraint
+	@objc func saveEditedTimeConstraint(notification: Notification) {
+		parts[editedIndex] = notification.object as! TimeConstraint
 		tableView.reloadData()
 	}
 
@@ -193,8 +198,7 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 					parts.append(DataTypeInfo())
 					break
 				case .timeConstraint:
-					let timeConstraint = TimeConstraint()
-					timeConstraint.specificDate = Date()
+					let timeConstraint = DependencyInjector.timeConstraint.defaultTimeConstraint()
 					parts.append(timeConstraint)
 					break
 				case .attributeRestriction:
@@ -276,7 +280,7 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 			if part is DataTypeInfo {
 				return query
 			} else if part is TimeConstraint {
-				query.timeConstraints.insert((part as! TimeConstraint))
+				query.timeConstraints.append((part as! TimeConstraint))
 			} else if part is AttributeRestriction {
 				query.attributeRestrictions.append((part as! AttributeRestriction))
 			} else {

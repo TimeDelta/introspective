@@ -40,7 +40,7 @@ public class DayOfWeekRestrictionParser {
 			let nearestWhichLabel = try getNearestWhichLabel(to: dayOfWeekLabelIndex, in: questionPart)
 
 			if distanceToNearestWhichTag == 1 {
-				let dayOfWeek = try DayOfWeek.fromString(dayOfWeekLabel.token)!
+				let dayOfWeek = try DayOfWeek.fromString(dayOfWeekLabel.token)
 				if whichTokenRepresentsMostRecent(nearestWhichLabel.token) {
 					// "last sunday", "the most recent saturday", "this friday", "this past tuesday"
 					return (Date().previous(dayOfWeek), nil)

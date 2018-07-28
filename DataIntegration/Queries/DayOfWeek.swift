@@ -16,15 +16,15 @@ public class DayOfWeek: NSObject, Aggregatable {
 
 	public static let Sunday = DayOfWeek(0, "Sun", "Sunday")
 	public static let Monday = DayOfWeek(1, "Mon", "Monday")
-	public static let Tuesday = DayOfWeek(2, "Tues", "Tuesday")
+	public static let Tuesday = DayOfWeek(2, "Tue", "Tuesday")
 	public static let Wednesday = DayOfWeek(3, "Wed", "Wednesday")
-	public static let Thursday = DayOfWeek(4, "Thurs", "Thursday")
+	public static let Thursday = DayOfWeek(4, "Thu", "Thursday")
 	public static let Friday = DayOfWeek(5, "Fri", "Friday")
 	public static let Saturday = DayOfWeek(6, "Sat", "Saturday")
 
 	public static let allDays = [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
 
-	public static func fromString(_ str: String) throws -> DayOfWeek? {
+	public static func fromString(_ str: String) throws -> DayOfWeek {
 		let dayName = str.lowercased()
 		for day in allDays {
 			if dayName.contains(day.abbreviation.lowercased()) {

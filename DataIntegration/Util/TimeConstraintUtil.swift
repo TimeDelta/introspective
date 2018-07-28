@@ -10,76 +10,43 @@ import Foundation
 
 public class TimeConstraintUtil {
 
-	public func getDateConstraintsFrom(timeConstraints: Set<TimeConstraint>) -> [(start: Date?, end: Date?, type: TimeConstraint.ConstraintType)] {
-		var constraints = [(start: Date?, end: Date?, type: TimeConstraint.ConstraintType)]()
+	public func getMostRestrictiveStartAndEndDates(from timeConstraints: [TimeConstraint]) -> (start: Date?, end: Date?) {
+		var latestStartDate: Date? = nil
+		var earliestEndDate: Date? = nil
 		for timeConstraint in timeConstraints {
-			if timeConstraint.specificDate != nil {
-				if timeConstraint.useStartOrEndDate == .start {
-					constraints.append((start: timeConstraint.specificDate!, end: nil, type: timeConstraint.constraintType))
-				} else {
-					constraints.append((start: nil, end: timeConstraint.specificDate!, type: timeConstraint.constraintType))
+			if timeConstraint is StartsAfterTimeConstraint {
+				let startsAfter = timeConstraint as! StartsAfterTimeConstraint
+				if latestStartDate == nil || startsAfter.date.isAfterDate(latestStartDate!, granularity: .nanosecond) {
+					latestStartDate = startsAfter.date
+				}
+			} else if timeConstraint is EndsBeforeTimeConstraint {
+				let endsBefore = timeConstraint as! EndsBeforeTimeConstraint
+				if earliestEndDate == nil || endsBefore.date.isBeforeDate(earliestEndDate!, granularity: .nanosecond) {
+					earliestEndDate = endsBefore.date
+				}
+			} else if timeConstraint is StartsOnDateTimeConstraint {
+				let startsOn = timeConstraint as! StartsOnDateTimeConstraint
+				if latestStartDate == nil || startsOn.date.isAfterDate(latestStartDate!, granularity: .nanosecond) {
+					latestStartDate = startsOn.date
+				}
+			} else if timeConstraint is EndsOnDateTimeConstraint {
+				let endsOn = timeConstraint as! EndsOnDateTimeConstraint
+				if earliestEndDate == nil || endsOn.date.isBeforeDate(earliestEndDate!, granularity: .nanosecond) {
+					earliestEndDate = endsOn.date
 				}
 			}
 		}
-		return constraints
+		return (start: latestStartDate, end: earliestEndDate)
 	}
 
-	public func getDaysOfWeekFrom(timeConstraints: Set<TimeConstraint>) -> Set<DayOfWeek> {
+	public func getDaysOfWeekFrom(timeConstraints: [TimeConstraint]) -> Set<DayOfWeek> {
 		var daysOfWeek = Set<DayOfWeek>()
 		for timeConstraint in timeConstraints {
-			if !timeConstraint.daysOfWeek.isEmpty {
-				daysOfWeek = daysOfWeek.union(timeConstraint.daysOfWeek)
+			if timeConstraint is StartsOnDayOfWeekTimeConstraint {
+				let constraint = timeConstraint as! StartsOnDayOfWeekTimeConstraint
+				daysOfWeek = daysOfWeek.union(constraint.daysOfWeek)
 			}
 		}
 		return daysOfWeek
-	}
-
-	/// - Precondition: All passed time constraints are valid
-	public func sample(_ sample: Sample, meets timeConstraints: Set<TimeConstraint>) -> Bool {
-		for timeConstraint in timeConstraints {
-			assert(timeConstraint.isValid(), "Precondition violated: invalid time constraint passed")
-		}
-
-		let daysOfWeek = getDaysOfWeekFrom(timeConstraints: timeConstraints)
-		if !daysOfWeek.isEmpty {
-			if !DependencyInjector.util.sampleUtil.sample(sample, occursOnOneOf: daysOfWeek) {
-				return false
-			}
-		}
-
-		let dateConstraints = getDateConstraintsFrom(timeConstraints: timeConstraints)
-		for constraint in dateConstraints {
-			if constraint.start != nil {
-				if !date(sample.dates[.start]!, matches: constraint.type, to: constraint.start!) {
-					return false
-				}
-			} else if constraint.end != nil {
-				if !date(sample.dates[.end]!, matches: constraint.type, to: constraint.end!) {
-					return false
-				}
-			}
-		}
-
-		return true
-	}
-
-	fileprivate func date(_ date1: Date, matches constraint: TimeConstraint.ConstraintType, to date2: Date) -> Bool {
-		switch (constraint) {
-			case .before:
-				if !date1.isBeforeDate(date2, granularity: .minute) {
-					return false
-				}
-				break
-			case .after:
-				if !date1.isAfterDate(date2, granularity: .minute) {
-					return false
-				}
-				break
-			case .on:
-				if !DependencyInjector.util.calendarUtil.date(date1, occursOnSame: .day, as: date2) {
-					return false
-				}
-		}
-		return true
 	}
 }

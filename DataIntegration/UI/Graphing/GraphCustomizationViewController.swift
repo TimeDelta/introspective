@@ -116,9 +116,9 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 			controller.attributes = Attribute.attributesFor(dataType: dataType)
 		} else if segue.destination is ParameterizedChooserViewController {
 			let controller = segue.destination as! ParameterizedChooserViewController
-			var possibleAggregators: [Aggregator]
+			var possibleAggregators: [Aggregator.Type]
 			switch (xAxisAttribute.type) {
-				case .date: possibleAggregators = [DateAggregator()]; break
+				case .date: possibleAggregators = [DateAggregator.self]; break
 				case .quantity: possibleAggregators = []; break
 				case .string: possibleAggregators = []; break
 			}

@@ -15,6 +15,6 @@ public protocol Parameterized: CustomStringConvertible {
 
 	init()
 
-	func get(parameter: Parameter) throws -> String
+	func get(parameter: Parameter) throws -> Any
 	func set(parameter: Parameter, to value: Any) throws
 }
