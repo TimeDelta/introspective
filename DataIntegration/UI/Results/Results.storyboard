@@ -123,6 +123,9 @@
                             <outlet property="delegate" destination="Ghm-Lr-d8F" id="W2z-IP-6fo"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="graphButton" destination="tgx-5U-WY9" id="VlC-tG-4aV"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FcQ-UK-F7F" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

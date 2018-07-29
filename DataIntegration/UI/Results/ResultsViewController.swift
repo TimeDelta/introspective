@@ -11,16 +11,12 @@ import os
 
 class ResultsViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
 
-	public var dataType: DataTypes! {
-		didSet {
-			reloadInputViews()
-		}
-	}
+	public var dataType: DataTypes!
 
 	public var extraInformation: [ExtraInformation]! {
 		didSet {
 			if error == nil && extraInformation != nil && samples != nil {
-				viewIsReady()
+				DispatchQueue.main.async { self.viewIsReady() }
 			}
 		}
 	}
@@ -29,19 +25,24 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 	public var samples: [Sample]! {
 		didSet {
 			if error == nil && extraInformation != nil && samples != nil  {
-				viewIsReady()
+				DispatchQueue.main.async { self.viewIsReady() }
 			}
 		}
 	}
 
 	public var error: Error? {
 		didSet {
-			reloadInputViews()
+			DispatchQueue.main.async { self.tableView.reloadData() }
 		}
 	}
 
-	fileprivate var filteredSamples: [Sample]!
 	fileprivate var lastSelectedRowIndex: Int!
+
+	@IBOutlet weak var graphButton: UIBarButtonItem!
+
+	public override func viewDidLoad() {
+		disableGraphButton()
+	}
 
     // MARK: - Table view data source
 
@@ -64,7 +65,6 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
 		if error != nil {
 			if section == 1 {
 				return 1
@@ -81,7 +81,7 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 		}
 
 		if section == 1 {
-			return filteredSamples.count
+			return samples.count
 		}
 
 		os_log("Unexpected section index ($@) while determining number of rows in section", type: .error, String(section))
@@ -108,15 +108,15 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 
 		if section == 0 {
 			let cell = (tableView.dequeueReusableCell(withIdentifier: "statisticsCell", for: indexPath) as! ExtraInformationTableViewCell)
-			cell.extraInformation = getExtraInformation(forRow: row)
-			cell.value = getExtraInformationValue(forRow: row)
+			cell.extraInformation = extraInformation[row]
+			cell.value = extraInformationValues[row]
 			return cell
 		}
 
 		if section == 1 {
 			switch (dataType!) {
 				case .heartRate:
-					let sample = filteredSamples[row]
+					let sample = samples[row]
 					let cell = (tableView.dequeueReusableCell(withIdentifier: "heartRateSampleCell", for: indexPath) as! HeartRateTableViewCell)
 					cell.heartRate = (sample as! HeartRate)
 					return cell
@@ -132,7 +132,7 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.destination is GraphCustomizationViewController {
             let controller = segue.destination as! GraphCustomizationViewController
-            controller.samples = filteredSamples
+            controller.samples = samples
             controller.dataType = dataType
 		}
 	}
@@ -146,36 +146,29 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 	// MARK: - Helper functions
 
 	fileprivate func viewIsReady() {
-		resetFilteredSamples()
+		enableGraphButton()
 		recomputeExtraInformation()
-		reloadInputViews()
-	}
-
-	fileprivate func getExtraInformation(forRow row: Int) -> ExtraInformation {
-		return extraInformation[row]
-	}
-
-	fileprivate func getExtraInformationValue(forRow row: Int) -> String {
-		return extraInformationValues[row]
+		tableView.reloadData()
 	}
 
 	fileprivate func waiting() -> Bool {
-		return extraInformation == nil || samples == nil || dataType == nil
-	}
-
-	fileprivate func resetFilteredSamples() {
-		if samples == nil {
-			filteredSamples = [Sample]()
-		} else {
-			filteredSamples = samples
-		}
-		recomputeExtraInformation()
+		return extraInformation == nil || samples == nil || extraInformationValues == nil
 	}
 
 	fileprivate func recomputeExtraInformation() {
 		extraInformationValues = [String]()
 		for index in 0 ..< extraInformation.count {
-			extraInformationValues.append(try! extraInformation[index].compute(forSamples: filteredSamples))
+			extraInformationValues.append(try! extraInformation[index].compute(forSamples: samples))
 		}
+	}
+
+	fileprivate func disableGraphButton() {
+		graphButton.isEnabled = false
+		graphButton.tintColor = UIColor.darkGray
+	}
+
+	fileprivate func enableGraphButton() {
+		graphButton.isEnabled = true
+		graphButton.tintColor = nil
 	}
 }
