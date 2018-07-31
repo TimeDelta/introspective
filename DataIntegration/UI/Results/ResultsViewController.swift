@@ -171,6 +171,6 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 		let controller = UIStoryboard(name: "Graph", bundle: nil).instantiateViewController(withIdentifier: "GraphCustomizationViewController") as! GraphCustomizationViewController
 		controller.samples = samples
 		controller.dataType = dataType
-		navigationController?.present(controller, animated: false, completion: nil)
+		navigationController?.pushViewController(controller, animated: false)
 	}
 }
