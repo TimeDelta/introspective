@@ -37,11 +37,12 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 	}
 
 	fileprivate var lastSelectedRowIndex: Int!
-
-	@IBOutlet weak var graphButton: UIBarButtonItem!
+	fileprivate var graphButton: UIBarButtonItem!
 
 	public override func viewDidLoad() {
+		createGraphButton()
 		disableGraphButton()
+		self.navigationItem.setRightBarButton(graphButton, animated: true)
 	}
 
     // MARK: - Table view data source
@@ -127,16 +128,6 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 		return UITableViewCell()
 	}
 
-	// MARK: - Navigation
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.destination is GraphCustomizationViewController {
-            let controller = segue.destination as! GraphCustomizationViewController
-            controller.samples = samples
-            controller.dataType = dataType
-		}
-	}
-
 	// MARK: - Popover delegation
 
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
@@ -170,5 +161,16 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 	fileprivate func enableGraphButton() {
 		graphButton.isEnabled = true
 		graphButton.tintColor = nil
+	}
+
+	fileprivate func createGraphButton() {
+		graphButton = UIBarButtonItem(title: "Graph", style: .plain, target: self, action: #selector(graphButtonPressed))
+	}
+
+	@objc fileprivate func graphButtonPressed() {
+		let controller = UIStoryboard(name: "Graph", bundle: nil).instantiateViewController(withIdentifier: "GraphCustomizationViewController") as! GraphCustomizationViewController
+		controller.samples = samples
+		controller.dataType = dataType
+		navigationController?.present(controller, animated: false, completion: nil)
 	}
 }

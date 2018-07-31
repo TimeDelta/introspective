@@ -16,19 +16,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="dKw-tA-gFz">
-                            <rect key="frame" x="0.0" y="204" width="375" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            <items>
-                                <barButtonItem title="Clear Filters" id="8XI-8B-n2e"/>
-                                <barButtonItem style="plain" systemItem="flexibleSpace" id="XJI-Cg-1eq"/>
-                                <barButtonItem title="Graph" id="tgx-5U-WY9">
-                                    <connections>
-                                        <segue destination="Vno-Pq-Fpt" kind="show" id="eqy-du-nQN"/>
-                                    </connections>
-                                </barButtonItem>
-                            </items>
-                        </toolbar>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="statisticsCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="statisticsCell" id="6oa-QE-LAf" customClass="ExtraInformationTableViewCell" customModule="DataIntegration" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
@@ -93,7 +80,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="P08-uU-d0d">
+                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="P08-uU-d0d">
                                             <rect key="frame" x="177" y="11" width="20" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         </activityIndicatorView>
@@ -123,21 +110,10 @@
                             <outlet property="delegate" destination="Ghm-Lr-d8F" id="W2z-IP-6fo"/>
                         </connections>
                     </tableView>
-                    <connections>
-                        <outlet property="graphButton" destination="tgx-5U-WY9" id="VlC-tG-4aV"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FcQ-UK-F7F" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2720.8000000000002" y="-2231.3343328335832"/>
-        </scene>
-        <!--Graph-->
-        <scene sceneID="M5e-71-tfL">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="Graph" storyboardName="Graph" id="Vno-Pq-Fpt" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="gy7-mG-5zR" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3412" y="-2231"/>
         </scene>
     </scenes>
 </document>
