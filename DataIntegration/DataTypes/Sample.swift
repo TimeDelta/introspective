@@ -18,25 +18,27 @@ public enum SampleError: Error {
 	case unknownAttribute
 }
 
-public protocol Sample {
+public protocol Sample: Attributed {
 
 	var dates: [DateType: Date] { get }
 	var dataType: DataTypes { get }
-	var attributes: [Attribute] { get }
-
-	func value<ValueType>(of attribute: Attribute) throws -> ValueType
-	func setValue<ValueType>(of attribute: Attribute, to value: ValueType) throws
 }
 
 
 /// An abstract base class for everything that implements the Sample protocol
 public class AnySample: Sample {
 
+	public static let startDate = DateTimeAttribute(name: "Start date")
+	public static let endDate = DateTimeAttribute(name: "End date")
+
+	public var name: String { get { fatalError("Must override") } }
+	public var description: String { get { fatalError("Must override") } }
+
 	public var dates: [DateType: Date]
 	public var dataType: DataTypes { get { fatalError("Must override") } }
 	public var attributes: [Attribute] { get { fatalError("Must override") } }
 
-	public init() {
+	public required init() {
 		dates = [.start: Date()]
 	}
 
@@ -49,11 +51,11 @@ public class AnySample: Sample {
 		self.dates = dates
 	}
 
-	public func value<ValueType>(of attribute: Attribute) throws -> ValueType {
+	public func value(of attribute: Attribute) throws -> Any {
 		fatalError("Must override")
 	}
 
-	public func setValue<ValueType>(of attribute: Attribute, to value: ValueType) throws {
+	public func set(attribute: Attribute, to value: Any) throws {
 		fatalError("Must override")
 	}
 }

@@ -10,17 +10,17 @@ import Foundation
 
 public class StartsBeforeDateOnlyTimeConstraint: TimeConstraint {
 
-	public static var name: String = "Starts before date"
-
 	fileprivate typealias Me = StartsBeforeDateOnlyTimeConstraint
 
-	public static let dateParameter = DateOnlyParameter(name: "Date")
-	public static var parameters: [Parameter] = [
-		dateParameter,
+	public static let dateAttribute = DateOnlyAttribute(name: "Date")
+	public static var attributes: [Attribute] = [
+		dateAttribute,
 	]
 
+	public let name = "Starts before date"
+	public let attributes: [Attribute] = Me.attributes
 	public var description: String {
-		let dateText = try! Me.dateParameter.convertToString(from: date)
+		let dateText = try! Me.dateAttribute.convertToString(from: date)
 		return "Starts before " + dateText
 	}
 
@@ -34,18 +34,18 @@ public class StartsBeforeDateOnlyTimeConstraint: TimeConstraint {
 		date = Date()
 	}
 
-	public func get(parameter: Parameter) throws -> Any {
-		if parameter.name != Me.dateParameter.name {
-			throw ParameterError.unknownParameter
+	public func value(of attribute: Attribute) throws -> Any {
+		if attribute.name != Me.dateAttribute.name {
+			throw AttributeError.unknownAttribute
 		}
 		return date
 	}
 
-	public func set(parameter: Parameter, to value: Any) throws {
-		if parameter.name != Me.dateParameter.name {
-			throw ParameterError.unknownParameter
+	public func set(attribute: Attribute, to value: Any) throws {
+		if attribute.name != Me.dateAttribute.name {
+			throw AttributeError.unknownAttribute
 		}
-		guard let castedValue = value as? Date else { throw ParameterError.typeMismatch }
+		guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
 		date = castedValue
 	}
 

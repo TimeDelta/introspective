@@ -7,17 +7,16 @@
 //
 
 import Foundation
-import SQLite
 
 public class DatabaseConnector: NSObject {
 
-	let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
-
-	var db: Connection?
-
-	public func connect() throws {
-		do {
-			self.db = try Connection("\(path)/db.sqlite3")
-		}
-	}
+//	let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
+//
+//	var db: Connection?
+//
+//	public func connect() throws {
+//		do {
+//			self.db = try Connection("\(path)/db.sqlite3")
+//		}
+//	}
 }

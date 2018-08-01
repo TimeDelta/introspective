@@ -14,16 +14,20 @@ public enum DataTypes: CustomStringConvertible {
 
 	public static let allTypes: [DataTypes] = [heartRate]
 
+	public static func attributesFor(_ type: DataTypes) -> [Attribute] {
+		switch (type) {
+			case .heartRate: return HeartRate.attributes
+		}
+	}
+
 	public var defaultDependentAttribute: Attribute {
 		switch (self) {
-			case .heartRate: return .heartRate
+			case .heartRate: return HeartRate.heartRate
 		}
 	}
 
 	public var defaultIndependentAttribute: Attribute {
-		switch (self) {
-			case .heartRate: return .startDate
-		}
+		return AnySample.startDate
 	}
 
 	public var description: String {

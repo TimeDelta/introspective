@@ -1,5 +1,5 @@
 //
-//  CalendarComponentAggregationParameter.swift
+//  CalendarComponentAttribute.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 7/22/18.
@@ -8,9 +8,9 @@
 
 import Foundation
 
-public class CalendarComponentParameter: SelectOneParameter {
+public class CalendarComponentAttribute: AnyAttribute, SelectOneAttribute {
 
-	fileprivate typealias Me = CalendarComponentParameter
+	fileprivate typealias Me = CalendarComponentAttribute
 
 	fileprivate static let supportedComponents: [Calendar.Component] = [
 		.year,
@@ -27,36 +27,32 @@ public class CalendarComponentParameter: SelectOneParameter {
 	]
 	fileprivate static let setOfSupportedComponents: Set<Calendar.Component> = Set<Calendar.Component>(supportedComponents)
 
-	public fileprivate(set) var name: String
-	public fileprivate(set) var extendedDescription: String?
-	/// If this is nil, it means this parameter takes an open value
 	public let possibleValues: [Any] = Me.supportedComponents
 
-	public init(name: String, description: String?) {
-		self.name = name
-		self.extendedDescription = description
+	public required init(name: String = "Day of the week", description: String? = nil) {
+		super.init(name: name, description: description)
 	}
 
-	public func isValid(value: String) -> Bool {
+	public override func isValid(value: String) -> Bool {
 		let component = try? Calendar.Component.from(string: value)
 		return component != nil && Me.setOfSupportedComponents.contains(component!)
 	}
 
-	public func errorMessageFor(invalidValue: String) -> String {
+	public override func errorMessageFor(invalidValue: String) -> String {
 		return "\"\(invalidValue)\" is not a supported unit of time."
 	}
 
-	public func convertToValue(from strValue: String) throws -> Any {
+	public override func convertToValue(from strValue: String) throws -> Any {
 		let component = try? Calendar.Component.from(string: strValue)
 		if component == nil || !Me.setOfSupportedComponents.contains(component!) {
-			throw ParameterError.unsupportedValue
+			throw AttributeError.unsupportedValue
 		}
 		return component!
 	}
 
-	public func convertToString(from value: Any) throws -> String {
+	public override func convertToString(from value: Any) throws -> String {
 		guard let castedValue = value as? Calendar.Component else {
-			throw ParameterError.typeMismatch
+			throw AttributeError.typeMismatch
 		}
 		return castedValue.description
 	}

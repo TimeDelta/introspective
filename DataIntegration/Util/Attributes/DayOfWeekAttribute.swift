@@ -1,5 +1,5 @@
 //
-//  DayOfWeekParameter.swift
+//  DayOfWeekAttribute.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 7/27/18.
@@ -8,35 +8,32 @@
 
 import Foundation
 
-public class DayOfWeekParameter: SelectOneParameter {
+public class DayOfWeekAttribute: AnyAttribute, SelectOneAttribute {
 
-	public fileprivate(set) var name: String
-	public fileprivate(set) var extendedDescription: String?
 	public fileprivate(set) var possibleValues: [Any] = DayOfWeek.allDays
 
-	public init(name: String = "Day of the week", description: String? = nil) {
-		self.name = name
-		self.extendedDescription = description
+	public required init(name: String = "Day of the week", description: String? = nil) {
+		super.init(name: name, description: description)
 	}
 
-	public func isValid(value: String) -> Bool {
+	public override func isValid(value: String) -> Bool {
 		return (try? DayOfWeek.fromString(value)) != nil
 	}
 
-	public func errorMessageFor(invalidValue: String) -> String {
+	public override func errorMessageFor(invalidValue: String) -> String {
 		if invalidValue.isEmpty {
 			return "No value selected"
 		}
 		return "\"\(invalidValue)\" is not a day of the week"
 	}
 
-	public func convertToValue(from strValue: String) throws -> Any {
+	public override func convertToValue(from strValue: String) throws -> Any {
 		return try DayOfWeek.fromString(strValue)
 	}
 
-	public func convertToString(from value: Any) throws -> String {
+	public override func convertToString(from value: Any) throws -> String {
 		guard let castedValue = value as? DayOfWeek else {
-			throw ParameterError.typeMismatch
+			throw AttributeError.typeMismatch
 		}
 		return castedValue.abbreviation
 	}

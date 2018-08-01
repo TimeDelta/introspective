@@ -10,17 +10,17 @@ import Foundation
 
 public class StartsOnDayOfWeekTimeConstraint: TimeConstraint {
 
-	public static var name: String = "Starts on day of week"
-
 	fileprivate typealias Me = StartsOnDayOfWeekTimeConstraint
 
-	public static let daysOfWeekParameter = DaysOfWeekParameter()
-	public static var parameters: [Parameter] = [
-		daysOfWeekParameter,
+	public static let daysOfWeekAttribute = DaysOfWeekAttribute()
+	public static var attributes: [Attribute] = [
+		daysOfWeekAttribute,
 	]
 
+	public let name: String = "Starts on day of week"
+	public let attributes: [Attribute] = Me.attributes
 	public var description: String {
-		let daysOfWeekText = try! Me.daysOfWeekParameter.convertToDisplayableString(from: daysOfWeek)
+		let daysOfWeekText = try! Me.daysOfWeekAttribute.convertToDisplayableString(from: daysOfWeek)
 		return "Starts on " + daysOfWeekText
 	}
 
@@ -30,18 +30,18 @@ public class StartsOnDayOfWeekTimeConstraint: TimeConstraint {
 		daysOfWeek = Set<DayOfWeek>()
 	}
 
-	public func get(parameter: Parameter) throws -> Any {
-		if parameter.name != Me.daysOfWeekParameter.name {
-			throw ParameterError.unknownParameter
+	public func value(of attribute: Attribute) throws -> Any {
+		if attribute.name != Me.daysOfWeekAttribute.name {
+			throw AttributeError.unknownAttribute
 		}
 		return daysOfWeek
 	}
 
-	public func set(parameter: Parameter, to value: Any) throws {
-		if parameter.name != Me.daysOfWeekParameter.name {
-			throw ParameterError.unknownParameter
+	public func set(attribute: Attribute, to value: Any) throws {
+		if attribute.name != Me.daysOfWeekAttribute.name {
+			throw AttributeError.unknownAttribute
 		}
-		guard let castedValue = value as? Set<DayOfWeek> else { throw ParameterError.typeMismatch }
+		guard let castedValue = value as? Set<DayOfWeek> else { throw AttributeError.typeMismatch }
 		daysOfWeek = castedValue
 	}
 

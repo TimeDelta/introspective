@@ -59,7 +59,7 @@ class EditSubDataTypeViewController: UIViewController, UIPickerViewDelegate, UIP
 		acceptButton.setTitle("Must fix issues", for: .disabled)
         acceptButton.setTitle("Accept", for: .normal)
 
-		updateParameterViews()
+		updateAttributeViews()
 	}
 
 	func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -112,7 +112,7 @@ class EditSubDataTypeViewController: UIViewController, UIPickerViewDelegate, UIP
 		if pickerView == matcherTypePicker {
 			let type: SubQueryMatcher.Type = SubQueryMatcherFactory.allMatchers[row]
 			matcher = type.init()
-			updateParameterViews()
+			updateAttributeViews()
 		} else if pickerView == timeUnitPicker {
 			let unit = Me.supportedTimeUnits[row]
 			let id = getParameterId(for: .timeUnit)
@@ -134,7 +134,7 @@ class EditSubDataTypeViewController: UIViewController, UIPickerViewDelegate, UIP
 		matcher.mostRecentOnly = mostRecentOnlySwitch.isOn
 	}
 
-	fileprivate func updateParameterViews() {
+	fileprivate func updateAttributeViews() {
 		timeUnitPicker.isHidden = true
 		timeUnitPicker.isUserInteractionEnabled = false
 		valueTextField.isHidden = true

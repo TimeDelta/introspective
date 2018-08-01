@@ -1,5 +1,5 @@
 //
-//  TextFieldParameter.swift
+//  SelectOneAttribute.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 7/27/18.
@@ -8,5 +8,5 @@
 
 import Foundation
 
-public protocol TextFieldParameter: Parameter {
+public protocol SelectOneAttribute: SelectAttribute {
 }

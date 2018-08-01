@@ -11,6 +11,7 @@ import UIKit
 class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
 
 	fileprivate static let acceptedTimeConstraintEdit = Notification.Name("acceptedTimeConstraint")
+	fileprivate static let acceptedAttributeRestrictionEdit = Notification.Name("attributeRestriction")
 
 	fileprivate typealias Me = AdvancedQuestionViewController
 
@@ -64,6 +65,7 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		partWasAdded()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedTimeConstraint), name: Me.acceptedTimeConstraintEdit, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedAttributeRestriction), name: Me.acceptedAttributeRestrictionEdit, object: nil)
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -134,19 +136,20 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 			let source = (sender as! UITableViewCell)
 			editedIndex = tableView.indexPath(for: source)!.row
 			controller.selectedIndex = EditDataTypeViewController.indexFor(type: source.textLabel!.text!)
-		} else if segue.destination is ParameterizedChooserViewController {
-			let controller = (segue.destination as! ParameterizedChooserViewController)
+		} else if sender is TimeConstraintTableViewCell {
+			let controller = (segue.destination as! AttributedChooserViewController)
 			let source = (sender as! UITableViewCell)
 			editedIndex = tableView.indexPath(for: source)!.row
-			controller.possibleValues = TimeConstraintFactory.allTypes
+			controller.possibleValues = TimeConstraintFactory.allConstraints
 			controller.currentValue = (parts[editedIndex] as! TimeConstraint)
 			controller.notificationToSendWhenAccepted = Me.acceptedTimeConstraintEdit
 		} else if segue.destination is EditAttributeRestrictionViewController {
 			let controller = (segue.destination as! EditAttributeRestrictionViewController)
 			let source = (sender as! UITableViewCell)
 			editedIndex = tableView.indexPath(for: source)!.row
+			controller.dataType = bottomMostDataTypeAbove(index: editedIndex)
 			controller.attributeRestriction = (parts[editedIndex] as! AttributeRestriction)
-			controller.dataType = closestDataType(aboveIndex: editedIndex)
+			controller.notificationToSendWhenAccepted = Me.acceptedAttributeRestrictionEdit
 		} else if segue.destination is EditSubDataTypeViewController {
 			let controller = (segue.destination as! EditSubDataTypeViewController)
 			let source = (sender as! UITableViewCell)
@@ -172,13 +175,13 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 	}
 
 	@objc func saveEditedTimeConstraint(notification: Notification) {
+		_ = navigationController?.popViewController(animated: true)
 		parts[editedIndex] = notification.object as! TimeConstraint
 		tableView.reloadData()
 	}
 
-	@IBAction func saveEditedAttributeRestriction(_ segue: UIStoryboardSegue) {
-		let controller = (segue.source as! EditAttributeRestrictionViewController)
-		parts[editedIndex] = controller.attributeRestriction
+	@objc func saveEditedAttributeRestriction(notification: Notification) {
+		parts[editedIndex] = notification.object as! AttributeRestriction
 		tableView.reloadData()
 	}
 
@@ -203,7 +206,8 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 					break
 				case .attributeRestriction:
 					let lastDataType = bottomMostDataType()
-					let attributeRestriction = AttributeRestriction(lastDataType.defaultDependentAttribute)
+					let attribute = lastDataType.defaultDependentAttribute
+					let attributeRestriction = EqualToAttributeRestriction(attribute: attribute)
 					parts.append(attributeRestriction)
 					break
 			}
@@ -224,6 +228,15 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 			index -= 1
 		}
 		return (parts[index] as! DataTypeInfo).dataType
+	}
+
+	fileprivate func bottomMostDataTypeAbove(index: Int) -> DataTypes {
+		for part in parts[0 ... index].reversed() {
+			if part is DataTypeInfo {
+				return (part as! DataTypeInfo).dataType
+			}
+		}
+		return (parts[0] as! DataTypeInfo).dataType // this will never happen but the compiler can't know that
 	}
 
 	fileprivate func closestDataType(aboveIndex: Int) -> DataTypes {

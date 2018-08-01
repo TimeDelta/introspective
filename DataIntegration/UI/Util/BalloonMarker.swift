@@ -166,7 +166,7 @@ open class BalloonMarker: MarkerImage {
 
 	open override func refreshContent(entry: ChartDataEntry, highlight: Highlight) {
 		var text: String = String(entry.x)
-		if xAttributeType is Date.Type {
+		if xAttributeType is DateAttribute.Type {
 			let numberOfSecondsSinceEarliestDate: UInt64 = entry.x.bitPattern
 			let calendar = Calendar.autoupdatingCurrent
 			let date = calendar.date(byAdding: .second, value: Int(numberOfSecondsSinceEarliestDate), to: earliestDate!)!

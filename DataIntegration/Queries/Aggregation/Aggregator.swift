@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol Aggregator: Parameterized {
+public protocol Aggregator: Attributed {
 
 	func aggregate(samples: [Sample]) throws -> [(Aggregatable, [Sample])]
 }

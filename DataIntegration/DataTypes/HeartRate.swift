@@ -14,11 +14,18 @@ public class HeartRate: AnySample {
 	fileprivate typealias Me = HeartRate
 	fileprivate static let unit: HKUnit = HKUnit(from: "count/min")
 
-	public static var attributes: [Attribute] {
-		return [.heartRate]
-	}
+	public static let heartRate = DoubleAttribute(name: "Heart rate")
+	public static let attributes: [Attribute] = [heartRate]
+
+	public override var name: String { return "Heart rate" }
+	public override var description: String { return "A measurement of how fast your heart is beating (in beats per minute)." }
 
 	public var heartRate: Double
+
+	public required init() {
+		heartRate = Double()
+		super.init()
+	}
 
 	public init(_ value: Double) {
 		heartRate = value
@@ -40,30 +47,14 @@ public class HeartRate: AnySample {
 		super.init([.start: sample.startDate, .end: sample.endDate])
 	}
 
-	public override func value<ValueType>(of attribute: Attribute) throws -> ValueType {
-		switch (attribute) {
-			case .heartRate:
-				guard let value = heartRate as? ValueType else { throw SampleError.typeMismatch }
-				return value
-			case .startDate:
-				guard let value = dates[.start] as? ValueType else { throw SampleError.typeMismatch }
-				return value
-			default:
-				throw SampleError.unknownAttribute
-		}
+	public override func value(of attribute: Attribute) throws -> Any {
+		if attribute.name != Me.heartRate.name { throw SampleError.unknownAttribute }
+		return heartRate
 	}
 
-	public override func setValue<ValueType>(of attribute: Attribute, to value: ValueType) throws {
-		switch (attribute) {
-			case .heartRate:
-				guard let castedValue = value as? Double else { throw SampleError.typeMismatch }
-				heartRate = castedValue
-				break
-			case .startDate:
-				guard let castedValue = value as? Date else { throw SampleError.typeMismatch }
-				dates[.start] = castedValue
-			default:
-				throw SampleError.unknownAttribute
-		}
+	public override func set(attribute: Attribute, to value: Any) throws {
+		if attribute.name != Me.heartRate.name { throw SampleError.unknownAttribute }
+		guard let castedValue = value as? Double else { throw SampleError.typeMismatch }
+		heartRate = castedValue
 	}
 }

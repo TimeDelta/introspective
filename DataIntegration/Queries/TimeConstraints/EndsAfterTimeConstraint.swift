@@ -10,15 +10,15 @@ import Foundation
 
 public class EndsAfterTimeConstraint: TimeConstraint {
 
-	public static var name: String = "Ends after date and time"
-
 	fileprivate typealias Me = EndsAfterTimeConstraint
 
-	public static let dateParameter = DateTimeParameter(name: "Date", latestDate: Date())
-	public static var parameters: [Parameter] = [
-		dateParameter,
+	public static let dateAttribute = DateTimeAttribute(name: "Date", latestDate: Date())
+	public static var attributes: [Attribute] = [
+		dateAttribute,
 	]
 
+	public let name = "Ends after date and time"
+	public let attributes: [Attribute] = Me.attributes
 	public var description: String {
 		return "Ends after " + DependencyInjector.util.calendarUtil.string(for: date)
 	}
@@ -29,18 +29,18 @@ public class EndsAfterTimeConstraint: TimeConstraint {
 		date = Date()
 	}
 
-	public func get(parameter: Parameter) throws -> Any {
-		if parameter.name != Me.dateParameter.name {
-			throw ParameterError.unknownParameter
+	public func value(of attribute: Attribute) throws -> Any {
+		if attribute.name != Me.dateAttribute.name {
+			throw AttributeError.unknownAttribute
 		}
 		return date
 	}
 
-	public func set(parameter: Parameter, to value: Any) throws {
-		if parameter.name != Me.dateParameter.name {
-			throw ParameterError.unknownParameter
+	public func set(attribute: Attribute, to value: Any) throws {
+		if attribute.name != Me.dateAttribute.name {
+			throw AttributeError.unknownAttribute
 		}
-		guard let castedValue = value as? Date else { throw ParameterError.typeMismatch }
+		guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
 		date = castedValue
 	}
 

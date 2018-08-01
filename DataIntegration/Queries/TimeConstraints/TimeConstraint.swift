@@ -9,7 +9,9 @@
 import Foundation
 import os
 
-public protocol TimeConstraint: Parameterized {
+public protocol TimeConstraint: Attributed {
+
+	init()
 
 	func isValid() -> Bool
 	func sampleAdheres(_ sample: Sample) -> Bool

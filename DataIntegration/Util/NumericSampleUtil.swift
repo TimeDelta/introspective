@@ -34,7 +34,7 @@ public class NumericSampleUtil {
 
 		var average: Double = 0.0
 		for sample in samples {
-			average += try! sample.value(of: attribute)
+			average += try! sample.value(of: attribute) as! Double
 		}
 		return average / Double(samples.count)
 	}
@@ -76,10 +76,10 @@ public class NumericSampleUtil {
 		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		return try! samples.max(by: { (sample1: Sample, sample2: Sample) -> Bool in
-			let value1: Type = try! sample1.value(of: attribute)
-			let value2: Type = try! sample2.value(of: attribute)
+			let value1 = try! sample1.value(of: attribute) as! Type
+			let value2 = try! sample2.value(of: attribute) as! Type
 			return value1 < value2
-		})!.value(of: attribute)
+		})!.value(of: attribute) as! Type
 	}
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
@@ -104,10 +104,10 @@ public class NumericSampleUtil {
 		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		return try! samples.min(by: { (sample1: Sample, sample2: Sample) -> Bool in
-			let value1: Type = try! sample1.value(of: attribute)
-			let value2: Type = try! sample2.value(of: attribute)
+			let value1 = try! sample1.value(of: attribute) as! Type
+			let value2 = try! sample2.value(of: attribute) as! Type
 			return value1 < value2
-		})!.value(of: attribute)
+		})!.value(of: attribute) as! Type
 	}
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
@@ -133,7 +133,7 @@ public class NumericSampleUtil {
 
 		var sum: Type = 0
 		for sample in samples {
-			sum += try! sample.value(of: attribute)
+			sum += try! sample.value(of: attribute) as! Type
 		}
 		return sum
 	}

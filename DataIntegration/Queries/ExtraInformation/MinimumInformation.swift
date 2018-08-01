@@ -15,7 +15,6 @@ public class MinimumInformation<SampleType: Sample, AttributeType: Comparable>: 
 
 	public init(_ attribute: Attribute) {
 		super.init()
-		assert(attribute.classType == AttributeType.self)
 		self.attribute = attribute
 	}
 

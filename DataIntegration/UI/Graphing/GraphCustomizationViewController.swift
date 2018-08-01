@@ -113,14 +113,14 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 			} else if source == yAxisButton {
 				controller.selectedAttribute = yAxisAttribute
 			}
-			controller.attributes = Attribute.attributesFor(dataType: dataType)
-		} else if segue.destination is ParameterizedChooserViewController {
-			let controller = segue.destination as! ParameterizedChooserViewController
-			var possibleAggregators: [Aggregator.Type]
-			switch (xAxisAttribute.type) {
-				case .date: possibleAggregators = [DateAggregator.self]; break
-				case .quantity: possibleAggregators = []; break
-				case .string: possibleAggregators = []; break
+			controller.attributes = DataTypes.attributesFor(dataType)
+		} else if segue.destination is AttributedChooserViewController {
+			let controller = segue.destination as! AttributedChooserViewController
+			var possibleAggregators: [Aggregator]
+			if xAxisAttribute is DateAttribute {
+				possibleAggregators = [DateAggregator()]
+			} else {
+				possibleAggregators = []
 			}
 			controller.possibleValues = possibleAggregators
 		}
@@ -150,17 +150,17 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 	}
 
 	@IBAction func aggregationChanged(_ segue: UIStoryboardSegue) {
-		let controller = segue.source as! ParameterizedChooserViewController
+		let controller = segue.source as! AttributedChooserViewController
 		aggregator = (controller.currentValue as! Aggregator)
 		aggregationButton.setTitle(aggregator.description, for: .normal)
 	}
 
 	fileprivate func updateXAttributeDisplay() {
-		xAxisButton.setTitle(xAxisAttribute.description, for: .normal)
+		xAxisButton.setTitle(xAxisAttribute.name, for: .normal)
 	}
 
 	fileprivate func updateYAttributeDisplay() {
-		yAxisButton.setTitle(yAxisAttribute.description, for: .normal)
+		yAxisButton.setTitle(yAxisAttribute.name, for: .normal)
 	}
 
 	fileprivate func getSelectedChartType() -> ChartType {

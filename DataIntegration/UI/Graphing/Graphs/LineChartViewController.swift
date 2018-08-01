@@ -43,8 +43,8 @@ class LineChartViewController: ChartViewController {
 			font: .systemFont(ofSize: 12),
 			textColor: .white,
 			insets: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
-		marker.xAttributeType = xAxisAttribute.classType
-		if xAxisAttribute.classType is Date.Type {
+		marker.xAttributeType = type(of: xAxisAttribute)
+		if xAxisAttribute is DateAttribute {
 			let firstSampleValue: Any = try! samples[0].value(of: xAxisAttribute)
 			marker.earliestDate = (firstSampleValue as! Date)
 		}

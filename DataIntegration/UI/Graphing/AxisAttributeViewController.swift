@@ -23,7 +23,7 @@ class AxisAttributeViewController: UIViewController, UIPickerViewDataSource, UIP
 
 		var index: Int = 0
 		for attribute in attributes {
-			if selectedAttribute == attribute {
+			if selectedAttribute.name == attribute.name {
 				break
 			}
 			index += 1
@@ -41,7 +41,7 @@ class AxisAttributeViewController: UIViewController, UIPickerViewDataSource, UIP
 	}
 
 	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return attributes[row].description
+		return attributes[row].name
 	}
 
 	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

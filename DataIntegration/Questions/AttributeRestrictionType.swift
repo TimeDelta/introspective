@@ -1,5 +1,5 @@
 //
-//  AttributeComparisonType.swift
+//  AttributeRestrictionType.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 7/21/18.
@@ -10,7 +10,7 @@ import Foundation
 import os
 import NaturalLanguage
 
-public enum AttributeComparisonType: CustomStringConvertible {
+public enum AttributeRestrictionType: CustomStringConvertible {
 
 	public enum Errors: Error {
 		case UnknownComparisonType
@@ -29,7 +29,7 @@ public enum AttributeComparisonType: CustomStringConvertible {
 	case startsWith
 	case endsWith
 
-	public static func from(tag: NLTag) throws -> AttributeComparisonType {
+	public static func from(tag: NLTag) throws -> AttributeRestrictionType {
 		switch (tag) {
 			case Tags.greaterThan:
 				return .greaterThan
@@ -46,15 +46,15 @@ public enum AttributeComparisonType: CustomStringConvertible {
 		}
 	}
 
-	public static func typesFor(attribute: Attribute) -> [AttributeComparisonType] {
-		return typesFor(attributeType: attribute.classType)
+	public static func typesFor(attribute: Attribute) -> [AttributeRestrictionType] {
+		return typesFor(attributeType: type(of: attribute))
 	}
 
-	public static func typesFor(attributeType: Any.Type) -> [AttributeComparisonType] {
-		if attributeType == Int.self || attributeType == Double.self {
+	public static func typesFor(attributeType: Attribute.Type) -> [AttributeRestrictionType] {
+		if attributeType == DoubleAttribute.self {
 			return [greaterThan, greaterThanOrEqual, equals, lessThanOrEqual, lessThan, isOneOf]
 		}
-		if attributeType == String.self {
+		if attributeType == TextAttribute.self {
 			return [equals, isOneOf, contains, matches, startsWith, endsWith]
 		}
 

@@ -38,7 +38,7 @@ public class SampleInformation<SampleType: Sample>: ExtraInformation {
 	public var endDate: Date?
 
 	public init() {
-		attribute = .heartRate
+		attribute = DoubleAttribute(name: "Must override")
 	}
 
 	public func compute(forSamples: [SampleType]) -> String {

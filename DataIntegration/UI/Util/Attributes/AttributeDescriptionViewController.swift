@@ -1,5 +1,5 @@
 //
-//  ParameterDescriptionViewController.swift
+//  AttributeDescriptionViewController.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 7/22/18.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ParameterDescriptionViewController: UIViewController {
+class AttributeDescriptionViewController: UIViewController {
 
 	public var descriptionText: String!
 

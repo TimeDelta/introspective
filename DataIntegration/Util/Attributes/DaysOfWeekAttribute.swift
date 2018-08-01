@@ -1,5 +1,5 @@
 //
-//  DaysOfWeekParameter.swift
+//  DaysOfWeekAttribute.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 7/27/18.
@@ -8,20 +8,13 @@
 
 import Foundation
 
-public class DaysOfWeekParameter: MultiSelectParameter {
+public class DaysOfWeekAttribute: AnyMultiSelectAttribute {
 
-	public let separator: Character = ";"
-
-	public fileprivate(set) var name: String
-	public fileprivate(set) var extendedDescription: String?
-	public fileprivate(set) var possibleValues: [Any] = DayOfWeek.allDays
-
-	public init(name: String = "Days of the week", description: String? = nil) {
-		self.name = name
-		self.extendedDescription = description
+	public required init(name: String = "Days of the week", description: String? = nil) {
+		super.init(name: name, description: description, possibleValues: DayOfWeek.allDays)
 	}
 
-	public func errorMessageFor(invalidValue: String) -> String {
+	public override func errorMessageFor(invalidValue: String) -> String {
 		for day in invalidValue.split(separator: separator) {
 			let dayOfWeek = try? DayOfWeek.fromString(String(day))
 			if dayOfWeek == nil {
@@ -31,7 +24,7 @@ public class DaysOfWeekParameter: MultiSelectParameter {
 		return "No days selected"
 	}
 
-	public func convertToValue(from strValue: String) throws -> Any {
+	public override func convertToValue(from strValue: String) throws -> Any {
 		var daysOfWeek = Set<DayOfWeek>()
 		for day in strValue.split(separator: separator) {
 			let dayAbbreviation = day.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -41,7 +34,7 @@ public class DaysOfWeekParameter: MultiSelectParameter {
 		return daysOfWeek
 	}
 
-	public func convertToString(from value: Any) throws -> String {
+	public override func convertToString(from value: Any) throws -> String {
 		if let castedValue = value as? Set<DayOfWeek> {
 			let sortedDaysOfWeek = castedValue.sorted(by: { (day1, day2) -> Bool in day1.intValue < day2.intValue } )
 			return sortedDaysOfWeek.map{ day in return day.abbreviation }.joined(separator: String(separator))
@@ -53,10 +46,10 @@ public class DaysOfWeekParameter: MultiSelectParameter {
 		if let castedValue = value as? DayOfWeek {
 			return castedValue.abbreviation
 		}
-		throw ParameterError.typeMismatch
+		throw AttributeError.typeMismatch
 	}
 
-	public func convertToDisplayableString(from value: Any) throws -> String {
+	public override func convertToDisplayableString(from value: Any) throws -> String {
 		if let castedValue = value as? Set<DayOfWeek> {
 			let sortedDaysOfWeek = castedValue.sorted(by: { (day1, day2) -> Bool in day1.intValue < day2.intValue } )
 			return convertDaysOfWeekIntoDisplayString(sortedDaysOfWeek)
@@ -68,29 +61,29 @@ public class DaysOfWeekParameter: MultiSelectParameter {
 		if let castedValue = value as? DayOfWeek {
 			return castedValue.abbreviation
 		}
-		throw ParameterError.typeMismatch
+		throw AttributeError.typeMismatch
 	}
 
-	public func indexOf(possibleValue: Any) -> Int? {
+	public override func indexOf(possibleValue: Any) -> Int? {
 		guard let castedValue = possibleValue as? DayOfWeek else {
 			return nil
 		}
 		return DayOfWeek.allDays.firstIndex(of: castedValue)
 	}
 
-	public func valueAsArray(_ value: Any) throws -> [Any] {
+	public override func valueAsArray(_ value: Any) throws -> [Any] {
 		if let castedValue = value as? Set<DayOfWeek> {
 			return castedValue.map { v in return v }
 		}
 		if let castedValue = value as? [DayOfWeek] {
 			return castedValue
 		}
-		throw ParameterError.unsupportedValue
+		throw AttributeError.unsupportedValue
 	}
 
-	public func valueFromArray(_ value: [Any]) throws -> Any {
+	public override func valueFromArray(_ value: [Any]) throws -> Any {
 		guard let castedValue = value as? [DayOfWeek] else {
-			throw ParameterError.typeMismatch
+			throw AttributeError.typeMismatch
 		}
 		return Set<DayOfWeek>(castedValue)
 	}

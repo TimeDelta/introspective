@@ -40,11 +40,11 @@ public class HeartRateQuery: SampleQuery<HeartRate> {
 				}).filter(self.samplePassesFilters)
 
 				let result = SampleQueryResult<HeartRate>(samples)
-				result.addExtraInformation(AverageInformation<HeartRate>(.heartRate))
-				result.addExtraInformation(CountInformation<HeartRate>(.heartRate))
-				result.addExtraInformation(MaximumInformation<HeartRate, Double>(.heartRate))
-				result.addExtraInformation(MinimumInformation<HeartRate, Double>(.heartRate))
-				result.addExtraInformation(SumInformation<HeartRate>(.heartRate))
+				result.addExtraInformation(AverageInformation<HeartRate>(HeartRate.heartRate))
+				result.addExtraInformation(CountInformation<HeartRate>(HeartRate.heartRate))
+				result.addExtraInformation(MaximumInformation<HeartRate, Double>(HeartRate.heartRate))
+				result.addExtraInformation(MinimumInformation<HeartRate, Double>(HeartRate.heartRate))
+				result.addExtraInformation(SumInformation<HeartRate>(HeartRate.heartRate))
 
 				self.queryDone(result, nil)
 			}
@@ -52,20 +52,18 @@ public class HeartRateQuery: SampleQuery<HeartRate> {
 	}
 
 	fileprivate func samplePassesFilters(_ heartRate: HeartRate) -> Bool {
-		if !self.matchesAttributeRestrictionCriteria(heartRate) {
-			return false
+		for attributeRestriction in attributeRestrictions {
+			if try! !attributeRestriction.samplePasses(heartRate) {
+				return false
+			}
 		}
 
-		for timeConstraint in self.timeConstraints {
+		for timeConstraint in timeConstraints {
 			if !timeConstraint.sampleAdheres(heartRate) {
 				return false
 			}
 		}
 
 		return true
-	}
-
-	fileprivate func matchesAttributeRestrictionCriteria(_ sample: HeartRate) -> Bool {
-		return true // TODO
 	}
 }

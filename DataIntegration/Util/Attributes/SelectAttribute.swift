@@ -1,5 +1,5 @@
 //
-//  SelectParameter.swift
+//  SelectAttribute.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 7/27/18.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol SelectParameter: Parameter {
+public protocol SelectAttribute: Attribute {
 
 	var possibleValues: [Any] { get }
 	func indexOf(possibleValue: Any) -> Int?

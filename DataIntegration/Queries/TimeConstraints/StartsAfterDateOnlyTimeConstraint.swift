@@ -10,17 +10,17 @@ import Foundation
 
 public class StartsAfterDateOnlyTimeConstraint: TimeConstraint {
 
-	public static var name: String = "Starts after date"
-
 	fileprivate typealias Me = StartsAfterDateOnlyTimeConstraint
 
-	public static let dateParameter = DateOnlyParameter(name: "Date", latestDate: Date())
-	public static var parameters: [Parameter] = [
-		dateParameter,
+	public static let dateAttribute = DateOnlyAttribute(name: "Date", latestDate: Date())
+	public static var attributes: [Attribute] = [
+		dateAttribute,
 	]
 
+	public let name: String = "Starts after date"
+	public let attributes: [Attribute] = Me.attributes
 	public var description: String {
-		let dateText = try! Me.dateParameter.convertToString(from: date)
+		let dateText = try! Me.dateAttribute.convertToString(from: date)
 		return "Starts after " + dateText
 	}
 
@@ -34,18 +34,18 @@ public class StartsAfterDateOnlyTimeConstraint: TimeConstraint {
 		date = Date()
 	}
 
-	public func get(parameter: Parameter) throws -> Any {
-		if parameter.name != Me.dateParameter.name {
-			throw ParameterError.unknownParameter
+	public func value(of attribute: Attribute) throws -> Any {
+		if attribute.name != Me.dateAttribute.name {
+			throw AttributeError.unknownAttribute
 		}
 		return date
 	}
 
-	public func set(parameter: Parameter, to value: Any) throws {
-		if parameter.name != Me.dateParameter.name {
-			throw ParameterError.unknownParameter
+	public func set(attribute: Attribute, to value: Any) throws {
+		if attribute.name != Me.dateAttribute.name {
+			throw AttributeError.unknownAttribute
 		}
-		guard let castedValue = value as? Date else { throw ParameterError.typeMismatch }
+		guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
 		date = castedValue
 	}
 

@@ -1,5 +1,5 @@
 //
-//  DateTimeParameter.swift
+//  DateOnlyAttribute.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 7/27/18.
@@ -8,13 +8,18 @@
 
 import Foundation
 
-public class DateTimeParameter: DateParameterBase {
+public class DateOnlyAttribute: DateAttributeBase {
+
+	public required convenience init(name: String, description: String? = nil) {
+		self.init(name: name, description: description, latestDate: nil)
+	}
 
 	init(name: String, description: String? = nil, earliestDate: Date? = nil, latestDate: Date? = nil) {
 		super.init(
 			name: name,
 			description: description,
-			includeTime: true,
+			includeTime: false,
+			format: "MMMM dd YYYY",
 			earliestDate: earliestDate,
 			latestDate: latestDate)
 	}

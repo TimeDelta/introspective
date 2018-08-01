@@ -10,6 +10,21 @@ import Foundation
 
 public class TimeConstraintFactory {
 
+	public static let allConstraints: [TimeConstraint] = [
+		StartsBeforeDateOnlyTimeConstraint(),
+		StartsBeforeTimeConstraint(),
+		StartsAfterDateOnlyTimeConstraint(),
+		StartsAfterTimeConstraint(),
+		EndsBeforeDateOnlyTimeConstraint(),
+		EndsBeforeTimeConstraint(),
+		EndsAfterDateOnlyTimeConstraint(),
+		EndsAfterTimeConstraint(),
+		StartsOnDateTimeConstraint(),
+		EndsOnDateTimeConstraint(),
+		StartsOnDayOfWeekTimeConstraint(),
+		EndsOnDayOfWeekTimeConstraint(),
+	]
+
 	public static let allTypes: [TimeConstraint.Type] = [
 		StartsBeforeDateOnlyTimeConstraint.self,
 		StartsBeforeTimeConstraint.self,
