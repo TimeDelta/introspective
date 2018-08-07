@@ -31,4 +31,5 @@ class DependencyInjector: NSObject {
 	public static var restrictionParser: RestrictionParserFactory { get { return injectionProvider.restrictionParserFactory } }
 	public static var subQueryMatcher: SubQueryMatcherFactory { get { return injectionProvider.subQueryMatcherFactory } }
 	public static var timeConstraint: TimeConstraintFactory { get { return injectionProvider.timeConstraintFactory } }
+	public static var extraInformation: ExtraInformationFactory { get { return injectionProvider.extraInformationFactory } }
 }

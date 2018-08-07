@@ -261,7 +261,7 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 				return
 			}
 			controller.samples = result?.samples
-			controller.extraInformation = result?.extraInformation
+			controller.extraInformation = [ExtraInformation]()
 		}
 	}
 

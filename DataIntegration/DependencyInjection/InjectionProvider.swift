@@ -18,4 +18,5 @@ protocol InjectionProvider {
 	var restrictionParserFactory: RestrictionParserFactory { get }
 	var subQueryMatcherFactory: SubQueryMatcherFactory { get }
 	var timeConstraintFactory: TimeConstraintFactory { get }
+	var extraInformationFactory: ExtraInformationFactory { get }
 }

@@ -18,7 +18,6 @@ class ExtraInformationTableViewCell: UITableViewCell {
 				text = value
 			}
 			keyValueLabel.text = extraInformation.key + ": " + text
-			datesLabel.text = getDateText()
 		}
 	}
 
@@ -34,19 +33,4 @@ class ExtraInformationTableViewCell: UITableViewCell {
 	}
 
 	@IBOutlet weak var keyValueLabel: UILabel!
-	@IBOutlet weak var datesLabel: UILabel!
-
-	/// - Precondition: extraInformation is not `nil`
-	fileprivate func getDateText() -> String {
-		assert(extraInformation != nil)
-
-		if extraInformation.startDate != nil && extraInformation.endDate != nil {
-			return DependencyInjector.util.calendarUtil.string(for: extraInformation.startDate!) + " to " + DependencyInjector.util.calendarUtil.string(for: extraInformation.endDate!)
-		} else if extraInformation.startDate != nil {
-			return "starting at " + DependencyInjector.util.calendarUtil.string(for: extraInformation.startDate!)
-		} else if extraInformation.endDate != nil {
-			return "until " + DependencyInjector.util.calendarUtil.string(for: extraInformation.endDate!)
-		}
-		return ""
-	}
 }

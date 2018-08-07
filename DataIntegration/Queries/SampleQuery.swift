@@ -73,9 +73,6 @@ public class SampleQuery<SampleType: Sample>: TypedQuery {
 
 		let filteredSamples: [SampleType] = subQuery!.matcher.getSamples(from: querySamples, matching: subQuerySamples)
 		let filteredResult = SampleQueryResult<SampleType>(filteredSamples)
-		for information in queryResult.sampleInformation {
-			filteredResult.addExtraInformation(information)
-		}
 
 		return filteredResult
 	}

@@ -12,8 +12,8 @@
         <!--Results-->
         <scene sceneID="zEc-BJ-2ZU">
             <objects>
-                <viewControllerPlaceholder storyboardName="Results" id="dVV-R4-kJA" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NLU-Jr-D4i" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewControllerPlaceholder storyboardName="Results" id="dVV-R4-kJA" sceneMemberID="viewController"/>
             </objects>
             <point key="canvasLocation" x="1527" y="-357"/>
         </scene>
@@ -243,7 +243,6 @@
         <!--Edit Attribute Restriction View Controller-->
         <scene sceneID="MN9-6C-1GP">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="3g6-cz-OBf" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="L2p-RU-HId" customClass="EditAttributeRestrictionViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ewH-tz-GfQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
@@ -269,6 +268,7 @@
                         <outlet property="attributedChooserSubView" destination="ik2-6N-gHU" id="gTr-i3-4US"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3g6-cz-OBf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2893.5999999999999" y="-44.527736131934034"/>
         </scene>

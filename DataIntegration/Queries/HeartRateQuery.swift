@@ -40,12 +40,6 @@ public class HeartRateQuery: SampleQuery<HeartRate> {
 				}).filter(self.samplePassesFilters)
 
 				let result = SampleQueryResult<HeartRate>(samples)
-				result.addExtraInformation(AverageInformation<HeartRate>(HeartRate.heartRate))
-				result.addExtraInformation(CountInformation<HeartRate>(HeartRate.heartRate))
-				result.addExtraInformation(MaximumInformation<HeartRate, Double>(HeartRate.heartRate))
-				result.addExtraInformation(MinimumInformation<HeartRate, Double>(HeartRate.heartRate))
-				result.addExtraInformation(SumInformation<HeartRate>(HeartRate.heartRate))
-
 				self.queryDone(result, nil)
 			}
 		}

@@ -105,6 +105,11 @@
 		A2771525211354C700CC9F11 /* HorizontalMultiSelectAttributeValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2771524211354C700CC9F11 /* HorizontalMultiSelectAttributeValueViewController.swift */; };
 		A27715272113E62400CC9F11 /* DoubleAttributeValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27715262113E62400CC9F11 /* DoubleAttributeValueViewController.swift */; };
 		A27715292113F79000CC9F11 /* AttributeListAcceptButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27715282113F79000CC9F11 /* AttributeListAcceptButtonViewController.swift */; };
+		A277152B211A307500CC9F11 /* ResultsActionsPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A277152A211A307500CC9F11 /* ResultsActionsPopupViewController.swift */; };
+		A277152D211A359D00CC9F11 /* SelectExtraInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A277152C211A359D00CC9F11 /* SelectExtraInformationViewController.swift */; };
+		A277152F211A364300CC9F11 /* ExtraInformationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A277152E211A364300CC9F11 /* ExtraInformationFactory.swift */; };
+		A2771531211A3FB600CC9F11 /* OldestDateInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2771530211A3FB600CC9F11 /* OldestDateInformation.swift */; };
+		A2771533211A431B00CC9F11 /* MostRecentDateInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2771532211A431B00CC9F11 /* MostRecentDateInformation.swift */; };
 		A28F9D702107DD0F0066579D /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D6F2107DD0F0066579D /* BalloonMarker.swift */; };
 		A28F9D76210A6C410066579D /* Attributed.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D75210A6C410066579D /* Attributed.swift */; };
 		A28F9D78210A6CE60066579D /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D77210A6CE60066579D /* Attribute.swift */; };
@@ -309,6 +314,11 @@
 		A2771524211354C700CC9F11 /* HorizontalMultiSelectAttributeValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalMultiSelectAttributeValueViewController.swift; sourceTree = "<group>"; };
 		A27715262113E62400CC9F11 /* DoubleAttributeValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleAttributeValueViewController.swift; sourceTree = "<group>"; };
 		A27715282113F79000CC9F11 /* AttributeListAcceptButtonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeListAcceptButtonViewController.swift; sourceTree = "<group>"; };
+		A277152A211A307500CC9F11 /* ResultsActionsPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsActionsPopupViewController.swift; sourceTree = "<group>"; };
+		A277152C211A359D00CC9F11 /* SelectExtraInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectExtraInformationViewController.swift; sourceTree = "<group>"; };
+		A277152E211A364300CC9F11 /* ExtraInformationFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtraInformationFactory.swift; sourceTree = "<group>"; };
+		A2771530211A3FB600CC9F11 /* OldestDateInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldestDateInformation.swift; sourceTree = "<group>"; };
+		A2771532211A431B00CC9F11 /* MostRecentDateInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MostRecentDateInformation.swift; sourceTree = "<group>"; };
 		A28F9D6F2107DD0F0066579D /* BalloonMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
 		A28F9D75210A6C410066579D /* Attributed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attributed.swift; sourceTree = "<group>"; };
 		A28F9D77210A6CE60066579D /* Attribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
@@ -468,12 +478,15 @@
 		A2333B6320FA53770072736A /* ExtraInformation */ = {
 			isa = PBXGroup;
 			children = (
+				A277152E211A364300CC9F11 /* ExtraInformationFactory.swift */,
 				A2333B5F20FA39290072736A /* ExtraInformation.swift */,
 				A2333B6420FA53A40072736A /* AverageInformation.swift */,
 				A2333B7F20FAC4AD0072736A /* CountInformation.swift */,
 				A2333B7D20FAC4A20072736A /* MaximumInformation.swift */,
 				A2333B7B20FAC4950072736A /* MinimumInformation.swift */,
 				A2333B8120FAC4B80072736A /* SumInformation.swift */,
+				A2771530211A3FB600CC9F11 /* OldestDateInformation.swift */,
+				A2771532211A431B00CC9F11 /* MostRecentDateInformation.swift */,
 			);
 			path = ExtraInformation;
 			sourceTree = "<group>";
@@ -843,6 +856,8 @@
 				A2E50A3620F9A4D600C89DE3 /* ExtraInformationTableViewCell.swift */,
 				A2333B5B20FA34A00072736A /* TimestampClickChoiceViewController.swift */,
 				A2DCAC042102B4E9003F91AD /* ResultsGraphViewController.swift */,
+				A277152A211A307500CC9F11 /* ResultsActionsPopupViewController.swift */,
+				A277152C211A359D00CC9F11 /* SelectExtraInformationViewController.swift */,
 			);
 			path = Results;
 			sourceTree = "<group>";
@@ -1015,6 +1030,7 @@
 				A2C2A97E20FE030E00402D3D /* InSameCalendarUnitSubQueryMatcher.swift in Sources */,
 				A2DCAC232104D87C003F91AD /* Aggregatable.swift in Sources */,
 				A2E4E8A420E5584D00631398 /* InjectionProvider.swift in Sources */,
+				A277152F211A364300CC9F11 /* ExtraInformationFactory.swift in Sources */,
 				A2333B7C20FAC4950072736A /* MinimumInformation.swift in Sources */,
 				A238FEFC20E541600025307F /* TextNormalizationUtil.swift in Sources */,
 				A217810B20EC258B00A8F9BA /* CalendarUtil.swift in Sources */,
@@ -1032,6 +1048,7 @@
 				A28F9D99210BCE240066579D /* MultiSelectAttribute.swift in Sources */,
 				A2333B8620FBF7C60072736A /* TimeConstraintUtil.swift in Sources */,
 				A248CFAD20F15004000FE34E /* EditDataTypeViewController.swift in Sources */,
+				A2771531211A3FB600CC9F11 /* OldestDateInformation.swift in Sources */,
 				A238FED120E53E900025307F /* Labels.swift in Sources */,
 				A2771515211114AF00CC9F11 /* AttributeFactory.swift in Sources */,
 				A217810F20ED2F0A00A8F9BA /* NumericSampleUtil.swift in Sources */,
@@ -1063,6 +1080,7 @@
 				A2333B8820FCF65B0072736A /* SubQueryMatcher.swift in Sources */,
 				A2E4E8AC20E559A600631398 /* QuerierFactory.swift in Sources */,
 				A2E4E8A220E5584200631398 /* InjectionType.swift in Sources */,
+				A277152D211A359D00CC9F11 /* SelectExtraInformationViewController.swift in Sources */,
 				A2FA034120F165F80049E40D /* AdvancedQuestionViewController.swift in Sources */,
 				A2E4E8AE20E55AE400631398 /* QueryFactory.swift in Sources */,
 				A2769F2D210BF25D00261C98 /* DateTimeAttribute.swift in Sources */,
@@ -1114,11 +1132,13 @@
 				A238FEDD20E53EED0025307F /* DayOfWeek.swift in Sources */,
 				A28F9D702107DD0F0066579D /* BalloonMarker.swift in Sources */,
 				A2DCAC0E2103D26F003F91AD /* AttributeRestrictionType.swift in Sources */,
+				A2771533211A431B00CC9F11 /* MostRecentDateInformation.swift in Sources */,
 				A238FECD20E53E820025307F /* TextQuestion.swift in Sources */,
 				A2DCAC1C2104CFAC003F91AD /* AttributedChooserViewController.swift in Sources */,
 				A238FEF120E53F8D0025307F /* SourceField.swift in Sources */,
 				A2DCAC052102B4E9003F91AD /* ResultsGraphViewController.swift in Sources */,
 				A217810920EBA51400A8F9BA /* SampleQueryResult.swift in Sources */,
+				A277152B211A307500CC9F11 /* ResultsActionsPopupViewController.swift in Sources */,
 				A27715212112635400CC9F11 /* DateAttributeValueViewController.swift in Sources */,
 				A2769F3B210CD8D500261C98 /* DisplayableError.swift in Sources */,
 				A238FEE720E53F430025307F /* Mood.swift in Sources */,

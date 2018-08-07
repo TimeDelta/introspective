@@ -8,50 +8,32 @@
 
 import Foundation
 
-public enum InformationType {
-	case statistics
-}
-
 public protocol ExtraInformation {
 
-	var informationType: InformationType { get }
 	var key: String { get }
 	var startDate: Date? { get set }
 	var endDate: Date? { get set }
 	var attribute: Attribute { get set }
 
+	init(_ attribute: Attribute)
+
 	func compute(forSamples: [Sample]) throws -> String
 }
 
 // An abstract base class for everything that implements ExtraInformation
-public class SampleInformation<SampleType: Sample>: ExtraInformation {
+public class AnyInformation: ExtraInformation {
 
-	public enum Errors: Error {
-		case typeMismatch
-	}
-
-	public var informationType: InformationType { get { fatalError("Must override") } }
 	public var key: String { get { fatalError("Must override") } }
 	public var attribute: Attribute
 
 	public var startDate: Date?
 	public var endDate: Date?
 
-	public init() {
-		attribute = DoubleAttribute(name: "Must override")
+	public required init(_ attribute: Attribute) {
+		self.attribute = attribute
 	}
 
-	public func compute(forSamples: [SampleType]) -> String {
+	public func compute(forSamples: [Sample]) -> String {
 		fatalError("Must override")
-	}
-}
-
-extension SampleInformation {
-
-	public func compute(forSamples samples: [Sample]) throws -> String {
-		guard let typedSamples = samples as? [SampleType] else {
-			throw Errors.typeMismatch
-		}
-		return compute(forSamples: typedSamples)
 	}
 }

@@ -15,10 +15,12 @@ public class HeartRate: AnySample {
 	fileprivate static let unit: HKUnit = HKUnit(from: "count/min")
 
 	public static let heartRate = DoubleAttribute(name: "Heart rate")
-	public static let attributes: [Attribute] = [heartRate]
+	public static let attributes: [Attribute] = [heartRate, startDate]
 
 	public override var name: String { return "Heart rate" }
 	public override var description: String { return "A measurement of how fast your heart is beating (in beats per minute)." }
+	public override var dataType: DataTypes { return .heartRate }
+	public override var attributes: [Attribute] { return Me.attributes }
 
 	public var heartRate: Double
 
@@ -48,13 +50,24 @@ public class HeartRate: AnySample {
 	}
 
 	public override func value(of attribute: Attribute) throws -> Any {
-		if attribute.name != Me.heartRate.name { throw SampleError.unknownAttribute }
-		return heartRate
+		if attribute.name == Me.heartRate.name {
+			return heartRate
+		}
+		if attribute.name == Me.startDate.name {
+			return dates[.start]!
+		}
+		throw SampleError.unknownAttribute
 	}
 
 	public override func set(attribute: Attribute, to value: Any) throws {
-		if attribute.name != Me.heartRate.name { throw SampleError.unknownAttribute }
-		guard let castedValue = value as? Double else { throw SampleError.typeMismatch }
-		heartRate = castedValue
+		if attribute.name == Me.heartRate.name {
+			guard let castedValue = value as? Double else { throw SampleError.typeMismatch }
+			heartRate = castedValue
+		}
+		if attribute.name == Me.startDate.name {
+			guard let castedValue = value as? Date else { throw SampleError.typeMismatch }
+			dates[.start] = castedValue
+		}
+		throw SampleError.unknownAttribute
 	}
 }

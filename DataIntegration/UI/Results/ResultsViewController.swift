@@ -36,13 +36,14 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 		}
 	}
 
+	@IBOutlet weak var actionsButton: UIBarButtonItem!
+
 	fileprivate var lastSelectedRowIndex: Int!
-	fileprivate var graphButton: UIBarButtonItem!
+	fileprivate var extraInformationEditIndex: Int!
 
 	public override func viewDidLoad() {
-		createGraphButton()
-		disableGraphButton()
-		self.navigationItem.setRightBarButton(graphButton, animated: true)
+		disableActionsButton()
+		self.navigationItem.setRightBarButton(actionsButton, animated: true)
 	}
 
     // MARK: - Table view data source
@@ -128,6 +129,63 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 		return UITableViewCell()
 	}
 
+	// MARK: - TableView Editing
+
+	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return indexPath.section == 0
+    }
+
+	override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+		return indexPath.section == 0
+	}
+
+	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+		extraInformation.swapAt(fromIndexPath.row, to.row)
+		extraInformationValues.swapAt(fromIndexPath.row, to.row)
+    }
+
+	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
+			self.extraInformation.remove(at: indexPath.row)
+			self.extraInformationValues.remove(at: indexPath.row)
+			tableView.deleteRows(at: [indexPath], with: .fade)
+			tableView.reloadData()
+		}
+
+		return [delete]
+	}
+
+	// MARK: - Navigation
+
+	public override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if segue.destination is ResultsActionsPopupViewController {
+			let controller = segue.destination as! ResultsActionsPopupViewController
+			controller.modalPresentationStyle = UIModalPresentationStyle.popover
+			controller.popoverPresentationController!.delegate = self
+			controller.currentlyEditing = isEditing
+			let _ = controller.view
+			controller.graphButton.addTarget(self, action: #selector(graphButtonPressed), for: .touchUpInside)
+			controller.addInformationButton.addTarget(self, action: #selector(addInformationButtonPressed), for: .touchUpInside)
+			controller.editButton.addTarget(self.editButtonItem.target, action: self.editButtonItem.action!, for: .touchUpInside)
+		} else if segue.destination is SelectExtraInformationViewController {
+			let informationCell = (sender as! UITableViewCell)
+			extraInformationEditIndex = tableView.indexPath(for: informationCell)!.row
+			let selectedInformation = extraInformation[extraInformationEditIndex]
+
+			let controller = segue.destination as! SelectExtraInformationViewController
+			controller.attributes = samples[0].attributes
+			controller.selectedAttribute = selectedInformation.attribute
+			controller.selectedInformation = selectedInformation
+		}
+	}
+
+	@IBAction func saveEditedExtraInformation(_ segue: UIStoryboardSegue) {
+		let controller = segue.source as! SelectExtraInformationViewController
+		extraInformation[extraInformationEditIndex] = controller.selectedInformation
+		recomputeExtraInformation()
+		tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+	}
+
 	// MARK: - Popover delegation
 
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
@@ -137,7 +195,7 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 	// MARK: - Helper functions
 
 	fileprivate func viewIsReady() {
-		enableGraphButton()
+		enableActionsButton()
 		recomputeExtraInformation()
 		tableView.reloadData()
 	}
@@ -153,18 +211,14 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 		}
 	}
 
-	fileprivate func disableGraphButton() {
-		graphButton.isEnabled = false
-		graphButton.tintColor = UIColor.darkGray
+	fileprivate func disableActionsButton() {
+		actionsButton.isEnabled = false
+		actionsButton.tintColor = UIColor.darkGray
 	}
 
-	fileprivate func enableGraphButton() {
-		graphButton.isEnabled = true
-		graphButton.tintColor = nil
-	}
-
-	fileprivate func createGraphButton() {
-		graphButton = UIBarButtonItem(title: "Graph", style: .plain, target: self, action: #selector(graphButtonPressed))
+	fileprivate func enableActionsButton() {
+		actionsButton.isEnabled = true
+		actionsButton.tintColor = nil
 	}
 
 	@objc fileprivate func graphButtonPressed() {
@@ -172,5 +226,13 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 		controller.samples = samples
 		controller.dataType = dataType
 		navigationController?.pushViewController(controller, animated: false)
+	}
+
+	@objc fileprivate func addInformationButtonPressed() {
+		let attribute = samples[0].dataType.defaultDependentAttribute
+		let information = DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: attribute)[0].init(attribute)
+		extraInformation.append(information)
+		recomputeExtraInformation()
+		tableView.reloadData()
 	}
 }

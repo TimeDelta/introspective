@@ -21,6 +21,7 @@ class UnitTestInjectionProvider: InjectionProvider {
 	public static let mockRestrictionParserFactory = RestrictionParserFactory()
 	public static let mockSubQueryMatcherFactory = SubQueryMatcherFactory()
 	public static let mockTimeConstraintFactory = TimeConstraintFactory()
+	public static let mockExtraInformationFactory = ExtraInformationFactory()
 
 	public static func resetMocks() {} // TODO
 
@@ -32,4 +33,5 @@ class UnitTestInjectionProvider: InjectionProvider {
 	public var restrictionParserFactory: RestrictionParserFactory { get { return Me.mockRestrictionParserFactory } }
 	public var subQueryMatcherFactory: SubQueryMatcherFactory { get { return Me.mockSubQueryMatcherFactory } }
 	public var timeConstraintFactory: TimeConstraintFactory { get { return Me.mockTimeConstraintFactory } }
+	public var extraInformationFactory: ExtraInformationFactory { get { return Me.mockExtraInformationFactory } }
 }
