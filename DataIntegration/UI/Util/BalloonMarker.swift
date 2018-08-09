@@ -18,7 +18,7 @@ open class BalloonMarker: MarkerImage {
 	open var insets: UIEdgeInsets
 	open var minimumSize = CGSize()
 
-	public var xAttributeType: Any.Type?
+	public var xAttributeType: Attribute.Type?
 	public var earliestDate: Date?
 
 	fileprivate var label: String?
@@ -167,9 +167,8 @@ open class BalloonMarker: MarkerImage {
 	open override func refreshContent(entry: ChartDataEntry, highlight: Highlight) {
 		var text: String = String(entry.x)
 		if xAttributeType is DateAttribute.Type {
-			let numberOfSecondsSinceEarliestDate: UInt64 = entry.x.bitPattern
 			let calendar = Calendar.autoupdatingCurrent
-			let date = calendar.date(byAdding: .second, value: Int(numberOfSecondsSinceEarliestDate), to: earliestDate!)!
+			let date = calendar.date(byAdding: .second, value: Int(entry.x), to: earliestDate!)!
 			text = DependencyInjector.util.calendarUtil.string(for: date, inFormat: "dd MMM yyyy 'at' HH:mm")
 		}
 		setLabel(text)

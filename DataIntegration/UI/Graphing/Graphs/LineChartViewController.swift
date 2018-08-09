@@ -45,8 +45,7 @@ class LineChartViewController: ChartViewController {
 			insets: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
 		marker.xAttributeType = type(of: xAxisAttribute)
 		if xAxisAttribute is DateAttribute {
-			let firstSampleValue: Any = try! samples[0].value(of: xAxisAttribute)
-			marker.earliestDate = (firstSampleValue as! Date)
+			marker.earliestDate = try! samples[0].value(of: xAxisAttribute) as! Date
 		}
         marker.chartView = chartView
         marker.minimumSize = CGSize(width: 80, height: 40)
@@ -91,9 +90,7 @@ class LineChartViewController: ChartViewController {
 	fileprivate func getDouble(for attribute: Attribute, from sample: Sample) -> Double {
 		let value: Any = try! sample.value(of: attribute)
 		if value is Date {
-			let firstSampleValue: Any = try! samples[0].value(of: attribute)
-			let earliestDate = firstSampleValue as! Date
-
+			let earliestDate = try! samples[0].value(of: attribute) as! Date
 			let date = value as! Date
 			let totalSeconds = earliestDate.getInterval(toDate: date, component: .second)
 			return Double(totalSeconds)

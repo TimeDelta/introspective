@@ -145,7 +145,6 @@
 		A2C2A98420FE128700402D3D /* SameEndDatesSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C2A98320FE128700402D3D /* SameEndDatesSubQueryMatcher.swift */; };
 		A2C2A98620FE149D00402D3D /* SubQueryMatcherFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C2A98520FE149D00402D3D /* SubQueryMatcherFactory.swift */; };
 		A2C2A98820FE1AB900402D3D /* SampleQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2C2A98720FE1AB900402D3D /* SampleQuery.swift */; };
-		A2DCAC052102B4E9003F91AD /* ResultsGraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC042102B4E9003F91AD /* ResultsGraphViewController.swift */; };
 		A2DCAC072102C98E003F91AD /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2DCAC062102C98E003F91AD /* Charts.framework */; };
 		A2DCAC082102C98E003F91AD /* Charts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2DCAC062102C98E003F91AD /* Charts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A2DCAC0E2103D26F003F91AD /* AttributeRestrictionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2DCAC0D2103D26F003F91AD /* AttributeRestrictionType.swift */; };
@@ -362,7 +361,6 @@
 		A2C2A98520FE149D00402D3D /* SubQueryMatcherFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubQueryMatcherFactory.swift; sourceTree = "<group>"; };
 		A2C2A98720FE1AB900402D3D /* SampleQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleQuery.swift; sourceTree = "<group>"; };
 		A2CFA08B20E54F2E0083C5C5 /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = DataIntegration/Carthage/Build/iOS/SQLite.framework; sourceTree = "<group>"; };
-		A2DCAC042102B4E9003F91AD /* ResultsGraphViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsGraphViewController.swift; sourceTree = "<group>"; };
 		A2DCAC062102C98E003F91AD /* Charts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Charts.framework; path = DataIntegration/Carthage/Build/iOS/Charts.framework; sourceTree = "<group>"; };
 		A2DCAC0D2103D26F003F91AD /* AttributeRestrictionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AttributeRestrictionType.swift; path = DataIntegration/Questions/AttributeRestrictionType.swift; sourceTree = SOURCE_ROOT; };
 		A2DCAC112103DFDF003F91AD /* Graph.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Graph.storyboard; sourceTree = "<group>"; };
@@ -855,7 +853,6 @@
 				A2E50A3220F9A33100C89DE3 /* ResultsViewController.swift */,
 				A2E50A3620F9A4D600C89DE3 /* ExtraInformationTableViewCell.swift */,
 				A2333B5B20FA34A00072736A /* TimestampClickChoiceViewController.swift */,
-				A2DCAC042102B4E9003F91AD /* ResultsGraphViewController.swift */,
 				A277152A211A307500CC9F11 /* ResultsActionsPopupViewController.swift */,
 				A277152C211A359D00CC9F11 /* SelectExtraInformationViewController.swift */,
 			);
@@ -1136,7 +1133,6 @@
 				A238FECD20E53E820025307F /* TextQuestion.swift in Sources */,
 				A2DCAC1C2104CFAC003F91AD /* AttributedChooserViewController.swift in Sources */,
 				A238FEF120E53F8D0025307F /* SourceField.swift in Sources */,
-				A2DCAC052102B4E9003F91AD /* ResultsGraphViewController.swift in Sources */,
 				A217810920EBA51400A8F9BA /* SampleQueryResult.swift in Sources */,
 				A277152B211A307500CC9F11 /* ResultsActionsPopupViewController.swift in Sources */,
 				A27715212112635400CC9F11 /* DateAttributeValueViewController.swift in Sources */,
