@@ -10,6 +10,9 @@ import UIKit
 
 class GraphCustomizationViewController: UIViewController, UIPopoverPresentationControllerDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
 
+	fileprivate typealias Me = GraphCustomizationViewController
+	fileprivate static let changedAggregation = Notification.Name("changedAggregation")
+
 	enum ChartType: CustomStringConvertible {
 
 		case lineGraph
@@ -79,6 +82,8 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 		}
 		updateXAttributeDisplay()
 		updateYAttributeDisplay()
+
+		NotificationCenter.default.addObserver(self, selector: #selector(aggregationChanged), name: Me.changedAggregation, object: nil)
     }
 
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -123,6 +128,8 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 				possibleAggregators = []
 			}
 			controller.possibleValues = possibleAggregators
+			controller.currentValue = aggregator
+			controller.notificationToSendWhenAccepted = Me.changedAggregation
 		}
     }
 
@@ -149,10 +156,10 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 		updateYAttributeDisplay()
 	}
 
-	@IBAction func aggregationChanged(_ segue: UIStoryboardSegue) {
-		let controller = segue.source as! AttributedChooserViewController
-		aggregator = (controller.currentValue as! Aggregator)
+	@objc func aggregationChanged(notification: Notification) {
+		aggregator = (notification.object as! Aggregator)
 		aggregationButton.setTitle(aggregator.description, for: .normal)
+		_ = navigationController?.popViewController(animated: true)
 	}
 
 	fileprivate func updateXAttributeDisplay() {
