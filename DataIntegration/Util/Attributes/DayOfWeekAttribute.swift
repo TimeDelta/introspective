@@ -12,8 +12,8 @@ public class DayOfWeekAttribute: AnyAttribute, SelectOneAttribute {
 
 	public fileprivate(set) var possibleValues: [Any] = DayOfWeek.allDays
 
-	public required init(name: String = "Day of the week", description: String? = nil) {
-		super.init(name: name, description: description)
+	public required init(name: String = "Day of the week", pluralName: String? = "Days of the week", description: String? = nil) {
+		super.init(name: name, pluralName: pluralName, description: description)
 	}
 
 	public override func isValid(value: String) -> Bool {

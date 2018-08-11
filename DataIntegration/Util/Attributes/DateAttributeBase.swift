@@ -16,12 +16,13 @@ public class DateAttributeBase: AnyAttribute, DateAttribute {
 
 	fileprivate var dateFormat: String
 
-	public required convenience init(name: String, description: String? = nil) {
-		self.init(name: name, description: description, latestDate: nil)
+	public required convenience init(name: String, pluralName: String? = nil, description: String? = nil) {
+		self.init(name: name, pluralName: pluralName, description: description, latestDate: nil)
 	}
 
 	public init(
 		name: String,
+		pluralName: String? = nil,
 		description: String? = nil,
 		includeTime: Bool = true,
 		format: String = CalendarUtil.defaultDateFormat,
@@ -32,7 +33,7 @@ public class DateAttributeBase: AnyAttribute, DateAttribute {
 		self.dateFormat = format
 		self.earliestDate = earliestDate
 		self.latestDate = latestDate
-		super.init(name: name, description: description)
+		super.init(name: name, pluralName: pluralName, description: description)
 	}
 
 	public override func isValid(value: String) -> Bool {

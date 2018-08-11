@@ -12,14 +12,14 @@ public class AttributeSelectAttribute: AnyAttribute, SelectOneAttribute {
 
 	public fileprivate(set) var possibleValues: [Any]
 
-	public required init(name: String, description: String? = nil) {
+	public required init(name: String = "Attribute", pluralName: String? = "Attributes", description: String? = nil) {
 		self.possibleValues = [Attribute]()
-		super.init(name: name, description: description)
+		super.init(name: name, pluralName: pluralName, description: description)
 	}
 
-	public init(name: String, description: String? = nil, attributes: [Attribute]) {
+	public init(name: String = "Attribute", pluralName: String? = "Attributes", description: String? = nil, attributes: [Attribute]) {
 		self.possibleValues = attributes
-		super.init(name: name, description: description)
+		super.init(name: name, pluralName: pluralName, description: description)
 	}
 
 	/// Is the specified value valid for this attribute?

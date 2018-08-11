@@ -40,7 +40,7 @@ public class NumericSampleUtil {
 	}
 
 	/// - Precondition: The provided samples array is not empty.
-	public func count(over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Int)] {
+	public func count(over samples: [Sample], per aggregationUnit: Calendar.Component? = nil) -> [(date: Date?, value: Int)] {
 		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		if aggregationUnit == nil {

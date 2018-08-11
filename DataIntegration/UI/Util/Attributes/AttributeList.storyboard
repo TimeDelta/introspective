@@ -232,10 +232,10 @@
             </objects>
             <point key="canvasLocation" x="6717" y="-1776"/>
         </scene>
-        <!--Double Attribute Value View Controller-->
+        <!--Numeric Attribute Value View Controller-->
         <scene sceneID="NWb-pn-e9b">
             <objects>
-                <viewController storyboardIdentifier="doubleAttribute" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Ic4-FV-ZaX" customClass="DoubleAttributeValueViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="numericAttribute" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Ic4-FV-ZaX" customClass="NumericAttributeValueViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="CnK-qb-LML">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="112"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

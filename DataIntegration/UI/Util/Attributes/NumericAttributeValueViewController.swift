@@ -1,5 +1,5 @@
 //
-//  DoubleAttributeValueViewController.swift
+//  NumericAttributeValueViewController.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 8/2/18.
@@ -8,9 +8,9 @@
 
 import UIKit
 
-class DoubleAttributeValueViewController: AttributeValueTypeViewController {
+class NumericAttributeValueViewController: AttributeValueTypeViewController {
 
-	public var doubleAttribute: DoubleAttribute!
+	public var numericAttribute: NumericAttribute!
 
 	@IBOutlet weak var textField: UITextField!
 	@IBOutlet weak var validationLabel: UILabel!
@@ -29,8 +29,8 @@ class DoubleAttributeValueViewController: AttributeValueTypeViewController {
 	}
 
 	fileprivate func validate(value: String?) {
-		if value != nil && DependencyInjector.util.stringUtil.isNumber(value!) {
-			currentValue = Double(value!)
+		if value != nil && numericAttribute.isValid(value: value!) {
+			currentValue = try! numericAttribute.convertToValue(from: value!)
 			validationLabel.text = ""
 			valueIsValid()
 		} else {

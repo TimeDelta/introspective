@@ -27,7 +27,7 @@ public enum DataTypes: CustomStringConvertible {
 	}
 
 	public var defaultIndependentAttribute: Attribute {
-		return AnySample.startDate
+		return SampleBase.startDate
 	}
 
 	public var description: String {

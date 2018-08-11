@@ -21,7 +21,7 @@ public class AnyAttributeRestriction: AttributeRestriction {
 
 	fileprivate typealias Me = AnyAttributeRestriction
 
-	public static let selectAnAttribute = TextAttribute(name:"Select an attribute")
+	public static let selectAnAttribute = TextAttribute(name:"Atribute", pluralName: "Attributes")
 
 	public var name: String { get { fatalError("Must override") } }
 	public var description: String { get { fatalError("Must override") } }

@@ -10,13 +10,14 @@ import Foundation
 
 public class DateOnlyAttribute: DateAttributeBase {
 
-	public required convenience init(name: String, description: String? = nil) {
-		self.init(name: name, description: description, latestDate: nil)
+	public required convenience init(name: String = "Date", pluralName: String? = "Dates", description: String? = nil) {
+		self.init(name: name, pluralName: pluralName, description: description, latestDate: nil)
 	}
 
-	init(name: String, description: String? = nil, earliestDate: Date? = nil, latestDate: Date? = nil) {
+	init(name: String = "Date", pluralName: String? = "Dates", description: String? = nil, earliestDate: Date? = nil, latestDate: Date? = nil) {
 		super.init(
 			name: name,
+			pluralName: pluralName,
 			description: description,
 			includeTime: false,
 			format: "MMMM dd YYYY",

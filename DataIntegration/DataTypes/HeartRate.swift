@@ -9,12 +9,12 @@
 import Foundation
 import HealthKit
 
-public class HeartRate: AnySample {
+public class HeartRate: SampleBase {
 
 	fileprivate typealias Me = HeartRate
 	fileprivate static let unit: HKUnit = HKUnit(from: "count/min")
 
-	public static let heartRate = DoubleAttribute(name: "Heart rate")
+	public static let heartRate = DoubleAttribute(name: "Heart rate", pluralName: "Heart rates")
 	public static let attributes: [Attribute] = [heartRate, startDate]
 
 	public override var name: String { return "Heart rate" }
@@ -63,10 +63,12 @@ public class HeartRate: AnySample {
 		if attribute.name == Me.heartRate.name {
 			guard let castedValue = value as? Double else { throw SampleError.typeMismatch }
 			heartRate = castedValue
+			return
 		}
 		if attribute.name == Me.startDate.name {
 			guard let castedValue = value as? Date else { throw SampleError.typeMismatch }
 			dates[.start] = castedValue
+			return
 		}
 		throw SampleError.unknownAttribute
 	}

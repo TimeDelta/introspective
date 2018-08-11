@@ -22,4 +22,6 @@ class FunctionalTestInjectionProvider: InjectionProvider {
 	public var subQueryMatcherFactory: SubQueryMatcherFactory { get { return productionInjectionProvider.subQueryMatcherFactory } }
 	public var timeConstraintFactory: TimeConstraintFactory { get { return productionInjectionProvider.timeConstraintFactory } }
 	public var extraInformationFactory: ExtraInformationFactory { get { return productionInjectionProvider.extraInformationFactory } }
+	public var sampleGrouperFactory: SampleGrouperFactory { get { return productionInjectionProvider.sampleGrouperFactory } }
+	public var sampleGroupCombinerFactory: SampleGroupCombinerFactory { get { return productionInjectionProvider.sampleGroupCombinerFactory } }
 }

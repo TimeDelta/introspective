@@ -24,14 +24,14 @@ public class AnyMultiSelectAttribute: AnyAttribute, MultiSelectAttribute {
 	public fileprivate(set) var separator: Character
 	public fileprivate(set) var possibleValues: [Any]
 
-	public required convenience init(name: String, description: String? = nil) {
-		self.init(name: name, description: description, separator: " ")
+	public required convenience init(name: String, pluralName: String? = nil, description: String? = nil) {
+		self.init(name: name, pluralName: pluralName, description: description, separator: " ")
 	}
 
-	public init(name: String, description: String? = nil, separator: Character = ";", possibleValues: [Any] = [Any]()) {
+	public init(name: String, pluralName: String? = nil, description: String? = nil, separator: Character = ";", possibleValues: [Any] = [Any]()) {
 		self.separator = separator
 		self.possibleValues = possibleValues
-		super.init(name: name, description: description)
+		super.init(name: name, pluralName: pluralName, description: description)
 	}
 
 	public override func isValid(value: String) -> Bool {

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14295.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="i85-gb-gSr">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.3.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="i85-gb-gSr">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14270.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -14,7 +14,7 @@
             <objects>
                 <viewController storyboardIdentifier="GraphCustomizationViewController" title="Graph Setup" useStoryboardIdentifierAsRestorationIdentifier="YES" id="i85-gb-gSr" customClass="GraphCustomizationViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="UWT-yU-geP">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="X-Axis:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7TN-9A-uF4">
@@ -67,11 +67,11 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Choose Aggregation"/>
                                 <connections>
-                                    <segue destination="WrQ-wj-kjv" kind="show" id="QIg-aG-eQc"/>
+                                    <segue destination="Adi-Y4-24A" kind="show" id="CJ9-wW-AGI"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="71L-ng-zLn">
-                                <rect key="frame" x="16" y="573" width="343" height="30"/>
+                                <rect key="frame" x="16" y="460" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Show me the graph">
@@ -85,6 +85,8 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="f6U-Zp-Zo9"/>
                     </view>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
                     <connections>
                         <outlet property="aggregationButton" destination="fUk-vr-P3B" id="8JQ-tE-AR7"/>
                         <outlet property="graphTypePicker" destination="HOw-bl-0pW" id="EAl-Qq-x35"/>
@@ -137,13 +139,83 @@
             </objects>
             <point key="canvasLocation" x="4416" y="-2450"/>
         </scene>
-        <!--AttributeList-->
-        <scene sceneID="DCO-OQ-Vsi">
+        <!--Sample Aggregation-->
+        <scene sceneID="YbQ-9F-esR">
             <objects>
-                <viewControllerPlaceholder storyboardName="AttributeList" id="WrQ-wj-kjv" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="KjZ-j5-TPR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController title="Sample Aggregation" id="Adi-Y4-24A" customClass="EditSampleAggregationViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="MTv-A8-Bac">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Group _ by:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k2r-Id-Jy5">
+                                <rect key="frame" x="16" y="115" width="343" height="21"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Combine _ by:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tda-kl-PfI">
+                                <rect key="frame" x="16" y="211" width="343" height="21"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="jnl-cE-NvT">
+                                <rect key="frame" x="16" y="144" width="343" height="59"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Choose"/>
+                                <connections>
+                                    <segue destination="hj5-p9-w3V" kind="show" id="95h-JM-7g4"/>
+                                </connections>
+                            </button>
+                            <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sql-uH-bLB">
+                                <rect key="frame" x="0.0" y="240" width="375" height="127"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            </pickerView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="validation label" textAlignment="justified" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dVf-gd-HYB">
+                                <rect key="frame" x="16" y="375" width="343" height="48"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="1" green="0.058155415100000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LcG-DN-v5g">
+                                <rect key="frame" x="16" y="431" width="343" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Accept">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <segue destination="WrL-Na-M5L" kind="unwind" unwindAction="graphSampleAggregationChanged:" id="WQs-cM-cly"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="eE1-8x-Nxa"/>
+                    </view>
+                    <connections>
+                        <outlet property="acceptButton" destination="LcG-DN-v5g" id="Viy-Iu-5Nw"/>
+                        <outlet property="combineValuesByLabel" destination="tda-kl-PfI" id="AfT-8s-cJm"/>
+                        <outlet property="groupByButton" destination="jnl-cE-NvT" id="cb2-od-FPm"/>
+                        <outlet property="groupByLabel" destination="k2r-Id-Jy5" id="0ew-QF-a3d"/>
+                        <outlet property="validationLabel" destination="dVf-gd-HYB" id="lco-U9-X9g"/>
+                        <outlet property="valueCombinationMethodPicker" destination="sql-uH-bLB" id="7eM-lh-3dv"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HWe-0x-GkY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="WrL-Na-M5L" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="4398" y="-2231"/>
+            <point key="canvasLocation" x="5053.6000000000004" y="-2231.3343328335832"/>
+        </scene>
+        <!--attributedChooserViewController-->
+        <scene sceneID="XMT-Mv-bo6">
+            <objects>
+                <viewControllerPlaceholder storyboardName="AttributeList" referencedIdentifier="attributedChooserViewController" id="hj5-p9-w3V" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VAO-8x-lak" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5676" y="-2231"/>
         </scene>
         <!--Axis Attribute View Controller-->
         <scene sceneID="Wg0-MW-KAz">

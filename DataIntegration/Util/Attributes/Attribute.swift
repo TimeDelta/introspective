@@ -18,10 +18,11 @@ public protocol Attribute {
 
 	/// This is a name that should be understandable by the user
 	var name: String { get }
+	var pluralName: String { get }
 	/// This is an explanation of this attribute that should be able to be presented to the user.
 	var extendedDescription: String? { get }
 
-	init(name: String, description: String?)
+	init(name: String, pluralName: String?, description: String?)
 
 	/// Is the specified value valid for this attribute?
 	func isValid(value: String) -> Bool
@@ -50,11 +51,17 @@ public class AnyAttribute: Attribute {
 
 	/// This is a name that should be understandable by the user
 	public fileprivate(set) var name: String
+	public fileprivate(set) var pluralName: String
 	/// This is an explanation of this attribute that should be able to be presented to the user.
 	public fileprivate(set) var extendedDescription: String?
 
-	public required init(name: String, description: String?) {
+	public required init(name: String, pluralName: String? = nil, description: String?) {
 		self.name = name
+		if pluralName == nil {
+			self.pluralName = name
+		} else {
+			self.pluralName = pluralName!
+		}
 		self.extendedDescription = description
 	}
 

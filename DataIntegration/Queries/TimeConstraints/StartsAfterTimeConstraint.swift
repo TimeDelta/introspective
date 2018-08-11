@@ -12,7 +12,7 @@ public class StartsAfterTimeConstraint: TimeConstraint {
 
 	fileprivate typealias Me = StartsAfterTimeConstraint
 
-	public static let dateAttribute = DateTimeAttribute(name: "Date", latestDate: Date())
+	public static let dateAttribute = DateTimeAttribute(latestDate: Date())
 	public static var attributes: [Attribute] = [
 		dateAttribute,
 	]

@@ -29,8 +29,8 @@ public class CalendarComponentAttribute: AnyAttribute, SelectOneAttribute {
 
 	public let possibleValues: [Any] = Me.supportedComponents
 
-	public required init(name: String = "Day of the week", description: String? = nil) {
-		super.init(name: name, description: description)
+	public required init(name: String = "Time unit", pluralName: String? = "Time units", description: String? = nil) {
+		super.init(name: name, pluralName: pluralName, description: description)
 	}
 
 	public override func isValid(value: String) -> Bool {

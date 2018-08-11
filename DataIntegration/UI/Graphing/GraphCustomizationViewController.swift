@@ -10,9 +10,6 @@ import UIKit
 
 class GraphCustomizationViewController: UIViewController, UIPopoverPresentationControllerDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
 
-	fileprivate typealias Me = GraphCustomizationViewController
-	fileprivate static let changedAggregation = Notification.Name("changedAggregation")
-
 	enum ChartType: CustomStringConvertible {
 
 		case lineGraph
@@ -61,7 +58,7 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 
 	fileprivate var xAxisAttribute: Attribute!
 	fileprivate var yAxisAttribute: Attribute!
-	fileprivate var aggregator: Aggregator!
+	fileprivate var aggregator: SampleAggregator!
 
 	@IBOutlet weak var graphTypePicker: UIPickerView!
 	@IBOutlet weak var xAxisButton: UIButton!
@@ -82,8 +79,6 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 		}
 		updateXAttributeDisplay()
 		updateYAttributeDisplay()
-
-		NotificationCenter.default.addObserver(self, selector: #selector(aggregationChanged), name: Me.changedAggregation, object: nil)
     }
 
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -119,17 +114,15 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 				controller.selectedAttribute = yAxisAttribute
 			}
 			controller.attributes = DataTypes.attributesFor(dataType)
-		} else if segue.destination is AttributedChooserViewController {
-			let controller = segue.destination as! AttributedChooserViewController
-			var possibleAggregators: [Aggregator]
-			if xAxisAttribute is DateAttribute {
-				possibleAggregators = [DateAggregator()]
+		} else if segue.destination is EditSampleAggregationViewController {
+			let controller = segue.destination as! EditSampleAggregationViewController
+			if aggregator == nil {
+				aggregator = SampleAggregator(groupingBy: xAxisAttribute, combining: yAxisAttribute)
 			} else {
-				possibleAggregators = []
+				aggregator.groupByAttribute = xAxisAttribute
+				aggregator.combinationAttribute = yAxisAttribute
 			}
-			controller.possibleValues = possibleAggregators
-			controller.currentValue = aggregator
-			controller.notificationToSendWhenAccepted = Me.changedAggregation
+			controller.currentAggregator = aggregator
 		}
     }
 
@@ -139,7 +132,11 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 		let controller = UIStoryboard(name: "LineChart", bundle: nil).instantiateViewController(withIdentifier: String(describing: controllerType)) as! ChartViewController
 		controller.properties[.xAxisAttribute] = xAxisAttribute
 		controller.properties[.yAxisAttribute] = yAxisAttribute
-		controller.samples = samples
+		if aggregator == nil {
+			controller.samples = samples
+		} else {
+			controller.samples = aggregator.aggregate(samples: samples)
+		}
 
 		navigationController!.pushViewController(controller, animated: true)
 	}
@@ -156,10 +153,10 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 		updateYAttributeDisplay()
 	}
 
-	@objc func aggregationChanged(notification: Notification) {
-		aggregator = (notification.object as! Aggregator)
+	@IBAction func graphSampleAggregationChanged(_ segue: UIStoryboardSegue) {
+		let controller = segue.source as! EditSampleAggregationViewController
+		aggregator = controller.currentAggregator
 		aggregationButton.setTitle(aggregator.description, for: .normal)
-		_ = navigationController?.popViewController(animated: true)
 	}
 
 	fileprivate func updateXAttributeDisplay() {

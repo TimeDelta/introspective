@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class DayOfWeek: NSObject, Aggregatable {
+public class DayOfWeek: NSObject {
 
 	public enum ErrorTypes: Error {
 		case UnknownDayOfWeek

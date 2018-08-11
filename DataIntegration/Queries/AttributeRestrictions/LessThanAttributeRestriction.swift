@@ -12,7 +12,7 @@ public class LessThanAttributeRestriction: AnyAttributeRestriction {
 
 	fileprivate typealias Me = LessThanAttributeRestriction
 
-	public static let valueAttribute = DoubleAttribute(name: "Value")
+	public static let valueAttribute = DoubleAttribute(name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [
 		valueAttribute,
 	]

@@ -12,7 +12,7 @@ public class StartsAfterDateOnlyTimeConstraint: TimeConstraint {
 
 	fileprivate typealias Me = StartsAfterDateOnlyTimeConstraint
 
-	public static let dateAttribute = DateOnlyAttribute(name: "Date", latestDate: Date())
+	public static let dateAttribute = DateOnlyAttribute(latestDate: Date())
 	public static var attributes: [Attribute] = [
 		dateAttribute,
 	]

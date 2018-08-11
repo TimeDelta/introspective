@@ -10,13 +10,14 @@ import Foundation
 
 public class DateTimeAttribute: DateAttributeBase {
 
-	public required convenience init(name: String, description: String? = nil) {
-		self.init(name: name, description: description, latestDate: nil)
+	public required convenience init(name: String = "Date and time", pluralName: String? = "Dates and times", description: String? = nil) {
+		self.init(name: name, pluralName: pluralName, description: description, latestDate: nil)
 	}
 
-	public init(name: String, description: String? = nil, earliestDate: Date? = nil, latestDate: Date? = nil) {
+	public init(name: String = "Date and time", pluralName: String? = "Dates and times", description: String? = nil, earliestDate: Date? = nil, latestDate: Date? = nil) {
 		super.init(
 			name: name,
+			pluralName: pluralName,
 			description: description,
 			includeTime: true,
 			earliestDate: earliestDate,

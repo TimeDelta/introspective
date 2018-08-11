@@ -26,7 +26,7 @@ public protocol Sample: Attributed {
 
 
 /// An abstract base class for everything that implements the Sample protocol
-public class AnySample: Sample {
+public class SampleBase: Sample {
 
 	public static let startDate = DateTimeAttribute(name: "Start date")
 	public static let endDate = DateTimeAttribute(name: "End date")

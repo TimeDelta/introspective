@@ -21,6 +21,8 @@ class ProductionInjectionProvider: InjectionProvider {
 	fileprivate static let realSubQueryMatcherFactory = SubQueryMatcherFactory()
 	fileprivate static let realTimeConstraintFactory = TimeConstraintFactory()
 	fileprivate static let realExtraInformationFactory = ExtraInformationFactory()
+	fileprivate static let realSampleGrouperFactory = SampleGrouperFactory()
+	fileprivate static let realSampleGroupCombinerFactory = SampleGroupCombinerFactory()
 
 	var queryFactory: QueryFactory { get { return Me.realQueryFactory } }
 	var querierFactory: QuerierFactory { get { return Me.realQuerierFactory } }
@@ -31,4 +33,6 @@ class ProductionInjectionProvider: InjectionProvider {
 	var subQueryMatcherFactory: SubQueryMatcherFactory { get { return Me.realSubQueryMatcherFactory } }
 	var timeConstraintFactory: TimeConstraintFactory { get { return Me.realTimeConstraintFactory } }
 	var extraInformationFactory: ExtraInformationFactory { get { return Me.realExtraInformationFactory } }
+	var sampleGrouperFactory: SampleGrouperFactory { get { return Me.realSampleGrouperFactory } }
+	var sampleGroupCombinerFactory: SampleGroupCombinerFactory { get { return Me.realSampleGroupCombinerFactory } }
 }

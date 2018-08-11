@@ -46,9 +46,9 @@ class AttributeValueViewController: UIViewController {
 			controller.textAttribute = (attribute as! TextAttribute)
 			controller.currentValue = attributeValue
 			subViewController = controller
-		} else if attribute is DoubleAttribute {
-			let controller = UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "doubleAttribute") as! DoubleAttributeValueViewController
-			controller.doubleAttribute = (attribute as! DoubleAttribute)
+		} else if attribute is NumericAttribute {
+			let controller = UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "numericAttribute") as! NumericAttributeValueViewController
+			controller.numericAttribute = (attribute as! NumericAttribute)
 			controller.currentValue = attributeValue
 			subViewController = controller
 		}
@@ -59,6 +59,9 @@ class AttributeValueViewController: UIViewController {
 			let containerView = ContainerView<AttributeValueTypeViewController>(parentController: self)
 			containerView.install(subViewController)
 			stackView.addArrangedSubview(containerView)
+
+			NotificationCenter.default.addObserver(self, selector: #selector(disableAcceptButton), name: Me.valueIsInvalidNotification, object: nil)
+			NotificationCenter.default.addObserver(self, selector: #selector(enableAcceptButton), name: Me.valueIsValidNotification, object: nil)
 		}
     }
 
@@ -66,13 +69,13 @@ class AttributeValueViewController: UIViewController {
 		attributeValue = subViewController.currentValue
 	}
 
-	fileprivate func disableAcceptButton() {
+	@objc fileprivate func disableAcceptButton() {
 		acceptButton.isEnabled = false
 		acceptButton.isUserInteractionEnabled = false
 		acceptButton.backgroundColor = UIColor.gray
 	}
 
-	fileprivate func enableAcceptButton() {
+	@objc fileprivate func enableAcceptButton() {
 		acceptButton.isEnabled = true
 		acceptButton.isUserInteractionEnabled = true
 		acceptButton.backgroundColor = UIColor.black
