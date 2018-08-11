@@ -29,9 +29,9 @@ public class SameTimeUnitSampleGrouper: SampleGrouper {
 
 	public func group(samples: [Sample], by attribute: Attribute) -> [(Any, [Sample])] {
 		var samplesByTimeUnit: [Date: [Sample]]
-		if attribute.name == SampleBase.startDate.name {
+		if attribute.equalTo(CommonSampleAttributes.startDate) || attribute.equalTo(CommonSampleAttributes.timestamp) {
 			samplesByTimeUnit = DependencyInjector.util.sampleUtil.aggregate(samples: samples, by: timeUnit, dateType: .start)
-		} else if attribute.name == SampleBase.endDate.name {
+		} else if attribute.equalTo(CommonSampleAttributes.endDate) {
 			samplesByTimeUnit = DependencyInjector.util.sampleUtil.aggregate(samples: samples, by: timeUnit, dateType: .end)
 		} else {
 			samplesByTimeUnit = DependencyInjector.util.sampleUtil.aggregate(samples: samples, by: timeUnit)

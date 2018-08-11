@@ -10,8 +10,8 @@ import Foundation
 
 public class DaysOfWeekAttribute: AnyMultiSelectAttribute {
 
-	public required init(name: String = "Days of the week", pluralName: String? = "Days of the week", description: String? = nil) {
-		super.init(name: name, pluralName: pluralName, description: description, possibleValues: DayOfWeek.allDays)
+	public required init(name: String = "Days of the week", pluralName: String? = "Days of the week", description: String? = nil, variableName: String? = nil) {
+		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, possibleValues: DayOfWeek.allDays)
 	}
 
 	public override func errorMessageFor(invalidValue: String) -> String {

@@ -27,9 +27,9 @@ public protocol SubQueryMatcher: CustomStringConvertible {
 
 	init()
 
-	func getSamples<QuerySampleType: Sample, SubQuerySampleType: Sample>(
+	func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
-		matching subQuerySamples: [SubQuerySampleType]
+		matching subQuerySamples: [Sample]
 	) -> [QuerySampleType]
 
 	func setParameter<T>(id: Int, value: T) throws

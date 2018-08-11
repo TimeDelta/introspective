@@ -73,7 +73,7 @@ public class SampleQuery<SampleType: Sample>: Query {
 		}
 		let queryResult = queryCallbackParameters!.result!
 		let querySamples = queryResult.typedSamples
-		let subQuerySamples = subQueryCallbackParameters!.result!.samples as! [SampleBase]
+		let subQuerySamples = subQueryCallbackParameters!.result!.samples
 
 		let filteredSamples: [SampleType] = subQuery!.matcher.getSamples(from: querySamples, matching: subQuerySamples)
 		let filteredResult = SampleQueryResult<SampleType>(filteredSamples)

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.3.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.1"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -95,8 +96,8 @@
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                     </tabBar>
                     <connections>
+                        <segue destination="bye-Kw-rc5" kind="relationship" relationship="viewControllers" id="5pf-Pu-cCd"/>
                         <segue destination="Pfg-2j-xxE" kind="relationship" relationship="viewControllers" id="ZsC-g8-cz3"/>
-                        <segue destination="TUt-v2-iRM" kind="relationship" relationship="viewControllers" id="WVs-V4-mBZ"/>
                         <segue destination="f8f-RT-Q3K" kind="relationship" relationship="viewControllers" id="ElL-nK-BXf"/>
                         <segue destination="Hic-qX-oaF" kind="relationship" relationship="viewControllers" id="BH7-IB-YM9"/>
                     </connections>
@@ -105,19 +106,13 @@
             </objects>
             <point key="canvasLocation" x="0.0" y="0.0"/>
         </scene>
-        <!--Record-->
-        <scene sceneID="1Dh-hX-Dme">
+        <!--RecordData-->
+        <scene sceneID="Ie7-6y-X3K">
             <objects>
-                <viewController title="Record" id="TUt-v2-iRM" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="6qU-Zh-fJ6">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="21q-5F-XMg"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="Record" id="Bzo-hB-JBL"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="hvE-PX-wW9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewControllerPlaceholder storyboardName="RecordData" id="bye-Kw-rc5" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="zXa-3o-mY9"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="r9B-KK-gFj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1" y="780"/>
         </scene>
@@ -135,7 +130,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FEX-yL-MCN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="750" y="781"/>
+            <point key="canvasLocation" x="750" y="774"/>
         </scene>
         <!--Source Definition View Controller-->
         <scene sceneID="VwU-FW-70v">

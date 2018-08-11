@@ -9,65 +9,65 @@
 import Foundation
 import HealthKit
 
-public class HeartRate: SampleBase {
+public class HeartRate: Sample {
 
 	fileprivate typealias Me = HeartRate
 	fileprivate static let unit: HKUnit = HKUnit(from: "count/min")
 
 	public static let heartRate = DoubleAttribute(name: "Heart rate", pluralName: "Heart rates")
-	public static let attributes: [Attribute] = [heartRate, startDate]
+	public static let attributes: [Attribute] = [CommonSampleAttributes.timestamp, heartRate]
 
-	public override var name: String { return "Heart rate" }
-	public override var description: String { return "A measurement of how fast your heart is beating (in beats per minute)." }
-	public override var dataType: DataTypes { return .heartRate }
-	public override var attributes: [Attribute] { return Me.attributes }
+	public var name: String { return "Heart rate" }
+	public var description: String { return "A measurement of how fast your heart is beating (in beats per minute)." }
+	public var dataType: DataTypes { return .heartRate }
+	public var attributes: [Attribute] { return Me.attributes }
+	public var timestamp: Date
 
 	public var heartRate: Double
 
-	public required init() {
+	public init() {
 		heartRate = Double()
-		super.init()
+		timestamp = Date()
 	}
 
 	public init(_ value: Double) {
 		heartRate = value
-		super.init()
+		timestamp = Date()
 	}
 
-	public init(_ value: Double, _ dateType: DateType, _ date: Date) {
+	public init(_ value: Double, _ timestamp: Date) {
 		heartRate = value
-		super.init(dateType, date)
-	}
-
-	public init(_ value: Double, _ dates: [DateType: Date]) {
-		heartRate = value
-		super.init(dates)
+		self.timestamp = timestamp
 	}
 
 	public init(_ sample: HKQuantitySample) {
 		heartRate = sample.quantity.doubleValue(for: Me.unit)
-		super.init([.start: sample.startDate, .end: sample.endDate])
+		timestamp = sample.startDate
 	}
 
-	public override func value(of attribute: Attribute) throws -> Any {
+	public func dates() -> [DateType: Date] {
+		return [.start: timestamp]
+	}
+
+	public func value(of attribute: Attribute) throws -> Any {
 		if attribute.name == Me.heartRate.name {
 			return heartRate
 		}
-		if attribute.name == Me.startDate.name {
-			return dates[.start]!
+		if attribute.name == CommonSampleAttributes.timestamp.name {
+			return timestamp
 		}
 		throw SampleError.unknownAttribute
 	}
 
-	public override func set(attribute: Attribute, to value: Any) throws {
+	public func set(attribute: Attribute, to value: Any) throws {
 		if attribute.name == Me.heartRate.name {
 			guard let castedValue = value as? Double else { throw SampleError.typeMismatch }
 			heartRate = castedValue
 			return
 		}
-		if attribute.name == Me.startDate.name {
+		if attribute.name == CommonSampleAttributes.timestamp.name {
 			guard let castedValue = value as? Date else { throw SampleError.typeMismatch }
-			dates[.start] = castedValue
+			timestamp = castedValue
 			return
 		}
 		throw SampleError.unknownAttribute

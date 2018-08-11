@@ -22,7 +22,7 @@ class SampleUtilUnitTests: UnitTest {
 
 	func testGivenEmptyDayOfWeekSet_sampleOccursOnOneOf_returnsTrue() {
 		// given
-		let sample = createSample(5.0)
+		let sample = createSample()
 
 		// when
 		let occurs = util.sample(sample, occursOnOneOf: Set<DayOfWeek>())
@@ -42,7 +42,7 @@ class SampleUtilUnitTests: UnitTest {
 				return true
 			},
 			joinSamples: { (_ , _, _) -> Sample in
-				return createSample(0.0)
+				return createSample()
 			}
 		)
 
@@ -54,10 +54,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let expectedStartDate = Date()
 		let expectedEndDate = Calendar.autoupdatingCurrent.date(byAdding: .year, value: 1, to: expectedStartDate)!
-		let samples = createSamples(withValues: [
-			(date: expectedStartDate, value: 0.0),
-			(date: expectedEndDate, value: 0.0),
-		])
+		let samples = createSamples(withDates: [expectedStartDate, expectedEndDate])
 		Given(mockCalendarUtil, .compare(date1: .value(expectedStartDate), date2: .value(expectedEndDate), willReturn: .orderedAscending))
 		Given(mockCalendarUtil, .compare(date1: .value(expectedEndDate), date2: .value(expectedStartDate), willReturn: .orderedDescending))
 
@@ -68,14 +65,14 @@ class SampleUtilUnitTests: UnitTest {
 				return false
 			},
 			joinSamples: { (_, start: Date, end: Date) -> Sample in
-				return createSample(start: start, end: end, value: 0.0)
+				return createSample(startDate: start, endDate: end)
 			}
 		)
 
 		// then
 		XCTAssert(convertedSamples.count == 1)
-		XCTAssert(convertedSamples[0].dates[.start] == expectedStartDate)
-		XCTAssert(convertedSamples[0].dates[.end] == expectedEndDate)
+		XCTAssert(convertedSamples[0].dates()[.start] == expectedStartDate)
+		XCTAssert(convertedSamples[0].dates()[.end] == expectedEndDate)
 	}
 
 	// TODO - finish writing unit tests

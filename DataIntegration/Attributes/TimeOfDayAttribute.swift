@@ -8,10 +8,10 @@
 
 import Foundation
 
-public class TimeOfDayAttribute: AnyAttribute {
+public class TimeOfDayAttribute: AttributeBase {
 
-	public required init(name: String = "Time of day", pluralName: String? = "Times of day", description: String? = nil) {
-		super.init(name: name, pluralName: pluralName, description: description)
+	public required init(name: String = "Time of day", pluralName: String? = "Times of day", description: String? = nil, variableName: String? = nil) {
+		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
 	}
 
 	public override func isValid(value: String) -> Bool {

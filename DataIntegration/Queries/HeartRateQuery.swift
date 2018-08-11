@@ -31,7 +31,7 @@ public class HeartRateQuery: SampleQuery<HeartRate> {
 					return
 				}
 				if originalSamples == nil || originalSamples!.count == 0 {
-					self.queryDone(nil, NoSamplesFoundQueryError(dataType: .heartRate))
+					self.queryDone(nil, NoHealthKitSamplesFoundQueryError(dataType: .heartRate))
 					return
 				}
 

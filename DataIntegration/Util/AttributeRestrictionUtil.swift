@@ -62,10 +62,11 @@ public class AttributeRestrictionUtilImpl: AttributeRestrictionUtil {
 	}
 
 	fileprivate func isStartDateRestriction(_ restriction: AttributeRestriction) -> Bool {
-		return restriction.restrictedAttribute.name == AnySample.startDate.name
+		return restriction.restrictedAttribute.name == CommonSampleAttributes.startDate.name
+			|| restriction.restrictedAttribute.name == CommonSampleAttributes.timestamp.name
 	}
 
 	fileprivate func isEndDateRestriction(_ restriction: AttributeRestriction) -> Bool {
-		return restriction.restrictedAttribute.name == AnySample.endDate.name
+		return restriction.restrictedAttribute.name == CommonSampleAttributes.endDate.name
 	}
 }

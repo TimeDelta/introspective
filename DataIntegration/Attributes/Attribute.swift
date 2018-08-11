@@ -20,10 +20,15 @@ public protocol Attribute {
 	/// This is a name that should be understandable by the user
 	var name: String { get }
 	var pluralName: String { get }
+	/// This needs to be able to be used by an NSPredicate within a PredicateAttributeRestriction
+	var variableName: String { get }
 	/// This is an explanation of this attribute that should be able to be presented to the user.
 	var extendedDescription: String? { get }
 
-	init(name: String, pluralName: String?, description: String?)
+	/// - Parameter pluralName: If nil, use `name` parameter.
+	/// - Parameter description: If nil, no description is needed for the user to understand this attribute.
+	/// - Parameter variableName: This should be usable by an NSPredicate to identify the associated variable. If nil, use `name` parameter.
+	init(name: String, pluralName: String?, description: String?, variableName: String?)
 
 	/// Is the specified value valid for this attribute?
 	func isValid(value: String) -> Bool
@@ -36,27 +41,30 @@ public protocol Attribute {
 
 extension Attribute {
 
+	public init(name: String, pluralName: String? = nil, description: String? = nil, variableName: String? = nil) {
+		self.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
+	}
+
 	public func equalTo(_ otherAttribute: Attribute) -> Bool {
 		return name == otherAttribute.name && extendedDescription == otherAttribute.extendedDescription
 	}
 }
 
-public class AnyAttribute: Attribute {
+public class AttributeBase: Attribute {
 
 	/// This is a name that should be understandable by the user
 	public fileprivate(set) var name: String
 	public fileprivate(set) var pluralName: String
+	/// This needs to be able to be used by an NSPredicate within a PredicateAttributeRestriction
+	public fileprivate(set) var variableName: String
 	/// This is an explanation of this attribute that should be able to be presented to the user.
 	public fileprivate(set) var extendedDescription: String?
 
-	public required init(name: String, pluralName: String? = nil, description: String? = nil) {
+	public required init(name: String, pluralName: String?, description: String?, variableName: String?) {
 		self.name = name
-		if pluralName == nil {
-			self.pluralName = name
-		} else {
-			self.pluralName = pluralName!
-		}
+		self.pluralName = pluralName ?? name
 		self.extendedDescription = description
+		self.variableName = variableName ?? name
 	}
 
 	public func isValid(value: String) -> Bool { fatalError("Must override") }

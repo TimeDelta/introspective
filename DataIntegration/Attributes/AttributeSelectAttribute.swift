@@ -8,18 +8,18 @@
 
 import Foundation
 
-public class AttributeSelectAttribute: AnyAttribute, SelectOneAttribute {
+public class AttributeSelectAttribute: AttributeBase, SelectOneAttribute {
 
 	public fileprivate(set) var possibleValues: [Any]
 
-	public required init(name: String = "Attribute", pluralName: String? = "Attributes", description: String? = nil) {
+	public required init(name: String = "Attribute", pluralName: String? = "Attributes", description: String? = nil, variableName: String? = nil) {
 		self.possibleValues = [Attribute]()
-		super.init(name: name, pluralName: pluralName, description: description)
+		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
 	}
 
-	public init(name: String = "Attribute", pluralName: String? = "Attributes", description: String? = nil, attributes: [Attribute]) {
+	public init(name: String = "Attribute", pluralName: String? = "Attributes", description: String? = nil, variableName: String? = nil, attributes: [Attribute]) {
 		self.possibleValues = attributes
-		super.init(name: name, pluralName: pluralName, description: description)
+		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
 	}
 
 	/// Is the specified value valid for this attribute?
@@ -40,12 +40,12 @@ public class AttributeSelectAttribute: AnyAttribute, SelectOneAttribute {
 	}
 
 	public override func convertToString(from value: Any) throws -> String {
-		guard let castedValue = value as? AnyAttribute else { throw AttributeError.typeMismatch }
+		guard let castedValue = value as? AttributeBase else { throw AttributeError.typeMismatch }
 		return castedValue.name
 	}
 
 	public func indexOf(possibleValue: Any) -> Int? {
-		guard let castedValue = possibleValue as? AnyAttribute else { return nil }
+		guard let castedValue = possibleValue as? AttributeBase else { return nil }
 		return (possibleValues as! [Attribute]).index(where: { attribute in return attribute.name == castedValue.name })
 	}
 }

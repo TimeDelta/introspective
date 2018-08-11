@@ -251,6 +251,9 @@ class QueryViewController: UITableViewController, UIPopoverPresentationControlle
 				case .heartRate:
 					currentQuery = (buildQuery(from: parts) as SampleQuery<HeartRate>)
 					break
+				case .mood:
+					currentQuery = (buildQuery(from: parts) as SampleQuery<Mood>)
+					break
 			}
 
 			if currentTopmostQuery != nil {

@@ -25,8 +25,11 @@ public class QueryFactoryImpl: QueryFactory {
 	}
 
 	public func queryFor<SampleType: Sample>(sampleType: SampleType.Type) throws -> SampleQuery<SampleType> {
-		if (sampleType == HeartRate.self) {
+		if sampleType == HeartRate.self {
 			return HeartRateQuery() as! SampleQuery<SampleType>
+		}
+		if sampleType == Mood.self {
+			return MoodQuery() as! SampleQuery<SampleType>
 		}
 		throw Errors.UnknownSampleType
 	}

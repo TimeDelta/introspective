@@ -27,9 +27,9 @@ public class SameEndDatesSubQueryMatcher: SubQueryMatcher {
 
 	public required init() {} // do nothing
 
-	public func getSamples<QuerySampleType: Sample, SubQuerySampleType: Sample>(
+	public func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
-		matching subQuerySamples: [SubQuerySampleType])
+		matching subQuerySamples: [Sample])
 	-> [QuerySampleType] {
 		var matchingSamples = [QuerySampleType]()
 
@@ -44,7 +44,7 @@ public class SameEndDatesSubQueryMatcher: SubQueryMatcher {
 				for: sample,
 				in: subQuerySamplesSortedByEndDate,
 				compare: { (s1: Sample, s2: Sample) -> ComparisonResult in
-					return DependencyInjector.util.calendarUtil.compare(s1.dates[.end], s2.dates[.end])
+					return DependencyInjector.util.calendarUtil.compare(s1.dates()[.end], s2.dates()[.end])
 				}
 			)
 			if matchingSampleIndex != nil {

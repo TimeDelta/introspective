@@ -210,7 +210,7 @@ public class TextNormalizationUtilImpl: TextNormalizationUtil {
 
 	fileprivate func replaceEnglishNumber(text: String, englishNum: String, _ additionalEnding: String? = nil) -> String {
 		let numberFormatter:NumberFormatter = NumberFormatter()
-		numberFormatter.numberStyle = NumberFormatter.Style.spellOut
+		numberFormatter.numberStyle = .spellOut
 
 		var englishNumber = englishNum.trimmingCharacters(in: CharacterSet([" "]))
 		var number = String(numberFormatter.number(from: englishNumber)!.doubleValue)

@@ -11,6 +11,7 @@ import Foundation
 //sourcery: AutoMockable
 public protocol InjectionProvider {
 
+	func database() -> Database
 	func queryFactory() -> QueryFactory
 	func querierFactory() -> QuerierFactory
 	func questionFactory() -> QuestionFactory

@@ -35,38 +35,63 @@ class UnitTest: XCTestCase {
 		super.tearDown()
 	}
 
-	func createSample(_ value: Double) -> Sample {
-		return HeartRate(value)
+	/// Create a mock sample
+	func createSample(startDate: Date? = nil, endDate: Date? = nil, withAttributes attributes: [Attribute] = [Attribute]()) -> AnySample {
+		let sample = AnySample()
+		var dates = [DateType: Date]()
+		if startDate != nil {
+			dates[.start] = startDate!
+		}
+		if endDate != nil {
+			dates[.end] = endDate!
+		}
+		sample.set(dates: dates)
+		sample.attributes = attributes
+		return sample
 	}
 
-	func createSample(_ value: Double, _ date: Date) -> Sample {
-		return HeartRate(value, .start, date)
+	/// Create `count` mock samples
+	func createSamples(count: Int) -> [AnySample] {
+		var samples = [AnySample]()
+		for _ in 1...count {
+			samples.append(createSample())
+		}
+		return samples
 	}
 
-	func createSample(start: Date, end: Date, value: Double) -> Sample {
-		return HeartRate(value, [.start : start, .end: end])
-	}
-
-	func createSamples(withValues values: [Double]) -> [Sample] {
-		var samples = [Sample]()
+	/// Create a new sample for each given value, assigning the value to the given attribute
+	func createSamples(withValues values: [Any], for attribute: Attribute) -> [AnySample] {
+		var samples = [AnySample]()
 		for value in values {
-			samples.append(createSample(value))
+			let sample = createSample(withAttributes: [attribute])
+			try! sample.set(attribute: attribute, to: value)
+			samples.append(sample)
 		}
 		return samples
 	}
 
-	func createSamples(withValues values: [(date: Date, value: Double)]) -> [Sample] {
-		var samples = [Sample]()
-		for (date, value) in values {
-			samples.append(createSample(value, date))
+	func createSamples(withDates dates: [(startDate: Date, endDate: Date)]) -> [AnySample] {
+		var samples = [AnySample]()
+		for (startDate, endDate) in dates {
+			samples.append(createSample(startDate: startDate, endDate: endDate))
 		}
 		return samples
 	}
 
-	func createSamples(withValues values: [(start: Date, end: Date, value: Double)]) -> [Sample] {
-		var samples = [Sample]()
-		for (start, end, value) in values {
-			samples.append(createSample(start: start, end: end, value: value))
+	func createSamples(withDates dates: [Date]) -> [AnySample] {
+		var samples = [AnySample]()
+		for date in dates {
+			samples.append(createSample(startDate: date))
+		}
+		return samples
+	}
+
+	func createSamples<ValueType: Any>(_ sampleValues: [(startDate: Date, value: ValueType)], for attribute: Attribute) -> [AnySample] {
+		var samples = [AnySample]()
+		for values in sampleValues {
+			let sample = createSample(startDate: values.startDate, withAttributes: [attribute])
+			try! sample.set(attribute: attribute, to: values.value)
+			samples.append(sample)
 		}
 		return samples
 	}
@@ -83,7 +108,7 @@ class UnitTest: XCTestCase {
 	fileprivate func registerMatchers() {
 		Matcher.default.register(Attribute.self) { lhs,rhs in return lhs.equalTo(rhs) }
 		Matcher.default.register(Sample.self) { lhs,rhs in return lhs.equalTo(rhs) }
-		Matcher.default.register(SampleBase.self)
+		Matcher.default.register(AnySample.self) { lhs,rhs in return lhs.equalTo(rhs) }
 		Matcher.default.register(DayOfWeek.self)
 	}
 

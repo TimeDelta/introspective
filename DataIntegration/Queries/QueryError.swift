@@ -20,11 +20,23 @@ public class NoSamplesFoundQueryError: QueryError {
 	public fileprivate(set) var dataType: DataTypes
 	public var displayableDescription: String {
 		let dataText = dataType.description.lowercased()
-		return "No \(dataText) samples found. Are you sure you authorized this app to read \(dataText) data?"
+		return "No \(dataText) samples found."
 	}
 
 	public required init(dataType: DataTypes) {
 		self.dataType = dataType
+	}
+}
+
+public class NoHealthKitSamplesFoundQueryError: NoSamplesFoundQueryError {
+
+	public override var displayableDescription: String {
+		let dataText = dataType.description.lowercased()
+		return "No \(dataText) samples found. Are you sure you authorized this app to read \(dataText) data?"
+	}
+
+	public required init(dataType: DataTypes) {
+		super.init(dataType: dataType)
 	}
 }
 

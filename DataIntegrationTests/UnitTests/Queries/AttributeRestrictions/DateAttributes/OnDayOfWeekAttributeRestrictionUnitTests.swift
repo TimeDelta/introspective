@@ -20,7 +20,7 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 
 	override func setUp() {
 		super.setUp()
-		attribute = AnyAttribute(name: "attribute")
+		attribute = AttributeBase(name: "attribute")
 		restriction = OnDayOfWeekAttributeRestriction(attribute: attribute)
 	}
 
@@ -90,7 +90,7 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 		restriction.daysOfWeek = restrictionDaysOfWeek
 		let sampleDate = Date()
 		Given(mockSample, .value(of: .value(attribute), willReturn: sampleDate))
-		Given(mockCalendarUtil, .date(date: .value(sampleDate), isOneOf: .value(restrictionDaysOfWeek), willReturn: false))
+		Given(mockCalendarUtil, .date(date: .value(sampleDate), isOnOneOf: .value(restrictionDaysOfWeek), willReturn: false))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)
@@ -106,7 +106,7 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 		restriction.daysOfWeek = restrictionDaysOfWeek
 		let sampleDate = Date()
 		Given(mockSample, .value(of: .value(attribute), willReturn: sampleDate))
-		Given(mockCalendarUtil, .date(date: .value(sampleDate), isOneOf: .value(restrictionDaysOfWeek), willReturn: true))
+		Given(mockCalendarUtil, .date(date: .value(sampleDate), isOnOneOf: .value(restrictionDaysOfWeek), willReturn: true))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)

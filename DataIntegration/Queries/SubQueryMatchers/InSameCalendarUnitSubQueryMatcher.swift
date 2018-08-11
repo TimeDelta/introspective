@@ -38,9 +38,9 @@ public class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher {
 
 	public required init() {} // do nothing
 
-	public func getSamples<QuerySampleType: Sample, SubQuerySampleType: Sample>(
+	public func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
-		matching subQuerySamples: [SubQuerySampleType])
+		matching subQuerySamples: [Sample])
 	-> [QuerySampleType] {
 		var matchingSamples = [QuerySampleType]()
 
@@ -52,7 +52,7 @@ public class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher {
 		let aggregatedSubQuerySamplesByStartDate = DependencyInjector.util.sampleUtil.aggregate(samples: applicableSubQuerySamples, by: timeUnit, dateType: .start)
 		let aggregatedSubQuerySamplesByEndDate = DependencyInjector.util.sampleUtil.aggregate(samples: applicableSubQuerySamples, by: timeUnit, dateType: .end)
 		for sample in querySamples {
-			let aggregationDate = DependencyInjector.util.calendarUtil.start(of: timeUnit, in: sample.dates[.start]!)
+			let aggregationDate = DependencyInjector.util.calendarUtil.start(of: timeUnit, in: sample.dates()[.start]!)
 			if aggregatedSubQuerySamplesByStartDate[aggregationDate] != nil || aggregatedSubQuerySamplesByEndDate[aggregationDate] != nil {
 				matchingSamples.append(sample)
 			}

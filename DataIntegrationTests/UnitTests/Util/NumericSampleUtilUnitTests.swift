@@ -14,6 +14,7 @@ import SwiftyMocky
 class NumericSampleUtilUnitTests: UnitTest {
 
 	fileprivate typealias Me = NumericSampleUtilUnitTests
+	fileprivate static let attribute = HeartRate.heartRate
 
 	fileprivate var util: NumericSampleUtilImpl!
 
@@ -25,10 +26,10 @@ class NumericSampleUtilUnitTests: UnitTest {
 	func testGivenOneSample_average_returnsValueOfThatSample() {
 		// given
 		let expectedAverage = 5.0
-		let samples = createSamples(withValues: [expectedAverage])
+		let samples = createSamples(withValues: [expectedAverage], for: Me.attribute)
 
 		// when
-		let average = util.average(for: HeartRate.heartRate, over: samples)
+		let average = util.average(for: Me.attribute, over: samples)
 
 		// then
 		XCTAssert(average == expectedAverage)
@@ -42,10 +43,10 @@ class NumericSampleUtilUnitTests: UnitTest {
 			expectedAverage += value
 		}
 		expectedAverage /= Double(values.count)
-		let samples = createSamples(withValues: values)
+		let samples = createSamples(withValues: values, for: Me.attribute)
 
 		// when
-		let average = util.average(for: HeartRate.heartRate, over: samples)
+		let average = util.average(for: Me.attribute, over: samples)
 
 		// then
 		XCTAssert(average == expectedAverage)
@@ -54,11 +55,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 	func testGivenOnlyOneSampleWithNilAggregation_averagePer_returnsValueForThatSample() {
 		// given
 		let values = [5.0]
-		let samples = createSamples(withValues: values)
+		let samples = createSamples(withValues: values, for: Me.attribute)
 		let expectedAverages: [(date: Date?, value: Double)] = [(date: nil, value: 5.0)]
 
 		// when
-		let averages = util.average(for: HeartRate.heartRate, over: samples, per: nil)
+		let averages = util.average(for: Me.attribute, over: samples, per: nil)
 
 		// then
 		XCTAssert(averages.count == expectedAverages.count)
@@ -76,10 +77,10 @@ class NumericSampleUtilUnitTests: UnitTest {
 			expectedAverage += value
 		}
 		expectedAverage /= Double(values.count)
-		let samples = createSamples(withValues: values)
+		let samples = createSamples(withValues: values, for: Me.attribute)
 
 		// when
-		let averages = util.average(for: HeartRate.heartRate, over: samples, per: nil)
+		let averages = util.average(for: Me.attribute, over: samples, per: nil)
 
 		// then
 		XCTAssert(averages.count == 1)
@@ -90,13 +91,13 @@ class NumericSampleUtilUnitTests: UnitTest {
 	func testGivenOnlyOneSampleInOneAggregationUnit_averagePer_returnsValueForThatSample() {
 		// given
 		let values = [5.0]
-		let samples = createSamples(withValues: values)
+		let samples = createSamples(withValues: values, for: Me.attribute)
 		let aggregationUnit: Calendar.Component = .year
 		let aggregationDate = Date()
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
 
 		// when
-		let averages = util.average(for: HeartRate.heartRate, over: samples, per: aggregationUnit)
+		let averages = util.average(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(averages.count == 1)
@@ -108,14 +109,14 @@ class NumericSampleUtilUnitTests: UnitTest {
 		// given
 		let date = Date("2018-01-01")!
 		let entries = [
-			(date: date, value: 5.0),
-			(date: date, value: 2.0),
-			(date: date, value: 1.0),
+			(startDate: date, value: 5.0),
+			(startDate: date, value: 2.0),
+			(startDate: date, value: 1.0),
 		]
-		let samples = createSamples(withValues: entries)
+		let samples = createSamples(entries, for: Me.attribute)
 		let aggregationUnit: Calendar.Component = .year
 		let aggregationDate = Date()
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
 		var expectedAverage = 0.0
 		for entry in entries {
 			expectedAverage += entry.value
@@ -123,7 +124,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		expectedAverage /= Double(entries.count)
 
 		// when
-		let averages = util.average(for: HeartRate.heartRate, over: samples, per: aggregationUnit)
+		let averages = util.average(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(averages.count == 1)
@@ -140,13 +141,13 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let value2 = 43.3
 		let value3 = 53.3
 		let entries = [
-			(date: date1, value: value1),
-			(date: date2, value: value2),
-			(date: date3, value: value3),
+			(startDate: date1, value: value1),
+			(startDate: date2, value: value2),
+			(startDate: date3, value: value3),
 		]
-		let samples = createSamples(withValues: entries)
+		let samples = createSamples(entries, for: Me.attribute)
 		let aggregationUnit: Calendar.Component = .year
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
 		let expectedAverages: [(date: Date?, value: Double)] = [
 			(date: date1, value: value1),
 			(date: date2, value: value2),
@@ -154,7 +155,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let averages = util.average(for: HeartRate.heartRate, over: samples, per: aggregationUnit)
+		let averages = util.average(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(averages.count == expectedAverages.count)
@@ -170,19 +171,19 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let date2 = Date("2019-01-01")!
 		let date3 = Date("2020-01-01")!
 		let entries = [
-			(date: date1, value: 5.0),
-			(date: date1, value: 7.0),
-			(date: date2, value: 1.0),
-			(date: date2, value: 2.0),
-			(date: date2, value: 3.0),
-			(date: date3, value: 1.0),
-			(date: date3, value: 2.0),
-			(date: date3, value: 3.0),
-			(date: date3, value: 4.0),
+			(startDate: date1, value: 5.0),
+			(startDate: date1, value: 7.0),
+			(startDate: date2, value: 1.0),
+			(startDate: date2, value: 2.0),
+			(startDate: date2, value: 3.0),
+			(startDate: date3, value: 1.0),
+			(startDate: date3, value: 2.0),
+			(startDate: date3, value: 3.0),
+			(startDate: date3, value: 4.0),
 		]
-		let samples = createSamples(withValues: entries)
+		let samples = createSamples(entries, for: Me.attribute)
 		let aggregationUnit: Calendar.Component = .year
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
 		let expectedAverages: [(date: Date?, value: Double)] = [
 			(date: date1, value: 6.0),
 			(date: date2, value: 2.0),
@@ -190,7 +191,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let averages = util.average(for: HeartRate.heartRate, over: samples, per: aggregationUnit)
+		let averages = util.average(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(averages.count == expectedAverages.count)
@@ -206,19 +207,19 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let date2 = Date("2019-01-01")!
 		let date3 = Date("2020-01-01")!
 		let entries = [
-			(date: date3, value: 2.0),
-			(date: date2, value: 1.0),
-			(date: date2, value: 3.0),
-			(date: date3, value: 4.0),
-			(date: date3, value: 1.0),
-			(date: date1, value: 7.0),
-			(date: date2, value: 2.0),
-			(date: date3, value: 3.0),
-			(date: date1, value: 5.0),
+			(startDate: date3, value: 2.0),
+			(startDate: date2, value: 1.0),
+			(startDate: date2, value: 3.0),
+			(startDate: date3, value: 4.0),
+			(startDate: date3, value: 1.0),
+			(startDate: date1, value: 7.0),
+			(startDate: date2, value: 2.0),
+			(startDate: date3, value: 3.0),
+			(startDate: date1, value: 5.0),
 		]
-		let samples = createSamples(withValues: entries)
+		let samples = createSamples(entries, for: Me.attribute)
 		let aggregationUnit: Calendar.Component = .year
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
 		let expectedAverages: [(date: Date?, value: Double)] = [
 			(date: date1, value: 6.0),
 			(date: date2, value: 2.0),
@@ -226,7 +227,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let averages = util.average(for: HeartRate.heartRate, over: samples, per: aggregationUnit)
+		let averages = util.average(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(averages.count == expectedAverages.count)
@@ -238,7 +239,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 
 	func testGivenSampleArrayWithOnlyOneSampleAndNilAggregation_countPer_returnsOne() {
 		// given
-		let samples = createSamples(withValues: [0.0])
+		let samples = createSamples(count: 1)
 
 		// when
 		let counts = util.count(over: samples, per: nil)
@@ -251,7 +252,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 
 	func testGivenSampleArrayWithMultipleSamplesAndNilAggregation_countPer_returnsCorrectValue() {
 		// given
-		let samples = createSamples(withValues: [0.0, 1.0, 2.0])
+		let samples = createSamples(count: 3)
 
 		// when
 		let counts = util.count(over: samples, per: nil)
@@ -265,9 +266,9 @@ class NumericSampleUtilUnitTests: UnitTest {
 	func testGivenSampleArrayWithOnlyOneSample_countPer_returnsOne() {
 		// given
 		let aggregationUnit: Calendar.Component = .year
-		let samples = [createSample(0.0)]
+		let samples = [createSample()]
 		let aggregationDate = Date()
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
 
 		// when
 		let counts = util.count(over: samples, per: aggregationUnit)
@@ -284,12 +285,8 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let date1 = Date("2018-01-01")!
 		let date2 = Date("2018-02-01")!
 		let date3 = Date("2018-03-01")!
-		let samples = createSamples(withValues: [
-			(date: date1, value: 0.0),
-			(date: date2, value: 0.0),
-			(date: date3, value: 0.0),
-		])
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
+		let samples = createSamples(withDates: [date1, date2, date3])
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
 		let expectedCounts: [(date: Date?, value: Int)] = [
 			(date: date1, value: 1),
 			(date: date2, value: 1),
@@ -313,18 +310,8 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let date1 = Date("2018-01-01")!
 		let date2 = Date("2018-01-02")!
 		let date3 = Date("2018-01-03")!
-		let samples = createSamples(withValues: [
-			(date: date1, value: 0.0),
-			(date: date1, value: 0.0),
-			(date: date2, value: 0.0),
-			(date: date2, value: 0.0),
-			(date: date2, value: 0.0),
-			(date: date3, value: 0.0),
-			(date: date3, value: 0.0),
-			(date: date3, value: 0.0),
-			(date: date3, value: 0.0),
-		])
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
+		let samples = createSamples(withDates: [date1, date1, date2, date2, date2, date3, date3, date3, date3])
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
 		let expectedCounts: [(date: Date?, value: Int)] = [
 			(date: date1, value: 2),
 			(date: date2, value: 3),
@@ -348,18 +335,8 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let date1 = Date("2018-01-01")!
 		let date2 = Date("2018-01-02")!
 		let date3 = Date("2018-01-03")!
-		let samples = createSamples(withValues: [
-			(date: date1, value: 0.0),
-			(date: date2, value: 0.0),
-			(date: date3, value: 0.0),
-			(date: date2, value: 0.0),
-			(date: date3, value: 0.0),
-			(date: date1, value: 0.0),
-			(date: date3, value: 0.0),
-			(date: date2, value: 0.0),
-			(date: date3, value: 0.0),
-		])
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
+		let samples = createSamples(withDates: [date1, date2, date3, date2, date3, date1, date3, date2, date3])
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
 		let expectedCounts: [(date: Date?, value: Int)] = [
 			(date: date1, value: 2),
 			(date: date2, value: 3),
@@ -380,10 +357,10 @@ class NumericSampleUtilUnitTests: UnitTest {
 	func testGivenSampleArrayWithOnlyOneValue_max_returnsThatValue() {
 		// given
 		let value = 3.4
-		let samples = [createSample(value)]
+		let samples = createSamples(withValues: [value], for: Me.attribute)
 
 		// when
-		let max: Double = util.max(for: HeartRate.heartRate, over: samples)
+		let max: Double = util.max(for: Me.attribute, over: samples)
 
 		// then
 		XCTAssert(max == value)
@@ -392,10 +369,10 @@ class NumericSampleUtilUnitTests: UnitTest {
 	func testGivenSampleArrayWithMultipleValues_max_returnsMaximumValue() {
 		// given
 		let expectedMax = 3.4
-		let samples = createSamples(withValues: [expectedMax - 1, expectedMax, expectedMax - 2])
+		let samples = createSamples(withValues: [expectedMax - 1, expectedMax, expectedMax - 2], for: Me.attribute)
 
 		// when
-		let max: Double = util.max(for: HeartRate.heartRate, over: samples)
+		let max: Double = util.max(for: Me.attribute, over: samples)
 
 		// then
 		XCTAssert(max == expectedMax)
@@ -404,10 +381,10 @@ class NumericSampleUtilUnitTests: UnitTest {
 	func testGivenSampleArrayWithOnlyOneSampleAndNilAggregation_maxPer_returnsValueForThatSample() {
 		// given
 		let value = 5.2
-		let samples = createSamples(withValues: [value])
+		let samples = createSamples(withValues: [value], for: Me.attribute)
 
 		// when
-		let maxs: [(date: Date?, value: Double)] = util.max(for: HeartRate.heartRate, over: samples, per: nil)
+		let maxs: [(date: Date?, value: Double)] = util.max(for: Me.attribute, over: samples, per: nil)
 
 		// then
 		XCTAssert(maxs.count == 1)
@@ -418,10 +395,10 @@ class NumericSampleUtilUnitTests: UnitTest {
 	func testGivenSampleArrayWithMultipleSamplesAndNilAggregation_maxPer_returnsCorrectValue() {
 		// given
 		let maxValue = 2.0
-		let samples = createSamples(withValues: [maxValue - 1, maxValue - 2, maxValue])
+		let samples = createSamples(withValues: [maxValue - 1, maxValue - 2, maxValue], for: Me.attribute)
 
 		// when
-		let maxs: [(date: Date?, value: Double)] = util.max(for: HeartRate.heartRate, over: samples, per: nil)
+		let maxs: [(date: Date?, value: Double)] = util.max(for: Me.attribute, over: samples, per: nil)
 
 		// then
 		XCTAssert(maxs.count == 1)
@@ -433,12 +410,12 @@ class NumericSampleUtilUnitTests: UnitTest {
 		// given
 		let aggregationUnit: Calendar.Component = .year
 		let value = 5.4
-		let samples = [createSample(value)]
+		let samples = createSamples(withValues: [value], for: Me.attribute)
 		let aggregationDate = Date()
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
 
 		// when
-		let maxs: [(date: Date?, value: Double)] = util.max(for: HeartRate.heartRate, over: samples, per: aggregationUnit)
+		let maxs: [(date: Date?, value: Double)] = util.max(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(maxs.count == 1)
@@ -455,12 +432,12 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let value1 = 4.3
 		let value2 = 5.3
 		let value3 = 43.4
-		let samples = createSamples(withValues: [
-			(date: date1, value: value1),
-			(date: date2, value: value2),
-			(date: date3, value: value3),
-		])
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
+		let samples = createSamples([
+			(startDate: date1, value: value1),
+			(startDate: date2, value: value2),
+			(startDate: date3, value: value3),
+		], for: Me.attribute)
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
 		let expectedMaxs: [(date: Date?, value: Double)] = [
 			(date: date1, value: value1),
 			(date: date2, value: value2),
@@ -468,7 +445,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let maxs: [(date: Date?, value: Double)] = util.max(for: HeartRate.heartRate, over: samples, per: aggregationUnit)
+		let maxs: [(date: Date?, value: Double)] = util.max(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(maxs.count == expectedMaxs.count)
@@ -487,18 +464,18 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let value1 = 4.3
 		let value2 = 54.2
 		let value3 = 43.2
-		let samples = createSamples(withValues: [
-			(date: date1, value: value1),
-			(date: date1, value: value1 - 1),
-			(date: date2, value: value2 - 2),
-			(date: date2, value: value2 - 1),
-			(date: date2, value: value2),
-			(date: date3, value: value3),
-			(date: date3, value: value3 - 2),
-			(date: date3, value: value3 - 1),
-			(date: date3, value: value3 - 3)
-		])
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
+		let samples = createSamples([
+			(startDate: date1, value: value1),
+			(startDate: date1, value: value1 - 1),
+			(startDate: date2, value: value2 - 2),
+			(startDate: date2, value: value2 - 1),
+			(startDate: date2, value: value2),
+			(startDate: date3, value: value3),
+			(startDate: date3, value: value3 - 2),
+			(startDate: date3, value: value3 - 1),
+			(startDate: date3, value: value3 - 3)
+		], for: Me.attribute)
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
 		let expectedMaxs: [(date: Date?, value: Double)] = [
 			(date: date1, value: value1),
 			(date: date2, value: value2),
@@ -506,7 +483,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let maxs: [(date: Date?, value: Double)] = util.max(for: HeartRate.heartRate, over: samples, per: aggregationUnit)
+		let maxs: [(date: Date?, value: Double)] = util.max(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(maxs.count == expectedMaxs.count)
@@ -525,18 +502,18 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let value1 = 4.3
 		let value2 = 54.2
 		let value3 = 43.2
-		let samples = createSamples(withValues: [
-			(date: date1, value: value1),
-			(date: date3, value: value3 - 3),
-			(date: date2, value: value2 - 1),
-			(date: date3, value: value3),
-			(date: date1, value: value1 - 1),
-			(date: date2, value: value2),
-			(date: date3, value: value3 - 1),
-			(date: date3, value: value3 - 2),
-			(date: date2, value: value2 - 2),
-		])
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
+		let samples = createSamples([
+			(startDate: date1, value: value1),
+			(startDate: date3, value: value3 - 3),
+			(startDate: date2, value: value2 - 1),
+			(startDate: date3, value: value3),
+			(startDate: date1, value: value1 - 1),
+			(startDate: date2, value: value2),
+			(startDate: date3, value: value3 - 1),
+			(startDate: date3, value: value3 - 2),
+			(startDate: date2, value: value2 - 2),
+		], for: Me.attribute)
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
 		let expectedMaxs: [(date: Date?, value: Double)] = [
 			(date: date1, value: value1),
 			(date: date2, value: value2),
@@ -544,7 +521,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let maxs: [(date: Date?, value: Double)] = util.max(for: HeartRate.heartRate, over: samples, per: aggregationUnit)
+		let maxs: [(date: Date?, value: Double)] = util.max(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(maxs.count == expectedMaxs.count)
@@ -557,10 +534,10 @@ class NumericSampleUtilUnitTests: UnitTest {
 	func testGivenSampleArrayWithOnlyOneValue_min_returnsThatValue() {
 		// given
 		let value = 3.4
-		let samples = [createSample(value)]
+		let samples = createSamples(withValues: [value], for: Me.attribute)
 
 		// when
-		let min: Double = util.min(for: HeartRate.heartRate, over: samples)
+		let min: Double = util.min(for: Me.attribute, over: samples)
 
 		// then
 		XCTAssert(min == value)
@@ -569,10 +546,10 @@ class NumericSampleUtilUnitTests: UnitTest {
 	func testGivenSampleArrayWithMultipleValues_min_returnsMinimumValue() {
 		// given
 		let expectedMin = 3.4
-		let samples = createSamples(withValues: [expectedMin + 1, expectedMin, expectedMin + 2])
+		let samples = createSamples(withValues: [expectedMin + 1, expectedMin, expectedMin + 2], for: Me.attribute)
 
 		// when
-		let min: Double = util.min(for: HeartRate.heartRate, over: samples)
+		let min: Double = util.min(for: Me.attribute, over: samples)
 
 		// then
 		XCTAssert(min == expectedMin)
@@ -581,10 +558,10 @@ class NumericSampleUtilUnitTests: UnitTest {
 	func testGivenSampleArrayWithOnlyOneSampleAndNilAggregation_minPer_returnsValueForThatSample() {
 		// given
 		let value = 4.3
-		let samples = createSamples(withValues: [value])
+		let samples = createSamples(withValues: [value], for: Me.attribute)
 
 		// when
-		let mins: [(date: Date?, value: Double)] = util.min(for: HeartRate.heartRate, over: samples, per: nil)
+		let mins: [(date: Date?, value: Double)] = util.min(for: Me.attribute, over: samples, per: nil)
 
 		// then
 		XCTAssert(mins.count == 1)
@@ -595,10 +572,10 @@ class NumericSampleUtilUnitTests: UnitTest {
 	func testGivenSampleArrayWithMultipleSamplesAndNilAggregation_minPer_returnsCorrectValue() {
 		// given
 		let minValue = 4.2432
-		let samples = createSamples(withValues: [minValue + 1, minValue, minValue + 2])
+		let samples = createSamples(withValues: [minValue + 1, minValue, minValue + 2], for: Me.attribute)
 
 		// when
-		let mins: [(date: Date?, value: Double)] = util.min(for: HeartRate.heartRate, over: samples, per: nil)
+		let mins: [(date: Date?, value: Double)] = util.min(for: Me.attribute, over: samples, per: nil)
 
 		// then
 		XCTAssert(mins.count == 1)
@@ -610,12 +587,12 @@ class NumericSampleUtilUnitTests: UnitTest {
 		// given
 		let aggregationUnit: Calendar.Component = .year
 		let value = 23.5
-		let samples = [createSample(value)]
+		let samples = createSamples(withValues: [value], for: Me.attribute)
 		let aggregationDate = Date()
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
 
 		// when
-		let mins: [(date: Date?, value: Double)] = util.min(for: HeartRate.heartRate, over: samples, per: aggregationUnit)
+		let mins: [(date: Date?, value: Double)] = util.min(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(mins.count == 1)
@@ -632,12 +609,12 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let value1 = 3.2
 		let value2 = 534.2
 		let value3 = 32.2
-		let samples = createSamples(withValues: [
-			(date: date1, value: value1),
-			(date: date2, value: value2),
-			(date: date3, value: value3),
-		])
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
+		let samples = createSamples([
+			(startDate: date1, value: value1),
+			(startDate: date2, value: value2),
+			(startDate: date3, value: value3),
+		], for: Me.attribute)
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
 		let expectedMins: [(date: Date?, value: Double)] = [
 			(date: date1, value: value1),
 			(date: date2, value: value2),
@@ -645,7 +622,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let mins: [(date: Date?, value: Double)] = util.min(for: HeartRate.heartRate, over: samples, per: aggregationUnit)
+		let mins: [(date: Date?, value: Double)] = util.min(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(mins.count == expectedMins.count)
@@ -664,18 +641,18 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let value1 = 3.2
 		let value2 = 534.2
 		let value3 = 32.2
-		let samples = createSamples(withValues: [
-			(date: date1, value: value1 + 1),
-			(date: date1, value: value1),
-			(date: date2, value: value2),
-			(date: date2, value: value2 + 1),
-			(date: date2, value: value2 + 2),
-			(date: date3, value: value3 + 3),
-			(date: date3, value: value3 + 1),
-			(date: date3, value: value3 + 2),
-			(date: date3, value: value3),
-		])
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
+		let samples = createSamples([
+			(startDate: date1, value: value1 + 1),
+			(startDate: date1, value: value1),
+			(startDate: date2, value: value2),
+			(startDate: date2, value: value2 + 1),
+			(startDate: date2, value: value2 + 2),
+			(startDate: date3, value: value3 + 3),
+			(startDate: date3, value: value3 + 1),
+			(startDate: date3, value: value3 + 2),
+			(startDate: date3, value: value3),
+		], for: Me.attribute)
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
 		let expectedMins: [(date: Date?, value: Double)] = [
 			(date: date1, value: value1),
 			(date: date2, value: value2),
@@ -683,7 +660,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let mins: [(date: Date?, value: Double)] = util.min(for: HeartRate.heartRate, over: samples, per: aggregationUnit)
+		let mins: [(date: Date?, value: Double)] = util.min(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(mins.count == expectedMins.count)
@@ -702,18 +679,18 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let value1 = 3.2
 		let value2 = 534.2
 		let value3 = 32.2
-		let samples = createSamples(withValues: [
-			(date: date1, value: value1 + 1),
-			(date: date3, value: value3),
-			(date: date2, value: value2 + 1),
-			(date: date3, value: value3 + 3),
-			(date: date3, value: value3 + 2),
-			(date: date3, value: value3 + 1),
-			(date: date1, value: value1),
-			(date: date2, value: value2 + 2),
-			(date: date2, value: value2),
-		])
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
+		let samples = createSamples([
+			(startDate: date1, value: value1 + 1),
+			(startDate: date3, value: value3),
+			(startDate: date2, value: value2 + 1),
+			(startDate: date3, value: value3 + 3),
+			(startDate: date3, value: value3 + 2),
+			(startDate: date3, value: value3 + 1),
+			(startDate: date1, value: value1),
+			(startDate: date2, value: value2 + 2),
+			(startDate: date2, value: value2),
+		], for: Me.attribute)
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
 		let expectedMins: [(date: Date?, value: Double)] = [
 			(date: date1, value: value1),
 			(date: date2, value: value2),
@@ -721,7 +698,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let mins: [(date: Date?, value: Double)] = util.min(for: HeartRate.heartRate, over: samples, per: aggregationUnit)
+		let mins: [(date: Date?, value: Double)] = util.min(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(mins.count == expectedMins.count)
@@ -734,10 +711,10 @@ class NumericSampleUtilUnitTests: UnitTest {
 	func testGivenSampleArrayWithOnlyOneValue_sum_returnsThatValue() {
 		// given
 		let value = 3.4
-		let samples = [createSample(value)]
+		let samples = createSamples(withValues: [value], for: Me.attribute)
 
 		// when
-		let sum: Double = util.sum(for: HeartRate.heartRate, over: samples)
+		let sum: Double = util.sum(for: Me.attribute, over: samples)
 
 		// then
 		XCTAssert(sum == value)
@@ -748,11 +725,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let value1 = 1.0
 		let value2 = 4.3
 		let value3 = 87.2
-		let samples = createSamples(withValues: [value1, value2, value3])
+		let samples = createSamples(withValues: [value1, value2, value3], for: Me.attribute)
 		let expectedSum = value1 + value2 + value3
 
 		// when
-		let sum: Double = util.sum(for: HeartRate.heartRate, over: samples)
+		let sum: Double = util.sum(for: Me.attribute, over: samples)
 
 		// then
 		XCTAssert(sum == expectedSum)
@@ -761,10 +738,10 @@ class NumericSampleUtilUnitTests: UnitTest {
 	func testGivenSampleArrayWithOnlyOneSampleAndNilAggregation_sumPer_returnsValueForThatSample() {
 		// given
 		let value = 23.3
-		let samples = createSamples(withValues: [value])
+		let samples = createSamples(withValues: [value], for: Me.attribute)
 
 		// when
-		let sums: [(date: Date?, value: Double)] = util.sum(for: HeartRate.heartRate, over: samples, per: nil)
+		let sums: [(date: Date?, value: Double)] = util.sum(for: Me.attribute, over: samples, per: nil)
 
 		// then
 		XCTAssert(sums.count == 1)
@@ -777,11 +754,11 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let value1 = 6.4
 		let value2 = 1005.4
 		let value3 = 23.45
-		let samples = createSamples(withValues: [value1, value2, value3])
+		let samples = createSamples(withValues: [value1, value2, value3], for: Me.attribute)
 		let expectedSum = value1 + value2 + value3
 
 		// when
-		let sums: [(date: Date?, value: Double)] = util.sum(for: HeartRate.heartRate, over: samples, per: nil)
+		let sums: [(date: Date?, value: Double)] = util.sum(for: Me.attribute, over: samples, per: nil)
 
 		// then
 		XCTAssert(sums.count == 1)
@@ -793,12 +770,12 @@ class NumericSampleUtilUnitTests: UnitTest {
 		// given
 		let aggregationUnit: Calendar.Component = .year
 		let value = 4.2
-		let samples = [createSample(value)]
+		let samples = createSamples(withValues: [value], for: Me.attribute)
 		let aggregationDate = Date()
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
 
 		// when
-		let sums: [(date: Date?, value: Double)] = util.sum(for: HeartRate.heartRate, over: samples, per: aggregationUnit)
+		let sums: [(date: Date?, value: Double)] = util.sum(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(sums.count == 1)
@@ -815,12 +792,12 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let value1 = 3.2
 		let value2 = 534.2
 		let value3 = 32.2
-		let samples = createSamples(withValues: [
-			(date: date1, value: value1),
-			(date: date2, value: value2),
-			(date: date3, value: value3)
-		])
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
+		let samples = createSamples([
+			(startDate: date1, value: value1),
+			(startDate: date2, value: value2),
+			(startDate: date3, value: value3)
+		], for: Me.attribute)
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
 		let expectedSums: [(date: Date?, value: Double)] = [
 			(date: date1, value: value1),
 			(date: date2, value: value2),
@@ -828,7 +805,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let sums: [(date: Date?, value: Double)] = util.sum(for: HeartRate.heartRate, over: samples, per: aggregationUnit)
+		let sums: [(date: Date?, value: Double)] = util.sum(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(sums.count == expectedSums.count)
@@ -847,18 +824,18 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let value1 = 3.2
 		let value2 = 534.2
 		let value3 = 32.2
-		let samples = createSamples(withValues: [
-			(date: date1, value: value1),
-			(date: date1, value: value1 + 1),
-			(date: date2, value: value2),
-			(date: date2, value: value2 + 2),
-			(date: date2, value: value2 + 1),
-			(date: date3, value: value3 + 2),
-			(date: date3, value: value3),
-			(date: date3, value: value3 + 1),
-			(date: date3, value: value3 + 3),
-		])
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
+		let samples = createSamples([
+			(startDate: date1, value: value1),
+			(startDate: date1, value: value1 + 1),
+			(startDate: date2, value: value2),
+			(startDate: date2, value: value2 + 2),
+			(startDate: date2, value: value2 + 1),
+			(startDate: date3, value: value3 + 2),
+			(startDate: date3, value: value3),
+			(startDate: date3, value: value3 + 1),
+			(startDate: date3, value: value3 + 3),
+		], for: Me.attribute)
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
 		let expectedSums: [(date: Date?, value: Double)] = [
 			(date: date1, value: 2 * value1 + 1),
 			(date: date2, value: 3 * value2 + 3),
@@ -866,7 +843,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let sums: [(date: Date?, value: Double)] = util.sum(for: HeartRate.heartRate, over: samples, per: aggregationUnit)
+		let sums: [(date: Date?, value: Double)] = util.sum(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(sums.count == expectedSums.count)
@@ -885,18 +862,18 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let value1 = 3.2
 		let value2 = 534.2
 		let value3 = 32.2
-		let samples = createSamples(withValues: [
-			(date: date2, value: value2),
-			(date: date2, value: value2 + 2),
-			(date: date3, value: value3 + 3),
-			(date: date3, value: value3),
-			(date: date1, value: value1 + 1),
-			(date: date2, value: value2 + 1),
-			(date: date3, value: value3 + 1),
-			(date: date1, value: value1),
-			(date: date3, value: value3 + 2),
-		])
-		Given(mockSampleUtil, .sort(samples: .value(samples), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
+		let samples = createSamples([
+			(startDate: date2, value: value2),
+			(startDate: date2, value: value2 + 2),
+			(startDate: date3, value: value3 + 3),
+			(startDate: date3, value: value3),
+			(startDate: date1, value: value1 + 1),
+			(startDate: date2, value: value2 + 1),
+			(startDate: date3, value: value3 + 1),
+			(startDate: date1, value: value1),
+			(startDate: date3, value: value3 + 2),
+		], for: Me.attribute)
+		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: generateAggregationSortReturnValue(for: samples)))
 		let expectedSums: [(date: Date?, value: Double)] = [
 			(date: date1, value: 2 * value1 + 1),
 			(date: date2, value: 3 * value2 + 3),
@@ -904,7 +881,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let sums: [(date: Date?, value: Double)] = util.sum(for: HeartRate.heartRate, over: samples, per: aggregationUnit)
+		let sums: [(date: Date?, value: Double)] = util.sum(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(sums.count == expectedSums.count)
@@ -919,7 +896,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 	fileprivate func generateAggregationSortReturnValue(for samples: [Sample]) -> [(date: Date, samples: [Sample])] {
 		var samplesByDate = [Date: [Sample]]()
 		for sample in samples {
-			let date = sample.dates[.start]!
+			let date = sample.dates()[.start]!
 			var samplesForDate = samplesByDate[date]
 			if samplesForDate == nil {
 				samplesForDate = [Sample]()

@@ -9,7 +9,7 @@
 import UIKit
 import os
 
-class EditSubDataTypeViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class EditSubDataTypeViewController: UIViewController {
 
 	fileprivate typealias Me = EditSubDataTypeViewController
 
@@ -57,68 +57,9 @@ class EditSubDataTypeViewController: UIViewController, UIPickerViewDelegate, UIP
 		matcherTypePicker.selectRow(getIndexForMatcher(), inComponent: 0, animated: false)
 
 		acceptButton.setTitle("Must fix issues", for: .disabled)
-        acceptButton.setTitle("Accept", for: .normal)
+		acceptButton.setTitle("Accept", for: .normal)
 
 		updateAttributeViews()
-	}
-
-	func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
-	}
-
-	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		if pickerView == dataTypePicker {
-			return DataTypes.allTypes.count
-		}
-		if pickerView == matcherTypePicker {
-			return SubQueryMatcherFactoryImpl.allMatchers.count
-		}
-		if pickerView == timeUnitPicker {
-			return Me.supportedTimeUnits.count
-		}
-
-		os_log("Unknown UIPickerView when retrieving number of rows", type: .error)
-		return 0
-	}
-
-	public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-		var label: UILabel? = (view as? UILabel)
-		if label == nil {
-			label = UILabel()
-		}
-		label!.textAlignment = .center
-
-		if pickerView == dataTypePicker {
-			label!.text = DataTypes.allTypes[row].description
-			label!.font = UIFont(name: "System", size: CGFloat(15))
-		} else if pickerView == matcherTypePicker {
-			label!.text = SubQueryMatcherFactoryImpl.allMatchers[row].genericDescription
-			label!.font = UIFont(name: "System", size: CGFloat(19))
-		} else if pickerView == timeUnitPicker {
-			label!.text = Me.supportedTimeUnits[row].description
-			let selectedMatcherIndex = matcherTypePicker.selectedRow(inComponent: 0)
-			if SubQueryMatcherFactoryImpl.allMatchers[selectedMatcherIndex] == WithinXCalendarUnitsSubQueryMatcher.self {
-				label!.text! += "s"
-			}
-			label!.font = UIFont(name: "System", size: CGFloat(19))
-		} else {
-			os_log("Unknown UIPickerView when retrieving view for row", type: .error)
-		}
-
-		return label!
-	}
-
-	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-		if pickerView == matcherTypePicker {
-			let type: SubQueryMatcher.Type = SubQueryMatcherFactoryImpl.allMatchers[row]
-			matcher = type.init()
-			updateAttributeViews()
-		} else if pickerView == timeUnitPicker {
-			let unit = Me.supportedTimeUnits[row]
-			let id = getParameterId(for: .timeUnit)
-			try! matcher.setParameter(id: id, value: unit)
-		}
-		validate()
 	}
 
 	@IBAction func textFieldValueChanged(_ sender: Any) {
@@ -226,5 +167,72 @@ class EditSubDataTypeViewController: UIViewController, UIPickerViewDelegate, UIP
 		acceptButton.isEnabled = true
 		acceptButton.isUserInteractionEnabled = true
 		acceptButton.backgroundColor = UIColor.black
+	}
+}
+
+extension EditSubDataTypeViewController: UIPickerViewDataSource {
+
+	func numberOfComponents(in pickerView: UIPickerView) -> Int {
+		return 1
+	}
+
+	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+		if pickerView == dataTypePicker {
+			return DataTypes.allTypes.count
+		}
+		if pickerView == matcherTypePicker {
+			return SubQueryMatcherFactoryImpl.allMatchers.count
+		}
+		if pickerView == timeUnitPicker {
+			return Me.supportedTimeUnits.count
+		}
+
+		os_log("Unknown UIPickerView when retrieving number of rows", type: .error)
+		return 0
+	}
+}
+
+extension EditSubDataTypeViewController: UIPickerViewDelegate {
+
+	public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+		var label: UILabel? = (view as? UILabel)
+		if label == nil {
+			label = UILabel()
+		}
+		label!.textAlignment = .center
+
+		if pickerView == dataTypePicker {
+			label!.text = DataTypes.allTypes[row].description
+			label!.font = UIFont(name: "System", size: CGFloat(15))
+		} else if pickerView == matcherTypePicker {
+			label!.text = SubQueryMatcherFactoryImpl.allMatchers[row].genericDescription
+			label!.font = UIFont(name: "System", size: CGFloat(19))
+		} else if pickerView == timeUnitPicker {
+			label!.text = Me.supportedTimeUnits[row].description
+			let selectedMatcherIndex = matcherTypePicker.selectedRow(inComponent: 0)
+			if SubQueryMatcherFactoryImpl.allMatchers[selectedMatcherIndex] == WithinXCalendarUnitsSubQueryMatcher.self {
+				label!.text! += "s"
+			}
+			label!.font = UIFont(name: "System", size: CGFloat(19))
+		} else {
+			os_log("Unknown UIPickerView when retrieving view for row", type: .error)
+		}
+
+		return label!
+	}
+
+	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+		if pickerView == matcherTypePicker {
+			let type: SubQueryMatcher.Type = SubQueryMatcherFactoryImpl.allMatchers[row]
+			matcher = type.init()
+			updateAttributeViews()
+		} else if pickerView == timeUnitPicker {
+			let unit = Me.supportedTimeUnits[row]
+			let id = getParameterId(for: .timeUnit)
+			try! matcher.setParameter(id: id, value: unit)
+		} else if pickerView == dataTypePicker {
+			dataType = DataTypes.allTypes[row]
+		}
+		validate()
 	}
 }

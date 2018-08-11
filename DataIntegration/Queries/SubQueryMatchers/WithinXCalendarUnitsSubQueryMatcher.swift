@@ -36,9 +36,9 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher {
 	public required init() {} // do nothing
 
 	/// Grab only the provided samples that start within `numberOfCalendarUnits` `calendarUnit` of a sub-query sample
-	public func getSamples<QuerySampleType: Sample, SubQuerySampleType: Sample>(
+	public func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
-		matching subQuerySamples: [SubQuerySampleType])
+		matching subQuerySamples: [Sample])
 	-> [QuerySampleType] {
 		if subQuerySamples.count == 0 {
 			return []

@@ -19,19 +19,19 @@ public protocol MultiSelectAttribute: SelectAttribute {
 	func valueFromArray(_ value: [Any]) throws -> Any
 }
 
-public class AnyMultiSelectAttribute: AnyAttribute, MultiSelectAttribute {
+public class AnyMultiSelectAttribute: AttributeBase, MultiSelectAttribute {
 
 	public fileprivate(set) var separator: Character
 	public fileprivate(set) var possibleValues: [Any]
 
-	public required convenience init(name: String, pluralName: String? = nil, description: String? = nil) {
-		self.init(name: name, pluralName: pluralName, description: description, separator: " ")
+	public required convenience init(name: String, pluralName: String? = nil, description: String? = nil, variableName: String? = nil) {
+		self.init(name: name, pluralName: pluralName, description: description, variableName: variableName, separator: " ")
 	}
 
-	public init(name: String, pluralName: String? = nil, description: String? = nil, separator: Character = ";", possibleValues: [Any] = [Any]()) {
+	public init(name: String, pluralName: String? = nil, description: String? = nil, variableName: String? = nil, separator: Character = ";", possibleValues: [Any] = [Any]()) {
 		self.separator = separator
 		self.possibleValues = possibleValues
-		super.init(name: name, pluralName: pluralName, description: description)
+		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
 	}
 
 	public override func isValid(value: String) -> Bool {

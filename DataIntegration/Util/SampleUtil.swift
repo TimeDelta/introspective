@@ -17,11 +17,16 @@ public protocol SampleUtil {
 	func aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, dateType: DateType) -> [Date: [SampleType]]
 	func sort(samples: [Sample], by aggregationUnit: Calendar.Component) -> [(date: Date, samples: [Sample])]
 	func sort<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component) -> [(date: Date, samples: [SampleType])]
+	/// - Note: behavior is undefined when passing `ComparisonResult.orderedSame`
 	func sort(samples: [Sample], by dateType: DateType, in order: ComparisonResult) -> [Sample]
+	/// - Note: behavior is undefined when passing `ComparisonResult.orderedSame`
 	func sort<SampleType: Sample>(samples: [SampleType], by dateType: DateType, in order: ComparisonResult) -> [SampleType]
 	func convertOneDateSamplesToTwoDateSamples(_ samples: [Sample], samplesShouldNotBeJoined: (Sample, Sample) -> Bool, joinSamples: ([Sample], Date, Date) -> Sample) -> [Sample]
 	func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(_ samples: [SampleType], samplesShouldNotBeJoined: (SampleType, SampleType) -> Bool, joinSamples: ([SampleType], Date, Date) -> SampleType) -> [SampleType]
+	/// - Precondition: input array has at least one element.
 	func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2]) -> SampleType2
+	/// - Precondition: input array has at least one element.
+	func closestInTimeTo(sample: Sample, in samples: [Sample]) -> Sample
 	/// Get the shortest distance between two samples in the specified calendar unit.
 	/// This will look at the distance between all 4 possible combinations of start and
 	/// end dates for the given samples then choose the lowest interval of time.
@@ -61,13 +66,13 @@ public class SampleUtilImpl: SampleUtil {
 	/// - Returns: `true` if the specified sample overlaps with one of the specifed days of the week or if the given `Set<DayOfWeek>` is empty, otherwise `false`.
 	public func sample(_ sample: Sample, occursOnOneOf daysOfWeek: Set<DayOfWeek>) -> Bool {
 		if !daysOfWeek.isEmpty {
-			let startDate = sample.dates[.start]!
+			let startDate = sample.dates()[.start]!
 			let calendar = Calendar.current
 			let startSampleDayOfWeek = calendar.component(.weekday, from: startDate)
 
 			var endSampleDayOfWeek: Int?
-			if sample.dates[.end] != nil {
-				endSampleDayOfWeek = calendar.component(.weekday, from: sample.dates[.end]!)
+			if sample.dates()[.end] != nil {
+				endSampleDayOfWeek = calendar.component(.weekday, from: sample.dates()[.end]!)
 			}
 			for dayOfWeek in daysOfWeek {
 				if startSampleDayOfWeek == dayOfWeek.intValue {
@@ -139,12 +144,12 @@ public class SampleUtilImpl: SampleUtil {
 		for sample in sortedSamples {
 			samplesJoined = false
 			if lastSample == nil {
-				start = sample.dates[.start]!
+				start = sample.dates()[.start]!
 			} else if samplesShouldNotBeJoined(lastSample!, sample) {
-				end = lastSample!.dates[.start]!
+				end = lastSample!.dates()[.start]!
 				let twoDateSample = joinSamples(samplesToJoin, start, end)
 				twoDateSamples.append(twoDateSample)
-				start = sample.dates[.start]!
+				start = sample.dates()[.start]!
 				samplesToJoin = [Sample]()
 				samplesJoined = true
 			}
@@ -152,7 +157,7 @@ public class SampleUtilImpl: SampleUtil {
 			lastSample = sample
 		}
 		if sortedSamples.count > 0 && !samplesJoined && !samplesShouldNotBeJoined(lastSample!, sortedSamples.last!) {
-			end = sortedSamples.last!.dates[.start]!
+			end = sortedSamples.last!.dates()[.start]!
 			let twoDateSample = joinSamples(samplesToJoin, start, end)
 			twoDateSamples.append(twoDateSample)
 		}
@@ -172,12 +177,12 @@ public class SampleUtilImpl: SampleUtil {
 		var samplesToJoin = [SampleType]()
 		for sample in sortedSamples {
 			if lastSample == nil {
-				start = sample.dates[.start]!
+				start = sample.dates()[.start]!
 			} else if samplesShouldNotBeJoined(lastSample!, sample) {
-				end = lastSample!.dates[.start]!
+				end = lastSample!.dates()[.start]!
 				let twoDateSample = joinSamples(samplesToJoin, start, end)
 				twoDateSamples.append(twoDateSample)
-				start = sample.dates[.start]!
+				start = sample.dates()[.start]!
 				samplesToJoin = [SampleType]()
 			}
 			samplesToJoin.append(sample)
@@ -195,11 +200,20 @@ public class SampleUtilImpl: SampleUtil {
 		} as! SampleType2
 	}
 
+	/// - Precondition: input array has at least one element.
+	public func closestInTimeTo(sample: Sample, in samples: [Sample]) -> Sample {
+		assert(samples.count > 0, "Precondition violated: input array must have at least one element")
+
+		return DependencyInjector.util.searchUtil.closestItem(to: sample, in: samples) { (sample1: Sample, sample2: Sample) -> Int in
+			return distance(between: sample1, and: sample2)
+		}
+	}
+
 	public func distance(between sample1: Sample, and sample2: Sample, in unit: Calendar.Component = .nanosecond) -> Int {
-		let start1 = sample1.dates[.start]!
-		let start2 = sample2.dates[.start]!
-		let end1 = sample2.dates[.end]
-		let end2 = sample2.dates[.end]
+		let start1 = sample1.dates()[.start]!
+		let start2 = sample2.dates()[.start]!
+		let end1 = sample2.dates()[.end]
+		let end2 = sample2.dates()[.end]
 
 		var closestDistance: Int = distance(start1, start2, unit)
 		if end1 != nil {
@@ -221,14 +235,14 @@ public class SampleUtilImpl: SampleUtil {
 		var filteredSamples = samples
 		if startDate != nil {
 			filteredSamples = filteredSamples.filter { (sample: Sample) -> Bool in
-				return sample.dates[.start]!.isAfterDate(startDate!, granularity: .nanosecond)
+				return sample.dates()[.start]!.isAfterDate(startDate!, granularity: .nanosecond)
 			}
 		}
 		if endDate != nil {
 			filteredSamples = filteredSamples.filter { (sample: Sample) -> Bool in
-				var date = sample.dates[.start]!
-				if sample.dates[.end] != nil {
-					date = sample.dates[.end]!
+				var date = sample.dates()[.start]!
+				if sample.dates()[.end] != nil {
+					date = sample.dates()[.end]!
 				}
 				return date.isAfterDate(endDate!, granularity: .nanosecond)
 			}
@@ -239,7 +253,7 @@ public class SampleUtilImpl: SampleUtil {
 	fileprivate func aggregate(_ samples: [Sample], _ aggregationUnit: Calendar.Component, _ dateType: DateType = .start) -> [Date: [Sample]] {
 		var samplesByAggregation = [Date: [Sample]]()
 		for sample in samples {
-			let date = sample.dates[dateType]
+			let date = sample.dates()[dateType]
 			if date != nil {
 				let aggregationDate = DependencyInjector.util.calendarUtil.start(of: aggregationUnit, in: date!)
 				var samplesForAggregationDate = samplesByAggregation[aggregationDate]
@@ -255,8 +269,8 @@ public class SampleUtilImpl: SampleUtil {
 
 	fileprivate func sort(_ samples: [Sample], _ dateType: DateType, _ order: ComparisonResult = .orderedAscending) -> [Sample] {
 		return samples.sorted(by: { (sample1: Sample, sample2: Sample) -> Bool in
-			let date1 = sample1.dates[dateType]
-			let date2 = sample2.dates[dateType]
+			let date1 = sample1.dates()[dateType]
+			let date2 = sample2.dates()[dateType]
 
 			return DependencyInjector.util.calendarUtil.compare(date1, date2) == order
 		})

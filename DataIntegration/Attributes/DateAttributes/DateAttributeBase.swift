@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class DateAttributeBase: AnyAttribute, DateAttribute {
+public class DateAttributeBase: AttributeBase, DateAttribute {
 
 	public fileprivate(set) var includeTime: Bool
 	public fileprivate(set) var earliestDate: Date?
@@ -16,14 +16,15 @@ public class DateAttributeBase: AnyAttribute, DateAttribute {
 
 	fileprivate var dateFormat: String
 
-	public required convenience init(name: String, pluralName: String? = nil, description: String? = nil) {
-		self.init(name: name, pluralName: pluralName, description: description, latestDate: nil)
+	public required convenience init(name: String, pluralName: String? = nil, description: String? = nil, variableName: String? = nil) {
+		self.init(name: name, pluralName: pluralName, description: description, variableName: variableName, latestDate: nil)
 	}
 
 	public init(
 		name: String,
 		pluralName: String? = nil,
 		description: String? = nil,
+		variableName: String? = nil,
 		includeTime: Bool = true,
 		format: String = defaultDateFormat,
 		earliestDate: Date? = nil,
@@ -33,7 +34,7 @@ public class DateAttributeBase: AnyAttribute, DateAttribute {
 		self.dateFormat = format
 		self.earliestDate = earliestDate
 		self.latestDate = latestDate
-		super.init(name: name, pluralName: pluralName, description: description)
+		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
 	}
 
 	public override func isValid(value: String) -> Bool {

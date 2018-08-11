@@ -57,6 +57,13 @@ class AttributeMock: Attribute, Mock {
 				__pluralName = newValue }
 	}
 	private var __pluralName: (String)?
+    var variableName: String { 
+		get {	invocations.append(.variableName_get)
+				return __variableName.orFail("AttributeMock - value for variableName was not defined") }
+		set {	invocations.append(.variableName_set(.value(newValue)))
+				__variableName = newValue }
+	}
+	private var __variableName: (String)?
     var extendedDescription: String? { 
 		get {	invocations.append(.extendedDescription_get)
 				return __extendedDescription }
@@ -71,12 +78,14 @@ class AttributeMock: Attribute, Mock {
 		static func name(set newValue: Parameter<String>) -> Property { return Property(method: .name_set(newValue)) }
         static var pluralName: Property { return Property(method: .pluralName_get) }
 		static func pluralName(set newValue: Parameter<String>) -> Property { return Property(method: .pluralName_set(newValue)) }
+        static var variableName: Property { return Property(method: .variableName_get) }
+		static func variableName(set newValue: Parameter<String>) -> Property { return Property(method: .variableName_set(newValue)) }
         static var extendedDescription: Property { return Property(method: .extendedDescription_get) }
 		static func extendedDescription(set newValue: Parameter<String?>) -> Property { return Property(method: .extendedDescription_set(newValue)) }
     }
 
 
-    required init(name: String, pluralName: String?, description: String?) { }
+    required init(name: String, pluralName: String?, description: String?, variableName: String?) { }
 
     func isValid(value: String) -> Bool {
         addInvocation(.iisValid__value_value(Parameter<String>.value(value)))
@@ -146,6 +155,8 @@ class AttributeMock: Attribute, Mock {
 		case name_set(Parameter<String>)
         case pluralName_get
 		case pluralName_set(Parameter<String>)
+        case variableName_get
+		case variableName_set(Parameter<String>)
         case extendedDescription_get
 		case extendedDescription_set(Parameter<String?>)
 
@@ -173,6 +184,8 @@ class AttributeMock: Attribute, Mock {
 				case (.name_set(let left),.name_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
                 case (.pluralName_get,.pluralName_get): return true
 				case (.pluralName_set(let left),.pluralName_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
+                case (.variableName_get,.variableName_get): return true
+				case (.variableName_set(let left),.variableName_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
                 case (.extendedDescription_get,.extendedDescription_get): return true
 				case (.extendedDescription_set(let left),.extendedDescription_set(let right)): return Parameter<String?>.compare(lhs: left, rhs: right, with: matcher)
                 default: return false
@@ -191,6 +204,8 @@ class AttributeMock: Attribute, Mock {
 				case .name_set(let newValue): return newValue.intValue
                 case .pluralName_get: return 0
 				case .pluralName_set(let newValue): return newValue.intValue
+                case .variableName_get: return 0
+				case .variableName_set(let newValue): return newValue.intValue
                 case .extendedDescription_get: return 0
 				case .extendedDescription_set(let newValue): return newValue.intValue
             }
@@ -709,21 +724,21 @@ class CalendarUtilMock: CalendarUtil, Mock {
     }
 
     func date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek {
-        addInvocation(.idate__dateisOneOf_daysOfWeek(Parameter<Date>.value(date), Parameter<CollectionType>.value(daysOfWeek).wrapAsGeneric()))
-		let perform = methodPerformValue(.idate__dateisOneOf_daysOfWeek(Parameter<Date>.value(date), Parameter<CollectionType>.value(daysOfWeek).wrapAsGeneric())) as? (Date, CollectionType) -> Void
+        addInvocation(.idate__dateisOnOneOf_daysOfWeek(Parameter<Date>.value(date), Parameter<CollectionType>.value(daysOfWeek).wrapAsGeneric()))
+		let perform = methodPerformValue(.idate__dateisOnOneOf_daysOfWeek(Parameter<Date>.value(date), Parameter<CollectionType>.value(daysOfWeek).wrapAsGeneric())) as? (Date, CollectionType) -> Void
 		perform?(date, daysOfWeek)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.idate__dateisOneOf_daysOfWeek(Parameter<Date>.value(date), Parameter<CollectionType>.value(daysOfWeek).wrapAsGeneric()))
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.idate__dateisOnOneOf_daysOfWeek(Parameter<Date>.value(date), Parameter<CollectionType>.value(daysOfWeek).wrapAsGeneric()))
 		let value = givenValue.value as? Bool
-		return value.orFail("stub return value not specified for date<CollectionType: Collection>(_ date: Date, isOneOf daysOfWeek: CollectionType). Use given")
+		return value.orFail("stub return value not specified for date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType). Use given")
     }
 
     func date(_ date: Date, isOnA dayOfWeek: DayOfWeek) -> Bool {
-        addInvocation(.idate__dateisA_dayOfWeek(Parameter<Date>.value(date), Parameter<DayOfWeek>.value(dayOfWeek)))
-		let perform = methodPerformValue(.idate__dateisA_dayOfWeek(Parameter<Date>.value(date), Parameter<DayOfWeek>.value(dayOfWeek))) as? (Date, DayOfWeek) -> Void
+        addInvocation(.idate__dateisOnA_dayOfWeek(Parameter<Date>.value(date), Parameter<DayOfWeek>.value(dayOfWeek)))
+		let perform = methodPerformValue(.idate__dateisOnA_dayOfWeek(Parameter<Date>.value(date), Parameter<DayOfWeek>.value(dayOfWeek))) as? (Date, DayOfWeek) -> Void
 		perform?(date, dayOfWeek)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.idate__dateisA_dayOfWeek(Parameter<Date>.value(date), Parameter<DayOfWeek>.value(dayOfWeek)))
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.idate__dateisOnA_dayOfWeek(Parameter<Date>.value(date), Parameter<DayOfWeek>.value(dayOfWeek)))
 		let value = givenValue.value as? Bool
-		return value.orFail("stub return value not specified for date(_ date: Date, isA dayOfWeek: DayOfWeek). Use given")
+		return value.orFail("stub return value not specified for date(_ date: Date, isOnA dayOfWeek: DayOfWeek). Use given")
     }
 
     func date(from dateStr: String, format: String) -> Date? {
@@ -741,8 +756,8 @@ class CalendarUtilMock: CalendarUtil, Mock {
         case istring__for_dateinFormat_format(Parameter<Date>, Parameter<String>)
         case idate__date1occursOnSame_componentas_date2(Parameter<Date>, Parameter<Calendar.Component>, Parameter<Date>)
         case icompare__date1_date2(Parameter<Date?>, Parameter<Date?>)
-        case idate__dateisOneOf_daysOfWeek(Parameter<Date>, Parameter<GenericAttribute>)
-        case idate__dateisA_dayOfWeek(Parameter<Date>, Parameter<DayOfWeek>)
+        case idate__dateisOnOneOf_daysOfWeek(Parameter<Date>, Parameter<GenericAttribute>)
+        case idate__dateisOnA_dayOfWeek(Parameter<Date>, Parameter<DayOfWeek>)
         case idate__from_dateStrformat_format(Parameter<String>, Parameter<String>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
@@ -768,11 +783,11 @@ class CalendarUtilMock: CalendarUtil, Mock {
                     guard Parameter.compare(lhs: lhsDate1, rhs: rhsDate1, with: matcher) else { return false } 
                     guard Parameter.compare(lhs: lhsDate2, rhs: rhsDate2, with: matcher) else { return false } 
                     return true 
-                case (.idate__dateisOneOf_daysOfWeek(let lhsDate, let lhsDaysofweek), .idate__dateisOneOf_daysOfWeek(let rhsDate, let rhsDaysofweek)):
+                case (.idate__dateisOnOneOf_daysOfWeek(let lhsDate, let lhsDaysofweek), .idate__dateisOnOneOf_daysOfWeek(let rhsDate, let rhsDaysofweek)):
                     guard Parameter.compare(lhs: lhsDate, rhs: rhsDate, with: matcher) else { return false } 
                     guard Parameter.compare(lhs: lhsDaysofweek, rhs: rhsDaysofweek, with: matcher) else { return false } 
                     return true 
-                case (.idate__dateisA_dayOfWeek(let lhsDate, let lhsDayofweek), .idate__dateisA_dayOfWeek(let rhsDate, let rhsDayofweek)):
+                case (.idate__dateisOnA_dayOfWeek(let lhsDate, let lhsDayofweek), .idate__dateisOnA_dayOfWeek(let rhsDate, let rhsDayofweek)):
                     guard Parameter.compare(lhs: lhsDate, rhs: rhsDate, with: matcher) else { return false } 
                     guard Parameter.compare(lhs: lhsDayofweek, rhs: rhsDayofweek, with: matcher) else { return false } 
                     return true 
@@ -791,8 +806,8 @@ class CalendarUtilMock: CalendarUtil, Mock {
                 case let .istring__for_dateinFormat_format(p0, p1): return p0.intValue + p1.intValue
                 case let .idate__date1occursOnSame_componentas_date2(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
                 case let .icompare__date1_date2(p0, p1): return p0.intValue + p1.intValue
-                case let .idate__dateisOneOf_daysOfWeek(p0, p1): return p0.intValue + p1.intValue
-                case let .idate__dateisA_dayOfWeek(p0, p1): return p0.intValue + p1.intValue
+                case let .idate__dateisOnOneOf_daysOfWeek(p0, p1): return p0.intValue + p1.intValue
+                case let .idate__dateisOnA_dayOfWeek(p0, p1): return p0.intValue + p1.intValue
                 case let .idate__from_dateStrformat_format(p0, p1): return p0.intValue + p1.intValue
             }
         }
@@ -824,11 +839,11 @@ class CalendarUtilMock: CalendarUtil, Mock {
         static func compare(date1: Parameter<Date?>, date2: Parameter<Date?>, willReturn: ComparisonResult) -> Given {
             return Given(method: .icompare__date1_date2(date1, date2), returns: willReturn, throws: nil)
         }
-        static func date<CollectionType: Collection>(date: Parameter<Date>, isOneOf daysOfWeek: Parameter<CollectionType>, willReturn: Bool) -> Given {
-            return Given(method: .idate__dateisOneOf_daysOfWeek(date, daysOfWeek.wrapAsGeneric()), returns: willReturn, throws: nil)
+        static func date<CollectionType: Collection>(date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>, willReturn: Bool) -> Given {
+            return Given(method: .idate__dateisOnOneOf_daysOfWeek(date, daysOfWeek.wrapAsGeneric()), returns: willReturn, throws: nil)
         }
-        static func date(date: Parameter<Date>, isA dayOfWeek: Parameter<DayOfWeek>, willReturn: Bool) -> Given {
-            return Given(method: .idate__dateisA_dayOfWeek(date, dayOfWeek), returns: willReturn, throws: nil)
+        static func date(date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>, willReturn: Bool) -> Given {
+            return Given(method: .idate__dateisOnA_dayOfWeek(date, dayOfWeek), returns: willReturn, throws: nil)
         }
         static func date(from dateStr: Parameter<String>, format: Parameter<String>, willReturn: Date?) -> Given {
             return Given(method: .idate__from_dateStrformat_format(dateStr, format), returns: willReturn, throws: nil)
@@ -853,11 +868,11 @@ class CalendarUtilMock: CalendarUtil, Mock {
         static func compare(date1: Parameter<Date?>, date2: Parameter<Date?>) -> Verify {
             return Verify(method: .icompare__date1_date2(date1, date2))
         }
-        static func date<CollectionType>(date: Parameter<Date>, isOneOf daysOfWeek: Parameter<CollectionType>) -> Verify {
-            return Verify(method: .idate__dateisOneOf_daysOfWeek(date, daysOfWeek.wrapAsGeneric()))
+        static func date<CollectionType>(date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>) -> Verify {
+            return Verify(method: .idate__dateisOnOneOf_daysOfWeek(date, daysOfWeek.wrapAsGeneric()))
         }
-        static func date(date: Parameter<Date>, isA dayOfWeek: Parameter<DayOfWeek>) -> Verify {
-            return Verify(method: .idate__dateisA_dayOfWeek(date, dayOfWeek))
+        static func date(date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>) -> Verify {
+            return Verify(method: .idate__dateisOnA_dayOfWeek(date, dayOfWeek))
         }
         static func date(from dateStr: Parameter<String>, format: Parameter<String>) -> Verify {
             return Verify(method: .idate__from_dateStrformat_format(dateStr, format))
@@ -883,11 +898,11 @@ class CalendarUtilMock: CalendarUtil, Mock {
         static func compare(date1: Parameter<Date?>, date2: Parameter<Date?>, perform: (Date?, Date?) -> Void) -> Perform {
             return Perform(method: .icompare__date1_date2(date1, date2), performs: perform)
         }
-        static func date<CollectionType>(date: Parameter<Date>, isOneOf daysOfWeek: Parameter<CollectionType>, perform: (Date, CollectionType) -> Void) -> Perform {
-            return Perform(method: .idate__dateisOneOf_daysOfWeek(date, daysOfWeek.wrapAsGeneric()), performs: perform)
+        static func date<CollectionType>(date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>, perform: (Date, CollectionType) -> Void) -> Perform {
+            return Perform(method: .idate__dateisOnOneOf_daysOfWeek(date, daysOfWeek.wrapAsGeneric()), performs: perform)
         }
-        static func date(date: Parameter<Date>, isA dayOfWeek: Parameter<DayOfWeek>, perform: (Date, DayOfWeek) -> Void) -> Perform {
-            return Perform(method: .idate__dateisA_dayOfWeek(date, dayOfWeek), performs: perform)
+        static func date(date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>, perform: (Date, DayOfWeek) -> Void) -> Perform {
+            return Perform(method: .idate__dateisOnA_dayOfWeek(date, dayOfWeek), performs: perform)
         }
         static func date(from dateStr: Parameter<String>, format: Parameter<String>, perform: (String, String) -> Void) -> Perform {
             return Perform(method: .idate__from_dateStrformat_format(dateStr, format), performs: perform)
@@ -971,24 +986,6 @@ class DataTypeFactoryMock: DataTypeFactory, Mock {
 		return value.orFail("stub return value not specified for heartRate(value: Double). Use given")
     }
 
-    func heartRate(_ value: Double, _ dateType: DateType, _ date: Date) -> HeartRate {
-        addInvocation(.iheartRate__value_dateType_date(Parameter<Double>.value(value), Parameter<DateType>.value(dateType), Parameter<Date>.value(date)))
-		let perform = methodPerformValue(.iheartRate__value_dateType_date(Parameter<Double>.value(value), Parameter<DateType>.value(dateType), Parameter<Date>.value(date))) as? (Double, DateType, Date) -> Void
-		perform?(value, dateType, date)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iheartRate__value_dateType_date(Parameter<Double>.value(value), Parameter<DateType>.value(dateType), Parameter<Date>.value(date)))
-		let value = givenValue.value as? HeartRate
-		return value.orFail("stub return value not specified for heartRate(_ value: Double, _ dateType: DateType, _ date: Date). Use given")
-    }
-
-    func heartRate(_ value: Double, _ dates: [DateType: Date]) -> HeartRate {
-        addInvocation(.iheartRate__value_dates(Parameter<Double>.value(value), Parameter<[DateType: Date]>.value(dates)))
-		let perform = methodPerformValue(.iheartRate__value_dates(Parameter<Double>.value(value), Parameter<[DateType: Date]>.value(dates))) as? (Double, [DateType: Date]) -> Void
-		perform?(value, dates)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iheartRate__value_dates(Parameter<Double>.value(value), Parameter<[DateType: Date]>.value(dates)))
-		let value = givenValue.value as? HeartRate
-		return value.orFail("stub return value not specified for heartRate(_ value: Double, _ dates: [DateType: Date]). Use given")
-    }
-
     func heartRate(_ sample: HKQuantitySample) -> HeartRate {
         addInvocation(.iheartRate__sample(Parameter<HKQuantitySample>.value(sample)))
 		let perform = methodPerformValue(.iheartRate__sample(Parameter<HKQuantitySample>.value(sample))) as? (HKQuantitySample) -> Void
@@ -1007,34 +1004,12 @@ class DataTypeFactoryMock: DataTypeFactory, Mock {
 		return value.orFail("stub return value not specified for mood(). Use given")
     }
 
-    func mood(rating: Double) -> Mood {
-        addInvocation(.imood__rating_rating(Parameter<Double>.value(rating)))
-		let perform = methodPerformValue(.imood__rating_rating(Parameter<Double>.value(rating))) as? (Double) -> Void
-		perform?(rating)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.imood__rating_rating(Parameter<Double>.value(rating)))
-		let value = givenValue.value as? Mood
-		return value.orFail("stub return value not specified for mood(rating: Double). Use given")
-    }
-
-    func mood(timestamp: Date) -> Mood {
-        addInvocation(.imood__timestamp_timestamp(Parameter<Date>.value(timestamp)))
-		let perform = methodPerformValue(.imood__timestamp_timestamp(Parameter<Date>.value(timestamp))) as? (Date) -> Void
-		perform?(timestamp)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.imood__timestamp_timestamp(Parameter<Date>.value(timestamp)))
-		let value = givenValue.value as? Mood
-		return value.orFail("stub return value not specified for mood(timestamp: Date). Use given")
-    }
-
     fileprivate enum MethodType {
         case iactivity
         case iactivityInstance__activity_activity(Parameter<Activity>)
         case iheartRate__value_value(Parameter<Double>)
-        case iheartRate__value_dateType_date(Parameter<Double>, Parameter<DateType>, Parameter<Date>)
-        case iheartRate__value_dates(Parameter<Double>, Parameter<[DateType: Date]>)
         case iheartRate__sample(Parameter<HKQuantitySample>)
         case imood
-        case imood__rating_rating(Parameter<Double>)
-        case imood__timestamp_timestamp(Parameter<Date>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -1046,25 +1021,10 @@ class DataTypeFactoryMock: DataTypeFactory, Mock {
                 case (.iheartRate__value_value(let lhsValue), .iheartRate__value_value(let rhsValue)):
                     guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
                     return true 
-                case (.iheartRate__value_dateType_date(let lhsValue, let lhsDatetype, let lhsDate), .iheartRate__value_dateType_date(let rhsValue, let rhsDatetype, let rhsDate)):
-                    guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
-                    guard Parameter.compare(lhs: lhsDatetype, rhs: rhsDatetype, with: matcher) else { return false } 
-                    guard Parameter.compare(lhs: lhsDate, rhs: rhsDate, with: matcher) else { return false } 
-                    return true 
-                case (.iheartRate__value_dates(let lhsValue, let lhsDates), .iheartRate__value_dates(let rhsValue, let rhsDates)):
-                    guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
-                    guard Parameter.compare(lhs: lhsDates, rhs: rhsDates, with: matcher) else { return false } 
-                    return true 
                 case (.iheartRate__sample(let lhsSample), .iheartRate__sample(let rhsSample)):
                     guard Parameter.compare(lhs: lhsSample, rhs: rhsSample, with: matcher) else { return false } 
                     return true 
                 case (.imood, .imood):
-                    return true 
-                case (.imood__rating_rating(let lhsRating), .imood__rating_rating(let rhsRating)):
-                    guard Parameter.compare(lhs: lhsRating, rhs: rhsRating, with: matcher) else { return false } 
-                    return true 
-                case (.imood__timestamp_timestamp(let lhsTimestamp), .imood__timestamp_timestamp(let rhsTimestamp)):
-                    guard Parameter.compare(lhs: lhsTimestamp, rhs: rhsTimestamp, with: matcher) else { return false } 
                     return true 
                 default: return false
             }
@@ -1075,12 +1035,8 @@ class DataTypeFactoryMock: DataTypeFactory, Mock {
                 case .iactivity: return 0
                 case let .iactivityInstance__activity_activity(p0): return p0.intValue
                 case let .iheartRate__value_value(p0): return p0.intValue
-                case let .iheartRate__value_dateType_date(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
-                case let .iheartRate__value_dates(p0, p1): return p0.intValue + p1.intValue
                 case let .iheartRate__sample(p0): return p0.intValue
                 case .imood: return 0
-                case let .imood__rating_rating(p0): return p0.intValue
-                case let .imood__timestamp_timestamp(p0): return p0.intValue
             }
         }
     }
@@ -1105,23 +1061,11 @@ class DataTypeFactoryMock: DataTypeFactory, Mock {
         static func heartRate(value: Parameter<Double>, willReturn: HeartRate) -> Given {
             return Given(method: .iheartRate__value_value(value), returns: willReturn, throws: nil)
         }
-        static func heartRate(value: Parameter<Double>, dateType: Parameter<DateType>, date: Parameter<Date>, willReturn: HeartRate) -> Given {
-            return Given(method: .iheartRate__value_dateType_date(value, dateType, date), returns: willReturn, throws: nil)
-        }
-        static func heartRate(value: Parameter<Double>, dates: Parameter<[DateType: Date]>, willReturn: HeartRate) -> Given {
-            return Given(method: .iheartRate__value_dates(value, dates), returns: willReturn, throws: nil)
-        }
         static func heartRate(sample: Parameter<HKQuantitySample>, willReturn: HeartRate) -> Given {
             return Given(method: .iheartRate__sample(sample), returns: willReturn, throws: nil)
         }
         static func mood(willReturn: Mood) -> Given {
             return Given(method: .imood, returns: willReturn, throws: nil)
-        }
-        static func mood(rating: Parameter<Double>, willReturn: Mood) -> Given {
-            return Given(method: .imood__rating_rating(rating), returns: willReturn, throws: nil)
-        }
-        static func mood(timestamp: Parameter<Date>, willReturn: Mood) -> Given {
-            return Given(method: .imood__timestamp_timestamp(timestamp), returns: willReturn, throws: nil)
         }
     }
 
@@ -1137,23 +1081,11 @@ class DataTypeFactoryMock: DataTypeFactory, Mock {
         static func heartRate(value: Parameter<Double>) -> Verify {
             return Verify(method: .iheartRate__value_value(value))
         }
-        static func heartRate(value: Parameter<Double>, dateType: Parameter<DateType>, date: Parameter<Date>) -> Verify {
-            return Verify(method: .iheartRate__value_dateType_date(value, dateType, date))
-        }
-        static func heartRate(value: Parameter<Double>, dates: Parameter<[DateType: Date]>) -> Verify {
-            return Verify(method: .iheartRate__value_dates(value, dates))
-        }
         static func heartRate(sample: Parameter<HKQuantitySample>) -> Verify {
             return Verify(method: .iheartRate__sample(sample))
         }
         static func mood() -> Verify {
             return Verify(method: .imood)
-        }
-        static func mood(rating: Parameter<Double>) -> Verify {
-            return Verify(method: .imood__rating_rating(rating))
-        }
-        static func mood(timestamp: Parameter<Date>) -> Verify {
-            return Verify(method: .imood__timestamp_timestamp(timestamp))
         }
     }
 
@@ -1170,23 +1102,11 @@ class DataTypeFactoryMock: DataTypeFactory, Mock {
         static func heartRate(value: Parameter<Double>, perform: (Double) -> Void) -> Perform {
             return Perform(method: .iheartRate__value_value(value), performs: perform)
         }
-        static func heartRate(value: Parameter<Double>, dateType: Parameter<DateType>, date: Parameter<Date>, perform: (Double, DateType, Date) -> Void) -> Perform {
-            return Perform(method: .iheartRate__value_dateType_date(value, dateType, date), performs: perform)
-        }
-        static func heartRate(value: Parameter<Double>, dates: Parameter<[DateType: Date]>, perform: (Double, [DateType: Date]) -> Void) -> Perform {
-            return Perform(method: .iheartRate__value_dates(value, dates), performs: perform)
-        }
         static func heartRate(sample: Parameter<HKQuantitySample>, perform: (HKQuantitySample) -> Void) -> Perform {
             return Perform(method: .iheartRate__sample(sample), performs: perform)
         }
         static func mood(perform: () -> Void) -> Perform {
             return Perform(method: .imood, performs: perform)
-        }
-        static func mood(rating: Parameter<Double>, perform: (Double) -> Void) -> Perform {
-            return Perform(method: .imood__rating_rating(rating), performs: perform)
-        }
-        static func mood(timestamp: Parameter<Date>, perform: (Date) -> Void) -> Perform {
-            return Perform(method: .imood__timestamp_timestamp(timestamp), performs: perform)
         }
     }
 
@@ -1239,6 +1159,15 @@ class InjectionProviderMock: InjectionProvider, Mock {
 
     typealias Property = Swift.Never
 
+
+    func database() -> Database {
+        addInvocation(.idatabase)
+		let perform = methodPerformValue(.idatabase) as? () -> Void
+		perform?()
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.idatabase)
+		let value = givenValue.value as? Database
+		return value.orFail("stub return value not specified for database(). Use given")
+    }
 
     func queryFactory() -> QueryFactory {
         addInvocation(.iqueryFactory)
@@ -1331,6 +1260,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
     }
 
     fileprivate enum MethodType {
+        case idatabase
         case iqueryFactory
         case iquerierFactory
         case iquestionFactory
@@ -1344,6 +1274,8 @@ class InjectionProviderMock: InjectionProvider, Mock {
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
+                case (.idatabase, .idatabase):
+                    return true 
                 case (.iqueryFactory, .iqueryFactory):
                     return true 
                 case (.iquerierFactory, .iquerierFactory):
@@ -1370,6 +1302,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
 
         func intValue() -> Int {
             switch self {
+                case .idatabase: return 0
                 case .iqueryFactory: return 0
                 case .iquerierFactory: return 0
                 case .iquestionFactory: return 0
@@ -1395,6 +1328,9 @@ class InjectionProviderMock: InjectionProvider, Mock {
             self.`throws` = `throws`
         }
 
+        static func database(willReturn: Database) -> Given {
+            return Given(method: .idatabase, returns: willReturn, throws: nil)
+        }
         static func queryFactory(willReturn: QueryFactory) -> Given {
             return Given(method: .iqueryFactory, returns: willReturn, throws: nil)
         }
@@ -1430,6 +1366,9 @@ class InjectionProviderMock: InjectionProvider, Mock {
     struct Verify {
         fileprivate var method: MethodType
 
+        static func database() -> Verify {
+            return Verify(method: .idatabase)
+        }
         static func queryFactory() -> Verify {
             return Verify(method: .iqueryFactory)
         }
@@ -1466,6 +1405,9 @@ class InjectionProviderMock: InjectionProvider, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
+        static func database(perform: () -> Void) -> Perform {
+            return Perform(method: .idatabase, performs: perform)
+        }
         static func queryFactory(perform: () -> Void) -> Perform {
             return Perform(method: .iqueryFactory, performs: perform)
         }
@@ -2507,12 +2449,21 @@ class SampleUtilMock: SampleUtil, Mock {
     }
 
     func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2]) -> SampleType2 {
-        addInvocation(.iclosestInTimeTo__sample_samplein_samples(Parameter<SampleType1>.value(sample).wrapAsGeneric(), Parameter<[SampleType2]>.value(samples).wrapAsGeneric()))
-		let perform = methodPerformValue(.iclosestInTimeTo__sample_samplein_samples(Parameter<SampleType1>.value(sample).wrapAsGeneric(), Parameter<[SampleType2]>.value(samples).wrapAsGeneric())) as? (SampleType1, [SampleType2]) -> Void
+        addInvocation(.iclosestInTimeTo__sample_samplein_samples_1(Parameter<SampleType1>.value(sample).wrapAsGeneric(), Parameter<[SampleType2]>.value(samples).wrapAsGeneric()))
+		let perform = methodPerformValue(.iclosestInTimeTo__sample_samplein_samples_1(Parameter<SampleType1>.value(sample).wrapAsGeneric(), Parameter<[SampleType2]>.value(samples).wrapAsGeneric())) as? (SampleType1, [SampleType2]) -> Void
 		perform?(sample, samples)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iclosestInTimeTo__sample_samplein_samples(Parameter<SampleType1>.value(sample).wrapAsGeneric(), Parameter<[SampleType2]>.value(samples).wrapAsGeneric()))
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iclosestInTimeTo__sample_samplein_samples_1(Parameter<SampleType1>.value(sample).wrapAsGeneric(), Parameter<[SampleType2]>.value(samples).wrapAsGeneric()))
 		let value = givenValue.value as? SampleType2
 		return value.orFail("stub return value not specified for closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2]). Use given")
+    }
+
+    func closestInTimeTo(sample: Sample, in samples: [Sample]) -> Sample {
+        addInvocation(.iclosestInTimeTo__sample_samplein_samples_2(Parameter<Sample>.value(sample), Parameter<[Sample]>.value(samples)))
+		let perform = methodPerformValue(.iclosestInTimeTo__sample_samplein_samples_2(Parameter<Sample>.value(sample), Parameter<[Sample]>.value(samples))) as? (Sample, [Sample]) -> Void
+		perform?(sample, samples)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iclosestInTimeTo__sample_samplein_samples_2(Parameter<Sample>.value(sample), Parameter<[Sample]>.value(samples)))
+		let value = givenValue.value as? Sample
+		return value.orFail("stub return value not specified for closestInTimeTo(sample: Sample, in samples: [Sample]). Use given")
     }
 
     func distance(between sample1: Sample, and sample2: Sample, in unit: Calendar.Component) -> Int {
@@ -2536,7 +2487,8 @@ class SampleUtilMock: SampleUtil, Mock {
         case isort__samples_samplesby_dateTypein_order_2(Parameter<GenericAttribute>, Parameter<DateType>, Parameter<ComparisonResult>)
         case iconvertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_1(Parameter<[Sample]>, Parameter<(Sample, Sample) -> Bool>, Parameter<([Sample], Date, Date) -> Sample>)
         case iconvertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(Parameter<GenericAttribute>, Parameter<GenericAttribute>, Parameter<GenericAttribute>)
-        case iclosestInTimeTo__sample_samplein_samples(Parameter<GenericAttribute>, Parameter<GenericAttribute>)
+        case iclosestInTimeTo__sample_samplein_samples_1(Parameter<GenericAttribute>, Parameter<GenericAttribute>)
+        case iclosestInTimeTo__sample_samplein_samples_2(Parameter<Sample>, Parameter<[Sample]>)
         case idistance__between_sample1and_sample2in_unit(Parameter<Sample>, Parameter<Sample>, Parameter<Calendar.Component>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
@@ -2593,7 +2545,11 @@ class SampleUtilMock: SampleUtil, Mock {
                     guard Parameter.compare(lhs: lhsSamplesshouldnotbejoined, rhs: rhsSamplesshouldnotbejoined, with: matcher) else { return false } 
                     guard Parameter.compare(lhs: lhsJoinsamples, rhs: rhsJoinsamples, with: matcher) else { return false } 
                     return true 
-                case (.iclosestInTimeTo__sample_samplein_samples(let lhsSample, let lhsSamples), .iclosestInTimeTo__sample_samplein_samples(let rhsSample, let rhsSamples)):
+                case (.iclosestInTimeTo__sample_samplein_samples_1(let lhsSample, let lhsSamples), .iclosestInTimeTo__sample_samplein_samples_1(let rhsSample, let rhsSamples)):
+                    guard Parameter.compare(lhs: lhsSample, rhs: rhsSample, with: matcher) else { return false } 
+                    guard Parameter.compare(lhs: lhsSamples, rhs: rhsSamples, with: matcher) else { return false } 
+                    return true 
+                case (.iclosestInTimeTo__sample_samplein_samples_2(let lhsSample, let lhsSamples), .iclosestInTimeTo__sample_samplein_samples_2(let rhsSample, let rhsSamples)):
                     guard Parameter.compare(lhs: lhsSample, rhs: rhsSample, with: matcher) else { return false } 
                     guard Parameter.compare(lhs: lhsSamples, rhs: rhsSamples, with: matcher) else { return false } 
                     return true 
@@ -2619,7 +2575,8 @@ class SampleUtilMock: SampleUtil, Mock {
                 case let .isort__samples_samplesby_dateTypein_order_2(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
                 case let .iconvertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_1(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
                 case let .iconvertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
-                case let .iclosestInTimeTo__sample_samplein_samples(p0, p1): return p0.intValue + p1.intValue
+                case let .iclosestInTimeTo__sample_samplein_samples_1(p0, p1): return p0.intValue + p1.intValue
+                case let .iclosestInTimeTo__sample_samplein_samples_2(p0, p1): return p0.intValue + p1.intValue
                 case let .idistance__between_sample1and_sample2in_unit(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             }
         }
@@ -2670,7 +2627,10 @@ class SampleUtilMock: SampleUtil, Mock {
             return Given(method: .iconvertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(samples.wrapAsGeneric(), samplesShouldNotBeJoined.wrapAsGeneric(), joinSamples.wrapAsGeneric()), returns: willReturn, throws: nil)
         }
         static func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: Parameter<SampleType1>, in samples: Parameter<[SampleType2]>, willReturn: SampleType2) -> Given {
-            return Given(method: .iclosestInTimeTo__sample_samplein_samples(sample.wrapAsGeneric(), samples.wrapAsGeneric()), returns: willReturn, throws: nil)
+            return Given(method: .iclosestInTimeTo__sample_samplein_samples_1(sample.wrapAsGeneric(), samples.wrapAsGeneric()), returns: willReturn, throws: nil)
+        }
+        static func closestInTimeTo(sample: Parameter<Sample>, in samples: Parameter<[Sample]>, willReturn: Sample) -> Given {
+            return Given(method: .iclosestInTimeTo__sample_samplein_samples_2(sample, samples), returns: willReturn, throws: nil)
         }
         static func distance(between sample1: Parameter<Sample>, and sample2: Parameter<Sample>, in unit: Parameter<Calendar.Component>, willReturn: Int) -> Given {
             return Given(method: .idistance__between_sample1and_sample2in_unit(sample1, sample2, unit), returns: willReturn, throws: nil)
@@ -2714,7 +2674,10 @@ class SampleUtilMock: SampleUtil, Mock {
             return Verify(method: .iconvertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(samples.wrapAsGeneric(), samplesShouldNotBeJoined.wrapAsGeneric(), joinSamples.wrapAsGeneric()))
         }
         static func closestInTimeTo<SampleType1,SampleType2>(sample: Parameter<SampleType1>, in samples: Parameter<[SampleType2]>) -> Verify {
-            return Verify(method: .iclosestInTimeTo__sample_samplein_samples(sample.wrapAsGeneric(), samples.wrapAsGeneric()))
+            return Verify(method: .iclosestInTimeTo__sample_samplein_samples_1(sample.wrapAsGeneric(), samples.wrapAsGeneric()))
+        }
+        static func closestInTimeTo(sample: Parameter<Sample>, in samples: Parameter<[Sample]>) -> Verify {
+            return Verify(method: .iclosestInTimeTo__sample_samplein_samples_2(sample, samples))
         }
         static func distance(between sample1: Parameter<Sample>, and sample2: Parameter<Sample>, in unit: Parameter<Calendar.Component>) -> Verify {
             return Verify(method: .idistance__between_sample1and_sample2in_unit(sample1, sample2, unit))
@@ -2759,7 +2722,10 @@ class SampleUtilMock: SampleUtil, Mock {
             return Perform(method: .iconvertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(samples.wrapAsGeneric(), samplesShouldNotBeJoined.wrapAsGeneric(), joinSamples.wrapAsGeneric()), performs: perform)
         }
         static func closestInTimeTo<SampleType1,SampleType2>(sample: Parameter<SampleType1>, in samples: Parameter<[SampleType2]>, perform: (SampleType1, [SampleType2]) -> Void) -> Perform {
-            return Perform(method: .iclosestInTimeTo__sample_samplein_samples(sample.wrapAsGeneric(), samples.wrapAsGeneric()), performs: perform)
+            return Perform(method: .iclosestInTimeTo__sample_samplein_samples_1(sample.wrapAsGeneric(), samples.wrapAsGeneric()), performs: perform)
+        }
+        static func closestInTimeTo(sample: Parameter<Sample>, in samples: Parameter<[Sample]>, perform: (Sample, [Sample]) -> Void) -> Perform {
+            return Perform(method: .iclosestInTimeTo__sample_samplein_samples_2(sample, samples), performs: perform)
         }
         static func distance(between sample1: Parameter<Sample>, and sample2: Parameter<Sample>, in unit: Parameter<Calendar.Component>, perform: (Sample, Sample, Calendar.Component) -> Void) -> Perform {
             return Perform(method: .idistance__between_sample1and_sample2in_unit(sample1, sample2, unit), performs: perform)

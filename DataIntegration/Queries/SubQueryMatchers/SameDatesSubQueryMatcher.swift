@@ -27,9 +27,9 @@ public class SameDatesSubQueryMatcher: SubQueryMatcher {
 
 	public required init() {} // do nothing
 
-	public func getSamples<QuerySampleType: Sample, SubQuerySampleType: Sample>(
+	public func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
-		matching subQuerySamples: [SubQuerySampleType])
+		matching subQuerySamples: [Sample])
 	-> [QuerySampleType] {
 		var matchingSamples = [QuerySampleType]()
 
@@ -51,15 +51,15 @@ public class SameDatesSubQueryMatcher: SubQueryMatcher {
 	}
 
 	fileprivate func compare(_ s1: Sample, _ s2: Sample) -> ComparisonResult {
-		let start1 = s1.dates[.start]!
-		let start2 = s2.dates[.start]!
+		let start1 = s1.dates()[.start]!
+		let start2 = s2.dates()[.start]!
 
 		let startDateComparison = start1.compare(start2)
 		if startDateComparison != .orderedSame {
 			return startDateComparison
 		}
 
-		return DependencyInjector.util.calendarUtil.compare(s1.dates[.end], s2.dates[.end])
+		return DependencyInjector.util.calendarUtil.compare(s1.dates()[.end], s2.dates()[.end])
 	}
 
 	public func setParameter<T>(id: Int, value: T) throws {

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class GreaterThanOrEqualToAttributeRestriction: NumericAttributeRestriction {
+public class GreaterThanOrEqualToAttributeRestriction: NumericAttributeRestriction, PredicateAttributeRestriction {
 
 	fileprivate typealias Me = GreaterThanOrEqualToAttributeRestriction
 
@@ -41,5 +41,9 @@ public class GreaterThanOrEqualToAttributeRestriction: NumericAttributeRestricti
 
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
 		return try getDoubleFrom(sample) >= value
+	}
+
+	public func toPredicate() -> NSPredicate {
+		return NSPredicate(format: "$@ >= $@", restrictedAttribute.variableName, String(value))
 	}
 }

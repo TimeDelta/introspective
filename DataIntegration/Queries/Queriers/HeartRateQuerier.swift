@@ -10,7 +10,7 @@ import Foundation
 import HealthKit
 import os
 
-public class HeartRateQuerier: NSObject {
+public class HeartRateQuerier {
 
 	enum Errors: Error {
 		case unauthorized

@@ -19,7 +19,7 @@ class HeartRateTableViewCell: UITableViewCell {
 			valueFormatter.numberStyle = .decimal
 			valueLabel.text = valueFormatter.string(from: NSNumber(value: heartRate.heartRate))
 
-			let dateString = DependencyInjector.util.calendarUtil.string(for: heartRate.dates[.start]!)
+			let dateString = DependencyInjector.util.calendarUtil.string(for: heartRate.timestamp)
 			timestampLabel.text = dateString
 		}
 	}

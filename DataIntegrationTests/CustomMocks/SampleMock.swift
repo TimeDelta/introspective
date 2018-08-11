@@ -26,13 +26,6 @@ class SampleMock: Sample, Mock {
     private var methodPerformValues: [Perform] = []
     var matcher: Matcher = Matcher.default
 
-    var dates: [DateType: Date] { 
-		get {	invocations.append(.dates_get)
-				return __dates.orFail("SampleMockMock - value for dates was not defined") }
-		set {	invocations.append(.dates_set(.value(newValue)))
-				__dates = newValue }
-	}
-	private var __dates: ([DateType: Date])?
     var dataType: DataTypes { 
 		get {	invocations.append(.dataType_get)
 				return __dataType.orFail("SampleMockMock - value for dataType was not defined") }
@@ -57,8 +50,6 @@ class SampleMock: Sample, Mock {
 
     struct Property {
         fileprivate var method: MethodType
-        static var dates: Property { return Property(method: .dates_get) }
-		static func dates(set newValue: Parameter<[DateType: Date]>) -> Property { return Property(method: .dates_set(newValue)) }
         static var dataType: Property { return Property(method: .dataType_get) }
 		static func dataType(set newValue: Parameter<DataTypes>) -> Property { return Property(method: .dataType_set(newValue)) }
         static var name: Property { return Property(method: .name_get) }
@@ -67,6 +58,15 @@ class SampleMock: Sample, Mock {
 		static func attributes(set newValue: Parameter<[Attribute]>) -> Property { return Property(method: .attributes_set(newValue)) }
     }
 
+
+    func dates() -> [DateType: Date] {
+        addInvocation(.idates)
+		let perform = methodPerformValue(.idates) as? () -> Void
+		perform?()
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.idates)
+		let value = givenValue.value as? [DateType: Date]
+		return value.orFail("stub return value not specified for dates(). Use given")
+    }
 
     func equalTo(_ otherSample: Sample) -> Bool {
         addInvocation(.iequalTo__otherSample(Parameter<Sample>.value(otherSample)))
@@ -96,11 +96,10 @@ class SampleMock: Sample, Mock {
     }
 
     fileprivate enum MethodType {
+        case idates
         case iequalTo__otherSample(Parameter<Sample>)
         case ivalue__of_attribute(Parameter<Attribute>)
         case iset__attribute_attributeto_value(Parameter<Attribute>, Parameter<Any>)
-        case dates_get
-		case dates_set(Parameter<[DateType: Date]>)
         case dataType_get
 		case dataType_set(Parameter<DataTypes>)
         case name_get
@@ -110,6 +109,8 @@ class SampleMock: Sample, Mock {
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
+                case (.idates, .idates):
+                    return true 
                 case (.iequalTo__otherSample(let lhsOthersample), .iequalTo__otherSample(let rhsOthersample)):
                     guard Parameter.compare(lhs: lhsOthersample, rhs: rhsOthersample, with: matcher) else { return false } 
                     return true 
@@ -120,8 +121,6 @@ class SampleMock: Sample, Mock {
                     guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
                     guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
                     return true 
-                case (.dates_get,.dates_get): return true
-				case (.dates_set(let left),.dates_set(let right)): return Parameter<[DateType: Date]>.compare(lhs: left, rhs: right, with: matcher)
                 case (.dataType_get,.dataType_get): return true
 				case (.dataType_set(let left),.dataType_set(let right)): return Parameter<DataTypes>.compare(lhs: left, rhs: right, with: matcher)
                 case (.name_get,.name_get): return true
@@ -134,11 +133,10 @@ class SampleMock: Sample, Mock {
 
         func intValue() -> Int {
             switch self {
+                case .idates: return 0
                 case let .iequalTo__otherSample(p0): return p0.intValue
                 case let .ivalue__of_attribute(p0): return p0.intValue
                 case let .iset__attribute_attributeto_value(p0, p1): return p0.intValue + p1.intValue
-                case .dates_get: return 0
-				case .dates_set(let newValue): return newValue.intValue
                 case .dataType_get: return 0
 				case .dataType_set(let newValue): return newValue.intValue
                 case .name_get: return 0
@@ -160,6 +158,9 @@ class SampleMock: Sample, Mock {
             self.`throws` = `throws`
         }
 
+        static func dates(willReturn: [DateType: Date]) -> Given {
+            return Given(method: .idates, returns: willReturn, throws: nil)
+        }
         static func equalTo(otherSample: Parameter<Sample>, willReturn: Bool) -> Given {
             return Given(method: .iequalTo__otherSample(otherSample), returns: willReturn, throws: nil)
         }
@@ -177,6 +178,9 @@ class SampleMock: Sample, Mock {
     struct Verify {
         fileprivate var method: MethodType
 
+        static func dates() -> Verify {
+            return Verify(method: .idates)
+        }
         static func equalTo(otherSample: Parameter<Sample>) -> Verify {
             return Verify(method: .iequalTo__otherSample(otherSample))
         }
@@ -192,6 +196,9 @@ class SampleMock: Sample, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
+        static func dates(perform: () -> Void) -> Perform {
+            return Perform(method: .idates, performs: perform)
+        }
         static func equalTo(otherSample: Parameter<Sample>, perform: (Sample) -> Void) -> Perform {
             return Perform(method: .iequalTo__otherSample(otherSample), performs: perform)
         }

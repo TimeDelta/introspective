@@ -8,10 +8,10 @@
 
 import Foundation
 
-public class IntegerAttribute: AnyAttribute, NumericAttribute {
+public class IntegerAttribute: AttributeBase, NumericAttribute {
 
-	public required init(name: String, pluralName: String? = nil, description: String? = nil) {
-		super.init(name: name, pluralName: pluralName, description: description)
+	public required init(name: String, pluralName: String? = nil, description: String? = nil, variableName: String? = nil) {
+		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
 	}
 
 	public override func isValid(value: String) -> Bool {

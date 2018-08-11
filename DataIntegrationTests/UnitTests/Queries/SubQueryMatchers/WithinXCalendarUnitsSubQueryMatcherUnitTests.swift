@@ -22,8 +22,8 @@ class WithinXCalendarUnitsSubQueryMatcherUnitTests: UnitTest {
 
 	func testGivenEmptyArrayOfQuerySamplesAndEmptyArrayOfSubQuerySamples_getSamples_returnsEmptyArray() {
 		// given
-		let querySamples = [SampleBase]()
-		let subQuerySamples = [SampleBase]()
+		let querySamples = [AnySample]()
+		let subQuerySamples = [Sample]()
 
 		// when
 		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
@@ -34,8 +34,8 @@ class WithinXCalendarUnitsSubQueryMatcherUnitTests: UnitTest {
 
 	func testGivenEmptyArrayOfQuerySamplesAndNonEmptyArrayOfSubQuerySamples_getSamples_returnsEmptyArray() {
 		// given
-		let querySamples = [SampleBase]()
-		let subQuerySamples = createSamples(withValues: [1.1, 2.2]) as! [SampleBase]
+		let querySamples = [AnySample]()
+		let subQuerySamples = createSamples(count: 2)
 
 		// when
 		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
@@ -46,8 +46,8 @@ class WithinXCalendarUnitsSubQueryMatcherUnitTests: UnitTest {
 
 	func testGivenEmptyArrayOfSubQuerySamplesAndNonEmptyArrayOfQuerySamples_getSamples_returnsEmptyArray() {
 		// given
-		let querySamples = createSamples(withValues: [8.0, 1.2]) as! [SampleBase]
-		let subQuerySamples = [SampleBase]()
+		let querySamples = createSamples(count: 2)
+		let subQuerySamples = [Sample]()
 
 		// when
 		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
@@ -60,11 +60,8 @@ class WithinXCalendarUnitsSubQueryMatcherUnitTests: UnitTest {
 		// given
 		matcher.numberOfTimeUnits = 1
 		matcher.timeUnit = .day
-		let querySamples = createSamples(withValues: [
-			(date: Date() - 1.days, value: 0.0),
-			(date: Date(), value: 1.0)
-		]) as! [SampleBase]
-		let subQuerySamples = [createSample(2.0, Date() + 1.days) as! SampleBase]
+		let querySamples = createSamples(withDates: [Date() - 1.days, Date()])
+		let subQuerySamples = [createSample(startDate: Date() + 1.days)] as [Sample]
 		Given(mockSampleUtil, .closestInTimeTo(sample: .value(querySamples[0]), in: .value(subQuerySamples), willReturn: subQuerySamples[0]))
 		Given(mockSampleUtil, .closestInTimeTo(sample: .value(querySamples[1]), in: .value(subQuerySamples), willReturn: subQuerySamples[0]))
 		Given(mockSampleUtil, .distance(
@@ -90,14 +87,8 @@ class WithinXCalendarUnitsSubQueryMatcherUnitTests: UnitTest {
 		// given
 		matcher.numberOfTimeUnits = 1
 		matcher.timeUnit = .day
-		let querySamples = createSamples(withValues: [
-			(date: Date() - 1.days, value: 0.0),
-			(date: Date(), value: 1.0),
-		]) as! [SampleBase]
-		let subQuerySamples = createSamples(withValues: [
-			(date: Date() - 3.days + 1.hours, value: 3.0),
-			(date: Date() + 1.days, value: 2.0),
-		]) as! [SampleBase]
+		let querySamples = createSamples(withDates: [Date() - 1.days, Date()])
+		let subQuerySamples = createSamples(withDates: [Date() - 3.days + 1.hours, Date() + 1.days]) as [Sample]
 		Given(mockSampleUtil, .closestInTimeTo(sample: .value(querySamples[0]), in: .value(subQuerySamples), willReturn: subQuerySamples[0]))
 		Given(mockSampleUtil, .closestInTimeTo(sample: .value(querySamples[1]), in: .value(subQuerySamples), willReturn: subQuerySamples[1]))
 		Given(mockSampleUtil, .distance(
@@ -124,14 +115,8 @@ class WithinXCalendarUnitsSubQueryMatcherUnitTests: UnitTest {
 		matcher.mostRecentOnly = true
 		matcher.numberOfTimeUnits = 1
 		matcher.timeUnit = .day
-		let querySamples = createSamples(withValues: [
-			(date: Date() - 1.days, value: 0.0),
-			(date: Date(), value: 1.0),
-		]) as! [SampleBase]
-		let subQuerySamples = createSamples(withValues: [
-			(date: Date() - 3.days + 1.hours, value: 3.0),
-			(date: Date() + 1.days, value: 2.0),
-		]) as! [SampleBase]
+		let querySamples = createSamples(withDates: [Date() - 1.days, Date()])
+		let subQuerySamples = createSamples(withDates: [Date() - 3.days + 1.hours, Date() + 1.days]) as [Sample]
 		Given(mockSampleUtil, .sort(samples: .value(subQuerySamples), by: .value(.start), in: .value(.orderedDescending), willReturn: subQuerySamples.reversed()))
 		Given(mockSampleUtil, .closestInTimeTo(sample: .value(querySamples[0]), in: .value([subQuerySamples[1]]), willReturn: subQuerySamples[1]))
 		Given(mockSampleUtil, .closestInTimeTo(sample: .value(querySamples[1]), in: .value([subQuerySamples[1]]), willReturn: subQuerySamples[1]))

@@ -12,6 +12,7 @@ public class DependencyInjector: NSObject {
 
 	public static var injectionProvider: InjectionProvider = ProductionInjectionProvider()
 
+	public static var db: Database { get { return injectionProvider.database() } }
 	public static var question: QuestionFactory { get { return injectionProvider.questionFactory() } }
 	public static var query: QueryFactory { get { return injectionProvider.queryFactory() } }
 	public static var querier: QuerierFactory { get { return injectionProvider.querierFactory() } }

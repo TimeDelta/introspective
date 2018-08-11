@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class CalendarComponentAttribute: AnyAttribute, SelectOneAttribute {
+public class CalendarComponentAttribute: AttributeBase, SelectOneAttribute {
 
 	fileprivate typealias Me = CalendarComponentAttribute
 
@@ -29,8 +29,8 @@ public class CalendarComponentAttribute: AnyAttribute, SelectOneAttribute {
 
 	public let possibleValues: [Any] = Me.supportedComponents
 
-	public required init(name: String = "Time unit", pluralName: String? = "Time units", description: String? = nil) {
-		super.init(name: name, pluralName: pluralName, description: description)
+	public required init(name: String = "Time unit", pluralName: String? = "Time units", description: String? = nil, variableName: String? = nil) {
+		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
 	}
 
 	public override func isValid(value: String) -> Bool {

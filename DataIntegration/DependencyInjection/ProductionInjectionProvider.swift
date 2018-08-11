@@ -12,6 +12,7 @@ public class ProductionInjectionProvider: InjectionProvider {
 
 	fileprivate typealias Me = ProductionInjectionProvider
 
+	fileprivate static let realDatabase = Database()
 	fileprivate static let realQueryFactory = QueryFactoryImpl()
 	fileprivate static let realQuerierFactory = QuerierFactoryImpl()
 	fileprivate static let realQuestionFactory = QuestionFactory()
@@ -23,6 +24,7 @@ public class ProductionInjectionProvider: InjectionProvider {
 	fileprivate static let realSampleGrouperFactory = SampleGrouperFactoryImpl()
 	fileprivate static let realSampleGroupCombinerFactory = SampleGroupCombinerFactoryImpl()
 
+	public func database() -> Database { return Me.realDatabase }
 	public func queryFactory() -> QueryFactory { return Me.realQueryFactory }
 	public func querierFactory() -> QuerierFactory { return Me.realQuerierFactory }
 	public func questionFactory() -> QuestionFactory { return Me.realQuestionFactory }

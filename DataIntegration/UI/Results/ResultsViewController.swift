@@ -11,6 +11,12 @@ import os
 
 class ResultsViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
 
+	fileprivate typealias Me = ResultsViewController
+	fileprivate static let cellHeights: [DataTypes: CGFloat] = [
+		.heartRate: 44,
+		.mood: 67,
+	]
+
 	public var dataType: DataTypes!
 
 	public var extraInformation: [ExtraInformation]! {
@@ -109,7 +115,7 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 		}
 
 		if section == 0 {
-			let cell = (tableView.dequeueReusableCell(withIdentifier: "statisticsCell", for: indexPath) as! ExtraInformationTableViewCell)
+			let cell = (tableView.dequeueReusableCell(withIdentifier: "informationCell", for: indexPath) as! ExtraInformationTableViewCell)
 			cell.extraInformation = extraInformation[row]
 			cell.value = extraInformationValues[row]
 			return cell
@@ -122,11 +128,20 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 					let cell = (tableView.dequeueReusableCell(withIdentifier: "heartRateSampleCell", for: indexPath) as! HeartRateTableViewCell)
 					cell.heartRate = (sample as! HeartRate)
 					return cell
+				case .mood:
+					let sample = samples[row]
+					let cell = (tableView.dequeueReusableCell(withIdentifier: "moodSampleCell", for: indexPath) as! MoodTableViewCell)
+					cell.mood = (sample as! Mood)
+					return cell
 			}
 		}
 
 		os_log("Unexpected section index ($@) while instantiating cell", type: .error, String(section))
 		return UITableViewCell()
+	}
+
+	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		return Me.cellHeights[dataType]!
 	}
 
 	// MARK: - TableView Editing

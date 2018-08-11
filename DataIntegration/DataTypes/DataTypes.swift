@@ -11,28 +11,35 @@ import Foundation
 public enum DataTypes: CustomStringConvertible {
 
 	case heartRate
+	case mood
 
-	public static let allTypes: [DataTypes] = [heartRate]
+	public static let allTypes: [DataTypes] = [heartRate, mood]
 
 	public static func attributesFor(_ type: DataTypes) -> [Attribute] {
 		switch (type) {
 			case .heartRate: return HeartRate.attributes
+			case .mood: return Mood.attributes
 		}
 	}
 
 	public var defaultDependentAttribute: Attribute {
 		switch (self) {
 			case .heartRate: return HeartRate.heartRate
+			case .mood: return Mood.moodRating
 		}
 	}
 
 	public var defaultIndependentAttribute: Attribute {
-		return SampleBase.startDate
+		switch(self) {
+			case .heartRate: return CommonSampleAttributes.timestamp
+			case .mood: return CommonSampleAttributes.timestamp
+		}
 	}
 
 	public var description: String {
 		switch (self) {
 			case .heartRate: return "Heart Rate"
+			case .mood: return "Mood"
 		}
 	}
 }

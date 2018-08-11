@@ -8,12 +8,12 @@
 
 import Foundation
 
-public class DayOfWeekAttribute: AnyAttribute, SelectOneAttribute {
+public class DayOfWeekAttribute: AttributeBase, SelectOneAttribute {
 
 	public fileprivate(set) var possibleValues: [Any] = DayOfWeek.allDays
 
-	public required init(name: String = "Day of the week", pluralName: String? = "Days of the week", description: String? = nil) {
-		super.init(name: name, pluralName: pluralName, description: description)
+	public required init(name: String = "Day of the week", pluralName: String? = "Days of the week", description: String? = nil, variableName: String? = nil) {
+		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
 	}
 
 	public override func isValid(value: String) -> Bool {

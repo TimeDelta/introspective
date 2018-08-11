@@ -20,7 +20,7 @@ class AfterDateAttributeRestrictionUnitTests: UnitTest {
 
 	override func setUp() {
 		super.setUp()
-		attribute = AnyAttribute(name: "attribute")
+		attribute = AttributeBase(name: "attribute")
 		restriction = AfterDateAttributeRestriction(attribute: attribute)
 	}
 

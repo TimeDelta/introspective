@@ -21,9 +21,9 @@ public enum SampleError: Error {
 
 public protocol Sample: Attributed {
 
-	var dates: [DateType: Date] { get }
 	var dataType: DataTypes { get }
 
+	func dates() -> [DateType: Date]
 	func equalTo(_ otherSample: Sample) -> Bool
 }
 
@@ -32,8 +32,8 @@ extension Sample {
 	public func equalTo(_ otherSample: Sample) -> Bool {
 		if name != otherSample.name { return false }
 		if description != otherSample.description { return false }
-		if dates != otherSample.dates { return false }
 		if dataType != otherSample.dataType { return false }
+		if dates() != otherSample.dates() { return false }
 		if type(of: self) != type(of: otherSample) { return false }
 		if attributes.count != otherSample.attributes.count { return false }
 		for attribute in attributes {
@@ -65,41 +65,9 @@ extension Sample {
 	}
 }
 
-/// An abstract base class for everything that implements the Sample protocol
-public class SampleBase: Sample, Equatable {
+public class CommonSampleAttributes {
 
-	public static func == (lhs: SampleBase, rhs: SampleBase) -> Bool {
-		return lhs.equalTo(rhs)
-	}
-
-	public static let startDate = DateTimeAttribute(name: "Start date")
-	public static let endDate = DateTimeAttribute(name: "End date")
-
-	public var name: String { get { fatalError("Must override") } }
-	public var description: String { get { fatalError("Must override") } }
-
-	public var dates: [DateType: Date]
-	public var dataType: DataTypes { get { fatalError("Must override") } }
-	public var attributes: [Attribute] { get { fatalError("Must override") } }
-
-	public required init() {
-		dates = [.start: Date()]
-	}
-
-	public init(_ dateType: DateType, _ date: Date) {
-		dates = [DateType: Date]()
-		dates[dateType] = date
-	}
-
-	public init(_ dates: [DateType: Date]) {
-		self.dates = dates
-	}
-
-	public func value(of attribute: Attribute) throws -> Any {
-		fatalError("Must override")
-	}
-
-	public func set(attribute: Attribute, to value: Any) throws {
-		fatalError("Must override")
-	}
+	public static let timestamp = DateTimeAttribute(name: "Timestamp", pluralName: "Timestamps")
+	public static let startDate = DateTimeAttribute(name: "Start date", pluralName: "Start dates")
+	public static let endDate = DateTimeAttribute(name: "End date", pluralName: "End dates")
 }

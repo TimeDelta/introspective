@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class EqualToAttributeRestriction: NumericAttributeRestriction {
+public class EqualToAttributeRestriction: NumericAttributeRestriction, PredicateAttributeRestriction {
 
 	fileprivate typealias Me = EqualToAttributeRestriction
 
@@ -41,5 +41,9 @@ public class EqualToAttributeRestriction: NumericAttributeRestriction {
 
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
 		return try getDoubleFrom(sample) < value
+	}
+
+	public func toPredicate() -> NSPredicate {
+		return NSPredicate(format: "$@ == $@", restrictedAttribute.variableName, String(value))
 	}
 }
