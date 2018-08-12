@@ -20,7 +20,6 @@ class UnitTestInjectionProvider: InjectionProvider {
 	public static let mockUtilFactory = UtilFactory()
 	public static let mockRestrictionParserFactory = RestrictionParserFactory()
 	public static let mockSubQueryMatcherFactory = SubQueryMatcherFactory()
-	public static let mockTimeConstraintFactory = TimeConstraintFactory()
 	public static let mockExtraInformationFactory = ExtraInformationFactory()
 	public static let mockSampleGrouperFactory = SampleGrouperFactory()
 	public static let mockSampleGroupCombinerFactory = SampleGroupCombinerFactory()
@@ -34,7 +33,6 @@ class UnitTestInjectionProvider: InjectionProvider {
 	public var utilFactory: UtilFactory { get { return Me.mockUtilFactory } }
 	public var restrictionParserFactory: RestrictionParserFactory { get { return Me.mockRestrictionParserFactory } }
 	public var subQueryMatcherFactory: SubQueryMatcherFactory { get { return Me.mockSubQueryMatcherFactory } }
-	public var timeConstraintFactory: TimeConstraintFactory { get { return Me.mockTimeConstraintFactory } }
 	public var extraInformationFactory: ExtraInformationFactory { get { return Me.mockExtraInformationFactory } }
 	public var sampleGrouperFactory: SampleGrouperFactory { get { return Me.mockSampleGrouperFactory } }
 	public var sampleGroupCombinerFactory: SampleGroupCombinerFactory { get { return Me.mockSampleGroupCombinerFactory } }

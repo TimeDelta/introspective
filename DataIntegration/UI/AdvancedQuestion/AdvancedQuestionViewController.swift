@@ -10,23 +10,20 @@ import UIKit
 
 class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
 
-	fileprivate static let acceptedTimeConstraintEdit = Notification.Name("acceptedTimeConstraint")
 	fileprivate static let acceptedAttributeRestrictionEdit = Notification.Name("attributeRestriction")
 
 	fileprivate typealias Me = AdvancedQuestionViewController
 
 	public enum CellType: CustomStringConvertible {
 		case dataType
-		case timeConstraint
 		case attributeRestriction
 		case subDataType
 
-		public static let allTypes: [CellType] = [dataType, timeConstraint, attributeRestriction]
+		public static let allTypes: [CellType] = [dataType, attributeRestriction]
 
 		var description: String {
 			switch (self) {
 				case .dataType: return "Data Type"
-				case .timeConstraint: return "Time Constraint"
 				case .attributeRestriction: return "Attribute Restriction"
 				case .subDataType: return "Sub Data Type"
 			}
@@ -64,7 +61,6 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 
 		partWasAdded()
 
-		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedTimeConstraint), name: Me.acceptedTimeConstraintEdit, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedAttributeRestriction), name: Me.acceptedAttributeRestrictionEdit, object: nil)
 	}
 
@@ -91,16 +87,12 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 				let typedCell = (cell as! SubDataTypeTableViewCell)
 				typedCell.matcher = (part as! DataTypeInfo).matcher
 				typedCell.dataType = (part as! DataTypeInfo).dataType
-				break
-			case .timeConstraint:
-				(cell as! TimeConstraintTableViewCell).timeConstraint = (part as! TimeConstraint)
-				break
+				return typedCell
 			case .attributeRestriction:
-				(cell as! AttributeRestrictionTableViewCell).attributeRestriction = (part as! AttributeRestriction)
-				break
+				let typedCell = (cell as! AttributeRestrictionTableViewCell)
+				typedCell.attributeRestriction = (part as! AttributeRestriction)
+				return typedCell
 		}
-
-        return cell
     }
 
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -136,13 +128,6 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 			let source = (sender as! UITableViewCell)
 			editedIndex = tableView.indexPath(for: source)!.row
 			controller.selectedIndex = EditDataTypeViewController.indexFor(type: source.textLabel!.text!)
-		} else if sender is TimeConstraintTableViewCell {
-			let controller = (segue.destination as! AttributedChooserViewController)
-			let source = (sender as! UITableViewCell)
-			editedIndex = tableView.indexPath(for: source)!.row
-			controller.possibleValues = TimeConstraintFactory.allConstraints
-			controller.currentValue = (parts[editedIndex] as! TimeConstraint)
-			controller.notificationToSendWhenAccepted = Me.acceptedTimeConstraintEdit
 		} else if segue.destination is EditAttributeRestrictionViewController {
 			let controller = (segue.destination as! EditAttributeRestrictionViewController)
 			let source = (sender as! UITableViewCell)
@@ -174,12 +159,6 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		tableView.reloadData()
 	}
 
-	@objc func saveEditedTimeConstraint(notification: Notification) {
-		_ = navigationController?.popViewController(animated: true)
-		parts[editedIndex] = notification.object as! TimeConstraint
-		tableView.reloadData()
-	}
-
 	@objc func saveEditedAttributeRestriction(notification: Notification) {
 		parts[editedIndex] = notification.object as! AttributeRestriction
 		tableView.reloadData()
@@ -199,10 +178,6 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 			switch (cellType) {
 				case .dataType, .subDataType:
 					parts.append(DataTypeInfo())
-					break
-				case .timeConstraint:
-					let timeConstraint = DependencyInjector.timeConstraint.defaultTimeConstraint()
-					parts.append(timeConstraint)
 					break
 				case .attributeRestriction:
 					let lastDataType = bottomMostDataType()
@@ -292,8 +267,6 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 		for part in parts.reversed() {
 			if part is DataTypeInfo {
 				return query
-			} else if part is TimeConstraint {
-				query.timeConstraints.append((part as! TimeConstraint))
 			} else if part is AttributeRestriction {
 				query.attributeRestrictions.append((part as! AttributeRestriction))
 			} else {

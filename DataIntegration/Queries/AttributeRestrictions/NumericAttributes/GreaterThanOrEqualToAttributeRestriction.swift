@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class GreaterThanOrEqualToAttributeRestriction: AnyAttributeRestriction {
+public class GreaterThanOrEqualToAttributeRestriction: NumericAttributeRestriction {
 
 	fileprivate typealias Me = GreaterThanOrEqualToAttributeRestriction
 
@@ -30,27 +30,16 @@ public class GreaterThanOrEqualToAttributeRestriction: AnyAttributeRestriction {
 	}
 
 	public override func value(of attribute: Attribute) throws -> Any {
-		if attribute.name != Me.valueAttribute.name { throw AttributeError.unknownAttribute }
-		return value
+		if attribute.name == Me.valueAttribute.name { return try numericValueOfRestrictedAttribute(value) }
+		throw AttributeError.unknownAttribute
 	}
 
 	public override func set(attribute: Attribute, to value: Any) throws {
 		if attribute.name != Me.valueAttribute.name { throw AttributeError.unknownAttribute }
-		guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
-		self.value = castedValue
+		self.value = try getDoubleFrom(value: value)
 	}
 
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
-		let sampleValue = try sample.value(of: restrictedAttribute)
-		var castedSampleValue: Double
-		if sampleValue is Int {
-			castedSampleValue = Double(sampleValue as! Int)
-		} else if sampleValue is Double {
-			castedSampleValue = sampleValue as! Double
-		} else {
-			throw AttributeError.typeMismatch
-		}
-
-		return castedSampleValue >= value
+		return try getDoubleFrom(sample) >= value
 	}
 }

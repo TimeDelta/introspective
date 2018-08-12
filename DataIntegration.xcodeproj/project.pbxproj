@@ -78,6 +78,8 @@
 		A255D53C20E5697B00BDD57B /* questionLabelsTrainingData.txt in Resources */ = {isa = PBXBuildFile; fileRef = A255D53A20E5697B00BDD57B /* questionLabelsTrainingData.txt */; };
 		A255D54620E5A9D600BDD57B /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A255D54520E5A9D600BDD57B /* HealthKit.framework */; };
 		A255D54820E5AAC600BDD57B /* UnitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A255D54720E5AAC600BDD57B /* UnitTest.swift */; };
+		A25AF7B22120A328007F97FD /* GreaterThanOrEqualToAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25AF7B12120A328007F97FD /* GreaterThanOrEqualToAttributeRestriction.swift */; };
+		A25AF7B42120A4B4007F97FD /* BeforeDateAndTimeAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A25AF7B32120A4B4007F97FD /* BeforeDateAndTimeAttributeRestriction.swift */; };
 		A2615EE0211DEFB5009F0393 /* NumericAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2615EDF211DEFB5009F0393 /* NumericAttribute.swift */; };
 		A2615EE2211DEFF8009F0393 /* IntegerAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2615EE1211DEFF8009F0393 /* IntegerAttribute.swift */; };
 		A2615EE6211DFE57009F0393 /* EditSampleAggregationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2615EE5211DFE57009F0393 /* EditSampleAggregationViewController.swift */; };
@@ -87,13 +89,10 @@
 		A2769F29210BF18500261C98 /* DateAttributeBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F28210BF18500261C98 /* DateAttributeBase.swift */; };
 		A2769F2B210BF1D900261C98 /* DateOnlyAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F2A210BF1D900261C98 /* DateOnlyAttribute.swift */; };
 		A2769F2D210BF25D00261C98 /* DateTimeAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F2C210BF25D00261C98 /* DateTimeAttribute.swift */; };
-		A2769F2F210C99EE00261C98 /* StartsBeforeDateOnlyTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F2E210C99EE00261C98 /* StartsBeforeDateOnlyTimeConstraint.swift */; };
-		A2769F31210C9A2B00261C98 /* StartsAfterDateOnlyTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F30210C9A2B00261C98 /* StartsAfterDateOnlyTimeConstraint.swift */; };
-		A2769F33210C9B2600261C98 /* EndsAfterDateOnlyTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F32210C9B2600261C98 /* EndsAfterDateOnlyTimeConstraint.swift */; };
-		A2769F35210C9BE400261C98 /* EndsBeforeDateOnlyTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F34210C9BE400261C98 /* EndsBeforeDateOnlyTimeConstraint.swift */; };
+		A2769F2F210C99EE00261C98 /* BeforeDateAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F2E210C99EE00261C98 /* BeforeDateAttributeRestriction.swift */; };
+		A2769F31210C9A2B00261C98 /* AfterDateAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F30210C9A2B00261C98 /* AfterDateAttributeRestriction.swift */; };
 		A2769F39210CD73A00261C98 /* QueryError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F38210CD73A00261C98 /* QueryError.swift */; };
 		A2769F3B210CD8D500261C98 /* DisplayableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2769F3A210CD8D500261C98 /* DisplayableError.swift */; };
-		A27715092110F1CC00CC9F11 /* GreaterThanOrEqualToAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27715082110F1CC00CC9F11 /* GreaterThanOrEqualToAttributeRestriction.swift */; };
 		A277150B2110F36000CC9F11 /* LessThanAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A277150A2110F36000CC9F11 /* LessThanAttributeRestriction.swift */; };
 		A277150D2111051500CC9F11 /* LessThanOrEqualToAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A277150C2111051500CC9F11 /* LessThanOrEqualToAttributeRestriction.swift */; };
 		A277150F2111066500CC9F11 /* EqualToAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A277150E2111066500CC9F11 /* EqualToAttributeRestriction.swift */; };
@@ -101,7 +100,7 @@
 		A27715132111124A00CC9F11 /* AttributeSelectAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27715122111124A00CC9F11 /* AttributeSelectAttribute.swift */; };
 		A2771515211114AF00CC9F11 /* AttributeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2771514211114AF00CC9F11 /* AttributeFactory.swift */; };
 		A27715172112191500CC9F11 /* EditAttributeRestrictionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27715162112191500CC9F11 /* EditAttributeRestrictionViewController.swift */; };
-		A27715192112223100CC9F11 /* DoubleAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27715182112223100CC9F11 /* DoubleAttributeRestriction.swift */; };
+		A27715192112223100CC9F11 /* NumericAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27715182112223100CC9F11 /* NumericAttributeRestriction.swift */; };
 		A277151B2112248000CC9F11 /* DateAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A277151A2112248000CC9F11 /* DateAttributeRestriction.swift */; };
 		A277151D21125F9000CC9F11 /* AttributeValueTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A277151C21125F9000CC9F11 /* AttributeValueTypeViewController.swift */; };
 		A277151F2112611E00CC9F11 /* SelectOneAttributeValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A277151E2112611E00CC9F11 /* SelectOneAttributeValueViewController.swift */; };
@@ -126,19 +125,13 @@
 		A28F9D76210A6C410066579D /* Attributed.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D75210A6C410066579D /* Attributed.swift */; };
 		A28F9D78210A6CE60066579D /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D77210A6CE60066579D /* Attribute.swift */; };
 		A28F9D7A210A6E8C0066579D /* AttributeList.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A28F9D79210A6E8C0066579D /* AttributeList.storyboard */; };
-		A28F9D7D210A7FE20066579D /* StartsAfterTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D7C210A7FE20066579D /* StartsAfterTimeConstraint.swift */; };
+		A28F9D7D210A7FE20066579D /* AfterDateAndTimeAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D7C210A7FE20066579D /* AfterDateAndTimeAttributeRestriction.swift */; };
 		A28F9D7F210A80910066579D /* DateAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D7E210A80910066579D /* DateAttribute.swift */; };
-		A28F9D81210B88790066579D /* StartsBeforeTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D80210B88790066579D /* StartsBeforeTimeConstraint.swift */; };
-		A28F9D83210B89520066579D /* EndsBeforeTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D82210B89520066579D /* EndsBeforeTimeConstraint.swift */; };
-		A28F9D85210B89C70066579D /* EndsAfterTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D84210B89C70066579D /* EndsAfterTimeConstraint.swift */; };
-		A28F9D87210B8A070066579D /* StartsOnDayOfWeekTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D86210B8A070066579D /* StartsOnDayOfWeekTimeConstraint.swift */; };
+		A28F9D87210B8A070066579D /* OnDayOfWeekAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D86210B8A070066579D /* OnDayOfWeekAttributeRestriction.swift */; };
 		A28F9D89210B8A4D0066579D /* DaysOfWeekAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D88210B8A4D0066579D /* DaysOfWeekAttribute.swift */; };
 		A28F9D8B210B8B360066579D /* MultiSelectSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D8A210B8B360066579D /* MultiSelectSegmentedControl.swift */; };
 		A28F9D8D210B8F780066579D /* DayOfWeekAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D8C210B8F780066579D /* DayOfWeekAttribute.swift */; };
-		A28F9D8F210B907A0066579D /* StartsOnDateTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D8E210B907A0066579D /* StartsOnDateTimeConstraint.swift */; };
-		A28F9D91210B91340066579D /* EndsOnDateTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D90210B91340066579D /* EndsOnDateTimeConstraint.swift */; };
-		A28F9D93210B931F0066579D /* TimeConstraintFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D92210B931F0066579D /* TimeConstraintFactory.swift */; };
-		A28F9D95210B94350066579D /* EndsOnDayOfWeekTimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D94210B94350066579D /* EndsOnDayOfWeekTimeConstraint.swift */; };
+		A28F9D8F210B907A0066579D /* OnDateAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D8E210B907A0066579D /* OnDateAttributeRestriction.swift */; };
 		A28F9D99210BCE240066579D /* MultiSelectAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D98210BCE240066579D /* MultiSelectAttribute.swift */; };
 		A28F9D9B210BCEB10066579D /* SelectAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D9A210BCEB10066579D /* SelectAttribute.swift */; };
 		A28F9D9D210BCEF00066579D /* SelectOneAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A28F9D9C210BCEF00066579D /* SelectOneAttribute.swift */; };
@@ -188,9 +181,11 @@
 		A2E50A3720F9A4D600C89DE3 /* ExtraInformationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E50A3620F9A4D600C89DE3 /* ExtraInformationTableViewCell.swift */; };
 		A2EF75A020ED539B00B0B2FB /* NumericSampleUtilUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2EF759F20ED539B00B0B2FB /* NumericSampleUtilUnitTests.swift */; };
 		A2F15A39211F023F000DA03B /* AnySample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F15A38211F023F000DA03B /* AnySample.swift */; };
+		A2F15A4A212091F3000DA03B /* BeforeTimeOfDayAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F15A49212091F3000DA03B /* BeforeTimeOfDayAttributeRestriction.swift */; };
+		A2F15A4C2120926F000DA03B /* TimeOfDayAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F15A4B2120926F000DA03B /* TimeOfDayAttribute.swift */; };
+		A2F15A4E21209425000DA03B /* TimeOfDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F15A4D21209425000DA03B /* TimeOfDay.swift */; };
+		A2F15A502120A27D000DA03B /* AfterTimeOfDayAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F15A4F2120A27D000DA03B /* AfterTimeOfDayAttributeRestriction.swift */; };
 		A2FA034120F165F80049E40D /* AdvancedQuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034020F165F80049E40D /* AdvancedQuestionViewController.swift */; };
-		A2FA034520F169C30049E40D /* TimeConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034420F169C30049E40D /* TimeConstraint.swift */; };
-		A2FA034E20F18FE20049E40D /* TimeConstraintTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA034D20F18FE20049E40D /* TimeConstraintTableViewCell.swift */; };
 		A2FA035220F1AB0A0049E40D /* AddToAdvancedQuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2FA035120F1AB0A0049E40D /* AddToAdvancedQuestionViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -297,6 +292,8 @@
 		A255D54120E5A84700BDD57B /* DataIntegration.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = DataIntegration.entitlements; sourceTree = "<group>"; };
 		A255D54520E5A9D600BDD57B /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		A255D54720E5AAC600BDD57B /* UnitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitTest.swift; sourceTree = "<group>"; };
+		A25AF7B12120A328007F97FD /* GreaterThanOrEqualToAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GreaterThanOrEqualToAttributeRestriction.swift; sourceTree = "<group>"; };
+		A25AF7B32120A4B4007F97FD /* BeforeDateAndTimeAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeforeDateAndTimeAttributeRestriction.swift; sourceTree = "<group>"; };
 		A2615EDF211DEFB5009F0393 /* NumericAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericAttribute.swift; sourceTree = "<group>"; };
 		A2615EE1211DEFF8009F0393 /* IntegerAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegerAttribute.swift; sourceTree = "<group>"; };
 		A2615EE5211DFE57009F0393 /* EditSampleAggregationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSampleAggregationViewController.swift; sourceTree = "<group>"; };
@@ -306,13 +303,10 @@
 		A2769F28210BF18500261C98 /* DateAttributeBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateAttributeBase.swift; sourceTree = "<group>"; };
 		A2769F2A210BF1D900261C98 /* DateOnlyAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOnlyAttribute.swift; sourceTree = "<group>"; };
 		A2769F2C210BF25D00261C98 /* DateTimeAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTimeAttribute.swift; sourceTree = "<group>"; };
-		A2769F2E210C99EE00261C98 /* StartsBeforeDateOnlyTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartsBeforeDateOnlyTimeConstraint.swift; sourceTree = "<group>"; };
-		A2769F30210C9A2B00261C98 /* StartsAfterDateOnlyTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartsAfterDateOnlyTimeConstraint.swift; sourceTree = "<group>"; };
-		A2769F32210C9B2600261C98 /* EndsAfterDateOnlyTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndsAfterDateOnlyTimeConstraint.swift; sourceTree = "<group>"; };
-		A2769F34210C9BE400261C98 /* EndsBeforeDateOnlyTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndsBeforeDateOnlyTimeConstraint.swift; sourceTree = "<group>"; };
+		A2769F2E210C99EE00261C98 /* BeforeDateAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeforeDateAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2769F30210C9A2B00261C98 /* AfterDateAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterDateAttributeRestriction.swift; sourceTree = "<group>"; };
 		A2769F38210CD73A00261C98 /* QueryError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryError.swift; sourceTree = "<group>"; };
 		A2769F3A210CD8D500261C98 /* DisplayableError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayableError.swift; sourceTree = "<group>"; };
-		A27715082110F1CC00CC9F11 /* GreaterThanOrEqualToAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreaterThanOrEqualToAttributeRestriction.swift; sourceTree = "<group>"; };
 		A277150A2110F36000CC9F11 /* LessThanAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanAttributeRestriction.swift; sourceTree = "<group>"; };
 		A277150C2111051500CC9F11 /* LessThanOrEqualToAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanOrEqualToAttributeRestriction.swift; sourceTree = "<group>"; };
 		A277150E2111066500CC9F11 /* EqualToAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToAttributeRestriction.swift; sourceTree = "<group>"; };
@@ -320,7 +314,7 @@
 		A27715122111124A00CC9F11 /* AttributeSelectAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeSelectAttribute.swift; sourceTree = "<group>"; };
 		A2771514211114AF00CC9F11 /* AttributeFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeFactory.swift; sourceTree = "<group>"; };
 		A27715162112191500CC9F11 /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
-		A27715182112223100CC9F11 /* DoubleAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleAttributeRestriction.swift; sourceTree = "<group>"; };
+		A27715182112223100CC9F11 /* NumericAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericAttributeRestriction.swift; sourceTree = "<group>"; };
 		A277151A2112248000CC9F11 /* DateAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateAttributeRestriction.swift; sourceTree = "<group>"; };
 		A277151C21125F9000CC9F11 /* AttributeValueTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeValueTypeViewController.swift; sourceTree = "<group>"; };
 		A277151E2112611E00CC9F11 /* SelectOneAttributeValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectOneAttributeValueViewController.swift; sourceTree = "<group>"; };
@@ -345,19 +339,13 @@
 		A28F9D75210A6C410066579D /* Attributed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attributed.swift; sourceTree = "<group>"; };
 		A28F9D77210A6CE60066579D /* Attribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
 		A28F9D79210A6E8C0066579D /* AttributeList.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AttributeList.storyboard; sourceTree = "<group>"; };
-		A28F9D7C210A7FE20066579D /* StartsAfterTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartsAfterTimeConstraint.swift; sourceTree = "<group>"; };
+		A28F9D7C210A7FE20066579D /* AfterDateAndTimeAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterDateAndTimeAttributeRestriction.swift; sourceTree = "<group>"; };
 		A28F9D7E210A80910066579D /* DateAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateAttribute.swift; sourceTree = "<group>"; };
-		A28F9D80210B88790066579D /* StartsBeforeTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartsBeforeTimeConstraint.swift; sourceTree = "<group>"; };
-		A28F9D82210B89520066579D /* EndsBeforeTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndsBeforeTimeConstraint.swift; sourceTree = "<group>"; };
-		A28F9D84210B89C70066579D /* EndsAfterTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndsAfterTimeConstraint.swift; sourceTree = "<group>"; };
-		A28F9D86210B8A070066579D /* StartsOnDayOfWeekTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartsOnDayOfWeekTimeConstraint.swift; sourceTree = "<group>"; };
+		A28F9D86210B8A070066579D /* OnDayOfWeekAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDayOfWeekAttributeRestriction.swift; sourceTree = "<group>"; };
 		A28F9D88210B8A4D0066579D /* DaysOfWeekAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaysOfWeekAttribute.swift; sourceTree = "<group>"; };
 		A28F9D8A210B8B360066579D /* MultiSelectSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSelectSegmentedControl.swift; sourceTree = "<group>"; };
 		A28F9D8C210B8F780066579D /* DayOfWeekAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeekAttribute.swift; sourceTree = "<group>"; };
-		A28F9D8E210B907A0066579D /* StartsOnDateTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartsOnDateTimeConstraint.swift; sourceTree = "<group>"; };
-		A28F9D90210B91340066579D /* EndsOnDateTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndsOnDateTimeConstraint.swift; sourceTree = "<group>"; };
-		A28F9D92210B931F0066579D /* TimeConstraintFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeConstraintFactory.swift; sourceTree = "<group>"; };
-		A28F9D94210B94350066579D /* EndsOnDayOfWeekTimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndsOnDayOfWeekTimeConstraint.swift; sourceTree = "<group>"; };
+		A28F9D8E210B907A0066579D /* OnDateAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDateAttributeRestriction.swift; sourceTree = "<group>"; };
 		A28F9D98210BCE240066579D /* MultiSelectAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSelectAttribute.swift; sourceTree = "<group>"; };
 		A28F9D9A210BCEB10066579D /* SelectAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectAttribute.swift; sourceTree = "<group>"; };
 		A28F9D9C210BCEF00066579D /* SelectOneAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectOneAttribute.swift; sourceTree = "<group>"; };
@@ -414,9 +402,11 @@
 		A2E50A3620F9A4D600C89DE3 /* ExtraInformationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtraInformationTableViewCell.swift; sourceTree = "<group>"; };
 		A2EF759F20ED539B00B0B2FB /* NumericSampleUtilUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericSampleUtilUnitTests.swift; sourceTree = "<group>"; };
 		A2F15A38211F023F000DA03B /* AnySample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnySample.swift; sourceTree = "<group>"; };
+		A2F15A49212091F3000DA03B /* BeforeTimeOfDayAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeforeTimeOfDayAttributeRestriction.swift; sourceTree = "<group>"; };
+		A2F15A4B2120926F000DA03B /* TimeOfDayAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeOfDayAttribute.swift; sourceTree = "<group>"; };
+		A2F15A4D21209425000DA03B /* TimeOfDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeOfDay.swift; sourceTree = "<group>"; };
+		A2F15A4F2120A27D000DA03B /* AfterTimeOfDayAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterTimeOfDayAttributeRestriction.swift; sourceTree = "<group>"; };
 		A2FA034020F165F80049E40D /* AdvancedQuestionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdvancedQuestionViewController.swift; sourceTree = "<group>"; };
-		A2FA034420F169C30049E40D /* TimeConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeConstraint.swift; sourceTree = "<group>"; };
-		A2FA034D20F18FE20049E40D /* TimeConstraintTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeConstraintTableViewCell.swift; sourceTree = "<group>"; };
 		A2FA035120F1AB0A0049E40D /* AddToAdvancedQuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToAdvancedQuestionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -484,13 +474,8 @@
 			children = (
 				A2771510211108F800CC9F11 /* AttributeRestrictionFactory.swift */,
 				A238FEDE20E53EFB0025307F /* AttributeRestriction.swift */,
-				A27715182112223100CC9F11 /* DoubleAttributeRestriction.swift */,
-				A277151A2112248000CC9F11 /* DateAttributeRestriction.swift */,
-				A277150A2110F36000CC9F11 /* LessThanAttributeRestriction.swift */,
-				A277150C2111051500CC9F11 /* LessThanOrEqualToAttributeRestriction.swift */,
-				A277150E2111066500CC9F11 /* EqualToAttributeRestriction.swift */,
-				A27715082110F1CC00CC9F11 /* GreaterThanOrEqualToAttributeRestriction.swift */,
-				A22D79FF2110AC1F00DD246E /* GreaterThanAttributeRestriction.swift */,
+				A2F15A512120A2FE000DA03B /* NumericAttributes */,
+				A28F9D7B210A7F280066579D /* DateAttributes */,
 			);
 			path = AttributeRestrictions;
 			sourceTree = "<group>";
@@ -560,6 +545,7 @@
 		A238FEC920E53E560025307F /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				A2F15A4D21209425000DA03B /* TimeOfDay.swift */,
 				A28F9D74210A6C280066579D /* Attributes */,
 				A217810C20ED0F8400A8F9BA /* UtilFactory.swift */,
 				A238FEFB20E541600025307F /* TextNormalizationUtil.swift */,
@@ -609,7 +595,6 @@
 				A238FED520E53EA40025307F /* Queriers */,
 				A2DCAC1F2104D65C003F91AD /* Aggregation */,
 				A22D79FA210FE1B500DD246E /* AttributeRestrictions */,
-				A28F9D7B210A7F280066579D /* TimeConstraints */,
 				A2333B6320FA53770072736A /* ExtraInformation */,
 				A2333B8920FCF79F0072736A /* SubQueryMatchers */,
 				A238FED620E53EAD0025307F /* Query.swift */,
@@ -714,6 +699,7 @@
 				A2769F28210BF18500261C98 /* DateAttributeBase.swift */,
 				A2769F2A210BF1D900261C98 /* DateOnlyAttribute.swift */,
 				A2769F2C210BF25D00261C98 /* DateTimeAttribute.swift */,
+				A2F15A4B2120926F000DA03B /* TimeOfDayAttribute.swift */,
 				A2DCAC262104EC81003F91AD /* CalendarComponentAttribute.swift */,
 				A28F9D88210B8A4D0066579D /* DaysOfWeekAttribute.swift */,
 				A28F9D8C210B8F780066579D /* DayOfWeekAttribute.swift */,
@@ -724,25 +710,20 @@
 			path = Attributes;
 			sourceTree = "<group>";
 		};
-		A28F9D7B210A7F280066579D /* TimeConstraints */ = {
+		A28F9D7B210A7F280066579D /* DateAttributes */ = {
 			isa = PBXGroup;
 			children = (
-				A28F9D92210B931F0066579D /* TimeConstraintFactory.swift */,
-				A2FA034420F169C30049E40D /* TimeConstraint.swift */,
-				A2769F2E210C99EE00261C98 /* StartsBeforeDateOnlyTimeConstraint.swift */,
-				A28F9D80210B88790066579D /* StartsBeforeTimeConstraint.swift */,
-				A2769F30210C9A2B00261C98 /* StartsAfterDateOnlyTimeConstraint.swift */,
-				A28F9D7C210A7FE20066579D /* StartsAfterTimeConstraint.swift */,
-				A2769F34210C9BE400261C98 /* EndsBeforeDateOnlyTimeConstraint.swift */,
-				A28F9D82210B89520066579D /* EndsBeforeTimeConstraint.swift */,
-				A2769F32210C9B2600261C98 /* EndsAfterDateOnlyTimeConstraint.swift */,
-				A28F9D84210B89C70066579D /* EndsAfterTimeConstraint.swift */,
-				A28F9D86210B8A070066579D /* StartsOnDayOfWeekTimeConstraint.swift */,
-				A28F9D94210B94350066579D /* EndsOnDayOfWeekTimeConstraint.swift */,
-				A28F9D8E210B907A0066579D /* StartsOnDateTimeConstraint.swift */,
-				A28F9D90210B91340066579D /* EndsOnDateTimeConstraint.swift */,
+				A277151A2112248000CC9F11 /* DateAttributeRestriction.swift */,
+				A2769F2E210C99EE00261C98 /* BeforeDateAttributeRestriction.swift */,
+				A25AF7B32120A4B4007F97FD /* BeforeDateAndTimeAttributeRestriction.swift */,
+				A2769F30210C9A2B00261C98 /* AfterDateAttributeRestriction.swift */,
+				A28F9D7C210A7FE20066579D /* AfterDateAndTimeAttributeRestriction.swift */,
+				A28F9D86210B8A070066579D /* OnDayOfWeekAttributeRestriction.swift */,
+				A28F9D8E210B907A0066579D /* OnDateAttributeRestriction.swift */,
+				A2F15A49212091F3000DA03B /* BeforeTimeOfDayAttributeRestriction.swift */,
+				A2F15A4F2120A27D000DA03B /* AfterTimeOfDayAttributeRestriction.swift */,
 			);
-			path = TimeConstraints;
+			path = DateAttributes;
 			sourceTree = "<group>";
 		};
 		A28F9DA4210BE6640066579D /* Attributes */ = {
@@ -940,12 +921,24 @@
 			path = Results;
 			sourceTree = "<group>";
 		};
+		A2F15A512120A2FE000DA03B /* NumericAttributes */ = {
+			isa = PBXGroup;
+			children = (
+				A27715182112223100CC9F11 /* NumericAttributeRestriction.swift */,
+				A277150A2110F36000CC9F11 /* LessThanAttributeRestriction.swift */,
+				A277150C2111051500CC9F11 /* LessThanOrEqualToAttributeRestriction.swift */,
+				A277150E2111066500CC9F11 /* EqualToAttributeRestriction.swift */,
+				A22D79FF2110AC1F00DD246E /* GreaterThanAttributeRestriction.swift */,
+				A25AF7B12120A328007F97FD /* GreaterThanOrEqualToAttributeRestriction.swift */,
+			);
+			path = NumericAttributes;
+			sourceTree = "<group>";
+		};
 		A2FA034C20F18FA40049E40D /* AdvancedQuestion */ = {
 			isa = PBXGroup;
 			children = (
 				A248CFA820F14ECD000FE34E /* AdvancedQuestionScreen.storyboard */,
 				A2FA034020F165F80049E40D /* AdvancedQuestionViewController.swift */,
-				A2FA034D20F18FE20049E40D /* TimeConstraintTableViewCell.swift */,
 				A20A5A7620F2635900EADEC5 /* AttributeRestrictionTableViewCell.swift */,
 				A29053462101106100191A34 /* SubDataTypeTableViewCell.swift */,
 				A2FA035120F1AB0A0049E40D /* AddToAdvancedQuestionViewController.swift */,
@@ -1118,10 +1111,9 @@
 				A277151F2112611E00CC9F11 /* SelectOneAttributeValueViewController.swift in Sources */,
 				A28F9D89210B8A4D0066579D /* DaysOfWeekAttribute.swift in Sources */,
 				A277151B2112248000CC9F11 /* DateAttributeRestriction.swift in Sources */,
-				A2769F31210C9A2B00261C98 /* StartsAfterDateOnlyTimeConstraint.swift in Sources */,
+				A2769F31210C9A2B00261C98 /* AfterDateAttributeRestriction.swift in Sources */,
 				A2DCAC1E2104D368003F91AD /* SampleAggregator.swift in Sources */,
 				A28F9D9D210BCEF00066579D /* SelectOneAttribute.swift in Sources */,
-				A27715092110F1CC00CC9F11 /* GreaterThanOrEqualToAttributeRestriction.swift in Sources */,
 				A28F9D99210BCE240066579D /* MultiSelectAttribute.swift in Sources */,
 				A2333B8620FBF7C60072736A /* TimeConstraintUtil.swift in Sources */,
 				A248CFAD20F15004000FE34E /* EditDataTypeViewController.swift in Sources */,
@@ -1137,17 +1129,15 @@
 				A2C2A98620FE149D00402D3D /* SubQueryMatcherFactory.swift in Sources */,
 				A28F9D78210A6CE60066579D /* Attribute.swift in Sources */,
 				A27715132111124A00CC9F11 /* AttributeSelectAttribute.swift in Sources */,
-				A28F9D91210B91340066579D /* EndsOnDateTimeConstraint.swift in Sources */,
+				A2F15A4E21209425000DA03B /* TimeOfDay.swift in Sources */,
 				A2DCAC212104D67F003F91AD /* SameTimeUnitSampleGrouper.swift in Sources */,
-				A28F9D95210B94350066579D /* EndsOnDayOfWeekTimeConstraint.swift in Sources */,
 				A27715232113501700CC9F11 /* TextAttributeValueViewController.swift in Sources */,
 				A2E4E8A820E5589400631398 /* UnitTestInjectionProvider.swift in Sources */,
 				A238FEEF20E53F850025307F /* MoodSource.swift in Sources */,
 				A217810720EBA25300A8F9BA /* ReturnType.swift in Sources */,
 				A238FF0420E542710025307F /* SecondViewController.swift in Sources */,
 				A238FED320E53E970025307F /* Tags.swift in Sources */,
-				A2769F33210C9B2600261C98 /* EndsAfterDateOnlyTimeConstraint.swift in Sources */,
-				A28F9D87210B8A070066579D /* StartsOnDayOfWeekTimeConstraint.swift in Sources */,
+				A28F9D87210B8A070066579D /* OnDayOfWeekAttributeRestriction.swift in Sources */,
 				A277154B211C95A200CC9F11 /* SampleGroupCombiner.swift in Sources */,
 				A238FEE520E53F3D0025307F /* HeartRate.swift in Sources */,
 				A238FED920E53EB70025307F /* HeartRateQuery.swift in Sources */,
@@ -1155,9 +1145,8 @@
 				A2DCAC272104EC81003F91AD /* CalendarComponentAttribute.swift in Sources */,
 				A27715272113E62400CC9F11 /* NumericAttributeValueViewController.swift in Sources */,
 				A2F15A39211F023F000DA03B /* AnySample.swift in Sources */,
+				A2F15A4A212091F3000DA03B /* BeforeTimeOfDayAttributeRestriction.swift in Sources */,
 				A28F9D9B210BCEB10066579D /* SelectAttribute.swift in Sources */,
-				A28F9D93210B931F0066579D /* TimeConstraintFactory.swift in Sources */,
-				A2FA034520F169C30049E40D /* TimeConstraint.swift in Sources */,
 				A2333B8820FCF65B0072736A /* SubQueryMatcher.swift in Sources */,
 				A2615EE2211DEFF8009F0393 /* IntegerAttribute.swift in Sources */,
 				A2E4E8AC20E559A600631398 /* QuerierFactory.swift in Sources */,
@@ -1167,7 +1156,6 @@
 				A2E4E8AE20E55AE400631398 /* QueryFactory.swift in Sources */,
 				A2769F2D210BF25D00261C98 /* DateTimeAttribute.swift in Sources */,
 				A2C2A98820FE1AB900402D3D /* SampleQuery.swift in Sources */,
-				A28F9D81210B88790066579D /* StartsBeforeTimeConstraint.swift in Sources */,
 				A2333B8D20FD15230072736A /* SearchUtil.swift in Sources */,
 				A2E50A3320F9A33100C89DE3 /* ResultsViewController.swift in Sources */,
 				A238FEDF20E53EFB0025307F /* AttributeRestriction.swift in Sources */,
@@ -1177,13 +1165,13 @@
 				A21780EB20E9796700A8F9BA /* DateExtension.swift in Sources */,
 				A277153E211C7C4D00CC9F11 /* MinimumSampleGroupCombiner.swift in Sources */,
 				A277153A211C798B00CC9F11 /* AverageSampleGroupCombiner.swift in Sources */,
-				A2769F2F210C99EE00261C98 /* StartsBeforeDateOnlyTimeConstraint.swift in Sources */,
+				A2769F2F210C99EE00261C98 /* BeforeDateAttributeRestriction.swift in Sources */,
 				A2333B6220FA3FA60072736A /* Sample.swift in Sources */,
 				A248CFB520F1649D000FE34E /* Question.swift in Sources */,
 				A248CFB120F16352000FE34E /* DataTypes.swift in Sources */,
 				A238FED720E53EAD0025307F /* Query.swift in Sources */,
 				A238FEFA20E541420025307F /* DatabaseConnector.swift in Sources */,
-				A28F9D8F210B907A0066579D /* StartsOnDateTimeConstraint.swift in Sources */,
+				A28F9D8F210B907A0066579D /* OnDateAttributeRestriction.swift in Sources */,
 				A2333B5C20FA34A00072736A /* TimestampClickChoiceViewController.swift in Sources */,
 				A2C2A98420FE128700402D3D /* SameEndDatesSubQueryMatcher.swift in Sources */,
 				A2769F29210BF18500261C98 /* DateAttributeBase.swift in Sources */,
@@ -1201,13 +1189,12 @@
 				A22D7A002110AC1F00DD246E /* GreaterThanAttributeRestriction.swift in Sources */,
 				A290534520FFF34C00191A34 /* EditSubDataTypeViewController.swift in Sources */,
 				A2E4E8A020E5583200631398 /* DependencyInjector.swift in Sources */,
-				A28F9D83210B89520066579D /* EndsBeforeTimeConstraint.swift in Sources */,
 				A238FF0820E5429A0025307F /* SourcesTableViewController.swift in Sources */,
 				A29053472101106100191A34 /* SubDataTypeTableViewCell.swift in Sources */,
 				A28F9D7F210A80910066579D /* DateAttribute.swift in Sources */,
 				A238FEED20E53F770025307F /* MedicationSource.swift in Sources */,
-				A28F9D85210B89C70066579D /* EndsAfterTimeConstraint.swift in Sources */,
 				A2DCAC3221078DDD003F91AD /* ChartViewController.swift in Sources */,
+				A2F15A502120A27D000DA03B /* AfterTimeOfDayAttributeRestriction.swift in Sources */,
 				A2DCAC2B2104FDF7003F91AD /* AttributeDescriptionViewController.swift in Sources */,
 				A2092D8B20F130FF00A182AA /* DayOfWeekRestrictionParser.swift in Sources */,
 				A238FEE920E53F570025307F /* Source.swift in Sources */,
@@ -1220,13 +1207,14 @@
 				A2771533211A431B00CC9F11 /* MostRecentDateInformation.swift in Sources */,
 				A238FECD20E53E820025307F /* TextQuestion.swift in Sources */,
 				A2DCAC1C2104CFAC003F91AD /* AttributedChooserViewController.swift in Sources */,
+				A2F15A4C2120926F000DA03B /* TimeOfDayAttribute.swift in Sources */,
 				A238FEF120E53F8D0025307F /* SourceField.swift in Sources */,
 				A217810920EBA51400A8F9BA /* SampleQueryResult.swift in Sources */,
+				A25AF7B42120A4B4007F97FD /* BeforeDateAndTimeAttributeRestriction.swift in Sources */,
 				A277152B211A307500CC9F11 /* ResultsActionsPopupViewController.swift in Sources */,
 				A27715212112635400CC9F11 /* DateAttributeValueViewController.swift in Sources */,
 				A2769F3B210CD8D500261C98 /* DisplayableError.swift in Sources */,
 				A238FEE720E53F430025307F /* Mood.swift in Sources */,
-				A2769F35210C9BE400261C98 /* EndsBeforeDateOnlyTimeConstraint.swift in Sources */,
 				A2C2A98020FE0BDE00402D3D /* SameDatesSubQueryMatcher.swift in Sources */,
 				A2615EEB211E2D0E009F0393 /* SampleGrouperFactory.swift in Sources */,
 				A29053492101233600191A34 /* StringUtil.swift in Sources */,
@@ -1235,10 +1223,10 @@
 				A2771540211C7C7400CC9F11 /* CountSampleGroupCombiner.swift in Sources */,
 				A238FEE120E53F1D0025307F /* Activity.swift in Sources */,
 				A2769F2B210BF1D900261C98 /* DateOnlyAttribute.swift in Sources */,
-				A27715192112223100CC9F11 /* DoubleAttributeRestriction.swift in Sources */,
+				A27715192112223100CC9F11 /* NumericAttributeRestriction.swift in Sources */,
 				A217810D20ED0F8400A8F9BA /* UtilFactory.swift in Sources */,
 				A238FEDB20E53EE10025307F /* QueryOperation.swift in Sources */,
-				A28F9D7D210A7FE20066579D /* StartsAfterTimeConstraint.swift in Sources */,
+				A28F9D7D210A7FE20066579D /* AfterDateAndTimeAttributeRestriction.swift in Sources */,
 				A255D52C20E5636E00BDD57B /* DataTypesFactory.swift in Sources */,
 				A2769F39210CD73A00261C98 /* QueryError.swift in Sources */,
 				A2DCAC3421078DF4003F91AD /* LineChartViewController.swift in Sources */,
@@ -1251,6 +1239,7 @@
 				A2092D8F20F1345200A182AA /* FactoryMocks.swift in Sources */,
 				A2771542211C7D5600CC9F11 /* SumSampleGroupCombiner.swift in Sources */,
 				A2092D8D20F1313200A182AA /* RestrictionParserFactory.swift in Sources */,
+				A25AF7B22120A328007F97FD /* GreaterThanOrEqualToAttributeRestriction.swift in Sources */,
 				A238FEE320E53F2A0025307F /* ActivityInstance.swift in Sources */,
 				A28F9D9F210BDAD40066579D /* TextAttribute.swift in Sources */,
 				A28F9D76210A6C410066579D /* Attributed.swift in Sources */,
@@ -1258,7 +1247,6 @@
 				A2DCAC1A2104BD27003F91AD /* AxisAttributeViewController.swift in Sources */,
 				A2C2A98220FE0CA200402D3D /* SameStartDatesSubQueryMatcher.swift in Sources */,
 				A238FEEB20E53F5F0025307F /* ActivitySource.swift in Sources */,
-				A2FA034E20F18FE20049E40D /* TimeConstraintTableViewCell.swift in Sources */,
 				A277150D2111051500CC9F11 /* LessThanOrEqualToAttributeRestriction.swift in Sources */,
 				A277150F2111066500CC9F11 /* EqualToAttributeRestriction.swift in Sources */,
 				A22D79FC210FEABC00DD246E /* DoubleAttribute.swift in Sources */,

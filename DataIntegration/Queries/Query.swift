@@ -10,7 +10,6 @@ import Foundation
 
 public protocol Query {
 
-	var timeConstraints: [TimeConstraint] { get set }
 	var attributeRestrictions: [AttributeRestriction] { get set }
 	var mostRecentEntryOnly: Bool { get set }
 	var numberOfDatesPerSample: Int { get }

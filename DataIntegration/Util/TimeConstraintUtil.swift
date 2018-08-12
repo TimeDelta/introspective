@@ -7,46 +7,59 @@
 //
 
 import Foundation
+import os
 
 public class TimeConstraintUtil {
 
-	public func getMostRestrictiveStartAndEndDates(from timeConstraints: [TimeConstraint]) -> (start: Date?, end: Date?) {
+	public func getMostRestrictiveStartAndEndDates(from attributeRestrictions: [AttributeRestriction]) -> (start: Date?, end: Date?) {
 		var latestStartDate: Date? = nil
 		var earliestEndDate: Date? = nil
-		for timeConstraint in timeConstraints {
-			if timeConstraint is StartsAfterTimeConstraint {
-				let startsAfter = timeConstraint as! StartsAfterTimeConstraint
-				if latestStartDate == nil || startsAfter.date.isAfterDate(latestStartDate!, granularity: .nanosecond) {
-					latestStartDate = startsAfter.date
-				}
-			} else if timeConstraint is EndsBeforeTimeConstraint {
-				let endsBefore = timeConstraint as! EndsBeforeTimeConstraint
-				if earliestEndDate == nil || endsBefore.date.isBeforeDate(earliestEndDate!, granularity: .nanosecond) {
-					earliestEndDate = endsBefore.date
-				}
-			} else if timeConstraint is StartsOnDateTimeConstraint {
-				let startsOn = timeConstraint as! StartsOnDateTimeConstraint
-				if latestStartDate == nil || startsOn.date.isAfterDate(latestStartDate!, granularity: .nanosecond) {
-					latestStartDate = startsOn.date
-				}
-			} else if timeConstraint is EndsOnDateTimeConstraint {
-				let endsOn = timeConstraint as! EndsOnDateTimeConstraint
-				if earliestEndDate == nil || endsOn.date.isBeforeDate(earliestEndDate!, granularity: .nanosecond) {
-					earliestEndDate = endsOn.date
-				}
+		for attributeRestriction in attributeRestrictions {
+			switch (attributeRestriction) {
+				case is AfterDateAndTimeAttributeRestriction:
+					let restriction = attributeRestriction as! AfterDateAndTimeAttributeRestriction
+					if isStartDateRestriction(restriction) && (latestStartDate == nil || restriction.date.isAfterDate(latestStartDate!, granularity: .nanosecond)) {
+						latestStartDate = restriction.date
+					}
+					break
+				case is BeforeDateAndTimeAttributeRestriction:
+					let restriction = attributeRestriction as! BeforeDateAndTimeAttributeRestriction
+					if isEndDateRestriction(restriction) && (earliestEndDate == nil || restriction.date.isBeforeDate(earliestEndDate!, granularity: .nanosecond)) {
+						earliestEndDate = restriction.date
+					}
+					break
+				case is OnDateAttributeRestriction:
+					let restriction = attributeRestriction as! OnDateAttributeRestriction
+					if isStartDateRestriction(restriction) && (latestStartDate == nil || restriction.date.isAfterDate(latestStartDate!, granularity: .nanosecond)) {
+						latestStartDate = restriction.date
+					} else if isEndDateRestriction(restriction) && (earliestEndDate == nil || restriction.date.isBeforeDate(earliestEndDate!, granularity: .nanosecond)) {
+						earliestEndDate = restriction.date
+					}
+					break
+				default:
+					os_log("Skipping attribute restriction: $@", type: .debug, attributeRestriction.description)
+					break
 			}
 		}
 		return (start: latestStartDate, end: earliestEndDate)
 	}
 
-	public func getDaysOfWeekFrom(timeConstraints: [TimeConstraint]) -> Set<DayOfWeek> {
+	public func getDaysOfWeekFrom(attributeRestrictions: [AttributeRestriction]) -> Set<DayOfWeek> {
 		var daysOfWeek = Set<DayOfWeek>()
-		for timeConstraint in timeConstraints {
-			if timeConstraint is StartsOnDayOfWeekTimeConstraint {
-				let constraint = timeConstraint as! StartsOnDayOfWeekTimeConstraint
-				daysOfWeek = daysOfWeek.union(constraint.daysOfWeek)
+		for attributeRestriction in attributeRestrictions {
+			if attributeRestriction is OnDayOfWeekAttributeRestriction {
+				let restriction = attributeRestriction as! OnDayOfWeekAttributeRestriction
+				daysOfWeek = daysOfWeek.union(restriction.daysOfWeek)
 			}
 		}
 		return daysOfWeek
+	}
+
+	fileprivate func isStartDateRestriction(_ restriction: AttributeRestriction) -> Bool {
+		return restriction.restrictedAttribute.name == AnySample.startDate.name
+	}
+
+	fileprivate func isEndDateRestriction(_ restriction: AttributeRestriction) -> Bool {
+		return restriction.restrictedAttribute.name == AnySample.endDate.name
 	}
 }

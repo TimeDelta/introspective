@@ -64,9 +64,9 @@ public class EditAttributeRestrictionViewController: UIViewController, UIPickerV
 			if attributeRestriction is DateAttributeRestriction {
 				currentRestriction = attributeRestriction
 			}
-		} else if selectedAttribute is DoubleAttribute {
+		} else if selectedAttribute is NumericAttribute {
 			applicableAttributeRestrictionTypes = AttributeRestrictionFactory.numberTypes
-			if attributeRestriction is DoubleAttributeRestriction {
+			if attributeRestriction is NumericAttributeRestriction {
 				currentRestriction = attributeRestriction
 			}
 		}

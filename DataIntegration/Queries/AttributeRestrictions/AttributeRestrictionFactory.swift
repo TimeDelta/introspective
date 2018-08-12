@@ -10,18 +10,10 @@ import Foundation
 
 public class AttributeRestrictionFactory {
 
-	public static let allTypes: [AttributeRestriction.Type] = [
-		LessThanAttributeRestriction.self,
-		LessThanOrEqualToAttributeRestriction.self,
-		EqualToAttributeRestriction.self,
-		GreaterThanOrEqualToAttributeRestriction.self,
-		GreaterThanAttributeRestriction.self,
-	]
-
 	public static let textTypes: [AttributeRestriction.Type] = [
 	]
 
-	public static let numberTypes: [AttributeRestriction.Type] = [
+	public static let numberTypes: [NumericAttributeRestriction.Type] = [
 		LessThanAttributeRestriction.self,
 		LessThanOrEqualToAttributeRestriction.self,
 		EqualToAttributeRestriction.self,
@@ -29,6 +21,14 @@ public class AttributeRestrictionFactory {
 		GreaterThanAttributeRestriction.self,
 	]
 
-	public static let dateTypes: [AttributeRestriction.Type] = [
+	public static let dateTypes: [DateAttributeRestriction.Type] = [
+		BeforeDateAttributeRestriction.self,
+		AfterDateAttributeRestriction.self,
+		BeforeDateAndTimeAttributeRestriction.self,
+		AfterDateAndTimeAttributeRestriction.self,
+		BeforeTimeOfDayAttributeRestriction.self,
+		AfterTimeOfDayAttributeRestriction.self,
+		OnDayOfWeekAttributeRestriction.self,
+		OnDateAttributeRestriction.self,
 	]
 }

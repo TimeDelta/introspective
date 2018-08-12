@@ -94,7 +94,7 @@ extension Calendar.Component: CustomStringConvertible {
 			case .month: return "Month"
 			case .weekOfMonth: return "Week Of Month"
 			case .weekOfYear: return "Week"
-			case .weekday: return "Weekday"
+			case .weekday: return "Day of week"
 			case .weekdayOrdinal: return "Weekday Ordinal"
 			case .timeZone: return "TimeZone"
 			case .day: return "Day"
@@ -115,7 +115,7 @@ extension Calendar.Component: CustomStringConvertible {
 			case "month": return .month
 			case "week of month": return .weekOfMonth
 			case "week": return .weekOfYear
-			case "weekday": return .weekday
+			case "day of week": return .weekday
 			case "weekday ordinal": return .weekdayOrdinal
 			case "timezone": return .timeZone
 			case "day": return .day

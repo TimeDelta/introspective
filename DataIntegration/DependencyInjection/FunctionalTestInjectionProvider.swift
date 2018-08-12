@@ -20,7 +20,6 @@ class FunctionalTestInjectionProvider: InjectionProvider {
 	public var utilFactory: UtilFactory { get { return productionInjectionProvider.utilFactory } }
 	public var restrictionParserFactory: RestrictionParserFactory { get { return productionInjectionProvider.restrictionParserFactory } }
 	public var subQueryMatcherFactory: SubQueryMatcherFactory { get { return productionInjectionProvider.subQueryMatcherFactory } }
-	public var timeConstraintFactory: TimeConstraintFactory { get { return productionInjectionProvider.timeConstraintFactory } }
 	public var extraInformationFactory: ExtraInformationFactory { get { return productionInjectionProvider.extraInformationFactory } }
 	public var sampleGrouperFactory: SampleGrouperFactory { get { return productionInjectionProvider.sampleGrouperFactory } }
 	public var sampleGroupCombinerFactory: SampleGroupCombinerFactory { get { return productionInjectionProvider.sampleGroupCombinerFactory } }
