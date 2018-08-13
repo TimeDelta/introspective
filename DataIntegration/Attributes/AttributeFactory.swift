@@ -14,6 +14,5 @@ public class AttributeFactory {
 		TextAttribute.self,
 		DateOnlyAttribute.self,
 		DateTimeAttribute.self,
-		
 	]
 }
