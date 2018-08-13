@@ -104,7 +104,7 @@
 		A277151B2112248000CC9F11 /* DateAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A277151A2112248000CC9F11 /* DateAttributeRestriction.swift */; };
 		A277151D21125F9000CC9F11 /* AttributeValueTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A277151C21125F9000CC9F11 /* AttributeValueTypeViewController.swift */; };
 		A277151F2112611E00CC9F11 /* SelectOneAttributeValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A277151E2112611E00CC9F11 /* SelectOneAttributeValueViewController.swift */; };
-		A27715212112635400CC9F11 /* DateAttributeValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27715202112635400CC9F11 /* DateAttributeValueViewController.swift */; };
+		A27715212112635400CC9F11 /* DateOrTimeAttributeValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27715202112635400CC9F11 /* DateOrTimeAttributeValueViewController.swift */; };
 		A27715232113501700CC9F11 /* TextAttributeValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27715222113501700CC9F11 /* TextAttributeValueViewController.swift */; };
 		A2771525211354C700CC9F11 /* HorizontalMultiSelectAttributeValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2771524211354C700CC9F11 /* HorizontalMultiSelectAttributeValueViewController.swift */; };
 		A27715272113E62400CC9F11 /* NumericAttributeValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27715262113E62400CC9F11 /* NumericAttributeValueViewController.swift */; };
@@ -318,7 +318,7 @@
 		A277151A2112248000CC9F11 /* DateAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateAttributeRestriction.swift; sourceTree = "<group>"; };
 		A277151C21125F9000CC9F11 /* AttributeValueTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeValueTypeViewController.swift; sourceTree = "<group>"; };
 		A277151E2112611E00CC9F11 /* SelectOneAttributeValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectOneAttributeValueViewController.swift; sourceTree = "<group>"; };
-		A27715202112635400CC9F11 /* DateAttributeValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateAttributeValueViewController.swift; sourceTree = "<group>"; };
+		A27715202112635400CC9F11 /* DateOrTimeAttributeValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOrTimeAttributeValueViewController.swift; sourceTree = "<group>"; };
 		A27715222113501700CC9F11 /* TextAttributeValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAttributeValueViewController.swift; sourceTree = "<group>"; };
 		A2771524211354C700CC9F11 /* HorizontalMultiSelectAttributeValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalMultiSelectAttributeValueViewController.swift; sourceTree = "<group>"; };
 		A27715262113E62400CC9F11 /* NumericAttributeValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericAttributeValueViewController.swift; sourceTree = "<group>"; };
@@ -736,7 +736,7 @@
 				A2DCAC2A2104FDF7003F91AD /* AttributeDescriptionViewController.swift */,
 				A277151C21125F9000CC9F11 /* AttributeValueTypeViewController.swift */,
 				A277151E2112611E00CC9F11 /* SelectOneAttributeValueViewController.swift */,
-				A27715202112635400CC9F11 /* DateAttributeValueViewController.swift */,
+				A27715202112635400CC9F11 /* DateOrTimeAttributeValueViewController.swift */,
 				A27715222113501700CC9F11 /* TextAttributeValueViewController.swift */,
 				A2771524211354C700CC9F11 /* HorizontalMultiSelectAttributeValueViewController.swift */,
 				A27715262113E62400CC9F11 /* NumericAttributeValueViewController.swift */,
@@ -1212,7 +1212,7 @@
 				A217810920EBA51400A8F9BA /* SampleQueryResult.swift in Sources */,
 				A25AF7B42120A4B4007F97FD /* BeforeDateAndTimeAttributeRestriction.swift in Sources */,
 				A277152B211A307500CC9F11 /* ResultsActionsPopupViewController.swift in Sources */,
-				A27715212112635400CC9F11 /* DateAttributeValueViewController.swift in Sources */,
+				A27715212112635400CC9F11 /* DateOrTimeAttributeValueViewController.swift in Sources */,
 				A2769F3B210CD8D500261C98 /* DisplayableError.swift in Sources */,
 				A238FEE720E53F430025307F /* Mood.swift in Sources */,
 				A2C2A98020FE0BDE00402D3D /* SameDatesSubQueryMatcher.swift in Sources */,

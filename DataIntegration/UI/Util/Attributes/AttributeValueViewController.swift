@@ -37,8 +37,13 @@ class AttributeValueViewController: UIViewController {
 			controller.currentValue = attributeValue
 			subViewController = controller
 		} else if attribute is DateAttribute {
-			let controller = UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "dateAttribute") as! DateAttributeValueViewController
+			let controller = UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "dateAttribute") as! DateOrTimeAttributeValueViewController
 			controller.dateAttribute = (attribute as! DateAttribute)
+			controller.currentValue = attributeValue
+			subViewController = controller
+		} else if attribute is TimeOfDayAttribute {
+			let controller = UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "dateAttribute") as! DateOrTimeAttributeValueViewController
+			controller.timeOfDayAttribute = (attribute as! TimeOfDayAttribute)
 			controller.currentValue = attributeValue
 			subViewController = controller
 		} else if attribute is TextAttribute {

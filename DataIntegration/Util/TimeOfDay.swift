@@ -17,8 +17,17 @@ public struct TimeOfDay {
 
 	public init() {}
 
+	public init(_ date: Date) {
+		let calendar = Calendar.autoupdatingCurrent
+		hour = calendar.component(.hour, from: date)
+		minute = calendar.component(.minute, from: date)
+		second = calendar.component(.second, from: date)
+		nanosecond = calendar.component(.nanosecond, from: date)
+	}
+
 	public init?(_ str: String) {
-		let parts = str.split(separator: ":")
+		let strStrippedOfAmPm = str.trimmingCharacters(in: CharacterSet(charactersIn: "apm "))
+		let parts = strStrippedOfAmPm.split(separator: ":")
 		// very minor sacrifice to speed to ensure readability here
 		// - nesting all parts inside each other is technically faster
 		//   in cases where not all parts are provided but speed gain
@@ -26,6 +35,9 @@ public struct TimeOfDay {
 		if parts.count > 0 {
 			guard let h = Int(parts[0]) else { return nil }
 			hour = h
+			if str.lowercased().contains("pm") && hour < 12 {
+				hour += 12
+			}
 		}
 		if parts.count > 1 {
 			guard let m = Int(parts[1]) else { return nil }
@@ -42,14 +54,51 @@ public struct TimeOfDay {
 	}
 
 	public nonmutating func toString() -> String {
-		var text = String(hour) + ":" + String(minute)
+		var text = ""
+		if userPrefers12hrTime() {
+			if hour > 12 {
+				text += padLeft(String(hour - 12))
+			} else if hour == 0 {
+				text += "12"
+			} else {
+				text += padLeft(String(hour))
+			}
+		} else {
+			text += padLeft(String(hour))
+		}
+
+		text += ":" + padLeft(String(minute))
+
 		if second > 0 || nanosecond > 0 {
-			text += ":" + String(second)
+			text += ":" + padLeft(String(second))
 		}
+
 		if nanosecond > 0 {
-			text += ":" + String(nanosecond)
+			text += ":" + padLeft(String(nanosecond))
 		}
+
+		if userPrefers12hrTime() {
+			if hour > 11 {
+				text += " " + Calendar.autoupdatingCurrent.pmSymbol
+			} else {
+				text += " " + Calendar.autoupdatingCurrent.amSymbol
+			}
+		}
+
 		return text
+	}
+
+	fileprivate func userPrefers12hrTime() -> Bool {
+		let locale = NSLocale.current
+		let formatter = DateFormatter.dateFormat(fromTemplate: "j", options:0, locale:locale)!
+		return formatter.contains("a")
+	}
+
+	fileprivate func padLeft(_ str: String) -> String {
+		if str.count == 1 {
+			return "0" + str
+		}
+		return str
 	}
 }
 
@@ -71,6 +120,13 @@ extension Date {
 	public static func >=(lhs: Date, rhs: TimeOfDay) -> Bool {
 		let comparisonResult = lhs.compare(to: rhs)
 		return comparisonResult == .orderedDescending || comparisonResult == .orderedSame
+	}
+
+	public init(_ timeOfDay: TimeOfDay) {
+		self.init()
+		let calendar = Calendar.autoupdatingCurrent
+		self = calendar.date(bySettingHour: timeOfDay.hour, minute: timeOfDay.minute, second: timeOfDay.second, of: self)!
+		self = calendar.date(bySetting: .nanosecond, value: timeOfDay.nanosecond, of: self)!
 	}
 
 	public func isBefore(timeOfDay: TimeOfDay) -> Bool {

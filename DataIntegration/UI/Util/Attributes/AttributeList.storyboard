@@ -200,10 +200,10 @@
             </objects>
             <point key="canvasLocation" x="6717" y="-1960"/>
         </scene>
-        <!--Date Attribute Value View Controller-->
+        <!--Date Or Time Attribute Value View Controller-->
         <scene sceneID="X8z-0B-nLY">
             <objects>
-                <viewController storyboardIdentifier="dateAttribute" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="LHq-0P-PtA" customClass="DateAttributeValueViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="dateAttribute" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="LHq-0P-PtA" customClass="DateOrTimeAttributeValueViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="KOc-jR-0cC">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="112"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -214,6 +214,9 @@
                                 <date key="date" timeIntervalSinceReferenceDate="554406283.19012594">
                                     <!--2018-07-27 17:44:43 +0000-->
                                 </date>
+                                <connections>
+                                    <action selector="dateValueChanged:" destination="LHq-0P-PtA" eventType="valueChanged" id="ra6-SM-lKw"/>
+                                </connections>
                             </datePicker>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -349,7 +352,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             </pickerView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" delaysContentTouches="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HiQ-1B-8T5">
-                                <rect key="frame" x="16" y="191" width="343" height="332"/>
+                                <rect key="frame" x="0.0" y="191" width="375" height="332"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </scrollView>
                         </subviews>
