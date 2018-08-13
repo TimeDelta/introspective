@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class EditAttributeRestrictionViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+public class EditAttributeRestrictionViewController: UIViewController {
 
 	fileprivate typealias Me = EditAttributeRestrictionViewController
 	fileprivate static let doneEditing = Notification.Name("doneChoosingAttributeRestrictionAttributes")
@@ -29,18 +29,6 @@ public class EditAttributeRestrictionViewController: UIViewController, UIPickerV
 		createAndInstallAttributedChooserViewController()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(doneEditing), name: Me.doneEditing, object: nil)
-	}
-
-	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
-	}
-
-	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return DataTypes.attributesFor(dataType).count
-	}
-
-	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return DataTypes.attributesFor(dataType)[row].name
 	}
 
 	@objc public func doneEditing(notification: Notification) {
@@ -75,9 +63,34 @@ public class EditAttributeRestrictionViewController: UIViewController, UIPickerV
 		}
 		attributedChooserViewController.possibleValues = possibleValues
 		attributedChooserViewController.currentValue = currentRestriction
+		if attributedChooserSubView.subviews.count > 0 {
+			attributedChooserViewController.reloadInputViews()
+		}
 	}
 
 	fileprivate func currentlySelectedAttribute() -> Attribute {
 		return DataTypes.attributesFor(dataType)[attributePicker.selectedRow(inComponent: 0)]
+	}
+}
+
+extension EditAttributeRestrictionViewController: UIPickerViewDataSource {
+
+	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
+		return 1
+	}
+
+	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+		return DataTypes.attributesFor(dataType).count
+	}
+}
+
+extension EditAttributeRestrictionViewController: UIPickerViewDelegate {
+
+	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+		return DataTypes.attributesFor(dataType)[row].name
+	}
+
+	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+		updateAttributedChooserViewValues()
 	}
 }

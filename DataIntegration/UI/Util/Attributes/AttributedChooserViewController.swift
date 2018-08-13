@@ -9,7 +9,7 @@
 import UIKit
 import os
 
-class AttributedChooserViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class AttributedChooserViewController: UIViewController {
 
 	public var possibleValues: [Attributed]!
 	public var currentValue: Attributed!
@@ -45,22 +45,9 @@ class AttributedChooserViewController: UIViewController, UIPickerViewDelegate, U
 		populateScrollView()
 	}
 
-	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
-		return 1
-	}
-
-	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return possibleValues.count
-	}
-
-	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return possibleValues[row].name
-	}
-
-	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-		currentValue = possibleValues[row]
-		resetScrollView()
-		populateScrollView()
+	public override func reloadInputViews() {
+		super.reloadInputViews()
+		valuePicker.reloadAllComponents()
 	}
 
 	@objc func accepted() {
@@ -120,5 +107,29 @@ class AttributedChooserViewController: UIViewController, UIPickerViewDelegate, U
 
 	fileprivate func subViewWidth() -> CGFloat {
 		return attributeScrollView.frame.maxX - attributeScrollView.frame.minX - attributeScrollView.adjustedContentInset.right - attributeScrollView.adjustedContentInset.left
+	}
+}
+
+extension AttributedChooserViewController: UIPickerViewDataSource {
+
+	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
+		return 1
+	}
+
+	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+		return possibleValues.count
+	}
+}
+
+extension AttributedChooserViewController: UIPickerViewDelegate {
+
+	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+		return possibleValues[row].name
+	}
+
+	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+		currentValue = possibleValues[row]
+		resetScrollView()
+		populateScrollView()
 	}
 }
