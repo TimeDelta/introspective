@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.3.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WJ9-gy-FSd">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.3.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ak2-fA-4ld">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -17,10 +17,10 @@
             </objects>
             <point key="canvasLocation" x="1527" y="-357"/>
         </scene>
-        <!--Advanced Question-->
+        <!--Query-->
         <scene sceneID="BuD-iL-Y85">
             <objects>
-                <tableViewController title="Advanced Question" id="WJ9-gy-FSd" customClass="AdvancedQuestionViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Query" id="WJ9-gy-FSd" customClass="QueryViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Vg8-c6-iz7">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -144,10 +144,11 @@
                             <outlet property="delegate" destination="WJ9-gy-FSd" id="SUZ-PG-SLk"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" id="uW4-4U-hFU"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oNl-5P-b6T" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2108" y="-814.54272863568224"/>
+            <point key="canvasLocation" x="2105" y="-815"/>
         </scene>
         <!--AttributeList-->
         <scene sceneID="rel-vm-fRV">
@@ -155,12 +156,12 @@
                 <viewControllerPlaceholder storyboardName="AttributeList" id="TmM-Sh-a3i" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mj2-Sw-tZs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2918" y="-771"/>
+            <point key="canvasLocation" x="2636" y="-772"/>
         </scene>
-        <!--Edit Sub Data Type View Controller-->
+        <!--Data Type Restriction-->
         <scene sceneID="wOb-hl-1eA">
             <objects>
-                <viewController id="TpJ-zB-lRv" customClass="EditSubDataTypeViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Data Type Restriction" id="TpJ-zB-lRv" customClass="EditSubDataTypeViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="GPo-Ep-6jC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -238,12 +239,12 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GNp-RO-4ZV" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="yEo-j9-8Ua" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3673" y="-815"/>
+            <point key="canvasLocation" x="3095" y="-815"/>
         </scene>
-        <!--Edit Attribute Restriction View Controller-->
+        <!--Edit Attribute Restriction-->
         <scene sceneID="MN9-6C-1GP">
             <objects>
-                <viewController id="L2p-RU-HId" customClass="EditAttributeRestrictionViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Edit Attribute Restriction" id="L2p-RU-HId" customClass="EditAttributeRestrictionViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ewH-tz-GfQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -270,12 +271,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3g6-cz-OBf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2893.5999999999999" y="-44.527736131934034"/>
+            <point key="canvasLocation" x="3094" y="-50"/>
         </scene>
-        <!--Edit Data Type View Controller-->
+        <!--Data Type-->
         <scene sceneID="25k-Cb-uw0">
             <objects>
-                <viewController id="o8u-xP-YgW" customClass="EditDataTypeViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Data Type" id="o8u-xP-YgW" customClass="EditDataTypeViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Qek-aE-XIP">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -306,12 +307,12 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K3S-q8-CRC" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="a8C-dW-ADL" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2893.5999999999999" y="-1510.7946026986508"/>
+            <point key="canvasLocation" x="3094" y="-1512"/>
         </scene>
         <!--Add-->
         <scene sceneID="rAh-zt-9l6">
             <objects>
-                <viewController autoresizesArchivedViewToFullSize="NO" title="Add" id="miM-5x-Nzi" customClass="AddToAdvancedQuestionViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController autoresizesArchivedViewToFullSize="NO" title="Add" id="miM-5x-Nzi" customClass="AddToQueryViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VUA-QF-F75">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -348,6 +349,24 @@
                 <exit id="bTJ-PX-zJS" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2107" y="-87"/>
+        </scene>
+        <!--Query-->
+        <scene sceneID="v4Q-v6-SpY">
+            <objects>
+                <navigationController title="Query" automaticallyAdjustsScrollViewInsets="NO" id="ak2-fA-4ld" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Xfa-VB-4KY">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="WJ9-gy-FSd" kind="relationship" relationship="rootViewController" id="iB5-ha-814"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WYn-Rx-vRN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1166" y="-815"/>
         </scene>
     </scenes>
 </document>

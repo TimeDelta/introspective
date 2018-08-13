@@ -1,5 +1,5 @@
 //
-//  AddToAdvancedQuestionViewController.swift
+//  AddToQueryViewController.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 7/7/18.
@@ -8,17 +8,17 @@
 
 import UIKit
 
-class AddToAdvancedQuestionViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+class AddToQueryViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
 
-	fileprivate typealias Me = AddToAdvancedQuestionViewController
+	fileprivate typealias Me = AddToQueryViewController
 
-	fileprivate static let values = AdvancedQuestionViewController.CellType.allTypes.map { (type: AdvancedQuestionViewController.CellType) -> String in
+	fileprivate static let values = QueryViewController.CellType.allTypes.map { (type: QueryViewController.CellType) -> String in
 		return type.description
 	}
 
 	@IBOutlet weak var questionPartSelector: UIPickerView!
 
-	var cellType: AdvancedQuestionViewController.CellType!
+	var cellType: QueryViewController.CellType!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -31,7 +31,7 @@ class AddToAdvancedQuestionViewController: UIViewController, UIPickerViewDataSou
 	}
 
 	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return AdvancedQuestionViewController.CellType.allTypes.count
+		return QueryViewController.CellType.allTypes.count
 	}
 
 	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
@@ -44,7 +44,7 @@ class AddToAdvancedQuestionViewController: UIViewController, UIPickerViewDataSou
 			if index == 0 {
 				cellType = .subDataType
 			} else {
-				cellType = AdvancedQuestionViewController.CellType.allTypes[index]
+				cellType = QueryViewController.CellType.allTypes[index]
 			}
 		}
 	}

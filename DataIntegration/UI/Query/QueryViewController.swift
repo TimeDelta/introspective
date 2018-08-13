@@ -1,5 +1,5 @@
 //
-//  AdvancedQueryViewController.swift
+//  QueryViewController.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 7/7/18.
@@ -8,11 +8,11 @@
 
 import UIKit
 
-class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
+class QueryViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
 
 	fileprivate static let acceptedAttributeRestrictionEdit = Notification.Name("attributeRestriction")
 
-	fileprivate typealias Me = AdvancedQuestionViewController
+	fileprivate typealias Me = QueryViewController
 
 	public enum CellType: CustomStringConvertible {
 		case dataType
@@ -120,7 +120,7 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 	}
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.destination is AddToAdvancedQuestionViewController {
+		if segue.destination is AddToQueryViewController {
             segue.destination.modalPresentationStyle = UIModalPresentationStyle.popover
             segue.destination.popoverPresentationController!.delegate = self
 		} else if segue.destination is EditDataTypeViewController {
@@ -172,7 +172,7 @@ class AdvancedQuestionViewController: UITableViewController, UIPopoverPresentati
 
 	@IBAction func addQuestionPart(_ segue: UIStoryboardSegue) {
 		if segue.identifier == "addQuestionPart" {
-			let controller = (segue.source as! AddToAdvancedQuestionViewController)
+			let controller = (segue.source as! AddToQueryViewController)
 			let cellType = controller.cellType!
 			cellTypes.append(cellType)
 			switch (cellType) {
