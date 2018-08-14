@@ -1,5 +1,5 @@
 //
-//  AfterDateAndTimeAttributeRestrictionUnitTests.swift
+//  AfterDateAttributeRestrictionUnitTests.swift
 //  DataIntegrationTests
 //
 //  Created by Bryan Nova on 8/14/18.
@@ -10,18 +10,18 @@ import XCTest
 import SwiftyMocky
 @testable import DataIntegration
 
-class AfterDateAndTimeAttributeRestrictionUnitTests: UnitTest {
+class AfterDateAttributeRestrictionUnitTests: UnitTest {
 
-	fileprivate typealias Me = AfterDateAndTimeAttributeRestrictionUnitTests
-	fileprivate static let dateAttribute = AfterDateAndTimeAttributeRestriction.dateAttribute
+    fileprivate typealias Me = AfterDateAttributeRestriction
+	fileprivate static let dateAttribute = AfterDateAttributeRestriction.dateAttribute
 
 	fileprivate var attribute: Attribute!
-	fileprivate var restriction: AfterDateAndTimeAttributeRestriction!
+	fileprivate var restriction: AfterDateAttributeRestriction!
 
 	override func setUp() {
 		super.setUp()
 		attribute = AnyAttribute(name: "attribute")
-		restriction = AfterDateAndTimeAttributeRestriction(attribute: attribute)
+		restriction = AfterDateAttributeRestriction(attribute: attribute)
 	}
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
@@ -35,6 +35,7 @@ class AfterDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 	func testGivenDateAttribute_valueOf_returnsCorrectDate() {
 		// given
 		let expectedDate = oldDate()
+		Given(mockCalendarUtil, .end(of: .value(.day), in: .value(expectedDate), willReturn: expectedDate))
 		restriction.date = expectedDate
 
 		// when
@@ -63,6 +64,7 @@ class AfterDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 	func testGivenDateAttributeAndValidValue_setAttributeTo_setsDateToCorrectValue() {
 		// given
 		let expectedDate = oldDate()
+		Given(mockCalendarUtil, .end(of: .value(.day), in: .value(expectedDate), willReturn: expectedDate))
 
 		// when
 		try! restriction.set(attribute: Me.dateAttribute, to: expectedDate)
@@ -87,23 +89,9 @@ class AfterDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 		// given
 		let mockSample = SampleMock()
 		let restrictionDate = oldDate()
+		Given(mockCalendarUtil, .end(of: .value(.day), in: .value(restrictionDate), willReturn: restrictionDate))
 		restriction.date = restrictionDate
 		Given(mockSample, .value(of: .value(attribute), willReturn: Date()))
-
-		// when
-		let samplePasses = try! restriction.samplePasses(mockSample)
-
-		// then
-		XCTAssert(samplePasses)
-	}
-
-	func testGivenSampleWithDateForGivenAttributeThatIsOnSameDayAtLaterTime_samplePasses_returnsTrue() {
-		// given
-		let mockSample = SampleMock()
-		let restrictionDate = Date(year: 2018, month: 1, day: 1, hour: 0, minute: 0)
-		restriction.date = restrictionDate
-		let sampleDate = Date(year: 2018, month: 1, day: 1, hour: 0, minute: 1)
-		Given(mockSample, .value(of: .value(attribute), willReturn: sampleDate))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)
@@ -115,7 +103,9 @@ class AfterDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithDateForGivenAttributeThatIsBeforeSpecifiedDate_samplePasses_returnsFalse() {
 		// given
 		let mockSample = SampleMock()
-		restriction.date = Date()
+		let restrictionDate = Date()
+		Given(mockCalendarUtil, .end(of: .value(.day), in: .value(restrictionDate), willReturn: restrictionDate))
+		restriction.date = restrictionDate
 		let sampleDate = oldDate()
 		Given(mockSample, .value(of: .value(attribute), willReturn: sampleDate))
 
@@ -126,12 +116,14 @@ class AfterDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(samplePasses)
 	}
 
-	func testGivenSampleWithDateForGivenAttributeThatIsOnSameDayAtEarlierTime_samplePasses_returnsFalse() {
+	func testGivenSampleWithDateForGivenAttributeThatIsOnSameDayAsSpecifiedDate_samplePasses_returnsFalse() {
 		// given
 		let mockSample = SampleMock()
-		let restrictionDate = Date(year: 2018, month: 1, day: 1, hour: 0, minute: 1)
+		let restrictionDate = Date(year: 2018, month: 1, day: 1, hour: 3, minute: 2, second: 1)
+		let endOfRestrictionDate = Date(year: 2018, month: 1, day: 1, hour: 23, minute: 59, second: 59)
+		Given(mockCalendarUtil, .end(of: .value(.day), in: .value(restrictionDate), willReturn: endOfRestrictionDate))
 		restriction.date = restrictionDate
-		let sampleDate = Date(year: 2018, month: 1, day: 1, hour: 0, minute: 0)
+		let sampleDate = Date(year: 2018, month: 1, day: 1, hour: 4, minute: 2, second: 1)
 		Given(mockSample, .value(of: .value(attribute), willReturn: sampleDate))
 
 		// when

@@ -80,4 +80,13 @@ class UnitTest: XCTestCase {
 		}
 		return samples
 	}
+
+	func oldDate() -> Date {
+		var dateComponents: DateComponents = DateComponents()
+		dateComponents.year = 1998
+		dateComponents.month = 1
+		dateComponents.day = 1
+
+		return Calendar.autoupdatingCurrent.date(from: dateComponents)!
+	}
 }
