@@ -8,7 +8,21 @@
 
 import Foundation
 
-public struct TimeOfDay {
+public struct TimeOfDay: Equatable {
+
+	public static func ==(lhs: TimeOfDay, rhs: TimeOfDay) -> Bool {
+		return lhs.hour == rhs.hour
+			&& lhs.minute == rhs.minute
+			&& lhs.second == rhs.second
+			&& lhs.nanosecond == rhs.nanosecond
+	}
+
+	public static func !=(lhs: TimeOfDay, rhs: TimeOfDay) -> Bool {
+		return lhs.hour != rhs.hour
+			|| lhs.minute != rhs.minute
+			|| lhs.second != rhs.second
+			|| lhs.nanosecond == rhs.nanosecond
+	}
 
 	public var hour: Int = 0
 	public var minute: Int = 0

@@ -36,7 +36,296 @@ import HealthKit
     }
 #endif
 
+// MARK: - Attribute
+class AttributeMock: Attribute, Mock {
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    var matcher: Matcher = Matcher.default
 
+    var name: String { 
+		get {	invocations.append(.name_get)
+				return __name.orFail("AttributeMock - value for name was not defined") }
+		set {	invocations.append(.name_set(.value(newValue)))
+				__name = newValue }
+	}
+	private var __name: (String)?
+    var pluralName: String { 
+		get {	invocations.append(.pluralName_get)
+				return __pluralName.orFail("AttributeMock - value for pluralName was not defined") }
+		set {	invocations.append(.pluralName_set(.value(newValue)))
+				__pluralName = newValue }
+	}
+	private var __pluralName: (String)?
+    var extendedDescription: String? { 
+		get {	invocations.append(.extendedDescription_get)
+				return __extendedDescription }
+		set {	invocations.append(.extendedDescription_set(.value(newValue)))
+				__extendedDescription = newValue }
+	}
+	private var __extendedDescription: (String)?
+
+    struct Property {
+        fileprivate var method: MethodType
+        static var name: Property { return Property(method: .name_get) }
+		static func name(set newValue: Parameter<String>) -> Property { return Property(method: .name_set(newValue)) }
+        static var pluralName: Property { return Property(method: .pluralName_get) }
+		static func pluralName(set newValue: Parameter<String>) -> Property { return Property(method: .pluralName_set(newValue)) }
+        static var extendedDescription: Property { return Property(method: .extendedDescription_get) }
+		static func extendedDescription(set newValue: Parameter<String?>) -> Property { return Property(method: .extendedDescription_set(newValue)) }
+    }
+
+
+    required init(name: String, pluralName: String?, description: String?) { }
+
+    func isValid(value: String) -> Bool {
+        addInvocation(.iisValid__value_value(Parameter<String>.value(value)))
+		let perform = methodPerformValue(.iisValid__value_value(Parameter<String>.value(value))) as? (String) -> Void
+		perform?(value)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iisValid__value_value(Parameter<String>.value(value)))
+		let value = givenValue.value as? Bool
+		return value.orFail("stub return value not specified for isValid(value: String). Use given")
+    }
+
+    func errorMessageFor(invalidValue: String) -> String {
+        addInvocation(.ierrorMessageFor__invalidValue_invalidValue(Parameter<String>.value(invalidValue)))
+		let perform = methodPerformValue(.ierrorMessageFor__invalidValue_invalidValue(Parameter<String>.value(invalidValue))) as? (String) -> Void
+		perform?(invalidValue)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.ierrorMessageFor__invalidValue_invalidValue(Parameter<String>.value(invalidValue)))
+		let value = givenValue.value as? String
+		return value.orFail("stub return value not specified for errorMessageFor(invalidValue: String). Use given")
+    }
+
+    func convertToValue(from strValue: String) throws -> Any {
+        addInvocation(.iconvertToValue__from_strValue(Parameter<String>.value(strValue)))
+		let perform = methodPerformValue(.iconvertToValue__from_strValue(Parameter<String>.value(strValue))) as? (String) -> Void
+		perform?(strValue)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iconvertToValue__from_strValue(Parameter<String>.value(strValue)))
+		if let error = givenValue.error { throw error }
+		let value = givenValue.value as? Any
+		return value.orFail("stub return value not specified for convertToValue(from strValue: String). Use given")
+    }
+
+    func convertToString(from value: Any) throws -> String {
+        addInvocation(.iconvertToString__from_value(Parameter<Any>.value(value)))
+		let perform = methodPerformValue(.iconvertToString__from_value(Parameter<Any>.value(value))) as? (Any) -> Void
+		perform?(value)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iconvertToString__from_value(Parameter<Any>.value(value)))
+		if let error = givenValue.error { throw error }
+		let value = givenValue.value as? String
+		return value.orFail("stub return value not specified for convertToString(from value: Any). Use given")
+    }
+
+    func convertToDisplayableString(from value: Any) throws -> String {
+        addInvocation(.iconvertToDisplayableString__from_value(Parameter<Any>.value(value)))
+		let perform = methodPerformValue(.iconvertToDisplayableString__from_value(Parameter<Any>.value(value))) as? (Any) -> Void
+		perform?(value)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iconvertToDisplayableString__from_value(Parameter<Any>.value(value)))
+		if let error = givenValue.error { throw error }
+		let value = givenValue.value as? String
+		return value.orFail("stub return value not specified for convertToDisplayableString(from value: Any). Use given")
+    }
+
+    func equalTo(_ otherAttribute: Attribute) -> Bool {
+        addInvocation(.iequalTo__otherAttribute(Parameter<Attribute>.value(otherAttribute)))
+		let perform = methodPerformValue(.iequalTo__otherAttribute(Parameter<Attribute>.value(otherAttribute))) as? (Attribute) -> Void
+		perform?(otherAttribute)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iequalTo__otherAttribute(Parameter<Attribute>.value(otherAttribute)))
+		let value = givenValue.value as? Bool
+		return value.orFail("stub return value not specified for equalTo(_ otherAttribute: Attribute). Use given")
+    }
+
+    fileprivate enum MethodType {
+        case iisValid__value_value(Parameter<String>)
+        case ierrorMessageFor__invalidValue_invalidValue(Parameter<String>)
+        case iconvertToValue__from_strValue(Parameter<String>)
+        case iconvertToString__from_value(Parameter<Any>)
+        case iconvertToDisplayableString__from_value(Parameter<Any>)
+        case iequalTo__otherAttribute(Parameter<Attribute>)
+        case name_get
+		case name_set(Parameter<String>)
+        case pluralName_get
+		case pluralName_set(Parameter<String>)
+        case extendedDescription_get
+		case extendedDescription_set(Parameter<String?>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+                case (.iisValid__value_value(let lhsValue), .iisValid__value_value(let rhsValue)):
+                    guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                    return true 
+                case (.ierrorMessageFor__invalidValue_invalidValue(let lhsInvalidvalue), .ierrorMessageFor__invalidValue_invalidValue(let rhsInvalidvalue)):
+                    guard Parameter.compare(lhs: lhsInvalidvalue, rhs: rhsInvalidvalue, with: matcher) else { return false } 
+                    return true 
+                case (.iconvertToValue__from_strValue(let lhsStrvalue), .iconvertToValue__from_strValue(let rhsStrvalue)):
+                    guard Parameter.compare(lhs: lhsStrvalue, rhs: rhsStrvalue, with: matcher) else { return false } 
+                    return true 
+                case (.iconvertToString__from_value(let lhsValue), .iconvertToString__from_value(let rhsValue)):
+                    guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                    return true 
+                case (.iconvertToDisplayableString__from_value(let lhsValue), .iconvertToDisplayableString__from_value(let rhsValue)):
+                    guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                    return true 
+                case (.iequalTo__otherAttribute(let lhsOtherattribute), .iequalTo__otherAttribute(let rhsOtherattribute)):
+                    guard Parameter.compare(lhs: lhsOtherattribute, rhs: rhsOtherattribute, with: matcher) else { return false } 
+                    return true 
+                case (.name_get,.name_get): return true
+				case (.name_set(let left),.name_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
+                case (.pluralName_get,.pluralName_get): return true
+				case (.pluralName_set(let left),.pluralName_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
+                case (.extendedDescription_get,.extendedDescription_get): return true
+				case (.extendedDescription_set(let left),.extendedDescription_set(let right)): return Parameter<String?>.compare(lhs: left, rhs: right, with: matcher)
+                default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+                case let .iisValid__value_value(p0): return p0.intValue
+                case let .ierrorMessageFor__invalidValue_invalidValue(p0): return p0.intValue
+                case let .iconvertToValue__from_strValue(p0): return p0.intValue
+                case let .iconvertToString__from_value(p0): return p0.intValue
+                case let .iconvertToDisplayableString__from_value(p0): return p0.intValue
+                case let .iequalTo__otherAttribute(p0): return p0.intValue
+                case .name_get: return 0
+				case .name_set(let newValue): return newValue.intValue
+                case .pluralName_get: return 0
+				case .pluralName_set(let newValue): return newValue.intValue
+                case .extendedDescription_get: return 0
+				case .extendedDescription_set(let newValue): return newValue.intValue
+            }
+        }
+    }
+
+    struct Given {
+        fileprivate var method: MethodType
+        var returns: Any?
+        var `throws`: Error?
+
+        private init(method: MethodType, returns: Any?, throws: Error?) {
+            self.method = method
+            self.returns = returns
+            self.`throws` = `throws`
+        }
+
+        static func isValid(value: Parameter<String>, willReturn: Bool) -> Given {
+            return Given(method: .iisValid__value_value(value), returns: willReturn, throws: nil)
+        }
+        static func errorMessageFor(invalidValue: Parameter<String>, willReturn: String) -> Given {
+            return Given(method: .ierrorMessageFor__invalidValue_invalidValue(invalidValue), returns: willReturn, throws: nil)
+        }
+        static func convertToValue(from strValue: Parameter<String>, willReturn: Any) -> Given {
+            return Given(method: .iconvertToValue__from_strValue(strValue), returns: willReturn, throws: nil)
+        }
+        static func convertToString(from value: Parameter<Any>, willReturn: String) -> Given {
+            return Given(method: .iconvertToString__from_value(value), returns: willReturn, throws: nil)
+        }
+        static func convertToDisplayableString(from value: Parameter<Any>, willReturn: String) -> Given {
+            return Given(method: .iconvertToDisplayableString__from_value(value), returns: willReturn, throws: nil)
+        }
+        static func equalTo(otherAttribute: Parameter<Attribute>, willReturn: Bool) -> Given {
+            return Given(method: .iequalTo__otherAttribute(otherAttribute), returns: willReturn, throws: nil)
+        }
+        static func convertToValue(from strValue: Parameter<String>, willThrow: Error) -> Given {
+            return Given(method: .iconvertToValue__from_strValue(strValue), returns: nil, throws: willThrow)
+        }
+        static func convertToString(from value: Parameter<Any>, willThrow: Error) -> Given {
+            return Given(method: .iconvertToString__from_value(value), returns: nil, throws: willThrow)
+        }
+        static func convertToDisplayableString(from value: Parameter<Any>, willThrow: Error) -> Given {
+            return Given(method: .iconvertToDisplayableString__from_value(value), returns: nil, throws: willThrow)
+        }
+    }
+
+    struct Verify {
+        fileprivate var method: MethodType
+
+        static func isValid(value: Parameter<String>) -> Verify {
+            return Verify(method: .iisValid__value_value(value))
+        }
+        static func errorMessageFor(invalidValue: Parameter<String>) -> Verify {
+            return Verify(method: .ierrorMessageFor__invalidValue_invalidValue(invalidValue))
+        }
+        static func convertToValue(from strValue: Parameter<String>) -> Verify {
+            return Verify(method: .iconvertToValue__from_strValue(strValue))
+        }
+        static func convertToString(from value: Parameter<Any>) -> Verify {
+            return Verify(method: .iconvertToString__from_value(value))
+        }
+        static func convertToDisplayableString(from value: Parameter<Any>) -> Verify {
+            return Verify(method: .iconvertToDisplayableString__from_value(value))
+        }
+        static func equalTo(otherAttribute: Parameter<Attribute>) -> Verify {
+            return Verify(method: .iequalTo__otherAttribute(otherAttribute))
+        }
+    }
+
+    struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        static func isValid(value: Parameter<String>, perform: (String) -> Void) -> Perform {
+            return Perform(method: .iisValid__value_value(value), performs: perform)
+        }
+        static func errorMessageFor(invalidValue: Parameter<String>, perform: (String) -> Void) -> Perform {
+            return Perform(method: .ierrorMessageFor__invalidValue_invalidValue(invalidValue), performs: perform)
+        }
+        static func convertToValue(from strValue: Parameter<String>, perform: (String) -> Void) -> Perform {
+            return Perform(method: .iconvertToValue__from_strValue(strValue), performs: perform)
+        }
+        static func convertToString(from value: Parameter<Any>, perform: (Any) -> Void) -> Perform {
+            return Perform(method: .iconvertToString__from_value(value), performs: perform)
+        }
+        static func convertToDisplayableString(from value: Parameter<Any>, perform: (Any) -> Void) -> Perform {
+            return Perform(method: .iconvertToDisplayableString__from_value(value), performs: perform)
+        }
+        static func equalTo(otherAttribute: Parameter<Attribute>, perform: (Attribute) -> Void) -> Perform {
+            return Perform(method: .iequalTo__otherAttribute(otherAttribute), performs: perform)
+        }
+    }
+
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+        methodReturnValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    public func verify(property: Property, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(property.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(property.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+
+    private func methodReturnValue(_ method: MethodType) -> (value: Any?, error: Error?) {
+        let matched = methodReturnValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher)  }
+        return (value: matched?.returns, error: matched?.`throws`)
+    }
+
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+}
 
 // MARK: - AttributeFactory
 class AttributeFactoryMock: AttributeFactory, Mock {

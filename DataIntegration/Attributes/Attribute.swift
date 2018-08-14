@@ -14,6 +14,7 @@ public enum AttributeError: Error {
 	case unknownAttribute
 }
 
+//sourcery: AutoMockable
 public protocol Attribute {
 
 	/// This is a name that should be understandable by the user
@@ -35,22 +36,6 @@ public protocol Attribute {
 
 extension Attribute {
 
-	/// Returns a Boolean value indicating whether two values are equal.
-    ///
-    /// Equality is the inverse of inequality. For any values `a` and `b`,
-    /// `a == b` implies that `a != b` is `false`.
-    ///
-    /// - Parameters:
-    ///   - lhs: A value to compare.
-    ///   - rhs: Another value to compare.
-    public static func == (lhs: Attribute, rhs: Attribute) -> Bool {
-		return lhs.name == rhs.name && lhs.extendedDescription == rhs.extendedDescription
-	}
-
-	public static func != (lhs: Attribute, rhs: Attribute) -> Bool {
-		return lhs.name != rhs.name || lhs.extendedDescription != rhs.extendedDescription
-	}
-
 	public func equalTo(_ otherAttribute: Attribute) -> Bool {
 		return name == otherAttribute.name && extendedDescription == otherAttribute.extendedDescription
 	}
@@ -64,7 +49,7 @@ public class AnyAttribute: Attribute {
 	/// This is an explanation of this attribute that should be able to be presented to the user.
 	public fileprivate(set) var extendedDescription: String?
 
-	public required init(name: String, pluralName: String? = nil, description: String?) {
+	public required init(name: String, pluralName: String? = nil, description: String? = nil) {
 		self.name = name
 		if pluralName == nil {
 			self.pluralName = name

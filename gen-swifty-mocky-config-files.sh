@@ -29,6 +29,7 @@ export IFS=$'\n'
 CONFIG_FILE="${PROJECT_DIR}/mocky.yml"
 
 echo "sources:" > "$CONFIG_FILE"
+echo "  - ${INPUT_DIR}Tests/CustomMocks" >> "$CONFIG_FILE"
 for file in `find "${INPUT_DIR}" -type f -name \*.swift | grep -v Carthage | egrep -v "${EXCLUSION_PATTERN}"`; do
     echo "  - $file" >> "$CONFIG_FILE"
 done
