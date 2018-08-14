@@ -1,5 +1,5 @@
 //
-//  AfterTimeOfDayAttributeRestrictionUnitTests.swift
+//  AfterDateAndTimeAttributeRestrictionUnitTests.swift
 //  DataIntegrationTests
 //
 //  Created by Bryan Nova on 8/14/18.
@@ -10,18 +10,18 @@ import XCTest
 import SwiftyMocky
 @testable import DataIntegration
 
-class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
+class AfterDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 
-	fileprivate typealias Me = AfterTimeOfDayAttributeRestrictionUnitTests
-	fileprivate static let timeAttribute = AfterTimeOfDayAttributeRestriction.timeAttribute
+	fileprivate typealias Me = AfterDateAndTimeAttributeRestrictionUnitTests
+	fileprivate static let dateAttribute = AfterDateAndTimeAttributeRestriction.dateAttribute
 
-	private var attribute: Attribute!
-	private var restriction: AfterTimeOfDayAttributeRestriction!
+	fileprivate var attribute: Attribute!
+	fileprivate var restriction: AfterDateAndTimeAttributeRestriction!
 
 	override func setUp() {
 		super.setUp()
 		attribute = AnyAttribute(name: "attribute")
-		restriction = AfterTimeOfDayAttributeRestriction(attribute: attribute)
+		restriction = AfterDateAndTimeAttributeRestriction(attribute: attribute)
 	}
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
@@ -32,18 +32,16 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenTimeAttribute_valueOf_returnsCorrectTimeOfDay() {
+	func testGivenDateAttribute_valueOf_returnsCorrectDate() {
 		// given
-		var expectedTimeOfDay = TimeOfDay()
-		expectedTimeOfDay.hour = 15
-		expectedTimeOfDay.minute = 23
-		restriction.timeOfDay = expectedTimeOfDay
+		let expectedDate = oldDate()
+		restriction.date = expectedDate
 
 		// when
-		let actualTimeOfDay = try! restriction.value(of: Me.timeAttribute) as! TimeOfDay
+		let actualDate = try! restriction.value(of: Me.dateAttribute) as! Date
 
 		// then
-		XCTAssertEqual(actualTimeOfDay, expectedTimeOfDay)
+		XCTAssertEqual(actualDate, expectedDate)
 	}
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
@@ -56,23 +54,21 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenWrongValueType_setAttributeTo_throwsTypeMismatchError() {
 		// when
-		XCTAssertThrowsError(try restriction.set(attribute: Me.timeAttribute, to: 1)) { error in
+		XCTAssertThrowsError(try restriction.set(attribute: Me.dateAttribute, to: 1)) { error in
 			// then
 			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
 		}
 	}
 
-	func testGivenTimeAttributeAndValidValue_setAttributeTo_setsTimeOfDayToCorrectValue() {
+	func testGivenDateAttributeAndValidValue_setAttributeTo_setsDateToCorrectValue() {
 		// given
-		var timeOfDay = TimeOfDay()
-		timeOfDay.hour = 18
-		timeOfDay.minute = 52
+		let expectedDate = oldDate()
 
 		// when
-		try! restriction.set(attribute: Me.timeAttribute, to: timeOfDay)
+		try! restriction.set(attribute: Me.dateAttribute, to: expectedDate)
 
 		// then
-		XCTAssertEqual(restriction.timeOfDay, timeOfDay)
+		XCTAssertEqual(restriction.date, expectedDate)
 	}
 
 	func testGivenSampleWithNonDateValueForGivenAttribute_samplePasses_throwsTypeMismatchError() {
@@ -87,15 +83,12 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSampleWithDateForGivenAttributeThatIsAfterSpecifiedTimeOfDay_samplePasses_returnsTrue() {
+	func testGivenSampleWithDateForGivenAttributeThatIsAfterSpecifiedDate_samplePasses_returnsTrue() {
 		// given
 		let mockSample = SampleMock()
-		var timeOfDay = TimeOfDay()
-		timeOfDay.hour = 0
-		timeOfDay.minute = 0
-		restriction.timeOfDay = timeOfDay
-		let date = Calendar.autoupdatingCurrent.date(bySetting: .hour, value: 1, of: Date())!
-		Given(mockSample, .value(of: .value(attribute), willReturn: date))
+		let restrictionDate = oldDate()
+		restriction.date = restrictionDate
+		Given(mockSample, .value(of: .value(attribute), willReturn: Date()))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)
@@ -107,17 +100,23 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithDateForGivenAttributeThatIsBeforeSpecifiedTimeOfDay_samplePasses_returnsFalse() {
 		// given
 		let mockSample = SampleMock()
-		var timeOfDay = TimeOfDay()
-		timeOfDay.hour = 1
-		timeOfDay.minute = 0
-		restriction.timeOfDay = timeOfDay
-		let date = Calendar.autoupdatingCurrent.date(bySetting: .hour, value: 0, of: Date())!
-		Given(mockSample, .value(of: .value(attribute), willReturn: date))
+		restriction.date = Date()
+		let sampleDate = oldDate()
+		Given(mockSample, .value(of: .value(attribute), willReturn: sampleDate))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)
 
 		// then
 		XCTAssertFalse(samplePasses)
+	}
+
+	fileprivate func oldDate() -> Date {
+		var dateComponents: DateComponents = DateComponents()
+		dateComponents.year = 1998
+		dateComponents.month = 1
+		dateComponents.day = 1
+
+		return Calendar.autoupdatingCurrent.date(from: dateComponents)!
 	}
 }
