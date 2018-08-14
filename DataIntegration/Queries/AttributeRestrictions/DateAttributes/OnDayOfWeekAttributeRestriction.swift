@@ -23,7 +23,7 @@ public class OnDayOfWeekAttributeRestriction: DateAttributeRestriction {
 		return "On a " + daysOfWeekText
 	}
 
-	public fileprivate(set) var daysOfWeek: Set<DayOfWeek>
+	public var daysOfWeek: Set<DayOfWeek>
 
 	public required init(attribute: Attribute) {
 		daysOfWeek = Set<DayOfWeek>()

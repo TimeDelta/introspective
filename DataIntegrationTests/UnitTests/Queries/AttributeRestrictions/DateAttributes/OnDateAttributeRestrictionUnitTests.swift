@@ -12,7 +12,7 @@ import SwiftyMocky
 
 class OnDateAttributeRestrictionUnitTests: UnitTest {
 
-    fileprivate typealias Me = OnDateAttributeRestrictionUnitTests
+	fileprivate typealias Me = OnDateAttributeRestrictionUnitTests
 	fileprivate static let dateAttribute = OnDateAttributeRestriction.dateAttribute
 
 	private var attribute: Attribute!

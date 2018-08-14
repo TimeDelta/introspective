@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class DayOfWeek: NSObject {
+public class DayOfWeek: Hashable, Comparable {
 
 	public enum ErrorTypes: Error {
 		case UnknownDayOfWeek
@@ -24,6 +24,26 @@ public class DayOfWeek: NSObject {
 
 	public static let allDays = [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
 
+	public static func < (lhs: DayOfWeek, rhs: DayOfWeek) -> Bool {
+		return lhs.intValue < rhs.intValue
+	}
+
+	public static func <= (lhs: DayOfWeek, rhs: DayOfWeek) -> Bool {
+		return lhs.intValue <= rhs.intValue
+	}
+
+	public static func == (lhs: DayOfWeek, rhs: DayOfWeek) -> Bool {
+		return lhs.intValue == rhs.intValue
+	}
+
+	public static func >= (lhs: DayOfWeek, rhs: DayOfWeek) -> Bool {
+		return lhs.intValue >= rhs.intValue
+	}
+
+	public static func > (lhs: DayOfWeek, rhs: DayOfWeek) -> Bool {
+		return lhs.intValue > rhs.intValue
+	}
+
 	public static func fromString(_ str: String) throws -> DayOfWeek {
 		let dayName = str.lowercased()
 		for day in allDays {
@@ -38,17 +58,19 @@ public class DayOfWeek: NSObject {
 		return allDays[intValue]
 	}
 
-	public override var description: String {
+	public var description: String {
 		return fullDayName
 	}
 
 	public fileprivate(set) var fullDayName: String
 	public fileprivate(set) var intValue: Int
 	public fileprivate(set) var abbreviation: String
+	public let hashValue: Int
 
 	fileprivate init(_ intValue: Int, _ minRequiredString: String, _ fullDayName: String) {
 		self.intValue = intValue
 		self.abbreviation = minRequiredString
 		self.fullDayName = fullDayName
+		self.hashValue = intValue
 	}
 }

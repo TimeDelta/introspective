@@ -38,6 +38,7 @@ class UnitTest: XCTestCase {
 
 		Matcher.default.register(Sample.self) { lhs,rhs in return lhs.equalTo(rhs) }
 		Matcher.default.register(Attribute.self) { lhs,rhs in return lhs.equalTo(rhs) }
+		Matcher.default.register(DayOfWeek.self)
 	}
 
 	override func tearDown() {
