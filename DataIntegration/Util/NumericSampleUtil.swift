@@ -37,13 +37,13 @@ public class NumericSampleUtilImpl: NumericSampleUtil {
 
 		if aggregationUnit == nil {
 			return [(date: nil, value: average(for: attribute, over: samples))]
-		} else {
-			var sampleAggregationAverages = [(date: Date?, value: Double)]()
-			for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sort(samples: samples, by: aggregationUnit!) {
-				sampleAggregationAverages.append((date: aggregationDate, value: average(for: attribute, over: samples)))
-			}
-			return sampleAggregationAverages
 		}
+
+		var sampleAggregationAverages = [(date: Date?, value: Double)]()
+		for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sort(samples: samples, by: aggregationUnit!) {
+			sampleAggregationAverages.append((date: aggregationDate, value: average(for: attribute, over: samples)))
+		}
+		return sampleAggregationAverages
 	}
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to a `Double`
@@ -64,13 +64,13 @@ public class NumericSampleUtilImpl: NumericSampleUtil {
 
 		if aggregationUnit == nil {
 			return [(date: nil, value: samples.count)]
-		} else {
-			var sampleAggregationCounts = [(date: Date?, value: Int)]()
-			for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sort(samples: samples, by: aggregationUnit!) {
-				sampleAggregationCounts.append((date: aggregationDate, value: samples.count))
-			}
-			return sampleAggregationCounts
 		}
+
+		var sampleAggregationCounts = [(date: Date?, value: Int)]()
+		for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sort(samples: samples, by: aggregationUnit!) {
+			sampleAggregationCounts.append((date: aggregationDate, value: samples.count))
+		}
+		return sampleAggregationCounts
 	}
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
@@ -80,13 +80,13 @@ public class NumericSampleUtilImpl: NumericSampleUtil {
 
 		if aggregationUnit == nil {
 			return [(date: nil, value: max(for: attribute, over: samples))]
-		} else {
-			var sampleAggregationMaxs = [(date: Date?, value: Type)]()
-			for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sort(samples: samples, by: aggregationUnit!) {
-				sampleAggregationMaxs.append((date: aggregationDate, value: max(for: attribute, over: samples)))
-			}
-			return sampleAggregationMaxs
 		}
+
+		var sampleAggregationMaxs = [(date: Date?, value: Type)]()
+		for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sort(samples: samples, by: aggregationUnit!) {
+			sampleAggregationMaxs.append((date: aggregationDate, value: max(for: attribute, over: samples)))
+		}
+		return sampleAggregationMaxs
 	}
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
@@ -108,13 +108,13 @@ public class NumericSampleUtilImpl: NumericSampleUtil {
 
 		if aggregationUnit == nil {
 			return [(date: nil, value: min(for: attribute, over: samples))]
-		} else {
-			var sampleAggregationMins = [(date: Date?, value: Type)]()
-			for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sort(samples: samples, by: aggregationUnit!) {
-				sampleAggregationMins.append((date: aggregationDate, value: min(for: attribute, over: samples)))
-			}
-			return sampleAggregationMins
 		}
+
+		var sampleAggregationMins = [(date: Date?, value: Type)]()
+		for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sort(samples: samples, by: aggregationUnit!) {
+			sampleAggregationMins.append((date: aggregationDate, value: min(for: attribute, over: samples)))
+		}
+		return sampleAggregationMins
 	}
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
@@ -136,13 +136,13 @@ public class NumericSampleUtilImpl: NumericSampleUtil {
 
 		if aggregationUnit == nil {
 			return [(date: nil, value: sum(for: attribute, over: samples))]
-		} else {
-			var sampleAggregationSums = [(date: Date?, value: Type)]()
-			for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sort(samples: samples, by: aggregationUnit!) {
-				sampleAggregationSums.append((date: aggregationDate, value: sum(for: attribute, over: samples)))
-			}
-			return sampleAggregationSums
 		}
+
+		var sampleAggregationSums = [(date: Date?, value: Type)]()
+		for (aggregationDate, samples) in DependencyInjector.util.sampleUtil.sort(samples: samples, by: aggregationUnit!) {
+			sampleAggregationSums.append((date: aggregationDate, value: sum(for: attribute, over: samples)))
+		}
+		return sampleAggregationSums
 	}
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
