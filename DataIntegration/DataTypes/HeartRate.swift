@@ -72,9 +72,4 @@ public class HeartRate: SampleBase {
 		}
 		throw SampleError.unknownAttribute
 	}
-
-	public override func equalTo(_ otherSample: Sample) -> Bool {
-		guard let otherHeartRate = otherSample as? HeartRate else { return false }
-		return dates[.start]! == otherHeartRate.dates[.start]! && heartRate == otherHeartRate.heartRate
-	}
 }

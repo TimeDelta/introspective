@@ -13,32 +13,21 @@ import SwiftyMocky
 
 class UnitTest: XCTestCase {
 
-	let injectionProvider = InjectionProviderMock()
+	var injectionProvider: InjectionProviderMock!
 
-	let utilFactory = UtilFactory()
-	let mockAttributeRestrictionUtil = AttributeRestrictionUtilMock()
-	let mockCalendarUtil = CalendarUtilMock()
-	let mockNumericSampleUtil = NumericSampleUtilMock()
-	let mockSampleUtil = SampleUtilMock()
-	let mockSearchUtil = SearchUtilMock()
-	let mockStringUtil = StringUtilMock()
-	let mockTextNormalizationUtil = TextNormalizationUtilMock()
+	var utilFactory: UtilFactory!
+	var mockAttributeRestrictionUtil: AttributeRestrictionUtilMock!
+	var mockCalendarUtil: CalendarUtilMock!
+	var mockNumericSampleUtil: NumericSampleUtilMock!
+	var mockSampleUtil: SampleUtilMock!
+	var mockSearchUtil: SearchUtilMock!
+	var mockStringUtil: StringUtilMock!
+	var mockTextNormalizationUtil: TextNormalizationUtilMock!
 
 	override func setUp() {
 		super.setUp()
-		DependencyInjector.injectionProvider = injectionProvider
-		Given(injectionProvider, .utilFactory(willReturn: utilFactory))
-		utilFactory.attributeRestrictionUtil = mockAttributeRestrictionUtil
-		utilFactory.calendarUtil = mockCalendarUtil
-		utilFactory.numericSampleUtil = mockNumericSampleUtil
-		utilFactory.sampleUtil = mockSampleUtil
-		utilFactory.searchUtil = mockSearchUtil
-		utilFactory.stringUtil = mockStringUtil
-		utilFactory.textNormalizationUtil = mockTextNormalizationUtil
-
-		Matcher.default.register(Sample.self) { lhs,rhs in return lhs.equalTo(rhs) }
-		Matcher.default.register(Attribute.self) { lhs,rhs in return lhs.equalTo(rhs) }
-		Matcher.default.register(DayOfWeek.self)
+		resetMocks()
+		registerMatchers()
 	}
 
 	override func tearDown() {
@@ -89,5 +78,35 @@ class UnitTest: XCTestCase {
 		dateComponents.day = 1
 
 		return Calendar.autoupdatingCurrent.date(from: dateComponents)!
+	}
+
+	fileprivate func registerMatchers() {
+		Matcher.default.register(Attribute.self) { lhs,rhs in return lhs.equalTo(rhs) }
+		Matcher.default.register(Sample.self) { lhs,rhs in return lhs.equalTo(rhs) }
+		Matcher.default.register(SampleBase.self)
+		Matcher.default.register(DayOfWeek.self)
+	}
+
+	fileprivate func resetMocks() {
+		injectionProvider = InjectionProviderMock()
+		DependencyInjector.injectionProvider = injectionProvider
+
+		utilFactory = UtilFactory()
+		Given(injectionProvider, .utilFactory(willReturn: utilFactory))
+
+		mockAttributeRestrictionUtil = AttributeRestrictionUtilMock()
+		utilFactory.attributeRestrictionUtil = mockAttributeRestrictionUtil
+		mockCalendarUtil = CalendarUtilMock()
+		utilFactory.calendarUtil = mockCalendarUtil
+		mockNumericSampleUtil = NumericSampleUtilMock()
+		utilFactory.numericSampleUtil = mockNumericSampleUtil
+		mockSampleUtil = SampleUtilMock()
+		utilFactory.sampleUtil = mockSampleUtil
+		mockSearchUtil = SearchUtilMock()
+		utilFactory.searchUtil = mockSearchUtil
+		mockStringUtil = StringUtilMock()
+		utilFactory.stringUtil = mockStringUtil
+		mockTextNormalizationUtil = TextNormalizationUtilMock()
+		utilFactory.textNormalizationUtil = mockTextNormalizationUtil
 	}
 }

@@ -44,34 +44,4 @@ public class AnySample: SampleBase {
 		guard let _ = realAttributes.first(where: { a in return a.name == attribute.name }) else { throw SampleError.unknownAttribute }
 		attributeValues[attribute.name] = value
 	}
-
-	public override func equalTo(_ otherSample: Sample) -> Bool {
-		if attributes.count != otherSample.attributes.count { return false }
-		for attribute in attributes {
-			let index = otherSample.attributes.index(where: { (a: Attribute) -> Bool in return a.equalTo(attribute) })
-			if index == nil { return false }
-		}
-		for attribute in attributes {
-			switch (attribute) {
-				case is DateAttribute:
-					let myDate = try! value(of: attribute) as! Date
-					let otherDate = try! otherSample.value(of: attribute) as! Date
-					if myDate != otherDate { return false }
-					break
-				case is IntegerAttribute:
-					let myInt = try! value(of: attribute) as! Int
-					let otherInt = try! otherSample.value(of: attribute) as! Int
-					if myInt != otherInt { return false }
-					break
-				case is DoubleAttribute:
-					let myDouble = try! value(of: attribute) as! Double
-					let otherDouble = try! otherSample.value(of: attribute) as! Double
-					if myDouble != otherDouble { return false }
-					break
-				default:
-					os_log("AnySample - Need to include equal comparison for attribute type: $@", type: .debug, String(describing: type(of: attribute)))
-			}
-		}
-		return true
-	}
 }

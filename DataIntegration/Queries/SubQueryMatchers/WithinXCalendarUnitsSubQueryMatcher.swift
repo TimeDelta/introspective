@@ -12,13 +12,13 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher {
 
 	fileprivate typealias Me = WithinXCalendarUnitsSubQueryMatcher
 
-	fileprivate static let amountOfTime = 0
-	fileprivate static let timeUnit = 1
+	fileprivate static let amountOfTimeId = 0
+	fileprivate static let timeUnitId = 1
 
 	public static let genericDescription: String = "Within <number> <time_unit> of"
 	public static let parameters: [(id: Int, type: ParamType)] = [
-		(id: amountOfTime, type: .integer),
-		(id: timeUnit, type: .timeUnit),
+		(id: amountOfTimeId, type: .integer),
+		(id: timeUnitId, type: .timeUnit),
 	]
 
 	public var description: String {
@@ -48,7 +48,8 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher {
 
 		var applicableSubQuerySamples = subQuerySamples
 		if mostRecentOnly {
-			applicableSubQuerySamples = [subQuerySamples[0]]
+			applicableSubQuerySamples = DependencyInjector.util.sampleUtil.sort(samples: subQuerySamples, by: .start, in: .orderedDescending)
+			applicableSubQuerySamples = [applicableSubQuerySamples[0]]
 		}
 
 		for sample in querySamples {
@@ -61,12 +62,12 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher {
 	}
 
 	public func setParameter<T>(id: Int, value: T) throws {
-		if id == Me.amountOfTime {
+		if id == Me.amountOfTimeId {
 			if T.self != Int.self {
 				throw ParamErrors.typeMismatch
 			}
 			numberOfTimeUnits = (value as! Int)
-		} else if id == Me.timeUnit {
+		} else if id == Me.timeUnitId {
 			if T.self != Calendar.Component.self {
 				throw ParamErrors.typeMismatch
 			}
@@ -77,12 +78,12 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher {
 	}
 
 	public func getParameterValue<T>(id: Int) throws -> T {
-		if id == Me.amountOfTime {
+		if id == Me.amountOfTimeId {
 			if T.self != Int.self {
 				throw ParamErrors.typeMismatch
 			}
 			return numberOfTimeUnits as! T
-		} else if id == Me.timeUnit {
+		} else if id == Me.timeUnitId {
 			if T.self != Calendar.Component.self {
 				throw ParamErrors.typeMismatch
 			}

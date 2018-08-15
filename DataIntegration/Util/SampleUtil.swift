@@ -22,6 +22,9 @@ public protocol SampleUtil {
 	func convertOneDateSamplesToTwoDateSamples(_ samples: [Sample], samplesShouldNotBeJoined: (Sample, Sample) -> Bool, joinSamples: ([Sample], Date, Date) -> Sample) -> [Sample]
 	func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(_ samples: [SampleType], samplesShouldNotBeJoined: (SampleType, SampleType) -> Bool, joinSamples: ([SampleType], Date, Date) -> SampleType) -> [SampleType]
 	func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2]) -> SampleType2
+	/// Get the shortest distance between two samples in the specified calendar unit.
+	/// This will look at the distance between all 4 possible combinations of start and
+	/// end dates for the given samples then choose the lowest interval of time.
 	func distance(between sample1: Sample, and sample2: Sample, in unit: Calendar.Component) -> Int
 }
 
