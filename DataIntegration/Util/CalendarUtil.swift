@@ -18,8 +18,8 @@ public protocol CalendarUtil {
 	func string(for date: Date, inFormat format: String) -> String
 	func date(_ date1: Date, occursOnSame component: Calendar.Component, as date2: Date) -> Bool
 	func compare(_ date1: Date?, _ date2: Date?) -> ComparisonResult
-	func date<CollectionType: Collection>(_ date: Date, isOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek
-	func date(_ date: Date, isA dayOfWeek: DayOfWeek) -> Bool
+	func date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek
+	func date(_ date: Date, isOnA dayOfWeek: DayOfWeek) -> Bool
 	func date(from dateStr: String, format: String) -> Date?
 }
 
@@ -67,23 +67,20 @@ public class CalendarUtilImpl: CalendarUtil {
 	public func compare(_ date1: Date?, _ date2: Date?) -> ComparisonResult {
 		if date1 != nil && date2 != nil {
 			return date1!.compare(date2!)
-		} else if date1 != nil {
-			return .orderedAscending
-		} else if date2 != nil {
-			return .orderedDescending
-		} else {
-			return .orderedSame
 		}
+		if date1 != nil { return .orderedAscending }
+		if date2 != nil { return .orderedDescending }
+		return .orderedSame
 	}
 
-	public func date<CollectionType: Collection>(_ date: Date, isOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek {
+	public func date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek {
 		let calendar = Calendar.current
 		let dayOfWeekIntForDate = calendar.component(.weekday, from: date)
 		let dayOfWeekForDate = DayOfWeek.fromInt(dayOfWeekIntForDate)
 		return daysOfWeek.contains(dayOfWeekForDate)
 	}
 
-	public func date(_ date: Date, isA dayOfWeek: DayOfWeek) -> Bool {
+	public func date(_ date: Date, isOnA dayOfWeek: DayOfWeek) -> Bool {
 		let calendar = Calendar.current
 		let dayOfWeekIntForDate = calendar.component(.weekday, from: date)
 		let dayOfWeekForDate = DayOfWeek.fromInt(dayOfWeekIntForDate)

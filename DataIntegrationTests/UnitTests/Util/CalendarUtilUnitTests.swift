@@ -7,18 +7,19 @@
 //
 
 import XCTest
+import SwiftDate
 @testable import DataIntegration
 
 class CalendarUtilUnitTests: UnitTest {
 
 	fileprivate var util: CalendarUtilImpl!
 
-    override func setUp() {
-        super.setUp()
-        util = CalendarUtilImpl()
-    }
+	override func setUp() {
+		super.setUp()
+		util = CalendarUtilImpl()
+	}
 
-    func testGivenYear_startOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
+	func testGivenYear_startOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
 		// given
 		let calendar = Calendar.autoupdatingCurrent
 		let date = Date()
@@ -204,7 +205,7 @@ class CalendarUtilUnitTests: UnitTest {
 		XCTAssert(zeroedDate == date)
 	}
 
-    func testGivenYear_endOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
+	func testGivenYear_endOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
 		// given
 		let calendar = Calendar.autoupdatingCurrent
 		let date = Date()
@@ -388,5 +389,338 @@ class CalendarUtilUnitTests: UnitTest {
 
 		// then
 		XCTAssert(zeroedDate == date)
+	}
+
+	func test_stringForDateInFormat_returnsCorrectlyFormattedDateString() {
+		// given
+		let date = Date(year: 2018, month: 1, day: 2, hour: 3, minute: 4, second: 5, nanosecond: 6, region: defaultRegion())
+		let format = "d 'of' MMMM',' YYYY 'at' H:mm:ss"
+
+		// when
+		let dateString = util.string(for: date, inFormat: format)
+
+		// then
+		XCTAssert(dateString == "2 of January, 2018 at 3:04:05")
+	}
+
+	func testGivenYearComponentAndTwoDatesInSameYear_dateOccursOnSameAs_returnsTrue() {
+		// given
+		let component: Calendar.Component = .year
+		let date1 = Date(year: 2018, month: 1, day: 2, hour: 3, minute: 4)
+		let date2 = Date(year: 2018, month: 4, day: 3, hour: 2, minute: 1)
+
+		// when
+		let result = util.date(date1, occursOnSame: component, as: date2)
+
+		// then
+		XCTAssert(result)
+	}
+
+	func testGivenYearComponentAndTwoDatesInDifferentYears_dateOccursOnSameAs_returnsFalse() {
+		// given
+		let component: Calendar.Component = .year
+		let date1 = Date(year: 2017, month: 1, day: 2, hour: 3, minute: 4)
+		let date2 = Date(year: 2018, month: 1, day: 2, hour: 3, minute: 4)
+
+		// when
+		let result = util.date(date1, occursOnSame: component, as: date2)
+
+		// then
+		XCTAssertFalse(result)
+	}
+
+	func testGivenMonthComponentAndTwoDatesInSameMonth_dateOccursOnSameAs_returnsTrue() {
+		// given
+		let component: Calendar.Component = .month
+		let date1 = Date(year: 2018, month: 1, day: 1, hour: 2, minute: 3, second: 7, nanosecond: 8, region: defaultRegion())
+		let date2 = Date(year: 2018, month: 1, day: 3, hour: 2, minute: 1, second: 7, nanosecond: 8, region: defaultRegion())
+
+		// when
+		let result = util.date(date1, occursOnSame: component, as: date2)
+
+		// then
+		XCTAssert(result)
+	}
+
+	func testGivenMonthComponentAndTwoDatesInDifferentMonths_dateOccursOnSameAs_returnsFalse() {
+		// given
+		let component: Calendar.Component = .month
+		let date1 = Date(year: 2018, month: 1, day: 2, hour: 3, minute: 4, second: 7, nanosecond: 8, region: defaultRegion())
+		let date2 = Date(year: 2018, month: 2, day: 2, hour: 3, minute: 4, second: 7, nanosecond: 8, region: defaultRegion())
+
+		// when
+		let result = util.date(date1, occursOnSame: component, as: date2)
+
+		// then
+		XCTAssertFalse(result)
+	}
+
+	func testGivenDayComponentAndTwoDatesInSameDay_dateOccursOnSameAs_returnsTrue() {
+		// given
+		let component: Calendar.Component = .day
+		let date1 = Date(year: 2018, month: 1, day: 1, hour: 2, minute: 3)
+		let date2 = Date(year: 2018, month: 1, day: 1, hour: 3, minute: 1)
+
+		// when
+		let result = util.date(date1, occursOnSame: component, as: date2)
+
+		// then
+		XCTAssert(result)
+	}
+
+	func testGivenDayComponentAndTwoDatesInDifferentDays_dateOccursOnSameAs_returnsFalse() {
+		// given
+		let component: Calendar.Component = .day
+		let date1 = Date(year: 2018, month: 1, day: 1, hour: 3, minute: 4)
+		let date2 = Date(year: 2018, month: 1, day: 2, hour: 3, minute: 4)
+
+		// when
+		let result = util.date(date1, occursOnSame: component, as: date2)
+
+		// then
+		XCTAssertFalse(result)
+	}
+
+	func testGivenHourComponentAndTwoDatesInSameHour_dateOccursOnSameAs_returnsTrue() {
+		// given
+		let component: Calendar.Component = .hour
+		let date1 = Date(year: 2018, month: 1, day: 1, hour: 2, minute: 3)
+		let date2 = Date(year: 2018, month: 1, day: 1, hour: 2, minute: 1)
+
+		// when
+		let result = util.date(date1, occursOnSame: component, as: date2)
+
+		// then
+		XCTAssert(result)
+	}
+
+	func testGivenHourComponentAndTwoDatesInDifferentHours_dateOccursOnSameAs_returnsFalse() {
+		// given
+		let component: Calendar.Component = .hour
+		let date1 = Date(year: 2018, month: 1, day: 2, hour: 3, minute: 5)
+		let date2 = Date(year: 2018, month: 1, day: 2, hour: 4, minute: 5)
+
+		// when
+		let result = util.date(date1, occursOnSame: component, as: date2)
+
+		// then
+		XCTAssertFalse(result)
+	}
+
+	func testGivenMinuteComponentAndTwoDatesInSameMinute_dateOccursOnSameAs_returnsTrue() {
+		// given
+		let component: Calendar.Component = .minute
+		let date1 = Date(year: 2018, month: 1, day: 1, hour: 2, minute: 3)
+		let date2 = Date(year: 2018, month: 1, day: 1, hour: 2, minute: 3)
+
+		// when
+		let result = util.date(date1, occursOnSame: component, as: date2)
+
+		// then
+		XCTAssert(result)
+	}
+
+	func testGivenMinuteComponentAndTwoDatesInDifferentMinutes_dateOccursOnSameAs_returnsFalse() {
+		// given
+		let component: Calendar.Component = .minute
+		let date1 = Date(year: 2018, month: 1, day: 2, hour: 3, minute: 4)
+		let date2 = Date(year: 2018, month: 1, day: 2, hour: 3, minute: 5)
+
+		// when
+		let result = util.date(date1, occursOnSame: component, as: date2)
+
+		// then
+		XCTAssertFalse(result)
+	}
+
+	func testGivenSecondComponentAndTwoDatesInSameSecond_dateOccursOnSameAs_returnsTrue() {
+		// given
+		let component: Calendar.Component = .second
+		let date1 = Date(year: 2018, month: 1, day: 1, hour: 2, minute: 3, second: 7, nanosecond: 8, region: defaultRegion())
+		let date2 = Date(year: 2018, month: 1, day: 1, hour: 2, minute: 3, second: 7, nanosecond: 9, region: defaultRegion())
+
+		// when
+		let result = util.date(date1, occursOnSame: component, as: date2)
+
+		// then
+		XCTAssert(result)
+	}
+
+	func testGivenSecondComponentAndTwoDatesInDifferentSeconds_dateOccursOnSameAs_returnsFalse() {
+		// given
+		let component: Calendar.Component = .second
+		let date1 = Date(year: 2018, month: 1, day: 2, hour: 3, minute: 4, second: 7, nanosecond: 8, region: defaultRegion())
+		let date2 = Date(year: 2018, month: 1, day: 2, hour: 3, minute: 5, second: 8, nanosecond: 8, region: defaultRegion())
+
+		// when
+		let result = util.date(date1, occursOnSame: component, as: date2)
+
+		// then
+		XCTAssertFalse(result)
+	}
+
+	func testGivenTwoNilDates_compare_returnsOrderedSame() {
+		// given
+		let firstDate: Date? = nil
+		let secondDate: Date? = nil
+
+		// when
+		let comparison = util.compare(firstDate, secondDate)
+
+		// then
+		XCTAssertEqual(comparison, .orderedSame)
+	}
+
+	func testGivenNilFirstDateAndRealSecondDate_compare_returnsOrderedDescending() {
+		// given
+		let firstDate: Date? = nil
+		let secondDate: Date? = Date()
+
+		// when
+		let comparison = util.compare(firstDate, secondDate)
+
+		// then
+		XCTAssertEqual(comparison, .orderedDescending)
+	}
+
+	func testGivenRealFirstDateAndNilSecondDate_compare_returnsOrderedAscending() {
+		// given
+		let firstDate: Date? = Date()
+		let secondDate: Date? = nil
+
+		// when
+		let comparison = util.compare(firstDate, secondDate)
+
+		// then
+		XCTAssertEqual(comparison, .orderedAscending)
+	}
+
+	func testGivenFirstDateEqualToSecondDate_compare_returnsOrderedSame() {
+		// given
+		let firstDate: Date? = Date()
+		let secondDate: Date? = firstDate
+
+		// when
+		let comparison = util.compare(firstDate, secondDate)
+
+		// then
+		XCTAssertEqual(comparison, .orderedSame)
+	}
+
+	func testGivenFirstDateLessThanSecondDate_compare_returnsOrderedAscending() {
+		// given
+		let firstDate: Date? = Date()
+		let secondDate: Date? = firstDate! + 1.days
+
+		// when
+		let comparison = util.compare(firstDate, secondDate)
+
+		// then
+		XCTAssertEqual(comparison, .orderedAscending)
+	}
+
+	func testGivenFirstDateGreaterThanSecondDate_compare_returnsOrderedDescending() {
+		// given
+		let firstDate: Date? = Date()
+		let secondDate: Date? = firstDate! - 1.days
+
+		// when
+		let comparison = util.compare(firstDate, secondDate)
+
+		// then
+		XCTAssertEqual(comparison, .orderedDescending)
+	}
+
+	func testGivenEveryDayOfWeekExceptOneForDate_dateIsOnOneOf_returnsFalse() {
+		// given
+		let dateDayOfWeek = DayOfWeek.Saturday
+		let date = Date().next(dateDayOfWeek)
+		let daysOfWeek = Set<DayOfWeek>([
+			DayOfWeek.Sunday,
+			DayOfWeek.Monday,
+			DayOfWeek.Tuesday,
+			DayOfWeek.Wednesday,
+			DayOfWeek.Thursday,
+			DayOfWeek.Friday,
+		])
+
+		// when
+		let onOneOf = util.date(date, isOnOneOf: daysOfWeek)
+
+		// then
+		XCTAssertFalse(onOneOf)
+	}
+
+	func testGivenEveryDayOfWeek_dateIsOnOneOf_returnsTrue() {
+		// given
+		let date = Date()
+		let daysOfWeek = Set<DayOfWeek>(DayOfWeek.allDays)
+
+		// when
+		let onOneOf = util.date(date, isOnOneOf: daysOfWeek)
+
+		// then
+		XCTAssert(onOneOf)
+	}
+
+	func testGivenOnlyDayOfWeekOnWhichDateOccurs_dateIsOnOneOf_returnsTrue() {
+		// given
+		let dateDayOfWeek = DayOfWeek.Saturday
+		let date = Date().next(dateDayOfWeek)
+		let daysOfWeek = Set<DayOfWeek>([dateDayOfWeek])
+
+		// when
+		let onOneOf = util.date(date, isOnOneOf: daysOfWeek)
+
+		// then
+		XCTAssert(onOneOf)
+	}
+
+	func testGivenDayOfWeekOnWhichDateOccurs_dateIsOnA_returnsTrue() {
+		// given
+		let dateDayOfWeek = DayOfWeek.Saturday
+		let date = Date().next(dateDayOfWeek)
+
+		// when
+		let onA = util.date(date, isOnA: dateDayOfWeek)
+
+		// then
+		XCTAssert(onA)
+	}
+
+	func testGivenDayOfWeekOnWhichDateDoesNotOccur_dateIsOnA_returnsFalse() {
+		// given
+		let dateDayOfWeek = DayOfWeek.Saturday
+		let date = Date().next(dateDayOfWeek)
+
+		// when
+		let onA = util.date(date, isOnA: DayOfWeek.Monday)
+
+		// then
+		XCTAssertFalse(onA)
+	}
+
+	func testGivenValidDateStringAndFormat_dateFromStringInFormat_returnsCorrectDate() {
+		// given
+		let year = 2018
+		let month = 10
+		let day = 12
+		let hour = 13
+		let minute = 32
+		let second = 18
+		let dateString = String(year) + " " + String(month) + " " + String(day) + " " + String(hour) + ":" + String(minute) + ":" + String(second)
+		let dateFormatString = "YYYY MM dd HH:mm:ss"
+		let expectedDate = Date(year: year, month: month, day: day, hour: hour, minute: minute, second: second, nanosecond: 0, region: defaultRegion())
+
+		// when
+		let actualDate = util.date(from: dateString, format: dateFormatString)
+
+		// then
+		XCTAssertEqual(actualDate, expectedDate)
+	}
+
+	fileprivate func defaultRegion() -> Region {
+		let calendar = Calendar.autoupdatingCurrent
+		return Region(calendar: calendar, zone: calendar.timeZone)
 	}
 }

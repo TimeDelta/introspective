@@ -708,7 +708,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 		return value.orFail("stub return value not specified for compare(_ date1: Date?, _ date2: Date?). Use given")
     }
 
-    func date<CollectionType: Collection>(_ date: Date, isOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek {
+    func date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek {
         addInvocation(.idate__dateisOneOf_daysOfWeek(Parameter<Date>.value(date), Parameter<CollectionType>.value(daysOfWeek).wrapAsGeneric()))
 		let perform = methodPerformValue(.idate__dateisOneOf_daysOfWeek(Parameter<Date>.value(date), Parameter<CollectionType>.value(daysOfWeek).wrapAsGeneric())) as? (Date, CollectionType) -> Void
 		perform?(date, daysOfWeek)
@@ -717,7 +717,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 		return value.orFail("stub return value not specified for date<CollectionType: Collection>(_ date: Date, isOneOf daysOfWeek: CollectionType). Use given")
     }
 
-    func date(_ date: Date, isA dayOfWeek: DayOfWeek) -> Bool {
+    func date(_ date: Date, isOnA dayOfWeek: DayOfWeek) -> Bool {
         addInvocation(.idate__dateisA_dayOfWeek(Parameter<Date>.value(date), Parameter<DayOfWeek>.value(dayOfWeek)))
 		let perform = methodPerformValue(.idate__dateisA_dayOfWeek(Parameter<Date>.value(date), Parameter<DayOfWeek>.value(dayOfWeek))) as? (Date, DayOfWeek) -> Void
 		perform?(date, dayOfWeek)
