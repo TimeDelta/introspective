@@ -17,8 +17,8 @@ public class Mood: NSManagedObject, CoreDataSample {
 
 	public static let maxRating = 7.0
 	public static let notRated = Double.nan
-	public static let moodRating = DoubleAttribute(name: "Mood Rating", pluralName: "Mood Ratings")
-	public static let note = TextAttribute(name: "Note", pluralName: "Notes")
+	public static let moodRating = DoubleAttribute(name: "Mood Rating", pluralName: "Mood Ratings", variableName: "rating")
+	public static let note = TextAttribute(name: "Note", pluralName: "Notes", variableName: "note")
 	public static let attributes: [Attribute] = [CommonSampleAttributes.timestamp, moodRating, note]
 
 	public let maxRating: Double = Me.maxRating

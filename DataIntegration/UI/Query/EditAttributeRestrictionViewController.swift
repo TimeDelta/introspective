@@ -57,6 +57,11 @@ public class EditAttributeRestrictionViewController: UIViewController {
 			if attributeRestriction is NumericAttributeRestriction {
 				currentRestriction = attributeRestriction
 			}
+		} else if selectedAttribute is TextAttribute {
+			applicableAttributeRestrictionTypes = AttributeRestrictionFactoryImpl.textTypes
+			if attributeRestriction is StringAttributeRestriction {
+				currentRestriction = attributeRestriction
+			}
 		}
 		let possibleValues = applicableAttributeRestrictionTypes.map { type in
 			return type.init(attribute: currentlySelectedAttribute())

@@ -16,6 +16,9 @@ public protocol AttributeRestrictionFactory {
 public class AttributeRestrictionFactoryImpl: AttributeRestrictionFactory {
 
 	public static let textTypes: [AttributeRestriction.Type] = [
+		StringContainsAttributeRestriction.self,
+		StringStartsWithAttributeRestriction.self,
+		StringEndsWithAttributeRestriction.self,
 	]
 
 	public static let numberTypes: [NumericAttributeRestriction.Type] = [

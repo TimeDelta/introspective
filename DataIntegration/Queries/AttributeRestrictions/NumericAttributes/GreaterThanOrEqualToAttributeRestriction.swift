@@ -44,6 +44,6 @@ public class GreaterThanOrEqualToAttributeRestriction: NumericAttributeRestricti
 	}
 
 	public func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "$@ >= $@", restrictedAttribute.variableName, String(value))
+		return NSPredicate(format: "%@ >= %@", restrictedAttribute.variableName, String(value))
 	}
 }

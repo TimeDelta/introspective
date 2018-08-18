@@ -10,10 +10,6 @@ import UIKit
 
 class RecordMoodTableViewCell: UITableViewCell {
 
-	fileprivate typealias Me = RecordMoodTableViewCell
-	fileprivate static let minRatingColor = UIColor.black
-	fileprivate static let maxRatingColor = UIColor.yellow
-
 	@IBOutlet weak var ratingSlider: UISlider!
 	@IBOutlet weak var outOfMaxRatingLabel: UILabel!
 	@IBOutlet weak var doneButon: UIButton!
@@ -28,28 +24,11 @@ class RecordMoodTableViewCell: UITableViewCell {
 	}
 
 	@IBAction func ratingChanged(_ sender: Any) {
-		var maxRed: CGFloat = 0
-		var maxGreen: CGFloat = 0
-		var maxBlue: CGFloat = 0
-		var maxAlpha: CGFloat = 0
-		Me.maxRatingColor.getRed(&maxRed, green: &maxGreen, blue: &maxBlue, alpha: &maxAlpha)
-
-		var minRed: CGFloat = 0
-		var minGreen: CGFloat = 0
-		var minBlue: CGFloat = 0
-		var minAlpha: CGFloat = 0
-		Me.minRatingColor.getRed(&minRed, green: &minGreen, blue: &minBlue, alpha: &minAlpha)
-
-		let valueRatio = CGFloat(ratingSlider.value)
-
-		ratingSlider.thumbTintColor = UIColor(
-			red: (maxRed - minRed) * valueRatio + minRed,
-			green: (maxGreen - minGreen) * valueRatio + minGreen,
-			blue: (maxBlue - minBlue) * valueRatio + minBlue,
-			alpha: (maxAlpha - minAlpha) * valueRatio + minAlpha)
-
 		let newValue = Double(ratingSlider.value) * Mood.maxRating
-		outOfMaxRatingLabel.text = valueToString(newValue) + " / " + valueToString(Mood.maxRating)
+
+		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: newValue)
+
+		outOfMaxRatingLabel.text = MoodUiUtil.valueToString(newValue) + " / " + MoodUiUtil.valueToString(Mood.maxRating)
 	}
 
 	@IBAction func doneButtonPressed(_ sender: Any) {
@@ -71,11 +50,5 @@ class RecordMoodTableViewCell: UITableViewCell {
 		addNoteButton.setTitle("Add Note", for: .normal)
 		ratingSlider.value = (ratingSlider.maximumValue - ratingSlider.minimumValue) / 2.0
 		ratingChanged(self)
-	}
-
-	fileprivate func valueToString(_ value: Double) -> String {
-		let numFormatter = NumberFormatter()
-		numFormatter.numberStyle = .decimal
-		return numFormatter.string(from: NSNumber(value: value))!
 	}
 }

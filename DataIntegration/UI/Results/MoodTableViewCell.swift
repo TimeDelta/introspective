@@ -10,22 +10,21 @@ import UIKit
 
 class MoodTableViewCell: UITableViewCell {
 
+	fileprivate typealias Me = MoodTableViewCell
+
 	public var mood: Mood! {
 		didSet {
 			guard let mood = mood else { return }
-			moodRatingLabel.text = valueToString(mood.rating) + " / " + valueToString(mood.maxRating)
+			moodRatingColorLabel.backgroundColor = MoodUiUtil.colorForMood(rating: mood.rating)
+			moodRatingColorLabel.text = nil
+			moodRatingLabel.text = MoodUiUtil.valueToString(mood.rating) + " / " + MoodUiUtil.valueToString(mood.maxRating)
 			timestampLabel.text = DependencyInjector.util.calendarUtil.string(for: mood.timestamp)
 			noteLabel.text = mood.note
 		}
 	}
 
+	@IBOutlet weak var moodRatingColorLabel: UILabel!
 	@IBOutlet weak var moodRatingLabel: UILabel!
 	@IBOutlet weak var timestampLabel: UILabel!
 	@IBOutlet weak var noteLabel: UILabel!
-
-	fileprivate func valueToString(_ value: Double) -> String {
-		let numFormatter = NumberFormatter()
-		numFormatter.numberStyle = .decimal
-		return numFormatter.string(from: NSNumber(value: value))!
-	}
 }

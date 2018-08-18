@@ -33,12 +33,17 @@ public class Database {
 				fatalError("Unresolved error \(error), \(error.userInfo)")
 			}
 		})
+		container.viewContext.automaticallyMergesChangesFromParent = true
 		return container
 	}()
 
+	fileprivate lazy var backgroundContext: NSManagedObjectContext = {
+		return self.persistentContainer.newBackgroundContext()
+	}()
+
 	public func new<Type: NSManagedObject>(objectType: Type.Type, entityName: String) throws -> Type {
-		let entity = NSEntityDescription.entity(forEntityName: entityName, in: persistentContainer.viewContext)!
-		guard let newObject = NSManagedObject(entity: entity, insertInto: persistentContainer.viewContext) as? Type else {
+		let entity = NSEntityDescription.entity(forEntityName: entityName, in: backgroundContext)!
+		guard let newObject = NSManagedObject(entity: entity, insertInto: backgroundContext) as? Type else {
 			os_log("Could not cast new object as $@", type: .error, String(describing: objectType))
 			throw DatabaseError.failedToInstantiateObject
 		}
@@ -50,15 +55,13 @@ public class Database {
 	}
 
 	public func save() {
-		if persistentContainer.viewContext.hasChanges {
-			persistentContainer.viewContext.performAndWait {
-				do {
-					try self.persistentContainer.viewContext.save()
-				} catch {
-					// TODO - Tell the user something went wrong while saving their data instead of crashing the app
-					let nserror = error as NSError
-					fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-				}
+		if backgroundContext.hasChanges {
+			do {
+				try backgroundContext.save()
+			} catch {
+				// TODO - Tell the user something went wrong while saving their data instead of crashing the app
+				let nserror = error as NSError
+				fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
 			}
 		}
 	}

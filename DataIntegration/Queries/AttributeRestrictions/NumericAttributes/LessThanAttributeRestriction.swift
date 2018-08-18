@@ -44,6 +44,6 @@ public class LessThanAttributeRestriction: NumericAttributeRestriction, Predicat
 	}
 
 	public func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "$@ < $@", restrictedAttribute.variableName, String(value))
+		return NSPredicate(format: "%K < %@", restrictedAttribute.variableName, String(value))
 	}
 }
