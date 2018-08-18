@@ -1,5 +1,5 @@
 //
-//  LessThanAttributeRestriction.swift
+//  EqualToNumericAttributeRestriction.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 7/31/18.
@@ -8,18 +8,18 @@
 
 import Foundation
 
-public class LessThanAttributeRestriction: NumericAttributeRestriction, PredicateAttributeRestriction {
+public class EqualToNumericAttributeRestriction: NumericAttributeRestriction, PredicateAttributeRestriction {
 
-	fileprivate typealias Me = LessThanAttributeRestriction
+	fileprivate typealias Me = EqualToNumericAttributeRestriction
 
 	public static let valueAttribute = DoubleAttribute(name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [
 		valueAttribute,
 	]
 
-	public override var name: String { return "<" }
+	public override var name: String { return "Equal to" }
 	public override var description: String {
-		return restrictedAttribute.name + " < " + String(value)
+		return restrictedAttribute.name + " = " + String(value)
 	}
 
 	public var value: Double
@@ -36,7 +36,7 @@ public class LessThanAttributeRestriction: NumericAttributeRestriction, Predicat
 
 	public override func set(attribute: Attribute, to value: Any) throws {
 		if attribute.name != Me.valueAttribute.name { throw AttributeError.unknownAttribute }
-		self.value = try getDoubleFrom(value: value) 
+		self.value = try getDoubleFrom(value: value)
 	}
 
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
@@ -44,6 +44,6 @@ public class LessThanAttributeRestriction: NumericAttributeRestriction, Predicat
 	}
 
 	public func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K < %@", restrictedAttribute.variableName, String(value))
+		return NSPredicate(format: "%@ == %@", restrictedAttribute.variableName, String(value))
 	}
 }

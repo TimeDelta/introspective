@@ -182,7 +182,7 @@ class QueryViewController: UITableViewController, UIPopoverPresentationControlle
 				case .attributeRestriction:
 					let lastDataType = bottomMostDataType()
 					let attribute = lastDataType.defaultDependentAttribute
-					let attributeRestriction = EqualToAttributeRestriction(attribute: attribute)
+					let attributeRestriction = EqualToNumericAttributeRestriction(attribute: attribute)
 					parts.append(attributeRestriction)
 					break
 			}

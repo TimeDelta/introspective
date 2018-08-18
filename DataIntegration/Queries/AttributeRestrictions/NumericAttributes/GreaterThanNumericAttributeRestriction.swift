@@ -1,5 +1,5 @@
 //
-//  EqualToAttributeRestriction.swift
+//  GreaterThanNumericAttributeRestriction.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 7/31/18.
@@ -8,18 +8,18 @@
 
 import Foundation
 
-public class EqualToAttributeRestriction: NumericAttributeRestriction, PredicateAttributeRestriction {
+public class GreaterThanNumericAttributeRestriction: NumericAttributeRestriction, PredicateAttributeRestriction {
 
-	fileprivate typealias Me = EqualToAttributeRestriction
+	fileprivate typealias Me = GreaterThanNumericAttributeRestriction
 
 	public static let valueAttribute = DoubleAttribute(name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [
 		valueAttribute,
 	]
 
-	public override var name: String { return "=" }
+	public override var name: String { return "Greater than" }
 	public override var description: String {
-		return restrictedAttribute.name + " = " + String(value)
+		return restrictedAttribute.name + " > " + String(value)
 	}
 
 	public var value: Double
@@ -40,10 +40,10 @@ public class EqualToAttributeRestriction: NumericAttributeRestriction, Predicate
 	}
 
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
-		return try getDoubleFrom(sample) < value
+		return try getDoubleFrom(sample) > value
 	}
 
 	public func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%@ == %@", restrictedAttribute.variableName, String(value))
+		return NSPredicate(format: "%@ > %@", restrictedAttribute.variableName, String(value))
 	}
 }

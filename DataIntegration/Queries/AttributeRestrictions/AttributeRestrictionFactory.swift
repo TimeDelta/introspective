@@ -22,11 +22,12 @@ public class AttributeRestrictionFactoryImpl: AttributeRestrictionFactory {
 	]
 
 	public static let numberTypes: [NumericAttributeRestriction.Type] = [
-		LessThanAttributeRestriction.self,
-		LessThanOrEqualToAttributeRestriction.self,
-		EqualToAttributeRestriction.self,
-		GreaterThanOrEqualToAttributeRestriction.self,
-		GreaterThanAttributeRestriction.self,
+		LessThanNumericAttributeRestriction.self,
+		LessThanOrEqualToNumericAttributeRestriction.self,
+		EqualToNumericAttributeRestriction.self,
+		GreaterThanOrEqualToNumericAttributeRestriction.self,
+		GreaterThanNumericAttributeRestriction.self,
+		NotEqualToNumericAttributeRestriction.self,
 	]
 
 	public static let dateTypes: [DateAttributeRestriction.Type] = [
