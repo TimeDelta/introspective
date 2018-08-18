@@ -48,6 +48,8 @@ class AttributedChooserViewController: UIViewController {
 	public override func reloadInputViews() {
 		super.reloadInputViews()
 		valuePicker.reloadAllComponents()
+		resetScrollView()
+		populateScrollView()
 	}
 
 	@objc func accepted() {

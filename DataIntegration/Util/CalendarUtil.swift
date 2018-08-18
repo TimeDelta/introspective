@@ -75,7 +75,7 @@ public class CalendarUtilImpl: CalendarUtil {
 
 	public func date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek {
 		let calendar = Calendar.current
-		let dayOfWeekIntForDate = calendar.component(.weekday, from: date)
+		let dayOfWeekIntForDate = calendar.component(.weekday, from: date) - 1
 		let dayOfWeekForDate = DayOfWeek.fromInt(dayOfWeekIntForDate)
 		return daysOfWeek.contains(dayOfWeekForDate)
 	}

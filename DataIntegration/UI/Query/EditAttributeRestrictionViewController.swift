@@ -67,7 +67,7 @@ public class EditAttributeRestrictionViewController: UIViewController {
 			return type.init(attribute: currentlySelectedAttribute())
 		}
 		attributedChooserViewController.possibleValues = possibleValues
-		attributedChooserViewController.currentValue = currentRestriction
+		attributedChooserViewController.currentValue = currentRestriction ?? possibleValues[0]
 		if attributedChooserSubView.subviews.count > 0 {
 			attributedChooserViewController.reloadInputViews()
 		}

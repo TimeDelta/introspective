@@ -633,8 +633,7 @@ class CalendarUtilUnitTests: UnitTest {
 
 	func testGivenEveryDayOfWeekExceptOneForDate_dateIsOnOneOf_returnsFalse() {
 		// given
-		let dateDayOfWeek = DayOfWeek.Saturday
-		let date = Date().next(dateDayOfWeek)
+		let date = DateInRegion().dateAt(.nextWeekday(.saturday))
 		let daysOfWeek = Set<DayOfWeek>([
 			DayOfWeek.Sunday,
 			DayOfWeek.Monday,
@@ -645,7 +644,7 @@ class CalendarUtilUnitTests: UnitTest {
 		])
 
 		// when
-		let onOneOf = util.date(date, isOnOneOf: daysOfWeek)
+		let onOneOf = util.date(date.date, isOnOneOf: daysOfWeek)
 
 		// then
 		XCTAssertFalse(onOneOf)
@@ -665,12 +664,11 @@ class CalendarUtilUnitTests: UnitTest {
 
 	func testGivenOnlyDayOfWeekOnWhichDateOccurs_dateIsOnOneOf_returnsTrue() {
 		// given
-		let dateDayOfWeek = DayOfWeek.Saturday
-		let date = Date().next(dateDayOfWeek)
-		let daysOfWeek = Set<DayOfWeek>([dateDayOfWeek])
+		let date = DateInRegion().dateAt(.nextWeekday(.saturday))
+		let daysOfWeek = Set<DayOfWeek>([DayOfWeek.Saturday])
 
 		// when
-		let onOneOf = util.date(date, isOnOneOf: daysOfWeek)
+		let onOneOf = util.date(date.date, isOnOneOf: daysOfWeek)
 
 		// then
 		XCTAssert(onOneOf)
