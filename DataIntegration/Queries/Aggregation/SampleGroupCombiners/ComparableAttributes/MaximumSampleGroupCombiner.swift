@@ -34,6 +34,7 @@ public class MaximumSampleGroupCombiner: SampleGroupCombiner {
 			} else if combinationAttribute is DateAttribute {
 				combinationValue = DependencyInjector.util.numericSampleUtil.max(for: combinationAttribute, over: samples) as Date
 			} else {
+				// TODO change this to throw a user-interpretable error
 				fatalError("Forgot a comparable attribute type: \(type(of: combinationAttribute))")
 			}
 			try! sample.set(attribute: combinationAttribute, to: combinationValue)
