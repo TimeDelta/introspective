@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class BeforeDateAndTimeAttributeRestriction: DateAttributeRestriction {
+public class BeforeDateAndTimeAttributeRestriction: DateAttributeRestriction, PredicateAttributeRestriction {
 
 	fileprivate typealias Me = BeforeDateAndTimeAttributeRestriction
 
@@ -48,5 +48,9 @@ public class BeforeDateAndTimeAttributeRestriction: DateAttributeRestriction {
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
 		guard let sampleDate = try sample.value(of: restrictedAttribute) as? Date else { throw SampleError.typeMismatch }
 		return sampleDate.isBeforeDate(date, granularity: .second)
+	}
+
+	public func toPredicate() -> NSPredicate {
+		return NSPredicate(format: "%K < %@", restrictedAttribute.variableName, date as NSDate)
 	}
 }

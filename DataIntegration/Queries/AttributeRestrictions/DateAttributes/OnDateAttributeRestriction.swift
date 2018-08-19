@@ -7,8 +7,9 @@
 //
 
 import Foundation
+import SwiftDate
 
-public class OnDateAttributeRestriction: DateAttributeRestriction {
+public class OnDateAttributeRestriction: DateAttributeRestriction, PredicateAttributeRestriction {
 
 	fileprivate typealias Me = OnDateAttributeRestriction
 
@@ -52,5 +53,10 @@ public class OnDateAttributeRestriction: DateAttributeRestriction {
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
 		guard let sampleDate = try sample.value(of: restrictedAttribute) as? Date else { throw SampleError.typeMismatch }
 		return DependencyInjector.util.calendarUtil.date(sampleDate, occursOnSame: .day, as: date)
+	}
+
+	public func toPredicate() -> NSPredicate {
+		let nextDay = Calendar.autoupdatingCurrent.date(byAdding: .day, value: 1, to: date)!
+		return NSPredicate(format: "%K > %@ AND %K < %@", restrictedAttribute.variableName, date as NSDate, restrictedAttribute.variableName, nextDay as NSDate)
 	}
 }

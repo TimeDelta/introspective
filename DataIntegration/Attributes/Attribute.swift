@@ -64,7 +64,16 @@ public class AttributeBase: Attribute {
 		self.name = name
 		self.pluralName = pluralName ?? name
 		self.extendedDescription = description
-		self.variableName = variableName ?? name
+		if variableName == nil {
+			let words = name.split(separator: " ")
+			var defaultValue: String = String(words[0])
+			for word in words[1...] {
+				defaultValue += String(word).localizedCapitalized
+			}
+			self.variableName = defaultValue
+		} else {
+			self.variableName = variableName!
+		}
 	}
 
 	public func isValid(value: String) -> Bool { fatalError("Must override") }

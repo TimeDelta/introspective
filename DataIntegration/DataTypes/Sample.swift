@@ -67,7 +67,7 @@ extension Sample {
 
 public class CommonSampleAttributes {
 
-	public static let timestamp = DateTimeAttribute(name: "Timestamp", pluralName: "Timestamps")
-	public static let startDate = DateTimeAttribute(name: "Start date", pluralName: "Start dates")
-	public static let endDate = DateTimeAttribute(name: "End date", pluralName: "End dates")
+	public static let timestamp = DateTimeAttribute(name: "Timestamp", pluralName: "Timestamps", variableName: "timestamp")
+	public static let startDate = DateTimeAttribute(name: "Start date", pluralName: "Start dates", variableName: "startDate")
+	public static let endDate = DateTimeAttribute(name: "End date", pluralName: "End dates", variableName: "endDate")
 }

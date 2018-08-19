@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class AfterDateAndTimeAttributeRestriction: DateAttributeRestriction {
+public class AfterDateAndTimeAttributeRestriction: DateAttributeRestriction, PredicateAttributeRestriction {
 
 	fileprivate typealias Me = AfterDateAndTimeAttributeRestriction
 
@@ -48,5 +48,9 @@ public class AfterDateAndTimeAttributeRestriction: DateAttributeRestriction {
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
 		guard let sampleDate = try sample.value(of: restrictedAttribute) as? Date else { throw SampleError.typeMismatch }
 		return sampleDate.isAfterDate(date, granularity: .second)
+	}
+
+	public func toPredicate() -> NSPredicate {
+		return NSPredicate(format: "%K > %@", restrictedAttribute.variableName, date as NSDate)
 	}
 }
