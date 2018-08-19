@@ -1,5 +1,5 @@
 //
-//  StringContainsAttributeRestriction.swift
+//  ContainsStringAttributeRestriction.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 8/18/18.
@@ -8,9 +8,9 @@
 
 import Foundation
 
-public class StringContainsAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, PredicateAttributeRestriction {
+public class ContainsStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, PredicateAttributeRestriction {
 
-	fileprivate typealias Me = StringContainsAttributeRestriction
+	fileprivate typealias Me = ContainsStringAttributeRestriction
 
 	public static let substringAttribute = TextAttribute(name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [

@@ -1,5 +1,5 @@
 //
-//  StringEndsWithAttributeRestriction.swift
+//  EndsWithStringAttributeRestriction.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 8/18/18.
@@ -8,9 +8,9 @@
 
 import Foundation
 
-public class StringEndsWithAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, PredicateAttributeRestriction {
+public class EndsWithStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, PredicateAttributeRestriction {
 
-	fileprivate typealias Me = StringEndsWithAttributeRestriction
+	fileprivate typealias Me = EndsWithStringAttributeRestriction
 
 	public static let suffixAttribute = TextAttribute(name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [
@@ -42,7 +42,7 @@ public class StringEndsWithAttributeRestriction: AnyAttributeRestriction, String
 
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
 		let value = try sample.value(of: restrictedAttribute) as! String
-		return value.starts(with: suffix)
+		return value.hasSuffix(suffix)
 	}
 
 	public func toPredicate() -> NSPredicate {

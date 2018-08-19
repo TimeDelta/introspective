@@ -50,6 +50,13 @@ class UnitTest: XCTestCase {
 		return sample
 	}
 
+	/// Create a single sample with the specified value for the given attribute
+	func createSample(withValue value: Any, for attribute: Attribute) -> AnySample {
+		let sample = createSample(withAttributes: [attribute])
+		try! sample.set(attribute: attribute, to: value)
+		return sample
+	}
+
 	/// Create `count` mock samples
 	func createSamples(count: Int) -> [AnySample] {
 		var samples = [AnySample]()
@@ -63,9 +70,7 @@ class UnitTest: XCTestCase {
 	func createSamples(withValues values: [Any], for attribute: Attribute) -> [AnySample] {
 		var samples = [AnySample]()
 		for value in values {
-			let sample = createSample(withAttributes: [attribute])
-			try! sample.set(attribute: attribute, to: value)
-			samples.append(sample)
+			samples.append(createSample(withValue: value, for: attribute))
 		}
 		return samples
 	}

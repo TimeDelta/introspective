@@ -1,5 +1,5 @@
 //
-//  StringStartsWithAttributeRestriction.swift
+//  StartsWithStringAttributeRestriction.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 8/18/18.
@@ -8,9 +8,9 @@
 
 import Foundation
 
-public class StringStartsWithAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, PredicateAttributeRestriction {
+public class StartsWithStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, PredicateAttributeRestriction {
 
-	fileprivate typealias Me = StringStartsWithAttributeRestriction
+	fileprivate typealias Me = StartsWithStringAttributeRestriction
 
 	public static let prefixAttribute = TextAttribute(name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [
