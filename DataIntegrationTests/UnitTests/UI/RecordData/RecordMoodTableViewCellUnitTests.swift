@@ -24,13 +24,14 @@ class RecordMoodTableViewCellUnitTests: UnitTest {
 		cell = RecordMoodTableViewCell()
 		cell.ratingSlider = UISlider(frame: frame)
 		cell.addNoteButton = UIButton(type: .system)
+		cell.doneButon = UIButton(type: .system)
 		cell.outOfMaxRatingLabel = UILabel(frame: frame)
 
 		mockMood = MoodMock()
 		Given(mockDataTypeFactory, .mood(willReturn: mockMood))
 	}
 
-	func testNoteGetsClearedAfterSaving() {
+	func testNoteGetsClearedOnSave() {
 		// given
 		cell.note = "this note is not nil"
 
@@ -39,5 +40,37 @@ class RecordMoodTableViewCellUnitTests: UnitTest {
 
 		// then
 		XCTAssert(cell.note == nil)
+	}
+
+	func testNoteGetsSetOnMoodOnSave() {
+		// given
+		let expectedNote = "this is a note"
+		cell.note = expectedNote
+
+		// when
+		cell.doneButtonPressed(self)
+
+		// then
+		XCTAssert(mockMood.note == expectedNote)
+	}
+
+	func testDatabaseSaveIsCalledOnSave() {
+		// when
+		cell.doneButtonPressed(self)
+
+		// then
+		Verify(mockDatabase, .save())
+	}
+
+	func testAddNoteButtonTitleSetToAddNoteOnSave() {
+		// given
+		let expectedTitle = "Add Note"
+		cell.addNoteButton.setTitle(expectedTitle + "some other stuff", for: .normal)
+
+		// when
+		cell.doneButtonPressed(self)
+
+		// then
+		XCTAssert(cell.addNoteButton.title(for: .normal) == expectedTitle)
 	}
 }
