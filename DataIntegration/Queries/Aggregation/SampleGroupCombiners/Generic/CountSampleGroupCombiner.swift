@@ -19,6 +19,7 @@ public class CountSampleGroupCombiner: SampleGroupCombiner {
 
 	public required init() {}
 
+	/// - Parameter groups: Must not pass empty sample array for a group
 	public func combine(groups: [(Any, [Sample])], groupedBy groupAttribute: Attribute, combinationAttribute: Attribute) -> [Sample] {
 		var combinedSamples = [Sample]()
 		for (groupValue, samples) in groups {
