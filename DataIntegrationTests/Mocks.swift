@@ -564,35 +564,20 @@ class AttributeRestrictionUtilMock: AttributeRestrictionUtil, Mock {
 		return value.orFail("stub return value not specified for getMostRestrictiveStartAndEndDates(from attributeRestrictions: [AttributeRestriction]). Use given")
     }
 
-    func getDaysOfWeekFrom(attributeRestrictions: [AttributeRestriction]) -> Set<DayOfWeek> {
-        addInvocation(.igetDaysOfWeekFrom__attributeRestrictions_attributeRestrictions(Parameter<[AttributeRestriction]>.value(attributeRestrictions)))
-		let perform = methodPerformValue(.igetDaysOfWeekFrom__attributeRestrictions_attributeRestrictions(Parameter<[AttributeRestriction]>.value(attributeRestrictions))) as? ([AttributeRestriction]) -> Void
-		perform?(attributeRestrictions)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.igetDaysOfWeekFrom__attributeRestrictions_attributeRestrictions(Parameter<[AttributeRestriction]>.value(attributeRestrictions)))
-		let value = givenValue.value as? Set<DayOfWeek>
-		return value.orFail("stub return value not specified for getDaysOfWeekFrom(attributeRestrictions: [AttributeRestriction]). Use given")
-    }
-
     fileprivate enum MethodType {
         case igetMostRestrictiveStartAndEndDates__from_attributeRestrictions(Parameter<[AttributeRestriction]>)
-        case igetDaysOfWeekFrom__attributeRestrictions_attributeRestrictions(Parameter<[AttributeRestriction]>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
                 case (.igetMostRestrictiveStartAndEndDates__from_attributeRestrictions(let lhsAttributerestrictions), .igetMostRestrictiveStartAndEndDates__from_attributeRestrictions(let rhsAttributerestrictions)):
                     guard Parameter.compare(lhs: lhsAttributerestrictions, rhs: rhsAttributerestrictions, with: matcher) else { return false } 
                     return true 
-                case (.igetDaysOfWeekFrom__attributeRestrictions_attributeRestrictions(let lhsAttributerestrictions), .igetDaysOfWeekFrom__attributeRestrictions_attributeRestrictions(let rhsAttributerestrictions)):
-                    guard Parameter.compare(lhs: lhsAttributerestrictions, rhs: rhsAttributerestrictions, with: matcher) else { return false } 
-                    return true 
-                default: return false
             }
         }
 
         func intValue() -> Int {
             switch self {
                 case let .igetMostRestrictiveStartAndEndDates__from_attributeRestrictions(p0): return p0.intValue
-                case let .igetDaysOfWeekFrom__attributeRestrictions_attributeRestrictions(p0): return p0.intValue
             }
         }
     }
@@ -611,9 +596,6 @@ class AttributeRestrictionUtilMock: AttributeRestrictionUtil, Mock {
         static func getMostRestrictiveStartAndEndDates(from attributeRestrictions: Parameter<[AttributeRestriction]>, willReturn: (start: Date?, end: Date?)) -> Given {
             return Given(method: .igetMostRestrictiveStartAndEndDates__from_attributeRestrictions(attributeRestrictions), returns: willReturn, throws: nil)
         }
-        static func getDaysOfWeekFrom(attributeRestrictions: Parameter<[AttributeRestriction]>, willReturn: Set<DayOfWeek>) -> Given {
-            return Given(method: .igetDaysOfWeekFrom__attributeRestrictions_attributeRestrictions(attributeRestrictions), returns: willReturn, throws: nil)
-        }
     }
 
     struct Verify {
@@ -621,9 +603,6 @@ class AttributeRestrictionUtilMock: AttributeRestrictionUtil, Mock {
 
         static func getMostRestrictiveStartAndEndDates(from attributeRestrictions: Parameter<[AttributeRestriction]>) -> Verify {
             return Verify(method: .igetMostRestrictiveStartAndEndDates__from_attributeRestrictions(attributeRestrictions))
-        }
-        static func getDaysOfWeekFrom(attributeRestrictions: Parameter<[AttributeRestriction]>) -> Verify {
-            return Verify(method: .igetDaysOfWeekFrom__attributeRestrictions_attributeRestrictions(attributeRestrictions))
         }
     }
 
@@ -633,9 +612,6 @@ class AttributeRestrictionUtilMock: AttributeRestrictionUtil, Mock {
 
         static func getMostRestrictiveStartAndEndDates(from attributeRestrictions: Parameter<[AttributeRestriction]>, perform: ([AttributeRestriction]) -> Void) -> Perform {
             return Perform(method: .igetMostRestrictiveStartAndEndDates__from_attributeRestrictions(attributeRestrictions), performs: perform)
-        }
-        static func getDaysOfWeekFrom(attributeRestrictions: Parameter<[AttributeRestriction]>, perform: ([AttributeRestriction]) -> Void) -> Perform {
-            return Perform(method: .igetDaysOfWeekFrom__attributeRestrictions_attributeRestrictions(attributeRestrictions), performs: perform)
         }
     }
 

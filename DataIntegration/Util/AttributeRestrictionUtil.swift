@@ -12,7 +12,6 @@ import os
 //sourcery: AutoMockable
 public protocol AttributeRestrictionUtil {
 	func getMostRestrictiveStartAndEndDates(from attributeRestrictions: [AttributeRestriction]) -> (start: Date?, end: Date?)
-	func getDaysOfWeekFrom(attributeRestrictions: [AttributeRestriction]) -> Set<DayOfWeek>
 }
 
 public class AttributeRestrictionUtilImpl: AttributeRestrictionUtil {
@@ -48,17 +47,6 @@ public class AttributeRestrictionUtilImpl: AttributeRestrictionUtil {
 			}
 		}
 		return (start: latestStartDate, end: earliestEndDate)
-	}
-
-	public func getDaysOfWeekFrom(attributeRestrictions: [AttributeRestriction]) -> Set<DayOfWeek> {
-		var daysOfWeek = Set<DayOfWeek>()
-		for attributeRestriction in attributeRestrictions {
-			if attributeRestriction is OnDayOfWeekAttributeRestriction {
-				let restriction = attributeRestriction as! OnDayOfWeekAttributeRestriction
-				daysOfWeek = daysOfWeek.union(restriction.daysOfWeek)
-			}
-		}
-		return daysOfWeek
 	}
 
 	fileprivate func isStartDateRestriction(_ restriction: AttributeRestriction) -> Bool {
