@@ -67,20 +67,12 @@ public class SampleUtilImpl: SampleUtil {
 	public func sample(_ sample: Sample, occursOnOneOf daysOfWeek: Set<DayOfWeek>) -> Bool {
 		if !daysOfWeek.isEmpty {
 			let startDate = sample.dates()[.start]!
-			let calendar = Calendar.current
-			let startSampleDayOfWeek = calendar.component(.weekday, from: startDate)
-
-			var endSampleDayOfWeek: Int?
-			if sample.dates()[.end] != nil {
-				endSampleDayOfWeek = calendar.component(.weekday, from: sample.dates()[.end]!)
+			if DependencyInjector.util.calendarUtil.date(startDate, isOnOneOf: daysOfWeek) {
+				return true
 			}
-			for dayOfWeek in daysOfWeek {
-				if startSampleDayOfWeek == dayOfWeek.intValue {
-					return true
-				}
-				if endSampleDayOfWeek != nil && endSampleDayOfWeek! == dayOfWeek.intValue {
-					return true
-				}
+			let endDate = sample.dates()[.end]
+			if endDate != nil && DependencyInjector.util.calendarUtil.date(endDate!, isOnOneOf: daysOfWeek) {
+				return true
 			}
 			return false
 		}
