@@ -11,10 +11,10 @@ import Foundation
 import CoreData
 
 
-extension Mood {
+extension MoodImpl {
 
-	@nonobjc public class func fetchRequest() -> NSFetchRequest<Mood> {
-		return NSFetchRequest<Mood>(entityName: "Mood")
+	@nonobjc public class func fetchRequest() -> NSFetchRequest<MoodImpl> {
+		return NSFetchRequest<MoodImpl>(entityName: "Mood")
 	}
 
 	@NSManaged public var rating: Double

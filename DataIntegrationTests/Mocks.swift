@@ -11,6 +11,7 @@
 #if MockyCustom
 import SwiftyMocky
 import HealthKit
+import CoreData
 @testable import DataIntegration
 
     public final class MockyAssertion {
@@ -29,12 +30,14 @@ import HealthKit
 import SwiftyMocky
 import XCTest
 import HealthKit
+import CoreData
 @testable import DataIntegration
 
     func MockyAssert(_ expression: @autoclosure () -> Bool, _ message: @autoclosure () -> String = "Verification failed", file: StaticString = #file, line: UInt = #line) {
         XCTAssert(expression(), message(), file: file, line: line)
     }
 #endif
+
 
 // MARK: - Attribute
 class AttributeMock: Attribute, Mock {
@@ -50,6 +53,7 @@ class AttributeMock: Attribute, Mock {
 				__name = newValue }
 	}
 	private var __name: (String)?
+
     var pluralName: String { 
 		get {	invocations.append(.pluralName_get)
 				return __pluralName.orFail("AttributeMock - value for pluralName was not defined") }
@@ -57,6 +61,7 @@ class AttributeMock: Attribute, Mock {
 				__pluralName = newValue }
 	}
 	private var __pluralName: (String)?
+
     var variableName: String { 
 		get {	invocations.append(.variableName_get)
 				return __variableName.orFail("AttributeMock - value for variableName was not defined") }
@@ -64,6 +69,7 @@ class AttributeMock: Attribute, Mock {
 				__variableName = newValue }
 	}
 	private var __variableName: (String)?
+
     var extendedDescription: String? { 
 		get {	invocations.append(.extendedDescription_get)
 				return __extendedDescription }
@@ -71,6 +77,7 @@ class AttributeMock: Attribute, Mock {
 				__extendedDescription = newValue }
 	}
 	private var __extendedDescription: (String)?
+
 
     struct Property {
         fileprivate var method: MethodType
@@ -83,6 +90,7 @@ class AttributeMock: Attribute, Mock {
         static var extendedDescription: Property { return Property(method: .extendedDescription_get) }
 		static func extendedDescription(set newValue: Parameter<String?>) -> Property { return Property(method: .extendedDescription_set(newValue)) }
     }
+
 
 
     required init(name: String, pluralName: String?, description: String?, variableName: String?) { }
@@ -354,6 +362,7 @@ class AttributeFactoryMock: AttributeFactory, Mock {
 
 
 
+
     fileprivate struct MethodType {
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool { return true }
         func intValue() -> Int { return 0 }
@@ -431,6 +440,7 @@ class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
 
 
     typealias Property = Swift.Never
+
 
 
     func initialize(type: AttributeRestriction.Type, forAttribute attribute: Attribute) -> AttributeRestriction {
@@ -542,6 +552,7 @@ class AttributeRestrictionUtilMock: AttributeRestrictionUtil, Mock {
 
 
     typealias Property = Swift.Never
+
 
 
     func getMostRestrictiveStartAndEndDates(from attributeRestrictions: [AttributeRestriction]) -> (start: Date?, end: Date?) {
@@ -676,6 +687,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 
 
     typealias Property = Swift.Never
+
 
 
     func start(of component: Calendar.Component, in date: Date) -> Date {
@@ -959,6 +971,7 @@ class DataTypeFactoryMock: DataTypeFactory, Mock {
     typealias Property = Swift.Never
 
 
+
     func activity() -> Activity {
         addInvocation(.iactivity)
 		let perform = methodPerformValue(.iactivity) as? () -> Void
@@ -1149,6 +1162,183 @@ class DataTypeFactoryMock: DataTypeFactory, Mock {
     }
 }
 
+// MARK: - Database
+class DatabaseMock: Database, Mock {
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    var matcher: Matcher = Matcher.default
+
+
+    typealias Property = Swift.Never
+
+
+
+    func new<Type: NSManagedObject>(objectType: Type.Type, entityName: String) throws -> Type {
+        addInvocation(.inew__objectType_objectTypeentityName_entityName(Parameter<Type.Type>.value(objectType).wrapAsGeneric(), Parameter<String>.value(entityName)))
+		let perform = methodPerformValue(.inew__objectType_objectTypeentityName_entityName(Parameter<Type.Type>.value(objectType).wrapAsGeneric(), Parameter<String>.value(entityName))) as? (Type.Type, String) -> Void
+		perform?(objectType, entityName)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.inew__objectType_objectTypeentityName_entityName(Parameter<Type.Type>.value(objectType).wrapAsGeneric(), Parameter<String>.value(entityName)))
+		if let error = givenValue.error { throw error }
+		let value = givenValue.value as? Type
+		return value.orFail("stub return value not specified for new<Type: NSManagedObject>(objectType: Type.Type, entityName: String). Use given")
+    }
+
+    func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type] {
+        addInvocation(.iquery__fetchRequest(Parameter<NSFetchRequest<Type>>.value(fetchRequest).wrapAsGeneric()))
+		let perform = methodPerformValue(.iquery__fetchRequest(Parameter<NSFetchRequest<Type>>.value(fetchRequest).wrapAsGeneric())) as? (NSFetchRequest<Type>) -> Void
+		perform?(fetchRequest)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iquery__fetchRequest(Parameter<NSFetchRequest<Type>>.value(fetchRequest).wrapAsGeneric()))
+		if let error = givenValue.error { throw error }
+		let value = givenValue.value as? [Type]
+		return value.orFail("stub return value not specified for query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>). Use given")
+    }
+
+    func save() {
+        addInvocation(.isave)
+		let perform = methodPerformValue(.isave) as? () -> Void
+		perform?()
+    }
+
+    func delete(_ object: NSManagedObject) {
+        addInvocation(.idelete__object(Parameter<NSManagedObject>.value(object)))
+		let perform = methodPerformValue(.idelete__object(Parameter<NSManagedObject>.value(object))) as? (NSManagedObject) -> Void
+		perform?(object)
+    }
+
+    fileprivate enum MethodType {
+        case inew__objectType_objectTypeentityName_entityName(Parameter<GenericAttribute>, Parameter<String>)
+        case iquery__fetchRequest(Parameter<GenericAttribute>)
+        case isave
+        case idelete__object(Parameter<NSManagedObject>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+                case (.inew__objectType_objectTypeentityName_entityName(let lhsObjecttype, let lhsEntityname), .inew__objectType_objectTypeentityName_entityName(let rhsObjecttype, let rhsEntityname)):
+                    guard Parameter.compare(lhs: lhsObjecttype, rhs: rhsObjecttype, with: matcher) else { return false } 
+                    guard Parameter.compare(lhs: lhsEntityname, rhs: rhsEntityname, with: matcher) else { return false } 
+                    return true 
+                case (.iquery__fetchRequest(let lhsFetchrequest), .iquery__fetchRequest(let rhsFetchrequest)):
+                    guard Parameter.compare(lhs: lhsFetchrequest, rhs: rhsFetchrequest, with: matcher) else { return false } 
+                    return true 
+                case (.isave, .isave):
+                    return true 
+                case (.idelete__object(let lhsObject), .idelete__object(let rhsObject)):
+                    guard Parameter.compare(lhs: lhsObject, rhs: rhsObject, with: matcher) else { return false } 
+                    return true 
+                default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+                case let .inew__objectType_objectTypeentityName_entityName(p0, p1): return p0.intValue + p1.intValue
+                case let .iquery__fetchRequest(p0): return p0.intValue
+                case .isave: return 0
+                case let .idelete__object(p0): return p0.intValue
+            }
+        }
+    }
+
+    struct Given {
+        fileprivate var method: MethodType
+        var returns: Any?
+        var `throws`: Error?
+
+        private init(method: MethodType, returns: Any?, throws: Error?) {
+            self.method = method
+            self.returns = returns
+            self.`throws` = `throws`
+        }
+
+        static func new<Type: NSManagedObject>(objectType: Parameter<Type.Type>, entityName: Parameter<String>, willReturn: Type) -> Given {
+            return Given(method: .inew__objectType_objectTypeentityName_entityName(objectType.wrapAsGeneric(), entityName), returns: willReturn, throws: nil)
+        }
+        static func query<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: [Type]) -> Given {
+            return Given(method: .iquery__fetchRequest(fetchRequest.wrapAsGeneric()), returns: willReturn, throws: nil)
+        }
+        static func new<Type: NSManagedObject>(objectType: Parameter<Type.Type>, entityName: Parameter<String>, willThrow: Error) -> Given {
+            return Given(method: .inew__objectType_objectTypeentityName_entityName(objectType.wrapAsGeneric(), entityName), returns: nil, throws: willThrow)
+        }
+        static func query<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willThrow: Error) -> Given {
+            return Given(method: .iquery__fetchRequest(fetchRequest.wrapAsGeneric()), returns: nil, throws: willThrow)
+        }
+    }
+
+    struct Verify {
+        fileprivate var method: MethodType
+
+        static func new<Type>(objectType: Parameter<Type.Type>, entityName: Parameter<String>) -> Verify {
+            return Verify(method: .inew__objectType_objectTypeentityName_entityName(objectType.wrapAsGeneric(), entityName))
+        }
+        static func query<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify {
+            return Verify(method: .iquery__fetchRequest(fetchRequest.wrapAsGeneric()))
+        }
+        static func save() -> Verify {
+            return Verify(method: .isave)
+        }
+        static func delete(object: Parameter<NSManagedObject>) -> Verify {
+            return Verify(method: .idelete__object(object))
+        }
+    }
+
+    struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        static func new<Type>(objectType: Parameter<Type.Type>, entityName: Parameter<String>, perform: (Type.Type, String) -> Void) -> Perform {
+            return Perform(method: .inew__objectType_objectTypeentityName_entityName(objectType.wrapAsGeneric(), entityName), performs: perform)
+        }
+        static func query<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>, perform: (NSFetchRequest<Type>) -> Void) -> Perform {
+            return Perform(method: .iquery__fetchRequest(fetchRequest.wrapAsGeneric()), performs: perform)
+        }
+        static func save(perform: () -> Void) -> Perform {
+            return Perform(method: .isave, performs: perform)
+        }
+        static func delete(object: Parameter<NSManagedObject>, perform: (NSManagedObject) -> Void) -> Perform {
+            return Perform(method: .idelete__object(object), performs: perform)
+        }
+    }
+
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+        methodReturnValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+    public func verify(property: Property, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) { }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+
+    private func methodReturnValue(_ method: MethodType) -> (value: Any?, error: Error?) {
+        let matched = methodReturnValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher)  }
+        return (value: matched?.returns, error: matched?.`throws`)
+    }
+
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+}
+
 // MARK: - InjectionProvider
 class InjectionProviderMock: InjectionProvider, Mock {
     private var invocations: [MethodType] = []
@@ -1158,6 +1348,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
 
 
     typealias Property = Swift.Never
+
 
 
     func database() -> Database {
@@ -1490,6 +1681,7 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
     typealias Property = Swift.Never
 
 
+
     func average(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Double)] {
         addInvocation(.iaverage__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(attribute), Parameter<[Sample]>.value(samples), Parameter<Calendar.Component?>.value(aggregationUnit)))
 		let perform = methodPerformValue(.iaverage__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(attribute), Parameter<[Sample]>.value(samples), Parameter<Calendar.Component?>.value(aggregationUnit))) as? (Attribute, [Sample], Calendar.Component?) -> Void
@@ -1802,11 +1994,13 @@ class QuerierFactoryMock: QuerierFactory, Mock {
 	}
 	private var __heartRateQuerier: (HeartRateQuerier)?
 
+
     struct Property {
         fileprivate var method: MethodType
         static var heartRateQuerier: Property { return Property(method: .heartRateQuerier_get) }
 		static func heartRateQuerier(set newValue: Parameter<HeartRateQuerier>) -> Property { return Property(method: .heartRateQuerier_set(newValue)) }
     }
+
 
 
     fileprivate enum MethodType {
@@ -1910,6 +2104,7 @@ class QueryMock: Query, Mock {
 				__attributeRestrictions = newValue }
 	}
 	private var __attributeRestrictions: ([AttributeRestriction])?
+
     var mostRecentEntryOnly: Bool { 
 		get {	invocations.append(.mostRecentEntryOnly_get)
 				return __mostRecentEntryOnly.orFail("QueryMock - value for mostRecentEntryOnly was not defined") }
@@ -1917,6 +2112,7 @@ class QueryMock: Query, Mock {
 				__mostRecentEntryOnly = newValue }
 	}
 	private var __mostRecentEntryOnly: (Bool)?
+
     var numberOfDatesPerSample: Int { 
 		get {	invocations.append(.numberOfDatesPerSample_get)
 				return __numberOfDatesPerSample.orFail("QueryMock - value for numberOfDatesPerSample was not defined") }
@@ -1924,6 +2120,7 @@ class QueryMock: Query, Mock {
 				__numberOfDatesPerSample = newValue }
 	}
 	private var __numberOfDatesPerSample: (Int)?
+
     var subQuery: (matcher: SubQueryMatcher, query: Query)? { 
 		get {	invocations.append(.subQuery_get)
 				return __subQuery }
@@ -1931,6 +2128,7 @@ class QueryMock: Query, Mock {
 				__subQuery = newValue }
 	}
 	private var __subQuery: ((matcher: SubQueryMatcher, query: Query))?
+
 
     struct Property {
         fileprivate var method: MethodType
@@ -1943,6 +2141,7 @@ class QueryMock: Query, Mock {
         static var subQuery: Property { return Property(method: .subQuery_get) }
 		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Property { return Property(method: .subQuery_set(newValue)) }
     }
+
 
 
     func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
@@ -2076,6 +2275,7 @@ class QueryFactoryMock: QueryFactory, Mock {
 
 
     typealias Property = Swift.Never
+
 
 
     func heartRateQuery() -> HeartRateQuery {
@@ -2215,6 +2415,7 @@ class SampleGroupCombinerFactoryMock: SampleGroupCombinerFactory, Mock {
     typealias Property = Swift.Never
 
 
+
     func typesFor(attribute: Attribute) -> [SampleGroupCombiner.Type] {
         addInvocation(.itypesFor__attribute_attribute(Parameter<Attribute>.value(attribute)))
 		let perform = methodPerformValue(.itypesFor__attribute_attribute(Parameter<Attribute>.value(attribute))) as? (Attribute) -> Void
@@ -2347,6 +2548,7 @@ class SampleUtilMock: SampleUtil, Mock {
 
 
     typealias Property = Swift.Never
+
 
 
     func getOnly(samples: [Sample], from startDate: Date?, to endDate: Date?) -> [Sample] {
@@ -2782,6 +2984,7 @@ class SearchUtilMock: SearchUtil, Mock {
     typealias Property = Swift.Never
 
 
+
     func binarySearch<T:Comparable>(for targetItem: T, in items: Array<T>) -> Int? {
         addInvocation(.ibinarySearch__for_targetItemin_items(Parameter<T>.value(targetItem).wrapAsGeneric(), Parameter<Array<T>>.value(items).wrapAsGeneric()))
 		let perform = methodPerformValue(.ibinarySearch__for_targetItemin_items(Parameter<T>.value(targetItem).wrapAsGeneric(), Parameter<Array<T>>.value(items).wrapAsGeneric())) as? (T, Array<T>) -> Void
@@ -2944,6 +3147,7 @@ class StringUtilMock: StringUtil, Mock {
     typealias Property = Swift.Never
 
 
+
     func isNumber(_ str: String) -> Bool {
         addInvocation(.iisNumber__str(Parameter<String>.value(str)))
 		let perform = methodPerformValue(.iisNumber__str(Parameter<String>.value(str))) as? (String) -> Void
@@ -3076,6 +3280,7 @@ class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
 
 
     typealias Property = Swift.Never
+
 
 
     func withinXCalendarUnitsSubQueryMatcher() -> WithinXCalendarUnitsSubQueryMatcher {
@@ -3274,6 +3479,7 @@ class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
 
 
     typealias Property = Swift.Never
+
 
 
     func expandContractions(_ text: String) -> String {

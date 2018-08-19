@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class MoodQuery: CoreDataQuery<Mood> {
+public class MoodQuery: CoreDataQuery<MoodImpl> {
 
 	public init() {
 		super.init(dataType: .mood)

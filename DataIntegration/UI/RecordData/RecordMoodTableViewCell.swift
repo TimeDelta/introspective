@@ -10,12 +10,12 @@ import UIKit
 
 class RecordMoodTableViewCell: UITableViewCell {
 
-	@IBOutlet weak var ratingSlider: UISlider!
-	@IBOutlet weak var outOfMaxRatingLabel: UILabel!
-	@IBOutlet weak var doneButon: UIButton!
-	@IBOutlet weak var addNoteButton: UIButton!
+	@IBOutlet var ratingSlider: UISlider!
+	@IBOutlet var outOfMaxRatingLabel: UILabel!
+	@IBOutlet var doneButon: UIButton!
+	@IBOutlet var addNoteButton: UIButton!
 
-	fileprivate var note: String? = nil
+	var note: String? = nil
 
 	public override func awakeFromNib() {
 		super.awakeFromNib()
@@ -24,17 +24,17 @@ class RecordMoodTableViewCell: UITableViewCell {
 	}
 
 	@IBAction func ratingChanged(_ sender: Any) {
-		let newValue = Double(ratingSlider.value) * Mood.maxRating
+		let newValue = Double(ratingSlider.value) * MoodImpl.maxRating
 
 		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: newValue)
 
-		outOfMaxRatingLabel.text = MoodUiUtil.valueToString(newValue) + " / " + MoodUiUtil.valueToString(Mood.maxRating)
+		outOfMaxRatingLabel.text = MoodUiUtil.valueToString(newValue) + " / " + MoodUiUtil.valueToString(MoodImpl.maxRating)
 	}
 
 	@IBAction func doneButtonPressed(_ sender: Any) {
-		let mood = DependencyInjector.dataType.mood()
+		var mood = DependencyInjector.dataType.mood()
 		mood.timestamp = Date()
-		mood.rating = Double(ratingSlider.value) * Mood.maxRating
+		mood.rating = Double(ratingSlider.value) * MoodImpl.maxRating
 		mood.note = note
 		DependencyInjector.db.save()
 
@@ -47,6 +47,7 @@ class RecordMoodTableViewCell: UITableViewCell {
 	}
 
 	fileprivate func reset() {
+		note = nil
 		addNoteButton.setTitle("Add Note", for: .normal)
 		ratingSlider.value = (ratingSlider.maximumValue - ratingSlider.minimumValue) / 2.0
 		ratingChanged(self)

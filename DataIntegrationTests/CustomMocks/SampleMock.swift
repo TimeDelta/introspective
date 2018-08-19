@@ -26,27 +26,33 @@ class SampleMock: Sample, Mock {
     private var methodPerformValues: [Perform] = []
     var matcher: Matcher = Matcher.default
 
+
     var dataType: DataTypes { 
 		get {	invocations.append(.dataType_get)
-				return __dataType.orFail("SampleMockMock - value for dataType was not defined") }
+				return __dataType.orFail("SampleMock - value for dataType was not defined") }
 		set {	invocations.append(.dataType_set(.value(newValue)))
 				__dataType = newValue }
 	}
 	private var __dataType: (DataTypes)?
+
+
     var name: String { 
 		get {	invocations.append(.name_get)
-				return __name.orFail("SampleMockMock - value for name was not defined") }
+				return __name.orFail("SampleMock - value for name was not defined") }
 		set {	invocations.append(.name_set(.value(newValue)))
 				__name = newValue }
 	}
 	private var __name: (String)?
+
+
     var attributes: [Attribute] { 
 		get {	invocations.append(.attributes_get)
-				return __attributes.orFail("SampleMockMock - value for attributes was not defined") }
+				return __attributes.orFail("SampleMock - value for attributes was not defined") }
 		set {	invocations.append(.attributes_set(.value(newValue)))
 				__attributes = newValue }
 	}
 	private var __attributes: ([Attribute])?
+
 
     struct Property {
         fileprivate var method: MethodType
@@ -57,6 +63,8 @@ class SampleMock: Sample, Mock {
         static var attributes: Property { return Property(method: .attributes_get) }
 		static func attributes(set newValue: Parameter<[Attribute]>) -> Property { return Property(method: .attributes_set(newValue)) }
     }
+
+
 
 
     func dates() -> [DateType: Date] {

@@ -35,7 +35,7 @@ public class MoodUiUtil {
 		var minAlpha: CGFloat = 0
 		Me.minRatingColor.getRed(&minRed, green: &minGreen, blue: &minBlue, alpha: &minAlpha)
 
-		let valueRatio = CGFloat(rating / Mood.maxRating)
+		let valueRatio = CGFloat(rating / MoodImpl.maxRating)
 
 		return UIColor(
 			red: (maxRed - minRed) * valueRatio + minRed,

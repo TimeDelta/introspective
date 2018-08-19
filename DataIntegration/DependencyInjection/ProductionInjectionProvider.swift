@@ -12,7 +12,7 @@ public class ProductionInjectionProvider: InjectionProvider {
 
 	fileprivate typealias Me = ProductionInjectionProvider
 
-	fileprivate static let realDatabase = Database()
+	fileprivate static let realDatabase = DatabaseImpl()
 	fileprivate static let realQueryFactory = QueryFactoryImpl()
 	fileprivate static let realQuerierFactory = QuerierFactoryImpl()
 	fileprivate static let realQuestionFactory = QuestionFactory()

@@ -14,7 +14,16 @@ public enum DatabaseError: Error {
 	case failedToInstantiateObject
 }
 
-public class Database {
+//sourcery: AutoMockable
+public protocol Database {
+
+	func new<Type: NSManagedObject>(objectType: Type.Type, entityName: String) throws -> Type
+	func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type]
+	func save()
+	func delete(_ object: NSManagedObject)
+}
+
+public class DatabaseImpl: Database {
 
 	fileprivate lazy var persistentContainer: NSPersistentContainer = {
 		let container = NSPersistentContainer(name: "Introspective")

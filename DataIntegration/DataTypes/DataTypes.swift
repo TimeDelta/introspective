@@ -18,14 +18,14 @@ public enum DataTypes: CustomStringConvertible {
 	public static func attributesFor(_ type: DataTypes) -> [Attribute] {
 		switch (type) {
 			case .heartRate: return HeartRate.attributes
-			case .mood: return Mood.attributes
+			case .mood: return MoodImpl.attributes
 		}
 	}
 
 	public var defaultDependentAttribute: Attribute {
 		switch (self) {
 			case .heartRate: return HeartRate.heartRate
-			case .mood: return Mood.moodRating
+			case .mood: return MoodImpl.rating
 		}
 	}
 

@@ -15,6 +15,8 @@ class UnitTest: XCTestCase {
 
 	var injectionProvider: InjectionProviderMock!
 
+	var mockDatabase: DatabaseMock!
+
 	var utilFactory: UtilFactory!
 	var mockAttributeRestrictionUtil: AttributeRestrictionUtilMock!
 	var mockCalendarUtil: CalendarUtilMock!
@@ -23,6 +25,8 @@ class UnitTest: XCTestCase {
 	var mockSearchUtil: SearchUtilMock!
 	var mockStringUtil: StringUtilMock!
 	var mockTextNormalizationUtil: TextNormalizationUtilMock!
+
+	var mockDataTypeFactory: DataTypeFactoryMock!
 
 	override func setUp() {
 		super.setUp()
@@ -131,6 +135,12 @@ class UnitTest: XCTestCase {
 	fileprivate func resetMocks() {
 		injectionProvider = InjectionProviderMock()
 		DependencyInjector.injectionProvider = injectionProvider
+
+		mockDatabase = DatabaseMock()
+		Given(injectionProvider, .database(willReturn: mockDatabase))
+
+		mockDataTypeFactory = DataTypeFactoryMock()
+		Given(injectionProvider, .dataTypeFactory(willReturn: mockDataTypeFactory))
 
 		utilFactory = UtilFactory()
 		Given(injectionProvider, .utilFactory(willReturn: utilFactory))

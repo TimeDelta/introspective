@@ -252,7 +252,7 @@ class QueryViewController: UITableViewController, UIPopoverPresentationControlle
 					currentQuery = (buildQuery(from: parts) as SampleQuery<HeartRate>)
 					break
 				case .mood:
-					currentQuery = (buildQuery(from: parts) as SampleQuery<Mood>)
+					currentQuery = (buildQuery(from: parts) as SampleQuery<MoodImpl>)
 					break
 			}
 
