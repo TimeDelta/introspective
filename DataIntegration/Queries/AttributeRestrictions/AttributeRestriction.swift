@@ -15,6 +15,17 @@ public protocol AttributeRestriction: Attributed {
 	init(attribute: Attribute)
 
 	func samplePasses(_ sample: Sample) throws -> Bool
+	func equalTo(_ otherRestriction: AttributeRestriction) -> Bool
+}
+
+extension AttributeRestriction {
+
+	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+		if type(of: self) != type(of: otherRestriction) { return false }
+		if !restrictedAttribute.equalTo(otherRestriction.restrictedAttribute) { return false }
+		if !equalTo(otherRestriction as Attributed) { return false }
+		return true
+	}
 }
 
 public class AnyAttributeRestriction: AttributeRestriction {

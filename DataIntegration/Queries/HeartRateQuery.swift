@@ -9,7 +9,10 @@
 import Foundation
 import HealthKit
 
-public class HeartRateQuery: SampleQuery<HeartRate> {
+//sourcery: AutoMockable
+public protocol HeartRateQuery: Query {}
+
+public class HeartRateQueryImpl: SampleQueryImpl<HeartRate>, HeartRateQuery {
 
 	override func run() {
 		let dateConstraints = DependencyInjector.util.attributeRestrictionUtil.getMostRestrictiveStartAndEndDates(from: attributeRestrictions)

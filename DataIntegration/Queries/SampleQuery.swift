@@ -8,11 +8,20 @@
 
 import Foundation
 
-public class SampleQuery<SampleType: Sample>: Query {
+public protocol SampleQuery: Query {
+	associatedtype SampleType: Sample
+
+	var attributeRestrictions: [AttributeRestriction] { get set }
+	var mostRecentEntryOnly: Bool { get set }
+	var subQuery: (matcher: SubQueryMatcher, query: Query)? { get set }
+
+	func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> ())
+}
+
+public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 
 	public var attributeRestrictions: [AttributeRestriction]
 	public var mostRecentEntryOnly: Bool
-	public let numberOfDatesPerSample: Int = 2
 	public var subQuery: (matcher: SubQueryMatcher, query: Query)?
 
 	fileprivate var callback: ((SampleQueryResult<SampleType>?, Error?) -> ())!

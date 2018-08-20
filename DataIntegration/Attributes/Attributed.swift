@@ -15,4 +15,15 @@ public protocol Attributed: CustomStringConvertible {
 
 	func value(of attribute: Attribute) throws -> Any
 	func set(attribute: Attribute, to value: Any) throws
+
+	func equalTo(_ otherAttributed: Attributed) -> Bool
+}
+
+extension Attributed {
+
+	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+		if type(of: self) != type(of: otherAttributed) { return false }
+		if name != otherAttributed.name { return false }
+		return true
+	}
 }

@@ -7,11 +7,12 @@
 //
 
 import Foundation
+import os
 
 //sourcery: AutoMockable
 public protocol QueryFactory {
 	func heartRateQuery() -> HeartRateQuery
-	func queryFor<SampleType: Sample>(sampleType: SampleType.Type) throws -> SampleQuery<SampleType>
+	func moodQuery() -> MoodQuery
 }
 
 public class QueryFactoryImpl: QueryFactory {
@@ -21,16 +22,10 @@ public class QueryFactoryImpl: QueryFactory {
 	}
 
 	public func heartRateQuery() -> HeartRateQuery {
-		return HeartRateQuery()
+		return HeartRateQueryImpl()
 	}
 
-	public func queryFor<SampleType: Sample>(sampleType: SampleType.Type) throws -> SampleQuery<SampleType> {
-		if sampleType == HeartRate.self {
-			return HeartRateQuery() as! SampleQuery<SampleType>
-		}
-		if sampleType == Mood.self {
-			return MoodQuery() as! SampleQuery<SampleType>
-		}
-		throw Errors.UnknownSampleType
+	public func moodQuery() -> MoodQuery {
+		return MoodQueryImpl()
 	}
 }

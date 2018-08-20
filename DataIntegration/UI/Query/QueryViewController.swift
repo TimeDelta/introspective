@@ -8,7 +8,7 @@
 
 import UIKit
 
-class QueryViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
+class QueryViewController: UITableViewController {
 
 	fileprivate static let acceptedAttributeRestrictionEdit = Notification.Name("attributeRestriction")
 
@@ -30,7 +30,7 @@ class QueryViewController: UITableViewController, UIPopoverPresentationControlle
 		}
 	}
 
-	fileprivate struct DataTypeInfo {
+	struct DataTypeInfo {
 		var dataType: DataTypes = .heartRate
 		var matcher: SubQueryMatcher? = SameDatesSubQueryMatcher()
 
@@ -44,9 +44,9 @@ class QueryViewController: UITableViewController, UIPopoverPresentationControlle
 		}
 	}
 
-	fileprivate var parts: [Any]!
-	fileprivate var cellTypes: [CellType]!
-	fileprivate var editedIndex: Int!
+	var parts: [Any]!
+	var cellTypes: [CellType]!
+	var editedIndex: Int!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -80,9 +80,9 @@ class QueryViewController: UITableViewController, UIPopoverPresentationControlle
 
 		let cellType = cellTypes[index]
 		let identifier = cellType.description
-        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
+		let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
 
-        switch (cellType) {
+		switch (cellType) {
 			case .dataType, .subDataType:
 				let typedCell = (cell as! SubDataTypeTableViewCell)
 				typedCell.matcher = (part as! DataTypeInfo).matcher
@@ -93,11 +93,11 @@ class QueryViewController: UITableViewController, UIPopoverPresentationControlle
 				typedCell.attributeRestriction = (part as! AttributeRestriction)
 				return typedCell
 		}
-    }
+	}
 
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return indexPath.row != 0
-    }
+	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		return indexPath.row != 0
+	}
 
 	override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
 		return indexPath.row != 0
@@ -106,7 +106,7 @@ class QueryViewController: UITableViewController, UIPopoverPresentationControlle
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		parts.swapAt(fromIndexPath.row, to.row)
 		cellTypes.swapAt(fromIndexPath.row, to.row)
-    }
+	}
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
@@ -119,10 +119,10 @@ class QueryViewController: UITableViewController, UIPopoverPresentationControlle
 		return [delete]
 	}
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.destination is AddToQueryViewController {
-            segue.destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            segue.destination.popoverPresentationController!.delegate = self
+			segue.destination.modalPresentationStyle = UIModalPresentationStyle.popover
+			segue.destination.popoverPresentationController!.delegate = self
 		} else if segue.destination is EditDataTypeViewController {
 			let controller = (segue.destination as! EditDataTypeViewController)
 			let source = (sender as! UITableViewCell)
@@ -147,10 +147,6 @@ class QueryViewController: UITableViewController, UIPopoverPresentationControlle
 			buildAndRunQuery(controller)
 		}
 	}
-
-	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-        return UIModalPresentationStyle.none
-    }
 
 	@IBAction func saveEditedDataType(_ segue: UIStoryboardSegue) {
 		let controller = (segue.source as! EditDataTypeViewController)
@@ -246,18 +242,20 @@ class QueryViewController: UITableViewController, UIPopoverPresentationControlle
 		for parts in partsSplitByQuery.reversed() {
 			var currentQuery: Query
 
-			let dataType = (parts[0] as! DataTypeInfo).dataType
-			switch (dataType) {
+			let dataTypeInfo = parts[0] as! DataTypeInfo
+			switch (dataTypeInfo.dataType) {
 				case .heartRate:
-					currentQuery = (buildQuery(from: parts) as SampleQuery<HeartRate>)
+					currentQuery = DependencyInjector.query.heartRateQuery()
 					break
 				case .mood:
-					currentQuery = (buildQuery(from: parts) as SampleQuery<MoodImpl>)
+					currentQuery = DependencyInjector.query.moodQuery()
 					break
 			}
 
+			buildQuery(&currentQuery, from: parts)
+
 			if currentTopmostQuery != nil {
-				currentTopmostQuery?.subQuery = (matcher: SameDatesSubQueryMatcher(), query: currentQuery)
+				currentTopmostQuery?.subQuery = (matcher: dataTypeInfo.matcher!, query: currentQuery)
 			} else {
 				currentTopmostQuery = currentQuery
 			}
@@ -265,18 +263,16 @@ class QueryViewController: UITableViewController, UIPopoverPresentationControlle
 		return currentTopmostQuery!
 	}
 
-	fileprivate func buildQuery<SampleType: Sample>(from parts: [Any]) -> SampleQuery<SampleType> {
-		let query = try! DependencyInjector.query.queryFor(sampleType: SampleType.self)
+	fileprivate func buildQuery(_ query: inout Query, from parts: [Any]) {
 		for part in parts.reversed() {
 			if part is DataTypeInfo {
-				return query
+				return
 			} else if part is AttributeRestriction {
 				query.attributeRestrictions.append((part as! AttributeRestriction))
 			} else {
 				fatalError("query part is of unknown type")
 			}
 		}
-		return query
 	}
 
 	fileprivate func splitPartsByQuery() -> [[Any]] {
@@ -295,7 +291,6 @@ class QueryViewController: UITableViewController, UIPopoverPresentationControlle
 		return partsSplitByQuery
 	}
 
-	// TODO - use this function to determine if data type cell should include "where" after data type name
 	fileprivate func distanceToNextDataType(index: Int) -> Int {
 		var distance = 0
 		for part in parts {
@@ -305,5 +300,12 @@ class QueryViewController: UITableViewController, UIPopoverPresentationControlle
 			distance += 1
 		}
 		return distance
+	}
+}
+
+extension QueryViewController: UIPopoverPresentationControllerDelegate {
+
+	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+		return UIModalPresentationStyle.none
 	}
 }

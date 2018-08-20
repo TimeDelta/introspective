@@ -39,6 +39,8 @@ import CoreData
 #endif
 
 
+
+
 // MARK: - Attribute
 class AttributeMock: Attribute, Mock {
     private var invocations: [MethodType] = []
@@ -1315,6 +1317,166 @@ class DatabaseMock: Database, Mock {
     }
 }
 
+// MARK: - HeartRateQuery
+class HeartRateQueryMock: HeartRateQuery, Mock {
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    var matcher: Matcher = Matcher.default
+
+    var attributeRestrictions: [AttributeRestriction] { 
+		get {	invocations.append(.attributeRestrictions_get)
+				return __attributeRestrictions.orFail("HeartRateQueryMock - value for attributeRestrictions was not defined") }
+		set {	invocations.append(.attributeRestrictions_set(.value(newValue)))
+				__attributeRestrictions = newValue }
+	}
+	private var __attributeRestrictions: ([AttributeRestriction])?
+
+    var mostRecentEntryOnly: Bool { 
+		get {	invocations.append(.mostRecentEntryOnly_get)
+				return __mostRecentEntryOnly.orFail("HeartRateQueryMock - value for mostRecentEntryOnly was not defined") }
+		set {	invocations.append(.mostRecentEntryOnly_set(.value(newValue)))
+				__mostRecentEntryOnly = newValue }
+	}
+	private var __mostRecentEntryOnly: (Bool)?
+
+    var subQuery: (matcher: SubQueryMatcher, query: Query)? { 
+		get {	invocations.append(.subQuery_get)
+				return __subQuery }
+		set {	invocations.append(.subQuery_set(.value(newValue)))
+				__subQuery = newValue }
+	}
+	private var __subQuery: ((matcher: SubQueryMatcher, query: Query))?
+
+
+    struct Property {
+        fileprivate var method: MethodType
+        static var attributeRestrictions: Property { return Property(method: .attributeRestrictions_get) }
+		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Property { return Property(method: .attributeRestrictions_set(newValue)) }
+        static var mostRecentEntryOnly: Property { return Property(method: .mostRecentEntryOnly_get) }
+		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Property { return Property(method: .mostRecentEntryOnly_set(newValue)) }
+        static var subQuery: Property { return Property(method: .subQuery_get) }
+		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Property { return Property(method: .subQuery_set(newValue)) }
+    }
+
+
+
+    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+        addInvocation(.irunQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(callback)))
+		let perform = methodPerformValue(.irunQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(callback))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+		perform?(callback)
+    }
+
+    fileprivate enum MethodType {
+        case irunQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
+        case attributeRestrictions_get
+		case attributeRestrictions_set(Parameter<[AttributeRestriction]>)
+        case mostRecentEntryOnly_get
+		case mostRecentEntryOnly_set(Parameter<Bool>)
+        case subQuery_get
+		case subQuery_set(Parameter<(matcher: SubQueryMatcher, query: Query)?>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+                case (.irunQuery__callback_callback(let lhsCallback), .irunQuery__callback_callback(let rhsCallback)):
+                    guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
+                    return true 
+                case (.attributeRestrictions_get,.attributeRestrictions_get): return true
+				case (.attributeRestrictions_set(let left),.attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
+                case (.mostRecentEntryOnly_get,.mostRecentEntryOnly_get): return true
+				case (.mostRecentEntryOnly_set(let left),.mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
+                case (.subQuery_get,.subQuery_get): return true
+				case (.subQuery_set(let left),.subQuery_set(let right)): return Parameter<(matcher: SubQueryMatcher, query: Query)?>.compare(lhs: left, rhs: right, with: matcher)
+                default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+                case let .irunQuery__callback_callback(p0): return p0.intValue
+                case .attributeRestrictions_get: return 0
+				case .attributeRestrictions_set(let newValue): return newValue.intValue
+                case .mostRecentEntryOnly_get: return 0
+				case .mostRecentEntryOnly_set(let newValue): return newValue.intValue
+                case .subQuery_get: return 0
+				case .subQuery_set(let newValue): return newValue.intValue
+            }
+        }
+    }
+
+    struct Given {
+        fileprivate var method: MethodType
+        var returns: Any?
+        var `throws`: Error?
+
+        private init(method: MethodType, returns: Any?, throws: Error?) {
+            self.method = method
+            self.returns = returns
+            self.`throws` = `throws`
+        }
+
+    }
+
+    struct Verify {
+        fileprivate var method: MethodType
+
+        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify {
+            return Verify(method: .irunQuery__callback_callback(callback))
+        }
+    }
+
+    struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+            return Perform(method: .irunQuery__callback_callback(callback), performs: perform)
+        }
+    }
+
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+        methodReturnValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    public func verify(property: Property, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(property.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(property.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+
+    private func methodReturnValue(_ method: MethodType) -> (value: Any?, error: Error?) {
+        let matched = methodReturnValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher)  }
+        return (value: matched?.returns, error: matched?.`throws`)
+    }
+
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+}
+
 // MARK: - InjectionProvider
 class InjectionProviderMock: InjectionProvider, Mock {
     private var invocations: [MethodType] = []
@@ -1626,6 +1788,166 @@ class InjectionProviderMock: InjectionProvider, Mock {
         MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
     public func verify(property: Property, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) { }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+
+    private func methodReturnValue(_ method: MethodType) -> (value: Any?, error: Error?) {
+        let matched = methodReturnValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher)  }
+        return (value: matched?.returns, error: matched?.`throws`)
+    }
+
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+}
+
+// MARK: - MoodQuery
+class MoodQueryMock: MoodQuery, Mock {
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    var matcher: Matcher = Matcher.default
+
+    var attributeRestrictions: [AttributeRestriction] { 
+		get {	invocations.append(.attributeRestrictions_get)
+				return __attributeRestrictions.orFail("MoodQueryMock - value for attributeRestrictions was not defined") }
+		set {	invocations.append(.attributeRestrictions_set(.value(newValue)))
+				__attributeRestrictions = newValue }
+	}
+	private var __attributeRestrictions: ([AttributeRestriction])?
+
+    var mostRecentEntryOnly: Bool { 
+		get {	invocations.append(.mostRecentEntryOnly_get)
+				return __mostRecentEntryOnly.orFail("MoodQueryMock - value for mostRecentEntryOnly was not defined") }
+		set {	invocations.append(.mostRecentEntryOnly_set(.value(newValue)))
+				__mostRecentEntryOnly = newValue }
+	}
+	private var __mostRecentEntryOnly: (Bool)?
+
+    var subQuery: (matcher: SubQueryMatcher, query: Query)? { 
+		get {	invocations.append(.subQuery_get)
+				return __subQuery }
+		set {	invocations.append(.subQuery_set(.value(newValue)))
+				__subQuery = newValue }
+	}
+	private var __subQuery: ((matcher: SubQueryMatcher, query: Query))?
+
+
+    struct Property {
+        fileprivate var method: MethodType
+        static var attributeRestrictions: Property { return Property(method: .attributeRestrictions_get) }
+		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Property { return Property(method: .attributeRestrictions_set(newValue)) }
+        static var mostRecentEntryOnly: Property { return Property(method: .mostRecentEntryOnly_get) }
+		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Property { return Property(method: .mostRecentEntryOnly_set(newValue)) }
+        static var subQuery: Property { return Property(method: .subQuery_get) }
+		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Property { return Property(method: .subQuery_set(newValue)) }
+    }
+
+
+
+    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+        addInvocation(.irunQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(callback)))
+		let perform = methodPerformValue(.irunQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(callback))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+		perform?(callback)
+    }
+
+    fileprivate enum MethodType {
+        case irunQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
+        case attributeRestrictions_get
+		case attributeRestrictions_set(Parameter<[AttributeRestriction]>)
+        case mostRecentEntryOnly_get
+		case mostRecentEntryOnly_set(Parameter<Bool>)
+        case subQuery_get
+		case subQuery_set(Parameter<(matcher: SubQueryMatcher, query: Query)?>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+                case (.irunQuery__callback_callback(let lhsCallback), .irunQuery__callback_callback(let rhsCallback)):
+                    guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
+                    return true 
+                case (.attributeRestrictions_get,.attributeRestrictions_get): return true
+				case (.attributeRestrictions_set(let left),.attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
+                case (.mostRecentEntryOnly_get,.mostRecentEntryOnly_get): return true
+				case (.mostRecentEntryOnly_set(let left),.mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
+                case (.subQuery_get,.subQuery_get): return true
+				case (.subQuery_set(let left),.subQuery_set(let right)): return Parameter<(matcher: SubQueryMatcher, query: Query)?>.compare(lhs: left, rhs: right, with: matcher)
+                default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+                case let .irunQuery__callback_callback(p0): return p0.intValue
+                case .attributeRestrictions_get: return 0
+				case .attributeRestrictions_set(let newValue): return newValue.intValue
+                case .mostRecentEntryOnly_get: return 0
+				case .mostRecentEntryOnly_set(let newValue): return newValue.intValue
+                case .subQuery_get: return 0
+				case .subQuery_set(let newValue): return newValue.intValue
+            }
+        }
+    }
+
+    struct Given {
+        fileprivate var method: MethodType
+        var returns: Any?
+        var `throws`: Error?
+
+        private init(method: MethodType, returns: Any?, throws: Error?) {
+            self.method = method
+            self.returns = returns
+            self.`throws` = `throws`
+        }
+
+    }
+
+    struct Verify {
+        fileprivate var method: MethodType
+
+        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify {
+            return Verify(method: .irunQuery__callback_callback(callback))
+        }
+    }
+
+    struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+            return Perform(method: .irunQuery__callback_callback(callback), performs: perform)
+        }
+    }
+
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+        methodReturnValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    public func verify(property: Property, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(property.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(property.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
 
     private func addInvocation(_ call: MethodType) {
         invocations.append(call)
@@ -2089,14 +2411,6 @@ class QueryMock: Query, Mock {
 	}
 	private var __mostRecentEntryOnly: (Bool)?
 
-    var numberOfDatesPerSample: Int { 
-		get {	invocations.append(.numberOfDatesPerSample_get)
-				return __numberOfDatesPerSample.orFail("QueryMock - value for numberOfDatesPerSample was not defined") }
-		set {	invocations.append(.numberOfDatesPerSample_set(.value(newValue)))
-				__numberOfDatesPerSample = newValue }
-	}
-	private var __numberOfDatesPerSample: (Int)?
-
     var subQuery: (matcher: SubQueryMatcher, query: Query)? { 
 		get {	invocations.append(.subQuery_get)
 				return __subQuery }
@@ -2112,8 +2426,6 @@ class QueryMock: Query, Mock {
 		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Property { return Property(method: .attributeRestrictions_set(newValue)) }
         static var mostRecentEntryOnly: Property { return Property(method: .mostRecentEntryOnly_get) }
 		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Property { return Property(method: .mostRecentEntryOnly_set(newValue)) }
-        static var numberOfDatesPerSample: Property { return Property(method: .numberOfDatesPerSample_get) }
-		static func numberOfDatesPerSample(set newValue: Parameter<Int>) -> Property { return Property(method: .numberOfDatesPerSample_set(newValue)) }
         static var subQuery: Property { return Property(method: .subQuery_get) }
 		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Property { return Property(method: .subQuery_set(newValue)) }
     }
@@ -2132,8 +2444,6 @@ class QueryMock: Query, Mock {
 		case attributeRestrictions_set(Parameter<[AttributeRestriction]>)
         case mostRecentEntryOnly_get
 		case mostRecentEntryOnly_set(Parameter<Bool>)
-        case numberOfDatesPerSample_get
-		case numberOfDatesPerSample_set(Parameter<Int>)
         case subQuery_get
 		case subQuery_set(Parameter<(matcher: SubQueryMatcher, query: Query)?>)
 
@@ -2146,8 +2456,6 @@ class QueryMock: Query, Mock {
 				case (.attributeRestrictions_set(let left),.attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
                 case (.mostRecentEntryOnly_get,.mostRecentEntryOnly_get): return true
 				case (.mostRecentEntryOnly_set(let left),.mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
-                case (.numberOfDatesPerSample_get,.numberOfDatesPerSample_get): return true
-				case (.numberOfDatesPerSample_set(let left),.numberOfDatesPerSample_set(let right)): return Parameter<Int>.compare(lhs: left, rhs: right, with: matcher)
                 case (.subQuery_get,.subQuery_get): return true
 				case (.subQuery_set(let left),.subQuery_set(let right)): return Parameter<(matcher: SubQueryMatcher, query: Query)?>.compare(lhs: left, rhs: right, with: matcher)
                 default: return false
@@ -2161,8 +2469,6 @@ class QueryMock: Query, Mock {
 				case .attributeRestrictions_set(let newValue): return newValue.intValue
                 case .mostRecentEntryOnly_get: return 0
 				case .mostRecentEntryOnly_set(let newValue): return newValue.intValue
-                case .numberOfDatesPerSample_get: return 0
-				case .numberOfDatesPerSample_set(let newValue): return newValue.intValue
                 case .subQuery_get: return 0
 				case .subQuery_set(let newValue): return newValue.intValue
             }
@@ -2263,26 +2569,24 @@ class QueryFactoryMock: QueryFactory, Mock {
 		return value.orFail("stub return value not specified for heartRateQuery(). Use given")
     }
 
-    func queryFor<SampleType: Sample>(sampleType: SampleType.Type) throws -> SampleQuery<SampleType> {
-        addInvocation(.iqueryFor__sampleType_sampleType(Parameter<SampleType.Type>.value(sampleType).wrapAsGeneric()))
-		let perform = methodPerformValue(.iqueryFor__sampleType_sampleType(Parameter<SampleType.Type>.value(sampleType).wrapAsGeneric())) as? (SampleType.Type) -> Void
-		perform?(sampleType)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iqueryFor__sampleType_sampleType(Parameter<SampleType.Type>.value(sampleType).wrapAsGeneric()))
-		if let error = givenValue.error { throw error }
-		let value = givenValue.value as? SampleQuery<SampleType>
-		return value.orFail("stub return value not specified for queryFor<SampleType: Sample>(sampleType: SampleType.Type). Use given")
+    func moodQuery() -> MoodQuery {
+        addInvocation(.imoodQuery)
+		let perform = methodPerformValue(.imoodQuery) as? () -> Void
+		perform?()
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.imoodQuery)
+		let value = givenValue.value as? MoodQuery
+		return value.orFail("stub return value not specified for moodQuery(). Use given")
     }
 
     fileprivate enum MethodType {
         case iheartRateQuery
-        case iqueryFor__sampleType_sampleType(Parameter<GenericAttribute>)
+        case imoodQuery
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
                 case (.iheartRateQuery, .iheartRateQuery):
                     return true 
-                case (.iqueryFor__sampleType_sampleType(let lhsSampletype), .iqueryFor__sampleType_sampleType(let rhsSampletype)):
-                    guard Parameter.compare(lhs: lhsSampletype, rhs: rhsSampletype, with: matcher) else { return false } 
+                case (.imoodQuery, .imoodQuery):
                     return true 
                 default: return false
             }
@@ -2291,7 +2595,7 @@ class QueryFactoryMock: QueryFactory, Mock {
         func intValue() -> Int {
             switch self {
                 case .iheartRateQuery: return 0
-                case let .iqueryFor__sampleType_sampleType(p0): return p0.intValue
+                case .imoodQuery: return 0
             }
         }
     }
@@ -2310,11 +2614,8 @@ class QueryFactoryMock: QueryFactory, Mock {
         static func heartRateQuery(willReturn: HeartRateQuery) -> Given {
             return Given(method: .iheartRateQuery, returns: willReturn, throws: nil)
         }
-        static func queryFor<SampleType: Sample>(sampleType: Parameter<SampleType.Type>, willReturn: SampleQuery<SampleType>) -> Given {
-            return Given(method: .iqueryFor__sampleType_sampleType(sampleType.wrapAsGeneric()), returns: willReturn, throws: nil)
-        }
-        static func queryFor<SampleType: Sample>(sampleType: Parameter<SampleType.Type>, willThrow: Error) -> Given {
-            return Given(method: .iqueryFor__sampleType_sampleType(sampleType.wrapAsGeneric()), returns: nil, throws: willThrow)
+        static func moodQuery(willReturn: MoodQuery) -> Given {
+            return Given(method: .imoodQuery, returns: willReturn, throws: nil)
         }
     }
 
@@ -2324,8 +2625,8 @@ class QueryFactoryMock: QueryFactory, Mock {
         static func heartRateQuery() -> Verify {
             return Verify(method: .iheartRateQuery)
         }
-        static func queryFor<SampleType>(sampleType: Parameter<SampleType.Type>) -> Verify {
-            return Verify(method: .iqueryFor__sampleType_sampleType(sampleType.wrapAsGeneric()))
+        static func moodQuery() -> Verify {
+            return Verify(method: .imoodQuery)
         }
     }
 
@@ -2336,8 +2637,8 @@ class QueryFactoryMock: QueryFactory, Mock {
         static func heartRateQuery(perform: () -> Void) -> Perform {
             return Perform(method: .iheartRateQuery, performs: perform)
         }
-        static func queryFor<SampleType>(sampleType: Parameter<SampleType.Type>, perform: (SampleType.Type) -> Void) -> Perform {
-            return Perform(method: .iqueryFor__sampleType_sampleType(sampleType.wrapAsGeneric()), performs: perform)
+        static func moodQuery(perform: () -> Void) -> Perform {
+            return Perform(method: .imoodQuery, performs: perform)
         }
     }
 

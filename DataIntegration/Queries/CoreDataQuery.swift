@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: SampleQuery<SampleType> {
+public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: SampleQueryImpl<SampleType> {
 
 	fileprivate let dataType: DataTypes
 

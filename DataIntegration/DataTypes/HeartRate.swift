@@ -9,7 +9,11 @@
 import Foundation
 import HealthKit
 
-public class HeartRate: Sample {
+public class HeartRate: Sample, Equatable {
+
+	public static func == (lhs: HeartRate, rhs: HeartRate) -> Bool {
+		return lhs.equalTo(rhs)
+	}
 
 	fileprivate typealias Me = HeartRate
 	fileprivate static let unit: HKUnit = HKUnit(from: "count/min")

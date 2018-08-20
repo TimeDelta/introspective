@@ -27,6 +27,7 @@ class UnitTest: XCTestCase {
 	var mockTextNormalizationUtil: TextNormalizationUtilMock!
 
 	var mockDataTypeFactory: DataTypeFactoryMock!
+	var mockQueryFactory: QueryFactoryMock!
 
 	override func setUp() {
 		super.setUp()
@@ -126,10 +127,12 @@ class UnitTest: XCTestCase {
 	}
 
 	fileprivate func registerMatchers() {
-		Matcher.default.register(Attribute.self) { lhs,rhs in return lhs.equalTo(rhs) }
-		Matcher.default.register(Sample.self) { lhs,rhs in return lhs.equalTo(rhs) }
 		Matcher.default.register(AnySample.self) { lhs,rhs in return lhs.equalTo(rhs) }
+		Matcher.default.register(Attribute.self) { lhs,rhs in return lhs.equalTo(rhs) }
+		Matcher.default.register(AttributeRestriction.self) { lhs,rhs in return lhs.equalTo(rhs) }
 		Matcher.default.register(DayOfWeek.self)
+		Matcher.default.register(HeartRate.Type.self) { _,_ in return true }
+		Matcher.default.register(Sample.self) { lhs,rhs in return lhs.equalTo(rhs) }
 	}
 
 	fileprivate func resetMocks() {
@@ -141,6 +144,9 @@ class UnitTest: XCTestCase {
 
 		mockDataTypeFactory = DataTypeFactoryMock()
 		Given(injectionProvider, .dataTypeFactory(willReturn: mockDataTypeFactory))
+
+		mockQueryFactory = QueryFactoryMock()
+		Given(injectionProvider, .queryFactory(willReturn: mockQueryFactory))
 
 		utilFactory = UtilFactory()
 		Given(injectionProvider, .utilFactory(willReturn: utilFactory))

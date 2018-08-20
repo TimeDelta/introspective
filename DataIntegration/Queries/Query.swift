@@ -13,7 +13,6 @@ public protocol Query {
 
 	var attributeRestrictions: [AttributeRestriction] { get set }
 	var mostRecentEntryOnly: Bool { get set }
-	var numberOfDatesPerSample: Int { get }
 
 	/// The timestamps from the results of the sub-query will be used to limit the results of this query
 	var subQuery: (matcher: SubQueryMatcher, query: Query)? { get set }

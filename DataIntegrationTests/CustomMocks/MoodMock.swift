@@ -214,6 +214,15 @@ class MoodMock: Mood, Mock {
 		if let error = givenValue.error { throw error }
     }
 
+    func equalTo(_ otherAttributed: Attributed) -> Bool {
+        addInvocation(.iequalTo__otherAttributed(Parameter<Attributed>.value(otherAttributed)))
+		let perform = methodPerformValue(.iequalTo__otherAttributed(Parameter<Attributed>.value(otherAttributed))) as? (Attributed) -> Void
+		perform?(otherAttributed)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iequalTo__otherAttributed(Parameter<Attributed>.value(otherAttributed)))
+		let value = givenValue.value as? Bool
+		return value.orFail("stub return value not specified for equalTo(_ otherAttributed: Attributed). Use given")
+    }
+
     fileprivate enum StaticMethodType {
 
         case maxRating_get
@@ -288,6 +297,7 @@ class MoodMock: Mood, Mock {
         case iequalTo__otherSample(Parameter<Sample>)
         case ivalue__of_attribute(Parameter<Attribute>)
         case iset__attribute_attributeto_value(Parameter<Attribute>, Parameter<Any>)
+        case iequalTo__otherAttributed(Parameter<Attributed>)
         case maxRating_get
 		case maxRating_set(Parameter<Double>)
         case rating_get
@@ -317,6 +327,9 @@ class MoodMock: Mood, Mock {
                     guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
                     guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
                     return true 
+                case (.iequalTo__otherAttributed(let lhsOtherattributed), .iequalTo__otherAttributed(let rhsOtherattributed)):
+                    guard Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher) else { return false } 
+                    return true 
                 case (.maxRating_get,.maxRating_get): return true
 				case (.maxRating_set(let left),.maxRating_set(let right)): return Parameter<Double>.compare(lhs: left, rhs: right, with: matcher)
                 case (.rating_get,.rating_get): return true
@@ -341,6 +354,7 @@ class MoodMock: Mood, Mock {
                 case let .iequalTo__otherSample(p0): return p0.intValue
                 case let .ivalue__of_attribute(p0): return p0.intValue
                 case let .iset__attribute_attributeto_value(p0, p1): return p0.intValue + p1.intValue
+                case let .iequalTo__otherAttributed(p0): return p0.intValue
                 case .maxRating_get: return 0
 				case .maxRating_set(let newValue): return newValue.intValue
                 case .rating_get: return 0
@@ -379,6 +393,9 @@ class MoodMock: Mood, Mock {
         static func value(of attribute: Parameter<Attribute>, willReturn: Any) -> Given {
             return Given(method: .ivalue__of_attribute(attribute), returns: willReturn, throws: nil)
         }
+        static func equalTo(otherAttributed: Parameter<Attributed>, willReturn: Bool) -> Given {
+            return Given(method: .iequalTo__otherAttributed(otherAttributed), returns: willReturn, throws: nil)
+        }
         static func value(of attribute: Parameter<Attribute>, willThrow: Error) -> Given {
             return Given(method: .ivalue__of_attribute(attribute), returns: nil, throws: willThrow)
         }
@@ -402,6 +419,9 @@ class MoodMock: Mood, Mock {
         static func set(attribute: Parameter<Attribute>, to value: Parameter<Any>) -> Verify {
             return Verify(method: .iset__attribute_attributeto_value(attribute, value))
         }
+        static func equalTo(otherAttributed: Parameter<Attributed>) -> Verify {
+            return Verify(method: .iequalTo__otherAttributed(otherAttributed))
+        }
     }
 
     struct Perform {
@@ -419,6 +439,9 @@ class MoodMock: Mood, Mock {
         }
         static func set(attribute: Parameter<Attribute>, to value: Parameter<Any>, perform: (Attribute, Any) -> Void) -> Perform {
             return Perform(method: .iset__attribute_attributeto_value(attribute, value), performs: perform)
+        }
+        static func equalTo(otherAttributed: Parameter<Attributed>, perform: (Attributed) -> Void) -> Perform {
+            return Perform(method: .iequalTo__otherAttributed(otherAttributed), performs: perform)
         }
     }
 

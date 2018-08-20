@@ -1,18 +1,17 @@
 //
-//  SampleMock.swift
+//  AttributeRestrictionMock.swift
 //  DataIntegrationTests
 //
-//  Created by Bryan Nova on 8/14/18.
+//  Created by Bryan Nova on 8/20/18.
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
 import Foundation
-import XCTest
 import SwiftyMocky
 @testable import DataIntegration
 
-// sourcery: mock = "Sample"
-class SampleMock: Sample, Mock {
+// sourcery: mock = "AttributeRestriction"
+class AttributeRestrictionMock: AttributeRestriction, Mock {
 	fileprivate var _description: String!
 
 	var description: String {
@@ -20,25 +19,25 @@ class SampleMock: Sample, Mock {
 		set { _description = newValue }
 	}
 
-// sourcery:inline:auto:SampleMock.autoMocked
+// sourcery:inline:auto:AttributeRestrictionMock.autoMocked
     private var invocations: [MethodType] = []
     private var methodReturnValues: [Given] = []
     private var methodPerformValues: [Perform] = []
     var matcher: Matcher = Matcher.default
 
 
-    var dataType: DataTypes { 
-		get {	invocations.append(.dataType_get)
-				return __dataType.orFail("SampleMock - value for dataType was not defined") }
-		set {	invocations.append(.dataType_set(.value(newValue)))
-				__dataType = newValue }
+    var restrictedAttribute: Attribute { 
+		get {	invocations.append(.restrictedAttribute_get)
+				return __restrictedAttribute.orFail("AttributeRestrictionMock - value for restrictedAttribute was not defined") }
+		set {	invocations.append(.restrictedAttribute_set(.value(newValue)))
+				__restrictedAttribute = newValue }
 	}
-	private var __dataType: (DataTypes)?
+	private var __restrictedAttribute: (Attribute)?
 
 
     var name: String { 
 		get {	invocations.append(.name_get)
-				return __name.orFail("SampleMock - value for name was not defined") }
+				return __name.orFail("AttributeRestrictionMock - value for name was not defined") }
 		set {	invocations.append(.name_set(.value(newValue)))
 				__name = newValue }
 	}
@@ -47,7 +46,7 @@ class SampleMock: Sample, Mock {
 
     var attributes: [Attribute] { 
 		get {	invocations.append(.attributes_get)
-				return __attributes.orFail("SampleMock - value for attributes was not defined") }
+				return __attributes.orFail("AttributeRestrictionMock - value for attributes was not defined") }
 		set {	invocations.append(.attributes_set(.value(newValue)))
 				__attributes = newValue }
 	}
@@ -56,8 +55,8 @@ class SampleMock: Sample, Mock {
 
     struct Property {
         fileprivate var method: MethodType
-        static var dataType: Property { return Property(method: .dataType_get) }
-		static func dataType(set newValue: Parameter<DataTypes>) -> Property { return Property(method: .dataType_set(newValue)) }
+        static var restrictedAttribute: Property { return Property(method: .restrictedAttribute_get) }
+		static func restrictedAttribute(set newValue: Parameter<Attribute>) -> Property { return Property(method: .restrictedAttribute_set(newValue)) }
         static var name: Property { return Property(method: .name_get) }
 		static func name(set newValue: Parameter<String>) -> Property { return Property(method: .name_set(newValue)) }
         static var attributes: Property { return Property(method: .attributes_get) }
@@ -67,22 +66,25 @@ class SampleMock: Sample, Mock {
 
 
 
-    func dates() -> [DateType: Date] {
-        addInvocation(.idates)
-		let perform = methodPerformValue(.idates) as? () -> Void
-		perform?()
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.idates)
-		let value = givenValue.value as? [DateType: Date]
-		return value.orFail("stub return value not specified for dates(). Use given")
+    required init(attribute: Attribute) { }
+
+    func samplePasses(_ sample: Sample) throws -> Bool {
+        addInvocation(.isamplePasses__sample(Parameter<Sample>.value(sample)))
+		let perform = methodPerformValue(.isamplePasses__sample(Parameter<Sample>.value(sample))) as? (Sample) -> Void
+		perform?(sample)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.isamplePasses__sample(Parameter<Sample>.value(sample)))
+		if let error = givenValue.error { throw error }
+		let value = givenValue.value as? Bool
+		return value.orFail("stub return value not specified for samplePasses(_ sample: Sample). Use given")
     }
 
-    func equalTo(_ otherSample: Sample) -> Bool {
-        addInvocation(.iequalTo__otherSample(Parameter<Sample>.value(otherSample)))
-		let perform = methodPerformValue(.iequalTo__otherSample(Parameter<Sample>.value(otherSample))) as? (Sample) -> Void
-		perform?(otherSample)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iequalTo__otherSample(Parameter<Sample>.value(otherSample)))
+    func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+        addInvocation(.iequalTo__otherRestriction(Parameter<AttributeRestriction>.value(otherRestriction)))
+		let perform = methodPerformValue(.iequalTo__otherRestriction(Parameter<AttributeRestriction>.value(otherRestriction))) as? (AttributeRestriction) -> Void
+		perform?(otherRestriction)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iequalTo__otherRestriction(Parameter<AttributeRestriction>.value(otherRestriction)))
 		let value = givenValue.value as? Bool
-		return value.orFail("stub return value not specified for equalTo(_ otherSample: Sample). Use given")
+		return value.orFail("stub return value not specified for equalTo(_ otherRestriction: AttributeRestriction). Use given")
     }
 
     func value(of attribute: Attribute) throws -> Any {
@@ -113,13 +115,13 @@ class SampleMock: Sample, Mock {
     }
 
     fileprivate enum MethodType {
-        case idates
-        case iequalTo__otherSample(Parameter<Sample>)
+        case isamplePasses__sample(Parameter<Sample>)
+        case iequalTo__otherRestriction(Parameter<AttributeRestriction>)
         case ivalue__of_attribute(Parameter<Attribute>)
         case iset__attribute_attributeto_value(Parameter<Attribute>, Parameter<Any>)
         case iequalTo__otherAttributed(Parameter<Attributed>)
-        case dataType_get
-		case dataType_set(Parameter<DataTypes>)
+        case restrictedAttribute_get
+		case restrictedAttribute_set(Parameter<Attribute>)
         case name_get
 		case name_set(Parameter<String>)
         case attributes_get
@@ -127,10 +129,11 @@ class SampleMock: Sample, Mock {
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
-                case (.idates, .idates):
+                case (.isamplePasses__sample(let lhsSample), .isamplePasses__sample(let rhsSample)):
+                    guard Parameter.compare(lhs: lhsSample, rhs: rhsSample, with: matcher) else { return false } 
                     return true 
-                case (.iequalTo__otherSample(let lhsOthersample), .iequalTo__otherSample(let rhsOthersample)):
-                    guard Parameter.compare(lhs: lhsOthersample, rhs: rhsOthersample, with: matcher) else { return false } 
+                case (.iequalTo__otherRestriction(let lhsOtherrestriction), .iequalTo__otherRestriction(let rhsOtherrestriction)):
+                    guard Parameter.compare(lhs: lhsOtherrestriction, rhs: rhsOtherrestriction, with: matcher) else { return false } 
                     return true 
                 case (.ivalue__of_attribute(let lhsAttribute), .ivalue__of_attribute(let rhsAttribute)):
                     guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
@@ -142,8 +145,8 @@ class SampleMock: Sample, Mock {
                 case (.iequalTo__otherAttributed(let lhsOtherattributed), .iequalTo__otherAttributed(let rhsOtherattributed)):
                     guard Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher) else { return false } 
                     return true 
-                case (.dataType_get,.dataType_get): return true
-				case (.dataType_set(let left),.dataType_set(let right)): return Parameter<DataTypes>.compare(lhs: left, rhs: right, with: matcher)
+                case (.restrictedAttribute_get,.restrictedAttribute_get): return true
+				case (.restrictedAttribute_set(let left),.restrictedAttribute_set(let right)): return Parameter<Attribute>.compare(lhs: left, rhs: right, with: matcher)
                 case (.name_get,.name_get): return true
 				case (.name_set(let left),.name_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
                 case (.attributes_get,.attributes_get): return true
@@ -154,13 +157,13 @@ class SampleMock: Sample, Mock {
 
         func intValue() -> Int {
             switch self {
-                case .idates: return 0
-                case let .iequalTo__otherSample(p0): return p0.intValue
+                case let .isamplePasses__sample(p0): return p0.intValue
+                case let .iequalTo__otherRestriction(p0): return p0.intValue
                 case let .ivalue__of_attribute(p0): return p0.intValue
                 case let .iset__attribute_attributeto_value(p0, p1): return p0.intValue + p1.intValue
                 case let .iequalTo__otherAttributed(p0): return p0.intValue
-                case .dataType_get: return 0
-				case .dataType_set(let newValue): return newValue.intValue
+                case .restrictedAttribute_get: return 0
+				case .restrictedAttribute_set(let newValue): return newValue.intValue
                 case .name_get: return 0
 				case .name_set(let newValue): return newValue.intValue
                 case .attributes_get: return 0
@@ -180,17 +183,20 @@ class SampleMock: Sample, Mock {
             self.`throws` = `throws`
         }
 
-        static func dates(willReturn: [DateType: Date]) -> Given {
-            return Given(method: .idates, returns: willReturn, throws: nil)
+        static func samplePasses(sample: Parameter<Sample>, willReturn: Bool) -> Given {
+            return Given(method: .isamplePasses__sample(sample), returns: willReturn, throws: nil)
         }
-        static func equalTo(otherSample: Parameter<Sample>, willReturn: Bool) -> Given {
-            return Given(method: .iequalTo__otherSample(otherSample), returns: willReturn, throws: nil)
+        static func equalTo(otherRestriction: Parameter<AttributeRestriction>, willReturn: Bool) -> Given {
+            return Given(method: .iequalTo__otherRestriction(otherRestriction), returns: willReturn, throws: nil)
         }
         static func value(of attribute: Parameter<Attribute>, willReturn: Any) -> Given {
             return Given(method: .ivalue__of_attribute(attribute), returns: willReturn, throws: nil)
         }
         static func equalTo(otherAttributed: Parameter<Attributed>, willReturn: Bool) -> Given {
             return Given(method: .iequalTo__otherAttributed(otherAttributed), returns: willReturn, throws: nil)
+        }
+        static func samplePasses(sample: Parameter<Sample>, willThrow: Error) -> Given {
+            return Given(method: .isamplePasses__sample(sample), returns: nil, throws: willThrow)
         }
         static func value(of attribute: Parameter<Attribute>, willThrow: Error) -> Given {
             return Given(method: .ivalue__of_attribute(attribute), returns: nil, throws: willThrow)
@@ -203,11 +209,11 @@ class SampleMock: Sample, Mock {
     struct Verify {
         fileprivate var method: MethodType
 
-        static func dates() -> Verify {
-            return Verify(method: .idates)
+        static func samplePasses(sample: Parameter<Sample>) -> Verify {
+            return Verify(method: .isamplePasses__sample(sample))
         }
-        static func equalTo(otherSample: Parameter<Sample>) -> Verify {
-            return Verify(method: .iequalTo__otherSample(otherSample))
+        static func equalTo(otherRestriction: Parameter<AttributeRestriction>) -> Verify {
+            return Verify(method: .iequalTo__otherRestriction(otherRestriction))
         }
         static func value(of attribute: Parameter<Attribute>) -> Verify {
             return Verify(method: .ivalue__of_attribute(attribute))
@@ -224,11 +230,11 @@ class SampleMock: Sample, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func dates(perform: () -> Void) -> Perform {
-            return Perform(method: .idates, performs: perform)
+        static func samplePasses(sample: Parameter<Sample>, perform: (Sample) -> Void) -> Perform {
+            return Perform(method: .isamplePasses__sample(sample), performs: perform)
         }
-        static func equalTo(otherSample: Parameter<Sample>, perform: (Sample) -> Void) -> Perform {
-            return Perform(method: .iequalTo__otherSample(otherSample), performs: perform)
+        static func equalTo(otherRestriction: Parameter<AttributeRestriction>, perform: (AttributeRestriction) -> Void) -> Perform {
+            return Perform(method: .iequalTo__otherRestriction(otherRestriction), performs: perform)
         }
         static func value(of attribute: Parameter<Attribute>, perform: (Attribute) -> Void) -> Perform {
             return Perform(method: .ivalue__of_attribute(attribute), performs: perform)

@@ -1,5 +1,5 @@
 //
-//  SubQueryMatch.swift
+//  SubQueryMatcher.swift
 //  DataIntegration
 //
 //  Created by Bryan Nova on 7/16/18.
@@ -27,12 +27,7 @@ public protocol SubQueryMatcher: CustomStringConvertible {
 
 	init()
 
-	func getSamples<QuerySampleType: Sample>(
-		from querySamples: [QuerySampleType],
-		matching subQuerySamples: [Sample]
-	) -> [QuerySampleType]
-
+	func getSamples<QuerySampleType: Sample>(from querySamples: [QuerySampleType], matching subQuerySamples: [Sample]) -> [QuerySampleType]
 	func setParameter<T>(id: Int, value: T) throws
-
 	func getParameterValue<T>(id: Int) throws -> T
 }

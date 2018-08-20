@@ -8,7 +8,10 @@
 
 import Foundation
 
-public class MoodQuery: CoreDataQuery<MoodImpl> {
+//sourcery: AutoMockable
+public protocol MoodQuery: Query {}
+
+public class MoodQueryImpl: CoreDataQuery<MoodImpl>, MoodQuery {
 
 	public init() {
 		super.init(dataType: .mood)
