@@ -20,7 +20,7 @@ public protocol SubQueryMatcherFactory {
 
 public class SubQueryMatcherFactoryImpl: SubQueryMatcherFactory {
 
-	public static var allMatchers: [SubQueryMatcher.Type] = [
+	public static var allMatcherTypes: [SubQueryMatcher.Type] = [
 		WithinXCalendarUnitsSubQueryMatcher.self,
 		InSameCalendarUnitSubQueryMatcher.self,
 		SameDatesSubQueryMatcher.self,

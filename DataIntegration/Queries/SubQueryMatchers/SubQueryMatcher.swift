@@ -8,26 +8,16 @@
 
 import Foundation
 
-public enum ParamType {
-	case integer
-	case timeUnit
-}
-
-public enum ParamErrors: Error {
-	case invalidIdentifier
-	case typeMismatch
-}
-
-public protocol SubQueryMatcher: CustomStringConvertible {
-
-	static var genericDescription: String { get }
-	static var parameters: [(id: Int, type: ParamType)] { get }
+public protocol SubQueryMatcher: Attributed {
 
 	var mostRecentOnly: Bool { get set }
 
 	init()
 
 	func getSamples<QuerySampleType: Sample>(from querySamples: [QuerySampleType], matching subQuerySamples: [Sample]) -> [QuerySampleType]
-	func setParameter<T>(id: Int, value: T) throws
-	func getParameterValue<T>(id: Int) throws -> T
+}
+
+public class CommonSubQueryMatcherAttributes {
+
+	public static let mostRecentOnly = BooleanAttribute(name: "Most recent only", description: "Use only the most recent enty that matches the given restrictions.")
 }

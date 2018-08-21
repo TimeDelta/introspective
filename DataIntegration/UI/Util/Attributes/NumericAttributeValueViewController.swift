@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os
 
 class NumericAttributeValueViewController: AttributeValueTypeViewController {
 
@@ -18,7 +19,13 @@ class NumericAttributeValueViewController: AttributeValueTypeViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		if currentValue != nil {
-			textField.text = String(currentValue as! Double)
+			if numericAttribute is DoubleAttribute {
+				textField.text = String(currentValue as! Double)
+			} else if numericAttribute is IntegerAttribute {
+				textField.text = String(currentValue as! Int)
+			} else {
+				os_log("Forgot a type of NumericAttribute when setting initial value for text field", type: .error)
+			}
 		} else {
 			setErrorMessageFor(invalidValue: nil)
 		}

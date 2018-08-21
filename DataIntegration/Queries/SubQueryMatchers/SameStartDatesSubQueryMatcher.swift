@@ -10,22 +10,19 @@ import Foundation
 
 public class SameStartDatesSubQueryMatcher: SubQueryMatcher {
 
-	fileprivate typealias Me = SameStartDatesSubQueryMatcher
-
-	public static let genericDescription: String = "Starts on the same date at the same time as"
-	public static let parameters: [(id: Int, type: ParamType)] = []
-
+	public let name: String = "Starts on the same date at the same time as"
 	public var description: String {
-		var text = Me.genericDescription
+		var text = "Starts on the same date at the same time as"
 		if mostRecentOnly {
 			text += " most recent"
 		}
 		return text
 	}
 
+	public let attributes: [Attribute] = [CommonSubQueryMatcherAttributes.mostRecentOnly]
 	public var mostRecentOnly: Bool = false
 
-	public required init() {} // do nothing
+	public required init() {}
 
 	public func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
@@ -54,11 +51,19 @@ public class SameStartDatesSubQueryMatcher: SubQueryMatcher {
 		return matchingSamples
 	}
 
-	public func setParameter<T>(id: Int, value: T) throws {
-		throw ParamErrors.invalidIdentifier // no paremeters
+	public func value(of attribute: Attribute) throws -> Any {
+		if attribute.equalTo(CommonSubQueryMatcherAttributes.mostRecentOnly) {
+			return mostRecentOnly
+		}
+		throw AttributeError.unknownAttribute
 	}
 
-	public func getParameterValue<T>(id: Int) throws -> T {
-		throw ParamErrors.invalidIdentifier // no paremeters
+	public func set(attribute: Attribute, to value: Any) throws {
+		if attribute.equalTo(CommonSubQueryMatcherAttributes.mostRecentOnly) {
+			guard let castedValue = value as? Bool else { throw AttributeError.typeMismatch }
+			mostRecentOnly = castedValue
+		} else {
+			throw AttributeError.unknownAttribute
+		}
 	}
 }

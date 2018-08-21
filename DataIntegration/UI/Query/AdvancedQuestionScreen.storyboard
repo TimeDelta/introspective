@@ -164,83 +164,31 @@
             <objects>
                 <viewController title="Data Type Restriction" id="TpJ-zB-lRv" customClass="EditSubDataTypeViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="GPo-Ep-6jC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YJf-8z-Lg1">
-                                <rect key="frame" x="16" y="577" width="343" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Accept">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <segue destination="yEo-j9-8Ua" kind="unwind" unwindAction="saveEditedSubQueryDataType:" id="xZH-jO-CTK"/>
-                                </connections>
-                            </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mbg-CO-KsO">
+                                <rect key="frame" x="0.0" y="160" width="375" height="438"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="dataTypePicker" translatesAutoresizingMaskIntoConstraints="NO" id="3yu-Wc-bpb">
-                                <rect key="frame" x="0.0" y="379" width="375" height="125"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="120"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             </pickerView>
-                            <pickerView contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="matcherTypePicker" translatesAutoresizingMaskIntoConstraints="NO" id="8OD-qY-1S4">
-                                <rect key="frame" x="0.0" y="62" width="375" height="130"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            </pickerView>
-                            <pickerView contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="timeUnitPicker" translatesAutoresizingMaskIntoConstraints="NO" id="IT0-LA-hfU">
-                                <rect key="frame" x="0.0" y="232" width="375" height="100"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            </pickerView>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xMd-VO-2bR">
-                                <rect key="frame" x="16" y="194" width="343" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
-                                <connections>
-                                    <action selector="textFieldValueChanged:" destination="TpJ-zB-lRv" eventType="editingChanged" id="RFG-nv-f0k"/>
-                                    <action selector="textFieldValueChanged:" destination="TpJ-zB-lRv" eventType="valueChanged" id="qhr-52-DRb"/>
-                                    <action selector="textFieldValueChanged:" destination="TpJ-zB-lRv" eventType="primaryActionTriggered" id="sId-xp-z5N"/>
-                                </connections>
-                            </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Most recent only:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WLi-px-bk1">
-                                <rect key="frame" x="16" y="345" width="133" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rnf-Pu-Yca">
-                                <rect key="frame" x="16" y="512" width="343" height="57"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="1" green="0.058155415100000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q9j-MT-AGE">
-                                <rect key="frame" x="164" y="340" width="49" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <connections>
-                                    <action selector="mostRecentOnlyChanged:" destination="TpJ-zB-lRv" eventType="valueChanged" id="LiS-S4-XE5"/>
-                                </connections>
-                            </switch>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="3mF-KX-9KV"/>
                     </view>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
                     <connections>
-                        <outlet property="acceptButton" destination="YJf-8z-Lg1" id="GJ5-H0-9Af"/>
+                        <outlet property="attributedChooserSubView" destination="mbg-CO-KsO" id="HMw-wn-wSe"/>
                         <outlet property="dataTypePicker" destination="3yu-Wc-bpb" id="DJe-w6-3mV"/>
-                        <outlet property="matcherTypePicker" destination="8OD-qY-1S4" id="ctc-aU-2AG"/>
-                        <outlet property="mostRecentOnlySwitch" destination="Q9j-MT-AGE" id="s8a-iZ-WUe"/>
-                        <outlet property="timeUnitPicker" destination="IT0-LA-hfU" id="md0-zG-ip9"/>
-                        <outlet property="validationLabel" destination="rnf-Pu-Yca" id="xxM-MF-AhV"/>
-                        <outlet property="valueTextField" destination="xMd-VO-2bR" id="nG1-J6-Ajd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GNp-RO-4ZV" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="yEo-j9-8Ua" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3095" y="-815"/>
+            <point key="canvasLocation" x="3093.5999999999999" y="-815.44227886056979"/>
         </scene>
         <!--Edit Attribute Restriction-->
         <scene sceneID="MN9-6C-1GP">
@@ -252,12 +200,12 @@
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ik2-6N-gHU">
                                 <rect key="frame" x="0.0" y="182" width="375" height="352"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ND4-V8-b6U">
                                 <rect key="frame" x="0.0" y="54" width="375" height="120"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             </pickerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

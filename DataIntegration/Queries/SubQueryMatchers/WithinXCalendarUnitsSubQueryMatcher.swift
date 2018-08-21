@@ -12,15 +12,11 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher {
 
 	fileprivate typealias Me = WithinXCalendarUnitsSubQueryMatcher
 
-	fileprivate static let amountOfTimeId = 0
-	fileprivate static let timeUnitId = 1
+	public static let amountOfTime = IntegerAttribute(name: "Number of time units")
+	public static let timeUnit = CalendarComponentAttribute(name: "Time unit")
+	public static let attributes = [CommonSubQueryMatcherAttributes.mostRecentOnly, amountOfTime, timeUnit]
 
-	public static let genericDescription: String = "Within <number> <time_unit> of"
-	public static let parameters: [(id: Int, type: ParamType)] = [
-		(id: amountOfTimeId, type: .integer),
-		(id: timeUnitId, type: .timeUnit),
-	]
-
+	public let name: String = "Within <number> <time_unit>s of"
 	public var description: String {
 		var text = "Within " + String(numberOfTimeUnits) + " " + timeUnit.description.lowercased() + "s of"
 		if mostRecentOnly {
@@ -29,11 +25,12 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher {
 		return text
 	}
 
+	public let attributes: [Attribute] = Me.attributes
 	public var numberOfTimeUnits: Int = 5
 	public var timeUnit: Calendar.Component = .minute
 	public var mostRecentOnly: Bool = false
 
-	public required init() {} // do nothing
+	public required init() {}
 
 	/// Grab only the provided samples that start within `numberOfCalendarUnits` `calendarUnit` of a sub-query sample
 	public func getSamples<QuerySampleType: Sample>(
@@ -61,35 +58,31 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher {
 		return matchingSamples
 	}
 
-	public func setParameter<T>(id: Int, value: T) throws {
-		if id == Me.amountOfTimeId {
-			if T.self != Int.self {
-				throw ParamErrors.typeMismatch
-			}
-			numberOfTimeUnits = (value as! Int)
-		} else if id == Me.timeUnitId {
-			if T.self != Calendar.Component.self {
-				throw ParamErrors.typeMismatch
-			}
-			timeUnit = (value as! Calendar.Component)
-		} else {
-			throw ParamErrors.invalidIdentifier
+	public func value(of attribute: Attribute) throws -> Any {
+		if attribute.equalTo(Me.amountOfTime) {
+			return numberOfTimeUnits
 		}
+		if attribute.equalTo(Me.timeUnit) {
+			return timeUnit
+		}
+		if attribute.equalTo(CommonSubQueryMatcherAttributes.mostRecentOnly) {
+			return mostRecentOnly
+		}
+		throw AttributeError.unknownAttribute
 	}
 
-	public func getParameterValue<T>(id: Int) throws -> T {
-		if id == Me.amountOfTimeId {
-			if T.self != Int.self {
-				throw ParamErrors.typeMismatch
-			}
-			return numberOfTimeUnits as! T
-		} else if id == Me.timeUnitId {
-			if T.self != Calendar.Component.self {
-				throw ParamErrors.typeMismatch
-			}
-			return timeUnit as! T
+	public func set(attribute: Attribute, to value: Any) throws {
+		if attribute.equalTo(Me.amountOfTime) {
+			guard let castedValue = value as? Int else { throw AttributeError.typeMismatch }
+			numberOfTimeUnits = castedValue
+		} else if attribute.equalTo(Me.timeUnit) {
+			guard let castedValue = value as? Calendar.Component else { throw AttributeError.typeMismatch }
+			timeUnit = castedValue
+		} else if attribute.equalTo(CommonSubQueryMatcherAttributes.mostRecentOnly) {
+			guard let castedValue = value as? Bool else { throw AttributeError.typeMismatch }
+			mostRecentOnly = castedValue
 		} else {
-			throw ParamErrors.invalidIdentifier
+			throw AttributeError.unknownAttribute
 		}
 	}
 }

@@ -10,9 +10,9 @@ import UIKit
 
 class QueryViewController: UITableViewController {
 
-	fileprivate static let acceptedAttributeRestrictionEdit = Notification.Name("attributeRestriction")
-
 	fileprivate typealias Me = QueryViewController
+	fileprivate static let acceptedAttributeRestrictionEdit = Notification.Name("acceptedAttributeRestrictionEdit")
+	fileprivate static let acceptedSubDataTypeEdit = Notification.Name("acceptedSubDataTypeEdit")
 
 	public enum CellType: CustomStringConvertible {
 		case dataType
@@ -62,6 +62,7 @@ class QueryViewController: UITableViewController {
 		partWasAdded()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedAttributeRestriction), name: Me.acceptedAttributeRestrictionEdit, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedSubQueryDataType), name: Me.acceptedSubDataTypeEdit, object: nil)
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -141,6 +142,7 @@ class QueryViewController: UITableViewController {
 			editedIndex = tableView.indexPath(for: source)!.row
 			controller.dataType = (parts[editedIndex] as! DataTypeInfo).dataType
 			controller.matcher = (parts[editedIndex] as! DataTypeInfo).matcher
+			controller.notificationToSendWhenAccepted = Me.acceptedSubDataTypeEdit
 		} else if segue.destination is ResultsViewController {
 			let controller = (segue.destination as! ResultsViewController)
 			controller.dataType = (parts[0] as! DataTypeInfo).dataType
@@ -160,9 +162,8 @@ class QueryViewController: UITableViewController {
 		tableView.reloadData()
 	}
 
-	@IBAction func saveEditedSubQueryDataType(_ segue: UIStoryboardSegue) {
-		let controller = (segue.source as! EditSubDataTypeViewController)
-		parts[editedIndex] = DataTypeInfo(controller.dataType, controller.matcher)
+	@objc func saveEditedSubQueryDataType(notification: Notification) {
+		parts[editedIndex] = notification.object as! DataTypeInfo
 		tableView.reloadData()
 	}
 
@@ -239,7 +240,7 @@ class QueryViewController: UITableViewController {
 	fileprivate func buildQuery() -> Query {
 		let partsSplitByQuery = splitPartsByQuery()
 		var currentTopmostQuery: Query? = nil
-		for parts in partsSplitByQuery.reversed() {
+		for parts in partsSplitByQuery {
 			var currentQuery: Query
 
 			let dataTypeInfo = parts[0] as! DataTypeInfo

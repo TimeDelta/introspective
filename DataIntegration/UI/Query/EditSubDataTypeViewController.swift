@@ -12,38 +12,22 @@ import os
 class EditSubDataTypeViewController: UIViewController {
 
 	fileprivate typealias Me = EditSubDataTypeViewController
+	fileprivate static let doneEditing = Notification.Name("doneChoosingSubDataType")
 
-	fileprivate static let supportedTimeUnits: [Calendar.Component] = [
-		.year,
-		.month,
-		.weekOfYear,
-		.day,
-		.hour,
-		.minute,
-		.second,
-		.nanosecond
-	]
-
+	public var notificationToSendWhenAccepted: Notification.Name!
 	public var matcher: SubQueryMatcher!
 	public var dataType: DataTypes!
 
 	@IBOutlet weak var dataTypePicker: UIPickerView!
-	@IBOutlet weak var matcherTypePicker: UIPickerView!
-	@IBOutlet weak var valueTextField: UITextField!
-	@IBOutlet weak var timeUnitPicker: UIPickerView!
-	@IBOutlet weak var mostRecentOnlySwitch: UISwitch!
-	@IBOutlet weak var validationLabel: UILabel!
-	@IBOutlet weak var acceptButton: UIButton!
+	@IBOutlet weak var attributedChooserSubView: UIView!
+
+	fileprivate var attributedChooserViewController: AttributedChooserViewController!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
 		dataTypePicker.dataSource = self
 		dataTypePicker.delegate = self
-		matcherTypePicker.dataSource = self
-		matcherTypePicker.delegate = self
-		timeUnitPicker.dataSource = self
-		timeUnitPicker.delegate = self
 
 		for index in 0 ..< DataTypes.allTypes.count {
 			if DataTypes.allTypes[index] == dataType {
@@ -52,121 +36,33 @@ class EditSubDataTypeViewController: UIViewController {
 			}
 		}
 
-		mostRecentOnlySwitch.setOn(matcher.mostRecentOnly, animated: false)
+		createAndInstallAttributedChooserViewController()
 
-		matcherTypePicker.selectRow(getIndexForMatcher(), inComponent: 0, animated: false)
-
-		acceptButton.setTitle("Must fix issues", for: .disabled)
-		acceptButton.setTitle("Accept", for: .normal)
-
-		updateAttributeViews()
+		NotificationCenter.default.addObserver(self, selector: #selector(doneEditing), name: Me.doneEditing, object: nil)
 	}
 
-	@IBAction func textFieldValueChanged(_ sender: Any) {
-		validate()
-		let textValue = valueTextField.text!
-		if DependencyInjector.util.stringUtil.isInteger(textValue) {
-			let id = getParameterId(for: .integer)
-			try! matcher.setParameter(id: id, value: Int(textValue)!)
+	@objc public func doneEditing(notification: Notification) {
+		let savedValue = QueryViewController.DataTypeInfo(dataType, notification.object as! SubQueryMatcher)
+		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: savedValue, userInfo: nil)
+		_ = navigationController?.popViewController(animated: true)
+	}
+
+	fileprivate func createAndInstallAttributedChooserViewController() {
+		attributedChooserViewController = (UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "attributedChooserViewController") as! AttributedChooserViewController)
+		updateAttributedChooserViewValues()
+		attributedChooserViewController.notificationToSendWhenAccepted = Me.doneEditing
+		attributedChooserSubView.addSubview(attributedChooserViewController.view)
+	}
+
+	fileprivate func updateAttributedChooserViewValues() {
+		let possibleValues = SubQueryMatcherFactoryImpl.allMatcherTypes.map { type in
+			return type.init()
 		}
-	}
-
-	@IBAction func mostRecentOnlyChanged(_ sender: Any) {
-		matcher.mostRecentOnly = mostRecentOnlySwitch.isOn
-	}
-
-	fileprivate func updateAttributeViews() {
-		timeUnitPicker.isHidden = true
-		timeUnitPicker.isUserInteractionEnabled = false
-		valueTextField.isHidden = true
-		valueTextField.isEnabled = false
-		valueTextField.isUserInteractionEnabled = false
-
-		let matcherTypeIndex = getIndexForMatcher()
-
-		let parameters = SubQueryMatcherFactoryImpl.allMatchers[matcherTypeIndex].parameters
-		for (id, type) in parameters {
-			switch (type) {
-				case .integer:
-					let value: Int = try! matcher.getParameterValue(id: id)
-
-					valueTextField.isHidden = false
-					valueTextField.isEnabled = true
-					valueTextField.isUserInteractionEnabled = true
-
-					valueTextField.text = String(value)
-					break
-				case .timeUnit:
-					let value: Calendar.Component = try! matcher.getParameterValue(id: id)
-
-					timeUnitPicker.isHidden = false
-					timeUnitPicker.isUserInteractionEnabled = true
-
-					var selectedTimeUnitIndex: Int = -1
-					for index in 0 ..< Me.supportedTimeUnits.count {
-						if Me.supportedTimeUnits[index] == value {
-							selectedTimeUnitIndex = index
-							break
-						}
-					}
-
-					timeUnitPicker.selectRow(selectedTimeUnitIndex, inComponent: 0, animated: false)
-					break
-			}
+		attributedChooserViewController.possibleValues = possibleValues
+		attributedChooserViewController.currentValue = matcher ?? possibleValues[0]
+		if attributedChooserSubView.subviews.count > 0 {
+			attributedChooserViewController.reloadInputViews()
 		}
-	}
-
-	fileprivate func getIndexForMatcher() -> Int {
-		for index in 0 ..< SubQueryMatcherFactoryImpl.allMatchers.count {
-			if SubQueryMatcherFactoryImpl.allMatchers[index] == type(of: matcher!) {
-				return index
-			}
-		}
-		return -1
-	}
-
-	fileprivate func getParameterId(for targetType: ParamType) -> Int {
-		for (id, type) in type(of: matcher).parameters {
-			if type == targetType {
-				return id
-			}
-		}
-		return -1
-	}
-
-	fileprivate func validate() {
-		if valueTextField.isEnabled {
-			let text = valueTextField.text!
-			if !DependencyInjector.util.stringUtil.isInteger(text) {
-				setInvalidState("\"\(text)\" is not an integer")
-				return
-			}
-		}
-		setValidState()
-	}
-
-	fileprivate func setInvalidState(_ message: String) {
-		disableAcceptButton()
-		validationLabel.text = message
-		validationLabel.reloadInputViews()
-	}
-
-	fileprivate func setValidState() {
-		enableAcceptButton()
-		validationLabel.text = ""
-		validationLabel.reloadInputViews()
-	}
-
-	fileprivate func disableAcceptButton() {
-		acceptButton.isEnabled = false
-		acceptButton.isUserInteractionEnabled = false
-		acceptButton.backgroundColor = UIColor.gray
-	}
-
-	fileprivate func enableAcceptButton() {
-		acceptButton.isEnabled = true
-		acceptButton.isUserInteractionEnabled = true
-		acceptButton.backgroundColor = UIColor.black
 	}
 }
 
@@ -177,62 +73,17 @@ extension EditSubDataTypeViewController: UIPickerViewDataSource {
 	}
 
 	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		if pickerView == dataTypePicker {
-			return DataTypes.allTypes.count
-		}
-		if pickerView == matcherTypePicker {
-			return SubQueryMatcherFactoryImpl.allMatchers.count
-		}
-		if pickerView == timeUnitPicker {
-			return Me.supportedTimeUnits.count
-		}
-
-		os_log("Unknown UIPickerView when retrieving number of rows", type: .error)
-		return 0
+		return DataTypes.allTypes.count
 	}
 }
 
 extension EditSubDataTypeViewController: UIPickerViewDelegate {
 
-	public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-		var label: UILabel? = (view as? UILabel)
-		if label == nil {
-			label = UILabel()
-		}
-		label!.textAlignment = .center
-
-		if pickerView == dataTypePicker {
-			label!.text = DataTypes.allTypes[row].description
-			label!.font = UIFont(name: "System", size: CGFloat(15))
-		} else if pickerView == matcherTypePicker {
-			label!.text = SubQueryMatcherFactoryImpl.allMatchers[row].genericDescription
-			label!.font = UIFont(name: "System", size: CGFloat(19))
-		} else if pickerView == timeUnitPicker {
-			label!.text = Me.supportedTimeUnits[row].description
-			let selectedMatcherIndex = matcherTypePicker.selectedRow(inComponent: 0)
-			if SubQueryMatcherFactoryImpl.allMatchers[selectedMatcherIndex] == WithinXCalendarUnitsSubQueryMatcher.self {
-				label!.text! += "s"
-			}
-			label!.font = UIFont(name: "System", size: CGFloat(19))
-		} else {
-			os_log("Unknown UIPickerView when retrieving view for row", type: .error)
-		}
-
-		return label!
+	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+		return DataTypes.allTypes[row].description
 	}
 
 	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-		if pickerView == matcherTypePicker {
-			let type: SubQueryMatcher.Type = SubQueryMatcherFactoryImpl.allMatchers[row]
-			matcher = type.init()
-			updateAttributeViews()
-		} else if pickerView == timeUnitPicker {
-			let unit = Me.supportedTimeUnits[row]
-			let id = getParameterId(for: .timeUnit)
-			try! matcher.setParameter(id: id, value: unit)
-		} else if pickerView == dataTypePicker {
-			dataType = DataTypes.allTypes[row]
-		}
-		validate()
+		dataType = DataTypes.allTypes[row]
 	}
 }
