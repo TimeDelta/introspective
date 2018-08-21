@@ -71,9 +71,19 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
 		perform?(callback)
     }
 
+    func equalTo(_ otherQuery: Query) -> Bool {
+        addInvocation(.iequalTo__otherQuery(Parameter<Query>.value(otherQuery)))
+		let perform = methodPerformValue(.iequalTo__otherQuery(Parameter<Query>.value(otherQuery))) as? (Query) -> Void
+		perform?(otherQuery)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iequalTo__otherQuery(Parameter<Query>.value(otherQuery)))
+		let value = givenValue.value as? Bool
+		return value.orFail("stub return value not specified for equalTo(_ otherQuery: Query). Use given")
+    }
+
     fileprivate enum MethodType {
         case irunQuery__callback_callback_1(Parameter<(SampleQueryResult<SampleType>?, Error?) -> ()>)
         case irunQuery__callback_callback_2(Parameter<(QueryResult?, Error?) -> ()>)
+        case iequalTo__otherQuery(Parameter<Query>)
         case attributeRestrictions_get
 		case attributeRestrictions_set(Parameter<[AttributeRestriction]>)
         case mostRecentEntryOnly_get
@@ -89,6 +99,9 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
                 case (.irunQuery__callback_callback_2(let lhsCallback), .irunQuery__callback_callback_2(let rhsCallback)):
                     guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
                     return true 
+                case (.iequalTo__otherQuery(let lhsOtherquery), .iequalTo__otherQuery(let rhsOtherquery)):
+                    guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
+                    return true 
                 case (.attributeRestrictions_get,.attributeRestrictions_get): return true
 				case (.attributeRestrictions_set(let left),.attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
                 case (.mostRecentEntryOnly_get,.mostRecentEntryOnly_get): return true
@@ -103,6 +116,7 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
             switch self {
                 case let .irunQuery__callback_callback_1(p0): return p0.intValue
                 case let .irunQuery__callback_callback_2(p0): return p0.intValue
+                case let .iequalTo__otherQuery(p0): return p0.intValue
                 case .attributeRestrictions_get: return 0
 				case .attributeRestrictions_set(let newValue): return newValue.intValue
                 case .mostRecentEntryOnly_get: return 0
@@ -124,6 +138,9 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
             self.`throws` = `throws`
         }
 
+        static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool) -> Given {
+            return Given(method: .iequalTo__otherQuery(otherQuery), returns: willReturn, throws: nil)
+        }
     }
 
     struct Verify {
@@ -134,6 +151,9 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
         }
         static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify {
             return Verify(method: .irunQuery__callback_callback_2(callback))
+        }
+        static func equalTo(otherQuery: Parameter<Query>) -> Verify {
+            return Verify(method: .iequalTo__otherQuery(otherQuery))
         }
     }
 
@@ -146,6 +166,9 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
         }
         static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
             return Perform(method: .irunQuery__callback_callback_2(callback), performs: perform)
+        }
+        static func equalTo(otherQuery: Parameter<Query>, perform: (Query) -> Void) -> Perform {
+            return Perform(method: .iequalTo__otherQuery(otherQuery), performs: perform)
         }
     }
 

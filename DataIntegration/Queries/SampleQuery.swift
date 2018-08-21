@@ -13,7 +13,6 @@ public protocol SampleQuery: Query {
 
 	var attributeRestrictions: [AttributeRestriction] { get set }
 	var mostRecentEntryOnly: Bool { get set }
-	var subQuery: (matcher: SubQueryMatcher, query: Query)? { get set }
 
 	func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> ())
 }

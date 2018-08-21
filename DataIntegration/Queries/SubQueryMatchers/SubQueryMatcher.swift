@@ -15,6 +15,16 @@ public protocol SubQueryMatcher: Attributed {
 	init()
 
 	func getSamples<QuerySampleType: Sample>(from querySamples: [QuerySampleType], matching subQuerySamples: [Sample]) -> [QuerySampleType]
+	func equalTo(_ otherMatcher: SubQueryMatcher) -> Bool
+}
+
+extension SubQueryMatcher {
+
+	public func equalTo(_ otherMatcher: SubQueryMatcher) -> Bool {
+		if type(of: self) != type(of: otherMatcher) { return false }
+		if mostRecentOnly != otherMatcher.mostRecentOnly { return false }
+		return true
+	}
 }
 
 public class CommonSubQueryMatcherAttributes {

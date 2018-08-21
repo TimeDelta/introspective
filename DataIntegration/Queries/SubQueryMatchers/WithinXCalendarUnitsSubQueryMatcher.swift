@@ -8,7 +8,11 @@
 
 import Foundation
 
-public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher {
+public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatable {
+
+	public static func ==(lhs: WithinXCalendarUnitsSubQueryMatcher, rhs: WithinXCalendarUnitsSubQueryMatcher) -> Bool {
+		return lhs.equalTo(rhs)
+	}
 
 	fileprivate typealias Me = WithinXCalendarUnitsSubQueryMatcher
 
@@ -84,5 +88,21 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher {
 		} else {
 			throw AttributeError.unknownAttribute
 		}
+	}
+
+	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+		if !(otherAttributed is WithinXCalendarUnitsSubQueryMatcher) { return false }
+		let other = otherAttributed as! WithinXCalendarUnitsSubQueryMatcher
+		return equalTo(other)
+	}
+
+	public func equalTo(_ otherMatcher: SubQueryMatcher) -> Bool {
+		if !(otherMatcher is WithinXCalendarUnitsSubQueryMatcher) { return false }
+		let other = otherMatcher as! WithinXCalendarUnitsSubQueryMatcher
+		return equalTo(other)
+	}
+
+	public func equalTo(_ other: WithinXCalendarUnitsSubQueryMatcher) -> Bool {
+		return numberOfTimeUnits == other.numberOfTimeUnits && timeUnit == other.timeUnit && mostRecentOnly == other.mostRecentOnly
 	}
 }

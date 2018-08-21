@@ -8,8 +8,11 @@
 
 import Foundation
 
-public class SameDatesSubQueryMatcher: SubQueryMatcher {
+public class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 
+	public static func ==(lhs: SameDatesSubQueryMatcher, rhs: SameDatesSubQueryMatcher) -> Bool {
+		return lhs.equalTo(rhs as SubQueryMatcher)
+	}
 
 	public let name: String = "Start and end timestamps are the same as"
 	public var description: String {

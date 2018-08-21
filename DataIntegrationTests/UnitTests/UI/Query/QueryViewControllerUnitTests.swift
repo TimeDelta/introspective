@@ -25,6 +25,7 @@ class QueryViewControllerUnitTests: UnitTest {
 		let sampleQuery = HeartRateQueryMock()
 		Given(mockQueryFactory, .heartRateQuery(willReturn: sampleQuery))
 		controller.viewDidLoad()
+		controller.parts[0] = QueryViewController.DataTypeInfo(.heartRate)
 		let segue = UIStoryboardSegue(identifier: "", source: controller, destination: ResultsViewController())
 
 		// when
@@ -41,6 +42,7 @@ class QueryViewControllerUnitTests: UnitTest {
 		Given(mockQueryFactory, .heartRateQuery(willReturn: sampleQuery))
 
 		controller.viewDidLoad()
+		controller.parts[0] = QueryViewController.DataTypeInfo(.heartRate)
 
 		let attributeRestriction = EqualToNumericAttributeRestriction(attribute: HeartRate.heartRate)
 		controller.parts.append(attributeRestriction)
@@ -62,6 +64,7 @@ class QueryViewControllerUnitTests: UnitTest {
 		Given(mockQueryFactory, .heartRateQuery(willReturn: sampleQuery))
 
 		controller.viewDidLoad()
+		controller.parts[0] = QueryViewController.DataTypeInfo(.heartRate)
 
 		let attributeRestriction1 = EqualToNumericAttributeRestriction(attribute: HeartRate.heartRate)
 		let attributeRestriction2 = NotEqualToNumericAttributeRestriction(attribute: HeartRate.heartRate)
@@ -76,6 +79,112 @@ class QueryViewControllerUnitTests: UnitTest {
 		// then
 		XCTAssert(sampleQuery.attributeRestrictions.contains(where: { r in return r.equalTo(attributeRestriction1) }))
 		XCTAssert(sampleQuery.attributeRestrictions.contains(where: { r in return r.equalTo(attributeRestriction2) }))
+		Verify(sampleQuery, .runQuery(callback: .any(((QueryResult?, Error?) -> ()).self)))
+	}
+
+	func testGivenHeartRateDataTypeWithMoodSubQueryAndNoAttributeRestrictions_prepareForSegue_correctlyBuildsAndRunsQuery() {
+		// given
+		let sampleQuery = HeartRateQueryMock()
+		Given(mockQueryFactory, .heartRateQuery(willReturn: sampleQuery))
+
+		let subQuery = MoodQueryMock()
+		Given(mockQueryFactory, .moodQuery(willReturn: subQuery))
+
+		controller.viewDidLoad()
+		controller.parts[0] = QueryViewController.DataTypeInfo(.heartRate)
+
+		var dataTypeInfo = QueryViewController.DataTypeInfo(.mood)
+		dataTypeInfo.matcher = SubQueryMatcherMock()
+		dataTypeInfo.matcher!.mostRecentOnly = false
+		controller.parts.append(dataTypeInfo)
+
+		let segue = UIStoryboardSegue(identifier: "", source: controller, destination: ResultsViewController())
+
+		// when
+		controller.prepare(for: segue, sender: self)
+
+		// then
+		XCTAssert(sampleQuery.subQuery != nil)
+		XCTAssert(sampleQuery.subQuery!.matcher === dataTypeInfo.matcher!)
+		XCTAssert(sampleQuery.subQuery!.query === subQuery)
+		Verify(sampleQuery, .runQuery(callback: .any(((QueryResult?, Error?) -> ()).self)))
+	}
+
+	func testGivenHeartRateDataTypeWithMoodSubQueryThatHasMultipleAttributeRestrictions_prepareForSegue_correctlyBuildsAndRunsQuery() {
+		// given
+		let sampleQuery = HeartRateQueryMock()
+		Given(mockQueryFactory, .heartRateQuery(willReturn: sampleQuery))
+
+		let subQuery = MoodQueryMock()
+		subQuery.attributeRestrictions = []
+		Given(mockQueryFactory, .moodQuery(willReturn: subQuery))
+
+		controller.viewDidLoad()
+		controller.parts[0] = QueryViewController.DataTypeInfo(.heartRate)
+
+		var dataTypeInfo = QueryViewController.DataTypeInfo(.mood)
+		dataTypeInfo.matcher = SubQueryMatcherMock()
+		controller.parts.append(dataTypeInfo)
+
+		let attributeRestriction1 = EqualToNumericAttributeRestriction(attribute: MoodImpl.rating)
+		let attributeRestriction2 = NotEqualToNumericAttributeRestriction(attribute: MoodImpl.rating)
+		controller.parts.append(attributeRestriction1)
+		controller.parts.append(attributeRestriction2)
+
+		let segue = UIStoryboardSegue(identifier: "", source: controller, destination: ResultsViewController())
+
+		// when
+		controller.prepare(for: segue, sender: self)
+
+		// then
+		XCTAssert(sampleQuery.subQuery != nil)
+		XCTAssert(sampleQuery.subQuery!.matcher === dataTypeInfo.matcher!)
+		XCTAssert(sampleQuery.subQuery!.query === subQuery)
+		XCTAssert(subQuery.attributeRestrictions.contains(where: { r in return r.equalTo(attributeRestriction1) }))
+		XCTAssert(subQuery.attributeRestrictions.contains(where: { r in return r.equalTo(attributeRestriction2) }))
+		Verify(sampleQuery, .runQuery(callback: .any(((QueryResult?, Error?) -> ()).self)))
+	}
+
+	func testGivenHeartRateDataTypeWithMultipleAttributeRestrictionsAndMoodSubQueryThatHasMultipleAttributeRestrictions_prepareForSegue_correctlyBuildsAndRunsQuery() {
+		// given
+		let sampleQuery = HeartRateQueryMock()
+		sampleQuery.attributeRestrictions = []
+		Given(mockQueryFactory, .heartRateQuery(willReturn: sampleQuery))
+
+		let subQuery = MoodQueryMock()
+		subQuery.attributeRestrictions = []
+		Given(mockQueryFactory, .moodQuery(willReturn: subQuery))
+
+		controller.viewDidLoad()
+		controller.parts[0] = QueryViewController.DataTypeInfo(.heartRate)
+
+		let heartRateAttributeRestriction1 = EqualToNumericAttributeRestriction(attribute: HeartRate.heartRate)
+		let heartRateAttributeRestriction2 = NotEqualToNumericAttributeRestriction(attribute: HeartRate.heartRate)
+		controller.parts.append(heartRateAttributeRestriction1)
+		controller.parts.append(heartRateAttributeRestriction2)
+
+		var dataTypeInfo = QueryViewController.DataTypeInfo(.mood)
+		dataTypeInfo.matcher = SubQueryMatcherMock()
+		controller.parts.append(dataTypeInfo)
+
+		let moodAttributeRestriction1 = EqualToNumericAttributeRestriction(attribute: MoodImpl.rating)
+		let moodAttributeRestriction2 = NotEqualToNumericAttributeRestriction(attribute: MoodImpl.rating)
+		controller.parts.append(moodAttributeRestriction1)
+		controller.parts.append(moodAttributeRestriction2)
+
+		let segue = UIStoryboardSegue(identifier: "", source: controller, destination: ResultsViewController())
+
+		// when
+		controller.prepare(for: segue, sender: self)
+
+		// then
+		XCTAssert(sampleQuery.subQuery != nil)
+		XCTAssert(sampleQuery.attributeRestrictions.contains(where: { r in return r.equalTo(heartRateAttributeRestriction1) }))
+		XCTAssert(sampleQuery.attributeRestrictions.contains(where: { r in return r.equalTo(heartRateAttributeRestriction2) }))
+		XCTAssert(sampleQuery.subQuery!.matcher === dataTypeInfo.matcher!)
+		XCTAssert(sampleQuery.subQuery!.query === subQuery)
+		XCTAssert(subQuery.attributeRestrictions.contains(where: { r in return r.equalTo(moodAttributeRestriction1) }))
+		XCTAssert(subQuery.attributeRestrictions.contains(where: { r in return r.equalTo(moodAttributeRestriction2) }))
 		Verify(sampleQuery, .runQuery(callback: .any(((QueryResult?, Error?) -> ()).self)))
 	}
 }

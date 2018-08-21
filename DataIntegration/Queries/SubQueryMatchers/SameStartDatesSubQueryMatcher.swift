@@ -8,7 +8,11 @@
 
 import Foundation
 
-public class SameStartDatesSubQueryMatcher: SubQueryMatcher {
+public class SameStartDatesSubQueryMatcher: SubQueryMatcher, Equatable {
+
+	public static func ==(lhs: SameStartDatesSubQueryMatcher, rhs: SameStartDatesSubQueryMatcher) -> Bool {
+		return lhs.equalTo(rhs as SubQueryMatcher)
+	}
 
 	public let name: String = "Starts on the same date at the same time as"
 	public var description: String {

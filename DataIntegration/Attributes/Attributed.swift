@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol Attributed: CustomStringConvertible {
+public protocol Attributed: class, CustomStringConvertible {
 
 	var name: String { get }
 	var attributes: [Attribute] { get }
