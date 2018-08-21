@@ -8,9 +8,13 @@
 
 import Foundation
 
-public class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction {
+public class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction, Equatable {
 
 	fileprivate typealias Me = BeforeTimeOfDayAttributeRestriction
+
+	public static func ==(lhs: BeforeTimeOfDayAttributeRestriction, rhs: BeforeTimeOfDayAttributeRestriction) -> Bool {
+		return lhs.equalTo(rhs)
+	}
 
 	public static let timeAttribute = TimeOfDayAttribute(
 		name: "Time",
@@ -51,5 +55,21 @@ public class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction {
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
 		guard let sampleDate = try sample.value(of: restrictedAttribute) as? Date else { throw SampleError.typeMismatch }
 		return sampleDate < timeOfDay
+	}
+
+	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+		if !(otherAttributed is BeforeTimeOfDayAttributeRestriction) { return false }
+		let other = otherAttributed as! BeforeTimeOfDayAttributeRestriction
+		return equalTo(other)
+	}
+
+	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+		if !(otherRestriction is BeforeTimeOfDayAttributeRestriction) { return false }
+		let other = otherRestriction as! BeforeTimeOfDayAttributeRestriction
+		return equalTo(other)
+	}
+
+	public func equalTo(_ other: BeforeTimeOfDayAttributeRestriction) -> Bool {
+		return timeOfDay == other.timeOfDay
 	}
 }

@@ -8,9 +8,13 @@
 
 import Foundation
 
-public class OnDayOfWeekAttributeRestriction: DateAttributeRestriction {
+public class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Equatable {
 
 	fileprivate typealias Me = OnDayOfWeekAttributeRestriction
+
+	public static func ==(lhs: OnDayOfWeekAttributeRestriction, rhs: OnDayOfWeekAttributeRestriction) -> Bool {
+		return lhs.equalTo(rhs)
+	}
 
 	public static let daysOfWeekAttribute = DaysOfWeekAttribute()
 	public static var attributes: [Attribute] = [
@@ -48,5 +52,21 @@ public class OnDayOfWeekAttributeRestriction: DateAttributeRestriction {
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
 		guard let sampleDate = try sample.value(of: restrictedAttribute) as? Date else { throw SampleError.typeMismatch }
 		return DependencyInjector.util.calendarUtil.date(sampleDate, isOnOneOf: daysOfWeek)
+	}
+
+	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+		if !(otherAttributed is OnDayOfWeekAttributeRestriction) { return false }
+		let other = otherAttributed as! OnDayOfWeekAttributeRestriction
+		return equalTo(other)
+	}
+
+	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+		if !(otherRestriction is OnDayOfWeekAttributeRestriction) { return false }
+		let other = otherRestriction as! OnDayOfWeekAttributeRestriction
+		return equalTo(other)
+	}
+
+	public func equalTo(_ other: OnDayOfWeekAttributeRestriction) -> Bool {
+		return daysOfWeek == other.daysOfWeek
 	}
 }

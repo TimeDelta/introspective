@@ -9,9 +9,13 @@
 import Foundation
 import SwiftDate
 
-public class OnDateAttributeRestriction: DateAttributeRestriction, PredicateAttributeRestriction {
+public class OnDateAttributeRestriction: DateAttributeRestriction, PredicateAttributeRestriction, Equatable {
 
 	fileprivate typealias Me = OnDateAttributeRestriction
+
+	public static func ==(lhs: OnDateAttributeRestriction, rhs: OnDateAttributeRestriction) -> Bool {
+		return lhs.equalTo(rhs)
+	}
 
 	public static let dateAttribute = DateOnlyAttribute()
 	public static var attributes: [Attribute] = [
@@ -58,5 +62,21 @@ public class OnDateAttributeRestriction: DateAttributeRestriction, PredicateAttr
 	public func toPredicate() -> NSPredicate {
 		let nextDay = Calendar.autoupdatingCurrent.date(byAdding: .day, value: 1, to: date)!
 		return NSPredicate(format: "%K > %@ AND %K < %@", restrictedAttribute.variableName, date as NSDate, restrictedAttribute.variableName, nextDay as NSDate)
+	}
+
+	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+		if !(otherAttributed is OnDateAttributeRestriction) { return false }
+		let other = otherAttributed as! OnDateAttributeRestriction
+		return equalTo(other)
+	}
+
+	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+		if !(otherRestriction is OnDateAttributeRestriction) { return false }
+		let other = otherRestriction as! OnDateAttributeRestriction
+		return equalTo(other)
+	}
+
+	public func equalTo(_ other: OnDateAttributeRestriction) -> Bool {
+		return date == other.date
 	}
 }

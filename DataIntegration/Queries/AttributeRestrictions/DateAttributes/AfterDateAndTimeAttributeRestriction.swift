@@ -8,9 +8,13 @@
 
 import Foundation
 
-public class AfterDateAndTimeAttributeRestriction: DateAttributeRestriction, PredicateAttributeRestriction {
+public class AfterDateAndTimeAttributeRestriction: DateAttributeRestriction, PredicateAttributeRestriction, Equatable {
 
 	fileprivate typealias Me = AfterDateAndTimeAttributeRestriction
+
+	public static func ==(lhs: AfterDateAndTimeAttributeRestriction, rhs: AfterDateAndTimeAttributeRestriction) -> Bool {
+		return lhs.equalTo(rhs)
+	}
 
 	public static let dateAttribute = DateTimeAttribute()
 	public static var attributes: [Attribute] = [
@@ -52,5 +56,21 @@ public class AfterDateAndTimeAttributeRestriction: DateAttributeRestriction, Pre
 
 	public func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K > %@", restrictedAttribute.variableName, date as NSDate)
+	}
+
+	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+		if !(otherAttributed is AfterDateAndTimeAttributeRestriction) { return false }
+		let other = otherAttributed as! AfterDateAndTimeAttributeRestriction
+		return equalTo(other)
+	}
+
+	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+		if !(otherRestriction is AfterDateAndTimeAttributeRestriction) { return false }
+		let other = otherRestriction as! AfterDateAndTimeAttributeRestriction
+		return equalTo(other)
+	}
+
+	public func equalTo(_ other: AfterDateAndTimeAttributeRestriction) -> Bool {
+		return date == other.date
 	}
 }

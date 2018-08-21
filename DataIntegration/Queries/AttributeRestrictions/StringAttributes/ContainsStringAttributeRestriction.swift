@@ -8,9 +8,13 @@
 
 import Foundation
 
-public class ContainsStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, PredicateAttributeRestriction {
+public class ContainsStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, PredicateAttributeRestriction, Equatable {
 
 	fileprivate typealias Me = ContainsStringAttributeRestriction
+
+	public static func ==(lhs: ContainsStringAttributeRestriction, rhs: ContainsStringAttributeRestriction) -> Bool {
+		return lhs.equalTo(rhs)
+	}
 
 	public static let substringAttribute = TextAttribute(name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [
@@ -47,5 +51,21 @@ public class ContainsStringAttributeRestriction: AnyAttributeRestriction, String
 
 	public func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K CONTAINS[cd] %@", restrictedAttribute.variableName, substring)
+	}
+
+	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+		if !(otherAttributed is ContainsStringAttributeRestriction) { return false }
+		let other = otherAttributed as! ContainsStringAttributeRestriction
+		return equalTo(other)
+	}
+
+	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+		if !(otherRestriction is ContainsStringAttributeRestriction) { return false }
+		let other = otherRestriction as! ContainsStringAttributeRestriction
+		return equalTo(other)
+	}
+
+	public func equalTo(_ other: ContainsStringAttributeRestriction) -> Bool {
+		return substring == other.substring
 	}
 }

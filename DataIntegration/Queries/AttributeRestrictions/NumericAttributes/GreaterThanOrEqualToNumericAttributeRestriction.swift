@@ -8,9 +8,13 @@
 
 import Foundation
 
-public class GreaterThanOrEqualToNumericAttributeRestriction: NumericAttributeRestriction, PredicateAttributeRestriction {
+public class GreaterThanOrEqualToNumericAttributeRestriction: NumericAttributeRestriction, PredicateAttributeRestriction, Equatable {
 
 	fileprivate typealias Me = GreaterThanOrEqualToNumericAttributeRestriction
+
+	public static func ==(lhs: GreaterThanOrEqualToNumericAttributeRestriction, rhs: GreaterThanOrEqualToNumericAttributeRestriction) -> Bool {
+		return lhs.equalTo(rhs)
+	}
 
 	public static let valueAttribute = DoubleAttribute(name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [
@@ -45,5 +49,21 @@ public class GreaterThanOrEqualToNumericAttributeRestriction: NumericAttributeRe
 
 	public func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K >= %@", restrictedAttribute.variableName, String(value))
+	}
+
+	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+		if !(otherAttributed is GreaterThanOrEqualToNumericAttributeRestriction) { return false }
+		let other = otherAttributed as! GreaterThanOrEqualToNumericAttributeRestriction
+		return equalTo(other)
+	}
+
+	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+		if !(otherRestriction is GreaterThanOrEqualToNumericAttributeRestriction) { return false }
+		let other = otherRestriction as! GreaterThanOrEqualToNumericAttributeRestriction
+		return equalTo(other)
+	}
+
+	public func equalTo(_ other: GreaterThanOrEqualToNumericAttributeRestriction) -> Bool {
+		return value == other.value
 	}
 }

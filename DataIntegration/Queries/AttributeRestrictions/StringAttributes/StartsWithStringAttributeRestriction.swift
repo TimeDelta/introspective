@@ -8,9 +8,13 @@
 
 import Foundation
 
-public class StartsWithStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, PredicateAttributeRestriction {
+public class StartsWithStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, PredicateAttributeRestriction, Equatable {
 
 	fileprivate typealias Me = StartsWithStringAttributeRestriction
+
+	public static func ==(lhs: StartsWithStringAttributeRestriction, rhs: StartsWithStringAttributeRestriction) -> Bool {
+		return lhs.equalTo(rhs)
+	}
 
 	public static let prefixAttribute = TextAttribute(name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [
@@ -47,6 +51,22 @@ public class StartsWithStringAttributeRestriction: AnyAttributeRestriction, Stri
 
 	public func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K BEGINSWITH[cd] %@", restrictedAttribute.variableName, prefix)
+	}
+
+	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+		if !(otherAttributed is StartsWithStringAttributeRestriction) { return false }
+		let other = otherAttributed as! StartsWithStringAttributeRestriction
+		return equalTo(other)
+	}
+
+	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+		if !(otherRestriction is StartsWithStringAttributeRestriction) { return false }
+		let other = otherRestriction as! StartsWithStringAttributeRestriction
+		return equalTo(other)
+	}
+
+	public func equalTo(_ other: StartsWithStringAttributeRestriction) -> Bool {
+		return prefix == other.prefix
 	}
 }
 

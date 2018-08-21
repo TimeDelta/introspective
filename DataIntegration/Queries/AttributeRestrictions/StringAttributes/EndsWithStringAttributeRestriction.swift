@@ -8,9 +8,13 @@
 
 import Foundation
 
-public class EndsWithStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, PredicateAttributeRestriction {
+public class EndsWithStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, PredicateAttributeRestriction, Equatable {
 
 	fileprivate typealias Me = EndsWithStringAttributeRestriction
+
+	public static func ==(lhs: EndsWithStringAttributeRestriction, rhs: EndsWithStringAttributeRestriction) -> Bool {
+		return lhs.equalTo(rhs)
+	}
 
 	public static let suffixAttribute = TextAttribute(name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [
@@ -48,6 +52,20 @@ public class EndsWithStringAttributeRestriction: AnyAttributeRestriction, String
 	public func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K ENDSWITH[cd] %@", restrictedAttribute.variableName, suffix)
 	}
+
+	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+		if !(otherAttributed is EndsWithStringAttributeRestriction) { return false }
+		let other = otherAttributed as! EndsWithStringAttributeRestriction
+		return equalTo(other)
+	}
+
+	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+		if !(otherRestriction is EndsWithStringAttributeRestriction) { return false }
+		let other = otherRestriction as! EndsWithStringAttributeRestriction
+		return equalTo(other)
+	}
+
+	public func equalTo(_ other: EndsWithStringAttributeRestriction) -> Bool {
+		return suffix == other.suffix
+	}
 }
-
-
