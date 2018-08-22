@@ -1153,14 +1153,14 @@ class DatabaseMock: Database, Mock {
 
 
 
-    func new<Type: NSManagedObject>(objectType: Type.Type, entityName: String) throws -> Type {
-        addInvocation(.inew__objectType_objectTypeentityName_entityName(Parameter<Type.Type>.value(objectType).wrapAsGeneric(), Parameter<String>.value(entityName)))
-		let perform = methodPerformValue(.inew__objectType_objectTypeentityName_entityName(Parameter<Type.Type>.value(objectType).wrapAsGeneric(), Parameter<String>.value(entityName))) as? (Type.Type, String) -> Void
-		perform?(objectType, entityName)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.inew__objectType_objectTypeentityName_entityName(Parameter<Type.Type>.value(objectType).wrapAsGeneric(), Parameter<String>.value(entityName)))
+    func new<Type: NSManagedObject & CoreDataObject>(objectType: Type.Type) throws -> Type {
+        addInvocation(.inew__objectType_objectType(Parameter<Type.Type>.value(objectType).wrapAsGeneric()))
+		let perform = methodPerformValue(.inew__objectType_objectType(Parameter<Type.Type>.value(objectType).wrapAsGeneric())) as? (Type.Type) -> Void
+		perform?(objectType)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.inew__objectType_objectType(Parameter<Type.Type>.value(objectType).wrapAsGeneric()))
 		if let error = givenValue.error { throw error }
 		let value = givenValue.value as? Type
-		return value.orFail("stub return value not specified for new<Type: NSManagedObject>(objectType: Type.Type, entityName: String). Use given")
+		return value.orFail("stub return value not specified for new<Type: NSManagedObject & CoreDataObject>(objectType: Type.Type). Use given")
     }
 
     func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type] {
@@ -1186,16 +1186,15 @@ class DatabaseMock: Database, Mock {
     }
 
     fileprivate enum MethodType {
-        case inew__objectType_objectTypeentityName_entityName(Parameter<GenericAttribute>, Parameter<String>)
+        case inew__objectType_objectType(Parameter<GenericAttribute>)
         case iquery__fetchRequest(Parameter<GenericAttribute>)
         case isave
         case idelete__object(Parameter<NSManagedObject>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
-                case (.inew__objectType_objectTypeentityName_entityName(let lhsObjecttype, let lhsEntityname), .inew__objectType_objectTypeentityName_entityName(let rhsObjecttype, let rhsEntityname)):
+                case (.inew__objectType_objectType(let lhsObjecttype), .inew__objectType_objectType(let rhsObjecttype)):
                     guard Parameter.compare(lhs: lhsObjecttype, rhs: rhsObjecttype, with: matcher) else { return false } 
-                    guard Parameter.compare(lhs: lhsEntityname, rhs: rhsEntityname, with: matcher) else { return false } 
                     return true 
                 case (.iquery__fetchRequest(let lhsFetchrequest), .iquery__fetchRequest(let rhsFetchrequest)):
                     guard Parameter.compare(lhs: lhsFetchrequest, rhs: rhsFetchrequest, with: matcher) else { return false } 
@@ -1211,7 +1210,7 @@ class DatabaseMock: Database, Mock {
 
         func intValue() -> Int {
             switch self {
-                case let .inew__objectType_objectTypeentityName_entityName(p0, p1): return p0.intValue + p1.intValue
+                case let .inew__objectType_objectType(p0): return p0.intValue
                 case let .iquery__fetchRequest(p0): return p0.intValue
                 case .isave: return 0
                 case let .idelete__object(p0): return p0.intValue
@@ -1230,14 +1229,14 @@ class DatabaseMock: Database, Mock {
             self.`throws` = `throws`
         }
 
-        static func new<Type: NSManagedObject>(objectType: Parameter<Type.Type>, entityName: Parameter<String>, willReturn: Type) -> Given {
-            return Given(method: .inew__objectType_objectTypeentityName_entityName(objectType.wrapAsGeneric(), entityName), returns: willReturn, throws: nil)
+        static func new<Type: NSManagedObject & CoreDataObject>(objectType: Parameter<Type.Type>, willReturn: Type) -> Given {
+            return Given(method: .inew__objectType_objectType(objectType.wrapAsGeneric()), returns: willReturn, throws: nil)
         }
         static func query<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: [Type]) -> Given {
             return Given(method: .iquery__fetchRequest(fetchRequest.wrapAsGeneric()), returns: willReturn, throws: nil)
         }
-        static func new<Type: NSManagedObject>(objectType: Parameter<Type.Type>, entityName: Parameter<String>, willThrow: Error) -> Given {
-            return Given(method: .inew__objectType_objectTypeentityName_entityName(objectType.wrapAsGeneric(), entityName), returns: nil, throws: willThrow)
+        static func new<Type: NSManagedObject & CoreDataObject>(objectType: Parameter<Type.Type>, willThrow: Error) -> Given {
+            return Given(method: .inew__objectType_objectType(objectType.wrapAsGeneric()), returns: nil, throws: willThrow)
         }
         static func query<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willThrow: Error) -> Given {
             return Given(method: .iquery__fetchRequest(fetchRequest.wrapAsGeneric()), returns: nil, throws: willThrow)
@@ -1247,8 +1246,8 @@ class DatabaseMock: Database, Mock {
     struct Verify {
         fileprivate var method: MethodType
 
-        static func new<Type>(objectType: Parameter<Type.Type>, entityName: Parameter<String>) -> Verify {
-            return Verify(method: .inew__objectType_objectTypeentityName_entityName(objectType.wrapAsGeneric(), entityName))
+        static func new<Type>(objectType: Parameter<Type.Type>) -> Verify {
+            return Verify(method: .inew__objectType_objectType(objectType.wrapAsGeneric()))
         }
         static func query<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify {
             return Verify(method: .iquery__fetchRequest(fetchRequest.wrapAsGeneric()))
@@ -1265,8 +1264,8 @@ class DatabaseMock: Database, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func new<Type>(objectType: Parameter<Type.Type>, entityName: Parameter<String>, perform: (Type.Type, String) -> Void) -> Perform {
-            return Perform(method: .inew__objectType_objectTypeentityName_entityName(objectType.wrapAsGeneric(), entityName), performs: perform)
+        static func new<Type>(objectType: Parameter<Type.Type>, perform: (Type.Type) -> Void) -> Perform {
+            return Perform(method: .inew__objectType_objectType(objectType.wrapAsGeneric()), performs: perform)
         }
         static func query<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>, perform: (NSFetchRequest<Type>) -> Void) -> Perform {
             return Perform(method: .iquery__fetchRequest(fetchRequest.wrapAsGeneric()), performs: perform)

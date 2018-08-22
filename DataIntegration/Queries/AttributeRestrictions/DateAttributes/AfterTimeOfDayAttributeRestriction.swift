@@ -32,8 +32,12 @@ public class AfterTimeOfDayAttributeRestriction: DateAttributeRestriction, Equat
 
 	public var timeOfDay: TimeOfDay
 
-	public required init(attribute: Attribute) {
-		timeOfDay = TimeOfDay()
+	public required convenience init(attribute: Attribute) {
+		self.init(attribute: attribute, timeOfDay: TimeOfDay())
+	}
+
+	public init(attribute: Attribute, timeOfDay: TimeOfDay = TimeOfDay()) {
+		self.timeOfDay = timeOfDay
 		super.init(attribute: attribute, attributes: Me.attributes)
 	}
 

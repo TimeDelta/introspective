@@ -29,8 +29,12 @@ public class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Equatabl
 
 	public var daysOfWeek: Set<DayOfWeek>
 
-	public required init(attribute: Attribute) {
-		daysOfWeek = Set<DayOfWeek>()
+	public required convenience init(attribute: Attribute) {
+		self.init(attribute: attribute, daysOfWeek: Set<DayOfWeek>())
+	}
+
+	public required init(attribute: Attribute, daysOfWeek: Set<DayOfWeek> = Set<DayOfWeek>()) {
+		self.daysOfWeek = daysOfWeek
 		super.init(attribute: attribute, attributes: Me.attributes)
 	}
 

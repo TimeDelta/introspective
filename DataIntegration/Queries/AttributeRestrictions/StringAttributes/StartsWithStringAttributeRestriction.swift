@@ -23,13 +23,17 @@ public class StartsWithStringAttributeRestriction: AnyAttributeRestriction, Stri
 
 	public override var name: String { return "Text starts with" }
 	public override var description: String {
-		return restrictedAttribute.name + " starts with '" + prefix + "'"
+		return restrictedAttribute.name.localizedCapitalized + " starts with '" + prefix + "'"
 	}
 
 	public var prefix: String
 
-	public required init(attribute: Attribute) {
-		prefix = String()
+	public required convenience init(attribute: Attribute) {
+		self.init(attribute: attribute, prefix: "")
+	}
+
+	public init(attribute: Attribute, prefix: String = "") {
+		self.prefix = prefix
 		super.init(attribute: attribute, attributes: Me.attributes)
 	}
 

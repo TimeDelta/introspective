@@ -12,22 +12,40 @@ import SwiftyMocky
 
 class FunctionalTest: XCTestCase {
 
-	let injectionProvider = InjectionProviderMock()
+	var injectionProvider: InjectionProviderMock!
 
-	let queryFactory = QueryFactoryImpl()
-	let querierFactory = QuerierFactoryImpl()
-	let questionFactory = QuestionFactory()
-	let dataTypeFactory = DataTypeFactoryImpl()
-	let utilFactory = UtilFactory()
-	let restrictionParserFactory = RestrictionParserFactory()
-	let subQueryMatcherFactory = SubQueryMatcherFactoryImpl()
-	let extraInformationFactory = ExtraInformationFactoryImpl()
-	let sampleGrouperFactory = SampleGrouperFactoryImpl()
-	let sampleGroupCombinerFactory = SampleGroupCombinerFactoryImpl()
+	var database: FunctionalTestDatabase!
+
+	var queryFactory: QueryFactoryImpl!
+	var querierFactory: QuerierFactoryImpl!
+	var questionFactory: QuestionFactory!
+	var dataTypeFactory: DataTypeFactoryImpl!
+	var utilFactory: UtilFactory!
+	var restrictionParserFactory: RestrictionParserFactory!
+	var subQueryMatcherFactory: SubQueryMatcherFactoryImpl!
+	var extraInformationFactory: ExtraInformationFactoryImpl!
+	var sampleGrouperFactory: SampleGrouperFactoryImpl!
+	var sampleGroupCombinerFactory: SampleGroupCombinerFactoryImpl!
 
 	override func setUp() {
 		super.setUp()
+		injectionProvider = InjectionProviderMock()
 		DependencyInjector.injectionProvider = injectionProvider
+
+		database = FunctionalTestDatabase()
+		Given(injectionProvider, .database(willReturn: database))
+
+		queryFactory = QueryFactoryImpl()
+		querierFactory = QuerierFactoryImpl()
+		questionFactory = QuestionFactory()
+		dataTypeFactory = DataTypeFactoryImpl()
+		utilFactory = UtilFactory()
+		restrictionParserFactory = RestrictionParserFactory()
+		subQueryMatcherFactory = SubQueryMatcherFactoryImpl()
+		extraInformationFactory = ExtraInformationFactoryImpl()
+		sampleGrouperFactory = SampleGrouperFactoryImpl()
+		sampleGroupCombinerFactory = SampleGroupCombinerFactoryImpl()
+
 		Given(injectionProvider, .queryFactory(willReturn: queryFactory))
 		Given(injectionProvider, .querierFactory(willReturn: querierFactory))
 		Given(injectionProvider, .questionFactory(willReturn: questionFactory))
@@ -41,6 +59,7 @@ class FunctionalTest: XCTestCase {
 	}
 
 	override func tearDown() {
+//		database.flushData(MoodImpl.self)
 		DependencyInjector.injectionProvider = ProductionInjectionProvider()
 		super.tearDown()
 	}

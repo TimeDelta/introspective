@@ -37,6 +37,6 @@ public class DataTypeFactoryImpl: DataTypeFactory {
 	}
 
 	public func mood() -> Mood {
-		return try! DependencyInjector.db.new(objectType: MoodImpl.self, entityName: MoodImpl.entityName)
+		return try! DependencyInjector.db.new(objectType: MoodImpl.self)
 	}
 }

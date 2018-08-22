@@ -42,6 +42,11 @@ public class HeartRateQueryImpl: SampleQueryImpl<HeartRate>, HeartRateQuery {
 					return HeartRate(sample)
 				}).filter(self.samplePassesFilters)
 
+				if samples.count == 0 {
+					self.queryDone(nil, NoHealthKitSamplesFoundQueryError(dataType: .heartRate))
+					return
+				}
+
 				let result = SampleQueryResult<HeartRate>(samples)
 				self.queryDone(result, nil)
 			}

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class DependencyInjector: NSObject {
+public final class DependencyInjector {
 
 	public static var injectionProvider: InjectionProvider = ProductionInjectionProvider()
 

@@ -23,13 +23,17 @@ public class EndsWithStringAttributeRestriction: AnyAttributeRestriction, String
 
 	public override var name: String { return "Text ends with" }
 	public override var description: String {
-		return restrictedAttribute.name + " ends with '" + suffix + "'"
+		return restrictedAttribute.name.localizedCapitalized + " ends with '" + suffix + "'"
 	}
 
 	public var suffix: String
 
-	public required init(attribute: Attribute) {
-		suffix = String()
+	public required convenience init(attribute: Attribute) {
+		self.init(attribute: attribute, suffix: "")
+	}
+
+	public init(attribute: Attribute, suffix: String = "") {
+		self.suffix = suffix
 		super.init(attribute: attribute, attributes: Me.attributes)
 	}
 

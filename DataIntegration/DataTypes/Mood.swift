@@ -26,6 +26,10 @@ public class MoodImpl: NSManagedObject, Mood {
 
 	fileprivate typealias Me = MoodImpl
 
+	public static func ==(lhs: MoodImpl, rhs: MoodImpl) -> Bool {
+		return lhs.equalTo(rhs)
+	}
+
 	public static let entityName = "Mood"
 
 	public static let maxRating = 7.0
@@ -38,6 +42,9 @@ public class MoodImpl: NSManagedObject, Mood {
 
 	public let name: String = "Mood"
 	public override var description: String { return "A quantitative reflection on your mood." }
+	public override var debugDescription: String {
+		return "Mood with rating = \(rating), timestamp = \(timestamp), and note = \(note ?? "nil")"
+	}
 
 	public let dataType: DataTypes = .mood
 	public let attributes: [Attribute] = Me.attributes
@@ -76,5 +83,21 @@ public class MoodImpl: NSManagedObject, Mood {
 			return
 		}
 		throw SampleError.unknownAttribute
+	}
+
+	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+		if !(otherAttributed is Mood) { return false }
+		let other = otherAttributed as! Mood
+		return equalTo(other)
+	}
+
+	public func equalTo(_ otherSample: Sample) -> Bool {
+		if !(otherSample is Mood) { return false }
+		let other = otherSample as! Mood
+		return equalTo(other)
+	}
+
+	public func equalTo(_ other: Mood) -> Bool {
+		return rating == other.rating && note == other.note && timestamp == other.timestamp
 	}
 }

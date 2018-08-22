@@ -29,7 +29,14 @@ public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: Sample
 				return
 			}
 
-			let result = SampleQueryResult<SampleType>(samples)
+			let filteredSamples = samples.filter(self.samplePassesFilters)
+
+			if filteredSamples.count == 0 {
+				self.queryDone(nil, NoSamplesFoundQueryError(dataType: dataType))
+				return
+			}
+
+			let result = SampleQueryResult<SampleType>(filteredSamples)
 			self.queryDone(result, nil)
 		} catch {
 			self.queryDone(nil, error)
@@ -45,5 +52,16 @@ public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: Sample
 			}
 		}
 		return NSCompoundPredicate(andPredicateWithSubpredicates: subPredicates)
+	}
+
+	fileprivate func samplePassesFilters(_ sample: SampleType) -> Bool {
+		for attributeRestriction in attributeRestrictions {
+			if !(attributeRestriction is PredicateAttributeRestriction) {
+				if try! !attributeRestriction.samplePasses(sample) {
+					return false
+				}
+			}
+		}
+		return true
 	}
 }

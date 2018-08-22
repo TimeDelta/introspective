@@ -28,8 +28,12 @@ public class LessThanNumericAttributeRestriction: NumericAttributeRestriction, P
 
 	public var value: Double
 
-	public required init(attribute: Attribute) {
-		value = Double()
+	public required convenience init(attribute: Attribute) {
+		self.init(attribute: attribute, value: 0.0)
+	}
+
+	public init(attribute: Attribute, value: Double = 0.0) {
+		self.value = value
 		super.init(attribute: attribute, attributes: Me.attributes)
 	}
 
@@ -48,7 +52,7 @@ public class LessThanNumericAttributeRestriction: NumericAttributeRestriction, P
 	}
 
 	public func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K < %@", restrictedAttribute.variableName, String(value))
+		return NSPredicate(format: "%K < %f", restrictedAttribute.variableName, value)
 	}
 
 	public func equalTo(_ otherAttributed: Attributed) -> Bool {

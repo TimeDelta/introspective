@@ -8,7 +8,5 @@
 
 import Foundation
 
-public protocol CoreDataSample: Sample {
-
-	static var entityName: String { get }
+public protocol CoreDataSample: Sample, CoreDataObject {
 }

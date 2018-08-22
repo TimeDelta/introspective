@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os
 
 class QueryViewController: UITableViewController {
 
@@ -266,12 +267,10 @@ class QueryViewController: UITableViewController {
 
 	fileprivate func buildQuery(_ query: inout Query, from parts: [Any]) {
 		for part in parts.reversed() {
-			if part is DataTypeInfo {
-				return
-			} else if part is AttributeRestriction {
+			if part is AttributeRestriction {
 				query.attributeRestrictions.append((part as! AttributeRestriction))
-			} else {
-				fatalError("query part is of unknown type")
+			} else if !(part is DataTypeInfo) {
+				os_log("query part is of unknown type: $@", type: .error, String(describing: type(of: part)))
 			}
 		}
 	}

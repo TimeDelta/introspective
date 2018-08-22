@@ -23,13 +23,17 @@ public class ContainsStringAttributeRestriction: AnyAttributeRestriction, String
 
 	public override var name: String { return "Text contains" }
 	public override var description: String {
-		return restrictedAttribute.name + " contains '" + substring + "'"
+		return restrictedAttribute.name.localizedCapitalized + " contains '" + substring + "'"
 	}
 
 	public var substring: String
 
-	public required init(attribute: Attribute) {
-		substring = String()
+	public required convenience init(attribute: Attribute) {
+		self.init(attribute: attribute, substring: "")
+	}
+
+	public init(attribute: Attribute, substring: String = "") {
+		self.substring = substring
 		super.init(attribute: attribute, attributes: Me.attributes)
 	}
 

@@ -29,8 +29,12 @@ public class BeforeDateAndTimeAttributeRestriction: DateAttributeRestriction, Pr
 
 	public var date: Date
 
-	public required init(attribute: Attribute) {
-		date = Date()
+	public required convenience init(attribute: Attribute) {
+		self.init(attribute: attribute, date: Date())
+	}
+
+	public init(attribute: Attribute, date: Date = Date()) {
+		self.date = date
 		super.init(attribute: attribute, attributes: Me.attributes)
 	}
 
