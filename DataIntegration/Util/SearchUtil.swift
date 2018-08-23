@@ -18,7 +18,11 @@ public protocol SearchUtil {
 public class SearchUtilImpl: SearchUtil {
 
 	/// - Precondition: input array is sorted in ascending order.
-	public func binarySearch<T:Comparable>(for targetItem: T, in items: Array<T>) -> Int? {
+	public func binarySearch<T: Comparable>(for targetItem: T, in items: Array<T>) -> Int? {
+		if items.count == 0 {
+			return nil
+		}
+
 		var lowerIndex = 0
 		var upperIndex = items.count - 1
 
@@ -66,7 +70,7 @@ public class SearchUtilImpl: SearchUtil {
 
 	/// - Precondition: input array has at least one element.
 	public func closestItem<T>(to targetItem: T, in items: Array<T>, distance: (T, T) -> Int) -> T {
-		assert(items.count > 0, "Precondition violated: input array must have at least one element")
+		precondition(items.count > 0, "Precondition violated: input array must have at least one element")
 
 		return items.sorted { (item1: T, item2: T) -> Bool in
 			return distance(item1, targetItem) < distance(item2, targetItem)
