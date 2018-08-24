@@ -1,0 +1,21 @@
+//
+//  MoodDataTestUtil.swift
+//  DataIntegrationTests
+//
+//  Created by Bryan Nova on 8/24/18.
+//  Copyright © 2018 Bryan Nova. All rights reserved.
+//
+
+import Foundation
+@testable import DataIntegration
+
+class MoodDataTestUtil {
+
+	static func createMood(note: String? = nil, rating: Double = 0.0, timestamp: Date = Date()) -> MoodImpl {
+		let mood = DependencyInjector.dataType.mood() as! MoodImpl
+		mood.rating = rating
+		mood.timestamp = timestamp
+		mood.note = note
+		return mood
+	}
+}

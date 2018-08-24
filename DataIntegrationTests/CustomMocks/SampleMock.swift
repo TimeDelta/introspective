@@ -54,6 +54,15 @@ class SampleMock: Sample, Mock {
 	private var __attributes: ([Attribute])?
 
 
+    var debugDescription: String { 
+		get {	invocations.append(.debugDescription_get)
+				return __debugDescription.orFail("SampleMock - value for debugDescription was not defined") }
+		set {	invocations.append(.debugDescription_set(.value(newValue)))
+				__debugDescription = newValue }
+	}
+	private var __debugDescription: (String)?
+
+
     struct Property {
         fileprivate var method: MethodType
         static var dataType: Property { return Property(method: .dataType_get) }
@@ -62,6 +71,8 @@ class SampleMock: Sample, Mock {
 		static func name(set newValue: Parameter<String>) -> Property { return Property(method: .name_set(newValue)) }
         static var attributes: Property { return Property(method: .attributes_get) }
 		static func attributes(set newValue: Parameter<[Attribute]>) -> Property { return Property(method: .attributes_set(newValue)) }
+        static var debugDescription: Property { return Property(method: .debugDescription_get) }
+		static func debugDescription(set newValue: Parameter<String>) -> Property { return Property(method: .debugDescription_set(newValue)) }
     }
 
 
@@ -124,6 +135,8 @@ class SampleMock: Sample, Mock {
 		case name_set(Parameter<String>)
         case attributes_get
 		case attributes_set(Parameter<[Attribute]>)
+        case debugDescription_get
+		case debugDescription_set(Parameter<String>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -148,6 +161,8 @@ class SampleMock: Sample, Mock {
 				case (.name_set(let left),.name_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
                 case (.attributes_get,.attributes_get): return true
 				case (.attributes_set(let left),.attributes_set(let right)): return Parameter<[Attribute]>.compare(lhs: left, rhs: right, with: matcher)
+                case (.debugDescription_get,.debugDescription_get): return true
+				case (.debugDescription_set(let left),.debugDescription_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
                 default: return false
             }
         }
@@ -165,6 +180,8 @@ class SampleMock: Sample, Mock {
 				case .name_set(let newValue): return newValue.intValue
                 case .attributes_get: return 0
 				case .attributes_set(let newValue): return newValue.intValue
+                case .debugDescription_get: return 0
+				case .debugDescription_set(let newValue): return newValue.intValue
             }
         }
     }

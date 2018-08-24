@@ -43,25 +43,4 @@ public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: Sample
 			return
 		}
 	}
-
-	fileprivate func getPredicate() -> NSPredicate {
-		var subPredicates = [NSPredicate]()
-		for attributeRestriction in attributeRestrictions {
-			if let predicateRestriction = attributeRestriction as? PredicateAttributeRestriction {
-				subPredicates.append(predicateRestriction.toPredicate())
-			}
-		}
-		return NSCompoundPredicate(andPredicateWithSubpredicates: subPredicates)
-	}
-
-	fileprivate func samplePassesFilters(_ sample: SampleType) -> Bool {
-		for attributeRestriction in attributeRestrictions {
-			if !(attributeRestriction is PredicateAttributeRestriction) {
-				if try! !attributeRestriction.samplePasses(sample) {
-					return false
-				}
-			}
-		}
-		return true
-	}
 }

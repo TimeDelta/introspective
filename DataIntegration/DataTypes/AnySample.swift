@@ -16,6 +16,10 @@ public class AnySample: Sample {
 	public var name: String = ""
 	public var description: String = ""
 
+	public var debugDescription: String {
+		return "AnySample with values: " + attributeValues.debugDescription
+	}
+
 	public var dataType: DataTypes { return .heartRate } // TODO - change this to custom once custom data types are supported
 	public var attributes: [Attribute] = [Attribute]()
 
@@ -26,6 +30,8 @@ public class AnySample: Sample {
 	}
 
 	public init(name: String, description: String = "", attributes: [Attribute], attributeValues: [String: Any] = [String: Any]()) {
+		self.name = name
+		self.description = description
 		self.attributes = attributes
 		self.attributeValues = attributeValues
 	}

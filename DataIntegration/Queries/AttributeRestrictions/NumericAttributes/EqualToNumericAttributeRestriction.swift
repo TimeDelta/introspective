@@ -48,7 +48,7 @@ public class EqualToNumericAttributeRestriction: NumericAttributeRestriction, Pr
 	}
 
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
-		return try getDoubleFrom(sample) < value
+		return try getDoubleFrom(sample) == value
 	}
 
 	public func toPredicate() -> NSPredicate {

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol Attributed: class, CustomStringConvertible {
+public protocol Attributed: class, CustomStringConvertible, CustomDebugStringConvertible {
 
 	var name: String { get }
 	var attributes: [Attribute] { get }
@@ -20,6 +20,8 @@ public protocol Attributed: class, CustomStringConvertible {
 }
 
 extension Attributed {
+
+	public var debugDescription: String { return description }
 
 	public func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if type(of: self) != type(of: otherAttributed) { return false }

@@ -9,7 +9,7 @@
 import Foundation
 import HealthKit
 
-public class HeartRate: Sample, Equatable {
+public class HeartRate: Sample, Equatable, CustomDebugStringConvertible {
 
 	public static func == (lhs: HeartRate, rhs: HeartRate) -> Bool {
 		return lhs.equalTo(rhs)
@@ -18,8 +18,13 @@ public class HeartRate: Sample, Equatable {
 	fileprivate typealias Me = HeartRate
 	fileprivate static let unit: HKUnit = HKUnit(from: "count/min")
 
-	public static let heartRate = DoubleAttribute(name: "Heart rate", pluralName: "Heart rates")
-	public static let attributes: [Attribute] = [CommonSampleAttributes.timestamp, heartRate]
+	public static let heartRate = DoubleAttribute(name: "Heart rate", pluralName: "Heart rates", variableName: HKPredicateKeyPathQuantity)
+	public static let timestamp = DateTimeAttribute(name: "Timestamp", pluralName: "Timestamps", variableName: HKPredicateKeyPathStartDate)
+	public static let attributes: [Attribute] = [timestamp, heartRate]
+
+	public var debugDescription: String {
+		return "HeartRate of \(heartRate) at " + DependencyInjector.util.calendarUtil.string(for: timestamp)
+	}
 
 	public var name: String { return "Heart rate" }
 	public var description: String { return "A measurement of how fast your heart is beating (in beats per minute)." }
@@ -75,5 +80,21 @@ public class HeartRate: Sample, Equatable {
 			return
 		}
 		throw SampleError.unknownAttribute
+	}
+
+	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+		if !(otherAttributed is HeartRate) { return false }
+		let other = otherAttributed as! HeartRate
+		return equalTo(other)
+	}
+
+	public func equalTo(_ otherSample: Sample) -> Bool {
+		if !(otherSample is HeartRate) { return false }
+		let other = otherSample as! HeartRate
+		return equalTo(other)
+	}
+
+	public func equalTo(_ other: HeartRate) -> Bool {
+		return timestamp == other.timestamp && heartRate == other.heartRate
 	}
 }

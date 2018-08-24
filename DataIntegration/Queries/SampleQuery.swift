@@ -61,6 +61,27 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 		}
 	}
 
+	func getPredicate() -> NSPredicate {
+		var subPredicates = [NSPredicate]()
+		for attributeRestriction in attributeRestrictions {
+			if let predicateRestriction = attributeRestriction as? PredicateAttributeRestriction {
+				subPredicates.append(predicateRestriction.toPredicate())
+			}
+		}
+		return NSCompoundPredicate(andPredicateWithSubpredicates: subPredicates)
+	}
+
+	func samplePassesFilters(_ sample: Sample) -> Bool {
+		for attributeRestriction in attributeRestrictions {
+			if !(attributeRestriction is PredicateAttributeRestriction) {
+				if try! !attributeRestriction.samplePasses(sample) {
+					return false
+				}
+			}
+		}
+		return true
+	}
+
 	fileprivate func filterAndCallBack() {
 		if subQueryCallbackParameters?.error != nil {
 			callback(nil, subQueryCallbackParameters!.error)

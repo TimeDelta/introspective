@@ -31,12 +31,12 @@ public class NumericAttributeRestriction: AnyAttributeRestriction {
 		}
 	}
 
-	func numericValueOfRestrictedAttribute(_ value: Any) throws -> Any {
+	func numericValueOfRestrictedAttribute(_ value: Double) throws -> Any {
 		switch (restrictedAttribute) {
 			case is IntegerAttribute:
-				return value as! Int
+				return Int(value)
 			case is DoubleAttribute:
-				return value as! Double
+				return value
 			default:
 				os_log("Unknown type of NumericAttribute: $@", type: .error, String(describing: type(of: restrictedAttribute)))
 				throw SampleError.typeMismatch

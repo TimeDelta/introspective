@@ -10,7 +10,7 @@ import XCTest
 import SwiftDate
 @testable import DataIntegration
 
-class MoodQueryFunctionalTest: QueryTest {
+class MoodQueryFunctionalTest: QueryFunctionalTest {
 
 	fileprivate var query: MoodQuery!
 
@@ -124,10 +124,6 @@ class MoodQueryFunctionalTest: QueryTest {
 	}
 
 	fileprivate func createMood(note: String? = nil, rating: Double = 0.0, timestamp: Date = Date()) -> MoodImpl {
-		let mood = DependencyInjector.dataType.mood() as! MoodImpl
-		mood.rating = rating
-		mood.timestamp = timestamp
-		mood.note = note
-		return mood
+		return MoodDataTestUtil.createMood(note: note, rating: rating, timestamp: timestamp)
 	}
 }

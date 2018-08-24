@@ -1,15 +1,15 @@
 //
-//  QueryTest.swift
+//  QueryFunctionalTest.swift
 //  DataIntegrationTests
 //
-//  Created by Bryan Nova on 8/21/18.
+//  Created by Bryan Nova on 8/23/18.
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
 import XCTest
 @testable import DataIntegration
 
-class QueryTest: FunctionalTest {
+class QueryFunctionalTest: FunctionalTest {
 
 	var queryCompletedExpectation: XCTestExpectation!
 	var result: QueryResult?
@@ -39,5 +39,9 @@ class QueryTest: FunctionalTest {
 		}
 		XCTAssert(result != nil)
 		return waitError == nil && error == nil && result != nil
+	}
+
+	func expected(_ expected: Sample, butGot actual: Sample) -> String {
+		return "EXPECTED: " + expected.debugDescription + "; ACTUAL: " + actual.debugDescription
 	}
 }
