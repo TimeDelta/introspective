@@ -185,26 +185,26 @@ public class SampleUtilImpl: SampleUtil {
 
 	/// - Precondition: input array has at least one element.
 	public func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2]) -> SampleType2 {
-		assert(samples.count > 0, "Precondition violated: input array must have at least one element")
+		precondition(samples.count > 0, "Precondition violated: input array must have at least one element")
 
 		return DependencyInjector.util.searchUtil.closestItem(to: sample, in: samples) { (sample1: Sample, sample2: Sample) -> Int in
-			return distance(between: sample1, and: sample2)
+			return abs(distance(between: sample1, and: sample2))
 		} as! SampleType2
 	}
 
 	/// - Precondition: input array has at least one element.
 	public func closestInTimeTo(sample: Sample, in samples: [Sample]) -> Sample {
-		assert(samples.count > 0, "Precondition violated: input array must have at least one element")
+		precondition(samples.count > 0, "Precondition violated: input array must have at least one element")
 
 		return DependencyInjector.util.searchUtil.closestItem(to: sample, in: samples) { (sample1: Sample, sample2: Sample) -> Int in
-			return distance(between: sample1, and: sample2)
+			return abs(distance(between: sample1, and: sample2))
 		}
 	}
 
 	public func distance(between sample1: Sample, and sample2: Sample, in unit: Calendar.Component = .nanosecond) -> Int {
 		let start1 = sample1.dates()[.start]!
 		let start2 = sample2.dates()[.start]!
-		let end1 = sample2.dates()[.end]
+		let end1 = sample1.dates()[.end]
 		let end2 = sample2.dates()[.end]
 
 		var closestDistance: Int = distance(start1, start2, unit)
@@ -269,6 +269,6 @@ public class SampleUtilImpl: SampleUtil {
 	}
 
 	fileprivate func distance(_ date1: Date, _ date2: Date, _ unit: Calendar.Component) -> Int {
-		return Calendar.current.dateComponents([unit], from: date1, to: date2).in(unit)!
+		return abs(Calendar.autoupdatingCurrent.dateComponents([unit], from: date1, to: date2).in(unit)!)
 	}
 }

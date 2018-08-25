@@ -48,8 +48,8 @@ public class HeartRateDataTestUtil {
 			group.leave()
 		})
 		group.wait()
-		group = DispatchGroup()
 		if allHeartRates.count > 0 {
+			group = DispatchGroup()
 			group.enter()
 			Me.healthStore.delete(allHeartRates) { _, error in
 				if error != nil { fatalError("Failed to delete heart rates: " + error!.localizedDescription) }

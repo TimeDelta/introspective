@@ -36,6 +36,12 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatable {
 
 	public required init() {}
 
+	public init(_ numberOfTimeUnits: Int, _ timeUnit: Calendar.Component, mostRecentOnly: Bool = false) {
+		self.numberOfTimeUnits = numberOfTimeUnits
+		self.timeUnit = timeUnit
+		self.mostRecentOnly = mostRecentOnly
+	}
+
 	/// Grab only the provided samples that start within `numberOfCalendarUnits` `calendarUnit` of a sub-query sample
 	public func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
@@ -54,8 +60,11 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatable {
 		}
 
 		for sample in querySamples {
-			let closestSubQuerySample = DependencyInjector.util.sampleUtil.closestInTimeTo(sample: sample, in: applicableSubQuerySamples)
-			if DependencyInjector.util.sampleUtil.distance(between: sample, and: closestSubQuerySample, in: timeUnit) <= numberOfTimeUnits {
+			let closestSubQuerySample = DependencyInjector.util.searchUtil.closestItem(to: sample, in: applicableSubQuerySamples) { (sample1, sample2) in
+				return DependencyInjector.util.sampleUtil.distance(between: sample1, and: sample2, in: self.timeUnit)
+			}
+			let distance = DependencyInjector.util.sampleUtil.distance(between: sample, and: closestSubQuerySample, in: timeUnit)
+			if distance <= numberOfTimeUnits {
 				matchingSamples.append(sample)
 			}
 		}

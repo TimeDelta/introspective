@@ -42,79 +42,40 @@ class UnitTest: XCTestCase {
 
 	/// Create a mock sample
 	func createSample(startDate: Date? = nil, endDate: Date? = nil, withAttributes attributes: [Attribute] = [Attribute]()) -> AnySample {
-		let sample = AnySample()
-		var dates = [DateType: Date]()
-		if startDate != nil {
-			dates[.start] = startDate!
-		}
-		if endDate != nil {
-			dates[.end] = endDate!
-		}
-		sample.set(dates: dates)
-		sample.attributes = attributes
-		return sample
+		return SampleCreatorTestUtil.createSample(startDate: startDate, endDate: endDate, withAttributes: attributes)
 	}
 
 	/// Create a single sample with the specified value for the given attribute
 	func createSample(withValue value: Any, for attribute: Attribute) -> AnySample {
-		let sample = createSample(withAttributes: [attribute])
-		try! sample.set(attribute: attribute, to: value)
-		return sample
+		return SampleCreatorTestUtil.createSample(withValue: value, for: attribute)
 	}
 
 	/// Create a single sample with the specified values for the given attributes
 	func createSample(withValues values: [(Any, Attribute)]) -> AnySample {
-		let attributes = values.map({ (_, attribute) in return attribute })
-		let sample = createSample(withAttributes: attributes)
-		for (value, attribute) in values {
-			try! sample.set(attribute: attribute, to: value)
-		}
-		return sample
+		return SampleCreatorTestUtil.createSample(withValues: values)
 	}
 
 	/// Create `count` mock samples
 	/// - Parameter attributes: Optionally provide the attributes that each sample should have
 	func createSamples(count: Int, withAttributes attributes: [Attribute] = [Attribute]()) -> [AnySample] {
-		var samples = [AnySample]()
-		for _ in 1...count {
-			samples.append(createSample(withAttributes: attributes))
-		}
-		return samples
+		return SampleCreatorTestUtil.createSamples(count: count, withAttributes: attributes)
 	}
 
 	/// Create a new sample for each given value, assigning the value to the given attribute
 	func createSamples(withValues values: [Any], for attribute: Attribute) -> [AnySample] {
-		var samples = [AnySample]()
-		for value in values {
-			samples.append(createSample(withValue: value, for: attribute))
-		}
-		return samples
+		return SampleCreatorTestUtil.createSamples(withValues: values, for: attribute)
 	}
 
 	func createSamples(withDates dates: [(startDate: Date, endDate: Date)]) -> [AnySample] {
-		var samples = [AnySample]()
-		for (startDate, endDate) in dates {
-			samples.append(createSample(startDate: startDate, endDate: endDate))
-		}
-		return samples
+		return SampleCreatorTestUtil.createSamples(withDates: dates)
 	}
 
 	func createSamples(withDates dates: [Date]) -> [AnySample] {
-		var samples = [AnySample]()
-		for date in dates {
-			samples.append(createSample(startDate: date))
-		}
-		return samples
+		return SampleCreatorTestUtil.createSamples(withDates: dates)
 	}
 
 	func createSamples<ValueType: Any>(_ sampleValues: [(startDate: Date, value: ValueType)], for attribute: Attribute) -> [AnySample] {
-		var samples = [AnySample]()
-		for values in sampleValues {
-			let sample = createSample(startDate: values.startDate, withAttributes: [attribute])
-			try! sample.set(attribute: attribute, to: values.value)
-			samples.append(sample)
-		}
-		return samples
+		return SampleCreatorTestUtil.createSamples(sampleValues, for: attribute)
 	}
 
 	func oldDate() -> Date {

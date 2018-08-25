@@ -152,4 +152,109 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(convertedSamples[0].dates()[.start] == expectedStartDate)
 		XCTAssert(convertedSamples[0].dates()[.end] == expectedEndDate)
 	}
+
+	func testGivenSameExactSampleTwice_distance_returnsZero() {
+		// given
+		let sample = createSample(startDate: Date(), endDate: Date())
+
+		// when
+		let distance = util.distance(between: sample, and: sample)
+
+		// then
+		XCTAssert(distance == 0)
+	}
+
+	func testGivenSamplesWithSameStartDatesAndNoEndDates_distance_returnsZero() {
+		// given
+		let date = Date()
+		let sample1 = createSample(startDate: date)
+		let sample2 = createSample(startDate: date)
+
+		// when
+		let distance = util.distance(between: sample1, and: sample2)
+
+		// then
+		XCTAssert(distance == 0)
+	}
+
+	func testGivenSamplesWithSameEndDatesButDifferentStartDates_distance_returnsZero() {
+		// given
+		let date = Date()
+		let sample1 = createSample(startDate: Date() - 1.days, endDate: date)
+		let sample2 = createSample(startDate: Date() + 1.days, endDate: date)
+
+		// when
+		let distance = util.distance(between: sample1, and: sample2)
+
+		// then
+		XCTAssert(distance == 0, "Distance: \(distance)")
+	}
+
+	func testGivenFirstSampleHasStartDateThatIsSameAsEndDateOfSecondSample_distance_returnsZero() {
+		// given
+		let date = Date()
+		let sample1 = createSample(startDate: date, endDate: Date() - 1.days)
+		let sample2 = createSample(startDate: Date() + 1.days, endDate: date)
+
+		// when
+		let distance = util.distance(between: sample1, and: sample2)
+
+		// then
+		XCTAssert(distance == 0, "Distance: \(distance)")
+	}
+
+	func testGivenFirstSampleHasEndDateThatIsSameAsStartDateOfSecondSample_distance_returnsZero() {
+		// given
+		let date = Date()
+		let sample1 = createSample(startDate: Date() - 1.days, endDate: date)
+		let sample2 = createSample(startDate: date, endDate: Date() + 1.days)
+
+		// when
+		let distance = util.distance(between: sample1, and: sample2)
+
+		// then
+		XCTAssert(distance == 0, "Distance: \(distance)")
+	}
+
+	func testGivenSamplesHaveStartDatesThatAreOneDayApartAndEndDatesThatAreTwoDaysApart_distanceInDays_returnsOne() {
+		// given
+		let startDate = Date()
+		let endDate = Date()
+		let sample1 = createSample(startDate: startDate, endDate: endDate)
+		let sample2 = createSample(startDate: startDate + 1.days, endDate: endDate + 2.days)
+
+		// when
+		let distance = util.distance(between: sample1, and: sample2, in: .day)
+
+		// then
+		XCTAssert(distance == 1, "Distance: \(distance)")
+	}
+
+	func testGivenSamplesHaveStartDatesThatAreTwoDaysApartAndEndDatesThatAreOneDayApart_distanceInDays_returnsOne() {
+		// given
+		let startDate = Date()
+		let endDate = Date()
+		let sample1 = createSample(startDate: startDate, endDate: endDate)
+		let sample2 = createSample(startDate: startDate + 2.days, endDate: endDate + 1.days)
+
+		// when
+		let distance = util.distance(between: sample1, and: sample2, in: .day)
+
+		// then
+		XCTAssert(distance == 1, "Distance: \(distance)")
+	}
+
+	func testGivenSamplesHaveStartDatesThatAreOneHourApartAndEndDatesThatAreOneDayApart_distanceInHours_returnsOne() {
+		// given
+		let startDate = Date()
+		let endDate = Date()
+		let sample1 = createSample(startDate: startDate, endDate: endDate)
+		let sample2 = createSample(startDate: startDate + 1.hours, endDate: endDate + 2.hours)
+
+		// when
+		let distance = util.distance(between: sample1, and: sample2, in: .hour)
+
+		// then
+		XCTAssert(distance == 1, "Distance: \(distance)")
+	}
 }

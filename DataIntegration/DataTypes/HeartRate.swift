@@ -39,6 +39,11 @@ public class HeartRate: Sample, Equatable, CustomDebugStringConvertible {
 		timestamp = Date()
 	}
 
+	public init(_ timestamp: Date) {
+		heartRate = Double()
+		self.timestamp = timestamp
+	}
+
 	public init(_ value: Double) {
 		heartRate = value
 		timestamp = Date()

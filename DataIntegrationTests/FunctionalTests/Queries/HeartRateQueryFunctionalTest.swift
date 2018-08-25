@@ -18,6 +18,7 @@ class HeartRateQueryFunctionalTest: QueryFunctionalTest {
 		super.setUp()
 		query = HeartRateQueryImpl()
 		HeartRateDataTestUtil.ensureAuthorized()
+		HeartRateDataTestUtil.deleteAllHeartRates()
 	}
 
 	override func tearDown() {
