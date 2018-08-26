@@ -36,7 +36,7 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatable {
 
 	public required init() {}
 
-	public init(_ numberOfTimeUnits: Int, _ timeUnit: Calendar.Component, mostRecentOnly: Bool = false) {
+	public init(numberOfTimeUnits: Int = 5, timeUnit: Calendar.Component = .minute, mostRecentOnly: Bool = false) {
 		self.numberOfTimeUnits = numberOfTimeUnits
 		self.timeUnit = timeUnit
 		self.mostRecentOnly = mostRecentOnly

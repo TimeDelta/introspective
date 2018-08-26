@@ -48,7 +48,7 @@ class CombinedQueryFunctionalTests: QueryFunctionalTest {
 		let ratingRestriction = GreaterThanOrEqualToNumericAttributeRestriction(attribute: MoodImpl.rating, value: minMood)
 		subQuery.attributeRestrictions.append(noteRestriction)
 		subQuery.attributeRestrictions.append(ratingRestriction)
-		let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfDaysWithinMood, .day, mostRecentOnly: false)
+		let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: numberOfDaysWithinMood, timeUnit: .day, mostRecentOnly: false)
 		let _ = createMood(note: "\(targetSubstring) some other stuff", rating: minMood, timestamp: earliestTargetMoodDate) // target mood
 		let _ = createMood(note: "prefix \(targetSubstring) suffix", rating: minMood + 1, timestamp: latestTargetMoodDate) // target mood
 		let _ = createMood(note: similarNoteThatWillNotBeMatched, timestamp: earliestTargetMoodDate)

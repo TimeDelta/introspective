@@ -139,4 +139,316 @@ class WithinXCalendarUnitsSubQueryMatcherUnitTests: UnitTest {
 		XCTAssert(matchingSamples.count == 1)
 		XCTAssert(matchingSamples[0].equalTo(querySamples[1]))
 	}
+
+	func testGivenUnknownAttribute_set_throwsUnknownAttributeError() {
+		// given
+		let attribute = CommonSampleAttributes.endDate
+		let value = 1
+
+		// when
+		XCTAssertThrowsError(try matcher.set(attribute: attribute, to: value)) { error in
+			// then
+			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
+		}
+	}
+
+	func testGivenAmountOfTimeAttributeWithInvalidValue_set_throwsTypeMismatchError() {
+		// given
+		let attribute = WithinXCalendarUnitsSubQueryMatcher.amountOfTime
+		let value = "abc"
+
+		// when
+		XCTAssertThrowsError(try matcher.set(attribute: attribute, to: value)) { error in
+			// then
+			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
+		}
+	}
+
+	func testGivenAmountOfTimeAttributeWithValidValue_set_correctlySetsValue() {
+		// given
+		let attribute = WithinXCalendarUnitsSubQueryMatcher.amountOfTime
+		let value = 5
+
+		// when
+		try! matcher.set(attribute: attribute, to: value)
+
+		// then
+		XCTAssert(matcher.numberOfTimeUnits == value)
+	}
+
+	func testGivenTimeUnitAttributeWithInvalidValue_set_throwsTypeMismatchError() {
+		// given
+		let attribute = WithinXCalendarUnitsSubQueryMatcher.timeUnit
+		let value = "abc"
+
+		// when
+		XCTAssertThrowsError(try matcher.set(attribute: attribute, to: value)) { error in
+			// then
+			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
+		}
+	}
+
+	func testGivenTimeUnitAttributeWithValidValue_set_correctlySetsValue() {
+		// given
+		let attribute = WithinXCalendarUnitsSubQueryMatcher.timeUnit
+		let value = Calendar.Component.day
+
+		// when
+		try! matcher.set(attribute: attribute, to: value)
+
+		// then
+		XCTAssert(matcher.timeUnit == value)
+	}
+
+	func testGivenMostRecentOnlyAttributeWithInvalidValue_set_throwsTypeMismatchError() {
+		// given
+		let attribute = CommonSubQueryMatcherAttributes.mostRecentOnly
+		let value = "abc"
+
+		// when
+		XCTAssertThrowsError(try matcher.set(attribute: attribute, to: value)) { error in
+			// then
+			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
+		}
+	}
+
+	func testGivenMostRecentOnlyAttributeWithValidValue_set_correctlySetsValue() {
+		// given
+		let attribute = CommonSubQueryMatcherAttributes.mostRecentOnly
+		let value = true
+
+		// when
+		try! matcher.set(attribute: attribute, to: value)
+
+		// then
+		XCTAssert(matcher.mostRecentOnly == value)
+	}
+
+	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
+		// given
+		let attribute = CommonSampleAttributes.endDate
+
+		// when
+		XCTAssertThrowsError(try matcher.value(of: attribute)) { error in
+			// then
+			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
+		}
+	}
+
+	func testGivenAmountOfTimeAttribute_valueOf_returnsCorrectValue() {
+		// given
+		let attribute = WithinXCalendarUnitsSubQueryMatcher.amountOfTime
+		let expectedValue = 54
+		matcher.numberOfTimeUnits = expectedValue
+
+		// when
+		let actualValue = try! matcher.value(of: attribute) as! Int
+
+		// then
+		XCTAssert(actualValue == expectedValue)
+	}
+
+	func testGivenTimeUnitAttribute_valueOf_returnsCorrectValue() {
+		// given
+		let attribute = WithinXCalendarUnitsSubQueryMatcher.timeUnit
+		let expectedValue = Calendar.Component.day
+		matcher.timeUnit = expectedValue
+
+		// when
+		let actualValue = try! matcher.value(of: attribute) as! Calendar.Component
+
+		// then
+		XCTAssert(actualValue == expectedValue)
+	}
+
+	func testGivenMostRecentOnlyAttribute_valueOf_returnsCorrectValue() {
+		// given
+		let attribute = CommonSubQueryMatcherAttributes.mostRecentOnly
+		let expectedValue = true
+		matcher.mostRecentOnly = expectedValue
+
+		// when
+		let actualValue = try! matcher.value(of: attribute) as! Bool
+
+		// then
+		XCTAssert(actualValue == expectedValue)
+	}
+
+	func testGivenTwoMatchersOfDifferentTypes_equalToAttributed_returnsFalse() {
+		// given
+		let otherAttributed: Attributed = SameDatesSubQueryMatcher()
+
+		// when
+		let equal = matcher.equalTo(otherAttributed)
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameObjectTwice_equalToAttributed_returnsTrue() {
+		// when
+		let equal = matcher.equalTo(matcher as Attributed)
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenSameMatcherTypeWithDifferentNumberOfUnits_equalToAttributed_returnsFalse() {
+		// given
+		let otherAttributed: Attributed = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: matcher.numberOfTimeUnits + 1)
+
+		// when
+		let equal = matcher.equalTo(otherAttributed)
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithDifferentTimeUnits_equalToAttributed_returnsFalse() {
+		// given
+		let otherAttributed: Attributed = WithinXCalendarUnitsSubQueryMatcher(timeUnit: Calendar.Component.hour)
+
+		// when
+		let equal = matcher.equalTo(otherAttributed)
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithDifferentMostRecentOnly_equalToAttributed_returnsFalse() {
+		// given
+		let otherAttributed: Attributed = WithinXCalendarUnitsSubQueryMatcher(mostRecentOnly: true)
+
+		// when
+		let equal = matcher.equalTo(otherAttributed)
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalToAttributed_returnsTrue() {
+		// given
+		let otherAttributed: Attributed = WithinXCalendarUnitsSubQueryMatcher()
+
+		// when
+		let equal = matcher.equalTo(otherAttributed)
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenTwoMatchersOfDifferentTypes_equalToMatcher_returnsFalse() {
+		// given
+		let otherMatcher: SubQueryMatcher = SameDatesSubQueryMatcher()
+
+		// when
+		let equal = matcher.equalTo(otherMatcher)
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameObjectTwice_equalToMatcher_returnsTrue() {
+		// when
+		let equal = matcher.equalTo(matcher as SubQueryMatcher)
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenSameMatcherTypeWithDifferentNumberOfUnits_equalToMatcher_returnsFalse() {
+		// given
+		let otherMatcher: SubQueryMatcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: matcher.numberOfTimeUnits + 1)
+
+		// when
+		let equal = matcher.equalTo(otherMatcher)
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithDifferentTimeUnits_equalToMatcher_returnsFalse() {
+		// given
+		let otherMatcher: SubQueryMatcher = WithinXCalendarUnitsSubQueryMatcher(timeUnit: Calendar.Component.hour)
+
+		// when
+		let equal = matcher.equalTo(otherMatcher)
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithDifferentMostRecentOnly_equalToMatcher_returnsFalse() {
+		// given
+		let otherMatcher: SubQueryMatcher = WithinXCalendarUnitsSubQueryMatcher(mostRecentOnly: true)
+
+		// when
+		let equal = matcher.equalTo(otherMatcher)
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalToMatcher_returnsTrue() {
+		// given
+		let otherMatcher: SubQueryMatcher = WithinXCalendarUnitsSubQueryMatcher()
+
+		// when
+		let equal = matcher.equalTo(otherMatcher)
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenSameObjectTwice_equalTo_returnsTrue() {
+		// when
+		let equal = matcher.equalTo(matcher)
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenSameMatcherTypeWithDifferentNumberOfUnits_equalTo_returnsFalse() {
+		// given
+		let other = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: matcher.numberOfTimeUnits + 1)
+
+		// when
+		let equal = matcher.equalTo(other)
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithDifferentTimeUnits_equalTo_returnsFalse() {
+		// given
+		let other = WithinXCalendarUnitsSubQueryMatcher(timeUnit: Calendar.Component.hour)
+
+		// when
+		let equal = matcher.equalTo(other)
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithDifferentMostRecentOnly_equalTo_returnsFalse() {
+		// given
+		let other = WithinXCalendarUnitsSubQueryMatcher(mostRecentOnly: true)
+
+		// when
+		let equal = matcher.equalTo(other)
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() {
+		// given
+		let other = WithinXCalendarUnitsSubQueryMatcher()
+
+		// when
+		let equal = matcher.equalTo(other)
+
+		// then
+		XCTAssert(equal)
+	}
 }

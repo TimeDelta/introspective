@@ -102,5 +102,4 @@ class WithinXCalendarUnitsSubQueryMatcherFunctionalTests: FunctionalTest {
 		XCTAssert(matchingSamples.count == 1)
 		XCTAssert(matchingSamples[0].equalTo(querySamples[1]))
 	}
-
 }
