@@ -17,6 +17,8 @@ public class SampleCreatorTestUtil {
 		var dates = [DateType: Date]()
 		if startDate != nil {
 			dates[.start] = startDate!
+		} else {
+			dates[.start] = Date()
 		}
 		if endDate != nil {
 			dates[.end] = endDate!

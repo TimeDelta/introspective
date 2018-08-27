@@ -81,6 +81,7 @@
 		52518402172AD2BCC2FC26DFBBCAA44B /* SameTimeUnitSampleGrouper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4B7820C237BE98EC69260A3EB316B7 /* SameTimeUnitSampleGrouper.swift */; };
 		52543E7AD6F4A80808E2D521540BC437 /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82474EE7216C1A8C89AD8F460D2B92AE /* UITest.swift */; };
 		53D780665C98645C085BCAEFF065C94E /* HorizontalMultiSelectAttributeValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A214A9E274205E9A786C23389DE5696 /* HorizontalMultiSelectAttributeValueViewController.swift */; };
+		53FF81EA6299D7A84AD70DAE144A46BE /* SampleCreatorTestUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43BE71C8B257F5739839F2183971CD1 /* SampleCreatorTestUtil.swift */; };
 		5484B5F16156C111C33D1005AD1C0E58 /* AnySample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2171E72DFAE4E4B8A9C7D94EB151EF /* AnySample.swift */; };
 		549FCCA7E870C08391FAD1A0BDB831AD /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B43E9C963BC4B11B7973019B3705D2 /* Activity.swift */; };
 		557BA84BBC74CF49812390A0DADF64B8 /* LineChart.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 817AF06FCDB4377055BE64BC7291EC9E /* LineChart.storyboard */; };
@@ -90,6 +91,7 @@
 		57358F6D0E9CB3FEDE6172B9622D829D /* CountSampleGroupCombiner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA11CBAEE08268807DFB0DFF8F01ED1 /* CountSampleGroupCombiner.swift */; };
 		5737C7B89B950A5E1463FFCDDA17FF68 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB5E9DA183378A23AEECCB84D14A9ED /* Source.swift */; };
 		57D7BECE14EF437A5B771B36DA89A57A /* AttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159931C7854A8D2B94F87DB40860B71E /* AttributeRestriction.swift */; };
+		5817B6CFE2BC0498B8BC82489135250B /* WithinXCalendarUnitsSubQueryMatcherFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CA985F7C3B1785EAD1279350F1D46 /* WithinXCalendarUnitsSubQueryMatcherFunctionalTests.swift */; };
 		592A5B5BE50EF1F5DE39B372BA688F97 /* DateOnlyAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B15E596CF33EC439D956F34A975A7D /* DateOnlyAttribute.swift */; };
 		59E80B1140C480E70826B269BDC8EA0C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6EFDA0D8A49DDAB2C764758C38BB7C55 /* Assets.xcassets */; };
 		60123D12FCA0FA53276870EFAE6D11AE /* ActivityInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97993953A0D4F58202621FBB47A5332D /* ActivityInstance.swift */; };
@@ -149,8 +151,7 @@
 		A087A79920BFB6C8FFFDC945664ED208 /* SourceField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 998CCB6BFA07C6CC1C75B0A23D58ACD2 /* SourceField.swift */; };
 		A1DCD9E359F8A3E11916D3C2DD4724F9 /* Tags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8802ED332A205967EA10364155D0925A /* Tags.swift */; };
 		A2C7578CB1E67C26F0041A82A1A01C1E /* ContainsStringAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AB7D7C12BBD8BEF86AD81096EA4680 /* ContainsStringAttributeRestriction.swift */; };
-		5817B6CFE2BC0498B8BC82489135250B /* WithinXCalendarUnitsSubQueryMatcherFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CA985F7C3B1785EAD1279350F1D46 /* WithinXCalendarUnitsSubQueryMatcherFunctionalTests.swift */; };
-		53FF81EA6299D7A84AD70DAE144A46BE /* SampleCreatorTestUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43BE71C8B257F5739839F2183971CD1 /* SampleCreatorTestUtil.swift */; };
+		E80FC0A1347B1AC448011EF314B04828 /* InSameCalendarUnitSubQueryMatcherUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D17B5390E90ED028E60171FC403CFF0 /* InSameCalendarUnitSubQueryMatcherUnitTests.swift */; };
 		A5063B5C4E2CBBA2D4B65824B3D626D8 /* AxisAttributeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC75D3C9E2CA764DBCAC686AAA52F938 /* AxisAttributeViewController.swift */; };
 		A524E80CB771114BAAEA4CE032778498 /* EditOperationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CBA86A2B0497021DA2A8B6EE3815459 /* EditOperationViewController.swift */; };
 		A555EA5E468443AEA471095008DB1C62 /* LessThanNumericAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43250474A8CDF0CFC55DA65C8B2D60CD /* LessThanNumericAttributeRestriction.swift */; };
@@ -351,6 +352,7 @@
 		46AE649A79C04CE05780A8F099A74F35 /* FunctionalTestDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionalTestDatabase.swift; sourceTree = "<group>"; };
 		477CA657E2F0AA3AAAE5519863ECC2FD /* InSameCalendarUnitSubQueryMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InSameCalendarUnitSubQueryMatcher.swift; sourceTree = "<group>"; };
 		48636021EDA67513D0E7B291F2BFD85E /* SampleQueryResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleQueryResult.swift; sourceTree = "<group>"; };
+		489CA985F7C3B1785EAD1279350F1D46 /* WithinXCalendarUnitsSubQueryMatcherFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithinXCalendarUnitsSubQueryMatcherFunctionalTests.swift; sourceTree = "<group>"; };
 		48C0378646ED0D2D53C993BD2FF14162 /* SubQueryMatcherFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubQueryMatcherFactory.swift; sourceTree = "<group>"; };
 		4A0EB2672BF28C80FA3094001CE862C2 /* AskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskViewController.swift; sourceTree = "<group>"; };
 		4A34C4583D5E7B21D1A76B3E21B41E2E /* EditSubDataTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSubDataTypeViewController.swift; sourceTree = "<group>"; };
@@ -440,8 +442,7 @@
 		9A214A9E274205E9A786C23389DE5696 /* HorizontalMultiSelectAttributeValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalMultiSelectAttributeValueViewController.swift; sourceTree = "<group>"; };
 		9AF9DACC8B8ABCE67941199642FA018F /* TextQuestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextQuestion.swift; sourceTree = "<group>"; };
 		9D85814314125B74D94FE8E312EBCE50 /* HeartRateQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateQuery.swift; sourceTree = "<group>"; };
-		489CA985F7C3B1785EAD1279350F1D46 /* WithinXCalendarUnitsSubQueryMatcherFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithinXCalendarUnitsSubQueryMatcherFunctionalTests.swift; sourceTree = "<group>"; };
-		F43BE71C8B257F5739839F2183971CD1 /* SampleCreatorTestUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCreatorTestUtil.swift; sourceTree = "<group>"; };
+		1D17B5390E90ED028E60171FC403CFF0 /* InSameCalendarUnitSubQueryMatcherUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InSameCalendarUnitSubQueryMatcherUnitTests.swift; sourceTree = "<group>"; };
 		A5C9A8724BF5AE2FCFBEDBD0974AFD08 /* AfterTimeOfDayAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterTimeOfDayAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A7A53A7CA006D4FBD270EE9CE0934C8D /* QueryFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryFactory.swift; sourceTree = "<group>"; };
 		AC25FB764DCEC4AF225646C6233C5B33 /* UnitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitTest.swift; sourceTree = "<group>"; };
@@ -520,6 +521,7 @@
 		F3093A5917D0E4CA9EC2344A023A0DC8 /* FunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionalTest.swift; sourceTree = "<group>"; };
 		F37D5B16754C84C856D65D4828FEC7FE /* StartsWithStringAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartsWithStringAttributeRestriction.swift; sourceTree = "<group>"; };
 		F3D62A9D391E1279F69771D3160F5C24 /* MostRecentDateInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MostRecentDateInformation.swift; sourceTree = "<group>"; };
+		F43BE71C8B257F5739839F2183971CD1 /* SampleCreatorTestUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCreatorTestUtil.swift; sourceTree = "<group>"; };
 		F473FB954CFDD0FACDF5A49E8DE6AB7F /* Mood.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mood.swift; sourceTree = "<group>"; };
 		F6AB596B913980639B64AFEC2D4BC719 /* AutoCodable.swifttemplate */ = {isa = PBXFileReference; lastKnownFileType = text; path = AutoCodable.swifttemplate; sourceTree = "<group>"; };
 		F6F3131685E057F75B299FB7AF7F3152 /* SampleQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleQuery.swift; sourceTree = "<group>"; };
@@ -576,6 +578,14 @@
 				D20323E562D73B674C88585A7A62951E /* Pods-DataIntegrationUITests.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		0312691716ECF3699F9A366BB108DCF4 /* SubQueryMatchers */ = {
+			isa = PBXGroup;
+			children = (
+				489CA985F7C3B1785EAD1279350F1D46 /* WithinXCalendarUnitsSubQueryMatcherFunctionalTests.swift */,
+			);
+			path = SubQueryMatchers;
 			sourceTree = "<group>";
 		};
 		038866737BD7804CDB58F4547CCD45C5 /* Generic */ = {
@@ -978,6 +988,7 @@
 			isa = PBXGroup;
 			children = (
 				18A334986A9D7FB28676AD46453FECE4 /* WithinXCalendarUnitsSubQueryMatcherUnitTests.swift */,
+				1D17B5390E90ED028E60171FC403CFF0 /* InSameCalendarUnitSubQueryMatcherUnitTests.swift */,
 			);
 			path = SubQueryMatchers;
 			sourceTree = "<group>";
@@ -1098,14 +1109,6 @@
 				FD95C44FEC4C5F1BCEEC4B8F47CFF1B1 /* NumericAttributes */,
 			);
 			path = AttributeRestrictions;
-			sourceTree = "<group>";
-		};
-		0312691716ECF3699F9A366BB108DCF4 /* SubQueryMatchers */ = {
-			isa = PBXGroup;
-			children = (
-				489CA985F7C3B1785EAD1279350F1D46 /* WithinXCalendarUnitsSubQueryMatcherFunctionalTests.swift */,
-			);
-			path = SubQueryMatchers;
 			sourceTree = "<group>";
 		};
 		A6B8DEAE9AF0E754BCB7AEF9DFFFEF3C /* DataIntegrationTests */ = {
@@ -1831,6 +1834,7 @@
 				5817B6CFE2BC0498B8BC82489135250B /* WithinXCalendarUnitsSubQueryMatcherFunctionalTests.swift in Sources */,
 				AD9097A27A898174BFC1BA8FB246AEF9 /* WithinXCalendarUnitsSubQueryMatcherUnitTests.swift in Sources */,
 				079D5C51A1092BF02DE0F1FCC393CDA9 /* BeforeTimeOfDayAttributeRestrictionUnitTests.swift in Sources */,
+				E80FC0A1347B1AC448011EF314B04828 /* InSameCalendarUnitSubQueryMatcherUnitTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

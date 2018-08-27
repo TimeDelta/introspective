@@ -40,6 +40,11 @@ public class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable {
 
 	public required init() {}
 
+	public init(timeUnit: Calendar.Component = .day, mostRecentOnly: Bool = false) {
+		self.timeUnit = timeUnit
+		self.mostRecentOnly = mostRecentOnly
+	}
+
 	public func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
 		matching subQuerySamples: [Sample])
@@ -48,6 +53,7 @@ public class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable {
 
 		var applicableSubQuerySamples = subQuerySamples
 		if mostRecentOnly {
+			applicableSubQuerySamples = DependencyInjector.util.sampleUtil.sort(samples: subQuerySamples, by: .start, in: .orderedDescending)
 			applicableSubQuerySamples = [subQuerySamples[0]]
 		}
 
