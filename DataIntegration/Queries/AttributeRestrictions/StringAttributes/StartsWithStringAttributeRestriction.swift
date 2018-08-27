@@ -70,7 +70,7 @@ public class StartsWithStringAttributeRestriction: AnyAttributeRestriction, Stri
 	}
 
 	public func equalTo(_ other: StartsWithStringAttributeRestriction) -> Bool {
-		return prefix == other.prefix
+		return restrictedAttribute.equalTo(other.restrictedAttribute) && prefix == other.prefix
 	}
 }
 
