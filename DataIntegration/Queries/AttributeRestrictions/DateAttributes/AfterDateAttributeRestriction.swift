@@ -79,6 +79,6 @@ public class AfterDateAttributeRestriction: DateAttributeRestriction, PredicateA
 	}
 
 	public func equalTo(_ other: AfterDateAttributeRestriction) -> Bool {
-		return date == other.date
+		return restrictedAttribute.equalTo(other.restrictedAttribute) && date == other.date
 	}
 }
