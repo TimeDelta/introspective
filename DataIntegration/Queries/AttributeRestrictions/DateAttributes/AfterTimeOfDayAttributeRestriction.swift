@@ -74,6 +74,6 @@ public class AfterTimeOfDayAttributeRestriction: DateAttributeRestriction, Equat
 	}
 
 	public func equalTo(_ other: AfterTimeOfDayAttributeRestriction) -> Bool {
-		return timeOfDay == other.timeOfDay
+		return restrictedAttribute.equalTo(other.restrictedAttribute) && timeOfDay == other.timeOfDay
 	}
 }
