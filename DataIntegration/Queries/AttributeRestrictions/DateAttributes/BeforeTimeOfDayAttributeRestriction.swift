@@ -74,6 +74,6 @@ public class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction, Equa
 	}
 
 	public func equalTo(_ other: BeforeTimeOfDayAttributeRestriction) -> Bool {
-		return timeOfDay == other.timeOfDay
+		return restrictedAttribute.equalTo(other.restrictedAttribute) && timeOfDay == other.timeOfDay
 	}
 }
