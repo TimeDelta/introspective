@@ -70,6 +70,6 @@ public class ContainsStringAttributeRestriction: AnyAttributeRestriction, String
 	}
 
 	public func equalTo(_ other: ContainsStringAttributeRestriction) -> Bool {
-		return substring == other.substring
+		return restrictedAttribute.equalTo(other.restrictedAttribute) && substring == other.substring
 	}
 }
