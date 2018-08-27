@@ -71,6 +71,6 @@ public class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Equatabl
 	}
 
 	public func equalTo(_ other: OnDayOfWeekAttributeRestriction) -> Bool {
-		return daysOfWeek == other.daysOfWeek
+		return restrictedAttribute.equalTo(other.restrictedAttribute) && daysOfWeek == other.daysOfWeek
 	}
 }
