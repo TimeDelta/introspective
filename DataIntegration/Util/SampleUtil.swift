@@ -148,7 +148,7 @@ public class SampleUtilImpl: SampleUtil {
 			samplesToJoin.append(sample)
 			lastSample = sample
 		}
-		if sortedSamples.count > 0 && !samplesJoined && !samplesShouldNotBeJoined(lastSample!, sortedSamples.last!) {
+		if sortedSamples.count > 0 && samplesJoined == samplesShouldNotBeJoined(lastSample!, sortedSamples.last!) {
 			end = sortedSamples.last!.dates()[.start]!
 			let twoDateSample = joinSamples(samplesToJoin, start, end)
 			twoDateSamples.append(twoDateSample)
@@ -167,7 +167,9 @@ public class SampleUtilImpl: SampleUtil {
 		var start: Date = Date() // have to initialize this here to make the compiler happy even though it would still always be initialized before getting used even without this
 		var end: Date
 		var samplesToJoin = [SampleType]()
+		var samplesJoined = false
 		for sample in sortedSamples {
+			samplesJoined = false
 			if lastSample == nil {
 				start = sample.dates()[.start]!
 			} else if samplesShouldNotBeJoined(lastSample!, sample) {
@@ -176,9 +178,15 @@ public class SampleUtilImpl: SampleUtil {
 				twoDateSamples.append(twoDateSample)
 				start = sample.dates()[.start]!
 				samplesToJoin = [SampleType]()
+				samplesJoined = true
 			}
 			samplesToJoin.append(sample)
 			lastSample = sample
+		}
+		if sortedSamples.count > 0 && samplesJoined == samplesShouldNotBeJoined(lastSample!, sortedSamples.last!) {
+			end = sortedSamples.last!.dates()[.start]!
+			let twoDateSample = joinSamples(samplesToJoin, start, end)
+			twoDateSamples.append(twoDateSample)
 		}
 		return twoDateSamples
 	}
@@ -236,7 +244,7 @@ public class SampleUtilImpl: SampleUtil {
 				if sample.dates()[.end] != nil {
 					date = sample.dates()[.end]!
 				}
-				return date.isAfterDate(endDate!, granularity: .nanosecond)
+				return date.isBeforeDate(endDate!, granularity: .nanosecond)
 			}
 		}
 		return filteredSamples
