@@ -309,7 +309,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = StartsWithStringAttributeRestriction(attribute: Me.attribute, prefix: restriction.prefix + "other stuff")
+		let otherAttributed = StartsWithStringAttributeRestriction(attribute: restriction.restrictedAttribute, prefix: restriction.prefix + "other stuff")
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)

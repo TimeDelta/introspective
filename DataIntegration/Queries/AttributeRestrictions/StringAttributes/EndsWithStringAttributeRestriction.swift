@@ -70,6 +70,6 @@ public class EndsWithStringAttributeRestriction: AnyAttributeRestriction, String
 	}
 
 	public func equalTo(_ other: EndsWithStringAttributeRestriction) -> Bool {
-		return suffix == other.suffix
+		return restrictedAttribute.equalTo(other.restrictedAttribute) && suffix == other.suffix
 	}
 }
