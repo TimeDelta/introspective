@@ -1,5 +1,5 @@
 //
-//  LessThanNumericAttributeRestrictionUnitTests.swift
+//  LessThanOrEqualToNumericAttributeRestrictionUnitTests.swift
 //  DataIntegrationTests
 //
 //  Created by Bryan Nova on 8/28/18.
@@ -10,17 +10,17 @@ import XCTest
 import SwiftyMocky
 @testable import DataIntegration
 
-class LessThanNumericAttributeRestrictionUnitTests: UnitTest {
+class LessThanOrEqualToNumericAttributeRestrictionUnitTests: UnitTest {
 
-	fileprivate typealias Me = LessThanNumericAttributeRestrictionUnitTests
-	fileprivate static let valueAttribute = LessThanNumericAttributeRestriction.valueAttribute
+	fileprivate typealias Me = LessThanOrEqualToNumericAttributeRestrictionUnitTests
+	fileprivate static let valueAttribute = LessThanOrEqualToNumericAttributeRestriction.valueAttribute
 	fileprivate static var restrictedAttribute = IntegerAttribute(name: "value")
 
-	fileprivate var restriction: LessThanNumericAttributeRestriction!
+	fileprivate var restriction: LessThanOrEqualToNumericAttributeRestriction!
 
 	override func setUp() {
 		super.setUp()
-		restriction = LessThanNumericAttributeRestriction(attribute: Me.restrictedAttribute)
+		restriction = LessThanOrEqualToNumericAttributeRestriction(attribute: Me.restrictedAttribute)
 	}
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
@@ -96,7 +96,7 @@ class LessThanNumericAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(samplePasses)
 	}
 
-	func testGivenSampleWithValueEqualToRestrictionValue_samplePasses_returnsFalse() {
+	func testGivenSampleWithValueEqualToRestrictionValue_samplePasses_returnsTrue() {
 		// given
 		let mockSample = SampleMock()
 		let restrictionValue = 235
@@ -107,7 +107,7 @@ class LessThanNumericAttributeRestrictionUnitTests: UnitTest {
 		let samplePasses = try! restriction.samplePasses(mockSample)
 
 		// then
-		XCTAssertFalse(samplePasses)
+		XCTAssert(samplePasses)
 	}
 
 	func testGivenSampleWithValueGreaterThanRestrictionValue_samplePasses_returnsFalse() {
@@ -145,7 +145,7 @@ class LessThanNumericAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = LessThanNumericAttributeRestriction(attribute: IntegerAttribute(name: "not the same attribute"))
+		let otherAttributed: Attributed = LessThanOrEqualToNumericAttributeRestriction(attribute: IntegerAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -156,7 +156,7 @@ class LessThanNumericAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = LessThanNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value + 1)
+		let otherAttributed: Attributed = LessThanOrEqualToNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value + 1)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -167,7 +167,7 @@ class LessThanNumericAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToAttributed_returnsTrue() {
 		// given
-		let otherAttributed: Attributed = LessThanNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value)
+		let otherAttributed: Attributed = LessThanOrEqualToNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -197,7 +197,7 @@ class LessThanNumericAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = LessThanNumericAttributeRestriction(attribute: IntegerAttribute(name: "not the same attribute"))
+		let otherAttributed: AttributeRestriction = LessThanOrEqualToNumericAttributeRestriction(attribute: IntegerAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -208,7 +208,7 @@ class LessThanNumericAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = LessThanNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value + 1)
+		let otherAttributed: AttributeRestriction = LessThanOrEqualToNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value + 1)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -219,7 +219,7 @@ class LessThanNumericAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let otherAttributed: AttributeRestriction = LessThanNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value)
+		let otherAttributed: AttributeRestriction = LessThanOrEqualToNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -238,7 +238,7 @@ class LessThanNumericAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = LessThanNumericAttributeRestriction(attribute: IntegerAttribute(name: "not the same attribute"))
+		let otherAttributed = LessThanOrEqualToNumericAttributeRestriction(attribute: IntegerAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -249,7 +249,7 @@ class LessThanNumericAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = LessThanNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value + 1)
+		let otherAttributed = LessThanOrEqualToNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value + 1)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -260,7 +260,7 @@ class LessThanNumericAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let otherAttributed = LessThanNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value)
+		let otherAttributed = LessThanOrEqualToNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
