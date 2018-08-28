@@ -36,6 +36,7 @@ public class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 
 		var applicableSubQuerySamples = subQuerySamples
 		if mostRecentOnly {
+			applicableSubQuerySamples = DependencyInjector.util.sampleUtil.sort(samples: subQuerySamples, by: .start, in: .orderedDescending)
 			applicableSubQuerySamples = [subQuerySamples[0]]
 		}
 

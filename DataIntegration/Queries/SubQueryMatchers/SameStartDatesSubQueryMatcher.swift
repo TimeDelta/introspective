@@ -36,10 +36,11 @@ public class SameStartDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 
 		var applicableSubQuerySamples = subQuerySamples
 		if mostRecentOnly {
+			applicableSubQuerySamples = DependencyInjector.util.sampleUtil.sort(samples: subQuerySamples, by: .start, in: .orderedDescending)
 			applicableSubQuerySamples = [subQuerySamples[0]]
 		}
 
-		let subQuerySamplesSortedByStartDate = DependencyInjector.util.sampleUtil.sort(samples: applicableSubQuerySamples, by: .start)
+		let subQuerySamplesSortedByStartDate = DependencyInjector.util.sampleUtil.sort(samples: applicableSubQuerySamples, by: .start, in: .orderedAscending)
 		for sample in querySamples {
 			let matchingSampleIndex = DependencyInjector.util.searchUtil.binarySearch(
 				for: sample,
