@@ -58,7 +58,7 @@ public class AfterDateAttributeRestriction: DateAttributeRestriction, PredicateA
 	}
 
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
-		guard let sampleDate = try sample.value(of: restrictedAttribute) as? Date else { throw SampleError.typeMismatch }
+		guard let sampleDate = try sample.value(of: restrictedAttribute) as? Date else { throw AttributeError.typeMismatch }
 		return sampleDate.isAfterDate(date, granularity: .second)
 	}
 

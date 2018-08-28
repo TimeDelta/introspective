@@ -14,19 +14,18 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 
 	fileprivate typealias Me = OnDayOfWeekAttributeRestrictionUnitTests
 	fileprivate static let daysOfWeekAttribute = OnDayOfWeekAttributeRestriction.daysOfWeekAttribute
+	fileprivate static let restrictedAttribute = DateTimeAttribute(name: "date")
 
-	private var attribute: Attribute!
-	private var restriction: OnDayOfWeekAttributeRestriction!
+	fileprivate var restriction: OnDayOfWeekAttributeRestriction!
 
 	override func setUp() {
 		super.setUp()
-		attribute = AttributeBase(name: "attribute")
-		restriction = OnDayOfWeekAttributeRestriction(attribute: attribute)
+		restriction = OnDayOfWeekAttributeRestriction(attribute: Me.restrictedAttribute)
 	}
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// when
-		XCTAssertThrowsError(try restriction.value(of: attribute)) { error in
+		XCTAssertThrowsError(try restriction.value(of: Me.restrictedAttribute)) { error in
 			// then
 			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
 		}
@@ -46,7 +45,7 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
-		XCTAssertThrowsError(try restriction.set(attribute: attribute, to: 1)) { error in
+		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: 1)) { error in
 			// then
 			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
 		}
@@ -74,12 +73,12 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithWrongValueTypeForGivenAttribute_samplePasses_throwsTypeMismatchError() {
 		// given
 		let mockSample = SampleMock()
-		Given(mockSample, .value(of: .value(attribute), willReturn: 1))
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: 1))
 
 		// when
 		XCTAssertThrowsError(try restriction.samplePasses(mockSample)) { error in
 			// then
-			XCTAssertEqual(error as? SampleError, SampleError.typeMismatch)
+			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
 		}
 	}
 
@@ -89,7 +88,7 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 		let restrictionDaysOfWeek = Set<DayOfWeek>([DayOfWeek.Friday])
 		restriction.daysOfWeek = restrictionDaysOfWeek
 		let sampleDate = Date()
-		Given(mockSample, .value(of: .value(attribute), willReturn: sampleDate))
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: sampleDate))
 		Given(mockCalendarUtil, .date(date: .value(sampleDate), isOnOneOf: .value(restrictionDaysOfWeek), willReturn: false))
 
 		// when
@@ -105,7 +104,7 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 		let restrictionDaysOfWeek = Set<DayOfWeek>([DayOfWeek.Friday])
 		restriction.daysOfWeek = restrictionDaysOfWeek
 		let sampleDate = Date()
-		Given(mockSample, .value(of: .value(attribute), willReturn: sampleDate))
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: sampleDate))
 		Given(mockCalendarUtil, .date(date: .value(sampleDate), isOnOneOf: .value(restrictionDaysOfWeek), willReturn: true))
 
 		// when

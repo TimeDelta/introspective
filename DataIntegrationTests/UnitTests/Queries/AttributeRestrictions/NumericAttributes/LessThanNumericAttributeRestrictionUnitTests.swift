@@ -1,27 +1,26 @@
 //
-//  BeforeDateAttributeRestrictionUnitTests.swift
+//  LessThanNumericAttributeRestrictionUnitTests.swift
 //  DataIntegrationTests
 //
-//  Created by Bryan Nova on 8/14/18.
+//  Created by Bryan Nova on 8/28/18.
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
 import XCTest
-import SwiftDate
 import SwiftyMocky
 @testable import DataIntegration
 
-class BeforeDateAttributeRestrictionUnitTests: UnitTest {
+class LessThanNumericAttributeRestrictionUnitTests: UnitTest {
 
-	fileprivate typealias Me = BeforeDateAttributeRestrictionUnitTests
-	fileprivate static let dateAttribute = BeforeDateAttributeRestriction.dateAttribute
-	fileprivate static let restrictedAttribute = DateOnlyAttribute(name: "date")
+	fileprivate typealias Me = LessThanNumericAttributeRestrictionUnitTests
+	fileprivate static let valueAttribute = LessThanNumericAttributeRestriction.valueAttribute
+	fileprivate static var restrictedAttribute = IntegerAttribute(name: "value")
 
-	fileprivate var restriction: BeforeDateAttributeRestriction!
+	fileprivate var restriction: LessThanNumericAttributeRestriction!
 
 	override func setUp() {
 		super.setUp()
-		restriction = BeforeDateAttributeRestriction(attribute: Me.restrictedAttribute)
+		restriction = LessThanNumericAttributeRestriction(attribute: Me.restrictedAttribute)
 	}
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
@@ -34,15 +33,14 @@ class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenDateAttribute_valueOf_returnsCorrectDate() {
 		// given
-		let expectedDate = oldDate()
-		Given(mockCalendarUtil, .start(of: .value(.day), in: .value(expectedDate), willReturn: expectedDate))
-		restriction.date = expectedDate
+		let expectedValue = 432
+		restriction.value = Double(expectedValue)
 
 		// when
-		let actualDate = try! restriction.value(of: Me.dateAttribute) as! Date
+		let actualValue = try! restriction.value(of: Me.valueAttribute) as! Int
 
 		// then
-		XCTAssertEqual(actualDate, expectedDate)
+		XCTAssertEqual(actualValue, expectedValue)
 	}
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
@@ -55,7 +53,7 @@ class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenWrongValueType_setAttributeTo_throwsTypeMismatchError() {
 		// when
-		XCTAssertThrowsError(try restriction.set(attribute: Me.dateAttribute, to: 1)) { error in
+		XCTAssertThrowsError(try restriction.set(attribute: Me.valueAttribute, to: Date())) { error in
 			// then
 			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
 		}
@@ -63,20 +61,19 @@ class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenDateAttributeAndValidValue_setAttributeTo_setsDateToCorrectValue() {
 		// given
-		let expectedDate = oldDate()
-		Given(mockCalendarUtil, .start(of: .value(.day), in: .value(expectedDate), willReturn: expectedDate))
+		let expectedValue = 2345
 
 		// when
-		try! restriction.set(attribute: Me.dateAttribute, to: expectedDate)
+		try! restriction.set(attribute: Me.valueAttribute, to: expectedValue)
 
 		// then
-		XCTAssertEqual(restriction.date, expectedDate)
+		XCTAssertEqual(restriction.value, Double(expectedValue))
 	}
 
 	func testGivenSampleWithNonDateValueForGivenAttribute_samplePasses_throwsTypeMismatchError() {
 		// given
 		let mockSample = SampleMock()
-		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: 1))
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: Date()))
 
 		// when
 		XCTAssertThrowsError(try restriction.samplePasses(mockSample)) { error in
@@ -85,13 +82,12 @@ class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSampleWithDateForGivenAttributeThatIsBeforeSpecifiedDate_samplePasses_returnsTrue() {
+	func testGivenSampleWithValueLessThanRestrictionValue_samplePasses_returnsTrue() {
 		// given
 		let mockSample = SampleMock()
-		let restrictionDate = Date()
-		Given(mockCalendarUtil, .start(of: .value(.day), in: .value(restrictionDate), willReturn: restrictionDate))
-		restriction.date = restrictionDate
-		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: oldDate()))
+		let restrictionValue = 235
+		restriction.value = Double(restrictionValue)
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: restrictionValue - 1))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)
@@ -100,13 +96,12 @@ class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(samplePasses)
 	}
 
-	func testGivenSampleWithDateForGivenAttributeThatIsAfterSpecifiedDate_samplePasses_returnsFalse() {
+	func testGivenSampleWithValueEqualToRestrictionValue_samplePasses_returnsFalse() {
 		// given
 		let mockSample = SampleMock()
-		let restrictionDate = oldDate()
-		Given(mockCalendarUtil, .start(of: .value(.day), in: .value(restrictionDate), willReturn: restrictionDate))
-		restriction.date = restrictionDate
-		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: Date()))
+		let restrictionValue = 235
+		restriction.value = Double(restrictionValue)
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: restrictionValue))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)
@@ -115,15 +110,12 @@ class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(samplePasses)
 	}
 
-	func testGivenSampleWithDateForGivenAttributeThatIsOnSameDayAsSpecifiedDate_samplePasses_returnsFalse() {
+	func testGivenSampleWithValueGreaterThanRestrictionValue_samplePasses_returnsTrue() {
 		// given
 		let mockSample = SampleMock()
-		let restrictionDate = Date(year: 2018, month: 1, day: 1, hour: 3, minute: 2, second: 1)
-		let startOfRestrictionDate = Date(year: 2018, month: 1, day: 1, hour: 0, minute: 0, second: 0)
-		Given(mockCalendarUtil, .start(of: .value(.day), in: .value(restrictionDate), willReturn: startOfRestrictionDate))
-		restriction.date = restrictionDate
-		let sampleDate = Date(year: 2018, month: 1, day: 1, hour: 2, minute: 2, second: 1)
-		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: sampleDate))
+		let restrictionValue = 235
+		restriction.value = Double(restrictionValue)
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: restrictionValue + 1))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)
@@ -153,7 +145,7 @@ class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = BeforeDateAttributeRestriction(attribute: DateOnlyAttribute(name: "not the same attribute"))
+		let otherAttributed: Attributed = LessThanNumericAttributeRestriction(attribute: DateTimeAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -164,7 +156,7 @@ class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = BeforeDateAttributeRestriction(attribute: restriction.restrictedAttribute, date: restriction.date + 1.days)
+		let otherAttributed: Attributed = LessThanNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value + 1)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -175,7 +167,7 @@ class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToAttributed_returnsTrue() {
 		// given
-		let otherAttributed: Attributed = BeforeDateAttributeRestriction(attribute: restriction.restrictedAttribute, date: restriction.date)
+		let otherAttributed: Attributed = LessThanNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -186,7 +178,7 @@ class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenOtherOfDifferentTypes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = LessThanNumericAttributeRestriction(attribute: restriction.restrictedAttribute)
+		let otherAttributed: AttributeRestriction = ContainsStringAttributeRestriction(attribute: restriction.restrictedAttribute)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -205,7 +197,7 @@ class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = BeforeDateAttributeRestriction(attribute: DateOnlyAttribute(name: "not the same attribute"))
+		let otherAttributed: AttributeRestriction = LessThanNumericAttributeRestriction(attribute: DateTimeAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -216,7 +208,7 @@ class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = BeforeDateAttributeRestriction(attribute: restriction.restrictedAttribute, date: restriction.date + 1.days)
+		let otherAttributed: AttributeRestriction = LessThanNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value + 1)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -227,7 +219,7 @@ class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let otherAttributed: AttributeRestriction = BeforeDateAttributeRestriction(attribute: restriction.restrictedAttribute, date: restriction.date)
+		let otherAttributed: AttributeRestriction = LessThanNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -246,7 +238,7 @@ class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = BeforeDateAttributeRestriction(attribute: DateOnlyAttribute(name: "not the same attribute"))
+		let otherAttributed = LessThanNumericAttributeRestriction(attribute: DateTimeAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -257,7 +249,7 @@ class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = BeforeDateAttributeRestriction(attribute: restriction.restrictedAttribute, date: restriction.date + 1.days)
+		let otherAttributed = LessThanNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value + 1)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -268,7 +260,7 @@ class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let otherAttributed = BeforeDateAttributeRestriction(attribute: restriction.restrictedAttribute, date: restriction.date)
+		let otherAttributed = LessThanNumericAttributeRestriction(attribute: restriction.restrictedAttribute, value: restriction.value)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)

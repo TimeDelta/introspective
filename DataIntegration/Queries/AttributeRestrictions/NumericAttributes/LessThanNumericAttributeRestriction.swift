@@ -68,6 +68,6 @@ public class LessThanNumericAttributeRestriction: NumericAttributeRestriction, P
 	}
 
 	public func equalTo(_ other: LessThanNumericAttributeRestriction) -> Bool {
-		return value == other.value
+		return restrictedAttribute.equalTo(other.restrictedAttribute) && value == other.value
 	}
 }

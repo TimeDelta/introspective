@@ -49,7 +49,7 @@ public class EndsWithStringAttributeRestriction: AnyAttributeRestriction, String
 	}
 
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
-		let value = try sample.value(of: restrictedAttribute) as! String
+		guard let value = try sample.value(of: restrictedAttribute) as? String else { throw AttributeError.typeMismatch }
 		return value.hasSuffix(suffix)
 	}
 

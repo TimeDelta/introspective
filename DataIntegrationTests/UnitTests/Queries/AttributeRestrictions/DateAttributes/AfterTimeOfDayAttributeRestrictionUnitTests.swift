@@ -14,19 +14,18 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 
 	fileprivate typealias Me = AfterTimeOfDayAttributeRestrictionUnitTests
 	fileprivate static let timeAttribute = AfterTimeOfDayAttributeRestriction.timeAttribute
+	fileprivate static let restrictedAttribute = DateTimeAttribute(name: "date")
 
-	private var attribute: Attribute!
-	private var restriction: AfterTimeOfDayAttributeRestriction!
+	fileprivate var restriction: AfterTimeOfDayAttributeRestriction!
 
 	override func setUp() {
 		super.setUp()
-		attribute = AttributeBase(name: "attribute")
-		restriction = AfterTimeOfDayAttributeRestriction(attribute: attribute)
+		restriction = AfterTimeOfDayAttributeRestriction(attribute: Me.restrictedAttribute)
 	}
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// when
-		XCTAssertThrowsError(try restriction.value(of: attribute)) { error in
+		XCTAssertThrowsError(try restriction.value(of: Me.restrictedAttribute)) { error in
 			// then
 			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
 		}
@@ -48,7 +47,7 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
-		XCTAssertThrowsError(try restriction.set(attribute: attribute, to: 1)) { error in
+		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: 1)) { error in
 			// then
 			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
 		}
@@ -78,12 +77,12 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithNonDateValueForGivenAttribute_samplePasses_throwsTypeMismatchError() {
 		// given
 		let mockSample = SampleMock()
-		Given(mockSample, .value(of: .value(attribute), willReturn: 1))
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: 1))
 
 		// when
 		XCTAssertThrowsError(try restriction.samplePasses(mockSample)) { error in
 			// then
-			XCTAssertEqual(error as? SampleError, SampleError.typeMismatch)
+			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
 		}
 	}
 
@@ -95,7 +94,7 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 		timeOfDay.minute = 0
 		restriction.timeOfDay = timeOfDay
 		let date = Calendar.autoupdatingCurrent.date(bySetting: .hour, value: 1, of: Date())!
-		Given(mockSample, .value(of: .value(attribute), willReturn: date))
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: date))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)
@@ -112,7 +111,7 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 		timeOfDay.minute = 0
 		restriction.timeOfDay = timeOfDay
 		let date = Calendar.autoupdatingCurrent.date(bySetting: .hour, value: 0, of: Date())!
-		Given(mockSample, .value(of: .value(attribute), willReturn: date))
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: date))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)

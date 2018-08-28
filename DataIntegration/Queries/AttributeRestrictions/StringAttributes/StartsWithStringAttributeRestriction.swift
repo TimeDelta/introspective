@@ -49,7 +49,7 @@ public class StartsWithStringAttributeRestriction: AnyAttributeRestriction, Stri
 	}
 
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
-		let value = try sample.value(of: restrictedAttribute) as! String
+		guard let value = try sample.value(of: restrictedAttribute) as? String else { throw AttributeError.typeMismatch }
 		return value.starts(with: prefix)
 	}
 

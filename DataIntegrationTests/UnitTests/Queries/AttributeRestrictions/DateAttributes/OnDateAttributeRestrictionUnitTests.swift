@@ -15,19 +15,18 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	fileprivate typealias Me = OnDateAttributeRestrictionUnitTests
 	fileprivate static let dateAttribute = OnDateAttributeRestriction.dateAttribute
+	fileprivate static let restrictedAttribute = DateOnlyAttribute(name: "date")
 
-	private var attribute: Attribute!
-	private var restriction: OnDateAttributeRestriction!
+	fileprivate var restriction: OnDateAttributeRestriction!
 
 	override func setUp() {
 		super.setUp()
-		attribute = AttributeBase(name: "attribute")
-		restriction = OnDateAttributeRestriction(attribute: attribute)
+		restriction = OnDateAttributeRestriction(attribute: Me.restrictedAttribute)
 	}
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// when
-		XCTAssertThrowsError(try restriction.value(of: attribute)) { error in
+		XCTAssertThrowsError(try restriction.value(of: Me.restrictedAttribute)) { error in
 			// then
 			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
 		}
@@ -48,7 +47,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
-		XCTAssertThrowsError(try restriction.set(attribute: attribute, to: 1)) { error in
+		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: 1)) { error in
 			// then
 			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
 		}
@@ -77,12 +76,12 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithNonDateValueForGivenAttribute_samplePasses_throwsTypeMismatchError() {
 		// given
 		let mockSample = SampleMock()
-		Given(mockSample, .value(of: .value(attribute), willReturn: 1))
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: 1))
 
 		// when
 		XCTAssertThrowsError(try restriction.samplePasses(mockSample)) { error in
 			// then
-			XCTAssertEqual(error as? SampleError, SampleError.typeMismatch)
+			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
 		}
 	}
 
@@ -93,7 +92,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 		Given(mockCalendarUtil, .start(of: .value(.day), in: .value(restrictionDate), willReturn: restrictionDate))
 		restriction.date = restrictionDate
 		let sampleDate = oldDate()
-		Given(mockSample, .value(of: .value(attribute), willReturn: sampleDate))
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: sampleDate))
 		Given(mockCalendarUtil, .date(date1: .value(restrictionDate), occursOnSame: .value(.day), as: .value(sampleDate), willReturn: false))
 		Given(mockCalendarUtil, .date(date1: .value(sampleDate), occursOnSame: .value(.day), as: .value(restrictionDate), willReturn: false))
 
@@ -111,7 +110,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 		Given(mockCalendarUtil, .start(of: .value(.day), in: .value(restrictionDate), willReturn: restrictionDate))
 		restriction.date = restrictionDate
 		let sampleDate = Date()
-		Given(mockSample, .value(of: .value(attribute), willReturn: sampleDate))
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: sampleDate))
 		Given(mockCalendarUtil, .date(date1: .value(restrictionDate), occursOnSame: .value(.day), as: .value(sampleDate), willReturn: false))
 		Given(mockCalendarUtil, .date(date1: .value(sampleDate), occursOnSame: .value(.day), as: .value(restrictionDate), willReturn: false))
 
@@ -130,7 +129,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 		Given(mockCalendarUtil, .start(of: .value(.day), in: .value(restrictionDate), willReturn: startOfRestrictionDate))
 		restriction.date = restrictionDate
 		let sampleDate = Date(year: 2018, month: 1, day: 1, hour: 2, minute: 2, second: 1)
-		Given(mockSample, .value(of: .value(attribute), willReturn: sampleDate))
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: sampleDate))
 		Given(mockCalendarUtil, .date(date1: .value(startOfRestrictionDate), occursOnSame: .value(.day), as: .value(sampleDate), willReturn: true))
 		Given(mockCalendarUtil, .date(date1: .value(sampleDate), occursOnSame: .value(.day), as: .value(startOfRestrictionDate), willReturn: true))
 

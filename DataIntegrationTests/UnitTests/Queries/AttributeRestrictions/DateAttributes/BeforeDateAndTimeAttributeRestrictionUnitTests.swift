@@ -15,19 +15,18 @@ class BeforeDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 
 	fileprivate typealias Me = BeforeDateAndTimeAttributeRestrictionUnitTests
 	fileprivate static let dateAttribute = BeforeDateAndTimeAttributeRestriction.dateAttribute
+	fileprivate static let restrictedAttribute = DateTimeAttribute(name: "date")
 
-	fileprivate var attribute: Attribute!
 	fileprivate var restriction: BeforeDateAndTimeAttributeRestriction!
 
 	override func setUp() {
 		super.setUp()
-		attribute = AttributeBase(name: "attribute")
-		restriction = BeforeDateAndTimeAttributeRestriction(attribute: attribute)
+		restriction = BeforeDateAndTimeAttributeRestriction(attribute: Me.restrictedAttribute)
 	}
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// when
-		XCTAssertThrowsError(try restriction.value(of: attribute)) { error in
+		XCTAssertThrowsError(try restriction.value(of: Me.restrictedAttribute)) { error in
 			// then
 			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
 		}
@@ -47,7 +46,7 @@ class BeforeDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
-		XCTAssertThrowsError(try restriction.set(attribute: attribute, to: 1)) { error in
+		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: 1)) { error in
 			// then
 			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
 		}
@@ -75,12 +74,12 @@ class BeforeDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithNonDateValueForGivenAttribute_samplePasses_throwsTypeMismatchError() {
 		// given
 		let mockSample = SampleMock()
-		Given(mockSample, .value(of: .value(attribute), willReturn: 1))
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: 1))
 
 		// when
 		XCTAssertThrowsError(try restriction.samplePasses(mockSample)) { error in
 			// then
-			XCTAssertEqual(error as? SampleError, SampleError.typeMismatch)
+			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
 		}
 	}
 
@@ -89,7 +88,7 @@ class BeforeDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 		let mockSample = SampleMock()
 		let restrictionDate = Date()
 		restriction.date = restrictionDate
-		Given(mockSample, .value(of: .value(attribute), willReturn: oldDate()))
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: oldDate()))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)
@@ -104,7 +103,7 @@ class BeforeDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 		let restrictionDate = Date(year: 2018, month: 1, day: 1, hour: 0, minute: 1)
 		restriction.date = restrictionDate
 		let sampleDate = Date(year: 2018, month: 1, day: 1, hour: 0, minute: 0)
-		Given(mockSample, .value(of: .value(attribute), willReturn: sampleDate))
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: sampleDate))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)
@@ -117,7 +116,7 @@ class BeforeDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 		// given
 		let mockSample = SampleMock()
 		restriction.date = oldDate()
-		Given(mockSample, .value(of: .value(attribute), willReturn: Date()))
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: Date()))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)
@@ -132,7 +131,7 @@ class BeforeDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 		let restrictionDate = Date(year: 2018, month: 1, day: 1, hour: 0, minute: 0)
 		restriction.date = restrictionDate
 		let sampleDate = Date(year: 2018, month: 1, day: 1, hour: 0, minute: 1)
-		Given(mockSample, .value(of: .value(attribute), willReturn: sampleDate))
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: sampleDate))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)

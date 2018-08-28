@@ -7,24 +7,25 @@
 //
 
 import XCTest
+import SwiftyMocky
 @testable import DataIntegration
 
 class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	fileprivate typealias Me = EndsWithStringAttributeRestrictionUnitTests
-	fileprivate static let attribute = TextAttribute(name: "text")
+	fileprivate static let restrictedAttribute = TextAttribute(name: "text")
 	fileprivate static let suffixAttribute = EndsWithStringAttributeRestriction.suffixAttribute
 
 	fileprivate var restriction: EndsWithStringAttributeRestriction!
 
 	override func setUp() {
 		super.setUp()
-		restriction = EndsWithStringAttributeRestriction(attribute: Me.attribute)
+		restriction = EndsWithStringAttributeRestriction(attribute: Me.restrictedAttribute)
 	}
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// when
-		XCTAssertThrowsError(try restriction.value(of: Me.attribute)) { error in
+		XCTAssertThrowsError(try restriction.value(of: Me.restrictedAttribute)) { error in
 			// then
 			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
 		}
@@ -44,7 +45,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
-		XCTAssertThrowsError(try restriction.set(attribute: Me.attribute, to: 1)) { error in
+		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: 1)) { error in
 			// then
 			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
 		}
@@ -69,9 +70,21 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertEqual(restriction.suffix, expectedSuffix)
 	}
 
+	func testGivenSampleWithNonStringValueForGivenAttribute_samplePasses_throwsTypeMismatchError() {
+		// given
+		let mockSample = SampleMock()
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: 1))
+
+		// when
+		XCTAssertThrowsError(try restriction.samplePasses(mockSample)) { error in
+			// then
+			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
+		}
+	}
+
 	func testGivenSampleWithEmptyStringForRestrictedAttributeAndEmptySuffixForRestriction_samplePasses_returnsTrue() {
 		// given
-		let sample = createSample(withValue: "", for: Me.attribute)
+		let sample = createSample(withValue: "", for: Me.restrictedAttribute)
 		restriction.suffix = ""
 
 		// when
@@ -83,7 +96,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSampleWithEmptyStringForRestrictedAttributeAndNonEmptySuffixForRestriction_samplePasses_returnsFalse() {
 		// given
-		let sample = createSample(withValue: "", for: Me.attribute)
+		let sample = createSample(withValue: "", for: Me.restrictedAttribute)
 		restriction.suffix = "not empty"
 
 		// when
@@ -97,7 +110,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 		// given
 		let suffix = "suffix"
 		let sampleValue = String(suffix.prefix(suffix.count - 2))
-		let sample = createSample(withValue: sampleValue, for: Me.attribute)
+		let sample = createSample(withValue: sampleValue, for: Me.restrictedAttribute)
 		restriction.suffix = suffix
 
 		// when
@@ -110,7 +123,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithExactMatchForRestrictedAttribute_samplePasses_returnsTrue() {
 		// given
 		let suffix = "exact match"
-		let sample = createSample(withValue: suffix, for: Me.attribute)
+		let sample = createSample(withValue: suffix, for: Me.restrictedAttribute)
 		restriction.suffix = suffix
 
 		// when
@@ -123,7 +136,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleThatEndsWithSuffixForRestrictedAttribute_samplePasses_returnsTrue() {
 		// given
 		let suffix = "suffix"
-		let sample = createSample(withValue: "some other stuff" + suffix, for: Me.attribute)
+		let sample = createSample(withValue: "some other stuff" + suffix, for: Me.restrictedAttribute)
 		restriction.suffix = suffix
 
 		// when
@@ -136,7 +149,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleThatStartsWithSuffixForRestrictedAttribute_samplePasses_returnsFalse() {
 		// given
 		let suffix = "suffix"
-		let sample = createSample(withValue: suffix + "some other stuff", for: Me.attribute)
+		let sample = createSample(withValue: suffix + "some other stuff", for: Me.restrictedAttribute)
 		restriction.suffix = suffix
 
 		// when
@@ -149,7 +162,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 	func textGivenSampleThatEndsWithSuffixForRestrictedAttribute_samplePasses_returnsFalse() {
 		// given
 		let suffix = "suffix"
-		let sample = createSample(withValue: "some " + suffix + " other stuff", for: Me.attribute)
+		let sample = createSample(withValue: "some " + suffix + " other stuff", for: Me.restrictedAttribute)
 		restriction.suffix = suffix
 
 		// when
@@ -161,7 +174,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSampleWithValueAndEmptySuffixForRestrictedAttribute_samplePasses_returnsTrue() {
 		// given
-		let sample = createSample(withValue: "some stuff", for: Me.attribute)
+		let sample = createSample(withValue: "some stuff", for: Me.restrictedAttribute)
 		restriction.suffix = ""
 
 		// when
@@ -174,7 +187,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithNonEmptyStringThatDoesNotContainSuffixForRestrictedAttribute_samplePasses_returnsFalse() {
 		// given
 		let suffix = "this is definitely not contained in the text the sample has"
-		let sample = createSample(withValue: "i am not empty", for: Me.attribute)
+		let sample = createSample(withValue: "i am not empty", for: Me.restrictedAttribute)
 		restriction.suffix = suffix
 
 		// when

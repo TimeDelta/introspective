@@ -23,9 +23,11 @@ public class NumericAttributeRestriction: AnyAttributeRestriction {
 	func getDoubleFrom(value: Any) throws -> Double {
 		switch (restrictedAttribute) {
 			case is IntegerAttribute:
-				return Double(value as! Int)
+				guard let castedValue = value as? Int else { throw AttributeError.typeMismatch }
+				return Double(castedValue)
 			case is DoubleAttribute:
-				 return value as! Double
+				guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
+				return castedValue
 			default:
 				throw AttributeError.typeMismatch
 		}
