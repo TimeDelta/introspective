@@ -75,4 +75,20 @@ public class SameEndDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 			throw AttributeError.unknownAttribute
 		}
 	}
+
+	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+		if !(otherAttributed is SameEndDatesSubQueryMatcher) { return false }
+		let other = otherAttributed as! SameEndDatesSubQueryMatcher
+		return equalTo(other)
+	}
+
+	public func equalTo(_ otherMatcher: SubQueryMatcher) -> Bool {
+		if !(otherMatcher is SameEndDatesSubQueryMatcher) { return false }
+		let other = otherMatcher as! SameEndDatesSubQueryMatcher
+		return equalTo(other)
+	}
+
+	public func equalTo(_ other: SameEndDatesSubQueryMatcher) -> Bool {
+		return mostRecentOnly == other.mostRecentOnly
+	}
 }
