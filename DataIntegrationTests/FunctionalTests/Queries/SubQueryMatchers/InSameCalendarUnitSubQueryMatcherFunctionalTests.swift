@@ -107,6 +107,39 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		}
 	}
 
+	func testGivenQuerySamplesWithEndDatesInSameCalendarUnitButStartDatesNotInSameCalendarUnitAsSubQuerySample_getSamples_returnsSamplesWithEndDatesInSameCalendarUnit() {
+		// given
+		let querySampleStartDate1 = Date() - 2.days
+		let querySampleEndDate1 = Date()
+		let querySampleStartDate2 = Date() - 1.days
+		let querySampleEndDate2 = Date() + 1.days
+		let subQuerySampleStartDate1 = querySampleStartDate1 + 2.days
+		let subQuerySampleEndDate1 = querySampleEndDate1 - 1.nanoseconds
+		let subQuerySampleStartDate2 = querySampleStartDate2 + 2.days
+		let subQuerySampleEndDate2 = querySampleEndDate2 + 2.days
+		let querySamples = SampleCreatorTestUtil.createSamples(withDates: [
+			(startDate: querySampleStartDate1, endDate: querySampleEndDate1),
+			(startDate: querySampleStartDate2, endDate: querySampleEndDate2),
+		])
+		let subQuerySamples: [Sample] = SampleCreatorTestUtil.createSamples(withDates: [
+			(startDate: subQuerySampleStartDate1, endDate: subQuerySampleEndDate1),
+			(startDate: subQuerySampleStartDate2, endDate: subQuerySampleEndDate2),
+		])
+		let timeUnit: Calendar.Component = .day
+		matcher.timeUnit = timeUnit
+
+		// when
+		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
+
+		// then
+		XCTAssert(matchingSamples.count == 1, "Found \(matchingSamples.count) samples")
+		if matchingSamples.count > 0 {
+			XCTAssert(
+				matchingSamples[0].equalTo(querySamples[0]),
+				"Expected \(querySamples[0].debugDescription) but got \(matchingSamples[0].debugDescription)")
+		}
+	}
+
 	func testGivenMostRecentOnlyIsTrueAndMultipleSubQuerySamplesAndMultipleQuerySamples_getSamples_returnsOnlyMatchingSamples() {
 		// given
 		let querySampleDate1 = Date() - 1.days
@@ -115,6 +148,40 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		let subQuerySampleDate2 = Date() + 1.days
 		let querySamples = SampleCreatorTestUtil.createSamples(withDates: [querySampleDate1, querySampleDate2])
 		let subQuerySamples: [Sample] = SampleCreatorTestUtil.createSamples(withDates: [subQuerySampleDate1, subQuerySampleDate2])
+		let timeUnit: Calendar.Component = .day
+		matcher.timeUnit = timeUnit
+		matcher.mostRecentOnly = true
+
+		// when
+		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
+
+		// then
+		XCTAssert(matchingSamples.count == 1, "Found \(matchingSamples.count) samples")
+		if matchingSamples.count > 0 {
+			XCTAssert(
+				matchingSamples[0].equalTo(querySamples[0]),
+				"Expected \(querySamples[0].debugDescription) but got \(matchingSamples[0].debugDescription)")
+		}
+	}
+
+	func testGivenMostRecentOnlyIsTrueAndMultipleSubQuerySamplesAndMultipleQuerySamplesAndAllSamplesHaveStartAndEndDates_getSamples_returnsOnlyMatchingSamples() {
+		// given
+		let querySampleStartDate1 = Date() - 1.days
+		let querySampleEndDate1 = Date() - 1.days
+		let querySampleStartDate2 = Date() + 1.days
+		let querySampleEndDate2 = Date() + 1.days
+		let subQuerySampleStartDate1 = querySampleStartDate1
+		let subQuerySampleEndDate1 = querySampleEndDate1
+		let subQuerySampleStartDate2 = querySampleStartDate2 + 1.days
+		let subQuerySampleEndDate2 = querySampleEndDate2 + 1.days
+		let querySamples = SampleCreatorTestUtil.createSamples(withDates: [
+			(startDate: querySampleStartDate1, endDate: querySampleEndDate1),
+			(startDate: querySampleStartDate2, endDate: querySampleEndDate2),
+		])
+		let subQuerySamples: [Sample] = SampleCreatorTestUtil.createSamples(withDates: [
+			(startDate: subQuerySampleStartDate1, endDate: subQuerySampleEndDate1),
+			(startDate: subQuerySampleStartDate2, endDate: subQuerySampleEndDate2),
+		])
 		let timeUnit: Calendar.Component = .day
 		matcher.timeUnit = timeUnit
 		matcher.mostRecentOnly = true

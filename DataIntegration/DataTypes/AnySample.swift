@@ -17,7 +17,7 @@ public class AnySample: Sample {
 	public var description: String = ""
 
 	public var debugDescription: String {
-		return "AnySample with values: " + attributeValues.debugDescription
+		return "AnySample (\(_dates[.start]?.toString() ?? "nil") - \(_dates[.end]?.toString() ?? "nil") values: " + attributeValues.debugDescription
 	}
 
 	public var dataType: DataTypes { return .heartRate } // TODO - change this to custom once custom data types are supported

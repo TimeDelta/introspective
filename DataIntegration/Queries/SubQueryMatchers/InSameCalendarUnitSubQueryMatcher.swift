@@ -60,9 +60,14 @@ public class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable {
 		let aggregatedSubQuerySamplesByStartDate = DependencyInjector.util.sampleUtil.aggregate(samples: applicableSubQuerySamples, by: timeUnit, dateType: .start)
 		let aggregatedSubQuerySamplesByEndDate = DependencyInjector.util.sampleUtil.aggregate(samples: applicableSubQuerySamples, by: timeUnit, dateType: .end)
 		for sample in querySamples {
-			let aggregationDate = DependencyInjector.util.calendarUtil.start(of: timeUnit, in: sample.dates()[.start]!)
-			if aggregatedSubQuerySamplesByStartDate[aggregationDate] != nil || aggregatedSubQuerySamplesByEndDate[aggregationDate] != nil {
+			let startAggregationDate = DependencyInjector.util.calendarUtil.start(of: timeUnit, in: sample.dates()[.start]!)
+			if aggregatedSubQuerySamplesByStartDate[startAggregationDate] != nil {
 				matchingSamples.append(sample)
+			} else if let endDate = sample.dates()[.end] {
+				let endAggregationDate = DependencyInjector.util.calendarUtil.start(of: timeUnit, in: endDate)
+				if aggregatedSubQuerySamplesByEndDate[endAggregationDate] != nil {
+					matchingSamples.append(sample)
+				}
 			}
 		}
 		return matchingSamples
