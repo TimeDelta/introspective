@@ -84,7 +84,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSampleWithEmptyStringForRestrictedAttributeAndEmptySuffixForRestriction_samplePasses_returnsTrue() {
 		// given
-		let sample = createSample(withValue: "", for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: "", for: Me.restrictedAttribute)
 		restriction.suffix = ""
 
 		// when
@@ -96,7 +96,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSampleWithEmptyStringForRestrictedAttributeAndNonEmptySuffixForRestriction_samplePasses_returnsFalse() {
 		// given
-		let sample = createSample(withValue: "", for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: "", for: Me.restrictedAttribute)
 		restriction.suffix = "not empty"
 
 		// when
@@ -110,7 +110,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 		// given
 		let suffix = "suffix"
 		let sampleValue = String(suffix.prefix(suffix.count - 2))
-		let sample = createSample(withValue: sampleValue, for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: sampleValue, for: Me.restrictedAttribute)
 		restriction.suffix = suffix
 
 		// when
@@ -123,7 +123,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithExactMatchForRestrictedAttribute_samplePasses_returnsTrue() {
 		// given
 		let suffix = "exact match"
-		let sample = createSample(withValue: suffix, for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: suffix, for: Me.restrictedAttribute)
 		restriction.suffix = suffix
 
 		// when
@@ -136,7 +136,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleThatEndsWithSuffixForRestrictedAttribute_samplePasses_returnsTrue() {
 		// given
 		let suffix = "suffix"
-		let sample = createSample(withValue: "some other stuff" + suffix, for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: "some other stuff" + suffix, for: Me.restrictedAttribute)
 		restriction.suffix = suffix
 
 		// when
@@ -149,7 +149,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleThatStartsWithSuffixForRestrictedAttribute_samplePasses_returnsFalse() {
 		// given
 		let suffix = "suffix"
-		let sample = createSample(withValue: suffix + "some other stuff", for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: suffix + "some other stuff", for: Me.restrictedAttribute)
 		restriction.suffix = suffix
 
 		// when
@@ -162,7 +162,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 	func textGivenSampleThatEndsWithSuffixForRestrictedAttribute_samplePasses_returnsFalse() {
 		// given
 		let suffix = "suffix"
-		let sample = createSample(withValue: "some " + suffix + " other stuff", for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: "some " + suffix + " other stuff", for: Me.restrictedAttribute)
 		restriction.suffix = suffix
 
 		// when
@@ -174,7 +174,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSampleWithValueAndEmptySuffixForRestrictedAttribute_samplePasses_returnsTrue() {
 		// given
-		let sample = createSample(withValue: "some stuff", for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: "some stuff", for: Me.restrictedAttribute)
 		restriction.suffix = ""
 
 		// when
@@ -187,7 +187,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithNonEmptyStringThatDoesNotContainSuffixForRestrictedAttribute_samplePasses_returnsFalse() {
 		// given
 		let suffix = "this is definitely not contained in the text the sample has"
-		let sample = createSample(withValue: "i am not empty", for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: "i am not empty", for: Me.restrictedAttribute)
 		restriction.suffix = suffix
 
 		// when

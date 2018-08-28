@@ -84,7 +84,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSampleWithEmptyStringForRestrictedAttributeAndEmptyPrefixForRestriction_samplePasses_returnsTrue() {
 		// given
-		let sample = createSample(withValue: "", for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: "", for: Me.restrictedAttribute)
 		restriction.prefix = ""
 
 		// when
@@ -96,7 +96,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSampleWithEmptyStringForRestrictedAttributeAndNonEmptyPrefixForRestriction_samplePasses_returnsFalse() {
 		// given
-		let sample = createSample(withValue: "", for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: "", for: Me.restrictedAttribute)
 		restriction.prefix = "not empty"
 
 		// when
@@ -110,7 +110,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 		// given
 		let prefix = "prefix"
 		let sampleValue = String(prefix.prefix(prefix.count - 2))
-		let sample = createSample(withValue: sampleValue, for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: sampleValue, for: Me.restrictedAttribute)
 		restriction.prefix = prefix
 
 		// when
@@ -123,7 +123,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithExactMatchForRestrictedAttribute_samplePasses_returnsTrue() {
 		// given
 		let prefix = "exact match"
-		let sample = createSample(withValue: prefix, for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: prefix, for: Me.restrictedAttribute)
 		restriction.prefix = prefix
 
 		// when
@@ -136,7 +136,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleThatStartsWithPrefixForRestrictedAttribute_samplePasses_returnsTrue() {
 		// given
 		let prefix = "prefix"
-		let sample = createSample(withValue: prefix + " some other stuff", for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: prefix + " some other stuff", for: Me.restrictedAttribute)
 		restriction.prefix = prefix
 
 		// when
@@ -149,7 +149,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleThatEndsWithPrefixForRestrictedAttribute_samplePasses_returnsFalse() {
 		// given
 		let suffix = "suffix"
-		let sample = createSample(withValue: "some other stuff" + suffix, for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: "some other stuff" + suffix, for: Me.restrictedAttribute)
 		restriction.prefix = suffix
 
 		// when
@@ -162,7 +162,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 	func textGivenSampleThatStartsWithPrefixForRestrictedAttribute_samplePasses_returnsFalse() {
 		// given
 		let prefix = "prefix"
-		let sample = createSample(withValue: "some " + prefix + " other stuff", for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: "some " + prefix + " other stuff", for: Me.restrictedAttribute)
 		restriction.prefix = prefix
 
 		// when
@@ -174,7 +174,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSampleWithValueAndEmptyPrefixForRestrictedAttribute_samplePasses_returnsTrue() {
 		// given
-		let sample = createSample(withValue: "some stuff", for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: "some stuff", for: Me.restrictedAttribute)
 		restriction.prefix = ""
 
 		// when
@@ -187,7 +187,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithNonEmptyStringThatDoesNotContainPrefixForRestrictedAttribute_samplePasses_returnsFalse() {
 		// given
 		let prefix = "this is definitely not contained in the text the sample has"
-		let sample = createSample(withValue: "i am not empty", for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: "i am not empty", for: Me.restrictedAttribute)
 		restriction.prefix = prefix
 
 		// when

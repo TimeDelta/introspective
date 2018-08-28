@@ -10,6 +10,9 @@ import Foundation
 
 public class OldestDateInformation: AnyInformation {
 
+	fileprivate typealias Me = OldestDateInformation
+	static let noSamplesMessage = "No samples between given start and end dates"
+
 	public override var key: String { get { return "Oldest" } }
 
 	public required init(_ attribute: Attribute) {
@@ -19,7 +22,7 @@ public class OldestDateInformation: AnyInformation {
 	public override func compute(forSamples samples: [Sample]) -> String {
 		let filteredSamples = DependencyInjector.util.sampleUtil.getOnly(samples: samples, from: startDate, to: endDate)
 		if filteredSamples.count == 0 {
-			return "No samples between given start and end dates"
+			return Me.noSamplesMessage
 		}
 
 		var oldestSampleDate = try! filteredSamples[0].value(of: attribute) as! Date

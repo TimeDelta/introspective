@@ -34,8 +34,7 @@ class MinimumSampleGroupCombinerUnitTests: UnitTest {
 		// given
 		let expectedMin: Int = 5
 		let combineByAttribute = IntegerAttribute(name: "combineBy")
-		let samples = [createSample(withValue: expectedMin, for: combineByAttribute)]
-		samples[0].attributes = [Me.groupByAttribute, combineByAttribute]
+		let samples = [SampleCreatorTestUtil.createSample(withValue: expectedMin, for: combineByAttribute, otherAttributes: [Me.groupByAttribute])]
 		Given(mockNumericSampleUtil, .min(for: .value(combineByAttribute), over: .value(samples), willReturn: expectedMin))
 
 		// when
@@ -49,8 +48,7 @@ class MinimumSampleGroupCombinerUnitTests: UnitTest {
 		// given
 		let expectedMin: Double = 5.0
 		let combineByAttribute = DoubleAttribute(name: "combineBy")
-		let samples = [createSample(withValue: expectedMin, for: combineByAttribute)]
-		samples[0].attributes = [Me.groupByAttribute, combineByAttribute]
+		let samples = [SampleCreatorTestUtil.createSample(withValue: expectedMin, for: combineByAttribute, otherAttributes: [Me.groupByAttribute])]
 		Given(mockNumericSampleUtil, .min(for: .value(combineByAttribute), over: .value(samples), willReturn: expectedMin))
 
 		// when
@@ -64,8 +62,7 @@ class MinimumSampleGroupCombinerUnitTests: UnitTest {
 		// given
 		let expectedMin: Date = Date()
 		let combineByAttribute = DateTimeAttribute()
-		let samples = [createSample(withValue: expectedMin, for: combineByAttribute)]
-		samples[0].attributes = [Me.groupByAttribute, combineByAttribute]
+		let samples = [SampleCreatorTestUtil.createSample(withValue: expectedMin, for: combineByAttribute, otherAttributes: [Me.groupByAttribute])]
 		Given(mockNumericSampleUtil, .min(for: .value(combineByAttribute), over: .value(samples), willReturn: expectedMin))
 
 		// when

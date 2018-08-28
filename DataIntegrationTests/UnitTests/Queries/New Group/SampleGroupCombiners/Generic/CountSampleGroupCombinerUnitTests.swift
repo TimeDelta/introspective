@@ -33,7 +33,7 @@ class CountSampleGroupCombinerUnitTests: UnitTest {
 
 	func testGivenOneGroupWithOneSample_combine_correctlyCombinesGroup() {
 		// given
-		let samples = createSamples(count: 1, withAttributes: Me.attributes)
+		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: Me.attributes)
 
 		// when
 		let combinedSamples = combiner.combine(groups: [("", samples)], groupedBy: Me.groupByAttribute, combinationAttribute: Me.combineByAttribute)
@@ -45,7 +45,7 @@ class CountSampleGroupCombinerUnitTests: UnitTest {
 	func testGivenOneGroupWithMultipleSamples_combine_correctlyCominesGroup() {
 		// given
 		let expectedCount = 3
-		let samples = createSamples(count: expectedCount, withAttributes: Me.attributes)
+		let samples = SampleCreatorTestUtil.createSamples(count: expectedCount, withAttributes: Me.attributes)
 
 		// when
 		let combinedSamples = combiner.combine(groups: [("", samples)], groupedBy: Me.groupByAttribute, combinationAttribute: Me.combineByAttribute)
@@ -56,7 +56,7 @@ class CountSampleGroupCombinerUnitTests: UnitTest {
 
 	func testGivenMultipleGroups_combine_returnsCorrectNumberOfSamples() {
 		// given
-		let samples = createSamples(count: 1, withAttributes: Me.attributes)
+		let samples = SampleCreatorTestUtil.createSamples(count: 1, withAttributes: Me.attributes)
 		let groups: [(Any, [Sample])] = [
 			("", samples),
 			("a", samples),
@@ -74,10 +74,10 @@ class CountSampleGroupCombinerUnitTests: UnitTest {
 	func testGivenMultipleGroupsWithDifferentNumbersOfSamples_combine_correctlyCombinesGroups() {
 		// given
 		let groups: [(Any, [Sample])] = [
-			("a", createSamples(count: 5, withAttributes: Me.attributes)),
-			("b", createSamples(count: 3, withAttributes: Me.attributes)),
-			("c", createSamples(count: 7, withAttributes: Me.attributes)),
-			("d", createSamples(count: 2, withAttributes: Me.attributes)),
+			("a", SampleCreatorTestUtil.createSamples(count: 5, withAttributes: Me.attributes)),
+			("b", SampleCreatorTestUtil.createSamples(count: 3, withAttributes: Me.attributes)),
+			("c", SampleCreatorTestUtil.createSamples(count: 7, withAttributes: Me.attributes)),
+			("d", SampleCreatorTestUtil.createSamples(count: 2, withAttributes: Me.attributes)),
 		]
 
 		// when

@@ -84,7 +84,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSampleWithEmptyStringForRestrictedAttribute_samplePasses_returnsFalse() {
 		// given
-		let sample = createSample(withValue: "", for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: "", for: Me.restrictedAttribute)
 
 		// when
 		let contains = try! restriction.samplePasses(sample)
@@ -97,7 +97,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		// given
 		let partialSubstring = "partial"
 		let substring = partialSubstring + "some other stuff"
-		let sample = createSample(withValue: partialSubstring, for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: partialSubstring, for: Me.restrictedAttribute)
 		restriction.substring = substring
 
 		// when
@@ -110,7 +110,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithExactMatchForRestrictedAttribute_samplePasses_returnsTrue() {
 		// given
 		let substring = "exact match"
-		let sample = createSample(withValue: substring, for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: substring, for: Me.restrictedAttribute)
 		restriction.substring = substring
 
 		// when
@@ -123,7 +123,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleThatStartsWithSubstringForRestrictedAttribute_samplePasses_returnsTrue() {
 		// given
 		let substring = "prefix "
-		let sample = createSample(withValue: substring + " some other stuff", for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: substring + " some other stuff", for: Me.restrictedAttribute)
 		restriction.substring = substring
 
 		// when
@@ -136,7 +136,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleThatEndsWithSubstringForRestrictedAttribute_samplePasses_returnsTrue() {
 		// given
 		let substring = "suffix"
-		let sample = createSample(withValue: "some other stuff" + substring, for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: "some other stuff" + substring, for: Me.restrictedAttribute)
 		restriction.substring = substring
 
 		// when
@@ -148,7 +148,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSampleWithValueAndEmptySubstringForRestrictedAttribute_samplePasses_returnsFalse() {
 		// given
-		let sample = createSample(withValue: "some stuff", for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: "some stuff", for: Me.restrictedAttribute)
 		restriction.substring = ""
 
 		// when
@@ -161,7 +161,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithNonEmptyStringThatDoesNotContainSubstringForRestrictedAttribute_samplePasses_returnsFalse() {
 		// given
 		let substring = "this is definitely not contained in the text the sample has"
-		let sample = createSample(withValue: "i am not empty", for: Me.restrictedAttribute)
+		let sample = SampleCreatorTestUtil.createSample(withValue: "i am not empty", for: Me.restrictedAttribute)
 		restriction.substring = substring
 
 		// when

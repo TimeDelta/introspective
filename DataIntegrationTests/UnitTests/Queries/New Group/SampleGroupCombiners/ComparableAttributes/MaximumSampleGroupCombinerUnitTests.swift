@@ -34,8 +34,7 @@ class MaximumSampleGroupCombinerUnitTests: UnitTest {
 		// given
 		let expectedMax: Int = 5
 		let combineByAttribute = IntegerAttribute(name: "combineBy")
-		let samples = [createSample(withValue: expectedMax, for: combineByAttribute)]
-		samples[0].attributes = [Me.groupByAttribute, combineByAttribute]
+		let samples = [SampleCreatorTestUtil.createSample(withValue: expectedMax, for: combineByAttribute, otherAttributes: [Me.groupByAttribute])]
 		Given(mockNumericSampleUtil, .max(for: .value(combineByAttribute), over: .value(samples), willReturn: expectedMax))
 
 		// when
@@ -49,8 +48,7 @@ class MaximumSampleGroupCombinerUnitTests: UnitTest {
 		// given
 		let expectedMax: Double = 5.0
 		let combineByAttribute = DoubleAttribute(name: "combineBy")
-		let samples = [createSample(withValue: expectedMax, for: combineByAttribute)]
-		samples[0].attributes = [Me.groupByAttribute, combineByAttribute]
+		let samples = [SampleCreatorTestUtil.createSample(withValue: expectedMax, for: combineByAttribute, otherAttributes: [Me.groupByAttribute])]
 		Given(mockNumericSampleUtil, .max(for: .value(combineByAttribute), over: .value(samples), willReturn: expectedMax))
 
 		// when
@@ -64,8 +62,7 @@ class MaximumSampleGroupCombinerUnitTests: UnitTest {
 		// given
 		let expectedMax: Date = Date()
 		let combineByAttribute = DateTimeAttribute()
-		let samples = [createSample(withValue: expectedMax, for: combineByAttribute)]
-		samples[0].attributes = [Me.groupByAttribute, combineByAttribute]
+		let samples = [SampleCreatorTestUtil.createSample(withValue: expectedMax, for: combineByAttribute, otherAttributes: [Me.groupByAttribute])]
 		Given(mockNumericSampleUtil, .max(for: .value(combineByAttribute), over: .value(samples), willReturn: expectedMax))
 
 		// when

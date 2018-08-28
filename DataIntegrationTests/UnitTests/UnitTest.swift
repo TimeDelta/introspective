@@ -40,44 +40,6 @@ class UnitTest: XCTestCase {
 		super.tearDown()
 	}
 
-	/// Create a mock sample
-	func createSample(startDate: Date? = nil, endDate: Date? = nil, withAttributes attributes: [Attribute] = [Attribute]()) -> AnySample {
-		return SampleCreatorTestUtil.createSample(startDate: startDate, endDate: endDate, withAttributes: attributes)
-	}
-
-	/// Create a single sample with the specified value for the given attribute
-	func createSample(withValue value: Any, for attribute: Attribute) -> AnySample {
-		return SampleCreatorTestUtil.createSample(withValue: value, for: attribute)
-	}
-
-	/// Create a single sample with the specified values for the given attributes
-	func createSample(withValues values: [(Any, Attribute)]) -> AnySample {
-		return SampleCreatorTestUtil.createSample(withValues: values)
-	}
-
-	/// Create `count` mock samples
-	/// - Parameter attributes: Optionally provide the attributes that each sample should have
-	func createSamples(count: Int, withAttributes attributes: [Attribute] = [Attribute]()) -> [AnySample] {
-		return SampleCreatorTestUtil.createSamples(count: count, withAttributes: attributes)
-	}
-
-	/// Create a new sample for each given value, assigning the value to the given attribute
-	func createSamples(withValues values: [Any], for attribute: Attribute) -> [AnySample] {
-		return SampleCreatorTestUtil.createSamples(withValues: values, for: attribute)
-	}
-
-	func createSamples(withDates dates: [(startDate: Date, endDate: Date)]) -> [AnySample] {
-		return SampleCreatorTestUtil.createSamples(withDates: dates)
-	}
-
-	func createSamples(withDates dates: [Date]) -> [AnySample] {
-		return SampleCreatorTestUtil.createSamples(withDates: dates)
-	}
-
-	func createSamples<ValueType: Any>(_ sampleValues: [(startDate: Date, value: ValueType)], for attribute: Attribute) -> [AnySample] {
-		return SampleCreatorTestUtil.createSamples(sampleValues, for: attribute)
-	}
-
 	func oldDate() -> Date {
 		var dateComponents: DateComponents = DateComponents()
 		dateComponents.year = 1998

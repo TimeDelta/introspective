@@ -23,7 +23,7 @@ class SampleUtilUnitTests: UnitTest {
 
 	func testGivenEmptyDayOfWeekSet_sampleOccursOnOneOf_returnsTrue() {
 		// given
-		let sample = createSample()
+		let sample = SampleCreatorTestUtil.createSample()
 
 		// when
 		let onOneOf = util.sample(sample, occursOnOneOf: Set<DayOfWeek>())
@@ -35,7 +35,7 @@ class SampleUtilUnitTests: UnitTest {
 	func testGivenEveryDayOfWeekExceptOneForDate_dateIsOnOneOf_returnsFalse() {
 		// given
 		let date = DateInRegion().dateAt(.nextWeekday(.saturday)).date
-		let sample = createSample(startDate: date)
+		let sample = SampleCreatorTestUtil.createSample(startDate: date)
 		let daysOfWeek = Set<DayOfWeek>([
 			DayOfWeek.Sunday,
 			DayOfWeek.Monday,
@@ -55,7 +55,7 @@ class SampleUtilUnitTests: UnitTest {
 
 	func testGivenEveryDayOfWeek_dateIsOnOneOf_returnsTrue() {
 		// given
-		let sample = createSample(startDate: Date())
+		let sample = SampleCreatorTestUtil.createSample(startDate: Date())
 		let daysOfWeek = Set<DayOfWeek>(DayOfWeek.allDays)
 		Given(mockCalendarUtil, .date(date: .any(Date.self), isOnOneOf: .value(daysOfWeek), willReturn: true))
 
@@ -69,7 +69,7 @@ class SampleUtilUnitTests: UnitTest {
 	func testGivenOnlyDayOfWeekOnWhichDateOccurs_dateIsOnOneOf_returnsTrue() {
 		// given
 		let date = DateInRegion().dateAt(.nextWeekday(.saturday)).date
-		let sample = createSample(startDate: date)
+		let sample = SampleCreatorTestUtil.createSample(startDate: date)
 		let daysOfWeek = Set<DayOfWeek>([DayOfWeek.Saturday])
 		Given(mockCalendarUtil, .date(date: .any(Date.self), isOnOneOf: .value(daysOfWeek), willReturn: true))
 
@@ -84,7 +84,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let startDate = Date()
 		let endDate = DateInRegion().dateAt(.nextWeekday(.saturday)).date
-		let sample = createSample(startDate: startDate, endDate: endDate)
+		let sample = SampleCreatorTestUtil.createSample(startDate: startDate, endDate: endDate)
 		let daysOfWeek = Set<DayOfWeek>([DayOfWeek.Saturday])
 		Given(mockCalendarUtil, .date(date: .value(startDate), isOnOneOf: .value(daysOfWeek), willReturn: false))
 		Given(mockCalendarUtil, .date(date: .value(endDate), isOnOneOf: .value(daysOfWeek), willReturn: true))
@@ -98,7 +98,7 @@ class SampleUtilUnitTests: UnitTest {
 
 	func testGivenSampleWithStartAndEndDatesOnDifferentDays_dateIsOnOneOf_returnsFalse() {
 		// given
-		let sample = createSample(startDate: Date(), endDate: Date())
+		let sample = SampleCreatorTestUtil.createSample(startDate: Date(), endDate: Date())
 		let daysOfWeek = Set<DayOfWeek>(DayOfWeek.allDays)
 		Given(mockCalendarUtil, .date(date: .any(Date.self), isOnOneOf: .value(daysOfWeek), willReturn: false))
 
@@ -120,7 +120,7 @@ class SampleUtilUnitTests: UnitTest {
 				return true
 			},
 			joinSamples: { (_ , _, _) -> Sample in
-				return createSample()
+				return SampleCreatorTestUtil.createSample()
 			}
 		)
 
@@ -132,7 +132,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let expectedStartDate = Date()
 		let expectedEndDate = expectedStartDate + 1.years
-		let samples = createSamples(withDates: [expectedStartDate, expectedEndDate])
+		let samples = SampleCreatorTestUtil.createSamples(withDates: [expectedStartDate, expectedEndDate])
 		Given(mockCalendarUtil, .compare(date1: .value(expectedStartDate), date2: .value(expectedEndDate), willReturn: .orderedAscending))
 		Given(mockCalendarUtil, .compare(date1: .value(expectedEndDate), date2: .value(expectedStartDate), willReturn: .orderedDescending))
 
@@ -143,7 +143,7 @@ class SampleUtilUnitTests: UnitTest {
 				return false
 			},
 			joinSamples: { (_, start: Date, end: Date) -> Sample in
-				return createSample(startDate: start, endDate: end)
+				return SampleCreatorTestUtil.createSample(startDate: start, endDate: end)
 			}
 		)
 
@@ -157,7 +157,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let date1 = Date()
 		let date2 = Date() + 1.years
-		let samples = createSamples(withDates: [date1, date2])
+		let samples = SampleCreatorTestUtil.createSamples(withDates: [date1, date2])
 		Given(mockCalendarUtil, .compare(date1: .value(date1), date2: .value(date2), willReturn: .orderedAscending))
 		Given(mockCalendarUtil, .compare(date1: .value(date2), date2: .value(date1), willReturn: .orderedDescending))
 
@@ -168,7 +168,7 @@ class SampleUtilUnitTests: UnitTest {
 				return true
 			},
 			joinSamples: { (_, start: Date, end: Date) -> Sample in
-				return createSample(startDate: start, endDate: end)
+				return SampleCreatorTestUtil.createSample(startDate: start, endDate: end)
 			}
 		)
 
@@ -194,7 +194,7 @@ class SampleUtilUnitTests: UnitTest {
 		let date2 = Date() + 5.hours
 		let date3 = Date() + 2.days
 		let date4 = Date() + 1.years
-		let samples = createSamples(withDates: [date1, date2, date3, date4])
+		let samples = SampleCreatorTestUtil.createSamples(withDates: [date1, date2, date3, date4])
 		Given(mockCalendarUtil, .compare(date1: .value(date1), date2: .value(date2), willReturn: .orderedAscending))
 		Given(mockCalendarUtil, .compare(date1: .value(date1), date2: .value(date3), willReturn: .orderedAscending))
 		Given(mockCalendarUtil, .compare(date1: .value(date1), date2: .value(date4), willReturn: .orderedAscending))
@@ -219,7 +219,7 @@ class SampleUtilUnitTests: UnitTest {
 				return !s1.equalTo(samples[0]) && !s1.equalTo(samples[1])
 			},
 			joinSamples: { (_, start: Date, end: Date) -> Sample in
-				return createSample(startDate: start, endDate: end)
+				return SampleCreatorTestUtil.createSample(startDate: start, endDate: end)
 			}
 		)
 
@@ -249,7 +249,7 @@ class SampleUtilUnitTests: UnitTest {
 				return true
 			},
 			joinSamples: { (_ , _, _) -> AnySample in
-				return createSample()
+				return SampleCreatorTestUtil.createSample()
 			}
 		)
 
@@ -261,7 +261,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let expectedStartDate = Date()
 		let expectedEndDate = expectedStartDate + 1.years
-		let samples = createSamples(withDates: [expectedStartDate, expectedEndDate])
+		let samples = SampleCreatorTestUtil.createSamples(withDates: [expectedStartDate, expectedEndDate])
 		Given(mockCalendarUtil, .compare(date1: .value(expectedStartDate), date2: .value(expectedEndDate), willReturn: .orderedAscending))
 		Given(mockCalendarUtil, .compare(date1: .value(expectedEndDate), date2: .value(expectedStartDate), willReturn: .orderedDescending))
 
@@ -272,7 +272,7 @@ class SampleUtilUnitTests: UnitTest {
 				return false
 			},
 			joinSamples: { (_, start: Date, end: Date) -> AnySample in
-				return createSample(startDate: start, endDate: end)
+				return SampleCreatorTestUtil.createSample(startDate: start, endDate: end)
 			}
 		)
 
@@ -286,7 +286,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let date1 = Date()
 		let date2 = Date() + 1.years
-		let samples = createSamples(withDates: [date1, date2])
+		let samples = SampleCreatorTestUtil.createSamples(withDates: [date1, date2])
 		Given(mockCalendarUtil, .compare(date1: .value(date1), date2: .value(date2), willReturn: .orderedAscending))
 		Given(mockCalendarUtil, .compare(date1: .value(date2), date2: .value(date1), willReturn: .orderedDescending))
 
@@ -297,7 +297,7 @@ class SampleUtilUnitTests: UnitTest {
 				return true
 			},
 			joinSamples: { (_, start: Date, end: Date) -> AnySample in
-				return createSample(startDate: start, endDate: end)
+				return SampleCreatorTestUtil.createSample(startDate: start, endDate: end)
 			}
 		)
 
@@ -323,7 +323,7 @@ class SampleUtilUnitTests: UnitTest {
 		let date2 = Date() + 5.hours
 		let date3 = Date() + 2.days
 		let date4 = Date() + 1.years
-		let samples = createSamples(withDates: [date1, date2, date3, date4])
+		let samples = SampleCreatorTestUtil.createSamples(withDates: [date1, date2, date3, date4])
 		Given(mockCalendarUtil, .compare(date1: .value(date1), date2: .value(date2), willReturn: .orderedAscending))
 		Given(mockCalendarUtil, .compare(date1: .value(date1), date2: .value(date3), willReturn: .orderedAscending))
 		Given(mockCalendarUtil, .compare(date1: .value(date1), date2: .value(date4), willReturn: .orderedAscending))
@@ -348,7 +348,7 @@ class SampleUtilUnitTests: UnitTest {
 				return !s1.equalTo(samples[0]) && !s1.equalTo(samples[1])
 			},
 			joinSamples: { (_, start: Date, end: Date) -> AnySample in
-				return createSample(startDate: start, endDate: end)
+				return SampleCreatorTestUtil.createSample(startDate: start, endDate: end)
 			}
 		)
 
@@ -369,7 +369,7 @@ class SampleUtilUnitTests: UnitTest {
 
 	func testGivenSameExactSampleTwice_distance_returnsZero() {
 		// given
-		let sample = createSample(startDate: Date(), endDate: Date())
+		let sample = SampleCreatorTestUtil.createSample(startDate: Date(), endDate: Date())
 
 		// when
 		let distance = util.distance(between: sample, and: sample)
@@ -381,8 +381,8 @@ class SampleUtilUnitTests: UnitTest {
 	func testGivenSamplesWithSameStartDatesAndNoEndDates_distance_returnsZero() {
 		// given
 		let date = Date()
-		let sample1 = createSample(startDate: date)
-		let sample2 = createSample(startDate: date)
+		let sample1 = SampleCreatorTestUtil.createSample(startDate: date)
+		let sample2 = SampleCreatorTestUtil.createSample(startDate: date)
 
 		// when
 		let distance = util.distance(between: sample1, and: sample2)
@@ -394,8 +394,8 @@ class SampleUtilUnitTests: UnitTest {
 	func testGivenSamplesWithSameEndDatesButDifferentStartDates_distance_returnsZero() {
 		// given
 		let date = Date()
-		let sample1 = createSample(startDate: Date() - 1.days, endDate: date)
-		let sample2 = createSample(startDate: Date() + 1.days, endDate: date)
+		let sample1 = SampleCreatorTestUtil.createSample(startDate: Date() - 1.days, endDate: date)
+		let sample2 = SampleCreatorTestUtil.createSample(startDate: Date() + 1.days, endDate: date)
 
 		// when
 		let distance = util.distance(between: sample1, and: sample2)
@@ -407,8 +407,8 @@ class SampleUtilUnitTests: UnitTest {
 	func testGivenFirstSampleHasStartDateThatIsSameAsEndDateOfSecondSample_distance_returnsZero() {
 		// given
 		let date = Date()
-		let sample1 = createSample(startDate: date, endDate: Date() - 1.days)
-		let sample2 = createSample(startDate: Date() + 1.days, endDate: date)
+		let sample1 = SampleCreatorTestUtil.createSample(startDate: date, endDate: Date() - 1.days)
+		let sample2 = SampleCreatorTestUtil.createSample(startDate: Date() + 1.days, endDate: date)
 
 		// when
 		let distance = util.distance(between: sample1, and: sample2)
@@ -420,8 +420,8 @@ class SampleUtilUnitTests: UnitTest {
 	func testGivenFirstSampleHasEndDateThatIsSameAsStartDateOfSecondSample_distance_returnsZero() {
 		// given
 		let date = Date()
-		let sample1 = createSample(startDate: Date() - 1.days, endDate: date)
-		let sample2 = createSample(startDate: date, endDate: Date() + 1.days)
+		let sample1 = SampleCreatorTestUtil.createSample(startDate: Date() - 1.days, endDate: date)
+		let sample2 = SampleCreatorTestUtil.createSample(startDate: date, endDate: Date() + 1.days)
 
 		// when
 		let distance = util.distance(between: sample1, and: sample2)
@@ -434,8 +434,8 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let startDate = Date()
 		let endDate = Date()
-		let sample1 = createSample(startDate: startDate, endDate: endDate)
-		let sample2 = createSample(startDate: startDate + 1.days, endDate: endDate + 2.days)
+		let sample1 = SampleCreatorTestUtil.createSample(startDate: startDate, endDate: endDate)
+		let sample2 = SampleCreatorTestUtil.createSample(startDate: startDate + 1.days, endDate: endDate + 2.days)
 
 		// when
 		let distance = util.distance(between: sample1, and: sample2, in: .day)
@@ -448,8 +448,8 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let startDate = Date()
 		let endDate = Date()
-		let sample1 = createSample(startDate: startDate, endDate: endDate)
-		let sample2 = createSample(startDate: startDate + 2.days, endDate: endDate + 1.days)
+		let sample1 = SampleCreatorTestUtil.createSample(startDate: startDate, endDate: endDate)
+		let sample2 = SampleCreatorTestUtil.createSample(startDate: startDate + 2.days, endDate: endDate + 1.days)
 
 		// when
 		let distance = util.distance(between: sample1, and: sample2, in: .day)
@@ -462,8 +462,8 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let startDate = Date()
 		let endDate = Date()
-		let sample1 = createSample(startDate: startDate, endDate: endDate)
-		let sample2 = createSample(startDate: startDate + 1.hours, endDate: endDate + 1.days)
+		let sample1 = SampleCreatorTestUtil.createSample(startDate: startDate, endDate: endDate)
+		let sample2 = SampleCreatorTestUtil.createSample(startDate: startDate + 1.hours, endDate: endDate + 1.days)
 
 		// when
 		let distance = util.distance(between: sample1, and: sample2, in: .hour)
@@ -488,7 +488,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let date = Date()
 		let beginningOfHour = date.dateAtStartOf(.hour)
-		let samples = createSamples(withDates: [date])
+		let samples = SampleCreatorTestUtil.createSamples(withDates: [date])
 		let unit = Calendar.Component.hour
 		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date), willReturn: beginningOfHour))
 
@@ -511,7 +511,7 @@ class SampleUtilUnitTests: UnitTest {
 		let date1 = Date()
 		let date2 = Date()
 		let beginningOfDay = date1.dateAtStartOf(.day)
-		let samples = createSamples(withDates: [date1, date2])
+		let samples = SampleCreatorTestUtil.createSamples(withDates: [date1, date2])
 		let unit = Calendar.Component.day
 		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date1), willReturn: beginningOfDay))
 		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date2), willReturn: beginningOfDay))
@@ -536,7 +536,7 @@ class SampleUtilUnitTests: UnitTest {
 		let date2 = Date() + 1.days
 		let beginningOfDay1 = date1.dateAtStartOf(.day)
 		let beginningOfDay2 = date2.dateAtStartOf(.day)
-		let samples = createSamples(withDates: [date1, date2])
+		let samples = SampleCreatorTestUtil.createSamples(withDates: [date1, date2])
 		let unit = Calendar.Component.day
 		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date1), willReturn: beginningOfDay1))
 		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date2), willReturn: beginningOfDay2))
@@ -579,7 +579,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let fromDate: Date? = nil
 		let toDate: Date? = nil
-		let samples: [Sample] = createSamples(count: 3)
+		let samples: [Sample] = SampleCreatorTestUtil.createSamples(count: 3)
 
 		// when
 		let returnedSamples = util.getOnly(samples: samples, from: fromDate, to: toDate)
@@ -593,7 +593,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let fromDate: Date? = Date()
 		let toDate: Date? = nil
-		let samples: [Sample] = createSamples(withDates: [fromDate! - 1.days, fromDate! + 1.days, fromDate! - 2.days])
+		let samples: [Sample] = SampleCreatorTestUtil.createSamples(withDates: [fromDate! - 1.days, fromDate! + 1.days, fromDate! - 2.days])
 
 		// when
 		let returnedSamples = util.getOnly(samples: samples, from: fromDate, to: toDate)
@@ -609,7 +609,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let fromDate: Date? = nil
 		let toDate: Date? = Date()
-		let samples: [Sample] = createSamples(withDates: [toDate! - 1.days, toDate! + 1.days, toDate! - 2.days])
+		let samples: [Sample] = SampleCreatorTestUtil.createSamples(withDates: [toDate! - 1.days, toDate! + 1.days, toDate! - 2.days])
 
 		// when
 		let returnedSamples = util.getOnly(samples: samples, from: fromDate, to: toDate)
@@ -626,7 +626,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let fromDate: Date? = nil
 		let toDate: Date? = Date()
-		let samples: [Sample] = createSamples(withDates:[
+		let samples: [Sample] = SampleCreatorTestUtil.createSamples(withDates:[
 			(startDate: Date(), endDate: toDate! - 1.days),
 			(startDate: Date(), endDate: toDate! + 1.days),
 			(startDate: Date(), endDate: toDate! - 2.days),
@@ -647,7 +647,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let fromDate: Date? = Date() - 2.days
 		let toDate: Date? = Date() + 1.days
-		let samples: [Sample] = createSamples(withDates:[
+		let samples: [Sample] = SampleCreatorTestUtil.createSamples(withDates:[
 			(startDate: fromDate! + 1.hours, endDate: toDate! - 1.hours),
 			(startDate: fromDate! + 1.hours, endDate: toDate! + 1.days),
 			(startDate: fromDate! + 2.hours, endDate: toDate! - 1.days),
@@ -682,7 +682,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let fromDate: Date? = nil
 		let toDate: Date? = nil
-		let samples = createSamples(count: 3)
+		let samples = SampleCreatorTestUtil.createSamples(count: 3)
 
 		// when
 		let returnedSamples = util.getOnly(samples: samples, from: fromDate, to: toDate)
@@ -696,7 +696,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let fromDate: Date? = Date()
 		let toDate: Date? = nil
-		let samples = createSamples(withDates: [fromDate! - 1.days, fromDate! + 1.days, fromDate! - 2.days])
+		let samples = SampleCreatorTestUtil.createSamples(withDates: [fromDate! - 1.days, fromDate! + 1.days, fromDate! - 2.days])
 
 		// when
 		let returnedSamples = util.getOnly(samples: samples, from: fromDate, to: toDate)
@@ -712,7 +712,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let fromDate: Date? = nil
 		let toDate: Date? = Date()
-		let samples = createSamples(withDates: [toDate! - 1.days, toDate! + 1.days, toDate! - 2.days])
+		let samples = SampleCreatorTestUtil.createSamples(withDates: [toDate! - 1.days, toDate! + 1.days, toDate! - 2.days])
 
 		// when
 		let returnedSamples = util.getOnly(samples: samples, from: fromDate, to: toDate)
@@ -729,7 +729,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let fromDate: Date? = nil
 		let toDate: Date? = Date()
-		let samples = createSamples(withDates:[
+		let samples = SampleCreatorTestUtil.createSamples(withDates:[
 			(startDate: Date(), endDate: toDate! - 1.days),
 			(startDate: Date(), endDate: toDate! + 1.days),
 			(startDate: Date(), endDate: toDate! - 2.days),
@@ -750,7 +750,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let fromDate: Date? = Date() - 2.days
 		let toDate: Date? = Date() + 1.days
-		let samples = createSamples(withDates:[
+		let samples = SampleCreatorTestUtil.createSamples(withDates:[
 			(startDate: fromDate! + 1.hours, endDate: toDate! - 1.hours),
 			(startDate: fromDate! + 1.hours, endDate: toDate! + 1.days),
 			(startDate: fromDate! + 2.hours, endDate: toDate! - 1.days),

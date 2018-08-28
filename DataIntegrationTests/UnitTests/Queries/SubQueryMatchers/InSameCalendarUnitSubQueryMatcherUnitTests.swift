@@ -39,7 +39,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 	func testGivenEmptyArrayOfQuerySamplesAndNonEmptyArrayOfSubQuerySamples_getSamples_returnsEmptyArray() {
 		// given
 		let querySamples = [AnySample]()
-		let subQuerySamples = createSamples(count: 2)
+		let subQuerySamples = SampleCreatorTestUtil.createSamples(count: 2)
 		let timeUnit: Calendar.Component = .day
 		matcher.timeUnit = timeUnit
 		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), dateType: .value(.start), willReturn: [Date: [Sample]]()))
@@ -54,7 +54,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 
 	func testGivenEmptyArrayOfSubQuerySamplesAndNonEmptyArrayOfQuerySamples_getSamples_returnsEmptyArray() {
 		// given
-		let querySamples = createSamples(count: 2)
+		let querySamples = SampleCreatorTestUtil.createSamples(count: 2)
 		let subQuerySamples = [Sample]()
 		let timeUnit: Calendar.Component = .day
 		matcher.timeUnit = timeUnit
@@ -74,8 +74,8 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		let querySampleDate1 = Date() - 1.days
 		let querySampleDate2 = Date()
 		let subQuerySampleDate = querySampleDate1
-		let querySamples = createSamples(withDates: [querySampleDate1, querySampleDate2])
-		let subQuerySamples: [Sample] = [createSample(startDate: subQuerySampleDate)]
+		let querySamples = SampleCreatorTestUtil.createSamples(withDates: [querySampleDate1, querySampleDate2])
+		let subQuerySamples: [Sample] = [SampleCreatorTestUtil.createSample(startDate: subQuerySampleDate)]
 		let timeUnit: Calendar.Component = .day
 		matcher.timeUnit = timeUnit
 		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), dateType: .value(.start), willReturn: [subQuerySampleDate: subQuerySamples]))
@@ -101,8 +101,8 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		let querySampleDate2 = Date()
 		let subQuerySampleDate1 = querySampleDate1
 		let subQuerySampleDate2 = Date() + 1.days
-		let querySamples = createSamples(withDates: [querySampleDate1, querySampleDate2])
-		let subQuerySamples: [Sample] = createSamples(withDates: [subQuerySampleDate1, subQuerySampleDate2])
+		let querySamples = SampleCreatorTestUtil.createSamples(withDates: [querySampleDate1, querySampleDate2])
+		let subQuerySamples: [Sample] = SampleCreatorTestUtil.createSamples(withDates: [subQuerySampleDate1, subQuerySampleDate2])
 		let timeUnit: Calendar.Component = .day
 		matcher.timeUnit = timeUnit
 		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), dateType: .value(.start), willReturn: [subQuerySampleDate1: subQuerySamples]))
@@ -128,8 +128,8 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		let querySampleDate2 = Date()
 		let subQuerySampleDate1 = querySampleDate1
 		let subQuerySampleDate2 = Date() + 1.days
-		let querySamples = createSamples(withDates: [querySampleDate1, querySampleDate2])
-		let subQuerySamples: [Sample] = createSamples(withDates: [subQuerySampleDate1, subQuerySampleDate2])
+		let querySamples = SampleCreatorTestUtil.createSamples(withDates: [querySampleDate1, querySampleDate2])
+		let subQuerySamples: [Sample] = SampleCreatorTestUtil.createSamples(withDates: [subQuerySampleDate1, subQuerySampleDate2])
 		let timeUnit: Calendar.Component = .day
 		matcher.timeUnit = timeUnit
 		matcher.mostRecentOnly = true
