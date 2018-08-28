@@ -68,6 +68,6 @@ public class EqualToNumericAttributeRestriction: NumericAttributeRestriction, Pr
 	}
 
 	public func equalTo(_ other: EqualToNumericAttributeRestriction) -> Bool {
-		return value == other.value
+		return restrictedAttribute.equalTo(other.restrictedAttribute) && value == other.value
 	}
 }
