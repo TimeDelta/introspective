@@ -11,7 +11,7 @@ import Foundation
 public class SameStartDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 
 	public static func ==(lhs: SameStartDatesSubQueryMatcher, rhs: SameStartDatesSubQueryMatcher) -> Bool {
-		return lhs.equalTo(rhs as SubQueryMatcher)
+		return lhs.equalTo(rhs)
 	}
 
 	public let name: String = "Starts on the same date at the same time as"
@@ -27,6 +27,10 @@ public class SameStartDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 	public var mostRecentOnly: Bool = false
 
 	public required init() {}
+
+	public init(mostRecentOnly: Bool = false) {
+		self.mostRecentOnly = mostRecentOnly
+	}
 
 	public func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
@@ -70,5 +74,21 @@ public class SameStartDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 		} else {
 			throw AttributeError.unknownAttribute
 		}
+	}
+
+	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+		if !(otherAttributed is SameStartDatesSubQueryMatcher) { return false }
+		let other = otherAttributed as! SameStartDatesSubQueryMatcher
+		return equalTo(other)
+	}
+
+	public func equalTo(_ otherMatcher: SubQueryMatcher) -> Bool {
+		if !(otherMatcher is SameStartDatesSubQueryMatcher) { return false }
+		let other = otherMatcher as! SameStartDatesSubQueryMatcher
+		return equalTo(other)
+	}
+
+	public func equalTo(_ other: SameStartDatesSubQueryMatcher) -> Bool {
+		return mostRecentOnly == other.mostRecentOnly
 	}
 }

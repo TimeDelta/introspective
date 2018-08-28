@@ -28,6 +28,10 @@ public class SameEndDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 
 	public required init() {}
 
+	public init(mostRecentOnly: Bool = false) {
+		self.mostRecentOnly = mostRecentOnly
+	}
+
 	public func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
 		matching subQuerySamples: [Sample])

@@ -1,5 +1,5 @@
 //
-//  SameDatesSubQueryMatcherUnitTests.swift
+//  SameStartDatesSubQueryMatcherUnitTests.swift
 //  DataIntegrationTests
 //
 //  Created by Bryan Nova on 8/28/18.
@@ -9,13 +9,13 @@
 import XCTest
 @testable import DataIntegration
 
-class SameDatesSubQueryMatcherUnitTests: UnitTest {
+class SameStartDatesSubQueryMatcherUnitTests: UnitTest {
 
-	fileprivate var matcher: SameDatesSubQueryMatcher!
+	fileprivate var matcher: SameStartDatesSubQueryMatcher!
 
 	override func setUp() {
 		super.setUp()
-		matcher = SameDatesSubQueryMatcher()
+		matcher = SameStartDatesSubQueryMatcher()
 	}
 
 	func testGivenUnknownAttribute_set_throwsUnknownAttributeError() {
@@ -99,7 +99,7 @@ class SameDatesSubQueryMatcherUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithDifferentMostRecentOnly_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = SameDatesSubQueryMatcher(mostRecentOnly: true)
+		let otherAttributed: Attributed = SameStartDatesSubQueryMatcher(mostRecentOnly: true)
 
 		// when
 		let equal = matcher.equalTo(otherAttributed)
@@ -110,7 +110,7 @@ class SameDatesSubQueryMatcherUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToAttributed_returnsTrue() {
 		// given
-		let otherAttributed: Attributed = SameDatesSubQueryMatcher()
+		let otherAttributed: Attributed = SameStartDatesSubQueryMatcher()
 
 		// when
 		let equal = matcher.equalTo(otherAttributed)
@@ -140,7 +140,7 @@ class SameDatesSubQueryMatcherUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithDifferentMostRecentOnly_equalToMatcher_returnsFalse() {
 		// given
-		let otherMatcher: SubQueryMatcher = SameDatesSubQueryMatcher(mostRecentOnly: true)
+		let otherMatcher: SubQueryMatcher = SameStartDatesSubQueryMatcher(mostRecentOnly: true)
 
 		// when
 		let equal = matcher.equalTo(otherMatcher)
@@ -151,7 +151,7 @@ class SameDatesSubQueryMatcherUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToMatcher_returnsTrue() {
 		// given
-		let otherMatcher: SubQueryMatcher = SameDatesSubQueryMatcher()
+		let otherMatcher: SubQueryMatcher = SameStartDatesSubQueryMatcher()
 
 		// when
 		let equal = matcher.equalTo(otherMatcher)
@@ -170,7 +170,7 @@ class SameDatesSubQueryMatcherUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithDifferentMostRecentOnly_equalTo_returnsFalse() {
 		// given
-		let other = SameDatesSubQueryMatcher(mostRecentOnly: true)
+		let other = SameStartDatesSubQueryMatcher(mostRecentOnly: true)
 
 		// when
 		let equal = matcher.equalTo(other)
@@ -181,7 +181,7 @@ class SameDatesSubQueryMatcherUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let other = SameDatesSubQueryMatcher()
+		let other = SameStartDatesSubQueryMatcher()
 
 		// when
 		let equal = matcher.equalTo(other)
