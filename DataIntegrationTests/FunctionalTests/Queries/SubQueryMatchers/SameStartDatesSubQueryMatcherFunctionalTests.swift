@@ -96,6 +96,23 @@ class SameStartDatesSubQueryMatcherFunctionalTests: FunctionalTest {
 		}
 	}
 
+	func testGivenQuerySampleWithSameEndDateAsSubQuerySampleButDifferentStartDate_getSamples_doesNotReturnThem() {
+		// given
+		let querySampleStartDate = Date() - 1.days
+		let querySampleEndDate = Date() - 1.hours
+		let subQuerySampleStartDate = querySampleStartDate + 3.hours
+		let subQuerySampleEndDate = querySampleEndDate
+		let querySamples = SampleCreatorTestUtil.createSamples(withDates: [(startDate: querySampleStartDate, endDate: querySampleEndDate)])
+		let subQuerySamples: [Sample] = SampleCreatorTestUtil.createSamples(withDates: [(startDate: subQuerySampleStartDate, endDate: subQuerySampleEndDate)])
+		matcher.mostRecentOnly = true
+
+		// when
+		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
+
+		// then
+		XCTAssert(matchingSamples.count == 0, "Found \(matchingSamples.count) samples")
+	}
+
 	func testGivenMostRecentOnlyIsTrueAndMultipleSubQuerySamplesAndMultipleQuerySamples_getSamples_returnsOnlyMatchingSamples() {
 		// given
 		let querySampleDate1 = Date() - 1.days
