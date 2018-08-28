@@ -46,6 +46,10 @@ public class SearchUtilImpl: SearchUtil {
 
 	/// - Precondition: input array is sorted in ascending order based on the given compare function.
 	public func binarySearch<T>(for targetItem: T, in items: Array<T>, compare: (T, T) -> ComparisonResult) -> Int? {
+		if items.count == 0 {
+			return nil
+		}
+
 		var lowerIndex = 0
 		var upperIndex = items.count - 1
 

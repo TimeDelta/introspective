@@ -53,10 +53,10 @@ class SearchUtilUnitTests: UnitTest {
 
 	func testGivenNoElementsInArray_binarySearchForUsing_returnsNil() {
 		// given
-		let items: [Int] = [0, 2, 3, 4, 5, 6]
+		let items: [Int] = []
 
 		// when
-		let index = util.binarySearch(for: 1, in: items, compare: comparisonFunction)
+		let index = util.binarySearch(for: 0, in: items, compare: comparisonFunction)
 
 		// then
 		XCTAssert(index == nil)
