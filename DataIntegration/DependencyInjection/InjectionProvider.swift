@@ -14,10 +14,8 @@ public protocol InjectionProvider {
 	func database() -> Database
 	func queryFactory() -> QueryFactory
 	func querierFactory() -> QuerierFactory
-	func questionFactory() -> QuestionFactory
 	func dataTypeFactory() -> DataTypeFactory
 	func utilFactory() -> UtilFactory
-	func restrictionParserFactory() -> RestrictionParserFactory
 	func subQueryMatcherFactory() -> SubQueryMatcherFactory
 	func extraInformationFactory() -> ExtraInformationFactory
 	func sampleGrouperFactory() -> SampleGrouperFactory

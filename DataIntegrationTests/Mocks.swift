@@ -1539,15 +1539,6 @@ class InjectionProviderMock: InjectionProvider, Mock {
 		return value.orFail("stub return value not specified for querierFactory(). Use given")
     }
 
-    func questionFactory() -> QuestionFactory {
-        addInvocation(.iquestionFactory)
-		let perform = methodPerformValue(.iquestionFactory) as? () -> Void
-		perform?()
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iquestionFactory)
-		let value = givenValue.value as? QuestionFactory
-		return value.orFail("stub return value not specified for questionFactory(). Use given")
-    }
-
     func dataTypeFactory() -> DataTypeFactory {
         addInvocation(.idataTypeFactory)
 		let perform = methodPerformValue(.idataTypeFactory) as? () -> Void
@@ -1564,15 +1555,6 @@ class InjectionProviderMock: InjectionProvider, Mock {
 		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iutilFactory)
 		let value = givenValue.value as? UtilFactory
 		return value.orFail("stub return value not specified for utilFactory(). Use given")
-    }
-
-    func restrictionParserFactory() -> RestrictionParserFactory {
-        addInvocation(.irestrictionParserFactory)
-		let perform = methodPerformValue(.irestrictionParserFactory) as? () -> Void
-		perform?()
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.irestrictionParserFactory)
-		let value = givenValue.value as? RestrictionParserFactory
-		return value.orFail("stub return value not specified for restrictionParserFactory(). Use given")
     }
 
     func subQueryMatcherFactory() -> SubQueryMatcherFactory {
@@ -1615,10 +1597,8 @@ class InjectionProviderMock: InjectionProvider, Mock {
         case idatabase
         case iqueryFactory
         case iquerierFactory
-        case iquestionFactory
         case idataTypeFactory
         case iutilFactory
-        case irestrictionParserFactory
         case isubQueryMatcherFactory
         case iextraInformationFactory
         case isampleGrouperFactory
@@ -1632,13 +1612,9 @@ class InjectionProviderMock: InjectionProvider, Mock {
                     return true 
                 case (.iquerierFactory, .iquerierFactory):
                     return true 
-                case (.iquestionFactory, .iquestionFactory):
-                    return true 
                 case (.idataTypeFactory, .idataTypeFactory):
                     return true 
                 case (.iutilFactory, .iutilFactory):
-                    return true 
-                case (.irestrictionParserFactory, .irestrictionParserFactory):
                     return true 
                 case (.isubQueryMatcherFactory, .isubQueryMatcherFactory):
                     return true 
@@ -1657,10 +1633,8 @@ class InjectionProviderMock: InjectionProvider, Mock {
                 case .idatabase: return 0
                 case .iqueryFactory: return 0
                 case .iquerierFactory: return 0
-                case .iquestionFactory: return 0
                 case .idataTypeFactory: return 0
                 case .iutilFactory: return 0
-                case .irestrictionParserFactory: return 0
                 case .isubQueryMatcherFactory: return 0
                 case .iextraInformationFactory: return 0
                 case .isampleGrouperFactory: return 0
@@ -1689,17 +1663,11 @@ class InjectionProviderMock: InjectionProvider, Mock {
         static func querierFactory(willReturn: QuerierFactory) -> Given {
             return Given(method: .iquerierFactory, returns: willReturn, throws: nil)
         }
-        static func questionFactory(willReturn: QuestionFactory) -> Given {
-            return Given(method: .iquestionFactory, returns: willReturn, throws: nil)
-        }
         static func dataTypeFactory(willReturn: DataTypeFactory) -> Given {
             return Given(method: .idataTypeFactory, returns: willReturn, throws: nil)
         }
         static func utilFactory(willReturn: UtilFactory) -> Given {
             return Given(method: .iutilFactory, returns: willReturn, throws: nil)
-        }
-        static func restrictionParserFactory(willReturn: RestrictionParserFactory) -> Given {
-            return Given(method: .irestrictionParserFactory, returns: willReturn, throws: nil)
         }
         static func subQueryMatcherFactory(willReturn: SubQueryMatcherFactory) -> Given {
             return Given(method: .isubQueryMatcherFactory, returns: willReturn, throws: nil)
@@ -1727,17 +1695,11 @@ class InjectionProviderMock: InjectionProvider, Mock {
         static func querierFactory() -> Verify {
             return Verify(method: .iquerierFactory)
         }
-        static func questionFactory() -> Verify {
-            return Verify(method: .iquestionFactory)
-        }
         static func dataTypeFactory() -> Verify {
             return Verify(method: .idataTypeFactory)
         }
         static func utilFactory() -> Verify {
             return Verify(method: .iutilFactory)
-        }
-        static func restrictionParserFactory() -> Verify {
-            return Verify(method: .irestrictionParserFactory)
         }
         static func subQueryMatcherFactory() -> Verify {
             return Verify(method: .isubQueryMatcherFactory)
@@ -1766,17 +1728,11 @@ class InjectionProviderMock: InjectionProvider, Mock {
         static func querierFactory(perform: () -> Void) -> Perform {
             return Perform(method: .iquerierFactory, performs: perform)
         }
-        static func questionFactory(perform: () -> Void) -> Perform {
-            return Perform(method: .iquestionFactory, performs: perform)
-        }
         static func dataTypeFactory(perform: () -> Void) -> Perform {
             return Perform(method: .idataTypeFactory, performs: perform)
         }
         static func utilFactory(perform: () -> Void) -> Perform {
             return Perform(method: .iutilFactory, performs: perform)
-        }
-        static func restrictionParserFactory(perform: () -> Void) -> Perform {
-            return Perform(method: .irestrictionParserFactory, performs: perform)
         }
         static func subQueryMatcherFactory(perform: () -> Void) -> Perform {
             return Perform(method: .isubQueryMatcherFactory, performs: perform)

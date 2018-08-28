@@ -13,12 +13,10 @@ public final class DependencyInjector {
 	public static var injectionProvider: InjectionProvider = ProductionInjectionProvider()
 
 	public static var db: Database { get { return injectionProvider.database() } }
-	public static var question: QuestionFactory { get { return injectionProvider.questionFactory() } }
 	public static var query: QueryFactory { get { return injectionProvider.queryFactory() } }
 	public static var querier: QuerierFactory { get { return injectionProvider.querierFactory() } }
 	public static var dataType: DataTypeFactory { get { return injectionProvider.dataTypeFactory() } }
 	public static var util: UtilFactory { get { return injectionProvider.utilFactory() } }
-	public static var restrictionParser: RestrictionParserFactory { get { return injectionProvider.restrictionParserFactory() } }
 	public static var subQueryMatcher: SubQueryMatcherFactory { get { return injectionProvider.subQueryMatcherFactory() } }
 	public static var extraInformation: ExtraInformationFactory { get { return injectionProvider.extraInformationFactory() } }
 	public static var sampleGrouper: SampleGrouperFactory { get { return injectionProvider.sampleGrouperFactory() } }
