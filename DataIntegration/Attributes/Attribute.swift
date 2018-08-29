@@ -46,7 +46,7 @@ extension Attribute {
 	}
 
 	public func equalTo(_ otherAttribute: Attribute) -> Bool {
-		return name == otherAttribute.name && extendedDescription == otherAttribute.extendedDescription
+		return name.lowercased() == otherAttribute.name.lowercased() && extendedDescription == otherAttribute.extendedDescription
 	}
 }
 

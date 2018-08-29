@@ -65,10 +65,10 @@ public class Weight: Sample, Equatable, CustomDebugStringConvertible {
 	}
 
 	public func value(of attribute: Attribute) throws -> Any {
-		if attribute.name == Me.weight.name {
+		if attribute.equalTo(Me.weight) {
 			return weight
 		}
-		if attribute.name == CommonSampleAttributes.timestamp.name {
+		if attribute.equalTo(CommonSampleAttributes.timestamp) {
 			return timestamp
 		}
 		throw AttributeError.unknownAttribute
