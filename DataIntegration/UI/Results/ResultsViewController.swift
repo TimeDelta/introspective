@@ -52,7 +52,7 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 		self.navigationItem.setRightBarButton(actionsButton, animated: true)
 	}
 
-    // MARK: - Table view data source
+	// MARK: - Table view data source
 
 	override func numberOfSections(in tableView: UITableView) -> Int {
 		return 2
@@ -147,8 +147,8 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 	// MARK: - TableView Editing
 
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return indexPath.section == 0
-    }
+		return indexPath.section == 0
+	}
 
 	override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
 		return indexPath.section == 0
@@ -157,7 +157,7 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		extraInformation.swapAt(fromIndexPath.row, to.row)
 		extraInformationValues.swapAt(fromIndexPath.row, to.row)
-    }
+	}
 
 	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
