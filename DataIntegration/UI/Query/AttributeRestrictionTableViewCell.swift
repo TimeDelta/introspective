@@ -18,8 +18,4 @@ class AttributeRestrictionTableViewCell: UITableViewCell {
 			label.text = attributeRestriction.description
 		}
 	}
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
 }

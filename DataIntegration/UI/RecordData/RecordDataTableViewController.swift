@@ -21,7 +21,7 @@ class RecordDataTableViewController: UITableViewController, UIPopoverPresentatio
 		toolbar.setItems([self.editButtonItem], animated: false)
 	}
 
-    // MARK: - Table view data source
+	// MARK: - Table view data source
 
 	override func numberOfSections(in tableView: UITableView) -> Int {
 		return 1

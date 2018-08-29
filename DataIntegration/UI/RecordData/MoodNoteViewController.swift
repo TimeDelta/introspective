@@ -18,9 +18,9 @@ class MoodNoteViewController: UIViewController {
 
 	@IBOutlet weak var textView: UITextView!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        if note != nil {
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		if note != nil {
 			textView.text = note
 		}
 
@@ -32,9 +32,9 @@ class MoodNoteViewController: UIViewController {
 		keyboardToolBar.setItems([flexibleSpace, doneButton], animated: true)
 
 		textView.inputAccessoryView = keyboardToolBar
-    }
+	}
 
-    @objc fileprivate func doneClicked() {
+	@objc fileprivate func doneClicked() {
 		NotificationCenter.default.post(name: Me.noteSavedNotification, object: textView.text, userInfo: nil)
 		self.dismiss(animated: true, completion: nil)
 	}

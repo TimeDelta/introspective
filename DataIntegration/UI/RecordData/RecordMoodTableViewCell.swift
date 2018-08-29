@@ -32,7 +32,7 @@ class RecordMoodTableViewCell: UITableViewCell {
 	}
 
 	@IBAction func doneButtonPressed(_ sender: Any) {
-		var mood = DependencyInjector.dataType.mood()
+		let mood = DependencyInjector.dataType.mood()
 		mood.timestamp = Date()
 		mood.rating = Double(ratingSlider.value) * MoodImpl.maxRating
 		mood.note = note
