@@ -15,8 +15,8 @@ class DateOrTimeAttributeValueViewController: AttributeValueTypeViewController {
 
 	@IBOutlet weak var datePicker: UIDatePicker!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	override func viewDidLoad() {
+		super.viewDidLoad()
 
 		if dateAttribute != nil {
 			if dateAttribute.includeTime {
@@ -42,9 +42,9 @@ class DateOrTimeAttributeValueViewController: AttributeValueTypeViewController {
 				datePicker.setDate(Date(currentValue as! TimeOfDay), animated: false)
 			}
 		}
-    }
+	}
 
-    @IBAction func dateValueChanged(_ sender: Any) {
+	@IBAction func dateValueChanged(_ sender: Any) {
 		if timeOfDayAttribute != nil {
 			currentValue = TimeOfDay(datePicker.date)
 		} else if dateAttribute.includeTime {

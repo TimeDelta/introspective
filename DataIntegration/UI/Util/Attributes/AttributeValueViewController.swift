@@ -22,8 +22,8 @@ class AttributeValueViewController: UIViewController {
 
 	fileprivate var subViewController: AttributeValueTypeViewController!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	override func viewDidLoad() {
+		super.viewDidLoad()
 
 		if attribute is SelectOneAttribute {
 			let controller = UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "selectOneAttribute") as! SelectOneAttributeValueViewController
@@ -68,7 +68,7 @@ class AttributeValueViewController: UIViewController {
 			NotificationCenter.default.addObserver(self, selector: #selector(disableAcceptButton), name: Me.valueIsInvalidNotification, object: nil)
 			NotificationCenter.default.addObserver(self, selector: #selector(enableAcceptButton), name: Me.valueIsValidNotification, object: nil)
 		}
-    }
+	}
 
 	@IBAction func accepted(_ sender: Any) {
 		attributeValue = subViewController.currentValue

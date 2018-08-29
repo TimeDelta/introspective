@@ -14,8 +14,8 @@ class AttributeDescriptionViewController: UIViewController {
 
 	@IBOutlet weak var descriptionTextView: UITextView!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	override func viewDidLoad() {
+		super.viewDidLoad()
 		descriptionTextView.text = descriptionText
-    }
+	}
 }

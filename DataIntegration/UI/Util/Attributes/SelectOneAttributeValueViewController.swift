@@ -14,10 +14,10 @@ class SelectOneAttributeValueViewController: AttributeValueTypeViewController, U
 
 	@IBOutlet weak var selectOnePicker: UIPickerView!
 
-    public override func viewDidLoad() {
-        super.viewDidLoad()
+	public override func viewDidLoad() {
+		super.viewDidLoad()
 
-        selectOnePicker.delegate = self
+		selectOnePicker.delegate = self
 		selectOnePicker.dataSource = self
 
 		if currentValue != nil {
@@ -26,7 +26,7 @@ class SelectOneAttributeValueViewController: AttributeValueTypeViewController, U
 				selectOnePicker.selectRow(index!, inComponent: 0, animated: false)
 			}
 		}
-    }
+	}
 
 	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
