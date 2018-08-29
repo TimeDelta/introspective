@@ -162,6 +162,22 @@ class OldestDateInformationFunctionalTests: FunctionalTest {
 		XCTAssertEqual(value, toString(sampleStartDate2))
 	}
 
+	func testGivenSampleArrayWithCorrectDateAfterIndexTwoAndNilStartAndEndDates_compute_returnsCorrectValue() {
+		// given
+		let sampleDate1 = Date()
+		let sampleDate2 = sampleDate1 - 2.hours
+		let sampleDate3 = sampleDate2 - 5.hours
+		let samples = SampleCreatorTestUtil.createSamples(withDates: [sampleDate1, sampleDate2, sampleDate3])
+		information.startDate = nil
+		information.endDate = nil
+
+		// when
+		let value = information.compute(forSamples: samples)
+
+		// then
+		XCTAssertEqual(value, toString(sampleDate3))
+	}
+
 	func testGivenNonEmptySampleArrayWithNilStartDateAndEndDateThatIsAfterSomeSampleEndDates_compute_returnsCorrectValue() {
 		// given
 		let sampleStartDate1 = Date()
