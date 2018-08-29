@@ -14,11 +14,6 @@ public enum DateType {
 	case end
 }
 
-public enum SampleError: Error {
-	case typeMismatch
-	case unknownAttribute
-}
-
 public protocol Sample: Attributed {
 
 	var dataType: DataTypes { get }

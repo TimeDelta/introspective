@@ -17,12 +17,12 @@ class HeartRateQueryFunctionalTest: QueryFunctionalTest {
 	override func setUp() {
 		super.setUp()
 		query = HeartRateQueryImpl()
-		HeartRateDataTestUtil.ensureAuthorized()
-		HeartRateDataTestUtil.deleteAllHeartRates()
+		HealthKitDataTestUtil.ensureAuthorized()
+		HealthKitDataTestUtil.deleteAll(.heartRate)
 	}
 
 	override func tearDown() {
-		HeartRateDataTestUtil.deleteAllHeartRates()
+		HealthKitDataTestUtil.deleteAll(.heartRate)
 		super.tearDown()
 	}
 
@@ -47,7 +47,7 @@ class HeartRateQueryFunctionalTest: QueryFunctionalTest {
 		let heartRate = HeartRate()
 		heartRate.heartRate = 89
 		heartRate.timestamp = Date()
-		HeartRateDataTestUtil.saveHeartRates(heartRate)
+		HealthKitDataTestUtil.saveHeartRates(heartRate)
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -66,7 +66,7 @@ class HeartRateQueryFunctionalTest: QueryFunctionalTest {
 		let value = 83.7
 		let expectedHeartRate = HeartRate(value)
 		let unexpectedHeartRate = HeartRate(value - 1)
-		HeartRateDataTestUtil.saveHeartRates(expectedHeartRate, unexpectedHeartRate)
+		HealthKitDataTestUtil.saveHeartRates(expectedHeartRate, unexpectedHeartRate)
 
 		let heartRateRestriction = EqualToNumericAttributeRestriction(attribute: HeartRate.heartRate, value: value)
 		query.attributeRestrictions.append(heartRateRestriction)
@@ -83,13 +83,13 @@ class HeartRateQueryFunctionalTest: QueryFunctionalTest {
 		}
 	}
 
-	func testGivenMultipleMoodsInDatabaseThatMatchGivenHeartRateRestriction_runQuery_returnsAllMatchingHeartRates() {
+	func testGivenMultipleHeartRatesInDatabaseThatMatchGivenHeartRateRestriction_runQuery_returnsAllMatchingHeartRates() {
 		// given
 		let value = 54.6
 		let expectedHeartRate1 = HeartRate(value)
 		let expectedHeartRate2 = HeartRate(value - 1)
 		let unexpectedHeartRate = HeartRate(value + 1)
-		HeartRateDataTestUtil.saveHeartRates(expectedHeartRate1, expectedHeartRate2, unexpectedHeartRate)
+		HealthKitDataTestUtil.saveHeartRates(expectedHeartRate1, expectedHeartRate2, unexpectedHeartRate)
 
 		let heartRateRestriction = LessThanOrEqualToNumericAttributeRestriction(attribute: HeartRate.heartRate, value: value)
 		query.attributeRestrictions.append(heartRateRestriction)
@@ -114,7 +114,7 @@ class HeartRateQueryFunctionalTest: QueryFunctionalTest {
 		let unexpectedHeartRate1 = HeartRate(value - 2)
 		let unexpectedHeartRate2 = HeartRate(value - 1)
 		let unexpectedHeartRate3 = HeartRate()
-		HeartRateDataTestUtil.saveHeartRates(expectedHeartRate, unexpectedHeartRate1, unexpectedHeartRate2, unexpectedHeartRate3)
+		HealthKitDataTestUtil.saveHeartRates(expectedHeartRate, unexpectedHeartRate1, unexpectedHeartRate2, unexpectedHeartRate3)
 
 		let heartRateRestriction = GreaterThanOrEqualToNumericAttributeRestriction(attribute: HeartRate.heartRate, value: value)
 		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(attribute: CommonSampleAttributes.timestamp, date: Date() - 1.days)

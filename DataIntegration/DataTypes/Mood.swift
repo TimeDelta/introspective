@@ -63,26 +63,26 @@ public class MoodImpl: NSManagedObject, Mood {
 		if attribute.name == Me.note.name {
 			return note
 		}
-		throw SampleError.unknownAttribute
+		throw AttributeError.unknownAttribute
 	}
 
 	public func set(attribute: Attribute, to value: Any) throws {
 		if attribute.name == Me.rating.name {
-			guard let castedValue = value as? Double else { throw SampleError.typeMismatch }
+			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
 			rating = castedValue
 			return
 		}
 		if attribute.name == CommonSampleAttributes.timestamp.name {
-			guard let castedValue = value as? Date else { throw SampleError.typeMismatch }
+			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
 			timestamp = castedValue
 			return
 		}
 		if attribute.name == Me.note.name {
-			guard let castedValue = value as? String else { throw SampleError.typeMismatch }
+			guard let castedValue = value as? String else { throw AttributeError.typeMismatch }
 			note = castedValue
 			return
 		}
-		throw SampleError.unknownAttribute
+		throw AttributeError.unknownAttribute
 	}
 
 	public func equalTo(_ otherAttributed: Attributed) -> Bool {

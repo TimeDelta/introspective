@@ -12,13 +12,15 @@ public enum DataTypes: CustomStringConvertible {
 
 	case heartRate
 	case mood
+	case weight
 
-	public static let allTypes: [DataTypes] = [heartRate, mood]
+	public static let allTypes: [DataTypes] = [heartRate, mood, weight]
 
 	public static func attributesFor(_ type: DataTypes) -> [Attribute] {
 		switch (type) {
 			case .heartRate: return HeartRate.attributes
 			case .mood: return MoodImpl.attributes
+			case .weight: return Weight.attributes
 		}
 	}
 
@@ -26,6 +28,7 @@ public enum DataTypes: CustomStringConvertible {
 		switch (self) {
 			case .heartRate: return HeartRate.heartRate
 			case .mood: return MoodImpl.rating
+			case .weight: return Weight.weight
 		}
 	}
 
@@ -33,6 +36,7 @@ public enum DataTypes: CustomStringConvertible {
 		switch(self) {
 			case .heartRate: return CommonSampleAttributes.timestamp
 			case .mood: return CommonSampleAttributes.timestamp
+			case .weight: return CommonSampleAttributes.timestamp
 		}
 	}
 
@@ -40,6 +44,7 @@ public enum DataTypes: CustomStringConvertible {
 		switch (self) {
 			case .heartRate: return "Heart Rate"
 			case .mood: return "Mood"
+			case .weight: return "Weight"
 		}
 	}
 }

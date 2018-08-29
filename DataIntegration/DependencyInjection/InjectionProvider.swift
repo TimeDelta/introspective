@@ -13,7 +13,6 @@ public protocol InjectionProvider {
 
 	func database() -> Database
 	func queryFactory() -> QueryFactory
-	func querierFactory() -> QuerierFactory
 	func dataTypeFactory() -> DataTypeFactory
 	func utilFactory() -> UtilFactory
 	func subQueryMatcherFactory() -> SubQueryMatcherFactory

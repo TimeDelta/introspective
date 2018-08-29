@@ -13,6 +13,7 @@ import os
 public protocol QueryFactory {
 	func heartRateQuery() -> HeartRateQuery
 	func moodQuery() -> MoodQuery
+	func weightQuery() -> WeightQuery
 }
 
 public class QueryFactoryImpl: QueryFactory {
@@ -27,5 +28,9 @@ public class QueryFactoryImpl: QueryFactory {
 
 	public func moodQuery() -> MoodQuery {
 		return MoodQueryImpl()
+	}
+
+	public func weightQuery() -> WeightQuery {
+		return WeightQueryImpl()
 	}
 }

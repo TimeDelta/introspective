@@ -14,7 +14,6 @@ public class ProductionInjectionProvider: InjectionProvider {
 
 	fileprivate static let realDatabase = DatabaseImpl()
 	fileprivate static let realQueryFactory = QueryFactoryImpl()
-	fileprivate static let realQuerierFactory = QuerierFactoryImpl()
 	fileprivate static let realDataTypeFactory = DataTypeFactoryImpl()
 	fileprivate static let realUtilFactory = UtilFactory()
 	fileprivate static let realSubQueryMatcherFactory = SubQueryMatcherFactoryImpl()
@@ -24,7 +23,6 @@ public class ProductionInjectionProvider: InjectionProvider {
 
 	public func database() -> Database { return Me.realDatabase }
 	public func queryFactory() -> QueryFactory { return Me.realQueryFactory }
-	public func querierFactory() -> QuerierFactory { return Me.realQuerierFactory }
 	public func dataTypeFactory() -> DataTypeFactory { return Me.realDataTypeFactory }
 	public func utilFactory() -> UtilFactory { return Me.realUtilFactory }
 	public func subQueryMatcherFactory() -> SubQueryMatcherFactory { return Me.realSubQueryMatcherFactory }

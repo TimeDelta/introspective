@@ -252,6 +252,9 @@ class QueryViewController: UITableViewController {
 				case .mood:
 					currentQuery = DependencyInjector.query.moodQuery()
 					break
+				case .weight:
+					currentQuery = DependencyInjector.query.weightQuery()
+					break
 			}
 
 			buildQuery(&currentQuery, from: parts)

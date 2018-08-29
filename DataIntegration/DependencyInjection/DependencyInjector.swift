@@ -14,7 +14,6 @@ public final class DependencyInjector {
 
 	public static var db: Database { get { return injectionProvider.database() } }
 	public static var query: QueryFactory { get { return injectionProvider.queryFactory() } }
-	public static var querier: QuerierFactory { get { return injectionProvider.querierFactory() } }
 	public static var dataType: DataTypeFactory { get { return injectionProvider.dataTypeFactory() } }
 	public static var util: UtilFactory { get { return injectionProvider.utilFactory() } }
 	public static var subQueryMatcher: SubQueryMatcherFactory { get { return injectionProvider.subQueryMatcherFactory() } }

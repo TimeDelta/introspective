@@ -41,7 +41,7 @@ public class NumericAttributeRestriction: AnyAttributeRestriction {
 				return value
 			default:
 				os_log("Unknown type of NumericAttribute: $@", type: .error, String(describing: type(of: restrictedAttribute)))
-				throw SampleError.typeMismatch
+				throw AttributeError.typeMismatch
 		}
 	}
 }

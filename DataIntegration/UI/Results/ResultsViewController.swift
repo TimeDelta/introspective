@@ -14,6 +14,7 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 	fileprivate typealias Me = ResultsViewController
 	fileprivate static let cellHeights: [DataTypes: CGFloat] = [
 		.heartRate: 44,
+		.weight: 44,
 		.mood: 67,
 	]
 
@@ -132,6 +133,11 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 					let sample = samples[row]
 					let cell = (tableView.dequeueReusableCell(withIdentifier: "moodSampleCell", for: indexPath) as! MoodTableViewCell)
 					cell.mood = (sample as! Mood)
+					return cell
+				case .weight:
+					let sample = samples[row]
+					let cell = (tableView.dequeueReusableCell(withIdentifier: "weightSampleCell", for: indexPath) as! WeightTableViewCell)
+					cell.weight = (sample as! Weight)
 					return cell
 			}
 		}

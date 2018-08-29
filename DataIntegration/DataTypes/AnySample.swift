@@ -51,12 +51,12 @@ public class AnySample: Sample {
 	}
 
 	public func value(of attribute: Attribute) throws -> Any {
-		guard let value = attributeValues[attribute.name] else { throw SampleError.unknownAttribute }
+		guard let value = attributeValues[attribute.name] else { throw AttributeError.unknownAttribute }
 		return value
 	}
 
 	public func set(attribute: Attribute, to value: Any) throws {
-		guard let _ = attributes.first(where: { a in return a.name == attribute.name }) else { throw SampleError.unknownAttribute }
+		guard let _ = attributes.first(where: { a in return a.name == attribute.name }) else { throw AttributeError.unknownAttribute }
 		attributeValues[attribute.name] = value
 	}
 

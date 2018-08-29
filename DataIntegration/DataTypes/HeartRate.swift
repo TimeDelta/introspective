@@ -16,8 +16,8 @@ public class HeartRate: Sample, Equatable, CustomDebugStringConvertible {
 	}
 
 	fileprivate typealias Me = HeartRate
-	fileprivate static let unit: HKUnit = HKUnit(from: "count/min")
 
+	public static let beatsPerMinute: HKUnit = HKUnit(from: "count/min")
 	public static let heartRate = DoubleAttribute(name: "Heart rate", pluralName: "Heart rates", variableName: HKPredicateKeyPathQuantity)
 	public static let timestamp = DateTimeAttribute(name: "Timestamp", pluralName: "Timestamps", variableName: HKPredicateKeyPathStartDate)
 	public static let attributes: [Attribute] = [timestamp, heartRate]
@@ -55,7 +55,7 @@ public class HeartRate: Sample, Equatable, CustomDebugStringConvertible {
 	}
 
 	public init(_ sample: HKQuantitySample) {
-		heartRate = sample.quantity.doubleValue(for: Me.unit)
+		heartRate = sample.quantity.doubleValue(for: Me.beatsPerMinute)
 		timestamp = sample.startDate
 	}
 
@@ -70,21 +70,21 @@ public class HeartRate: Sample, Equatable, CustomDebugStringConvertible {
 		if attribute.name == CommonSampleAttributes.timestamp.name {
 			return timestamp
 		}
-		throw SampleError.unknownAttribute
+		throw AttributeError.unknownAttribute
 	}
 
 	public func set(attribute: Attribute, to value: Any) throws {
 		if attribute.name == Me.heartRate.name {
-			guard let castedValue = value as? Double else { throw SampleError.typeMismatch }
+			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
 			heartRate = castedValue
 			return
 		}
 		if attribute.name == CommonSampleAttributes.timestamp.name {
-			guard let castedValue = value as? Date else { throw SampleError.typeMismatch }
+			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
 			timestamp = castedValue
 			return
 		}
-		throw SampleError.unknownAttribute
+		throw AttributeError.unknownAttribute
 	}
 
 	public func equalTo(_ otherAttributed: Attributed) -> Bool {
