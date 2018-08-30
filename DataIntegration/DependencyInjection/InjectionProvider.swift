@@ -12,6 +12,7 @@ import Foundation
 public protocol InjectionProvider {
 
 	func database() -> Database
+	func codableStorage() -> CodableStorage
 	func queryFactory() -> QueryFactory
 	func dataTypeFactory() -> DataTypeFactory
 	func utilFactory() -> UtilFactory

@@ -13,6 +13,7 @@ public final class DependencyInjector {
 	public static var injectionProvider: InjectionProvider = ProductionInjectionProvider()
 
 	public static var db: Database { get { return injectionProvider.database() } }
+	public static var codableStorage: CodableStorage { get { return injectionProvider.codableStorage() } }
 	public static var query: QueryFactory { get { return injectionProvider.queryFactory() } }
 	public static var dataType: DataTypeFactory { get { return injectionProvider.dataTypeFactory() } }
 	public static var util: UtilFactory { get { return injectionProvider.utilFactory() } }

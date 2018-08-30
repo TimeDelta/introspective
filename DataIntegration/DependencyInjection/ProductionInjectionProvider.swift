@@ -13,6 +13,7 @@ public class ProductionInjectionProvider: InjectionProvider {
 	fileprivate typealias Me = ProductionInjectionProvider
 
 	fileprivate static let realDatabase = DatabaseImpl()
+	fileprivate static let realCodableStorage = CodableStorageImpl()
 	fileprivate static let realQueryFactory = QueryFactoryImpl()
 	fileprivate static let realDataTypeFactory = DataTypeFactoryImpl()
 	fileprivate static let realUtilFactory = UtilFactory()
@@ -22,6 +23,7 @@ public class ProductionInjectionProvider: InjectionProvider {
 	fileprivate static let realSampleGroupCombinerFactory = SampleGroupCombinerFactoryImpl()
 
 	public func database() -> Database { return Me.realDatabase }
+	public func codableStorage() -> CodableStorage { return Me.realCodableStorage }
 	public func queryFactory() -> QueryFactory { return Me.realQueryFactory }
 	public func dataTypeFactory() -> DataTypeFactory { return Me.realDataTypeFactory }
 	public func utilFactory() -> UtilFactory { return Me.realUtilFactory }

@@ -14,8 +14,8 @@ class SourcesTableViewController: UITableViewController {
 	var sources: Array<Source>
 
 	required init?(coder aDecoder: NSCoder) {
-		if CodableStorage.fileExists(SOURCES_FILE, in: .documents) {
-			sources = CodableStorage.retrieve(SOURCES_FILE, from: CodableStorage.Directory.documents, as: [Source].self)
+		if DependencyInjector.codableStorage.fileExists(SOURCES_FILE, in: .documents) {
+			sources = try! DependencyInjector.codableStorage.retrieve(SOURCES_FILE, from: .documents, as: [Source].self)
 		} else {
 			sources = Array<Source>()
 		}
