@@ -17,15 +17,17 @@ public class HealthManager {
 	public enum SampleType {
 		case heartRate
 		case weight
+		case bmi
 
 		static var allTypes: [SampleType] {
-			return [.heartRate, .weight]
+			return [.heartRate, .weight, .bmi]
 		}
 
 		var name: String {
 			switch (self) {
 				case .heartRate: return "heart rate"
 				case .weight: return "weight"
+				case .bmi: return "body mass index"
 			}
 		}
 
@@ -33,6 +35,7 @@ public class HealthManager {
 			switch (self) {
 				case .heartRate: return HKObjectType.quantityType(forIdentifier: .heartRate)!
 				case .weight: return HKObjectType.quantityType(forIdentifier: .bodyMass)!
+				case .bmi: return HKObjectType.quantityType(forIdentifier: .bodyMassIndex)!
 			}
 		}
 
@@ -40,6 +43,7 @@ public class HealthManager {
 			switch (self) {
 				case .heartRate: return HKSampleType.quantityType(forIdentifier: .heartRate)!
 				case .weight: return HKSampleType.quantityType(forIdentifier: .bodyMass)!
+				case .bmi: return HKSampleType.quantityType(forIdentifier: .bodyMassIndex)!
 			}
 		}
 	}

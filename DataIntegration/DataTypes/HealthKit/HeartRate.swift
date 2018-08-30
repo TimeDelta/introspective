@@ -9,7 +9,7 @@
 import Foundation
 import HealthKit
 
-public class HeartRate: Sample, Equatable, CustomDebugStringConvertible {
+public class HeartRate: HealthKitQuantitySample, Equatable, CustomDebugStringConvertible {
 
 	public static func == (lhs: HeartRate, rhs: HeartRate) -> Bool {
 		return lhs.equalTo(rhs)
@@ -59,27 +59,35 @@ public class HeartRate: Sample, Equatable, CustomDebugStringConvertible {
 		timestamp = sample.startDate
 	}
 
+	public func quantityUnit() -> HKUnit {
+		return Me.beatsPerMinute
+	}
+
+	public func quantityValue() -> Double {
+		return heartRate
+	}
+
 	public func dates() -> [DateType: Date] {
 		return [.start: timestamp]
 	}
 
 	public func value(of attribute: Attribute) throws -> Any {
-		if attribute.name == Me.heartRate.name {
+		if attribute.equalTo(Me.heartRate) {
 			return heartRate
 		}
-		if attribute.name == CommonSampleAttributes.timestamp.name {
+		if attribute.equalTo(Me.timestamp) {
 			return timestamp
 		}
 		throw AttributeError.unknownAttribute
 	}
 
 	public func set(attribute: Attribute, to value: Any) throws {
-		if attribute.name == Me.heartRate.name {
+		if attribute.equalTo(Me.heartRate) {
 			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
 			heartRate = castedValue
 			return
 		}
-		if attribute.name == CommonSampleAttributes.timestamp.name {
+		if attribute.equalTo(Me.timestamp) {
 			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
 			timestamp = castedValue
 			return

@@ -14,6 +14,7 @@ public protocol QueryFactory {
 	func heartRateQuery() -> HeartRateQuery
 	func moodQuery() -> MoodQuery
 	func weightQuery() -> WeightQuery
+	func bmiQuery() -> BodyMassIndexQuery
 }
 
 public class QueryFactoryImpl: QueryFactory {
@@ -32,5 +33,9 @@ public class QueryFactoryImpl: QueryFactory {
 
 	public func weightQuery() -> WeightQuery {
 		return WeightQueryImpl()
+	}
+
+	public func bmiQuery() -> BodyMassIndexQuery {
+		return BodyMassIndexQueryImpl()
 	}
 }

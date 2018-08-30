@@ -9,7 +9,7 @@
 import Foundation
 import HealthKit
 
-public class Weight: Sample, Equatable, CustomDebugStringConvertible {
+public class Weight: HealthKitQuantitySample, Equatable, CustomDebugStringConvertible {
 
 	public static func ==(lhs: Weight, rhs: Weight) -> Bool {
 		return lhs.equalTo(rhs)
@@ -60,6 +60,14 @@ public class Weight: Sample, Equatable, CustomDebugStringConvertible {
 		timestamp = sample.startDate
 	}
 
+	public func quantityUnit() -> HKUnit {
+		return Me.pounds
+	}
+
+	public func quantityValue() -> Double {
+		return weight
+	}
+
 	public func dates() -> [DateType: Date] {
 		return [.start: timestamp]
 	}
@@ -68,19 +76,19 @@ public class Weight: Sample, Equatable, CustomDebugStringConvertible {
 		if attribute.equalTo(Me.weight) {
 			return weight
 		}
-		if attribute.equalTo(CommonSampleAttributes.timestamp) {
+		if attribute.equalTo(Me.timestamp) {
 			return timestamp
 		}
 		throw AttributeError.unknownAttribute
 	}
 
 	public func set(attribute: Attribute, to value: Any) throws {
-		if attribute.name == Me.weight.name {
+		if attribute.equalTo(Me.weight) {
 			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
 			weight = castedValue
 			return
 		}
-		if attribute.name == CommonSampleAttributes.timestamp.name {
+		if attribute.equalTo(Me.timestamp) {
 			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
 			timestamp = castedValue
 			return

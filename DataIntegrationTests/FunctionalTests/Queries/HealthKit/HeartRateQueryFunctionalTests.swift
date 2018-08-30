@@ -1,5 +1,5 @@
 //
-//  HeartRateQueryFunctionalTest.swift
+//  HeartRateQueryFunctionalTests.swift
 //  DataIntegrationTests
 //
 //  Created by Bryan Nova on 8/23/18.
@@ -10,7 +10,7 @@ import XCTest
 import SwiftDate
 @testable import DataIntegration
 
-class HeartRateQueryFunctionalTest: QueryFunctionalTest {
+class HeartRateQueryFunctionalTests: QueryFunctionalTest {
 
 	fileprivate var query: HeartRateQueryImpl!
 
@@ -38,7 +38,7 @@ class HeartRateQueryFunctionalTest: QueryFunctionalTest {
 				message = "Found " + String(self.samples.count) + " samples"
 			}
 			XCTAssert(self.error != nil, message)
-			XCTAssert(self.error is NoSamplesFoundQueryError, self.error?.localizedDescription ?? "")
+			XCTAssert(self.error is NoHealthKitSamplesFoundQueryError, self.error?.localizedDescription ?? "")
 		}
 	}
 
@@ -117,7 +117,7 @@ class HeartRateQueryFunctionalTest: QueryFunctionalTest {
 		HealthKitDataTestUtil.saveHeartRates(expectedHeartRate, unexpectedHeartRate1, unexpectedHeartRate2, unexpectedHeartRate3)
 
 		let heartRateRestriction = GreaterThanOrEqualToNumericAttributeRestriction(attribute: HeartRate.heartRate, value: value)
-		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(attribute: CommonSampleAttributes.timestamp, date: Date() - 1.days)
+		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(attribute: HeartRate.timestamp, date: Date() - 1.days)
 		query.attributeRestrictions.append(heartRateRestriction)
 		query.attributeRestrictions.append(timestampRestriction)
 

@@ -13,8 +13,12 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 
 	fileprivate typealias Me = ResultsViewController
 	fileprivate static let cellHeights: [DataTypes: CGFloat] = [
+		// HealthKit
 		.heartRate: 44,
 		.weight: 44,
+		.bmi: 44,
+
+		// CoreData
 		.mood: 67,
 	]
 
@@ -124,20 +128,15 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 
 		if section == 1 {
 			switch (dataType!) {
-				case .heartRate:
+				case .heartRate, .weight, .bmi:
 					let sample = samples[row]
-					let cell = (tableView.dequeueReusableCell(withIdentifier: "heartRateSampleCell", for: indexPath) as! HeartRateTableViewCell)
-					cell.heartRate = (sample as! HeartRate)
+					let cell = (tableView.dequeueReusableCell(withIdentifier: "healthKitQuantitySampleCell", for: indexPath) as! HealthKitQuantitySampleTableViewCell)
+					cell.sample = (sample as! HealthKitQuantitySample)
 					return cell
 				case .mood:
 					let sample = samples[row]
 					let cell = (tableView.dequeueReusableCell(withIdentifier: "moodSampleCell", for: indexPath) as! MoodTableViewCell)
 					cell.mood = (sample as! Mood)
-					return cell
-				case .weight:
-					let sample = samples[row]
-					let cell = (tableView.dequeueReusableCell(withIdentifier: "weightSampleCell", for: indexPath) as! WeightTableViewCell)
-					cell.weight = (sample as! Weight)
 					return cell
 			}
 		}

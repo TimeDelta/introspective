@@ -38,7 +38,7 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 				message = "Found " + String(self.samples.count) + " samples"
 			}
 			XCTAssert(self.error != nil, message)
-			XCTAssert(self.error is NoSamplesFoundQueryError, self.error?.localizedDescription ?? "")
+			XCTAssert(self.error is NoHealthKitSamplesFoundQueryError, self.error?.localizedDescription ?? "")
 		}
 	}
 
@@ -115,7 +115,7 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 		HealthKitDataTestUtil.saveWeights(expectedWeight, unexpectedWeight1, unexpectedWeight2, unexpectedWeight3)
 
 		let WeightRestriction = GreaterThanOrEqualToNumericAttributeRestriction(attribute: Weight.weight, value: value)
-		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(attribute: CommonSampleAttributes.timestamp, date: Date() - 1.days)
+		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(attribute: Weight.timestamp, date: Date() - 1.days)
 		query.attributeRestrictions.append(WeightRestriction)
 		query.attributeRestrictions.append(timestampRestriction)
 

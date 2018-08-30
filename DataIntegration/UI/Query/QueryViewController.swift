@@ -255,6 +255,9 @@ class QueryViewController: UITableViewController {
 				case .weight:
 					currentQuery = DependencyInjector.query.weightQuery()
 					break
+				case .bmi:
+					currentQuery = DependencyInjector.query.bmiQuery()
+					break
 			}
 
 			buildQuery(&currentQuery, from: parts)
