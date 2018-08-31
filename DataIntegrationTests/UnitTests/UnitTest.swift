@@ -17,6 +17,8 @@ class UnitTest: XCTestCase {
 
 	var mockDatabase: DatabaseMock!
 
+	var mockSettings: SettingsMock!
+
 	var utilFactory: UtilFactory!
 	var mockAttributeRestrictionUtil: AttributeRestrictionUtilMock!
 	var mockCalendarUtil: CalendarUtilMock!
@@ -64,6 +66,9 @@ class UnitTest: XCTestCase {
 
 		mockDatabase = DatabaseMock()
 		Given(injectionProvider, .database(willReturn: mockDatabase))
+
+		mockSettings = SettingsMock()
+		Given(injectionProvider, .settings(willReturn: mockSettings))
 
 		mockDataTypeFactory = DataTypeFactoryMock()
 		Given(injectionProvider, .dataTypeFactory(willReturn: mockDataTypeFactory))

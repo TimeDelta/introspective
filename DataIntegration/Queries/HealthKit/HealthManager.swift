@@ -62,12 +62,12 @@ public class HealthManager {
 	}
 
 	static public func getAuthorization(for type: SampleType, callback: @escaping (Error?) -> ()) {
-		os_log("Checking authorization to read $@ data", type: .info, type.name)
+		os_log("Checking authorization to read %@ data", type: .info, type.name)
 
 		let status = Me.healthStore.authorizationStatus(for: type.objectType)
 
 		if status == .notDetermined {
-			os_log("Requesting authorization to read $@ data", type: .info, type.name)
+			os_log("Requesting authorization to read %@ data", type: .info, type.name)
 			var writePermissions: Set<HKSampleType>? = nil
 			if testing {
 				writePermissions = Set(SampleType.allTypes.map({ return $0.sampleType }))

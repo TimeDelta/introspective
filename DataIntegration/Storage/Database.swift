@@ -57,7 +57,7 @@ public class DatabaseImpl: Database {
 	public func new<Type: NSManagedObject & CoreDataObject>(objectType: Type.Type) throws -> Type {
 		let entity = NSEntityDescription.entity(forEntityName: objectType.entityName, in: backgroundContext)!
 		guard let newObject = NSManagedObject(entity: entity, insertInto: backgroundContext) as? Type else {
-			os_log("Could not cast new object as $@", type: .error, objectType.entityName)
+			os_log("Could not cast new object as %@", type: .error, objectType.entityName)
 			throw DatabaseError.failedToInstantiateObject
 		}
 		return newObject

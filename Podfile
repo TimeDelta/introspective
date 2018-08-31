@@ -7,6 +7,7 @@ target 'DataIntegration' do
 
   pod "SwiftyMocky"
   pod "Sourcery"
+  pod "Presentr"
 
   target 'DataIntegrationTests' do
     inherit! :search_paths

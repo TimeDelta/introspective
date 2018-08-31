@@ -20,4 +20,5 @@ extension MoodImpl {
 	@NSManaged public var note: String?
 	@NSManaged public var rating: Double
 	@NSManaged public var timestamp: Date
+	@NSManaged public var maxRating: Double
 }

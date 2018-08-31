@@ -22,7 +22,7 @@ public class MoodUiUtil {
 		return numFormatter.string(from: NSNumber(value: value))!
 	}
 
-	public static func colorForMood(rating: Double) -> UIColor {
+	public static func colorForMood(rating: Double, maxRating: Double) -> UIColor {
 		var maxRed: CGFloat = 0
 		var maxGreen: CGFloat = 0
 		var maxBlue: CGFloat = 0
@@ -35,7 +35,7 @@ public class MoodUiUtil {
 		var minAlpha: CGFloat = 0
 		Me.minRatingColor.getRed(&minRed, green: &minGreen, blue: &minBlue, alpha: &minAlpha)
 
-		let valueRatio = CGFloat(rating / MoodImpl.maxRating)
+		let valueRatio = CGFloat(rating / maxRating)
 
 		return UIColor(
 			red: (maxRed - minRed) * valueRatio + minRed,

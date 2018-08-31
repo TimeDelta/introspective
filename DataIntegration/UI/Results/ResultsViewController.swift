@@ -97,7 +97,7 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 			return samples.count
 		}
 
-		os_log("Unexpected section index ($@) while determining number of rows in section", type: .error, String(section))
+		os_log("Unexpected section index (%@) while determining number of rows in section", type: .error, String(section))
 		return 0
 	}
 
@@ -141,7 +141,7 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 			}
 		}
 
-		os_log("Unexpected section index ($@) while instantiating cell", type: .error, String(section))
+		os_log("Unexpected section index (%@) while instantiating cell", type: .error, String(section))
 		return UITableViewCell()
 	}
 

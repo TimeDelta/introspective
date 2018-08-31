@@ -29,6 +29,8 @@ class RecordMoodTableViewCellUnitTests: UnitTest {
 
 		mockMood = MoodMock()
 		Given(mockDataTypeFactory, .mood(willReturn: mockMood))
+
+		mockSettings.maximumMood = 7.0
 	}
 
 	func testNoteGetsClearedOnSave() {

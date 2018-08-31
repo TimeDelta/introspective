@@ -24,17 +24,18 @@ class RecordMoodTableViewCell: UITableViewCell {
 	}
 
 	@IBAction func ratingChanged(_ sender: Any) {
-		let newValue = Double(ratingSlider.value) * MoodImpl.maxRating
+		let maxValue = DependencyInjector.settings.maximumMood
+		let newValue = Double(ratingSlider.value) * maxValue
 
-		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: newValue)
+		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: newValue, maxRating: maxValue)
 
-		outOfMaxRatingLabel.text = MoodUiUtil.valueToString(newValue) + " / " + MoodUiUtil.valueToString(MoodImpl.maxRating)
+		outOfMaxRatingLabel.text = MoodUiUtil.valueToString(newValue) + " / " + MoodUiUtil.valueToString(maxValue)
 	}
 
 	@IBAction func doneButtonPressed(_ sender: Any) {
 		let mood = DependencyInjector.dataType.mood()
 		mood.timestamp = Date()
-		mood.rating = Double(ratingSlider.value) * MoodImpl.maxRating
+		mood.rating = Double(ratingSlider.value) * DependencyInjector.settings.maximumMood
 		mood.note = note
 		DependencyInjector.db.save()
 

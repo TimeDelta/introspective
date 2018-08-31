@@ -15,7 +15,7 @@ class MoodTableViewCell: UITableViewCell {
 	public var mood: Mood! {
 		didSet {
 			guard let mood = mood else { return }
-			moodRatingColorLabel.backgroundColor = MoodUiUtil.colorForMood(rating: mood.rating)
+			moodRatingColorLabel.backgroundColor = MoodUiUtil.colorForMood(rating: mood.rating, maxRating: mood.maxRating)
 			moodRatingColorLabel.text = nil
 			moodRatingLabel.text = MoodUiUtil.valueToString(mood.rating) + " / " + MoodUiUtil.valueToString(mood.maxRating)
 			timestampLabel.text = DependencyInjector.util.calendarUtil.string(for: mood.timestamp)

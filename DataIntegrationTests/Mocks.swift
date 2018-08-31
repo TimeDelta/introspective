@@ -1,4 +1,4 @@
-// Generated using Sourcery 0.13.1 — https://github.com/krzysztofzablocki/Sourcery
+// Generated using Sourcery 0.14.0 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
 
 
@@ -1122,6 +1122,217 @@ class CalendarUtilMock: CalendarUtil, Mock {
     }
 }
 
+// MARK: - CodableStorage
+class CodableStorageMock: CodableStorage, Mock {
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    var matcher: Matcher = Matcher.default
+
+
+    typealias Property = Swift.Never
+
+
+
+    func store<T: Encodable>(_ object: T, to directory: StorageDirectory, as fileName: String) throws {
+        addInvocation(.istore__objectto_directoryas_fileName(Parameter<T>.value(object).wrapAsGeneric(), Parameter<StorageDirectory>.value(directory), Parameter<String>.value(fileName)))
+		let perform = methodPerformValue(.istore__objectto_directoryas_fileName(Parameter<T>.value(object).wrapAsGeneric(), Parameter<StorageDirectory>.value(directory), Parameter<String>.value(fileName))) as? (T, StorageDirectory, String) -> Void
+		perform?(object, directory, fileName)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.istore__objectto_directoryas_fileName(Parameter<T>.value(object).wrapAsGeneric(), Parameter<StorageDirectory>.value(directory), Parameter<String>.value(fileName)))
+		if let error = givenValue.error { throw error }
+    }
+
+    func retrieve<T: Decodable>(_ fileName: String, from directory: StorageDirectory, as type: T.Type) throws -> T {
+        addInvocation(.iretrieve__fileNamefrom_directoryas_type(Parameter<String>.value(fileName), Parameter<StorageDirectory>.value(directory), Parameter<T.Type>.value(type).wrapAsGeneric()))
+		let perform = methodPerformValue(.iretrieve__fileNamefrom_directoryas_type(Parameter<String>.value(fileName), Parameter<StorageDirectory>.value(directory), Parameter<T.Type>.value(type).wrapAsGeneric())) as? (String, StorageDirectory, T.Type) -> Void
+		perform?(fileName, directory, type)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iretrieve__fileNamefrom_directoryas_type(Parameter<String>.value(fileName), Parameter<StorageDirectory>.value(directory), Parameter<T.Type>.value(type).wrapAsGeneric()))
+		if let error = givenValue.error { throw error }
+		let value = givenValue.value as? T
+		return value.orFail("stub return value not specified for retrieve<T: Decodable>(_ fileName: String, from directory: StorageDirectory, as type: T.Type). Use given")
+    }
+
+    func clear(_ directory: StorageDirectory) throws {
+        addInvocation(.iclear__directory(Parameter<StorageDirectory>.value(directory)))
+		let perform = methodPerformValue(.iclear__directory(Parameter<StorageDirectory>.value(directory))) as? (StorageDirectory) -> Void
+		perform?(directory)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iclear__directory(Parameter<StorageDirectory>.value(directory)))
+		if let error = givenValue.error { throw error }
+    }
+
+    func remove(_ fileName: String, from directory: StorageDirectory) throws {
+        addInvocation(.iremove__fileNamefrom_directory(Parameter<String>.value(fileName), Parameter<StorageDirectory>.value(directory)))
+		let perform = methodPerformValue(.iremove__fileNamefrom_directory(Parameter<String>.value(fileName), Parameter<StorageDirectory>.value(directory))) as? (String, StorageDirectory) -> Void
+		perform?(fileName, directory)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iremove__fileNamefrom_directory(Parameter<String>.value(fileName), Parameter<StorageDirectory>.value(directory)))
+		if let error = givenValue.error { throw error }
+    }
+
+    func fileExists(_ fileName: String, in directory: StorageDirectory) -> Bool {
+        addInvocation(.ifileExists__fileNamein_directory(Parameter<String>.value(fileName), Parameter<StorageDirectory>.value(directory)))
+		let perform = methodPerformValue(.ifileExists__fileNamein_directory(Parameter<String>.value(fileName), Parameter<StorageDirectory>.value(directory))) as? (String, StorageDirectory) -> Void
+		perform?(fileName, directory)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.ifileExists__fileNamein_directory(Parameter<String>.value(fileName), Parameter<StorageDirectory>.value(directory)))
+		let value = givenValue.value as? Bool
+		return value.orFail("stub return value not specified for fileExists(_ fileName: String, in directory: StorageDirectory). Use given")
+    }
+
+    fileprivate enum MethodType {
+        case istore__objectto_directoryas_fileName(Parameter<GenericAttribute>, Parameter<StorageDirectory>, Parameter<String>)
+        case iretrieve__fileNamefrom_directoryas_type(Parameter<String>, Parameter<StorageDirectory>, Parameter<GenericAttribute>)
+        case iclear__directory(Parameter<StorageDirectory>)
+        case iremove__fileNamefrom_directory(Parameter<String>, Parameter<StorageDirectory>)
+        case ifileExists__fileNamein_directory(Parameter<String>, Parameter<StorageDirectory>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+                case (.istore__objectto_directoryas_fileName(let lhsObject, let lhsDirectory, let lhsFilename), .istore__objectto_directoryas_fileName(let rhsObject, let rhsDirectory, let rhsFilename)):
+                    guard Parameter.compare(lhs: lhsObject, rhs: rhsObject, with: matcher) else { return false } 
+                    guard Parameter.compare(lhs: lhsDirectory, rhs: rhsDirectory, with: matcher) else { return false } 
+                    guard Parameter.compare(lhs: lhsFilename, rhs: rhsFilename, with: matcher) else { return false } 
+                    return true 
+                case (.iretrieve__fileNamefrom_directoryas_type(let lhsFilename, let lhsDirectory, let lhsType), .iretrieve__fileNamefrom_directoryas_type(let rhsFilename, let rhsDirectory, let rhsType)):
+                    guard Parameter.compare(lhs: lhsFilename, rhs: rhsFilename, with: matcher) else { return false } 
+                    guard Parameter.compare(lhs: lhsDirectory, rhs: rhsDirectory, with: matcher) else { return false } 
+                    guard Parameter.compare(lhs: lhsType, rhs: rhsType, with: matcher) else { return false } 
+                    return true 
+                case (.iclear__directory(let lhsDirectory), .iclear__directory(let rhsDirectory)):
+                    guard Parameter.compare(lhs: lhsDirectory, rhs: rhsDirectory, with: matcher) else { return false } 
+                    return true 
+                case (.iremove__fileNamefrom_directory(let lhsFilename, let lhsDirectory), .iremove__fileNamefrom_directory(let rhsFilename, let rhsDirectory)):
+                    guard Parameter.compare(lhs: lhsFilename, rhs: rhsFilename, with: matcher) else { return false } 
+                    guard Parameter.compare(lhs: lhsDirectory, rhs: rhsDirectory, with: matcher) else { return false } 
+                    return true 
+                case (.ifileExists__fileNamein_directory(let lhsFilename, let lhsDirectory), .ifileExists__fileNamein_directory(let rhsFilename, let rhsDirectory)):
+                    guard Parameter.compare(lhs: lhsFilename, rhs: rhsFilename, with: matcher) else { return false } 
+                    guard Parameter.compare(lhs: lhsDirectory, rhs: rhsDirectory, with: matcher) else { return false } 
+                    return true 
+                default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+                case let .istore__objectto_directoryas_fileName(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+                case let .iretrieve__fileNamefrom_directoryas_type(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+                case let .iclear__directory(p0): return p0.intValue
+                case let .iremove__fileNamefrom_directory(p0, p1): return p0.intValue + p1.intValue
+                case let .ifileExists__fileNamein_directory(p0, p1): return p0.intValue + p1.intValue
+            }
+        }
+    }
+
+    struct Given {
+        fileprivate var method: MethodType
+        var returns: Any?
+        var `throws`: Error?
+
+        private init(method: MethodType, returns: Any?, throws: Error?) {
+            self.method = method
+            self.returns = returns
+            self.`throws` = `throws`
+        }
+
+        static func retrieve<T: Decodable>(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>, willReturn: T) -> Given {
+            return Given(method: .iretrieve__fileNamefrom_directoryas_type(fileName, directory, type.wrapAsGeneric()), returns: willReturn, throws: nil)
+        }
+        static func fileExists(fileName: Parameter<String>, in directory: Parameter<StorageDirectory>, willReturn: Bool) -> Given {
+            return Given(method: .ifileExists__fileNamein_directory(fileName, directory), returns: willReturn, throws: nil)
+        }
+        static func store<T: Encodable>(object: Parameter<T>, to directory: Parameter<StorageDirectory>, as fileName: Parameter<String>, willThrow: Error) -> Given {
+            return Given(method: .istore__objectto_directoryas_fileName(object.wrapAsGeneric(), directory, fileName), returns: nil, throws: willThrow)
+        }
+        static func retrieve<T: Decodable>(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>, willThrow: Error) -> Given {
+            return Given(method: .iretrieve__fileNamefrom_directoryas_type(fileName, directory, type.wrapAsGeneric()), returns: nil, throws: willThrow)
+        }
+        static func clear(directory: Parameter<StorageDirectory>, willThrow: Error) -> Given {
+            return Given(method: .iclear__directory(directory), returns: nil, throws: willThrow)
+        }
+        static func remove(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, willThrow: Error) -> Given {
+            return Given(method: .iremove__fileNamefrom_directory(fileName, directory), returns: nil, throws: willThrow)
+        }
+    }
+
+    struct Verify {
+        fileprivate var method: MethodType
+
+        static func store<T>(object: Parameter<T>, to directory: Parameter<StorageDirectory>, as fileName: Parameter<String>) -> Verify {
+            return Verify(method: .istore__objectto_directoryas_fileName(object.wrapAsGeneric(), directory, fileName))
+        }
+        static func retrieve<T>(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>) -> Verify {
+            return Verify(method: .iretrieve__fileNamefrom_directoryas_type(fileName, directory, type.wrapAsGeneric()))
+        }
+        static func clear(directory: Parameter<StorageDirectory>) -> Verify {
+            return Verify(method: .iclear__directory(directory))
+        }
+        static func remove(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>) -> Verify {
+            return Verify(method: .iremove__fileNamefrom_directory(fileName, directory))
+        }
+        static func fileExists(fileName: Parameter<String>, in directory: Parameter<StorageDirectory>) -> Verify {
+            return Verify(method: .ifileExists__fileNamein_directory(fileName, directory))
+        }
+    }
+
+    struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        static func store<T>(object: Parameter<T>, to directory: Parameter<StorageDirectory>, as fileName: Parameter<String>, perform: (T, StorageDirectory, String) -> Void) -> Perform {
+            return Perform(method: .istore__objectto_directoryas_fileName(object.wrapAsGeneric(), directory, fileName), performs: perform)
+        }
+        static func retrieve<T>(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>, perform: (String, StorageDirectory, T.Type) -> Void) -> Perform {
+            return Perform(method: .iretrieve__fileNamefrom_directoryas_type(fileName, directory, type.wrapAsGeneric()), performs: perform)
+        }
+        static func clear(directory: Parameter<StorageDirectory>, perform: (StorageDirectory) -> Void) -> Perform {
+            return Perform(method: .iclear__directory(directory), performs: perform)
+        }
+        static func remove(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, perform: (String, StorageDirectory) -> Void) -> Perform {
+            return Perform(method: .iremove__fileNamefrom_directory(fileName, directory), performs: perform)
+        }
+        static func fileExists(fileName: Parameter<String>, in directory: Parameter<StorageDirectory>, perform: (String, StorageDirectory) -> Void) -> Perform {
+            return Perform(method: .ifileExists__fileNamein_directory(fileName, directory), performs: perform)
+        }
+    }
+
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+        methodReturnValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+    public func verify(property: Property, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) { }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+
+    private func methodReturnValue(_ method: MethodType) -> (value: Any?, error: Error?) {
+        let matched = methodReturnValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher)  }
+        return (value: matched?.returns, error: matched?.`throws`)
+    }
+
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+}
+
 // MARK: - DataTypeFactory
 class DataTypeFactoryMock: DataTypeFactory, Mock {
     private var invocations: [MethodType] = []
@@ -1659,6 +1870,24 @@ class InjectionProviderMock: InjectionProvider, Mock {
 		return value.orFail("stub return value not specified for database(). Use given")
     }
 
+    func codableStorage() -> CodableStorage {
+        addInvocation(.icodableStorage)
+		let perform = methodPerformValue(.icodableStorage) as? () -> Void
+		perform?()
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.icodableStorage)
+		let value = givenValue.value as? CodableStorage
+		return value.orFail("stub return value not specified for codableStorage(). Use given")
+    }
+
+    func settings() -> Settings {
+        addInvocation(.isettings)
+		let perform = methodPerformValue(.isettings) as? () -> Void
+		perform?()
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.isettings)
+		let value = givenValue.value as? Settings
+		return value.orFail("stub return value not specified for settings(). Use given")
+    }
+
     func queryFactory() -> QueryFactory {
         addInvocation(.iqueryFactory)
 		let perform = methodPerformValue(.iqueryFactory) as? () -> Void
@@ -1724,6 +1953,8 @@ class InjectionProviderMock: InjectionProvider, Mock {
 
     fileprivate enum MethodType {
         case idatabase
+        case icodableStorage
+        case isettings
         case iqueryFactory
         case idataTypeFactory
         case iutilFactory
@@ -1735,6 +1966,10 @@ class InjectionProviderMock: InjectionProvider, Mock {
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
                 case (.idatabase, .idatabase):
+                    return true 
+                case (.icodableStorage, .icodableStorage):
+                    return true 
+                case (.isettings, .isettings):
                     return true 
                 case (.iqueryFactory, .iqueryFactory):
                     return true 
@@ -1757,6 +1992,8 @@ class InjectionProviderMock: InjectionProvider, Mock {
         func intValue() -> Int {
             switch self {
                 case .idatabase: return 0
+                case .icodableStorage: return 0
+                case .isettings: return 0
                 case .iqueryFactory: return 0
                 case .idataTypeFactory: return 0
                 case .iutilFactory: return 0
@@ -1781,6 +2018,12 @@ class InjectionProviderMock: InjectionProvider, Mock {
 
         static func database(willReturn: Database) -> Given {
             return Given(method: .idatabase, returns: willReturn, throws: nil)
+        }
+        static func codableStorage(willReturn: CodableStorage) -> Given {
+            return Given(method: .icodableStorage, returns: willReturn, throws: nil)
+        }
+        static func settings(willReturn: Settings) -> Given {
+            return Given(method: .isettings, returns: willReturn, throws: nil)
         }
         static func queryFactory(willReturn: QueryFactory) -> Given {
             return Given(method: .iqueryFactory, returns: willReturn, throws: nil)
@@ -1811,6 +2054,12 @@ class InjectionProviderMock: InjectionProvider, Mock {
         static func database() -> Verify {
             return Verify(method: .idatabase)
         }
+        static func codableStorage() -> Verify {
+            return Verify(method: .icodableStorage)
+        }
+        static func settings() -> Verify {
+            return Verify(method: .isettings)
+        }
         static func queryFactory() -> Verify {
             return Verify(method: .iqueryFactory)
         }
@@ -1840,6 +2089,12 @@ class InjectionProviderMock: InjectionProvider, Mock {
 
         static func database(perform: () -> Void) -> Perform {
             return Perform(method: .idatabase, performs: perform)
+        }
+        static func codableStorage(perform: () -> Void) -> Perform {
+            return Perform(method: .icodableStorage, performs: perform)
+        }
+        static func settings(perform: () -> Void) -> Perform {
+            return Perform(method: .isettings, performs: perform)
         }
         static func queryFactory(perform: () -> Void) -> Perform {
             return Perform(method: .iqueryFactory, performs: perform)
@@ -1904,11 +2159,20 @@ class InjectionProviderMock: InjectionProvider, Mock {
 }
 
 // MARK: - MoodQuery
-class MoodQueryMock: MoodQuery, Mock {
+class MoodQueryMock: MoodQuery, Mock, StaticMock {
     private var invocations: [MethodType] = []
     private var methodReturnValues: [Given] = []
     private var methodPerformValues: [Perform] = []
     var matcher: Matcher = Matcher.default
+    static private var invocations: [StaticMethodType] = []
+    static private var methodReturnValues: [StaticGiven] = []
+    static private var methodPerformValues: [StaticPerform] = []
+    static var matcher: Matcher = Matcher.default
+    static func clear() {
+        invocations = []
+        methodReturnValues = []
+        methodPerformValues = []
+    }
 
     var attributeRestrictions: [AttributeRestriction] { 
 		get {	invocations.append(.attributeRestrictions_get)
@@ -1944,7 +2208,20 @@ class MoodQueryMock: MoodQuery, Mock {
         static var subQuery: Property { return Property(method: .subQuery_get) }
 		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Property { return Property(method: .subQuery_set(newValue)) }
     }
+    static var updatingMoodsInBackground: Bool { 
+		get {	MoodQueryMock.invocations.append(.updatingMoodsInBackground_get)
+				return MoodQueryMock.__updatingMoodsInBackground.orFail("MoodQueryMock - value for updatingMoodsInBackground was not defined") }
+		set {	MoodQueryMock.invocations.append(.updatingMoodsInBackground_set(.value(newValue)))
+				MoodQueryMock.__updatingMoodsInBackground = newValue }
+	}
+	private static var __updatingMoodsInBackground: (Bool)?
 
+
+    struct StaticProperty {
+        fileprivate var method: StaticMethodType
+        static var updatingMoodsInBackground: StaticProperty { return StaticProperty(method: .updatingMoodsInBackground_get) }
+		static func updatingMoodsInBackground(set newValue: Parameter<Bool>) -> StaticProperty { return StaticProperty(method: .updatingMoodsInBackground_set(newValue)) }
+    }
 
 
     func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
@@ -1962,7 +2239,52 @@ class MoodQueryMock: MoodQuery, Mock {
 		return value.orFail("stub return value not specified for equalTo(_ otherQuery: Query). Use given")
     }
 
-    fileprivate enum MethodType {
+    fileprivate enum StaticMethodType {
+
+        case updatingMoodsInBackground_get
+		case updatingMoodsInBackground_set(Parameter<Bool>)
+
+        static func compareParameters(lhs: StaticMethodType, rhs: StaticMethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+                case (.updatingMoodsInBackground_get,.updatingMoodsInBackground_get): return true
+				case (.updatingMoodsInBackground_set(let left),.updatingMoodsInBackground_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
+                default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+                case .updatingMoodsInBackground_get: return 0
+				case .updatingMoodsInBackground_set(let newValue): return newValue.intValue
+            }
+        }
+    }
+
+    struct StaticGiven {
+        fileprivate var method: StaticMethodType
+        var returns: Any?
+        var `throws`: Error?
+
+        private init(method: StaticMethodType, returns: Any?, throws: Error?) {
+            self.method = method
+            self.returns = returns
+            self.`throws` = `throws`
+        }
+
+    }
+
+    struct StaticVerify {
+        fileprivate var method: StaticMethodType
+
+    }
+
+    struct StaticPerform {
+        fileprivate var method: StaticMethodType
+        var performs: Any
+
+    }
+
+        fileprivate enum MethodType {
         case irunQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
         case iequalTo__otherQuery(Parameter<Query>)
         case attributeRestrictions_get
@@ -2083,6 +2405,48 @@ class MoodQueryMock: MoodQuery, Mock {
 
     private func matchingCalls(_ method: MethodType) -> [MethodType] {
         return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+
+    static private func matchingCalls(_ method: StaticVerify) -> Int {
+        return matchingCalls(method.method).count
+    }
+
+    static public func given(_ method: StaticGiven) {
+        methodReturnValues.append(method)
+        methodReturnValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    static public func perform(_ method: StaticPerform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    static public func verify(_ method: StaticVerify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    static public func verify(property: StaticProperty, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(property.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(property.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    static private func addInvocation(_ call: StaticMethodType) {
+        invocations.append(call)
+    }
+
+    static private func methodReturnValue(_ method: StaticMethodType) -> (value: Any?, error: Error?) {
+        let matched = methodReturnValues.reversed().first { StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher)  }
+        return (value: matched?.returns, error: matched?.`throws`)
+    }
+
+    static private func methodPerformValue(_ method: StaticMethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+
+    static private func matchingCalls(_ method: StaticMethodType) -> [StaticMethodType] {
+        return invocations.filter { StaticMethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
     }
 }
 
@@ -3484,6 +3848,298 @@ class SearchUtilMock: SearchUtil, Mock {
 
     private func matchingCalls(_ method: MethodType) -> [MethodType] {
         return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+}
+
+// MARK: - Settings
+class SettingsMock: Settings, Mock, StaticMock {
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    var matcher: Matcher = Matcher.default
+    static private var invocations: [StaticMethodType] = []
+    static private var methodReturnValues: [StaticGiven] = []
+    static private var methodPerformValues: [StaticPerform] = []
+    static var matcher: Matcher = Matcher.default
+    static func clear() {
+        invocations = []
+        methodReturnValues = []
+        methodPerformValues = []
+    }
+
+    var maximumMood: Double { 
+		get {	invocations.append(.maximumMood_get)
+				return __maximumMood.orFail("SettingsMock - value for maximumMood was not defined") }
+		set {	invocations.append(.maximumMood_set(.value(newValue)))
+				__maximumMood = newValue }
+	}
+	private var __maximumMood: (Double)?
+
+
+    struct Property {
+        fileprivate var method: MethodType
+        static var maximumMood: Property { return Property(method: .maximumMood_get) }
+		static func maximumMood(set newValue: Parameter<Double>) -> Property { return Property(method: .maximumMood_set(newValue)) }
+    }
+    static var entityName: String { 
+		get {	SettingsMock.invocations.append(.entityName_get)
+				return SettingsMock.__entityName.orFail("SettingsMock - value for entityName was not defined") }
+		set {	SettingsMock.invocations.append(.entityName_set(.value(newValue)))
+				SettingsMock.__entityName = newValue }
+	}
+	private static var __entityName: (String)?
+
+
+    struct StaticProperty {
+        fileprivate var method: StaticMethodType
+        static var entityName: StaticProperty { return StaticProperty(method: .entityName_get) }
+		static func entityName(set newValue: Parameter<String>) -> StaticProperty { return StaticProperty(method: .entityName_set(newValue)) }
+    }
+
+
+    func setMaxMood(_ value: Double) {
+        addInvocation(.isetMaxMood__value(Parameter<Double>.value(value)))
+		let perform = methodPerformValue(.isetMaxMood__value(Parameter<Double>.value(value))) as? (Double) -> Void
+		perform?(value)
+    }
+
+    func changed(_ setting: Setting) -> Bool {
+        addInvocation(.ichanged__setting(Parameter<Setting>.value(setting)))
+		let perform = methodPerformValue(.ichanged__setting(Parameter<Setting>.value(setting))) as? (Setting) -> Void
+		perform?(setting)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.ichanged__setting(Parameter<Setting>.value(setting)))
+		let value = givenValue.value as? Bool
+		return value.orFail("stub return value not specified for changed(_ setting: Setting). Use given")
+    }
+
+    func reset() {
+        addInvocation(.ireset)
+		let perform = methodPerformValue(.ireset) as? () -> Void
+		perform?()
+    }
+
+    func save() {
+        addInvocation(.isave)
+		let perform = methodPerformValue(.isave) as? () -> Void
+		perform?()
+    }
+
+    fileprivate enum StaticMethodType {
+
+        case entityName_get
+		case entityName_set(Parameter<String>)
+
+        static func compareParameters(lhs: StaticMethodType, rhs: StaticMethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+                case (.entityName_get,.entityName_get): return true
+				case (.entityName_set(let left),.entityName_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
+                default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+                case .entityName_get: return 0
+				case .entityName_set(let newValue): return newValue.intValue
+            }
+        }
+    }
+
+    struct StaticGiven {
+        fileprivate var method: StaticMethodType
+        var returns: Any?
+        var `throws`: Error?
+
+        private init(method: StaticMethodType, returns: Any?, throws: Error?) {
+            self.method = method
+            self.returns = returns
+            self.`throws` = `throws`
+        }
+
+    }
+
+    struct StaticVerify {
+        fileprivate var method: StaticMethodType
+
+    }
+
+    struct StaticPerform {
+        fileprivate var method: StaticMethodType
+        var performs: Any
+
+    }
+
+        fileprivate enum MethodType {
+        case isetMaxMood__value(Parameter<Double>)
+        case ichanged__setting(Parameter<Setting>)
+        case ireset
+        case isave
+        case maximumMood_get
+		case maximumMood_set(Parameter<Double>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+                case (.isetMaxMood__value(let lhsValue), .isetMaxMood__value(let rhsValue)):
+                    guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                    return true 
+                case (.ichanged__setting(let lhsSetting), .ichanged__setting(let rhsSetting)):
+                    guard Parameter.compare(lhs: lhsSetting, rhs: rhsSetting, with: matcher) else { return false } 
+                    return true 
+                case (.ireset, .ireset):
+                    return true 
+                case (.isave, .isave):
+                    return true 
+                case (.maximumMood_get,.maximumMood_get): return true
+				case (.maximumMood_set(let left),.maximumMood_set(let right)): return Parameter<Double>.compare(lhs: left, rhs: right, with: matcher)
+                default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+                case let .isetMaxMood__value(p0): return p0.intValue
+                case let .ichanged__setting(p0): return p0.intValue
+                case .ireset: return 0
+                case .isave: return 0
+                case .maximumMood_get: return 0
+				case .maximumMood_set(let newValue): return newValue.intValue
+            }
+        }
+    }
+
+    struct Given {
+        fileprivate var method: MethodType
+        var returns: Any?
+        var `throws`: Error?
+
+        private init(method: MethodType, returns: Any?, throws: Error?) {
+            self.method = method
+            self.returns = returns
+            self.`throws` = `throws`
+        }
+
+        static func changed(setting: Parameter<Setting>, willReturn: Bool) -> Given {
+            return Given(method: .ichanged__setting(setting), returns: willReturn, throws: nil)
+        }
+    }
+
+    struct Verify {
+        fileprivate var method: MethodType
+
+        static func setMaxMood(value: Parameter<Double>) -> Verify {
+            return Verify(method: .isetMaxMood__value(value))
+        }
+        static func changed(setting: Parameter<Setting>) -> Verify {
+            return Verify(method: .ichanged__setting(setting))
+        }
+        static func reset() -> Verify {
+            return Verify(method: .ireset)
+        }
+        static func save() -> Verify {
+            return Verify(method: .isave)
+        }
+    }
+
+    struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        static func setMaxMood(value: Parameter<Double>, perform: (Double) -> Void) -> Perform {
+            return Perform(method: .isetMaxMood__value(value), performs: perform)
+        }
+        static func changed(setting: Parameter<Setting>, perform: (Setting) -> Void) -> Perform {
+            return Perform(method: .ichanged__setting(setting), performs: perform)
+        }
+        static func reset(perform: () -> Void) -> Perform {
+            return Perform(method: .ireset, performs: perform)
+        }
+        static func save(perform: () -> Void) -> Perform {
+            return Perform(method: .isave, performs: perform)
+        }
+    }
+
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+        methodReturnValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    public func verify(property: Property, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(property.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(property.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+
+    private func methodReturnValue(_ method: MethodType) -> (value: Any?, error: Error?) {
+        let matched = methodReturnValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher)  }
+        return (value: matched?.returns, error: matched?.`throws`)
+    }
+
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+
+    static private func matchingCalls(_ method: StaticVerify) -> Int {
+        return matchingCalls(method.method).count
+    }
+
+    static public func given(_ method: StaticGiven) {
+        methodReturnValues.append(method)
+        methodReturnValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    static public func perform(_ method: StaticPerform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    static public func verify(_ method: StaticVerify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    static public func verify(property: StaticProperty, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(property.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(property.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    static private func addInvocation(_ call: StaticMethodType) {
+        invocations.append(call)
+    }
+
+    static private func methodReturnValue(_ method: StaticMethodType) -> (value: Any?, error: Error?) {
+        let matched = methodReturnValues.reversed().first { StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher)  }
+        return (value: matched?.returns, error: matched?.`throws`)
+    }
+
+    static private func methodPerformValue(_ method: StaticMethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+
+    static private func matchingCalls(_ method: StaticMethodType) -> [StaticMethodType] {
+        return invocations.filter { StaticMethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
     }
 }
 

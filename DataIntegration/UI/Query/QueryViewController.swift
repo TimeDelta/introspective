@@ -276,7 +276,7 @@ class QueryViewController: UITableViewController {
 			if part is AttributeRestriction {
 				query.attributeRestrictions.append((part as! AttributeRestriction))
 			} else if !(part is DataTypeInfo) {
-				os_log("query part is of unknown type: $@", type: .error, String(describing: type(of: part)))
+				os_log("query part is of unknown type: %@", type: .error, String(describing: type(of: part)))
 			}
 		}
 	}

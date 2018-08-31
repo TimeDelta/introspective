@@ -9,9 +9,14 @@
 import Foundation
 
 //sourcery: AutoMockable
-public protocol MoodQuery: Query {}
+public protocol MoodQuery: Query {
+
+	static var updatingMoodsInBackground: Bool { get set }
+}
 
 public class MoodQueryImpl: CoreDataQuery<MoodImpl>, MoodQuery {
+
+	public static var updatingMoodsInBackground: Bool = false
 
 	public init() {
 		super.init(dataType: .mood)

@@ -53,7 +53,7 @@ extension Sample {
 					if myDouble != otherDouble { return false }
 					break
 				default:
-					os_log("Sample - Need to include equal comparison for attribute type: $@", type: .debug, String(describing: type(of: attribute)))
+					os_log("Sample - Need to include equal comparison for attribute type: %@", type: .debug, String(describing: type(of: attribute)))
 			}
 		}
 		return true

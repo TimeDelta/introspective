@@ -40,7 +40,7 @@ public class NumericAttributeRestriction: AnyAttributeRestriction {
 			case is DoubleAttribute:
 				return value
 			default:
-				os_log("Unknown type of NumericAttribute: $@", type: .error, String(describing: type(of: restrictedAttribute)))
+				os_log("Unknown type of NumericAttribute: %@", type: .error, String(describing: type(of: restrictedAttribute)))
 				throw AttributeError.typeMismatch
 		}
 	}

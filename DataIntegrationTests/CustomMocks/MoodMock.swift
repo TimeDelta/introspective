@@ -128,15 +128,6 @@ class MoodMock: Mood, Mock {
 		static func debugDescription(set newValue: Parameter<String>) -> Property { return Property(method: .debugDescription_set(newValue)) }
     }
 
-    static var maxRating: Double { 
-		get {	MoodMock.invocations.append(.maxRating_get)
-				return MoodMock.__maxRating.orFail("MoodMock - value for maxRating was not defined") }
-		set {	MoodMock.invocations.append(.maxRating_set(.value(newValue)))
-				MoodMock.__maxRating = newValue }
-	}
-	private static var __maxRating: (Double)?
-
-
     static var notRated: Double { 
 		get {	MoodMock.invocations.append(.notRated_get)
 				return MoodMock.__notRated.orFail("MoodMock - value for notRated was not defined") }
@@ -175,8 +166,6 @@ class MoodMock: Mood, Mock {
 
     struct StaticProperty {
         fileprivate var method: StaticMethodType
-        static var maxRating: StaticProperty { return StaticProperty(method: .maxRating_get) }
-		static func maxRating(set newValue: Parameter<Double>) -> StaticProperty { return StaticProperty(method: .maxRating_set(newValue)) }
         static var notRated: StaticProperty { return StaticProperty(method: .notRated_get) }
 		static func notRated(set newValue: Parameter<Double>) -> StaticProperty { return StaticProperty(method: .notRated_set(newValue)) }
         static var rating: StaticProperty { return StaticProperty(method: .rating_get) }
@@ -236,8 +225,6 @@ class MoodMock: Mood, Mock {
 
     fileprivate enum StaticMethodType {
 
-        case maxRating_get
-		case maxRating_set(Parameter<Double>)
         case notRated_get
 		case notRated_set(Parameter<Double>)
         case rating_get
@@ -249,8 +236,6 @@ class MoodMock: Mood, Mock {
 
         static func compareParameters(lhs: StaticMethodType, rhs: StaticMethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
-                case (.maxRating_get,.maxRating_get): return true
-				case (.maxRating_set(let left),.maxRating_set(let right)): return Parameter<Double>.compare(lhs: left, rhs: right, with: matcher)
                 case (.notRated_get,.notRated_get): return true
 				case (.notRated_set(let left),.notRated_set(let right)): return Parameter<Double>.compare(lhs: left, rhs: right, with: matcher)
                 case (.rating_get,.rating_get): return true
@@ -265,8 +250,6 @@ class MoodMock: Mood, Mock {
 
         func intValue() -> Int {
             switch self {
-                case .maxRating_get: return 0
-				case .maxRating_set(let newValue): return newValue.intValue
                 case .notRated_get: return 0
 				case .notRated_set(let newValue): return newValue.intValue
                 case .rating_get: return 0

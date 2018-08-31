@@ -58,7 +58,7 @@ class AttributedChooserViewController: UIViewController {
 			let attributeValue = controller.attributeValue!
 			try! currentValue.set(attribute: attribute, to: attributeValue)
 		}
-		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: currentValue, userInfo: nil)
+		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: currentValue)
 	}
 
 	fileprivate func resetScrollView() {

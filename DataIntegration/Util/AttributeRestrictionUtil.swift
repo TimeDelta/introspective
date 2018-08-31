@@ -42,7 +42,7 @@ public class AttributeRestrictionUtilImpl: AttributeRestrictionUtil {
 					}
 					break
 				default:
-					os_log("Skipping attribute restriction: $@", type: .debug, attributeRestriction.description)
+					os_log("Skipping attribute restriction: %@", type: .debug, attributeRestriction.description)
 					break
 			}
 		}

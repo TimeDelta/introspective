@@ -13,6 +13,7 @@ public protocol InjectionProvider {
 
 	func database() -> Database
 	func codableStorage() -> CodableStorage
+	func settings() -> Settings
 	func queryFactory() -> QueryFactory
 	func dataTypeFactory() -> DataTypeFactory
 	func utilFactory() -> UtilFactory

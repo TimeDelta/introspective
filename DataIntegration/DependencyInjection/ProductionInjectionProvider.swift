@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 
 public class ProductionInjectionProvider: InjectionProvider {
 
@@ -14,6 +15,7 @@ public class ProductionInjectionProvider: InjectionProvider {
 
 	fileprivate static let realDatabase = DatabaseImpl()
 	fileprivate static let realCodableStorage = CodableStorageImpl()
+	fileprivate static var realSettings: SettingsImpl!
 	fileprivate static let realQueryFactory = QueryFactoryImpl()
 	fileprivate static let realDataTypeFactory = DataTypeFactoryImpl()
 	fileprivate static let realUtilFactory = UtilFactory()
@@ -24,6 +26,18 @@ public class ProductionInjectionProvider: InjectionProvider {
 
 	public func database() -> Database { return Me.realDatabase }
 	public func codableStorage() -> CodableStorage { return Me.realCodableStorage }
+	public func settings() -> Settings {
+		if Me.realSettings == nil {
+			let fetchRequest = NSFetchRequest<SettingsImpl>(entityName: SettingsImpl.entityName)
+			let existingSettings = try! Me.realDatabase.query(fetchRequest)
+			if existingSettings.count == 0 {
+				Me.realSettings = try! Me.realDatabase.new(objectType: SettingsImpl.self)
+			} else {
+				Me.realSettings = existingSettings[0]
+			}
+		}
+		return Me.realSettings
+	}
 	public func queryFactory() -> QueryFactory { return Me.realQueryFactory }
 	public func dataTypeFactory() -> DataTypeFactory { return Me.realDataTypeFactory }
 	public func utilFactory() -> UtilFactory { return Me.realUtilFactory }

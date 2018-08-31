@@ -51,7 +51,7 @@ public class CodableStorageImpl: CodableStorage {
 			}
 			FileManager.default.createFile(atPath: url.path, contents: data, attributes: nil)
 		} catch {
-			os_log("Failed to store object ($@) in '$@' as '$@': $@", type: .error, String(describing: object), String(describing: directory), fileName, error.localizedDescription)
+			os_log("Failed to store object (%@) in '%@' as '%@': %@", type: .error, String(describing: object), String(describing: directory), fileName, error.localizedDescription)
 			throw error
 		}
 	}
@@ -67,7 +67,7 @@ public class CodableStorageImpl: CodableStorage {
 		let url = getURL(for: directory).appendingPathComponent(fileName, isDirectory: false)
 
 		if !FileManager.default.fileExists(atPath: url.path) {
-			os_log("File at path '$@' does not exist!", type: .error, url.path)
+			os_log("File at path '%@' does not exist!", type: .error, url.path)
 			throw CodableStorageError.fileDoesNotExist
 		}
 
@@ -76,7 +76,7 @@ public class CodableStorageImpl: CodableStorage {
 			let model = try decoder.decode(type, from: data)
 			return model
 		} else {
-			os_log("No data at $@", type: .error, url.path)
+			os_log("No data at %@", type: .error, url.path)
 			throw CodableStorageError.noDataFound
 		}
 	}
