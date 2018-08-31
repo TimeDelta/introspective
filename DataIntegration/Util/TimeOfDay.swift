@@ -102,13 +102,13 @@ public struct TimeOfDay: Equatable {
 		return text
 	}
 
-	fileprivate func userPrefers12hrTime() -> Bool {
+	private func userPrefers12hrTime() -> Bool {
 		let locale = NSLocale.current
 		let formatter = DateFormatter.dateFormat(fromTemplate: "j", options:0, locale:locale)!
 		return formatter.contains("a")
 	}
 
-	fileprivate func padLeft(_ str: String) -> String {
+	private func padLeft(_ str: String) -> String {
 		if str.count == 1 {
 			return "0" + str
 		}

@@ -32,11 +32,11 @@ extension CalendarUtil {
 	}
 }
 
-public class CalendarUtilImpl: CalendarUtil {
+public final class CalendarUtilImpl: CalendarUtil {
 
 	/// Set all components of the specified date less than the specified component to the minimum value for that component.
 	/// - Parameter toBeginningOf: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
-	public func start(of component: Calendar.Component, in date: Date) -> Date {
+	public final func start(of component: Calendar.Component, in date: Date) -> Date {
 		let calendar = Calendar.autoupdatingCurrent
 		let dateInRegion = DateInRegion(date, region: Region(calendar: calendar, zone: calendar.timeZone))
 		let start = dateInRegion.dateAtStartOf(component)
@@ -45,26 +45,26 @@ public class CalendarUtilImpl: CalendarUtil {
 
 	/// Set all components of the specified date less than the specified component to the maximum value for that component.
 	/// - Parameter toBeginningOf: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
-	public func end(of component: Calendar.Component, in date: Date) -> Date {
+	public final func end(of component: Calendar.Component, in date: Date) -> Date {
 		let calendar = Calendar.autoupdatingCurrent
 		let dateInRegion = DateInRegion(date, region: Region(calendar: calendar, zone: calendar.timeZone))
 		let end = dateInRegion.dateAtEndOf(component)
 		return end.date
 	}
 
-	public func string(for date: Date, inFormat format: String) -> String {
+	public final func string(for date: Date, inFormat format: String) -> String {
 		let calendar = Calendar.autoupdatingCurrent
 		let dateInRegion = DateInRegion(date, region: Region(calendar: calendar, zone: calendar.timeZone))
 		return dateInRegion.toFormat(format)
 	}
 
-	public func date(_ date1: Date, occursOnSame component: Calendar.Component, as date2: Date) -> Bool {
+	public final func date(_ date1: Date, occursOnSame component: Calendar.Component, as date2: Date) -> Bool {
 		let startOfDate1 = start(of: component, in: date1)
 		let startOfDate2 = start(of: component, in: date2)
 		return startOfDate1 == startOfDate2
 	}
 
-	public func compare(_ date1: Date?, _ date2: Date?) -> ComparisonResult {
+	public final func compare(_ date1: Date?, _ date2: Date?) -> ComparisonResult {
 		if date1 != nil && date2 != nil {
 			return date1!.compare(date2!)
 		}
@@ -73,21 +73,21 @@ public class CalendarUtilImpl: CalendarUtil {
 		return .orderedSame
 	}
 
-	public func date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek {
+	public final func date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek {
 		let calendar = Calendar.current
 		let dayOfWeekIntForDate = calendar.component(.weekday, from: date) - 1
 		let dayOfWeekForDate = DayOfWeek.fromInt(dayOfWeekIntForDate)
 		return daysOfWeek.contains(dayOfWeekForDate)
 	}
 
-	public func date(_ date: Date, isOnA dayOfWeek: DayOfWeek) -> Bool {
+	public final func date(_ date: Date, isOnA dayOfWeek: DayOfWeek) -> Bool {
 		let calendar = Calendar.current
 		let dayOfWeekIntForDate = calendar.component(.weekday, from: date)
 		let dayOfWeekForDate = DayOfWeek.fromInt(dayOfWeekIntForDate)
 		return dayOfWeekForDate == dayOfWeek
 	}
 
-	public func date(from dateStr: String, format: String) -> Date? {
+	public final func date(from dateStr: String, format: String) -> Date? {
 		let calendar = Calendar.autoupdatingCurrent
 		let region = Region(calendar: calendar, zone: calendar.timeZone)
 		return Date(dateStr, format: format, region: region)

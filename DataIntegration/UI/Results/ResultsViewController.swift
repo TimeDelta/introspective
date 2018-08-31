@@ -9,10 +9,10 @@
 import UIKit
 import os
 
-class ResultsViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
+final class ResultsViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
 
-	fileprivate typealias Me = ResultsViewController
-	fileprivate static let cellHeights: [DataTypes: CGFloat] = [
+	private typealias Me = ResultsViewController
+	private static let cellHeights: [DataTypes: CGFloat] = [
 		// HealthKit
 		.heartRate: 44,
 		.weight: 44,
@@ -22,18 +22,18 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 		.mood: 67,
 	]
 
-	public var dataType: DataTypes!
+	public final var dataType: DataTypes!
 
-	public var extraInformation: [ExtraInformation]! {
+	public final var extraInformation: [ExtraInformation]! {
 		didSet {
 			if error == nil && extraInformation != nil && samples != nil {
 				DispatchQueue.main.async { self.viewIsReady() }
 			}
 		}
 	}
-	fileprivate var extraInformationValues: [String]!
+	private final var extraInformationValues: [String]!
 
-	public var samples: [Sample]! {
+	public final var samples: [Sample]! {
 		didSet {
 			if error == nil && extraInformation != nil && samples != nil  {
 				DispatchQueue.main.async { self.viewIsReady() }
@@ -41,29 +41,29 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 		}
 	}
 
-	public var error: Error? {
+	public final var error: Error? {
 		didSet {
 			DispatchQueue.main.async { self.tableView.reloadData() }
 		}
 	}
 
-	@IBOutlet weak var actionsButton: UIBarButtonItem!
+	@IBOutlet weak final var actionsButton: UIBarButtonItem!
 
-	fileprivate var lastSelectedRowIndex: Int!
-	fileprivate var extraInformationEditIndex: Int!
+	private final var lastSelectedRowIndex: Int!
+	private final var extraInformationEditIndex: Int!
 
-	public override func viewDidLoad() {
+	public final override func viewDidLoad() {
 		disableActionsButton()
 		self.navigationItem.setRightBarButton(actionsButton, animated: true)
 	}
 
 	// MARK: - Table view data source
 
-	override func numberOfSections(in tableView: UITableView) -> Int {
+	final override func numberOfSections(in tableView: UITableView) -> Int {
 		return 2
 	}
 
-	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+	final override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		if section == 0 {
 			return "Extra Information"
 		} else if section == 1 {
@@ -77,7 +77,7 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 		}
 	}
 
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if error != nil {
 			if section == 1 {
 				return 1
@@ -101,7 +101,7 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 		return 0
 	}
 
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let row = indexPath.row
 		let section = indexPath.section
 
@@ -145,26 +145,26 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 		return UITableViewCell()
 	}
 
-	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+	final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		return Me.cellHeights[dataType]!
 	}
 
 	// MARK: - TableView Editing
 
-	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+	final override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 		return indexPath.section == 0
 	}
 
-	override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+	final override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
 		return indexPath.section == 0
 	}
 
-	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		extraInformation.swapAt(fromIndexPath.row, to.row)
 		extraInformationValues.swapAt(fromIndexPath.row, to.row)
 	}
 
-	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+	final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
 			self.extraInformation.remove(at: indexPath.row)
 			self.extraInformationValues.remove(at: indexPath.row)
@@ -177,7 +177,7 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 
 	// MARK: - Navigation
 
-	public override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	public final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.destination is ResultsActionsPopupViewController {
 			let controller = segue.destination as! ResultsActionsPopupViewController
 			controller.modalPresentationStyle = UIModalPresentationStyle.popover
@@ -199,7 +199,7 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 		}
 	}
 
-	@IBAction func saveEditedExtraInformation(_ segue: UIStoryboardSegue) {
+	@IBAction final func saveEditedExtraInformation(_ segue: UIStoryboardSegue) {
 		let controller = segue.source as! SelectExtraInformationViewController
 		extraInformation[extraInformationEditIndex] = controller.selectedInformation
 		recomputeExtraInformation()
@@ -208,47 +208,47 @@ class ResultsViewController: UITableViewController, UIPopoverPresentationControl
 
 	// MARK: - Popover delegation
 
-	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+	final func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
 		return UIModalPresentationStyle.none
 	}
 
 	// MARK: - Helper functions
 
-	fileprivate func viewIsReady() {
+	private final func viewIsReady() {
 		enableActionsButton()
 		recomputeExtraInformation()
 		tableView.reloadData()
 	}
 
-	fileprivate func waiting() -> Bool {
+	private final func waiting() -> Bool {
 		return extraInformation == nil || samples == nil || extraInformationValues == nil
 	}
 
-	fileprivate func recomputeExtraInformation() {
+	private final func recomputeExtraInformation() {
 		extraInformationValues = [String]()
 		for index in 0 ..< extraInformation.count {
 			extraInformationValues.append(try! extraInformation[index].compute(forSamples: samples))
 		}
 	}
 
-	fileprivate func disableActionsButton() {
+	private final func disableActionsButton() {
 		actionsButton.isEnabled = false
 		actionsButton.tintColor = UIColor.darkGray
 	}
 
-	fileprivate func enableActionsButton() {
+	private final func enableActionsButton() {
 		actionsButton.isEnabled = true
 		actionsButton.tintColor = nil
 	}
 
-	@objc fileprivate func graphButtonPressed() {
+	@objc private final func graphButtonPressed() {
 		let controller = UIStoryboard(name: "Graph", bundle: nil).instantiateViewController(withIdentifier: "GraphCustomizationViewController") as! GraphCustomizationViewController
 		controller.samples = samples
 		controller.dataType = dataType
 		navigationController?.pushViewController(controller, animated: false)
 	}
 
-	@objc fileprivate func addInformationButtonPressed() {
+	@objc private final func addInformationButtonPressed() {
 		let attribute = samples[0].dataType.defaultDependentAttribute
 		let information = DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: attribute)[0].init(attribute)
 		extraInformation.append(information)

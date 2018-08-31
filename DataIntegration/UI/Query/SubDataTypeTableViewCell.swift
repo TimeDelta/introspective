@@ -8,22 +8,22 @@
 
 import UIKit
 
-class SubDataTypeTableViewCell: UITableViewCell {
+final class SubDataTypeTableViewCell: UITableViewCell {
 
-	public var matcher: SubQueryMatcher! {
+	public final var matcher: SubQueryMatcher! {
 		didSet {
 			guard let matcher = matcher else { return }
 			subQueryMatcherDescriptionLabel.text = matcher.description
 		}
 	}
 
-	public var dataType: DataTypes! {
+	public final var dataType: DataTypes! {
 		didSet {
 			guard let dataType = dataType else { return }
 			dataTypeLabel.text = dataType.description
 		}
 	}
 
-	@IBOutlet weak var dataTypeLabel: UILabel!
-	@IBOutlet weak var subQueryMatcherDescriptionLabel: UILabel!
+	@IBOutlet weak final var dataTypeLabel: UILabel!
+	@IBOutlet weak final var subQueryMatcherDescriptionLabel: UILabel!
 }

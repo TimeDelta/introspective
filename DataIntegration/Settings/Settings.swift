@@ -28,34 +28,34 @@ public protocol Settings: CoreDataObject {
 	func save()
 }
 
-public class SettingsImpl: NSManagedObject, Settings {
+public final class SettingsImpl: NSManagedObject, Settings {
 
 	private typealias Me = SettingsImpl
 	public static let entityName = "Settings"
 
-	private var newMaxMood: Double? = nil
-	public var maximumMood: Double {
+	private final var newMaxMood: Double? = nil
+	public final var maximumMood: Double {
 		if newMaxMood != nil {
 			return newMaxMood!
 		}
 		return maxMood
 	}
 
-	public func changed(_ setting: Setting) -> Bool {
+	public final func changed(_ setting: Setting) -> Bool {
 		switch (setting) {
 			case .maxMood: return newMaxMood != nil
 		}
 	}
 
-	public func setMaxMood(_ value: Double) {
+	public final func setMaxMood(_ value: Double) {
 		newMaxMood = value
 	}
 
-	public func reset() {
+	public final func reset() {
 		newMaxMood = nil
 	}
 
-	public func save() {
+	public final func save() {
 		maxMood = newMaxMood ?? maxMood
 		DependencyInjector.db.save()
 		reset()

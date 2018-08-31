@@ -9,9 +9,9 @@
 import Foundation
 import UIKit
 
-public class MoodUiUtil {
+public final class MoodUiUtil {
 
-	fileprivate typealias Me = MoodUiUtil
+	private typealias Me = MoodUiUtil
 
 	public static let minRatingColor = UIColor.black
 	public static let maxRatingColor = UIColor.yellow

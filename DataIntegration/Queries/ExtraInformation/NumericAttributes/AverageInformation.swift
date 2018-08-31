@@ -8,15 +8,15 @@
 
 import Foundation
 
-public class AverageInformation: AnyInformation {
+public final class AverageInformation: AnyInformation {
 
-	public override var key: String { get { return "Average" } }
+	public final override var key: String { get { return "Average" } }
 
 	public required init(_ attribute: Attribute) {
 		super.init(attribute)
 	}
 
-	public override func compute(forSamples samples: [Sample]) -> String {
+	public final override func compute(forSamples samples: [Sample]) -> String {
 		let filteredSamples = DependencyInjector.util.sampleUtil.getOnly(samples: samples, from: startDate, to: endDate)
 		return String(DependencyInjector.util.numericSampleUtil.average(for: attribute, over: filteredSamples))
 	}

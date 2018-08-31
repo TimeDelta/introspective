@@ -15,11 +15,11 @@ public protocol TextNormalizationUtil {
 	func removePunctuation(_ text: String) -> String
 }
 
-public class TextNormalizationUtilImpl: TextNormalizationUtil {
+public final class TextNormalizationUtilImpl: TextNormalizationUtil {
 
-	fileprivate typealias Me = TextNormalizationUtilImpl
+	private typealias Me = TextNormalizationUtilImpl
 
-	fileprivate static let contractions = [
+	private static let contractions = [
 		"ain't": "am not",
 		"aren't": "are not",
 		"can't've": "cannot have",
@@ -139,17 +139,17 @@ public class TextNormalizationUtilImpl: TextNormalizationUtil {
 		"you've": "you have"
 	]
 
-	fileprivate static let punctuationRegex = try! NSRegularExpression(pattern: "[^a-zA-Z0-9]+")
-	fileprivate static let decimalEndingReplacementRegex = try! NSRegularExpression(pattern: "\\.?0+$")
-	fileprivate static let numberOrderTokenEndingRegex = try! NSRegularExpression(pattern: "(st|nd|rd|th)$")
+	private static let punctuationRegex = try! NSRegularExpression(pattern: "[^a-zA-Z0-9]+")
+	private static let decimalEndingReplacementRegex = try! NSRegularExpression(pattern: "\\.?0+$")
+	private static let numberOrderTokenEndingRegex = try! NSRegularExpression(pattern: "(st|nd|rd|th)$")
 
-	fileprivate static let numberWordsArray = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety", "hundred", "thousand", "million", "billion", "trillion", "quadrillion", "quintillion"]
-	fileprivate static let numberWords = Set<String>(numberWordsArray)
-	fileprivate static let numberOrderTokensArray = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth", "seventeenth", "eighteenth", "nineteenth", "twentieth", "thirtieth", "fortieth", "fiftieth", "sixtieth", "seventieth", "eightieth", "ninetieth", "hundredth", "thousandth", "millionth", "billionth", "trillionth", "quadrillionth", "quintillionth"]
-	fileprivate static let numberOrderTokens = Set<String>(numberOrderTokensArray)
-	fileprivate static let hyphenatedNumberWords = Set<String>(["twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" ])
+	private static let numberWordsArray = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety", "hundred", "thousand", "million", "billion", "trillion", "quadrillion", "quintillion"]
+	private static let numberWords = Set<String>(numberWordsArray)
+	private static let numberOrderTokensArray = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth", "seventeenth", "eighteenth", "nineteenth", "twentieth", "thirtieth", "fortieth", "fiftieth", "sixtieth", "seventieth", "eightieth", "ninetieth", "hundredth", "thousandth", "millionth", "billionth", "trillionth", "quadrillionth", "quintillionth"]
+	private static let numberOrderTokens = Set<String>(numberOrderTokensArray)
+	private static let hyphenatedNumberWords = Set<String>(["twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" ])
 
-	public func expandContractions(_ text: String) -> String {
+	public final func expandContractions(_ text: String) -> String {
 		var expandedText = text
 		for contractionReplacement in Me.contractions {
 			expandedText = expandedText.replacingOccurrences(of: contractionReplacement.key, with: contractionReplacement.value)
@@ -157,7 +157,7 @@ public class TextNormalizationUtilImpl: TextNormalizationUtil {
 		return expandedText
 	}
 
-	public func normalizeNumbers(_ text: String) -> String {
+	public final func normalizeNumbers(_ text: String) -> String {
 		var previousNumberWordShouldBeHyphenated = false
 		var englishNumber = String()
 		var finalText = text
@@ -195,11 +195,11 @@ public class TextNormalizationUtilImpl: TextNormalizationUtil {
 		return finalText
 	}
 
-	public func removePunctuation(_ text: String) -> String {
+	public final func removePunctuation(_ text: String) -> String {
 		return Me.punctuationRegex.stringByReplacingMatches(in: text, options: [], range: NSMakeRange(0, text.count), withTemplate: "")
 	}
 
-	fileprivate func appendAppropriateSeparatorToEnglishNumber(_ englishNumber: inout String, _ previousNumberWordShouldBeHyphenated: inout Bool) {
+	private func appendAppropriateSeparatorToEnglishNumber(_ englishNumber: inout String, _ previousNumberWordShouldBeHyphenated: inout Bool) {
 		if previousNumberWordShouldBeHyphenated {
 			englishNumber.append("-")
 			previousNumberWordShouldBeHyphenated = false
@@ -208,7 +208,7 @@ public class TextNormalizationUtilImpl: TextNormalizationUtil {
 		}
 	}
 
-	fileprivate func replaceEnglishNumber(text: String, englishNum: String, _ additionalEnding: String? = nil) -> String {
+	private func replaceEnglishNumber(text: String, englishNum: String, _ additionalEnding: String? = nil) -> String {
 		let numberFormatter:NumberFormatter = NumberFormatter()
 		numberFormatter.numberStyle = .spellOut
 
@@ -226,7 +226,7 @@ public class TextNormalizationUtilImpl: TextNormalizationUtil {
 		return englishNumberRegex.stringByReplacingMatches(in: text, options: [], range: NSMakeRange(0, text.count), withTemplate: number)
 	}
 
-	fileprivate func convertNumberOrderTokenToEnglishNumberWord(_ token: String) -> String {
+	private func convertNumberOrderTokenToEnglishNumberWord(_ token: String) -> String {
 		for i in 0 ..< Me.numberOrderTokensArray.count {
 			if Me.numberOrderTokensArray[i] == token {
 				return Me.numberWordsArray[i]

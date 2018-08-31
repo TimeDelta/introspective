@@ -10,14 +10,14 @@ import UIKit
 import Charts
 import SwiftDate
 
-class LineChartViewController: ChartViewController {
+final class LineChartViewController: ChartViewController {
 
-	fileprivate var xAxisAttribute: Attribute!
-	fileprivate var yAxisAttribute: Attribute!
+	private final var xAxisAttribute: Attribute!
+	private final var yAxisAttribute: Attribute!
 
-	@IBOutlet weak var chartView: LineChartView!
+	@IBOutlet weak final var chartView: LineChartView!
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		xAxisAttribute = (properties[.xAxisAttribute]! as! Attribute)
@@ -47,14 +47,14 @@ class LineChartViewController: ChartViewController {
 		if xAxisAttribute is DateAttribute {
 			marker.earliestDate = try! samples[0].value(of: xAxisAttribute) as! Date
 		}
-        marker.chartView = chartView
-        marker.minimumSize = CGSize(width: 80, height: 40)
-        chartView.marker = marker
+		marker.chartView = chartView
+		marker.minimumSize = CGSize(width: 80, height: 40)
+		chartView.marker = marker
 
 		updateChartData()
 	}
 
-	fileprivate func updateChartData() {
+	private final func updateChartData() {
 		let dataEntries = samples.map { (sample: Sample) -> ChartDataEntry in
 			let xValue = getDouble(for: xAxisAttribute, from: sample)
 			let yValue = getDouble(for: yAxisAttribute, from: sample)
@@ -76,10 +76,10 @@ class LineChartViewController: ChartViewController {
 			ChartColorTemplates.colorFromString("#00ff0000").cgColor,
 			ChartColorTemplates.colorFromString("#ffff0000").cgColor,
 		]
-        let gradient = CGGradient(colorsSpace: nil, colors: gradientColors as CFArray, locations: nil)!
+		let gradient = CGGradient(colorsSpace: nil, colors: gradientColors as CFArray, locations: nil)!
 
-        dataSet.fill = Fill(linearGradient: gradient, angle: 90)
-        dataSet.drawFilledEnabled = true
+		dataSet.fill = Fill(linearGradient: gradient, angle: 90)
+		dataSet.drawFilledEnabled = true
 
 		let data = LineChartData(dataSet: dataSet)
 		chartView.data = data
@@ -87,7 +87,7 @@ class LineChartViewController: ChartViewController {
 		chartView.animate(xAxisDuration: 2, yAxisDuration: 2)
 	}
 
-	fileprivate func getDouble(for attribute: Attribute, from sample: Sample) -> Double {
+	private final func getDouble(for attribute: Attribute, from sample: Sample) -> Double {
 		let value: Any = try! sample.value(of: attribute)
 		if value is Date {
 			let earliestDate = try! samples[0].value(of: attribute) as! Date
@@ -102,6 +102,7 @@ class LineChartViewController: ChartViewController {
 		} else if value is Int {
 			return Double(value as! Int)
 		}
+		// TODO - gracefully tell user about this
 		fatalError("Forgot an x-axis data type")
 	}
 }

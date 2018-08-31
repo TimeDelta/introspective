@@ -9,7 +9,7 @@
 import UIKit
 import os
 
-class AttributeListAcceptButtonViewController: UIViewController {
+final class AttributeListAcceptButtonViewController: UIViewController {
 
-	@IBOutlet weak var acceptButton: UIButton!
+	@IBOutlet weak final var acceptButton: UIButton!
 }

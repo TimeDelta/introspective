@@ -8,20 +8,17 @@
 
 import UIKit
 
-class AttributeViewController: UIViewController, UIPopoverPresentationControllerDelegate {
+final class AttributeViewController: UIViewController, UIPopoverPresentationControllerDelegate {
 
-	public var attribute: Attribute!
-	public var attributeValue: Any! {
-		didSet {
-		}
-	}
+	public final var attribute: Attribute!
+	public final var attributeValue: Any!
 
-	@IBOutlet weak var attributeDescriptionButton: UIButton!
-	@IBOutlet weak var attributeNameLabel: UILabel!
-	@IBOutlet weak var attributeValueButton: UIButton!
-	@IBOutlet weak var booleanValueSwitch: UISwitch!
+	@IBOutlet weak final var attributeDescriptionButton: UIButton!
+	@IBOutlet weak final var attributeNameLabel: UILabel!
+	@IBOutlet weak final var attributeValueButton: UIButton!
+	@IBOutlet weak final var booleanValueSwitch: UISwitch!
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		attributeNameLabel.text = attribute.name + ":"
@@ -35,11 +32,11 @@ class AttributeViewController: UIViewController, UIPopoverPresentationController
 		updateDisplay()
 	}
 
-	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+	final func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
 		return UIModalPresentationStyle.none
 	}
 
-	public override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	public final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		segue.destination.modalPresentationStyle = UIModalPresentationStyle.popover
 		segue.destination.popoverPresentationController!.delegate = self
 
@@ -53,17 +50,17 @@ class AttributeViewController: UIViewController, UIPopoverPresentationController
 		}
 	}
 
-	@IBAction func booleanValueChanged(_ sender: Any) {
+	@IBAction final func booleanValueChanged(_ sender: Any) {
 		attributeValue = booleanValueSwitch.isOn
 	}
 
-	@IBAction func saveAttributeValue(_ segue: UIStoryboardSegue) {
+	@IBAction final func saveAttributeValue(_ segue: UIStoryboardSegue) {
 		let controller = (segue.source as! AttributeValueViewController)
 		attributeValue = controller.attributeValue!
 		updateDisplay()
 	}
 
-	fileprivate func updateDisplay() {
+	private final func updateDisplay() {
 		if attribute is BooleanAttribute {
 			if attributeValue == nil {
 				attributeValue = true

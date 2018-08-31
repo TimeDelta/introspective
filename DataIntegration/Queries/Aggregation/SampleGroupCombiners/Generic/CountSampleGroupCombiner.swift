@@ -8,19 +8,19 @@
 
 import Foundation
 
-public class CountSampleGroupCombiner: SampleGroupCombiner {
+public final class CountSampleGroupCombiner: SampleGroupCombiner {
 
 	public static let name = "Count"
 
-	public let descriptionIsPlural: Bool = true
-	public var description: String {
+	public final let descriptionIsPlural: Bool = true
+	public final var description: String {
 		return "number of"
 	}
 
 	public required init() {}
 
 	/// - Parameter groups: Must not pass empty sample array for a group
-	public func combine(groups: [(Any, [Sample])], groupedBy groupAttribute: Attribute, combinationAttribute: Attribute) -> [Sample] {
+	public final func combine(groups: [(Any, [Sample])], groupedBy groupAttribute: Attribute, combinationAttribute: Attribute) -> [Sample] {
 		var combinedSamples = [Sample]()
 		for (groupValue, samples) in groups {
 			let name = samples[0].name

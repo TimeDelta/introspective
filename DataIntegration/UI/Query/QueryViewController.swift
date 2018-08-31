@@ -9,11 +9,11 @@
 import UIKit
 import os
 
-class QueryViewController: UITableViewController {
+final class QueryViewController: UITableViewController {
 
-	fileprivate typealias Me = QueryViewController
-	fileprivate static let acceptedAttributeRestrictionEdit = Notification.Name("acceptedAttributeRestrictionEdit")
-	fileprivate static let acceptedSubDataTypeEdit = Notification.Name("acceptedSubDataTypeEdit")
+	private typealias Me = QueryViewController
+	private static let acceptedAttributeRestrictionEdit = Notification.Name("acceptedAttributeRestrictionEdit")
+	private static let acceptedSubDataTypeEdit = Notification.Name("acceptedSubDataTypeEdit")
 
 	public enum CellType: CustomStringConvertible {
 		case dataType
@@ -45,11 +45,11 @@ class QueryViewController: UITableViewController {
 		}
 	}
 
-	var parts: [Any]!
-	var cellTypes: [CellType]!
-	var editedIndex: Int!
+	final var parts: [Any]!
+	final var cellTypes: [CellType]!
+	final var editedIndex: Int!
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		self.navigationItem.rightBarButtonItem = self.editButtonItem
@@ -66,11 +66,11 @@ class QueryViewController: UITableViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedSubQueryDataType), name: Me.acceptedSubDataTypeEdit, object: nil)
 	}
 
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return parts.count
 	}
 
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let index = indexPath.row
 		let part = parts[index]
 
@@ -97,20 +97,20 @@ class QueryViewController: UITableViewController {
 		}
 	}
 
-	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+	final override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 		return indexPath.row != 0
 	}
 
-	override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+	final override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
 		return indexPath.row != 0
 	}
 
-	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		parts.swapAt(fromIndexPath.row, to.row)
 		cellTypes.swapAt(fromIndexPath.row, to.row)
 	}
 
-	override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+	final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
 			self.parts.remove(at: indexPath.row)
 			self.cellTypes.remove(at: indexPath.row)
@@ -121,7 +121,7 @@ class QueryViewController: UITableViewController {
 		return [delete]
 	}
 
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.destination is AddToQueryViewController {
 			segue.destination.modalPresentationStyle = UIModalPresentationStyle.popover
 			segue.destination.popoverPresentationController!.delegate = self
@@ -151,24 +151,24 @@ class QueryViewController: UITableViewController {
 		}
 	}
 
-	@IBAction func saveEditedDataType(_ segue: UIStoryboardSegue) {
+	@IBAction final func saveEditedDataType(_ segue: UIStoryboardSegue) {
 		let controller = (segue.source as! EditDataTypeViewController)
 		let index = controller.dataTypeSelector.selectedRow(inComponent: 0)
 		parts[editedIndex] = DataTypeInfo(DataTypes.allTypes[index])
 		tableView.reloadData()
 	}
 
-	@objc func saveEditedAttributeRestriction(notification: Notification) {
+	@objc final func saveEditedAttributeRestriction(notification: Notification) {
 		parts[editedIndex] = notification.object as! AttributeRestriction
 		tableView.reloadData()
 	}
 
-	@objc func saveEditedSubQueryDataType(notification: Notification) {
+	@objc final func saveEditedSubQueryDataType(notification: Notification) {
 		parts[editedIndex] = notification.object as! DataTypeInfo
 		tableView.reloadData()
 	}
 
-	@IBAction func addQuestionPart(_ segue: UIStoryboardSegue) {
+	@IBAction final func addQuestionPart(_ segue: UIStoryboardSegue) {
 		if segue.identifier == "addQuestionPart" {
 			let controller = (segue.source as! AddToQueryViewController)
 			let cellType = controller.cellType!
@@ -189,13 +189,15 @@ class QueryViewController: UITableViewController {
 		}
 	}
 
-	@IBAction func cancel(_ segue: UIStoryboardSegue) {} // do nothing
+	@IBAction final func cancel(_ segue: UIStoryboardSegue) {} // do nothing
 
-	fileprivate func bottomMostDataType() -> DataTypes {
+	// Mark: - Helper Functions
+
+	private final func bottomMostDataType() -> DataTypes {
 		return bottomMostDataType(in: parts)
 	}
 
-	fileprivate func bottomMostDataType(in parts: [Any]) -> DataTypes {
+	private final func bottomMostDataType(in parts: [Any]) -> DataTypes {
 		var index = cellTypes.count - 1
 		while index >= 0 && cellTypes[index] != .dataType {
 			index -= 1
@@ -203,7 +205,7 @@ class QueryViewController: UITableViewController {
 		return (parts[index] as! DataTypeInfo).dataType
 	}
 
-	fileprivate func bottomMostDataTypeAbove(index: Int) -> DataTypes {
+	private final func bottomMostDataTypeAbove(index: Int) -> DataTypes {
 		for part in parts[0 ... index].reversed() {
 			if part is DataTypeInfo {
 				return (part as! DataTypeInfo).dataType
@@ -212,7 +214,7 @@ class QueryViewController: UITableViewController {
 		return (parts[0] as! DataTypeInfo).dataType // this will never happen but the compiler can't know that
 	}
 
-	fileprivate func closestDataType(aboveIndex: Int) -> DataTypes {
+	private final func closestDataType(aboveIndex: Int) -> DataTypes {
 		var index = aboveIndex
 		while index >= 0 && cellTypes[index] != .dataType {
 			index -= 1
@@ -220,12 +222,12 @@ class QueryViewController: UITableViewController {
 		return (parts[index] as! DataTypeInfo).dataType
 	}
 
-	fileprivate func partWasAdded() {
+	private final func partWasAdded() {
 		let indexPath = IndexPath(row: cellTypes.count - 1, section: 0)
 		tableView.insertRows(at: [indexPath], with: .automatic)
 	}
 
-	fileprivate func buildAndRunQuery(_ controller: ResultsViewController) {
+	private final func buildAndRunQuery(_ controller: ResultsViewController) {
 		let query = buildQuery()
 
 		query.runQuery { (result: QueryResult?, error: Error?) in
@@ -238,7 +240,7 @@ class QueryViewController: UITableViewController {
 		}
 	}
 
-	fileprivate func buildQuery() -> Query {
+	private final func buildQuery() -> Query {
 		let partsSplitByQuery = splitPartsByQuery()
 		var currentTopmostQuery: Query? = nil
 		for parts in partsSplitByQuery {
@@ -271,7 +273,7 @@ class QueryViewController: UITableViewController {
 		return currentTopmostQuery!
 	}
 
-	fileprivate func buildQuery(_ query: inout Query, from parts: [Any]) {
+	private final func buildQuery(_ query: inout Query, from parts: [Any]) {
 		for part in parts.reversed() {
 			if part is AttributeRestriction {
 				query.attributeRestrictions.append((part as! AttributeRestriction))
@@ -281,7 +283,7 @@ class QueryViewController: UITableViewController {
 		}
 	}
 
-	fileprivate func splitPartsByQuery() -> [[Any]] {
+	private final func splitPartsByQuery() -> [[Any]] {
 		var partsSplitByQuery = [[Any]]()
 		var currentParts = [Any]()
 		for part in parts {
@@ -297,7 +299,7 @@ class QueryViewController: UITableViewController {
 		return partsSplitByQuery
 	}
 
-	fileprivate func distanceToNextDataType(index: Int) -> Int {
+	private final func distanceToNextDataType(index: Int) -> Int {
 		var distance = 0
 		for part in parts {
 			if part is DataTypeInfo {

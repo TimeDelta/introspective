@@ -16,17 +16,17 @@ public protocol DataTypeFactory {
 	func mood() -> Mood
 }
 
-public class DataTypeFactoryImpl: DataTypeFactory {
+public final class DataTypeFactoryImpl: DataTypeFactory {
 
-	public func heartRate(value: Double) -> HeartRate {
+	public final func heartRate(value: Double) -> HeartRate {
 		return HeartRate(value)
 	}
 
-	public func heartRate(_ sample: HKQuantitySample) -> HeartRate {
+	public final func heartRate(_ sample: HKQuantitySample) -> HeartRate {
 		return HeartRate(sample)
 	}
 
-	public func mood() -> Mood {
+	public final func mood() -> Mood {
 		return try! DependencyInjector.db.new(objectType: MoodImpl.self)
 	}
 }

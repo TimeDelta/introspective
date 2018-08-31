@@ -18,7 +18,7 @@ public extension Date {
 		return get(.backward, dayOfWeek)
 	}
 
-	fileprivate func get(_ direction: Calendar.SearchDirection, _ dayOfWeek: DayOfWeek) -> Date {
+	private func get(_ direction: Calendar.SearchDirection, _ dayOfWeek: DayOfWeek) -> Date {
 		let dayIndex = dayOfWeek.intValue
 		let calendar = Calendar(identifier: .gregorian)
 		var nextDateComponent = DateComponents()

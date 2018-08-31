@@ -8,21 +8,21 @@
 
 import UIKit
 
-class AttributeValueViewController: UIViewController {
+final class AttributeValueViewController: UIViewController {
 
-	fileprivate typealias Me = AttributeValueViewController
-	fileprivate static let valueIsInvalidNotification = Notification.Name("invalidValue")
-	fileprivate static let valueIsValidNotification = Notification.Name("validValue")
+	private typealias Me = AttributeValueViewController
+	private static let valueIsInvalidNotification = Notification.Name("invalidValue")
+	private static let valueIsValidNotification = Notification.Name("validValue")
 
-	public var attribute: Attribute!
-	public var attributeValue: Any!
+	public final var attribute: Attribute!
+	public final var attributeValue: Any!
 
-	@IBOutlet weak var stackView: UIStackView!
-	@IBOutlet weak var acceptButton: UIButton!
+	@IBOutlet weak final var stackView: UIStackView!
+	@IBOutlet weak final var acceptButton: UIButton!
 
-	fileprivate var subViewController: AttributeValueTypeViewController!
+	private final var subViewController: AttributeValueTypeViewController!
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		if attribute is SelectOneAttribute {
@@ -70,17 +70,17 @@ class AttributeValueViewController: UIViewController {
 		}
 	}
 
-	@IBAction func accepted(_ sender: Any) {
+	@IBAction final func accepted(_ sender: Any) {
 		attributeValue = subViewController.currentValue
 	}
 
-	@objc fileprivate func disableAcceptButton() {
+	@objc private final func disableAcceptButton() {
 		acceptButton.isEnabled = false
 		acceptButton.isUserInteractionEnabled = false
 		acceptButton.backgroundColor = UIColor.gray
 	}
 
-	@objc fileprivate func enableAcceptButton() {
+	@objc private final func enableAcceptButton() {
 		acceptButton.isEnabled = true
 		acceptButton.isUserInteractionEnabled = true
 		acceptButton.backgroundColor = UIColor.black

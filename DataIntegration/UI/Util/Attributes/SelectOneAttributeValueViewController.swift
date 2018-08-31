@@ -8,13 +8,13 @@
 
 import UIKit
 
-class SelectOneAttributeValueViewController: AttributeValueTypeViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+final class SelectOneAttributeValueViewController: AttributeValueTypeViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 
-	public var selectOneAttribute: SelectOneAttribute!
+	public final var selectOneAttribute: SelectOneAttribute!
 
-	@IBOutlet weak var selectOnePicker: UIPickerView!
+	@IBOutlet weak final var selectOnePicker: UIPickerView!
 
-	public override func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		selectOnePicker.delegate = self
@@ -28,20 +28,20 @@ class SelectOneAttributeValueViewController: AttributeValueTypeViewController, U
 		}
 	}
 
-	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
+	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 		return selectOneAttribute.possibleValues.count
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		let value = selectOneAttribute.possibleValues[row]
 		return try! selectOneAttribute.convertToString(from: value)
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 		currentValue = selectOneAttribute.possibleValues[row]
 	}
 }

@@ -8,9 +8,9 @@
 
 import Foundation
 
-public class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Equatable {
+public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Equatable {
 
-	fileprivate typealias Me = OnDayOfWeekAttributeRestriction
+	private typealias Me = OnDayOfWeekAttributeRestriction
 
 	public static func ==(lhs: OnDayOfWeekAttributeRestriction, rhs: OnDayOfWeekAttributeRestriction) -> Bool {
 		return lhs.equalTo(rhs)
@@ -21,13 +21,13 @@ public class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Equatabl
 		daysOfWeekAttribute,
 	]
 
-	public override var name: String { return "On day(s) of the week" }
-	public override var description: String {
+	public final override var name: String { return "On day(s) of the week" }
+	public final override var description: String {
 		let daysOfWeekText = try! Me.daysOfWeekAttribute.convertToDisplayableString(from: daysOfWeek)
 		return "On a " + daysOfWeekText
 	}
 
-	public var daysOfWeek: Set<DayOfWeek>
+	public final var daysOfWeek: Set<DayOfWeek>
 
 	public required convenience init(attribute: Attribute) {
 		self.init(attribute: attribute, daysOfWeek: Set<DayOfWeek>())
@@ -38,14 +38,14 @@ public class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Equatabl
 		super.init(attribute: attribute, attributes: Me.attributes)
 	}
 
-	public override func value(of attribute: Attribute) throws -> Any {
+	public final override func value(of attribute: Attribute) throws -> Any {
 		if attribute.name != Me.daysOfWeekAttribute.name {
 			throw AttributeError.unknownAttribute
 		}
 		return daysOfWeek
 	}
 
-	public override func set(attribute: Attribute, to value: Any) throws {
+	public final override func set(attribute: Attribute, to value: Any) throws {
 		if attribute.name != Me.daysOfWeekAttribute.name {
 			throw AttributeError.unknownAttribute
 		}
@@ -53,24 +53,24 @@ public class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Equatabl
 		daysOfWeek = castedValue
 	}
 
-	public override func samplePasses(_ sample: Sample) throws -> Bool {
+	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		guard let sampleDate = try sample.value(of: restrictedAttribute) as? Date else { throw AttributeError.typeMismatch }
 		return DependencyInjector.util.calendarUtil.date(sampleDate, isOnOneOf: daysOfWeek)
 	}
 
-	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is OnDayOfWeekAttributeRestriction) { return false }
 		let other = otherAttributed as! OnDayOfWeekAttributeRestriction
 		return equalTo(other)
 	}
 
-	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is OnDayOfWeekAttributeRestriction) { return false }
 		let other = otherRestriction as! OnDayOfWeekAttributeRestriction
 		return equalTo(other)
 	}
 
-	public func equalTo(_ other: OnDayOfWeekAttributeRestriction) -> Bool {
+	public final func equalTo(_ other: OnDayOfWeekAttributeRestriction) -> Bool {
 		return restrictedAttribute.equalTo(other.restrictedAttribute) && daysOfWeek == other.daysOfWeek
 	}
 }

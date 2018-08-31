@@ -9,12 +9,12 @@
 import UIKit
 import Presentr
 
-class MoodSettingsViewController: UIViewController {
+final class MoodSettingsViewController: UIViewController {
 
 	private typealias Me = MoodSettingsViewController
 	private static let answeredOldMoodsModalNotification = Notification.Name("answeredScaleOldMoodsQuestion")
 
-	private let presenter: Presentr = {
+	private final let presenter: Presentr = {
 		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
 
 		let customPresenter = Presentr(presentationType: customType)
@@ -25,9 +25,9 @@ class MoodSettingsViewController: UIViewController {
 		return customPresenter
 	}()
 
-	@IBOutlet weak var maxMoodField: UITextField!
+	@IBOutlet weak final var maxMoodField: UITextField!
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		updateUI()
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(reset))
@@ -50,7 +50,7 @@ class MoodSettingsViewController: UIViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(saveAndGoBackToSettings), name: Me.answeredOldMoodsModalNotification, object: nil)
 	}
 
-	@IBAction func doneEditingMaxMood(_ sender: Any) {
+	@IBAction final func doneEditingMaxMood(_ sender: Any) {
 		if !DependencyInjector.util.stringUtil.isNumber(maxMoodField.text!) {
 			maxMoodField.text = String(DependencyInjector.settings.maximumMood)
 		}
@@ -61,7 +61,7 @@ class MoodSettingsViewController: UIViewController {
 		updateUI()
 	}
 
-	@objc private func done() {
+	@objc private final func done() {
 		if DependencyInjector.util.stringUtil.isNumber(maxMoodField.text!) {
 			DependencyInjector.settings.setMaxMood(Double(maxMoodField.text!)!)
 		}
@@ -74,12 +74,12 @@ class MoodSettingsViewController: UIViewController {
 		saveAndGoBackToSettings()
 	}
 
-	@objc private func saveAndGoBackToSettings() {
+	@objc private final func saveAndGoBackToSettings() {
 		DependencyInjector.settings.save()
 		let _ = self.navigationController?.popViewController(animated: true)
 	}
 
-	private func updateUI() {
+	private final func updateUI() {
 		let formatter = NumberFormatter()
 		formatter.numberStyle = .decimal
 		maxMoodField.text = MoodUiUtil.valueToString(DependencyInjector.settings.maximumMood)

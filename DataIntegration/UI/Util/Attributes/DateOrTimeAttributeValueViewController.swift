@@ -8,14 +8,14 @@
 
 import UIKit
 
-class DateOrTimeAttributeValueViewController: AttributeValueTypeViewController {
+final class DateOrTimeAttributeValueViewController: AttributeValueTypeViewController {
 
-	public var dateAttribute: DateAttribute!
-	public var timeOfDayAttribute: TimeOfDayAttribute!
+	public final var dateAttribute: DateAttribute!
+	public final var timeOfDayAttribute: TimeOfDayAttribute!
 
-	@IBOutlet weak var datePicker: UIDatePicker!
+	@IBOutlet weak final var datePicker: UIDatePicker!
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		if dateAttribute != nil {
@@ -44,7 +44,7 @@ class DateOrTimeAttributeValueViewController: AttributeValueTypeViewController {
 		}
 	}
 
-	@IBAction func dateValueChanged(_ sender: Any) {
+	@IBAction final func dateValueChanged(_ sender: Any) {
 		if timeOfDayAttribute != nil {
 			currentValue = TimeOfDay(datePicker.date)
 		} else if dateAttribute.includeTime {

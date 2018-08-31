@@ -9,16 +9,16 @@
 import UIKit
 import os
 
-class SelectExtraInformationViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+final class SelectExtraInformationViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 
-	public var attributes: [Attribute]!
-	public var selectedAttribute: Attribute!
-	public var selectedInformation: ExtraInformation!
+	public final var attributes: [Attribute]!
+	public final var selectedAttribute: Attribute!
+	public final var selectedInformation: ExtraInformation!
 
-	@IBOutlet weak var attributePicker: UIPickerView!
-	@IBOutlet weak var informationPicker: UIPickerView!
+	@IBOutlet weak final var attributePicker: UIPickerView!
+	@IBOutlet weak final var informationPicker: UIPickerView!
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		attributePicker.delegate = self
@@ -39,11 +39,11 @@ class SelectExtraInformationViewController: UIViewController, UIPickerViewDelega
 		informationPicker.selectRow(selectedInformationIndex, inComponent: 0, animated: false)
 	}
 
-	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
+	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 		if pickerView == attributePicker {
 			return attributes.count
 		}
@@ -54,7 +54,7 @@ class SelectExtraInformationViewController: UIViewController, UIPickerViewDelega
 		return 0
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		if pickerView == attributePicker {
 			return attributes[row].name
 		}
@@ -65,7 +65,7 @@ class SelectExtraInformationViewController: UIViewController, UIPickerViewDelega
 		return nil
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 		if pickerView == attributePicker {
 			selectedAttribute = attributes[row]
 			informationPicker.reloadAllComponents()
@@ -76,7 +76,7 @@ class SelectExtraInformationViewController: UIViewController, UIPickerViewDelega
 		}
 	}
 
-	fileprivate func getApplicableInformationTypesForSelectedAttribute() -> [ExtraInformation.Type] {
+	private final func getApplicableInformationTypesForSelectedAttribute() -> [ExtraInformation.Type] {
 		return DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: selectedAttribute)
 	}
 }

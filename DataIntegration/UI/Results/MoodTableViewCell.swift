@@ -8,11 +8,11 @@
 
 import UIKit
 
-class MoodTableViewCell: UITableViewCell {
+final class MoodTableViewCell: UITableViewCell {
 
-	fileprivate typealias Me = MoodTableViewCell
+	private typealias Me = MoodTableViewCell
 
-	public var mood: Mood! {
+	public final var mood: Mood! {
 		didSet {
 			guard let mood = mood else { return }
 			moodRatingColorLabel.backgroundColor = MoodUiUtil.colorForMood(rating: mood.rating, maxRating: mood.maxRating)
@@ -23,8 +23,8 @@ class MoodTableViewCell: UITableViewCell {
 		}
 	}
 
-	@IBOutlet weak var moodRatingColorLabel: UILabel!
-	@IBOutlet weak var moodRatingLabel: UILabel!
-	@IBOutlet weak var timestampLabel: UILabel!
-	@IBOutlet weak var noteLabel: UILabel!
+	@IBOutlet weak final var moodRatingColorLabel: UILabel!
+	@IBOutlet weak final var moodRatingLabel: UILabel!
+	@IBOutlet weak final var timestampLabel: UILabel!
+	@IBOutlet weak final var noteLabel: UILabel!
 }

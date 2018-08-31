@@ -9,30 +9,31 @@
 import Foundation
 import HealthKit
 
-public class BodyMassIndex: HealthKitQuantitySample, Equatable, CustomDebugStringConvertible {
+public final class BodyMassIndex: HealthKitQuantitySample, Equatable, CustomDebugStringConvertible {
 
 	public static func ==(lhs: BodyMassIndex, rhs: BodyMassIndex) -> Bool {
 		return lhs.equalTo(rhs)
 	}
 
-	fileprivate typealias Me = BodyMassIndex
+	private typealias Me = BodyMassIndex
+
 	public static let unit: HKUnit = HKUnit.count()
 
 	public static let bmi = DoubleAttribute(name: "BMI", pluralName: "BMIs", variableName: HKPredicateKeyPathQuantity)
 	public static let timestamp = DateTimeAttribute(name: "timestamp", pluralName: "timestamps", variableName: HKPredicateKeyPathStartDate)
 	public static let attributes: [Attribute] = [timestamp, bmi]
 
-	public var debugDescription: String {
+	public final var debugDescription: String {
 		return "bmi of \(bmi) at " + DependencyInjector.util.calendarUtil.string(for: timestamp)
 	}
 
-	public var name: String { return "Body Mass Index" }
-	public var description: String { return "Body Mass Index (BMI) is an indicator of your body fat. It's calculated from your height and weight, and can tell you whether you are underweight, normal, overweight, or obese. It can also help you gauge your risk for diseases that can occur with more body fat." }
-	public var dataType: DataTypes { return .bmi }
-	public var attributes: [Attribute] { return Me.attributes }
-	public var timestamp: Date
+	public final var name: String { return "Body Mass Index" }
+	public final var description: String { return "Body Mass Index (BMI) is an indicator of your body fat. It's calculated from your height and weight, and can tell you whether you are underweight, normal, overweight, or obese. It can also help you gauge your risk for diseases that can occur with more body fat." }
+	public final var dataType: DataTypes { return .bmi }
+	public final var attributes: [Attribute] { return Me.attributes }
+	public final var timestamp: Date
 
-	public var bmi: Double
+	public final var bmi: Double
 
 	public init() {
 		bmi = Double()
@@ -59,19 +60,19 @@ public class BodyMassIndex: HealthKitQuantitySample, Equatable, CustomDebugStrin
 		timestamp = sample.startDate
 	}
 
-	public func quantityUnit() -> HKUnit {
+	public final func quantityUnit() -> HKUnit {
 		return Me.unit
 	}
 
-	public func quantityValue() -> Double {
+	public final func quantityValue() -> Double {
 		return bmi
 	}
 
-	public func dates() -> [DateType: Date] {
+	public final func dates() -> [DateType: Date] {
 		return [.start: timestamp]
 	}
 
-	public func value(of attribute: Attribute) throws -> Any {
+	public final func value(of attribute: Attribute) throws -> Any {
 		if attribute.equalTo(Me.bmi) {
 			return bmi
 		}
@@ -81,7 +82,7 @@ public class BodyMassIndex: HealthKitQuantitySample, Equatable, CustomDebugStrin
 		throw AttributeError.unknownAttribute
 	}
 
-	public func set(attribute: Attribute, to value: Any) throws {
+	public final func set(attribute: Attribute, to value: Any) throws {
 		if attribute.equalTo(Me.bmi) {
 			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
 			bmi = castedValue
@@ -95,19 +96,19 @@ public class BodyMassIndex: HealthKitQuantitySample, Equatable, CustomDebugStrin
 		throw AttributeError.unknownAttribute
 	}
 
-	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is BodyMassIndex) { return false }
 		let other = otherAttributed as! BodyMassIndex
 		return equalTo(other)
 	}
 
-	public func equalTo(_ otherSample: Sample) -> Bool {
+	public final func equalTo(_ otherSample: Sample) -> Bool {
 		if !(otherSample is BodyMassIndex) { return false }
 		let other = otherSample as! BodyMassIndex
 		return equalTo(other)
 	}
 
-	public func equalTo(_ other: BodyMassIndex) -> Bool {
+	public final func equalTo(_ other: BodyMassIndex) -> Bool {
 		return timestamp == other.timestamp && bmi == other.bmi
 	}
 }

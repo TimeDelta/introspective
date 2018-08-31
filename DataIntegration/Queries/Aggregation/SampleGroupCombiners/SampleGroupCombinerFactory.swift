@@ -14,9 +14,9 @@ public protocol SampleGroupCombinerFactory {
 	func initialize(type: SampleGroupCombiner.Type) -> SampleGroupCombiner
 }
 
-public class SampleGroupCombinerFactoryImpl: SampleGroupCombinerFactory {
+public final class SampleGroupCombinerFactoryImpl: SampleGroupCombinerFactory {
 
-	fileprivate typealias Me = SampleGroupCombinerFactoryImpl
+	private typealias Me = SampleGroupCombinerFactoryImpl
 
 	public static let genericTypes: [SampleGroupCombiner.Type] = [
 		CountSampleGroupCombiner.self,
@@ -32,7 +32,7 @@ public class SampleGroupCombinerFactoryImpl: SampleGroupCombinerFactory {
 		MinimumSampleGroupCombiner.self,
 	]
 
-	public func typesFor(attribute: Attribute) -> [SampleGroupCombiner.Type] {
+	public final func typesFor(attribute: Attribute) -> [SampleGroupCombiner.Type] {
 		var types = Me.genericTypes
 		if attribute is NumericAttribute {
 			types.append(contentsOf: Me.numericTypes)
@@ -43,7 +43,7 @@ public class SampleGroupCombinerFactoryImpl: SampleGroupCombinerFactory {
 		return types
 	}
 
-	public func initialize(type: SampleGroupCombiner.Type) -> SampleGroupCombiner {
+	public final func initialize(type: SampleGroupCombiner.Type) -> SampleGroupCombiner {
 		return type.init()
 	}
 }

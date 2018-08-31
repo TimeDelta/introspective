@@ -8,14 +8,14 @@
 
 import UIKit
 
-class AxisAttributeViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+final class AxisAttributeViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
 
-	public var attributes: [Attribute]!
-	public var selectedAttribute: Attribute!
+	public final var attributes: [Attribute]!
+	public final var selectedAttribute: Attribute!
 
-	@IBOutlet weak var attributePicker: UIPickerView!
+	@IBOutlet weak final var attributePicker: UIPickerView!
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		attributePicker.delegate = self
@@ -32,19 +32,19 @@ class AxisAttributeViewController: UIViewController, UIPickerViewDataSource, UIP
 		attributePicker.selectRow(index, inComponent: 0, animated: false)
 	}
 
-	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
+	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 		return attributes.count
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		return attributes[row].name
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 		selectedAttribute = attributes[row]
 	}
 }

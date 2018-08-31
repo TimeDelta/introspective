@@ -51,20 +51,20 @@ extension SampleUtil {
 	}
 }
 
-public class SampleUtilImpl: SampleUtil {
+public final class SampleUtilImpl: SampleUtil {
 
 	// need this because protocols don't conform to themselves
-	public func getOnly(samples: [Sample], from startDate: Date?, to endDate: Date?) -> [Sample] {
+	public final func getOnly(samples: [Sample], from startDate: Date?, to endDate: Date?) -> [Sample] {
 		return getOnly(samples, startDate, endDate)
 	}
 
-	public func getOnly<SampleType: Sample>(samples: [SampleType], from startDate: Date?, to endDate: Date?) -> [SampleType] {
+	public final func getOnly<SampleType: Sample>(samples: [SampleType], from startDate: Date?, to endDate: Date?) -> [SampleType] {
 		return getOnly(samples, startDate, endDate) as! [SampleType]
 	}
 
 	/// Does the specified `HKSample` have any time overlap with any of the given days of the week?
 	/// - Returns: `true` if the specified sample overlaps with one of the specifed days of the week or if the given `Set<DayOfWeek>` is empty, otherwise `false`.
-	public func sample(_ sample: Sample, occursOnOneOf daysOfWeek: Set<DayOfWeek>) -> Bool {
+	public final func sample(_ sample: Sample, occursOnOneOf daysOfWeek: Set<DayOfWeek>) -> Bool {
 		if !daysOfWeek.isEmpty {
 			let startDate = sample.dates()[.start]!
 			if DependencyInjector.util.calendarUtil.date(startDate, isOnOneOf: daysOfWeek) {
@@ -80,16 +80,16 @@ public class SampleUtilImpl: SampleUtil {
 	}
 
 	// need this because protocols don't conform to themselves
-	public func aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, dateType: DateType = .start) -> [Date: [Sample]] {
+	public final func aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, dateType: DateType = .start) -> [Date: [Sample]] {
 		return aggregate(samples, aggregationUnit, dateType)
 	}
 
-	public func aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, dateType: DateType = .start) -> [Date: [SampleType]] {
+	public final func aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, dateType: DateType = .start) -> [Date: [SampleType]] {
 		return aggregate(samples, aggregationUnit, dateType) as! [Date: [SampleType]]
 	}
 
 	// need this because for some stupid reason, protocols don't conform to themselves
-	public func sort(samples: [Sample], by aggregationUnit: Calendar.Component) -> [(date: Date, samples: [Sample])] {
+	public final func sort(samples: [Sample], by aggregationUnit: Calendar.Component) -> [(date: Date, samples: [Sample])] {
 		let samplesByAggregation = aggregate(samples: samples, by: aggregationUnit)
 		let sortedSamplesByAggregation = samplesByAggregation.sorted { (entry1: (key: Date, value: [Sample]), entry2: (key: Date, value: [Sample])) -> Bool in
 			return entry1.key.compare(entry2.key) == ComparisonResult.orderedAscending
@@ -99,7 +99,7 @@ public class SampleUtilImpl: SampleUtil {
 		})
 	}
 
-	public func sort<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component) -> [(date: Date, samples: [SampleType])] {
+	public final func sort<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component) -> [(date: Date, samples: [SampleType])] {
 		let samplesByAggregation = aggregate(samples: samples, by: aggregationUnit)
 		let sortedSamplesByAggregation = samplesByAggregation.sorted { (entry1: (key: Date, value: [SampleType]), entry2: (key: Date, value: [SampleType])) -> Bool in
 			return entry1.key.compare(entry2.key) == ComparisonResult.orderedAscending
@@ -111,17 +111,17 @@ public class SampleUtilImpl: SampleUtil {
 
 	// need this because protocols don't conform to themselves
 	/// - Note: behavior is undefined when passing `ComparisonResult.orderedSame`
-	public func sort(samples: [Sample], by dateType: DateType, in order: ComparisonResult = .orderedAscending) -> [Sample] {
+	public final func sort(samples: [Sample], by dateType: DateType, in order: ComparisonResult = .orderedAscending) -> [Sample] {
 		return sort(samples, dateType, order)
 	}
 
 	/// - Note: behavior is undefined when passing `ComparisonResult.orderedSame`
-	public func sort<SampleType: Sample>(samples: [SampleType], by dateType: DateType, in order: ComparisonResult = .orderedAscending) -> [SampleType] {
+	public final func sort<SampleType: Sample>(samples: [SampleType], by dateType: DateType, in order: ComparisonResult = .orderedAscending) -> [SampleType] {
 		return sort(samples, dateType, order) as! [SampleType]
 	}
 
 	// need this because protocols don't conform to themselves
-	public func convertOneDateSamplesToTwoDateSamples(
+	public final func convertOneDateSamplesToTwoDateSamples(
 		_ samples: [Sample],
 		samplesShouldNotBeJoined: (Sample, Sample) -> Bool,
 		joinSamples: ([Sample], Date, Date) -> Sample)
@@ -156,7 +156,7 @@ public class SampleUtilImpl: SampleUtil {
 		return twoDateSamples
 	}
 
-	public func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(
+	public final func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(
 		_ samples: [SampleType],
 		samplesShouldNotBeJoined: (SampleType, SampleType) -> Bool,
 		joinSamples: ([SampleType], Date, Date) -> SampleType)
@@ -192,7 +192,7 @@ public class SampleUtilImpl: SampleUtil {
 	}
 
 	/// - Precondition: input array has at least one element.
-	public func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2]) -> SampleType2 {
+	public final func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2]) -> SampleType2 {
 		precondition(samples.count > 0, "Precondition violated: input array must have at least one element")
 
 		return DependencyInjector.util.searchUtil.closestItem(to: sample, in: samples) { (sample1: Sample, sample2: Sample) -> Int in
@@ -201,7 +201,7 @@ public class SampleUtilImpl: SampleUtil {
 	}
 
 	/// - Precondition: input array has at least one element.
-	public func closestInTimeTo(sample: Sample, in samples: [Sample]) -> Sample {
+	public final func closestInTimeTo(sample: Sample, in samples: [Sample]) -> Sample {
 		precondition(samples.count > 0, "Precondition violated: input array must have at least one element")
 
 		return DependencyInjector.util.searchUtil.closestItem(to: sample, in: samples) { (sample1: Sample, sample2: Sample) -> Int in
@@ -209,7 +209,7 @@ public class SampleUtilImpl: SampleUtil {
 		}
 	}
 
-	public func distance(between sample1: Sample, and sample2: Sample, in unit: Calendar.Component = .nanosecond) -> Int {
+	public final func distance(between sample1: Sample, and sample2: Sample, in unit: Calendar.Component = .nanosecond) -> Int {
 		let start1 = sample1.dates()[.start]!
 		let start2 = sample2.dates()[.start]!
 		let end1 = sample1.dates()[.end]
@@ -231,7 +231,7 @@ public class SampleUtilImpl: SampleUtil {
 		return closestDistance
 	}
 
-	fileprivate func getOnly(_ samples: [Sample], _ startDate: Date?, _ endDate: Date?) -> [Sample] {
+	private final func getOnly(_ samples: [Sample], _ startDate: Date?, _ endDate: Date?) -> [Sample] {
 		var filteredSamples = samples
 		if startDate != nil {
 			filteredSamples = filteredSamples.filter { (sample: Sample) -> Bool in
@@ -250,7 +250,7 @@ public class SampleUtilImpl: SampleUtil {
 		return filteredSamples
 	}
 
-	fileprivate func aggregate(_ samples: [Sample], _ aggregationUnit: Calendar.Component, _ dateType: DateType = .start) -> [Date: [Sample]] {
+	private final func aggregate(_ samples: [Sample], _ aggregationUnit: Calendar.Component, _ dateType: DateType = .start) -> [Date: [Sample]] {
 		var samplesByAggregation = [Date: [Sample]]()
 		for sample in samples {
 			let date = sample.dates()[dateType]
@@ -267,7 +267,7 @@ public class SampleUtilImpl: SampleUtil {
 		return samplesByAggregation
 	}
 
-	fileprivate func sort(_ samples: [Sample], _ dateType: DateType, _ order: ComparisonResult = .orderedAscending) -> [Sample] {
+	private final func sort(_ samples: [Sample], _ dateType: DateType, _ order: ComparisonResult = .orderedAscending) -> [Sample] {
 		return samples.sorted(by: { (sample1: Sample, sample2: Sample) -> Bool in
 			let date1 = sample1.dates()[dateType]
 			let date2 = sample2.dates()[dateType]
@@ -276,7 +276,7 @@ public class SampleUtilImpl: SampleUtil {
 		})
 	}
 
-	fileprivate func distance(_ date1: Date, _ date2: Date, _ unit: Calendar.Component) -> Int {
+	private final func distance(_ date1: Date, _ date2: Date, _ unit: Calendar.Component) -> Int {
 		return abs(Calendar.autoupdatingCurrent.dateComponents([unit], from: date1, to: date2).in(unit)!)
 	}
 }

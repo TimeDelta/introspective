@@ -8,9 +8,9 @@
 
 import UIKit
 
-class ExtraInformationTableViewCell: UITableViewCell {
+final class ExtraInformationTableViewCell: UITableViewCell {
 
-	public var extraInformation: ExtraInformation! {
+	public final var extraInformation: ExtraInformation! {
 		didSet {
 			if extraInformation == nil { return }
 			var text = ""
@@ -21,7 +21,7 @@ class ExtraInformationTableViewCell: UITableViewCell {
 		}
 	}
 
-	public var value: String! {
+	public final var value: String! {
 		didSet {
 			if value == nil { return }
 			var text = ""
@@ -32,5 +32,5 @@ class ExtraInformationTableViewCell: UITableViewCell {
 		}
 	}
 
-	@IBOutlet weak var keyValueLabel: UILabel!
+	@IBOutlet weak final var keyValueLabel: UILabel!
 }

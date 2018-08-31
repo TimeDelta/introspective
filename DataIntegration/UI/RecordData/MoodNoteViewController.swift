@@ -8,17 +8,17 @@
 
 import UIKit
 
-class MoodNoteViewController: UIViewController {
+final class MoodNoteViewController: UIViewController {
 
-	fileprivate typealias Me = MoodNoteViewController
+	private typealias Me = MoodNoteViewController
 
 	public static let noteSavedNotification = Notification.Name("moodNoteSaved")
 
-	public var note: String!
+	public final var note: String!
 
-	@IBOutlet weak var textView: UITextView!
+	@IBOutlet weak final var textView: UITextView!
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		if note != nil {
 			textView.text = note
@@ -34,7 +34,7 @@ class MoodNoteViewController: UIViewController {
 		textView.inputAccessoryView = keyboardToolBar
 	}
 
-	@objc fileprivate func doneClicked() {
+	@objc private final func doneClicked() {
 		NotificationCenter.default.post(name: Me.noteSavedNotification, object: textView.text, userInfo: nil)
 		self.dismiss(animated: true, completion: nil)
 	}

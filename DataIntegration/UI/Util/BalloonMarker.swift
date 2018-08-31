@@ -18,13 +18,13 @@ open class BalloonMarker: MarkerImage {
 	open var insets: UIEdgeInsets
 	open var minimumSize = CGSize()
 
-	public var xAttributeType: Attribute.Type?
-	public var earliestDate: Date?
+	public final var xAttributeType: Attribute.Type?
+	public final var earliestDate: Date?
 
-	fileprivate var label: String?
-	fileprivate var _labelSize: CGSize = CGSize()
-	fileprivate var _paragraphStyle: NSMutableParagraphStyle?
-	fileprivate var _drawAttributes = [NSAttributedStringKey : AnyObject]()
+	private final var label: String?
+	private final var _labelSize: CGSize = CGSize()
+	private final var _paragraphStyle: NSMutableParagraphStyle?
+	private final var _drawAttributes = [NSAttributedStringKey : AnyObject]()
 
 	public init(color: UIColor, font: UIFont, textColor: UIColor, insets: UIEdgeInsets) {
 		self.color = color

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class DateTimeAttribute: DateAttributeBase {
+public final class DateTimeAttribute: DateAttributeBase {
 
 	public required convenience init(name: String = "Date and time", pluralName: String? = "Dates and times", description: String? = nil, variableName: String? = nil) {
 		self.init(name: name, pluralName: pluralName, description: description, variableName: variableName, latestDate: nil)

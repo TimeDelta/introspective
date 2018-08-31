@@ -8,20 +8,20 @@
 
 import Foundation
 
-public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatable {
+public final class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatable {
 
 	public static func ==(lhs: WithinXCalendarUnitsSubQueryMatcher, rhs: WithinXCalendarUnitsSubQueryMatcher) -> Bool {
 		return lhs.equalTo(rhs)
 	}
 
-	fileprivate typealias Me = WithinXCalendarUnitsSubQueryMatcher
+	private typealias Me = WithinXCalendarUnitsSubQueryMatcher
 
 	public static let amountOfTime = IntegerAttribute(name: "Number of time units")
 	public static let timeUnit = CalendarComponentAttribute(name: "Time unit")
 	public static let attributes = [CommonSubQueryMatcherAttributes.mostRecentOnly, amountOfTime, timeUnit]
 
-	public let name: String = "Within <number> <time_unit>s of"
-	public var description: String {
+	public final let name: String = "Within <number> <time_unit>s of"
+	public final var description: String {
 		var text = "Within " + String(numberOfTimeUnits) + " " + timeUnit.description.lowercased() + "s of"
 		if mostRecentOnly {
 			text += " most recent"
@@ -29,10 +29,10 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatable {
 		return text
 	}
 
-	public let attributes: [Attribute] = Me.attributes
-	public var numberOfTimeUnits: Int = 5
-	public var timeUnit: Calendar.Component = .minute
-	public var mostRecentOnly: Bool = false
+	public final let attributes: [Attribute] = Me.attributes
+	public final var numberOfTimeUnits: Int = 5
+	public final var timeUnit: Calendar.Component = .minute
+	public final var mostRecentOnly: Bool = false
 
 	public required init() {}
 
@@ -43,7 +43,7 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatable {
 	}
 
 	/// Grab only the provided samples that start within `numberOfCalendarUnits` `calendarUnit` of a sub-query sample
-	public func getSamples<QuerySampleType: Sample>(
+	public final func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
 		matching subQuerySamples: [Sample])
 	-> [QuerySampleType] {
@@ -71,7 +71,7 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatable {
 		return matchingSamples
 	}
 
-	public func value(of attribute: Attribute) throws -> Any {
+	public final func value(of attribute: Attribute) throws -> Any {
 		if attribute.equalTo(Me.amountOfTime) {
 			return numberOfTimeUnits
 		}
@@ -84,7 +84,7 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatable {
 		throw AttributeError.unknownAttribute
 	}
 
-	public func set(attribute: Attribute, to value: Any) throws {
+	public final func set(attribute: Attribute, to value: Any) throws {
 		if attribute.equalTo(Me.amountOfTime) {
 			guard let castedValue = value as? Int else { throw AttributeError.typeMismatch }
 			numberOfTimeUnits = castedValue
@@ -99,19 +99,19 @@ public class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatable {
 		}
 	}
 
-	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is WithinXCalendarUnitsSubQueryMatcher) { return false }
 		let other = otherAttributed as! WithinXCalendarUnitsSubQueryMatcher
 		return equalTo(other)
 	}
 
-	public func equalTo(_ otherMatcher: SubQueryMatcher) -> Bool {
+	public final func equalTo(_ otherMatcher: SubQueryMatcher) -> Bool {
 		if !(otherMatcher is WithinXCalendarUnitsSubQueryMatcher) { return false }
 		let other = otherMatcher as! WithinXCalendarUnitsSubQueryMatcher
 		return equalTo(other)
 	}
 
-	public func equalTo(_ other: WithinXCalendarUnitsSubQueryMatcher) -> Bool {
+	public final func equalTo(_ other: WithinXCalendarUnitsSubQueryMatcher) -> Bool {
 		return numberOfTimeUnits == other.numberOfTimeUnits && timeUnit == other.timeUnit && mostRecentOnly == other.mostRecentOnly
 	}
 }

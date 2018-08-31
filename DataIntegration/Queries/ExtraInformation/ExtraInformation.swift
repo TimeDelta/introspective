@@ -24,10 +24,10 @@ public protocol ExtraInformation {
 public class AnyInformation: ExtraInformation {
 
 	public var key: String { get { fatalError("Must override") } }
-	public var attribute: Attribute
+	public final var attribute: Attribute
 
-	public var startDate: Date?
-	public var endDate: Date?
+	public final var startDate: Date?
+	public final var endDate: Date?
 
 	public required init(_ attribute: Attribute) {
 		self.attribute = attribute

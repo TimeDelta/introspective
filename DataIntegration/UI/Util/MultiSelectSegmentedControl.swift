@@ -63,7 +63,7 @@ open class MultiSelectSegmentedControl: UISegmentedControl {
 		}
 	}
 
-	fileprivate func selectSegmentsOfSelectedIndexes() {
+	private final func selectSegmentsOfSelectedIndexes() {
 		super.selectedSegmentIndex = UISegmentedControlNoSegment
 		var isPrevSelected = false
 		for i in 0...numberOfSegments {
@@ -94,7 +94,7 @@ open class MultiSelectSegmentedControl: UISegmentedControl {
 
 	//MARK: Initialization
 
-	fileprivate func onInit() {
+	private func onInit() {
 		addTarget(self, action: #selector(valueChanged), for: .valueChanged)
 	}
 
@@ -137,7 +137,7 @@ open class MultiSelectSegmentedControl: UISegmentedControl {
 		}
 	}
 
-	fileprivate func onInsertSegmentAtIndex(segment: Int) {
+	private final func onInsertSegmentAtIndex(segment: Int) {
 		selectedIndexes.shift(startingAt: segment, by: 1)
 		initSortedSegmentsArray()
 	}

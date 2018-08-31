@@ -10,11 +10,11 @@ import Foundation
 
 public class DateAttributeBase: AttributeBase, DateAttribute {
 
-	public fileprivate(set) var includeTime: Bool
-	public fileprivate(set) var earliestDate: Date?
-	public fileprivate(set) var latestDate: Date?
+	public private(set) final var includeTime: Bool
+	public private(set) final var earliestDate: Date?
+	public private(set) final var latestDate: Date?
 
-	fileprivate var dateFormat: String
+	private final var dateFormat: String
 
 	public required convenience init(name: String, pluralName: String? = nil, description: String? = nil, variableName: String? = nil) {
 		self.init(name: name, pluralName: pluralName, description: description, variableName: variableName, latestDate: nil)
@@ -37,19 +37,19 @@ public class DateAttributeBase: AttributeBase, DateAttribute {
 		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
 	}
 
-	public override func isValid(value: String) -> Bool {
+	public final override func isValid(value: String) -> Bool {
 		return DependencyInjector.util.calendarUtil.date(from: value, format: dateFormat) != nil
 	}
 
-	public override func errorMessageFor(invalidValue: String) -> String {
+	public final override func errorMessageFor(invalidValue: String) -> String {
 		return "\"" + invalidValue + "\" is not a date"
 	}
 
-	public override func convertToValue(from strValue: String) throws -> Any {
+	public final override func convertToValue(from strValue: String) throws -> Any {
 		return DependencyInjector.util.calendarUtil.date(from: strValue, format: dateFormat)!
 	}
 
-	public override func convertToString(from value: Any) throws -> String {
+	public final override func convertToString(from value: Any) throws -> String {
 		guard let castedValue = value as? Date else {
 			throw AttributeError.typeMismatch
 		}

@@ -8,18 +8,18 @@
 
 import Foundation
 
-public class MinimumSampleGroupCombiner: SampleGroupCombiner {
+public final class MinimumSampleGroupCombiner: SampleGroupCombiner {
 
 	public static let name = "Minimum"
 
-	public let descriptionIsPlural: Bool = false
-	public var description: String {
+	public final let descriptionIsPlural: Bool = false
+	public final var description: String {
 		return "minimum"
 	}
 
 	public required init() {}
 
-	public func combine(groups: [(Any, [Sample])], groupedBy groupAttribute: Attribute, combinationAttribute: Attribute) -> [Sample] {
+	public final func combine(groups: [(Any, [Sample])], groupedBy groupAttribute: Attribute, combinationAttribute: Attribute) -> [Sample] {
 		var combinedSamples = [Sample]()
 		for (groupValue, samples) in groups {
 			let sample = samples[0]

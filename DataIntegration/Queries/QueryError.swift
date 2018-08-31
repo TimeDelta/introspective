@@ -17,7 +17,7 @@ public protocol QueryError: DisplayableError {
 
 public class NoSamplesFoundQueryError: QueryError {
 
-	public fileprivate(set) var dataType: DataTypes
+	public final let dataType: DataTypes
 	public var displayableDescription: String {
 		let dataText = dataType.description.lowercased()
 		return "No \(dataText) samples found."
@@ -28,9 +28,9 @@ public class NoSamplesFoundQueryError: QueryError {
 	}
 }
 
-public class NoHealthKitSamplesFoundQueryError: NoSamplesFoundQueryError {
+public final class NoHealthKitSamplesFoundQueryError: NoSamplesFoundQueryError {
 
-	public override var displayableDescription: String {
+	public final override var displayableDescription: String {
 		let dataText = dataType.description.lowercased()
 		return "No \(dataText) samples found. Are you sure you authorized this app to read \(dataText) data?"
 	}
@@ -40,10 +40,10 @@ public class NoHealthKitSamplesFoundQueryError: NoSamplesFoundQueryError {
 	}
 }
 
-public class UnauthorizedQueryError: QueryError {
+public final class UnauthorizedQueryError: QueryError {
 
-	public fileprivate(set) var dataType: DataTypes
-	public var displayableDescription: String {
+	public final let dataType: DataTypes
+	public final var displayableDescription: String {
 		return "You must authorize this app to read \(dataType.description) data"
 	}
 

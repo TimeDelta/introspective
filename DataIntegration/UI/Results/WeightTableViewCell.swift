@@ -8,9 +8,9 @@
 
 import UIKit
 
-class WeightTableViewCell: UITableViewCell {
+final class WeightTableViewCell: UITableViewCell {
 
-	public var weight: Weight! {
+	public final var weight: Weight! {
 		didSet {
 			guard let weight = weight else { return }
 
@@ -23,6 +23,6 @@ class WeightTableViewCell: UITableViewCell {
 		}
 	}
 
-	@IBOutlet weak var valueLabel: UILabel!
-	@IBOutlet weak var timestampLabel: UILabel!
+	@IBOutlet weak final var valueLabel: UILabel!
+	@IBOutlet weak final var timestampLabel: UILabel!
 }

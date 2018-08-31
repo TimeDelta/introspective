@@ -18,7 +18,7 @@ public protocol SubQueryMatcherFactory {
 	func sameEndDatesSubQueryMatcher() -> SameEndDatesSubQueryMatcher
 }
 
-public class SubQueryMatcherFactoryImpl: SubQueryMatcherFactory {
+public final class SubQueryMatcherFactoryImpl: SubQueryMatcherFactory {
 
 	public static var allMatcherTypes: [SubQueryMatcher.Type] = [
 		WithinXCalendarUnitsSubQueryMatcher.self,
@@ -28,23 +28,23 @@ public class SubQueryMatcherFactoryImpl: SubQueryMatcherFactory {
 		SameEndDatesSubQueryMatcher.self,
 	]
 
-	public func withinXCalendarUnitsSubQueryMatcher() -> WithinXCalendarUnitsSubQueryMatcher {
+	public final func withinXCalendarUnitsSubQueryMatcher() -> WithinXCalendarUnitsSubQueryMatcher {
 		return WithinXCalendarUnitsSubQueryMatcher()
 	}
 
-	public func inSameCalendarUnitSubQueryMatcher() -> InSameCalendarUnitSubQueryMatcher {
+	public final func inSameCalendarUnitSubQueryMatcher() -> InSameCalendarUnitSubQueryMatcher {
 		return InSameCalendarUnitSubQueryMatcher()
 	}
 
-	public func sameDatesSubQueryMatcher() -> SameDatesSubQueryMatcher {
+	public final func sameDatesSubQueryMatcher() -> SameDatesSubQueryMatcher {
 		return SameDatesSubQueryMatcher()
 	}
 
-	public func sameStartDatesSubQueryMatcher() -> SameStartDatesSubQueryMatcher {
+	public final func sameStartDatesSubQueryMatcher() -> SameStartDatesSubQueryMatcher {
 		return SameStartDatesSubQueryMatcher()
 	}
 
-	public func sameEndDatesSubQueryMatcher() -> SameEndDatesSubQueryMatcher {
+	public final func sameEndDatesSubQueryMatcher() -> SameEndDatesSubQueryMatcher {
 		return SameEndDatesSubQueryMatcher()
 	}
 }

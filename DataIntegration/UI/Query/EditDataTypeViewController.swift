@@ -8,11 +8,11 @@
 
 import UIKit
 
-class EditDataTypeViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+final class EditDataTypeViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
 
-	fileprivate typealias Me = EditDataTypeViewController
+	private typealias Me = EditDataTypeViewController
 
-	fileprivate static let values = DataTypes.allTypes.map { (type: DataTypes) -> String in
+	private static let values = DataTypes.allTypes.map { (type: DataTypes) -> String in
 		return type.description
 	}
 
@@ -27,26 +27,26 @@ class EditDataTypeViewController: UIViewController, UIPickerViewDataSource, UIPi
 		return -1 // this will never happen
 	}
 
-	var selectedIndex: Int!
+	final var selectedIndex: Int!
 
-	@IBOutlet weak var dataTypeSelector: UIPickerView!
+	@IBOutlet weak final var dataTypeSelector: UIPickerView!
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		dataTypeSelector.dataSource = self
 		dataTypeSelector.delegate = self
 		dataTypeSelector.selectRow(selectedIndex, inComponent: 0, animated: false)
 	}
 
-	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
+	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 		return DataTypes.allTypes.count
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		return Me.values[row]
 	}
 }

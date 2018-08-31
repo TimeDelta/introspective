@@ -9,21 +9,21 @@
 import Foundation
 import os
 
-public class AnySample: Sample {
+public final class AnySample: Sample {
 
-	fileprivate var _dates: [DateType: Date] = [DateType: Date]() {
+	private final var _dates: [DateType: Date] = [DateType: Date]() {
 		didSet { updateAttributeValuesWithDates() }
 	}
 
-	public var name: String
-	public var description: String
+	public final var name: String
+	public final var description: String
 
-	public var debugDescription: String {
+	public final var debugDescription: String {
 		return "AnySample (\(_dates[.start]?.toString() ?? "nil") - \(_dates[.end]?.toString() ?? "nil") values: " + attributeValues.debugDescription
 	}
 
-	public var dataType: DataTypes { return .heartRate } // TODO - change this to custom once custom data types are supported
-	public var attributes: [Attribute] {
+	public final var dataType: DataTypes { return .heartRate } // TODO - change this to custom once custom data types are supported
+	public final var attributes: [Attribute] {
 		didSet {
 			attributeValues = [String: Any]()
 			for attribute in attributes {
@@ -32,7 +32,7 @@ public class AnySample: Sample {
 		}
 	}
 
-	fileprivate var attributeValues: [String: Any]
+	private final var attributeValues: [String: Any]
 
 	public init(name: String = "", description: String = "", attributes: [Attribute] = [Attribute](), attributeValues: [String: Any] = [String: Any]()) {
 		self.name = name
@@ -41,26 +41,26 @@ public class AnySample: Sample {
 		self.attributeValues = attributeValues
 	}
 
-	public func set(dates: [DateType: Date]) {
+	public final func set(dates: [DateType: Date]) {
 		self._dates = dates
 		updateAttributeValuesWithDates()
 	}
 
-	public func dates() -> [DateType: Date] {
+	public final func dates() -> [DateType: Date] {
 		return _dates
 	}
 
-	public func value(of attribute: Attribute) throws -> Any {
+	public final func value(of attribute: Attribute) throws -> Any {
 		guard let value = attributeValues[attribute.name] else { throw AttributeError.unknownAttribute }
 		return value
 	}
 
-	public func set(attribute: Attribute, to value: Any) throws {
+	public final func set(attribute: Attribute, to value: Any) throws {
 		guard let _ = attributes.first(where: { a in return a.name == attribute.name }) else { throw AttributeError.unknownAttribute }
 		attributeValues[attribute.name] = value
 	}
 
-	fileprivate func updateAttributeValuesWithDates() {
+	private final func updateAttributeValuesWithDates() {
 		if isAttribute(CommonSampleAttributes.startDate) {
 			attributeValues[CommonSampleAttributes.startDate.name] = _dates[.start]
 		}
@@ -72,7 +72,7 @@ public class AnySample: Sample {
 		}
 	}
 
-	fileprivate func isAttribute(_ attribute: Attribute) -> Bool {
+	private final func isAttribute(_ attribute: Attribute) -> Bool {
 		return attributes.contains(where: { $0.equalTo(attribute) })
 	}
 }

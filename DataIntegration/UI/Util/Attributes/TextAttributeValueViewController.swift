@@ -8,14 +8,14 @@
 
 import UIKit
 
-class TextAttributeValueViewController: AttributeValueTypeViewController, UITextViewDelegate {
+final class TextAttributeValueViewController: AttributeValueTypeViewController, UITextViewDelegate {
 
-	public var textAttribute: TextAttribute!
+	public final var textAttribute: TextAttribute!
 
-	@IBOutlet weak var textView: UITextView!
-	@IBOutlet weak var validationLabel: UILabel!
+	@IBOutlet weak final var textView: UITextView!
+	@IBOutlet weak final var validationLabel: UILabel!
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		textView.delegate = self
 		if currentValue != nil {
@@ -23,7 +23,7 @@ class TextAttributeValueViewController: AttributeValueTypeViewController, UIText
 		}
 	}
 
-	public func textViewDidChange(_ textView: UITextView) {
+	public final func textViewDidChange(_ textView: UITextView) {
 		if textAttribute.isValid(value: textView.text) {
 			setValidState()
 			currentValue = textView.text
@@ -33,13 +33,13 @@ class TextAttributeValueViewController: AttributeValueTypeViewController, UIText
 		}
 	}
 
-	fileprivate func setInvalidState(_ message: String) {
+	private final func setInvalidState(_ message: String) {
 		valueIsInvalid()
 		validationLabel.text = message
 		validationLabel.reloadInputViews()
 	}
 
-	fileprivate func setValidState() {
+	private final func setValidState() {
 		valueIsValid()
 		validationLabel.text = ""
 		validationLabel.reloadInputViews()

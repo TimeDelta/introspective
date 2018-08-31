@@ -21,8 +21,8 @@ public protocol MultiSelectAttribute: SelectAttribute {
 
 public class AnyMultiSelectAttribute: AttributeBase, MultiSelectAttribute {
 
-	public fileprivate(set) var separator: Character
-	public fileprivate(set) var possibleValues: [Any]
+	public final let separator: Character
+	public final let possibleValues: [Any]
 
 	public required convenience init(name: String, pluralName: String? = nil, description: String? = nil, variableName: String? = nil) {
 		self.init(name: name, pluralName: pluralName, description: description, variableName: variableName, separator: " ")
@@ -34,7 +34,7 @@ public class AnyMultiSelectAttribute: AttributeBase, MultiSelectAttribute {
 		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
 	}
 
-	public override func isValid(value: String) -> Bool {
+	public final override func isValid(value: String) -> Bool {
 		let possibleValueStrings = possibleValues.map { value in return try! convertToString(from: value) }
 		let setOfPossibleValues = Set<String>(possibleValueStrings)
 		for subValue in value.split(separator: separator) {
@@ -45,11 +45,11 @@ public class AnyMultiSelectAttribute: AttributeBase, MultiSelectAttribute {
 		return true
 	}
 
-	public func splitMultiSelect(value: String) -> [String] {
+	public final func splitMultiSelect(value: String) -> [String] {
 		return value.split(separator: separator).map { v in return String(v) }
 	}
 
-	public func combineMultiSelect(values: [String]) -> String {
+	public final func combineMultiSelect(values: [String]) -> String {
 		return values.joined(separator: String(separator))
 	}
 

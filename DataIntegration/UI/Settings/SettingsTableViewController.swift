@@ -8,28 +8,28 @@
 
 import UIKit
 
-class SettingsTableViewController: UITableViewController {
+final class SettingsTableViewController: UITableViewController {
 
-	private let identifiers = [
+	private final let identifiers = [
 		"generalSettings",
 		"moodSettings",
 	]
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 	}
 
 	// MARK: - Table view data source
 
-	override func numberOfSections(in tableView: UITableView) -> Int {
+	final override func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
 
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return 2
 	}
 
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		return tableView.dequeueReusableCell(withIdentifier: identifiers[indexPath.row], for: indexPath)
 	}
 }

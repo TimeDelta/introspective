@@ -9,13 +9,14 @@
 import Foundation
 import HealthKit
 
-public class Weight: HealthKitQuantitySample, Equatable, CustomDebugStringConvertible {
+public final class Weight: HealthKitQuantitySample, Equatable, CustomDebugStringConvertible {
 
 	public static func ==(lhs: Weight, rhs: Weight) -> Bool {
 		return lhs.equalTo(rhs)
 	}
 
-	fileprivate typealias Me = Weight
+	private typealias Me = Weight
+
 	public static let pounds: HKUnit = HKUnit(from: .pound)
 	public static let kilograms: HKUnit = HKUnit(from: .kilogram)
 
@@ -23,17 +24,17 @@ public class Weight: HealthKitQuantitySample, Equatable, CustomDebugStringConver
 	public static let timestamp = DateTimeAttribute(name: "timestamp", pluralName: "timestamps", variableName: HKPredicateKeyPathStartDate)
 	public static let attributes: [Attribute] = [timestamp, weight]
 
-	public var debugDescription: String {
+	public final var debugDescription: String {
 		return "Weight of \(weight) at " + DependencyInjector.util.calendarUtil.string(for: timestamp)
 	}
 
-	public var name: String { return "Weight" }
-	public var description: String { return "A measurement of body mass." }
-	public var dataType: DataTypes { return .weight }
-	public var attributes: [Attribute] { return Me.attributes }
-	public var timestamp: Date
+	public final var name: String { return "Weight" }
+	public final var description: String { return "A measurement of body mass." }
+	public final var dataType: DataTypes { return .weight }
+	public final var attributes: [Attribute] { return Me.attributes }
+	public final var timestamp: Date
 
-	public var weight: Double
+	public final var weight: Double
 
 	public init() {
 		weight = Double()
@@ -60,19 +61,19 @@ public class Weight: HealthKitQuantitySample, Equatable, CustomDebugStringConver
 		timestamp = sample.startDate
 	}
 
-	public func quantityUnit() -> HKUnit {
+	public final func quantityUnit() -> HKUnit {
 		return Me.pounds
 	}
 
-	public func quantityValue() -> Double {
+	public final func quantityValue() -> Double {
 		return weight
 	}
 
-	public func dates() -> [DateType: Date] {
+	public final func dates() -> [DateType: Date] {
 		return [.start: timestamp]
 	}
 
-	public func value(of attribute: Attribute) throws -> Any {
+	public final func value(of attribute: Attribute) throws -> Any {
 		if attribute.equalTo(Me.weight) {
 			return weight
 		}
@@ -82,7 +83,7 @@ public class Weight: HealthKitQuantitySample, Equatable, CustomDebugStringConver
 		throw AttributeError.unknownAttribute
 	}
 
-	public func set(attribute: Attribute, to value: Any) throws {
+	public final func set(attribute: Attribute, to value: Any) throws {
 		if attribute.equalTo(Me.weight) {
 			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
 			weight = castedValue
@@ -96,19 +97,19 @@ public class Weight: HealthKitQuantitySample, Equatable, CustomDebugStringConver
 		throw AttributeError.unknownAttribute
 	}
 
-	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is Weight) { return false }
 		let other = otherAttributed as! Weight
 		return equalTo(other)
 	}
 
-	public func equalTo(_ otherSample: Sample) -> Bool {
+	public final func equalTo(_ otherSample: Sample) -> Bool {
 		if !(otherSample is Weight) { return false }
 		let other = otherSample as! Weight
 		return equalTo(other)
 	}
 
-	public func equalTo(_ other: Weight) -> Bool {
+	public final func equalTo(_ other: Weight) -> Bool {
 		return timestamp == other.timestamp && weight == other.weight
 	}
 }

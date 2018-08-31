@@ -19,21 +19,21 @@ public protocol SampleQuery: Query {
 
 public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 
-	public var attributeRestrictions: [AttributeRestriction]
-	public var mostRecentEntryOnly: Bool
-	public var subQuery: (matcher: SubQueryMatcher, query: Query)?
+	public final var attributeRestrictions: [AttributeRestriction]
+	public final var mostRecentEntryOnly: Bool
+	public final var subQuery: (matcher: SubQueryMatcher, query: Query)?
 
-	fileprivate var callback: ((SampleQueryResult<SampleType>?, Error?) -> ())!
+	private final var callback: ((SampleQueryResult<SampleType>?, Error?) -> ())!
 
-	fileprivate var subQueryCallbackParameters: (result: QueryResult?, error: Error?)? = nil
-	fileprivate var queryCallbackParameters: (result: SampleQueryResult<SampleType>?, error: Error?)? = nil
+	private final var subQueryCallbackParameters: (result: QueryResult?, error: Error?)? = nil
+	private final var queryCallbackParameters: (result: SampleQueryResult<SampleType>?, error: Error?)? = nil
 
 	public init() {
 		attributeRestrictions = [AttributeRestriction]()
 		mostRecentEntryOnly = false
 	}
 
-	public func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> ()) {
+	public final func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> ()) {
 		self.callback = callback
 		subQuery?.query.runQuery(callback: { (result: QueryResult?, error: Error?) in
 			self.subQueryCallbackParameters = (result, error)
@@ -44,7 +44,7 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 		run()
 	}
 
-	public func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+	public final func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
 		runQuery { (result: SampleQueryResult<SampleType>?, error: Error?) in
 			callback(result, error)
 		}
@@ -54,7 +54,7 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 		fatalError("Must override and call queryDone() when finished")
 	}
 
-	func queryDone(_ result: SampleQueryResult<SampleType>?, _ error: Error?) {
+	final func queryDone(_ result: SampleQueryResult<SampleType>?, _ error: Error?) {
 		queryCallbackParameters = (result, error)
 		if subQuery == nil || subQueryCallbackParameters != nil {
 			filterAndCallBack()
@@ -82,7 +82,7 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 		return true
 	}
 
-	fileprivate func filterAndCallBack() {
+	private final func filterAndCallBack() {
 		if subQueryCallbackParameters?.error != nil {
 			callback(nil, subQueryCallbackParameters!.error)
 			return
@@ -94,7 +94,7 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 		callback(filterResults(), nil)
 	}
 
-	fileprivate func filterResults() -> SampleQueryResult<SampleType>? {
+	private final func filterResults() -> SampleQueryResult<SampleType>? {
 		assert(queryCallbackParameters!.result != nil, "query result is nil")
 
 		if subQuery == nil {

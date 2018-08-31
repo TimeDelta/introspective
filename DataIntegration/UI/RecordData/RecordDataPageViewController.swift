@@ -8,13 +8,13 @@
 
 import UIKit
 
-class RecordDataPageViewController: UIPageViewController {
+final class RecordDataPageViewController: UIPageViewController {
 
-	fileprivate lazy var orderedViewControllers: [UIViewController] = [
+	private lazy final var orderedViewControllers: [UIViewController] = [
 		instantiateController(named: "recordDataTable"),
 	]
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		dataSource = self
 
@@ -27,13 +27,13 @@ class RecordDataPageViewController: UIPageViewController {
 		}
 	}
 
-	fileprivate func instantiateController(named name: String) -> UIViewController {
+	private final func instantiateController(named name: String) -> UIViewController {
 		return UIStoryboard(name: "RecordData", bundle: nil).instantiateViewController(withIdentifier: name)
 	}
 }
 
 extension RecordDataPageViewController: UIPageViewControllerDataSource {
-	func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+	final func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
 		guard let viewControllerIndex = orderedViewControllers.index(of: viewController) else {
 			return nil
 		}
@@ -46,7 +46,7 @@ extension RecordDataPageViewController: UIPageViewControllerDataSource {
 		return orderedViewControllers[previousIndex]
 	}
 
-	func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+	final func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
 		guard let viewControllerIndex = orderedViewControllers.index(of: viewController) else {
 			return nil
 		}
@@ -59,11 +59,11 @@ extension RecordDataPageViewController: UIPageViewControllerDataSource {
 		return orderedViewControllers[nextIndex]
 	}
 
-	func presentationCountForPageViewController(pageViewController: UIPageViewController) -> Int {
+	final func presentationCountForPageViewController(pageViewController: UIPageViewController) -> Int {
 		return orderedViewControllers.count
 	}
 
-	func presentationIndexForPageViewController(pageViewController: UIPageViewController) -> Int {
+	final func presentationIndexForPageViewController(pageViewController: UIPageViewController) -> Int {
 		guard let firstViewController = viewControllers?.first else {
 			return 0
 		}

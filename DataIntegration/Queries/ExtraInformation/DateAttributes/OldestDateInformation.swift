@@ -8,18 +8,18 @@
 
 import Foundation
 
-public class OldestDateInformation: AnyInformation {
+public final class OldestDateInformation: AnyInformation {
 
-	fileprivate typealias Me = OldestDateInformation
+	private typealias Me = OldestDateInformation
 	static let noSamplesMessage = "No samples between given start and end dates"
 
-	public override var key: String { get { return "Oldest" } }
+	public final override var key: String { get { return "Oldest" } }
 
 	public required init(_ attribute: Attribute) {
 		super.init(attribute)
 	}
 
-	public override func compute(forSamples samples: [Sample]) -> String {
+	public final override func compute(forSamples samples: [Sample]) -> String {
 		let filteredSamples = DependencyInjector.util.sampleUtil.getOnly(samples: samples, from: startDate, to: endDate)
 		if filteredSamples.count == 0 {
 			return Me.noSamplesMessage

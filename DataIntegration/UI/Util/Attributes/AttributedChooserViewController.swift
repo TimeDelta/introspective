@@ -9,19 +9,19 @@
 import UIKit
 import os
 
-class AttributedChooserViewController: UIViewController {
+final class AttributedChooserViewController: UIViewController {
 
-	public var possibleValues: [Attributed]!
-	public var currentValue: Attributed!
-	public var notificationToSendWhenAccepted: Notification.Name!
+	public final var possibleValues: [Attributed]!
+	public final var currentValue: Attributed!
+	public final var notificationToSendWhenAccepted: Notification.Name!
 
-	@IBOutlet weak var valuePicker: UIPickerView!
-	@IBOutlet weak var attributeScrollView: UIScrollView!
+	@IBOutlet weak final var valuePicker: UIPickerView!
+	@IBOutlet weak final var attributeScrollView: UIScrollView!
 
-	fileprivate var attributeViewControllers: [AttributeViewController]!
-	fileprivate let verticalSpacing = CGFloat(5)
+	private final var attributeViewControllers: [AttributeViewController]!
+	private final let verticalSpacing = CGFloat(5)
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		valuePicker.delegate = self
@@ -45,14 +45,14 @@ class AttributedChooserViewController: UIViewController {
 		populateScrollView()
 	}
 
-	public override func reloadInputViews() {
+	public final override func reloadInputViews() {
 		super.reloadInputViews()
 		valuePicker.reloadAllComponents()
 		resetScrollView()
 		populateScrollView()
 	}
 
-	@objc func accepted() {
+	@objc final func accepted() {
 		for controller in attributeViewControllers {
 			let attribute = controller.attribute!
 			let attributeValue = controller.attributeValue!
@@ -61,7 +61,7 @@ class AttributedChooserViewController: UIViewController {
 		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: currentValue)
 	}
 
-	fileprivate func resetScrollView() {
+	private final func resetScrollView() {
 		attributeViewControllers = [AttributeViewController]()
 		for view in attributeScrollView.subviews {
 			attributeScrollView.willRemoveSubview(view)
@@ -69,12 +69,12 @@ class AttributedChooserViewController: UIViewController {
 		}
 	}
 
-	fileprivate func populateScrollView() {
+	private final func populateScrollView() {
 		populateAttributes()
 		createAndAddAcceptButton()
 	}
 
-	fileprivate func populateAttributes() {
+	private final func populateAttributes() {
 		var yPos = CGFloat(0)
 		let height = CGFloat(70)
 		for attribute in currentValue.attributes {
@@ -90,7 +90,7 @@ class AttributedChooserViewController: UIViewController {
 		}
 	}
 
-	fileprivate func createAndAddAcceptButton() {
+	private final func createAndAddAcceptButton() {
 		let controller = UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "acceptButton") as! AttributeListAcceptButtonViewController
 		let x = attributeScrollView.frame.minX
 		controller.view.frame = CGRect(x: x, y: getNextYPosForScrollView(), width: subViewWidth(), height: 30)
@@ -99,7 +99,7 @@ class AttributedChooserViewController: UIViewController {
 		controller.didMove(toParentViewController: self)
 	}
 
-	fileprivate func getNextYPosForScrollView() -> CGFloat {
+	private final func getNextYPosForScrollView() -> CGFloat {
 		var yPos = CGFloat(0)
 		for view in attributeScrollView.subviews {
 			yPos += view.frame.height + verticalSpacing
@@ -107,29 +107,29 @@ class AttributedChooserViewController: UIViewController {
 		return yPos
 	}
 
-	fileprivate func subViewWidth() -> CGFloat {
+	private func subViewWidth() -> CGFloat {
 		return attributeScrollView.frame.maxX - attributeScrollView.frame.minX - attributeScrollView.adjustedContentInset.right - attributeScrollView.adjustedContentInset.left
 	}
 }
 
 extension AttributedChooserViewController: UIPickerViewDataSource {
 
-	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
+	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 		return possibleValues.count
 	}
 }
 
 extension AttributedChooserViewController: UIPickerViewDelegate {
 
-	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		return possibleValues[row].name
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 		currentValue = possibleValues[row]
 		resetScrollView()
 		populateScrollView()

@@ -12,7 +12,7 @@ import os
 
 public var testing = true // TODO
 
-public class HealthManager {
+public final class HealthManager {
 
 	public enum SampleType {
 		case heartRate

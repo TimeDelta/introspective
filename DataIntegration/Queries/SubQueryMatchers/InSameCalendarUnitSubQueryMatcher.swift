@@ -8,19 +8,19 @@
 
 import Foundation
 
-public class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable {
+public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable {
 
 	public static func ==(lhs: InSameCalendarUnitSubQueryMatcher, rhs: InSameCalendarUnitSubQueryMatcher) -> Bool {
 		return lhs.equalTo(rhs)
 	}
 
-	fileprivate typealias Me = InSameCalendarUnitSubQueryMatcher
+	private typealias Me = InSameCalendarUnitSubQueryMatcher
 
 	public static let timeUnit = CalendarComponentAttribute(name: "Time unit")
 	public static let attributes: [Attribute] = [CommonSubQueryMatcherAttributes.mostRecentOnly, timeUnit]
 
-	public let name: String = "Within the same <time_unit> of"
-	public var description: String {
+	public final let name: String = "Within the same <time_unit> of"
+	public final var description: String {
 		var text: String
 		if timeUnit == .day {
 			text = "On"
@@ -34,9 +34,9 @@ public class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable {
 		return text
 	}
 
-	public let attributes: [Attribute] = Me.attributes
-	public var timeUnit: Calendar.Component = .day
-	public var mostRecentOnly: Bool = false
+	public final let attributes: [Attribute] = Me.attributes
+	public final var timeUnit: Calendar.Component = .day
+	public final var mostRecentOnly: Bool = false
 
 	public required init() {}
 
@@ -45,7 +45,7 @@ public class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable {
 		self.mostRecentOnly = mostRecentOnly
 	}
 
-	public func getSamples<QuerySampleType: Sample>(
+	public final func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
 		matching subQuerySamples: [Sample])
 	-> [QuerySampleType] {
@@ -73,7 +73,7 @@ public class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable {
 		return matchingSamples
 	}
 
-	public func value(of attribute: Attribute) throws -> Any {
+	public final func value(of attribute: Attribute) throws -> Any {
 		if attribute.equalTo(Me.timeUnit) {
 			return timeUnit
 		}
@@ -83,7 +83,7 @@ public class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable {
 		throw AttributeError.unknownAttribute
 	}
 
-	public func set(attribute: Attribute, to value: Any) throws {
+	public final func set(attribute: Attribute, to value: Any) throws {
 		if attribute.equalTo(Me.timeUnit) {
 			guard let castedValue = value as? Calendar.Component else { throw AttributeError.typeMismatch }
 			timeUnit = castedValue
@@ -95,19 +95,19 @@ public class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable {
 		}
 	}
 
-	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is InSameCalendarUnitSubQueryMatcher) { return false }
 		let other = otherAttributed as! InSameCalendarUnitSubQueryMatcher
 		return equalTo(other)
 	}
 
-	public func equalTo(_ otherMatcher: SubQueryMatcher) -> Bool {
+	public final func equalTo(_ otherMatcher: SubQueryMatcher) -> Bool {
 		if !(otherMatcher is InSameCalendarUnitSubQueryMatcher) { return false }
 		let other = otherMatcher as! InSameCalendarUnitSubQueryMatcher
 		return equalTo(other)
 	}
 
-	public func equalTo(_ other: InSameCalendarUnitSubQueryMatcher) -> Bool {
+	public final func equalTo(_ other: InSameCalendarUnitSubQueryMatcher) -> Bool {
 		return timeUnit == other.timeUnit && mostRecentOnly == other.mostRecentOnly
 	}
 }

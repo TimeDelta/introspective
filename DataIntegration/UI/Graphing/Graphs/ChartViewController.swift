@@ -16,11 +16,11 @@ public class ChartViewController: UIViewController, ChartViewDelegate {
 		case yAxisAttribute
 	}
 
-	public var properties = [ChartProperty: Any]()
-	public var samples: [Sample]!
+	public final var properties = [ChartProperty: Any]()
+	public final var samples: [Sample]!
 
-	func setUp(chartView: ChartViewBase) {
+	final func setUp(chartView: ChartViewBase) {
 		chartView.delegate = self
-        chartView.backgroundColor = UIColor(red: 104/255, green: 241/255, blue: 175/255, alpha: 1)
+		chartView.backgroundColor = UIColor(red: 104/255, green: 241/255, blue: 175/255, alpha: 1)
 	}
 }

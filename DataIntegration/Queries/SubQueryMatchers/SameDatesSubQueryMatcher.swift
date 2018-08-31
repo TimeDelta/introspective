@@ -8,14 +8,14 @@
 
 import Foundation
 
-public class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
+public final class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 
 	public static func ==(lhs: SameDatesSubQueryMatcher, rhs: SameDatesSubQueryMatcher) -> Bool {
 		return lhs.equalTo(rhs)
 	}
 
-	public let name: String = "Start and end timestamps are the same as"
-	public var description: String {
+	public final let name: String = "Start and end timestamps are the same as"
+	public final var description: String {
 		var text = "Start and end timestamps are the same as"
 		if mostRecentOnly {
 			text += " most recent"
@@ -23,8 +23,8 @@ public class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 		return text
 	}
 
-	public let attributes: [Attribute] = [CommonSubQueryMatcherAttributes.mostRecentOnly]
-	public var mostRecentOnly: Bool = false
+	public final let attributes: [Attribute] = [CommonSubQueryMatcherAttributes.mostRecentOnly]
+	public final var mostRecentOnly: Bool = false
 
 	public required init() {}
 
@@ -32,7 +32,7 @@ public class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 		self.mostRecentOnly = mostRecentOnly
 	}
 
-	public func getSamples<QuerySampleType: Sample>(
+	public final func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
 		matching subQuerySamples: [Sample])
 	-> [QuerySampleType] {
@@ -56,7 +56,39 @@ public class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 		return matchingSamples
 	}
 
-	fileprivate func compare(_ s1: Sample, _ s2: Sample) -> ComparisonResult {
+	public final func value(of attribute: Attribute) throws -> Any {
+		if attribute.equalTo(CommonSubQueryMatcherAttributes.mostRecentOnly) {
+			return mostRecentOnly
+		}
+		throw AttributeError.unknownAttribute
+	}
+
+	public final func set(attribute: Attribute, to value: Any) throws {
+		if attribute.equalTo(CommonSubQueryMatcherAttributes.mostRecentOnly) {
+			guard let castedValue = value as? Bool else { throw AttributeError.typeMismatch }
+			mostRecentOnly = castedValue
+		} else {
+			throw AttributeError.unknownAttribute
+		}
+	}
+
+	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
+		if !(otherAttributed is SameDatesSubQueryMatcher) { return false }
+		let other = otherAttributed as! SameDatesSubQueryMatcher
+		return equalTo(other)
+	}
+
+	public final func equalTo(_ otherMatcher: SubQueryMatcher) -> Bool {
+		if !(otherMatcher is SameDatesSubQueryMatcher) { return false }
+		let other = otherMatcher as! SameDatesSubQueryMatcher
+		return equalTo(other)
+	}
+
+	public final func equalTo(_ other: SameDatesSubQueryMatcher) -> Bool {
+		return mostRecentOnly == other.mostRecentOnly
+	}
+
+	private final func compare(_ s1: Sample, _ s2: Sample) -> ComparisonResult {
 		let start1 = s1.dates()[.start]!
 		let start2 = s2.dates()[.start]!
 
@@ -66,37 +98,5 @@ public class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 		}
 
 		return DependencyInjector.util.calendarUtil.compare(s1.dates()[.end], s2.dates()[.end])
-	}
-
-	public func value(of attribute: Attribute) throws -> Any {
-		if attribute.equalTo(CommonSubQueryMatcherAttributes.mostRecentOnly) {
-			return mostRecentOnly
-		}
-		throw AttributeError.unknownAttribute
-	}
-
-	public func set(attribute: Attribute, to value: Any) throws {
-		if attribute.equalTo(CommonSubQueryMatcherAttributes.mostRecentOnly) {
-			guard let castedValue = value as? Bool else { throw AttributeError.typeMismatch }
-			mostRecentOnly = castedValue
-		} else {
-			throw AttributeError.unknownAttribute
-		}
-	}
-
-	public func equalTo(_ otherAttributed: Attributed) -> Bool {
-		if !(otherAttributed is SameDatesSubQueryMatcher) { return false }
-		let other = otherAttributed as! SameDatesSubQueryMatcher
-		return equalTo(other)
-	}
-
-	public func equalTo(_ otherMatcher: SubQueryMatcher) -> Bool {
-		if !(otherMatcher is SameDatesSubQueryMatcher) { return false }
-		let other = otherMatcher as! SameDatesSubQueryMatcher
-		return equalTo(other)
-	}
-
-	public func equalTo(_ other: SameDatesSubQueryMatcher) -> Bool {
-		return mostRecentOnly == other.mostRecentOnly
 	}
 }

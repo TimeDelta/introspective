@@ -10,7 +10,7 @@ import Foundation
 
 public class DateAttributeRestriction: AnyAttributeRestriction {
 
-	override func isValid(attribute: Attribute) -> Bool {
+	final override func isValid(attribute: Attribute) -> Bool {
 		return attribute is DateAttribute
 	}
 }

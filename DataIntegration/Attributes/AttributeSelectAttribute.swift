@@ -8,9 +8,9 @@
 
 import Foundation
 
-public class AttributeSelectAttribute: AttributeBase, SelectOneAttribute {
+public final class AttributeSelectAttribute: AttributeBase, SelectOneAttribute {
 
-	public fileprivate(set) var possibleValues: [Any]
+	public final let possibleValues: [Any]
 
 	public required init(name: String = "Attribute", pluralName: String? = "Attributes", description: String? = nil, variableName: String? = nil) {
 		self.possibleValues = [Attribute]()
@@ -23,15 +23,15 @@ public class AttributeSelectAttribute: AttributeBase, SelectOneAttribute {
 	}
 
 	/// Is the specified value valid for this attribute?
-	public override func isValid(value: String) -> Bool {
+	public final override func isValid(value: String) -> Bool {
 		return possibleValues.contains(where: { a in return (a as! Attribute).name == value })
 	}
 
-	public override func errorMessageFor(invalidValue: String) -> String {
+	public final override func errorMessageFor(invalidValue: String) -> String {
 		return "\"\(invalidValue)\" is not an acceptable attribute"
 	}
 
-	public override func convertToValue(from strValue: String) throws -> Any {
+	public final override func convertToValue(from strValue: String) throws -> Any {
 		let attribute = (possibleValues as! [Attribute]).first(where: { attribute in return attribute.name == strValue })
 		if attribute == nil {
 			throw AttributeError.unsupportedValue
@@ -39,12 +39,12 @@ public class AttributeSelectAttribute: AttributeBase, SelectOneAttribute {
 		return attribute!
 	}
 
-	public override func convertToString(from value: Any) throws -> String {
+	public final override func convertToString(from value: Any) throws -> String {
 		guard let castedValue = value as? AttributeBase else { throw AttributeError.typeMismatch }
 		return castedValue.name
 	}
 
-	public func indexOf(possibleValue: Any) -> Int? {
+	public final func indexOf(possibleValue: Any) -> Int? {
 		guard let castedValue = possibleValue as? AttributeBase else { return nil }
 		return (possibleValues as! [Attribute]).index(where: { attribute in return attribute.name == castedValue.name })
 	}

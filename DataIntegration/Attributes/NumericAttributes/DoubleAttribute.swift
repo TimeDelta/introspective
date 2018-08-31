@@ -8,26 +8,26 @@
 
 import Foundation
 
-public class DoubleAttribute: AttributeBase, NumericAttribute {
+public final class DoubleAttribute: AttributeBase, NumericAttribute {
 
 	public required init(name: String, pluralName: String? = nil, description: String? = nil, variableName: String? = nil) {
 		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
 	}
 
-	public override func isValid(value: String) -> Bool {
+	public final override func isValid(value: String) -> Bool {
 		return Double(value) != nil
 	}
 
-	public override func errorMessageFor(invalidValue: String) -> String {
+	public final override func errorMessageFor(invalidValue: String) -> String {
 		return "\(invalidValue) is not a number"
 	}
 
-	public override func convertToValue(from strValue: String) throws -> Any {
+	public final override func convertToValue(from strValue: String) throws -> Any {
 		if !isValid(value: strValue) { throw  AttributeError.unsupportedValue }
 		return Double(strValue)!
 	}
 
-	public override func convertToString(from value: Any) throws -> String {
+	public final override func convertToString(from value: Any) throws -> String {
 		guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
 		return String(castedValue)
 	}

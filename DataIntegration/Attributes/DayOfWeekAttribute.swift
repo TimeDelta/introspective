@@ -8,37 +8,37 @@
 
 import Foundation
 
-public class DayOfWeekAttribute: AttributeBase, SelectOneAttribute {
+public final class DayOfWeekAttribute: AttributeBase, SelectOneAttribute {
 
-	public fileprivate(set) var possibleValues: [Any] = DayOfWeek.allDays
+	public final let possibleValues: [Any] = DayOfWeek.allDays
 
 	public required init(name: String = "Day of the week", pluralName: String? = "Days of the week", description: String? = nil, variableName: String? = nil) {
 		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
 	}
 
-	public override func isValid(value: String) -> Bool {
+	public final override func isValid(value: String) -> Bool {
 		return (try? DayOfWeek.fromString(value)) != nil
 	}
 
-	public override func errorMessageFor(invalidValue: String) -> String {
+	public final override func errorMessageFor(invalidValue: String) -> String {
 		if invalidValue.isEmpty {
 			return "No value selected"
 		}
 		return "\"\(invalidValue)\" is not a day of the week"
 	}
 
-	public override func convertToValue(from strValue: String) throws -> Any {
+	public final override func convertToValue(from strValue: String) throws -> Any {
 		return try DayOfWeek.fromString(strValue)
 	}
 
-	public override func convertToString(from value: Any) throws -> String {
+	public final override func convertToString(from value: Any) throws -> String {
 		guard let castedValue = value as? DayOfWeek else {
 			throw AttributeError.typeMismatch
 		}
 		return castedValue.abbreviation
 	}
 
-	public func indexOf(possibleValue: Any) -> Int? {
+	public final func indexOf(possibleValue: Any) -> Int? {
 		guard let castedValue = possibleValue as? DayOfWeek else {
 			return nil
 		}

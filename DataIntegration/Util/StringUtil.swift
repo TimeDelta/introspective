@@ -14,18 +14,18 @@ public protocol StringUtil {
 	func isInteger(_ str: String) -> Bool
 }
 
-public class StringUtilImpl: StringUtil {
+public final class StringUtilImpl: StringUtil {
 
-	fileprivate typealias Me = StringUtilImpl
+	private typealias Me = StringUtilImpl
 
-	fileprivate static let numberRegex = "^[0-9]*.?[0-9]+$"
-	fileprivate static let integerRegex = "^[0-9]+$"
+	private static let numberRegex = "^[0-9]*.?[0-9]+$"
+	private static let integerRegex = "^[0-9]+$"
 
-	public func isNumber(_ str: String) -> Bool {
+	public final func isNumber(_ str: String) -> Bool {
 		return str.range(of: Me.numberRegex, options: .regularExpression, range: nil, locale: nil) != nil
 	}
 
-	public func isInteger(_ str: String) -> Bool {
+	public final func isInteger(_ str: String) -> Bool {
 		return str.range(of: Me.integerRegex, options: .regularExpression, range: nil, locale: nil) != nil
 	}
 }

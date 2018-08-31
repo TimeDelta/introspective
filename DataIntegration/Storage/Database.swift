@@ -25,9 +25,9 @@ public protocol Database {
 
 public class DatabaseImpl: Database {
 
-	fileprivate var persistentContainer: NSPersistentContainer
+	private final var persistentContainer: NSPersistentContainer
 
-	fileprivate lazy var backgroundContext: NSManagedObjectContext = {
+	private lazy final var backgroundContext: NSManagedObjectContext = {
 		return self.persistentContainer.newBackgroundContext()
 	}()
 
@@ -54,7 +54,7 @@ public class DatabaseImpl: Database {
 		}()
 	}
 
-	public func new<Type: NSManagedObject & CoreDataObject>(objectType: Type.Type) throws -> Type {
+	public final func new<Type: NSManagedObject & CoreDataObject>(objectType: Type.Type) throws -> Type {
 		let entity = NSEntityDescription.entity(forEntityName: objectType.entityName, in: backgroundContext)!
 		guard let newObject = NSManagedObject(entity: entity, insertInto: backgroundContext) as? Type else {
 			os_log("Could not cast new object as %@", type: .error, objectType.entityName)
@@ -63,11 +63,11 @@ public class DatabaseImpl: Database {
 		return newObject
 	}
 
-	public func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type] {
+	public final func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type] {
 		return try persistentContainer.viewContext.fetch(fetchRequest)
 	}
 
-	public func save() {
+	public final func save() {
 		if backgroundContext.hasChanges {
 			do {
 				try backgroundContext.save()
@@ -79,7 +79,7 @@ public class DatabaseImpl: Database {
 		}
 	}
 
-	public func delete(_ object: NSManagedObject) {
+	public final func delete(_ object: NSManagedObject) {
 		persistentContainer.viewContext.delete(object)
 	}
 }

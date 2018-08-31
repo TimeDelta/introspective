@@ -9,14 +9,14 @@
 import UIKit
 import os
 
-class NumericAttributeValueViewController: AttributeValueTypeViewController {
+final class NumericAttributeValueViewController: AttributeValueTypeViewController {
 
-	public var numericAttribute: NumericAttribute!
+	public final var numericAttribute: NumericAttribute!
 
-	@IBOutlet weak var textField: UITextField!
-	@IBOutlet weak var validationLabel: UILabel!
+	@IBOutlet weak final var textField: UITextField!
+	@IBOutlet weak final var validationLabel: UILabel!
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		if currentValue != nil {
 			if numericAttribute is DoubleAttribute {
@@ -31,11 +31,11 @@ class NumericAttributeValueViewController: AttributeValueTypeViewController {
 		}
 	}
 
-	@IBAction func valueChanged(_ sender: Any) {
+	@IBAction final func valueChanged(_ sender: Any) {
 		validate(value: textField.text)
 	}
 
-	fileprivate func validate(value: String?) {
+	private final func validate(value: String?) {
 		if value != nil && numericAttribute.isValid(value: value!) {
 			currentValue = try! numericAttribute.convertToValue(from: value!)
 			validationLabel.text = ""
@@ -46,7 +46,7 @@ class NumericAttributeValueViewController: AttributeValueTypeViewController {
 		}
 	}
 
-	fileprivate func setErrorMessageFor(invalidValue value: String?) {
+	private final func setErrorMessageFor(invalidValue value: String?) {
 		if value == nil || value!.isEmpty {
 			validationLabel.text = "Must enter a value"
 		} else {

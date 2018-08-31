@@ -17,25 +17,25 @@ public protocol QueryFactory {
 	func bmiQuery() -> BodyMassIndexQuery
 }
 
-public class QueryFactoryImpl: QueryFactory {
+public final class QueryFactoryImpl: QueryFactory {
 
 	public enum Errors: Error {
 		case UnknownSampleType
 	}
 
-	public func heartRateQuery() -> HeartRateQuery {
+	public final func heartRateQuery() -> HeartRateQuery {
 		return HeartRateQueryImpl()
 	}
 
-	public func moodQuery() -> MoodQuery {
+	public final func moodQuery() -> MoodQuery {
 		return MoodQueryImpl()
 	}
 
-	public func weightQuery() -> WeightQuery {
+	public final func weightQuery() -> WeightQuery {
 		return WeightQueryImpl()
 	}
 
-	public func bmiQuery() -> BodyMassIndexQuery {
+	public final func bmiQuery() -> BodyMassIndexQuery {
 		return BodyMassIndexQueryImpl()
 	}
 }

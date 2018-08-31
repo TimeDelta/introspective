@@ -9,9 +9,9 @@
 import Foundation
 import CoreData
 
-class FunctionalTestDatabase: DatabaseImpl {
+final class FunctionalTestDatabase: DatabaseImpl {
 
-	fileprivate let persistentContainer: NSPersistentContainer
+	private final let persistentContainer: NSPersistentContainer
 
 	public init() {
 		persistentContainer = NSPersistentContainer(name: "Introspective")
@@ -30,7 +30,7 @@ class FunctionalTestDatabase: DatabaseImpl {
 		super.init(persistentContainer)
 	}
 
-	func flushData(_ types: CoreDataObject.Type...) {
+	final func flushData(_ types: CoreDataObject.Type...) {
 		for type in types {
 			let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: type.entityName)
 			let objs = try! persistentContainer.viewContext.fetch(fetchRequest)
@@ -41,7 +41,7 @@ class FunctionalTestDatabase: DatabaseImpl {
 		try! persistentContainer.viewContext.save()
 	}
 
-	func numberOfItemsInDatabase(_ type: CoreDataObject.Type) -> Int {
+	final func numberOfItemsInDatabase(_ type: CoreDataObject.Type) -> Int {
 		let request: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: type.entityName)
 		return try! persistentContainer.viewContext.fetch(request).count
 	}

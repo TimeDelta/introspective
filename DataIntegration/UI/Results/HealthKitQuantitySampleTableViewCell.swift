@@ -9,9 +9,9 @@
 import UIKit
 import SwiftDate
 
-class HealthKitQuantitySampleTableViewCell: UITableViewCell {
+final class HealthKitQuantitySampleTableViewCell: UITableViewCell {
 
-	public var sample: HealthKitQuantitySample! {
+	public final var sample: HealthKitQuantitySample! {
 		didSet {
 			guard let sample = sample else { return }
 
@@ -29,6 +29,6 @@ class HealthKitQuantitySampleTableViewCell: UITableViewCell {
 		}
 	}
 
-	@IBOutlet weak var valueLabel: UILabel!
-	@IBOutlet weak var timestampLabel: UILabel!
+	@IBOutlet weak final var valueLabel: UILabel!
+	@IBOutlet weak final var timestampLabel: UILabel!
 }

@@ -8,23 +8,23 @@
 
 import Foundation
 
-public class UtilFactory {
+public final class UtilFactory {
 
-	fileprivate typealias Me = UtilFactory
+	private typealias Me = UtilFactory
 
-	fileprivate static let realCalendarUtil = CalendarUtilImpl()
-	fileprivate static let realHKQuantitySampleUtil = NumericSampleUtilImpl()
-	fileprivate static let realTextNormalizationUtil = TextNormalizationUtilImpl()
-	fileprivate static let realSampleUtil = SampleUtilImpl()
-	fileprivate static let realTimeConstraintUtil = AttributeRestrictionUtilImpl()
-	fileprivate static let realSearchUtil = SearchUtilImpl()
-	fileprivate static let realStringUtil = StringUtilImpl()
+	private static let realCalendarUtil = CalendarUtilImpl()
+	private static let realHKQuantitySampleUtil = NumericSampleUtilImpl()
+	private static let realTextNormalizationUtil = TextNormalizationUtilImpl()
+	private static let realSampleUtil = SampleUtilImpl()
+	private static let realTimeConstraintUtil = AttributeRestrictionUtilImpl()
+	private static let realSearchUtil = SearchUtilImpl()
+	private static let realStringUtil = StringUtilImpl()
 
-	public var calendarUtil: CalendarUtil = Me.realCalendarUtil
-	public var numericSampleUtil: NumericSampleUtil = Me.realHKQuantitySampleUtil
-	public var textNormalizationUtil: TextNormalizationUtil = Me.realTextNormalizationUtil
-	public var sampleUtil: SampleUtil = Me.realSampleUtil
-	public var attributeRestrictionUtil: AttributeRestrictionUtil = Me.realTimeConstraintUtil
-	public var searchUtil: SearchUtil = Me.realSearchUtil
-	public var stringUtil: StringUtil = Me.realStringUtil
+	public final var calendarUtil: CalendarUtil = Me.realCalendarUtil
+	public final var numericSampleUtil: NumericSampleUtil = Me.realHKQuantitySampleUtil
+	public final var textNormalizationUtil: TextNormalizationUtil = Me.realTextNormalizationUtil
+	public final var sampleUtil: SampleUtil = Me.realSampleUtil
+	public final var attributeRestrictionUtil: AttributeRestrictionUtil = Me.realTimeConstraintUtil
+	public final var searchUtil: SearchUtil = Me.realSearchUtil
+	public final var stringUtil: StringUtil = Me.realStringUtil
 }

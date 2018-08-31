@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class ActivitySource: Source {
+public final class ActivitySource: Source {
 
 	public override init() {
 		super.init()

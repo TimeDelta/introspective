@@ -8,9 +8,9 @@
 
 import Foundation
 
-public class LessThanNumericAttributeRestriction: NumericAttributeRestriction, PredicateAttributeRestriction, Equatable {
+public final class LessThanNumericAttributeRestriction: NumericAttributeRestriction, PredicateAttributeRestriction, Equatable {
 
-	fileprivate typealias Me = LessThanNumericAttributeRestriction
+	private typealias Me = LessThanNumericAttributeRestriction
 
 	public static func ==(lhs: LessThanNumericAttributeRestriction, rhs: LessThanNumericAttributeRestriction) -> Bool {
 		return lhs.equalTo(rhs)
@@ -21,12 +21,12 @@ public class LessThanNumericAttributeRestriction: NumericAttributeRestriction, P
 		valueAttribute,
 	]
 
-	public override var name: String { return "Less than" }
-	public override var description: String {
+	public final override var name: String { return "Less than" }
+	public final override var description: String {
 		return restrictedAttribute.name + " < " + String(value)
 	}
 
-	public var value: Double
+	public final var value: Double
 
 	public required convenience init(attribute: Attribute) {
 		self.init(attribute: attribute, value: 0.0)
@@ -37,37 +37,37 @@ public class LessThanNumericAttributeRestriction: NumericAttributeRestriction, P
 		super.init(attribute: attribute, attributes: Me.attributes)
 	}
 
-	public override func value(of attribute: Attribute) throws -> Any {
+	public final override func value(of attribute: Attribute) throws -> Any {
 		if attribute.name == Me.valueAttribute.name { return try numericValueOfRestrictedAttribute(value) }
 		throw AttributeError.unknownAttribute
 	}
 
-	public override func set(attribute: Attribute, to value: Any) throws {
+	public final override func set(attribute: Attribute, to value: Any) throws {
 		if attribute.name != Me.valueAttribute.name { throw AttributeError.unknownAttribute }
 		self.value = try getDoubleFrom(value: value)
 	}
 
-	public override func samplePasses(_ sample: Sample) throws -> Bool {
+	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		return try getDoubleFrom(sample) < value
 	}
 
-	public func toPredicate() -> NSPredicate {
+	public final func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K < %f", restrictedAttribute.variableName, value)
 	}
 
-	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is LessThanNumericAttributeRestriction) { return false }
 		let other = otherAttributed as! LessThanNumericAttributeRestriction
 		return equalTo(other)
 	}
 
-	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is LessThanNumericAttributeRestriction) { return false }
 		let other = otherRestriction as! LessThanNumericAttributeRestriction
 		return equalTo(other)
 	}
 
-	public func equalTo(_ other: LessThanNumericAttributeRestriction) -> Bool {
+	public final func equalTo(_ other: LessThanNumericAttributeRestriction) -> Bool {
 		return restrictedAttribute.equalTo(other.restrictedAttribute) && value == other.value
 	}
 }

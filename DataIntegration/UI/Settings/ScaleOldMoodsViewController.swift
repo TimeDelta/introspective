@@ -9,11 +9,11 @@
 import UIKit
 import os
 
-class ScaleOldMoodsViewController: UIViewController {
+final class ScaleOldMoodsViewController: UIViewController {
 
-	public var notificationToSendOnCompletion: Notification.Name!
+	public final var notificationToSendOnCompletion: Notification.Name!
 
-	@IBAction func userChoseYes(_ sender: Any) {
+	@IBAction final func userChoseYes(_ sender: Any) {
 		DispatchQueue.global(qos: .userInitiated).async {
 			MoodQueryImpl.updatingMoodsInBackground = true
 			DependencyInjector.query.moodQuery().runQuery { (result, error) in
@@ -38,7 +38,7 @@ class ScaleOldMoodsViewController: UIViewController {
 		dismiss(animated: true, completion: nil)
 	}
 
-	@IBAction func userChoseNo(_ sender: Any) {
+	@IBAction final func userChoseNo(_ sender: Any) {
 		NotificationCenter.default.post(name: notificationToSendOnCompletion, object: nil)
 		dismiss(animated: true, completion: nil)
 	}

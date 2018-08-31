@@ -9,9 +9,9 @@
 import Foundation
 import os
 
-public class SourceField: NSObject, Codable {
+public final class SourceField: NSObject, Codable {
 
-	fileprivate enum CodingKeys: CodingKey {
+	private enum CodingKeys: CodingKey {
 		case fieldName
 		case fieldType
 	}
@@ -24,8 +24,8 @@ public class SourceField: NSObject, Codable {
 		case List
 	}
 
-	public fileprivate(set) var fieldName: String
-	public fileprivate(set) var fieldType: FieldType
+	public private(set) final var fieldName: String
+	public private(set) final var fieldType: FieldType
 
 	public override init() {
 		fieldName = ""
@@ -50,7 +50,7 @@ public class SourceField: NSObject, Codable {
 		}
 	}
 
-	public func encode(to encoder: Encoder) {
+	public final func encode(to encoder: Encoder) {
 		do {
 			var container = encoder.container(keyedBy: CodingKeys.self)
 			try container.encode(fieldName, forKey: .fieldName)

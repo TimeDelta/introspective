@@ -32,7 +32,7 @@ public protocol CodableStorage {
 	func fileExists(_ fileName: String, in directory: StorageDirectory) -> Bool
 }
 
-public class CodableStorageImpl: CodableStorage {
+public final class CodableStorageImpl: CodableStorage {
 
 	/// Store an encodable struct to the specified directory on disk
 	///
@@ -40,7 +40,7 @@ public class CodableStorageImpl: CodableStorage {
 	///   - object: the encodable struct to store
 	///   - directory: where to store the struct
 	///   - fileName: what to name the file where the struct data will be stored
-	public func store<T: Encodable>(_ object: T, to directory: StorageDirectory, as fileName: String) throws {
+	public final func store<T: Encodable>(_ object: T, to directory: StorageDirectory, as fileName: String) throws {
 		let url = getURL(for: directory).appendingPathComponent(fileName, isDirectory: false)
 
 		let encoder = JSONEncoder()
@@ -63,7 +63,7 @@ public class CodableStorageImpl: CodableStorage {
 	///   - directory: directory where struct data is stored
 	///   - type: struct type (i.e. Message.self)
 	/// - Returns: decoded struct model(s) of data
-	public func retrieve<T: Decodable>(_ fileName: String, from directory: StorageDirectory, as type: T.Type) throws -> T {
+	public final func retrieve<T: Decodable>(_ fileName: String, from directory: StorageDirectory, as type: T.Type) throws -> T {
 		let url = getURL(for: directory).appendingPathComponent(fileName, isDirectory: false)
 
 		if !FileManager.default.fileExists(atPath: url.path) {
@@ -82,7 +82,7 @@ public class CodableStorageImpl: CodableStorage {
 	}
 
 	/// Remove all files at specified directory
-	public func clear(_ directory: StorageDirectory) throws {
+	public final func clear(_ directory: StorageDirectory) throws {
 		let url = getURL(for: directory)
 		let contents = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: [])
 		for fileUrl in contents {
@@ -91,7 +91,7 @@ public class CodableStorageImpl: CodableStorage {
 	}
 
 	/// Remove specified file from specified directory
-	public func remove(_ fileName: String, from directory: StorageDirectory) throws {
+	public final func remove(_ fileName: String, from directory: StorageDirectory) throws {
 		let url = getURL(for: directory).appendingPathComponent(fileName, isDirectory: false)
 		if FileManager.default.fileExists(atPath: url.path) {
 			try FileManager.default.removeItem(at: url)
@@ -99,13 +99,13 @@ public class CodableStorageImpl: CodableStorage {
 	}
 
 	/// Returns BOOL indicating whether file exists at specified directory with specified file name
-	public func fileExists(_ fileName: String, in directory: StorageDirectory) -> Bool {
+	public final func fileExists(_ fileName: String, in directory: StorageDirectory) -> Bool {
 		let url = getURL(for: directory).appendingPathComponent(fileName, isDirectory: false)
 		return FileManager.default.fileExists(atPath: url.path)
 	}
 
 	/// Returns URL constructed from specified directory
-	fileprivate func getURL(for directory: StorageDirectory) -> URL {
+	private final func getURL(for directory: StorageDirectory) -> URL {
 		var searchPathDirectory: FileManager.SearchPathDirectory
 
 		switch directory {

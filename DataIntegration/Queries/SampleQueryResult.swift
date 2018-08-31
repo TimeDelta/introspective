@@ -15,7 +15,7 @@ public protocol QueryResult {
 
 public class SampleQueryResult<SampleType: Sample>: NSObject, QueryResult {
 
-	public fileprivate(set) var typedSamples: [SampleType]
+	public private(set) final var typedSamples: [SampleType]
 
 	public init(_ samples: [SampleType]) {
 		self.typedSamples = samples

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class DayOfWeek: Hashable, Comparable {
+public final class DayOfWeek: Hashable, Comparable {
 
 	public enum ErrorTypes: Error {
 		case UnknownDayOfWeek
@@ -62,12 +62,12 @@ public class DayOfWeek: Hashable, Comparable {
 		return fullDayName
 	}
 
-	public fileprivate(set) var fullDayName: String
-	public fileprivate(set) var intValue: Int
-	public fileprivate(set) var abbreviation: String
-	public let hashValue: Int
+	public final let fullDayName: String
+	public final let intValue: Int
+	public final let abbreviation: String
+	public final let hashValue: Int
 
-	fileprivate init(_ intValue: Int, _ minRequiredString: String, _ fullDayName: String) {
+	private init(_ intValue: Int, _ minRequiredString: String, _ fullDayName: String) {
 		self.intValue = intValue
 		self.abbreviation = minRequiredString
 		self.fullDayName = fullDayName

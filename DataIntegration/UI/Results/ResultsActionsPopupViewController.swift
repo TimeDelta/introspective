@@ -8,21 +8,21 @@
 
 import UIKit
 
-class ResultsActionsPopupViewController: UIViewController {
+final class ResultsActionsPopupViewController: UIViewController {
 
-	public var currentlyEditing: Bool!
+	public final var currentlyEditing: Bool!
 
-	@IBOutlet weak var graphButton: UIButton!
-	@IBOutlet weak var addInformationButton: UIButton!
-	@IBOutlet weak var editButton: UIButton!
+	@IBOutlet weak final var graphButton: UIButton!
+	@IBOutlet weak final var addInformationButton: UIButton!
+	@IBOutlet weak final var editButton: UIButton!
 
-	public override func viewDidLoad() {
+	public final override func viewDidLoad() {
 		if currentlyEditing != nil && currentlyEditing {
 			editButton.setTitle("Done Editing", for: .normal)
 		}
 	}
 
-	@IBAction func dismissVIew(sender: AnyObject) {
+	@IBAction final func dismissVIew(sender: AnyObject) {
 		self.dismiss(animated: true, completion: nil)
 	}
 }

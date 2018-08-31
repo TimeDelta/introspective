@@ -14,15 +14,15 @@ public protocol SampleGrouperFactory {
 	func initialize(type: SampleGrouper.Type) -> SampleGrouper
 }
 
-public class SampleGrouperFactoryImpl: SampleGrouperFactory {
+public final class SampleGrouperFactoryImpl: SampleGrouperFactory {
 
-	fileprivate typealias Me = SampleGrouperFactoryImpl
+	private typealias Me = SampleGrouperFactoryImpl
 
 	public static let dateTypes: [SampleGrouper.Type] = [
 		SameTimeUnitSampleGrouper.self,
 	]
 
-	public func typesFor(attribute: Attribute) -> [SampleGrouper.Type] {
+	public final func typesFor(attribute: Attribute) -> [SampleGrouper.Type] {
 		var types = [SampleGrouper.Type]()
 		if attribute is DateAttribute {
 			types.append(contentsOf: Me.dateTypes)
@@ -30,11 +30,11 @@ public class SampleGrouperFactoryImpl: SampleGrouperFactory {
 		return types
 	}
 
-	public func groupersFor(attribute: Attribute) -> [SampleGrouper] {
+	public final func groupersFor(attribute: Attribute) -> [SampleGrouper] {
 		return typesFor(attribute: attribute).map() { type in return type.init() }
 	}
 
-	public func initialize(type: SampleGrouper.Type) -> SampleGrouper {
+	public final func initialize(type: SampleGrouper.Type) -> SampleGrouper {
 		return type.init()
 	}
 }

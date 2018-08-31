@@ -9,21 +9,21 @@
 import UIKit
 import os
 
-class EditSubDataTypeViewController: UIViewController {
+final class EditSubDataTypeViewController: UIViewController {
 
-	fileprivate typealias Me = EditSubDataTypeViewController
-	fileprivate static let doneEditing = Notification.Name("doneChoosingSubDataType")
+	private typealias Me = EditSubDataTypeViewController
+	private static let doneEditing = Notification.Name("doneChoosingSubDataType")
 
-	public var notificationToSendWhenAccepted: Notification.Name!
-	public var matcher: SubQueryMatcher!
-	public var dataType: DataTypes!
+	public final var notificationToSendWhenAccepted: Notification.Name!
+	public final var matcher: SubQueryMatcher!
+	public final var dataType: DataTypes!
 
-	@IBOutlet weak var dataTypePicker: UIPickerView!
-	@IBOutlet weak var attributedChooserSubView: UIView!
+	@IBOutlet weak final var dataTypePicker: UIPickerView!
+	@IBOutlet weak final var attributedChooserSubView: UIView!
 
-	fileprivate var attributedChooserViewController: AttributedChooserViewController!
+	private final var attributedChooserViewController: AttributedChooserViewController!
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		dataTypePicker.dataSource = self
@@ -41,20 +41,20 @@ class EditSubDataTypeViewController: UIViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(doneEditing), name: Me.doneEditing, object: nil)
 	}
 
-	@objc public func doneEditing(notification: Notification) {
+	@objc public final func doneEditing(notification: Notification) {
 		let savedValue = QueryViewController.DataTypeInfo(dataType, notification.object as! SubQueryMatcher)
 		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: savedValue, userInfo: nil)
 		_ = navigationController?.popViewController(animated: true)
 	}
 
-	fileprivate func createAndInstallAttributedChooserViewController() {
+	private final func createAndInstallAttributedChooserViewController() {
 		attributedChooserViewController = (UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "attributedChooserViewController") as! AttributedChooserViewController)
 		updateAttributedChooserViewValues()
 		attributedChooserViewController.notificationToSendWhenAccepted = Me.doneEditing
 		attributedChooserSubView.addSubview(attributedChooserViewController.view)
 	}
 
-	fileprivate func updateAttributedChooserViewValues() {
+	private final func updateAttributedChooserViewValues() {
 		let possibleValues = SubQueryMatcherFactoryImpl.allMatcherTypes.map { type in
 			return type.init()
 		}
@@ -68,22 +68,22 @@ class EditSubDataTypeViewController: UIViewController {
 
 extension EditSubDataTypeViewController: UIPickerViewDataSource {
 
-	func numberOfComponents(in pickerView: UIPickerView) -> Int {
+	final func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
 	}
 
-	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+	final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 		return DataTypes.allTypes.count
 	}
 }
 
 extension EditSubDataTypeViewController: UIPickerViewDelegate {
 
-	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		return DataTypes.allTypes[row].description
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 		dataType = DataTypes.allTypes[row]
 	}
 }

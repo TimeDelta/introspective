@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class MedicationSource: Source {
+public final class MedicationSource: Source {
 
 	override init() {
 		super.init()

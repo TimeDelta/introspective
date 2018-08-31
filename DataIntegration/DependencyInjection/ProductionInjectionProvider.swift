@@ -9,24 +9,24 @@
 import Foundation
 import CoreData
 
-public class ProductionInjectionProvider: InjectionProvider {
+public final class ProductionInjectionProvider: InjectionProvider {
 
-	fileprivate typealias Me = ProductionInjectionProvider
+	private typealias Me = ProductionInjectionProvider
 
-	fileprivate static let realDatabase = DatabaseImpl()
-	fileprivate static let realCodableStorage = CodableStorageImpl()
-	fileprivate static var realSettings: SettingsImpl!
-	fileprivate static let realQueryFactory = QueryFactoryImpl()
-	fileprivate static let realDataTypeFactory = DataTypeFactoryImpl()
-	fileprivate static let realUtilFactory = UtilFactory()
-	fileprivate static let realSubQueryMatcherFactory = SubQueryMatcherFactoryImpl()
-	fileprivate static let realExtraInformationFactory = ExtraInformationFactoryImpl()
-	fileprivate static let realSampleGrouperFactory = SampleGrouperFactoryImpl()
-	fileprivate static let realSampleGroupCombinerFactory = SampleGroupCombinerFactoryImpl()
+	private static let realDatabase = DatabaseImpl()
+	private static let realCodableStorage = CodableStorageImpl()
+	private static var realSettings: SettingsImpl!
+	private static let realQueryFactory = QueryFactoryImpl()
+	private static let realDataTypeFactory = DataTypeFactoryImpl()
+	private static let realUtilFactory = UtilFactory()
+	private static let realSubQueryMatcherFactory = SubQueryMatcherFactoryImpl()
+	private static let realExtraInformationFactory = ExtraInformationFactoryImpl()
+	private static let realSampleGrouperFactory = SampleGrouperFactoryImpl()
+	private static let realSampleGroupCombinerFactory = SampleGroupCombinerFactoryImpl()
 
-	public func database() -> Database { return Me.realDatabase }
-	public func codableStorage() -> CodableStorage { return Me.realCodableStorage }
-	public func settings() -> Settings {
+	public final func database() -> Database { return Me.realDatabase }
+	public final func codableStorage() -> CodableStorage { return Me.realCodableStorage }
+	public final func settings() -> Settings {
 		if Me.realSettings == nil {
 			let fetchRequest = NSFetchRequest<SettingsImpl>(entityName: SettingsImpl.entityName)
 			let existingSettings = try! Me.realDatabase.query(fetchRequest)
@@ -38,11 +38,11 @@ public class ProductionInjectionProvider: InjectionProvider {
 		}
 		return Me.realSettings
 	}
-	public func queryFactory() -> QueryFactory { return Me.realQueryFactory }
-	public func dataTypeFactory() -> DataTypeFactory { return Me.realDataTypeFactory }
-	public func utilFactory() -> UtilFactory { return Me.realUtilFactory }
-	public func subQueryMatcherFactory() -> SubQueryMatcherFactory { return Me.realSubQueryMatcherFactory }
-	public func extraInformationFactory() -> ExtraInformationFactory { return Me.realExtraInformationFactory }
-	public func sampleGrouperFactory() -> SampleGrouperFactory { return Me.realSampleGrouperFactory }
-	public func sampleGroupCombinerFactory() -> SampleGroupCombinerFactory { return Me.realSampleGroupCombinerFactory }
+	public final func queryFactory() -> QueryFactory { return Me.realQueryFactory }
+	public final func dataTypeFactory() -> DataTypeFactory { return Me.realDataTypeFactory }
+	public final func utilFactory() -> UtilFactory { return Me.realUtilFactory }
+	public final func subQueryMatcherFactory() -> SubQueryMatcherFactory { return Me.realSubQueryMatcherFactory }
+	public final func extraInformationFactory() -> ExtraInformationFactory { return Me.realExtraInformationFactory }
+	public final func sampleGrouperFactory() -> SampleGrouperFactory { return Me.realSampleGrouperFactory }
+	public final func sampleGroupCombinerFactory() -> SampleGroupCombinerFactory { return Me.realSampleGroupCombinerFactory }
 }

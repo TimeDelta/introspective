@@ -15,10 +15,10 @@ public protocol SearchUtil {
 	func closestItem<T>(to targetItem: T, in items: Array<T>, distance: (T, T) -> Int) -> T
 }
 
-public class SearchUtilImpl: SearchUtil {
+public final class SearchUtilImpl: SearchUtil {
 
 	/// - Precondition: input array is sorted in ascending order.
-	public func binarySearch<T: Comparable>(for targetItem: T, in items: Array<T>) -> Int? {
+	public final func binarySearch<T: Comparable>(for targetItem: T, in items: Array<T>) -> Int? {
 		if items.count == 0 {
 			return nil
 		}
@@ -45,7 +45,7 @@ public class SearchUtilImpl: SearchUtil {
 	}
 
 	/// - Precondition: input array is sorted in ascending order based on the given compare function.
-	public func binarySearch<T>(for targetItem: T, in items: Array<T>, compare: (T, T) -> ComparisonResult) -> Int? {
+	public final func binarySearch<T>(for targetItem: T, in items: Array<T>, compare: (T, T) -> ComparisonResult) -> Int? {
 		if items.count == 0 {
 			return nil
 		}
@@ -73,7 +73,7 @@ public class SearchUtilImpl: SearchUtil {
 	}
 
 	/// - Precondition: input array has at least one element.
-	public func closestItem<T>(to targetItem: T, in items: Array<T>, distance: (T, T) -> Int) -> T {
+	public final func closestItem<T>(to targetItem: T, in items: Array<T>, distance: (T, T) -> Int) -> T {
 		precondition(items.count > 0, "Precondition violated: input array must have at least one element")
 
 		return items.sorted { (item1: T, item2: T) -> Bool in

@@ -14,9 +14,9 @@ public protocol AttributeRestrictionUtil {
 	func getMostRestrictiveStartAndEndDates(from attributeRestrictions: [AttributeRestriction]) -> (start: Date?, end: Date?)
 }
 
-public class AttributeRestrictionUtilImpl: AttributeRestrictionUtil {
+public final class AttributeRestrictionUtilImpl: AttributeRestrictionUtil {
 
-	public func getMostRestrictiveStartAndEndDates(from attributeRestrictions: [AttributeRestriction]) -> (start: Date?, end: Date?) {
+	public final func getMostRestrictiveStartAndEndDates(from attributeRestrictions: [AttributeRestriction]) -> (start: Date?, end: Date?) {
 		var latestStartDate: Date? = nil
 		var earliestEndDate: Date? = nil
 		for attributeRestriction in attributeRestrictions {
@@ -49,12 +49,12 @@ public class AttributeRestrictionUtilImpl: AttributeRestrictionUtil {
 		return (start: latestStartDate, end: earliestEndDate)
 	}
 
-	fileprivate func isStartDateRestriction(_ restriction: AttributeRestriction) -> Bool {
+	private final func isStartDateRestriction(_ restriction: AttributeRestriction) -> Bool {
 		return restriction.restrictedAttribute.name == CommonSampleAttributes.startDate.name
 			|| restriction.restrictedAttribute.name == CommonSampleAttributes.timestamp.name
 	}
 
-	fileprivate func isEndDateRestriction(_ restriction: AttributeRestriction) -> Bool {
+	private final func isEndDateRestriction(_ restriction: AttributeRestriction) -> Bool {
 		return restriction.restrictedAttribute.name == CommonSampleAttributes.endDate.name
 	}
 }

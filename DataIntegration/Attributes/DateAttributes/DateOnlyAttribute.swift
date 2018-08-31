@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class DateOnlyAttribute: DateAttributeBase {
+public final class DateOnlyAttribute: DateAttributeBase {
 
 	public required convenience init(name: String = "Date", pluralName: String? = "Dates", description: String? = nil, variableName: String? = nil) {
 		self.init(name: name, pluralName: pluralName, description: description, variableName: variableName, latestDate: nil)

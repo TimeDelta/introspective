@@ -19,10 +19,10 @@ public class Source: NSObject, Codable {
 		case mappedColumnNames
 	}
 
-	public internal(set) var name: String
-	public internal(set) var requiredFields: Array<SourceField>
-	public internal(set) var optionalFields: Array<SourceField>
-	public internal(set) var mappedColumnNames: [String: String]
+	public internal(set) final var name: String
+	public internal(set) final var requiredFields: Array<SourceField>
+	public internal(set) final var optionalFields: Array<SourceField>
+	public internal(set) final var mappedColumnNames: [String: String]
 
 	public override init() {
 		name = ""
@@ -45,7 +45,7 @@ public class Source: NSObject, Codable {
 		}
 	}
 
-	public func encode(to encoder: Encoder) {
+	public final func encode(to encoder: Encoder) {
 		do {
 			var container = encoder.container(keyedBy: CodingKeys.self)
 			try container.encode(name, forKey: .name)

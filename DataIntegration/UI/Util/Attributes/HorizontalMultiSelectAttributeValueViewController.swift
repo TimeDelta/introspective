@@ -8,13 +8,13 @@
 
 import UIKit
 
-class HorizontalMultiSelectAttributeValueViewController: AttributeValueTypeViewController, MultiSelectSegmentedControlDelegate {
+final class HorizontalMultiSelectAttributeValueViewController: AttributeValueTypeViewController, MultiSelectSegmentedControlDelegate {
 
-	public var multiSelectAttribute: MultiSelectAttribute!
+	public final var multiSelectAttribute: MultiSelectAttribute!
 
-	@IBOutlet weak var multiSelect: MultiSelectSegmentedControl!
+	@IBOutlet weak final var multiSelect: MultiSelectSegmentedControl!
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		multiSelect.removeAllSegments()
@@ -36,7 +36,7 @@ class HorizontalMultiSelectAttributeValueViewController: AttributeValueTypeViewC
 		}
 	}
 
-	public func multiSelect(multiSelectSegmendedControl: MultiSelectSegmentedControl, didChangeValue value: Bool, atIndex index: Int) {
+	public final func multiSelect(multiSelectSegmendedControl: MultiSelectSegmentedControl, didChangeValue value: Bool, atIndex index: Int) {
 		var values = [Any]()
 		for index in multiSelect.selectedSegmentIndexes {
 			let value = multiSelectAttribute.possibleValues[Int(index)]

@@ -12,13 +12,13 @@ import HealthKit
 //sourcery: AutoMockable
 public protocol WeightQuery: Query {}
 
-public class WeightQueryImpl: HealthKitQuery<Weight>, WeightQuery {
+public final class WeightQueryImpl: HealthKitQuery<Weight>, WeightQuery {
 
 	public init() {
 		super.init(dataType: .weight, type: .weight)
 	}
 
-	override func initFromHKSample(_ hkSample: HKSample) -> Weight {
+	final override func initFromHKSample(_ hkSample: HKSample) -> Weight {
 		precondition(hkSample is HKQuantitySample, "Wrong type of health kit sample for weight")
 		return Weight(hkSample as! HKQuantitySample)
 	}

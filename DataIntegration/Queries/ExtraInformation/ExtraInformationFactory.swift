@@ -13,9 +13,9 @@ public protocol ExtraInformationFactory {
 	func getApplicableInformationTypes(forAttribute attribute: Attribute) -> [ExtraInformation.Type]
 }
 
-public class ExtraInformationFactoryImpl: ExtraInformationFactory {
+public final class ExtraInformationFactoryImpl: ExtraInformationFactory {
 
-	fileprivate typealias Me = ExtraInformationFactoryImpl
+	private typealias Me = ExtraInformationFactoryImpl
 
 	public static let numericInformationTypes: [ExtraInformation.Type] = [
 		AverageInformation.self,
@@ -30,7 +30,7 @@ public class ExtraInformationFactoryImpl: ExtraInformationFactory {
 		MostRecentDateInformation.self,
 	]
 
-	public func getApplicableInformationTypes(forAttribute attribute: Attribute) -> [ExtraInformation.Type] {
+	public final func getApplicableInformationTypes(forAttribute attribute: Attribute) -> [ExtraInformation.Type] {
 		if attribute is DoubleAttribute {
 			return Me.numericInformationTypes
 		}

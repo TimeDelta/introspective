@@ -8,10 +8,10 @@
 
 import UIKit
 
-public class ContainerView<T: UIViewController>: UIView {
+public final class ContainerView<T: UIViewController>: UIView {
 
-	unowned var parentController: UIViewController
-	weak var currentController: T?
+	unowned final var parentController: UIViewController
+	weak final var currentController: T?
 
 	init(parentController: UIViewController) {
 		self.parentController = parentController
@@ -22,17 +22,17 @@ public class ContainerView<T: UIViewController>: UIView {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	func install(_ controller: T) {
+	final func install(_ controller: T) {
 		removeCurrentController()
 		currentController = controller
 		setUpViewController(controller, animated: false)
 	}
 
-	func uninstall() {
+	final func uninstall() {
 		removeCurrentController()
 	}
 
-	fileprivate func setUpViewController(_ targetController: T?, animated: Bool) {
+	private final func setUpViewController(_ targetController: T?, animated: Bool) {
 		if let controller = targetController {
 			parentController.addChildViewController(controller)
 			controller.view.frame = self.bounds
@@ -41,7 +41,7 @@ public class ContainerView<T: UIViewController>: UIView {
 		}
 	}
 
-	fileprivate func removeCurrentController() {
+	private final func removeCurrentController() {
 		if let _viewController = currentController {
 			_viewController.willMove(toParentViewController: nil)
 			_viewController.view.removeFromSuperview()

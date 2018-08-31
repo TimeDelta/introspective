@@ -12,13 +12,13 @@ import HealthKit
 //sourcery: AutoMockable
 public protocol BodyMassIndexQuery: Query {}
 
-public class BodyMassIndexQueryImpl: HealthKitQuery<BodyMassIndex>, BodyMassIndexQuery {
+public final class BodyMassIndexQueryImpl: HealthKitQuery<BodyMassIndex>, BodyMassIndexQuery {
 
 	public init() {
 		super.init(dataType: .bmi, type: .bmi)
 	}
 
-	override func initFromHKSample(_ hkSample: HKSample) -> BodyMassIndex {
+	final override func initFromHKSample(_ hkSample: HKSample) -> BodyMassIndex {
 		precondition(hkSample is HKQuantitySample, "Wrong type of health kit sample for BMI")
 		return BodyMassIndex(hkSample as! HKQuantitySample)
 	}

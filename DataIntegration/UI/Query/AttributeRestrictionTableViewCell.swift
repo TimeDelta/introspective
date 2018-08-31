@@ -8,11 +8,11 @@
 
 import UIKit
 
-class AttributeRestrictionTableViewCell: UITableViewCell {
+final class AttributeRestrictionTableViewCell: UITableViewCell {
 
-	@IBOutlet weak var label: UILabel!
+	@IBOutlet weak final var label: UILabel!
 
-	public var attributeRestriction: AttributeRestriction! {
+	public final var attributeRestriction: AttributeRestriction! {
 		didSet {
 			guard let attributeRestriction = attributeRestriction else { return }
 			label.text = attributeRestriction.description

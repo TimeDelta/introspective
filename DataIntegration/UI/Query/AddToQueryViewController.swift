@@ -8,37 +8,37 @@
 
 import UIKit
 
-class AddToQueryViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+final class AddToQueryViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
 
-	fileprivate typealias Me = AddToQueryViewController
+	private typealias Me = AddToQueryViewController
 
-	fileprivate static let values = QueryViewController.CellType.allTypes.map { (type: QueryViewController.CellType) -> String in
+	private static let values = QueryViewController.CellType.allTypes.map { (type: QueryViewController.CellType) -> String in
 		return type.description
 	}
 
-	@IBOutlet weak var questionPartSelector: UIPickerView!
+	@IBOutlet weak final var questionPartSelector: UIPickerView!
 
-	var cellType: QueryViewController.CellType!
+	final var cellType: QueryViewController.CellType!
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		questionPartSelector.dataSource = self
 		questionPartSelector.delegate = self
 	}
 
-	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
+	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 		return QueryViewController.CellType.allTypes.count
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		return Me.values[row]
 	}
 
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == "addQuestionPart" {
 			let index = questionPartSelector.selectedRow(inComponent: 0)
 			if index == 0 {

@@ -8,26 +8,26 @@
 
 import Foundation
 
-public class SameTimeUnitSampleGrouper: SampleGrouper {
+public final class SameTimeUnitSampleGrouper: SampleGrouper {
 
-	fileprivate typealias Me = SameTimeUnitSampleGrouper
+	private typealias Me = SameTimeUnitSampleGrouper
 
 	public static let timeUnitParam = CalendarComponentAttribute(description: "Combine all samples within the same time unit")
 	public static let attributes: [Attribute] = [
 		timeUnitParam,
 	]
 
-	public let name = "Same time unit"
-	public let attributes: [Attribute] = Me.attributes
-	public var description: String {
+	public final let name = "Same time unit"
+	public final let attributes: [Attribute] = Me.attributes
+	public final var description: String {
 		return "per " + timeUnit.description.localizedLowercase
 	}
 
-	public var timeUnit: Calendar.Component = .day
+	public final var timeUnit: Calendar.Component = .day
 
 	public required init() {}
 
-	public func group(samples: [Sample], by attribute: Attribute) -> [(Any, [Sample])] {
+	public final func group(samples: [Sample], by attribute: Attribute) -> [(Any, [Sample])] {
 		var samplesByTimeUnit: [Date: [Sample]]
 		if attribute.equalTo(CommonSampleAttributes.startDate) || attribute.equalTo(CommonSampleAttributes.timestamp) {
 			samplesByTimeUnit = DependencyInjector.util.sampleUtil.aggregate(samples: samples, by: timeUnit, dateType: .start)
@@ -41,14 +41,14 @@ public class SameTimeUnitSampleGrouper: SampleGrouper {
 			.map({ (key, value) in return (key, value) })
 	}
 
-	public func value(of attribute: Attribute) throws -> Any {
+	public final func value(of attribute: Attribute) throws -> Any {
 		if attribute.name == Me.timeUnitParam.name {
 			return timeUnit
 		}
 		throw AttributeError.unknownAttribute
 	}
 
-	public func set(attribute: Attribute, to value: Any) throws {
+	public final func set(attribute: Attribute, to value: Any) throws {
 		if attribute.name != Me.timeUnitParam.name {
 			throw AttributeError.unknownAttribute
 		}

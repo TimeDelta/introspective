@@ -8,9 +8,9 @@
 
 import Foundation
 
-public class AfterTimeOfDayAttributeRestriction: DateAttributeRestriction, Equatable {
+public final class AfterTimeOfDayAttributeRestriction: DateAttributeRestriction, Equatable {
 
-	fileprivate typealias Me = AfterTimeOfDayAttributeRestriction
+	private typealias Me = AfterTimeOfDayAttributeRestriction
 
 	public static func ==(lhs: AfterTimeOfDayAttributeRestriction, rhs: AfterTimeOfDayAttributeRestriction) -> Bool {
 		return lhs.equalTo(rhs)
@@ -24,13 +24,13 @@ public class AfterTimeOfDayAttributeRestriction: DateAttributeRestriction, Equat
 		timeAttribute,
 	]
 
-	public override var name: String { return "After time of day" }
-	public override var description: String {
+	public final override var name: String { return "After time of day" }
+	public final override var description: String {
 		let timeText = try! Me.timeAttribute.convertToDisplayableString(from: timeOfDay)
 		return "After " + timeText
 	}
 
-	public var timeOfDay: TimeOfDay
+	public final var timeOfDay: TimeOfDay
 
 	public required convenience init(attribute: Attribute) {
 		self.init(attribute: attribute, timeOfDay: TimeOfDay())
@@ -41,14 +41,14 @@ public class AfterTimeOfDayAttributeRestriction: DateAttributeRestriction, Equat
 		super.init(attribute: attribute, attributes: Me.attributes)
 	}
 
-	public override func value(of attribute: Attribute) throws -> Any {
+	public final override func value(of attribute: Attribute) throws -> Any {
 		if attribute.name != Me.timeAttribute.name {
 			throw AttributeError.unknownAttribute
 		}
 		return timeOfDay
 	}
 
-	public override func set(attribute: Attribute, to value: Any) throws {
+	public final override func set(attribute: Attribute, to value: Any) throws {
 		if attribute.name != Me.timeAttribute.name {
 			throw AttributeError.unknownAttribute
 		}
@@ -56,24 +56,24 @@ public class AfterTimeOfDayAttributeRestriction: DateAttributeRestriction, Equat
 		timeOfDay = castedValue
 	}
 
-	public override func samplePasses(_ sample: Sample) throws -> Bool {
+	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		guard let sampleDate = try sample.value(of: restrictedAttribute) as? Date else { throw AttributeError.typeMismatch }
 		return sampleDate > timeOfDay
 	}
 
-	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is AfterTimeOfDayAttributeRestriction) { return false }
 		let other = otherAttributed as! AfterTimeOfDayAttributeRestriction
 		return equalTo(other)
 	}
 
-	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is AfterTimeOfDayAttributeRestriction) { return false }
 		let other = otherRestriction as! AfterTimeOfDayAttributeRestriction
 		return equalTo(other)
 	}
 
-	public func equalTo(_ other: AfterTimeOfDayAttributeRestriction) -> Bool {
+	public final func equalTo(_ other: AfterTimeOfDayAttributeRestriction) -> Bool {
 		return restrictedAttribute.equalTo(other.restrictedAttribute) && timeOfDay == other.timeOfDay
 	}
 }

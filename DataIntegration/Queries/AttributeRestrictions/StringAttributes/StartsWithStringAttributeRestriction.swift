@@ -8,9 +8,9 @@
 
 import Foundation
 
-public class StartsWithStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, PredicateAttributeRestriction, Equatable {
+public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, PredicateAttributeRestriction, Equatable {
 
-	fileprivate typealias Me = StartsWithStringAttributeRestriction
+	private typealias Me = StartsWithStringAttributeRestriction
 
 	public static func ==(lhs: StartsWithStringAttributeRestriction, rhs: StartsWithStringAttributeRestriction) -> Bool {
 		return lhs.equalTo(rhs)
@@ -21,12 +21,12 @@ public class StartsWithStringAttributeRestriction: AnyAttributeRestriction, Stri
 		prefixAttribute,
 	]
 
-	public override var name: String { return "Text starts with" }
-	public override var description: String {
+	public final override var name: String { return "Text starts with" }
+	public final override var description: String {
 		return restrictedAttribute.name.localizedCapitalized + " starts with '" + prefix + "'"
 	}
 
-	public var prefix: String
+	public final var prefix: String
 
 	public required convenience init(attribute: Attribute) {
 		self.init(attribute: attribute, prefix: "")
@@ -37,39 +37,39 @@ public class StartsWithStringAttributeRestriction: AnyAttributeRestriction, Stri
 		super.init(attribute: attribute, attributes: Me.attributes)
 	}
 
-	public override func value(of attribute: Attribute) throws -> Any {
+	public final override func value(of attribute: Attribute) throws -> Any {
 		if attribute.name == Me.prefixAttribute.name { return prefix }
 		throw AttributeError.unknownAttribute
 	}
 
-	public override func set(attribute: Attribute, to value: Any) throws {
+	public final override func set(attribute: Attribute, to value: Any) throws {
 		if attribute.name != Me.prefixAttribute.name { throw AttributeError.unknownAttribute }
 		guard let castedValue = value as? String else { throw AttributeError.typeMismatch }
 		prefix = castedValue
 	}
 
-	public override func samplePasses(_ sample: Sample) throws -> Bool {
+	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		guard let value = try sample.value(of: restrictedAttribute) as? String else { throw AttributeError.typeMismatch }
 		return value.starts(with: prefix)
 	}
 
-	public func toPredicate() -> NSPredicate {
+	public final func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K BEGINSWITH[cd] %@", restrictedAttribute.variableName, prefix)
 	}
 
-	public func equalTo(_ otherAttributed: Attributed) -> Bool {
+	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is StartsWithStringAttributeRestriction) { return false }
 		let other = otherAttributed as! StartsWithStringAttributeRestriction
 		return equalTo(other)
 	}
 
-	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
+	public final func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		if !(otherRestriction is StartsWithStringAttributeRestriction) { return false }
 		let other = otherRestriction as! StartsWithStringAttributeRestriction
 		return equalTo(other)
 	}
 
-	public func equalTo(_ other: StartsWithStringAttributeRestriction) -> Bool {
+	public final func equalTo(_ other: StartsWithStringAttributeRestriction) -> Bool {
 		return restrictedAttribute.equalTo(other.restrictedAttribute) && prefix == other.prefix
 	}
 }

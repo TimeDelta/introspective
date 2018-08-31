@@ -8,15 +8,15 @@
 
 import Foundation
 
-public class MinimumInformation<AttributeType: Comparable>: AnyInformation {
+public final class MinimumInformation<AttributeType: Comparable>: AnyInformation {
 
-	public override var key: String { get { return "Minimum" } }
+	public final override var key: String { get { return "Minimum" } }
 
 	public required init(_ attribute: Attribute) {
 		super.init(attribute)
 	}
 
-	public override func compute(forSamples samples: [Sample]) -> String {
+	public final override func compute(forSamples samples: [Sample]) -> String {
 		let filteredSamples = DependencyInjector.util.sampleUtil.getOnly(samples: samples, from: startDate, to: endDate)
 		let value = DependencyInjector.util.numericSampleUtil.min(for: attribute, over: filteredSamples) as AttributeType
 		return String(describing: value)

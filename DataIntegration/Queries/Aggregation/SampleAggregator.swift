@@ -8,9 +8,9 @@
 
 import Foundation
 
-public class SampleAggregator: NSObject {
+public final class SampleAggregator: NSObject {
 
-	public override var description: String {
+	public final override var description: String {
 		var text = groupCombiner.description + " "
 		if groupCombiner.descriptionIsPlural {
 			text += combinationAttribute.pluralName.localizedLowercase
@@ -21,10 +21,10 @@ public class SampleAggregator: NSObject {
 		return text
 	}
 
-	public var grouper: SampleGrouper!
-	public var groupCombiner: SampleGroupCombiner!
-	public var groupByAttribute: Attribute
-	public var combinationAttribute: Attribute
+	public final var grouper: SampleGrouper!
+	public final var groupCombiner: SampleGroupCombiner!
+	public final var groupByAttribute: Attribute
+	public final var combinationAttribute: Attribute
 
 	public init(_ grouper: SampleGrouper? = nil, _ groupCombiner: SampleGroupCombiner? = nil, groupingBy groupAttribute: Attribute, combining combinationAttribute: Attribute) {
 		self.grouper = grouper
@@ -34,7 +34,10 @@ public class SampleAggregator: NSObject {
 	}
 
 	/// - Precondition: `grouper` and `groupCombiner` are both not nil
-	public func aggregate(samples: [Sample]) -> [Sample] {
+	public final func aggregate(samples: [Sample]) -> [Sample] {
+		precondition(grouper != nil, "Grouper was nil")
+		precondition(groupCombiner != nil, "Group Combiner was nil")
+
 		let groups = grouper.group(samples: samples, by: groupByAttribute)
 		return groupCombiner.combine(groups: groups, groupedBy: groupByAttribute, combinationAttribute: combinationAttribute)
 	}

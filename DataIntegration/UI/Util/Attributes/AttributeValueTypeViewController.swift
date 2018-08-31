@@ -10,16 +10,16 @@ import UIKit
 
 class AttributeValueTypeViewController: UIViewController {
 
-	public var notificationToSendOnValueInvalid: Notification.Name!
-	public var notificationToSendOnValueValid: Notification.Name!
+	public final var notificationToSendOnValueInvalid: Notification.Name!
+	public final var notificationToSendOnValueValid: Notification.Name!
 
-	public var currentValue: Any!
+	public final var currentValue: Any!
 
-	func valueIsInvalid() {
+	final func valueIsInvalid() {
 		NotificationCenter.default.post(name: notificationToSendOnValueInvalid, object: nil, userInfo: nil)
 	}
 
-	func valueIsValid() {
+	final func valueIsValid() {
 		NotificationCenter.default.post(name: notificationToSendOnValueValid, object: nil, userInfo: nil)
 	}
 }

@@ -53,12 +53,12 @@ extension Attribute {
 public class AttributeBase: Attribute {
 
 	/// This is a name that should be understandable by the user
-	public fileprivate(set) var name: String
-	public fileprivate(set) var pluralName: String
+	public private(set) final var name: String
+	public private(set) final var pluralName: String
 	/// This needs to be able to be used by an NSPredicate within a PredicateAttributeRestriction
-	public fileprivate(set) var variableName: String
+	public private(set) final var variableName: String
 	/// This is an explanation of this attribute that should be able to be presented to the user.
-	public fileprivate(set) var extendedDescription: String?
+	public private(set) final var extendedDescription: String?
 
 	public required init(name: String, pluralName: String?, description: String?, variableName: String?) {
 		self.name = name

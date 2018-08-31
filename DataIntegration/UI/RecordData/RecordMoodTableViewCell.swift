@@ -8,22 +8,22 @@
 
 import UIKit
 
-class RecordMoodTableViewCell: UITableViewCell {
+final class RecordMoodTableViewCell: UITableViewCell {
 
-	@IBOutlet var ratingSlider: UISlider!
-	@IBOutlet var outOfMaxRatingLabel: UILabel!
-	@IBOutlet var doneButon: UIButton!
-	@IBOutlet var addNoteButton: UIButton!
+	@IBOutlet final var ratingSlider: UISlider!
+	@IBOutlet final var outOfMaxRatingLabel: UILabel!
+	@IBOutlet final var doneButon: UIButton!
+	@IBOutlet final var addNoteButton: UIButton!
 
-	var note: String? = nil
+	final var note: String? = nil
 
-	public override func awakeFromNib() {
+	public final override func awakeFromNib() {
 		super.awakeFromNib()
 		reset()
 		NotificationCenter.default.addObserver(self, selector: #selector(noteSaved), name: MoodNoteViewController.noteSavedNotification, object: nil)
 	}
 
-	@IBAction func ratingChanged(_ sender: Any) {
+	@IBAction final func ratingChanged(_ sender: Any) {
 		let maxValue = DependencyInjector.settings.maximumMood
 		let newValue = Double(ratingSlider.value) * maxValue
 
@@ -32,7 +32,7 @@ class RecordMoodTableViewCell: UITableViewCell {
 		outOfMaxRatingLabel.text = MoodUiUtil.valueToString(newValue) + " / " + MoodUiUtil.valueToString(maxValue)
 	}
 
-	@IBAction func doneButtonPressed(_ sender: Any) {
+	@IBAction final func doneButtonPressed(_ sender: Any) {
 		let mood = DependencyInjector.dataType.mood()
 		mood.timestamp = Date()
 		mood.rating = Double(ratingSlider.value) * DependencyInjector.settings.maximumMood
@@ -42,12 +42,12 @@ class RecordMoodTableViewCell: UITableViewCell {
 		reset()
 	}
 
-	@objc fileprivate func noteSaved(notification: Notification) {
+	@objc private final func noteSaved(notification: Notification) {
 		note = (notification.object as! String)
 		addNoteButton.setTitle(note, for: .normal)
 	}
 
-	fileprivate func reset() {
+	private final func reset() {
 		note = nil
 		addNoteButton.setTitle("Add Note", for: .normal)
 		ratingSlider.value = (ratingSlider.maximumValue - ratingSlider.minimumValue) / 2.0

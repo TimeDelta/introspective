@@ -23,7 +23,7 @@ public class HealthKitQuery<SampleType: Sample>: SampleQueryImpl<SampleType> {
 		fatalError("Must override")
 	}
 
-	override func run() {
+	final override func run() {
 		let dateConstraints = DependencyInjector.util.attributeRestrictionUtil.getMostRestrictiveStartAndEndDates(from: attributeRestrictions)
 
 		HealthManager.getAuthorization(for: type) {
@@ -61,7 +61,7 @@ public class HealthKitQuery<SampleType: Sample>: SampleQueryImpl<SampleType> {
 		}
 	}
 
-	override func samplePassesFilters(_ sample: Sample) -> Bool {
+	final override func samplePassesFilters(_ sample: Sample) -> Bool {
 		for attributeRestriction in attributeRestrictions {
 			if try! !attributeRestriction.samplePasses(sample) {
 				return false

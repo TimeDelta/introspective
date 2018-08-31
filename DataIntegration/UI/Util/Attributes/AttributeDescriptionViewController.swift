@@ -8,13 +8,13 @@
 
 import UIKit
 
-class AttributeDescriptionViewController: UIViewController {
+final class AttributeDescriptionViewController: UIViewController {
 
-	public var descriptionText: String!
+	public final var descriptionText: String!
 
-	@IBOutlet weak var descriptionTextView: UITextView!
+	@IBOutlet weak final var descriptionTextView: UITextView!
 
-	override func viewDidLoad() {
+	final override func viewDidLoad() {
 		super.viewDidLoad()
 		descriptionTextView.text = descriptionText
 	}

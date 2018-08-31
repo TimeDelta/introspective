@@ -8,21 +8,21 @@
 
 import UIKit
 
-public class EditAttributeRestrictionViewController: UIViewController {
+public final class EditAttributeRestrictionViewController: UIViewController {
 
-	fileprivate typealias Me = EditAttributeRestrictionViewController
-	fileprivate static let doneEditing = Notification.Name("doneChoosingAttributeRestrictionAttributes")
+	private typealias Me = EditAttributeRestrictionViewController
+	private static let doneEditing = Notification.Name("doneChoosingAttributeRestrictionAttributes")
 
-	public var notificationToSendWhenAccepted: Notification.Name!
-	public var dataType: DataTypes!
-	public var attributeRestriction: AttributeRestriction!
+	public final var notificationToSendWhenAccepted: Notification.Name!
+	public final var dataType: DataTypes!
+	public final var attributeRestriction: AttributeRestriction!
 
-	@IBOutlet weak var attributedChooserSubView: UIView!
-	@IBOutlet weak var attributePicker: UIPickerView!
+	@IBOutlet weak final var attributedChooserSubView: UIView!
+	@IBOutlet weak final var attributePicker: UIPickerView!
 
-	fileprivate var attributedChooserViewController: AttributedChooserViewController!
+	private final var attributedChooserViewController: AttributedChooserViewController!
 
-	public override func viewDidLoad() {
+	public final override func viewDidLoad() {
 		attributePicker.delegate = self
 		attributePicker.dataSource = self
 
@@ -31,19 +31,19 @@ public class EditAttributeRestrictionViewController: UIViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(doneEditing), name: Me.doneEditing, object: nil)
 	}
 
-	@objc public func doneEditing(notification: Notification) {
+	@objc public final func doneEditing(notification: Notification) {
 		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: notification.object, userInfo: nil)
 		_ = navigationController?.popViewController(animated: true)
 	}
 
-	fileprivate func createAndInstallAttributedChooserViewController() {
+	private final func createAndInstallAttributedChooserViewController() {
 		attributedChooserViewController = (UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "attributedChooserViewController") as! AttributedChooserViewController)
 		updateAttributedChooserViewValues()
 		attributedChooserViewController.notificationToSendWhenAccepted = Me.doneEditing
 		attributedChooserSubView.addSubview(attributedChooserViewController.view)
 	}
 
-	fileprivate func updateAttributedChooserViewValues() {
+	private final func updateAttributedChooserViewValues() {
 		let selectedAttribute = currentlySelectedAttribute()
 		var applicableAttributeRestrictionTypes: [AttributeRestriction.Type] = []
 		var currentRestriction: AttributeRestriction? = nil
@@ -73,7 +73,7 @@ public class EditAttributeRestrictionViewController: UIViewController {
 		}
 	}
 
-	fileprivate func currentlySelectedAttribute() -> Attribute {
+	private final func currentlySelectedAttribute() -> Attribute {
 		return DataTypes.attributesFor(dataType)[attributePicker.selectedRow(inComponent: 0)]
 	}
 }

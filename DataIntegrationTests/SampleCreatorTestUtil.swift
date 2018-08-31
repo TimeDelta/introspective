@@ -101,7 +101,7 @@ public class SampleCreatorTestUtil {
 		return samples
 	}
 
-	fileprivate static func attributes(_ attributes: [Attribute], contains attribute: Attribute) -> Bool {
+	private static func attributes(_ attributes: [Attribute], contains attribute: Attribute) -> Bool {
 		return attributes.contains(where: { $0.equalTo(attribute) })
 	}
 }

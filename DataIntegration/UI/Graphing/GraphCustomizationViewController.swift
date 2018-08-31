@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GraphCustomizationViewController: UIViewController, UIPopoverPresentationControllerDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+final class GraphCustomizationViewController: UIViewController, UIPopoverPresentationControllerDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
 
 	enum ChartType: CustomStringConvertible {
 
@@ -53,25 +53,25 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 		}
 	}
 
-	public var samples: [Sample]!
-	public var dataType: DataTypes!
+	public final var samples: [Sample]!
+	public final var dataType: DataTypes!
 
-	fileprivate var xAxisAttribute: Attribute!
-	fileprivate var yAxisAttribute: Attribute!
-	fileprivate var aggregator: SampleAggregator!
+	private final var xAxisAttribute: Attribute!
+	private final var yAxisAttribute: Attribute!
+	private final var aggregator: SampleAggregator!
 
-	@IBOutlet weak var graphTypePicker: UIPickerView!
-	@IBOutlet weak var xAxisButton: UIButton!
-	@IBOutlet weak var yAxisButton: UIButton!
-	@IBOutlet weak var aggregationButton: UIButton!
+	@IBOutlet weak final var graphTypePicker: UIPickerView!
+	@IBOutlet weak final var xAxisButton: UIButton!
+	@IBOutlet weak final var yAxisButton: UIButton!
+	@IBOutlet weak final var aggregationButton: UIButton!
 
-	override func viewDidLoad() {
-        super.viewDidLoad()
+	final override func viewDidLoad() {
+		super.viewDidLoad()
 
 		graphTypePicker.delegate = self
 		graphTypePicker.dataSource = self
 
-        if xAxisAttribute == nil {
+		if xAxisAttribute == nil {
 			xAxisAttribute = dataType.defaultIndependentAttribute
 		}
 		if yAxisAttribute == nil {
@@ -79,36 +79,36 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 		}
 		updateXAttributeDisplay()
 		updateYAttributeDisplay()
-    }
+	}
 
-    public func numberOfComponents(in pickerView: UIPickerView) -> Int {
+	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 		return ChartType.allTypes.count
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		return ChartType.allTypes[row].description
 	}
 
-	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 	}
 
 	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-        return UIModalPresentationStyle.none
-    }
+		return UIModalPresentationStyle.none
+	}
 
-    // MARK: - Navigation
+	// MARK: - Navigation
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.destination is AxisAttributeViewController {
 			let controller = segue.destination as! AxisAttributeViewController
-            controller.modalPresentationStyle = UIModalPresentationStyle.popover
-            controller.popoverPresentationController!.delegate = self
-            let source = sender as! UIButton
-            if source == xAxisButton {
+			controller.modalPresentationStyle = UIModalPresentationStyle.popover
+			controller.popoverPresentationController!.delegate = self
+			let source = sender as! UIButton
+			if source == xAxisButton {
 				controller.selectedAttribute = xAxisAttribute
 			} else if source == yAxisButton {
 				controller.selectedAttribute = yAxisAttribute
@@ -124,9 +124,9 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 			}
 			controller.currentAggregator = aggregator
 		}
-    }
+	}
 
-	@IBAction func showGraph(_ sender: Any) {
+	@IBAction final func showGraph(_ sender: Any) {
 		let chartType = getSelectedChartType()
 		let controllerType = chartType.viewControllerClass
 		let controller = UIStoryboard(name: "LineChart", bundle: nil).instantiateViewController(withIdentifier: String(describing: controllerType)) as! ChartViewController
@@ -141,33 +141,33 @@ class GraphCustomizationViewController: UIViewController, UIPopoverPresentationC
 		navigationController!.pushViewController(controller, animated: true)
 	}
 
-    @IBAction func xAxisChanged(_ segue: UIStoryboardSegue) {
+	@IBAction final func xAxisChanged(_ segue: UIStoryboardSegue) {
 		let controller = segue.source as! AxisAttributeViewController
 		xAxisAttribute = controller.selectedAttribute
 		updateXAttributeDisplay()
 	}
 
-	@IBAction func yAxisChanged(_ segue: UIStoryboardSegue) {
+	@IBAction final func yAxisChanged(_ segue: UIStoryboardSegue) {
 		let controller = segue.source as! AxisAttributeViewController
 		yAxisAttribute = controller.selectedAttribute
 		updateYAttributeDisplay()
 	}
 
-	@IBAction func graphSampleAggregationChanged(_ segue: UIStoryboardSegue) {
+	@IBAction final func graphSampleAggregationChanged(_ segue: UIStoryboardSegue) {
 		let controller = segue.source as! EditSampleAggregationViewController
 		aggregator = controller.currentAggregator
 		aggregationButton.setTitle(aggregator.description, for: .normal)
 	}
 
-	fileprivate func updateXAttributeDisplay() {
+	private final func updateXAttributeDisplay() {
 		xAxisButton.setTitle(xAxisAttribute.name, for: .normal)
 	}
 
-	fileprivate func updateYAttributeDisplay() {
+	private final func updateYAttributeDisplay() {
 		yAxisButton.setTitle(yAxisAttribute.name, for: .normal)
 	}
 
-	fileprivate func getSelectedChartType() -> ChartType {
+	private final func getSelectedChartType() -> ChartType {
 		let selectedIndex = graphTypePicker.selectedRow(inComponent: 0)
 		return ChartType.allTypes[selectedIndex]
 	}

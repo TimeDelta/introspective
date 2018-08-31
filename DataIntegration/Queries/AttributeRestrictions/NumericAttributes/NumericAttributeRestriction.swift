@@ -15,12 +15,12 @@ public class NumericAttributeRestriction: AnyAttributeRestriction {
 		return attribute is NumericAttribute
 	}
 
-	func getDoubleFrom(_ sample: Sample) throws -> Double {
+	final func getDoubleFrom(_ sample: Sample) throws -> Double {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		return try getDoubleFrom(value: sampleValue)
 	}
 
-	func getDoubleFrom(value: Any) throws -> Double {
+	final func getDoubleFrom(value: Any) throws -> Double {
 		switch (restrictedAttribute) {
 			case is IntegerAttribute:
 				guard let castedValue = value as? Int else { throw AttributeError.typeMismatch }
@@ -33,7 +33,7 @@ public class NumericAttributeRestriction: AnyAttributeRestriction {
 		}
 	}
 
-	func numericValueOfRestrictedAttribute(_ value: Double) throws -> Any {
+	final func numericValueOfRestrictedAttribute(_ value: Double) throws -> Any {
 		switch (restrictedAttribute) {
 			case is IntegerAttribute:
 				return Int(value)

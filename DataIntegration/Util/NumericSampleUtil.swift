@@ -28,12 +28,12 @@ extension NumericSampleUtil {
 	}
 }
 
-public class NumericSampleUtilImpl: NumericSampleUtil {
+public final class NumericSampleUtilImpl: NumericSampleUtil {
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to a `Double`
 	/// - Precondition: The provided samples array is not empty.
-	public func average(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Double)] {
-		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+	public final func average(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Double)] {
+		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		if aggregationUnit == nil {
 			return [(date: nil, value: average(for: attribute, over: samples))]
@@ -48,8 +48,8 @@ public class NumericSampleUtilImpl: NumericSampleUtil {
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to a `Double`
 	/// - Precondition: The provided samples array is not empty.
-	public func average(for attribute: Attribute, over samples: [Sample]) -> Double {
-		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+	public final func average(for attribute: Attribute, over samples: [Sample]) -> Double {
+		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		var average: Double = 0.0
 		for sample in samples {
@@ -59,8 +59,8 @@ public class NumericSampleUtilImpl: NumericSampleUtil {
 	}
 
 	/// - Precondition: The provided samples array is not empty.
-	public func count(over samples: [Sample], per aggregationUnit: Calendar.Component? = nil) -> [(date: Date?, value: Int)] {
-		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+	public final func count(over samples: [Sample], per aggregationUnit: Calendar.Component? = nil) -> [(date: Date?, value: Int)] {
+		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		if aggregationUnit == nil {
 			return [(date: nil, value: samples.count)]
@@ -75,8 +75,8 @@ public class NumericSampleUtilImpl: NumericSampleUtil {
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
 	/// - Precondition: The provided samples array is not empty.
-	public func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Type)] {
-		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+	public final func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Type)] {
+		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		if aggregationUnit == nil {
 			return [(date: nil, value: max(for: attribute, over: samples))]
@@ -91,8 +91,8 @@ public class NumericSampleUtilImpl: NumericSampleUtil {
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
 	/// - Precondition: The provided samples array is not empty.
-	public func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample]) -> Type {
-		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+	public final func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample]) -> Type {
+		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		return try! samples.max(by: { (sample1: Sample, sample2: Sample) -> Bool in
 			let value1 = try! sample1.value(of: attribute) as! Type
@@ -103,8 +103,8 @@ public class NumericSampleUtilImpl: NumericSampleUtil {
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
 	/// - Precondition: The provided samples array is not empty.
-	public func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Type)] {
-		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+	public final func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Type)] {
+		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		if aggregationUnit == nil {
 			return [(date: nil, value: min(for: attribute, over: samples))]
@@ -119,8 +119,8 @@ public class NumericSampleUtilImpl: NumericSampleUtil {
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
 	/// - Precondition: The provided samples array is not empty.
-	public func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample]) -> Type {
-		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+	public final func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample]) -> Type {
+		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		return try! samples.min(by: { (sample1: Sample, sample2: Sample) -> Bool in
 			let value1 = try! sample1.value(of: attribute) as! Type
@@ -131,8 +131,8 @@ public class NumericSampleUtilImpl: NumericSampleUtil {
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
 	/// - Precondition: The provided samples array is not empty.
-	public func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Type)] {
-		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+	public final func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Type)] {
+		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		if aggregationUnit == nil {
 			return [(date: nil, value: sum(for: attribute, over: samples))]
@@ -147,8 +147,8 @@ public class NumericSampleUtilImpl: NumericSampleUtil {
 
 	/// - Note: It is the caller's job to make sure that the specified attribute can be cast to the specified type.
 	/// - Precondition: The provided samples array is not empty.
-	public func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample]) -> Type {
-		assert(samples.count > 0, "Precondition violated: provided samples array must not be empty")
+	public final func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample]) -> Type {
+		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		var sum: Type = 0
 		for sample in samples {

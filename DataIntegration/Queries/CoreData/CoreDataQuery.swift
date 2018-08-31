@@ -11,13 +11,13 @@ import CoreData
 
 public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: SampleQueryImpl<SampleType> {
 
-	fileprivate let dataType: DataTypes
+	private final let dataType: DataTypes
 
 	public init(dataType: DataTypes) {
 		self.dataType = dataType
 	}
 
-	override func run() {
+	final override func run() {
 		let fetchRequest: NSFetchRequest<SampleType> = NSFetchRequest<SampleType>(entityName: SampleType.entityName)
 		fetchRequest.predicate = getPredicate()
 

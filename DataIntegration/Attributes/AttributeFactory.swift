@@ -13,7 +13,7 @@ public protocol AttributeFactory {
 
 }
 
-public class AttributeFactoryImpl: AttributeFactory {
+public final class AttributeFactoryImpl: AttributeFactory {
 
 	public static let allTypes: [Attribute.Type] = [
 		TextAttribute.self,
