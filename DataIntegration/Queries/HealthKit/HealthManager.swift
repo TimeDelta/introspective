@@ -10,8 +10,6 @@ import Foundation
 import HealthKit
 import os
 
-public var testing = true // TODO
-
 public final class HealthManager {
 
 	public enum SampleType {

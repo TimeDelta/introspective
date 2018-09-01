@@ -37,6 +37,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 		mood.timestamp = Date()
 		mood.rating = Double(ratingSlider.value) * DependencyInjector.settings.maximumMood
 		mood.note = note
+		mood.maxRating = DependencyInjector.settings.maximumMood
 		DependencyInjector.db.save()
 
 		reset()

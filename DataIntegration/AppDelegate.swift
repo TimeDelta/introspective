@@ -9,6 +9,8 @@
 import UIKit
 import CoreData
 
+public var testing = true // TODO - change this to false before release
+
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
 

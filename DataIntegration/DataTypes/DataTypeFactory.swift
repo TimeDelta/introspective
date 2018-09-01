@@ -11,12 +11,17 @@ import HealthKit
 
 //sourcery: AutoMockable
 public protocol DataTypeFactory {
+	func heartRate(_ value: Double, _ date: Date) -> HeartRate
 	func heartRate(value: Double) -> HeartRate
 	func heartRate(_ sample: HKQuantitySample) -> HeartRate
 	func mood() -> Mood
 }
 
 public final class DataTypeFactoryImpl: DataTypeFactory {
+
+	public final func heartRate(_ value: Double, _ date: Date) -> HeartRate {
+		return HeartRate(value, date)
+	}
 
 	public final func heartRate(value: Double) -> HeartRate {
 		return HeartRate(value)

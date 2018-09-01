@@ -5,11 +5,10 @@
 //  Created by Bryan Nova on 8/23/18.
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
+//  Leave this file in the main module so that it can be used by the hidden "Generate Test Data" button in settings
 
 import Foundation
 import HealthKit
-import XCTest
-@testable import DataIntegration
 
 public class HealthKitDataTestUtil {
 
@@ -65,7 +64,7 @@ public class HealthKitDataTestUtil {
 		}
 	}
 
-	private static func save<SampleType: HealthKitQuantitySample>(type: HealthManager.SampleType, _ samples: [SampleType]) {
+	public static func save<SampleType: HealthKitQuantitySample>(type: HealthManager.SampleType, _ samples: [SampleType]) {
 		save(type: type, unit: samples[0].quantityUnit(), datesAndQuantity: { return ($0.startDate(), $0.endDate(), $0.quantityValue()) }, samples)
 	}
 

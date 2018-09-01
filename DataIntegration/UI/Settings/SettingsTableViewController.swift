@@ -10,7 +10,9 @@ import UIKit
 
 final class SettingsTableViewController: UITableViewController {
 
-	private final let identifiers = [
+	private typealias Me = SettingsTableViewController
+
+	private static let identifiers = [
 		"generalSettings",
 		"moodSettings",
 	]
@@ -22,14 +24,23 @@ final class SettingsTableViewController: UITableViewController {
 	// MARK: - Table view data source
 
 	final override func numberOfSections(in tableView: UITableView) -> Int {
+		if testing {
+			return 2
+		}
 		return 1
 	}
 
 	final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		if testing && section == 0 {
+			return 1
+		}
 		return 2
 	}
 
 	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		return tableView.dequeueReusableCell(withIdentifier: identifiers[indexPath.row], for: indexPath)
+		if testing && indexPath.section == 0 {
+			return tableView.dequeueReusableCell(withIdentifier: "generateTestData", for: indexPath)
+		}
+		return tableView.dequeueReusableCell(withIdentifier: Me.identifiers[indexPath.row], for: indexPath)
 	}
 }

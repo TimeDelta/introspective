@@ -1345,6 +1345,15 @@ class DataTypeFactoryMock: DataTypeFactory, Mock {
 
 
 
+    func heartRate(_ value: Double, _ date: Date) -> HeartRate {
+        addInvocation(.iheartRate__value_date(Parameter<Double>.value(value), Parameter<Date>.value(date)))
+		let perform = methodPerformValue(.iheartRate__value_date(Parameter<Double>.value(value), Parameter<Date>.value(date))) as? (Double, Date) -> Void
+		perform?(value, date)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iheartRate__value_date(Parameter<Double>.value(value), Parameter<Date>.value(date)))
+		let value = givenValue.value as? HeartRate
+		return value.orFail("stub return value not specified for heartRate(_ value: Double, _ date: Date). Use given")
+    }
+
     func heartRate(value: Double) -> HeartRate {
         addInvocation(.iheartRate__value_value(Parameter<Double>.value(value)))
 		let perform = methodPerformValue(.iheartRate__value_value(Parameter<Double>.value(value))) as? (Double) -> Void
@@ -1373,12 +1382,17 @@ class DataTypeFactoryMock: DataTypeFactory, Mock {
     }
 
     fileprivate enum MethodType {
+        case iheartRate__value_date(Parameter<Double>, Parameter<Date>)
         case iheartRate__value_value(Parameter<Double>)
         case iheartRate__sample(Parameter<HKQuantitySample>)
         case imood
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
+                case (.iheartRate__value_date(let lhsValue, let lhsDate), .iheartRate__value_date(let rhsValue, let rhsDate)):
+                    guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                    guard Parameter.compare(lhs: lhsDate, rhs: rhsDate, with: matcher) else { return false } 
+                    return true 
                 case (.iheartRate__value_value(let lhsValue), .iheartRate__value_value(let rhsValue)):
                     guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
                     return true 
@@ -1393,6 +1407,7 @@ class DataTypeFactoryMock: DataTypeFactory, Mock {
 
         func intValue() -> Int {
             switch self {
+                case let .iheartRate__value_date(p0, p1): return p0.intValue + p1.intValue
                 case let .iheartRate__value_value(p0): return p0.intValue
                 case let .iheartRate__sample(p0): return p0.intValue
                 case .imood: return 0
@@ -1411,6 +1426,9 @@ class DataTypeFactoryMock: DataTypeFactory, Mock {
             self.`throws` = `throws`
         }
 
+        static func heartRate(value: Parameter<Double>, date: Parameter<Date>, willReturn: HeartRate) -> Given {
+            return Given(method: .iheartRate__value_date(value, date), returns: willReturn, throws: nil)
+        }
         static func heartRate(value: Parameter<Double>, willReturn: HeartRate) -> Given {
             return Given(method: .iheartRate__value_value(value), returns: willReturn, throws: nil)
         }
@@ -1425,6 +1443,9 @@ class DataTypeFactoryMock: DataTypeFactory, Mock {
     struct Verify {
         fileprivate var method: MethodType
 
+        static func heartRate(value: Parameter<Double>, date: Parameter<Date>) -> Verify {
+            return Verify(method: .iheartRate__value_date(value, date))
+        }
         static func heartRate(value: Parameter<Double>) -> Verify {
             return Verify(method: .iheartRate__value_value(value))
         }
@@ -1440,6 +1461,9 @@ class DataTypeFactoryMock: DataTypeFactory, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
+        static func heartRate(value: Parameter<Double>, date: Parameter<Date>, perform: (Double, Date) -> Void) -> Perform {
+            return Perform(method: .iheartRate__value_date(value, date), performs: perform)
+        }
         static func heartRate(value: Parameter<Double>, perform: (Double) -> Void) -> Perform {
             return Perform(method: .iheartRate__value_value(value), performs: perform)
         }
