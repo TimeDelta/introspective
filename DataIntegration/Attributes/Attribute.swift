@@ -53,12 +53,12 @@ extension Attribute {
 public class AttributeBase: Attribute {
 
 	/// This is a name that should be understandable by the user
-	public private(set) final var name: String
-	public private(set) final var pluralName: String
+	public final let name: String
+	public final let pluralName: String
 	/// This needs to be able to be used by an NSPredicate within a PredicateAttributeRestriction
-	public private(set) final var variableName: String
+	public final let variableName: String
 	/// This is an explanation of this attribute that should be able to be presented to the user.
-	public private(set) final var extendedDescription: String?
+	public final let extendedDescription: String?
 
 	public required init(name: String, pluralName: String?, description: String?, variableName: String?) {
 		self.name = name
@@ -80,6 +80,7 @@ public class AttributeBase: Attribute {
 	public func errorMessageFor(invalidValue: String) -> String { fatalError("Must override") }
 	public func convertToValue(from strValue: String) throws -> Any { fatalError("Must override") }
 	public func convertToString(from value: Any) throws -> String { fatalError("Must override") }
+
 	public func convertToDisplayableString(from value: Any) throws -> String {
 		return try convertToString(from: value)
 	}
