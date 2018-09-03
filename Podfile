@@ -5,12 +5,14 @@ target 'DataIntegration' do
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
   use_frameworks!
 
-  pod "SwiftyMocky"
   pod "Sourcery"
   pod "Presentr"
+  pod "Charts"
+  pod "SwiftDate"
 
   target 'DataIntegrationTests' do
     inherit! :search_paths
+    pod "SwiftyMocky"
   end
 
   target 'DataIntegrationUITests' do

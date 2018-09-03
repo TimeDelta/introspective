@@ -128,15 +128,6 @@ class MoodMock: Mood, Mock {
 		static func debugDescription(set newValue: Parameter<String>) -> Property { return Property(method: .debugDescription_set(newValue)) }
     }
 
-    static var notRated: Double { 
-		get {	MoodMock.invocations.append(.notRated_get)
-				return MoodMock.__notRated.orFail("MoodMock - value for notRated was not defined") }
-		set {	MoodMock.invocations.append(.notRated_set(.value(newValue)))
-				MoodMock.__notRated = newValue }
-	}
-	private static var __notRated: (Double)?
-
-
     static var rating: DoubleAttribute { 
 		get {	MoodMock.invocations.append(.rating_get)
 				return MoodMock.__rating.orFail("MoodMock - value for rating was not defined") }
@@ -144,6 +135,15 @@ class MoodMock: Mood, Mock {
 				MoodMock.__rating = newValue }
 	}
 	private static var __rating: (DoubleAttribute)?
+
+
+    static var maxRating: DoubleAttribute { 
+		get {	MoodMock.invocations.append(.maxRating_get)
+				return MoodMock.__maxRating.orFail("MoodMock - value for maxRating was not defined") }
+		set {	MoodMock.invocations.append(.maxRating_set(.value(newValue)))
+				MoodMock.__maxRating = newValue }
+	}
+	private static var __maxRating: (DoubleAttribute)?
 
 
     static var note: TextAttribute { 
@@ -166,10 +166,10 @@ class MoodMock: Mood, Mock {
 
     struct StaticProperty {
         fileprivate var method: StaticMethodType
-        static var notRated: StaticProperty { return StaticProperty(method: .notRated_get) }
-		static func notRated(set newValue: Parameter<Double>) -> StaticProperty { return StaticProperty(method: .notRated_set(newValue)) }
         static var rating: StaticProperty { return StaticProperty(method: .rating_get) }
 		static func rating(set newValue: Parameter<DoubleAttribute>) -> StaticProperty { return StaticProperty(method: .rating_set(newValue)) }
+        static var maxRating: StaticProperty { return StaticProperty(method: .maxRating_get) }
+		static func maxRating(set newValue: Parameter<DoubleAttribute>) -> StaticProperty { return StaticProperty(method: .maxRating_set(newValue)) }
         static var note: StaticProperty { return StaticProperty(method: .note_get) }
 		static func note(set newValue: Parameter<TextAttribute>) -> StaticProperty { return StaticProperty(method: .note_set(newValue)) }
         static var entityName: StaticProperty { return StaticProperty(method: .entityName_get) }
@@ -225,10 +225,10 @@ class MoodMock: Mood, Mock {
 
     fileprivate enum StaticMethodType {
 
-        case notRated_get
-		case notRated_set(Parameter<Double>)
         case rating_get
 		case rating_set(Parameter<DoubleAttribute>)
+        case maxRating_get
+		case maxRating_set(Parameter<DoubleAttribute>)
         case note_get
 		case note_set(Parameter<TextAttribute>)
         case entityName_get
@@ -236,10 +236,10 @@ class MoodMock: Mood, Mock {
 
         static func compareParameters(lhs: StaticMethodType, rhs: StaticMethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
-                case (.notRated_get,.notRated_get): return true
-				case (.notRated_set(let left),.notRated_set(let right)): return Parameter<Double>.compare(lhs: left, rhs: right, with: matcher)
                 case (.rating_get,.rating_get): return true
 				case (.rating_set(let left),.rating_set(let right)): return Parameter<DoubleAttribute>.compare(lhs: left, rhs: right, with: matcher)
+                case (.maxRating_get,.maxRating_get): return true
+				case (.maxRating_set(let left),.maxRating_set(let right)): return Parameter<DoubleAttribute>.compare(lhs: left, rhs: right, with: matcher)
                 case (.note_get,.note_get): return true
 				case (.note_set(let left),.note_set(let right)): return Parameter<TextAttribute>.compare(lhs: left, rhs: right, with: matcher)
                 case (.entityName_get,.entityName_get): return true
@@ -250,10 +250,10 @@ class MoodMock: Mood, Mock {
 
         func intValue() -> Int {
             switch self {
-                case .notRated_get: return 0
-				case .notRated_set(let newValue): return newValue.intValue
                 case .rating_get: return 0
 				case .rating_set(let newValue): return newValue.intValue
+                case .maxRating_get: return 0
+				case .maxRating_set(let newValue): return newValue.intValue
                 case .note_get: return 0
 				case .note_set(let newValue): return newValue.intValue
                 case .entityName_get: return 0

@@ -1873,6 +1873,116 @@ class HeartRateQueryMock: HeartRateQuery, Mock {
     }
 }
 
+// MARK: - ImporterFactory
+class ImporterFactoryMock: ImporterFactory, Mock {
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    var matcher: Matcher = Matcher.default
+
+
+    typealias Property = Swift.Never
+
+
+
+    func wellnessMoodImporter() -> WellnessMoodImporter {
+        addInvocation(.iwellnessMoodImporter)
+		let perform = methodPerformValue(.iwellnessMoodImporter) as? () -> Void
+		perform?()
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iwellnessMoodImporter)
+		let value = givenValue.value as? WellnessMoodImporter
+		return value.orFail("stub return value not specified for wellnessMoodImporter(). Use given")
+    }
+
+    fileprivate enum MethodType {
+        case iwellnessMoodImporter
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+                case (.iwellnessMoodImporter, .iwellnessMoodImporter):
+                    return true 
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+                case .iwellnessMoodImporter: return 0
+            }
+        }
+    }
+
+    struct Given {
+        fileprivate var method: MethodType
+        var returns: Any?
+        var `throws`: Error?
+
+        private init(method: MethodType, returns: Any?, throws: Error?) {
+            self.method = method
+            self.returns = returns
+            self.`throws` = `throws`
+        }
+
+        static func wellnessMoodImporter(willReturn: WellnessMoodImporter) -> Given {
+            return Given(method: .iwellnessMoodImporter, returns: willReturn, throws: nil)
+        }
+    }
+
+    struct Verify {
+        fileprivate var method: MethodType
+
+        static func wellnessMoodImporter() -> Verify {
+            return Verify(method: .iwellnessMoodImporter)
+        }
+    }
+
+    struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        static func wellnessMoodImporter(perform: () -> Void) -> Perform {
+            return Perform(method: .iwellnessMoodImporter, performs: perform)
+        }
+    }
+
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+        methodReturnValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+    public func verify(property: Property, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) { }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+
+    private func methodReturnValue(_ method: MethodType) -> (value: Any?, error: Error?) {
+        let matched = methodReturnValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher)  }
+        return (value: matched?.returns, error: matched?.`throws`)
+    }
+
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+}
+
 // MARK: - InjectionProvider
 class InjectionProviderMock: InjectionProvider, Mock {
     private var invocations: [MethodType] = []
@@ -1975,6 +2085,15 @@ class InjectionProviderMock: InjectionProvider, Mock {
 		return value.orFail("stub return value not specified for sampleGroupCombinerFactory(). Use given")
     }
 
+    func importerFactory() -> ImporterFactory {
+        addInvocation(.iimporterFactory)
+		let perform = methodPerformValue(.iimporterFactory) as? () -> Void
+		perform?()
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iimporterFactory)
+		let value = givenValue.value as? ImporterFactory
+		return value.orFail("stub return value not specified for importerFactory(). Use given")
+    }
+
     fileprivate enum MethodType {
         case idatabase
         case icodableStorage
@@ -1986,6 +2105,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
         case iextraInformationFactory
         case isampleGrouperFactory
         case isampleGroupCombinerFactory
+        case iimporterFactory
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -2009,6 +2129,8 @@ class InjectionProviderMock: InjectionProvider, Mock {
                     return true 
                 case (.isampleGroupCombinerFactory, .isampleGroupCombinerFactory):
                     return true 
+                case (.iimporterFactory, .iimporterFactory):
+                    return true 
                 default: return false
             }
         }
@@ -2025,6 +2147,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
                 case .iextraInformationFactory: return 0
                 case .isampleGrouperFactory: return 0
                 case .isampleGroupCombinerFactory: return 0
+                case .iimporterFactory: return 0
             }
         }
     }
@@ -2070,6 +2193,9 @@ class InjectionProviderMock: InjectionProvider, Mock {
         static func sampleGroupCombinerFactory(willReturn: SampleGroupCombinerFactory) -> Given {
             return Given(method: .isampleGroupCombinerFactory, returns: willReturn, throws: nil)
         }
+        static func importerFactory(willReturn: ImporterFactory) -> Given {
+            return Given(method: .iimporterFactory, returns: willReturn, throws: nil)
+        }
     }
 
     struct Verify {
@@ -2104,6 +2230,9 @@ class InjectionProviderMock: InjectionProvider, Mock {
         }
         static func sampleGroupCombinerFactory() -> Verify {
             return Verify(method: .isampleGroupCombinerFactory)
+        }
+        static func importerFactory() -> Verify {
+            return Verify(method: .iimporterFactory)
         }
     }
 
@@ -2140,6 +2269,9 @@ class InjectionProviderMock: InjectionProvider, Mock {
         }
         static func sampleGroupCombinerFactory(perform: () -> Void) -> Perform {
             return Perform(method: .isampleGroupCombinerFactory, performs: perform)
+        }
+        static func importerFactory(perform: () -> Void) -> Perform {
+            return Perform(method: .iimporterFactory, performs: perform)
         }
     }
 
@@ -4822,6 +4954,116 @@ class WeightQueryMock: WeightQuery, Mock {
         let invocations = matchingCalls(property.method)
         MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(property.method)`, but was: \(invocations.count)", file: file, line: line)
     }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+
+    private func methodReturnValue(_ method: MethodType) -> (value: Any?, error: Error?) {
+        let matched = methodReturnValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher)  }
+        return (value: matched?.returns, error: matched?.`throws`)
+    }
+
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+}
+
+// MARK: - WellnessMoodImporter
+class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    var matcher: Matcher = Matcher.default
+
+
+    typealias Property = Swift.Never
+
+
+
+    func importData(from url: URL) throws {
+        addInvocation(.iimportData__from_url(Parameter<URL>.value(url)))
+		let perform = methodPerformValue(.iimportData__from_url(Parameter<URL>.value(url))) as? (URL) -> Void
+		perform?(url)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iimportData__from_url(Parameter<URL>.value(url)))
+		if let error = givenValue.error { throw error }
+    }
+
+    fileprivate enum MethodType {
+        case iimportData__from_url(Parameter<URL>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+                case (.iimportData__from_url(let lhsUrl), .iimportData__from_url(let rhsUrl)):
+                    guard Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher) else { return false } 
+                    return true 
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+                case let .iimportData__from_url(p0): return p0.intValue
+            }
+        }
+    }
+
+    struct Given {
+        fileprivate var method: MethodType
+        var returns: Any?
+        var `throws`: Error?
+
+        private init(method: MethodType, returns: Any?, throws: Error?) {
+            self.method = method
+            self.returns = returns
+            self.`throws` = `throws`
+        }
+
+        static func importData(from url: Parameter<URL>, willThrow: Error) -> Given {
+            return Given(method: .iimportData__from_url(url), returns: nil, throws: willThrow)
+        }
+    }
+
+    struct Verify {
+        fileprivate var method: MethodType
+
+        static func importData(from url: Parameter<URL>) -> Verify {
+            return Verify(method: .iimportData__from_url(url))
+        }
+    }
+
+    struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        static func importData(from url: Parameter<URL>, perform: (URL) -> Void) -> Perform {
+            return Perform(method: .iimportData__from_url(url), performs: perform)
+        }
+    }
+
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+        methodReturnValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+    public func verify(property: Property, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) { }
 
     private func addInvocation(_ call: MethodType) {
         invocations.append(call)

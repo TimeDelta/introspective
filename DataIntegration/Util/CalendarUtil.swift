@@ -9,7 +9,7 @@
 import Foundation
 import SwiftDate
 
-public let defaultDateFormat = "MMMM dd YYYY 'at' HH:mm:ss"
+public let defaultDateFormat = "MMMM dd yyyy 'at' HH:mm:ss"
 
 //sourcery: AutoMockable
 public protocol CalendarUtil {

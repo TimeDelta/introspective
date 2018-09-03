@@ -11,8 +11,8 @@ import CoreData
 
 public protocol Mood: CoreDataSample {
 
-	static var notRated: Double { get }
 	static var rating: DoubleAttribute { get }
+	static var maxRating: DoubleAttribute { get }
 	static var note: TextAttribute { get }
 
 	var maxRating: Double { get set }
@@ -31,10 +31,10 @@ public final class MoodImpl: NSManagedObject, Mood {
 
 	public static let entityName = "Mood"
 
-	public static let notRated = Double.nan
 	public static let rating = DoubleAttribute(name: "Mood Rating", pluralName: "Mood Ratings", variableName: "rating")
+	public static let maxRating = DoubleAttribute(name: "Max Mood Rating", pluralName: "Max mood rating", variableName: "maxRating")
 	public static let note = TextAttribute(name: "Note", pluralName: "Notes", variableName: "note")
-	public static let attributes: [Attribute] = [CommonSampleAttributes.timestamp, rating, note]
+	public static let attributes: [Attribute] = [CommonSampleAttributes.timestamp, rating, maxRating, note]
 
 	public final let name: String = "Mood"
 	public final override var description: String { return "A quantitative reflection on your mood." }
