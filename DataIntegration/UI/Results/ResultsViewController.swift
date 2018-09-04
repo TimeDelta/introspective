@@ -11,6 +11,8 @@ import os
 
 final class ResultsViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
 
+	// MARK: - Static variables
+
 	private typealias Me = ResultsViewController
 	private static let cellHeights: [DataTypes: CGFloat] = [
 		// HealthKit
@@ -22,12 +24,14 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 		.mood: 67,
 	]
 
+	// MARK: - Public Member Variables
+
 	public final var dataType: DataTypes!
 
 	public final var extraInformation: [ExtraInformation]! {
 		didSet {
 			if error == nil && extraInformation != nil && samples != nil {
-				DispatchQueue.main.async { self.viewIsReady() }
+				DispatchQueue.global(qos: .userInteractive).async { self.viewIsReady() }
 			}
 		}
 	}
@@ -36,7 +40,7 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 	public final var samples: [Sample]! {
 		didSet {
 			if error == nil && extraInformation != nil && samples != nil  {
-				DispatchQueue.main.async { self.viewIsReady() }
+				DispatchQueue.global(qos: .userInteractive).async { self.viewIsReady() }
 			}
 		}
 	}
@@ -47,14 +51,23 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 		}
 	}
 
+	// MARK: - IBOutlets
+
 	@IBOutlet weak final var actionsButton: UIBarButtonItem!
+
+	// MARK: - Private Member Variables
 
 	private final var lastSelectedRowIndex: Int!
 	private final var extraInformationEditIndex: Int!
 
+	private final var finishedLoading = false
+
+	// MARK: - UIViewController Overloads
+
 	public final override func viewDidLoad() {
 		disableActionsButton()
 		self.navigationItem.setRightBarButton(actionsButton, animated: true)
+		finishedLoading = true
 	}
 
 	// MARK: - Table view data source
@@ -215,9 +228,12 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 	// MARK: - Helper functions
 
 	private final func viewIsReady() {
-		enableActionsButton()
-		recomputeExtraInformation()
-		tableView.reloadData()
+		while !finishedLoading {}
+		DispatchQueue.main.async {
+			self.enableActionsButton()
+			self.recomputeExtraInformation()
+			self.tableView.reloadData()
+		}
 	}
 
 	private final func waiting() -> Bool {
