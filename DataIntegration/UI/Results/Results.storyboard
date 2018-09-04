@@ -162,13 +162,7 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                     <items>
                         <navigationItem title="Results" id="Ug8-T0-D2y">
-                            <barButtonItem key="rightBarButtonItem" title="..." id="kRk-L8-68y">
-                                <connections>
-                                    <segue destination="iE9-Lr-Iae" kind="popoverPresentation" popoverAnchorBarButtonItem="kRk-L8-68y" id="0I2-yk-vws">
-                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                    </segue>
-                                </connections>
-                            </barButtonItem>
+                            <barButtonItem key="rightBarButtonItem" title="..." id="kRk-L8-68y"/>
                         </navigationItem>
                     </items>
                 </navigationBar>
@@ -238,46 +232,52 @@
             <objects>
                 <viewController storyboardIdentifier="resultsActions" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="iE9-Lr-Iae" customClass="ResultsActionsPopupViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="x0W-Fc-vfF">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="130"/>
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="144"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xQg-Vf-YGO">
-                                <rect key="frame" x="0.0" y="50" width="300" height="30"/>
+                                <rect key="frame" x="0.0" y="38" width="300" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Add Information"/>
                                 <connections>
-                                    <action selector="dismissVIewWithSender:" destination="iE9-Lr-Iae" eventType="touchUpInside" id="ZhO-j3-cve"/>
+                                    <action selector="addInformationWithSender:" destination="iE9-Lr-Iae" eventType="touchUpInside" id="OpE-c1-c36"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eEC-G3-LDa">
-                                <rect key="frame" x="0.0" y="12" width="300" height="30"/>
+                                <rect key="frame" x="0.0" y="0.0" width="300" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Graph"/>
                                 <connections>
-                                    <action selector="dismissVIewWithSender:" destination="iE9-Lr-Iae" eventType="touchUpInside" id="eL7-tg-h1g"/>
+                                    <action selector="graphWithSender:" destination="iE9-Lr-Iae" eventType="touchUpInside" id="JHu-7M-foi"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="obP-1C-gTH">
-                                <rect key="frame" x="0.0" y="88" width="300" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="0.0" y="76" width="300" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Edit"/>
                                 <connections>
-                                    <action selector="dismissVIewWithSender:" destination="iE9-Lr-Iae" eventType="touchUpInside" id="k9h-An-0Uf"/>
+                                    <action selector="editWithSender:" destination="iE9-Lr-Iae" eventType="touchUpInside" id="7gL-8M-CJR"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tcl-As-EkD">
+                                <rect key="frame" x="0.0" y="114" width="300" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Delete All ___ Entries"/>
+                                <connections>
+                                    <action selector="deleteAllWithSender:" destination="iE9-Lr-Iae" eventType="touchUpInside" id="6qe-Nc-h9U"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="onV-iN-pBD"/>
                     </view>
-                    <value key="contentSizeForViewInPopover" type="size" width="300" height="130"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="300" height="130"/>
+                    <size key="freeformSize" width="300" height="144"/>
                     <connections>
-                        <outlet property="addInformationButton" destination="xQg-Vf-YGO" id="pCx-bG-yma"/>
+                        <outlet property="deleteAllButton" destination="tcl-As-EkD" id="ELP-es-FNR"/>
                         <outlet property="editButton" destination="obP-1C-gTH" id="dr8-bb-wvA"/>
-                        <outlet property="graphButton" destination="eEC-G3-LDa" id="NI7-dE-wZz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuY-F3-2WJ" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -21,6 +21,7 @@ public protocol Database {
 	func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type]
 	func save()
 	func delete(_ object: NSManagedObject)
+	func deleteAll(_ objects: [NSManagedObject]) throws
 }
 
 public class DatabaseImpl: Database {
@@ -81,5 +82,11 @@ public class DatabaseImpl: Database {
 
 	public final func delete(_ object: NSManagedObject) {
 		persistentContainer.viewContext.delete(object)
+	}
+
+	public final func deleteAll(_ objects: [NSManagedObject]) throws {
+		let objectIds = objects.map { return $0.objectID }
+		let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: objectIds)
+		try persistentContainer.viewContext.execute(batchDeleteRequest)
 	}
 }

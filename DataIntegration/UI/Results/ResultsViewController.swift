@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Presentr
+import CoreData
 import os
 
 final class ResultsViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
@@ -59,6 +61,7 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 
 	private final var lastSelectedRowIndex: Int!
 	private final var extraInformationEditIndex: Int!
+	private final var actionsPresenter: Presentr!
 
 	private final var finishedLoading = false
 
@@ -66,6 +69,14 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 
 	public final override func viewDidLoad() {
 		disableActionsButton()
+		actionsButton.target = self
+		actionsButton.action = #selector(presentActions)
+
+		NotificationCenter.default.addObserver(self, selector: #selector(graphButtonPressed), name: ResultsActionsPopupViewController.graphSamples, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(addInformationButtonPressed), name: ResultsActionsPopupViewController.addInformation, object: nil)
+		NotificationCenter.default.addObserver(editButtonItem.target!, selector: editButtonItem.action!, name: ResultsActionsPopupViewController.graphSamples, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(deleteAllSamples), name: ResultsActionsPopupViewController.deleteAllSamples, object: nil)
+
 		self.navigationItem.setRightBarButton(actionsButton, animated: true)
 		finishedLoading = true
 	}
@@ -165,7 +176,7 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 	// MARK: - TableView Editing
 
 	final override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		return indexPath.section == 0
+		return indexPath.section == 0 || samplesAreDeletable()
 	}
 
 	final override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
@@ -179,8 +190,17 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 
 	final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
-			self.extraInformation.remove(at: indexPath.row)
-			self.extraInformationValues.remove(at: indexPath.row)
+			if indexPath.section == 0 {
+				self.extraInformation.remove(at: indexPath.row)
+				self.extraInformationValues.remove(at: indexPath.row)
+			} else if indexPath.section == 1 {
+				guard let managedSample = self.samples[indexPath.row] as? NSManagedObject else { return }
+				DispatchQueue.global(qos: .background).async {
+					DependencyInjector.db.delete(managedSample)
+					DependencyInjector.db.save()
+				}
+				self.samples.remove(at: indexPath.row)
+			}
 			tableView.deleteRows(at: [indexPath], with: .fade)
 			tableView.reloadData()
 		}
@@ -191,16 +211,7 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 	// MARK: - Navigation
 
 	public final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.destination is ResultsActionsPopupViewController {
-			let controller = segue.destination as! ResultsActionsPopupViewController
-			controller.modalPresentationStyle = UIModalPresentationStyle.popover
-			controller.popoverPresentationController!.delegate = self
-			controller.currentlyEditing = isEditing
-			let _ = controller.view
-			controller.graphButton.addTarget(self, action: #selector(graphButtonPressed), for: .touchUpInside)
-			controller.addInformationButton.addTarget(self, action: #selector(addInformationButtonPressed), for: .touchUpInside)
-			controller.editButton.addTarget(self.editButtonItem.target, action: self.editButtonItem.action!, for: .touchUpInside)
-		} else if segue.destination is SelectExtraInformationViewController {
+		if segue.destination is SelectExtraInformationViewController {
 			let informationCell = (sender as! UITableViewCell)
 			extraInformationEditIndex = tableView.indexPath(for: informationCell)!.row
 			let selectedInformation = extraInformation[extraInformationEditIndex]
@@ -227,8 +238,14 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 
 	// MARK: - Helper functions
 
+	@objc private final func presentActions() {
+		let actionsController = storyboard!.instantiateViewController(withIdentifier: "resultsActions") as! ResultsActionsPopupViewController
+		actionsController.sampleType = dataType.description
+		customPresentViewController(actionsPresenter, viewController: actionsController, animated: true)
+	}
+
 	private final func viewIsReady() {
-		while !finishedLoading {}
+		while !finishedLoading {} // this ensures that the actions button does not get disabled after everything loads
 		DispatchQueue.main.async {
 			self.enableActionsButton()
 			self.recomputeExtraInformation()
@@ -247,14 +264,31 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 		}
 	}
 
+	private final func samplesAreDeletable() -> Bool {
+		return (samples != nil && samples.count > 0 && samples[0] is CoreDataSample)
+	}
+
 	private final func disableActionsButton() {
 		actionsButton.isEnabled = false
 		actionsButton.tintColor = UIColor.darkGray
 	}
 
 	private final func enableActionsButton() {
+		setActionsPresenter()
 		actionsButton.isEnabled = true
 		actionsButton.tintColor = nil
+	}
+
+	private final func setActionsPresenter() {
+		let customType: PresentationType
+		if samplesAreDeletable() {
+			customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 144), center: .center)
+		} else {
+			customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 106), center: .center)
+		}
+		actionsPresenter = Presentr(presentationType: customType)
+		actionsPresenter.dismissTransitionType = .crossDissolve
+		actionsPresenter.roundCorners = true
 	}
 
 	@objc private final func graphButtonPressed() {
@@ -270,5 +304,14 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 		extraInformation.append(information)
 		recomputeExtraInformation()
 		tableView.reloadData()
+	}
+
+	@objc private final func deleteAllSamples() {
+		DispatchQueue.global(qos: .userInitiated).async {
+			// TODO - tell the user something went wrong if an error is thrown here
+			try! DependencyInjector.db.deleteAll(self.samples as! [NSManagedObject])
+			DependencyInjector.db.save()
+		}
+		navigationController!.popViewController(animated: true)
 	}
 }

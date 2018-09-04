@@ -1558,11 +1558,20 @@ class DatabaseMock: Database, Mock {
 		perform?(object)
     }
 
+    func deleteAll(_ objects: [NSManagedObject]) throws {
+        addInvocation(.ideleteAll__objects(Parameter<[NSManagedObject]>.value(objects)))
+		let perform = methodPerformValue(.ideleteAll__objects(Parameter<[NSManagedObject]>.value(objects))) as? ([NSManagedObject]) -> Void
+		perform?(objects)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.ideleteAll__objects(Parameter<[NSManagedObject]>.value(objects)))
+		if let error = givenValue.error { throw error }
+    }
+
     fileprivate enum MethodType {
         case inew__objectType_objectType(Parameter<GenericAttribute>)
         case iquery__fetchRequest(Parameter<GenericAttribute>)
         case isave
         case idelete__object(Parameter<NSManagedObject>)
+        case ideleteAll__objects(Parameter<[NSManagedObject]>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -1577,6 +1586,9 @@ class DatabaseMock: Database, Mock {
                 case (.idelete__object(let lhsObject), .idelete__object(let rhsObject)):
                     guard Parameter.compare(lhs: lhsObject, rhs: rhsObject, with: matcher) else { return false } 
                     return true 
+                case (.ideleteAll__objects(let lhsObjects), .ideleteAll__objects(let rhsObjects)):
+                    guard Parameter.compare(lhs: lhsObjects, rhs: rhsObjects, with: matcher) else { return false } 
+                    return true 
                 default: return false
             }
         }
@@ -1587,6 +1599,7 @@ class DatabaseMock: Database, Mock {
                 case let .iquery__fetchRequest(p0): return p0.intValue
                 case .isave: return 0
                 case let .idelete__object(p0): return p0.intValue
+                case let .ideleteAll__objects(p0): return p0.intValue
             }
         }
     }
@@ -1614,6 +1627,9 @@ class DatabaseMock: Database, Mock {
         static func query<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willThrow: Error) -> Given {
             return Given(method: .iquery__fetchRequest(fetchRequest.wrapAsGeneric()), returns: nil, throws: willThrow)
         }
+        static func deleteAll(objects: Parameter<[NSManagedObject]>, willThrow: Error) -> Given {
+            return Given(method: .ideleteAll__objects(objects), returns: nil, throws: willThrow)
+        }
     }
 
     struct Verify {
@@ -1630,6 +1646,9 @@ class DatabaseMock: Database, Mock {
         }
         static func delete(object: Parameter<NSManagedObject>) -> Verify {
             return Verify(method: .idelete__object(object))
+        }
+        static func deleteAll(objects: Parameter<[NSManagedObject]>) -> Verify {
+            return Verify(method: .ideleteAll__objects(objects))
         }
     }
 
@@ -1648,6 +1667,9 @@ class DatabaseMock: Database, Mock {
         }
         static func delete(object: Parameter<NSManagedObject>, perform: (NSManagedObject) -> Void) -> Perform {
             return Perform(method: .idelete__object(object), performs: perform)
+        }
+        static func deleteAll(objects: Parameter<[NSManagedObject]>, perform: ([NSManagedObject]) -> Void) -> Perform {
+            return Perform(method: .ideleteAll__objects(objects), performs: perform)
         }
     }
 
