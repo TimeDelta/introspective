@@ -11,14 +11,13 @@ import UIKit
 final class AddToQueryViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
 
 	private typealias Me = AddToQueryViewController
-
 	private static let values = QueryViewController.CellType.allTypes.map { (type: QueryViewController.CellType) -> String in
 		return type.description
 	}
 
-	@IBOutlet weak final var questionPartSelector: UIPickerView!
+	public final var notificationToSendOnAccept: Notification.Name!
 
-	final var cellType: QueryViewController.CellType!
+	@IBOutlet weak final var questionPartSelector: UIPickerView!
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
@@ -38,14 +37,15 @@ final class AddToQueryViewController: UIViewController, UIPickerViewDataSource, 
 		return Me.values[row]
 	}
 
-	final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.identifier == "addQuestionPart" {
-			let index = questionPartSelector.selectedRow(inComponent: 0)
-			if index == 0 {
-				cellType = .subDataType
-			} else {
-				cellType = QueryViewController.CellType.allTypes[index]
-			}
+	@IBAction final func userClickedAccept(sender: Any?) {
+		let index = questionPartSelector.selectedRow(inComponent: 0)
+		var cellType: QueryViewController.CellType
+		if index == 0 {
+			cellType = .subDataType
+		} else {
+			cellType = QueryViewController.CellType.allTypes[index]
 		}
+		NotificationCenter.default.post(name: notificationToSendOnAccept, object: cellType)
+		dismiss(animated: true, completion: nil)
 	}
 }

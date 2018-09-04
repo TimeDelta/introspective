@@ -7,13 +7,36 @@
 //
 
 import UIKit
+import Presentr
 import os
 
 final class QueryViewController: UITableViewController {
 
+	// MARK: - Static Member Variables
 	private typealias Me = QueryViewController
 	private static let acceptedAttributeRestrictionEdit = Notification.Name("acceptedAttributeRestrictionEdit")
 	private static let acceptedSubDataTypeEdit = Notification.Name("acceptedSubDataTypeEdit")
+	private static let addQuestionPart = Notification.Name("addQuestionPart")
+	private static let acceptedDataTypeEdit = Notification.Name("acceptedDataTypeEdit")
+
+	private static let addQuestionPartPresenter: Presentr = {
+		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
+
+		let customPresenter = Presentr(presentationType: customType)
+		customPresenter.dismissTransitionType = .crossDissolve
+		customPresenter.roundCorners = true
+		return customPresenter
+	}()
+	private static let editDataTypePresenter: Presentr = {
+		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
+
+		let customPresenter = Presentr(presentationType: customType)
+		customPresenter.dismissTransitionType = .crossDissolve
+		customPresenter.roundCorners = true
+		return customPresenter
+	}()
+
+	// MARK: - Enums / Structs
 
 	public enum CellType: CustomStringConvertible {
 		case dataType
@@ -45,9 +68,16 @@ final class QueryViewController: UITableViewController {
 		}
 	}
 
+	// MARK: - IBOutlets
+	@IBOutlet weak final var addPartButton: UIBarButtonItem!
+
+	// MARK: - Instance Member Variables
+
 	final var parts: [Any]!
 	final var cellTypes: [CellType]!
 	final var editedIndex: Int!
+
+	// MARK: - UIViewController Overloads
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
@@ -64,7 +94,13 @@ final class QueryViewController: UITableViewController {
 
 		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedAttributeRestriction), name: Me.acceptedAttributeRestrictionEdit, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedSubQueryDataType), name: Me.acceptedSubDataTypeEdit, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(addQuestionPart), name: Me.addQuestionPart, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedDataType), name: Me.acceptedDataTypeEdit, object: nil)
+		addPartButton.target = self
+		addPartButton.action = #selector(addPartButtonWasPressed)
 	}
+
+	// MARK: - Table View Data Source
 
 	final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return parts.count
@@ -97,6 +133,8 @@ final class QueryViewController: UITableViewController {
 		}
 	}
 
+	// MARK: - Table View Delegate
+
 	final override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 		return indexPath.row != 0
 	}
@@ -121,16 +159,22 @@ final class QueryViewController: UITableViewController {
 		return [delete]
 	}
 
+	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		if indexPath.section == 0 && indexPath.row == 0 {
+			let controller = storyboard!.instantiateViewController(withIdentifier: "editDataType") as! EditDataTypeViewController
+			editedIndex = 0
+			let dataType = (parts[0] as! DataTypeInfo).dataType
+			controller.selectedIndex = EditDataTypeViewController.indexFor(type: dataType.description)
+			controller.notificationToSendOnAccept = Me.acceptedDataTypeEdit
+			tableView.deselectRow(at: indexPath, animated: true)
+			customPresentViewController(Me.editDataTypePresenter, viewController: controller, animated: true)
+		}
+	}
+
+	// MARK: - Navigation
+
 	final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.destination is AddToQueryViewController {
-			segue.destination.modalPresentationStyle = UIModalPresentationStyle.popover
-			segue.destination.popoverPresentationController!.delegate = self
-		} else if segue.destination is EditDataTypeViewController {
-			let controller = (segue.destination as! EditDataTypeViewController)
-			let source = (sender as! UITableViewCell)
-			editedIndex = tableView.indexPath(for: source)!.row
-			controller.selectedIndex = EditDataTypeViewController.indexFor(type: source.textLabel!.text!)
-		} else if segue.destination is EditAttributeRestrictionViewController {
+		if segue.destination is EditAttributeRestrictionViewController {
 			let controller = (segue.destination as! EditAttributeRestrictionViewController)
 			let source = (sender as! UITableViewCell)
 			editedIndex = tableView.indexPath(for: source)!.row
@@ -151,9 +195,8 @@ final class QueryViewController: UITableViewController {
 		}
 	}
 
-	@IBAction final func saveEditedDataType(_ segue: UIStoryboardSegue) {
-		let controller = (segue.source as! EditDataTypeViewController)
-		let index = controller.dataTypeSelector.selectedRow(inComponent: 0)
+	@objc final func saveEditedDataType(notification: Notification) {
+		let index = notification.object as! Int
 		parts[editedIndex] = DataTypeInfo(DataTypes.allTypes[index])
 		tableView.reloadData()
 	}
@@ -168,28 +211,29 @@ final class QueryViewController: UITableViewController {
 		tableView.reloadData()
 	}
 
-	@IBAction final func addQuestionPart(_ segue: UIStoryboardSegue) {
-		if segue.identifier == "addQuestionPart" {
-			let controller = (segue.source as! AddToQueryViewController)
-			let cellType = controller.cellType!
-			cellTypes.append(cellType)
-			switch (cellType) {
-				case .dataType, .subDataType:
-					parts.append(DataTypeInfo())
-					break
-				case .attributeRestriction:
-					let lastDataType = bottomMostDataType()
-					let attribute = lastDataType.defaultDependentAttribute
-					let attributeRestriction = EqualToNumericAttributeRestriction(attribute: attribute)
-					parts.append(attributeRestriction)
-					break
-			}
-
-			partWasAdded()
+	@objc final func addQuestionPart(notification: Notification) {
+		let cellType = notification.object as! CellType
+		cellTypes.append(cellType)
+		switch (cellType) {
+			case .dataType, .subDataType:
+				parts.append(DataTypeInfo())
+				break
+			case .attributeRestriction:
+				let lastDataType = bottomMostDataType()
+				let attribute = lastDataType.defaultDependentAttribute
+				let attributeRestriction = EqualToNumericAttributeRestriction(attribute: attribute)
+				parts.append(attributeRestriction)
+				break
 		}
+
+		partWasAdded()
 	}
 
-	@IBAction final func cancel(_ segue: UIStoryboardSegue) {} // do nothing
+	@objc private final func addPartButtonWasPressed() {
+		let controller = storyboard!.instantiateViewController(withIdentifier: "addQuestionPart") as! AddToQueryViewController
+		controller.notificationToSendOnAccept = Me.addQuestionPart
+		customPresentViewController(Me.addQuestionPartPresenter, viewController: controller, animated: true)
+	}
 
 	// Mark: - Helper Functions
 
@@ -313,7 +357,7 @@ final class QueryViewController: UITableViewController {
 
 extension QueryViewController: UIPopoverPresentationControllerDelegate {
 
-	func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+	final func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
 		return UIModalPresentationStyle.none
 	}
 }

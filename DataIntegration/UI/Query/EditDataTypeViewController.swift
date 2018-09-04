@@ -28,6 +28,7 @@ final class EditDataTypeViewController: UIViewController, UIPickerViewDataSource
 	}
 
 	final var selectedIndex: Int!
+	final var notificationToSendOnAccept: Notification.Name!
 
 	@IBOutlet weak final var dataTypeSelector: UIPickerView!
 
@@ -48,5 +49,10 @@ final class EditDataTypeViewController: UIViewController, UIPickerViewDataSource
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		return Me.values[row]
+	}
+
+	@IBAction func userPressedAccept(_ sender: Any) {
+		NotificationCenter.default.post(name: notificationToSendOnAccept, object: dataTypeSelector.selectedRow(inComponent: 0))
+		dismiss(animated: true, completion: nil)
 	}
 }
