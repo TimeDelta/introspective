@@ -14,12 +14,12 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 	private typealias Me = TestDataGenerationTableViewCell
 
 	private static let samplesPerHour = 12
-	private static let minHeartRate: UInt32 = 45
-	private static let maxHeartRate: UInt32 = 200
-	private static let minWeight: UInt32 = 100
-	private static let maxWeight: UInt32 = 200
-	private static let minBMI: UInt32 = 15
-	private static let maxBMI: UInt32 = 50
+
+	private static let bmiRange: (min: UInt32, max: UInt32) = (min: 15, max: 50)
+	private static let heartRateRange: (min: UInt32, max: UInt32) = (min: 45, max: 200)
+	private static let leanBodyMassRange: (min: UInt32, max: UInt32) = (min: 120, max: 150)
+	private static let weightRange: (min: UInt32, max: UInt32) = (min: 100, max: 200)
+
 	private static let moodNotes = [
 		"Not feeling too great", nil,
 		"Today was a great day", nil,
@@ -42,9 +42,10 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 				fatalError("HealthKit authorization failed: " + error!.localizedDescription)
 			}
 			DispatchQueue.global(qos: .userInitiated).async {
-				var heartRates = [HeartRate]()
-				var weights = [Weight]()
 				var bmis = [BodyMassIndex]()
+				var heartRates = [HeartRate]()
+				var leanBodyMasses = [LeanBodyMass]()
+				var weights = [Weight]()
 
 				for daysAgo in 1 ... 60 {
 					for hoursAgo in 0 ... 23 {
@@ -52,8 +53,14 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 							let minutesAgo: Int = 60 * sampleNum / Me.samplesPerHour
 							let date = Date() - daysAgo.days - hoursAgo.hours - minutesAgo.minutes
 
-							let heartRate = HeartRate(Double(arc4random_uniform(Me.maxHeartRate - Me.minHeartRate) + Me.minHeartRate), date)
+							let bmi = BodyMassIndex(self.randomDouble(Me.bmiRange), date)
+							bmis.append(bmi)
+
+							let heartRate = HeartRate(self.randomDouble(Me.heartRateRange), date)
 							heartRates.append(heartRate)
+
+							let leanBodyMass = LeanBodyMass(self.randomDouble(Me.leanBodyMassRange), date)
+							leanBodyMasses.append(leanBodyMass)
 
 							let mood = DependencyInjector.dataType.mood()
 							mood.timestamp = date
@@ -61,19 +68,17 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 							mood.rating = Double(arc4random_uniform(UInt32(mood.maxRating)))
 							mood.note = Me.moodNotes[Int(arc4random_uniform(UInt32(Me.moodNotes.count - 1)))]
 
-							let weight = Weight(Double(arc4random_uniform(Me.maxWeight - Me.minWeight) + Me.minWeight), date)
+							let weight = Weight(self.randomDouble(Me.weightRange), date)
 							weights.append(weight)
-
-							let bmi = BodyMassIndex(Double(arc4random_uniform(Me.maxBMI - Me.minBMI) + Me.minBMI), date)
-							bmis.append(bmi)
 						}
 					}
 				}
 
 				DependencyInjector.db.save()
-				HealthKitDataTestUtil.save(type: .heartRate, heartRates)
-				HealthKitDataTestUtil.save(type: .weight, weights)
 				HealthKitDataTestUtil.save(type: .bmi, bmis)
+				HealthKitDataTestUtil.save(type: .heartRate, heartRates)
+				HealthKitDataTestUtil.save(type: .leanBodyMass, leanBodyMasses)
+				HealthKitDataTestUtil.save(type: .weight, weights)
 
 				DispatchQueue.main.async {
 					self.dataGenerationActivityIndicator.isHidden = true
@@ -83,5 +88,9 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 				}
 			}
 		}
+	}
+
+	private final func randomDouble(_ range: (min: UInt32, max: UInt32)) -> Double {
+		return Double(arc4random_uniform(range.max - range.min) + range.min)
 	}
 }

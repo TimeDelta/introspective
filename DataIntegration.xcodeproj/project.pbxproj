@@ -96,6 +96,7 @@
 		592A5B5BE50EF1F5DE39B372BA688F97 /* DateOnlyAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B15E596CF33EC439D956F34A975A7D /* DateOnlyAttribute.swift */; };
 		59E80B1140C480E70826B269BDC8EA0C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6EFDA0D8A49DDAB2C764758C38BB7C55 /* Assets.xcassets */; };
 		5C078D5E5D6A67B0FD03BDF40EDD5A37 /* SameDatesSubQueryMatcherFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81060F9F96A9BF38607FDA003112FCCE /* SameDatesSubQueryMatcherFunctionalTests.swift */; };
+		5F7145A6443C4619F48ECC898BBB7E3F /* LeanBodyMass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD00D8F6C6A684259EA8F37D1184678 /* LeanBodyMass.swift */; };
 		607346B6CAE87B396FE19DB2F7FDA3D8 /* NumericSampleUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D6977A57B39B1C1425D3878E0C6B663 /* NumericSampleUtil.swift */; };
 		608B1BB13F88DC35BE11044F11601C5A /* LessThanOrEqualToNumericAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D681E66A6BA8584B8D3646432EE336FC /* LessThanOrEqualToNumericAttributeRestrictionUnitTests.swift */; };
 		609C900B3D875AA87F13161BD98A113C /* BodyMassIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31335A5BF1402E244D0514A742D0B736 /* BodyMassIndex.swift */; };
@@ -134,6 +135,7 @@
 		8742AB2D6CD5FCC0EA3AAB4E9C69A90A /* SampleGroupCombiner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51583E53521D85F034EA9FE3CC4D8ED9 /* SampleGroupCombiner.swift */; };
 		89C1488BECE28B9CF8B94B367FA7E310 /* SampleUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFB3042CC68A1D57CBFC494CC6E0C09 /* SampleUtil.swift */; };
 		8A85FCFA3C9432F5253A67BC93DEA680 /* ImporterFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B564BC6F9BE4D76034F6456FD6533E64 /* ImporterFactory.swift */; };
+		8B9F086375A15E982C35959895454240 /* LeanBodyMassQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74B8618708E58525E248CFEB19CEC906 /* LeanBodyMassQuery.swift */; };
 		8BDCA09F05326153E452E08DC032801D /* TextAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C5D633D575C4B52FA8432126665922 /* TextAttribute.swift */; };
 		8C223B17DD49912F7AA9D8D7026C2FE0 /* NumericAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDB0F5043170D77BE7445B3ADFA5233 /* NumericAttributeRestriction.swift */; };
 		8D49755E0EFC8B73E020804322AF6589 /* AttributeDescriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E588CD99251C0F4C98C7C2A07A176D /* AttributeDescriptionViewController.swift */; };
@@ -141,6 +143,7 @@
 		92702A2421CF78CDC253D4CDF63E6634 /* SameEndDatesSubQueryMatcherFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D3528E0566B2F94F90745E84469C44 /* SameEndDatesSubQueryMatcherFunctionalTests.swift */; };
 		92C7A7C75BEB2EC4318F855F187514B1 /* InSameCalendarUnitSubQueryMatcherFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C343D48043C85A2BEE23931055E048A9 /* InSameCalendarUnitSubQueryMatcherFunctionalTests.swift */; };
 		93BDFA34A581A560E466B9EF23F8E26E /* SameStartDatesSubQueryMatcherFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5576EC1CDDD9E0A21A704CD16A7BBCBB /* SameStartDatesSubQueryMatcherFunctionalTests.swift */; };
+		94344978DB01485BA4838F31A8A8B7B7 /* LeanBodyMassQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A919EADCD4F93E09172ECAE2FEC76FDB /* LeanBodyMassQueryFunctionalTests.swift */; };
 		967581943ECB0F3165EA853B2553FAEE /* HeartRateQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F2A7607E1B55CB5E480011ECC5D8615 /* HeartRateQueryFunctionalTests.swift */; };
 		96A83CFDC2839A887D4C57EA6E3CE07A /* SelectExtraInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08CCC1947E6E38BF061CE5951DCCE3D /* SelectExtraInformationViewController.swift */; };
 		96F1CE31C26A5124FB589917D714279E /* BeforeDateAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C651C2D3D7469BCDF2EA53F37A9EB33 /* BeforeDateAttributeRestrictionUnitTests.swift */; };
@@ -400,6 +403,7 @@
 		7309F7DAEFFE63C665E1779FB4022634 /* SameDatesSubQueryMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SameDatesSubQueryMatcher.swift; sourceTree = "<group>"; };
 		74514233F508FE826884A7B8FCD9DD38 /* Mocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
 		7454556A2B10E62C2B674DE5D1A59353 /* StartsWithStringAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartsWithStringAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
+		74B8618708E58525E248CFEB19CEC906 /* LeanBodyMassQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeanBodyMassQuery.swift; sourceTree = "<group>"; };
 		75359B6F29B2E3CFFF6B1FA030262AE7 /* NumericAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericAttribute.swift; sourceTree = "<group>"; };
 		783F06A344A51D1BA6F7E2F4410303BF /* OnDateAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDateAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		78423FF150CAB51A2B4235DF24742D07 /* AttributeRestrictionFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeRestrictionFactory.swift; sourceTree = "<group>"; };
@@ -444,11 +448,13 @@
 		99E9B5620B8F1B545D1E048092ED0316 /* BeforeDateAndTimeAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeforeDateAndTimeAttributeRestriction.swift; sourceTree = "<group>"; };
 		9A214A9E274205E9A786C23389DE5696 /* HorizontalMultiSelectAttributeValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalMultiSelectAttributeValueViewController.swift; sourceTree = "<group>"; };
 		9A66AC46AB73B48E19F6D2FE234C8309 /* SameDatesSubQueryMatcherUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SameDatesSubQueryMatcherUnitTests.swift; sourceTree = "<group>"; };
+		9BD00D8F6C6A684259EA8F37D1184678 /* LeanBodyMass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeanBodyMass.swift; sourceTree = "<group>"; };
 		9FD453CD3D249B6B9B99EA642198C12D /* BodyMassIndexQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyMassIndexQueryFunctionalTests.swift; sourceTree = "<group>"; };
 		A5C9A8724BF5AE2FCFBEDBD0974AFD08 /* AfterTimeOfDayAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterTimeOfDayAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A743E525C7D969243616FC0D19EECCD4 /* SameStartDatesSubQueryMatcherUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SameStartDatesSubQueryMatcherUnitTests.swift; sourceTree = "<group>"; };
 		A754557D1FCADC351EC3C432539DCD96 /* TestDataGenerationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDataGenerationTableViewCell.swift; sourceTree = "<group>"; };
 		A7A53A7CA006D4FBD270EE9CE0934C8D /* QueryFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryFactory.swift; sourceTree = "<group>"; };
+		A919EADCD4F93E09172ECAE2FEC76FDB /* LeanBodyMassQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeanBodyMassQueryFunctionalTests.swift; sourceTree = "<group>"; };
 		AAB90E1E9D9FF7A6E592CD656E974294 /* HealthKitQuantitySample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitQuantitySample.swift; sourceTree = "<group>"; };
 		AC25FB764DCEC4AF225646C6233C5B33 /* UnitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitTest.swift; sourceTree = "<group>"; };
 		AC461ED82BC1439356D84C5F07A70648 /* DateOrTimeAttributeValueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOrTimeAttributeValueViewController.swift; sourceTree = "<group>"; };
@@ -606,9 +612,10 @@
 		0457D04D2DA2B8200F11165C13BBDF7F /* HealthKit */ = {
 			isa = PBXGroup;
 			children = (
-				7F2A7607E1B55CB5E480011ECC5D8615 /* HeartRateQueryFunctionalTests.swift */,
-				B328FAA510785284169685ED2372FDD2 /* WeightQueryFunctionalTests.swift */,
 				9FD453CD3D249B6B9B99EA642198C12D /* BodyMassIndexQueryFunctionalTests.swift */,
+				7F2A7607E1B55CB5E480011ECC5D8615 /* HeartRateQueryFunctionalTests.swift */,
+				A919EADCD4F93E09172ECAE2FEC76FDB /* LeanBodyMassQueryFunctionalTests.swift */,
+				B328FAA510785284169685ED2372FDD2 /* WeightQueryFunctionalTests.swift */,
 			);
 			path = HealthKit;
 			sourceTree = "<group>";
@@ -873,9 +880,10 @@
 			children = (
 				1D4EEAB3D088696245C0D89C388B1D3B /* HealthManager.swift */,
 				206DE8025C2E30954BA670CD9EAC8A0E /* HealthKitQuery.swift */,
-				2D1AF24EF00E5BCA6F4D102A46F64384 /* HeartRateQuery.swift */,
-				F4FAC763A70DBD4942A119A4C1763C7B /* WeightQuery.swift */,
 				61F24F523B49925F8DE1F50DC5E98137 /* BodyMassIndexQuery.swift */,
+				2D1AF24EF00E5BCA6F4D102A46F64384 /* HeartRateQuery.swift */,
+				74B8618708E58525E248CFEB19CEC906 /* LeanBodyMassQuery.swift */,
+				F4FAC763A70DBD4942A119A4C1763C7B /* WeightQuery.swift */,
 			);
 			path = HealthKit;
 			sourceTree = "<group>";
@@ -945,6 +953,7 @@
 				AAB90E1E9D9FF7A6E592CD656E974294 /* HealthKitQuantitySample.swift */,
 				31335A5BF1402E244D0514A742D0B736 /* BodyMassIndex.swift */,
 				8D642A7781B3D33AB8769B9073927A38 /* HeartRate.swift */,
+				9BD00D8F6C6A684259EA8F37D1184678 /* LeanBodyMass.swift */,
 				323A8D6369E3E27A0B8FB6967916A295 /* Weight.swift */,
 			);
 			path = HealthKit;
@@ -1805,6 +1814,7 @@
 				D59F40B9A38643EC5477A006242518B5 /* GraphCustomizationViewController.swift in Sources */,
 				0C16ACE558991235E3564C38F702C877 /* GreaterThanNumericAttributeRestriction.swift in Sources */,
 				EE0253278343D80A2433EF3812A58855 /* StringAttributeRestriction.swift in Sources */,
+				5F7145A6443C4619F48ECC898BBB7E3F /* LeanBodyMass.swift in Sources */,
 				1F6846816917667566C2236D04ADF7D6 /* GreaterThanOrEqualToNumericAttributeRestriction.swift in Sources */,
 				19D33A2B78F12F1FC90914FC0D4265C9 /* HeartRate.swift in Sources */,
 				B520CA83F92E270A5574EA7F66518AA3 /* HealthManager.swift in Sources */,
@@ -1838,6 +1848,7 @@
 				3DF93B02859690F07C3D8DB8BD33287D /* ProductionInjectionProvider.swift in Sources */,
 				24EC35C42E7A83EB358DE05BED3CC386 /* Query.swift in Sources */,
 				3979A130A4D52B83D204A992E41995A9 /* QueryError.swift in Sources */,
+				8B9F086375A15E982C35959895454240 /* LeanBodyMassQuery.swift in Sources */,
 				F33C702510065001811B96C1408CCB1F /* Importer.swift in Sources */,
 				C6F3CD1069606851E8D1B50B3DC4F974 /* ScaleOldMoodsViewController.swift in Sources */,
 				71A846EA3A1FE7ADC69A0F1F20D731FD /* QueryFactory.swift in Sources */,
@@ -1956,6 +1967,7 @@
 				079D5C51A1092BF02DE0F1FCC393CDA9 /* BeforeTimeOfDayAttributeRestrictionUnitTests.swift in Sources */,
 				92C7A7C75BEB2EC4318F855F187514B1 /* InSameCalendarUnitSubQueryMatcherFunctionalTests.swift in Sources */,
 				E80FC0A1347B1AC448011EF314B04828 /* InSameCalendarUnitSubQueryMatcherUnitTests.swift in Sources */,
+				94344978DB01485BA4838F31A8A8B7B7 /* LeanBodyMassQueryFunctionalTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

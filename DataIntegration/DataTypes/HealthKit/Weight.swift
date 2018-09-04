@@ -18,7 +18,7 @@ public final class Weight: HealthKitQuantitySample, Equatable, CustomDebugString
 	private typealias Me = Weight
 
 	public static let pounds: HKUnit = HKUnit(from: .pound)
-	public static let kilograms: HKUnit = HKUnit(from: .kilogram)
+	public static let unit = HealthManager.preferredUnitFor(.weight) ?? Me.pounds
 
 	public static let weight = DoubleAttribute(name: "weight", pluralName: "weights", variableName: HKPredicateKeyPathQuantity)
 	public static let timestamp = DateTimeAttribute(name: "timestamp", pluralName: "timestamps", variableName: HKPredicateKeyPathStartDate)
@@ -57,12 +57,12 @@ public final class Weight: HealthKitQuantitySample, Equatable, CustomDebugString
 	}
 
 	public init(_ sample: HKQuantitySample) {
-		weight = sample.quantity.doubleValue(for: Me.pounds)
+		weight = sample.quantity.doubleValue(for: Me.unit)
 		timestamp = sample.startDate
 	}
 
 	public final func quantityUnit() -> HKUnit {
-		return Me.pounds
+		return Me.unit
 	}
 
 	public final func quantityValue() -> Double {

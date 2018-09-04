@@ -11,7 +11,7 @@ import HealthKit
 
 public final class HeartRate: HealthKitQuantitySample, Equatable, CustomDebugStringConvertible {
 
-	public static func == (lhs: HeartRate, rhs: HeartRate) -> Bool {
+	public static func ==(lhs: HeartRate, rhs: HeartRate) -> Bool {
 		return lhs.equalTo(rhs)
 	}
 

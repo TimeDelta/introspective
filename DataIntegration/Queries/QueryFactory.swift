@@ -11,10 +11,11 @@ import os
 
 //sourcery: AutoMockable
 public protocol QueryFactory {
+	func bmiQuery() -> BodyMassIndexQuery
 	func heartRateQuery() -> HeartRateQuery
+	func leanBodyMassQuery() -> LeanBodyMassQuery
 	func moodQuery() -> MoodQuery
 	func weightQuery() -> WeightQuery
-	func bmiQuery() -> BodyMassIndexQuery
 }
 
 public final class QueryFactoryImpl: QueryFactory {
@@ -23,8 +24,16 @@ public final class QueryFactoryImpl: QueryFactory {
 		case UnknownSampleType
 	}
 
+	public final func bmiQuery() -> BodyMassIndexQuery {
+		return BodyMassIndexQueryImpl()
+	}
+
 	public final func heartRateQuery() -> HeartRateQuery {
 		return HeartRateQueryImpl()
+	}
+
+	public final func leanBodyMassQuery() -> LeanBodyMassQuery {
+		return LeanBodyMassQueryImpl()
 	}
 
 	public final func moodQuery() -> MoodQuery {
@@ -33,9 +42,5 @@ public final class QueryFactoryImpl: QueryFactory {
 
 	public final func weightQuery() -> WeightQuery {
 		return WeightQueryImpl()
-	}
-
-	public final func bmiQuery() -> BodyMassIndexQuery {
-		return BodyMassIndexQueryImpl()
 	}
 }

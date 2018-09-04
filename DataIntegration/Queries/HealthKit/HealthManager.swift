@@ -13,35 +13,39 @@ import os
 public final class HealthManager {
 
 	public enum SampleType {
-		case heartRate
-		case weight
 		case bmi
+		case heartRate
+		case leanBodyMass
+		case weight
 
 		static var allTypes: [SampleType] {
-			return [.heartRate, .weight, .bmi]
+			return [.bmi, .heartRate, .leanBodyMass, .weight]
 		}
 
 		var name: String {
 			switch (self) {
-				case .heartRate: return "heart rate"
-				case .weight: return "weight"
 				case .bmi: return "body mass index"
+				case .heartRate: return "heart rate"
+				case .leanBodyMass: return "lean body mass"
+				case .weight: return "weight"
 			}
 		}
 
 		var objectType: HKObjectType {
 			switch (self) {
-				case .heartRate: return HKObjectType.quantityType(forIdentifier: .heartRate)!
-				case .weight: return HKObjectType.quantityType(forIdentifier: .bodyMass)!
 				case .bmi: return HKObjectType.quantityType(forIdentifier: .bodyMassIndex)!
+				case .heartRate: return HKObjectType.quantityType(forIdentifier: .heartRate)!
+				case .leanBodyMass: return HKObjectType.quantityType(forIdentifier: .leanBodyMass)!
+				case .weight: return HKObjectType.quantityType(forIdentifier: .bodyMass)!
 			}
 		}
 
 		var sampleType: HKSampleType {
 			switch (self) {
-				case .heartRate: return HKSampleType.quantityType(forIdentifier: .heartRate)!
-				case .weight: return HKSampleType.quantityType(forIdentifier: .bodyMass)!
 				case .bmi: return HKSampleType.quantityType(forIdentifier: .bodyMassIndex)!
+				case .heartRate: return HKSampleType.quantityType(forIdentifier: .heartRate)!
+				case .leanBodyMass: return HKSampleType.quantityType(forIdentifier: .leanBodyMass)!
+				case .weight: return HKSampleType.quantityType(forIdentifier: .bodyMass)!
 			}
 		}
 	}
@@ -57,6 +61,22 @@ public final class HealthManager {
 			callback(results as? [HKQuantitySample], error)
 		}
 		Me.healthStore.execute(query)
+	}
+
+	static public func preferredUnitFor(_ type: SampleType) -> HKUnit? {
+		let group = DispatchGroup()
+		group.enter()
+		let quantityType = type.objectType as! HKQuantityType
+		var unit: HKUnit? = nil
+		Me.healthStore.preferredUnits(for: Set([quantityType])) { (units, error) in
+			if error != nil {
+				os_log("Failed to determine preferred unit for %@: %@", type: .error, String(describing: type), error!.localizedDescription)
+			}
+			unit = units[quantityType]
+			group.leave()
+		}
+		group.wait()
+		return unit
 	}
 
 	static public func getAuthorization(for type: SampleType, callback: @escaping (Error?) -> ()) {

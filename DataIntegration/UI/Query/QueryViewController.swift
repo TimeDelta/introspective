@@ -96,8 +96,8 @@ final class QueryViewController: UITableViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedSubQueryDataType), name: Me.acceptedSubDataTypeEdit, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(addQuestionPart), name: Me.addQuestionPart, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedDataType), name: Me.acceptedDataTypeEdit, object: nil)
-		addPartButton.target = self
-		addPartButton.action = #selector(addPartButtonWasPressed)
+		addPartButton?.target = self
+		addPartButton?.action = #selector(addPartButtonWasPressed)
 	}
 
 	// MARK: - Table View Data Source
@@ -292,17 +292,20 @@ final class QueryViewController: UITableViewController {
 
 			let dataTypeInfo = parts[0] as! DataTypeInfo
 			switch (dataTypeInfo.dataType) {
+				case .bmi:
+					currentQuery = DependencyInjector.query.bmiQuery()
+					break
 				case .heartRate:
 					currentQuery = DependencyInjector.query.heartRateQuery()
+					break
+				case .leanBodyMass:
+					currentQuery = DependencyInjector.query.leanBodyMassQuery()
 					break
 				case .mood:
 					currentQuery = DependencyInjector.query.moodQuery()
 					break
 				case .weight:
 					currentQuery = DependencyInjector.query.weightQuery()
-					break
-				case .bmi:
-					currentQuery = DependencyInjector.query.bmiQuery()
 					break
 			}
 

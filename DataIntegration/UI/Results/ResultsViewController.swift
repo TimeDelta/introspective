@@ -13,19 +13,6 @@ import os
 
 final class ResultsViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
 
-	// MARK: - Static variables
-
-	private typealias Me = ResultsViewController
-	private static let cellHeights: [DataTypes: CGFloat] = [
-		// HealthKit
-		.heartRate: 44,
-		.weight: 44,
-		.bmi: 44,
-
-		// CoreData
-		.mood: 67,
-	]
-
 	// MARK: - Public Member Variables
 
 	public final var dataType: DataTypes!
@@ -152,7 +139,7 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 
 		if section == 1 {
 			switch (dataType!) {
-				case .heartRate, .weight, .bmi:
+				case .bmi, .heartRate, .leanBodyMass, .weight:
 					let sample = samples[row]
 					let cell = (tableView.dequeueReusableCell(withIdentifier: "healthKitQuantitySampleCell", for: indexPath) as! HealthKitQuantitySampleTableViewCell)
 					cell.sample = (sample as! HealthKitQuantitySample)
@@ -170,7 +157,13 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 	}
 
 	final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return Me.cellHeights[dataType]!
+		if indexPath.section == 0 { return 44 }
+		switch (dataType!) {
+			case .bmi, .heartRate, .leanBodyMass, .weight:
+				return 44
+			case .mood:
+				return 67
+		}
 	}
 
 	// MARK: - TableView Editing
