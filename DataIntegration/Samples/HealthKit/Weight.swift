@@ -9,32 +9,39 @@
 import Foundation
 import HealthKit
 
-public final class Weight: HealthKitQuantitySample, Equatable, CustomDebugStringConvertible {
-
-	public static func ==(lhs: Weight, rhs: Weight) -> Bool {
-		return lhs.equalTo(rhs)
-	}
+public final class Weight: HealthKitQuantitySample {
 
 	private typealias Me = Weight
 
-	public static let pounds: HKUnit = HKUnit(from: .pound)
-	public static let unit = HealthManager.preferredUnitFor(.weight) ?? Me.pounds
+	// MARK: - HealthKit Stuff
 
-	public static let weight = DoubleAttribute(name: "weight", pluralName: "weights", variableName: HKPredicateKeyPathQuantity)
-	public static let timestamp = DateTimeAttribute(name: "timestamp", pluralName: "timestamps", variableName: HKPredicateKeyPathStartDate)
+	public static let unit: HKUnit = HealthManager.preferredUnitFor(.bodyMass) ?? HKUnit(from: .pound)
+	public static let quantityType: HKQuantityType = HKQuantityType.quantityType(forIdentifier: .bodyMass)!
+	public static let sampleType: HKSampleType = quantityType
+	public static let objectType: HKObjectType = quantityType
+
+	// MARK: - Display Information
+
+	public static let name: String = "Weight"
+	public static let description: String = "A measurement of body mass."
+
+	// MARK: - Attributes
+
+	public static let weight = DoubleAttribute(name: "Weight", pluralName: "Weights", variableName: HKPredicateKeyPathQuantity)
+	public static let timestamp = DateTimeAttribute(name: "Timestamp", pluralName: "Timestamps", variableName: HKPredicateKeyPathStartDate)
 	public static let attributes: [Attribute] = [timestamp, weight]
-
-	public final var debugDescription: String {
-		return "Weight of \(weight) at " + DependencyInjector.util.calendarUtil.string(for: timestamp)
-	}
-
-	public final var name: String { return "Weight" }
-	public final var description: String { return "A measurement of body mass." }
-	public final var dataType: DataTypes { return .weight }
+	public static let defaultDependentAttribute: Attribute = weight
+	public static let defaultIndependentAttribute: Attribute = timestamp
 	public final var attributes: [Attribute] { return Me.attributes }
-	public final var timestamp: Date
 
+	// MARK: - Instance Member Variables
+
+	public final var name: String = Me.name
+	public final var description: String = Me.description
+	public final var timestamp: Date
 	public final var weight: Double
+
+	// MARK: - Initializers
 
 	public init() {
 		weight = Double()
@@ -56,10 +63,12 @@ public final class Weight: HealthKitQuantitySample, Equatable, CustomDebugString
 		self.timestamp = timestamp
 	}
 
-	public init(_ sample: HKQuantitySample) {
+	public required init(_ sample: HKQuantitySample) {
 		weight = sample.quantity.doubleValue(for: Me.unit)
 		timestamp = sample.startDate
 	}
+
+	// MARK: - HealthKitQuantitySample Functions
 
 	public final func quantityUnit() -> HKUnit {
 		return Me.unit
@@ -69,9 +78,13 @@ public final class Weight: HealthKitQuantitySample, Equatable, CustomDebugString
 		return weight
 	}
 
+	// MARK: - Sample Functions
+
 	public final func dates() -> [DateType: Date] {
 		return [.start: timestamp]
 	}
+
+	// MARK: - Attributed Functions
 
 	public final func value(of attribute: Attribute) throws -> Any {
 		if attribute.equalTo(Me.weight) {
@@ -96,6 +109,15 @@ public final class Weight: HealthKitQuantitySample, Equatable, CustomDebugString
 		}
 		throw AttributeError.unknownAttribute
 	}
+}
+
+// MARK: - Equatable
+
+extension Weight: Equatable {
+
+	public static func ==(lhs: Weight, rhs: Weight) -> Bool {
+		return lhs.equalTo(rhs)
+	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is Weight) { return false }
@@ -111,5 +133,14 @@ public final class Weight: HealthKitQuantitySample, Equatable, CustomDebugString
 
 	public final func equalTo(_ other: Weight) -> Bool {
 		return timestamp == other.timestamp && weight == other.weight
+	}
+}
+
+// MARK: - Debug
+
+extension Weight: CustomDebugStringConvertible {
+
+	public final var debugDescription: String {
+		return "Weight of \(weight) at " + DependencyInjector.util.calendarUtil.string(for: timestamp)
 	}
 }

@@ -11,6 +11,11 @@ import os
 
 public final class AnySample: Sample {
 
+	public static let name: String = "Custom"
+	public static let defaultDependentAttribute: Attribute = CommonSampleAttributes.timestamp
+	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.timestamp
+	public static let attributes: [Attribute] = []
+
 	private final var _dates: [DateType: Date] = [DateType: Date]() {
 		didSet { updateAttributeValuesWithDates() }
 	}
@@ -22,7 +27,6 @@ public final class AnySample: Sample {
 		return "AnySample (\(_dates[.start]?.toString() ?? "nil") - \(_dates[.end]?.toString() ?? "nil") values: " + attributeValues.debugDescription
 	}
 
-	public final var dataType: DataTypes { return .heartRate } // TODO - change this to custom once custom data types are supported
 	public final var attributes: [Attribute] {
 		didSet {
 			attributeValues = [String: Any]()

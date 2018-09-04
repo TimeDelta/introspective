@@ -18,11 +18,11 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 		super.setUp()
 		query = LeanBodyMassQueryImpl()
 		HealthKitDataTestUtil.ensureAuthorized()
-		HealthKitDataTestUtil.deleteAll(.leanBodyMass)
+		HealthKitDataTestUtil.deleteAll(LeanBodyMass.self)
 	}
 
 	override func tearDown() {
-		HealthKitDataTestUtil.deleteAll(.leanBodyMass)
+		HealthKitDataTestUtil.deleteAll(LeanBodyMass.self)
 		super.tearDown()
 	}
 
@@ -45,7 +45,7 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenOneBodyMassIndexInHealthKit_runQuery_returnsThatBodyMassIndex() {
 		// given
 		let expected = LeanBodyMass(89)
-		HealthKitDataTestUtil.save(type: .leanBodyMass, [expected])
+		HealthKitDataTestUtil.save(type: LeanBodyMass.self, [expected])
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -64,7 +64,7 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 		let value = 83.7
 		let expected = LeanBodyMass(value)
 		let unexpected = LeanBodyMass(value - 1)
-		HealthKitDataTestUtil.save(type: .leanBodyMass, [expected, unexpected])
+		HealthKitDataTestUtil.save(type: LeanBodyMass.self, [expected, unexpected])
 
 		let bmiRestriction = EqualToNumericAttributeRestriction(attribute: LeanBodyMass.leanBodyMass, value: value)
 		query.attributeRestrictions.append(bmiRestriction)
@@ -87,7 +87,7 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 		let expected1 = LeanBodyMass(value)
 		let expected2 = LeanBodyMass(value - 1)
 		let unexpected = LeanBodyMass(value + 1)
-		HealthKitDataTestUtil.save(type: .leanBodyMass, [expected1, expected2, unexpected])
+		HealthKitDataTestUtil.save(type: LeanBodyMass.self, [expected1, expected2, unexpected])
 
 		let bmiRestriction = LessThanOrEqualToNumericAttributeRestriction(attribute: LeanBodyMass.leanBodyMass, value: value)
 		query.attributeRestrictions.append(bmiRestriction)
@@ -112,7 +112,7 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 		let unexpected1 = LeanBodyMass(value - 2)
 		let unexpected2 = LeanBodyMass(value - 1)
 		let unexpected3 = LeanBodyMass()
-		HealthKitDataTestUtil.save(type: .leanBodyMass, [expected, unexpected1, unexpected2, unexpected3])
+		HealthKitDataTestUtil.save(type: LeanBodyMass.self, [expected, unexpected1, unexpected2, unexpected3])
 
 		let bmiRestriction = GreaterThanOrEqualToNumericAttributeRestriction(attribute: LeanBodyMass.leanBodyMass, value: value)
 		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(attribute: LeanBodyMass.timestamp, date: Date() - 1.days)

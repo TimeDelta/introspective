@@ -28,7 +28,7 @@ class RecordMoodTableViewCellUnitTests: UnitTest {
 		cell.outOfMaxRatingLabel = UILabel(frame: frame)
 
 		mockMood = MoodMock()
-		Given(mockDataTypeFactory, .mood(willReturn: mockMood))
+		Given(mockSampleFactory, .mood(willReturn: mockMood))
 
 		mockSettings.maximumMood = 7.0
 	}

@@ -10,44 +10,43 @@ import Foundation
 
 public protocol QueryError: DisplayableError {
 
-	var dataType: DataTypes { get }
+	var sampleType: Sample.Type { get }
 
-	init(dataType: DataTypes)
+	init(sampleType: Sample.Type)
 }
 
 public class NoSamplesFoundQueryError: QueryError {
 
-	public final let dataType: DataTypes
+	public final let sampleType: Sample.Type
 	public var displayableDescription: String {
-		let dataText = dataType.description.lowercased()
-		return "No \(dataText) samples found."
+		return "No \(sampleType.name.lowercased()) entries found."
 	}
 
-	public required init(dataType: DataTypes) {
-		self.dataType = dataType
+	public required init(sampleType: Sample.Type) {
+		self.sampleType = sampleType
 	}
 }
 
 public final class NoHealthKitSamplesFoundQueryError: NoSamplesFoundQueryError {
 
 	public final override var displayableDescription: String {
-		let dataText = dataType.description.lowercased()
-		return "No \(dataText) samples found. Are you sure you authorized this app to read \(dataText) data?"
+		let dataText = sampleType.name.lowercased()
+		return "No \(dataText) entries found. Are you sure you authorized this app to read \(dataText) data?"
 	}
 
-	public required init(dataType: DataTypes) {
-		super.init(dataType: dataType)
+	public required init(sampleType: Sample.Type) {
+		super.init(sampleType: sampleType)
 	}
 }
 
 public final class UnauthorizedQueryError: QueryError {
 
-	public final let dataType: DataTypes
+	public final let sampleType: Sample.Type
 	public final var displayableDescription: String {
-		return "You must authorize this app to read \(dataType.description) data"
+		return "You must authorize this app to read \(sampleType.name.lowercased()) data"
 	}
 
-	public required init(dataType: DataTypes) {
-		self.dataType = dataType
+	public required init(sampleType: Sample.Type) {
+		self.sampleType = sampleType
 	}
 }

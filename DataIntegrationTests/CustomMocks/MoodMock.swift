@@ -72,15 +72,6 @@ class MoodMock: Mood, Mock {
 	private var __timestamp: (Date)?
 
 
-    var dataType: DataTypes { 
-		get {	invocations.append(.dataType_get)
-				return __dataType.orFail("MoodMock - value for dataType was not defined") }
-		set {	invocations.append(.dataType_set(.value(newValue)))
-				__dataType = newValue }
-	}
-	private var __dataType: (DataTypes)?
-
-
     var name: String { 
 		get {	invocations.append(.name_get)
 				return __name.orFail("MoodMock - value for name was not defined") }
@@ -118,8 +109,6 @@ class MoodMock: Mood, Mock {
 		static func note(set newValue: Parameter<String?>) -> Property { return Property(method: .note_set(newValue)) }
         static var timestamp: Property { return Property(method: .timestamp_get) }
 		static func timestamp(set newValue: Parameter<Date>) -> Property { return Property(method: .timestamp_set(newValue)) }
-        static var dataType: Property { return Property(method: .dataType_get) }
-		static func dataType(set newValue: Parameter<DataTypes>) -> Property { return Property(method: .dataType_set(newValue)) }
         static var name: Property { return Property(method: .name_get) }
 		static func name(set newValue: Parameter<String>) -> Property { return Property(method: .name_set(newValue)) }
         static var attributes: Property { return Property(method: .attributes_get) }
@@ -164,6 +153,42 @@ class MoodMock: Mood, Mock {
 	private static var __entityName: (String)?
 
 
+    static var name: String { 
+		get {	MoodMock.invocations.append(.name_get)
+				return MoodMock.__name.orFail("MoodMock - value for name was not defined") }
+		set {	MoodMock.invocations.append(.name_set(.value(newValue)))
+				MoodMock.__name = newValue }
+	}
+	private static var __name: (String)?
+
+
+    static var attributes: [Attribute] { 
+		get {	MoodMock.invocations.append(.attributes_get)
+				return MoodMock.__attributes.orFail("MoodMock - value for attributes was not defined") }
+		set {	MoodMock.invocations.append(.attributes_set(.value(newValue)))
+				MoodMock.__attributes = newValue }
+	}
+	private static var __attributes: ([Attribute])?
+
+
+    static var defaultDependentAttribute: Attribute { 
+		get {	MoodMock.invocations.append(.defaultDependentAttribute_get)
+				return MoodMock.__defaultDependentAttribute.orFail("MoodMock - value for defaultDependentAttribute was not defined") }
+		set {	MoodMock.invocations.append(.defaultDependentAttribute_set(.value(newValue)))
+				MoodMock.__defaultDependentAttribute = newValue }
+	}
+	private static var __defaultDependentAttribute: (Attribute)?
+
+
+    static var defaultIndependentAttribute: Attribute { 
+		get {	MoodMock.invocations.append(.defaultIndependentAttribute_get)
+				return MoodMock.__defaultIndependentAttribute.orFail("MoodMock - value for defaultIndependentAttribute was not defined") }
+		set {	MoodMock.invocations.append(.defaultIndependentAttribute_set(.value(newValue)))
+				MoodMock.__defaultIndependentAttribute = newValue }
+	}
+	private static var __defaultIndependentAttribute: (Attribute)?
+
+
     struct StaticProperty {
         fileprivate var method: StaticMethodType
         static var rating: StaticProperty { return StaticProperty(method: .rating_get) }
@@ -174,6 +199,14 @@ class MoodMock: Mood, Mock {
 		static func note(set newValue: Parameter<TextAttribute>) -> StaticProperty { return StaticProperty(method: .note_set(newValue)) }
         static var entityName: StaticProperty { return StaticProperty(method: .entityName_get) }
 		static func entityName(set newValue: Parameter<String>) -> StaticProperty { return StaticProperty(method: .entityName_set(newValue)) }
+        static var name: StaticProperty { return StaticProperty(method: .name_get) }
+		static func name(set newValue: Parameter<String>) -> StaticProperty { return StaticProperty(method: .name_set(newValue)) }
+        static var attributes: StaticProperty { return StaticProperty(method: .attributes_get) }
+		static func attributes(set newValue: Parameter<[Attribute]>) -> StaticProperty { return StaticProperty(method: .attributes_set(newValue)) }
+        static var defaultDependentAttribute: StaticProperty { return StaticProperty(method: .defaultDependentAttribute_get) }
+		static func defaultDependentAttribute(set newValue: Parameter<Attribute>) -> StaticProperty { return StaticProperty(method: .defaultDependentAttribute_set(newValue)) }
+        static var defaultIndependentAttribute: StaticProperty { return StaticProperty(method: .defaultIndependentAttribute_get) }
+		static func defaultIndependentAttribute(set newValue: Parameter<Attribute>) -> StaticProperty { return StaticProperty(method: .defaultIndependentAttribute_set(newValue)) }
     }
 
 
@@ -233,6 +266,14 @@ class MoodMock: Mood, Mock {
 		case note_set(Parameter<TextAttribute>)
         case entityName_get
 		case entityName_set(Parameter<String>)
+        case name_get
+		case name_set(Parameter<String>)
+        case attributes_get
+		case attributes_set(Parameter<[Attribute]>)
+        case defaultDependentAttribute_get
+		case defaultDependentAttribute_set(Parameter<Attribute>)
+        case defaultIndependentAttribute_get
+		case defaultIndependentAttribute_set(Parameter<Attribute>)
 
         static func compareParameters(lhs: StaticMethodType, rhs: StaticMethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -244,6 +285,14 @@ class MoodMock: Mood, Mock {
 				case (.note_set(let left),.note_set(let right)): return Parameter<TextAttribute>.compare(lhs: left, rhs: right, with: matcher)
                 case (.entityName_get,.entityName_get): return true
 				case (.entityName_set(let left),.entityName_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
+                case (.name_get,.name_get): return true
+				case (.name_set(let left),.name_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
+                case (.attributes_get,.attributes_get): return true
+				case (.attributes_set(let left),.attributes_set(let right)): return Parameter<[Attribute]>.compare(lhs: left, rhs: right, with: matcher)
+                case (.defaultDependentAttribute_get,.defaultDependentAttribute_get): return true
+				case (.defaultDependentAttribute_set(let left),.defaultDependentAttribute_set(let right)): return Parameter<Attribute>.compare(lhs: left, rhs: right, with: matcher)
+                case (.defaultIndependentAttribute_get,.defaultIndependentAttribute_get): return true
+				case (.defaultIndependentAttribute_set(let left),.defaultIndependentAttribute_set(let right)): return Parameter<Attribute>.compare(lhs: left, rhs: right, with: matcher)
                 default: return false
             }
         }
@@ -258,6 +307,14 @@ class MoodMock: Mood, Mock {
 				case .note_set(let newValue): return newValue.intValue
                 case .entityName_get: return 0
 				case .entityName_set(let newValue): return newValue.intValue
+                case .name_get: return 0
+				case .name_set(let newValue): return newValue.intValue
+                case .attributes_get: return 0
+				case .attributes_set(let newValue): return newValue.intValue
+                case .defaultDependentAttribute_get: return 0
+				case .defaultDependentAttribute_set(let newValue): return newValue.intValue
+                case .defaultIndependentAttribute_get: return 0
+				case .defaultIndependentAttribute_set(let newValue): return newValue.intValue
             }
         }
     }
@@ -300,8 +357,6 @@ class MoodMock: Mood, Mock {
 		case note_set(Parameter<String?>)
         case timestamp_get
 		case timestamp_set(Parameter<Date>)
-        case dataType_get
-		case dataType_set(Parameter<DataTypes>)
         case name_get
 		case name_set(Parameter<String>)
         case attributes_get
@@ -334,8 +389,6 @@ class MoodMock: Mood, Mock {
 				case (.note_set(let left),.note_set(let right)): return Parameter<String?>.compare(lhs: left, rhs: right, with: matcher)
                 case (.timestamp_get,.timestamp_get): return true
 				case (.timestamp_set(let left),.timestamp_set(let right)): return Parameter<Date>.compare(lhs: left, rhs: right, with: matcher)
-                case (.dataType_get,.dataType_get): return true
-				case (.dataType_set(let left),.dataType_set(let right)): return Parameter<DataTypes>.compare(lhs: left, rhs: right, with: matcher)
                 case (.name_get,.name_get): return true
 				case (.name_set(let left),.name_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
                 case (.attributes_get,.attributes_get): return true
@@ -361,8 +414,6 @@ class MoodMock: Mood, Mock {
 				case .note_set(let newValue): return newValue.intValue
                 case .timestamp_get: return 0
 				case .timestamp_set(let newValue): return newValue.intValue
-                case .dataType_get: return 0
-				case .dataType_set(let newValue): return newValue.intValue
                 case .name_get: return 0
 				case .name_set(let newValue): return newValue.intValue
                 case .attributes_get: return 0

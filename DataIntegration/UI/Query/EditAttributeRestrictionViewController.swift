@@ -14,7 +14,7 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 	private static let doneEditing = Notification.Name("doneChoosingAttributeRestrictionAttributes")
 
 	public final var notificationToSendWhenAccepted: Notification.Name!
-	public final var dataType: DataTypes!
+	public final var sampleType: Sample.Type!
 	public final var attributeRestriction: AttributeRestriction!
 
 	@IBOutlet weak final var attributedChooserSubView: UIView!
@@ -74,7 +74,7 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 	}
 
 	private final func currentlySelectedAttribute() -> Attribute {
-		return DataTypes.attributesFor(dataType)[attributePicker.selectedRow(inComponent: 0)]
+		return sampleType.attributes[attributePicker.selectedRow(inComponent: 0)]
 	}
 }
 
@@ -85,14 +85,14 @@ extension EditAttributeRestrictionViewController: UIPickerViewDataSource {
 	}
 
 	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return DataTypes.attributesFor(dataType).count
+		return sampleType.attributes.count
 	}
 }
 
 extension EditAttributeRestrictionViewController: UIPickerViewDelegate {
 
 	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return DataTypes.attributesFor(dataType)[row].name
+		return sampleType.attributes[row].name
 	}
 
 	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

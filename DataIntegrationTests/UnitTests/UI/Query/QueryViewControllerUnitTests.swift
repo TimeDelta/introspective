@@ -24,8 +24,10 @@ class QueryViewControllerUnitTests: UnitTest {
 		// given
 		let sampleQuery = HeartRateQueryMock()
 		Given(mockQueryFactory, .heartRateQuery(willReturn: sampleQuery))
+
+		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.DataTypeInfo(.heartRate)
+		controller.parts[0] = QueryViewController.DataTypeInfo(HeartRate.self)
 		let segue = UIStoryboardSegue(identifier: "", source: controller, destination: ResultsViewController())
 
 		// when
@@ -41,8 +43,9 @@ class QueryViewControllerUnitTests: UnitTest {
 		sampleQuery.attributeRestrictions = []
 		Given(mockQueryFactory, .heartRateQuery(willReturn: sampleQuery))
 
+		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.DataTypeInfo(.heartRate)
+		controller.parts[0] = QueryViewController.DataTypeInfo(HeartRate.self)
 
 		let attributeRestriction = EqualToNumericAttributeRestriction(attribute: HeartRate.heartRate)
 		controller.parts.append(attributeRestriction)
@@ -63,8 +66,9 @@ class QueryViewControllerUnitTests: UnitTest {
 		sampleQuery.attributeRestrictions = []
 		Given(mockQueryFactory, .heartRateQuery(willReturn: sampleQuery))
 
+		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.DataTypeInfo(.heartRate)
+		controller.parts[0] = QueryViewController.DataTypeInfo(HeartRate.self)
 
 		let attributeRestriction1 = EqualToNumericAttributeRestriction(attribute: HeartRate.heartRate)
 		let attributeRestriction2 = NotEqualToNumericAttributeRestriction(attribute: HeartRate.heartRate)
@@ -90,10 +94,11 @@ class QueryViewControllerUnitTests: UnitTest {
 		let subQuery = MoodQueryMock()
 		Given(mockQueryFactory, .moodQuery(willReturn: subQuery))
 
+		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.DataTypeInfo(.heartRate)
+		controller.parts[0] = QueryViewController.DataTypeInfo(HeartRate.self)
 
-		var dataTypeInfo = QueryViewController.DataTypeInfo(.mood)
+		var dataTypeInfo = QueryViewController.DataTypeInfo(MoodImpl.self)
 		dataTypeInfo.matcher = SubQueryMatcherMock()
 		dataTypeInfo.matcher!.mostRecentOnly = false
 		controller.parts.append(dataTypeInfo)
@@ -119,10 +124,11 @@ class QueryViewControllerUnitTests: UnitTest {
 		subQuery.attributeRestrictions = []
 		Given(mockQueryFactory, .moodQuery(willReturn: subQuery))
 
+		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.DataTypeInfo(.heartRate)
+		controller.parts[0] = QueryViewController.DataTypeInfo(HeartRate.self)
 
-		var dataTypeInfo = QueryViewController.DataTypeInfo(.mood)
+		var dataTypeInfo = QueryViewController.DataTypeInfo(MoodImpl.self)
 		dataTypeInfo.matcher = SubQueryMatcherMock()
 		controller.parts.append(dataTypeInfo)
 
@@ -155,15 +161,16 @@ class QueryViewControllerUnitTests: UnitTest {
 		subQuery.attributeRestrictions = []
 		Given(mockQueryFactory, .moodQuery(willReturn: subQuery))
 
+		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.DataTypeInfo(.heartRate)
+		controller.parts[0] = QueryViewController.DataTypeInfo(HeartRate.self)
 
 		let heartRateAttributeRestriction1 = EqualToNumericAttributeRestriction(attribute: HeartRate.heartRate)
 		let heartRateAttributeRestriction2 = NotEqualToNumericAttributeRestriction(attribute: HeartRate.heartRate)
 		controller.parts.append(heartRateAttributeRestriction1)
 		controller.parts.append(heartRateAttributeRestriction2)
 
-		var dataTypeInfo = QueryViewController.DataTypeInfo(.mood)
+		var dataTypeInfo = QueryViewController.DataTypeInfo(MoodImpl.self)
 		dataTypeInfo.matcher = SubQueryMatcherMock()
 		controller.parts.append(dataTypeInfo)
 

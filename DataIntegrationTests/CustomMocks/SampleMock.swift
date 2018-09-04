@@ -25,15 +25,15 @@ class SampleMock: Sample, Mock {
     private var methodReturnValues: [Given] = []
     private var methodPerformValues: [Perform] = []
     var matcher: Matcher = Matcher.default
-
-
-    var dataType: DataTypes { 
-		get {	invocations.append(.dataType_get)
-				return __dataType.orFail("SampleMock - value for dataType was not defined") }
-		set {	invocations.append(.dataType_set(.value(newValue)))
-				__dataType = newValue }
-	}
-	private var __dataType: (DataTypes)?
+    static private var invocations: [StaticMethodType] = []
+    static private var methodReturnValues: [StaticGiven] = []
+    static private var methodPerformValues: [StaticPerform] = []
+    static var matcher: Matcher = Matcher.default
+    static func clear() {
+        invocations = []
+        methodReturnValues = []
+        methodPerformValues = []
+    }
 
 
     var name: String { 
@@ -65,8 +65,6 @@ class SampleMock: Sample, Mock {
 
     struct Property {
         fileprivate var method: MethodType
-        static var dataType: Property { return Property(method: .dataType_get) }
-		static func dataType(set newValue: Parameter<DataTypes>) -> Property { return Property(method: .dataType_set(newValue)) }
         static var name: Property { return Property(method: .name_get) }
 		static func name(set newValue: Parameter<String>) -> Property { return Property(method: .name_set(newValue)) }
         static var attributes: Property { return Property(method: .attributes_get) }
@@ -75,6 +73,53 @@ class SampleMock: Sample, Mock {
 		static func debugDescription(set newValue: Parameter<String>) -> Property { return Property(method: .debugDescription_set(newValue)) }
     }
 
+    static var name: String { 
+		get {	SampleMock.invocations.append(.name_get)
+				return SampleMock.__name.orFail("SampleMock - value for name was not defined") }
+		set {	SampleMock.invocations.append(.name_set(.value(newValue)))
+				SampleMock.__name = newValue }
+	}
+	private static var __name: (String)?
+
+
+    static var attributes: [Attribute] { 
+		get {	SampleMock.invocations.append(.attributes_get)
+				return SampleMock.__attributes.orFail("SampleMock - value for attributes was not defined") }
+		set {	SampleMock.invocations.append(.attributes_set(.value(newValue)))
+				SampleMock.__attributes = newValue }
+	}
+	private static var __attributes: ([Attribute])?
+
+
+    static var defaultDependentAttribute: Attribute { 
+		get {	SampleMock.invocations.append(.defaultDependentAttribute_get)
+				return SampleMock.__defaultDependentAttribute.orFail("SampleMock - value for defaultDependentAttribute was not defined") }
+		set {	SampleMock.invocations.append(.defaultDependentAttribute_set(.value(newValue)))
+				SampleMock.__defaultDependentAttribute = newValue }
+	}
+	private static var __defaultDependentAttribute: (Attribute)?
+
+
+    static var defaultIndependentAttribute: Attribute { 
+		get {	SampleMock.invocations.append(.defaultIndependentAttribute_get)
+				return SampleMock.__defaultIndependentAttribute.orFail("SampleMock - value for defaultIndependentAttribute was not defined") }
+		set {	SampleMock.invocations.append(.defaultIndependentAttribute_set(.value(newValue)))
+				SampleMock.__defaultIndependentAttribute = newValue }
+	}
+	private static var __defaultIndependentAttribute: (Attribute)?
+
+
+    struct StaticProperty {
+        fileprivate var method: StaticMethodType
+        static var name: StaticProperty { return StaticProperty(method: .name_get) }
+		static func name(set newValue: Parameter<String>) -> StaticProperty { return StaticProperty(method: .name_set(newValue)) }
+        static var attributes: StaticProperty { return StaticProperty(method: .attributes_get) }
+		static func attributes(set newValue: Parameter<[Attribute]>) -> StaticProperty { return StaticProperty(method: .attributes_set(newValue)) }
+        static var defaultDependentAttribute: StaticProperty { return StaticProperty(method: .defaultDependentAttribute_get) }
+		static func defaultDependentAttribute(set newValue: Parameter<Attribute>) -> StaticProperty { return StaticProperty(method: .defaultDependentAttribute_set(newValue)) }
+        static var defaultIndependentAttribute: StaticProperty { return StaticProperty(method: .defaultIndependentAttribute_get) }
+		static func defaultIndependentAttribute(set newValue: Parameter<Attribute>) -> StaticProperty { return StaticProperty(method: .defaultIndependentAttribute_set(newValue)) }
+    }
 
 
 
@@ -123,14 +168,75 @@ class SampleMock: Sample, Mock {
 		return value.orFail("stub return value not specified for equalTo(_ otherAttributed: Attributed). Use given")
     }
 
-    fileprivate enum MethodType {
+    fileprivate enum StaticMethodType {
+
+        case name_get
+		case name_set(Parameter<String>)
+        case attributes_get
+		case attributes_set(Parameter<[Attribute]>)
+        case defaultDependentAttribute_get
+		case defaultDependentAttribute_set(Parameter<Attribute>)
+        case defaultIndependentAttribute_get
+		case defaultIndependentAttribute_set(Parameter<Attribute>)
+
+        static func compareParameters(lhs: StaticMethodType, rhs: StaticMethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+                case (.name_get,.name_get): return true
+				case (.name_set(let left),.name_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
+                case (.attributes_get,.attributes_get): return true
+				case (.attributes_set(let left),.attributes_set(let right)): return Parameter<[Attribute]>.compare(lhs: left, rhs: right, with: matcher)
+                case (.defaultDependentAttribute_get,.defaultDependentAttribute_get): return true
+				case (.defaultDependentAttribute_set(let left),.defaultDependentAttribute_set(let right)): return Parameter<Attribute>.compare(lhs: left, rhs: right, with: matcher)
+                case (.defaultIndependentAttribute_get,.defaultIndependentAttribute_get): return true
+				case (.defaultIndependentAttribute_set(let left),.defaultIndependentAttribute_set(let right)): return Parameter<Attribute>.compare(lhs: left, rhs: right, with: matcher)
+                default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+                case .name_get: return 0
+				case .name_set(let newValue): return newValue.intValue
+                case .attributes_get: return 0
+				case .attributes_set(let newValue): return newValue.intValue
+                case .defaultDependentAttribute_get: return 0
+				case .defaultDependentAttribute_set(let newValue): return newValue.intValue
+                case .defaultIndependentAttribute_get: return 0
+				case .defaultIndependentAttribute_set(let newValue): return newValue.intValue
+            }
+        }
+    }
+
+    struct StaticGiven {
+        fileprivate var method: StaticMethodType
+        var returns: Any?
+        var `throws`: Error?
+
+        private init(method: StaticMethodType, returns: Any?, throws: Error?) {
+            self.method = method
+            self.returns = returns
+            self.`throws` = `throws`
+        }
+
+    }
+
+    struct StaticVerify {
+        fileprivate var method: StaticMethodType
+
+    }
+
+    struct StaticPerform {
+        fileprivate var method: StaticMethodType
+        var performs: Any
+
+    }
+
+        fileprivate enum MethodType {
         case idates
         case iequalTo__otherSample(Parameter<Sample>)
         case ivalue__of_attribute(Parameter<Attribute>)
         case iset__attribute_attributeto_value(Parameter<Attribute>, Parameter<Any>)
         case iequalTo__otherAttributed(Parameter<Attributed>)
-        case dataType_get
-		case dataType_set(Parameter<DataTypes>)
         case name_get
 		case name_set(Parameter<String>)
         case attributes_get
@@ -155,8 +261,6 @@ class SampleMock: Sample, Mock {
                 case (.iequalTo__otherAttributed(let lhsOtherattributed), .iequalTo__otherAttributed(let rhsOtherattributed)):
                     guard Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher) else { return false } 
                     return true 
-                case (.dataType_get,.dataType_get): return true
-				case (.dataType_set(let left),.dataType_set(let right)): return Parameter<DataTypes>.compare(lhs: left, rhs: right, with: matcher)
                 case (.name_get,.name_get): return true
 				case (.name_set(let left),.name_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
                 case (.attributes_get,.attributes_get): return true
@@ -174,8 +278,6 @@ class SampleMock: Sample, Mock {
                 case let .ivalue__of_attribute(p0): return p0.intValue
                 case let .iset__attribute_attributeto_value(p0, p1): return p0.intValue + p1.intValue
                 case let .iequalTo__otherAttributed(p0): return p0.intValue
-                case .dataType_get: return 0
-				case .dataType_set(let newValue): return newValue.intValue
                 case .name_get: return 0
 				case .name_set(let newValue): return newValue.intValue
                 case .attributes_get: return 0
@@ -298,6 +400,48 @@ class SampleMock: Sample, Mock {
 
     private func matchingCalls(_ method: MethodType) -> [MethodType] {
         return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+
+    static private func matchingCalls(_ method: StaticVerify) -> Int {
+        return matchingCalls(method.method).count
+    }
+
+    static public func given(_ method: StaticGiven) {
+        methodReturnValues.append(method)
+        methodReturnValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    static public func perform(_ method: StaticPerform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    static public func verify(_ method: StaticVerify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    static public func verify(property: StaticProperty, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(property.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(property.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    static private func addInvocation(_ call: StaticMethodType) {
+        invocations.append(call)
+    }
+
+    static private func methodReturnValue(_ method: StaticMethodType) -> (value: Any?, error: Error?) {
+        let matched = methodReturnValues.reversed().first { StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher)  }
+        return (value: matched?.returns, error: matched?.`throws`)
+    }
+
+    static private func methodPerformValue(_ method: StaticMethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+
+    static private func matchingCalls(_ method: StaticMethodType) -> [StaticMethodType] {
+        return invocations.filter { StaticMethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
     }
 // sourcery:end
 }

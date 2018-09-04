@@ -9,7 +9,11 @@
 import Foundation
 import HealthKit
 
-public protocol HealthKitQuantitySample: Sample {
+public protocol HealthKitQuantitySample: HealthKitSample {
+
+	static var quantityType: HKQuantityType { get }
+
+	init(_ sample: HKQuantitySample)
 
 	func quantityUnit() -> HKUnit
 	func quantityValue() -> Double

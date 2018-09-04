@@ -15,8 +15,6 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 
 	// MARK: - Public Member Variables
 
-	public final var dataType: DataTypes!
-
 	public final var extraInformation: [ExtraInformation]! {
 		didSet {
 			if error == nil && extraInformation != nil && samples != nil {
@@ -24,7 +22,6 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 			}
 		}
 	}
-	private final var extraInformationValues: [String]!
 
 	public final var samples: [Sample]! {
 		didSet {
@@ -46,10 +43,10 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 
 	// MARK: - Private Member Variables
 
+	private final var extraInformationValues: [String]!
 	private final var lastSelectedRowIndex: Int!
 	private final var extraInformationEditIndex: Int!
 	private final var actionsPresenter: Presentr!
-
 	private final var finishedLoading = false
 
 	// MARK: - UIViewController Overloads
@@ -78,8 +75,8 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 		if section == 0 {
 			return "Extra Information"
 		} else if section == 1 {
-			if dataType != nil {
-				return dataType.description
+			if samples != nil && samples.count > 0 {
+				return samples[0].name.capitalized
 			}
 			return "Entries"
 		} else {
@@ -138,17 +135,19 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 		}
 
 		if section == 1 {
-			switch (dataType!) {
-				case .bmi, .heartRate, .leanBodyMass, .weight:
+			switch (samples[0]) {
+				case is BodyMassIndex, is HeartRate, is LeanBodyMass, is Weight:
 					let sample = samples[row]
 					let cell = (tableView.dequeueReusableCell(withIdentifier: "healthKitQuantitySampleCell", for: indexPath) as! HealthKitQuantitySampleTableViewCell)
 					cell.sample = (sample as! HealthKitQuantitySample)
 					return cell
-				case .mood:
+				case is Mood:
 					let sample = samples[row]
 					let cell = (tableView.dequeueReusableCell(withIdentifier: "moodSampleCell", for: indexPath) as! MoodTableViewCell)
 					cell.mood = (sample as! Mood)
 					return cell
+				default:
+					fatalError("Forgot a type of Sample")
 			}
 		}
 
@@ -158,11 +157,13 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 
 	final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if indexPath.section == 0 { return 44 }
-		switch (dataType!) {
-			case .bmi, .heartRate, .leanBodyMass, .weight:
+		switch (samples[indexPath.row]) {
+			case is BodyMassIndex, is HeartRate, is LeanBodyMass, is Weight:
 				return 44
-			case .mood:
+			case is Mood:
 				return 67
+			default:
+				fatalError("Forgot a type of Sample")
 		}
 	}
 
@@ -233,7 +234,7 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 
 	@objc private final func presentActions() {
 		let actionsController = storyboard!.instantiateViewController(withIdentifier: "resultsActions") as! ResultsActionsPopupViewController
-		actionsController.sampleType = dataType.description
+		actionsController.sampleType = type(of: samples[0]).name
 		customPresentViewController(actionsPresenter, viewController: actionsController, animated: true)
 	}
 
@@ -287,12 +288,11 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 	@objc private final func graphButtonPressed() {
 		let controller = UIStoryboard(name: "Graph", bundle: nil).instantiateViewController(withIdentifier: "GraphCustomizationViewController") as! GraphCustomizationViewController
 		controller.samples = samples
-		controller.dataType = dataType
 		navigationController?.pushViewController(controller, animated: false)
 	}
 
 	@objc private final func addInformationButtonPressed() {
-		let attribute = samples[0].dataType.defaultDependentAttribute
+		let attribute = type(of: samples[0]).defaultDependentAttribute
 		let information = DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: attribute)[0].init(attribute)
 		extraInformation.append(information)
 		recomputeExtraInformation()

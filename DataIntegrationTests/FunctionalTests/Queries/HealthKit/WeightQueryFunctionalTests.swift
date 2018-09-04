@@ -18,11 +18,11 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 		super.setUp()
 		query = WeightQueryImpl()
 		HealthKitDataTestUtil.ensureAuthorized()
-		HealthKitDataTestUtil.deleteAll(.weight)
+		HealthKitDataTestUtil.deleteAll(Weight.self)
 	}
 
 	override func tearDown() {
-		HealthKitDataTestUtil.deleteAll(.weight)
+		HealthKitDataTestUtil.deleteAll(Weight.self)
 		super.tearDown()
 	}
 

@@ -11,12 +11,6 @@ import CoreData
 
 public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: SampleQueryImpl<SampleType> {
 
-	private final let dataType: DataTypes
-
-	public init(dataType: DataTypes) {
-		self.dataType = dataType
-	}
-
 	final override func run() {
 		let fetchRequest: NSFetchRequest<SampleType> = NSFetchRequest<SampleType>(entityName: SampleType.entityName)
 		fetchRequest.predicate = getPredicate()
@@ -25,14 +19,14 @@ public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: Sample
 			let samples: [SampleType] = try DependencyInjector.db.query(fetchRequest)
 
 			if samples.count == 0 {
-				self.queryDone(nil, NoSamplesFoundQueryError(dataType: dataType))
+				self.queryDone(nil, NoSamplesFoundQueryError(sampleType: SampleType.self))
 				return
 			}
 
 			let filteredSamples = samples.filter(self.samplePassesFilters)
 
 			if filteredSamples.count == 0 {
-				self.queryDone(nil, NoSamplesFoundQueryError(dataType: dataType))
+				self.queryDone(nil, NoSamplesFoundQueryError(sampleType: SampleType.self))
 				return
 			}
 

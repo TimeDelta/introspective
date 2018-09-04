@@ -12,9 +12,7 @@ final class EditDataTypeViewController: UIViewController, UIPickerViewDataSource
 
 	private typealias Me = EditDataTypeViewController
 
-	private static let values = DataTypes.allTypes.map { (type: DataTypes) -> String in
-		return type.description
-	}
+	private static let values = DependencyInjector.sample.allTypes().map { return $0.name }
 
 	static func indexFor(type: String) -> Int {
 		var index = 0
@@ -44,7 +42,7 @@ final class EditDataTypeViewController: UIViewController, UIPickerViewDataSource
 	}
 
 	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return DataTypes.allTypes.count
+		return DependencyInjector.sample.allTypes().count
 	}
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {

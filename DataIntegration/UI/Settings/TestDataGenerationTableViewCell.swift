@@ -37,7 +37,7 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 		generateTestDataButton.isEnabled = false
 		generateTestDataButton.isUserInteractionEnabled = false
 
-		HealthManager.getAuthorization(for: .heartRate) { error in
+		HealthManager.getAuthorization(for: HeartRate.self) { error in
 			if error != nil {
 				fatalError("HealthKit authorization failed: " + error!.localizedDescription)
 			}
@@ -62,7 +62,7 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 							let leanBodyMass = LeanBodyMass(self.randomDouble(Me.leanBodyMassRange), date)
 							leanBodyMasses.append(leanBodyMass)
 
-							let mood = DependencyInjector.dataType.mood()
+							let mood = DependencyInjector.sample.mood()
 							mood.timestamp = date
 							mood.maxRating = DependencyInjector.settings.maximumMood
 							mood.rating = Double(arc4random_uniform(UInt32(mood.maxRating)))
@@ -75,10 +75,10 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 				}
 
 				DependencyInjector.db.save()
-				HealthKitDataTestUtil.save(type: .bmi, bmis)
-				HealthKitDataTestUtil.save(type: .heartRate, heartRates)
-				HealthKitDataTestUtil.save(type: .leanBodyMass, leanBodyMasses)
-				HealthKitDataTestUtil.save(type: .weight, weights)
+				HealthKitDataTestUtil.save(type: BodyMassIndex.self, bmis)
+				HealthKitDataTestUtil.save(type: HeartRate.self, heartRates)
+				HealthKitDataTestUtil.save(type: LeanBodyMass.self, leanBodyMasses)
+				HealthKitDataTestUtil.save(type: Weight.self, weights)
 
 				DispatchQueue.main.async {
 					self.dataGenerationActivityIndicator.isHidden = true

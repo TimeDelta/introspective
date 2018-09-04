@@ -18,11 +18,11 @@ class BodyMassIndexQueryFunctionalTests: QueryFunctionalTest {
 		super.setUp()
 		query = BodyMassIndexQueryImpl()
 		HealthKitDataTestUtil.ensureAuthorized()
-		HealthKitDataTestUtil.deleteAll(.bmi)
+		HealthKitDataTestUtil.deleteAll(BodyMassIndex.self)
 	}
 
 	override func tearDown() {
-		HealthKitDataTestUtil.deleteAll(.bmi)
+		HealthKitDataTestUtil.deleteAll(BodyMassIndex.self)
 		super.tearDown()
 	}
 

@@ -14,10 +14,6 @@ public protocol WeightQuery: Query {}
 
 public final class WeightQueryImpl: HealthKitQuery<Weight>, WeightQuery {
 
-	public init() {
-		super.init(dataType: .weight, type: .weight)
-	}
-
 	final override func initFromHKSample(_ hkSample: HKSample) -> Weight {
 		precondition(hkSample is HKQuantitySample, "Wrong type of health kit sample for weight")
 		return Weight(hkSample as! HKQuantitySample)

@@ -54,7 +54,6 @@ final class GraphCustomizationViewController: UIViewController, UIPopoverPresent
 	}
 
 	public final var samples: [Sample]!
-	public final var dataType: DataTypes!
 
 	private final var xAxisAttribute: Attribute!
 	private final var yAxisAttribute: Attribute!
@@ -72,10 +71,10 @@ final class GraphCustomizationViewController: UIViewController, UIPopoverPresent
 		graphTypePicker.dataSource = self
 
 		if xAxisAttribute == nil {
-			xAxisAttribute = dataType.defaultIndependentAttribute
+			xAxisAttribute = type(of: samples[0]).defaultIndependentAttribute
 		}
 		if yAxisAttribute == nil {
-			yAxisAttribute = dataType.defaultDependentAttribute
+			yAxisAttribute = type(of: samples[0]).defaultDependentAttribute
 		}
 		updateXAttributeDisplay()
 		updateYAttributeDisplay()
@@ -113,7 +112,7 @@ final class GraphCustomizationViewController: UIViewController, UIPopoverPresent
 			} else if source == yAxisButton {
 				controller.selectedAttribute = yAxisAttribute
 			}
-			controller.attributes = DataTypes.attributesFor(dataType)
+			controller.attributes = samples[0].attributes
 		} else if segue.destination is EditSampleAggregationViewController {
 			let controller = segue.destination as! EditSampleAggregationViewController
 			if aggregator == nil {

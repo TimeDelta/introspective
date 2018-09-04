@@ -24,7 +24,7 @@ public final class WellnessMoodImporterImpl: WellnessMoodImporter {
 		for line in contents.components(separatedBy: "\n")[1...] {
 			if string(line, matches: Me.dateRegex) { // new mood record
 				currentMood?.note = currentNote
-				currentMood = DependencyInjector.dataType.mood()
+				currentMood = DependencyInjector.sample.mood()
 				let parts = line.components(separatedBy: ",")
 				currentMood!.timestamp = DependencyInjector.util.calendarUtil.date(from: parts[0...1].joined(), format: "M/d/yy HH:mm")!
 				currentMood!.maxRating = 7.0

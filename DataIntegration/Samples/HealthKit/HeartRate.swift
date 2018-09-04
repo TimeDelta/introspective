@@ -9,31 +9,39 @@
 import Foundation
 import HealthKit
 
-public final class HeartRate: HealthKitQuantitySample, Equatable, CustomDebugStringConvertible {
-
-	public static func ==(lhs: HeartRate, rhs: HeartRate) -> Bool {
-		return lhs.equalTo(rhs)
-	}
+public final class HeartRate: HealthKitQuantitySample {
 
 	private typealias Me = HeartRate
 
-	public static let beatsPerMinute: HKUnit = HKUnit(from: "count/min")
+	// MARK: - HealthKit Stuff
+
+	public static let unit: HKUnit = HealthManager.preferredUnitFor(.heartRate) ?? HKUnit(from: "count/min")
+	public static let quantityType: HKQuantityType = HKQuantityType.quantityType(forIdentifier: .heartRate)!
+	public static let sampleType: HKSampleType = quantityType
+	public static let objectType: HKObjectType = quantityType
+
+	// MARK: - Display Information
+
+	public static let name: String = "Heart Rate"
+	public static let description: String = "A measurement of how fast your heart is beating (in beats per minute)."
+
+	// MARK: - Attributes
 
 	public static let heartRate = DoubleAttribute(name: "Heart rate", pluralName: "Heart rates", variableName: HKPredicateKeyPathQuantity)
 	public static let timestamp = DateTimeAttribute(name: "Timestamp", pluralName: "Timestamps", variableName: HKPredicateKeyPathStartDate)
 	public static let attributes: [Attribute] = [timestamp, heartRate]
-
-	public final var debugDescription: String {
-		return "HeartRate of \(heartRate) at " + DependencyInjector.util.calendarUtil.string(for: timestamp)
-	}
-
-	public final var name: String { return "Heart rate" }
-	public final var description: String { return "A measurement of how fast your heart is beating (in beats per minute)." }
-	public final var dataType: DataTypes { return .heartRate }
+	public static let defaultDependentAttribute: Attribute = heartRate
+	public static let defaultIndependentAttribute: Attribute = timestamp
 	public final var attributes: [Attribute] { return Me.attributes }
-	public final var timestamp: Date
 
+	// MARK: - Instance Member Variables
+
+	public final var name: String = Me.name
+	public final var description: String = Me.description
+	public final var timestamp: Date
 	public final var heartRate: Double
+
+	// MARK: - Initializers
 
 	public init() {
 		heartRate = Double()
@@ -55,22 +63,28 @@ public final class HeartRate: HealthKitQuantitySample, Equatable, CustomDebugStr
 		self.timestamp = timestamp
 	}
 
-	public init(_ sample: HKQuantitySample) {
-		heartRate = sample.quantity.doubleValue(for: Me.beatsPerMinute)
+	public required init(_ sample: HKQuantitySample) {
+		heartRate = sample.quantity.doubleValue(for: Me.unit)
 		timestamp = sample.startDate
 	}
 
+	// MARK: - HealthKitQuantitySample Functions
+
 	public final func quantityUnit() -> HKUnit {
-		return Me.beatsPerMinute
+		return Me.unit
 	}
 
 	public final func quantityValue() -> Double {
 		return heartRate
 	}
 
+	// MARK: - Sample Functions
+
 	public final func dates() -> [DateType: Date] {
 		return [.start: timestamp]
 	}
+
+	// MARK: - Attributed Functions
 
 	public final func value(of attribute: Attribute) throws -> Any {
 		if attribute.equalTo(Me.heartRate) {
@@ -95,6 +109,15 @@ public final class HeartRate: HealthKitQuantitySample, Equatable, CustomDebugStr
 		}
 		throw AttributeError.unknownAttribute
 	}
+}
+
+// MARK: - Equatable
+
+extension HeartRate: Equatable {
+
+	public static func ==(lhs: HeartRate, rhs: HeartRate) -> Bool {
+		return lhs.equalTo(rhs)
+	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is HeartRate) { return false }
@@ -110,5 +133,14 @@ public final class HeartRate: HealthKitQuantitySample, Equatable, CustomDebugStr
 
 	public final func equalTo(_ other: HeartRate) -> Bool {
 		return timestamp == other.timestamp && heartRate == other.heartRate
+	}
+}
+
+// MARK: - Debug
+
+extension HeartRate: CustomDebugStringConvertible {
+
+	public final var debugDescription: String {
+		return "HeartRate of \(heartRate) at " + DependencyInjector.util.calendarUtil.string(for: timestamp)
 	}
 }

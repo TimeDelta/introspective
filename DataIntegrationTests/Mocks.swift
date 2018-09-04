@@ -1333,187 +1333,6 @@ class CodableStorageMock: CodableStorage, Mock {
     }
 }
 
-// MARK: - DataTypeFactory
-class DataTypeFactoryMock: DataTypeFactory, Mock {
-    private var invocations: [MethodType] = []
-    private var methodReturnValues: [Given] = []
-    private var methodPerformValues: [Perform] = []
-    var matcher: Matcher = Matcher.default
-
-
-    typealias Property = Swift.Never
-
-
-
-    func heartRate(_ value: Double, _ date: Date) -> HeartRate {
-        addInvocation(.iheartRate__value_date(Parameter<Double>.value(value), Parameter<Date>.value(date)))
-		let perform = methodPerformValue(.iheartRate__value_date(Parameter<Double>.value(value), Parameter<Date>.value(date))) as? (Double, Date) -> Void
-		perform?(value, date)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iheartRate__value_date(Parameter<Double>.value(value), Parameter<Date>.value(date)))
-		let value = givenValue.value as? HeartRate
-		return value.orFail("stub return value not specified for heartRate(_ value: Double, _ date: Date). Use given")
-    }
-
-    func heartRate(value: Double) -> HeartRate {
-        addInvocation(.iheartRate__value_value(Parameter<Double>.value(value)))
-		let perform = methodPerformValue(.iheartRate__value_value(Parameter<Double>.value(value))) as? (Double) -> Void
-		perform?(value)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iheartRate__value_value(Parameter<Double>.value(value)))
-		let value = givenValue.value as? HeartRate
-		return value.orFail("stub return value not specified for heartRate(value: Double). Use given")
-    }
-
-    func heartRate(_ sample: HKQuantitySample) -> HeartRate {
-        addInvocation(.iheartRate__sample(Parameter<HKQuantitySample>.value(sample)))
-		let perform = methodPerformValue(.iheartRate__sample(Parameter<HKQuantitySample>.value(sample))) as? (HKQuantitySample) -> Void
-		perform?(sample)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iheartRate__sample(Parameter<HKQuantitySample>.value(sample)))
-		let value = givenValue.value as? HeartRate
-		return value.orFail("stub return value not specified for heartRate(_ sample: HKQuantitySample). Use given")
-    }
-
-    func mood() -> Mood {
-        addInvocation(.imood)
-		let perform = methodPerformValue(.imood) as? () -> Void
-		perform?()
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.imood)
-		let value = givenValue.value as? Mood
-		return value.orFail("stub return value not specified for mood(). Use given")
-    }
-
-    fileprivate enum MethodType {
-        case iheartRate__value_date(Parameter<Double>, Parameter<Date>)
-        case iheartRate__value_value(Parameter<Double>)
-        case iheartRate__sample(Parameter<HKQuantitySample>)
-        case imood
-
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
-            switch (lhs, rhs) {
-                case (.iheartRate__value_date(let lhsValue, let lhsDate), .iheartRate__value_date(let rhsValue, let rhsDate)):
-                    guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
-                    guard Parameter.compare(lhs: lhsDate, rhs: rhsDate, with: matcher) else { return false } 
-                    return true 
-                case (.iheartRate__value_value(let lhsValue), .iheartRate__value_value(let rhsValue)):
-                    guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
-                    return true 
-                case (.iheartRate__sample(let lhsSample), .iheartRate__sample(let rhsSample)):
-                    guard Parameter.compare(lhs: lhsSample, rhs: rhsSample, with: matcher) else { return false } 
-                    return true 
-                case (.imood, .imood):
-                    return true 
-                default: return false
-            }
-        }
-
-        func intValue() -> Int {
-            switch self {
-                case let .iheartRate__value_date(p0, p1): return p0.intValue + p1.intValue
-                case let .iheartRate__value_value(p0): return p0.intValue
-                case let .iheartRate__sample(p0): return p0.intValue
-                case .imood: return 0
-            }
-        }
-    }
-
-    struct Given {
-        fileprivate var method: MethodType
-        var returns: Any?
-        var `throws`: Error?
-
-        private init(method: MethodType, returns: Any?, throws: Error?) {
-            self.method = method
-            self.returns = returns
-            self.`throws` = `throws`
-        }
-
-        static func heartRate(value: Parameter<Double>, date: Parameter<Date>, willReturn: HeartRate) -> Given {
-            return Given(method: .iheartRate__value_date(value, date), returns: willReturn, throws: nil)
-        }
-        static func heartRate(value: Parameter<Double>, willReturn: HeartRate) -> Given {
-            return Given(method: .iheartRate__value_value(value), returns: willReturn, throws: nil)
-        }
-        static func heartRate(sample: Parameter<HKQuantitySample>, willReturn: HeartRate) -> Given {
-            return Given(method: .iheartRate__sample(sample), returns: willReturn, throws: nil)
-        }
-        static func mood(willReturn: Mood) -> Given {
-            return Given(method: .imood, returns: willReturn, throws: nil)
-        }
-    }
-
-    struct Verify {
-        fileprivate var method: MethodType
-
-        static func heartRate(value: Parameter<Double>, date: Parameter<Date>) -> Verify {
-            return Verify(method: .iheartRate__value_date(value, date))
-        }
-        static func heartRate(value: Parameter<Double>) -> Verify {
-            return Verify(method: .iheartRate__value_value(value))
-        }
-        static func heartRate(sample: Parameter<HKQuantitySample>) -> Verify {
-            return Verify(method: .iheartRate__sample(sample))
-        }
-        static func mood() -> Verify {
-            return Verify(method: .imood)
-        }
-    }
-
-    struct Perform {
-        fileprivate var method: MethodType
-        var performs: Any
-
-        static func heartRate(value: Parameter<Double>, date: Parameter<Date>, perform: (Double, Date) -> Void) -> Perform {
-            return Perform(method: .iheartRate__value_date(value, date), performs: perform)
-        }
-        static func heartRate(value: Parameter<Double>, perform: (Double) -> Void) -> Perform {
-            return Perform(method: .iheartRate__value_value(value), performs: perform)
-        }
-        static func heartRate(sample: Parameter<HKQuantitySample>, perform: (HKQuantitySample) -> Void) -> Perform {
-            return Perform(method: .iheartRate__sample(sample), performs: perform)
-        }
-        static func mood(perform: () -> Void) -> Perform {
-            return Perform(method: .imood, performs: perform)
-        }
-    }
-
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
-    }
-
-    public func given(_ method: Given) {
-        methodReturnValues.append(method)
-        methodReturnValues.sort { $0.method.intValue() < $1.method.intValue() }
-    }
-
-    public func perform(_ method: Perform) {
-        methodPerformValues.append(method)
-        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
-    }
-
-    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
-    }
-    public func verify(property: Property, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) { }
-
-    private func addInvocation(_ call: MethodType) {
-        invocations.append(call)
-    }
-
-    private func methodReturnValue(_ method: MethodType) -> (value: Any?, error: Error?) {
-        let matched = methodReturnValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher)  }
-        return (value: matched?.returns, error: matched?.`throws`)
-    }
-
-    private func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
-        return matched?.performs
-    }
-
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
-    }
-}
-
 // MARK: - Database
 class DatabaseMock: Database, Mock {
     private var invocations: [MethodType] = []
@@ -2053,13 +1872,13 @@ class InjectionProviderMock: InjectionProvider, Mock {
 		return value.orFail("stub return value not specified for queryFactory(). Use given")
     }
 
-    func dataTypeFactory() -> DataTypeFactory {
-        addInvocation(.idataTypeFactory)
-		let perform = methodPerformValue(.idataTypeFactory) as? () -> Void
+    func sampleFactory() -> SampleFactory {
+        addInvocation(.isampleFactory)
+		let perform = methodPerformValue(.isampleFactory) as? () -> Void
 		perform?()
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.idataTypeFactory)
-		let value = givenValue.value as? DataTypeFactory
-		return value.orFail("stub return value not specified for dataTypeFactory(). Use given")
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.isampleFactory)
+		let value = givenValue.value as? SampleFactory
+		return value.orFail("stub return value not specified for sampleFactory(). Use given")
     }
 
     func utilFactory() -> UtilFactory {
@@ -2121,7 +1940,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
         case icodableStorage
         case isettings
         case iqueryFactory
-        case idataTypeFactory
+        case isampleFactory
         case iutilFactory
         case isubQueryMatcherFactory
         case iextraInformationFactory
@@ -2139,7 +1958,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
                     return true 
                 case (.iqueryFactory, .iqueryFactory):
                     return true 
-                case (.idataTypeFactory, .idataTypeFactory):
+                case (.isampleFactory, .isampleFactory):
                     return true 
                 case (.iutilFactory, .iutilFactory):
                     return true 
@@ -2163,7 +1982,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
                 case .icodableStorage: return 0
                 case .isettings: return 0
                 case .iqueryFactory: return 0
-                case .idataTypeFactory: return 0
+                case .isampleFactory: return 0
                 case .iutilFactory: return 0
                 case .isubQueryMatcherFactory: return 0
                 case .iextraInformationFactory: return 0
@@ -2197,8 +2016,8 @@ class InjectionProviderMock: InjectionProvider, Mock {
         static func queryFactory(willReturn: QueryFactory) -> Given {
             return Given(method: .iqueryFactory, returns: willReturn, throws: nil)
         }
-        static func dataTypeFactory(willReturn: DataTypeFactory) -> Given {
-            return Given(method: .idataTypeFactory, returns: willReturn, throws: nil)
+        static func sampleFactory(willReturn: SampleFactory) -> Given {
+            return Given(method: .isampleFactory, returns: willReturn, throws: nil)
         }
         static func utilFactory(willReturn: UtilFactory) -> Given {
             return Given(method: .iutilFactory, returns: willReturn, throws: nil)
@@ -2235,8 +2054,8 @@ class InjectionProviderMock: InjectionProvider, Mock {
         static func queryFactory() -> Verify {
             return Verify(method: .iqueryFactory)
         }
-        static func dataTypeFactory() -> Verify {
-            return Verify(method: .idataTypeFactory)
+        static func sampleFactory() -> Verify {
+            return Verify(method: .isampleFactory)
         }
         static func utilFactory() -> Verify {
             return Verify(method: .iutilFactory)
@@ -2274,8 +2093,8 @@ class InjectionProviderMock: InjectionProvider, Mock {
         static func queryFactory(perform: () -> Void) -> Perform {
             return Perform(method: .iqueryFactory, performs: perform)
         }
-        static func dataTypeFactory(perform: () -> Void) -> Perform {
-            return Perform(method: .idataTypeFactory, performs: perform)
+        static func sampleFactory(perform: () -> Void) -> Perform {
+            return Perform(method: .isampleFactory, performs: perform)
         }
         static func utilFactory(perform: () -> Void) -> Perform {
             return Perform(method: .iutilFactory, performs: perform)
@@ -3460,6 +3279,231 @@ class QueryFactoryMock: QueryFactory, Mock {
         }
         static func weightQuery(perform: () -> Void) -> Perform {
             return Perform(method: .iweightQuery, performs: perform)
+        }
+    }
+
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+        methodReturnValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+    public func verify(property: Property, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) { }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+
+    private func methodReturnValue(_ method: MethodType) -> (value: Any?, error: Error?) {
+        let matched = methodReturnValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher)  }
+        return (value: matched?.returns, error: matched?.`throws`)
+    }
+
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+}
+
+// MARK: - SampleFactory
+class SampleFactoryMock: SampleFactory, Mock {
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    var matcher: Matcher = Matcher.default
+
+
+    typealias Property = Swift.Never
+
+
+
+    func allTypes() -> [Sample.Type] {
+        addInvocation(.iallTypes)
+		let perform = methodPerformValue(.iallTypes) as? () -> Void
+		perform?()
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iallTypes)
+		let value = givenValue.value as? [Sample.Type]
+		return value.orFail("stub return value not specified for allTypes(). Use given")
+    }
+
+    func healthKitTypes() -> [HealthKitSample.Type] {
+        addInvocation(.ihealthKitTypes)
+		let perform = methodPerformValue(.ihealthKitTypes) as? () -> Void
+		perform?()
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.ihealthKitTypes)
+		let value = givenValue.value as? [HealthKitSample.Type]
+		return value.orFail("stub return value not specified for healthKitTypes(). Use given")
+    }
+
+    func heartRate(_ value: Double, _ date: Date) -> HeartRate {
+        addInvocation(.iheartRate__value_date(Parameter<Double>.value(value), Parameter<Date>.value(date)))
+		let perform = methodPerformValue(.iheartRate__value_date(Parameter<Double>.value(value), Parameter<Date>.value(date))) as? (Double, Date) -> Void
+		perform?(value, date)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iheartRate__value_date(Parameter<Double>.value(value), Parameter<Date>.value(date)))
+		let value = givenValue.value as? HeartRate
+		return value.orFail("stub return value not specified for heartRate(_ value: Double, _ date: Date). Use given")
+    }
+
+    func heartRate(value: Double) -> HeartRate {
+        addInvocation(.iheartRate__value_value(Parameter<Double>.value(value)))
+		let perform = methodPerformValue(.iheartRate__value_value(Parameter<Double>.value(value))) as? (Double) -> Void
+		perform?(value)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iheartRate__value_value(Parameter<Double>.value(value)))
+		let value = givenValue.value as? HeartRate
+		return value.orFail("stub return value not specified for heartRate(value: Double). Use given")
+    }
+
+    func heartRate(_ sample: HKQuantitySample) -> HeartRate {
+        addInvocation(.iheartRate__sample(Parameter<HKQuantitySample>.value(sample)))
+		let perform = methodPerformValue(.iheartRate__sample(Parameter<HKQuantitySample>.value(sample))) as? (HKQuantitySample) -> Void
+		perform?(sample)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iheartRate__sample(Parameter<HKQuantitySample>.value(sample)))
+		let value = givenValue.value as? HeartRate
+		return value.orFail("stub return value not specified for heartRate(_ sample: HKQuantitySample). Use given")
+    }
+
+    func mood() -> Mood {
+        addInvocation(.imood)
+		let perform = methodPerformValue(.imood) as? () -> Void
+		perform?()
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.imood)
+		let value = givenValue.value as? Mood
+		return value.orFail("stub return value not specified for mood(). Use given")
+    }
+
+    fileprivate enum MethodType {
+        case iallTypes
+        case ihealthKitTypes
+        case iheartRate__value_date(Parameter<Double>, Parameter<Date>)
+        case iheartRate__value_value(Parameter<Double>)
+        case iheartRate__sample(Parameter<HKQuantitySample>)
+        case imood
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+                case (.iallTypes, .iallTypes):
+                    return true 
+                case (.ihealthKitTypes, .ihealthKitTypes):
+                    return true 
+                case (.iheartRate__value_date(let lhsValue, let lhsDate), .iheartRate__value_date(let rhsValue, let rhsDate)):
+                    guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                    guard Parameter.compare(lhs: lhsDate, rhs: rhsDate, with: matcher) else { return false } 
+                    return true 
+                case (.iheartRate__value_value(let lhsValue), .iheartRate__value_value(let rhsValue)):
+                    guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                    return true 
+                case (.iheartRate__sample(let lhsSample), .iheartRate__sample(let rhsSample)):
+                    guard Parameter.compare(lhs: lhsSample, rhs: rhsSample, with: matcher) else { return false } 
+                    return true 
+                case (.imood, .imood):
+                    return true 
+                default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+                case .iallTypes: return 0
+                case .ihealthKitTypes: return 0
+                case let .iheartRate__value_date(p0, p1): return p0.intValue + p1.intValue
+                case let .iheartRate__value_value(p0): return p0.intValue
+                case let .iheartRate__sample(p0): return p0.intValue
+                case .imood: return 0
+            }
+        }
+    }
+
+    struct Given {
+        fileprivate var method: MethodType
+        var returns: Any?
+        var `throws`: Error?
+
+        private init(method: MethodType, returns: Any?, throws: Error?) {
+            self.method = method
+            self.returns = returns
+            self.`throws` = `throws`
+        }
+
+        static func allTypes(willReturn: [Sample.Type]) -> Given {
+            return Given(method: .iallTypes, returns: willReturn, throws: nil)
+        }
+        static func healthKitTypes(willReturn: [HealthKitSample.Type]) -> Given {
+            return Given(method: .ihealthKitTypes, returns: willReturn, throws: nil)
+        }
+        static func heartRate(value: Parameter<Double>, date: Parameter<Date>, willReturn: HeartRate) -> Given {
+            return Given(method: .iheartRate__value_date(value, date), returns: willReturn, throws: nil)
+        }
+        static func heartRate(value: Parameter<Double>, willReturn: HeartRate) -> Given {
+            return Given(method: .iheartRate__value_value(value), returns: willReturn, throws: nil)
+        }
+        static func heartRate(sample: Parameter<HKQuantitySample>, willReturn: HeartRate) -> Given {
+            return Given(method: .iheartRate__sample(sample), returns: willReturn, throws: nil)
+        }
+        static func mood(willReturn: Mood) -> Given {
+            return Given(method: .imood, returns: willReturn, throws: nil)
+        }
+    }
+
+    struct Verify {
+        fileprivate var method: MethodType
+
+        static func allTypes() -> Verify {
+            return Verify(method: .iallTypes)
+        }
+        static func healthKitTypes() -> Verify {
+            return Verify(method: .ihealthKitTypes)
+        }
+        static func heartRate(value: Parameter<Double>, date: Parameter<Date>) -> Verify {
+            return Verify(method: .iheartRate__value_date(value, date))
+        }
+        static func heartRate(value: Parameter<Double>) -> Verify {
+            return Verify(method: .iheartRate__value_value(value))
+        }
+        static func heartRate(sample: Parameter<HKQuantitySample>) -> Verify {
+            return Verify(method: .iheartRate__sample(sample))
+        }
+        static func mood() -> Verify {
+            return Verify(method: .imood)
+        }
+    }
+
+    struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        static func allTypes(perform: () -> Void) -> Perform {
+            return Perform(method: .iallTypes, performs: perform)
+        }
+        static func healthKitTypes(perform: () -> Void) -> Perform {
+            return Perform(method: .ihealthKitTypes, performs: perform)
+        }
+        static func heartRate(value: Parameter<Double>, date: Parameter<Date>, perform: (Double, Date) -> Void) -> Perform {
+            return Perform(method: .iheartRate__value_date(value, date), performs: perform)
+        }
+        static func heartRate(value: Parameter<Double>, perform: (Double) -> Void) -> Perform {
+            return Perform(method: .iheartRate__value_value(value), performs: perform)
+        }
+        static func heartRate(sample: Parameter<HKQuantitySample>, perform: (HKQuantitySample) -> Void) -> Perform {
+            return Perform(method: .iheartRate__sample(sample), performs: perform)
+        }
+        static func mood(perform: () -> Void) -> Perform {
+            return Perform(method: .imood, performs: perform)
         }
     }
 

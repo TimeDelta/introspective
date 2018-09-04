@@ -28,7 +28,7 @@ class UnitTest: XCTestCase {
 	var mockStringUtil: StringUtilMock!
 	var mockTextNormalizationUtil: TextNormalizationUtilMock!
 
-	var mockDataTypeFactory: DataTypeFactoryMock!
+	var mockSampleFactory: SampleFactoryMock!
 	var mockQueryFactory: QueryFactoryMock!
 
 	override func setUp() {
@@ -70,8 +70,8 @@ class UnitTest: XCTestCase {
 		mockSettings = SettingsMock()
 		Given(injectionProvider, .settings(willReturn: mockSettings))
 
-		mockDataTypeFactory = DataTypeFactoryMock()
-		Given(injectionProvider, .dataTypeFactory(willReturn: mockDataTypeFactory))
+		mockSampleFactory = SampleFactoryMock()
+		Given(injectionProvider, .sampleFactory(willReturn: mockSampleFactory))
 
 		mockQueryFactory = QueryFactoryMock()
 		Given(injectionProvider, .queryFactory(willReturn: mockQueryFactory))

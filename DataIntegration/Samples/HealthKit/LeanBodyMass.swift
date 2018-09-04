@@ -9,32 +9,39 @@
 import Foundation
 import HealthKit
 
-public final class LeanBodyMass: HealthKitQuantitySample, Equatable, CustomDebugStringConvertible {
-
-	public static func ==(lhs: LeanBodyMass, rhs: LeanBodyMass) -> Bool {
-		return lhs.equalTo(rhs)
-	}
+public final class LeanBodyMass: HealthKitQuantitySample {
 
 	private typealias Me = LeanBodyMass
 
-	public static let pounds: HKUnit = HKUnit(from: .pound)
-	public static let unit = HealthManager.preferredUnitFor(.leanBodyMass) ?? Me.pounds
+	// MARK: - HealthKit Stuff
+
+	public static let unit: HKUnit = HealthManager.preferredUnitFor(.leanBodyMass) ?? HKUnit(from: .pound)
+	public static let quantityType: HKQuantityType = HKQuantityType.quantityType(forIdentifier: .leanBodyMass)!
+	public static let sampleType: HKSampleType = quantityType
+	public static let objectType: HKObjectType = quantityType
+
+	// MARK: - Display Information
+
+	public static let name: String = "Lean Body Mass"
+	public static let description: String = "Lean body mass is the weight of your body minus your body fat"
+
+	// MARK: - Attributes
 
 	public static let leanBodyMass = DoubleAttribute(name: "Lean body mass", pluralName: "Lean body masses", variableName: HKPredicateKeyPathQuantity)
 	public static let timestamp = DateTimeAttribute(name: "Timestamp", pluralName: "Timestamps", variableName: HKPredicateKeyPathStartDate)
 	public static let attributes: [Attribute] = [timestamp, leanBodyMass]
-
-	public final var debugDescription: String {
-		return "LeanBodyMass of \(leanBodyMass) at " + DependencyInjector.util.calendarUtil.string(for: timestamp)
-	}
-
-	public final var name: String { return "Lean body mass" }
-	public final var description: String { return "Lean body mass is the weight of your body minus your body fat" } // TODO
-	public final var dataType: DataTypes { return .leanBodyMass }
+	public static let defaultDependentAttribute: Attribute = leanBodyMass
+	public static let defaultIndependentAttribute: Attribute = timestamp
 	public final var attributes: [Attribute] { return Me.attributes }
-	public final var timestamp: Date
 
+	// MARK: - Instance Member Variables
+
+	public final var name: String = Me.name
+	public final var description: String = Me.description
+	public final var timestamp: Date
 	public final var leanBodyMass: Double
+
+	// MARK: - Initializers
 
 	public init() {
 		leanBodyMass = Double()
@@ -56,10 +63,12 @@ public final class LeanBodyMass: HealthKitQuantitySample, Equatable, CustomDebug
 		self.timestamp = timestamp
 	}
 
-	public init(_ sample: HKQuantitySample) {
+	public required init(_ sample: HKQuantitySample) {
 		leanBodyMass = sample.quantity.doubleValue(for: Me.unit)
 		timestamp = sample.startDate
 	}
+
+	// MARK: - HealthKitQuantitySample Functions
 
 	public final func quantityUnit() -> HKUnit {
 		return Me.unit
@@ -69,9 +78,13 @@ public final class LeanBodyMass: HealthKitQuantitySample, Equatable, CustomDebug
 		return leanBodyMass
 	}
 
+	// MARK: - Sample Functions
+
 	public final func dates() -> [DateType: Date] {
 		return [.start: timestamp]
 	}
+
+	// MARK: - Attributed Functions
 
 	public final func value(of attribute: Attribute) throws -> Any {
 		if attribute.equalTo(Me.leanBodyMass) {
@@ -96,6 +109,15 @@ public final class LeanBodyMass: HealthKitQuantitySample, Equatable, CustomDebug
 		}
 		throw AttributeError.unknownAttribute
 	}
+}
+
+// MARK: - Equatable
+
+extension LeanBodyMass: Equatable {
+
+	public static func ==(lhs: LeanBodyMass, rhs: LeanBodyMass) -> Bool {
+		return lhs.equalTo(rhs)
+	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is LeanBodyMass) { return false }
@@ -111,5 +133,14 @@ public final class LeanBodyMass: HealthKitQuantitySample, Equatable, CustomDebug
 
 	public final func equalTo(_ other: LeanBodyMass) -> Bool {
 		return timestamp == other.timestamp && leanBodyMass == other.leanBodyMass
+	}
+}
+
+// MARK: - Debug
+
+extension LeanBodyMass: CustomDebugStringConvertible {
+
+	public final var debugDescription: String {
+		return "LeanBodyMass of \(leanBodyMass) at " + DependencyInjector.util.calendarUtil.string(for: timestamp)
 	}
 }

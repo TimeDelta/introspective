@@ -16,7 +16,7 @@ public final class DependencyInjector {
 	public static var codableStorage: CodableStorage { get { return injectionProvider.codableStorage() } }
 	public static var settings: Settings { get { return injectionProvider.settings() } }
 	public static var query: QueryFactory { get { return injectionProvider.queryFactory() } }
-	public static var dataType: DataTypeFactory { get { return injectionProvider.dataTypeFactory() } }
+	public static var sample: SampleFactory { get { return injectionProvider.sampleFactory() } }
 	public static var util: UtilFactory { get { return injectionProvider.utilFactory() } }
 	public static var subQueryMatcher: SubQueryMatcherFactory { get { return injectionProvider.subQueryMatcherFactory() } }
 	public static var extraInformation: ExtraInformationFactory { get { return injectionProvider.extraInformationFactory() } }

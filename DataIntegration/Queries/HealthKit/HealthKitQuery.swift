@@ -9,15 +9,7 @@
 import Foundation
 import HealthKit
 
-public class HealthKitQuery<SampleType: Sample>: SampleQueryImpl<SampleType> {
-
-	private var dataType: DataTypes
-	private var type: HealthManager.SampleType
-
-	public init(dataType: DataTypes, type: HealthManager.SampleType) {
-		self.dataType = dataType
-		self.type = type
-	}
+public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<SampleType> {
 
 	func initFromHKSample(_ hkSample: HKSample) -> SampleType {
 		fatalError("Must override")
@@ -26,7 +18,7 @@ public class HealthKitQuery<SampleType: Sample>: SampleQueryImpl<SampleType> {
 	final override func run() {
 		let dateConstraints = DependencyInjector.util.attributeRestrictionUtil.getMostRestrictiveStartAndEndDates(from: attributeRestrictions)
 
-		HealthManager.getAuthorization(for: type) {
+		HealthManager.getAuthorization(for: SampleType.self) {
 			(error: Error?) in
 
 			if error != nil {
@@ -34,7 +26,7 @@ public class HealthKitQuery<SampleType: Sample>: SampleQueryImpl<SampleType> {
 				return
 			}
 
-			HealthManager.getSamples(for: self.type, startDate: dateConstraints.start, endDate: dateConstraints.end) {
+			HealthManager.getSamples(for: SampleType.self, startDate: dateConstraints.start, endDate: dateConstraints.end) {
 				(originalSamples: Array<HKSample>?, error: Error?) in
 
 				if error != nil {
@@ -42,7 +34,7 @@ public class HealthKitQuery<SampleType: Sample>: SampleQueryImpl<SampleType> {
 					return
 				}
 				if originalSamples == nil || originalSamples!.count == 0 {
-					self.queryDone(nil, NoHealthKitSamplesFoundQueryError(dataType: self.dataType))
+					self.queryDone(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
 					return
 				}
 
@@ -51,7 +43,7 @@ public class HealthKitQuery<SampleType: Sample>: SampleQueryImpl<SampleType> {
 				}).filter(self.samplePassesFilters)
 
 				if samples.count == 0 {
-					self.queryDone(nil, NoHealthKitSamplesFoundQueryError(dataType: self.dataType))
+					self.queryDone(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
 					return
 				}
 

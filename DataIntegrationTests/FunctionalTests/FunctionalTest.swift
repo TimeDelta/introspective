@@ -17,7 +17,7 @@ class FunctionalTest: XCTestCase {
 	var database: FunctionalTestDatabase!
 
 	var queryFactory: QueryFactoryImpl!
-	var dataTypeFactory: DataTypeFactoryImpl!
+	var sampleFactory: SampleFactoryImpl!
 	var utilFactory: UtilFactory!
 	var subQueryMatcherFactory: SubQueryMatcherFactoryImpl!
 	var extraInformationFactory: ExtraInformationFactoryImpl!
@@ -33,7 +33,7 @@ class FunctionalTest: XCTestCase {
 		Given(injectionProvider, .database(willReturn: database))
 
 		queryFactory = QueryFactoryImpl()
-		dataTypeFactory = DataTypeFactoryImpl()
+		sampleFactory = SampleFactoryImpl()
 		utilFactory = UtilFactory()
 		subQueryMatcherFactory = SubQueryMatcherFactoryImpl()
 		extraInformationFactory = ExtraInformationFactoryImpl()
@@ -41,7 +41,7 @@ class FunctionalTest: XCTestCase {
 		sampleGroupCombinerFactory = SampleGroupCombinerFactoryImpl()
 
 		Given(injectionProvider, .queryFactory(willReturn: queryFactory))
-		Given(injectionProvider, .dataTypeFactory(willReturn: dataTypeFactory))
+		Given(injectionProvider, .sampleFactory(willReturn: sampleFactory))
 		Given(injectionProvider, .utilFactory(willReturn: utilFactory))
 		Given(injectionProvider, .subQueryMatcherFactory(willReturn: subQueryMatcherFactory))
 		Given(injectionProvider, .extraInformationFactory(willReturn: extraInformationFactory))

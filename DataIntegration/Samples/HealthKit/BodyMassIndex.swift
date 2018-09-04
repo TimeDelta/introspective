@@ -9,31 +9,39 @@
 import Foundation
 import HealthKit
 
-public final class BodyMassIndex: HealthKitQuantitySample, Equatable, CustomDebugStringConvertible {
-
-	public static func ==(lhs: BodyMassIndex, rhs: BodyMassIndex) -> Bool {
-		return lhs.equalTo(rhs)
-	}
+public final class BodyMassIndex: HealthKitQuantitySample {
 
 	private typealias Me = BodyMassIndex
 
-	public static let unit: HKUnit = HKUnit.count()
+	// MARK: - HealthKit Stuff
+
+	public static let unit: HKUnit = HealthManager.preferredUnitFor(.bodyMassIndex) ?? HKUnit.count()
+	public static let quantityType: HKQuantityType = HKQuantityType.quantityType(forIdentifier: .bodyMassIndex)!
+	public static let sampleType: HKSampleType = quantityType
+	public static let objectType: HKObjectType = quantityType
+
+	// MARK: - Display Information
+
+	public static let name: String = "Body Mass Index"
+	public static let description: String = "Body Mass Index (BMI) is an indicator of your body fat. It's calculated from your height and weight, and can tell you whether you are underweight, normal, overweight, or obese. It can also help you gauge your risk for diseases that can occur with more body fat."
+
+	// MARK: - Attributes
 
 	public static let bmi = DoubleAttribute(name: "BMI", pluralName: "BMIs", variableName: HKPredicateKeyPathQuantity)
-	public static let timestamp = DateTimeAttribute(name: "timestamp", pluralName: "timestamps", variableName: HKPredicateKeyPathStartDate)
+	public static let timestamp = DateTimeAttribute(name: "Timestamp", pluralName: "Timestamps", variableName: HKPredicateKeyPathStartDate)
 	public static let attributes: [Attribute] = [timestamp, bmi]
-
-	public final var debugDescription: String {
-		return "bmi of \(bmi) at " + DependencyInjector.util.calendarUtil.string(for: timestamp)
-	}
-
-	public final var name: String { return "Body Mass Index" }
-	public final var description: String { return "Body Mass Index (BMI) is an indicator of your body fat. It's calculated from your height and weight, and can tell you whether you are underweight, normal, overweight, or obese. It can also help you gauge your risk for diseases that can occur with more body fat." }
-	public final var dataType: DataTypes { return .bmi }
+	public static let defaultDependentAttribute: Attribute = bmi
+	public static let defaultIndependentAttribute: Attribute = timestamp
 	public final var attributes: [Attribute] { return Me.attributes }
-	public final var timestamp: Date
 
+	// MARK: - Instance Member Variables
+
+	public final var name: String = Me.name
+	public final var description: String = Me.description
+	public final var timestamp: Date
 	public final var bmi: Double
+
+	// MARK: - Initializers
 
 	public init() {
 		bmi = Double()
@@ -55,10 +63,12 @@ public final class BodyMassIndex: HealthKitQuantitySample, Equatable, CustomDebu
 		self.timestamp = timestamp
 	}
 
-	public init(_ sample: HKQuantitySample) {
+	public required init(_ sample: HKQuantitySample) {
 		bmi = sample.quantity.doubleValue(for: Me.unit)
 		timestamp = sample.startDate
 	}
+
+	// MARK: - HealthKitQuantitySample Functions
 
 	public final func quantityUnit() -> HKUnit {
 		return Me.unit
@@ -68,9 +78,13 @@ public final class BodyMassIndex: HealthKitQuantitySample, Equatable, CustomDebu
 		return bmi
 	}
 
+	// MARK: - Sample Functions
+
 	public final func dates() -> [DateType: Date] {
 		return [.start: timestamp]
 	}
+
+	// MARK: - Attributed Functions
 
 	public final func value(of attribute: Attribute) throws -> Any {
 		if attribute.equalTo(Me.bmi) {
@@ -95,6 +109,15 @@ public final class BodyMassIndex: HealthKitQuantitySample, Equatable, CustomDebu
 		}
 		throw AttributeError.unknownAttribute
 	}
+}
+
+// MARK: - Equatable
+
+extension BodyMassIndex: Equatable {
+
+	public static func ==(lhs: BodyMassIndex, rhs: BodyMassIndex) -> Bool {
+		return lhs.equalTo(rhs)
+	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is BodyMassIndex) { return false }
@@ -110,5 +133,14 @@ public final class BodyMassIndex: HealthKitQuantitySample, Equatable, CustomDebu
 
 	public final func equalTo(_ other: BodyMassIndex) -> Bool {
 		return timestamp == other.timestamp && bmi == other.bmi
+	}
+}
+
+// MARK: - Debug
+
+extension BodyMassIndex: CustomDebugStringConvertible {
+
+	public final var debugDescription: String {
+		return "BodyMassIndex of \(bmi) at " + DependencyInjector.util.calendarUtil.string(for: timestamp)
 	}
 }

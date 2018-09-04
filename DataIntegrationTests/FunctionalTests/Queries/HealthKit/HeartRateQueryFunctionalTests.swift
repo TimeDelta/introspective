@@ -18,11 +18,11 @@ class HeartRateQueryFunctionalTests: QueryFunctionalTest {
 		super.setUp()
 		query = HeartRateQueryImpl()
 		HealthKitDataTestUtil.ensureAuthorized()
-		HealthKitDataTestUtil.deleteAll(.heartRate)
+		HealthKitDataTestUtil.deleteAll(HeartRate.self)
 	}
 
 	override func tearDown() {
-		HealthKitDataTestUtil.deleteAll(.heartRate)
+		HealthKitDataTestUtil.deleteAll(HeartRate.self)
 		super.tearDown()
 	}
 

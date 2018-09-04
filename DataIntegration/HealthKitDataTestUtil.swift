@@ -15,21 +15,19 @@ public class HealthKitDataTestUtil {
 	private typealias Me = HealthKitDataTestUtil
 
 	private static let healthStore = HKHealthStore()
-	private static let readPermissions = Set(HealthManager.SampleType.allTypes.map({ return $0.objectType }))
-	private static let sharePermissions = Set(HealthManager.SampleType.allTypes.map({ return $0.sampleType }))
-	private static let weight = HealthManager.SampleType.weight
-	private static let heartRate = HealthManager.SampleType.heartRate
+	private static let readPermissions = Set(DependencyInjector.sample.healthKitTypes().map({ return $0.objectType }))
+	private static let sharePermissions = Set(DependencyInjector.sample.healthKitTypes().map({ return $0.sampleType }))
 
 	public static func saveHeartRates(_ heartRates: HeartRate...) {
-		save(type: .heartRate, heartRates)
+		save(type: HeartRate.self, heartRates)
 	}
 
 	public static func saveWeights(_ weights: Weight...) {
-		save(type: .weight, weights)
+		save(type: Weight.self, weights)
 	}
 
 	public static func saveBMIs(_ bmis: BodyMassIndex...) {
-		save(type: .bmi, bmis)
+		save(type: BodyMassIndex.self, bmis)
 	}
 
 	public static func ensureAuthorized() {
@@ -42,7 +40,7 @@ public class HealthKitDataTestUtil {
 		group.wait()
 	}
 
-	public static func deleteAll(_ type: HealthManager.SampleType) {
+	public static func deleteAll(_ type: HealthKitSample.Type) {
 		var allSamples = [HKSample]()
 		var group = DispatchGroup()
 		group.enter()
@@ -64,12 +62,12 @@ public class HealthKitDataTestUtil {
 		}
 	}
 
-	public static func save<SampleType: HealthKitQuantitySample>(type: HealthManager.SampleType, _ samples: [SampleType]) {
+	public static func save<SampleType: HealthKitQuantitySample>(type: HealthKitSample.Type, _ samples: [SampleType]) {
 		save(type: type, unit: samples[0].quantityUnit(), datesAndQuantity: { return ($0.startDate(), $0.endDate(), $0.quantityValue()) }, samples)
 	}
 
 	private static func save<SampleType: Sample>(
-		type: HealthManager.SampleType,
+		type: HealthKitSample.Type,
 		unit: HKUnit,
 		datesAndQuantity: (SampleType) -> (Date, Date, Double),
 		_ samples: [SampleType])

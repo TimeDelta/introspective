@@ -55,15 +55,15 @@ final class QueryViewController: UITableViewController {
 	}
 
 	struct DataTypeInfo {
-		var dataType: DataTypes = .heartRate
+		var sampleType: Sample.Type = DependencyInjector.sample.allTypes()[0]
 		var matcher: SubQueryMatcher? = SameDatesSubQueryMatcher()
 
 		init() {}
-		init(_ dataType: DataTypes) {
-			self.dataType = dataType
+		init(_ sampleType: Sample.Type) {
+			self.sampleType = sampleType
 		}
-		init(_ dataType: DataTypes, _ matcher: SubQueryMatcher) {
-			self.dataType = dataType
+		init(_ sampleType: Sample.Type, _ matcher: SubQueryMatcher) {
+			self.sampleType = sampleType
 			self.matcher = matcher
 		}
 	}
@@ -112,7 +112,7 @@ final class QueryViewController: UITableViewController {
 
 		if index == 0 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "Data Type", for: indexPath)
-			cell.textLabel?.text = (part as! DataTypeInfo).dataType.description
+			cell.textLabel?.text = (part as! DataTypeInfo).sampleType.name
 			return cell
 		}
 
@@ -124,7 +124,7 @@ final class QueryViewController: UITableViewController {
 			case .dataType, .subDataType:
 				let typedCell = (cell as! SubDataTypeTableViewCell)
 				typedCell.matcher = (part as! DataTypeInfo).matcher
-				typedCell.dataType = (part as! DataTypeInfo).dataType
+				typedCell.sampleType = (part as! DataTypeInfo).sampleType
 				return typedCell
 			case .attributeRestriction:
 				let typedCell = (cell as! AttributeRestrictionTableViewCell)
@@ -163,8 +163,8 @@ final class QueryViewController: UITableViewController {
 		if indexPath.section == 0 && indexPath.row == 0 {
 			let controller = storyboard!.instantiateViewController(withIdentifier: "editDataType") as! EditDataTypeViewController
 			editedIndex = 0
-			let dataType = (parts[0] as! DataTypeInfo).dataType
-			controller.selectedIndex = EditDataTypeViewController.indexFor(type: dataType.description)
+			let sampleType = (parts[0] as! DataTypeInfo).sampleType
+			controller.selectedIndex = EditDataTypeViewController.indexFor(type: sampleType.name)
 			controller.notificationToSendOnAccept = Me.acceptedDataTypeEdit
 			tableView.deselectRow(at: indexPath, animated: true)
 			customPresentViewController(Me.editDataTypePresenter, viewController: controller, animated: true)
@@ -178,26 +178,25 @@ final class QueryViewController: UITableViewController {
 			let controller = (segue.destination as! EditAttributeRestrictionViewController)
 			let source = (sender as! UITableViewCell)
 			editedIndex = tableView.indexPath(for: source)!.row
-			controller.dataType = bottomMostDataTypeAbove(index: editedIndex)
+			controller.sampleType = bottomMostDataTypeAbove(index: editedIndex)
 			controller.attributeRestriction = (parts[editedIndex] as! AttributeRestriction)
 			controller.notificationToSendWhenAccepted = Me.acceptedAttributeRestrictionEdit
 		} else if segue.destination is EditSubDataTypeViewController {
 			let controller = (segue.destination as! EditSubDataTypeViewController)
 			let source = (sender as! UITableViewCell)
 			editedIndex = tableView.indexPath(for: source)!.row
-			controller.dataType = (parts[editedIndex] as! DataTypeInfo).dataType
+			controller.sampleType = (parts[editedIndex] as! DataTypeInfo).sampleType
 			controller.matcher = (parts[editedIndex] as! DataTypeInfo).matcher
 			controller.notificationToSendWhenAccepted = Me.acceptedSubDataTypeEdit
 		} else if segue.destination is ResultsViewController {
 			let controller = (segue.destination as! ResultsViewController)
-			controller.dataType = (parts[0] as! DataTypeInfo).dataType
 			buildAndRunQuery(controller)
 		}
 	}
 
 	@objc final func saveEditedDataType(notification: Notification) {
 		let index = notification.object as! Int
-		parts[editedIndex] = DataTypeInfo(DataTypes.allTypes[index])
+		parts[editedIndex] = DataTypeInfo(DependencyInjector.sample.allTypes()[index])
 		tableView.reloadData()
 	}
 
@@ -237,33 +236,33 @@ final class QueryViewController: UITableViewController {
 
 	// Mark: - Helper Functions
 
-	private final func bottomMostDataType() -> DataTypes {
+	private final func bottomMostDataType() -> Sample.Type {
 		return bottomMostDataType(in: parts)
 	}
 
-	private final func bottomMostDataType(in parts: [Any]) -> DataTypes {
+	private final func bottomMostDataType(in parts: [Any]) -> Sample.Type {
 		var index = cellTypes.count - 1
 		while index >= 0 && cellTypes[index] != .dataType {
 			index -= 1
 		}
-		return (parts[index] as! DataTypeInfo).dataType
+		return (parts[index] as! DataTypeInfo).sampleType
 	}
 
-	private final func bottomMostDataTypeAbove(index: Int) -> DataTypes {
+	private final func bottomMostDataTypeAbove(index: Int) -> Sample.Type {
 		for part in parts[0 ... index].reversed() {
 			if part is DataTypeInfo {
-				return (part as! DataTypeInfo).dataType
+				return (part as! DataTypeInfo).sampleType
 			}
 		}
-		return (parts[0] as! DataTypeInfo).dataType // this will never happen but the compiler can't know that
+		return (parts[0] as! DataTypeInfo).sampleType // this will never happen but the compiler can't know that
 	}
 
-	private final func closestDataType(aboveIndex: Int) -> DataTypes {
+	private final func closestDataType(aboveIndex: Int) -> Sample.Type {
 		var index = aboveIndex
 		while index >= 0 && cellTypes[index] != .dataType {
 			index -= 1
 		}
-		return (parts[index] as! DataTypeInfo).dataType
+		return (parts[index] as! DataTypeInfo).sampleType
 	}
 
 	private final func partWasAdded() {
@@ -291,22 +290,23 @@ final class QueryViewController: UITableViewController {
 			var currentQuery: Query
 
 			let dataTypeInfo = parts[0] as! DataTypeInfo
-			switch (dataTypeInfo.dataType) {
-				case .bmi:
+			switch (dataTypeInfo.sampleType) {
+				case is BodyMassIndex.Type:
 					currentQuery = DependencyInjector.query.bmiQuery()
 					break
-				case .heartRate:
+				case is HeartRate.Type:
 					currentQuery = DependencyInjector.query.heartRateQuery()
 					break
-				case .leanBodyMass:
+				case is LeanBodyMass.Type:
 					currentQuery = DependencyInjector.query.leanBodyMassQuery()
 					break
-				case .mood:
+				case is MoodImpl.Type:
 					currentQuery = DependencyInjector.query.moodQuery()
 					break
-				case .weight:
+				case is Weight.Type:
 					currentQuery = DependencyInjector.query.weightQuery()
 					break
+				default: fatalError("Forgot a type of Sample")
 			}
 
 			buildQuery(&currentQuery, from: parts)

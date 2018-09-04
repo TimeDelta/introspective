@@ -17,13 +17,17 @@ class CombinedQueryFunctionalTests: QueryFunctionalTest {
 	override func setUp() {
 		super.setUp()
 		HealthKitDataTestUtil.ensureAuthorized()
-		HealthKitDataTestUtil.deleteAll(.heartRate)
-		HealthKitDataTestUtil.deleteAll(.weight)
+		HealthKitDataTestUtil.deleteAll(HeartRate.self)
+		HealthKitDataTestUtil.deleteAll(Weight.self)
+		HealthKitDataTestUtil.deleteAll(BodyMassIndex.self)
+		HealthKitDataTestUtil.deleteAll(LeanBodyMass.self)
 	}
 
 	override func tearDown() {
-		HealthKitDataTestUtil.deleteAll(.heartRate)
-		HealthKitDataTestUtil.deleteAll(.weight)
+		HealthKitDataTestUtil.deleteAll(HeartRate.self)
+		HealthKitDataTestUtil.deleteAll(Weight.self)
+		HealthKitDataTestUtil.deleteAll(BodyMassIndex.self)
+		HealthKitDataTestUtil.deleteAll(LeanBodyMass.self)
 		super.tearDown()
 	}
 

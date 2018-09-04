@@ -17,8 +17,4 @@ public protocol MoodQuery: Query {
 public final class MoodQueryImpl: CoreDataQuery<MoodImpl>, MoodQuery {
 
 	public static var updatingMoodsInBackground: Bool = false
-
-	public init() {
-		super.init(dataType: .mood)
-	}
 }

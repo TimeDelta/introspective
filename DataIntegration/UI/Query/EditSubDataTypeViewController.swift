@@ -16,7 +16,7 @@ final class EditSubDataTypeViewController: UIViewController {
 
 	public final var notificationToSendWhenAccepted: Notification.Name!
 	public final var matcher: SubQueryMatcher!
-	public final var dataType: DataTypes!
+	public final var sampleType: Sample.Type!
 
 	@IBOutlet weak final var dataTypePicker: UIPickerView!
 	@IBOutlet weak final var attributedChooserSubView: UIView!
@@ -29,12 +29,11 @@ final class EditSubDataTypeViewController: UIViewController {
 		dataTypePicker.dataSource = self
 		dataTypePicker.delegate = self
 
-		for index in 0 ..< DataTypes.allTypes.count {
-			if DataTypes.allTypes[index] == dataType {
-				dataTypePicker.selectRow(index, inComponent: 0, animated: false)
-				break
-			}
+		let index = DependencyInjector.sample.allTypes().index { $0 == sampleType }
+		if index != nil {
+			dataTypePicker.selectRow(index!, inComponent: 0, animated: false)
 		}
+
 
 		createAndInstallAttributedChooserViewController()
 
@@ -42,7 +41,7 @@ final class EditSubDataTypeViewController: UIViewController {
 	}
 
 	@objc public final func doneEditing(notification: Notification) {
-		let savedValue = QueryViewController.DataTypeInfo(dataType, notification.object as! SubQueryMatcher)
+		let savedValue = QueryViewController.DataTypeInfo(sampleType, notification.object as! SubQueryMatcher)
 		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: savedValue, userInfo: nil)
 		_ = navigationController?.popViewController(animated: true)
 	}
@@ -73,17 +72,17 @@ extension EditSubDataTypeViewController: UIPickerViewDataSource {
 	}
 
 	final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return DataTypes.allTypes.count
+		return DependencyInjector.sample.allTypes().count
 	}
 }
 
 extension EditSubDataTypeViewController: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return DataTypes.allTypes[row].description
+		return DependencyInjector.sample.allTypes()[row].name
 	}
 
 	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-		dataType = DataTypes.allTypes[row]
+		sampleType = DependencyInjector.sample.allTypes()[row]
 	}
 }

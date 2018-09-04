@@ -25,29 +25,37 @@ public final class MoodImpl: NSManagedObject, Mood {
 
 	private typealias Me = MoodImpl
 
-	public static func ==(lhs: MoodImpl, rhs: MoodImpl) -> Bool {
-		return lhs.equalTo(rhs)
-	}
+	// MARK: - CoreData Stuff
 
 	public static let entityName = "Mood"
+
+	// MARK: - Display Information
+
+	public static let name = "Mood"
+	public static let description = "A quantitative reflection on your mood."
+
+	// MARK: - Attributes
 
 	public static let rating = DoubleAttribute(name: "Mood Rating", pluralName: "Mood Ratings", variableName: "rating")
 	public static let maxRating = DoubleAttribute(name: "Max Mood Rating", pluralName: "Max mood rating", variableName: "maxRating")
 	public static let note = TextAttribute(name: "Note", pluralName: "Notes", variableName: "note")
 	public static let attributes: [Attribute] = [CommonSampleAttributes.timestamp, rating, maxRating, note]
+	public static let defaultDependentAttribute: Attribute = rating
+	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.timestamp
+	public final let attributes: [Attribute] = Me.attributes
+
+	// MARK: - Instance Member Variables
 
 	public final let name: String = "Mood"
-	public final override var description: String { return "A quantitative reflection on your mood." }
-	public final override var debugDescription: String {
-		return "Mood with rating = \(rating), timestamp = \(timestamp), and note = \(note ?? "nil")"
-	}
+	public final override var description: String { return Me.description }
 
-	public final let dataType: DataTypes = .mood
-	public final let attributes: [Attribute] = Me.attributes
+	// MARK: - Sample Functions
 
 	public final func dates() -> [DateType: Date] {
 		return [.start: timestamp]
 	}
+
+	// MARK: - Attributed Functions
 
 	public final func value(of attribute: Attribute) throws -> Any {
 		if attribute.name == Me.rating.name {
@@ -81,6 +89,12 @@ public final class MoodImpl: NSManagedObject, Mood {
 		throw AttributeError.unknownAttribute
 	}
 
+	// MARK: - Equatable
+
+	public static func ==(lhs: MoodImpl, rhs: MoodImpl) -> Bool {
+		return lhs.equalTo(rhs)
+	}
+
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is Mood) { return false }
 		let other = otherAttributed as! Mood
@@ -95,5 +109,11 @@ public final class MoodImpl: NSManagedObject, Mood {
 
 	public final func equalTo(_ other: Mood) -> Bool {
 		return rating == other.rating && note == other.note && timestamp == other.timestamp
+	}
+
+	// MARK: - Debug
+
+	public final override var debugDescription: String {
+		return "Mood with rating = \(rating), timestamp = \(timestamp), and note = \(note ?? "nil")"
 	}
 }

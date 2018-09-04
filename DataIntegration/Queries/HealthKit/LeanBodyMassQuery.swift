@@ -14,10 +14,6 @@ public protocol LeanBodyMassQuery: Query {}
 
 public final class LeanBodyMassQueryImpl: HealthKitQuery<LeanBodyMass>, LeanBodyMassQuery {
 
-	public init() {
-		super.init(dataType: .leanBodyMass, type: .leanBodyMass)
-	}
-
 	final override func initFromHKSample(_ hkSample: HKSample) -> LeanBodyMass {
 		precondition(hkSample is HKQuantitySample, "Wrong type of health kit sample for BMI")
 		return LeanBodyMass(hkSample as! HKQuantitySample)

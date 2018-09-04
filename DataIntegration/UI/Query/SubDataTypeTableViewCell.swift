@@ -17,10 +17,10 @@ final class SubDataTypeTableViewCell: UITableViewCell {
 		}
 	}
 
-	public final var dataType: DataTypes! {
+	public final var sampleType: Sample.Type! {
 		didSet {
-			guard let dataType = dataType else { return }
-			dataTypeLabel.text = dataType.description
+			guard let sampleType = sampleType else { return }
+			dataTypeLabel.text = sampleType.name
 		}
 	}
 
