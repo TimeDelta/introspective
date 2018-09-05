@@ -11,6 +11,10 @@ import HealthKit
 
 public protocol HealthKitSample: Sample {
 
-	static var objectType: HKObjectType { get }
-	static var sampleType: HKSampleType { get } // TODO - this should be in a different protocol that objectType
+	static var readPermissions: Set<HKObjectType> { get }
+	static var writePermissions: Set<HKSampleType> { get }
+
+	static var sampleType: HKSampleType { get }
+
+	func hkSample() -> HKSample
 }

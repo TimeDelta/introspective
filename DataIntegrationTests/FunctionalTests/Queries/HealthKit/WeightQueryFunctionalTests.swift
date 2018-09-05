@@ -42,10 +42,10 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 		}
 	}
 
-	func testGivenOneWeightInHealthKit_runQuery_returnsThatWeight() {
+	func testGivenOneWeightInHealthKitWithUnrestrictedQuery_runQuery_returnsThatWeight() {
 		// given
-		let weight = Weight(89)
-		HealthKitDataTestUtil.saveWeights(weight)
+		let expected = Weight(89)
+		HealthKitDataTestUtil.save([expected])
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -54,7 +54,7 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 		waitForExpectations(timeout: 0.1) { (waitError) in
 			if self.assertNoErrors(waitError) {
 				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(weight), self.expected(weight, butGot: self.samples[0]))
+				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
 			}
 		}
 	}
@@ -62,9 +62,8 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenMultipleWeightsInHealthKitAndRestrictionOnWeightThatShouldOnlyReturnOneWeight_runQuery_returnsThatOneWeight() {
 		// given
 		let value = 83.7
-		let expectedWeight = Weight(value)
-		let unexpectedWeight = Weight(value - 1)
-		HealthKitDataTestUtil.saveWeights(expectedWeight, unexpectedWeight)
+		let expected = Weight(value)
+		HealthKitDataTestUtil.save([expected, Weight(value - 1)])
 
 		let WeightRestriction = EqualToNumericAttributeRestriction(attribute: Weight.weight, value: value)
 		query.attributeRestrictions.append(WeightRestriction)
@@ -76,7 +75,7 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 		waitForExpectations(timeout: 0.1) { (waitError) in
 			if self.assertNoErrors(waitError) {
 				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expectedWeight), self.expected(expectedWeight, butGot: self.samples[0]))
+				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
 			}
 		}
 	}
@@ -84,10 +83,9 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenMultipleWeightsInDatabaseThatMatchGivenWeightRestriction_runQuery_returnsAllMatchingWeights() {
 		// given
 		let value = 54.6
-		let expectedWeight1 = Weight(value)
-		let expectedWeight2 = Weight(value - 1)
-		let unexpectedWeight = Weight(value + 1)
-		HealthKitDataTestUtil.saveWeights(expectedWeight1, expectedWeight2, unexpectedWeight)
+		let expected1 = Weight(value)
+		let expected2 = Weight(value - 1)
+		HealthKitDataTestUtil.save([expected1, expected2, Weight(value + 1)])
 
 		let WeightRestriction = LessThanOrEqualToNumericAttributeRestriction(attribute: Weight.weight, value: value)
 		query.attributeRestrictions.append(WeightRestriction)
@@ -99,8 +97,8 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 		waitForExpectations(timeout: 0.1) { (waitError) in
 			if self.assertNoErrors(waitError) {
 				XCTAssert(self.samples.count == 2, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expectedWeight1) }))
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expectedWeight2) }))
+				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expected1) }))
+				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expected2) }))
 			}
 		}
 	}
@@ -108,11 +106,8 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenQueryHasOneRestrictionForEachAttributeAndMultipleWeightsInHealthKitWithOnlyOneThatMatches_runQuery_returnsThatWeight() {
 		// given
 		let value = 54.6
-		let expectedWeight = Weight(value, Date() - 2.days)
-		let unexpectedWeight1 = Weight(value - 2)
-		let unexpectedWeight2 = Weight(value - 1)
-		let unexpectedWeight3 = Weight()
-		HealthKitDataTestUtil.saveWeights(expectedWeight, unexpectedWeight1, unexpectedWeight2, unexpectedWeight3)
+		let expected = Weight(value, Date() - 2.days)
+		HealthKitDataTestUtil.save([expected, Weight(value - 2), Weight(value - 1), Weight()])
 
 		let WeightRestriction = GreaterThanOrEqualToNumericAttributeRestriction(attribute: Weight.weight, value: value)
 		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(attribute: Weight.timestamp, date: Date() - 1.days)
@@ -126,7 +121,7 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 		waitForExpectations(timeout: 0.1) { (waitError) in
 			if self.assertNoErrors(waitError) {
 				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expectedWeight), self.expected(expectedWeight, butGot: self.samples[0]))
+				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
 			}
 		}
 	}

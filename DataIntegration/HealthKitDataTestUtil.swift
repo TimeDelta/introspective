@@ -15,26 +15,37 @@ public class HealthKitDataTestUtil {
 	private typealias Me = HealthKitDataTestUtil
 
 	private static let healthStore = HKHealthStore()
-	private static let readPermissions = Set(DependencyInjector.sample.healthKitTypes().map({ return $0.objectType }))
-	private static let sharePermissions = Set(DependencyInjector.sample.healthKitTypes().map({ return $0.sampleType }))
-
-	public static func saveHeartRates(_ heartRates: HeartRate...) {
-		save(type: HeartRate.self, heartRates)
-	}
-
-	public static func saveWeights(_ weights: Weight...) {
-		save(type: Weight.self, weights)
-	}
-
-	public static func saveBMIs(_ bmis: BodyMassIndex...) {
-		save(type: BodyMassIndex.self, bmis)
-	}
+	private static let readPermissions: Set<HKObjectType> = {
+		var allPermissions = Set<HKObjectType>()
+		for permissions in DependencyInjector.sample.healthKitTypes().map({ return $0.readPermissions }) {
+			allPermissions = allPermissions.union(permissions)
+		}
+		return allPermissions
+	}()
+	private static let writePermissions: Set<HKSampleType> = {
+		var allPermissions = Set<HKSampleType>()
+		for permissions in DependencyInjector.sample.healthKitTypes().map({ return $0.writePermissions }) {
+			allPermissions = allPermissions.union(permissions)
+		}
+		return allPermissions
+	}()
 
 	public static func ensureAuthorized() {
 		let group = DispatchGroup()
 		group.enter()
-		Me.healthStore.requestAuthorization(toShare: Me.sharePermissions, read: Me.readPermissions) { (_, error) in
+		Me.healthStore.requestAuthorization(toShare: Me.writePermissions, read: Me.readPermissions) { (_, error) in
 			if error != nil { fatalError("Failed to authorize HealthKit access: " + error!.localizedDescription) }
+			group.leave()
+		}
+		group.wait()
+	}
+
+	public static func save<SampleType: HealthKitSample>(_ samples: [SampleType]) {
+		let allSamples = samples.map({ $0.hkSample() })
+		let group = DispatchGroup()
+		group.enter()
+		Me.healthStore.save(allSamples) { _, error in
+			if error != nil { fatalError("Failed to save samples: " + error!.localizedDescription) }
 			group.leave()
 		}
 		group.wait()
@@ -60,30 +71,5 @@ public class HealthKitDataTestUtil {
 			}
 			group.wait()
 		}
-	}
-
-	public static func save<SampleType: HealthKitQuantitySample>(type: HealthKitSample.Type, _ samples: [SampleType]) {
-		save(type: type, unit: samples[0].quantityUnit(), datesAndQuantity: { return ($0.startDate(), $0.endDate(), $0.quantityValue()) }, samples)
-	}
-
-	private static func save<SampleType: Sample>(
-		type: HealthKitSample.Type,
-		unit: HKUnit,
-		datesAndQuantity: (SampleType) -> (Date, Date, Double),
-		_ samples: [SampleType])
-	{
-		var allSamples = [HKQuantitySample]()
-		for sample in samples {
-			let (start, end, value) = datesAndQuantity(sample)
-			let quantity = HKQuantity(unit: unit, doubleValue: value)
-			allSamples.append(HKQuantitySample(type: type.objectType as! HKQuantityType, quantity: quantity, start: start, end: end))
-		}
-		let group = DispatchGroup()
-		group.enter()
-		Me.healthStore.save(allSamples) { _, error in
-			if error != nil { fatalError("Failed to save " + type.name + ": " + error!.localizedDescription) }
-			group.leave()
-		}
-		group.wait()
 	}
 }

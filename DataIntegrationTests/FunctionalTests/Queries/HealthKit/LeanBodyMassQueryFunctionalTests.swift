@@ -26,7 +26,7 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 		super.tearDown()
 	}
 
-	func testGivenNoBodyMassIndexsInHealthKit_runQuery_returnsNoSamplesFoundError() {
+	func testGivenNoLeanBodyMassesInHealthKit_runQuery_returnsNoSamplesFoundError() {
 		// when
 		query.runQuery(callback: queryComplete)
 
@@ -42,10 +42,10 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 		}
 	}
 
-	func testGivenOneBodyMassIndexInHealthKit_runQuery_returnsThatBodyMassIndex() {
+	func testGivenOneLeanBodyMassInHealthKitWithUnrestrictedQuery_runQuery_returnsThatLeanBodyMasses() {
 		// given
 		let expected = LeanBodyMass(89)
-		HealthKitDataTestUtil.save(type: LeanBodyMass.self, [expected])
+		HealthKitDataTestUtil.save([expected])
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -59,15 +59,17 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 		}
 	}
 
-	func testGivenMultipleBodyMassIndexsInHealthKitAndRestrictionOnBodyMassIndexThatShouldOnlyReturnOneBodyMassIndex_runQuery_returnsThatOneBodyMassIndex() {
+	func testGivenMultipleLeanBodyMassesInHealthKitAndRestrictionOnLeanBodyMassThatShouldOnlyReturnOneLeanBodyMass_runQuery_returnsThatOneLeanBodyMass() {
 		// given
 		let value = 83.7
 		let expected = LeanBodyMass(value)
-		let unexpected = LeanBodyMass(value - 1)
-		HealthKitDataTestUtil.save(type: LeanBodyMass.self, [expected, unexpected])
+		HealthKitDataTestUtil.save([
+			expected,
+			LeanBodyMass(value - 1),
+		])
 
-		let bmiRestriction = EqualToNumericAttributeRestriction(attribute: LeanBodyMass.leanBodyMass, value: value)
-		query.attributeRestrictions.append(bmiRestriction)
+		let leanBodyMassRestriction = EqualToNumericAttributeRestriction(attribute: LeanBodyMass.leanBodyMass, value: value)
+		query.attributeRestrictions.append(leanBodyMassRestriction)
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -81,16 +83,19 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 		}
 	}
 
-	func testGivenMultipleBodyMassIndexsInDatabaseThatMatchGivenBodyMassIndexRestriction_runQuery_returnsAllMatchingBodyMassIndexs() {
+	func testGivenMultipleLeanBodyMassesInDatabaseThatMatchGivenLeanBodyMassRestriction_runQuery_returnsAllMatchingLeanBodyMasses() {
 		// given
 		let value = 54.6
 		let expected1 = LeanBodyMass(value)
 		let expected2 = LeanBodyMass(value - 1)
-		let unexpected = LeanBodyMass(value + 1)
-		HealthKitDataTestUtil.save(type: LeanBodyMass.self, [expected1, expected2, unexpected])
+		HealthKitDataTestUtil.save([
+			expected1,
+			expected2,
+			LeanBodyMass(value + 1),
+		])
 
-		let bmiRestriction = LessThanOrEqualToNumericAttributeRestriction(attribute: LeanBodyMass.leanBodyMass, value: value)
-		query.attributeRestrictions.append(bmiRestriction)
+		let leanBodyMassRestriction = LessThanOrEqualToNumericAttributeRestriction(attribute: LeanBodyMass.leanBodyMass, value: value)
+		query.attributeRestrictions.append(leanBodyMassRestriction)
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -105,18 +110,20 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 		}
 	}
 
-	func testGivenQueryHasOneRestrictionForEachAttributeAndMultipleBodyMassIndexsInHealthKitWithOnlyOneThatMatches_runQuery_returnsThatBodyMassIndex() {
+	func testGivenQueryHasOneRestrictionForEachAttributeAndMultipleLeanBodyMassesInHealthKitWithOnlyOneThatMatches_runQuery_returnsThatLeanBodyMass() {
 		// given
 		let value = 54.6
 		let expected = LeanBodyMass(value, Date() - 2.days)
-		let unexpected1 = LeanBodyMass(value - 2)
-		let unexpected2 = LeanBodyMass(value - 1)
-		let unexpected3 = LeanBodyMass()
-		HealthKitDataTestUtil.save(type: LeanBodyMass.self, [expected, unexpected1, unexpected2, unexpected3])
+		HealthKitDataTestUtil.save([
+			expected,
+			LeanBodyMass(value - 2),
+			LeanBodyMass(value - 1),
+			LeanBodyMass(),
+		])
 
-		let bmiRestriction = GreaterThanOrEqualToNumericAttributeRestriction(attribute: LeanBodyMass.leanBodyMass, value: value)
+		let leanBodyMassRestriction = GreaterThanOrEqualToNumericAttributeRestriction(attribute: LeanBodyMass.leanBodyMass, value: value)
 		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(attribute: LeanBodyMass.timestamp, date: Date() - 1.days)
-		query.attributeRestrictions.append(bmiRestriction)
+		query.attributeRestrictions.append(leanBodyMassRestriction)
 		query.attributeRestrictions.append(timestampRestriction)
 
 		// when

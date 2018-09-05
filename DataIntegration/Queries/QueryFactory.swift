@@ -11,6 +11,7 @@ import os
 
 //sourcery: AutoMockable
 public protocol QueryFactory {
+	func bloodPressureQuery() -> BloodPressureQuery
 	func bmiQuery() -> BodyMassIndexQuery
 	func heartRateQuery() -> HeartRateQuery
 	func leanBodyMassQuery() -> LeanBodyMassQuery
@@ -22,6 +23,10 @@ public final class QueryFactoryImpl: QueryFactory {
 
 	public enum Errors: Error {
 		case UnknownSampleType
+	}
+
+	public final func bloodPressureQuery() -> BloodPressureQuery {
+		return BloodPressureQueryImpl()
 	}
 
 	public final func bmiQuery() -> BodyMassIndexQuery {

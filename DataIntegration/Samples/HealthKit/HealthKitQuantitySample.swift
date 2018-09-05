@@ -13,21 +13,9 @@ public protocol HealthKitQuantitySample: HealthKitSample {
 
 	static var quantityType: HKQuantityType { get }
 
+	var unitString: String { get }
+
 	init(_ sample: HKQuantitySample)
 
-	func quantityUnit() -> HKUnit
 	func quantityValue() -> Double
-	func startDate() -> Date
-	func endDate() -> Date
-}
-
-extension HealthKitQuantitySample {
-
-	public func startDate() -> Date {
-		return dates()[.start]!
-	}
-
-	public func endDate() -> Date {
-		return dates()[.end] ?? dates()[.start]!
-	}
 }

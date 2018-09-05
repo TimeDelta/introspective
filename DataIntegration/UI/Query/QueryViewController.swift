@@ -279,7 +279,6 @@ final class QueryViewController: UITableViewController {
 				return
 			}
 			controller.samples = result?.samples
-			controller.extraInformation = [ExtraInformation]()
 		}
 	}
 
@@ -291,6 +290,8 @@ final class QueryViewController: UITableViewController {
 
 			let dataTypeInfo = parts[0] as! DataTypeInfo
 			switch (dataTypeInfo.sampleType) {
+				case is BloodPressure.Type:
+					currentQuery = DependencyInjector.query.bloodPressureQuery()
 				case is BodyMassIndex.Type:
 					currentQuery = DependencyInjector.query.bmiQuery()
 					break

@@ -15,10 +15,12 @@ public final class HeartRate: HealthKitQuantitySample {
 
 	// MARK: - HealthKit Stuff
 
-	public static let unit: HKUnit = HealthManager.preferredUnitFor(.heartRate) ?? HKUnit(from: "count/min")
 	public static let quantityType: HKQuantityType = HKQuantityType.quantityType(forIdentifier: .heartRate)!
 	public static let sampleType: HKSampleType = quantityType
-	public static let objectType: HKObjectType = quantityType
+	public static let readPermissions: Set<HKObjectType> = Set([sampleType])
+	public static let writePermissions: Set<HKSampleType> = Set([sampleType])
+	public static let unit: HKUnit = HealthManager.preferredUnitFor(.heartRate) ?? HKUnit(from: "count/min")
+	public final let unitString: String = "bpm"
 
 	// MARK: - Display Information
 
@@ -68,13 +70,16 @@ public final class HeartRate: HealthKitQuantitySample {
 		timestamp = sample.startDate
 	}
 
-	// MARK: - HealthKitQuantitySample Functions
+	// MARK: - HealthKitSample Functions
 
-	public final func quantityUnit() -> HKUnit {
-		return Me.unit
+	public func hkSample() -> HKSample {
+		let quantity = HKQuantity(unit: Me.unit, doubleValue: quantityValue())
+		return HKQuantitySample(type: Me.quantityType, quantity: quantity, start: timestamp, end: timestamp)
 	}
 
-	public final func quantityValue() -> Double {
+	// MARK: - HealthKitQuantitySample Functions
+
+	public func quantityValue() -> Double {
 		return heartRate
 	}
 

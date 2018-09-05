@@ -1,30 +1,27 @@
 //
-//  HealthKitQuantitySampleTableViewCell.swift
+//  BloodPressureTableViewCell.swift
 //  DataIntegration
 //
-//  Created by Bryan Nova on 7/13/18.
+//  Created by Bryan Nova on 9/5/18.
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
 import UIKit
-import SwiftDate
 
-final class HealthKitQuantitySampleTableViewCell: UITableViewCell {
+class BloodPressureTableViewCell: UITableViewCell {
 
-	private typealias Me = HealthKitQuantitySampleTableViewCell
+	private typealias Me = BloodPressureTableViewCell
 	private static let valueFormatter: NumberFormatter = {
 		let formatter = NumberFormatter()
 		formatter.numberStyle = .decimal
 		return formatter
 	}()
 
-	public final var sample: HealthKitQuantitySample! {
+	public final var sample: BloodPressure! {
 		didSet {
 			guard let sample = sample else { return }
 
-			let valueFormatter = NumberFormatter()
-			valueFormatter.numberStyle = .decimal
-			valueLabel.text = formatValue(sample.quantityValue()) + " " + sample.unitString
+			valueLabel.text = formatValue(sample.systolic) + "/" + formatValue(sample.diastolic)
 
 			let start = sample.dates()[.start]!
 			let end = sample.dates()[.end]

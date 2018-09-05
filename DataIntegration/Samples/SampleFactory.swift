@@ -25,6 +25,7 @@ public final class SampleFactoryImpl: SampleFactory {
 
 	public final func allTypes() -> [Sample.Type] {
 		return [
+			BloodPressure.self,
 			BodyMassIndex.self,
 			HeartRate.self,
 			LeanBodyMass.self,
@@ -35,6 +36,7 @@ public final class SampleFactoryImpl: SampleFactory {
 
 	public final func healthKitTypes() -> [HealthKitSample.Type] {
 		return [
+			BloodPressure.self,
 			BodyMassIndex.self,
 			HeartRate.self,
 			LeanBodyMass.self,

@@ -657,6 +657,189 @@ class AttributeRestrictionUtilMock: AttributeRestrictionUtil, Mock {
     }
 }
 
+// MARK: - BloodPressureQuery
+class BloodPressureQueryMock: BloodPressureQuery, Mock {
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    var matcher: Matcher = Matcher.default
+
+    var attributeRestrictions: [AttributeRestriction] { 
+		get {	invocations.append(.attributeRestrictions_get)
+				return __attributeRestrictions.orFail("BloodPressureQueryMock - value for attributeRestrictions was not defined") }
+		set {	invocations.append(.attributeRestrictions_set(.value(newValue)))
+				__attributeRestrictions = newValue }
+	}
+	private var __attributeRestrictions: ([AttributeRestriction])?
+
+    var mostRecentEntryOnly: Bool { 
+		get {	invocations.append(.mostRecentEntryOnly_get)
+				return __mostRecentEntryOnly.orFail("BloodPressureQueryMock - value for mostRecentEntryOnly was not defined") }
+		set {	invocations.append(.mostRecentEntryOnly_set(.value(newValue)))
+				__mostRecentEntryOnly = newValue }
+	}
+	private var __mostRecentEntryOnly: (Bool)?
+
+    var subQuery: (matcher: SubQueryMatcher, query: Query)? { 
+		get {	invocations.append(.subQuery_get)
+				return __subQuery }
+		set {	invocations.append(.subQuery_set(.value(newValue)))
+				__subQuery = newValue }
+	}
+	private var __subQuery: ((matcher: SubQueryMatcher, query: Query))?
+
+
+    struct Property {
+        fileprivate var method: MethodType
+        static var attributeRestrictions: Property { return Property(method: .attributeRestrictions_get) }
+		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Property { return Property(method: .attributeRestrictions_set(newValue)) }
+        static var mostRecentEntryOnly: Property { return Property(method: .mostRecentEntryOnly_get) }
+		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Property { return Property(method: .mostRecentEntryOnly_set(newValue)) }
+        static var subQuery: Property { return Property(method: .subQuery_get) }
+		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Property { return Property(method: .subQuery_set(newValue)) }
+    }
+
+
+
+    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+        addInvocation(.irunQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(callback)))
+		let perform = methodPerformValue(.irunQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(callback))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+		perform?(callback)
+    }
+
+    func equalTo(_ otherQuery: Query) -> Bool {
+        addInvocation(.iequalTo__otherQuery(Parameter<Query>.value(otherQuery)))
+		let perform = methodPerformValue(.iequalTo__otherQuery(Parameter<Query>.value(otherQuery))) as? (Query) -> Void
+		perform?(otherQuery)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iequalTo__otherQuery(Parameter<Query>.value(otherQuery)))
+		let value = givenValue.value as? Bool
+		return value.orFail("stub return value not specified for equalTo(_ otherQuery: Query). Use given")
+    }
+
+    fileprivate enum MethodType {
+        case irunQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
+        case iequalTo__otherQuery(Parameter<Query>)
+        case attributeRestrictions_get
+		case attributeRestrictions_set(Parameter<[AttributeRestriction]>)
+        case mostRecentEntryOnly_get
+		case mostRecentEntryOnly_set(Parameter<Bool>)
+        case subQuery_get
+		case subQuery_set(Parameter<(matcher: SubQueryMatcher, query: Query)?>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+                case (.irunQuery__callback_callback(let lhsCallback), .irunQuery__callback_callback(let rhsCallback)):
+                    guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
+                    return true 
+                case (.iequalTo__otherQuery(let lhsOtherquery), .iequalTo__otherQuery(let rhsOtherquery)):
+                    guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
+                    return true 
+                case (.attributeRestrictions_get,.attributeRestrictions_get): return true
+				case (.attributeRestrictions_set(let left),.attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
+                case (.mostRecentEntryOnly_get,.mostRecentEntryOnly_get): return true
+				case (.mostRecentEntryOnly_set(let left),.mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
+                case (.subQuery_get,.subQuery_get): return true
+				case (.subQuery_set(let left),.subQuery_set(let right)): return Parameter<(matcher: SubQueryMatcher, query: Query)?>.compare(lhs: left, rhs: right, with: matcher)
+                default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+                case let .irunQuery__callback_callback(p0): return p0.intValue
+                case let .iequalTo__otherQuery(p0): return p0.intValue
+                case .attributeRestrictions_get: return 0
+				case .attributeRestrictions_set(let newValue): return newValue.intValue
+                case .mostRecentEntryOnly_get: return 0
+				case .mostRecentEntryOnly_set(let newValue): return newValue.intValue
+                case .subQuery_get: return 0
+				case .subQuery_set(let newValue): return newValue.intValue
+            }
+        }
+    }
+
+    struct Given {
+        fileprivate var method: MethodType
+        var returns: Any?
+        var `throws`: Error?
+
+        private init(method: MethodType, returns: Any?, throws: Error?) {
+            self.method = method
+            self.returns = returns
+            self.`throws` = `throws`
+        }
+
+        static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool) -> Given {
+            return Given(method: .iequalTo__otherQuery(otherQuery), returns: willReturn, throws: nil)
+        }
+    }
+
+    struct Verify {
+        fileprivate var method: MethodType
+
+        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify {
+            return Verify(method: .irunQuery__callback_callback(callback))
+        }
+        static func equalTo(otherQuery: Parameter<Query>) -> Verify {
+            return Verify(method: .iequalTo__otherQuery(otherQuery))
+        }
+    }
+
+    struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+            return Perform(method: .irunQuery__callback_callback(callback), performs: perform)
+        }
+        static func equalTo(otherQuery: Parameter<Query>, perform: (Query) -> Void) -> Perform {
+            return Perform(method: .iequalTo__otherQuery(otherQuery), performs: perform)
+        }
+    }
+
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+        methodReturnValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    public func verify(property: Property, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(property.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(property.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+
+    private func methodReturnValue(_ method: MethodType) -> (value: Any?, error: Error?) {
+        let matched = methodReturnValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher)  }
+        return (value: matched?.returns, error: matched?.`throws`)
+    }
+
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+}
+
 // MARK: - BodyMassIndexQuery
 class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
     private var invocations: [MethodType] = []
@@ -3134,6 +3317,15 @@ class QueryFactoryMock: QueryFactory, Mock {
 
 
 
+    func bloodPressureQuery() -> BloodPressureQuery {
+        addInvocation(.ibloodPressureQuery)
+		let perform = methodPerformValue(.ibloodPressureQuery) as? () -> Void
+		perform?()
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.ibloodPressureQuery)
+		let value = givenValue.value as? BloodPressureQuery
+		return value.orFail("stub return value not specified for bloodPressureQuery(). Use given")
+    }
+
     func bmiQuery() -> BodyMassIndexQuery {
         addInvocation(.ibmiQuery)
 		let perform = methodPerformValue(.ibmiQuery) as? () -> Void
@@ -3180,6 +3372,7 @@ class QueryFactoryMock: QueryFactory, Mock {
     }
 
     fileprivate enum MethodType {
+        case ibloodPressureQuery
         case ibmiQuery
         case iheartRateQuery
         case ileanBodyMassQuery
@@ -3188,6 +3381,8 @@ class QueryFactoryMock: QueryFactory, Mock {
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
+                case (.ibloodPressureQuery, .ibloodPressureQuery):
+                    return true 
                 case (.ibmiQuery, .ibmiQuery):
                     return true 
                 case (.iheartRateQuery, .iheartRateQuery):
@@ -3204,6 +3399,7 @@ class QueryFactoryMock: QueryFactory, Mock {
 
         func intValue() -> Int {
             switch self {
+                case .ibloodPressureQuery: return 0
                 case .ibmiQuery: return 0
                 case .iheartRateQuery: return 0
                 case .ileanBodyMassQuery: return 0
@@ -3224,6 +3420,9 @@ class QueryFactoryMock: QueryFactory, Mock {
             self.`throws` = `throws`
         }
 
+        static func bloodPressureQuery(willReturn: BloodPressureQuery) -> Given {
+            return Given(method: .ibloodPressureQuery, returns: willReturn, throws: nil)
+        }
         static func bmiQuery(willReturn: BodyMassIndexQuery) -> Given {
             return Given(method: .ibmiQuery, returns: willReturn, throws: nil)
         }
@@ -3244,6 +3443,9 @@ class QueryFactoryMock: QueryFactory, Mock {
     struct Verify {
         fileprivate var method: MethodType
 
+        static func bloodPressureQuery() -> Verify {
+            return Verify(method: .ibloodPressureQuery)
+        }
         static func bmiQuery() -> Verify {
             return Verify(method: .ibmiQuery)
         }
@@ -3265,6 +3467,9 @@ class QueryFactoryMock: QueryFactory, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
+        static func bloodPressureQuery(perform: () -> Void) -> Perform {
+            return Perform(method: .ibloodPressureQuery, performs: perform)
+        }
         static func bmiQuery(perform: () -> Void) -> Perform {
             return Perform(method: .ibmiQuery, performs: perform)
         }

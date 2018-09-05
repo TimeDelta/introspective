@@ -15,10 +15,12 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 
 	// MARK: - HealthKit Stuff
 
-	public static let unit: HKUnit = HealthManager.preferredUnitFor(.bodyMassIndex) ?? HKUnit.count()
 	public static let quantityType: HKQuantityType = HKQuantityType.quantityType(forIdentifier: .bodyMassIndex)!
 	public static let sampleType: HKSampleType = quantityType
-	public static let objectType: HKObjectType = quantityType
+	public static let readPermissions: Set<HKObjectType> = Set([sampleType])
+	public static let writePermissions: Set<HKSampleType> = Set([sampleType])
+	public static let unit: HKUnit = HealthManager.preferredUnitFor(.bodyMassIndex) ?? HKUnit.count()
+	public final let unitString: String = ""
 
 	// MARK: - Display Information
 
@@ -68,13 +70,16 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 		timestamp = sample.startDate
 	}
 
-	// MARK: - HealthKitQuantitySample Functions
+	// MARK: - HealthKitSample Functions
 
-	public final func quantityUnit() -> HKUnit {
-		return Me.unit
+	public func hkSample() -> HKSample {
+		let quantity = HKQuantity(unit: Me.unit, doubleValue: quantityValue())
+		return HKQuantitySample(type: Me.quantityType, quantity: quantity, start: timestamp, end: timestamp)
 	}
 
-	public final func quantityValue() -> Double {
+	// MARK: - HealthKitQuantitySample Functions
+
+	public func quantityValue() -> Double {
 		return bmi
 	}
 

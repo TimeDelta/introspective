@@ -18,7 +18,7 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 	final override func run() {
 		let dateConstraints = DependencyInjector.util.attributeRestrictionUtil.getMostRestrictiveStartAndEndDates(from: attributeRestrictions)
 
-		HealthManager.getAuthorization(for: SampleType.self) {
+		HealthManager.getAuthorization() {
 			(error: Error?) in
 
 			if error != nil {
@@ -38,16 +38,15 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 					return
 				}
 
-				let samples = originalSamples!.map({ (sample: HKSample) -> SampleType in
-					return self.initFromHKSample(sample)
-				}).filter(self.samplePassesFilters)
+				let mappedSamples = originalSamples!.map({ self.initFromHKSample($0)})
+				let filteredSamples = mappedSamples.filter(self.samplePassesFilters)
 
-				if samples.count == 0 {
+				if filteredSamples.count == 0 {
 					self.queryDone(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
 					return
 				}
 
-				let result = SampleQueryResult<SampleType>(samples)
+				let result = SampleQueryResult<SampleType>(filteredSamples)
 				self.queryDone(result, nil)
 			}
 		}

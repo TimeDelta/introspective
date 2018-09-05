@@ -41,10 +41,13 @@ class CombinedQueryFunctionalTests: QueryFunctionalTest {
 		query = HeartRateQueryImpl()
 		let expectedHeartRate1 = HeartRate(1, earliestTargetMoodDate - 2.days)
 		let expectedHeartRate2 = HeartRate(2, earliestTargetMoodDate - 5.days - 16.hours - 12.minutes - 3.seconds)
-		let unexpectedHeartRate1 = HeartRate(3, earliestTargetMoodDate - numberOfDaysWithinMood.days - 1.days)
-		let unexpectedHeartRate2 = HeartRate(4, latestTargetMoodDate + numberOfDaysWithinMood.days + 1.days)
-		let unexpectedHeartRate3 = HeartRate(5, latestTargetMoodDate + numberOfDaysWithinMood.days + 5.days)
-		HealthKitDataTestUtil.saveHeartRates(expectedHeartRate1, expectedHeartRate2, unexpectedHeartRate1, unexpectedHeartRate2, unexpectedHeartRate3)
+		HealthKitDataTestUtil.save([
+			expectedHeartRate1,
+			expectedHeartRate2,
+			HeartRate(3, earliestTargetMoodDate - numberOfDaysWithinMood.days - 1.days),
+			HeartRate(4, latestTargetMoodDate + numberOfDaysWithinMood.days + 1.days),
+			HeartRate(5, latestTargetMoodDate + numberOfDaysWithinMood.days + 5.days),
+		])
 
 		let subQuery = MoodQueryImpl()
 		let targetSubstring = "sad"
@@ -85,10 +88,13 @@ class CombinedQueryFunctionalTests: QueryFunctionalTest {
 		query = HeartRateQueryImpl()
 		let expectedHeartRate1 = HeartRate(1, startOfTargetDay + 2.hours)
 		let expectedHeartRate2 = HeartRate(2, startOfTargetDay + 5.hours + 17.minutes + 2.seconds)
-		let unexpectedHeartRate1 = HeartRate(3, startOfTargetDay - 1.minutes)
-		let unexpectedHeartRate2 = HeartRate(4, startOfTargetDay + 1.days)
-		let unexpectedHeartRate3 = HeartRate(5, startOfTargetDay + 5.days)
-		HealthKitDataTestUtil.saveHeartRates(expectedHeartRate1, expectedHeartRate2, unexpectedHeartRate1, unexpectedHeartRate2, unexpectedHeartRate3)
+		HealthKitDataTestUtil.save([
+			expectedHeartRate1,
+			expectedHeartRate2,
+			HeartRate(3, startOfTargetDay - 1.minutes),
+			HeartRate(4, startOfTargetDay + 1.days),
+			HeartRate(5, startOfTargetDay + 5.days),
+		])
 
 		let moodSubQuery = MoodQueryImpl()
 		let maxMood = 2.0
@@ -103,11 +109,12 @@ class CombinedQueryFunctionalTests: QueryFunctionalTest {
 
 		let weightSubQuery = WeightQueryImpl()
 		let minWeight = 170.0
-		let expectedWeight = Weight(minWeight + 1, startOfTargetDay + 17.hours + 23.minutes + 34.seconds)
-		let expectedWeightOnWrongDay = Weight(minWeight + 5, startOfTargetDay + 5.days)
-		let unexpectedWeight1 = Weight(minWeight - 1, startOfTargetDay - 1.hours)
-		let unexpectedWeight2 = Weight(minWeight - 23, startOfTargetDay + 1.days)
-		HealthKitDataTestUtil.saveWeights(expectedWeight, expectedWeightOnWrongDay, unexpectedWeight1, unexpectedWeight2)
+		HealthKitDataTestUtil.save([
+			Weight(minWeight + 1, startOfTargetDay + 17.hours + 23.minutes + 34.seconds), // target
+			Weight(minWeight + 5, startOfTargetDay + 5.days), // expected on wrong day
+			Weight(minWeight - 1, startOfTargetDay - 1.hours),
+			Weight(minWeight - 23, startOfTargetDay + 1.days),
+		])
 
 		let matcher = InSameCalendarUnitSubQueryMatcher(timeUnit: .day, mostRecentOnly: false)
 		moodSubQuery.subQuery = (matcher: matcher, query: weightSubQuery)

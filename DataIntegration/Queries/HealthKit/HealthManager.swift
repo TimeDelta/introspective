@@ -14,13 +14,26 @@ public final class HealthManager {
 
 	private typealias Me = HealthManager
 	private static let healthStore = HKHealthStore()
-	private static let readPermissions: Set<HKObjectType> = Set<HKObjectType>(DependencyInjector.sample.healthKitTypes().map({ return $0.objectType }))
+	private static let readPermissions: Set<HKObjectType> = {
+		var allPermissions = Set<HKObjectType>()
+		for permissions in DependencyInjector.sample.healthKitTypes().map({ return $0.readPermissions }) {
+			allPermissions = allPermissions.union(permissions)
+		}
+		return allPermissions
+	}()
+	private static let writePermissions: Set<HKSampleType> = {
+		var allPermissions = Set<HKSampleType>()
+		for permissions in DependencyInjector.sample.healthKitTypes().map({ return $0.writePermissions }) {
+			allPermissions = allPermissions.union(permissions)
+		}
+		return allPermissions
+	}()
 
-	static public func getSamples(for type: HealthKitSample.Type, startDate: Date?, endDate: Date?, callback:@escaping (Array<HKQuantitySample>?, Error?)->()) {
+	static public func getSamples(for type: HealthKitSample.Type, startDate: Date?, endDate: Date?, callback:@escaping (Array<HKSample>?, Error?)->()) {
 		let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
 		let query = HKSampleQuery(sampleType: type.sampleType, predicate: predicate, limit: Int(HKObjectQueryNoLimit), sortDescriptors: nil) {
 			query, results, error in
-			callback(results as? [HKQuantitySample], error)
+			callback(results, error)
 		}
 		Me.healthStore.execute(query)
 	}
@@ -41,21 +54,27 @@ public final class HealthManager {
 		return unit
 	}
 
-	static public func getAuthorization(for type: HealthKitSample.Type, callback: @escaping (Error?) -> ()) {
-		os_log("Checking authorization to read %@ data", type: .info, String(describing: type))
-
-		let status = Me.healthStore.authorizationStatus(for: type.objectType)
-
-		if status == .notDetermined {
-			os_log("Requesting authorization to read %@ data", type: .info, type.name)
-			var writePermissions: Set<HKSampleType>? = nil
-			if testing {
-				writePermissions = Set(DependencyInjector.sample.healthKitTypes().map({ return $0.sampleType }))
+	static public func getAuthorization(callback: @escaping (Error?) -> ()) {
+		var requesting = false
+		for objectType in readPermissions {
+			os_log("Checking authorization to read %@ data", type: .info, objectType.identifier)
+			let status = Me.healthStore.authorizationStatus(for: objectType)
+			os_log("Finished checking authorization to read %@ data", type: .info, objectType.identifier)
+			if status == .notDetermined {
+				requesting = true
+				os_log("Requesting authorization to HealthKit data", type: .info)
+				let writePermissions: Set<HKSampleType>? = testing ? Me.writePermissions : nil
+				Me.healthStore.requestAuthorization(toShare: writePermissions, read: Me.readPermissions) { (success, error) in
+					os_log("Finished requesting access to HealthKit data: %@", type: .info, success ? "Success" : "Failure")
+					if error != nil {
+						os_log("Error occurred while trying to request access to HealthKit data: %@", type: .info, error!.localizedDescription)
+					}
+					callback(error)
+				}
+				break
 			}
-			Me.healthStore.requestAuthorization(toShare: writePermissions, read: Me.readPermissions) { (result: Bool, error: Error?) in
-				callback(error)
-			}
-		} else {
+		}
+		if !requesting {
 			callback(nil)
 		}
 	}
