@@ -21,8 +21,8 @@ public final class BloodPressure: HealthKitCorrelationSample {
 	public static let sampleType: HKSampleType = correlationType
 	public static var readPermissions: Set<HKObjectType> = Set([systolicQuantityType, diastolicQuantityType])
 	public static var writePermissions: Set<HKSampleType> = Set([systolicQuantityType, diastolicQuantityType])
-	public static let systolicUnit: HKUnit = HealthManager.preferredUnitFor(.bloodPressureSystolic) ?? HKUnit.millimeterOfMercury()
-	public static let diastolicUnit: HKUnit = HealthManager.preferredUnitFor(.bloodPressureDiastolic) ?? HKUnit.millimeterOfMercury()
+	public static let systolicUnit: HKUnit = HKUnit.millimeterOfMercury()
+	public static let diastolicUnit: HKUnit = HKUnit.millimeterOfMercury()
 
 	// MARK: - Display Information
 

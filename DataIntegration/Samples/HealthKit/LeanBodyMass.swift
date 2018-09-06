@@ -19,7 +19,7 @@ public final class LeanBodyMass: HealthKitQuantitySample {
 	public static let sampleType: HKSampleType = quantityType
 	public static var readPermissions: Set<HKObjectType> = Set([sampleType])
 	public static var writePermissions: Set<HKSampleType> = Set([sampleType])
-	public static let unit: HKUnit = HealthManager.preferredUnitFor(.leanBodyMass) ?? HKUnit(from: .pound)
+	public static let unit: HKUnit = HKUnit(from: .pound)
 	public final let unitString: String = Me.unit.unitString
 
 	// MARK: - Display Information

@@ -19,7 +19,7 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 	public static let sampleType: HKSampleType = quantityType
 	public static let readPermissions: Set<HKObjectType> = Set([sampleType])
 	public static let writePermissions: Set<HKSampleType> = Set([sampleType])
-	public static let unit: HKUnit = HealthManager.preferredUnitFor(.bodyMassIndex) ?? HKUnit.count()
+	public static let unit: HKUnit = HKUnit.count()
 	public final let unitString: String = ""
 
 	// MARK: - Display Information

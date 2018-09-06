@@ -19,7 +19,7 @@ public final class HeartRate: HealthKitQuantitySample {
 	public static let sampleType: HKSampleType = quantityType
 	public static let readPermissions: Set<HKObjectType> = Set([sampleType])
 	public static let writePermissions: Set<HKSampleType> = Set([sampleType])
-	public static let unit: HKUnit = HealthManager.preferredUnitFor(.heartRate) ?? HKUnit(from: "count/min")
+	public static let unit: HKUnit = HKUnit(from: "count/min")
 	public final let unitString: String = "bpm"
 
 	// MARK: - Display Information
