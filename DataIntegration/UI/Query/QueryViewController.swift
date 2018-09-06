@@ -292,6 +292,7 @@ final class QueryViewController: UITableViewController {
 			switch (dataTypeInfo.sampleType) {
 				case is BloodPressure.Type:
 					currentQuery = DependencyInjector.query.bloodPressureQuery()
+					break
 				case is BodyMassIndex.Type:
 					currentQuery = DependencyInjector.query.bmiQuery()
 					break
@@ -303,6 +304,9 @@ final class QueryViewController: UITableViewController {
 					break
 				case is MoodImpl.Type:
 					currentQuery = DependencyInjector.query.moodQuery()
+					break
+				case is SexualActivity.Type:
+					currentQuery = DependencyInjector.query.sexualActivityQuery()
 					break
 				case is Weight.Type:
 					currentQuery = DependencyInjector.query.weightQuery()

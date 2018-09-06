@@ -8,25 +8,30 @@
 
 import Foundation
 
+public protocol TextAttributeDelegate {
+
+	func isValid(value: String) -> Bool
+	func errorMessageFor(invalidValue: String) -> String
+}
+
 public final class TextAttribute: AttributeBase {
 
-	public required init(name: String, pluralName: String? = nil, description: String? = nil, variableName: String? = nil) {
+	private final let delegate: TextAttributeDelegate?
+
+	public init(name: String, pluralName: String? = nil, description: String? = nil, variableName: String? = nil, delegate: TextAttributeDelegate? = nil) {
+		self.delegate = delegate
 		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
 	}
 
-	public final override func isValid(value: String) -> Bool {
-		return true
+	public final func isValid(value: String) -> Bool {
+		return delegate?.isValid(value: value) ?? true
 	}
 
-	public final override func errorMessageFor(invalidValue: String) -> String {
-		return ""
+	public final func errorMessageFor(invalidValue: String) -> String {
+		return delegate?.errorMessageFor(invalidValue: invalidValue) ?? ""
 	}
 
-	public final override func convertToValue(from strValue: String) throws -> Any {
-		return strValue
-	}
-
-	public final override func convertToString(from value: Any) throws -> String {
+	public final override func convertToDisplayableString(from value: Any) throws -> String {
 		guard let castedValue = value as? String else { throw AttributeError.typeMismatch }
 		return castedValue
 	}

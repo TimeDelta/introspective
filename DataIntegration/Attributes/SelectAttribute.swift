@@ -11,5 +11,6 @@ import Foundation
 public protocol SelectAttribute: Attribute {
 
 	var possibleValues: [Any] { get }
+
 	func indexOf(possibleValue: Any) -> Int?
 }

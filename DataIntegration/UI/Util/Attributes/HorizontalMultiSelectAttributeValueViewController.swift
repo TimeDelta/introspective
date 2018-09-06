@@ -20,7 +20,7 @@ final class HorizontalMultiSelectAttributeValueViewController: AttributeValueTyp
 		multiSelect.removeAllSegments()
 		var index = 0
 		for value in multiSelectAttribute.possibleValues {
-			let segmentTitle = try! multiSelectAttribute.convertToDisplayableString(from: value)
+			let segmentTitle = try! multiSelectAttribute.convertPossibleValueToDisplayableString(value)
 			multiSelect.insertSegment(withTitle: segmentTitle, at: index, animated: false)
 			index += 1
 		}

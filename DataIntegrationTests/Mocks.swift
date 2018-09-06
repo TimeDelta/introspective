@@ -96,44 +96,13 @@ class AttributeMock: Attribute, Mock {
 
 
 
-    required init(name: String, pluralName: String?, description: String?, variableName: String?) { }
-
-    func isValid(value: String) -> Bool {
-        addInvocation(.iisValid__value_value(Parameter<String>.value(value)))
-		let perform = methodPerformValue(.iisValid__value_value(Parameter<String>.value(value))) as? (String) -> Void
-		perform?(value)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iisValid__value_value(Parameter<String>.value(value)))
+    func equalTo(_ otherAttribute: Attribute) -> Bool {
+        addInvocation(.iequalTo__otherAttribute(Parameter<Attribute>.value(otherAttribute)))
+		let perform = methodPerformValue(.iequalTo__otherAttribute(Parameter<Attribute>.value(otherAttribute))) as? (Attribute) -> Void
+		perform?(otherAttribute)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iequalTo__otherAttribute(Parameter<Attribute>.value(otherAttribute)))
 		let value = givenValue.value as? Bool
-		return value.orFail("stub return value not specified for isValid(value: String). Use given")
-    }
-
-    func errorMessageFor(invalidValue: String) -> String {
-        addInvocation(.ierrorMessageFor__invalidValue_invalidValue(Parameter<String>.value(invalidValue)))
-		let perform = methodPerformValue(.ierrorMessageFor__invalidValue_invalidValue(Parameter<String>.value(invalidValue))) as? (String) -> Void
-		perform?(invalidValue)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.ierrorMessageFor__invalidValue_invalidValue(Parameter<String>.value(invalidValue)))
-		let value = givenValue.value as? String
-		return value.orFail("stub return value not specified for errorMessageFor(invalidValue: String). Use given")
-    }
-
-    func convertToValue(from strValue: String) throws -> Any {
-        addInvocation(.iconvertToValue__from_strValue(Parameter<String>.value(strValue)))
-		let perform = methodPerformValue(.iconvertToValue__from_strValue(Parameter<String>.value(strValue))) as? (String) -> Void
-		perform?(strValue)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iconvertToValue__from_strValue(Parameter<String>.value(strValue)))
-		if let error = givenValue.error { throw error }
-		let value = givenValue.value as? Any
-		return value.orFail("stub return value not specified for convertToValue(from strValue: String). Use given")
-    }
-
-    func convertToString(from value: Any) throws -> String {
-        addInvocation(.iconvertToString__from_value(Parameter<Any>.value(value)))
-		let perform = methodPerformValue(.iconvertToString__from_value(Parameter<Any>.value(value))) as? (Any) -> Void
-		perform?(value)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iconvertToString__from_value(Parameter<Any>.value(value)))
-		if let error = givenValue.error { throw error }
-		let value = givenValue.value as? String
-		return value.orFail("stub return value not specified for convertToString(from value: Any). Use given")
+		return value.orFail("stub return value not specified for equalTo(_ otherAttribute: Attribute). Use given")
     }
 
     func convertToDisplayableString(from value: Any) throws -> String {
@@ -146,22 +115,9 @@ class AttributeMock: Attribute, Mock {
 		return value.orFail("stub return value not specified for convertToDisplayableString(from value: Any). Use given")
     }
 
-    func equalTo(_ otherAttribute: Attribute) -> Bool {
-        addInvocation(.iequalTo__otherAttribute(Parameter<Attribute>.value(otherAttribute)))
-		let perform = methodPerformValue(.iequalTo__otherAttribute(Parameter<Attribute>.value(otherAttribute))) as? (Attribute) -> Void
-		perform?(otherAttribute)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iequalTo__otherAttribute(Parameter<Attribute>.value(otherAttribute)))
-		let value = givenValue.value as? Bool
-		return value.orFail("stub return value not specified for equalTo(_ otherAttribute: Attribute). Use given")
-    }
-
     fileprivate enum MethodType {
-        case iisValid__value_value(Parameter<String>)
-        case ierrorMessageFor__invalidValue_invalidValue(Parameter<String>)
-        case iconvertToValue__from_strValue(Parameter<String>)
-        case iconvertToString__from_value(Parameter<Any>)
-        case iconvertToDisplayableString__from_value(Parameter<Any>)
         case iequalTo__otherAttribute(Parameter<Attribute>)
+        case iconvertToDisplayableString__from_value(Parameter<Any>)
         case name_get
 		case name_set(Parameter<String>)
         case pluralName_get
@@ -173,23 +129,11 @@ class AttributeMock: Attribute, Mock {
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
-                case (.iisValid__value_value(let lhsValue), .iisValid__value_value(let rhsValue)):
-                    guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
-                    return true 
-                case (.ierrorMessageFor__invalidValue_invalidValue(let lhsInvalidvalue), .ierrorMessageFor__invalidValue_invalidValue(let rhsInvalidvalue)):
-                    guard Parameter.compare(lhs: lhsInvalidvalue, rhs: rhsInvalidvalue, with: matcher) else { return false } 
-                    return true 
-                case (.iconvertToValue__from_strValue(let lhsStrvalue), .iconvertToValue__from_strValue(let rhsStrvalue)):
-                    guard Parameter.compare(lhs: lhsStrvalue, rhs: rhsStrvalue, with: matcher) else { return false } 
-                    return true 
-                case (.iconvertToString__from_value(let lhsValue), .iconvertToString__from_value(let rhsValue)):
-                    guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                case (.iequalTo__otherAttribute(let lhsOtherattribute), .iequalTo__otherAttribute(let rhsOtherattribute)):
+                    guard Parameter.compare(lhs: lhsOtherattribute, rhs: rhsOtherattribute, with: matcher) else { return false } 
                     return true 
                 case (.iconvertToDisplayableString__from_value(let lhsValue), .iconvertToDisplayableString__from_value(let rhsValue)):
                     guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
-                    return true 
-                case (.iequalTo__otherAttribute(let lhsOtherattribute), .iequalTo__otherAttribute(let rhsOtherattribute)):
-                    guard Parameter.compare(lhs: lhsOtherattribute, rhs: rhsOtherattribute, with: matcher) else { return false } 
                     return true 
                 case (.name_get,.name_get): return true
 				case (.name_set(let left),.name_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
@@ -205,12 +149,8 @@ class AttributeMock: Attribute, Mock {
 
         func intValue() -> Int {
             switch self {
-                case let .iisValid__value_value(p0): return p0.intValue
-                case let .ierrorMessageFor__invalidValue_invalidValue(p0): return p0.intValue
-                case let .iconvertToValue__from_strValue(p0): return p0.intValue
-                case let .iconvertToString__from_value(p0): return p0.intValue
-                case let .iconvertToDisplayableString__from_value(p0): return p0.intValue
                 case let .iequalTo__otherAttribute(p0): return p0.intValue
+                case let .iconvertToDisplayableString__from_value(p0): return p0.intValue
                 case .name_get: return 0
 				case .name_set(let newValue): return newValue.intValue
                 case .pluralName_get: return 0
@@ -234,29 +174,11 @@ class AttributeMock: Attribute, Mock {
             self.`throws` = `throws`
         }
 
-        static func isValid(value: Parameter<String>, willReturn: Bool) -> Given {
-            return Given(method: .iisValid__value_value(value), returns: willReturn, throws: nil)
-        }
-        static func errorMessageFor(invalidValue: Parameter<String>, willReturn: String) -> Given {
-            return Given(method: .ierrorMessageFor__invalidValue_invalidValue(invalidValue), returns: willReturn, throws: nil)
-        }
-        static func convertToValue(from strValue: Parameter<String>, willReturn: Any) -> Given {
-            return Given(method: .iconvertToValue__from_strValue(strValue), returns: willReturn, throws: nil)
-        }
-        static func convertToString(from value: Parameter<Any>, willReturn: String) -> Given {
-            return Given(method: .iconvertToString__from_value(value), returns: willReturn, throws: nil)
-        }
-        static func convertToDisplayableString(from value: Parameter<Any>, willReturn: String) -> Given {
-            return Given(method: .iconvertToDisplayableString__from_value(value), returns: willReturn, throws: nil)
-        }
         static func equalTo(otherAttribute: Parameter<Attribute>, willReturn: Bool) -> Given {
             return Given(method: .iequalTo__otherAttribute(otherAttribute), returns: willReturn, throws: nil)
         }
-        static func convertToValue(from strValue: Parameter<String>, willThrow: Error) -> Given {
-            return Given(method: .iconvertToValue__from_strValue(strValue), returns: nil, throws: willThrow)
-        }
-        static func convertToString(from value: Parameter<Any>, willThrow: Error) -> Given {
-            return Given(method: .iconvertToString__from_value(value), returns: nil, throws: willThrow)
+        static func convertToDisplayableString(from value: Parameter<Any>, willReturn: String) -> Given {
+            return Given(method: .iconvertToDisplayableString__from_value(value), returns: willReturn, throws: nil)
         }
         static func convertToDisplayableString(from value: Parameter<Any>, willThrow: Error) -> Given {
             return Given(method: .iconvertToDisplayableString__from_value(value), returns: nil, throws: willThrow)
@@ -266,23 +188,11 @@ class AttributeMock: Attribute, Mock {
     struct Verify {
         fileprivate var method: MethodType
 
-        static func isValid(value: Parameter<String>) -> Verify {
-            return Verify(method: .iisValid__value_value(value))
-        }
-        static func errorMessageFor(invalidValue: Parameter<String>) -> Verify {
-            return Verify(method: .ierrorMessageFor__invalidValue_invalidValue(invalidValue))
-        }
-        static func convertToValue(from strValue: Parameter<String>) -> Verify {
-            return Verify(method: .iconvertToValue__from_strValue(strValue))
-        }
-        static func convertToString(from value: Parameter<Any>) -> Verify {
-            return Verify(method: .iconvertToString__from_value(value))
+        static func equalTo(otherAttribute: Parameter<Attribute>) -> Verify {
+            return Verify(method: .iequalTo__otherAttribute(otherAttribute))
         }
         static func convertToDisplayableString(from value: Parameter<Any>) -> Verify {
             return Verify(method: .iconvertToDisplayableString__from_value(value))
-        }
-        static func equalTo(otherAttribute: Parameter<Attribute>) -> Verify {
-            return Verify(method: .iequalTo__otherAttribute(otherAttribute))
         }
     }
 
@@ -290,23 +200,11 @@ class AttributeMock: Attribute, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func isValid(value: Parameter<String>, perform: (String) -> Void) -> Perform {
-            return Perform(method: .iisValid__value_value(value), performs: perform)
-        }
-        static func errorMessageFor(invalidValue: Parameter<String>, perform: (String) -> Void) -> Perform {
-            return Perform(method: .ierrorMessageFor__invalidValue_invalidValue(invalidValue), performs: perform)
-        }
-        static func convertToValue(from strValue: Parameter<String>, perform: (String) -> Void) -> Perform {
-            return Perform(method: .iconvertToValue__from_strValue(strValue), performs: perform)
-        }
-        static func convertToString(from value: Parameter<Any>, perform: (Any) -> Void) -> Perform {
-            return Perform(method: .iconvertToString__from_value(value), performs: perform)
+        static func equalTo(otherAttribute: Parameter<Attribute>, perform: (Attribute) -> Void) -> Perform {
+            return Perform(method: .iequalTo__otherAttribute(otherAttribute), performs: perform)
         }
         static func convertToDisplayableString(from value: Parameter<Any>, perform: (Any) -> Void) -> Perform {
             return Perform(method: .iconvertToDisplayableString__from_value(value), performs: perform)
-        }
-        static func equalTo(otherAttribute: Parameter<Attribute>, perform: (Attribute) -> Void) -> Perform {
-            return Perform(method: .iequalTo__otherAttribute(otherAttribute), performs: perform)
         }
     }
 
@@ -3362,6 +3260,15 @@ class QueryFactoryMock: QueryFactory, Mock {
 		return value.orFail("stub return value not specified for moodQuery(). Use given")
     }
 
+    func sexualActivityQuery() -> SexualActivityQuery {
+        addInvocation(.isexualActivityQuery)
+		let perform = methodPerformValue(.isexualActivityQuery) as? () -> Void
+		perform?()
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.isexualActivityQuery)
+		let value = givenValue.value as? SexualActivityQuery
+		return value.orFail("stub return value not specified for sexualActivityQuery(). Use given")
+    }
+
     func weightQuery() -> WeightQuery {
         addInvocation(.iweightQuery)
 		let perform = methodPerformValue(.iweightQuery) as? () -> Void
@@ -3377,6 +3284,7 @@ class QueryFactoryMock: QueryFactory, Mock {
         case iheartRateQuery
         case ileanBodyMassQuery
         case imoodQuery
+        case isexualActivityQuery
         case iweightQuery
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
@@ -3391,6 +3299,8 @@ class QueryFactoryMock: QueryFactory, Mock {
                     return true 
                 case (.imoodQuery, .imoodQuery):
                     return true 
+                case (.isexualActivityQuery, .isexualActivityQuery):
+                    return true 
                 case (.iweightQuery, .iweightQuery):
                     return true 
                 default: return false
@@ -3404,6 +3314,7 @@ class QueryFactoryMock: QueryFactory, Mock {
                 case .iheartRateQuery: return 0
                 case .ileanBodyMassQuery: return 0
                 case .imoodQuery: return 0
+                case .isexualActivityQuery: return 0
                 case .iweightQuery: return 0
             }
         }
@@ -3435,6 +3346,9 @@ class QueryFactoryMock: QueryFactory, Mock {
         static func moodQuery(willReturn: MoodQuery) -> Given {
             return Given(method: .imoodQuery, returns: willReturn, throws: nil)
         }
+        static func sexualActivityQuery(willReturn: SexualActivityQuery) -> Given {
+            return Given(method: .isexualActivityQuery, returns: willReturn, throws: nil)
+        }
         static func weightQuery(willReturn: WeightQuery) -> Given {
             return Given(method: .iweightQuery, returns: willReturn, throws: nil)
         }
@@ -3457,6 +3371,9 @@ class QueryFactoryMock: QueryFactory, Mock {
         }
         static func moodQuery() -> Verify {
             return Verify(method: .imoodQuery)
+        }
+        static func sexualActivityQuery() -> Verify {
+            return Verify(method: .isexualActivityQuery)
         }
         static func weightQuery() -> Verify {
             return Verify(method: .iweightQuery)
@@ -3481,6 +3398,9 @@ class QueryFactoryMock: QueryFactory, Mock {
         }
         static func moodQuery(perform: () -> Void) -> Perform {
             return Perform(method: .imoodQuery, performs: perform)
+        }
+        static func sexualActivityQuery(perform: () -> Void) -> Perform {
+            return Perform(method: .isexualActivityQuery, performs: perform)
         }
         static func weightQuery(perform: () -> Void) -> Perform {
             return Perform(method: .iweightQuery, performs: perform)
@@ -4772,6 +4692,189 @@ class SettingsMock: Settings, Mock, StaticMock {
 
     static private func matchingCalls(_ method: StaticMethodType) -> [StaticMethodType] {
         return invocations.filter { StaticMethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+}
+
+// MARK: - SexualActivityQuery
+class SexualActivityQueryMock: SexualActivityQuery, Mock {
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    var matcher: Matcher = Matcher.default
+
+    var attributeRestrictions: [AttributeRestriction] { 
+		get {	invocations.append(.attributeRestrictions_get)
+				return __attributeRestrictions.orFail("SexualActivityQueryMock - value for attributeRestrictions was not defined") }
+		set {	invocations.append(.attributeRestrictions_set(.value(newValue)))
+				__attributeRestrictions = newValue }
+	}
+	private var __attributeRestrictions: ([AttributeRestriction])?
+
+    var mostRecentEntryOnly: Bool { 
+		get {	invocations.append(.mostRecentEntryOnly_get)
+				return __mostRecentEntryOnly.orFail("SexualActivityQueryMock - value for mostRecentEntryOnly was not defined") }
+		set {	invocations.append(.mostRecentEntryOnly_set(.value(newValue)))
+				__mostRecentEntryOnly = newValue }
+	}
+	private var __mostRecentEntryOnly: (Bool)?
+
+    var subQuery: (matcher: SubQueryMatcher, query: Query)? { 
+		get {	invocations.append(.subQuery_get)
+				return __subQuery }
+		set {	invocations.append(.subQuery_set(.value(newValue)))
+				__subQuery = newValue }
+	}
+	private var __subQuery: ((matcher: SubQueryMatcher, query: Query))?
+
+
+    struct Property {
+        fileprivate var method: MethodType
+        static var attributeRestrictions: Property { return Property(method: .attributeRestrictions_get) }
+		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Property { return Property(method: .attributeRestrictions_set(newValue)) }
+        static var mostRecentEntryOnly: Property { return Property(method: .mostRecentEntryOnly_get) }
+		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Property { return Property(method: .mostRecentEntryOnly_set(newValue)) }
+        static var subQuery: Property { return Property(method: .subQuery_get) }
+		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Property { return Property(method: .subQuery_set(newValue)) }
+    }
+
+
+
+    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+        addInvocation(.irunQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(callback)))
+		let perform = methodPerformValue(.irunQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(callback))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+		perform?(callback)
+    }
+
+    func equalTo(_ otherQuery: Query) -> Bool {
+        addInvocation(.iequalTo__otherQuery(Parameter<Query>.value(otherQuery)))
+		let perform = methodPerformValue(.iequalTo__otherQuery(Parameter<Query>.value(otherQuery))) as? (Query) -> Void
+		perform?(otherQuery)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iequalTo__otherQuery(Parameter<Query>.value(otherQuery)))
+		let value = givenValue.value as? Bool
+		return value.orFail("stub return value not specified for equalTo(_ otherQuery: Query). Use given")
+    }
+
+    fileprivate enum MethodType {
+        case irunQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
+        case iequalTo__otherQuery(Parameter<Query>)
+        case attributeRestrictions_get
+		case attributeRestrictions_set(Parameter<[AttributeRestriction]>)
+        case mostRecentEntryOnly_get
+		case mostRecentEntryOnly_set(Parameter<Bool>)
+        case subQuery_get
+		case subQuery_set(Parameter<(matcher: SubQueryMatcher, query: Query)?>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+                case (.irunQuery__callback_callback(let lhsCallback), .irunQuery__callback_callback(let rhsCallback)):
+                    guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
+                    return true 
+                case (.iequalTo__otherQuery(let lhsOtherquery), .iequalTo__otherQuery(let rhsOtherquery)):
+                    guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
+                    return true 
+                case (.attributeRestrictions_get,.attributeRestrictions_get): return true
+				case (.attributeRestrictions_set(let left),.attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
+                case (.mostRecentEntryOnly_get,.mostRecentEntryOnly_get): return true
+				case (.mostRecentEntryOnly_set(let left),.mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
+                case (.subQuery_get,.subQuery_get): return true
+				case (.subQuery_set(let left),.subQuery_set(let right)): return Parameter<(matcher: SubQueryMatcher, query: Query)?>.compare(lhs: left, rhs: right, with: matcher)
+                default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+                case let .irunQuery__callback_callback(p0): return p0.intValue
+                case let .iequalTo__otherQuery(p0): return p0.intValue
+                case .attributeRestrictions_get: return 0
+				case .attributeRestrictions_set(let newValue): return newValue.intValue
+                case .mostRecentEntryOnly_get: return 0
+				case .mostRecentEntryOnly_set(let newValue): return newValue.intValue
+                case .subQuery_get: return 0
+				case .subQuery_set(let newValue): return newValue.intValue
+            }
+        }
+    }
+
+    struct Given {
+        fileprivate var method: MethodType
+        var returns: Any?
+        var `throws`: Error?
+
+        private init(method: MethodType, returns: Any?, throws: Error?) {
+            self.method = method
+            self.returns = returns
+            self.`throws` = `throws`
+        }
+
+        static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool) -> Given {
+            return Given(method: .iequalTo__otherQuery(otherQuery), returns: willReturn, throws: nil)
+        }
+    }
+
+    struct Verify {
+        fileprivate var method: MethodType
+
+        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify {
+            return Verify(method: .irunQuery__callback_callback(callback))
+        }
+        static func equalTo(otherQuery: Parameter<Query>) -> Verify {
+            return Verify(method: .iequalTo__otherQuery(otherQuery))
+        }
+    }
+
+    struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+            return Perform(method: .irunQuery__callback_callback(callback), performs: perform)
+        }
+        static func equalTo(otherQuery: Parameter<Query>, perform: (Query) -> Void) -> Perform {
+            return Perform(method: .iequalTo__otherQuery(otherQuery), performs: perform)
+        }
+    }
+
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+        methodReturnValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    public func verify(property: Property, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(property.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(property.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+
+    private func methodReturnValue(_ method: MethodType) -> (value: Any?, error: Error?) {
+        let matched = methodReturnValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher)  }
+        return (value: matched?.returns, error: matched?.`throws`)
+    }
+
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
     }
 }
 

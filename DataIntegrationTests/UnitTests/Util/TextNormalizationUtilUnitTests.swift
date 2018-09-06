@@ -14,11 +14,11 @@ class TextNormalizationUtilUnitTests: UnitTest {
 	fileprivate var util: TextNormalizationUtilImpl!
 
 	override func setUp() {
-        super.setUp()
+		super.setUp()
 		util = TextNormalizationUtilImpl()
-    }
+	}
 
-    func testGivenTheOneHundredTwentiethGame_normalizeNumbers_replacesOneHundredTwentiethWith120th() {
+	func testGivenTheOneHundredTwentiethGame_normalizeNumbers_replacesOneHundredTwentiethWith120th() {
 		// given
 		let text = "the one hundred twentieth game"
 		let expectedResult = "the 120th game"

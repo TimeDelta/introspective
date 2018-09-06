@@ -30,6 +30,7 @@ public final class SampleFactoryImpl: SampleFactory {
 			HeartRate.self,
 			LeanBodyMass.self,
 			MoodImpl.self,
+			SexualActivity.self,
 			Weight.self,
 		]
 	}
@@ -40,6 +41,7 @@ public final class SampleFactoryImpl: SampleFactory {
 			BodyMassIndex.self,
 			HeartRate.self,
 			LeanBodyMass.self,
+			SexualActivity.self,
 			Weight.self,
 		]
 	}

@@ -47,6 +47,7 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 				var bmis = [BodyMassIndex]()
 				var heartRates = [HeartRate]()
 				var leanBodyMasses = [LeanBodyMass]()
+				var sexualActivities = [SexualActivity]()
 				var weights = [Weight]()
 
 				for daysAgo in 1 ... 60 {
@@ -76,6 +77,10 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 							mood.rating = Double(arc4random_uniform(UInt32(mood.maxRating)))
 							mood.note = Me.moodNotes[Int(arc4random_uniform(UInt32(Me.moodNotes.count - 1)))]
 
+							let sexualActivity = SexualActivity(date)
+							sexualActivity.protectionUsed = SexualActivity.Protection.allValues[Int(arc4random_uniform(2))]
+							sexualActivities.append(sexualActivity)
+
 							let weight = Weight(self.randomDouble(Me.weightRange), date)
 							weights.append(weight)
 						}
@@ -87,6 +92,7 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 				HealthKitDataTestUtil.save(bmis)
 				HealthKitDataTestUtil.save(heartRates)
 				HealthKitDataTestUtil.save(leanBodyMasses)
+				HealthKitDataTestUtil.save(sexualActivities)
 				HealthKitDataTestUtil.save(weights)
 
 				DispatchQueue.main.async {

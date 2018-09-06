@@ -16,6 +16,7 @@ public protocol QueryFactory {
 	func heartRateQuery() -> HeartRateQuery
 	func leanBodyMassQuery() -> LeanBodyMassQuery
 	func moodQuery() -> MoodQuery
+	func sexualActivityQuery() -> SexualActivityQuery
 	func weightQuery() -> WeightQuery
 }
 
@@ -43,6 +44,10 @@ public final class QueryFactoryImpl: QueryFactory {
 
 	public final func moodQuery() -> MoodQuery {
 		return MoodQueryImpl()
+	}
+
+	public final func sexualActivityQuery() -> SexualActivityQuery {
+		return SexualActivityQueryImpl()
 	}
 
 	public final func weightQuery() -> WeightQuery {

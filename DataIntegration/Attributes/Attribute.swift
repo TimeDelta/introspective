@@ -25,25 +25,11 @@ public protocol Attribute {
 	/// This is an explanation of this attribute that should be able to be presented to the user.
 	var extendedDescription: String? { get }
 
-	/// - Parameter pluralName: If nil, use `name` parameter.
-	/// - Parameter description: If nil, no description is needed for the user to understand this attribute.
-	/// - Parameter variableName: This should be usable by an NSPredicate to identify the associated variable. If nil, use `name` parameter.
-	init(name: String, pluralName: String?, description: String?, variableName: String?)
-
-	/// Is the specified value valid for this attribute?
-	func isValid(value: String) -> Bool
-	func errorMessageFor(invalidValue: String) -> String
-	func convertToValue(from strValue: String) throws -> Any
-	func convertToString(from value: Any) throws -> String
-	func convertToDisplayableString(from value: Any) throws -> String
 	func equalTo(_ otherAttribute: Attribute) -> Bool
+	func convertToDisplayableString(from value: Any) throws -> String
 }
 
 extension Attribute {
-
-	public init(name: String, pluralName: String? = nil, description: String? = nil, variableName: String? = nil) {
-		self.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
-	}
 
 	public func equalTo(_ otherAttribute: Attribute) -> Bool {
 		return name.lowercased() == otherAttribute.name.lowercased() && extendedDescription == otherAttribute.extendedDescription
@@ -60,7 +46,10 @@ public class AttributeBase: Attribute {
 	/// This is an explanation of this attribute that should be able to be presented to the user.
 	public final let extendedDescription: String?
 
-	public required init(name: String, pluralName: String?, description: String?, variableName: String?) {
+	/// - Parameter pluralName: If nil, use `name` parameter.
+	/// - Parameter description: If nil, no description is needed for the user to understand this attribute.
+	/// - Parameter variableName: This should be usable by an NSPredicate to identify the associated variable. If nil, use `name` parameter.
+	public init(name: String, pluralName: String? = nil, description: String? = nil, variableName: String? = nil) {
 		self.name = name
 		self.pluralName = pluralName ?? name
 		self.extendedDescription = description
@@ -76,12 +65,5 @@ public class AttributeBase: Attribute {
 		}
 	}
 
-	public func isValid(value: String) -> Bool { fatalError("Must override") }
-	public func errorMessageFor(invalidValue: String) -> String { fatalError("Must override") }
-	public func convertToValue(from strValue: String) throws -> Any { fatalError("Must override") }
-	public func convertToString(from value: Any) throws -> String { fatalError("Must override") }
-
-	public func convertToDisplayableString(from value: Any) throws -> String {
-		return try convertToString(from: value)
-	}
+	public func convertToDisplayableString(from value: Any) throws -> String { fatalError("Must override convertToDisplayableString") }
 }

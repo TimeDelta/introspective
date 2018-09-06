@@ -128,21 +128,23 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 		}
 
 		if section == 1 {
+			let sample = samples[row]
 			switch (samples[0]) {
 				case is BloodPressure:
-					let sample = samples[row]
 					let cell = (tableView.dequeueReusableCell(withIdentifier: "bloodPressureCell", for: indexPath) as! BloodPressureTableViewCell)
 					cell.sample = (sample as! BloodPressure)
 					return cell
 				case is HealthKitQuantitySample:
-					let sample = samples[row]
 					let cell = (tableView.dequeueReusableCell(withIdentifier: "healthKitQuantitySampleCell", for: indexPath) as! HealthKitQuantitySampleTableViewCell)
 					cell.sample = (sample as! HealthKitQuantitySample)
 					return cell
 				case is Mood:
-					let sample = samples[row]
 					let cell = (tableView.dequeueReusableCell(withIdentifier: "moodSampleCell", for: indexPath) as! MoodTableViewCell)
 					cell.mood = (sample as! Mood)
+					return cell
+				case is SexualActivity:
+					let cell = (tableView.dequeueReusableCell(withIdentifier: "sexualActivityCell", for: indexPath) as! SexualActivityTableViewCell)
+					cell.sample = (sample as! SexualActivity)
 					return cell
 				default:
 					fatalError("Forgot a type of Sample")
@@ -156,7 +158,7 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 	final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if indexPath.section == 0 || waiting() { return 44 }
 		switch (samples[indexPath.row]) {
-			case is BloodPressure, is BodyMassIndex, is HeartRate, is LeanBodyMass, is Weight:
+			case is BloodPressure, is BodyMassIndex, is HeartRate, is LeanBodyMass, is SexualActivity, is Weight:
 				return 44
 			case is Mood:
 				return 67

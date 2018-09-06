@@ -38,7 +38,7 @@ final class SelectOneAttributeValueViewController: AttributeValueTypeViewControl
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		let value = selectOneAttribute.possibleValues[row]
-		return try! selectOneAttribute.convertToString(from: value)
+		return try! selectOneAttribute.convertToDisplayableString(from: value)
 	}
 
 	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

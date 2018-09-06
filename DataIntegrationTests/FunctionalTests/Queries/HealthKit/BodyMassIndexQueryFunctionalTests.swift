@@ -34,8 +34,10 @@ class BodyMassIndexQueryFunctionalTests: QueryFunctionalTest {
 		waitForExpectations(timeout: 0.1) { (waitError) in
 			XCTAssert(waitError == nil)
 			var message = ""
-			if self.error == nil {
+			if self.error == nil && self.result != nil {
 				message = "Found " + String(self.samples.count) + " samples"
+			} else if self.error == nil {
+				message = "Probably have to delete the app from the simulator, including its data"
 			}
 			XCTAssert(self.error != nil, message)
 			XCTAssert(self.error is NoHealthKitSamplesFoundQueryError, self.error?.localizedDescription ?? "")
