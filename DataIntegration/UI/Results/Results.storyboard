@@ -68,7 +68,6 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="keyValueLabel" destination="2S0-nB-LTp" id="BAW-m9-Quj"/>
-                                    <segue destination="JEn-MW-SWo" kind="show" id="4ox-Cg-J8w"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="moodSampleCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="moodSampleCell" rowHeight="67" id="l1y-vP-wUp" customClass="MoodTableViewCell" customModule="DataIntegration" customModuleProvider="target">
@@ -225,49 +224,6 @@
             </objects>
             <point key="canvasLocation" x="2720.8000000000002" y="-2231.3343328335832"/>
         </scene>
-        <!--Select Extra Information View Controller-->
-        <scene sceneID="BZf-hz-TPN">
-            <objects>
-                <viewController id="JEn-MW-SWo" customClass="SelectExtraInformationViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="dv0-e4-lbS">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="966-2o-Umj">
-                                <rect key="frame" x="16" y="41" width="343" height="200"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                            </pickerView>
-                            <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="b3i-F2-WyX">
-                                <rect key="frame" x="16" y="249" width="343" height="200"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
-                            </pickerView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="peE-7x-3IY">
-                                <rect key="frame" x="16" y="457" width="343" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Accept">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <segue destination="FzV-Jw-Gzt" kind="unwind" unwindAction="saveEditedExtraInformation:" id="782-ee-qqf"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="d9A-Et-TsD"/>
-                    </view>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
-                    <connections>
-                        <outlet property="attributePicker" destination="966-2o-Umj" id="1ao-6P-df8"/>
-                        <outlet property="informationPicker" destination="b3i-F2-WyX" id="zJ9-Bi-KuZ"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="j4h-bD-cl9" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="FzV-Jw-Gzt" userLabel="Exit" sceneMemberID="exit"/>
-            </objects>
-            <point key="canvasLocation" x="2721" y="-1512"/>
-        </scene>
         <!--View Controller-->
         <scene sceneID="0Z6-Y2-rHE">
             <objects>
@@ -281,7 +237,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r24-hL-8AF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3511" y="-2848"/>
+            <point key="canvasLocation" x="3521" y="-2231"/>
         </scene>
         <!--Results Actions Popup View Controller-->
         <scene sceneID="9ez-9s-6Ld">

@@ -8,9 +8,9 @@
 
 import Foundation
 
-public protocol ExtraInformation {
+public protocol ExtraInformation: CustomStringConvertible {
 
-	var key: String { get }
+	var name: String { get }
 	var startDate: Date? { get set }
 	var endDate: Date? { get set }
 	var attribute: Attribute { get set }
@@ -18,12 +18,14 @@ public protocol ExtraInformation {
 	init(_ attribute: Attribute)
 
 	func compute(forSamples: [Sample]) throws -> String
+	func equalTo(_ other: ExtraInformation) -> Bool
 }
 
 // An abstract base class for everything that implements ExtraInformation
 public class AnyInformation: ExtraInformation {
 
-	public var key: String { get { fatalError("Must override") } }
+	public var name: String { get { fatalError("Must override name") } }
+	public var description: String { get { fatalError("Must override description") } }
 	public final var attribute: Attribute
 
 	public final var startDate: Date?
@@ -33,7 +35,7 @@ public class AnyInformation: ExtraInformation {
 		self.attribute = attribute
 	}
 
-	public func compute(forSamples: [Sample]) -> String {
-		fatalError("Must override")
-	}
+	public func compute(forSamples: [Sample]) -> String { fatalError("Must override compute()") }
+
+	public func equalTo(_ other: ExtraInformation) -> Bool { fatalError("Must override equalTo()") }
 }

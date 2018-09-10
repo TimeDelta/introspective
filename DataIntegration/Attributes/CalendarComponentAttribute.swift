@@ -12,7 +12,7 @@ public final class CalendarComponentAttribute: TypedSelectOneAttribute<Calendar.
 
 	private typealias Me = CalendarComponentAttribute
 
-	private static let supportedComponents: [Calendar.Component] = [
+	public static let supportedComponents: [Calendar.Component] = [
 		.year,
 		.quarter,
 		.month,

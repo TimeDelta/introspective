@@ -18,12 +18,13 @@ public protocol QueryFactory {
 	func moodQuery() -> MoodQuery
 	func sexualActivityQuery() -> SexualActivityQuery
 	func weightQuery() -> WeightQuery
+	func queryFor(_ sampleType: Sample.Type) throws -> Query
 }
 
 public final class QueryFactoryImpl: QueryFactory {
 
 	public enum Errors: Error {
-		case UnknownSampleType
+		case unknownSampleType
 	}
 
 	public final func bloodPressureQuery() -> BloodPressureQuery {
@@ -52,5 +53,20 @@ public final class QueryFactoryImpl: QueryFactory {
 
 	public final func weightQuery() -> WeightQuery {
 		return WeightQueryImpl()
+	}
+
+	public func queryFor(_ sampleType: Sample.Type) throws -> Query {
+		switch (sampleType) {
+			case is BloodPressure.Type: return bloodPressureQuery()
+			case is BodyMassIndex.Type: return bmiQuery()
+			case is HeartRate.Type: return heartRateQuery()
+			case is LeanBodyMass.Type: return leanBodyMassQuery()
+			case is Mood.Type: return moodQuery()
+			case is SexualActivity.Type: return sexualActivityQuery()
+			case is Weight.Type: return weightQuery()
+			default:
+				os_log("Unknown sample type: %@", type: .error, String(describing: sampleType))
+				throw Errors.unknownSampleType
+		}
 	}
 }

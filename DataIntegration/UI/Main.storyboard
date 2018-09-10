@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--AdvancedQuestionScreen-->
+        <!--Explore-->
         <scene sceneID="ge1-LL-uDT">
             <objects>
-                <viewControllerPlaceholder storyboardName="AdvancedQuestionScreen" id="Pfg-2j-xxE" sceneMemberID="viewController">
+                <viewControllerPlaceholder storyboardName="Explore" id="Pfg-2j-xxE" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="RXL-Ah-Xlu"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lXc-vy-2Z0" userLabel="First Responder" sceneMemberID="firstResponder"/>

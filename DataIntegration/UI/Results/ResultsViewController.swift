@@ -11,7 +11,12 @@ import Presentr
 import CoreData
 import os
 
-final class ResultsViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
+final class ResultsViewController: UITableViewController {
+
+	// MARK: - Static Member Variables
+
+	private typealias Me = ResultsViewController
+	private static let editedExtraInformation = Notification.Name("editedExtraInformationFromResultsView")
 
 	// MARK: - Public Member Variables
 
@@ -53,12 +58,13 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 		NotificationCenter.default.addObserver(self, selector: #selector(addInformationButtonPressed), name: ResultsActionsPopupViewController.addInformation, object: nil)
 		NotificationCenter.default.addObserver(editButtonItem.target!, selector: editButtonItem.action!, name: ResultsActionsPopupViewController.graphSamples, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(deleteAllSamples), name: ResultsActionsPopupViewController.deleteAllSamples, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedExtraInformation), name: Me.editedExtraInformation, object: nil)
 
 		self.navigationItem.setRightBarButton(actionsButton, animated: true)
 		finishedLoading = true
 	}
 
-	// MARK: - Table view data source
+	// MARK: - Table View Data Source
 
 	final override func numberOfSections(in tableView: UITableView) -> Int {
 		return 2
@@ -101,6 +107,8 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 		os_log("Unexpected section index (%@) while determining number of rows in section", type: .error, String(section))
 		return 0
 	}
+
+	// MARK: - Table View Delegate
 
 	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let row = indexPath.row
@@ -167,6 +175,24 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 		}
 	}
 
+	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		if indexPath.section == 0 {
+			extraInformationEditIndex = indexPath.row
+			let selectedInformation = extraInformation[extraInformationEditIndex]
+
+			let controller = storyboard!.instantiateViewController(withIdentifier: "editExtraInformation") as! SelectExtraInformationViewController
+			controller.notificationToSendWhenFinished = Me.editedExtraInformation
+			controller.attributes = samples[0].attributes
+			controller.selectedAttribute = selectedInformation.attribute
+			controller.selectedInformation = selectedInformation
+			if navigationController != nil {
+				navigationController!.pushViewController(controller, animated: true)
+			} else {
+				present(controller, animated: true, completion: nil)
+			}
+		}
+	}
+
 	// MARK: - TableView Editing
 
 	final override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -204,39 +230,45 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 
 	// MARK: - Navigation
 
-	public final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.destination is SelectExtraInformationViewController {
-			let informationCell = (sender as! UITableViewCell)
-			extraInformationEditIndex = tableView.indexPath(for: informationCell)!.row
-			let selectedInformation = extraInformation[extraInformationEditIndex]
-
-			let controller = segue.destination as! SelectExtraInformationViewController
-			controller.attributes = samples[0].attributes
-			controller.selectedAttribute = selectedInformation.attribute
-			controller.selectedInformation = selectedInformation
-		}
-	}
-
-	@IBAction final func saveEditedExtraInformation(_ segue: UIStoryboardSegue) {
-		let controller = segue.source as! SelectExtraInformationViewController
-		extraInformation[extraInformationEditIndex] = controller.selectedInformation
+	@objc final func saveEditedExtraInformation(notification: Notification) {
+		let selectedInformation = notification.object as! ExtraInformation
+		extraInformation[extraInformationEditIndex] = selectedInformation
 		recomputeExtraInformation()
 		tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
 	}
 
-	// MARK: - Popover delegation
-
-	final func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-		return UIModalPresentationStyle.none
-	}
-
-	// MARK: - Helper functions
+	// MARK: - Button Actions
 
 	@objc private final func presentActions() {
 		let actionsController = storyboard!.instantiateViewController(withIdentifier: "resultsActions") as! ResultsActionsPopupViewController
 		actionsController.sampleType = type(of: samples[0]).name
 		customPresentViewController(actionsPresenter, viewController: actionsController, animated: true)
 	}
+
+	@objc private final func graphButtonPressed() {
+		let controller = UIStoryboard(name: "GraphChooser", bundle: nil).instantiateViewController(withIdentifier: "QueryResultsGraphTypeChooser") as! QueryResultsGraphTypeTableViewController
+		controller.samples = samples
+		navigationController?.pushViewController(controller, animated: false)
+	}
+
+	@objc private final func addInformationButtonPressed() {
+		let attribute = type(of: samples[0]).defaultDependentAttribute
+		let information = DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: attribute)[0].init(attribute)
+		extraInformation.append(information)
+		recomputeExtraInformation()
+		tableView.reloadData()
+	}
+
+	@objc private final func deleteAllSamples() {
+		DispatchQueue.global(qos: .userInitiated).async {
+			// TODO - tell the user something went wrong if an error is thrown here
+			try! DependencyInjector.db.deleteAll(self.samples as! [NSManagedObject])
+			DependencyInjector.db.save()
+		}
+		navigationController!.popViewController(animated: true)
+	}
+
+	// MARK: - Helper functions
 
 	private final func viewIsReady() {
 		while !finishedLoading {} // this ensures that the actions button does not get disabled after everything loads
@@ -283,28 +315,5 @@ final class ResultsViewController: UITableViewController, UIPopoverPresentationC
 		actionsPresenter = Presentr(presentationType: customType)
 		actionsPresenter.dismissTransitionType = .crossDissolve
 		actionsPresenter.roundCorners = true
-	}
-
-	@objc private final func graphButtonPressed() {
-		let controller = UIStoryboard(name: "Graph", bundle: nil).instantiateViewController(withIdentifier: "GraphCustomizationViewController") as! GraphCustomizationViewController
-		controller.samples = samples
-		navigationController?.pushViewController(controller, animated: false)
-	}
-
-	@objc private final func addInformationButtonPressed() {
-		let attribute = type(of: samples[0]).defaultDependentAttribute
-		let information = DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: attribute)[0].init(attribute)
-		extraInformation.append(information)
-		recomputeExtraInformation()
-		tableView.reloadData()
-	}
-
-	@objc private final func deleteAllSamples() {
-		DispatchQueue.global(qos: .userInitiated).async {
-			// TODO - tell the user something went wrong if an error is thrown here
-			try! DependencyInjector.db.deleteAll(self.samples as! [NSManagedObject])
-			DependencyInjector.db.save()
-		}
-		navigationController!.popViewController(animated: true)
 	}
 }

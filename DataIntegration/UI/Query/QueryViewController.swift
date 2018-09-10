@@ -10,31 +10,7 @@ import UIKit
 import Presentr
 import os
 
-final class QueryViewController: UITableViewController {
-
-	// MARK: - Static Member Variables
-	private typealias Me = QueryViewController
-	private static let acceptedAttributeRestrictionEdit = Notification.Name("acceptedAttributeRestrictionEdit")
-	private static let acceptedSubDataTypeEdit = Notification.Name("acceptedSubDataTypeEdit")
-	private static let addQuestionPart = Notification.Name("addQuestionPart")
-	private static let acceptedDataTypeEdit = Notification.Name("acceptedDataTypeEdit")
-
-	private static let addQuestionPartPresenter: Presentr = {
-		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
-
-		let customPresenter = Presentr(presentationType: customType)
-		customPresenter.dismissTransitionType = .crossDissolve
-		customPresenter.roundCorners = true
-		return customPresenter
-	}()
-	private static let editDataTypePresenter: Presentr = {
-		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
-
-		let customPresenter = Presentr(presentationType: customType)
-		customPresenter.dismissTransitionType = .crossDissolve
-		customPresenter.roundCorners = true
-		return customPresenter
-	}()
+class QueryViewController: UITableViewController {
 
 	// MARK: - Enums / Structs
 
@@ -45,7 +21,7 @@ final class QueryViewController: UITableViewController {
 		public var description: String {
 			switch (self) {
 				case .dataType: return "Data Type"
-				case .attributeRestriction: return "AttributeRestriction"
+				case .attributeRestriction: return "Attribute Restriction"
 			}
 		}
 	}
@@ -77,29 +53,69 @@ final class QueryViewController: UITableViewController {
 		}
 	}
 
+	// MARK: - Static Member Variables
+
+	private typealias Me = QueryViewController
+	private static let acceptedAttributeRestrictionEdit = Notification.Name("acceptedAttributeRestrictionEdit")
+	private static let acceptedSubDataTypeEdit = Notification.Name("acceptedSubDataTypeEdit")
+	private static let addQuestionPart = Notification.Name("addQuestionPart")
+	private static let acceptedDataTypeEdit = Notification.Name("acceptedDataTypeEdit")
+	private static let runQueryNotification = Notification.Name("runQuery")
+
+	private static let addQuestionPartPresenter: Presentr = {
+		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
+
+		let customPresenter = Presentr(presentationType: customType)
+		customPresenter.dismissTransitionType = .crossDissolve
+		customPresenter.roundCorners = true
+		return customPresenter
+	}()
+	private static let editDataTypePresenter: Presentr = {
+		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
+
+		let customPresenter = Presentr(presentationType: customType)
+		customPresenter.dismissTransitionType = .crossDissolve
+		customPresenter.roundCorners = true
+		return customPresenter
+	}()
+
 	// MARK: - IBOutlets
+
 	@IBOutlet weak final var addPartButton: UIBarButtonItem!
+	@IBOutlet weak final var finishedButton: UIBarButtonItem!
+	@IBOutlet weak final var editButton: UIBarButtonItem!
 
 	// MARK: - Instance Member Variables
 
+	public final var finishedButtonTitle: String! = "Run"
+	/// Corresponding notification object will contain the built query as the object
+	public final var finishedButtonNotification: Notification.Name! = Me.runQueryNotification
+	public final var topmostSampleType: Sample.Type?
+
 	final var parts: [Part]!
-	final var editedIndex: Int!
+	private final var editedIndex: Int!
 
 	// MARK: - UIViewController Overloads
 
-	final override func viewDidLoad() {
+	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		self.navigationItem.rightBarButtonItem = self.editButtonItem
+		editButton.target = editButtonItem.target
+		editButton.action = editButtonItem.action
 
-		parts = [Part(DataTypeInfo())]
+		if topmostSampleType != nil {
+			parts = [Part(DataTypeInfo(topmostSampleType!))]
+		} else {
+			parts = [Part(DataTypeInfo())]
+		}
 
 		partWasAdded()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedAttributeRestriction), name: Me.acceptedAttributeRestrictionEdit, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedSubQueryDataType), name: Me.acceptedSubDataTypeEdit, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(addQuestionPart), name: Me.addQuestionPart, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedDataType), name: Me.acceptedDataTypeEdit, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedSampleType), name: Me.acceptedDataTypeEdit, object: nil)
+
 		addPartButton?.target = self
 		addPartButton?.action = #selector(addPartButtonWasPressed)
 	}
@@ -117,6 +133,9 @@ final class QueryViewController: UITableViewController {
 		if index == 0 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "Data Type", for: indexPath)
 			cell.textLabel?.text = part.dataTypeInfo!.sampleType.name
+			if topmostSampleType != nil {
+				cell.isUserInteractionEnabled = false
+			}
 			return cell
 		}
 
@@ -162,14 +181,39 @@ final class QueryViewController: UITableViewController {
 
 	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.section == 0 && indexPath.row == 0 {
-			let controller = storyboard!.instantiateViewController(withIdentifier: "editDataType") as! EditDataTypeViewController
+			let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "chooseSampleType") as! ChooseSampleTypeViewController
 			editedIndex = 0
-			let sampleType = parts[0].dataTypeInfo!.sampleType
-			controller.selectedIndex = EditDataTypeViewController.indexFor(type: sampleType.name)
+			controller.selectedSampleType = parts[0].dataTypeInfo!.sampleType
 			controller.notificationToSendOnAccept = Me.acceptedDataTypeEdit
 			tableView.deselectRow(at: indexPath, animated: true)
 			customPresentViewController(Me.editDataTypePresenter, viewController: controller, animated: true)
 		}
+	}
+
+	// MARK: - Button Actions
+
+	@IBAction final func finishedButtonPressed(_ sender: Any) {
+		let query = buildQuery()
+		if finishedButtonNotification != Me.runQueryNotification {
+			NotificationCenter.default.post(name: finishedButtonNotification, object: query)
+			let _ = navigationController?.popViewController(animated: true)
+		} else {
+			let controller = UIStoryboard(name: "Results", bundle: nil).instantiateViewController(withIdentifier: "results") as! ResultsViewController
+			query.runQuery { (result: QueryResult?, error: Error?) in
+				if error != nil {
+					controller.error = error
+					return
+				}
+				controller.samples = result?.samples
+			}
+			navigationController!.pushViewController(controller, animated: true)
+		}
+	}
+
+	@objc private final func addPartButtonWasPressed() {
+		let controller = storyboard!.instantiateViewController(withIdentifier: "addQuestionPart") as! AddToQueryViewController
+		controller.notificationToSendOnAccept = Me.addQuestionPart
+		customPresentViewController(Me.addQuestionPartPresenter, viewController: controller, animated: true)
 	}
 
 	// MARK: - Navigation
@@ -189,15 +233,14 @@ final class QueryViewController: UITableViewController {
 			controller.sampleType = parts[editedIndex].dataTypeInfo!.sampleType
 			controller.matcher = parts[editedIndex].dataTypeInfo!.matcher
 			controller.notificationToSendWhenAccepted = Me.acceptedSubDataTypeEdit
-		} else if segue.destination is ResultsViewController {
-			let controller = (segue.destination as! ResultsViewController)
-			buildAndRunQuery(controller)
 		}
 	}
 
-	@objc final func saveEditedDataType(notification: Notification) {
-		let index = notification.object as! Int
-		parts[editedIndex] = Part(DataTypeInfo(DependencyInjector.sample.allTypes()[index]))
+	// MARK: - Received Notifications
+
+	@objc final func saveEditedSampleType(notification: Notification) {
+		let sampleType = notification.object as! Sample.Type
+		parts[editedIndex] = Part(DataTypeInfo(sampleType))
 		tableView.reloadData()
 	}
 
@@ -227,12 +270,6 @@ final class QueryViewController: UITableViewController {
 		}
 
 		partWasAdded()
-	}
-
-	@objc private final func addPartButtonWasPressed() {
-		let controller = storyboard!.instantiateViewController(withIdentifier: "addQuestionPart") as! AddToQueryViewController
-		controller.notificationToSendOnAccept = Me.addQuestionPart
-		customPresentViewController(Me.addQuestionPartPresenter, viewController: controller, animated: true)
 	}
 
 	// Mark: - Helper Functions
@@ -269,18 +306,6 @@ final class QueryViewController: UITableViewController {
 	private final func partWasAdded() {
 		let indexPath = IndexPath(row: parts.count - 1, section: 0)
 		tableView.insertRows(at: [indexPath], with: .automatic)
-	}
-
-	private final func buildAndRunQuery(_ controller: ResultsViewController) {
-		let query = buildQuery()
-
-		query.runQuery { (result: QueryResult?, error: Error?) in
-			if error != nil {
-				controller.error = error
-				return
-			}
-			controller.samples = result?.samples
-		}
 	}
 
 	private final func buildQuery() -> Query {
@@ -361,12 +386,5 @@ final class QueryViewController: UITableViewController {
 			distance += 1
 		}
 		return distance
-	}
-}
-
-extension QueryViewController: UIPopoverPresentationControllerDelegate {
-
-	final func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-		return UIModalPresentationStyle.none
 	}
 }

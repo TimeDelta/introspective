@@ -7,8 +7,8 @@ target 'DataIntegration' do
 
   pod "Sourcery"
   pod "Presentr"
-  pod "Charts"
   pod "SwiftDate"
+  pod 'AAInfographics'
 
   target 'DataIntegrationTests' do
     inherit! :search_paths

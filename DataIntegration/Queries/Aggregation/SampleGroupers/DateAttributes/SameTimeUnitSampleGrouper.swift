@@ -27,6 +27,10 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 
 	public required init() {}
 
+	public init(_ timeUnit: Calendar.Component) {
+		self.timeUnit = timeUnit
+	}
+
 	public final func group(samples: [Sample], by attribute: Attribute) -> [(Any, [Sample])] {
 		var samplesByTimeUnit: [Date: [Sample]]
 		if attribute.equalTo(CommonSampleAttributes.startDate) || attribute.equalTo(CommonSampleAttributes.timestamp) {

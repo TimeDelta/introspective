@@ -17,7 +17,7 @@ final class ExtraInformationTableViewCell: UITableViewCell {
 			if value != nil {
 				text = value
 			}
-			keyValueLabel.text = extraInformation.key + ": " + text
+			keyValueLabel.text = extraInformation.description + ": " + text
 		}
 	}
 
@@ -26,7 +26,7 @@ final class ExtraInformationTableViewCell: UITableViewCell {
 			if value == nil { return }
 			var text = ""
 			if extraInformation != nil {
-				text = extraInformation.key + ": "
+				text = extraInformation.description + ": "
 			}
 			keyValueLabel.text = text + value
 		}

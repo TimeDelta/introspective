@@ -13,7 +13,8 @@ public final class MostRecentDateInformation: AnyInformation {
 	private typealias Me = OldestDateInformation
 	static let noSamplesMessage = "No samples between given start and end dates"
 
-	public final override var key: String { get { return "Most Recent" } }
+	public final override var name: String { return "Most Recent" }
+	public final override var description: String { return name + " " + attribute.name }
 
 	public required init(_ attribute: Attribute) {
 		super.init(attribute)
@@ -33,5 +34,9 @@ public final class MostRecentDateInformation: AnyInformation {
 			}
 		}
 		return DependencyInjector.util.calendarUtil.string(for: mostRecentDate)
+	}
+
+	public final override func equalTo(_ other: ExtraInformation) -> Bool {
+		return other is MostRecentDateInformation && attribute.equalTo(other.attribute)
 	}
 }

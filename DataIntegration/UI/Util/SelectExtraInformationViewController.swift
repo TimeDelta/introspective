@@ -9,14 +9,21 @@
 import UIKit
 import os
 
-final class SelectExtraInformationViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+final class SelectExtraInformationViewController: UIViewController {
+
+	// MARK: - Public Member Variables
 
 	public final var attributes: [Attribute]!
 	public final var selectedAttribute: Attribute!
 	public final var selectedInformation: ExtraInformation!
+	public final var notificationToSendWhenFinished: Notification.Name!
+
+	// MARK: - IBOutlets
 
 	@IBOutlet weak final var attributePicker: UIPickerView!
 	@IBOutlet weak final var informationPicker: UIPickerView!
+
+	// MARK: - UIViewController Overloads
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
@@ -35,9 +42,29 @@ final class SelectExtraInformationViewController: UIViewController, UIPickerView
 		if selectedInformation == nil {
 			selectedInformation = getApplicableInformationTypesForSelectedAttribute()[0].init(selectedAttribute)
 		};
-		let selectedInformationIndex = getApplicableInformationTypesForSelectedAttribute().index(where: { type in return type.init(selectedAttribute).key == selectedInformation.key })!
+		let selectedInformationIndex = getApplicableInformationTypesForSelectedAttribute().index(where: { type in return type.init(selectedAttribute).name == selectedInformation.name })!
 		informationPicker.selectRow(selectedInformationIndex, inComponent: 0, animated: false)
 	}
+
+	@IBAction func acceptButtonPressed(_ sender: Any) {
+		NotificationCenter.default.post(name: notificationToSendWhenFinished, object: selectedInformation)
+		if navigationController != nil {
+			let _ = navigationController!.popViewController(animated: true)
+		} else {
+			dismiss(animated: false, completion: nil)
+		}
+	}
+
+	// MARK: - Helper Functions
+
+	private final func getApplicableInformationTypesForSelectedAttribute() -> [ExtraInformation.Type] {
+		return DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: selectedAttribute)
+	}
+}
+
+// MARK: - UIPickerViewDataSource
+
+extension SelectExtraInformationViewController: UIPickerViewDataSource {
 
 	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
@@ -53,13 +80,18 @@ final class SelectExtraInformationViewController: UIViewController, UIPickerView
 		os_log("Unknown picker view while attempting to retrieve number of rows", type: .error)
 		return 0
 	}
+}
+
+// MARK: - UIPickerViewDelegate
+
+extension SelectExtraInformationViewController: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		if pickerView == attributePicker {
 			return attributes[row].name
 		}
 		if pickerView == informationPicker {
-			return getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute).key
+			return getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute).name
 		}
 		os_log("Unknown picker view while attempting to retrieve title for row", type: .error)
 		return nil
@@ -69,14 +101,14 @@ final class SelectExtraInformationViewController: UIViewController, UIPickerView
 		if pickerView == attributePicker {
 			selectedAttribute = attributes[row]
 			informationPicker.reloadAllComponents()
-			selectedInformation = getApplicableInformationTypesForSelectedAttribute()[0].init(selectedAttribute)
+			let applicableInformationTypes = getApplicableInformationTypesForSelectedAttribute()
+			if applicableInformationTypes.index(where: { $0 == type(of: selectedInformation) }) == nil {
+				selectedInformation = applicableInformationTypes[0].init(selectedAttribute)
+			}
 		}
 		if pickerView == informationPicker {
 			selectedInformation = getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute)
 		}
-	}
-
-	private final func getApplicableInformationTypesForSelectedAttribute() -> [ExtraInformation.Type] {
-		return DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: selectedAttribute)
+		os_log("Unknown picker view while running didSelectRow", type: .error)
 	}
 }
