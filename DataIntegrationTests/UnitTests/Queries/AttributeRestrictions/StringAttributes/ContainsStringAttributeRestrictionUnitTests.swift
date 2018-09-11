@@ -20,7 +20,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	override func setUp() {
 		super.setUp()
-		restriction = ContainsStringAttributeRestriction(attribute: Me.restrictedAttribute)
+		restriction = ContainsStringAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
 	}
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
@@ -192,7 +192,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = ContainsStringAttributeRestriction(attribute: TextAttribute(name: "not the same attribute"))
+		let otherAttributed: Attributed = ContainsStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -203,7 +203,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = ContainsStringAttributeRestriction(attribute: restriction.restrictedAttribute, substring: restriction.substring + "other stuff")
+		let otherAttributed: Attributed = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, substring: restriction.substring + "other stuff")
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -214,7 +214,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToAttributed_returnsTrue() {
 		// given
-		let otherAttributed: Attributed = ContainsStringAttributeRestriction(attribute: restriction.restrictedAttribute)
+		let otherAttributed: Attributed = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -225,7 +225,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenOtherOfDifferentTypes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = LessThanNumericAttributeRestriction(attribute: restriction.restrictedAttribute)
+		let otherAttributed: AttributeRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -244,7 +244,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = ContainsStringAttributeRestriction(attribute: TextAttribute(name: "not the same attribute"))
+		let otherAttributed: AttributeRestriction = ContainsStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -255,7 +255,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = ContainsStringAttributeRestriction(attribute: restriction.restrictedAttribute, substring: restriction.substring + "other stuff")
+		let otherAttributed: AttributeRestriction = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, substring: restriction.substring + "other stuff")
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -266,7 +266,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let otherAttributed: AttributeRestriction = ContainsStringAttributeRestriction(attribute: restriction.restrictedAttribute)
+		let otherAttributed: AttributeRestriction = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -285,7 +285,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = ContainsStringAttributeRestriction(attribute: TextAttribute(name: "not the same attribute"))
+		let otherAttributed = ContainsStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -296,7 +296,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = ContainsStringAttributeRestriction(attribute: restriction.restrictedAttribute, substring: restriction.substring + "other stuff")
+		let otherAttributed = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, substring: restriction.substring + "other stuff")
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -307,7 +307,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let otherAttributed = ContainsStringAttributeRestriction(attribute: restriction.restrictedAttribute)
+		let otherAttributed = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)

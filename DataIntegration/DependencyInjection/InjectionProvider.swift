@@ -15,6 +15,7 @@ public protocol InjectionProvider {
 	func codableStorage() -> CodableStorage
 	func settings() -> Settings
 	func queryFactory() -> QueryFactory
+	func attributeRestrictionFactory() -> AttributeRestrictionFactory
 	func sampleFactory() -> SampleFactory
 	func utilFactory() -> UtilFactory
 	func subQueryMatcherFactory() -> SubQueryMatcherFactory

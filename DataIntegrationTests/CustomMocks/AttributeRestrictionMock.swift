@@ -77,7 +77,7 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
 
 
 
-    required init(attribute: Attribute) { }
+    required init(restrictedAttribute: Attribute) { }
 
     func samplePasses(_ sample: Sample) throws -> Bool {
         addInvocation(.isamplePasses__sample(Parameter<Sample>.value(sample)))

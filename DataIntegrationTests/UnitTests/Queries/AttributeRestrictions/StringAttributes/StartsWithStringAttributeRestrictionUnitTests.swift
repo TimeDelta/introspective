@@ -20,7 +20,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	override func setUp() {
 		super.setUp()
-		restriction = StartsWithStringAttributeRestriction(attribute: Me.restrictedAttribute)
+		restriction = StartsWithStringAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
 	}
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
@@ -218,7 +218,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = StartsWithStringAttributeRestriction(attribute: TextAttribute(name: "not the same attribute"))
+		let otherAttributed: Attributed = StartsWithStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -229,7 +229,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = StartsWithStringAttributeRestriction(attribute: restriction.restrictedAttribute, prefix: restriction.prefix + "other stuff")
+		let otherAttributed: Attributed = StartsWithStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, prefix: restriction.prefix + "other stuff")
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -240,7 +240,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToAttributed_returnsTrue() {
 		// given
-		let otherAttributed: Attributed = StartsWithStringAttributeRestriction(attribute: restriction.restrictedAttribute)
+		let otherAttributed: Attributed = StartsWithStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -251,7 +251,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenOtherOfDifferentTypes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = LessThanNumericAttributeRestriction(attribute: restriction.restrictedAttribute)
+		let otherAttributed: AttributeRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -270,7 +270,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = StartsWithStringAttributeRestriction(attribute: TextAttribute(name: "not the same attribute"))
+		let otherAttributed: AttributeRestriction = StartsWithStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -281,7 +281,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = StartsWithStringAttributeRestriction(attribute: restriction.restrictedAttribute, prefix: restriction.prefix + "other stuff")
+		let otherAttributed: AttributeRestriction = StartsWithStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, prefix: restriction.prefix + "other stuff")
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -292,7 +292,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let otherAttributed: AttributeRestriction = StartsWithStringAttributeRestriction(attribute: restriction.restrictedAttribute)
+		let otherAttributed: AttributeRestriction = StartsWithStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -311,7 +311,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = StartsWithStringAttributeRestriction(attribute: TextAttribute(name: "not the same attribute"))
+		let otherAttributed = StartsWithStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -322,7 +322,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = StartsWithStringAttributeRestriction(attribute: restriction.restrictedAttribute, prefix: restriction.prefix + "other stuff")
+		let otherAttributed = StartsWithStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, prefix: restriction.prefix + "other stuff")
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -333,7 +333,7 @@ class StartsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let otherAttributed = StartsWithStringAttributeRestriction(attribute: restriction.restrictedAttribute)
+		let otherAttributed = StartsWithStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)

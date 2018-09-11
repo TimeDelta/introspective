@@ -11,9 +11,7 @@ import UIKit
 final class AddToQueryViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
 
 	private typealias Me = AddToQueryViewController
-	private static let values = QueryViewController.CellType.allTypes.map { (type: QueryViewController.CellType) -> String in
-		return type.description
-	}
+	private static let values = QueryViewController.PartType.allTypes.map { $0.description }
 
 	public final var notificationToSendOnAccept: Notification.Name!
 
@@ -30,7 +28,7 @@ final class AddToQueryViewController: UIViewController, UIPickerViewDataSource, 
 	}
 
 	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return QueryViewController.CellType.allTypes.count
+		return Me.values.count
 	}
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
@@ -39,12 +37,7 @@ final class AddToQueryViewController: UIViewController, UIPickerViewDataSource, 
 
 	@IBAction final func userClickedAccept(sender: Any?) {
 		let index = questionPartSelector.selectedRow(inComponent: 0)
-		var cellType: QueryViewController.CellType
-		if index == 0 {
-			cellType = .subDataType
-		} else {
-			cellType = QueryViewController.CellType.allTypes[index]
-		}
+		let cellType = QueryViewController.PartType.allTypes[index]
 		NotificationCenter.default.post(name: notificationToSendOnAccept, object: cellType)
 		dismiss(animated: true, completion: nil)
 	}

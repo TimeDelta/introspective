@@ -70,7 +70,7 @@ class HeartRateQueryFunctionalTests: QueryFunctionalTest {
 			HeartRate(value - 1),
 		])
 
-		let heartRateRestriction = EqualToNumericAttributeRestriction(attribute: HeartRate.heartRate, value: value)
+		let heartRateRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate, value: value)
 		query.attributeRestrictions.append(heartRateRestriction)
 
 		// when
@@ -96,7 +96,7 @@ class HeartRateQueryFunctionalTests: QueryFunctionalTest {
 			HeartRate(value + 1),
 		])
 
-		let heartRateRestriction = LessThanOrEqualToNumericAttributeRestriction(attribute: HeartRate.heartRate, value: value)
+		let heartRateRestriction = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate, value: value)
 		query.attributeRestrictions.append(heartRateRestriction)
 
 		// when
@@ -123,8 +123,8 @@ class HeartRateQueryFunctionalTests: QueryFunctionalTest {
 			HeartRate(),
 		])
 
-		let heartRateRestriction = GreaterThanOrEqualToNumericAttributeRestriction(attribute: HeartRate.heartRate, value: value)
-		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(attribute: HeartRate.timestamp, date: Date() - 1.days)
+		let heartRateRestriction = GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate, value: value)
+		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(restrictedAttribute: HeartRate.timestamp, date: Date() - 1.days)
 		query.attributeRestrictions.append(heartRateRestriction)
 		query.attributeRestrictions.append(timestampRestriction)
 

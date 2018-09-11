@@ -47,24 +47,18 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 		let selectedAttribute = currentlySelectedAttribute()
 		var applicableAttributeRestrictionTypes: [AttributeRestriction.Type] = []
 		var currentRestriction: AttributeRestriction? = nil
-		if selectedAttribute is DateAttribute {
-			applicableAttributeRestrictionTypes = AttributeRestrictionFactoryImpl.dateTypes
-			if attributeRestriction is DateAttributeRestriction {
-				currentRestriction = attributeRestriction
-			}
-		} else if selectedAttribute is NumericAttribute {
-			applicableAttributeRestrictionTypes = AttributeRestrictionFactoryImpl.numberTypes
-			if attributeRestriction is NumericAttributeRestriction {
-				currentRestriction = attributeRestriction
-			}
-		} else if selectedAttribute is TextAttribute {
-			applicableAttributeRestrictionTypes = AttributeRestrictionFactoryImpl.textTypes
-			if attributeRestriction is StringAttributeRestriction {
-				currentRestriction = attributeRestriction
-			}
+		applicableAttributeRestrictionTypes = DependencyInjector.restriction.typesFor(selectedAttribute)
+		if selectedAttribute is DateAttribute && attributeRestriction is DateAttributeRestriction {
+			currentRestriction = attributeRestriction
+		} else if selectedAttribute is DoubleAttribute && attributeRestriction is DoubleAttributeRestriction {
+			currentRestriction = attributeRestriction
+		} else if selectedAttribute is IntegerAttribute && attributeRestriction is IntegerAttributeRestriction {
+			currentRestriction = attributeRestriction
+		} else if selectedAttribute is TextAttribute && attributeRestriction is StringAttributeRestriction {
+			currentRestriction = attributeRestriction
 		}
 		let possibleValues = applicableAttributeRestrictionTypes.map { type in
-			return type.init(attribute: currentlySelectedAttribute())
+			return type.init(restrictedAttribute: currentlySelectedAttribute())
 		}
 		attributedChooserViewController.possibleValues = possibleValues
 		attributedChooserViewController.currentValue = currentRestriction ?? possibleValues[0]

@@ -21,7 +21,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	override func setUp() {
 		super.setUp()
-		restriction = OnDateAttributeRestriction(attribute: Me.restrictedAttribute)
+		restriction = OnDateAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
 	}
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
@@ -161,7 +161,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = OnDateAttributeRestriction(attribute: DateOnlyAttribute(name: "not the same attribute"))
+		let otherAttributed: Attributed = OnDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -172,7 +172,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = OnDateAttributeRestriction(attribute: restriction.restrictedAttribute, date: restriction.date + 1.days)
+		let otherAttributed: Attributed = OnDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, date: restriction.date + 1.days)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -183,7 +183,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToAttributed_returnsTrue() {
 		// given
-		let otherAttributed: Attributed = OnDateAttributeRestriction(attribute: restriction.restrictedAttribute, date: restriction.date)
+		let otherAttributed: Attributed = OnDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, date: restriction.date)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -194,7 +194,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenOtherOfDifferentTypes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = LessThanNumericAttributeRestriction(attribute: restriction.restrictedAttribute)
+		let otherAttributed: AttributeRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -213,7 +213,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = OnDateAttributeRestriction(attribute: DateOnlyAttribute(name: "not the same attribute"))
+		let otherAttributed: AttributeRestriction = OnDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -224,7 +224,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = OnDateAttributeRestriction(attribute: restriction.restrictedAttribute, date: restriction.date + 1.days)
+		let otherAttributed: AttributeRestriction = OnDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, date: restriction.date + 1.days)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -235,7 +235,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let otherAttributed: AttributeRestriction = OnDateAttributeRestriction(attribute: restriction.restrictedAttribute, date: restriction.date)
+		let otherAttributed: AttributeRestriction = OnDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, date: restriction.date)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -254,7 +254,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = OnDateAttributeRestriction(attribute: DateOnlyAttribute(name: "not the same attribute"))
+		let otherAttributed = OnDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -265,7 +265,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = OnDateAttributeRestriction(attribute: restriction.restrictedAttribute, date: restriction.date + 1.days)
+		let otherAttributed = OnDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, date: restriction.date + 1.days)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -276,7 +276,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let otherAttributed = OnDateAttributeRestriction(attribute: restriction.restrictedAttribute, date: restriction.date)
+		let otherAttributed = OnDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, date: restriction.date)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)

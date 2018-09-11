@@ -38,19 +38,28 @@ final class QueryViewController: UITableViewController {
 
 	// MARK: - Enums / Structs
 
-	public enum CellType: CustomStringConvertible {
+	public enum PartType: CustomStringConvertible {
 		case dataType
 		case attributeRestriction
-		case subDataType
-
-		public static let allTypes: [CellType] = [dataType, attributeRestriction]
-
-		var description: String {
+		public static let allTypes = [dataType, attributeRestriction]
+		public var description: String {
 			switch (self) {
 				case .dataType: return "Data Type"
-				case .attributeRestriction: return "Attribute Restriction"
-				case .subDataType: return "Sub Data Type"
+				case .attributeRestriction: return "AttributeRestriction"
 			}
+		}
+	}
+
+	struct Part {
+		public var dataTypeInfo: DataTypeInfo? = nil
+		public var attributeRestriction: AttributeRestriction? = nil
+
+		public init(_ dataTypeInfo: DataTypeInfo) {
+			self.dataTypeInfo = dataTypeInfo
+		}
+
+		public init(_ attributeRestriction: AttributeRestriction) {
+			self.attributeRestriction = attributeRestriction
 		}
 	}
 
@@ -73,8 +82,7 @@ final class QueryViewController: UITableViewController {
 
 	// MARK: - Instance Member Variables
 
-	final var parts: [Any]!
-	final var cellTypes: [CellType]!
+	final var parts: [Part]!
 	final var editedIndex: Int!
 
 	// MARK: - UIViewController Overloads
@@ -84,11 +92,7 @@ final class QueryViewController: UITableViewController {
 
 		self.navigationItem.rightBarButtonItem = self.editButtonItem
 
-		cellTypes = [CellType]()
-		parts = [Any]()
-
-		cellTypes.append(.dataType)
-		parts.append(DataTypeInfo())
+		parts = [Part(DataTypeInfo())]
 
 		partWasAdded()
 
@@ -112,25 +116,24 @@ final class QueryViewController: UITableViewController {
 
 		if index == 0 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "Data Type", for: indexPath)
-			cell.textLabel?.text = (part as! DataTypeInfo).sampleType.name
+			cell.textLabel?.text = part.dataTypeInfo!.sampleType.name
 			return cell
 		}
 
-		let cellType = cellTypes[index]
-		let identifier = cellType.description
-		let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
 
-		switch (cellType) {
-			case .dataType, .subDataType:
-				let typedCell = (cell as! SubDataTypeTableViewCell)
-				typedCell.matcher = (part as! DataTypeInfo).matcher
-				typedCell.sampleType = (part as! DataTypeInfo).sampleType
-				return typedCell
-			case .attributeRestriction:
-				let typedCell = (cell as! AttributeRestrictionTableViewCell)
-				typedCell.attributeRestriction = (part as! AttributeRestriction)
-				return typedCell
+		if let dataTypeInfo = part.dataTypeInfo {
+			let cell = tableView.dequeueReusableCell(withIdentifier: "Sub Data Type", for: indexPath) as! SubDataTypeTableViewCell
+			cell.matcher = dataTypeInfo.matcher
+			cell.sampleType = dataTypeInfo.sampleType
+			return cell
 		}
+		if let attributeRestriction = part.attributeRestriction {
+			let cell = tableView.dequeueReusableCell(withIdentifier: "Attribute Restriction", for: indexPath) as! AttributeRestrictionTableViewCell
+			cell.attributeRestriction = attributeRestriction
+			return cell
+		}
+		os_log("Forgot a type of cell: %@", type: .error, String(describing: part))
+		return UITableViewCell()
 	}
 
 	// MARK: - Table View Delegate
@@ -145,13 +148,11 @@ final class QueryViewController: UITableViewController {
 
 	final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		parts.swapAt(fromIndexPath.row, to.row)
-		cellTypes.swapAt(fromIndexPath.row, to.row)
 	}
 
 	final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
 			self.parts.remove(at: indexPath.row)
-			self.cellTypes.remove(at: indexPath.row)
 			tableView.deleteRows(at: [indexPath], with: .fade)
 			tableView.reloadData()
 		}
@@ -163,7 +164,7 @@ final class QueryViewController: UITableViewController {
 		if indexPath.section == 0 && indexPath.row == 0 {
 			let controller = storyboard!.instantiateViewController(withIdentifier: "editDataType") as! EditDataTypeViewController
 			editedIndex = 0
-			let sampleType = (parts[0] as! DataTypeInfo).sampleType
+			let sampleType = parts[0].dataTypeInfo!.sampleType
 			controller.selectedIndex = EditDataTypeViewController.indexFor(type: sampleType.name)
 			controller.notificationToSendOnAccept = Me.acceptedDataTypeEdit
 			tableView.deselectRow(at: indexPath, animated: true)
@@ -179,14 +180,14 @@ final class QueryViewController: UITableViewController {
 			let source = (sender as! UITableViewCell)
 			editedIndex = tableView.indexPath(for: source)!.row
 			controller.sampleType = bottomMostDataTypeAbove(index: editedIndex)
-			controller.attributeRestriction = (parts[editedIndex] as! AttributeRestriction)
+			controller.attributeRestriction = parts[editedIndex].attributeRestriction!
 			controller.notificationToSendWhenAccepted = Me.acceptedAttributeRestrictionEdit
 		} else if segue.destination is EditSubDataTypeViewController {
 			let controller = (segue.destination as! EditSubDataTypeViewController)
 			let source = (sender as! UITableViewCell)
 			editedIndex = tableView.indexPath(for: source)!.row
-			controller.sampleType = (parts[editedIndex] as! DataTypeInfo).sampleType
-			controller.matcher = (parts[editedIndex] as! DataTypeInfo).matcher
+			controller.sampleType = parts[editedIndex].dataTypeInfo!.sampleType
+			controller.matcher = parts[editedIndex].dataTypeInfo!.matcher
 			controller.notificationToSendWhenAccepted = Me.acceptedSubDataTypeEdit
 		} else if segue.destination is ResultsViewController {
 			let controller = (segue.destination as! ResultsViewController)
@@ -196,32 +197,32 @@ final class QueryViewController: UITableViewController {
 
 	@objc final func saveEditedDataType(notification: Notification) {
 		let index = notification.object as! Int
-		parts[editedIndex] = DataTypeInfo(DependencyInjector.sample.allTypes()[index])
+		parts[editedIndex] = Part(DataTypeInfo(DependencyInjector.sample.allTypes()[index]))
 		tableView.reloadData()
 	}
 
 	@objc final func saveEditedAttributeRestriction(notification: Notification) {
-		parts[editedIndex] = notification.object as! AttributeRestriction
+		parts[editedIndex] = Part(notification.object as! AttributeRestriction)
 		tableView.reloadData()
 	}
 
 	@objc final func saveEditedSubQueryDataType(notification: Notification) {
-		parts[editedIndex] = notification.object as! DataTypeInfo
+		parts[editedIndex] = Part(notification.object as! DataTypeInfo)
 		tableView.reloadData()
 	}
 
 	@objc final func addQuestionPart(notification: Notification) {
-		let cellType = notification.object as! CellType
-		cellTypes.append(cellType)
-		switch (cellType) {
-			case .dataType, .subDataType:
-				parts.append(DataTypeInfo())
+		let type = notification.object as! PartType
+		switch (type) {
+			case .dataType:
+				parts.append(Part(DataTypeInfo()))
 				break
 			case .attributeRestriction:
 				let lastDataType = bottomMostDataType()
 				let attribute = lastDataType.defaultDependentAttribute
-				let attributeRestriction = EqualToNumericAttributeRestriction(attribute: attribute)
-				parts.append(attributeRestriction)
+				let restrictionType = DependencyInjector.restriction.typesFor(attribute)[0]
+				let attributeRestriction = DependencyInjector.restriction.initialize(type: restrictionType, forAttribute: attribute)
+				parts.append(Part(attributeRestriction))
 				break
 		}
 
@@ -240,33 +241,33 @@ final class QueryViewController: UITableViewController {
 		return bottomMostDataType(in: parts)
 	}
 
-	private final func bottomMostDataType(in parts: [Any]) -> Sample.Type {
-		var index = cellTypes.count - 1
-		while index >= 0 && cellTypes[index] != .dataType {
+	private final func bottomMostDataType(in parts: [Part]) -> Sample.Type {
+		var index = parts.count - 1
+		while index >= 0 && parts[index].dataTypeInfo == nil {
 			index -= 1
 		}
-		return (parts[index] as! DataTypeInfo).sampleType
+		return parts[index].dataTypeInfo!.sampleType
 	}
 
 	private final func bottomMostDataTypeAbove(index: Int) -> Sample.Type {
 		for part in parts[0 ... index].reversed() {
-			if part is DataTypeInfo {
-				return (part as! DataTypeInfo).sampleType
+			if part.dataTypeInfo != nil {
+				return part.dataTypeInfo!.sampleType
 			}
 		}
-		return (parts[0] as! DataTypeInfo).sampleType // this will never happen but the compiler can't know that
+		return parts[0].dataTypeInfo!.sampleType // this will never happen but the compiler can't know that
 	}
 
 	private final func closestDataType(aboveIndex: Int) -> Sample.Type {
 		var index = aboveIndex
-		while index >= 0 && cellTypes[index] != .dataType {
+		while index >= 0 && parts[index].dataTypeInfo == nil {
 			index -= 1
 		}
-		return (parts[index] as! DataTypeInfo).sampleType
+		return parts[index].dataTypeInfo!.sampleType
 	}
 
 	private final func partWasAdded() {
-		let indexPath = IndexPath(row: cellTypes.count - 1, section: 0)
+		let indexPath = IndexPath(row: parts.count - 1, section: 0)
 		tableView.insertRows(at: [indexPath], with: .automatic)
 	}
 
@@ -288,7 +289,7 @@ final class QueryViewController: UITableViewController {
 		for parts in partsSplitByQuery {
 			var currentQuery: Query
 
-			let dataTypeInfo = parts[0] as! DataTypeInfo
+			let dataTypeInfo = parts[0].dataTypeInfo!
 			switch (dataTypeInfo.sampleType) {
 				case is BloodPressure.Type:
 					currentQuery = DependencyInjector.query.bloodPressureQuery()
@@ -325,23 +326,23 @@ final class QueryViewController: UITableViewController {
 		return currentTopmostQuery!
 	}
 
-	private final func buildQuery(_ query: inout Query, from parts: [Any]) {
+	private final func buildQuery(_ query: inout Query, from parts: [Part]) {
 		for part in parts.reversed() {
-			if part is AttributeRestriction {
-				query.attributeRestrictions.append((part as! AttributeRestriction))
-			} else if !(part is DataTypeInfo) {
-				os_log("query part is of unknown type: %@", type: .error, String(describing: type(of: part)))
+			if let attributeRestriction = part.attributeRestriction {
+				query.attributeRestrictions.append(attributeRestriction)
+			} else if part.dataTypeInfo == nil {
+				os_log("Forgot a type of query part: %@", type: .error, String(describing: part))
 			}
 		}
 	}
 
-	private final func splitPartsByQuery() -> [[Any]] {
-		var partsSplitByQuery = [[Any]]()
-		var currentParts = [Any]()
+	private final func splitPartsByQuery() -> [[Part]] {
+		var partsSplitByQuery = [[Part]]()
+		var currentParts = [Part]()
 		for part in parts {
-			if part is DataTypeInfo && !currentParts.isEmpty {
+			if part.dataTypeInfo != nil && !currentParts.isEmpty {
 				partsSplitByQuery.append(currentParts)
-				currentParts = [Any]()
+				currentParts = [Part]()
 			}
 			currentParts.append(part)
 		}
@@ -354,7 +355,7 @@ final class QueryViewController: UITableViewController {
 	private final func distanceToNextDataType(index: Int) -> Int {
 		var distance = 0
 		for part in parts {
-			if part is DataTypeInfo {
+			if part.dataTypeInfo != nil {
 				return distance
 			}
 			distance += 1

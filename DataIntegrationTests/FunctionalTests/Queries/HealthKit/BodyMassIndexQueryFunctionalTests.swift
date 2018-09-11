@@ -70,7 +70,7 @@ class BodyMassIndexQueryFunctionalTests: QueryFunctionalTest {
 			BodyMassIndex(value - 1),
 		])
 
-		let bmiRestriction = EqualToNumericAttributeRestriction(attribute: BodyMassIndex.bmi, value: value)
+		let bmiRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: BodyMassIndex.bmi, value: value)
 		query.attributeRestrictions.append(bmiRestriction)
 
 		// when
@@ -96,7 +96,7 @@ class BodyMassIndexQueryFunctionalTests: QueryFunctionalTest {
 			BodyMassIndex(value + 1),
 		])
 
-		let bmiRestriction = LessThanOrEqualToNumericAttributeRestriction(attribute: BodyMassIndex.bmi, value: value)
+		let bmiRestriction = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: BodyMassIndex.bmi, value: value)
 		query.attributeRestrictions.append(bmiRestriction)
 
 		// when
@@ -123,8 +123,8 @@ class BodyMassIndexQueryFunctionalTests: QueryFunctionalTest {
 			BodyMassIndex(),
 		])
 
-		let bmiRestriction = GreaterThanOrEqualToNumericAttributeRestriction(attribute: BodyMassIndex.bmi, value: value)
-		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(attribute: BodyMassIndex.timestamp, date: Date() - 1.days)
+		let bmiRestriction = GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: BodyMassIndex.bmi, value: value)
+		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(restrictedAttribute: BodyMassIndex.timestamp, date: Date() - 1.days)
 		query.attributeRestrictions.append(bmiRestriction)
 		query.attributeRestrictions.append(timestampRestriction)
 

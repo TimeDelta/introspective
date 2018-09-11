@@ -70,7 +70,7 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 			LeanBodyMass(value - 1),
 		])
 
-		let leanBodyMassRestriction = EqualToNumericAttributeRestriction(attribute: LeanBodyMass.leanBodyMass, value: value)
+		let leanBodyMassRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: LeanBodyMass.leanBodyMass, value: value)
 		query.attributeRestrictions.append(leanBodyMassRestriction)
 
 		// when
@@ -96,7 +96,7 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 			LeanBodyMass(value + 1),
 		])
 
-		let leanBodyMassRestriction = LessThanOrEqualToNumericAttributeRestriction(attribute: LeanBodyMass.leanBodyMass, value: value)
+		let leanBodyMassRestriction = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: LeanBodyMass.leanBodyMass, value: value)
 		query.attributeRestrictions.append(leanBodyMassRestriction)
 
 		// when
@@ -123,8 +123,8 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 			LeanBodyMass(),
 		])
 
-		let leanBodyMassRestriction = GreaterThanOrEqualToNumericAttributeRestriction(attribute: LeanBodyMass.leanBodyMass, value: value)
-		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(attribute: LeanBodyMass.timestamp, date: Date() - 1.days)
+		let leanBodyMassRestriction = GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: LeanBodyMass.leanBodyMass, value: value)
+		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(restrictedAttribute: LeanBodyMass.timestamp, date: Date() - 1.days)
 		query.attributeRestrictions.append(leanBodyMassRestriction)
 		query.attributeRestrictions.append(timestampRestriction)
 

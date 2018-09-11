@@ -70,7 +70,7 @@ final class BloodPressureQueryFunctionalTests: QueryFunctionalTest {
 			BloodPressure(systolic: value - 1),
 		])
 
-		let systolicRestriction = EqualToNumericAttributeRestriction(attribute: BloodPressure.systolic, value: value)
+		let systolicRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: BloodPressure.systolic, value: value)
 		query.attributeRestrictions.append(systolicRestriction)
 
 		// when
@@ -99,8 +99,8 @@ final class BloodPressureQueryFunctionalTests: QueryFunctionalTest {
 			BloodPressure(systolic: systolicValue + 1, diastolic: diastolicValue - 1),
 		])
 
-		let systolicRestriction = LessThanOrEqualToNumericAttributeRestriction(attribute: BloodPressure.systolic, value: systolicValue)
-		let diastolicRestriction = GreaterThanNumericAttributeRestriction(attribute: BloodPressure.diastolic, value: diastolicValue)
+		let systolicRestriction = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: BloodPressure.systolic, value: systolicValue)
+		let diastolicRestriction = GreaterThanDoubleAttributeRestriction(restrictedAttribute: BloodPressure.diastolic, value: diastolicValue)
 		query.attributeRestrictions.append(systolicRestriction)
 		query.attributeRestrictions.append(diastolicRestriction)
 
@@ -128,8 +128,8 @@ final class BloodPressureQueryFunctionalTests: QueryFunctionalTest {
 			BloodPressure(),
 		])
 
-		let systolicRestriction = GreaterThanOrEqualToNumericAttributeRestriction(attribute: BloodPressure.systolic, value: value)
-		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(attribute: BloodPressure.timestamp, date: Date() - 1.days)
+		let systolicRestriction = GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: BloodPressure.systolic, value: value)
+		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(restrictedAttribute: BloodPressure.timestamp, date: Date() - 1.days)
 		query.attributeRestrictions.append(systolicRestriction)
 		query.attributeRestrictions.append(timestampRestriction)
 

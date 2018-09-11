@@ -344,6 +344,15 @@ class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
 
 
 
+    func typesFor(_ attribute: Attribute) -> [AttributeRestriction.Type] {
+        addInvocation(.itypesFor__attribute(Parameter<Attribute>.value(attribute)))
+		let perform = methodPerformValue(.itypesFor__attribute(Parameter<Attribute>.value(attribute))) as? (Attribute) -> Void
+		perform?(attribute)
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.itypesFor__attribute(Parameter<Attribute>.value(attribute)))
+		let value = givenValue.value as? [AttributeRestriction.Type]
+		return value.orFail("stub return value not specified for typesFor(_ attribute: Attribute). Use given")
+    }
+
     func initialize(type: AttributeRestriction.Type, forAttribute attribute: Attribute) -> AttributeRestriction {
         addInvocation(.iinitialize__type_typeforAttribute_attribute(Parameter<AttributeRestriction.Type>.value(type), Parameter<Attribute>.value(attribute)))
 		let perform = methodPerformValue(.iinitialize__type_typeforAttribute_attribute(Parameter<AttributeRestriction.Type>.value(type), Parameter<Attribute>.value(attribute))) as? (AttributeRestriction.Type, Attribute) -> Void
@@ -354,19 +363,25 @@ class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
     }
 
     fileprivate enum MethodType {
+        case itypesFor__attribute(Parameter<Attribute>)
         case iinitialize__type_typeforAttribute_attribute(Parameter<AttributeRestriction.Type>, Parameter<Attribute>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
+                case (.itypesFor__attribute(let lhsAttribute), .itypesFor__attribute(let rhsAttribute)):
+                    guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
+                    return true 
                 case (.iinitialize__type_typeforAttribute_attribute(let lhsType, let lhsAttribute), .iinitialize__type_typeforAttribute_attribute(let rhsType, let rhsAttribute)):
                     guard Parameter.compare(lhs: lhsType, rhs: rhsType, with: matcher) else { return false } 
                     guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
                     return true 
+                default: return false
             }
         }
 
         func intValue() -> Int {
             switch self {
+                case let .itypesFor__attribute(p0): return p0.intValue
                 case let .iinitialize__type_typeforAttribute_attribute(p0, p1): return p0.intValue + p1.intValue
             }
         }
@@ -383,6 +398,9 @@ class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
             self.`throws` = `throws`
         }
 
+        static func typesFor(attribute: Parameter<Attribute>, willReturn: [AttributeRestriction.Type]) -> Given {
+            return Given(method: .itypesFor__attribute(attribute), returns: willReturn, throws: nil)
+        }
         static func initialize(type: Parameter<AttributeRestriction.Type>, forAttribute attribute: Parameter<Attribute>, willReturn: AttributeRestriction) -> Given {
             return Given(method: .iinitialize__type_typeforAttribute_attribute(type, attribute), returns: willReturn, throws: nil)
         }
@@ -391,6 +409,9 @@ class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
     struct Verify {
         fileprivate var method: MethodType
 
+        static func typesFor(attribute: Parameter<Attribute>) -> Verify {
+            return Verify(method: .itypesFor__attribute(attribute))
+        }
         static func initialize(type: Parameter<AttributeRestriction.Type>, forAttribute attribute: Parameter<Attribute>) -> Verify {
             return Verify(method: .iinitialize__type_typeforAttribute_attribute(type, attribute))
         }
@@ -400,6 +421,9 @@ class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
+        static func typesFor(attribute: Parameter<Attribute>, perform: (Attribute) -> Void) -> Perform {
+            return Perform(method: .itypesFor__attribute(attribute), performs: perform)
+        }
         static func initialize(type: Parameter<AttributeRestriction.Type>, forAttribute attribute: Parameter<Attribute>, perform: (AttributeRestriction.Type, Attribute) -> Void) -> Perform {
             return Perform(method: .iinitialize__type_typeforAttribute_attribute(type, attribute), performs: perform)
         }
@@ -1953,6 +1977,15 @@ class InjectionProviderMock: InjectionProvider, Mock {
 		return value.orFail("stub return value not specified for queryFactory(). Use given")
     }
 
+    func attributeRestrictionFactory() -> AttributeRestrictionFactory {
+        addInvocation(.iattributeRestrictionFactory)
+		let perform = methodPerformValue(.iattributeRestrictionFactory) as? () -> Void
+		perform?()
+		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iattributeRestrictionFactory)
+		let value = givenValue.value as? AttributeRestrictionFactory
+		return value.orFail("stub return value not specified for attributeRestrictionFactory(). Use given")
+    }
+
     func sampleFactory() -> SampleFactory {
         addInvocation(.isampleFactory)
 		let perform = methodPerformValue(.isampleFactory) as? () -> Void
@@ -2021,6 +2054,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
         case icodableStorage
         case isettings
         case iqueryFactory
+        case iattributeRestrictionFactory
         case isampleFactory
         case iutilFactory
         case isubQueryMatcherFactory
@@ -2038,6 +2072,8 @@ class InjectionProviderMock: InjectionProvider, Mock {
                 case (.isettings, .isettings):
                     return true 
                 case (.iqueryFactory, .iqueryFactory):
+                    return true 
+                case (.iattributeRestrictionFactory, .iattributeRestrictionFactory):
                     return true 
                 case (.isampleFactory, .isampleFactory):
                     return true 
@@ -2063,6 +2099,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
                 case .icodableStorage: return 0
                 case .isettings: return 0
                 case .iqueryFactory: return 0
+                case .iattributeRestrictionFactory: return 0
                 case .isampleFactory: return 0
                 case .iutilFactory: return 0
                 case .isubQueryMatcherFactory: return 0
@@ -2096,6 +2133,9 @@ class InjectionProviderMock: InjectionProvider, Mock {
         }
         static func queryFactory(willReturn: QueryFactory) -> Given {
             return Given(method: .iqueryFactory, returns: willReturn, throws: nil)
+        }
+        static func attributeRestrictionFactory(willReturn: AttributeRestrictionFactory) -> Given {
+            return Given(method: .iattributeRestrictionFactory, returns: willReturn, throws: nil)
         }
         static func sampleFactory(willReturn: SampleFactory) -> Given {
             return Given(method: .isampleFactory, returns: willReturn, throws: nil)
@@ -2135,6 +2175,9 @@ class InjectionProviderMock: InjectionProvider, Mock {
         static func queryFactory() -> Verify {
             return Verify(method: .iqueryFactory)
         }
+        static func attributeRestrictionFactory() -> Verify {
+            return Verify(method: .iattributeRestrictionFactory)
+        }
         static func sampleFactory() -> Verify {
             return Verify(method: .isampleFactory)
         }
@@ -2173,6 +2216,9 @@ class InjectionProviderMock: InjectionProvider, Mock {
         }
         static func queryFactory(perform: () -> Void) -> Perform {
             return Perform(method: .iqueryFactory, performs: perform)
+        }
+        static func attributeRestrictionFactory(perform: () -> Void) -> Perform {
+            return Perform(method: .iattributeRestrictionFactory, performs: perform)
         }
         static func sampleFactory(perform: () -> Void) -> Perform {
             return Perform(method: .isampleFactory, performs: perform)

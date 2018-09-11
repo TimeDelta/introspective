@@ -17,6 +17,7 @@ public final class ProductionInjectionProvider: InjectionProvider {
 	private static let realCodableStorage = CodableStorageImpl()
 	private static var realSettings: SettingsImpl!
 	private static let realQueryFactory = QueryFactoryImpl()
+	private static let realAttributeRestrictionFactory = AttributeRestrictionFactoryImpl()
 	private static let realSampleFactory = SampleFactoryImpl()
 	private static let realUtilFactory = UtilFactory()
 	private static let realSubQueryMatcherFactory = SubQueryMatcherFactoryImpl()
@@ -40,6 +41,7 @@ public final class ProductionInjectionProvider: InjectionProvider {
 		return Me.realSettings
 	}
 	public final func queryFactory() -> QueryFactory { return Me.realQueryFactory }
+	public final func attributeRestrictionFactory() -> AttributeRestrictionFactory { return Me.realAttributeRestrictionFactory }
 	public final func sampleFactory() -> SampleFactory { return Me.realSampleFactory }
 	public final func utilFactory() -> UtilFactory { return Me.realUtilFactory }
 	public final func subQueryMatcherFactory() -> SubQueryMatcherFactory { return Me.realSubQueryMatcherFactory }

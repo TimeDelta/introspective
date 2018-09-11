@@ -67,7 +67,7 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 		let expected = Weight(value)
 		HealthKitDataTestUtil.save([expected, Weight(value - 1)])
 
-		let WeightRestriction = EqualToNumericAttributeRestriction(attribute: Weight.weight, value: value)
+		let WeightRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: Weight.weight, value: value)
 		query.attributeRestrictions.append(WeightRestriction)
 
 		// when
@@ -89,7 +89,7 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 		let expected2 = Weight(value - 1)
 		HealthKitDataTestUtil.save([expected1, expected2, Weight(value + 1)])
 
-		let WeightRestriction = LessThanOrEqualToNumericAttributeRestriction(attribute: Weight.weight, value: value)
+		let WeightRestriction = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: Weight.weight, value: value)
 		query.attributeRestrictions.append(WeightRestriction)
 
 		// when
@@ -111,8 +111,8 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 		let expected = Weight(value, Date() - 2.days)
 		HealthKitDataTestUtil.save([expected, Weight(value - 2), Weight(value - 1), Weight()])
 
-		let WeightRestriction = GreaterThanOrEqualToNumericAttributeRestriction(attribute: Weight.weight, value: value)
-		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(attribute: Weight.timestamp, date: Date() - 1.days)
+		let WeightRestriction = GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: Weight.weight, value: value)
+		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(restrictedAttribute: Weight.timestamp, date: Date() - 1.days)
 		query.attributeRestrictions.append(WeightRestriction)
 		query.attributeRestrictions.append(timestampRestriction)
 

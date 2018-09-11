@@ -47,7 +47,7 @@ class QueryViewControllerUnitTests: UnitTest {
 		controller.viewDidLoad()
 		controller.parts[0] = QueryViewController.DataTypeInfo(HeartRate.self)
 
-		let attributeRestriction = EqualToNumericAttributeRestriction(attribute: HeartRate.heartRate)
+		let attributeRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
 		controller.parts.append(attributeRestriction)
 
 		let segue = UIStoryboardSegue(identifier: "", source: controller, destination: ResultsViewController())
@@ -70,8 +70,8 @@ class QueryViewControllerUnitTests: UnitTest {
 		controller.viewDidLoad()
 		controller.parts[0] = QueryViewController.DataTypeInfo(HeartRate.self)
 
-		let attributeRestriction1 = EqualToNumericAttributeRestriction(attribute: HeartRate.heartRate)
-		let attributeRestriction2 = NotEqualToNumericAttributeRestriction(attribute: HeartRate.heartRate)
+		let attributeRestriction1 = EqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
+		let attributeRestriction2 = NotEqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
 		controller.parts.append(attributeRestriction1)
 		controller.parts.append(attributeRestriction2)
 
@@ -132,8 +132,8 @@ class QueryViewControllerUnitTests: UnitTest {
 		dataTypeInfo.matcher = SubQueryMatcherMock()
 		controller.parts.append(dataTypeInfo)
 
-		let attributeRestriction1 = EqualToNumericAttributeRestriction(attribute: MoodImpl.rating)
-		let attributeRestriction2 = NotEqualToNumericAttributeRestriction(attribute: MoodImpl.rating)
+		let attributeRestriction1 = EqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating)
+		let attributeRestriction2 = NotEqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating)
 		controller.parts.append(attributeRestriction1)
 		controller.parts.append(attributeRestriction2)
 
@@ -165,8 +165,8 @@ class QueryViewControllerUnitTests: UnitTest {
 		controller.viewDidLoad()
 		controller.parts[0] = QueryViewController.DataTypeInfo(HeartRate.self)
 
-		let heartRateAttributeRestriction1 = EqualToNumericAttributeRestriction(attribute: HeartRate.heartRate)
-		let heartRateAttributeRestriction2 = NotEqualToNumericAttributeRestriction(attribute: HeartRate.heartRate)
+		let heartRateAttributeRestriction1 = EqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
+		let heartRateAttributeRestriction2 = NotEqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
 		controller.parts.append(heartRateAttributeRestriction1)
 		controller.parts.append(heartRateAttributeRestriction2)
 
@@ -174,8 +174,8 @@ class QueryViewControllerUnitTests: UnitTest {
 		dataTypeInfo.matcher = SubQueryMatcherMock()
 		controller.parts.append(dataTypeInfo)
 
-		let moodAttributeRestriction1 = EqualToNumericAttributeRestriction(attribute: MoodImpl.rating)
-		let moodAttributeRestriction2 = NotEqualToNumericAttributeRestriction(attribute: MoodImpl.rating)
+		let moodAttributeRestriction1 = EqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating)
+		let moodAttributeRestriction2 = NotEqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating)
 		controller.parts.append(moodAttributeRestriction1)
 		controller.parts.append(moodAttributeRestriction2)
 

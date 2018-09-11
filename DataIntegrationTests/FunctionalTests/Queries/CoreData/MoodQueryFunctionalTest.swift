@@ -55,7 +55,7 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		let _ = createMood(note: "something that doesn't contain the target note text")
 		DependencyInjector.db.save()
 
-		let noteRestriction = ContainsStringAttributeRestriction(attribute: MoodImpl.note, substring: note)
+		let noteRestriction = ContainsStringAttributeRestriction(restrictedAttribute: MoodImpl.note, substring: note)
 		query.attributeRestrictions.append(noteRestriction)
 
 		// when
@@ -78,7 +78,7 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		let _ = createMood()
 		DependencyInjector.db.save()
 
-		let noteRestriction = ContainsStringAttributeRestriction(attribute: MoodImpl.note, substring: note)
+		let noteRestriction = ContainsStringAttributeRestriction(restrictedAttribute: MoodImpl.note, substring: note)
 		query.attributeRestrictions.append(noteRestriction)
 
 		// when
@@ -104,9 +104,9 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		let _ = createMood()
 		DependencyInjector.db.save()
 
-		let noteRestriction = ContainsStringAttributeRestriction(attribute: MoodImpl.note, substring: note)
-		let timestampRestriction = AfterDateAndTimeAttributeRestriction(attribute: CommonSampleAttributes.timestamp, date: Date() - 1.days)
-		let ratingRestriction = LessThanNumericAttributeRestriction(attribute: MoodImpl.rating, value: 2.0)
+		let noteRestriction = ContainsStringAttributeRestriction(restrictedAttribute: MoodImpl.note, substring: note)
+		let timestampRestriction = AfterDateAndTimeAttributeRestriction(restrictedAttribute: CommonSampleAttributes.timestamp, date: Date() - 1.days)
+		let ratingRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating, value: 2.0)
 		query.attributeRestrictions.append(noteRestriction)
 		query.attributeRestrictions.append(timestampRestriction)
 		query.attributeRestrictions.append(ratingRestriction)

@@ -20,7 +20,7 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 
 	override func setUp() {
 		super.setUp()
-		restriction = OnDayOfWeekAttributeRestriction(attribute: Me.restrictedAttribute)
+		restriction = OnDayOfWeekAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
 	}
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
@@ -135,7 +135,7 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = OnDayOfWeekAttributeRestriction(attribute: DateOnlyAttribute(name: "not the same attribute"))
+		let otherAttributed: Attributed = OnDayOfWeekAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -152,7 +152,7 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 		} else {
 			daysOfWeek.removeFirst()
 		}
-		let otherAttributed: Attributed = OnDayOfWeekAttributeRestriction(attribute: restriction.restrictedAttribute, daysOfWeek: daysOfWeek)
+		let otherAttributed: Attributed = OnDayOfWeekAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, daysOfWeek: daysOfWeek)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -163,7 +163,7 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToAttributed_returnsTrue() {
 		// given
-		let otherAttributed: Attributed = OnDayOfWeekAttributeRestriction(attribute: restriction.restrictedAttribute, daysOfWeek: restriction.daysOfWeek)
+		let otherAttributed: Attributed = OnDayOfWeekAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, daysOfWeek: restriction.daysOfWeek)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -174,7 +174,7 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenOtherOfDifferentTypes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = LessThanNumericAttributeRestriction(attribute: restriction.restrictedAttribute)
+		let otherAttributed: AttributeRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -193,7 +193,7 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = OnDayOfWeekAttributeRestriction(attribute: DateOnlyAttribute(name: "not the same attribute"))
+		let otherAttributed: AttributeRestriction = OnDayOfWeekAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -210,7 +210,7 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 		} else {
 			daysOfWeek.removeFirst()
 		}
-		let otherAttributed: AttributeRestriction = OnDayOfWeekAttributeRestriction(attribute: restriction.restrictedAttribute, daysOfWeek: daysOfWeek)
+		let otherAttributed: AttributeRestriction = OnDayOfWeekAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, daysOfWeek: daysOfWeek)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -221,7 +221,7 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let otherAttributed: AttributeRestriction = OnDayOfWeekAttributeRestriction(attribute: restriction.restrictedAttribute, daysOfWeek: restriction.daysOfWeek)
+		let otherAttributed: AttributeRestriction = OnDayOfWeekAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, daysOfWeek: restriction.daysOfWeek)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -240,7 +240,7 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = OnDayOfWeekAttributeRestriction(attribute: DateOnlyAttribute(name: "not the same attribute"))
+		let otherAttributed = OnDayOfWeekAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -257,7 +257,7 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 		} else {
 			daysOfWeek.removeFirst()
 		}
-		let otherAttributed = OnDayOfWeekAttributeRestriction(attribute: restriction.restrictedAttribute, daysOfWeek: daysOfWeek)
+		let otherAttributed = OnDayOfWeekAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, daysOfWeek: daysOfWeek)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -268,7 +268,7 @@ class OnDayOfWeekAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let otherAttributed = OnDayOfWeekAttributeRestriction(attribute: restriction.restrictedAttribute, daysOfWeek: restriction.daysOfWeek)
+		let otherAttributed = OnDayOfWeekAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, daysOfWeek: restriction.daysOfWeek)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)

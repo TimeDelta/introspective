@@ -12,20 +12,10 @@ public protocol AttributeRestriction: Attributed {
 
 	var restrictedAttribute: Attribute { get set }
 
-	init(attribute: Attribute)
+	init(restrictedAttribute: Attribute)
 
 	func samplePasses(_ sample: Sample) throws -> Bool
 	func equalTo(_ otherRestriction: AttributeRestriction) -> Bool
-}
-
-extension AttributeRestriction {
-
-	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
-		if type(of: self) != type(of: otherRestriction) { return false }
-		if !restrictedAttribute.equalTo(otherRestriction.restrictedAttribute) { return false }
-		if !equalTo(otherRestriction as Attributed) { return false }
-		return true
-	}
 }
 
 public class AnyAttributeRestriction: AttributeRestriction {
@@ -34,33 +24,28 @@ public class AnyAttributeRestriction: AttributeRestriction {
 
 	public static let selectAnAttribute = TextAttribute(name:"Atribute", pluralName: "Attributes")
 
-	public var name: String { get { fatalError("Must override") } }
-	public var description: String { get { fatalError("Must override") } }
+	public var name: String { get { fatalError("Must override name") } }
+	public var description: String { get { fatalError("Must override description") } }
 	public final var attributes: [Attribute]
-	public final var restrictedAttribute: Attribute {
-		didSet {
-			assert(isValid(attribute: restrictedAttribute))
-		}
-	}
+	public final var restrictedAttribute: Attribute
 
 	public init(attributes: [Attribute]) {
 		self.restrictedAttribute = Me.selectAnAttribute
 		self.attributes = attributes
 	}
 
-	public init(attribute: Attribute, attributes: [Attribute]) {
-		self.restrictedAttribute = attribute
+	public init(restrictedAttribute: Attribute, attributes: [Attribute]) {
+		self.restrictedAttribute = restrictedAttribute
 		self.attributes = attributes
 	}
 
-	public required init(attribute: Attribute) {
-		self.restrictedAttribute = attribute
+	public required init(restrictedAttribute: Attribute) {
+		self.restrictedAttribute = restrictedAttribute
 		attributes = [Attribute]()
 	}
 
-	public func samplePasses(_ sample: Sample) throws -> Bool { fatalError("Must override") }
-	public func value(of attribute: Attribute) throws -> Any { fatalError("Must override") }
-	public func set(attribute: Attribute, to value: Any) throws { fatalError("Must override") }
-
-	func isValid(attribute: Attribute) -> Bool { fatalError("Must override") }
+	public func samplePasses(_ sample: Sample) throws -> Bool { fatalError("Must override samplePasses()") }
+	public func value(of attribute: Attribute) throws -> Any { fatalError("Must override value(of:)") }
+	public func set(attribute: Attribute, to value: Any) throws { fatalError("Must override set(attribute:to:)") }
+	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool { fatalError("Must override equalTo()")}
 }

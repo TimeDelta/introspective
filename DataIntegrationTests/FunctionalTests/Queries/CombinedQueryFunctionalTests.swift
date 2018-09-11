@@ -53,8 +53,8 @@ class CombinedQueryFunctionalTests: QueryFunctionalTest {
 		let targetSubstring = "sad"
 		let similarNoteThatWillNotBeMatched = String(targetSubstring.prefix(targetSubstring.count - 1))
 		let minMood = 2.0
-		let noteRestriction = ContainsStringAttributeRestriction(attribute: MoodImpl.note, substring: targetSubstring)
-		let ratingRestriction = GreaterThanOrEqualToNumericAttributeRestriction(attribute: MoodImpl.rating, value: minMood)
+		let noteRestriction = ContainsStringAttributeRestriction(restrictedAttribute: MoodImpl.note, substring: targetSubstring)
+		let ratingRestriction = GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating, value: minMood)
 		subQuery.attributeRestrictions.append(noteRestriction)
 		subQuery.attributeRestrictions.append(ratingRestriction)
 		let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: numberOfDaysWithinMood, timeUnit: .day, mostRecentOnly: false)
@@ -98,7 +98,7 @@ class CombinedQueryFunctionalTests: QueryFunctionalTest {
 
 		let moodSubQuery = MoodQueryImpl()
 		let maxMood = 2.0
-		let ratingRestriction = LessThanNumericAttributeRestriction(attribute: MoodImpl.rating, value: maxMood)
+		let ratingRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating, value: maxMood)
 		moodSubQuery.attributeRestrictions.append(ratingRestriction)
 		let _ = createMood(rating: 0.0, timestamp: startOfTargetDay) // target mood
 		let _ = createMood(rating: maxMood - 0.1, timestamp: startOfTargetDay) // target mood
