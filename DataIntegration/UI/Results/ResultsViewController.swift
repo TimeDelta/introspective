@@ -180,7 +180,7 @@ final class ResultsViewController: UITableViewController {
 			extraInformationEditIndex = indexPath.row
 			let selectedInformation = extraInformation[extraInformationEditIndex]
 
-			let controller = storyboard!.instantiateViewController(withIdentifier: "editExtraInformation") as! SelectExtraInformationViewController
+			let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "editExtraInformation") as! SelectExtraInformationViewController
 			controller.notificationToSendWhenFinished = Me.editedExtraInformation
 			controller.attributes = samples[0].attributes
 			controller.selectedAttribute = selectedInformation.attribute
