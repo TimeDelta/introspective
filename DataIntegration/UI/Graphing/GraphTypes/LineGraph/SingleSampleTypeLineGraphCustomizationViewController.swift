@@ -197,15 +197,15 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 	}
 
 	@objc private final func xAxisChanged(notification: Notification) {
-		xAxisAttribute = notification.object as! Attribute
+		xAxisAttribute = (notification.object as! Attribute)
 	}
 
 	@objc private final func yAxisChanged(notification: Notification) {
-		xAxisAttribute = notification.object as! Attribute
+		xAxisAttribute = (notification.object as! Attribute)
 	}
 
 	@objc private final func aggregationChanged(notification: Notification) {
-		aggregator = notification.object as! SampleAggregator
+		aggregator = (notification.object as! SampleAggregator)
 	}
 
 	// MARK: - Helper Functions

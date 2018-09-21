@@ -34,18 +34,18 @@ public final class ContainerView<T: UIViewController>: UIView {
 
 	private final func setUpViewController(_ targetController: T?, animated: Bool) {
 		if let controller = targetController {
-			parentController.addChildViewController(controller)
+			parentController.addChild(controller)
 			controller.view.frame = self.bounds
 			self.addSubview(controller.view)
-			controller.didMove(toParentViewController: parentController)
+			controller.didMove(toParent: parentController)
 		}
 	}
 
 	private final func removeCurrentController() {
 		if let _viewController = currentController {
-			_viewController.willMove(toParentViewController: nil)
+			_viewController.willMove(toParent: nil)
 			_viewController.view.removeFromSuperview()
-			_viewController.removeFromParentViewController()
+			_viewController.removeFromParent()
 			currentController = nil
 		}
 	}

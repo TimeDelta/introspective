@@ -206,7 +206,7 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 	}
 
 	@IBAction final func showMeTheGraphButtonPressed(_ sender: Any) {
-		chartController = storyboard!.instantiateViewController(withIdentifier: "LineChartViewController") as! LineChartViewController
+		chartController = (storyboard!.instantiateViewController(withIdentifier: "LineChartViewController") as! LineChartViewController)
 
 		if xAxisQuery == nil {
 			xAxisQuery = try! DependencyInjector.query.queryFor(xAxisSampleType)
@@ -228,11 +228,11 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 	}
 
 	@objc private final func xAxisSampleTypeChanged(notification: Notification) {
-		xAxisSampleType = notification.object as! Sample.Type
+		xAxisSampleType = (notification.object as! Sample.Type)
 	}
 
 	@objc private final func yAxisSampleTypeChanged(notification: Notification) {
-		yAxisSampleType = notification.object as! Sample.Type
+		yAxisSampleType = (notification.object as! Sample.Type)
 	}
 
 	@objc private final func xAxisQueryChanged(notification: Notification) {
@@ -274,7 +274,7 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 			}
 			if let samples = result?.samples {
 				let grouper = SameTimeUnitSampleGrouper(self.grouping!)
-				self.xAxisSampleGroups = grouper.group(samples: samples, by: self.firstDateAttributeFor(self.xAxisSampleType)) as! [(Date, [Sample])]
+				self.xAxisSampleGroups = (grouper.group(samples: samples, by: self.firstDateAttributeFor(self.xAxisSampleType)) as! [(Date, [Sample])])
 			} else {
 				os_log("X-axis query run did not return an error or any results", type: .error)
 			}
@@ -290,7 +290,7 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 			}
 			if let samples = result?.samples {
 				let grouper = SameTimeUnitSampleGrouper(self.grouping!)
-				self.yAxisSampleGroups = grouper.group(samples: samples, by: self.firstDateAttributeFor(self.yAxisSampleType)) as! [(Date, [Sample])]
+				self.yAxisSampleGroups = (grouper.group(samples: samples, by: self.firstDateAttributeFor(self.yAxisSampleType)) as! [(Date, [Sample])])
 			} else {
 				os_log("Y-axis query run did not return an error or any results", type: .error)
 			}
