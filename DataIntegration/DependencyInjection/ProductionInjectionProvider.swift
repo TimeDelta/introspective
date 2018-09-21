@@ -23,7 +23,6 @@ public final class ProductionInjectionProvider: InjectionProvider {
 	private static let realSubQueryMatcherFactory = SubQueryMatcherFactoryImpl()
 	private static let realExtraInformationFactory = ExtraInformationFactoryImpl()
 	private static let realSampleGrouperFactory = SampleGrouperFactoryImpl()
-	private static let realSampleGroupCombinerFactory = SampleGroupCombinerFactoryImpl()
 	private static let realImporterFactory = ImporterFactoryImpl()
 
 	public final func database() -> Database { return Me.realDatabase }
@@ -47,6 +46,5 @@ public final class ProductionInjectionProvider: InjectionProvider {
 	public final func subQueryMatcherFactory() -> SubQueryMatcherFactory { return Me.realSubQueryMatcherFactory }
 	public final func extraInformationFactory() -> ExtraInformationFactory { return Me.realExtraInformationFactory }
 	public final func sampleGrouperFactory() -> SampleGrouperFactory { return Me.realSampleGrouperFactory }
-	public final func sampleGroupCombinerFactory() -> SampleGroupCombinerFactory { return Me.realSampleGroupCombinerFactory }
 	public final func importerFactory() -> ImporterFactory { return Me.realImporterFactory }
 }

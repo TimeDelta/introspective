@@ -1,55 +1,52 @@
 //
-//  AttributeSelectionViewController.swift
+//  ChooseAttributeViewController.swift
 //  DataIntegration
 //
-//  Created by Bryan Nova on 9/8/18.
+//  Created by Bryan Nova on 9/21/18.
 //  Copyright © 2018 Bryan Nova. All rights reserved.
 //
 
 import UIKit
+import os
 
-class AttributeSelectionViewController: UIViewController {
-
-	// MARK: - Instance Member Variables
-
-	public final var attributes: [Attribute]!
-	public final var selectedAttribute: Attribute!
-	public final var notificationToSendWhenAccepted: Notification.Name!
+final class ChooseAttributeViewController: UIViewController {
 
 	// MARK: - IBOutlets
 
 	@IBOutlet weak final var attributePicker: UIPickerView!
 
+	// MARK: - Instance Member Variables
+
+	public final var attributes: [Attribute]!
+	public final var selectedAttribute: Attribute?
+	public final var notificationToSendOnAccept: Notification.Name!
+
 	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
-
-		attributePicker.delegate = self
 		attributePicker.dataSource = self
-
-		var index: Int = 0
-		for attribute in attributes {
-			if selectedAttribute.name == attribute.name {
-				break
+		attributePicker.delegate = self
+		if selectedAttribute != nil {
+			if let selectedIndex = attributes.index(where: { $0.equalTo(selectedAttribute!) }) {
+				attributePicker.selectRow(selectedIndex, inComponent: 0, animated: false)
+			} else {
+				os_log("Could not find index for specified component", type: .error)
 			}
-			index += 1
 		}
-
-		attributePicker.selectRow(index, inComponent: 0, animated: false)
 	}
 
 	// MARK: - Button Actions
 
-	@IBAction func acceptButtonPressed(_ sender: Any) {
-		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: selectedAttribute)
+	@IBAction final func userPressedAccept(_ sender: Any) {
+		NotificationCenter.default.post(name: notificationToSendOnAccept, object: selectedAttribute)
 		dismiss(animated: true, completion: nil)
 	}
 }
 
 // MARK: - UIPickerViewDataSource
 
-extension AttributeSelectionViewController: UIPickerViewDataSource {
+extension ChooseAttributeViewController: UIPickerViewDataSource {
 
 	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
@@ -62,7 +59,7 @@ extension AttributeSelectionViewController: UIPickerViewDataSource {
 
 // MARK: - UIPickerViewDelegate
 
-extension AttributeSelectionViewController: UIPickerViewDelegate {
+extension ChooseAttributeViewController: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		return attributes[row].name

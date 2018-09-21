@@ -15,30 +15,32 @@
             <objects>
                 <viewController storyboardIdentifier="LineChartViewController" id="wyt-VF-PBn" customClass="LineChartViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="SrV-5L-VYa">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eic-3R-wfB">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Error message" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9T9-qa-NER">
+                                        <rect key="frame" x="16" y="215" width="343" height="124"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="93z-Dd-Pnl">
+                                        <rect key="frame" x="177" y="267" width="20" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                    </activityIndicatorView>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Error message" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9T9-qa-NER">
-                                <rect key="frame" x="16" y="239" width="343" height="124"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="93z-Dd-Pnl">
-                                <rect key="frame" x="177" y="291" width="20" height="20"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="0XI-fq-Q2r"/>
                     </view>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="activityIndicator" destination="93z-Dd-Pnl" id="pSk-Y2-jbv"/>
@@ -73,7 +75,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TGf-6q-C2U">
-                                <rect key="frame" x="16" y="378" width="343" height="30"/>
+                                <rect key="frame" x="46" y="378" width="284" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <state key="normal" title="Choose query (optional)"/>
                                 <connections>
@@ -156,11 +158,27 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hdM-QY-YKD">
-                                <rect key="frame" x="120" y="237" width="135" height="30"/>
+                                <rect key="frame" x="16" y="237" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <state key="normal" title="Choose information"/>
                                 <connections>
                                     <action selector="chooseXAxisInformationButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="ZaT-Ca-puI"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xwR-Ud-Thz">
+                                <rect key="frame" x="16" y="386" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="X"/>
+                                <connections>
+                                    <action selector="clearYAxisQueryButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="KE6-sK-srW"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O6I-UQ-OHk">
+                                <rect key="frame" x="16" y="203" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="X"/>
+                                <connections>
+                                    <action selector="clearXAxisQueryButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="E5S-yk-1nW"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -177,6 +195,8 @@
                         <outlet property="chooseYAxisInformationButton" destination="mxe-Wc-9Po" id="4Og-tI-BUM"/>
                         <outlet property="chooseYAxisQueryButton" destination="TGf-6q-C2U" id="8TO-Ir-2Ia"/>
                         <outlet property="chooseYAxisSampleTypeButton" destination="zY6-nj-87d" id="uxb-R3-6xt"/>
+                        <outlet property="clearXAxisQueryButton" destination="O6I-UQ-OHk" id="HX8-B3-ksM"/>
+                        <outlet property="clearYAxisQueryButton" destination="xwR-Ud-Thz" id="clB-e1-vFW"/>
                         <outlet property="showGraphButton" destination="puh-yl-8rv" id="Aa7-pD-0pb"/>
                     </connections>
                 </viewController>
@@ -184,15 +204,15 @@
             </objects>
             <point key="canvasLocation" x="-519.20000000000005" y="-548.27586206896558"/>
         </scene>
-        <!--Choose Information To Graph Table View Controller-->
+        <!--Choose Information-->
         <scene sceneID="Ymt-E5-tUB">
             <objects>
-                <tableViewController storyboardIdentifier="chooseInformation" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FBF-3k-koa" customClass="ChooseInformationToGraphTableViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="chooseInformation" title="Choose Information" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FBF-3k-koa" customClass="ChooseInformationToGraphTableViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Ejy-H4-omQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" misplaced="YES" id="cwI-mE-mJ8">
+                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="cwI-mE-mJ8">
                             <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             <items>
@@ -238,7 +258,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yc8-qE-dOP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1226" y="304"/>
+            <point key="canvasLocation" x="-519" y="155"/>
         </scene>
         <!--Graph Setup-->
         <scene sceneID="Z8t-2U-Zhj">
@@ -248,39 +268,34 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4ad-RJ-rPP">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4ad-RJ-rPP">
                                 <rect key="frame" x="16" y="509" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Show me the graph">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <state key="disabled">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="showGraph:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="47s-JU-Alu"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c9B-Ny-KM0">
-                                <rect key="frame" x="16" y="395" width="343" height="30"/>
+                                <rect key="frame" x="16" y="433" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <state key="normal" title="Choose x-axis attribute"/>
+                                <state key="normal" title="Choose x-axis information"/>
                                 <connections>
                                     <action selector="editXAxis:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="SIG-oF-HUC"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nr2-WX-IXz">
-                                <rect key="frame" x="16" y="433" width="343" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <state key="normal" title="Choose y-axis attribute"/>
-                                <connections>
-                                    <action selector="editYAxis:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="eFn-m0-eWX"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z2z-Gm-07i">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nr2-WX-IXz">
                                 <rect key="frame" x="16" y="471" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <state key="normal" title="Choose aggregation (optional)"/>
+                                <state key="normal" title="Choose y-axis information"/>
                                 <connections>
-                                    <action selector="chooseAggregationButtonPressed:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="m35-Bv-4Bf"/>
+                                    <action selector="editYAxis:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="eFn-m0-eWX"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -290,7 +305,7 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="aggregationButton" destination="Z2z-Gm-07i" id="CkK-0m-CNc"/>
+                        <outlet property="showGraphButton" destination="4ad-RJ-rPP" id="xDU-2R-uWx"/>
                         <outlet property="xAxisButton" destination="c9B-Ny-KM0" id="Sfl-Om-bI0"/>
                         <outlet property="yAxisButton" destination="Nr2-WX-IXz" id="OKy-I7-iVE"/>
                     </connections>
@@ -299,48 +314,31 @@
             </objects>
             <point key="canvasLocation" x="-1954" y="-548"/>
         </scene>
-        <!--Sample Aggregation-->
-        <scene sceneID="Xqa-J4-afV">
+        <!--X-Axis Setup-->
+        <scene sceneID="G8o-ah-oVL">
             <objects>
-                <viewController storyboardIdentifier="chooseAggregation" title="Sample Aggregation" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dNX-sh-xEc" customClass="EditSampleAggregationViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Zaz-qk-byN">
+                <viewController storyboardIdentifier="xAxisSetup" title="X-Axis Setup" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rzj-bc-0U9" customClass="XAxisSetupViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="EQb-Mf-jMi">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Group _ by:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jcD-qa-FTN">
-                                <rect key="frame" x="16" y="188" width="343" height="21"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Oit-Yb-YZR">
+                                <rect key="frame" x="46" y="466" width="282" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Combine _ by:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f6c-XN-FYz">
-                                <rect key="frame" x="16" y="284" width="343" height="21"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="9u1-uc-LbB">
-                                <rect key="frame" x="16" y="217" width="343" height="59"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <state key="normal" title="Choose"/>
+                                <state key="normal" title="Choose grouping (optional)"/>
                                 <connections>
-                                    <segue destination="vjY-Fc-0EX" kind="show" id="V47-HJ-dFA"/>
+                                    <action selector="chooseGroupingButtonPressed:" destination="rzj-bc-0U9" eventType="touchUpInside" id="8vx-Xg-qsz"/>
                                 </connections>
                             </button>
-                            <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dQD-GE-4Q0">
-                                <rect key="frame" x="0.0" y="313" width="375" height="127"/>
+                            <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hd0-Cd-LPt">
+                                <rect key="frame" x="0.0" y="300" width="375" height="162"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             </pickerView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="validation label" textAlignment="justified" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ARA-s5-xOo">
-                                <rect key="frame" x="16" y="448" width="343" height="48"/>
+                            <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Aky-Nj-Y3S">
+                                <rect key="frame" x="0.0" y="130" width="375" height="162"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="1" green="0.058155415100000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XcJ-V8-emv">
+                            </pickerView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iNB-rE-c4n">
                                 <rect key="frame" x="16" y="504" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -348,35 +346,34 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <action selector="acceptButtonPressed:" destination="dNX-sh-xEc" eventType="touchUpInside" id="Seo-mo-uc1"/>
+                                    <action selector="acceptButtonPressed:" destination="rzj-bc-0U9" eventType="touchUpInside" id="0Id-Mx-23X"/>
+                                    <action selector="showGraph:" destination="lY4-vc-GUS" eventType="touchUpInside" id="u2e-U1-MoJ"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kPG-gF-MxN">
+                                <rect key="frame" x="16" y="470" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="X"/>
+                                <connections>
+                                    <action selector="clearGroupingButtonPressed:" destination="rzj-bc-0U9" eventType="touchUpInside" id="EeO-xs-vF9"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="aew-dX-Sa3"/>
+                        <viewLayoutGuide key="safeArea" id="nI5-sN-eLd"/>
                     </view>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="acceptButton" destination="XcJ-V8-emv" id="zmE-dx-Zmi"/>
-                        <outlet property="combineValuesByLabel" destination="f6c-XN-FYz" id="pae-4e-3wd"/>
-                        <outlet property="groupByButton" destination="9u1-uc-LbB" id="zzJ-xX-O4M"/>
-                        <outlet property="groupByLabel" destination="jcD-qa-FTN" id="Fqh-gH-ZSw"/>
-                        <outlet property="validationLabel" destination="ARA-s5-xOo" id="HHc-k3-6td"/>
-                        <outlet property="valueCombinationMethodPicker" destination="dQD-GE-4Q0" id="ihN-6W-Vws"/>
+                        <outlet property="attributePicker" destination="hd0-Cd-LPt" id="B7g-dE-NCV"/>
+                        <outlet property="chooseGroupingButton" destination="Oit-Yb-YZR" id="IWb-Zr-8vF"/>
+                        <outlet property="clearGroupingButton" destination="kPG-gF-MxN" id="xBV-7I-6bc"/>
+                        <outlet property="informationPicker" destination="Aky-Nj-Y3S" id="zrz-b9-A1e"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="TZR-01-myI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SWh-MX-JnS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-519" y="304"/>
-        </scene>
-        <!--attributedChooserViewController-->
-        <scene sceneID="dt4-y4-fv8">
-            <objects>
-                <viewControllerPlaceholder storyboardName="AttributeList" referencedIdentifier="attributedChooserViewController" id="vjY-Fc-0EX" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="pOv-5I-ZlH" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="192" y="303"/>
+            <point key="canvasLocation" x="-1954" y="154"/>
         </scene>
         <!--Graph Setup-->
         <scene sceneID="3jh-t0-FHX">
@@ -387,27 +384,19 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ss2-tD-fkF">
-                                <rect key="frame" x="16" y="395" width="343" height="30"/>
+                                <rect key="frame" x="16" y="433" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <state key="normal" title="Choose x-axis attribute"/>
+                                <state key="normal" title="Choose x-axis information"/>
                                 <connections>
                                     <action selector="editXAxis:" destination="lY4-vc-GUS" eventType="touchUpInside" id="Uo8-HH-HLO"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Pe-Ia-XeU">
-                                <rect key="frame" x="16" y="433" width="343" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <state key="normal" title="Choose y-axis attribute"/>
-                                <connections>
-                                    <action selector="editYAxis:" destination="lY4-vc-GUS" eventType="touchUpInside" id="PEc-Ec-vJe"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Caz-Gd-G3u">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Pe-Ia-XeU">
                                 <rect key="frame" x="16" y="471" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <state key="normal" title="Choose aggregation (optional)"/>
+                                <state key="normal" title="Choose y-axis information"/>
                                 <connections>
-                                    <action selector="chooseAggregationButtonPressed:" destination="lY4-vc-GUS" eventType="touchUpInside" id="c0u-6G-bAK"/>
+                                    <action selector="editYAxis:" destination="lY4-vc-GUS" eventType="touchUpInside" id="PEc-Ec-vJe"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kpR-s2-gWu">
@@ -417,12 +406,15 @@
                                 <state key="normal" title="Show me the graph">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <state key="disabled" title="Show me the graph">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="showGraph:" destination="lY4-vc-GUS" eventType="touchUpInside" id="ezQ-ZU-kPv"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zb1-Dx-Wvx">
-                                <rect key="frame" x="16" y="357" width="343" height="30"/>
+                                <rect key="frame" x="46" y="395" width="282" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <state key="normal" title="Choose query (optional)"/>
                                 <connections>
@@ -430,9 +422,17 @@
                                 </connections>
                             </button>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o00-l3-PQb">
-                                <rect key="frame" x="0.0" y="187" width="375" height="162"/>
+                                <rect key="frame" x="0.0" y="225" width="375" height="162"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             </pickerView>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JDS-g5-far">
+                                <rect key="frame" x="16" y="399" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="X"/>
+                                <connections>
+                                    <action selector="clearQueryButtonPressed:" destination="lY4-vc-GUS" eventType="touchUpInside" id="jbX-G2-t5T"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="SYa-8H-sqQ"/>
@@ -440,17 +440,76 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="aggregationButton" destination="Caz-Gd-G3u" id="Zvq-sS-tcP"/>
+                        <outlet property="clearQueryButton" destination="JDS-g5-far" id="d2g-7d-scC"/>
                         <outlet property="queryButton" destination="zb1-Dx-Wvx" id="6Zf-Nf-okH"/>
                         <outlet property="sampleTypePicker" destination="o00-l3-PQb" id="y4Z-AQ-ClD"/>
-                        <outlet property="showMeTheGraphButton" destination="kpR-s2-gWu" id="H40-EW-QCb"/>
+                        <outlet property="showGraphButton" destination="kpR-s2-gWu" id="f5s-hH-aWd"/>
                         <outlet property="xAxisButton" destination="Ss2-tD-fkF" id="0NB-Wt-0bL"/>
                         <outlet property="yAxisButton" destination="9Pe-Ia-XeU" id="aOy-bA-joK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W7V-XG-sgy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1226" y="-548"/>
+            <point key="canvasLocation" x="-1226.4000000000001" y="-548.27586206896558"/>
+        </scene>
+        <!--Choose Attributes-->
+        <scene sceneID="tM6-ZN-PtJ">
+            <objects>
+                <tableViewController storyboardIdentifier="chooseAttributes" title="Choose Attributes" useStoryboardIdentifierAsRestorationIdentifier="YES" id="1XS-07-gq8" customClass="ChooseAttributesToGraphTableViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Lw3-yK-3r2">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="506-6p-G6g">
+                            <rect key="frame" x="0.0" y="72" width="375" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            <items>
+                                <barButtonItem systemItem="add" id="PEo-ck-FTG">
+                                    <connections>
+                                        <action selector="addButtonPressed:" destination="1XS-07-gq8" id="l6C-Ra-FVY"/>
+                                    </connections>
+                                </barButtonItem>
+                                <barButtonItem style="plain" systemItem="flexibleSpace" id="C2I-SV-izv"/>
+                                <barButtonItem title="Done" id="SUA-SD-5nJ">
+                                    <connections>
+                                        <action selector="doneButtonPressed:" destination="1XS-07-gq8" id="DDD-E6-IBb"/>
+                                    </connections>
+                                </barButtonItem>
+                            </items>
+                        </toolbar>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="cell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="R1W-Wb-U9w" style="IBUITableViewCellStyleDefault" id="nXw-le-bCM">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="nXw-le-bCM" id="ALU-Qi-z2K">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="R1W-Wb-U9w">
+                                            <rect key="frame" x="16" y="0.0" width="343" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="1XS-07-gq8" id="Ivl-V6-J5i"/>
+                            <outlet property="delegate" destination="1XS-07-gq8" id="5zb-sR-38k"/>
+                        </connections>
+                    </tableView>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="addButton" destination="PEo-ck-FTG" id="iyY-Iz-iDC"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kHY-VB-V0a" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1226" y="154"/>
         </scene>
     </scenes>
 </document>

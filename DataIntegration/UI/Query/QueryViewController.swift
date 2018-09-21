@@ -103,6 +103,8 @@ class QueryViewController: UITableViewController {
 		editButton.target = editButtonItem.target
 		editButton.action = editButtonItem.action
 
+		finishedButton.title = finishedButtonTitle
+
 		if topmostSampleType != nil {
 			parts = [Part(DataTypeInfo(topmostSampleType!))]
 		} else {

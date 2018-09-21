@@ -13,13 +13,24 @@ import os
 
 final class SingleSampleTypeLineGraphCustomizationViewController: UIViewController {
 
+	// MARK: - Enums / Structs
+
+	private struct AttributeOrInformation {
+		fileprivate var attribute: Attribute?
+		fileprivate var information: ExtraInformation?
+
+		fileprivate init(attribute: Attribute? = nil, information: ExtraInformation? = nil) {
+			self.attribute = attribute
+			self.information = information
+		}
+	}
+
 	// MARK: - Static Member Variables
 
 	private typealias Me = SingleSampleTypeLineGraphCustomizationViewController
 	private static let xAxisChanged = Notification.Name("xAxisChanged")
 	private static let yAxisChanged = Notification.Name("yAxisChanged")
 	private static let queryChanged = Notification.Name("queryChanged")
-	private static let aggregationChanged = Notification.Name("aggregationChanged")
 	private static let presenter: Presentr = {
 		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
 		let customPresenter = Presentr(presentationType: customType)
@@ -28,64 +39,81 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 		return customPresenter
 	}()
 
-	// MARK: - Instance Member Variables
-
-	private final var query: Query? {
-		didSet {
-			if query == nil {
-				queryButton.setTitle("Choose query (optional)", for: .normal)
-			} else {
-				queryButton.setTitle("Query chosen (click to change)", for: .normal)
-			}
-		}
-	}
-	private final var xAxisAttribute: Attribute! {
-		didSet {
-			if xAxisAttribute == nil {
-				xAxisButton.setTitle("Choose x-axis attribute", for: .normal)
-			} else {
-				xAxisButton.setTitle("X-Axis: " + xAxisAttribute.name, for: .normal)
-			}
-		}
-	}
-	private final var yAxisAttribute: Attribute! {
-		didSet {
-			if yAxisAttribute == nil {
-				yAxisButton.setTitle("Choose y-axis attribute", for: .normal)
-			} else {
-				yAxisButton.setTitle("Y-Axis: " + yAxisAttribute.name, for: .normal)
-			}
-		}
-	}
-	private final var aggregator: SampleAggregator! {
-		didSet {
-			if aggregator == nil {
-				aggregationButton.setTitle("Choose aggregation (optional)", for: .normal)
-			} else {
-				aggregationButton.setTitle(aggregator.description, for: .normal)
-			}
-		}
-	}
-	private final var oldSampleType: Sample.Type!
-	private final var sampleType: Sample.Type! {
-		didSet {
-			if oldSampleType != sampleType {
-				query = nil
-				xAxisAttribute = nil
-				yAxisAttribute = nil
-				aggregator = nil
-			}
-		}
-	}
-
 	// MARK: - IBOutlets
 
 	@IBOutlet weak final var sampleTypePicker: UIPickerView!
 	@IBOutlet weak final var queryButton: UIButton!
 	@IBOutlet weak final var xAxisButton: UIButton!
 	@IBOutlet weak final var yAxisButton: UIButton!
-	@IBOutlet weak final var aggregationButton: UIButton!
-	@IBOutlet weak final var showMeTheGraphButton: UIButton!
+	@IBOutlet weak final var showGraphButton: UIButton!
+	@IBOutlet weak final var clearQueryButton: UIButton!
+
+	// MARK: - Instance Member Variables
+
+	private final var query: Query? {
+		didSet {
+			if query == nil {
+				queryButton.setTitle("Choose query (optional)", for: .normal)
+				UiUtil.setButton(clearQueryButton, enabled: false, hidden: true)
+			} else {
+				queryButton.setTitle("Query chosen (click to change)", for: .normal)
+				UiUtil.setButton(clearQueryButton, enabled: true, hidden: false)
+			}
+		}
+	}
+	private final var xAxis: AttributeOrInformation! {
+		didSet {
+			if xAxis == nil {
+				xAxisButton.setTitle("Choose x-axis information", for: .normal)
+				yAxis = nil
+				UiUtil.setButton(yAxisButton, enabled: false)
+			} else if let attribute = xAxis.attribute {
+				xAxisButton.setTitle("X-Axis: " + attribute.name, for: .normal)
+				UiUtil.setButton(yAxisButton, enabled: true)
+			} else if let information = xAxis.information {
+				var text = information.description.localizedLowercase
+				if grouping != nil {
+					text += " per " + grouping!.description.localizedLowercase
+				}
+				xAxisButton.setTitle("X-Axis: " + text, for: .normal)
+				UiUtil.setButton(yAxisButton, enabled: true)
+			}
+			updateShowGraphButtonState()
+		}
+	}
+	private final var yAxis: [AttributeOrInformation]! {
+		didSet {
+			if yAxis == nil {
+				yAxisButton.setTitle("Choose information", for: .disabled)
+			} else {
+				var description = "Y-Axis: "
+				for value in yAxis! {
+					if let information = value.information {
+						description += information.description.localizedLowercase + ", "
+					} else if let attribute = value.attribute {
+						description += attribute.name.localizedLowercase + ", "
+					}
+				}
+				description.removeLast()
+				description.removeLast()
+				yAxisButton.setTitle(description, for: .normal)
+			}
+			updateShowGraphButtonState()
+		}
+	}
+	private final var grouping: Calendar.Component!
+	private final var oldSampleType: Sample.Type!
+	private final var sampleType: Sample.Type! {
+		didSet {
+			if oldSampleType != sampleType {
+				query = nil
+				xAxis = nil
+				yAxis = nil
+				grouping = nil
+			}
+		}
+	}
+	private final var chartController: LineChartViewController!
 
 	// MARK: - UIViewController Overrides
 
@@ -96,19 +124,17 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 		sampleTypePicker.dataSource = self
 		sampleTypePicker.delegate = self
 
-		if xAxisAttribute == nil {
-			xAxisAttribute = sampleType.defaultIndependentAttribute
-		}
-		if yAxisAttribute == nil {
-			yAxisAttribute = sampleType.defaultDependentAttribute
-		}
-
 		NotificationCenter.default.addObserver(self, selector: #selector(xAxisChanged), name: Me.xAxisChanged, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(yAxisChanged), name: Me.yAxisChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(aggregationChanged), name: Me.aggregationChanged, object: nil)
+
+		updateShowGraphButtonState()
 	}
 
 	// MARK: - Button Actions
+
+	@IBAction final func clearQueryButtonPressed(_ sender: Any) {
+		query = nil
+	}
 
 	@IBAction final func chooseQueryButtonPressed(_ sender: Any) {
 		let controller = UIStoryboard(name: "Query", bundle: nil).instantiateViewController(withIdentifier: "queryView") as! QueryViewController
@@ -119,75 +145,40 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 	}
 
 	@IBAction final func showGraph(_ sender: Any) {
-		let controller = storyboard!.instantiateViewController(withIdentifier: "LineChartViewController") as! LineChartViewController
 		if query == nil {
 			query = try! DependencyInjector.query.queryFor(sampleType)
 		}
-		query!.runQuery { (result, error) in
-			if error != nil {
-				os_log("Query run failed: %@", type: .error, error!.localizedDescription)
-				controller.errorMessage = "Something went wrong while running the query. Sorry for the inconvenience this has caused you."
-				return
-			}
-			if let samples = result?.samples {
-				var aggregatedSamples: [Sample] = samples
-				if self.aggregator != nil {
-					aggregatedSamples = self.aggregator.aggregate(samples: samples)
-				}
-				let data = aggregatedSamples.map{ (sample) -> [Any] in
-					let rawXValue = try! sample.value(of: self.xAxisAttribute)
-					var xValue: Any = rawXValue
-					if !(self.xAxisAttribute is NumericAttribute) {
-						xValue = try! self.xAxisAttribute.convertToDisplayableString(from: rawXValue)
-					}
-					return [xValue, self.getDouble(for: self.yAxisAttribute, from: sample, allSamples: samples)]
-				}
-				if !(self.xAxisAttribute is NumericAttribute) {
-					controller.displayXAxisValueLabels = false
-				}
-				DispatchQueue.main.async {
-					controller.dataSeries = [
-						AASeriesElement()
-							.name(self.yAxisAttribute.name.localizedCapitalized)
-							.data(data)
-							.toDic()!
-					]
-				}
-			} else {
-				os_log("Query run did not return an error or any results", type: .error)
-				controller.dataSeries = nil
-			}
+		chartController = (storyboard!.instantiateViewController(withIdentifier: "LineChartViewController") as! LineChartViewController)
+		DispatchQueue.global(qos: .userInitiated).async {
+			self.runQuery()
 		}
-		navigationController!.pushViewController(controller, animated: true)
+		navigationController?.pushViewController(chartController, animated: true)
 	}
 
 	@IBAction final func editXAxis(_ sender: Any) {
-		let controller = UIStoryboard(name: "GraphingUtil", bundle: nil).instantiateViewController(withIdentifier: "selectAttribtue") as! AttributeSelectionViewController
-		controller.selectedAttribute = xAxisAttribute
-		controller.notificationToSendWhenAccepted = Me.xAxisChanged
+		let controller = storyboard!.instantiateViewController(withIdentifier: "xAxisSetup") as! XAxisSetupViewController
 		controller.attributes = sampleType.attributes
-		customPresentViewController(Me.presenter, viewController: controller, animated: true)
+		controller.selectedAttribute = xAxis?.attribute
+		controller.selectedInformation = xAxis?.information
+		controller.grouping = grouping
+		controller.notificationToSendWhenFinished = Me.xAxisChanged
+		navigationController?.pushViewController(controller, animated: true)
 	}
 
 	@IBAction final func editYAxis(_ sender: Any) {
-		let controller = UIStoryboard(name: "GraphingUtil", bundle: nil).instantiateViewController(withIdentifier: "selectAttribtue") as! AttributeSelectionViewController
-		controller.selectedAttribute = yAxisAttribute
-		controller.notificationToSendWhenAccepted = Me.yAxisChanged
-		controller.attributes = sampleType.attributes
-		customPresentViewController(Me.presenter, viewController: controller, animated: true)
-	}
-
-	@IBAction final func chooseAggregationButtonPressed(_ sender: Any) {
-		let controller = storyboard!.instantiateViewController(withIdentifier: "chooseAggregation") as! EditSampleAggregationViewController
-		controller.notificationToSendOnAccept = Me.aggregationChanged
-		if aggregator == nil {
-			aggregator = SampleAggregator(groupingBy: xAxisAttribute, combining: yAxisAttribute)
+		if grouping == nil {
+			let controller = storyboard!.instantiateViewController(withIdentifier: "chooseAttributes") as! ChooseAttributesToGraphTableViewController
+			controller.allowedAttributes = sampleType.attributes.filter{ $0 is NumericAttribute }
+			controller.selectedAttributes = yAxis?.map{ $0.attribute! }
+			controller.notificationToSendWhenFinished = Me.yAxisChanged
+			navigationController?.pushViewController(controller, animated: true)
 		} else {
-			aggregator.groupByAttribute = xAxisAttribute
-			aggregator.combinationAttribute = yAxisAttribute
+			let controller = storyboard!.instantiateViewController(withIdentifier: "chooseInformation") as! ChooseInformationToGraphTableViewController
+			controller.attributes = sampleType.attributes.filter{ $0 is NumericAttribute }
+			controller.information = yAxis?.map{ $0.information! }
+			controller.notificationToSendWhenFinished = Me.yAxisChanged
+			navigationController?.pushViewController(controller, animated: true)
 		}
-		controller.currentAggregator = aggregator
-		navigationController!.pushViewController(controller, animated: true)
 	}
 
 	// MARK: - Received Notifications
@@ -197,43 +188,145 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 	}
 
 	@objc private final func xAxisChanged(notification: Notification) {
-		xAxisAttribute = (notification.object as! Attribute)
+		if let value = notification.object as? (grouping: Calendar.Component, xAxis: Attribute) {
+			grouping = value.grouping
+			xAxis = AttributeOrInformation(attribute: value.xAxis)
+		} else if let value = notification.object as? (grouping: Calendar.Component, xAxis: ExtraInformation) {
+			grouping = value.grouping
+			xAxis = AttributeOrInformation(information: value.xAxis)
+		} else {
+			os_log("Unknown object type returned from x-axis setup: %@", type: .error, String(describing: type(of: notification.object)))
+		}
 	}
 
 	@objc private final func yAxisChanged(notification: Notification) {
-		xAxisAttribute = (notification.object as! Attribute)
-	}
-
-	@objc private final func aggregationChanged(notification: Notification) {
-		aggregator = (notification.object as! SampleAggregator)
+		if let attributes = notification.object as? [Attribute] {
+			yAxis = attributes.map{ AttributeOrInformation(attribute: $0) }
+		} else if let information = notification.object as? [ExtraInformation] {
+			yAxis = information.map{ AttributeOrInformation(information: $0) }
+		} else {
+			os_log("Unknown object type returned from y-axis setup: %@", type: .error, String(describing: type(of: notification.object)))
+		}
 	}
 
 	// MARK: - Helper Functions
 
-	private final func enableGraphButtonIfValid() {
-		if xAxisAttribute != nil && yAxisAttribute != nil {
-			showMeTheGraphButton.isEnabled = true
-			showMeTheGraphButton.isUserInteractionEnabled = true
+	private final func updateShowGraphButtonState() {
+		 showGraphButton.isEnabled =
+			xAxis != nil &&
+			(xAxis.attribute != nil || xAxis.information != nil) &&
+			yAxis != nil &&
+			grouping != nil
+		showGraphButton.backgroundColor = showGraphButton.isEnabled ? .black : .gray
+	}
+
+	private final func runQuery() {
+		query!.runQuery { (result, error) in
+			if error != nil {
+				os_log("X-axis query run failed: %@", type: .error, error!.localizedDescription)
+				DispatchQueue.main.async {
+					self.chartController.errorMessage = "Something went wrong while running the query. Sorry for the inconvenience this has caused you."
+				}
+				return
+			}
+			if let samples = result?.samples {
+				self.updateChartData(samples)
+			} else {
+				os_log("X-axis query run did not return an error or any results", type: .error)
+			}
 		}
 	}
 
-	private final func getDouble(for attribute: Attribute, from sample: Sample, allSamples: [Sample]) -> Double {
-		let value: Any = try! sample.value(of: attribute)
-		if value is Date {
-			let earliestDate = try! allSamples[0].value(of: attribute) as! Date
-			let date = value as! Date
-			let totalSeconds = earliestDate.getInterval(toDate: date, component: .second)
-			return Double(totalSeconds)
-		} else if value is DayOfWeek {
-			let dayOfWeek = value as! DayOfWeek
-			return Double(dayOfWeek.intValue)
-		} else if value is Double {
-			return value as! Double
-		} else if value is Int {
-			return Double(value as! Int)
+	private final func firstDateAttributeFor(_ sampleType: Sample.Type) -> DateAttribute {
+		if let index = sampleType.attributes.index(where: { $0 is DateAttribute }) {
+			return sampleType.attributes[index] as! DateAttribute
 		}
-		// TODO - gracefully tell user about this
-		fatalError("Forgot a data type")
+		os_log("No DateAttribute found for sample type: %@", type: .error, String(describing: sampleType))
+		return CommonSampleAttributes.timestamp
+	}
+
+	private final func updateChartData(_ samples: [Sample]) {
+		var allData = [Dictionary<String, Any>]()
+		var xValuesAreNumbers: Bool
+		if grouping != nil {
+			let grouper = SameTimeUnitSampleGrouper(grouping!)
+			let groups = grouper.group(samples: samples, by: firstDateAttributeFor(type(of: samples[0]))) as! [(Date, [Sample])]
+
+			let xValues = transform(sampleGroups: groups, information: xAxis.information!)
+			xValuesAreNumbers = areAllNumbers(xValues.map{ $0.sampleValue })
+			var sortedXValues = xValues
+			// if x values are numbers and are not sorted, graph will look very weird
+			if xValuesAreNumbers {
+				sortedXValues = xValues.sorted(by: { Double($0.sampleValue)! < Double($1.sampleValue)! })
+			}
+
+			for yInformation in yAxis.map({ $0.information! }) {
+				let yValues = transform(sampleGroups: groups, information: yInformation)
+				var seriesData = [[Any]]()
+				for (xGroupValue, xSampleValue) in sortedXValues { // loop over x values so that series data is already sorted
+					if let yValueIndex = yValues.index(where: { $0.groupValue == xGroupValue }) {
+						let yValue = yValues[yValueIndex].sampleValue
+						var xValue: Any = xSampleValue
+						if xValuesAreNumbers {
+							xValue = Double(formatNumber(xSampleValue))!
+						}
+						seriesData.append([xValue, Double(formatNumber(yValue))!])
+					}
+				}
+				allData.append(AASeriesElement()
+					.name(yInformation.description.localizedCapitalized)
+					.data(seriesData)
+					.toDic()!)
+			}
+		} else {
+			xValuesAreNumbers = xAxis.attribute! is NumericAttribute
+			for yAttribute in yAxis.map({ $0.attribute! }) {
+				let data = samples.map({ (sample: Sample) -> [Any] in
+					let rawXValue = try! sample.value(of: self.xAxis.attribute!)
+					var xValue: Any = rawXValue
+					if !xValuesAreNumbers {
+						xValue = try! self.xAxis.attribute!.convertToDisplayableString(from: rawXValue)
+					}
+					return [xValue, try! sample.value(of: yAttribute)]
+				})
+				allData.append(AASeriesElement()
+					.name(yAttribute.name)
+					.data(data)
+					.toDic()!)
+			}
+		}
+		DispatchQueue.main.async {
+			self.chartController.displayXAxisValueLabels = xValuesAreNumbers
+			self.chartController.dataSeries = allData
+		}
+	}
+
+	private final func transform(sampleGroups: [(Date, [Sample])], information: ExtraInformation) -> [(groupValue: Date, sampleValue: String)] {
+		var values = [(groupValue: Date, sampleValue: String)]()
+		for (groupValue, samples) in sampleGroups {
+			let sampleValue = try! information.compute(forSamples: samples)
+			values.append((groupValue: groupValue, sampleValue: sampleValue))
+		}
+		return values
+	}
+
+	private final func areAllNumbers(_ values: [String]) -> Bool {
+		for value in values {
+			if !DependencyInjector.util.stringUtil.isNumber(value) {
+				return false
+			}
+		}
+		return true
+	}
+
+	private final func formatNumber(_ value: String) -> String {
+		var copiedValue = value
+		if let decimalIndex = value.index(where: { $0 == "." }) {
+			if let lastCharIndex = copiedValue.index(decimalIndex, offsetBy: 3, limitedBy: value.endIndex) {
+				copiedValue.removeSubrange(lastCharIndex ..< value.endIndex)
+			}
+		}
+		return copiedValue
 	}
 }
 

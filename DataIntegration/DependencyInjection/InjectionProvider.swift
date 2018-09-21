@@ -21,6 +21,5 @@ public protocol InjectionProvider {
 	func subQueryMatcherFactory() -> SubQueryMatcherFactory
 	func extraInformationFactory() -> ExtraInformationFactory
 	func sampleGrouperFactory() -> SampleGrouperFactory
-	func sampleGroupCombinerFactory() -> SampleGroupCombinerFactory
 	func importerFactory() -> ImporterFactory
 }

@@ -11,17 +11,17 @@ import os
 
 final class SelectExtraInformationViewController: UIViewController {
 
-	// MARK: - Public Member Variables
+	// MARK: - IBOutlets
+
+	@IBOutlet weak final var attributePicker: UIPickerView!
+	@IBOutlet weak final var informationPicker: UIPickerView!
+
+	// MARK: - Instance Member Variables
 
 	public final var attributes: [Attribute]!
 	public final var selectedAttribute: Attribute!
 	public final var selectedInformation: ExtraInformation!
 	public final var notificationToSendWhenFinished: Notification.Name!
-
-	// MARK: - IBOutlets
-
-	@IBOutlet weak final var attributePicker: UIPickerView!
-	@IBOutlet weak final var informationPicker: UIPickerView!
 
 	// MARK: - UIViewController Overloads
 
@@ -39,14 +39,12 @@ final class SelectExtraInformationViewController: UIViewController {
 		let selectedAttributeIndex = attributes.index(where: { attribute in return attribute.name == selectedAttribute.name })!
 		attributePicker.selectRow(selectedAttributeIndex, inComponent: 0, animated: false)
 
-		if selectedInformation == nil {
-			selectedInformation = getApplicableInformationTypesForSelectedAttribute()[0].init(selectedAttribute)
-		};
-		let selectedInformationIndex = getApplicableInformationTypesForSelectedAttribute().index(where: { type in return type.init(selectedAttribute).name == selectedInformation.name })!
-		informationPicker.selectRow(selectedInformationIndex, inComponent: 0, animated: false)
+		if let selectedInformationIndex = indexOfSelectedInformation() {
+			informationPicker.selectRow(selectedInformationIndex, inComponent: 0, animated: false)
+		}
 	}
 
-	@IBAction func acceptButtonPressed(_ sender: Any) {
+	@IBAction final func acceptButtonPressed(_ sender: Any) {
 		NotificationCenter.default.post(name: notificationToSendWhenFinished, object: selectedInformation)
 		if navigationController != nil {
 			let _ = navigationController!.popViewController(animated: true)
@@ -59,6 +57,11 @@ final class SelectExtraInformationViewController: UIViewController {
 
 	private final func getApplicableInformationTypesForSelectedAttribute() -> [ExtraInformation.Type] {
 		return DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: selectedAttribute)
+	}
+
+	private final func indexOfSelectedInformation() -> Int? {
+		if selectedInformation == nil { return nil }
+		return getApplicableInformationTypesForSelectedAttribute().index(where: { $0.init(selectedAttribute).equalTo(selectedInformation!) })
 	}
 }
 
@@ -102,7 +105,9 @@ extension SelectExtraInformationViewController: UIPickerViewDelegate {
 			selectedAttribute = attributes[row]
 			informationPicker.reloadAllComponents()
 			let applicableInformationTypes = getApplicableInformationTypesForSelectedAttribute()
-			if applicableInformationTypes.index(where: { $0 == type(of: selectedInformation) }) == nil {
+			if let index = applicableInformationTypes.index(where: { $0 == type(of: selectedInformation) }) {
+				selectedInformation = applicableInformationTypes[index].init(selectedAttribute)
+			} else {
 				selectedInformation = applicableInformationTypes[0].init(selectedAttribute)
 			}
 		}

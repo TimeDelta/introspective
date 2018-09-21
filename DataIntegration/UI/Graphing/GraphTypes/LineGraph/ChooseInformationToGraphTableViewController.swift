@@ -29,7 +29,7 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
-
+		// TODO - support editing
 		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedInformation), name: Me.editedInformation, object: nil)
 	}
 

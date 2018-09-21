@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -42,12 +42,12 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="300" height="200"/>
                     <connections>
-                        <outlet property="dataTypeSelector" destination="PjO-Az-SgO" id="1rS-Sy-GuP"/>
+                        <outlet property="sampleTypePicker" destination="PjO-Az-SgO" id="1rS-Sy-GuP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="m8U-lo-EAo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2106" y="-1320"/>
+            <point key="canvasLocation" x="2106" y="-1356"/>
         </scene>
         <!--Select Attribute Or Information View Controller-->
         <scene sceneID="Zfo-WX-ilZ">
@@ -145,10 +145,10 @@
             </objects>
             <point key="canvasLocation" x="3449" y="-1110"/>
         </scene>
-        <!--Choose Sample Type-->
+        <!--Choose Calendar Component-->
         <scene sceneID="OuC-cr-gB2">
             <objects>
-                <viewController storyboardIdentifier="chooseCalendarComponent" title="Choose Sample Type" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hCP-R4-IHq" customClass="ChooseCalendarComponentViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="chooseCalendarComponent" title="Choose Calendar Component" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hCP-R4-IHq" customClass="ChooseCalendarComponentViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="bS9-Fh-m0D">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -177,12 +177,51 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="300" height="200"/>
                     <connections>
-                        <outlet property="dataTypeSelector" destination="Zc7-S7-QkG" id="jQ9-9g-f3h"/>
+                        <outlet property="calendarComponentPicker" destination="Zc7-S7-QkG" id="jQ9-9g-f3h"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="elf-u5-gbQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2106" y="-1043"/>
+            <point key="canvasLocation" x="2106" y="-1111"/>
+        </scene>
+        <!--Choose Attribute-->
+        <scene sceneID="rFv-hY-uMn">
+            <objects>
+                <viewController storyboardIdentifier="chooseAttribute" title="Choose Attribute" useStoryboardIdentifierAsRestorationIdentifier="YES" id="1Uh-4R-NlM" customClass="ChooseAttributeViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="EUv-Fi-79d">
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hu4-TJ-lZl">
+                                <rect key="frame" x="0.0" y="0.0" width="300" height="162"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                            </pickerView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6pQ-GJ-llc">
+                                <rect key="frame" x="0.0" y="170" width="300" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Accept">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="userPressedAccept:" destination="1Uh-4R-NlM" eventType="touchUpInside" id="8UR-Tr-uvB"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="0gO-AE-2ac"/>
+                    </view>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="300" height="200"/>
+                    <connections>
+                        <outlet property="attributePicker" destination="Hu4-TJ-lZl" id="C4K-oD-Umk"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="maq-iM-4Gw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2106" y="-871"/>
         </scene>
     </scenes>
 </document>

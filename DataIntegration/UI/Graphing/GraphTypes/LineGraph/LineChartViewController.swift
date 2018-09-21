@@ -65,6 +65,7 @@ final class LineChartViewController: UIViewController {
 		doneWaiting()
 		chartModel = chartModel
 			.xAxisVisible(displayXAxisValueLabels)
+			.legendEnabled(false)
 			.series(dataSeries)
 		chartView.aa_drawChartWithChartModel(chartModel)
 	}

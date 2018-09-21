@@ -18,7 +18,7 @@ public final class SampleGrouperFactoryImpl: SampleGrouperFactory {
 
 	private typealias Me = SampleGrouperFactoryImpl
 
-	public static let dateTypes: [SampleGrouper.Type] = [
+	private static let dateTypes: [SampleGrouper.Type] = [
 		SameTimeUnitSampleGrouper.self,
 	]
 

@@ -34,10 +34,12 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 	// MARK: - IBOutlets
 
 	@IBOutlet weak final var chooseXAxisSampleTypeButton: UIButton!
+	@IBOutlet weak final var clearXAxisQueryButton: UIButton!
 	@IBOutlet weak final var chooseXAxisQueryButton: UIButton!
 	@IBOutlet weak final var chooseXAxisInformationButton: UIButton!
 
 	@IBOutlet weak final var chooseYAxisSampleTypeButton: UIButton!
+	@IBOutlet weak final var clearYAxisQueryButton: UIButton!
 	@IBOutlet weak final var chooseYAxisQueryButton: UIButton!
 	@IBOutlet weak final var chooseYAxisInformationButton: UIButton!
 
@@ -77,18 +79,22 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 	private final var xAxisQuery: Query? {
 		didSet {
 			if xAxisQuery == nil {
-				chooseXAxisQueryButton.setTitle("Choose query (optional)", for: .disabled)
+				chooseXAxisQueryButton.setTitle("Choose query (optional)", for: .normal)
+				UiUtil.setButton(clearXAxisQueryButton, enabled: false, hidden: true)
 			} else {
 				chooseXAxisQueryButton.setTitle("X-axis query chosen (click to change)", for: .normal)
+				UiUtil.setButton(clearXAxisQueryButton, enabled: true, hidden: false)
 			}
 		}
 	}
 	private final var yAxisQuery: Query? {
 		didSet {
 			if yAxisQuery == nil {
-				chooseYAxisQueryButton.setTitle("Choose query (optional)", for: .disabled)
+				chooseYAxisQueryButton.setTitle("Choose query (optional)", for: .normal)
+				UiUtil.setButton(clearYAxisQueryButton, enabled: false, hidden: true)
 			} else {
 				chooseYAxisQueryButton.setTitle("Y-axis query chosen (click to change)", for: .normal)
+				UiUtil.setButton(clearYAxisQueryButton, enabled: true, hidden: false)
 			}
 		}
 	}
@@ -103,7 +109,7 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 	private final var xAxisInformation: ExtraInformation? {
 		didSet {
 			if xAxisInformation == nil {
-				chooseXAxisInformationButton.setTitle("Choose information", for: .disabled)
+				chooseXAxisInformationButton.setTitle("Choose information", for: .normal)
 			} else {
 				chooseXAxisInformationButton.setTitle(xAxisInformation!.description, for: .normal)
 			}
@@ -113,7 +119,7 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 	private final var yAxisInformation: [ExtraInformation]? {
 		didSet {
 			if yAxisInformation == nil {
-				chooseYAxisInformationButton.setTitle("Choose information", for: .disabled)
+				chooseYAxisInformationButton.setTitle("Choose information", for: .normal)
 			} else {
 				var description = ""
 				for information in yAxisInformation! {
@@ -163,6 +169,10 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 		customPresentViewController(Me.presenter, viewController: controller, animated: true)
 	}
 
+	@IBAction final func clearXAxisQueryButtonPressed(_ sender: Any) {
+		xAxisQuery = nil
+	}
+
 	@IBAction final func chooseXAxisQueryButtonPressed(_ sender: Any) {
 		let controller = UIStoryboard(name: "Query", bundle: nil).instantiateViewController(withIdentifier: "queryView") as! QueryViewController
 		// TODO - support passing in existing query
@@ -186,6 +196,10 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 		controller.selectedSampleType = yAxisSampleType
 		controller.notificationToSendOnAccept = Me.yAxisSampleTypeChanged
 		customPresentViewController(Me.presenter, viewController: controller, animated: true)
+	}
+
+	@IBAction final func clearYAxisQueryButtonPressed(_ sender: Any) {
+		yAxisQuery = nil
 	}
 
 	@IBAction final func chooseYAxisQueryButtonPressed(_ sender: Any) {
@@ -295,25 +309,6 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 				os_log("Y-axis query run did not return an error or any results", type: .error)
 			}
 		}
-	}
-
-	private final func getDouble(for attribute: Attribute, from sample: Sample, allSamples: [Sample]) -> Double {
-		let value: Any = try! sample.value(of: attribute)
-		if value is Date {
-			let earliestDate = try! allSamples[0].value(of: attribute) as! Date
-			let date = value as! Date
-			let totalSeconds = earliestDate.getInterval(toDate: date, component: .second)
-			return Double(totalSeconds)
-		} else if value is DayOfWeek {
-			let dayOfWeek = value as! DayOfWeek
-			return Double(dayOfWeek.intValue)
-		} else if value is Double {
-			return value as! Double
-		} else if value is Int {
-			return Double(value as! Int)
-		}
-		// TODO - gracefully tell user about this
-		fatalError("Forgot a data type")
 	}
 
 	private final func firstDateAttributeFor(_ sampleType: Sample.Type) -> DateAttribute {

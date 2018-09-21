@@ -13,7 +13,7 @@ final class ChooseCalendarComponentViewController: UIViewController {
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var dataTypeSelector: UIPickerView!
+	@IBOutlet weak final var calendarComponentPicker: UIPickerView!
 
 	// MARK: - Instance Member Variables
 
@@ -24,11 +24,11 @@ final class ChooseCalendarComponentViewController: UIViewController {
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
-		dataTypeSelector.dataSource = self
-		dataTypeSelector.delegate = self
+		calendarComponentPicker.dataSource = self
+		calendarComponentPicker.delegate = self
 		if selectedComponent != nil {
 			if let selectedIndex = CalendarComponentAttribute.supportedComponents.index(of: selectedComponent!) {
-				dataTypeSelector.selectRow(selectedIndex, inComponent: 0, animated: false)
+				calendarComponentPicker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
 				os_log("Could not find index for specified component", type: .error)
 			}

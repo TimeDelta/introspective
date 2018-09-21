@@ -58,30 +58,38 @@ public final class MoodImpl: NSManagedObject, Mood {
 	// MARK: - Attributed Functions
 
 	public final func value(of attribute: Attribute) throws -> Any {
-		if attribute.name == Me.rating.name {
+		if attribute.equalTo(Me.maxRating) {
+			return maxRating
+		}
+		if attribute.equalTo(Me.rating) {
 			return rating
 		}
-		if attribute.name == CommonSampleAttributes.timestamp.name {
+		if attribute.equalTo(CommonSampleAttributes.timestamp) {
 			return timestamp
 		}
-		if attribute.name == Me.note.name {
+		if attribute.equalTo(Me.note) {
 			return note
 		}
 		throw AttributeError.unknownAttribute
 	}
 
 	public final func set(attribute: Attribute, to value: Any) throws {
-		if attribute.name == Me.rating.name {
+		if attribute.equalTo(Me.maxRating) {
+			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
+			maxRating = castedValue
+			return
+		}
+		if attribute.equalTo(Me.rating) {
 			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
 			rating = castedValue
 			return
 		}
-		if attribute.name == CommonSampleAttributes.timestamp.name {
+		if attribute.equalTo(CommonSampleAttributes.timestamp) {
 			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
 			timestamp = castedValue
 			return
 		}
-		if attribute.name == Me.note.name {
+		if attribute.equalTo(Me.note) {
 			guard let castedValue = value as? String else { throw AttributeError.typeMismatch }
 			note = castedValue
 			return

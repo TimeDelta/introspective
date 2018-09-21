@@ -13,7 +13,7 @@ final class ChooseSampleTypeViewController: UIViewController {
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var dataTypeSelector: UIPickerView!
+	@IBOutlet weak final var sampleTypePicker: UIPickerView!
 
 	// MARK: - Instance Member Variables
 
@@ -24,11 +24,11 @@ final class ChooseSampleTypeViewController: UIViewController {
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
-		dataTypeSelector.dataSource = self
-		dataTypeSelector.delegate = self
+		sampleTypePicker.dataSource = self
+		sampleTypePicker.delegate = self
 		if selectedSampleType != nil {
 			if let selectedIndex = DependencyInjector.sample.allTypes().index(where: { $0 == selectedSampleType }) {
-				dataTypeSelector.selectRow(selectedIndex, inComponent: 0, animated: false)
+				sampleTypePicker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
 				os_log("Could not find index for specified type", type: .error)
 			}
@@ -38,7 +38,7 @@ final class ChooseSampleTypeViewController: UIViewController {
 	// MARK: - Button Actions
 
 	@IBAction final func userPressedAccept(_ sender: Any) {
-		let selectedIndex = dataTypeSelector.selectedRow(inComponent: 0)
+		let selectedIndex = sampleTypePicker.selectedRow(inComponent: 0)
 		let selectedSampleType = DependencyInjector.sample.allTypes()[selectedIndex]
 		NotificationCenter.default.post(name: notificationToSendOnAccept, object: selectedSampleType)
 		dismiss(animated: true, completion: nil)
