@@ -69,6 +69,7 @@ final class AttributeViewController: UIViewController {
 		let controller = storyboard!.instantiateViewController(withIdentifier: "attributeValue") as! AttributeValueViewController
 		controller.attribute = attribute
 		controller.attributeValue = attributeValue
+		controller.notificationToSendOnAccept = Me.valueChanged
 		customPresentViewController(UiUtil.defaultPresenter, viewController: controller, animated: true)
 	}
 

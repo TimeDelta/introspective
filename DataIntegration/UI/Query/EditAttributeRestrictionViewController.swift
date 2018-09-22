@@ -33,7 +33,7 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 
 	@objc public final func doneEditing(notification: Notification) {
 		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: notification.object, userInfo: nil)
-		_ = navigationController?.popViewController(animated: true)
+		navigationController?.popViewController(animated: true)
 	}
 
 	private final func createAndInstallAttributedChooserViewController() {
