@@ -54,12 +54,18 @@ public final class AttributeRestrictionFactoryImpl: AttributeRestrictionFactory 
 		OnDateAttributeRestriction.self,
 	]
 
+	private static let selectOneTypes: [AttributeRestriction.Type] = [
+		EqualToSelectOneAttributeRestriction.self,
+		NotEqualToSelectOneAttributeRestriction.self,
+	]
+
 	public final func typesFor(_ attribute: Attribute) -> [AttributeRestriction.Type] {
 		switch (attribute) {
 			case is TextAttribute: return Me.textTypes
 			case is DoubleAttribute: return Me.doubleTypes
 			case is IntegerAttribute: return Me.integerTypes
 			case is DateAttribute: return Me.dateTypes
+			case is SelectOneAttribute: return Me.selectOneTypes
 			default:
 				os_log("Forgot a type of attribute: %@", type: .error, String(describing: type(of: attribute)))
 				return []

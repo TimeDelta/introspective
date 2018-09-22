@@ -22,6 +22,6 @@ public final class EqualToIntegerAttributeRestriction: TypedEqualToAttributeRest
 	}
 
 	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K == %d", restrictedAttribute.variableName, value)
+		return NSPredicate(format: "%K == %d", restrictedAttribute.variableName, value as! Int)
 	}
 }
