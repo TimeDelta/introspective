@@ -213,8 +213,8 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 
 	@IBAction final func chooseYAxisInformationButtonPressed(_ sender: Any) {
 		let controller = storyboard!.instantiateViewController(withIdentifier: "chooseInformation") as! ChooseInformationToGraphTableViewController
-		controller.attributes = yAxisSampleType.attributes.filter { $0 is NumericAttribute }
-		controller.information = yAxisInformation
+		controller.attributes = yAxisSampleType.attributes
+		controller.chosenInformation = yAxisInformation
 		controller.notificationToSendWhenFinished = Me.yAxisInformationChanged
 		navigationController?.pushViewController(controller, animated: true)
 	}

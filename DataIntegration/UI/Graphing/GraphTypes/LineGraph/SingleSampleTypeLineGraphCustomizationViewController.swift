@@ -84,7 +84,7 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 	private final var yAxis: [AttributeOrInformation]! {
 		didSet {
 			if yAxis == nil {
-				yAxisButton.setTitle("Choose information", for: .disabled)
+				yAxisButton.setTitle("Choose y-axis information", for: .disabled)
 			} else {
 				var description = "Y-Axis: "
 				for value in yAxis! {
@@ -126,6 +126,7 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 
 		NotificationCenter.default.addObserver(self, selector: #selector(xAxisChanged), name: Me.xAxisChanged, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(yAxisChanged), name: Me.yAxisChanged, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(queryChanged), name: Me.queryChanged, object: nil)
 
 		updateShowGraphButtonState()
 	}
@@ -174,8 +175,9 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 			navigationController?.pushViewController(controller, animated: true)
 		} else {
 			let controller = storyboard!.instantiateViewController(withIdentifier: "chooseInformation") as! ChooseInformationToGraphTableViewController
-			controller.attributes = sampleType.attributes.filter{ $0 is NumericAttribute }
-			controller.information = yAxis?.map{ $0.information! }
+			controller.attributes = sampleType.attributes
+			controller.limitToNumericInformation = true
+			controller.chosenInformation = yAxis?.map{ $0.information! }
 			controller.notificationToSendWhenFinished = Me.yAxisChanged
 			navigationController?.pushViewController(controller, animated: true)
 		}
@@ -188,10 +190,10 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 	}
 
 	@objc private final func xAxisChanged(notification: Notification) {
-		if let value = notification.object as? (grouping: Calendar.Component, xAxis: Attribute) {
+		if let value = notification.object as? (grouping: Calendar.Component?, xAxis: Attribute) {
 			grouping = value.grouping
 			xAxis = AttributeOrInformation(attribute: value.xAxis)
-		} else if let value = notification.object as? (grouping: Calendar.Component, xAxis: ExtraInformation) {
+		} else if let value = notification.object as? (grouping: Calendar.Component?, xAxis: ExtraInformation) {
 			grouping = value.grouping
 			xAxis = AttributeOrInformation(information: value.xAxis)
 		} else {
@@ -204,6 +206,8 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 			yAxis = attributes.map{ AttributeOrInformation(attribute: $0) }
 		} else if let information = notification.object as? [ExtraInformation] {
 			yAxis = information.map{ AttributeOrInformation(information: $0) }
+		} else if notification.object == nil {
+			yAxis = nil
 		} else {
 			os_log("Unknown object type returned from y-axis setup: %@", type: .error, String(describing: type(of: notification.object)))
 		}

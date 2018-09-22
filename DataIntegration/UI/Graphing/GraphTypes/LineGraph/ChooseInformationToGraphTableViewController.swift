@@ -18,10 +18,11 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 
 	// MARK: - Instance Member Variables
 
+	public final var limitToNumericInformation: Bool = false
 	public final var notificationToSendWhenFinished: Notification.Name!
 	public final var attributes: [Attribute]!
-	public final var information: [ExtraInformation]! {
-		didSet { information = information ?? [ExtraInformation]() }
+	public final var chosenInformation: [ExtraInformation]! {
+		didSet { chosenInformation = chosenInformation ?? [ExtraInformation]() }
 	}
 
 	private final var attributeEditIndex: Int!
@@ -36,12 +37,12 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 	// MARK: - TableView Data Source
 
 	final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return information.count
+		return chosenInformation.count
 	}
 
 	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-		cell.textLabel?.text = information[indexPath.row].description
+		cell.textLabel?.text = chosenInformation[indexPath.row].description
 		return cell
 	}
 
@@ -49,11 +50,12 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 
 	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		informationEditIndex = indexPath.row
-		let selectedInformation = information[informationEditIndex]
+		let selectedInformation = chosenInformation[informationEditIndex]
 
 		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "editExtraInformation") as! SelectExtraInformationViewController
 		controller.notificationToSendWhenFinished = Me.editedInformation
 		controller.attributes = attributes
+		controller.limitToNumericInformation = limitToNumericInformation
 		controller.selectedAttribute = selectedInformation.attribute
 		controller.selectedInformation = selectedInformation
 		navigationController!.pushViewController(controller, animated: true)
@@ -63,20 +65,25 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 
 	@IBAction final func addButtonPressed(_ sender: Any) {
 		let attribute = attributes[0]
-		let information = DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: attribute)[0].init(attribute)
-		self.information.append(information)
+		var newInformation: ExtraInformation
+		if limitToNumericInformation {
+			newInformation = DependencyInjector.extraInformation.getApplicableNumericInformationTypes(forAttribute: attribute)[0].init(attribute)
+		} else {
+			newInformation = DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: attribute)[0].init(attribute)
+		}
+		self.chosenInformation.append(newInformation)
 		self.tableView.reloadData()
 	}
 
 	@IBAction final func doneButtonPressed(_ sender: Any) {
-		NotificationCenter.default.post(name: notificationToSendWhenFinished, object: information)
+		NotificationCenter.default.post(name: notificationToSendWhenFinished, object: chosenInformation)
 		navigationController!.popViewController(animated: true)
 	}
 
 	// MARK: - Received Notifications
 
 	@objc private final func saveEditedInformation(notification: Notification) {
-		information[informationEditIndex] = notification.object as! ExtraInformation
+		chosenInformation[informationEditIndex] = notification.object as! ExtraInformation
 		tableView.reloadData()
 	}
 }

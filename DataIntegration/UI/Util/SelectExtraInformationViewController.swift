@@ -21,6 +21,7 @@ final class SelectExtraInformationViewController: UIViewController {
 	public final var attributes: [Attribute]!
 	public final var selectedAttribute: Attribute!
 	public final var selectedInformation: ExtraInformation!
+	public final var limitToNumericInformation: Bool = false
 	public final var notificationToSendWhenFinished: Notification.Name!
 
 	// MARK: - UIViewController Overloads
@@ -56,7 +57,11 @@ final class SelectExtraInformationViewController: UIViewController {
 	// MARK: - Helper Functions
 
 	private final func getApplicableInformationTypesForSelectedAttribute() -> [ExtraInformation.Type] {
-		return DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: selectedAttribute)
+		if limitToNumericInformation {
+			return DependencyInjector.extraInformation.getApplicableNumericInformationTypes(forAttribute: selectedAttribute)
+		} else {
+			return DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: selectedAttribute)
+		}
 	}
 
 	private final func indexOfSelectedInformation() -> Int? {

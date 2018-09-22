@@ -60,7 +60,7 @@ final class QueryResultsLineGraphCustomizationViewController: UIViewController, 
 	private final var yAxis: [AttributeOrInformation]! {
 		didSet {
 			if yAxis == nil {
-				yAxisButton.setTitle("Choose information", for: .disabled)
+				yAxisButton.setTitle("Choose y-axis information", for: .disabled)
 			} else {
 				var description = "Y-Axis: "
 				for value in yAxis! {
@@ -120,8 +120,9 @@ final class QueryResultsLineGraphCustomizationViewController: UIViewController, 
 			navigationController?.pushViewController(controller, animated: true)
 		} else {
 			let controller = storyboard!.instantiateViewController(withIdentifier: "chooseInformation") as! ChooseInformationToGraphTableViewController
-			controller.attributes = type(of: samples[0]).attributes.filter{ $0 is NumericAttribute }
-			controller.information = yAxis?.map{ $0.information! }
+			controller.attributes = type(of: samples[0]).attributes
+			controller.limitToNumericInformation = true
+			controller.chosenInformation = yAxis?.map{ $0.information! }
 			controller.notificationToSendWhenFinished = Me.yAxisChanged
 			navigationController?.pushViewController(controller, animated: true)
 		}
@@ -154,6 +155,8 @@ final class QueryResultsLineGraphCustomizationViewController: UIViewController, 
 			yAxis = attributes.map{ AttributeOrInformation(attribute: $0) }
 		} else if let information = notification.object as? [ExtraInformation] {
 			yAxis = information.map{ AttributeOrInformation(information: $0) }
+		} else if notification.object == nil {
+			yAxis = nil
 		} else {
 			os_log("Unknown object type returned from y-axis setup: %@", type: .error, String(describing: type(of: notification.object)))
 		}
