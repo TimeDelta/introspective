@@ -7,20 +7,13 @@
 //
 
 import UIKit
-import Presentr
+import NotificationBannerSwift
 import os
 
 final class ImportDataTableViewController: UITableViewController, UIDocumentPickerDelegate {
 
 	private typealias Me = ImportDataTableViewController
-	private static let presenter: Presentr = {
-		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
-
-		let customPresenter = Presentr(presentationType: customType)
-		customPresenter.dismissTransitionType = .crossDissolve
-		customPresenter.roundCorners = true
-		return customPresenter
-	}()
+	
 	private final var importer: Importer!
 
 	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -38,14 +31,15 @@ final class ImportDataTableViewController: UITableViewController, UIDocumentPick
 		DispatchQueue.global(qos: .userInitiated).async {
 			do {
 				try localImporter.importData(from: url)
-				let errorMessageController = UIStoryboard(name: "ErrorMessage", bundle: nil).instantiateViewController(withIdentifier: "errorMessage") as! ErrorMessageViewController
-				errorMessageController.errorMessage = "Finished importing data"
-				self.customPresentViewController(Me.presenter, viewController: errorMessageController, animated: true)
+				let messageText = "Sucessfully imported " + localImporter.dataTypePluralName.localizedLowercase + " from " + localImporter.sourceName
+				DispatchQueue.main.async {
+					let banner = StatusBarNotificationBanner(title: messageText, style: .success)
+					banner.show()
+				}
 			} catch {
 				os_log("Failed to import data: %@", type: .error, error.localizedDescription)
-				let errorMessageController = UIStoryboard(name: "ErrorMessage", bundle: nil).instantiateViewController(withIdentifier: "errorMessage") as! ErrorMessageViewController
-				errorMessageController.errorMessage = "Data import failed"
-				self.customPresentViewController(Me.presenter, viewController: errorMessageController, animated: true)
+				let alert = UIAlertController(title: "Failed to import data", message: nil, preferredStyle: .alert)
+				self.present(alert, animated: false)
 			}
 		}
 		importer = nil // do this in order to make sure no importer type initialization from tableView(didSelectRowAt:) was forgotten

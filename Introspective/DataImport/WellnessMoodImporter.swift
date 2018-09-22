@@ -17,6 +17,9 @@ public final class WellnessMoodImporterImpl: WellnessMoodImporter {
 	private typealias Me = WellnessMoodImporterImpl
 	private static let dateRegex = "^\\d\\d?/\\d\\d?/\\d\\d, \\d\\d:\\d\\d"
 
+	public final let dataTypePluralName: String = "moods"
+	public final let sourceName: String = "Wellness"
+
 	public final func importData(from url: URL) throws {
 		let contents = try String(contentsOf: url)
 		var currentMood: Mood? = nil

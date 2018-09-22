@@ -10,5 +10,8 @@ import Foundation
 
 public protocol Importer {
 
+	var dataTypePluralName: String { get }
+	var sourceName: String { get }
+
 	func importData(from url: URL) throws
 }

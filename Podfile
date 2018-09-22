@@ -9,6 +9,7 @@ target 'Introspective' do
   pod "Presentr"
   pod "SwiftDate"
   pod 'AAInfographics'
+  pod 'NotificationBannerSwift'
 
   target 'IntrospectiveTests' do
     inherit! :search_paths
