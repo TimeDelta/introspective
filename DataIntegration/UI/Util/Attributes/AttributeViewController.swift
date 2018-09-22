@@ -7,16 +7,28 @@
 //
 
 import UIKit
+import Presentr
 
-final class AttributeViewController: UIViewController, UIPopoverPresentationControllerDelegate {
+final class AttributeViewController: UIViewController {
 
-	public final var attribute: Attribute!
-	public final var attributeValue: Any!
+	// MARK: - Static Member Variables
+
+	private typealias Me = AttributeViewController
+	private static let valueChanged = Notification.Name("attributeValueChanged")
+
+	// MARK: - IBOutlets
 
 	@IBOutlet weak final var attributeDescriptionButton: UIButton!
 	@IBOutlet weak final var attributeNameLabel: UILabel!
 	@IBOutlet weak final var attributeValueButton: UIButton!
 	@IBOutlet weak final var booleanValueSwitch: UISwitch!
+
+	// MARK: - Instance Member Variables
+
+	public final var attribute: Attribute!
+	public final var attributeValue: Any!
+
+	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
@@ -29,17 +41,12 @@ final class AttributeViewController: UIViewController, UIPopoverPresentationCont
 			attributeDescriptionButton.isUserInteractionEnabled = false
 		}
 
+		NotificationCenter.default.addObserver(self, selector: #selector(valueChanged), name: Me.valueChanged, object: nil)
+
 		updateDisplay()
 	}
 
-	final func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-		return UIModalPresentationStyle.none
-	}
-
 	public final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		segue.destination.modalPresentationStyle = UIModalPresentationStyle.popover
-		segue.destination.popoverPresentationController!.delegate = self
-
 		if segue.destination is AttributeDescriptionViewController {
 			let controller = segue.destination as! AttributeDescriptionViewController
 			controller.descriptionText = attribute.extendedDescription
@@ -50,15 +57,33 @@ final class AttributeViewController: UIViewController, UIPopoverPresentationCont
 		}
 	}
 
+	// MARK: - Button Actions
+
+	@IBAction final func descriptionButtonPressed(_ sender: Any) {
+		let controller = storyboard!.instantiateViewController(withIdentifier: "attributeDescription") as! AttributeDescriptionViewController
+		controller.descriptionText = attribute.extendedDescription
+		customPresentViewController(UiUtil.defaultPresenter, viewController: controller, animated: true)
+	}
+
+	@IBAction final func valueButtonPressed(_ sender: Any) {
+		let controller = storyboard!.instantiateViewController(withIdentifier: "attributeValue") as! AttributeValueViewController
+		controller.attribute = attribute
+		controller.attributeValue = attributeValue
+		customPresentViewController(UiUtil.defaultPresenter, viewController: controller, animated: true)
+	}
+
 	@IBAction final func booleanValueChanged(_ sender: Any) {
 		attributeValue = booleanValueSwitch.isOn
 	}
 
-	@IBAction final func saveAttributeValue(_ segue: UIStoryboardSegue) {
-		let controller = (segue.source as! AttributeValueViewController)
-		attributeValue = controller.attributeValue!
+	// MARK: - Received Notifications
+
+	@objc private final func valueChanged(notification: Notification) {
+		attributeValue = notification.object
 		updateDisplay()
 	}
+
+	// MARK: - Helper Functions
 
 	private final func updateDisplay() {
 		if attribute is BooleanAttribute {

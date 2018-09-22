@@ -10,15 +10,22 @@ import UIKit
 
 final class AttributeValueViewController: UIViewController {
 
+	// MARK: - Static Member Variables
+
 	private typealias Me = AttributeValueViewController
 	private static let valueIsInvalidNotification = Notification.Name("invalidValue")
 	private static let valueIsValidNotification = Notification.Name("validValue")
 
-	public final var attribute: Attribute!
-	public final var attributeValue: Any!
+	// MARK: - IBOutlets
 
 	@IBOutlet weak final var stackView: UIStackView!
 	@IBOutlet weak final var acceptButton: UIButton!
+
+	// MARK: - Instance Member Variables
+
+	public final var notificationToSendOnAccept: Notification.Name!
+	public final var attribute: Attribute!
+	public final var attributeValue: Any!
 
 	private final var subViewController: AttributeValueTypeViewController!
 
@@ -71,7 +78,8 @@ final class AttributeValueViewController: UIViewController {
 	}
 
 	@IBAction final func accepted(_ sender: Any) {
-		attributeValue = subViewController.currentValue
+		NotificationCenter.default.post(name: notificationToSendOnAccept, object: subViewController.currentValue)
+		dismiss(animated: true, completion: nil)
 	}
 
 	@objc private final func disableAcceptButton() {
