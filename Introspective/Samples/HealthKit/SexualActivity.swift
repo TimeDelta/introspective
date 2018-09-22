@@ -1,0 +1,174 @@
+//
+//  SexualActivity.swift
+//  Introspective
+//
+//  Created by Bryan Nova on 9/6/18.
+//  Copyright © 2018 Bryan Nova. All rights reserved.
+//
+
+import Foundation
+import HealthKit
+
+public final class SexualActivity: HealthKitCategorySample {
+
+	private typealias Me = SexualActivity
+
+	public enum Protection: CustomStringConvertible {
+		case notUsed
+		case used
+		case unspecified
+
+		public static var allValues: [Protection] = [unspecified, notUsed, used]
+
+		public var description: String {
+			switch (self) {
+				case .notUsed: return "Not used"
+				case .used: return "Used"
+				case .unspecified: return "Unspecified"
+			}
+		}
+	}
+
+	// MARK: - HealthKit Stuff
+
+	public static let categoryType: HKCategoryType = HKCategoryType.categoryType(forIdentifier: .sexualActivity)!
+	public static let sampleType: HKSampleType = categoryType
+	public static let readPermissions: Set<HKObjectType> = Set([sampleType])
+	public static let writePermissions: Set<HKSampleType> = Set([sampleType])
+
+	// MARK: - Display Information
+
+	public static let name: String = "Sexual Activity"
+	public static let description: String = ""
+
+	// MARK: - Attributes
+
+	public static let protectionUsed = TypedSelectOneAttribute<Protection>(name: "Protection used", variableName: HKMetadataKeySexualActivityProtectionUsed, possibleValues: Protection.allValues, possibleValueToString: { $0.description }, areEqual: { $0 == $1 })
+	public static let timestamp = DateTimeAttribute(name: "Timestamp", pluralName: "Timestamps", variableName: HKPredicateKeyPathStartDate)
+	public static let attributes: [Attribute] = [timestamp, protectionUsed]
+	public static let defaultDependentAttribute: Attribute = protectionUsed
+	public static let defaultIndependentAttribute: Attribute = timestamp
+	public final var attributes: [Attribute] { return Me.attributes }
+
+	// MARK: - Instance Member Variables
+
+	public final var name: String = Me.name
+	public final var description: String = Me.description
+	public final var timestamp: Date
+	public final var protectionUsed: Protection
+
+	// MARK: - Initializers
+
+	public init() {
+		timestamp = Date()
+		protectionUsed = .unspecified
+	}
+
+	public init(_ timestamp: Date) {
+		self.timestamp = timestamp
+		protectionUsed = .unspecified
+	}
+
+	public init(_ protection: Protection) {
+		timestamp = Date()
+		protectionUsed = protection
+	}
+
+	public init(_ protection: Protection, _ timestamp: Date) {
+		self.timestamp = timestamp
+		protectionUsed = protection
+	}
+
+	public required init(_ sample: HKCategorySample) {
+		if let protection = sample.metadata?[HKMetadataKeySexualActivityProtectionUsed] as? Bool {
+			protectionUsed = protection ? .used : .notUsed
+		} else {
+			protectionUsed = .unspecified
+		}
+		timestamp = sample.startDate
+	}
+
+	// MARK: - HealthKitSample Functions
+
+	public func hkSample() -> HKSample {
+		let metadata: [String: Any]?
+		switch (protectionUsed) {
+			case .unspecified:
+				metadata = nil
+				break
+			case .used:
+				metadata = [HKMetadataKeySexualActivityProtectionUsed: true]
+				break
+			case .notUsed:
+				metadata = [HKMetadataKeySexualActivityProtectionUsed: false]
+				break
+		}
+		return HKCategorySample(type: Me.categoryType, value: HKCategoryValue.notApplicable.rawValue, start: timestamp, end: timestamp, metadata: metadata)
+	}
+
+	// MARK: - Sample Functions
+
+	public final func dates() -> [DateType: Date] {
+		return [.start: timestamp]
+	}
+
+	// MARK: - Attributed Functions
+
+	public final func value(of attribute: Attribute) throws -> Any {
+		if attribute.equalTo(Me.protectionUsed) {
+			return protectionUsed
+		}
+		if attribute.equalTo(Me.timestamp) {
+			return timestamp
+		}
+		throw AttributeError.unknownAttribute
+	}
+
+	public final func set(attribute: Attribute, to value: Any) throws {
+		if attribute.equalTo(Me.protectionUsed) {
+			guard let castedValue = value as? Protection else { throw AttributeError.typeMismatch }
+			protectionUsed = castedValue
+			return
+		}
+		if attribute.equalTo(Me.timestamp) {
+			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
+			timestamp = castedValue
+			return
+		}
+		throw AttributeError.unknownAttribute
+	}
+}
+
+// MARK: - Equatable
+
+extension SexualActivity: Equatable {
+
+	public static func ==(lhs: SexualActivity, rhs: SexualActivity) -> Bool {
+		return lhs.equalTo(rhs)
+	}
+
+	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
+		if !(otherAttributed is SexualActivity) { return false }
+		let other = otherAttributed as! SexualActivity
+		return equalTo(other)
+	}
+
+	public final func equalTo(_ otherSample: Sample) -> Bool {
+		if !(otherSample is SexualActivity) { return false }
+		let other = otherSample as! SexualActivity
+		return equalTo(other)
+	}
+
+	public final func equalTo(_ other: SexualActivity) -> Bool {
+		return timestamp == other.timestamp && protectionUsed == other.protectionUsed
+	}
+}
+
+// MARK: - Debug
+
+extension SexualActivity: CustomDebugStringConvertible {
+
+	public final var debugDescription: String {
+		return "SexualActivity with protection \(protectionUsed) at " + DependencyInjector.util.calendarUtil.string(for: timestamp)
+	}
+}

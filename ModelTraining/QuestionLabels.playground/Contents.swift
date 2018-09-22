@@ -46,7 +46,7 @@ func getData(from: URL) throws -> [(tokens: [MLWordTagger.Token], labels: [Strin
 	return data
 }
 
-let questionLabelsDataFileUrl = URL(fileURLWithPath: "/Users/bryannova/development/DataIntegration/ModelTraining/questionLabelsTrainingData.txt")
+let questionLabelsDataFileUrl = URL(fileURLWithPath: "/Users/bryannova/development/Introspective/ModelTraining/questionLabelsTrainingData.txt")
 let data = try getData(from: questionLabelsDataFileUrl)
 
 print("Finished getting training data: " + String(data.count))
@@ -55,6 +55,6 @@ let model = try MLWordTagger(trainingData: data)
 
 print("Created MLWordTagger model")
 
-try model.write(to: URL(fileURLWithPath: "/Users/bryannova/development/DataIntegration/Models/questionLabels.mlmodel"))
+try model.write(to: URL(fileURLWithPath: "/Users/bryannova/development/Introspective/Models/questionLabels.mlmodel"))
 
 print("Wrote MLWordTagger model to disk")
