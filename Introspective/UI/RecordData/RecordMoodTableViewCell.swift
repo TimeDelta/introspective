@@ -7,21 +7,30 @@
 //
 
 import UIKit
+import Presentr
 
 final class RecordMoodTableViewCell: UITableViewCell {
 
-	@IBOutlet final var ratingSlider: UISlider!
-	@IBOutlet final var outOfMaxRatingLabel: UILabel!
-	@IBOutlet final var doneButon: UIButton!
-	@IBOutlet final var addNoteButton: UIButton!
+	// MARK: - IBOutlets
+
+	@IBOutlet weak final var ratingSlider: UISlider!
+	@IBOutlet weak final var outOfMaxRatingLabel: UILabel!
+	@IBOutlet weak final var doneButon: UIButton!
+	@IBOutlet weak final var addNoteButton: UIButton!
+
+	// MARK: - Instance Member Variables
 
 	final var note: String? = nil
+
+	// MARK: - UIView Overrides
 
 	public final override func awakeFromNib() {
 		super.awakeFromNib()
 		reset()
 		NotificationCenter.default.addObserver(self, selector: #selector(noteSaved), name: MoodNoteViewController.noteSavedNotification, object: nil)
 	}
+
+	// MARK: - Button Actions
 
 	@IBAction final func ratingChanged(_ sender: Any) {
 		let maxValue = DependencyInjector.settings.maximumMood
@@ -30,6 +39,12 @@ final class RecordMoodTableViewCell: UITableViewCell {
 		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: newValue, maxRating: maxValue)
 
 		outOfMaxRatingLabel.text = MoodUiUtil.valueToString(newValue) + " / " + MoodUiUtil.valueToString(maxValue)
+	}
+
+	@IBAction final func presentMoodNoteController(_ sender: Any) {
+		let controller = UIStoryboard(name: "RecordData", bundle: nil).instantiateViewController(withIdentifier: "moodNote") as! MoodNoteViewController
+		controller.note = note ?? ""
+		NotificationCenter.default.post(name: RecordDataTableViewController.showViewController, object: controller)
 	}
 
 	@IBAction final func doneButtonPressed(_ sender: Any) {
@@ -43,10 +58,14 @@ final class RecordMoodTableViewCell: UITableViewCell {
 		reset()
 	}
 
+	// MARK: - Received Notifications
+
 	@objc private final func noteSaved(notification: Notification) {
 		note = (notification.object as! String)
 		addNoteButton.setTitle(note, for: .normal)
 	}
+
+	// MARK: - Helper Functions
 
 	private final func reset() {
 		note = nil

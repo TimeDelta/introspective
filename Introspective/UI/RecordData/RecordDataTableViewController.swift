@@ -22,6 +22,8 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		return customPresenter
 	}()
 
+	public static let showViewController = Notification.Name("showViewController")
+
 	// MARK: - IBOutlets
 
 	@IBOutlet weak final var toolbar: UIToolbar!
@@ -37,6 +39,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 	final override func viewDidLoad() {
 		super.viewDidLoad()
 		toolbar.setItems([self.editButtonItem], animated: false)
+		NotificationCenter.default.addObserver(self, selector: #selector(showViewController), name: Me.showViewController, object: nil)
 	}
 
 	// MARK: - Table view data source
@@ -52,11 +55,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 	// MARK: - Table view delegate
 
 	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: viewParams[indexPath.row].id, for: indexPath)
-		if cell is RecordMoodTableViewCell {
-			(cell as! RecordMoodTableViewCell).addNoteButton.addTarget(self, action: #selector(presentMoodNoteController), for: .touchUpInside)
-		}
-		return cell
+		return tableView.dequeueReusableCell(withIdentifier: viewParams[indexPath.row].id, for: indexPath)
 	}
 
 	final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
@@ -67,11 +66,10 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		return viewParams[indexPath.row].height
 	}
 
-	// MARK: - Helper Functions
+	// MARK: - Received Notifications
 
-	@objc private final func presentMoodNoteController(_ sender: UIButton) {
-		let controller = UIStoryboard(name: "RecordData", bundle: nil).instantiateViewController(withIdentifier: "moodNote") as! MoodNoteViewController
-		controller.note = ""
+	@objc private final func showViewController(notification: Notification) {
+		let controller = notification.object as! UIViewController
 		customPresentViewController(Me.presenter, viewController: controller, animated: true)
 	}
 }

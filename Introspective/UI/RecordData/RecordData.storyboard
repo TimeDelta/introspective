@@ -50,6 +50,9 @@
                                             <rect key="frame" x="16" y="47" width="343" height="40"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Add Note"/>
+                                            <connections>
+                                                <action selector="presentMoodNoteController:" destination="fJm-WJ-Cyf" eventType="touchUpInside" id="CBJ-FW-iny"/>
+                                            </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LbB-hc-tae">
                                             <rect key="frame" x="313" y="11" width="46" height="34"/>
