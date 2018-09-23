@@ -7,14 +7,32 @@
 //
 
 import UIKit
+import Presentr
 
 final class RecordDataTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
 
+	// MARK: - Static Member Variables
+
+	private typealias Me = RecordDataTableViewController
+	private static let presenter: Presentr = {
+		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .topCenter)
+		let customPresenter = Presentr(presentationType: customType)
+		customPresenter.dismissTransitionType = .crossDissolve
+		customPresenter.roundCorners = true
+		return customPresenter
+	}()
+
+	// MARK: - IBOutlets
+
 	@IBOutlet weak final var toolbar: UIToolbar!
+
+	// MARK: - Instance Member Variables
 
 	private final var viewParams: [(id: String, height: CGFloat)] = [
 		(id: "mood", height: 100.0),
 	]
+
+	// MARK: - UIViewCOntroller Overrides
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
@@ -30,6 +48,8 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 	final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return viewParams.count
 	}
+
+	// MARK: - Table view delegate
 
 	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: viewParams[indexPath.row].id, for: indexPath)
@@ -47,24 +67,11 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		return viewParams[indexPath.row].height
 	}
 
-	// MARK: - Navigation
-
-	final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-	}
-
-	final func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-		return UIModalPresentationStyle.none
-	}
-
 	// MARK: - Helper Functions
 
 	@objc private final func presentMoodNoteController(_ sender: UIButton) {
 		let controller = UIStoryboard(name: "RecordData", bundle: nil).instantiateViewController(withIdentifier: "moodNote") as! MoodNoteViewController
 		controller.note = ""
-		controller.modalPresentationStyle = UIModalPresentationStyle.popover
-		controller.popoverPresentationController!.delegate = self
-		controller.popoverPresentationController!.sourceRect = sender.bounds
-		controller.popoverPresentationController!.sourceView = sender
-		present(controller, animated: true, completion: nil)
+		customPresentViewController(Me.presenter, viewController: controller, animated: true)
 	}
 }
