@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ghm-Lr-d8F">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ghm-Lr-d8F">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,9 +13,9 @@
         <!--Results-->
         <scene sceneID="DiK-u2-3mB">
             <objects>
-                <tableViewController storyboardIdentifier="results" title="Results" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Ghm-Lr-d8F" customClass="ResultsViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="results" title="Results" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Ghm-Lr-d8F" customClass="ResultsViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="aju-gh-Kty">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
@@ -50,7 +50,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="informationCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="informationCell" id="6oa-QE-LAf" customClass="ExtraInformationTableViewCell" customModule="DataIntegration" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="informationCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="informationCell" id="6oa-QE-LAf" customClass="ExtraInformationTableViewCell" customModule="Introspective" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="116" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6oa-QE-LAf" id="cSl-3o-Vsj">
@@ -70,7 +70,7 @@
                                     <outlet property="keyValueLabel" destination="2S0-nB-LTp" id="BAW-m9-Quj"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="moodSampleCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="moodSampleCell" rowHeight="67" id="l1y-vP-wUp" customClass="MoodTableViewCell" customModule="DataIntegration" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="moodSampleCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="moodSampleCell" rowHeight="67" id="l1y-vP-wUp" customClass="MoodTableViewCell" customModule="Introspective" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="160" width="375" height="67"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="l1y-vP-wUp" id="KGl-ux-7NW">
@@ -112,10 +112,9 @@
                                     <outlet property="moodRatingLabel" destination="y7b-o7-rLv" id="bx7-Qf-Lh4"/>
                                     <outlet property="noteLabel" destination="IsO-mI-fgM" id="me5-JM-P1p"/>
                                     <outlet property="timestampLabel" destination="CPV-RO-dI6" id="rGD-r7-TTe"/>
-                                    <segue destination="ct9-g3-3n8" kind="show" id="Jmu-JZ-fBJ"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="healthKitQuantitySampleCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="healthKitQuantitySampleCell" id="saI-fl-ZrE" customClass="HealthKitQuantitySampleTableViewCell" customModule="DataIntegration" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="healthKitQuantitySampleCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="healthKitQuantitySampleCell" id="saI-fl-ZrE" customClass="HealthKitQuantitySampleTableViewCell" customModule="Introspective" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="227" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="saI-fl-ZrE" id="ToZ-ln-JAZ">
@@ -143,7 +142,7 @@
                                     <outlet property="valueLabel" destination="Hbl-tw-SmA" id="A0m-4O-2Jh"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="bloodPressureCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="bloodPressureCell" id="s4v-1Y-R8w" customClass="BloodPressureTableViewCell" customModule="DataIntegration" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="bloodPressureCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="bloodPressureCell" id="s4v-1Y-R8w" customClass="BloodPressureTableViewCell" customModule="Introspective" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="271" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="s4v-1Y-R8w" id="Sok-NP-xrY">
@@ -171,7 +170,7 @@
                                     <outlet property="valueLabel" destination="bpl-Bo-Yih" id="uCB-56-Jbw"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="sexualActivityCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="sexualActivityCell" id="idc-qF-613" customClass="SexualActivityTableViewCell" customModule="DataIntegration" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="sexualActivityCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="sexualActivityCell" id="idc-qF-613" customClass="SexualActivityTableViewCell" customModule="Introspective" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="315" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="idc-qF-613" id="2Mo-y4-Dah">
@@ -205,8 +204,8 @@
                             <outlet property="delegate" destination="Ghm-Lr-d8F" id="W2z-IP-6fo"/>
                         </connections>
                     </tableView>
-                    <nil key="simulatedTopBarMetrics"/>
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="actionsButton" destination="kRk-L8-68y" id="qXZ-47-iAl"/>
                     </connections>
@@ -224,25 +223,10 @@
             </objects>
             <point key="canvasLocation" x="2720.8000000000002" y="-2231.3343328335832"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="0Z6-Y2-rHE">
-            <objects>
-                <viewController id="ct9-g3-3n8" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Qrt-B4-iun">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="9we-DC-sxw"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="r24-hL-8AF" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3521" y="-2231"/>
-        </scene>
         <!--Results Actions Popup View Controller-->
         <scene sceneID="9ez-9s-6Ld">
             <objects>
-                <viewController storyboardIdentifier="resultsActions" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="iE9-Lr-Iae" customClass="ResultsActionsPopupViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="resultsActions" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="iE9-Lr-Iae" customClass="ResultsActionsPopupViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="x0W-Fc-vfF">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="144"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
