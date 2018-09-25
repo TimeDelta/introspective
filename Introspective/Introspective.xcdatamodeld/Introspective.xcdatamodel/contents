@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="18A377a" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14315.18" systemVersion="18A389" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CustomSample" representedClassName="CustomSample" syncable="YES" codeGenerationType="class">
+        <attribute name="definition" attributeType="Transformable" customClassName=".CoreDataSampleDefinition" syncable="YES"/>
+        <attribute name="values" attributeType="Transformable" syncable="YES"/>
+    </entity>
     <entity name="Mood" representedClassName=".MoodImpl" syncable="YES">
         <attribute name="maxRating" attributeType="Double" defaultValueString="7" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="note" optional="YES" attributeType="String" syncable="YES"/>
@@ -12,5 +16,6 @@
     <elements>
         <element name="Mood" positionX="-63" positionY="-18" width="128" height="105"/>
         <element name="Settings" positionX="-63" positionY="9" width="128" height="60"/>
+        <element name="CustomSample" positionX="-63" positionY="9" width="128" height="75"/>
     </elements>
 </model>

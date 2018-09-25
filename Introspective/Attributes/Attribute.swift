@@ -36,7 +36,7 @@ extension Attribute {
 	}
 }
 
-public class AttributeBase: Attribute {
+public class AttributeBase: NSObject, Attribute {
 
 	/// This is a name that should be understandable by the user
 	public final let name: String

@@ -16,17 +16,25 @@ public enum DateType {
 
 public protocol Sample: Attributed {
 
-	static var name: String { get }
-
-	static var attributes: [Attribute] { get }
-	static var defaultDependentAttribute: Attribute { get }
-	static var defaultIndependentAttribute: Attribute { get }
+	var definition: SampleDefinition { get }
 
 	func dates() -> [DateType: Date]
 	func equalTo(_ otherSample: Sample) -> Bool
 }
 
 extension Sample {
+
+	public var name: String {
+		return definition.name
+	}
+
+	public var description: String {
+		return definition.description
+	}
+
+	public var attributes: [Attribute] {
+		return definition.attributes
+	}
 
 	public func equalTo(_ otherSample: Sample) -> Bool {
 		if name != otherSample.name { return false }
