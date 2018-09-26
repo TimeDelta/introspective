@@ -43,11 +43,15 @@ public final class SexualActivity: HealthKitCategorySample {
 
 	// MARK: - Attributes
 
-	public static let protectionUsed = TypedSelectOneAttribute<Protection>(name: "Protection used", variableName: HKMetadataKeySexualActivityProtectionUsed, possibleValues: Protection.allValues, possibleValueToString: { $0.description }, areEqual: { $0 == $1 })
-	public static let timestamp = DateTimeAttribute(name: "Timestamp", pluralName: "Timestamps", variableName: HKPredicateKeyPathStartDate)
-	public static let attributes: [Attribute] = [timestamp, protectionUsed]
+	public static let protectionUsed = TypedSelectOneAttribute<Protection>(
+		name: "Protection used",
+		variableName: HKMetadataKeySexualActivityProtectionUsed,
+		possibleValues: Protection.allValues,
+		possibleValueToString: { $0.description },
+		areEqual: { $0 == $1 })
+	public static let attributes: [Attribute] = [CommonSampleAttributes.healthKitTimestamp, protectionUsed]
 	public static let defaultDependentAttribute: Attribute = protectionUsed
-	public static let defaultIndependentAttribute: Attribute = timestamp
+	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
 	public final var attributes: [Attribute] { return Me.attributes }
 
 	// MARK: - Instance Member Variables
@@ -59,22 +63,7 @@ public final class SexualActivity: HealthKitCategorySample {
 
 	// MARK: - Initializers
 
-	public init() {
-		timestamp = Date()
-		protectionUsed = .unspecified
-	}
-
-	public init(_ timestamp: Date) {
-		self.timestamp = timestamp
-		protectionUsed = .unspecified
-	}
-
-	public init(_ protection: Protection) {
-		timestamp = Date()
-		protectionUsed = protection
-	}
-
-	public init(_ protection: Protection, _ timestamp: Date) {
+	public init(_ timestamp: Date = Date(), _ protection: Protection = .unspecified) {
 		self.timestamp = timestamp
 		protectionUsed = protection
 	}
@@ -118,7 +107,7 @@ public final class SexualActivity: HealthKitCategorySample {
 		if attribute.equalTo(Me.protectionUsed) {
 			return protectionUsed
 		}
-		if attribute.equalTo(Me.timestamp) {
+		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
 			return timestamp
 		}
 		throw AttributeError.unknownAttribute
@@ -130,7 +119,7 @@ public final class SexualActivity: HealthKitCategorySample {
 			protectionUsed = castedValue
 			return
 		}
-		if attribute.equalTo(Me.timestamp) {
+		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
 			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
 			timestamp = castedValue
 			return

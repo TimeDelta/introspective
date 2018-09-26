@@ -30,10 +30,9 @@ public final class LeanBodyMass: HealthKitQuantitySample {
 	// MARK: - Attributes
 
 	public static let leanBodyMass = DoubleAttribute(name: "Lean body mass", pluralName: "Lean body masses", variableName: HKPredicateKeyPathQuantity)
-	public static let timestamp = DateTimeAttribute(name: "Timestamp", pluralName: "Timestamps", variableName: HKPredicateKeyPathStartDate)
-	public static let attributes: [Attribute] = [timestamp, leanBodyMass]
+	public static let attributes: [Attribute] = [CommonSampleAttributes.healthKitTimestamp, leanBodyMass]
 	public static let defaultDependentAttribute: Attribute = leanBodyMass
-	public static let defaultIndependentAttribute: Attribute = timestamp
+	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
 	public final var attributes: [Attribute] { return Me.attributes }
 
 	// MARK: - Instance Member Variables
@@ -45,22 +44,7 @@ public final class LeanBodyMass: HealthKitQuantitySample {
 
 	// MARK: - Initializers
 
-	public init() {
-		leanBodyMass = Double()
-		timestamp = Date()
-	}
-
-	public init(_ timestamp: Date) {
-		leanBodyMass = Double()
-		self.timestamp = timestamp
-	}
-
-	public init(_ value: Double) {
-		leanBodyMass = value
-		timestamp = Date()
-	}
-
-	public init(_ value: Double, _ timestamp: Date) {
+	public init(_ value: Double = Double(), _ timestamp: Date = Date()) {
 		leanBodyMass = value
 		self.timestamp = timestamp
 	}
@@ -95,7 +79,7 @@ public final class LeanBodyMass: HealthKitQuantitySample {
 		if attribute.equalTo(Me.leanBodyMass) {
 			return leanBodyMass
 		}
-		if attribute.equalTo(Me.timestamp) {
+		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
 			return timestamp
 		}
 		throw AttributeError.unknownAttribute
@@ -107,7 +91,7 @@ public final class LeanBodyMass: HealthKitQuantitySample {
 			leanBodyMass = castedValue
 			return
 		}
-		if attribute.equalTo(Me.timestamp) {
+		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
 			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
 			timestamp = castedValue
 			return

@@ -23,27 +23,33 @@ public protocol SampleFactory {
 
 public final class SampleFactoryImpl: SampleFactory {
 
+	private typealias Me = SampleFactoryImpl
+	private static let allTypes: [Sample.Type] = [
+		BloodPressure.self,
+		BodyMassIndex.self,
+		HeartRate.self,
+		LeanBodyMass.self,
+		MoodImpl.self,
+		SexualActivity.self,
+		Sleep.self,
+		Weight.self,
+	]
+	private static let healthKitTypes: [HealthKitSample.Type] = [
+		BloodPressure.self,
+		BodyMassIndex.self,
+		HeartRate.self,
+		LeanBodyMass.self,
+		SexualActivity.self,
+		Sleep.self,
+		Weight.self,
+	]
+
 	public final func allTypes() -> [Sample.Type] {
-		return [
-			BloodPressure.self,
-			BodyMassIndex.self,
-			HeartRate.self,
-			LeanBodyMass.self,
-			MoodImpl.self,
-			SexualActivity.self,
-			Weight.self,
-		]
+		return Me.allTypes
 	}
 
 	public final func healthKitTypes() -> [HealthKitSample.Type] {
-		return [
-			BloodPressure.self,
-			BodyMassIndex.self,
-			HeartRate.self,
-			LeanBodyMass.self,
-			SexualActivity.self,
-			Weight.self,
-		]
+		return Me.healthKitTypes
 	}
 
 	public final func heartRate(_ value: Double, _ date: Date) -> HeartRate {

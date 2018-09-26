@@ -30,10 +30,9 @@ public final class HeartRate: HealthKitQuantitySample {
 	// MARK: - Attributes
 
 	public static let heartRate = DoubleAttribute(name: "Heart rate", pluralName: "Heart rates", variableName: HKPredicateKeyPathQuantity)
-	public static let timestamp = DateTimeAttribute(name: "Timestamp", pluralName: "Timestamps", variableName: HKPredicateKeyPathStartDate)
-	public static let attributes: [Attribute] = [timestamp, heartRate]
+	public static let attributes: [Attribute] = [CommonSampleAttributes.healthKitTimestamp, heartRate]
 	public static let defaultDependentAttribute: Attribute = heartRate
-	public static let defaultIndependentAttribute: Attribute = timestamp
+	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
 	public final var attributes: [Attribute] { return Me.attributes }
 
 	// MARK: - Instance Member Variables
@@ -45,22 +44,7 @@ public final class HeartRate: HealthKitQuantitySample {
 
 	// MARK: - Initializers
 
-	public init() {
-		heartRate = Double()
-		timestamp = Date()
-	}
-
-	public init(_ timestamp: Date) {
-		heartRate = Double()
-		self.timestamp = timestamp
-	}
-
-	public init(_ value: Double) {
-		heartRate = value
-		timestamp = Date()
-	}
-
-	public init(_ value: Double, _ timestamp: Date) {
+	public init(_ value: Double = Double(), _ timestamp: Date = Date()) {
 		heartRate = value
 		self.timestamp = timestamp
 	}
@@ -95,7 +79,7 @@ public final class HeartRate: HealthKitQuantitySample {
 		if attribute.equalTo(Me.heartRate) {
 			return heartRate
 		}
-		if attribute.equalTo(Me.timestamp) {
+		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
 			return timestamp
 		}
 		throw AttributeError.unknownAttribute
@@ -107,7 +91,7 @@ public final class HeartRate: HealthKitQuantitySample {
 			heartRate = castedValue
 			return
 		}
-		if attribute.equalTo(Me.timestamp) {
+		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
 			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
 			timestamp = castedValue
 			return

@@ -339,6 +339,8 @@ class QueryViewController: UITableViewController {
 				case is Weight.Type:
 					currentQuery = DependencyInjector.query.weightQuery()
 					break
+				case is Sleep.Type:
+					currentQuery = DependencyInjector.query.sleepQuery()
 				default: fatalError("Forgot a type of Sample")
 			}
 

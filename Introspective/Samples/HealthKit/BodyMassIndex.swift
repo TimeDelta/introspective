@@ -30,10 +30,9 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 	// MARK: - Attributes
 
 	public static let bmi = DoubleAttribute(name: "BMI", pluralName: "BMIs", variableName: HKPredicateKeyPathQuantity)
-	public static let timestamp = DateTimeAttribute(name: "Timestamp", pluralName: "Timestamps", variableName: HKPredicateKeyPathStartDate)
-	public static let attributes: [Attribute] = [timestamp, bmi]
+	public static let attributes: [Attribute] = [CommonSampleAttributes.healthKitTimestamp, bmi]
 	public static let defaultDependentAttribute: Attribute = bmi
-	public static let defaultIndependentAttribute: Attribute = timestamp
+	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
 	public final var attributes: [Attribute] { return Me.attributes }
 
 	// MARK: - Instance Member Variables
@@ -45,22 +44,7 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 
 	// MARK: - Initializers
 
-	public init() {
-		bmi = Double()
-		timestamp = Date()
-	}
-
-	public init(_ timestamp: Date) {
-		bmi = Double()
-		self.timestamp = timestamp
-	}
-
-	public init(_ value: Double) {
-		bmi = value
-		timestamp = Date()
-	}
-
-	public init(_ value: Double, _ timestamp: Date) {
+	public init(_ value: Double = Double(), _ timestamp: Date = Date()) {
 		bmi = value
 		self.timestamp = timestamp
 	}
@@ -95,7 +79,7 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 		if attribute.equalTo(Me.bmi) {
 			return bmi
 		}
-		if attribute.equalTo(Me.timestamp) {
+		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
 			return timestamp
 		}
 		throw AttributeError.unknownAttribute
@@ -107,7 +91,7 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 			bmi = castedValue
 			return
 		}
-		if attribute.equalTo(Me.timestamp) {
+		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
 			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
 			timestamp = castedValue
 			return

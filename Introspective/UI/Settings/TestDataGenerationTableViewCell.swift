@@ -15,11 +15,13 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 
 	private static let samplesPerHour = 12
 
-	private static let bloodPressureRange: (systolic: (min: UInt32, max: UInt32), diastolic: (min: UInt32, max: UInt32)) = (systolic: (min: 100, max: 140), diastolic: (min: 50, max: 100))
-	private static let bmiRange: (min: UInt32, max: UInt32) = (min: 15, max: 50)
-	private static let heartRateRange: (min: UInt32, max: UInt32) = (min: 45, max: 200)
-	private static let leanBodyMassRange: (min: UInt32, max: UInt32) = (min: 120, max: 150)
-	private static let weightRange: (min: UInt32, max: UInt32) = (min: 100, max: 200)
+	private static let bloodPressureRange: (systolic: (min: Double, max: Double), diastolic: (min: Double, max: Double)) = (systolic: (min: 100, max: 140), diastolic: (min: 50, max: 100))
+	private static let bmiRange: (min: Double, max: Double) = (min: 15, max: 50)
+	private static let heartRateRange: (min: Double, max: Double) = (min: 45, max: 200)
+	private static let leanBodyMassRange: (min: Double, max: Double) = (min: 120, max: 150)
+	private static let moodRatingRange: (min: Double, max: Double) = (min: 0, max: DependencyInjector.settings.maximumMood)
+	private static let sleepHoursRange: (min: Int, max: Int) = (min: 1, max: 10)
+	private static let weightRange: (min: Double, max: Double) = (min: 100, max: 200)
 
 	private static let moodNotes = [
 		"Not feeling too great", nil,
@@ -48,9 +50,10 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 				var heartRates = [HeartRate]()
 				var leanBodyMasses = [LeanBodyMass]()
 				var sexualActivities = [SexualActivity]()
+				var sleepRecords = [Sleep]()
 				var weights = [Weight]()
 
-				for daysAgo in 1 ... 60 {
+				for daysAgo in 0 ... 60 {
 					for hoursAgo in 0 ... 23 {
 						for sampleNum in 0 ... Me.samplesPerHour {
 							let minutesAgo: Int = 60 * sampleNum / Me.samplesPerHour
@@ -74,11 +77,15 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 							let mood = DependencyInjector.sample.mood()
 							mood.timestamp = date
 							mood.maxRating = DependencyInjector.settings.maximumMood
-							mood.rating = Double(arc4random_uniform(UInt32(mood.maxRating)))
-							mood.note = Me.moodNotes[Int(arc4random_uniform(UInt32(Me.moodNotes.count - 1)))]
+							mood.rating = self.randomDouble(Me.moodRatingRange)
+							mood.note = self.randomEntry(Me.moodNotes)
+
+							let sleep = Sleep(startDate: date, endDate: date + self.randomInt(Me.sleepHoursRange).hours)
+							sleep.state = self.randomEntry(Sleep.State.allValues)
+							sleepRecords.append(sleep)
 
 							let sexualActivity = SexualActivity(date)
-							sexualActivity.protectionUsed = SexualActivity.Protection.allValues[Int(arc4random_uniform(2))]
+							sexualActivity.protectionUsed = self.randomEntry(SexualActivity.Protection.allValues)
 							sexualActivities.append(sexualActivity)
 
 							let weight = Weight(self.randomDouble(Me.weightRange), date)
@@ -93,6 +100,7 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 				HealthKitDataTestUtil.save(heartRates)
 				HealthKitDataTestUtil.save(leanBodyMasses)
 				HealthKitDataTestUtil.save(sexualActivities)
+				HealthKitDataTestUtil.save(sleepRecords)
 				HealthKitDataTestUtil.save(weights)
 
 				DispatchQueue.main.async {
@@ -105,7 +113,15 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 		}
 	}
 
-	private final func randomDouble(_ range: (min: UInt32, max: UInt32)) -> Double {
-		return Double(arc4random_uniform(range.max - range.min) + range.min)
+	private final func randomEntry<EntryType>(_ array: [EntryType]) -> EntryType {
+		return array[randomInt((min: 0, max: array.count - 1))]
+	}
+
+	private final func randomInt(_ range: (min: Int, max: Int)) -> Int {
+		return Int.random(in: range.min ... range.max)
+	}
+
+	private final func randomDouble(_ range: (min: Double, max: Double)) -> Double {
+		return Double.random(in: range.min ... range.max)
 	}
 }

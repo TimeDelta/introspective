@@ -33,10 +33,9 @@ public final class BloodPressure: HealthKitCorrelationSample {
 
 	public static let systolic = DoubleAttribute(name: "Systolic blood pressure", pluralName: "Systolic blood pressures", variableName: HKPredicateKeyPathQuantity)
 	public static let diastolic = DoubleAttribute(name: "Diastolic blood pressure", pluralName: "Diastolic blood pressures", variableName: HKPredicateKeyPathQuantity)
-	public static let timestamp = DateTimeAttribute(name: "Timestamp", pluralName: "Timestamps", variableName: HKPredicateKeyPathStartDate)
-	public static let attributes: [Attribute] = [timestamp, systolic, diastolic]
+	public static let attributes: [Attribute] = [CommonSampleAttributes.healthKitTimestamp, systolic, diastolic]
 	public static let defaultDependentAttribute: Attribute = diastolic
-	public static let defaultIndependentAttribute: Attribute = timestamp
+	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
 	public final var attributes: [Attribute] { return Me.attributes }
 
 	// MARK: - Instance Member Variables
@@ -49,52 +48,10 @@ public final class BloodPressure: HealthKitCorrelationSample {
 
 	// MARK: - Initializers
 
-	public init() {
-		diastolic = Double()
-		systolic = Double()
-		timestamp = Date()
-	}
-
-	public init(_ timestamp: Date) {
-		diastolic = Double()
-		systolic = Double()
-		self.timestamp = timestamp
-	}
-
-	public init(systolic: Double, diastolic: Double) {
+	public init(systolic: Double = Double(), diastolic: Double = Double(), _ timestampe: Date = Date()) {
 		self.systolic = systolic
 		self.diastolic = diastolic
 		timestamp = Date()
-	}
-
-	public init(systolic: Double) {
-		self.systolic = systolic
-		diastolic = Double()
-		timestamp = Date()
-	}
-
-	public init(diastolic: Double) {
-		systolic = Double()
-		self.diastolic = diastolic
-		timestamp = Date()
-	}
-
-	public init(systolic: Double, _ timestamp: Date) {
-		self.systolic = systolic
-		diastolic = Double()
-		self.timestamp = timestamp
-	}
-
-	public init(diastolic: Double, _ timestamp: Date) {
-		systolic = Double()
-		self.diastolic = diastolic
-		self.timestamp = timestamp
-	}
-
-	public init(systolic: Double, diastolic: Double, _ timestamp: Date) {
-		self.systolic = systolic
-		self.diastolic = diastolic
-		self.timestamp = timestamp
 	}
 
 	public required init(_ sample: HKCorrelation) {
@@ -140,7 +97,7 @@ public final class BloodPressure: HealthKitCorrelationSample {
 		if attribute.equalTo(Me.diastolic) {
 			return diastolic
 		}
-		if attribute.equalTo(Me.timestamp) {
+		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
 			return timestamp
 		}
 		throw AttributeError.unknownAttribute
@@ -157,7 +114,7 @@ public final class BloodPressure: HealthKitCorrelationSample {
 			diastolic = castedValue
 			return
 		}
-		if attribute.equalTo(Me.timestamp) {
+		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
 			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
 			timestamp = castedValue
 			return

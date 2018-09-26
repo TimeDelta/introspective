@@ -154,6 +154,10 @@ final class ResultsViewController: UITableViewController {
 					let cell = (tableView.dequeueReusableCell(withIdentifier: "sexualActivityCell", for: indexPath) as! SexualActivityTableViewCell)
 					cell.sample = (sample as! SexualActivity)
 					return cell
+				case is Sleep:
+					let cell = (tableView.dequeueReusableCell(withIdentifier: "sleepCell", for: indexPath) as! SleepTableViewCell)
+					cell.sleep = (sample as! Sleep)
+					return cell
 				default:
 					fatalError("Forgot a type of Sample")
 			}
@@ -166,7 +170,13 @@ final class ResultsViewController: UITableViewController {
 	final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		if indexPath.section == 0 || waiting() { return 44 }
 		switch (samples[indexPath.row]) {
-			case is BloodPressure, is BodyMassIndex, is HeartRate, is LeanBodyMass, is SexualActivity, is Weight:
+			case is BloodPressure,
+				 is BodyMassIndex,
+				 is HeartRate,
+				 is LeanBodyMass,
+				 is SexualActivity,
+				 is Sleep,
+				 is Weight:
 				return 44
 			case is Mood:
 				return 67

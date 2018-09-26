@@ -17,6 +17,7 @@ public protocol QueryFactory {
 	func leanBodyMassQuery() -> LeanBodyMassQuery
 	func moodQuery() -> MoodQuery
 	func sexualActivityQuery() -> SexualActivityQuery
+	func sleepQuery() -> SleepQuery
 	func weightQuery() -> WeightQuery
 	func queryFor(_ sampleType: Sample.Type) throws -> Query
 }
@@ -49,6 +50,10 @@ public final class QueryFactoryImpl: QueryFactory {
 
 	public final func sexualActivityQuery() -> SexualActivityQuery {
 		return SexualActivityQueryImpl()
+	}
+
+	public final func sleepQuery() -> SleepQuery {
+		return SleepQueryImpl()
 	}
 
 	public final func weightQuery() -> WeightQuery {

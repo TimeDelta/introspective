@@ -53,7 +53,7 @@ public class NotEqualToAttributeRestriction: AnyAttributeRestriction, Equatable 
 
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
 		let actualValue = try sample.value(of: restrictedAttribute)
-		return try areEqual(actualValue, value)
+		return try !areEqual(actualValue, value)
 	}
 
 	public func equalTo(_ otherAttributed: Attributed) -> Bool {
