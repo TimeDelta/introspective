@@ -13,7 +13,7 @@
         <!--Line Chart View Controller-->
         <scene sceneID="6Pf-pm-8FX">
             <objects>
-                <viewController storyboardIdentifier="LineChartViewController" id="wyt-VF-PBn" customClass="LineChartViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LineChartViewController" id="wyt-VF-PBn" customClass="LineChartViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="SrV-5L-VYa">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -55,7 +55,7 @@
         <!--Multiple Sample Type Line Graph Customization View Controller-->
         <scene sceneID="LGk-43-ijj">
             <objects>
-                <viewController storyboardIdentifier="MultipleSampleType" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4xZ-0p-oXx" customClass="MultipleSampleTypeLineGraphCustomizationViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MultipleSampleType" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4xZ-0p-oXx" customClass="MultipleSampleTypeLineGraphCustomizationViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HGe-jb-y1w">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -207,12 +207,12 @@
         <!--Choose Information-->
         <scene sceneID="Ymt-E5-tUB">
             <objects>
-                <tableViewController storyboardIdentifier="chooseInformation" title="Choose Information" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FBF-3k-koa" customClass="ChooseInformationToGraphTableViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="chooseInformation" title="Choose Information" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FBF-3k-koa" customClass="ChooseInformationToGraphTableViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Ejy-H4-omQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="cwI-mE-mJ8">
+                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" misplaced="YES" id="cwI-mE-mJ8">
                             <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             <items>
@@ -263,7 +263,7 @@
         <!--Graph Setup-->
         <scene sceneID="Z8t-2U-Zhj">
             <objects>
-                <viewController storyboardIdentifier="QueryResultsLineGraphCustomization" title="Graph Setup" useStoryboardIdentifierAsRestorationIdentifier="YES" id="6BZ-0A-CbZ" customClass="QueryResultsLineGraphCustomizationViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="QueryResultsLineGraphCustomization" title="Graph Setup" useStoryboardIdentifierAsRestorationIdentifier="YES" id="6BZ-0A-CbZ" customClass="QueryResultsLineGraphCustomizationViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6Kf-YK-6kl">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -317,7 +317,7 @@
         <!--X-Axis Setup-->
         <scene sceneID="G8o-ah-oVL">
             <objects>
-                <viewController storyboardIdentifier="xAxisSetup" title="X-Axis Setup" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rzj-bc-0U9" customClass="XAxisSetupViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="xAxisSetup" title="X-Axis Setup" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rzj-bc-0U9" customClass="XAxisSetupViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EQb-Mf-jMi">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -378,7 +378,7 @@
         <!--Graph Setup-->
         <scene sceneID="3jh-t0-FHX">
             <objects>
-                <viewController storyboardIdentifier="SingleSampleTypeLineGraphCustomization" title="Graph Setup" useStoryboardIdentifierAsRestorationIdentifier="YES" id="lY4-vc-GUS" customClass="SingleSampleTypeLineGraphCustomizationViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SingleSampleTypeLineGraphCustomization" title="Graph Setup" useStoryboardIdentifierAsRestorationIdentifier="YES" id="lY4-vc-GUS" customClass="SingleSampleTypeLineGraphCustomizationViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VE6-YB-AVy">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -455,12 +455,12 @@
         <!--Choose Attributes-->
         <scene sceneID="tM6-ZN-PtJ">
             <objects>
-                <tableViewController storyboardIdentifier="chooseAttributes" title="Choose Attributes" useStoryboardIdentifierAsRestorationIdentifier="YES" id="1XS-07-gq8" customClass="ChooseAttributesToGraphTableViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="chooseAttributes" title="Choose Attributes" useStoryboardIdentifierAsRestorationIdentifier="YES" id="1XS-07-gq8" customClass="ChooseAttributesToGraphTableViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Lw3-yK-3r2">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="506-6p-G6g">
+                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" misplaced="YES" id="506-6p-G6g">
                             <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             <items>

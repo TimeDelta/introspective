@@ -150,6 +150,7 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 			query = try! DependencyInjector.query.queryFor(sampleType)
 		}
 		chartController = (storyboard!.instantiateViewController(withIdentifier: "LineChartViewController") as! LineChartViewController)
+		chartController.queries = [query!]
 		DispatchQueue.global(qos: .userInitiated).async {
 			self.runQuery()
 		}

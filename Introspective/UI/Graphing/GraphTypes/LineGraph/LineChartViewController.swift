@@ -20,6 +20,7 @@ final class LineChartViewController: UIViewController {
 
 	// MARK: - Instance Member Variables
 
+	public final var queries: [Query]?
 	public final var dataSeries: [Dictionary<String, Any>]! {
 		didSet {
 			dataSeries = dataSeries ?? [Dictionary<String, Any>]()
@@ -55,7 +56,20 @@ final class LineChartViewController: UIViewController {
 		chartView.scrollEnabled = true
 		view.insertSubview(chartView, at: 0)
 
+		UiUtil.setBackButton(for: self, title: "Graph Setup", action: #selector(back))
+
 		finishedSetup = true
+	}
+
+	// MARK: - Button Actions
+
+	@objc private final func back() {
+		if queries != nil {
+			for query in queries! {
+				query.stop()
+			}
+		}
+		self.navigationController?.popViewController(animated: true)
 	}
 
 	// MARK: - Helper Functions

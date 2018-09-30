@@ -29,13 +29,15 @@ public final class HealthManager {
 		return allPermissions
 	}()
 
-	static public func getSamples(for type: HealthKitSample.Type, startDate: Date?, endDate: Date?, callback:@escaping (Array<HKSample>?, Error?)->()) {
+	/// - Returns: A method that can be called to stop the query
+	static public func getSamples(for type: HealthKitSample.Type, startDate: Date?, endDate: Date?, callback:@escaping (Array<HKSample>?, Error?)->()) -> (() -> ()) {
 		let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
 		let query = HKSampleQuery(sampleType: type.sampleType, predicate: predicate, limit: Int(HKObjectQueryNoLimit), sortDescriptors: nil) {
 			query, results, error in
 			callback(results, error)
 		}
 		Me.healthStore.execute(query)
+		return { Me.healthStore.stop(query) }
 	}
 
 	static public func preferredUnitFor(_ typeId: HKQuantityTypeIdentifier) -> HKUnit? {

@@ -28,4 +28,21 @@ final class UiUtil {
 		button.isEnabled = enabled ?? button.isEnabled
 		setView(button, enabled: enabled, hidden: hidden)
 	}
+
+	public static func setBackButton(for viewController: UIViewController, title: String, action selector: Selector) {
+		// Disable the swipe to make sure user presses button
+		viewController.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+
+		// Replace the default back button
+		viewController.navigationItem.setHidesBackButton(true, animated: false)
+
+		let button = UIButton(type: .system)
+		button.setImage(UIImage(named: "back-button"), for: .normal)
+		button.setTitle("Settings", for: .normal)
+		button.sizeToFit()
+		button.addTarget(viewController, action: selector, for: .touchUpInside)
+
+		let backButton = UIBarButtonItem(customView: button)
+		viewController.navigationItem.leftBarButtonItem = backButton
+	}
 }

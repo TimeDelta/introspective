@@ -25,16 +25,23 @@ public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: Sample
 
 			let filteredSamples = samples.filter(self.samplePassesFilters)
 
-			if filteredSamples.count == 0 {
-				self.queryDone(nil, NoSamplesFoundQueryError(sampleType: SampleType.self))
-				return
-			}
+			if !self.stopped {
+				if filteredSamples.count == 0 {
+					self.queryDone(nil, NoSamplesFoundQueryError(sampleType: SampleType.self))
+					return
+				}
 
-			let result = SampleQueryResult<SampleType>(filteredSamples)
-			self.queryDone(result, nil)
+				let result = SampleQueryResult<SampleType>(filteredSamples)
+				self.queryDone(result, nil)
+			}
 		} catch {
 			self.queryDone(nil, error)
 			return
 		}
+	}
+
+	/// CoreData FetchRequest's cannot be stopped once started
+	public final override func stop() {
+		super.stop()
 	}
 }

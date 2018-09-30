@@ -23,6 +23,8 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 	public final var mostRecentEntryOnly: Bool
 	public final var subQuery: (matcher: SubQueryMatcher, query: Query)?
 
+	final var stopped = false
+
 	private final var callback: ((SampleQueryResult<SampleType>?, Error?) -> ())!
 
 	private final var subQueryCallbackParameters: (result: QueryResult?, error: Error?)? = nil
@@ -50,8 +52,14 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 		}
 	}
 
+	/// - Returns: A method that can be called to stop the query
 	func run() {
 		fatalError("Must override and call queryDone() when finished")
+	}
+
+	public func stop() {
+		stopped = true
+		subQuery?.query.stop()
 	}
 
 	final func queryDone(_ result: SampleQueryResult<SampleType>?, _ error: Error?) {
@@ -73,6 +81,7 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 
 	func samplePassesFilters(_ sample: Sample) -> Bool {
 		for attributeRestriction in attributeRestrictions {
+			if stopped { return false }
 			if !(attributeRestriction is PredicateAttributeRestriction) {
 				if try! !attributeRestriction.samplePasses(sample) {
 					return false

@@ -32,20 +32,7 @@ final class MoodSettingsViewController: UIViewController {
 		updateUI()
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(reset))
 
-		// Disable the swipe to make sure we get a chance to save
-		self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-
-		// Replace the default back button
-		self.navigationItem.setHidesBackButton(true, animated: false)
-
-		let button = UIButton(type: .system)
-		button.setImage(UIImage(named: "back-button"), for: .normal)
-		button.setTitle("Settings", for: .normal)
-		button.sizeToFit()
-		button.addTarget(self, action: #selector(done), for: .touchUpInside)
-
-		let backButton = UIBarButtonItem(customView: button)
-		self.navigationItem.leftBarButtonItem = backButton
+		UiUtil.setBackButton(for: self, title: "Settings", action: #selector(saveAndGoBackToSettings))
 
 		NotificationCenter.default.addObserver(self, selector: #selector(saveAndGoBackToSettings), name: Me.answeredOldMoodsModalNotification, object: nil)
 	}
@@ -76,7 +63,7 @@ final class MoodSettingsViewController: UIViewController {
 
 	@objc private final func saveAndGoBackToSettings() {
 		DependencyInjector.settings.save()
-		let _ = self.navigationController?.popViewController(animated: true)
+		self.navigationController?.popViewController(animated: true)
 	}
 
 	private final func updateUI() {

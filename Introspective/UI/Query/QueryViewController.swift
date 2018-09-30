@@ -120,6 +120,21 @@ class QueryViewController: UITableViewController {
 
 		addPartButton?.target = self
 		addPartButton?.action = #selector(addPartButtonWasPressed)
+
+		// Disable the swipe to make sure user presses button
+		self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+
+		// Replace the default back button
+		self.navigationItem.setHidesBackButton(true, animated: false)
+
+		let button = UIButton(type: .system)
+		button.setImage(UIImage(named: "back-button"), for: .normal)
+		button.setTitle("Settings", for: .normal)
+		button.sizeToFit()
+		button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+
+		let backButton = UIBarButtonItem(customView: button)
+		self.navigationItem.leftBarButtonItem = backButton
 	}
 
 	// MARK: - Table View Data Source
@@ -208,6 +223,7 @@ class QueryViewController: UITableViewController {
 				}
 				controller.samples = result?.samples
 			}
+			controller.query = query
 			navigationController!.pushViewController(controller, animated: true)
 		}
 	}
@@ -216,6 +232,10 @@ class QueryViewController: UITableViewController {
 		let controller = storyboard!.instantiateViewController(withIdentifier: "addQuestionPart") as! AddToQueryViewController
 		controller.notificationToSendOnAccept = Me.addQuestionPart
 		customPresentViewController(Me.addQuestionPartPresenter, viewController: controller, animated: true)
+	}
+
+	@objc private final func backButtonPressed() {
+
 	}
 
 	// MARK: - Navigation

@@ -229,6 +229,7 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 			yAxisQuery = try! DependencyInjector.query.queryFor(yAxisSampleType)
 		}
 
+		chartController.queries = [xAxisQuery!, yAxisQuery!]
 		DispatchQueue.global(qos: .userInteractive).async {
 			self.runQueries()
 		}

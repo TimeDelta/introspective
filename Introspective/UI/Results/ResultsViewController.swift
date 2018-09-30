@@ -18,8 +18,13 @@ final class ResultsViewController: UITableViewController {
 	private typealias Me = ResultsViewController
 	private static let editedExtraInformation = Notification.Name("editedExtraInformationFromResultsView")
 
-	// MARK: - Public Member Variables
+	// MARK: - IBOutlets
 
+	@IBOutlet weak final var actionsButton: UIBarButtonItem!
+
+	// MARK: - Instance Member Variables
+
+	public final var query: Query!
 	public final var samples: [Sample]! {
 		didSet {
 			if error == nil && samples != nil  {
@@ -27,18 +32,11 @@ final class ResultsViewController: UITableViewController {
 			}
 		}
 	}
-
 	public final var error: Error? {
 		didSet {
 			DispatchQueue.main.async { self.tableView.reloadData() }
 		}
 	}
-
-	// MARK: - IBOutlets
-
-	@IBOutlet weak final var actionsButton: UIBarButtonItem!
-
-	// MARK: - Private Member Variables
 
 	private final var extraInformation = [ExtraInformation]()
 	private final var extraInformationValues: [String]!
@@ -61,6 +59,9 @@ final class ResultsViewController: UITableViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedExtraInformation), name: Me.editedExtraInformation, object: nil)
 
 		self.navigationItem.setRightBarButton(actionsButton, animated: true)
+
+		UiUtil.setBackButton(for: self, title: "Query", action: #selector(done))
+
 		finishedLoading = true
 	}
 
@@ -276,6 +277,11 @@ final class ResultsViewController: UITableViewController {
 			DependencyInjector.db.save()
 		}
 		navigationController!.popViewController(animated: true)
+	}
+
+	@objc private final func done() {
+		query.stop()
+		self.navigationController?.popViewController(animated: true)
 	}
 
 	// MARK: - Helper functions

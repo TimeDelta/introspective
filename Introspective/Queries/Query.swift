@@ -18,6 +18,7 @@ public protocol Query: class {
 	var subQuery: (matcher: SubQueryMatcher, query: Query)? { get set }
 
 	func runQuery(callback: @escaping (QueryResult?, Error?) -> ())
+	func stop()
 	func equalTo(_ otherQuery: Query) -> Bool
 }
 
