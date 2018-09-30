@@ -15,7 +15,7 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 
 	public final var notificationToSendWhenAccepted: Notification.Name!
 	public final var sampleType: Sample.Type!
-	public final var attributeRestriction: AttributeRestriction!
+	public final var attributeRestriction: AttributeRestriction?
 
 	@IBOutlet weak final var attributedChooserSubView: UIView!
 	@IBOutlet weak final var attributePicker: UIPickerView!
@@ -26,6 +26,12 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 		attributePicker.delegate = self
 		attributePicker.dataSource = self
 
+		if attributeRestriction != nil {
+			let attribute = attributeRestriction!.restrictedAttribute
+			if let index = sampleType.attributes.firstIndex(where: { $0.equalTo(attribute) }) {
+				attributePicker.selectRow(index, inComponent: 0, animated: false)
+			}
+		}
 		createAndInstallAttributedChooserViewController()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(doneEditing), name: Me.doneEditing, object: nil)
@@ -40,6 +46,7 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 		attributedChooserViewController = (UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "attributedChooserViewController") as! AttributedChooserViewController)
 		updateAttributedChooserViewValues()
 		attributedChooserViewController.notificationToSendWhenAccepted = Me.doneEditing
+		attributedChooserViewController.currentValue = attributeRestriction
 		attributedChooserSubView.addSubview(attributedChooserViewController.view)
 	}
 
