@@ -8,11 +8,9 @@
 
 import UIKit
 import Presentr
+import os
 
 final class MoodSettingsViewController: UIViewController {
-
-	private typealias Me = MoodSettingsViewController
-	private static let answeredOldMoodsModalNotification = Notification.Name("answeredScaleOldMoodsQuestion")
 
 	private final let presenter: Presentr = {
 		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
@@ -32,9 +30,7 @@ final class MoodSettingsViewController: UIViewController {
 		updateUI()
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(reset))
 
-		UiUtil.setBackButton(for: self, title: "Settings", action: #selector(saveAndGoBackToSettings))
-
-		NotificationCenter.default.addObserver(self, selector: #selector(saveAndGoBackToSettings), name: Me.answeredOldMoodsModalNotification, object: nil)
+		UiUtil.setBackButton(for: self, title: "Settings", action: #selector(done))
 	}
 
 	@IBAction final func doneEditingMaxMood(_ sender: Any) {
@@ -54,8 +50,36 @@ final class MoodSettingsViewController: UIViewController {
 		}
 
 		if DependencyInjector.settings.changed(.maxMood) {
-			let scaleOldMoodsController = storyboard!.instantiateViewController(withIdentifier: "ScaleOldMoodsViewController") as! ScaleOldMoodsViewController
-			scaleOldMoodsController.notificationToSendOnCompletion = Me.answeredOldMoodsModalNotification
+			let scaleOldMoodsController = UIAlertController(
+				title: "Scale old moods?",
+				message: "Applying this new maximum to old moods will scale them to have the same ratio with this max that they had with the max at the time they were created.",
+				preferredStyle: .alert)
+			scaleOldMoodsController.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
+				DispatchQueue.global(qos: .userInitiated).async {
+					MoodQueryImpl.updatingMoodsInBackground = true
+					DependencyInjector.query.moodQuery().runQuery { (result, error) in
+						if error != nil {
+							// TODO - send user a notification that this failed
+							os_log("Failed to scale old moods: %@", type: .error, error!.localizedDescription)
+							MoodQueryImpl.updatingMoodsInBackground = false
+							return
+						}
+						for sample in result!.samples {
+							let mood = (sample as! Mood)
+							let oldMax = mood.maxRating
+							let oldRating = mood.rating
+							mood.maxRating = DependencyInjector.settings.maximumMood
+							mood.rating = (oldRating / oldMax) * DependencyInjector.settings.maximumMood
+						}
+						DependencyInjector.db.save()
+						MoodQueryImpl.updatingMoodsInBackground = false
+					}
+				}
+				self.saveAndGoBackToSettings()
+			})
+			scaleOldMoodsController.addAction(UIAlertAction(title: "No", style: .default) { _ in
+				self.saveAndGoBackToSettings()
+			})
 			customPresentViewController(presenter, viewController: scaleOldMoodsController, animated: true)
 		}
 		saveAndGoBackToSettings()

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="AKg-GW-OpP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="AKg-GW-OpP">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,7 +13,7 @@
         <!--Settings-->
         <scene sceneID="msT-sk-aop">
             <objects>
-                <tableViewController title="Settings" id="fZJ-11-bhE" customClass="SettingsTableViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Settings" id="fZJ-11-bhE" customClass="SettingsTableViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="6Xo-EX-SdH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -56,7 +56,7 @@
                                     <segue destination="Lio-fX-vKa" kind="show" id="qb2-Pl-PxZ"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="generateTestData" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="generateTestData" id="RIH-Tw-YAa" customClass="TestDataGenerationTableViewCell" customModule="DataIntegration" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="generateTestData" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="generateTestData" id="RIH-Tw-YAa" customClass="TestDataGenerationTableViewCell" customModule="Introspective" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="116" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RIH-Tw-YAa" id="idv-uQ-qcU">
@@ -103,7 +103,7 @@
         <!--Mood Settings-->
         <scene sceneID="lol-KH-jPy">
             <objects>
-                <viewController title="Mood Settings" id="Lio-fX-vKa" customClass="MoodSettingsViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Mood Settings" id="Lio-fX-vKa" customClass="MoodSettingsViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ui3-s4-fcy">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -140,52 +140,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="u4R-l0-zMB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1519.2" y="115.59220389805098"/>
-        </scene>
-        <!--Scale Old Moods View Controller-->
-        <scene sceneID="3SM-kr-6q0">
-            <objects>
-                <viewController storyboardIdentifier="ScaleOldMoodsViewController" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Lqm-7W-cgM" customClass="ScaleOldMoodsViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="uTy-NG-alw">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tt7-Li-96E">
-                                <rect key="frame" x="0.0" y="170" width="140" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="No"/>
-                                <connections>
-                                    <action selector="userChoseNo:" destination="Lqm-7W-cgM" eventType="touchUpInside" id="Mh1-Wo-JC6"/>
-                                </connections>
-                            </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="qq0-c1-N1X">
-                                <rect key="frame" x="0.0" y="0.0" width="300" height="162"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <string key="text">Would you like to apply this new maximum to old moods by scaling them to have the same ratio with this max that they had with the max at the time they were created?</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QHG-vQ-Yu8">
-                                <rect key="frame" x="160" y="170" width="140" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Yes"/>
-                                <connections>
-                                    <action selector="userChoseYes:" destination="Lqm-7W-cgM" eventType="touchUpInside" id="P2F-Ig-98u"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="2AH-d5-U6n"/>
-                    </view>
-                    <value key="contentSizeForViewInPopover" type="size" width="300" height="200"/>
-                    <nil key="simulatedTopBarMetrics"/>
-                    <nil key="simulatedBottomBarMetrics"/>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="300" height="200"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="FjN-MN-aX2" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1518" y="-341"/>
         </scene>
         <!--Settings-->
         <scene sceneID="dCS-wz-Dld">
