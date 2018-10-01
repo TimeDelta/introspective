@@ -12,6 +12,8 @@ public protocol Importer {
 
 	var dataTypePluralName: String { get }
 	var sourceName: String { get }
+	var lastImport: Date? { get }
+	var importOnlyNewData: Bool { get set }
 
 	func importData(from url: URL) throws
 }

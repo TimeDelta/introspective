@@ -11,12 +11,16 @@ import Foundation
 //sourcery: AutoMockable
 public protocol ImporterFactory {
 
-	func wellnessMoodImporter() -> WellnessMoodImporter
+	func wellnessMoodImporter() throws -> WellnessMoodImporter
 }
 
 public final class ImporterFactoryImpl: ImporterFactory {
 
-	public final func wellnessMoodImporter() -> WellnessMoodImporter {
-		return WellnessMoodImporterImpl()
+	public final func wellnessMoodImporter() throws -> WellnessMoodImporter {
+		let importers = try DependencyInjector.db.query(WellnessMoodImporterImpl.fetchRequest())
+		if importers.count > 0 {
+			return importers[0]
+		}
+		return try DependencyInjector.db.new(objectType: WellnessMoodImporterImpl.self)
 	}
 }

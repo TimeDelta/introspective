@@ -19,6 +19,7 @@ public final class UtilFactory {
 	private static let realTimeConstraintUtil = AttributeRestrictionUtilImpl()
 	private static let realSearchUtil = SearchUtilImpl()
 	private static let realStringUtil = StringUtilImpl()
+	private static let realIOUtil = IOUtilImpl()
 
 	public final var calendarUtil: CalendarUtil = Me.realCalendarUtil
 	public final var numericSampleUtil: NumericSampleUtil = Me.realHKQuantitySampleUtil
@@ -27,4 +28,5 @@ public final class UtilFactory {
 	public final var attributeRestrictionUtil: AttributeRestrictionUtil = Me.realTimeConstraintUtil
 	public final var searchUtil: SearchUtil = Me.realSearchUtil
 	public final var stringUtil: StringUtil = Me.realStringUtil
+	public final var ioUtil: IOUtil = Me.realIOUtil
 }

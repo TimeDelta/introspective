@@ -33,6 +33,10 @@ final class ChooseAttributeViewController: UIViewController {
 			} else {
 				os_log("Could not find index for specified component", type: .error)
 			}
+		} else if attributes.count > 0 {
+			selectedAttribute = attributes[0]
+		} else {
+			os_log("No attributes passed", type: .error)
 		}
 	}
 

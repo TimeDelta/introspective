@@ -17,13 +17,14 @@ final class ImportDataTableViewController: UITableViewController, UIDocumentPick
 	private final var importer: Importer!
 
 	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let documentPickerController = UIDocumentPickerViewController(documentTypes: ["public.data"], in: .import)
-		documentPickerController.allowsMultipleSelection = false
-		documentPickerController.delegate = self
-		self.present(documentPickerController, animated: true, completion: nil)
-		if indexPath.section == 0 && indexPath.row == 0 {
-			importer = DependencyInjector.importer.wellnessMoodImporter()
-		}
+		let prompt = UIAlertController(title: "Import new data only?", message: "This will only import data that was recorded after the imported record with the most recent date and time.", preferredStyle: .alert)
+		prompt.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
+			self.importData(newDataOnly: true, indexPath: indexPath)
+		})
+		prompt.addAction(UIAlertAction(title: "No", style: .destructive) { _ in
+			self.importData(newDataOnly: false, indexPath: indexPath)
+		})
+		present(prompt, animated: false, completion: nil)
 	}
 
 	public final func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
@@ -43,5 +44,22 @@ final class ImportDataTableViewController: UITableViewController, UIDocumentPick
 			}
 		}
 		importer = nil // do this in order to make sure no importer type initialization from tableView(didSelectRowAt:) was forgotten
+	}
+
+	private final func importData(newDataOnly: Bool, indexPath: IndexPath) {
+		let documentPickerController = UIDocumentPickerViewController(documentTypes: ["public.data"], in: .import)
+		documentPickerController.allowsMultipleSelection = false
+		documentPickerController.delegate = self
+		self.present(documentPickerController, animated: true, completion: nil)
+		if indexPath.section == 0 && indexPath.row == 0 {
+			do {
+				importer = try DependencyInjector.importer.wellnessMoodImporter()
+			} catch {
+				os_log("Failed to create data importer: %@", error.localizedDescription)
+				let alert = UIAlertController(title: "Failed to import data", message: nil, preferredStyle: .alert)
+				self.present(alert, animated: false)
+			}
+		}
+		importer.importOnlyNewData = newDataOnly
 	}
 }
