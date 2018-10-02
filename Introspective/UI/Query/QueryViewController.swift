@@ -198,7 +198,7 @@ class QueryViewController: UITableViewController {
 		let query = buildQuery()
 		if finishedButtonNotification != Me.runQueryNotification {
 			NotificationCenter.default.post(name: finishedButtonNotification, object: query)
-			let _ = navigationController?.popViewController(animated: true)
+			navigationController?.popViewController(animated: true)
 		} else {
 			let controller = UIStoryboard(name: "Results", bundle: nil).instantiateViewController(withIdentifier: "results") as! ResultsViewController
 			query.runQuery { (result: QueryResult?, error: Error?) in

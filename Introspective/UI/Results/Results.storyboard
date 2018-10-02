@@ -251,58 +251,65 @@
             </objects>
             <point key="canvasLocation" x="2720.8000000000002" y="-2231.3343328335832"/>
         </scene>
+        <!--Sort Results View Controller-->
+        <scene sceneID="vbt-ag-4DS">
+            <objects>
+                <viewController storyboardIdentifier="sortResults" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oda-fn-dSN" customClass="SortResultsViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="FL1-Sb-MZx">
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="245"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ck3-uC-ueh">
+                                <rect key="frame" x="127" y="6" width="49" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Descending" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G5e-yE-QLV">
+                                <rect key="frame" x="27" y="10" width="92" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Ascending" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aed-wY-rKN">
+                                <rect key="frame" x="182" y="11" width="81" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="1ie-vk-hOv">
+                                <rect key="frame" x="0.0" y="45" width="300" height="200"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="Uv8-Jl-vdH"/>
+                    </view>
+                    <value key="contentSizeForViewInPopover" type="size" width="300" height="245"/>
+                    <size key="freeformSize" width="300" height="245"/>
+                    <connections>
+                        <outlet property="chooseAttributeView" destination="1ie-vk-hOv" id="uQg-yz-86y"/>
+                        <outlet property="sortAscendingSwitch" destination="ck3-uC-ueh" id="Jkh-9a-6Bs"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="d2D-NZ-TYA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3440" y="-2232.2338830584708"/>
+        </scene>
         <!--Results Actions Popup View Controller-->
         <scene sceneID="9ez-9s-6Ld">
             <objects>
                 <viewController storyboardIdentifier="resultsActions" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="iE9-Lr-Iae" customClass="ResultsActionsPopupViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="x0W-Fc-vfF">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="144"/>
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="182"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xQg-Vf-YGO">
-                                <rect key="frame" x="0.0" y="38" width="300" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Add Information"/>
-                                <connections>
-                                    <action selector="addInformationWithSender:" destination="iE9-Lr-Iae" eventType="touchUpInside" id="OpE-c1-c36"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eEC-G3-LDa">
-                                <rect key="frame" x="0.0" y="0.0" width="300" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Graph"/>
-                                <connections>
-                                    <action selector="graphWithSender:" destination="iE9-Lr-Iae" eventType="touchUpInside" id="JHu-7M-foi"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="obP-1C-gTH">
-                                <rect key="frame" x="0.0" y="76" width="300" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Edit"/>
-                                <connections>
-                                    <action selector="editWithSender:" destination="iE9-Lr-Iae" eventType="touchUpInside" id="7gL-8M-CJR"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tcl-As-EkD">
-                                <rect key="frame" x="0.0" y="114" width="300" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Delete All ___ Entries"/>
-                                <connections>
-                                    <action selector="deleteAllWithSender:" destination="iE9-Lr-Iae" eventType="touchUpInside" id="6qe-Nc-h9U"/>
-                                </connections>
-                            </button>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="onV-iN-pBD"/>
                     </view>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="300" height="144"/>
-                    <connections>
-                        <outlet property="deleteAllButton" destination="tcl-As-EkD" id="ELP-es-FNR"/>
-                        <outlet property="editButton" destination="obP-1C-gTH" id="dr8-bb-wvA"/>
-                    </connections>
+                    <size key="freeformSize" width="300" height="182"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuY-F3-2WJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

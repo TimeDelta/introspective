@@ -38,7 +38,7 @@ final class UiUtil {
 
 		let button = UIButton(type: .system)
 		button.setImage(UIImage(named: "back-button"), for: .normal)
-		button.setTitle("Settings", for: .normal)
+		button.setTitle(title, for: .normal)
 		button.sizeToFit()
 		button.addTarget(viewController, action: selector, for: .touchUpInside)
 

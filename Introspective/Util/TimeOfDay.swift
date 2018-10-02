@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct TimeOfDay: Equatable {
+public struct TimeOfDay: Comparable {
 
 	public static func ==(lhs: TimeOfDay, rhs: TimeOfDay) -> Bool {
 		return lhs.hour == rhs.hour
@@ -22,6 +22,14 @@ public struct TimeOfDay: Equatable {
 			|| lhs.minute != rhs.minute
 			|| lhs.second != rhs.second
 			|| lhs.nanosecond == rhs.nanosecond
+	}
+
+	public static func < (lhs: TimeOfDay, rhs: TimeOfDay) -> Bool {
+		return lhs.compare(to: rhs) == .orderedAscending
+	}
+
+	public static func > (lhs: TimeOfDay, rhs: TimeOfDay) -> Bool {
+		return lhs.compare(to: rhs) == .orderedDescending
 	}
 
 	public var hour: Int = 0
@@ -113,6 +121,22 @@ public struct TimeOfDay: Equatable {
 			return "0" + str
 		}
 		return str
+	}
+
+	private func compare(to other: TimeOfDay) -> ComparisonResult {
+		if hour < other.hour { return .orderedAscending }
+		if hour > other.hour { return .orderedDescending }
+
+		if minute < other.minute { return .orderedAscending }
+		if minute > other.minute { return .orderedDescending }
+
+		if second < other.second { return .orderedAscending }
+		if second > other.second { return .orderedDescending }
+
+		if nanosecond < other.nanosecond { return .orderedAscending }
+		if nanosecond > other.nanosecond { return .orderedDescending }
+
+		return .orderedSame
 	}
 }
 

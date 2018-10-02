@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ak2-fA-4ld">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ak2-fA-4ld">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,7 +13,7 @@
         <!--Query-->
         <scene sceneID="BuD-iL-Y85">
             <objects>
-                <tableViewController storyboardIdentifier="queryView" title="Query" useStoryboardIdentifierAsRestorationIdentifier="YES" id="WJ9-gy-FSd" customClass="QueryViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="queryView" title="Query" useStoryboardIdentifierAsRestorationIdentifier="YES" id="WJ9-gy-FSd" customClass="QueryViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Vg8-c6-iz7">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -55,7 +55,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Time Constraint" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Time Constraint" id="gSx-Db-scv" customClass="TimeConstraintTableViewCell" customModule="DataIntegration" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Time Constraint" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Time Constraint" id="gSx-Db-scv" customClass="TimeConstraintTableViewCell" customModule="Introspective" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gSx-Db-scv" id="ghK-fP-dcX">
@@ -76,7 +76,7 @@
                                     <segue destination="TmM-Sh-a3i" kind="show" id="ivT-Ux-oft"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Attribute Restriction" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Attribute Restriction" id="MNv-3c-tDo" customClass="AttributeRestrictionTableViewCell" customModule="DataIntegration" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Attribute Restriction" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Attribute Restriction" id="MNv-3c-tDo" customClass="AttributeRestrictionTableViewCell" customModule="Introspective" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="116" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="MNv-3c-tDo" id="RUV-6D-o6N">
@@ -97,7 +97,7 @@
                                     <segue destination="L2p-RU-HId" kind="show" id="2Xt-cS-96n"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Sub Data Type" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Sub Data Type" id="DtB-nS-adP" customClass="SubDataTypeTableViewCell" customModule="DataIntegration" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Sub Data Type" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Sub Data Type" id="DtB-nS-adP" customClass="SubDataTypeTableViewCell" customModule="Introspective" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="160" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="DtB-nS-adP" id="jLT-dU-cT6">
@@ -154,7 +154,7 @@
         <!--Data Type Restriction-->
         <scene sceneID="wOb-hl-1eA">
             <objects>
-                <viewController title="Data Type Restriction" id="TpJ-zB-lRv" customClass="EditSubDataTypeViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Data Type Restriction" id="TpJ-zB-lRv" customClass="EditSubDataTypeViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="GPo-Ep-6jC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -185,7 +185,7 @@
         <!--Edit Attribute Restriction-->
         <scene sceneID="MN9-6C-1GP">
             <objects>
-                <viewController title="Edit Attribute Restriction" id="L2p-RU-HId" customClass="EditAttributeRestrictionViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Edit Attribute Restriction" id="L2p-RU-HId" customClass="EditAttributeRestrictionViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ewH-tz-GfQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -217,7 +217,7 @@
         <!--Add-->
         <scene sceneID="rAh-zt-9l6">
             <objects>
-                <viewController storyboardIdentifier="addQuestionPart" autoresizesArchivedViewToFullSize="NO" title="Add" useStoryboardIdentifierAsRestorationIdentifier="YES" id="miM-5x-Nzi" customClass="AddToQueryViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="addQuestionPart" autoresizesArchivedViewToFullSize="NO" title="Add" useStoryboardIdentifierAsRestorationIdentifier="YES" id="miM-5x-Nzi" customClass="AddToQueryViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VUA-QF-F75">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

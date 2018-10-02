@@ -13,7 +13,7 @@
         <!--Choose Sample Type-->
         <scene sceneID="RcI-Vp-RGK">
             <objects>
-                <viewController storyboardIdentifier="chooseSampleType" title="Choose Sample Type" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dOP-V8-Wai" customClass="ChooseSampleTypeViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="chooseSampleType" title="Choose Sample Type" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dOP-V8-Wai" customClass="ChooseSampleTypeViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="d41-5m-qrq">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -52,7 +52,7 @@
         <!--Select Attribute Or Information View Controller-->
         <scene sceneID="Zfo-WX-ilZ">
             <objects>
-                <viewController storyboardIdentifier="selectAttributeOrInformation" useStoryboardIdentifierAsRestorationIdentifier="YES" id="t2S-bw-44Z" customClass="SelectAttributeOrInformationViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="selectAttributeOrInformation" useStoryboardIdentifierAsRestorationIdentifier="YES" id="t2S-bw-44Z" customClass="SelectAttributeOrInformationViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="REE-m6-eXh">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -106,7 +106,7 @@
         <!--Select Extra Information View Controller-->
         <scene sceneID="6Bd-2O-Dyb">
             <objects>
-                <viewController storyboardIdentifier="editExtraInformation" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7bf-1I-Qe9" customClass="SelectExtraInformationViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="editExtraInformation" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7bf-1I-Qe9" customClass="SelectExtraInformationViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="53e-q4-6ZI">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -148,7 +148,7 @@
         <!--Choose Calendar Component-->
         <scene sceneID="OuC-cr-gB2">
             <objects>
-                <viewController storyboardIdentifier="chooseCalendarComponent" title="Choose Calendar Component" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hCP-R4-IHq" customClass="ChooseCalendarComponentViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="chooseCalendarComponent" title="Choose Calendar Component" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hCP-R4-IHq" customClass="ChooseCalendarComponentViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="bS9-Fh-m0D">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -187,7 +187,7 @@
         <!--Choose Attribute-->
         <scene sceneID="rFv-hY-uMn">
             <objects>
-                <viewController storyboardIdentifier="chooseAttribute" title="Choose Attribute" useStoryboardIdentifierAsRestorationIdentifier="YES" id="1Uh-4R-NlM" customClass="ChooseAttributeViewController" customModule="DataIntegration" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="chooseAttribute" title="Choose Attribute" useStoryboardIdentifierAsRestorationIdentifier="YES" id="1Uh-4R-NlM" customClass="ChooseAttributeViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EUv-Fi-79d">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
