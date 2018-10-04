@@ -108,7 +108,7 @@ public final class Sleep: HealthKitCategorySample {
 	// MARK: - Sample Functions
 
 	public final func dates() -> [DateType: Date] {
-		return [.start: startDate]
+		return [.start: startDate, .end: endDate]
 	}
 
 	// MARK: - Attributed Functions
