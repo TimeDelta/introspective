@@ -13,11 +13,18 @@ import SwiftyMocky
 
 class QueryViewControllerUnitTests: UnitTest {
 
-	fileprivate var controller: QueryViewController!
+	private typealias Me = QueryViewControllerUnitTests
+	private static let frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+	private static let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: nil, action: nil)
+	private static let finishedButton = UIBarButtonItem(barButtonSystemItem: .edit, target: nil, action: nil)
+
+	private var controller: QueryViewController!
 
 	override func setUp() {
 		super.setUp()
 		controller = QueryViewController()
+		controller.editButton = Me.editButton
+		controller.finishedButton = Me.finishedButton
 	}
 
 	func testGivenHeartRateDataTypeWithNoRestrictionsOrSubQuery_prepareForSegue_correctlyBuildsAndRunsQuery() {
@@ -27,11 +34,10 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.DataTypeInfo(HeartRate.self)
-		let segue = UIStoryboardSegue(identifier: "", source: controller, destination: ResultsViewController())
+		controller.parts[0] = QueryViewController.Part(QueryViewController.DataTypeInfo(HeartRate.self))
 
 		// when
-		controller.prepare(for: segue, sender: self)
+		controller.finishedButtonPressed(Me.finishedButton)
 
 		// then
 		Verify(sampleQuery, .runQuery(callback: .any(((QueryResult?, Error?) -> ()).self)))
@@ -45,15 +51,13 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.DataTypeInfo(HeartRate.self)
+		controller.parts[0] = QueryViewController.Part(QueryViewController.DataTypeInfo(HeartRate.self))
 
 		let attributeRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
-		controller.parts.append(attributeRestriction)
-
-		let segue = UIStoryboardSegue(identifier: "", source: controller, destination: ResultsViewController())
+		controller.parts.append(QueryViewController.Part(attributeRestriction))
 
 		// when
-		controller.prepare(for: segue, sender: self)
+		controller.finishedButtonPressed(Me.finishedButton)
 
 		// then
 		XCTAssert(sampleQuery.attributeRestrictions.contains(where: { r in return r.equalTo(attributeRestriction) }))
@@ -68,17 +72,15 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.DataTypeInfo(HeartRate.self)
+		controller.parts[0] = QueryViewController.Part(QueryViewController.DataTypeInfo(HeartRate.self))
 
 		let attributeRestriction1 = EqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
 		let attributeRestriction2 = NotEqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
-		controller.parts.append(attributeRestriction1)
-		controller.parts.append(attributeRestriction2)
-
-		let segue = UIStoryboardSegue(identifier: "", source: controller, destination: ResultsViewController())
+		controller.parts.append(QueryViewController.Part(attributeRestriction1))
+		controller.parts.append(QueryViewController.Part(attributeRestriction2))
 
 		// when
-		controller.prepare(for: segue, sender: self)
+		controller.finishedButtonPressed(Me.finishedButton)
 
 		// then
 		XCTAssert(sampleQuery.attributeRestrictions.contains(where: { r in return r.equalTo(attributeRestriction1) }))
@@ -96,22 +98,22 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.DataTypeInfo(HeartRate.self)
+		controller.parts[0] = QueryViewController.Part(QueryViewController.DataTypeInfo(HeartRate.self))
 
 		var dataTypeInfo = QueryViewController.DataTypeInfo(MoodImpl.self)
 		dataTypeInfo.matcher = SubQueryMatcherMock()
 		dataTypeInfo.matcher!.mostRecentOnly = false
-		controller.parts.append(dataTypeInfo)
-
-		let segue = UIStoryboardSegue(identifier: "", source: controller, destination: ResultsViewController())
+		controller.parts.append(QueryViewController.Part(dataTypeInfo))
 
 		// when
-		controller.prepare(for: segue, sender: self)
+		controller.finishedButtonPressed(Me.finishedButton)
 
 		// then
 		XCTAssert(sampleQuery.subQuery != nil)
-		XCTAssert(sampleQuery.subQuery!.matcher === dataTypeInfo.matcher!)
-		XCTAssert(sampleQuery.subQuery!.query === subQuery)
+		if sampleQuery.subQuery != nil {
+			XCTAssert(sampleQuery.subQuery!.matcher === dataTypeInfo.matcher!)
+			XCTAssert(sampleQuery.subQuery!.query === subQuery)
+		}
 		Verify(sampleQuery, .runQuery(callback: .any(((QueryResult?, Error?) -> ()).self)))
 	}
 
@@ -126,26 +128,26 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.DataTypeInfo(HeartRate.self)
+		controller.parts[0] = QueryViewController.Part(QueryViewController.DataTypeInfo(HeartRate.self))
 
 		var dataTypeInfo = QueryViewController.DataTypeInfo(MoodImpl.self)
 		dataTypeInfo.matcher = SubQueryMatcherMock()
-		controller.parts.append(dataTypeInfo)
+		controller.parts.append(QueryViewController.Part(dataTypeInfo))
 
 		let attributeRestriction1 = EqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating)
 		let attributeRestriction2 = NotEqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating)
-		controller.parts.append(attributeRestriction1)
-		controller.parts.append(attributeRestriction2)
-
-		let segue = UIStoryboardSegue(identifier: "", source: controller, destination: ResultsViewController())
+		controller.parts.append(QueryViewController.Part(attributeRestriction1))
+		controller.parts.append(QueryViewController.Part(attributeRestriction2))
 
 		// when
-		controller.prepare(for: segue, sender: self)
+		controller.finishedButtonPressed(Me.finishedButton)
 
 		// then
 		XCTAssert(sampleQuery.subQuery != nil)
-		XCTAssert(sampleQuery.subQuery!.matcher === dataTypeInfo.matcher!)
-		XCTAssert(sampleQuery.subQuery!.query === subQuery)
+		if sampleQuery.subQuery != nil {
+			XCTAssert(sampleQuery.subQuery!.matcher === dataTypeInfo.matcher!)
+			XCTAssert(sampleQuery.subQuery!.query === subQuery)
+		}
 		XCTAssert(subQuery.attributeRestrictions.contains(where: { r in return r.equalTo(attributeRestriction1) }))
 		XCTAssert(subQuery.attributeRestrictions.contains(where: { r in return r.equalTo(attributeRestriction2) }))
 		Verify(sampleQuery, .runQuery(callback: .any(((QueryResult?, Error?) -> ()).self)))
@@ -163,33 +165,33 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.DataTypeInfo(HeartRate.self)
+		controller.parts[0] = QueryViewController.Part(QueryViewController.DataTypeInfo(HeartRate.self))
 
 		let heartRateAttributeRestriction1 = EqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
 		let heartRateAttributeRestriction2 = NotEqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
-		controller.parts.append(heartRateAttributeRestriction1)
-		controller.parts.append(heartRateAttributeRestriction2)
+		controller.parts.append(QueryViewController.Part(heartRateAttributeRestriction1))
+		controller.parts.append(QueryViewController.Part(heartRateAttributeRestriction2))
 
 		var dataTypeInfo = QueryViewController.DataTypeInfo(MoodImpl.self)
 		dataTypeInfo.matcher = SubQueryMatcherMock()
-		controller.parts.append(dataTypeInfo)
+		controller.parts.append(QueryViewController.Part(dataTypeInfo))
 
 		let moodAttributeRestriction1 = EqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating)
 		let moodAttributeRestriction2 = NotEqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating)
-		controller.parts.append(moodAttributeRestriction1)
-		controller.parts.append(moodAttributeRestriction2)
-
-		let segue = UIStoryboardSegue(identifier: "", source: controller, destination: ResultsViewController())
+		controller.parts.append(QueryViewController.Part(moodAttributeRestriction1))
+		controller.parts.append(QueryViewController.Part(moodAttributeRestriction2))
 
 		// when
-		controller.prepare(for: segue, sender: self)
+		controller.finishedButtonPressed(Me.finishedButton)
 
 		// then
 		XCTAssert(sampleQuery.subQuery != nil)
+		if sampleQuery.subQuery != nil {
+			XCTAssert(sampleQuery.subQuery!.matcher === dataTypeInfo.matcher!)
+			XCTAssert(sampleQuery.subQuery!.query === subQuery)
+		}
 		XCTAssert(sampleQuery.attributeRestrictions.contains(where: { r in return r.equalTo(heartRateAttributeRestriction1) }))
 		XCTAssert(sampleQuery.attributeRestrictions.contains(where: { r in return r.equalTo(heartRateAttributeRestriction2) }))
-		XCTAssert(sampleQuery.subQuery!.matcher === dataTypeInfo.matcher!)
-		XCTAssert(sampleQuery.subQuery!.query === subQuery)
 		XCTAssert(subQuery.attributeRestrictions.contains(where: { r in return r.equalTo(moodAttributeRestriction1) }))
 		XCTAssert(subQuery.attributeRestrictions.contains(where: { r in return r.equalTo(moodAttributeRestriction2) }))
 		Verify(sampleQuery, .runQuery(callback: .any(((QueryResult?, Error?) -> ()).self)))

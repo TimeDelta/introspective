@@ -22,7 +22,6 @@ class FunctionalTest: XCTestCase {
 	var subQueryMatcherFactory: SubQueryMatcherFactoryImpl!
 	var extraInformationFactory: ExtraInformationFactoryImpl!
 	var sampleGrouperFactory: SampleGrouperFactoryImpl!
-	var sampleGroupCombinerFactory: SampleGroupCombinerFactoryImpl!
 
 	override func setUp() {
 		super.setUp()
@@ -38,7 +37,6 @@ class FunctionalTest: XCTestCase {
 		subQueryMatcherFactory = SubQueryMatcherFactoryImpl()
 		extraInformationFactory = ExtraInformationFactoryImpl()
 		sampleGrouperFactory = SampleGrouperFactoryImpl()
-		sampleGroupCombinerFactory = SampleGroupCombinerFactoryImpl()
 
 		Given(injectionProvider, .queryFactory(willReturn: queryFactory))
 		Given(injectionProvider, .sampleFactory(willReturn: sampleFactory))
@@ -46,7 +44,6 @@ class FunctionalTest: XCTestCase {
 		Given(injectionProvider, .subQueryMatcherFactory(willReturn: subQueryMatcherFactory))
 		Given(injectionProvider, .extraInformationFactory(willReturn: extraInformationFactory))
 		Given(injectionProvider, .sampleGrouperFactory(willReturn: sampleGrouperFactory))
-		Given(injectionProvider, .sampleGroupCombinerFactory(willReturn: sampleGroupCombinerFactory))
 	}
 
 	override func tearDown() {

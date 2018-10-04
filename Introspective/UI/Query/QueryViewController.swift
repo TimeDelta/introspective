@@ -209,7 +209,7 @@ class QueryViewController: UITableViewController {
 				controller.samples = result?.samples
 			}
 			controller.query = query
-			navigationController!.pushViewController(controller, animated: true)
+			navigationController?.pushViewController(controller, animated: true)
 		}
 	}
 

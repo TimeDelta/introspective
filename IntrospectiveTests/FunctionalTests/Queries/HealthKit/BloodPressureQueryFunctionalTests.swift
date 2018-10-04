@@ -119,18 +119,23 @@ final class BloodPressureQueryFunctionalTests: QueryFunctionalTest {
 
 	func testGivenQueryHasOneRestrictionForEachAttributeAndMultipleBloodPressuresInHealthKitWithOnlyOneThatMatches_runQuery_returnsThatBloodPressure() {
 		// given
-		let value = 54.6
-		let expected = BloodPressure(systolic: value, Date() - 2.days)
+		let systolicValue = 54.6
+		let diastolicValue =  18.3
+		let expected = BloodPressure(systolic: systolicValue, diastolic: diastolicValue, Date() - 2.days)
 		HealthKitDataTestUtil.save([
 			expected,
-			BloodPressure(diastolic: value - 2),
-			BloodPressure(systolic: value - 1),
-			BloodPressure(),
+			BloodPressure(systolic: diastolicValue, diastolic: systolicValue, Date() - 2.days),
+			BloodPressure(systolic: systolicValue - 1, diastolic: diastolicValue, Date() - 2.days),
+			BloodPressure(systolic: systolicValue, diastolic: diastolicValue + 2, Date() - 2.days),
+			BloodPressure(Date() - 2.days),
+			BloodPressure(systolic: systolicValue, diastolic: diastolicValue)
 		])
 
-		let systolicRestriction = GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: BloodPressure.systolic, value: value)
-		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(restrictedAttribute: BloodPressure.timestamp, date: Date() - 1.days)
+		let systolicRestriction = GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: BloodPressure.systolic, value: systolicValue)
+		let diastolicRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: BloodPressure.diastolic, value: diastolicValue)
+		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitTimestamp, date: Date() - 1.days)
 		query.attributeRestrictions.append(systolicRestriction)
+		query.attributeRestrictions.append(diastolicRestriction)
 		query.attributeRestrictions.append(timestampRestriction)
 
 		// when

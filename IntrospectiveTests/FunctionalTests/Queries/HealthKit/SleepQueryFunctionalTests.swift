@@ -7,6 +7,8 @@
 //
 
 import XCTest
+import SwiftDate
+@testable import Introspective
 
 class SleepQueryFunctionalTests: QueryFunctionalTest {
 
@@ -62,10 +64,10 @@ class SleepQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenMultipleSleepRecordsInHealthKitAndRestrictionOnSleepThatShouldOnlyReturnOneSleep_runQuery_returnsThatOneSleep() {
 		// given
 		let date = Date()
-		let expected = Sleep(date)
+		let expected = Sleep(startDate: date)
 		HealthKitDataTestUtil.save([
 			expected,
-			Sleep(date - 1.days),
+			Sleep(startDate: date - 1.days),
 		])
 
 		let timestampRestriction = OnDateAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitStartDate, date: date)
@@ -85,17 +87,25 @@ class SleepQueryFunctionalTests: QueryFunctionalTest {
 
 	func testGivenMultipleSleepRecordsInDatabaseThatMatchGivenSleepRestriction_runQuery_returnsAllMatchingSleepRecords() {
 		// given
-		let date = Date()
-		let expected1 = Sleep(date + 1.days)
-		let expected2 = Sleep(date + 2.days)
+		let startDate = Date()
+		let endDate = startDate + 2.days
+		let expected1 = Sleep(.asleep, startDate: startDate + 1.days, endDate: endDate)
+		let expected2 = Sleep(.asleep, startDate: startDate + 23.hours, endDate: endDate)
 		HealthKitDataTestUtil.save([
 			expected1,
 			expected2,
-			Sleep(date - 1.days),
+			Sleep(.asleep, startDate: startDate - 1.days, endDate: endDate),
+			Sleep(.asleep, startDate: startDate + 1.days, endDate: endDate + 2.days),
+			Sleep(.awake, startDate: startDate + 1.days, endDate: endDate + 1.days),
+			Sleep(.inBed, startDate: startDate + 1.days, endDate: endDate + 1.days),
 		])
 
-		let timestampRestriction = AfterDateAndTimeAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitStartDate, date: date)
-		query.attributeRestrictions.append(timestampRestriction)
+		let sleepStateRestriction = EqualToSelectOneAttributeRestriction(restrictedAttribute: Sleep.state, value: Sleep.State.asleep, valueAttribute: Sleep.state)
+		let startDateRestriction = AfterDateAndTimeAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitStartDate, date: startDate)
+		let endDateRestriction = OnDateAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitEndDate, date: endDate)
+		query.attributeRestrictions.append(sleepStateRestriction)
+		query.attributeRestrictions.append(startDateRestriction)
+		query.attributeRestrictions.append(endDateRestriction)
 
 		// when
 		query.runQuery(callback: queryComplete)

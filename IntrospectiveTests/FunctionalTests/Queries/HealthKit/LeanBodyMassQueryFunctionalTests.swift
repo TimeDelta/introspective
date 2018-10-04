@@ -124,7 +124,7 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 		])
 
 		let leanBodyMassRestriction = GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: LeanBodyMass.leanBodyMass, value: value)
-		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(restrictedAttribute: LeanBodyMass.timestamp, date: Date() - 1.days)
+		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitTimestamp, date: Date() - 1.days)
 		query.attributeRestrictions.append(leanBodyMassRestriction)
 		query.attributeRestrictions.append(timestampRestriction)
 

@@ -21,14 +21,32 @@ class SampleMock: Sample, Mock {
 	}
 
 // sourcery:inline:auto:SampleMock.autoMocked
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
     private var invocations: [MethodType] = []
     private var methodReturnValues: [Given] = []
     private var methodPerformValues: [Perform] = []
-    var matcher: Matcher = Matcher.default
+    private var file: StaticString?
+    private var line: UInt?
+
+    typealias PropertyStub = Given
+    typealias MethodStub = Given
+    typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+    static var matcher: Matcher = Matcher.default
+    static var stubbingPolicy: StubbingPolicy = .wrap
+    static var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
     static private var invocations: [StaticMethodType] = []
     static private var methodReturnValues: [StaticGiven] = []
     static private var methodPerformValues: [StaticPerform] = []
-    static var matcher: Matcher = Matcher.default
+    typealias StaticPropertyStub = StaticGiven
+    typealias StaticMethodStub = StaticGiven
     static func clear() {
         invocations = []
         methodReturnValues = []
@@ -36,186 +54,182 @@ class SampleMock: Sample, Mock {
     }
 
 
-    var name: String { 
-		get {	invocations.append(.name_get)
-				return __name.orFail("SampleMock - value for name was not defined") }
-		set {	invocations.append(.name_set(.value(newValue)))
-				__name = newValue }
+    var name: String {
+		get {	invocations.append(.p_name_get); return __p_name ?? givenGetterValue(.p_name_get, "SampleMock - stub value for name was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_name = newValue }
 	}
-	private var __name: (String)?
+	private var __p_name: (String)?
 
 
-    var attributes: [Attribute] { 
-		get {	invocations.append(.attributes_get)
-				return __attributes.orFail("SampleMock - value for attributes was not defined") }
-		set {	invocations.append(.attributes_set(.value(newValue)))
-				__attributes = newValue }
+    var attributes: [Attribute] {
+		get {	invocations.append(.p_attributes_get); return __p_attributes ?? givenGetterValue(.p_attributes_get, "SampleMock - stub value for attributes was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_attributes = newValue }
 	}
-	private var __attributes: ([Attribute])?
+	private var __p_attributes: ([Attribute])?
 
 
-    var debugDescription: String { 
-		get {	invocations.append(.debugDescription_get)
-				return __debugDescription.orFail("SampleMock - value for debugDescription was not defined") }
-		set {	invocations.append(.debugDescription_set(.value(newValue)))
-				__debugDescription = newValue }
+    var debugDescription: String {
+		get {	invocations.append(.p_debugDescription_get); return __p_debugDescription ?? givenGetterValue(.p_debugDescription_get, "SampleMock - stub value for debugDescription was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_debugDescription = newValue }
 	}
-	private var __debugDescription: (String)?
+	private var __p_debugDescription: (String)?
 
 
-    struct Property {
-        fileprivate var method: MethodType
-        static var name: Property { return Property(method: .name_get) }
-		static func name(set newValue: Parameter<String>) -> Property { return Property(method: .name_set(newValue)) }
-        static var attributes: Property { return Property(method: .attributes_get) }
-		static func attributes(set newValue: Parameter<[Attribute]>) -> Property { return Property(method: .attributes_set(newValue)) }
-        static var debugDescription: Property { return Property(method: .debugDescription_get) }
-		static func debugDescription(set newValue: Parameter<String>) -> Property { return Property(method: .debugDescription_set(newValue)) }
-    }
 
-    static var name: String { 
-		get {	SampleMock.invocations.append(.name_get)
-				return SampleMock.__name.orFail("SampleMock - value for name was not defined") }
-		set {	SampleMock.invocations.append(.name_set(.value(newValue)))
-				SampleMock.__name = newValue }
+    static var name: String {
+		get {	SampleMock.invocations.append(.p_name_get); return SampleMock.__p_name ?? givenGetterValue(.p_name_get, "SampleMock - stub value for name was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	SampleMock.__p_name = newValue }
 	}
-	private static var __name: (String)?
+	private static var __p_name: (String)?
 
 
-    static var attributes: [Attribute] { 
-		get {	SampleMock.invocations.append(.attributes_get)
-				return SampleMock.__attributes.orFail("SampleMock - value for attributes was not defined") }
-		set {	SampleMock.invocations.append(.attributes_set(.value(newValue)))
-				SampleMock.__attributes = newValue }
+    static var attributes: [Attribute] {
+		get {	SampleMock.invocations.append(.p_attributes_get); return SampleMock.__p_attributes ?? givenGetterValue(.p_attributes_get, "SampleMock - stub value for attributes was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	SampleMock.__p_attributes = newValue }
 	}
-	private static var __attributes: ([Attribute])?
+	private static var __p_attributes: ([Attribute])?
 
 
-    static var defaultDependentAttribute: Attribute { 
-		get {	SampleMock.invocations.append(.defaultDependentAttribute_get)
-				return SampleMock.__defaultDependentAttribute.orFail("SampleMock - value for defaultDependentAttribute was not defined") }
-		set {	SampleMock.invocations.append(.defaultDependentAttribute_set(.value(newValue)))
-				SampleMock.__defaultDependentAttribute = newValue }
+    static var defaultDependentAttribute: Attribute {
+		get {	SampleMock.invocations.append(.p_defaultDependentAttribute_get); return SampleMock.__p_defaultDependentAttribute ?? givenGetterValue(.p_defaultDependentAttribute_get, "SampleMock - stub value for defaultDependentAttribute was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	SampleMock.__p_defaultDependentAttribute = newValue }
 	}
-	private static var __defaultDependentAttribute: (Attribute)?
+	private static var __p_defaultDependentAttribute: (Attribute)?
 
 
-    static var defaultIndependentAttribute: Attribute { 
-		get {	SampleMock.invocations.append(.defaultIndependentAttribute_get)
-				return SampleMock.__defaultIndependentAttribute.orFail("SampleMock - value for defaultIndependentAttribute was not defined") }
-		set {	SampleMock.invocations.append(.defaultIndependentAttribute_set(.value(newValue)))
-				SampleMock.__defaultIndependentAttribute = newValue }
+    static var defaultIndependentAttribute: Attribute {
+		get {	SampleMock.invocations.append(.p_defaultIndependentAttribute_get); return SampleMock.__p_defaultIndependentAttribute ?? givenGetterValue(.p_defaultIndependentAttribute_get, "SampleMock - stub value for defaultIndependentAttribute was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	SampleMock.__p_defaultIndependentAttribute = newValue }
 	}
-	private static var __defaultIndependentAttribute: (Attribute)?
+	private static var __p_defaultIndependentAttribute: (Attribute)?
 
 
-    struct StaticProperty {
-        fileprivate var method: StaticMethodType
-        static var name: StaticProperty { return StaticProperty(method: .name_get) }
-		static func name(set newValue: Parameter<String>) -> StaticProperty { return StaticProperty(method: .name_set(newValue)) }
-        static var attributes: StaticProperty { return StaticProperty(method: .attributes_get) }
-		static func attributes(set newValue: Parameter<[Attribute]>) -> StaticProperty { return StaticProperty(method: .attributes_set(newValue)) }
-        static var defaultDependentAttribute: StaticProperty { return StaticProperty(method: .defaultDependentAttribute_get) }
-		static func defaultDependentAttribute(set newValue: Parameter<Attribute>) -> StaticProperty { return StaticProperty(method: .defaultDependentAttribute_set(newValue)) }
-        static var defaultIndependentAttribute: StaticProperty { return StaticProperty(method: .defaultIndependentAttribute_get) }
-		static func defaultIndependentAttribute(set newValue: Parameter<Attribute>) -> StaticProperty { return StaticProperty(method: .defaultIndependentAttribute_set(newValue)) }
-    }
 
 
 
     func dates() -> [DateType: Date] {
-        addInvocation(.idates)
-		let perform = methodPerformValue(.idates) as? () -> Void
+        addInvocation(.m_dates)
+		let perform = methodPerformValue(.m_dates) as? () -> Void
 		perform?()
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.idates)
-		let value = givenValue.value as? [DateType: Date]
-		return value.orFail("stub return value not specified for dates(). Use given")
+		var __value: [DateType: Date]
+		do {
+		    __value = try methodReturnValue(.m_dates).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for dates(). Use given")
+			Failure("Stub return value not specified for dates(). Use given")
+		}
+		return __value
     }
 
     func equalTo(_ otherSample: Sample) -> Bool {
-        addInvocation(.iequalTo__otherSample(Parameter<Sample>.value(otherSample)))
-		let perform = methodPerformValue(.iequalTo__otherSample(Parameter<Sample>.value(otherSample))) as? (Sample) -> Void
-		perform?(otherSample)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iequalTo__otherSample(Parameter<Sample>.value(otherSample)))
-		let value = givenValue.value as? Bool
-		return value.orFail("stub return value not specified for equalTo(_ otherSample: Sample). Use given")
+        addInvocation(.m_equalTo__otherSample(Parameter<Sample>.value(`otherSample`)))
+		let perform = methodPerformValue(.m_equalTo__otherSample(Parameter<Sample>.value(`otherSample`))) as? (Sample) -> Void
+		perform?(`otherSample`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_equalTo__otherSample(Parameter<Sample>.value(`otherSample`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for equalTo(_ otherSample: Sample). Use given")
+			Failure("Stub return value not specified for equalTo(_ otherSample: Sample). Use given")
+		}
+		return __value
     }
 
     func value(of attribute: Attribute) throws -> Any {
-        addInvocation(.ivalue__of_attribute(Parameter<Attribute>.value(attribute)))
-		let perform = methodPerformValue(.ivalue__of_attribute(Parameter<Attribute>.value(attribute))) as? (Attribute) -> Void
-		perform?(attribute)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.ivalue__of_attribute(Parameter<Attribute>.value(attribute)))
-		if let error = givenValue.error { throw error }
-		let value = givenValue.value as? Any
-		return value.orFail("stub return value not specified for value(of attribute: Attribute). Use given")
+        addInvocation(.m_value__of_attribute(Parameter<Attribute>.value(`attribute`)))
+		let perform = methodPerformValue(.m_value__of_attribute(Parameter<Attribute>.value(`attribute`))) as? (Attribute) -> Void
+		perform?(`attribute`)
+		var __value: Any
+		do {
+		    __value = try methodReturnValue(.m_value__of_attribute(Parameter<Attribute>.value(`attribute`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for value(of attribute: Attribute). Use given")
+			Failure("Stub return value not specified for value(of attribute: Attribute). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
     }
 
     func set(attribute: Attribute, to value: Any) throws {
-        addInvocation(.iset__attribute_attributeto_value(Parameter<Attribute>.value(attribute), Parameter<Any>.value(value)))
-		let perform = methodPerformValue(.iset__attribute_attributeto_value(Parameter<Attribute>.value(attribute), Parameter<Any>.value(value))) as? (Attribute, Any) -> Void
-		perform?(attribute, value)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iset__attribute_attributeto_value(Parameter<Attribute>.value(attribute), Parameter<Any>.value(value)))
-		if let error = givenValue.error { throw error }
+        addInvocation(.m_set__attribute_attributeto_value(Parameter<Attribute>.value(`attribute`), Parameter<Any>.value(`value`)))
+		let perform = methodPerformValue(.m_set__attribute_attributeto_value(Parameter<Attribute>.value(`attribute`), Parameter<Any>.value(`value`))) as? (Attribute, Any) -> Void
+		perform?(`attribute`, `value`)
+		do {
+		    _ = try methodReturnValue(.m_set__attribute_attributeto_value(Parameter<Attribute>.value(`attribute`), Parameter<Any>.value(`value`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
     }
 
     func equalTo(_ otherAttributed: Attributed) -> Bool {
-        addInvocation(.iequalTo__otherAttributed(Parameter<Attributed>.value(otherAttributed)))
-		let perform = methodPerformValue(.iequalTo__otherAttributed(Parameter<Attributed>.value(otherAttributed))) as? (Attributed) -> Void
-		perform?(otherAttributed)
-		let givenValue: (value: Any?, error: Error?) = methodReturnValue(.iequalTo__otherAttributed(Parameter<Attributed>.value(otherAttributed)))
-		let value = givenValue.value as? Bool
-		return value.orFail("stub return value not specified for equalTo(_ otherAttributed: Attributed). Use given")
+        addInvocation(.m_equalTo__otherAttributed(Parameter<Attributed>.value(`otherAttributed`)))
+		let perform = methodPerformValue(.m_equalTo__otherAttributed(Parameter<Attributed>.value(`otherAttributed`))) as? (Attributed) -> Void
+		perform?(`otherAttributed`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_equalTo__otherAttributed(Parameter<Attributed>.value(`otherAttributed`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for equalTo(_ otherAttributed: Attributed). Use given")
+			Failure("Stub return value not specified for equalTo(_ otherAttributed: Attributed). Use given")
+		}
+		return __value
     }
 
     fileprivate enum StaticMethodType {
-
-        case name_get
-		case name_set(Parameter<String>)
-        case attributes_get
-		case attributes_set(Parameter<[Attribute]>)
-        case defaultDependentAttribute_get
-		case defaultDependentAttribute_set(Parameter<Attribute>)
-        case defaultIndependentAttribute_get
-		case defaultIndependentAttribute_set(Parameter<Attribute>)
+        case p_name_get
+        case p_attributes_get
+        case p_defaultDependentAttribute_get
+        case p_defaultIndependentAttribute_get
 
         static func compareParameters(lhs: StaticMethodType, rhs: StaticMethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
-                case (.name_get,.name_get): return true
-				case (.name_set(let left),.name_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
-                case (.attributes_get,.attributes_get): return true
-				case (.attributes_set(let left),.attributes_set(let right)): return Parameter<[Attribute]>.compare(lhs: left, rhs: right, with: matcher)
-                case (.defaultDependentAttribute_get,.defaultDependentAttribute_get): return true
-				case (.defaultDependentAttribute_set(let left),.defaultDependentAttribute_set(let right)): return Parameter<Attribute>.compare(lhs: left, rhs: right, with: matcher)
-                case (.defaultIndependentAttribute_get,.defaultIndependentAttribute_get): return true
-				case (.defaultIndependentAttribute_set(let left),.defaultIndependentAttribute_set(let right)): return Parameter<Attribute>.compare(lhs: left, rhs: right, with: matcher)
-                default: return false
+            case (.p_name_get,.p_name_get): return true
+            case (.p_attributes_get,.p_attributes_get): return true
+            case (.p_defaultDependentAttribute_get,.p_defaultDependentAttribute_get): return true
+            case (.p_defaultIndependentAttribute_get,.p_defaultIndependentAttribute_get): return true
+            default: return false
             }
         }
 
         func intValue() -> Int {
             switch self {
-                case .name_get: return 0
-				case .name_set(let newValue): return newValue.intValue
-                case .attributes_get: return 0
-				case .attributes_set(let newValue): return newValue.intValue
-                case .defaultDependentAttribute_get: return 0
-				case .defaultDependentAttribute_set(let newValue): return newValue.intValue
-                case .defaultIndependentAttribute_get: return 0
-				case .defaultIndependentAttribute_set(let newValue): return newValue.intValue
+                case .p_name_get: return 0
+                case .p_attributes_get: return 0
+                case .p_defaultDependentAttribute_get: return 0
+                case .p_defaultIndependentAttribute_get: return 0
             }
         }
     }
 
-    struct StaticGiven {
+    class StaticGiven: StubbedMethod {
         fileprivate var method: StaticMethodType
-        var returns: Any?
-        var `throws`: Error?
 
-        private init(method: StaticMethodType, returns: Any?, throws: Error?) {
+        private init(method: StaticMethodType, products: [Product]) {
             self.method = method
-            self.returns = returns
-            self.`throws` = `throws`
+            super.init(products)
+        }
+
+        static func name(getter defaultValue: String...) -> StaticPropertyStub {
+            return StaticGiven(method: .p_name_get, products: defaultValue.map({ Product.return($0) }))
+        }
+        static func attributes(getter defaultValue: [Attribute]...) -> StaticPropertyStub {
+            return StaticGiven(method: .p_attributes_get, products: defaultValue.map({ Product.return($0) }))
+        }
+        static func defaultDependentAttribute(getter defaultValue: Attribute...) -> StaticPropertyStub {
+            return StaticGiven(method: .p_defaultDependentAttribute_get, products: defaultValue.map({ Product.return($0) }))
+        }
+        static func defaultIndependentAttribute(getter defaultValue: Attribute...) -> StaticPropertyStub {
+            return StaticGiven(method: .p_defaultIndependentAttribute_get, products: defaultValue.map({ Product.return($0) }))
         }
 
     }
@@ -223,6 +237,10 @@ class SampleMock: Sample, Mock {
     struct StaticVerify {
         fileprivate var method: StaticMethodType
 
+        static var name: StaticVerify { return StaticVerify(method: .p_name_get) }
+        static var attributes: StaticVerify { return StaticVerify(method: .p_attributes_get) }
+        static var defaultDependentAttribute: StaticVerify { return StaticVerify(method: .p_defaultDependentAttribute_get) }
+        static var defaultIndependentAttribute: StaticVerify { return StaticVerify(method: .p_defaultIndependentAttribute_get) }
     }
 
     struct StaticPerform {
@@ -231,142 +249,184 @@ class SampleMock: Sample, Mock {
 
     }
 
-        fileprivate enum MethodType {
-        case idates
-        case iequalTo__otherSample(Parameter<Sample>)
-        case ivalue__of_attribute(Parameter<Attribute>)
-        case iset__attribute_attributeto_value(Parameter<Attribute>, Parameter<Any>)
-        case iequalTo__otherAttributed(Parameter<Attributed>)
-        case name_get
-		case name_set(Parameter<String>)
-        case attributes_get
-		case attributes_set(Parameter<[Attribute]>)
-        case debugDescription_get
-		case debugDescription_set(Parameter<String>)
+    
+    fileprivate enum MethodType {
+        case m_dates
+        case m_equalTo__otherSample(Parameter<Sample>)
+        case m_value__of_attribute(Parameter<Attribute>)
+        case m_set__attribute_attributeto_value(Parameter<Attribute>, Parameter<Any>)
+        case m_equalTo__otherAttributed(Parameter<Attributed>)
+        case p_name_get
+        case p_attributes_get
+        case p_debugDescription_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
-                case (.idates, .idates):
-                    return true 
-                case (.iequalTo__otherSample(let lhsOthersample), .iequalTo__otherSample(let rhsOthersample)):
-                    guard Parameter.compare(lhs: lhsOthersample, rhs: rhsOthersample, with: matcher) else { return false } 
-                    return true 
-                case (.ivalue__of_attribute(let lhsAttribute), .ivalue__of_attribute(let rhsAttribute)):
-                    guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
-                    return true 
-                case (.iset__attribute_attributeto_value(let lhsAttribute, let lhsValue), .iset__attribute_attributeto_value(let rhsAttribute, let rhsValue)):
-                    guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
-                    guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
-                    return true 
-                case (.iequalTo__otherAttributed(let lhsOtherattributed), .iequalTo__otherAttributed(let rhsOtherattributed)):
-                    guard Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher) else { return false } 
-                    return true 
-                case (.name_get,.name_get): return true
-				case (.name_set(let left),.name_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
-                case (.attributes_get,.attributes_get): return true
-				case (.attributes_set(let left),.attributes_set(let right)): return Parameter<[Attribute]>.compare(lhs: left, rhs: right, with: matcher)
-                case (.debugDescription_get,.debugDescription_get): return true
-				case (.debugDescription_set(let left),.debugDescription_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
-                default: return false
+            case (.m_dates, .m_dates):
+                return true 
+            case (.m_equalTo__otherSample(let lhsOthersample), .m_equalTo__otherSample(let rhsOthersample)):
+                guard Parameter.compare(lhs: lhsOthersample, rhs: rhsOthersample, with: matcher) else { return false } 
+                return true 
+            case (.m_value__of_attribute(let lhsAttribute), .m_value__of_attribute(let rhsAttribute)):
+                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
+                return true 
+            case (.m_set__attribute_attributeto_value(let lhsAttribute, let lhsValue), .m_set__attribute_attributeto_value(let rhsAttribute, let rhsValue)):
+                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                return true 
+            case (.m_equalTo__otherAttributed(let lhsOtherattributed), .m_equalTo__otherAttributed(let rhsOtherattributed)):
+                guard Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher) else { return false } 
+                return true 
+            case (.p_name_get,.p_name_get): return true
+            case (.p_attributes_get,.p_attributes_get): return true
+            case (.p_debugDescription_get,.p_debugDescription_get): return true
+            default: return false
             }
         }
 
         func intValue() -> Int {
             switch self {
-                case .idates: return 0
-                case let .iequalTo__otherSample(p0): return p0.intValue
-                case let .ivalue__of_attribute(p0): return p0.intValue
-                case let .iset__attribute_attributeto_value(p0, p1): return p0.intValue + p1.intValue
-                case let .iequalTo__otherAttributed(p0): return p0.intValue
-                case .name_get: return 0
-				case .name_set(let newValue): return newValue.intValue
-                case .attributes_get: return 0
-				case .attributes_set(let newValue): return newValue.intValue
-                case .debugDescription_get: return 0
-				case .debugDescription_set(let newValue): return newValue.intValue
+            case .m_dates: return 0
+            case let .m_equalTo__otherSample(p0): return p0.intValue
+            case let .m_value__of_attribute(p0): return p0.intValue
+            case let .m_set__attribute_attributeto_value(p0, p1): return p0.intValue + p1.intValue
+            case let .m_equalTo__otherAttributed(p0): return p0.intValue
+            case .p_name_get: return 0
+            case .p_attributes_get: return 0
+            case .p_debugDescription_get: return 0
             }
         }
     }
 
-    struct Given {
+    class Given: StubbedMethod {
         fileprivate var method: MethodType
-        var returns: Any?
-        var `throws`: Error?
 
-        private init(method: MethodType, returns: Any?, throws: Error?) {
+        private init(method: MethodType, products: [Product]) {
             self.method = method
-            self.returns = returns
-            self.`throws` = `throws`
+            super.init(products)
         }
 
-        static func dates(willReturn: [DateType: Date]) -> Given {
-            return Given(method: .idates, returns: willReturn, throws: nil)
+        static func name(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_name_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func equalTo(otherSample: Parameter<Sample>, willReturn: Bool) -> Given {
-            return Given(method: .iequalTo__otherSample(otherSample), returns: willReturn, throws: nil)
+        static func attributes(getter defaultValue: [Attribute]...) -> PropertyStub {
+            return Given(method: .p_attributes_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func value(of attribute: Parameter<Attribute>, willReturn: Any) -> Given {
-            return Given(method: .ivalue__of_attribute(attribute), returns: willReturn, throws: nil)
+        static func debugDescription(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_debugDescription_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func equalTo(otherAttributed: Parameter<Attributed>, willReturn: Bool) -> Given {
-            return Given(method: .iequalTo__otherAttributed(otherAttributed), returns: willReturn, throws: nil)
+
+        static func dates(willReturn: [DateType: Date]...) -> MethodStub {
+            return Given(method: .m_dates, products: willReturn.map({ Product.return($0) }))
         }
-        static func value(of attribute: Parameter<Attribute>, willThrow: Error) -> Given {
-            return Given(method: .ivalue__of_attribute(attribute), returns: nil, throws: willThrow)
+        static func equalTo(_ otherSample: Parameter<Sample>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__otherSample(`otherSample`), products: willReturn.map({ Product.return($0) }))
         }
-        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any>, willThrow: Error) -> Given {
-            return Given(method: .iset__attribute_attributeto_value(attribute, value), returns: nil, throws: willThrow)
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherSample` label")
+		static func equalTo(otherSample: Parameter<Sample>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__otherSample(`otherSample`), products: willReturn.map({ Product.return($0) }))
+        }
+        static func value(of attribute: Parameter<Attribute>, willReturn: Any...) -> MethodStub {
+            return Given(method: .m_value__of_attribute(`attribute`), products: willReturn.map({ Product.return($0) }))
+        }
+        static func equalTo(_ otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
+		static func equalTo(otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) }))
+        }
+        static func dates(willProduce: (Stubber<[DateType: Date]>) -> Void) -> MethodStub {
+            let willReturn: [[DateType: Date]] = []
+			let given: Given = { return Given(method: .m_dates, products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: ([DateType: Date]).self)
+			willProduce(stubber)
+			return given
+        }
+        static func equalTo(_ otherSample: Parameter<Sample>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_equalTo__otherSample(`otherSample`), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        static func equalTo(_ otherAttributed: Parameter<Attributed>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        static func value(of attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func value(of attribute: Parameter<Attribute>, willProduce: (StubberThrows<Any>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Any).self)
+			willProduce(stubber)
+			return given
+        }
+        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
         }
     }
 
     struct Verify {
         fileprivate var method: MethodType
 
-        static func dates() -> Verify {
-            return Verify(method: .idates)
-        }
-        static func equalTo(otherSample: Parameter<Sample>) -> Verify {
-            return Verify(method: .iequalTo__otherSample(otherSample))
-        }
-        static func value(of attribute: Parameter<Attribute>) -> Verify {
-            return Verify(method: .ivalue__of_attribute(attribute))
-        }
-        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any>) -> Verify {
-            return Verify(method: .iset__attribute_attributeto_value(attribute, value))
-        }
-        static func equalTo(otherAttributed: Parameter<Attributed>) -> Verify {
-            return Verify(method: .iequalTo__otherAttributed(otherAttributed))
-        }
+        static func dates() -> Verify { return Verify(method: .m_dates)}
+        static func equalTo(_ otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherSample` label")
+		static func equalTo(otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
+        static func value(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_value__of_attribute(`attribute`))}
+        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any>) -> Verify { return Verify(method: .m_set__attribute_attributeto_value(`attribute`, `value`))}
+        static func equalTo(_ otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
+		static func equalTo(otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
+        static var name: Verify { return Verify(method: .p_name_get) }
+        static var attributes: Verify { return Verify(method: .p_attributes_get) }
+        static var debugDescription: Verify { return Verify(method: .p_debugDescription_get) }
     }
 
     struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func dates(perform: () -> Void) -> Perform {
-            return Perform(method: .idates, performs: perform)
+        static func dates(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_dates, performs: perform)
         }
-        static func equalTo(otherSample: Parameter<Sample>, perform: (Sample) -> Void) -> Perform {
-            return Perform(method: .iequalTo__otherSample(otherSample), performs: perform)
+        static func equalTo(_ otherSample: Parameter<Sample>, perform: @escaping (Sample) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__otherSample(`otherSample`), performs: perform)
         }
-        static func value(of attribute: Parameter<Attribute>, perform: (Attribute) -> Void) -> Perform {
-            return Perform(method: .ivalue__of_attribute(attribute), performs: perform)
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherSample` label")
+		static func equalTo(otherSample: Parameter<Sample>, perform: @escaping (Sample) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__otherSample(`otherSample`), performs: perform)
         }
-        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any>, perform: (Attribute, Any) -> Void) -> Perform {
-            return Perform(method: .iset__attribute_attributeto_value(attribute, value), performs: perform)
+        static func value(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
+            return Perform(method: .m_value__of_attribute(`attribute`), performs: perform)
         }
-        static func equalTo(otherAttributed: Parameter<Attributed>, perform: (Attributed) -> Void) -> Perform {
-            return Perform(method: .iequalTo__otherAttributed(otherAttributed), performs: perform)
+        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any>, perform: @escaping (Attribute, Any) -> Void) -> Perform {
+            return Perform(method: .m_set__attribute_attributeto_value(`attribute`, `value`), performs: perform)
         }
-    }
-
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
+        static func equalTo(_ otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__otherAttributed(`otherAttributed`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
+		static func equalTo(otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__otherAttributed(`otherAttributed`), performs: perform)
+        }
     }
 
     public func given(_ method: Given) {
         methodReturnValues.append(method)
-        methodReturnValues.sort { $0.method.intValue() < $1.method.intValue() }
     }
 
     public func perform(_ method: Perform) {
@@ -379,36 +439,49 @@ class SampleMock: Sample, Mock {
         MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
-    public func verify(property: Property, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(property.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(property.method)`, but was: \(invocations.count)", file: file, line: line)
-    }
-
     private func addInvocation(_ call: MethodType) {
         invocations.append(call)
     }
-
-    private func methodReturnValue(_ method: MethodType) -> (value: Any?, error: Error?) {
-        let matched = methodReturnValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher)  }
-        return (value: matched?.returns, error: matched?.`throws`)
+    private func methodReturnValue(_ method: MethodType) throws -> Product {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
     }
-
     private func methodPerformValue(_ method: MethodType) -> Any? {
         let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
         return matched?.performs
     }
-
     private func matchingCalls(_ method: MethodType) -> [MethodType] {
         return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
     }
-
-    static private func matchingCalls(_ method: StaticVerify) -> Int {
+    private func matchingCalls(_ method: Verify) -> Int {
         return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
     }
 
     static public func given(_ method: StaticGiven) {
         methodReturnValues.append(method)
-        methodReturnValues.sort { $0.method.intValue() < $1.method.intValue() }
     }
 
     static public func perform(_ method: StaticPerform) {
@@ -421,27 +494,38 @@ class SampleMock: Sample, Mock {
         MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
-    static public func verify(property: StaticProperty, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(property.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(property.method)`, but was: \(invocations.count)", file: file, line: line)
-    }
-
     static private func addInvocation(_ call: StaticMethodType) {
         invocations.append(call)
     }
-
-    static private func methodReturnValue(_ method: StaticMethodType) -> (value: Any?, error: Error?) {
-        let matched = methodReturnValues.reversed().first { StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher)  }
-        return (value: matched?.returns, error: matched?.`throws`)
+    static private func methodReturnValue(_ method: StaticMethodType) throws -> Product {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
     }
-
     static private func methodPerformValue(_ method: StaticMethodType) -> Any? {
         let matched = methodPerformValues.reversed().first { StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
         return matched?.performs
     }
-
     static private func matchingCalls(_ method: StaticMethodType) -> [StaticMethodType] {
         return invocations.filter { StaticMethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    static private func matchingCalls(_ method: StaticVerify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    static private func givenGetterValue<T>(_ method: StaticMethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            Failure(message)
+        }
+    }
+    static private func optionalGivenGetterValue<T>(_ method: StaticMethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
     }
 // sourcery:end
 }

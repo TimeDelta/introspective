@@ -55,7 +55,7 @@ public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestrictio
 
 	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		guard let sampleDate = try sample.value(of: restrictedAttribute) as? Date else { throw AttributeError.typeMismatch }
-		return sampleDate.isAfterDate(date, granularity: .second)
+		return sampleDate.isAfterDate(date, granularity: .nanosecond)
 	}
 
 	public final func toPredicate() -> NSPredicate {

@@ -124,7 +124,7 @@ class HeartRateQueryFunctionalTests: QueryFunctionalTest {
 		])
 
 		let heartRateRestriction = GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate, value: value)
-		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(restrictedAttribute: HeartRate.timestamp, date: Date() - 1.days)
+		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitTimestamp, date: Date() - 1.days)
 		query.attributeRestrictions.append(heartRateRestriction)
 		query.attributeRestrictions.append(timestampRestriction)
 

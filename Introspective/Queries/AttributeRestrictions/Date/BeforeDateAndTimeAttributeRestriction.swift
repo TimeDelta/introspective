@@ -55,7 +55,7 @@ public final class BeforeDateAndTimeAttributeRestriction: DateAttributeRestricti
 
 	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		guard let sampleDate = try sample.value(of: restrictedAttribute) as? Date else { throw AttributeError.typeMismatch }
-		return sampleDate.isBeforeDate(date, granularity: .second)
+		return sampleDate.isBeforeDate(date, granularity: .nanosecond)
 	}
 
 	public final func toPredicate() -> NSPredicate {

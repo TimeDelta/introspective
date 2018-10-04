@@ -15,7 +15,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 
 	@IBOutlet weak final var ratingSlider: UISlider!
 	@IBOutlet weak final var outOfMaxRatingLabel: UILabel!
-	@IBOutlet weak final var doneButon: UIButton!
+	@IBOutlet weak final var doneButton: UIButton!
 	@IBOutlet weak final var addNoteButton: UIButton!
 
 	// MARK: - Instance Member Variables

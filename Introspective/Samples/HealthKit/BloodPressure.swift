@@ -48,10 +48,10 @@ public final class BloodPressure: HealthKitCorrelationSample {
 
 	// MARK: - Initializers
 
-	public init(systolic: Double = Double(), diastolic: Double = Double(), _ timestampe: Date = Date()) {
+	public init(systolic: Double = Double(), diastolic: Double = Double(), _ timestamp: Date = Date()) {
 		self.systolic = systolic
 		self.diastolic = diastolic
-		timestamp = Date()
+		self.timestamp = timestamp
 	}
 
 	public required init(_ sample: HKCorrelation) {

@@ -13,24 +13,29 @@ import UIKit
 
 class RecordMoodTableViewCellUnitTests: UnitTest {
 
+	fileprivate typealias Me = RecordMoodTableViewCellUnitTests
+	private static let frame = CGRect(x: 0, y: 0, width: 100, height: 30)
+	private static let ratingSlider = UISlider(frame: frame)
+	private static let addNoteButton = UIButton(type: .system)
+	private static let doneButton = UIButton(type: .system)
+	private static let outOfMaxRatingLabel = UILabel(frame: frame)
+
 	fileprivate var cell: RecordMoodTableViewCell!
 	fileprivate var mockMood: MoodMock!
 
 	override func setUp() {
 		super.setUp()
 
-		let frame = CGRect(x: 0, y: 0, width: 100, height: 30)
-
 		cell = RecordMoodTableViewCell()
-		cell.ratingSlider = UISlider(frame: frame)
-		cell.addNoteButton = UIButton(type: .system)
-		cell.doneButon = UIButton(type: .system)
-		cell.outOfMaxRatingLabel = UILabel(frame: frame)
+		cell.ratingSlider = Me.ratingSlider
+		cell.addNoteButton = Me.addNoteButton
+		cell.doneButton = Me.doneButton
+		cell.outOfMaxRatingLabel = Me.outOfMaxRatingLabel
 
 		mockMood = MoodMock()
 		Given(mockSampleFactory, .mood(willReturn: mockMood))
 
-		mockSettings.maximumMood = 7.0
+		Given(mockSettings, .maximumMood(getter: 7.0))
 	}
 
 	func testNoteGetsClearedOnSave() {

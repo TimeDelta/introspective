@@ -93,8 +93,8 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 		restriction.date = restrictionDate
 		let sampleDate = oldDate()
 		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: sampleDate))
-		Given(mockCalendarUtil, .date(date1: .value(restrictionDate), occursOnSame: .value(.day), as: .value(sampleDate), willReturn: false))
-		Given(mockCalendarUtil, .date(date1: .value(sampleDate), occursOnSame: .value(.day), as: .value(restrictionDate), willReturn: false))
+		Given(mockCalendarUtil, .date(.value(restrictionDate), occursOnSame: .value(.day), as: .value(sampleDate), willReturn: false))
+		Given(mockCalendarUtil, .date(.value(sampleDate), occursOnSame: .value(.day), as: .value(restrictionDate), willReturn: false))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)
@@ -111,8 +111,8 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 		restriction.date = restrictionDate
 		let sampleDate = Date()
 		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: sampleDate))
-		Given(mockCalendarUtil, .date(date1: .value(restrictionDate), occursOnSame: .value(.day), as: .value(sampleDate), willReturn: false))
-		Given(mockCalendarUtil, .date(date1: .value(sampleDate), occursOnSame: .value(.day), as: .value(restrictionDate), willReturn: false))
+		Given(mockCalendarUtil, .date(.value(restrictionDate), occursOnSame: .value(.day), as: .value(sampleDate), willReturn: false))
+		Given(mockCalendarUtil, .date(.value(sampleDate), occursOnSame: .value(.day), as: .value(restrictionDate), willReturn: false))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)
@@ -130,8 +130,8 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 		restriction.date = restrictionDate
 		let sampleDate = Date(year: 2018, month: 1, day: 1, hour: 2, minute: 2, second: 1)
 		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: sampleDate))
-		Given(mockCalendarUtil, .date(date1: .value(startOfRestrictionDate), occursOnSame: .value(.day), as: .value(sampleDate), willReturn: true))
-		Given(mockCalendarUtil, .date(date1: .value(sampleDate), occursOnSame: .value(.day), as: .value(startOfRestrictionDate), willReturn: true))
+		Given(mockCalendarUtil, .date(.value(startOfRestrictionDate), occursOnSame: .value(.day), as: .value(sampleDate), willReturn: true))
+		Given(mockCalendarUtil, .date(.value(sampleDate), occursOnSame: .value(.day), as: .value(startOfRestrictionDate), willReturn: true))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)

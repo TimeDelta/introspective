@@ -44,7 +44,7 @@ class SampleUtilUnitTests: UnitTest {
 			DayOfWeek.Thursday,
 			DayOfWeek.Friday,
 		])
-		Given(mockCalendarUtil, .date(date: .value(date), isOnOneOf: .value(daysOfWeek), willReturn: false))
+		Given(mockCalendarUtil, .date(.value(date), isOnOneOf: .value(daysOfWeek), willReturn: false))
 
 		// when
 		let onOneOf = util.sample(sample, occursOnOneOf: daysOfWeek)
@@ -57,7 +57,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let sample = SampleCreatorTestUtil.createSample(startDate: Date())
 		let daysOfWeek = Set<DayOfWeek>(DayOfWeek.allDays)
-		Given(mockCalendarUtil, .date(date: .any(Date.self), isOnOneOf: .value(daysOfWeek), willReturn: true))
+		Given(mockCalendarUtil, .date(.any(Date.self), isOnOneOf: .value(daysOfWeek), willReturn: true))
 
 		// when
 		let onOneOf = util.sample(sample, occursOnOneOf: daysOfWeek)
@@ -71,7 +71,7 @@ class SampleUtilUnitTests: UnitTest {
 		let date = DateInRegion().dateAt(.nextWeekday(.saturday)).date
 		let sample = SampleCreatorTestUtil.createSample(startDate: date)
 		let daysOfWeek = Set<DayOfWeek>([DayOfWeek.Saturday])
-		Given(mockCalendarUtil, .date(date: .any(Date.self), isOnOneOf: .value(daysOfWeek), willReturn: true))
+		Given(mockCalendarUtil, .date(.any(Date.self), isOnOneOf: .value(daysOfWeek), willReturn: true))
 
 		// when
 		let onOneOf = util.sample(sample, occursOnOneOf: daysOfWeek)
@@ -86,8 +86,8 @@ class SampleUtilUnitTests: UnitTest {
 		let endDate = DateInRegion().dateAt(.nextWeekday(.saturday)).date
 		let sample = SampleCreatorTestUtil.createSample(startDate: startDate, endDate: endDate)
 		let daysOfWeek = Set<DayOfWeek>([DayOfWeek.Saturday])
-		Given(mockCalendarUtil, .date(date: .value(startDate), isOnOneOf: .value(daysOfWeek), willReturn: false))
-		Given(mockCalendarUtil, .date(date: .value(endDate), isOnOneOf: .value(daysOfWeek), willReturn: true))
+		Given(mockCalendarUtil, .date(.value(startDate), isOnOneOf: .value(daysOfWeek), willReturn: false))
+		Given(mockCalendarUtil, .date(.value(endDate), isOnOneOf: .value(daysOfWeek), willReturn: true))
 
 		// when
 		let onOneOf = util.sample(sample, occursOnOneOf: daysOfWeek)
@@ -100,7 +100,7 @@ class SampleUtilUnitTests: UnitTest {
 		// given
 		let sample = SampleCreatorTestUtil.createSample(startDate: Date(), endDate: Date())
 		let daysOfWeek = Set<DayOfWeek>(DayOfWeek.allDays)
-		Given(mockCalendarUtil, .date(date: .any(Date.self), isOnOneOf: .value(daysOfWeek), willReturn: false))
+		Given(mockCalendarUtil, .date(.any(Date.self), isOnOneOf: .value(daysOfWeek), willReturn: false))
 
 		// when
 		let onOneOf = util.sample(sample, occursOnOneOf: daysOfWeek)
@@ -133,8 +133,8 @@ class SampleUtilUnitTests: UnitTest {
 		let expectedStartDate = Date()
 		let expectedEndDate = expectedStartDate + 1.years
 		let samples = SampleCreatorTestUtil.createSamples(withDates: [expectedStartDate, expectedEndDate])
-		Given(mockCalendarUtil, .compare(date1: .value(expectedStartDate), date2: .value(expectedEndDate), willReturn: .orderedAscending))
-		Given(mockCalendarUtil, .compare(date1: .value(expectedEndDate), date2: .value(expectedStartDate), willReturn: .orderedDescending))
+		Given(mockCalendarUtil, .compare(.value(expectedStartDate), .value(expectedEndDate), willReturn: .orderedAscending))
+		Given(mockCalendarUtil, .compare(.value(expectedEndDate), .value(expectedStartDate), willReturn: .orderedDescending))
 
 		// when
 		let convertedSamples = util.convertOneDateSamplesToTwoDateSamples(
@@ -158,8 +158,8 @@ class SampleUtilUnitTests: UnitTest {
 		let date1 = Date()
 		let date2 = Date() + 1.years
 		let samples = SampleCreatorTestUtil.createSamples(withDates: [date1, date2])
-		Given(mockCalendarUtil, .compare(date1: .value(date1), date2: .value(date2), willReturn: .orderedAscending))
-		Given(mockCalendarUtil, .compare(date1: .value(date2), date2: .value(date1), willReturn: .orderedDescending))
+		Given(mockCalendarUtil, .compare(.value(date1), .value(date2), willReturn: .orderedAscending))
+		Given(mockCalendarUtil, .compare(.value(date2), .value(date1), willReturn: .orderedDescending))
 
 		// when
 		let convertedSamples = util.convertOneDateSamplesToTwoDateSamples(
@@ -195,21 +195,21 @@ class SampleUtilUnitTests: UnitTest {
 		let date3 = Date() + 2.days
 		let date4 = Date() + 1.years
 		let samples = SampleCreatorTestUtil.createSamples(withDates: [date1, date2, date3, date4])
-		Given(mockCalendarUtil, .compare(date1: .value(date1), date2: .value(date2), willReturn: .orderedAscending))
-		Given(mockCalendarUtil, .compare(date1: .value(date1), date2: .value(date3), willReturn: .orderedAscending))
-		Given(mockCalendarUtil, .compare(date1: .value(date1), date2: .value(date4), willReturn: .orderedAscending))
+		Given(mockCalendarUtil, .compare(.value(date1), .value(date2), willReturn: .orderedAscending))
+		Given(mockCalendarUtil, .compare(.value(date1), .value(date3), willReturn: .orderedAscending))
+		Given(mockCalendarUtil, .compare(.value(date1), .value(date4), willReturn: .orderedAscending))
 
-		Given(mockCalendarUtil, .compare(date1: .value(date2), date2: .value(date1), willReturn: .orderedDescending))
-		Given(mockCalendarUtil, .compare(date1: .value(date2), date2: .value(date3), willReturn: .orderedAscending))
-		Given(mockCalendarUtil, .compare(date1: .value(date2), date2: .value(date4), willReturn: .orderedAscending))
+		Given(mockCalendarUtil, .compare(.value(date2), .value(date1), willReturn: .orderedDescending))
+		Given(mockCalendarUtil, .compare(.value(date2), .value(date3), willReturn: .orderedAscending))
+		Given(mockCalendarUtil, .compare(.value(date2), .value(date4), willReturn: .orderedAscending))
 
-		Given(mockCalendarUtil, .compare(date1: .value(date3), date2: .value(date1), willReturn: .orderedDescending))
-		Given(mockCalendarUtil, .compare(date1: .value(date3), date2: .value(date2), willReturn: .orderedDescending))
-		Given(mockCalendarUtil, .compare(date1: .value(date3), date2: .value(date4), willReturn: .orderedAscending))
+		Given(mockCalendarUtil, .compare(.value(date3), .value(date1), willReturn: .orderedDescending))
+		Given(mockCalendarUtil, .compare(.value(date3), .value(date2), willReturn: .orderedDescending))
+		Given(mockCalendarUtil, .compare(.value(date3), .value(date4), willReturn: .orderedAscending))
 
-		Given(mockCalendarUtil, .compare(date1: .value(date4), date2: .value(date1), willReturn: .orderedDescending))
-		Given(mockCalendarUtil, .compare(date1: .value(date4), date2: .value(date2), willReturn: .orderedDescending))
-		Given(mockCalendarUtil, .compare(date1: .value(date4), date2: .value(date3), willReturn: .orderedDescending))
+		Given(mockCalendarUtil, .compare(.value(date4), .value(date1), willReturn: .orderedDescending))
+		Given(mockCalendarUtil, .compare(.value(date4), .value(date2), willReturn: .orderedDescending))
+		Given(mockCalendarUtil, .compare(.value(date4), .value(date3), willReturn: .orderedDescending))
 
 		// when
 		let convertedSamples = util.convertOneDateSamplesToTwoDateSamples(
@@ -262,8 +262,8 @@ class SampleUtilUnitTests: UnitTest {
 		let expectedStartDate = Date()
 		let expectedEndDate = expectedStartDate + 1.years
 		let samples = SampleCreatorTestUtil.createSamples(withDates: [expectedStartDate, expectedEndDate])
-		Given(mockCalendarUtil, .compare(date1: .value(expectedStartDate), date2: .value(expectedEndDate), willReturn: .orderedAscending))
-		Given(mockCalendarUtil, .compare(date1: .value(expectedEndDate), date2: .value(expectedStartDate), willReturn: .orderedDescending))
+		Given(mockCalendarUtil, .compare(.value(expectedStartDate), .value(expectedEndDate), willReturn: .orderedAscending))
+		Given(mockCalendarUtil, .compare(.value(expectedEndDate), .value(expectedStartDate), willReturn: .orderedDescending))
 
 		// when
 		let convertedSamples = util.convertOneDateSamplesToTwoDateSamples(
@@ -287,8 +287,8 @@ class SampleUtilUnitTests: UnitTest {
 		let date1 = Date()
 		let date2 = Date() + 1.years
 		let samples = SampleCreatorTestUtil.createSamples(withDates: [date1, date2])
-		Given(mockCalendarUtil, .compare(date1: .value(date1), date2: .value(date2), willReturn: .orderedAscending))
-		Given(mockCalendarUtil, .compare(date1: .value(date2), date2: .value(date1), willReturn: .orderedDescending))
+		Given(mockCalendarUtil, .compare(.value(date1), .value(date2), willReturn: .orderedAscending))
+		Given(mockCalendarUtil, .compare(.value(date2), .value(date1), willReturn: .orderedDescending))
 
 		// when
 		let convertedSamples = util.convertOneDateSamplesToTwoDateSamples(
@@ -324,21 +324,21 @@ class SampleUtilUnitTests: UnitTest {
 		let date3 = Date() + 2.days
 		let date4 = Date() + 1.years
 		let samples = SampleCreatorTestUtil.createSamples(withDates: [date1, date2, date3, date4])
-		Given(mockCalendarUtil, .compare(date1: .value(date1), date2: .value(date2), willReturn: .orderedAscending))
-		Given(mockCalendarUtil, .compare(date1: .value(date1), date2: .value(date3), willReturn: .orderedAscending))
-		Given(mockCalendarUtil, .compare(date1: .value(date1), date2: .value(date4), willReturn: .orderedAscending))
+		Given(mockCalendarUtil, .compare(.value(date1), .value(date2), willReturn: .orderedAscending))
+		Given(mockCalendarUtil, .compare(.value(date1), .value(date3), willReturn: .orderedAscending))
+		Given(mockCalendarUtil, .compare(.value(date1), .value(date4), willReturn: .orderedAscending))
 
-		Given(mockCalendarUtil, .compare(date1: .value(date2), date2: .value(date1), willReturn: .orderedDescending))
-		Given(mockCalendarUtil, .compare(date1: .value(date2), date2: .value(date3), willReturn: .orderedAscending))
-		Given(mockCalendarUtil, .compare(date1: .value(date2), date2: .value(date4), willReturn: .orderedAscending))
+		Given(mockCalendarUtil, .compare(.value(date2), .value(date1), willReturn: .orderedDescending))
+		Given(mockCalendarUtil, .compare(.value(date2), .value(date3), willReturn: .orderedAscending))
+		Given(mockCalendarUtil, .compare(.value(date2), .value(date4), willReturn: .orderedAscending))
 
-		Given(mockCalendarUtil, .compare(date1: .value(date3), date2: .value(date1), willReturn: .orderedDescending))
-		Given(mockCalendarUtil, .compare(date1: .value(date3), date2: .value(date2), willReturn: .orderedDescending))
-		Given(mockCalendarUtil, .compare(date1: .value(date3), date2: .value(date4), willReturn: .orderedAscending))
+		Given(mockCalendarUtil, .compare(.value(date3), .value(date1), willReturn: .orderedDescending))
+		Given(mockCalendarUtil, .compare(.value(date3), .value(date2), willReturn: .orderedDescending))
+		Given(mockCalendarUtil, .compare(.value(date3), .value(date4), willReturn: .orderedAscending))
 
-		Given(mockCalendarUtil, .compare(date1: .value(date4), date2: .value(date1), willReturn: .orderedDescending))
-		Given(mockCalendarUtil, .compare(date1: .value(date4), date2: .value(date2), willReturn: .orderedDescending))
-		Given(mockCalendarUtil, .compare(date1: .value(date4), date2: .value(date3), willReturn: .orderedDescending))
+		Given(mockCalendarUtil, .compare(.value(date4), .value(date1), willReturn: .orderedDescending))
+		Given(mockCalendarUtil, .compare(.value(date4), .value(date2), willReturn: .orderedDescending))
+		Given(mockCalendarUtil, .compare(.value(date4), .value(date3), willReturn: .orderedDescending))
 
 		// when
 		let convertedSamples = util.convertOneDateSamplesToTwoDateSamples(

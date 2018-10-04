@@ -8,7 +8,7 @@ echo "Mocks Input Directory = ${INPUT_DIR}"
 addArgs() {
     echo "args:" >> "$1"
     echo "  testable:" >> "$1"
-    echo "    - DataIntegration" >> "$1"
+    echo "    - Introspective" >> "$1"
     echo "  import:" >> "$1"
     echo "    - HealthKit" >> "$1"
     echo "    - CoreData" >> "$1"

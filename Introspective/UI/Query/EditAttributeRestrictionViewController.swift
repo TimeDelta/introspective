@@ -53,22 +53,16 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 	private final func updateAttributedChooserViewValues() {
 		let selectedAttribute = currentlySelectedAttribute()
 		var applicableAttributeRestrictionTypes: [AttributeRestriction.Type] = []
-		var currentRestriction: AttributeRestriction? = nil
 		applicableAttributeRestrictionTypes = DependencyInjector.restriction.typesFor(selectedAttribute)
-		if selectedAttribute is DateAttribute && attributeRestriction is DateAttributeRestriction {
-			currentRestriction = attributeRestriction
-		} else if selectedAttribute is DoubleAttribute && attributeRestriction is DoubleAttributeRestriction {
-			currentRestriction = attributeRestriction
-		} else if selectedAttribute is IntegerAttribute && attributeRestriction is IntegerAttributeRestriction {
-			currentRestriction = attributeRestriction
-		} else if selectedAttribute is TextAttribute && attributeRestriction is StringAttributeRestriction {
-			currentRestriction = attributeRestriction
-		}
 		let possibleValues = applicableAttributeRestrictionTypes.map { type in
-			return type.init(restrictedAttribute: currentlySelectedAttribute())
+			return type.init(restrictedAttribute: selectedAttribute)
+		}
+		if attributeRestrictionMatchesAttribute() {
+			attributedChooserViewController.currentValue = attributeRestriction
+		} else {
+			attributedChooserViewController.currentValue = possibleValues[0]
 		}
 		attributedChooserViewController.possibleValues = possibleValues
-		attributedChooserViewController.currentValue = currentRestriction ?? possibleValues[0]
 		if attributedChooserSubView.subviews.count > 0 {
 			attributedChooserViewController.reloadInputViews()
 		}
@@ -76,6 +70,10 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 
 	private final func currentlySelectedAttribute() -> Attribute {
 		return sampleType.attributes[attributePicker.selectedRow(inComponent: 0)]
+	}
+
+	private final func attributeRestrictionMatchesAttribute() -> Bool {
+		return attributeRestriction != nil && DependencyInjector.restriction.typesFor(currentlySelectedAttribute()).contains(where: { $0 == type(of: attributeRestriction!) })
 	}
 }
 

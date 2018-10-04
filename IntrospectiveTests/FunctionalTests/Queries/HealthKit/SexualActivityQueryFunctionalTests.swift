@@ -70,7 +70,7 @@ class SexualActivityQueryFunctionalTests: QueryFunctionalTest {
 			SexualActivity(date - 1.days),
 		])
 
-		let timestampRestriction = OnDateAttributeRestriction(restrictedAttribute: SexualActivity.timestamp, date: date)
+		let timestampRestriction = OnDateAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitTimestamp, date: date)
 		query.attributeRestrictions.append(timestampRestriction)
 
 		// when
@@ -96,7 +96,7 @@ class SexualActivityQueryFunctionalTests: QueryFunctionalTest {
 			SexualActivity(date - 1.days),
 		])
 
-		let timestampRestriction = AfterDateAndTimeAttributeRestriction(restrictedAttribute: SexualActivity.timestamp, date: date)
+		let timestampRestriction = AfterDateAndTimeAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitTimestamp, date: date)
 		query.attributeRestrictions.append(timestampRestriction)
 
 		// when

@@ -67,7 +67,7 @@ class EqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 		try! restriction.set(attribute: Me.valueAttribute, to: expectedValue)
 
 		// then
-		XCTAssertEqual(restriction.value, expectedValue)
+		XCTAssertEqual(restriction.value as? Int, expectedValue)
 	}
 
 	func testGivenSampleWithNonDateValueForGivenAttribute_samplePasses_throwsTypeMismatchError() {
@@ -156,7 +156,7 @@ class EqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = EqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value + 1)
+		let otherAttributed: Attributed = EqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value as! Int + 1)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -167,7 +167,7 @@ class EqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToAttributed_returnsTrue() {
 		// given
-		let otherAttributed: Attributed = EqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value)
+		let otherAttributed: Attributed = EqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value as! Int)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -208,7 +208,7 @@ class EqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = EqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value + 1)
+		let otherAttributed: AttributeRestriction = EqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value as! Int + 1)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -219,7 +219,7 @@ class EqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let otherAttributed: AttributeRestriction = EqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value)
+		let otherAttributed: AttributeRestriction = EqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value as! Int)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -249,7 +249,7 @@ class EqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = EqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value + 1)
+		let otherAttributed = EqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value as! Int + 1)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -260,7 +260,7 @@ class EqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let otherAttributed = EqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value)
+		let otherAttributed = EqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value as! Int)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
