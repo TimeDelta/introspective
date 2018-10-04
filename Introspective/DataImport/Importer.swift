@@ -16,4 +16,5 @@ public protocol Importer {
 	var importOnlyNewData: Bool { get set }
 
 	func importData(from url: URL) throws
+	func resetLastImportDate()
 }

@@ -54,6 +54,11 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 		DependencyInjector.db.save()
 	}
 
+	public final func resetLastImportDate() {
+		lastImport = nil
+		DependencyInjector.db.save()
+	}
+
 	private final func string(_ str: String, matches regex: String) -> Bool {
 		return str.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
 	}

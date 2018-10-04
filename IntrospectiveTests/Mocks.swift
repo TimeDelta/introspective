@@ -8086,9 +8086,16 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
 		}
     }
 
+    func resetLastImportDate() {
+        addInvocation(.m_resetLastImportDate)
+		let perform = methodPerformValue(.m_resetLastImportDate) as? () -> Void
+		perform?()
+    }
+
 
     fileprivate enum MethodType {
         case m_importData__from_url(Parameter<URL>)
+        case m_resetLastImportDate
         case p_dataTypePluralName_get
         case p_sourceName_get
         case p_lastImport_get
@@ -8099,6 +8106,8 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
             switch (lhs, rhs) {
             case (.m_importData__from_url(let lhsUrl), .m_importData__from_url(let rhsUrl)):
                 guard Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher) else { return false } 
+                return true 
+            case (.m_resetLastImportDate, .m_resetLastImportDate):
                 return true 
             case (.p_dataTypePluralName_get,.p_dataTypePluralName_get): return true
             case (.p_sourceName_get,.p_sourceName_get): return true
@@ -8112,6 +8121,7 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
         func intValue() -> Int {
             switch self {
             case let .m_importData__from_url(p0): return p0.intValue
+            case .m_resetLastImportDate: return 0
             case .p_dataTypePluralName_get: return 0
             case .p_sourceName_get: return 0
             case .p_lastImport_get: return 0
@@ -8158,6 +8168,7 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
         fileprivate var method: MethodType
 
         static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
+        static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
         static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
         static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
         static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
@@ -8171,6 +8182,9 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
 
         static func importData(from url: Parameter<URL>, perform: @escaping (URL) -> Void) -> Perform {
             return Perform(method: .m_importData__from_url(`url`), performs: perform)
+        }
+        static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resetLastImportDate, performs: perform)
         }
     }
 
