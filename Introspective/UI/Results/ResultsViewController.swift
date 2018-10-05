@@ -52,9 +52,14 @@ final class ResultsViewController: UITableViewController {
 	private final var extraInformationEditIndex: Int!
 	private final var actionsPresenter: Presentr!
 	private final var finishedLoading = false
-	private final var actionsController: ResultsActionsPopupViewController!
+
+	private final var actionsController: UIAlertController?
+
 	private final var sortAttribute: Attribute?
 	private final var sortOrder: ComparisonResult?
+	private final var sortTask: DispatchWorkItem?
+	private final var sortActionSheet: UIAlertController?
+	private final var sortController: SortResultsViewController?
 
 	// MARK: - UIViewController Overloads
 
@@ -63,11 +68,6 @@ final class ResultsViewController: UITableViewController {
 		actionsButton.target = self
 		actionsButton.action = #selector(presentActions)
 
-		NotificationCenter.default.addObserver(self, selector: #selector(graph), name: ResultsActionsPopupViewController.graphSamples, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(setSampleSort), name: ResultsActionsPopupViewController.sort, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(addInformation), name: ResultsActionsPopupViewController.addInformation, object: nil)
-		NotificationCenter.default.addObserver(editButtonItem.target!, selector: editButtonItem.action!, name: ResultsActionsPopupViewController.graphSamples, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(deleteAllSamples), name: ResultsActionsPopupViewController.deleteAllSamples, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedExtraInformation), name: Me.editedExtraInformation, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(sortSamplesBy), name: Me.sortSamples, object: nil)
 
@@ -75,6 +75,7 @@ final class ResultsViewController: UITableViewController {
 
 		UiUtil.setBackButton(for: self, title: "Query", action: #selector(done))
 
+		tableView.flashScrollIndicators()
 		finishedLoading = true
 	}
 
@@ -138,7 +139,7 @@ final class ResultsViewController: UITableViewController {
 			return cell
 		}
 
-		if waiting() {
+		if waiting() || sortTask != nil {
 			return tableView.dequeueReusableCell(withIdentifier: "waitingCell", for: indexPath)
 		}
 
@@ -264,11 +265,17 @@ final class ResultsViewController: UITableViewController {
 	// MARK: - Button Actions
 
 	@objc private final func presentActions() {
-		actionsController = (storyboard!.instantiateViewController(withIdentifier: "resultsActions") as! ResultsActionsPopupViewController)
-		actionsController.sampleType = type(of: samples[0]).name
-		actionsController.sortable = samplesAreSortable()
-		actionsController.deletable = samplesAreDeletable()
-		customPresentViewController(actionsPresenter, viewController: actionsController, animated: true)
+		actionsController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+		actionsController?.addAction(UIAlertAction(title: "Graph", style: .default) { _ in self.graph() })
+		if samplesAreSortable() {
+			actionsController?.addAction(UIAlertAction(title: "Sort", style: .default) { _ in self.setSampleSort() })
+		}
+		actionsController?.addAction(UIAlertAction(title: "Add Information", style: .default) { _ in self.addInformation() })
+		if samplesAreDeletable() {
+			actionsController?.addAction(UIAlertAction(title: "Delete All " + samples[0].name + " Entries", style: .default) { _ in self.deleteAllSamples() })
+		}
+		actionsController?.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		present(actionsController!, animated: false, completion: nil)
 	}
 
 	@objc private final func done() {
@@ -276,42 +283,22 @@ final class ResultsViewController: UITableViewController {
 		self.navigationController?.popViewController(animated: true)
 	}
 
-	// MARK: - Received Notifications
-
-	@objc private final func graph(notification: Notification) {
+	@objc private final func graph() {
 		let controller = UIStoryboard(name: "GraphChooser", bundle: nil).instantiateViewController(withIdentifier: "QueryResultsGraphTypeChooser") as! QueryResultsGraphTypeTableViewController
 		controller.samples = samples
 		navigationController?.pushViewController(controller, animated: false)
 	}
 
-	@objc private final func setSampleSort(notification: Notification) {
-		actionsController!.dismiss(animated: true, completion: {
-			let controller = self.storyboard!.instantiateViewController(withIdentifier: "sortResults") as! SortResultsViewController
-			controller.attributes = self.sortableAttributes()
-			controller.sortAttribute = self.sortAttribute
-			controller.sortOrder = self.sortOrder
-			controller.notificationToSendOnAccept = Me.sortSamples
-			self.customPresentViewController(Me.sortPresenter, viewController: controller, animated: true)
-		})
+	@objc private final func setSampleSort() {
+		let controller = self.storyboard!.instantiateViewController(withIdentifier: "sortResults") as! SortResultsViewController
+		controller.attributes = self.sortableAttributes()
+		controller.sortAttribute = self.sortAttribute
+		controller.sortOrder = self.sortOrder
+		controller.notificationToSendOnAccept = Me.sortSamples
+		self.customPresentViewController(Me.sortPresenter, viewController: controller, animated: true)
 	}
 
-	@objc private final func sortSamplesBy(notification: Notification) {
-		let sortCriteria = notification.object as! (attribute: Attribute, order: ComparisonResult)
-		sortOrder = sortCriteria.order
-		sortAttribute = sortCriteria.attribute
-		switch (sortAttribute) {
-			case is DoubleAttribute: sortByDouble(); break
-			case is IntegerAttribute: sortByInteger(); break
-			case is TextAttribute: sortByText(); break
-			case is DateAttribute: sortByDate(); break
-			case is DayOfWeekAttribute: sortByDayOfWeek(); break
-			case is TimeOfDayAttribute: sortByTimeOfDay(); break
-			default:
-				os_log("Unknown sort attribute type: %@", type: .error, String(describing: type(of: sortAttribute)))
-		}
-	}
-
-	@objc private final func addInformation(notification: Notification) {
+	@objc private final func addInformation() {
 		let attribute = type(of: samples[0]).defaultDependentAttribute
 		let information = DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: attribute)[0].init(attribute)
 		extraInformation.append(information)
@@ -319,13 +306,52 @@ final class ResultsViewController: UITableViewController {
 		tableView.reloadData()
 	}
 
-	@objc private final func deleteAllSamples(notification: Notification) {
+	@objc private final func deleteAllSamples() {
 		DispatchQueue.global(qos: .userInitiated).async {
 			// TODO - tell the user something went wrong if an error is thrown here
 			try! DependencyInjector.db.deleteAll(self.samples as! [NSManagedObject])
 			DependencyInjector.db.save()
 		}
 		navigationController!.popViewController(animated: true)
+	}
+
+	// MARK: - Received Notifications
+
+	@objc private final func sortSamplesBy(notification: Notification) {
+		sortController?.dismiss(animated: false, completion: nil)
+
+		let sortCriteria = notification.object as! (attribute: Attribute, order: ComparisonResult)
+		self.sortOrder = sortCriteria.order
+		self.sortAttribute = sortCriteria.attribute
+		self.sortTask = DispatchWorkItem {
+			DispatchQueue.main.sync{
+				self.tableView.reloadData()
+				self.sortActionSheet = UIAlertController(title: "Sorting by \(self.sortAttribute!.name)", message: nil, preferredStyle: .actionSheet)
+				self.sortActionSheet?.addAction(UIAlertAction(title: "Cancel", style: .cancel){ _ in
+					self.sortTask?.cancel()
+					self.sortTask = nil
+					self.tableView.reloadData()
+				})
+				self.present(self.sortActionSheet!, animated: false, completion: nil)
+			}
+
+			switch (self.sortAttribute) {
+				case is DoubleAttribute: self.sortByDouble(); break
+				case is IntegerAttribute: self.sortByInteger(); break
+				case is TextAttribute: self.sortByText(); break
+				case is DateAttribute: self.sortByDate(); break
+				case is DayOfWeekAttribute: self.sortByDayOfWeek(); break
+				case is TimeOfDayAttribute: self.sortByTimeOfDay(); break
+				default:
+					os_log("Unknown sort attribute type: %@", type: .error, String(describing: type(of: self.sortAttribute)))
+			}
+			self.sortTask = nil
+			DispatchQueue.main.async{
+				self.sortActionSheet?.dismiss(animated: false, completion: nil)
+				self.tableView.reloadData()
+			}
+		}
+		DispatchQueue.global(qos: .userInteractive).async(execute: self.sortTask!)
 	}
 
 	// MARK: - Helper functions
@@ -400,6 +426,7 @@ final class ResultsViewController: UITableViewController {
 	private final func sortByDouble() {
 		do {
 			samples = try samples.sorted() {
+				if self.sortTask == nil || self.sortTask!.isCancelled { return true }
 				let value1 = try $0.value(of: self.sortAttribute!) as? Double
 				let value2 = try $1.value(of: self.sortAttribute!) as? Double
 				if value1 == nil && value2 == nil { return true }
@@ -410,7 +437,6 @@ final class ResultsViewController: UITableViewController {
 				}
 				return value1! >= value2!
 			}
-			tableView.reloadData()
 		} catch {
 			os_log("Failed to sort by DoubleAttribute: %@", type: .error, error.localizedDescription)
 			tellUserSortFailed()
@@ -420,6 +446,7 @@ final class ResultsViewController: UITableViewController {
 	private final func sortByInteger() {
 		do {
 			samples = try samples.sorted() {
+				if self.sortTask == nil || self.sortTask!.isCancelled { return true }
 				let value1 = try $0.value(of: self.sortAttribute!) as? Int
 				let value2 = try $1.value(of: self.sortAttribute!) as? Int
 				if value1 == nil && value2 == nil { return true }
@@ -430,7 +457,6 @@ final class ResultsViewController: UITableViewController {
 				}
 				return value1! >= value2!
 			}
-			tableView.reloadData()
 		} catch {
 			os_log("Failed to sort by IntegerAttribute: %@", type: .error, error.localizedDescription)
 			tellUserSortFailed()
@@ -440,6 +466,7 @@ final class ResultsViewController: UITableViewController {
 	private final func sortByText() {
 		do {
 			samples = try samples.sorted() {
+				if self.sortTask == nil || self.sortTask!.isCancelled { return true }
 				let value1 = try $0.value(of: self.sortAttribute!) as? String
 				let value2 = try $1.value(of: self.sortAttribute!) as? String
 				if value1 == nil && value2 == nil { return true }
@@ -450,7 +477,6 @@ final class ResultsViewController: UITableViewController {
 				}
 				return value1! >= value2!
 			}
-			tableView.reloadData()
 		} catch {
 			os_log("Failed to sort by TextAttribute: %@", type: .error, error.localizedDescription)
 			tellUserSortFailed()
@@ -460,6 +486,7 @@ final class ResultsViewController: UITableViewController {
 	private final func sortByDate() {
 		do {
 			samples = try samples.sorted() {
+				if self.sortTask == nil || self.sortTask!.isCancelled { return true }
 				let value1 = try $0.value(of: self.sortAttribute!) as? Date
 				let value2 = try $1.value(of: self.sortAttribute!) as? Date
 				if value1 == nil && value2 == nil { return true }
@@ -470,7 +497,6 @@ final class ResultsViewController: UITableViewController {
 				}
 				return value1! >= value2!
 			}
-			tableView.reloadData()
 		} catch {
 			os_log("Failed to sort by DateAttribute: %@", type: .error, error.localizedDescription)
 			tellUserSortFailed()
@@ -480,6 +506,7 @@ final class ResultsViewController: UITableViewController {
 	private final func sortByDayOfWeek() {
 		do {
 			samples = try samples.sorted() {
+				if self.sortTask == nil || self.sortTask!.isCancelled { return true }
 				let value1 = try $0.value(of: self.sortAttribute!) as? DayOfWeek
 				let value2 = try $1.value(of: self.sortAttribute!) as? DayOfWeek
 				if value1 == nil && value2 == nil { return true }
@@ -490,7 +517,6 @@ final class ResultsViewController: UITableViewController {
 				}
 				return value1! >= value2!
 			}
-			tableView.reloadData()
 		} catch {
 			os_log("Failed to sort by DayOfWeekAttribute: %@", type: .error, error.localizedDescription)
 			tellUserSortFailed()
@@ -500,6 +526,7 @@ final class ResultsViewController: UITableViewController {
 	private final func sortByTimeOfDay() {
 		do {
 			samples = try samples.sorted() {
+				if self.sortTask == nil || self.sortTask!.isCancelled { return true }
 				let value1 = try $0.value(of: self.sortAttribute!) as? TimeOfDay
 				let value2 = try $1.value(of: self.sortAttribute!) as? TimeOfDay
 				if value1 == nil && value2 == nil { return true }
@@ -510,7 +537,6 @@ final class ResultsViewController: UITableViewController {
 				}
 				return value1! >= value2!
 			}
-			tableView.reloadData()
 		} catch {
 			os_log("Failed to sort by TimeOfDayAttribute: %@", type: .error, error.localizedDescription)
 			tellUserSortFailed()
