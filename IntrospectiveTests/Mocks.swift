@@ -4640,6 +4640,20 @@ class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
+    func restingHeartRateQuery() -> RestingHeartRateQuery {
+        addInvocation(.m_restingHeartRateQuery)
+		let perform = methodPerformValue(.m_restingHeartRateQuery) as? () -> Void
+		perform?()
+		var __value: RestingHeartRateQuery
+		do {
+		    __value = try methodReturnValue(.m_restingHeartRateQuery).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for restingHeartRateQuery(). Use given")
+			Failure("Stub return value not specified for restingHeartRateQuery(). Use given")
+		}
+		return __value
+    }
+
     func sexualActivityQuery() -> SexualActivityQuery {
         addInvocation(.m_sexualActivityQuery)
 		let perform = methodPerformValue(.m_sexualActivityQuery) as? () -> Void
@@ -4705,6 +4719,7 @@ class QueryFactoryMock: QueryFactory, Mock {
         case m_heartRateQuery
         case m_leanBodyMassQuery
         case m_moodQuery
+        case m_restingHeartRateQuery
         case m_sexualActivityQuery
         case m_sleepQuery
         case m_weightQuery
@@ -4721,6 +4736,8 @@ class QueryFactoryMock: QueryFactory, Mock {
             case (.m_leanBodyMassQuery, .m_leanBodyMassQuery):
                 return true 
             case (.m_moodQuery, .m_moodQuery):
+                return true 
+            case (.m_restingHeartRateQuery, .m_restingHeartRateQuery):
                 return true 
             case (.m_sexualActivityQuery, .m_sexualActivityQuery):
                 return true 
@@ -4742,6 +4759,7 @@ class QueryFactoryMock: QueryFactory, Mock {
             case .m_heartRateQuery: return 0
             case .m_leanBodyMassQuery: return 0
             case .m_moodQuery: return 0
+            case .m_restingHeartRateQuery: return 0
             case .m_sexualActivityQuery: return 0
             case .m_sleepQuery: return 0
             case .m_weightQuery: return 0
@@ -4773,6 +4791,9 @@ class QueryFactoryMock: QueryFactory, Mock {
         }
         static func moodQuery(willReturn: MoodQuery...) -> MethodStub {
             return Given(method: .m_moodQuery, products: willReturn.map({ Product.return($0) }))
+        }
+        static func restingHeartRateQuery(willReturn: RestingHeartRateQuery...) -> MethodStub {
+            return Given(method: .m_restingHeartRateQuery, products: willReturn.map({ Product.return($0) }))
         }
         static func sexualActivityQuery(willReturn: SexualActivityQuery...) -> MethodStub {
             return Given(method: .m_sexualActivityQuery, products: willReturn.map({ Product.return($0) }))
@@ -4825,6 +4846,13 @@ class QueryFactoryMock: QueryFactory, Mock {
 			willProduce(stubber)
 			return given
         }
+        static func restingHeartRateQuery(willProduce: (Stubber<RestingHeartRateQuery>) -> Void) -> MethodStub {
+            let willReturn: [RestingHeartRateQuery] = []
+			let given: Given = { return Given(method: .m_restingHeartRateQuery, products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (RestingHeartRateQuery).self)
+			willProduce(stubber)
+			return given
+        }
         static func sexualActivityQuery(willProduce: (Stubber<SexualActivityQuery>) -> Void) -> MethodStub {
             let willReturn: [SexualActivityQuery] = []
 			let given: Given = { return Given(method: .m_sexualActivityQuery, products: willReturn.map({ Product.return($0) })) }()
@@ -4870,6 +4898,7 @@ class QueryFactoryMock: QueryFactory, Mock {
         static func heartRateQuery() -> Verify { return Verify(method: .m_heartRateQuery)}
         static func leanBodyMassQuery() -> Verify { return Verify(method: .m_leanBodyMassQuery)}
         static func moodQuery() -> Verify { return Verify(method: .m_moodQuery)}
+        static func restingHeartRateQuery() -> Verify { return Verify(method: .m_restingHeartRateQuery)}
         static func sexualActivityQuery() -> Verify { return Verify(method: .m_sexualActivityQuery)}
         static func sleepQuery() -> Verify { return Verify(method: .m_sleepQuery)}
         static func weightQuery() -> Verify { return Verify(method: .m_weightQuery)}
@@ -4897,6 +4926,9 @@ class QueryFactoryMock: QueryFactory, Mock {
         static func moodQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_moodQuery, performs: perform)
         }
+        static func restingHeartRateQuery(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_restingHeartRateQuery, performs: perform)
+        }
         static func sexualActivityQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_sexualActivityQuery, performs: perform)
         }
@@ -4912,6 +4944,254 @@ class QueryFactoryMock: QueryFactory, Mock {
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `sampleType` label")
 		static func queryFor(sampleType: Parameter<Sample.Type>, perform: @escaping (Sample.Type) -> Void) -> Perform {
             return Perform(method: .m_queryFor__sampleType(`sampleType`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> Product {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
+// MARK: - RestingHeartRateQuery
+class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    typealias PropertyStub = Given
+    typealias MethodStub = Given
+    typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    var attributeRestrictions: [AttributeRestriction] {
+		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "RestingHeartRateQueryMock - stub value for attributeRestrictions was not defined") }
+		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
+	}
+	private var __p_attributeRestrictions: ([AttributeRestriction])?
+
+    var mostRecentEntryOnly: Bool {
+		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "RestingHeartRateQueryMock - stub value for mostRecentEntryOnly was not defined") }
+		set {	invocations.append(.p_mostRecentEntryOnly_set(.value(newValue))); __p_mostRecentEntryOnly = newValue }
+	}
+	private var __p_mostRecentEntryOnly: (Bool)?
+
+    var subQuery: (matcher: SubQueryMatcher, query: Query)? {
+		get {	invocations.append(.p_subQuery_get); return __p_subQuery ?? optionalGivenGetterValue(.p_subQuery_get, "RestingHeartRateQueryMock - stub value for subQuery was not defined") }
+		set {	invocations.append(.p_subQuery_set(.value(newValue))); __p_subQuery = newValue }
+	}
+	private var __p_subQuery: ((matcher: SubQueryMatcher, query: Query))?
+
+
+
+
+
+    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+        addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
+		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
+		perform?(`callback`)
+    }
+
+    func stop() {
+        addInvocation(.m_stop)
+		let perform = methodPerformValue(.m_stop) as? () -> Void
+		perform?()
+    }
+
+    func equalTo(_ otherQuery: Query) -> Bool {
+        addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
+		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
+		perform?(`otherQuery`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for equalTo(_ otherQuery: Query). Use given")
+			Failure("Stub return value not specified for equalTo(_ otherQuery: Query). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
+        case m_stop
+        case m_equalTo__otherQuery(Parameter<Query>)
+        case p_attributeRestrictions_get
+		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
+        case p_mostRecentEntryOnly_get
+		case p_mostRecentEntryOnly_set(Parameter<Bool>)
+        case p_subQuery_get
+		case p_subQuery_set(Parameter<(matcher: SubQueryMatcher, query: Query)?>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_runQuery__callback_callback(let lhsCallback), .m_runQuery__callback_callback(let rhsCallback)):
+                guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
+                return true 
+            case (.m_stop, .m_stop):
+                return true 
+            case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
+                guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
+                return true 
+            case (.p_attributeRestrictions_get,.p_attributeRestrictions_get): return true
+			case (.p_attributeRestrictions_set(let left),.p_attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_mostRecentEntryOnly_get,.p_mostRecentEntryOnly_get): return true
+			case (.p_mostRecentEntryOnly_set(let left),.p_mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_subQuery_get,.p_subQuery_get): return true
+			case (.p_subQuery_set(let left),.p_subQuery_set(let right)): return Parameter<(matcher: SubQueryMatcher, query: Query)?>.compare(lhs: left, rhs: right, with: matcher)
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_runQuery__callback_callback(p0): return p0.intValue
+            case .m_stop: return 0
+            case let .m_equalTo__otherQuery(p0): return p0.intValue
+            case .p_attributeRestrictions_get: return 0
+			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
+            case .p_mostRecentEntryOnly_get: return 0
+			case .p_mostRecentEntryOnly_set(let newValue): return newValue.intValue
+            case .p_subQuery_get: return 0
+			case .p_subQuery_set(let newValue): return newValue.intValue
+            }
+        }
+    }
+
+    class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [Product]) {
+            self.method = method
+            super.init(products)
+        }
+
+        static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
+            return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ Product.return($0) }))
+        }
+        static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ Product.return($0) }))
+        }
+        static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
+            return Given(method: .p_subQuery_get, products: defaultValue.map({ Product.return($0) }))
+        }
+
+        static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
+		static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
+        }
+        static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    struct Verify {
+        fileprivate var method: MethodType
+
+        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        static func stop() -> Verify { return Verify(method: .m_stop)}
+        static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
+		static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
+		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
+		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
+        static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
+		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
+    }
+
+    struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+            return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
+        }
+        static func stop(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_stop, performs: perform)
+        }
+        static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
+		static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
     }
 

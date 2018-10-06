@@ -189,6 +189,7 @@ final class ResultsViewController: UITableViewController {
 				 is BodyMassIndex,
 				 is HeartRate,
 				 is LeanBodyMass,
+				 is RestingHeartRate,
 				 is SexualActivity,
 				 is Sleep,
 				 is Weight:

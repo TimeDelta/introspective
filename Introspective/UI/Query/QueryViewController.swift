@@ -334,14 +334,18 @@ class QueryViewController: UITableViewController {
 				case is MoodImpl.Type:
 					currentQuery = DependencyInjector.query.moodQuery()
 					break
+				case is RestingHeartRate.Type:
+					currentQuery = DependencyInjector.query.restingHeartRateQuery()
+					break
 				case is SexualActivity.Type:
 					currentQuery = DependencyInjector.query.sexualActivityQuery()
+					break
+				case is Sleep.Type:
+					currentQuery = DependencyInjector.query.sleepQuery()
 					break
 				case is Weight.Type:
 					currentQuery = DependencyInjector.query.weightQuery()
 					break
-				case is Sleep.Type:
-					currentQuery = DependencyInjector.query.sleepQuery()
 				default: fatalError("Forgot a type of Sample")
 			}
 

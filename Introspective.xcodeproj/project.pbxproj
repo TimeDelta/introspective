@@ -203,6 +203,9 @@
 		A1741703508EA4B538BF55AB8D4C19D4 /* InSameCalendarUnitSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D17C897038BC72D188BF5938E99B20 /* InSameCalendarUnitSubQueryMatcher.swift */; };
 		A1AA6C0832AB2D1D89489B4D593B373F /* RecordMoodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16EBB19F87D1ED49AC879F1EE69BEA1 /* RecordMoodTableViewCell.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
+		11F463C3025BB3582EA2B6FCCB900219 /* RestingHeartRate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E7142AF9A2D5CD6F54C548C517F484 /* RestingHeartRate.swift */; };
+		DC4A8AA382FF63646A5DC8565D3CBDD0 /* RestingHeartRateQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC29D9B7E557F52033C7E618D8AEDFC /* RestingHeartRateQuery.swift */; };
+		5BE2D38612042D7874C22A05A3221ABD /* RestingHeartRateQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC35BA576759FA61B15F904C42335C0 /* RestingHeartRateQueryFunctionalTests.swift */; };
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
 		A46B458F444FF5C6A7FDBBED46E3A253 /* RecordDataPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87F6CD05F845F22D50E6097CF2DBF9C3 /* RecordDataPageViewController.swift */; };
 		A4D62D5E8F31E71700667007DFE443D2 /* Introspective.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A7581418039FB6FD454DA7AA8C114E56 /* Introspective.xcdatamodeld */; };
@@ -504,6 +507,9 @@
 		9FAD6A8CE5B12D85BB43F2F13128C320 /* BloodPressureQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPressureQueryFunctionalTests.swift; sourceTree = "<group>"; };
 		A1B6336EF7C8BA63691FB3CF1C00CFAD /* DateOnlyAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOnlyAttribute.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
+		42E7142AF9A2D5CD6F54C548C517F484 /* RestingHeartRate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestingHeartRate.swift; sourceTree = "<group>"; };
+		0CC29D9B7E557F52033C7E618D8AEDFC /* RestingHeartRateQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestingHeartRateQuery.swift; sourceTree = "<group>"; };
+		1EC35BA576759FA61B15F904C42335C0 /* RestingHeartRateQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestingHeartRateQueryFunctionalTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A7AA8E7D0DDBCC72BB2887FB26298A64 /* HealthKitSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitSample.swift; sourceTree = "<group>"; };
 		A97C2E852D585DB55B6F4CCE827222F0 /* IOUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOUtil.swift; sourceTree = "<group>"; };
@@ -1019,6 +1025,7 @@
 				5F2ED98BCDA9F07DF1F5D97FBB05C600 /* BodyMassIndexQuery.swift */,
 				E6D69936A5A5E546D7BEB9AF98A726AC /* HeartRateQuery.swift */,
 				1A8F17F09B302EB8FBCAB4ECC94D7D00 /* LeanBodyMassQuery.swift */,
+				0CC29D9B7E557F52033C7E618D8AEDFC /* RestingHeartRateQuery.swift */,
 				6E5A0BB958879272EBFA21D39D463B05 /* SexualActivityQuery.swift */,
 				3F606EFF3ACB023928CA4F88FBB679CB /* SleepQuery.swift */,
 				C62A3AC3AEA8E497B110D0AB765E3D1F /* WeightQuery.swift */,
@@ -1047,6 +1054,7 @@
 				184416EAAB43B80AC400EEDDDE0BCBCC /* SexualActivity.swift */,
 				420B6E90D1AF33B94AC28A6F3D4B7158 /* Sleep.swift */,
 				EB35E452FEA5A653CFD2853BAB4EA693 /* Weight.swift */,
+				42E7142AF9A2D5CD6F54C548C517F484 /* RestingHeartRate.swift */,
 			);
 			path = HealthKit;
 			sourceTree = "<group>";
@@ -1151,6 +1159,7 @@
 				D942EE3699FEE557365EE1AD198A3F2B /* BodyMassIndexQueryFunctionalTests.swift */,
 				AEB900441A58470DF6731F6B7F737641 /* HeartRateQueryFunctionalTests.swift */,
 				309E5D0D463F26860DCDBB12873716DB /* LeanBodyMassQueryFunctionalTests.swift */,
+				1EC35BA576759FA61B15F904C42335C0 /* RestingHeartRateQueryFunctionalTests.swift */,
 				FCC1F87C400CE195DE27C92FCD07710E /* SexualActivityQueryFunctionalTests.swift */,
 				61B0DED60547B86BC4A095154FDEF4A7 /* SleepQueryFunctionalTests.swift */,
 				2F4D1022C090AF57366EAF3AC8B2380B /* WeightQueryFunctionalTests.swift */,
@@ -1895,6 +1904,7 @@
 				1D6950CDDA8B6FDEF434AD41C730154E /* WithinXCalendarUnitsSubQueryMatcherUnitTests.swift in Sources */,
 				49DE98EC9E77FE10DC149F4D839B6163 /* BeforeTimeOfDayAttributeRestrictionUnitTests.swift in Sources */,
 				75006A246A455215C8A348F88CAC02EA /* InSameCalendarUnitSubQueryMatcherFunctionalTests.swift in Sources */,
+				5BE2D38612042D7874C22A05A3221ABD /* RestingHeartRateQueryFunctionalTests.swift in Sources */,
 				562BCB8CDBB1F9BB9E290D74540407D8 /* InSameCalendarUnitSubQueryMatcherUnitTests.swift in Sources */,
 				AD1F2D8F380682512CC3B77A3E794665 /* LeanBodyMassQueryFunctionalTests.swift in Sources */,
 			);
@@ -2016,12 +2026,14 @@
 				349CF8214C8DF46C5AD808213E09A677 /* LessThanOrEqualToDoubleAttributeRestriction.swift in Sources */,
 				868B459B53D45F5547F834099EE1A056 /* ImporterFactory.swift in Sources */,
 				BDE35E68BC7CC54FB6B7575921856248 /* LineChartViewController.swift in Sources */,
+				DC4A8AA382FF63646A5DC8565D3CBDD0 /* RestingHeartRateQuery.swift in Sources */,
 				6D6D96F0AAA6323A6A95470C4F47A59E /* MaximumInformation.swift in Sources */,
 				B2EFD65E6772424D26C77E9BF613779E /* MinimumInformation.swift in Sources */,
 				FAE9B07CDA7A6D73AB62823372A14BF0 /* Mood.swift in Sources */,
 				B9F32DD81301106E4F915B636BD74119 /* HealthKitDataTestUtil.swift in Sources */,
 				9B6D0C2EBE88D201F2408D66C0B5E98F /* MostRecentDateInformation.swift in Sources */,
 				A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */,
+				11F463C3025BB3582EA2B6FCCB900219 /* RestingHeartRate.swift in Sources */,
 				AF54D2A5CABAFC8A4C9C0869108607A0 /* MultiSelectAttribute.swift in Sources */,
 				231DE7430CB413BB7CDE37E24785EAD6 /* MultiSelectSegmentedControl.swift in Sources */,
 				3ABD5CFC5F7EE2C49C39BC20CBC398D5 /* NumericAttribute.swift in Sources */,

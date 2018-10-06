@@ -49,6 +49,7 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 				var bmis = [BodyMassIndex]()
 				var heartRates = [HeartRate]()
 				var leanBodyMasses = [LeanBodyMass]()
+				var restingHeartRates = [RestingHeartRate]()
 				var sexualActivities = [SexualActivity]()
 				var sleepRecords = [Sleep]()
 				var weights = [Weight]()
@@ -80,6 +81,9 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 							mood.rating = self.randomDouble(Me.moodRatingRange)
 							mood.note = self.randomEntry(Me.moodNotes)
 
+							let restingHeartRate = RestingHeartRate(self.randomDouble(Me.heartRateRange), date)
+							restingHeartRates.append(restingHeartRate)
+
 							let sleep = Sleep(startDate: date, endDate: date + self.randomInt(Me.sleepHoursRange).hours)
 							sleep.state = self.randomEntry(Sleep.State.allValues)
 							sleepRecords.append(sleep)
@@ -99,6 +103,7 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 				HealthKitDataTestUtil.save(bmis)
 				HealthKitDataTestUtil.save(heartRates)
 				HealthKitDataTestUtil.save(leanBodyMasses)
+				HealthKitDataTestUtil.save(restingHeartRates)
 				HealthKitDataTestUtil.save(sexualActivities)
 				HealthKitDataTestUtil.save(sleepRecords)
 				HealthKitDataTestUtil.save(weights)
