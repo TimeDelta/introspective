@@ -285,7 +285,7 @@ final class ResultsViewController: UITableViewController {
 	}
 
 	@objc private final func graph() {
-		let controller = UIStoryboard(name: "GraphChooser", bundle: nil).instantiateViewController(withIdentifier: "QueryResultsGraphTypeChooser") as! QueryResultsGraphTypeTableViewController
+		let controller = UIStoryboard(name: "GraphSetup", bundle: nil).instantiateViewController(withIdentifier: "queryResultsGraphSetup") as! QueryResultsGraphSetupViewController
 		controller.samples = samples
 		navigationController?.pushViewController(controller, animated: false)
 	}

@@ -1,5 +1,5 @@
 //
-//  MultipleSampleTypeLineGraphCustomizationViewController.swift
+//  MultipleSampleTypeBasicXYGraphCustomizationViewController.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 9/7/18.
@@ -11,11 +11,11 @@ import AAInfographics
 import Presentr
 import os
 
-final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewController {
+final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGraphTypeSetupViewController {
 
 	// MARK: - Static Member Variables
 
-	private typealias Me = MultipleSampleTypeLineGraphCustomizationViewController
+	private typealias Me = MultipleSampleTypeBasicXYGraphCustomizationViewController
 	private static let yAxisInformationChanged = Notification.Name("chosenDataToGraphChanged")
 	private static let xAxisSampleTypeChanged = Notification.Name("xAxisSampleTypeChanged")
 	private static let yAxisSampleTypeChanged = Notification.Name("yAxisSampleTypeChanged")
@@ -134,7 +134,7 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 	}
 	private final var xAxisSampleGroups: [(Date, [Sample])]! { didSet { updateChartData() } }
 	private final var yAxisSampleGroups: [(Date, [Sample])]! { didSet { updateChartData() } }
-	private final var chartController: LineChartViewController!
+	private final var chartController: BasicXYChartViewController!
 
 	// MARK: - UIViewController Overloads
 
@@ -179,7 +179,7 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = xAxisSampleType
 		controller.finishedButtonNotification = Me.xAxisQueryChanged
-		navigationController!.pushViewController(controller, animated: true)
+		realNavigationController!.pushViewController(controller, animated: true)
 	}
 
 	@IBAction final func chooseXAxisInformationButtonPressed(_ sender: Any) {
@@ -188,7 +188,7 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 		controller.selectedAttribute = xAxisInformation?.attribute
 		controller.selectedInformation = xAxisInformation
 		controller.notificationToSendWhenFinished = Me.xAxisInformationChanged
-		navigationController!.pushViewController(controller, animated: true)
+		realNavigationController!.pushViewController(controller, animated: true)
 	}
 
 	@IBAction final func chooseYAxisSampleTypeButtonPressed(_ sender: Any) {
@@ -208,7 +208,7 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = yAxisSampleType
 		controller.finishedButtonNotification = Me.yAxisQueryChanged
-		navigationController?.pushViewController(controller, animated: true)
+		realNavigationController?.pushViewController(controller, animated: true)
 	}
 
 	@IBAction final func chooseYAxisInformationButtonPressed(_ sender: Any) {
@@ -216,11 +216,11 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 		controller.attributes = yAxisSampleType.attributes
 		controller.chosenInformation = yAxisInformation
 		controller.notificationToSendWhenFinished = Me.yAxisInformationChanged
-		navigationController?.pushViewController(controller, animated: true)
+		realNavigationController?.pushViewController(controller, animated: true)
 	}
 
 	@IBAction final func showMeTheGraphButtonPressed(_ sender: Any) {
-		chartController = (storyboard!.instantiateViewController(withIdentifier: "LineChartViewController") as! LineChartViewController)
+		chartController = (storyboard!.instantiateViewController(withIdentifier: "BasicXYChartViewController") as! BasicXYChartViewController)
 
 		if xAxisQuery == nil {
 			xAxisQuery = try! DependencyInjector.query.queryFor(xAxisSampleType)
@@ -230,10 +230,11 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 		}
 
 		chartController.queries = [xAxisQuery!, yAxisQuery!]
+		chartController.chartType = chartType
 		DispatchQueue.global(qos: .userInteractive).async {
 			self.runQueries()
 		}
-		navigationController!.pushViewController(chartController, animated: true)
+		realNavigationController!.pushViewController(chartController, animated: true)
 	}
 
 	// MARK: - Received Notifications
@@ -393,3 +394,4 @@ final class MultipleSampleTypeLineGraphCustomizationViewController: UIViewContro
 		return copiedValue
 	}
 }
+

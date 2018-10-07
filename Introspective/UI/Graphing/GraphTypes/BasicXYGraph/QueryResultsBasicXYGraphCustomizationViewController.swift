@@ -1,5 +1,5 @@
 //
-//  QueryResultsLineGraphCustomizationViewController.swift
+//  QueryResultsBasicXYGraphCustomizationViewController.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 7/21/18.
@@ -11,7 +11,7 @@ import Presentr
 import AAInfographics
 import os
 
-final class QueryResultsLineGraphCustomizationViewController: UIViewController, QueryResultsGraphCustomizationViewController {
+final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTypeSetupViewController, QueryResultsGraphCustomizationViewController {
 
 	// MARK: - Enums / Structs
 
@@ -27,7 +27,7 @@ final class QueryResultsLineGraphCustomizationViewController: UIViewController, 
 
 	// MARK: - Static Member Variables
 
-	private typealias Me = QueryResultsLineGraphCustomizationViewController
+	private typealias Me = QueryResultsBasicXYGraphCustomizationViewController
 	private static let xAxisChanged = Notification.Name("xAxisChanged")
 	private static let yAxisChanged = Notification.Name("yAxisChanged")
 	private static let aggregationChanged = Notification.Name("aggregationChanged")
@@ -79,7 +79,7 @@ final class QueryResultsLineGraphCustomizationViewController: UIViewController, 
 	}
 
 	private final var grouping: Calendar.Component?
-	private final var chartController: LineChartViewController!
+	private final var chartController: BasicXYChartViewController!
 
 	// MARK: - IBOutlets
 
@@ -108,7 +108,7 @@ final class QueryResultsLineGraphCustomizationViewController: UIViewController, 
 		controller.grouping = grouping
 		controller.notificationToSendWhenFinished = Me.xAxisChanged
 		controller.attributes = samples[0].attributes
-		navigationController?.pushViewController(controller, animated: true)
+		realNavigationController?.pushViewController(controller, animated: true)
 	}
 
 	@IBAction func editYAxis(_ sender: Any) {
@@ -117,23 +117,24 @@ final class QueryResultsLineGraphCustomizationViewController: UIViewController, 
 			controller.allowedAttributes = type(of: samples[0]).attributes.filter{ $0 is NumericAttribute }
 			controller.selectedAttributes = yAxis?.map{ $0.attribute! }
 			controller.notificationToSendWhenFinished = Me.yAxisChanged
-			navigationController?.pushViewController(controller, animated: true)
+			realNavigationController?.pushViewController(controller, animated: true)
 		} else {
 			let controller = storyboard!.instantiateViewController(withIdentifier: "chooseInformation") as! ChooseInformationToGraphTableViewController
 			controller.attributes = type(of: samples[0]).attributes
 			controller.limitToNumericInformation = true
 			controller.chosenInformation = yAxis?.map{ $0.information! }
 			controller.notificationToSendWhenFinished = Me.yAxisChanged
-			navigationController?.pushViewController(controller, animated: true)
+			realNavigationController?.pushViewController(controller, animated: true)
 		}
 	}
 
 	@IBAction final func showGraph(_ sender: Any) {
-		chartController = (storyboard!.instantiateViewController(withIdentifier: "LineChartViewController") as! LineChartViewController)
+		chartController = (storyboard!.instantiateViewController(withIdentifier: "BasicXYChartViewController") as! BasicXYChartViewController)
+		chartController.chartType = chartType
 		DispatchQueue.global(qos: .userInitiated).async {
 			self.updateChartData()
 		}
-		navigationController?.pushViewController(chartController, animated: true)
+		realNavigationController?.pushViewController(chartController, animated: true)
 	}
 
 	// MARK: - Received Notifications

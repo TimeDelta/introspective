@@ -1,5 +1,5 @@
 //
-//  SingleSampleTypeLineGraphCustomizationViewController.swift
+//  SingleSampleTypeBasicXYGraphCustomizationViewController.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 9/13/18.
@@ -11,7 +11,7 @@ import Presentr
 import AAInfographics
 import os
 
-final class SingleSampleTypeLineGraphCustomizationViewController: UIViewController {
+final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGraphTypeSetupViewController {
 
 	// MARK: - Enums / Structs
 
@@ -27,7 +27,7 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 
 	// MARK: - Static Member Variables
 
-	private typealias Me = SingleSampleTypeLineGraphCustomizationViewController
+	private typealias Me = SingleSampleTypeBasicXYGraphCustomizationViewController
 	private static let xAxisChanged = Notification.Name("xAxisChanged")
 	private static let yAxisChanged = Notification.Name("yAxisChanged")
 	private static let queryChanged = Notification.Name("queryChanged")
@@ -113,7 +113,7 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 			}
 		}
 	}
-	private final var chartController: LineChartViewController!
+	private final var chartController: BasicXYChartViewController!
 
 	// MARK: - UIViewController Overrides
 
@@ -142,19 +142,20 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = sampleType
 		controller.finishedButtonNotification = Me.queryChanged
-		navigationController?.pushViewController(controller, animated: true)
+		realNavigationController?.pushViewController(controller, animated: true)
 	}
 
 	@IBAction final func showGraph(_ sender: Any) {
 		if query == nil {
 			query = try! DependencyInjector.query.queryFor(sampleType)
 		}
-		chartController = (storyboard!.instantiateViewController(withIdentifier: "LineChartViewController") as! LineChartViewController)
+		chartController = (storyboard!.instantiateViewController(withIdentifier: "BasicXYChartViewController") as! BasicXYChartViewController)
+		chartController.chartType = chartType
 		chartController.queries = [query!]
 		DispatchQueue.global(qos: .userInitiated).async {
 			self.runQuery()
 		}
-		navigationController?.pushViewController(chartController, animated: true)
+		realNavigationController?.pushViewController(chartController, animated: true)
 	}
 
 	@IBAction final func editXAxis(_ sender: Any) {
@@ -164,7 +165,7 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 		controller.selectedInformation = xAxis?.information
 		controller.grouping = grouping
 		controller.notificationToSendWhenFinished = Me.xAxisChanged
-		navigationController?.pushViewController(controller, animated: true)
+		realNavigationController?.pushViewController(controller, animated: true)
 	}
 
 	@IBAction final func editYAxis(_ sender: Any) {
@@ -173,14 +174,14 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 			controller.allowedAttributes = sampleType.attributes.filter{ $0 is NumericAttribute }
 			controller.selectedAttributes = yAxis?.map{ $0.attribute! }
 			controller.notificationToSendWhenFinished = Me.yAxisChanged
-			navigationController?.pushViewController(controller, animated: true)
+			realNavigationController?.pushViewController(controller, animated: true)
 		} else {
 			let controller = storyboard!.instantiateViewController(withIdentifier: "chooseInformation") as! ChooseInformationToGraphTableViewController
 			controller.attributes = sampleType.attributes
 			controller.limitToNumericInformation = true
 			controller.chosenInformation = yAxis?.map{ $0.information! }
 			controller.notificationToSendWhenFinished = Me.yAxisChanged
-			navigationController?.pushViewController(controller, animated: true)
+			realNavigationController?.pushViewController(controller, animated: true)
 		}
 	}
 
@@ -230,7 +231,11 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 			if error != nil {
 				os_log("X-axis query run failed: %@", type: .error, error!.localizedDescription)
 				DispatchQueue.main.async {
-					self.chartController.errorMessage = "Something went wrong while running the query. Sorry for the inconvenience this has caused you."
+					if let displayableError = error as? DisplayableError {
+						self.chartController.errorMessage = displayableError.displayableDescription
+					} else {
+						self.chartController.errorMessage = "Something went wrong while running the query. Sorry for the inconvenience this has caused you."
+					}
 				}
 				return
 			}
@@ -337,7 +342,7 @@ final class SingleSampleTypeLineGraphCustomizationViewController: UIViewControll
 
 // MARK: - UIPickerViewDataSource
 
-extension SingleSampleTypeLineGraphCustomizationViewController: UIPickerViewDataSource {
+extension SingleSampleTypeBasicXYGraphCustomizationViewController: UIPickerViewDataSource {
 
 	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
@@ -350,7 +355,7 @@ extension SingleSampleTypeLineGraphCustomizationViewController: UIPickerViewData
 
 // MARK: - UIPickerViewDelegate
 
-extension SingleSampleTypeLineGraphCustomizationViewController: UIPickerViewDelegate {
+extension SingleSampleTypeBasicXYGraphCustomizationViewController: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		return DependencyInjector.sample.allTypes()[row].name
@@ -360,3 +365,5 @@ extension SingleSampleTypeLineGraphCustomizationViewController: UIPickerViewDele
 		sampleType = DependencyInjector.sample.allTypes()[row]
 	}
 }
+
+

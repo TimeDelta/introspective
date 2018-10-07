@@ -1,5 +1,5 @@
 //
-//  LineChartViewController.swift
+//  BasicXYChartViewController.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 7/24/18.
@@ -10,7 +10,7 @@ import UIKit
 import AAInfographics
 import SwiftDate
 
-final class LineChartViewController: UIViewController {
+class BasicXYChartViewController: UIViewController {
 
 	// MARK: - IBOutlets
 
@@ -37,10 +37,11 @@ final class LineChartViewController: UIViewController {
 		}
 	}
 	public final var displayXAxisValueLabels: Bool = true
+	public final var chartType: AAChartType!
+	public final var categories: [String]?
 	private final var finishedSetup: Bool = false
 	private final var chartView: AAChartView!
 	private final var chartModel = AAChartModel()
-		.chartType(.Spline)
 		.animationType(.EaseInCubic)
 		.dataLabelEnabled(true)
 		.zoomType(.XY)
@@ -50,10 +51,12 @@ final class LineChartViewController: UIViewController {
 	final override func viewDidLoad() {
 		super.viewDidLoad()
 
+		chartModel = chartModel.chartType(chartType)
+
 		chartView = AAChartView()
 		chartView.frame = chartViewOutline.frame
 		chartView.contentHeight = chartViewOutline.frame.size.height
-		chartView.scrollEnabled = true
+		chartView.scrollEnabled = false
 		view.insertSubview(chartView, at: 0)
 
 		UiUtil.setBackButton(for: self, title: "Graph Setup", action: #selector(back))
@@ -79,8 +82,11 @@ final class LineChartViewController: UIViewController {
 		doneWaiting()
 		chartModel = chartModel
 			.xAxisVisible(displayXAxisValueLabels)
-			.legendEnabled(false)
+			.legendEnabled(true)
 			.series(dataSeries)
+		if categories != nil {
+			chartModel = chartModel.categories(categories!)
+		}
 		chartView.aa_drawChartWithChartModel(chartModel)
 	}
 

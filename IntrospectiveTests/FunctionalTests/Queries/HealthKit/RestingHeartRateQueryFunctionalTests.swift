@@ -12,7 +12,7 @@ import SwiftDate
 
 class RestingHeartRateQueryFunctionalTests: QueryFunctionalTest {
 
-	fileprivate var query: RestingHeartRateQueryImpl!
+	private var query: RestingHeartRateQueryImpl!
 
 	override func setUp() {
 		super.setUp()

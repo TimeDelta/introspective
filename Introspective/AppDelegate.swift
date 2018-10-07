@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-public var testing = true // TODO - change this to false before release
+public var testing = true // TODO - change this to false before each release
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
