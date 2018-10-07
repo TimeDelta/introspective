@@ -235,20 +235,27 @@ final class ResultsViewController: UITableViewController {
 	}
 
 	final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+		guard let managedSample = self.samples[indexPath.row] as? NSManagedObject else { return [] }
 		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
 			if indexPath.section == 0 {
 				self.extraInformation.remove(at: indexPath.row)
 				self.extraInformationValues.remove(at: indexPath.row)
+				tableView.deleteRows(at: [indexPath], with: .fade)
+				tableView.reloadData()
 			} else if indexPath.section == 1 {
-				guard let managedSample = self.samples[indexPath.row] as? NSManagedObject else { return }
-				DispatchQueue.global(qos: .background).async {
-					DependencyInjector.db.delete(managedSample)
-					DependencyInjector.db.save()
-				}
-				self.samples.remove(at: indexPath.row)
+				let alert = UIAlertController(title: "Are you sure you want to delete this?", message: nil, preferredStyle: .alert)
+				alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
+					DispatchQueue.global(qos: .background).async {
+						DependencyInjector.db.delete(managedSample)
+						DependencyInjector.db.save()
+					}
+					self.samples.remove(at: indexPath.row)
+					tableView.deleteRows(at: [indexPath], with: .fade)
+					tableView.reloadData()
+				})
+				alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+				self.present(alert, animated: false, completion: nil)
 			}
-			tableView.deleteRows(at: [indexPath], with: .fade)
-			tableView.reloadData()
 		}
 
 		return [delete]
@@ -308,12 +315,20 @@ final class ResultsViewController: UITableViewController {
 	}
 
 	@objc private final func deleteAllSamples() {
-		DispatchQueue.global(qos: .userInitiated).async {
-			// TODO - tell the user something went wrong if an error is thrown here
-			try! DependencyInjector.db.deleteAll(self.samples as! [NSManagedObject])
-			DependencyInjector.db.save()
-		}
-		navigationController!.popViewController(animated: true)
+		let alert = UIAlertController(
+			title: "Are you sure you want to delete all \(samples[0].name.localizedLowercase) records?",
+			message: nil,
+			preferredStyle: .alert)
+		alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
+			DispatchQueue.global(qos: .userInitiated).async {
+				// TODO - tell the user something went wrong if an error is thrown here
+				try! DependencyInjector.db.deleteAll(self.samples as! [NSManagedObject])
+				DependencyInjector.db.save()
+			}
+			self.navigationController!.popViewController(animated: true)
+		})
+		alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+		self.present(alert, animated: false, completion: nil)
 	}
 
 	// MARK: - Received Notifications
