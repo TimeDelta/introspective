@@ -36,7 +36,9 @@ final class ChooseAttributesToGraphTableViewController: UITableViewController {
 	final override func viewDidLoad() {
 		super.viewDidLoad()
 		editButtonItem.isEnabled = true
-		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedAttribute), name: Me.editedAttribute, object: nil)
+		if selectedAttributes.count == allowedAttributes.count {
+			addButton.isEnabled = false
+		}
 		if allowedAttributes.count == 0 {
 			let alert = UIAlertController(title: "No graphable attributes", message: "There are no graphable attributes on the chosen data type.", preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
@@ -45,6 +47,7 @@ final class ChooseAttributesToGraphTableViewController: UITableViewController {
 			})
 			present(alert, animated: false)
 		}
+		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedAttribute), name: Me.editedAttribute, object: nil)
 	}
 
 	// MARK: - TableView Data Source
