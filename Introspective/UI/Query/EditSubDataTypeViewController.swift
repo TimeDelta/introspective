@@ -1,5 +1,5 @@
 //
-//  EditSubDataTypeViewController.swift
+//  EditSubSampleTypeViewController.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 7/18/18.
@@ -9,9 +9,9 @@
 import UIKit
 import os
 
-final class EditSubDataTypeViewController: UIViewController {
+final class EditSubSampleTypeViewController: UIViewController {
 
-	private typealias Me = EditSubDataTypeViewController
+	private typealias Me = EditSubSampleTypeViewController
 	private static let doneEditing = Notification.Name("doneChoosingSubDataType")
 
 	public final var notificationToSendWhenAccepted: Notification.Name!
@@ -41,7 +41,7 @@ final class EditSubDataTypeViewController: UIViewController {
 	}
 
 	@objc public final func doneEditing(notification: Notification) {
-		let savedValue = QueryViewController.DataTypeInfo(sampleType, notification.object as! SubQueryMatcher)
+		let savedValue = QueryViewController.SampleTypeInfo(sampleType, notification.object as! SubQueryMatcher)
 		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: savedValue, userInfo: nil)
 		_ = navigationController?.popViewController(animated: true)
 	}
@@ -65,7 +65,7 @@ final class EditSubDataTypeViewController: UIViewController {
 	}
 }
 
-extension EditSubDataTypeViewController: UIPickerViewDataSource {
+extension EditSubSampleTypeViewController: UIPickerViewDataSource {
 
 	final func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
@@ -76,7 +76,7 @@ extension EditSubDataTypeViewController: UIPickerViewDataSource {
 	}
 }
 
-extension EditSubDataTypeViewController: UIPickerViewDelegate {
+extension EditSubSampleTypeViewController: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		return DependencyInjector.sample.allTypes()[row].name

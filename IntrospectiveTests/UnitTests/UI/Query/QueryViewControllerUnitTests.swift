@@ -34,7 +34,7 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.Part(QueryViewController.DataTypeInfo(HeartRate.self))
+		controller.parts[0] = QueryViewController.Part(QueryViewController.SampleTypeInfo(HeartRate.self))
 
 		// when
 		controller.finishedButtonPressed(Me.finishedButton)
@@ -51,7 +51,7 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.Part(QueryViewController.DataTypeInfo(HeartRate.self))
+		controller.parts[0] = QueryViewController.Part(QueryViewController.SampleTypeInfo(HeartRate.self))
 
 		let attributeRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
 		controller.parts.append(QueryViewController.Part(attributeRestriction))
@@ -72,7 +72,7 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.Part(QueryViewController.DataTypeInfo(HeartRate.self))
+		controller.parts[0] = QueryViewController.Part(QueryViewController.SampleTypeInfo(HeartRate.self))
 
 		let attributeRestriction1 = EqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
 		let attributeRestriction2 = NotEqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
@@ -98,9 +98,9 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.Part(QueryViewController.DataTypeInfo(HeartRate.self))
+		controller.parts[0] = QueryViewController.Part(QueryViewController.SampleTypeInfo(HeartRate.self))
 
-		var dataTypeInfo = QueryViewController.DataTypeInfo(MoodImpl.self)
+		var dataTypeInfo = QueryViewController.SampleTypeInfo(MoodImpl.self)
 		dataTypeInfo.matcher = SubQueryMatcherMock()
 		dataTypeInfo.matcher!.mostRecentOnly = false
 		controller.parts.append(QueryViewController.Part(dataTypeInfo))
@@ -128,9 +128,9 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.Part(QueryViewController.DataTypeInfo(HeartRate.self))
+		controller.parts[0] = QueryViewController.Part(QueryViewController.SampleTypeInfo(HeartRate.self))
 
-		var dataTypeInfo = QueryViewController.DataTypeInfo(MoodImpl.self)
+		var dataTypeInfo = QueryViewController.SampleTypeInfo(MoodImpl.self)
 		dataTypeInfo.matcher = SubQueryMatcherMock()
 		controller.parts.append(QueryViewController.Part(dataTypeInfo))
 
@@ -165,14 +165,14 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.Part(QueryViewController.DataTypeInfo(HeartRate.self))
+		controller.parts[0] = QueryViewController.Part(QueryViewController.SampleTypeInfo(HeartRate.self))
 
 		let heartRateAttributeRestriction1 = EqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
 		let heartRateAttributeRestriction2 = NotEqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
 		controller.parts.append(QueryViewController.Part(heartRateAttributeRestriction1))
 		controller.parts.append(QueryViewController.Part(heartRateAttributeRestriction2))
 
-		var dataTypeInfo = QueryViewController.DataTypeInfo(MoodImpl.self)
+		var dataTypeInfo = QueryViewController.SampleTypeInfo(MoodImpl.self)
 		dataTypeInfo.matcher = SubQueryMatcherMock()
 		controller.parts.append(QueryViewController.Part(dataTypeInfo))
 

@@ -1,5 +1,5 @@
 //
-//  SubDataTypeTableViewCell.swift
+//  SubSampleTypeTableViewCell.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 7/19/18.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class SubDataTypeTableViewCell: UITableViewCell {
+final class SubSampleTypeTableViewCell: UITableViewCell {
 
 	public final var matcher: SubQueryMatcher! {
 		didSet {
