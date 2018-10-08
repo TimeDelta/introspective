@@ -122,14 +122,6 @@
             </objects>
             <point key="canvasLocation" x="2106" y="-836"/>
         </scene>
-        <!--AttributeList-->
-        <scene sceneID="rel-vm-fRV">
-            <objects>
-                <viewControllerPlaceholder storyboardName="AttributeList" id="TmM-Sh-a3i" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="mj2-Sw-tZs" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2638" y="-792"/>
-        </scene>
         <!--Data Type Restriction-->
         <scene sceneID="wOb-hl-1eA">
             <objects>
@@ -249,7 +241,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WYn-Rx-vRN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1305" y="-815"/>
+            <point key="canvasLocation" x="1308" y="-836"/>
         </scene>
     </scenes>
 </document>

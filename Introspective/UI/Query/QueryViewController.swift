@@ -100,8 +100,8 @@ class QueryViewController: UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		editButton.target = editButtonItem.target
-		editButton.action = editButtonItem.action
+		editButton.target = self
+		editButton.action = #selector(editButtonPressed)
 
 		finishedButton.title = finishedButtonTitle
 
@@ -239,6 +239,11 @@ class QueryViewController: UITableViewController {
 		let controller = storyboard!.instantiateViewController(withIdentifier: "addQuestionPart") as! AddToQueryViewController
 		controller.notificationToSendOnAccept = Me.addQuestionPart
 		customPresentViewController(Me.addQuestionPartPresenter, viewController: controller, animated: true)
+	}
+
+	@objc private final func editButtonPressed() {
+		editButton.title = isEditing ? "Edit" : "Done"
+		let _ = editButtonItem.target?.perform(editButtonItem.action)
 	}
 
 	// MARK: - Navigation
