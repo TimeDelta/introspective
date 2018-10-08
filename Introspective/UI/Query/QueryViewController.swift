@@ -58,7 +58,6 @@ class QueryViewController: UITableViewController {
 	private typealias Me = QueryViewController
 	private static let acceptedAttributeRestrictionEdit = Notification.Name("acceptedAttributeRestrictionEdit")
 	private static let acceptedSubSampleTypeEdit = Notification.Name("acceptedSubSampleTypeEdit")
-	private static let addQuestionPart = Notification.Name("addQuestionPart")
 	private static let acceptedSampleTypeEdit = Notification.Name("acceptedSampleTypeEdit")
 	private static let runQueryNotification = Notification.Name("runQuery")
 
@@ -115,7 +114,6 @@ class QueryViewController: UITableViewController {
 
 		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedAttributeRestriction), name: Me.acceptedAttributeRestrictionEdit, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedSubQuerySampleType), name: Me.acceptedSubSampleTypeEdit, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(addQueryPart), name: Me.addQuestionPart, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedSampleType), name: Me.acceptedSampleTypeEdit, object: nil)
 
 		addPartButton?.target = self
@@ -236,9 +234,18 @@ class QueryViewController: UITableViewController {
 	}
 
 	@objc private final func addPartButtonWasPressed() {
-		let controller = storyboard!.instantiateViewController(withIdentifier: "addQuestionPart") as! AddToQueryViewController
-		controller.notificationToSendOnAccept = Me.addQuestionPart
-		customPresentViewController(Me.addQuestionPartPresenter, viewController: controller, animated: true)
+		let actionSheet = UIAlertController(title: "What would you like to add?", message: nil, preferredStyle: .actionSheet)
+		actionSheet.addAction(UIAlertAction(title: "Data Type", style: .default) { _ in
+			self.parts.append(Part(SampleTypeInfo()))
+			self.partWasAdded()
+		})
+		actionSheet.addAction(UIAlertAction(title: "Attribute Restriction", style: .default) { _ in
+			let attributeRestriction = self.defaultAttributeRestriction(for: self.bottomMostSampleType())
+			self.parts.append(Part(attributeRestriction))
+			self.partWasAdded()
+		})
+		actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		present(actionSheet, animated: true, completion: nil)
 	}
 
 	@objc private final func editButtonPressed() {
@@ -285,22 +292,6 @@ class QueryViewController: UITableViewController {
 		parts[editedIndex] = Part(notification.object as! SampleTypeInfo)
 		updateAttributesForSampleType(at: editedIndex)
 		tableView.reloadData()
-	}
-
-	@objc final func addQueryPart(notification: Notification) {
-		let type = notification.object as! PartType
-		switch (type) {
-			case .sampleType:
-				parts.append(Part(SampleTypeInfo()))
-				break
-			case .attributeRestriction:
-				let lastSampleType = bottomMostSampleType()
-				let attributeRestriction = defaultAttributeRestriction(for: lastSampleType)
-				parts.append(Part(attributeRestriction))
-				break
-		}
-
-		partWasAdded()
 	}
 
 	// Mark: - Helper Functions

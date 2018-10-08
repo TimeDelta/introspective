@@ -71,6 +71,7 @@
 		2942CBCAAB795952A25BBD7E19DB255C /* PredicateAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A25D6CFB75782C55714E73C5F9E9FAD /* PredicateAttributeRestriction.swift */; };
 		2982A1E90800CA08A7D39D48EB1566FE /* CoreDataSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C2A33585A153743EEA8E88D6C4C2B0 /* CoreDataSample.swift */; };
 		2AE5F4EFBCCAEFF64486073452C44051 /* GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 009DFB340841909C6169D40E442BD8D0 /* GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests.swift */; };
+		2C6C58F800E7821FB668286A4BD07160 /* SubSampleTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3D0D80E7E86D4500CCF74A48C82EDD7 /* SubSampleTypeTableViewCell.swift */; };
 		2D45C222CEA3CE55123AF26537E4D7FC /* GraphSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ECF803DE85297C577FBE071ABC37BFC /* GraphSetupViewController.swift */; };
 		2D725687A3E19F711FAE91EBF0FF2AB9 /* EndsWithStringAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D5C7FC2BB9DCB332D524D2D185D918 /* EndsWithStringAttributeRestriction.swift */; };
 		2D7F4DA6093F2A28A6BFF43C57F1F624 /* OldestDateInformationFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF6CDA193CA720D8FD039E742EEAF92F /* OldestDateInformationFunctionalTests.swift */; };
@@ -230,7 +231,6 @@
 		B9F32DD81301106E4F915B636BD74119 /* HealthKitDataTestUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE99842B0CECEA6988A3B61ED88CDB3A /* HealthKitDataTestUtil.swift */; };
 		BA790FBD4E3FCE5DC199963DE2D77A37 /* EqualToDoubleAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62B2CDA4044E6A67C1707B03A5AB7688 /* EqualToDoubleAttributeRestriction.swift */; };
 		BA854AF9314FE78E97A840D63E7FF50C /* BasicXYChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7FFBB23D9DE9FEB63589CA7C0E3679 /* BasicXYChartViewController.swift */; };
-		BB18E46C5C799044150CDA58A70C0A02 /* AddToQueryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB67315960365D089CD01EE0322571DB /* AddToQueryViewController.swift */; };
 		BDABB030DE6812C289980A0ADED589E9 /* GreaterThanDoubleAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4A94B19FC5067A7CC7DF50CF47E1F2 /* GreaterThanDoubleAttributeRestriction.swift */; };
 		BDAFF3097E94F789CFA942FC5D2FA6C4 /* EndsWithStringAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 039430D2B64ECEF427478D936F9AC389 /* EndsWithStringAttributeRestrictionUnitTests.swift */; };
 		BE90801D612A6647F4D1736FA6F8C873 /* QueryError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEA5D487B62C5AF7A98DDCF7285019A /* QueryError.swift */; };
@@ -255,7 +255,6 @@
 		D28B06424A2B0F739B3E521F64D2F97D /* AfterDateAndTimeAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74344105EA03F65D1993ADE5D387A89B /* AfterDateAndTimeAttributeRestrictionUnitTests.swift */; };
 		D2D90ED2CD5115F1DC1CF839744FEA28 /* CalendarUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495903CAE758E2D5A35917B01C9288AB /* CalendarUtil.swift */; };
 		D3F47E63D7B5B67E4DF853E72484AFA1 /* IOUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97C2E852D585DB55B6F4CCE827222F0 /* IOUtil.swift */; };
-		2C6C58F800E7821FB668286A4BD07160 /* SubSampleTypeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3D0D80E7E86D4500CCF74A48C82EDD7 /* SubSampleTypeTableViewCell.swift */; };
 		D4AF7A49F4DD55CE7B3C38F5EC1AB3EF /* RecordDataTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D30BBB7762C78F1AE39E5BE06C181B7 /* RecordDataTableViewController.swift */; };
 		D55B7362364725866C3F95441C9E36FB /* AttributeList.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6B7B1A7C9C1BEDF4B8CEBDD495A720B /* AttributeList.storyboard */; };
 		D5B46DE2EAFB233516FDA2C5890CE44E /* SameEndDatesSubQueryMatcherFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297BB019924DD8DC5F9563BEF3060077 /* SameEndDatesSubQueryMatcherFunctionalTests.swift */; };
@@ -563,7 +562,6 @@
 		C35A8F670EF0CCCC2E60B8FE50EDE920 /* Pods-IntrospectiveTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IntrospectiveTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-IntrospectiveTests/Pods-IntrospectiveTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C36998BE8C3707EC944A1D554A2E581E /* Settings+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Settings+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		C3877311BC9AD2DCEAC216849C509DD1 /* MostRecentDateInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MostRecentDateInformation.swift; sourceTree = "<group>"; };
-		E3D0D80E7E86D4500CCF74A48C82EDD7 /* SubSampleTypeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubSampleTypeTableViewCell.swift; sourceTree = "<group>"; };
 		C62A3AC3AEA8E497B110D0AB765E3D1F /* WeightQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightQuery.swift; sourceTree = "<group>"; };
 		C749B173E6E65D8EFACA6CA2C24BD158 /* AfterTimeOfDayAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterTimeOfDayAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		C7BBAF8BDAD34ADC4D1030CFBE73E411 /* InjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InjectionProvider.swift; sourceTree = "<group>"; };
@@ -571,7 +569,6 @@
 		C93F285EA1182B34FB4431C83C36D363 /* QueryResultsBasicXYGraphCustomizationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryResultsBasicXYGraphCustomizationViewController.swift; sourceTree = "<group>"; };
 		CA203F109303DF5A4C96FF3BC1381FDA /* BeforeDateAndTimeAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeforeDateAndTimeAttributeRestriction.swift; sourceTree = "<group>"; };
 		CAD63769A091651D02195AE7ABEDAEF7 /* EqualToIntegerAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToIntegerAttributeRestriction.swift; sourceTree = "<group>"; };
-		CB67315960365D089CD01EE0322571DB /* AddToQueryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToQueryViewController.swift; sourceTree = "<group>"; };
 		CD0A4D632FA9158F03ADD40EAE8FCCE7 /* IntrospectiveUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IntrospectiveUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD407C2211B353B0FDD369D5FE3DBBFD /* ImportDataTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportDataTableViewController.swift; sourceTree = "<group>"; };
 		CD6F1393B3FB95778B82E4107DABC8AF /* BeforeDateAndTimeAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeforeDateAndTimeAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
@@ -598,6 +595,7 @@
 		E0C459591513219111FB49E86E65DD67 /* SubQueryMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubQueryMatcher.swift; sourceTree = "<group>"; };
 		E207DA91F979401926A3DB2621F4D89A /* TextNormalizationUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNormalizationUtil.swift; sourceTree = "<group>"; };
 		E27A253A64E22592AE40EE14140A3068 /* MoodQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQuery.swift; sourceTree = "<group>"; };
+		E3D0D80E7E86D4500CCF74A48C82EDD7 /* SubSampleTypeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubSampleTypeTableViewCell.swift; sourceTree = "<group>"; };
 		E4225153F91A1B5C939A68DC8E6558D9 /* ChooseCalendarComponentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCalendarComponentViewController.swift; sourceTree = "<group>"; };
 		E4B9E173302A4AD7CA5A9A914C82D0FE /* SampleQueryResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleQueryResult.swift; sourceTree = "<group>"; };
 		E51488F43C1C1AF3E357896B07AFDE4C /* ExploreCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreCollectionViewController.swift; sourceTree = "<group>"; };
@@ -1514,7 +1512,6 @@
 				6F404EDA0FF10E5B353689A12171D9E0 /* QueryViewController.swift */,
 				E3D0D80E7E86D4500CCF74A48C82EDD7 /* SubSampleTypeTableViewCell.swift */,
 				95CBC6BFB30927C64AD76644FD14B257 /* AttributeRestrictionTableViewCell.swift */,
-				CB67315960365D089CD01EE0322571DB /* AddToQueryViewController.swift */,
 				A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */,
 				F00DE3A8CC4C204EC257C34A20769422 /* EditSubDataTypeViewController.swift */,
 			);
@@ -1941,7 +1938,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6E35D08EDAFC3DC43C04805C38EB9D26 /* CoreDataObject.swift in Sources */,
-				BB18E46C5C799044150CDA58A70C0A02 /* AddToQueryViewController.swift in Sources */,
 				BDABB030DE6812C289980A0ADED589E9 /* GreaterThanDoubleAttributeRestriction.swift in Sources */,
 				CE07E546FBCCB77DE2FA882DAD69ECDE /* AfterDateAndTimeAttributeRestriction.swift in Sources */,
 				C07090A59F4A356A534A3A567E79BBBC /* NotEqualToIntegerAttributeRestriction.swift in Sources */,
