@@ -46,17 +46,16 @@ class BodyMassIndexQueryFunctionalTests: QueryFunctionalTest {
 
 	func testGivenOneBodyMassIndexInHealthKitWithUnrestrictedQuery_runQuery_returnsThatBodyMassIndex() {
 		// given
-		let expected = BodyMassIndex(89)
-		HealthKitDataTestUtil.save([expected])
+		let expectedSamples = [BodyMassIndex(89)]
+		HealthKitDataTestUtil.save(expectedSamples)
 
 		// when
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -64,11 +63,9 @@ class BodyMassIndexQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenMultipleBodyMassIndexesInHealthKitAndRestrictionOnBodyMassIndexThatShouldOnlyReturnOneBodyMassIndex_runQuery_returnsThatOneBodyMassIndex() {
 		// given
 		let value = 83.7
-		let expected = BodyMassIndex(value)
-		HealthKitDataTestUtil.save([
-			expected,
-			BodyMassIndex(value - 1),
-		])
+		let expectedSamples = [BodyMassIndex(value)]
+		HealthKitDataTestUtil.save(expectedSamples)
+		HealthKitDataTestUtil.save([BodyMassIndex(value - 1)])
 
 		let bmiRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: BodyMassIndex.bmi, value: value)
 		query.attributeRestrictions.append(bmiRestriction)
@@ -77,10 +74,9 @@ class BodyMassIndexQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -88,13 +84,9 @@ class BodyMassIndexQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenMultipleBodyMassIndexesInDatabaseThatMatchGivenBodyMassIndexRestriction_runQuery_returnsAllMatchingBodyMassIndexes() {
 		// given
 		let value = 54.6
-		let expected1 = BodyMassIndex(value)
-		let expected2 = BodyMassIndex(value - 1)
-		HealthKitDataTestUtil.save([
-			expected1,
-			expected2,
-			BodyMassIndex(value + 1),
-		])
+		let expectedSamples = [BodyMassIndex(value), BodyMassIndex(value - 1)]
+		HealthKitDataTestUtil.save(expectedSamples)
+		HealthKitDataTestUtil.save([BodyMassIndex(value + 1)])
 
 		let bmiRestriction = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: BodyMassIndex.bmi, value: value)
 		query.attributeRestrictions.append(bmiRestriction)
@@ -103,11 +95,9 @@ class BodyMassIndexQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 2, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expected1) }))
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expected2) }))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -115,9 +105,9 @@ class BodyMassIndexQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenQueryHasOneRestrictionForEachAttributeAndMultipleBodyMassIndexesInHealthKitWithOnlyOneThatMatches_runQuery_returnsThatBodyMassIndex() {
 		// given
 		let value = 54.6
-		let expected = BodyMassIndex(value, Date() - 2.days)
+		let expectedSamples = [BodyMassIndex(value, Date() - 2.days)]
+		HealthKitDataTestUtil.save(expectedSamples)
 		HealthKitDataTestUtil.save([
-			expected,
 			BodyMassIndex(value - 2),
 			BodyMassIndex(value - 1),
 			BodyMassIndex(),
@@ -132,10 +122,9 @@ class BodyMassIndexQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}

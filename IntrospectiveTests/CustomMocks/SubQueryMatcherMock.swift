@@ -47,12 +47,12 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
 	private var __p_mostRecentOnly: (Bool)?
 
 
-    var name: String {
-		get {	invocations.append(.p_name_get); return __p_name ?? givenGetterValue(.p_name_get, "SubQueryMatcherMock - stub value for name was not defined") }
+    var attributedName: String {
+		get {	invocations.append(.p_attributedName_get); return __p_attributedName ?? givenGetterValue(.p_attributedName_get, "SubQueryMatcherMock - stub value for attributedName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	__p_name = newValue }
+		set {	__p_attributedName = newValue }
 	}
-	private var __p_name: (String)?
+	private var __p_attributedName: (String)?
 
 
     var attributes: [Attribute] {
@@ -105,28 +105,27 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
 		return __value
     }
 
-    func value(of attribute: Attribute) throws -> Any {
+    func value(of attribute: Attribute) throws -> Any? {
         addInvocation(.m_value__of_attribute(Parameter<Attribute>.value(`attribute`)))
 		let perform = methodPerformValue(.m_value__of_attribute(Parameter<Attribute>.value(`attribute`))) as? (Attribute) -> Void
 		perform?(`attribute`)
-		var __value: Any
+		var __value: Any? = nil
 		do {
 		    __value = try methodReturnValue(.m_value__of_attribute(Parameter<Attribute>.value(`attribute`))).casted()
 		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for value(of attribute: Attribute). Use given")
-			Failure("Stub return value not specified for value(of attribute: Attribute). Use given")
+			// do nothing
 		} catch {
 		    throw error
 		}
 		return __value
     }
 
-    func set(attribute: Attribute, to value: Any) throws {
-        addInvocation(.m_set__attribute_attributeto_value(Parameter<Attribute>.value(`attribute`), Parameter<Any>.value(`value`)))
-		let perform = methodPerformValue(.m_set__attribute_attributeto_value(Parameter<Attribute>.value(`attribute`), Parameter<Any>.value(`value`))) as? (Attribute, Any) -> Void
+    func set(attribute: Attribute, to value: Any?) throws {
+        addInvocation(.m_set__attribute_attributeto_value(Parameter<Attribute>.value(`attribute`), Parameter<Any?>.value(`value`)))
+		let perform = methodPerformValue(.m_set__attribute_attributeto_value(Parameter<Attribute>.value(`attribute`), Parameter<Any?>.value(`value`))) as? (Attribute, Any?) -> Void
 		perform?(`attribute`, `value`)
 		do {
-		    _ = try methodReturnValue(.m_set__attribute_attributeto_value(Parameter<Attribute>.value(`attribute`), Parameter<Any>.value(`value`))).casted() as Void
+		    _ = try methodReturnValue(.m_set__attribute_attributeto_value(Parameter<Attribute>.value(`attribute`), Parameter<Any?>.value(`value`))).casted() as Void
 		} catch MockError.notStubed {
 			// do nothing
 		} catch {
@@ -153,11 +152,11 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
         case m_getSamples__from_querySamplesmatching_subQuerySamples(Parameter<GenericAttribute>, Parameter<[Sample]>)
         case m_equalTo__otherMatcher(Parameter<SubQueryMatcher>)
         case m_value__of_attribute(Parameter<Attribute>)
-        case m_set__attribute_attributeto_value(Parameter<Attribute>, Parameter<Any>)
+        case m_set__attribute_attributeto_value(Parameter<Attribute>, Parameter<Any?>)
         case m_equalTo__otherAttributed(Parameter<Attributed>)
         case p_mostRecentOnly_get
 		case p_mostRecentOnly_set(Parameter<Bool>)
-        case p_name_get
+        case p_attributedName_get
         case p_attributes_get
         case p_debugDescription_get
 
@@ -182,7 +181,7 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
                 return true 
             case (.p_mostRecentOnly_get,.p_mostRecentOnly_get): return true
 			case (.p_mostRecentOnly_set(let left),.p_mostRecentOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_name_get,.p_name_get): return true
+            case (.p_attributedName_get,.p_attributedName_get): return true
             case (.p_attributes_get,.p_attributes_get): return true
             case (.p_debugDescription_get,.p_debugDescription_get): return true
             default: return false
@@ -198,7 +197,7 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
             case let .m_equalTo__otherAttributed(p0): return p0.intValue
             case .p_mostRecentOnly_get: return 0
 			case .p_mostRecentOnly_set(let newValue): return newValue.intValue
-            case .p_name_get: return 0
+            case .p_attributedName_get: return 0
             case .p_attributes_get: return 0
             case .p_debugDescription_get: return 0
             }
@@ -216,8 +215,8 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
         static func mostRecentOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentOnly_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func name(getter defaultValue: String...) -> PropertyStub {
-            return Given(method: .p_name_get, products: defaultValue.map({ Product.return($0) }))
+        static func attributedName(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_attributedName_get, products: defaultValue.map({ Product.return($0) }))
         }
         static func attributes(getter defaultValue: [Attribute]...) -> PropertyStub {
             return Given(method: .p_attributes_get, products: defaultValue.map({ Product.return($0) }))
@@ -236,7 +235,7 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
 		static func equalTo(otherMatcher: Parameter<SubQueryMatcher>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherMatcher(`otherMatcher`), products: willReturn.map({ Product.return($0) }))
         }
-        static func value(of attribute: Parameter<Attribute>, willReturn: Any...) -> MethodStub {
+        static func value(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
             return Given(method: .m_value__of_attribute(`attribute`), products: willReturn.map({ Product.return($0) }))
         }
         static func equalTo(_ otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
@@ -270,17 +269,17 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
         static func value(of attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func value(of attribute: Parameter<Attribute>, willProduce: (StubberThrows<Any>) -> Void) -> MethodStub {
+        static func value(of attribute: Parameter<Attribute>, willProduce: (StubberThrows<Any?>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) })) }()
-			let stubber = given.stubThrows(for: (Any).self)
+			let stubber = given.stubThrows(for: (Any?).self)
 			willProduce(stubber)
 			return given
         }
-        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any>, willThrow: Error...) -> MethodStub {
+        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
@@ -297,13 +296,13 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherMatcher` label")
 		static func equalTo(otherMatcher: Parameter<SubQueryMatcher>) -> Verify { return Verify(method: .m_equalTo__otherMatcher(`otherMatcher`))}
         static func value(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_value__of_attribute(`attribute`))}
-        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any>) -> Verify { return Verify(method: .m_set__attribute_attributeto_value(`attribute`, `value`))}
+        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>) -> Verify { return Verify(method: .m_set__attribute_attributeto_value(`attribute`, `value`))}
         static func equalTo(_ otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
 		static func equalTo(otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
         static var mostRecentOnly: Verify { return Verify(method: .p_mostRecentOnly_get) }
 		static func mostRecentOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentOnly_set(newValue)) }
-        static var name: Verify { return Verify(method: .p_name_get) }
+        static var attributedName: Verify { return Verify(method: .p_attributedName_get) }
         static var attributes: Verify { return Verify(method: .p_attributes_get) }
         static var debugDescription: Verify { return Verify(method: .p_debugDescription_get) }
     }
@@ -325,7 +324,7 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
         static func value(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
             return Perform(method: .m_value__of_attribute(`attribute`), performs: perform)
         }
-        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any>, perform: @escaping (Attribute, Any) -> Void) -> Perform {
+        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, perform: @escaping (Attribute, Any?) -> Void) -> Perform {
             return Perform(method: .m_set__attribute_attributeto_value(`attribute`, `value`), performs: perform)
         }
         static func equalTo(_ otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {

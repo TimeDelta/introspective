@@ -30,7 +30,7 @@ public protocol Sample: Attributed {
 extension Sample {
 
 	public func equalTo(_ otherSample: Sample) -> Bool {
-		if name != otherSample.name { return false }
+		if attributedName != otherSample.attributedName { return false }
 		if description != otherSample.description { return false }
 		if dates() != otherSample.dates() { return false }
 		if type(of: self) != type(of: otherSample) { return false }

@@ -15,7 +15,7 @@ final class ChooseCalendarComponentViewController: UIViewController {
 
 	@IBOutlet weak final var calendarComponentPicker: UIPickerView!
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	public final var selectedComponent: Calendar.Component?
 	public final var notificationToSendOnAccept: Notification.Name!

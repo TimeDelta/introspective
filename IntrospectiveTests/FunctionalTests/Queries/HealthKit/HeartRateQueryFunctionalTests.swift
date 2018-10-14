@@ -46,17 +46,16 @@ class HeartRateQueryFunctionalTests: QueryFunctionalTest {
 
 	func testGivenOneHeartRateInHealthKitWithUnrestrictedQuery_runQuery_returnsThatHeartRate() {
 		// given
-		let expected = HeartRate(89)
-		HealthKitDataTestUtil.save([expected])
+		let expectedSamples = [HeartRate(89)]
+		HealthKitDataTestUtil.save(expectedSamples)
 
 		// when
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -64,11 +63,9 @@ class HeartRateQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenMultipleHeartRatesInHealthKitAndRestrictionOnHeartRateThatShouldOnlyReturnOneHeartRate_runQuery_returnsThatOneHeartRate() {
 		// given
 		let value = 83.7
-		let expected = HeartRate(value)
-		HealthKitDataTestUtil.save([
-			expected,
-			HeartRate(value - 1),
-		])
+		let expectedSamples = [HeartRate(value)]
+		HealthKitDataTestUtil.save(expectedSamples)
+		HealthKitDataTestUtil.save([HeartRate(value - 1)])
 
 		let heartRateRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate, value: value)
 		query.attributeRestrictions.append(heartRateRestriction)
@@ -77,10 +74,9 @@ class HeartRateQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -88,13 +84,9 @@ class HeartRateQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenMultipleHeartRatesInDatabaseThatMatchGivenHeartRateRestriction_runQuery_returnsAllMatchingHeartRates() {
 		// given
 		let value = 54.6
-		let expected1 = HeartRate(value)
-		let expected2 = HeartRate(value - 1)
-		HealthKitDataTestUtil.save([
-			expected1,
-			expected2,
-			HeartRate(value + 1),
-		])
+		let expectedSamples = [HeartRate(value), HeartRate(value - 1)]
+		HealthKitDataTestUtil.save(expectedSamples)
+		HealthKitDataTestUtil.save([HeartRate(value + 1)])
 
 		let heartRateRestriction = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate, value: value)
 		query.attributeRestrictions.append(heartRateRestriction)
@@ -103,11 +95,9 @@ class HeartRateQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 2, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expected1) }))
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expected2) }))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -115,9 +105,9 @@ class HeartRateQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenQueryHasOneRestrictionForEachAttributeAndMultipleHeartRatesInHealthKitWithOnlyOneThatMatches_runQuery_returnsThatHeartRate() {
 		// given
 		let value = 54.6
-		let expected = HeartRate(value, Date() - 2.days)
+		let expectedSamples = [HeartRate(value, Date() - 2.days)]
+		HealthKitDataTestUtil.save(expectedSamples)
 		HealthKitDataTestUtil.save([
-			expected,
 			HeartRate(value - 2),
 			HeartRate(value - 1),
 			HeartRate(),
@@ -132,10 +122,9 @@ class HeartRateQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}

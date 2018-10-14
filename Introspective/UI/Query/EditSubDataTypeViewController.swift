@@ -11,17 +11,24 @@ import os
 
 final class EditSubSampleTypeViewController: UIViewController {
 
+	// MARK: - Static Variables
+
 	private typealias Me = EditSubSampleTypeViewController
 	private static let doneEditing = Notification.Name("doneChoosingSubDataType")
 
-	public final var notificationToSendWhenAccepted: Notification.Name!
-	public final var matcher: SubQueryMatcher!
-	public final var sampleType: Sample.Type!
+	// MARK: - IBOutlets
 
 	@IBOutlet weak final var dataTypePicker: UIPickerView!
 	@IBOutlet weak final var attributedChooserSubView: UIView!
 
+	// MARK: - Instance Variables
+
+	public final var notificationToSendWhenAccepted: Notification.Name!
+	public final var matcher: SubQueryMatcher!
+	public final var sampleType: Sample.Type!
 	private final var attributedChooserViewController: AttributedChooserViewController!
+
+	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
@@ -34,17 +41,24 @@ final class EditSubSampleTypeViewController: UIViewController {
 			dataTypePicker.selectRow(index!, inComponent: 0, animated: false)
 		}
 
-
 		createAndInstallAttributedChooserViewController()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(doneEditing), name: Me.doneEditing, object: nil)
 	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
+
+	// MARK: - Received Notifications
 
 	@objc public final func doneEditing(notification: Notification) {
 		let savedValue = QueryViewController.SampleTypeInfo(sampleType, notification.object as! SubQueryMatcher)
 		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: savedValue, userInfo: nil)
 		_ = navigationController?.popViewController(animated: true)
 	}
+
+	// MARK: - Helper Functions
 
 	private final func createAndInstallAttributedChooserViewController() {
 		attributedChooserViewController = (UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "attributedChooserViewController") as! AttributedChooserViewController)
@@ -65,6 +79,8 @@ final class EditSubSampleTypeViewController: UIViewController {
 	}
 }
 
+// MARK: - UIPickerViewDataSource
+
 extension EditSubSampleTypeViewController: UIPickerViewDataSource {
 
 	final func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -75,6 +91,8 @@ extension EditSubSampleTypeViewController: UIPickerViewDataSource {
 		return DependencyInjector.sample.allTypes().count
 	}
 }
+
+// MARK: - UIPickerViewDelegate
 
 extension EditSubSampleTypeViewController: UIPickerViewDelegate {
 

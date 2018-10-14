@@ -10,12 +10,21 @@ import Foundation
 
 public final class DateTimeAttribute: DateAttributeBase {
 
-	public init(name: String = "Date and time", pluralName: String? = "Dates and times", description: String? = nil, variableName: String? = nil, earliestDate: Date? = nil, latestDate: Date? = nil) {
+	public init(
+		name: String = "Date and time",
+		pluralName: String? = "Dates and times",
+		description: String? = nil,
+		variableName: String? = nil,
+		optional: Bool = false,
+		earliestDate: Date? = nil,
+		latestDate: Date? = nil)
+	{
 		super.init(
 			name: name,
 			pluralName: pluralName,
 			description: description,
 			variableName: variableName,
+			optional: optional,
 			includeTime: true,
 			earliestDate: earliestDate,
 			latestDate: latestDate)

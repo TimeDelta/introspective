@@ -9,12 +9,20 @@
 import UIKit
 import os
 
-final class NumericAttributeValueViewController: AttributeValueTypeViewController {
+final class NumericAttributeValueViewController: UIViewController {
 
-	public final var numericAttribute: NumericAttribute!
+	// MARK: - IBOutlets
 
 	@IBOutlet weak final var textField: UITextField!
-	@IBOutlet weak final var validationLabel: UILabel!
+	@IBOutlet weak final var saveButton: UIButton!
+
+	// MARK: - Instance Variables
+
+	public final var numericAttribute: NumericAttribute!
+	public final var notificationToSendOnAccept: Notification.Name!
+	public final var currentValue: Any!
+
+	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
@@ -26,31 +34,40 @@ final class NumericAttributeValueViewController: AttributeValueTypeViewControlle
 			} else {
 				os_log("Forgot a type of NumericAttribute when setting initial value for text field", type: .error)
 			}
-		} else {
-			setErrorMessageFor(invalidValue: nil)
 		}
 	}
+
+	// MARK: - Actions
 
 	@IBAction final func valueChanged(_ sender: Any) {
 		validate(value: textField.text)
 	}
 
+	@IBAction final func saveButtonPressed(_ sender: Any) {
+		DispatchQueue.main.async {
+			NotificationCenter.default.post(name: self.notificationToSendOnAccept, object: self.currentValue)
+		}
+		dismiss(animated: true, completion: nil)
+	}
+
+	// MARK: - Helper Functions
+
 	private final func validate(value: String?) {
 		if value != nil && numericAttribute.isValid(value: value!) {
 			currentValue = try! numericAttribute.convertToValue(from: value!)
-			validationLabel.text = ""
-			valueIsValid()
+			enableSaveButton()
 		} else {
-			setErrorMessageFor(invalidValue: value)
-			valueIsInvalid()
+			disableSaveButton()
 		}
 	}
 
-	private final func setErrorMessageFor(invalidValue value: String?) {
-		if value == nil || value!.isEmpty {
-			validationLabel.text = "Must enter a value"
-		} else {
-			validationLabel.text = "\"\(value!)\" is not a number"
-		}
+	private final func disableSaveButton() {
+		UiUtil.setButton(saveButton, enabled: false, hidden: false)
+		saveButton.backgroundColor = UIColor.gray
+	}
+
+	private final func enableSaveButton() {
+		UiUtil.setButton(saveButton, enabled: true, hidden: false)
+		saveButton.backgroundColor = UIColor.black
 	}
 }

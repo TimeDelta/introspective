@@ -53,7 +53,7 @@ class QueryViewController: UITableViewController {
 		}
 	}
 
-	// MARK: - Static Member Variables
+	// MARK: - Static Variables
 
 	private typealias Me = QueryViewController
 	private static let acceptedAttributeRestrictionEdit = Notification.Name("acceptedAttributeRestrictionEdit")
@@ -84,7 +84,7 @@ class QueryViewController: UITableViewController {
 	@IBOutlet weak final var finishedButton: UIBarButtonItem!
 	@IBOutlet weak final var editButton: UIBarButtonItem!
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	public final var finishedButtonTitle: String! = "Run"
 	/// Corresponding notification object will contain the built query as the object
@@ -118,6 +118,10 @@ class QueryViewController: UITableViewController {
 
 		addPartButton?.target = self
 		addPartButton?.action = #selector(addPartButtonWasPressed)
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	// MARK: - Table View Data Source
@@ -359,32 +363,25 @@ class QueryViewController: UITableViewController {
 			let sampleTypeInfo = parts[0].sampleTypeInfo!
 			switch (sampleTypeInfo.sampleType) {
 				case is BloodPressure.Type:
-					currentQuery = DependencyInjector.query.bloodPressureQuery()
-					break
+					currentQuery = DependencyInjector.query.bloodPressureQuery(); break
 				case is BodyMassIndex.Type:
-					currentQuery = DependencyInjector.query.bmiQuery()
-					break
+					currentQuery = DependencyInjector.query.bmiQuery(); break
 				case is HeartRate.Type:
-					currentQuery = DependencyInjector.query.heartRateQuery()
-					break
+					currentQuery = DependencyInjector.query.heartRateQuery(); break
 				case is LeanBodyMass.Type:
-					currentQuery = DependencyInjector.query.leanBodyMassQuery()
-					break
+					currentQuery = DependencyInjector.query.leanBodyMassQuery(); break
+				case is MedicationDose.Type:
+					currentQuery = DependencyInjector.query.medicationDoseQuery(); break
 				case is MoodImpl.Type:
-					currentQuery = DependencyInjector.query.moodQuery()
-					break
+					currentQuery = DependencyInjector.query.moodQuery(); break
 				case is RestingHeartRate.Type:
-					currentQuery = DependencyInjector.query.restingHeartRateQuery()
-					break
+					currentQuery = DependencyInjector.query.restingHeartRateQuery(); break
 				case is SexualActivity.Type:
-					currentQuery = DependencyInjector.query.sexualActivityQuery()
-					break
+					currentQuery = DependencyInjector.query.sexualActivityQuery(); break
 				case is Sleep.Type:
-					currentQuery = DependencyInjector.query.sleepQuery()
-					break
+					currentQuery = DependencyInjector.query.sleepQuery(); break
 				case is Weight.Type:
-					currentQuery = DependencyInjector.query.weightQuery()
-					break
+					currentQuery = DependencyInjector.query.weightQuery(); break
 				default: fatalError("Forgot a type of Sample")
 			}
 

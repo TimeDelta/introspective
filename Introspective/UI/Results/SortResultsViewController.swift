@@ -10,7 +10,7 @@ import UIKit
 
 final class SortResultsViewController: UIViewController {
 
-	// MARK: - Static Member Variables
+	// MARK: - Static Variables
 
 	private typealias Me = SortResultsViewController
 	private static let userAccepted = Notification.Name("userAccepted")
@@ -20,7 +20,7 @@ final class SortResultsViewController: UIViewController {
 	@IBOutlet weak final var sortAscendingSwitch: UISwitch!
 	@IBOutlet weak final var chooseAttributeView: UIStackView!
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	public final var attributes: [Attribute]!
 	public final var sortAttribute: Attribute!

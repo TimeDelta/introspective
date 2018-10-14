@@ -46,17 +46,16 @@ class SleepQueryFunctionalTests: QueryFunctionalTest {
 
 	func testGivenOneSleepInHealthKitWithUnrestrictedQuery_runQuery_returnsThatSleepRecords() {
 		// given
-		let expected = Sleep()
-		HealthKitDataTestUtil.save([expected])
+		let expectedSamples = [Sleep()]
+		HealthKitDataTestUtil.save(expectedSamples)
 
 		// when
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -64,11 +63,9 @@ class SleepQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenMultipleSleepRecordsInHealthKitAndRestrictionOnSleepThatShouldOnlyReturnOneSleep_runQuery_returnsThatOneSleep() {
 		// given
 		let date = Date()
-		let expected = Sleep(startDate: date)
-		HealthKitDataTestUtil.save([
-			expected,
-			Sleep(startDate: date - 1.days),
-		])
+		let expectedSamples = [Sleep(startDate: date)]
+		HealthKitDataTestUtil.save(expectedSamples)
+		HealthKitDataTestUtil.save([Sleep(startDate: date - 1.days)])
 
 		let timestampRestriction = OnDateAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitStartDate, date: date)
 		query.attributeRestrictions.append(timestampRestriction)
@@ -77,10 +74,9 @@ class SleepQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -89,11 +85,12 @@ class SleepQueryFunctionalTests: QueryFunctionalTest {
 		// given
 		let startDate = Date()
 		let endDate = startDate + 2.days
-		let expected1 = Sleep(.asleep, startDate: startDate + 1.days, endDate: endDate)
-		let expected2 = Sleep(.asleep, startDate: startDate + 23.hours, endDate: endDate)
+		let expectedSamples = [
+			Sleep(.asleep, startDate: startDate + 1.days, endDate: endDate),
+			Sleep(.asleep, startDate: startDate + 23.hours, endDate: endDate)
+		]
+		HealthKitDataTestUtil.save(expectedSamples)
 		HealthKitDataTestUtil.save([
-			expected1,
-			expected2,
 			Sleep(.asleep, startDate: startDate - 1.days, endDate: endDate),
 			Sleep(.asleep, startDate: startDate + 1.days, endDate: endDate + 2.days),
 			Sleep(.awake, startDate: startDate + 1.days, endDate: endDate + 1.days),
@@ -111,11 +108,9 @@ class SleepQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 2, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expected1) }))
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expected2) }))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}

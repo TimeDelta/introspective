@@ -21,7 +21,7 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 		suffixAttribute,
 	]
 
-	public final override var name: String { return "Text ends with" }
+	public final override var attributedName: String { return "Text ends with" }
 	public final override var description: String {
 		return restrictedAttribute.name.localizedCapitalized + " ends with '" + suffix + "'"
 	}
@@ -37,12 +37,12 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 		super.init(restrictedAttribute: restrictedAttribute, attributes: Me.attributes)
 	}
 
-	public final override func value(of attribute: Attribute) throws -> Any {
-		if attribute.name == Me.suffixAttribute.name { return suffix }
+	public final override func value(of attribute: Attribute) throws -> Any? {
+		if attribute.equalTo(Me.suffixAttribute) { return suffix }
 		throw AttributeError.unknownAttribute
 	}
 
-	public final override func set(attribute: Attribute, to value: Any) throws {
+	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.name != Me.suffixAttribute.name { throw AttributeError.unknownAttribute }
 		guard let castedValue = value as? String else { throw AttributeError.typeMismatch }
 		suffix = castedValue
@@ -54,7 +54,7 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 	}
 
 	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K ENDSWITH[cd] %@", restrictedAttribute.variableName, suffix)
+		return NSPredicate(format: "%K ENDSWITH[cd] %@", restrictedAttribute.variableName!, suffix)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {

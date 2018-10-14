@@ -72,6 +72,7 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 	func getPredicate() -> NSPredicate {
 		var subPredicates = [NSPredicate]()
 		for attributeRestriction in attributeRestrictions {
+			if attributeRestriction.restrictedAttribute.variableName == nil { continue }
 			if let predicateRestriction = attributeRestriction as? PredicateAttributeRestriction {
 				subPredicates.append(predicateRestriction.toPredicate())
 			}
@@ -82,7 +83,7 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 	func samplePassesFilters(_ sample: Sample) -> Bool {
 		for attributeRestriction in attributeRestrictions {
 			if stopped { return false }
-			if !(attributeRestriction is PredicateAttributeRestriction) {
+			if attributeRestriction.restrictedAttribute.variableName == nil || !(attributeRestriction is PredicateAttributeRestriction) {
 				if try! !attributeRestriction.samplePasses(sample) {
 					return false
 				}

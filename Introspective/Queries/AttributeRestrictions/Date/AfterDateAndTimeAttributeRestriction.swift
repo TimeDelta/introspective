@@ -21,7 +21,7 @@ public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestrictio
 		dateAttribute,
 	]
 
-	public final override var name: String { return "After date and time" }
+	public final override var attributedName: String { return "After date and time" }
 	public final override var description: String {
 		let dateText = try! Me.dateAttribute.convertToDisplayableString(from: date)
 		return "After " + dateText
@@ -38,14 +38,14 @@ public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestrictio
 		super.init(restrictedAttribute: restrictedAttribute, attributes: Me.attributes)
 	}
 
-	public final override func value(of attribute: Attribute) throws -> Any {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.name != Me.dateAttribute.name {
 			throw AttributeError.unknownAttribute
 		}
 		return date
 	}
 
-	public final override func set(attribute: Attribute, to value: Any) throws {
+	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.name != Me.dateAttribute.name {
 			throw AttributeError.unknownAttribute
 		}
@@ -59,7 +59,7 @@ public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestrictio
 	}
 
 	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K > %@", restrictedAttribute.variableName, date as NSDate)
+		return NSPredicate(format: "%K > %@", restrictedAttribute.variableName!, date as NSDate)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {

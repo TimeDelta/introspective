@@ -46,17 +46,16 @@ class SexualActivityQueryFunctionalTests: QueryFunctionalTest {
 
 	func testGivenOneSexualActivityInHealthKitWithUnrestrictedQuery_runQuery_returnsThatSexualActivities() {
 		// given
-		let expected = SexualActivity()
-		HealthKitDataTestUtil.save([expected])
+		let expectedSamples = [SexualActivity()]
+		HealthKitDataTestUtil.save(expectedSamples)
 
 		// when
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -64,11 +63,9 @@ class SexualActivityQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenMultipleSexualActivitiesInHealthKitAndRestrictionOnSexualActivityThatShouldOnlyReturnOneSexualActivity_runQuery_returnsThatOneSexualActivity() {
 		// given
 		let date = Date()
-		let expected = SexualActivity(date)
-		HealthKitDataTestUtil.save([
-			expected,
-			SexualActivity(date - 1.days),
-		])
+		let expectedSamples = [SexualActivity(date)]
+		HealthKitDataTestUtil.save(expectedSamples)
+		HealthKitDataTestUtil.save([SexualActivity(date - 1.days)])
 
 		let timestampRestriction = OnDateAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitTimestamp, date: date)
 		query.attributeRestrictions.append(timestampRestriction)
@@ -77,10 +74,9 @@ class SexualActivityQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -88,13 +84,9 @@ class SexualActivityQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenMultipleSexualActivitiesInDatabaseThatMatchGivenSexualActivityRestriction_runQuery_returnsAllMatchingSexualActivities() {
 		// given
 		let date = Date()
-		let expected1 = SexualActivity(date + 1.days)
-		let expected2 = SexualActivity(date + 2.days)
-		HealthKitDataTestUtil.save([
-			expected1,
-			expected2,
-			SexualActivity(date - 1.days),
-		])
+		let expectedSamples = [SexualActivity(date + 1.days), SexualActivity(date + 2.days)]
+		HealthKitDataTestUtil.save(expectedSamples)
+		HealthKitDataTestUtil.save([SexualActivity(date - 1.days)])
 
 		let timestampRestriction = AfterDateAndTimeAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitTimestamp, date: date)
 		query.attributeRestrictions.append(timestampRestriction)
@@ -103,11 +95,9 @@ class SexualActivityQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 2, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expected1) }))
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expected2) }))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}

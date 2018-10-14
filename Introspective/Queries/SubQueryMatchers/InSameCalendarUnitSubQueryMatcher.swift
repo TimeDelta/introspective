@@ -19,7 +19,7 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 	public static let timeUnit = CalendarComponentAttribute(name: "Time unit")
 	public static let attributes: [Attribute] = [CommonSubQueryMatcherAttributes.mostRecentOnly, timeUnit]
 
-	public final let name: String = "Within the same <time_unit> of"
+	public final let attributedName: String = "Within the same <time_unit> of"
 	public final var description: String {
 		var text: String
 		if timeUnit == .day {
@@ -73,7 +73,7 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 		return matchingSamples
 	}
 
-	public final func value(of attribute: Attribute) throws -> Any {
+	public final func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.timeUnit) {
 			return timeUnit
 		}
@@ -83,7 +83,7 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 		throw AttributeError.unknownAttribute
 	}
 
-	public final func set(attribute: Attribute, to value: Any) throws {
+	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.timeUnit) {
 			guard let castedValue = value as? Calendar.Component else { throw AttributeError.typeMismatch }
 			timeUnit = castedValue

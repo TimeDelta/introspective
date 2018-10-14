@@ -14,7 +14,7 @@ public final class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 		return lhs.equalTo(rhs)
 	}
 
-	public final let name: String = "Start and end timestamps are the same as"
+	public final let attributedName: String = "Start and end timestamps are the same as"
 	public final var description: String {
 		var text = "Start and end timestamps are the same as"
 		if mostRecentOnly {
@@ -56,14 +56,14 @@ public final class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 		return matchingSamples
 	}
 
-	public final func value(of attribute: Attribute) throws -> Any {
+	public final func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(CommonSubQueryMatcherAttributes.mostRecentOnly) {
 			return mostRecentOnly
 		}
 		throw AttributeError.unknownAttribute
 	}
 
-	public final func set(attribute: Attribute, to value: Any) throws {
+	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(CommonSubQueryMatcherAttributes.mostRecentOnly) {
 			guard let castedValue = value as? Bool else { throw AttributeError.typeMismatch }
 			mostRecentOnly = castedValue

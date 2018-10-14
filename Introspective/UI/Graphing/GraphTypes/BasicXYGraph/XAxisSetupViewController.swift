@@ -12,7 +12,7 @@ import os
 
 final class XAxisSetupViewController: UIViewController {
 
-	// MARK: - Static Member Variables
+	// MARK: - Static Variables
 
 	private typealias Me = XAxisSetupViewController
 	private static let groupingChanged = Notification.Name("groupingChanged")
@@ -31,7 +31,7 @@ final class XAxisSetupViewController: UIViewController {
 	@IBOutlet weak final var attributePicker: UIPickerView!
 	@IBOutlet weak final var informationPicker: UIPickerView!
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	public final var grouping: Calendar.Component? { didSet { updateDisplay() } }
 	public final var attributes: [Attribute]!

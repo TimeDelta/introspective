@@ -15,7 +15,7 @@ public class TypedGreaterThanAttributeRestrictionBase<ValueType: Comparable>: An
 		return lhs.equalTo(rhs)
 	}
 
-	public final override var name: String { return "Greater than" }
+	public final override var attributedName: String { return "Greater than" }
 	public final override var description: String {
 		do {
 			let valueText = try restrictedAttribute.convertToDisplayableString(from: value)
@@ -39,21 +39,21 @@ public class TypedGreaterThanAttributeRestrictionBase<ValueType: Comparable>: An
 		fatalError("This should never be called because this is an abstract base class")
 	}
 
-	public final override func value(of attribute: Attribute) throws -> Any {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(valueAttribute) { return value }
 		throw AttributeError.unknownAttribute
 	}
 
-	public final override func set(attribute: Attribute, to value: Any) throws {
+	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(valueAttribute) { throw AttributeError.unknownAttribute }
 		guard let castedValue = value as? ValueType else { throw AttributeError.typeMismatch }
 		self.value = castedValue
 	}
 
 	public final override func samplePasses(_ sample: Sample) throws -> Bool {
-		guard let castedValue = try sample.value(of: restrictedAttribute) as? ValueType else {
-			throw AttributeError.typeMismatch
-		}
+		let sampleValue = try sample.value(of: restrictedAttribute)
+		if sampleValue == nil { return false }
+		guard let castedValue = sampleValue as? ValueType else { throw AttributeError.typeMismatch }
 		return castedValue > value
 	}
 

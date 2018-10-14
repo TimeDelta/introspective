@@ -15,7 +15,7 @@ final class ChooseSampleTypeViewController: UIViewController {
 
 	@IBOutlet weak final var sampleTypePicker: UIPickerView!
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	public final var selectedSampleType: Sample.Type?
 	public final var notificationToSendOnAccept: Notification.Name!

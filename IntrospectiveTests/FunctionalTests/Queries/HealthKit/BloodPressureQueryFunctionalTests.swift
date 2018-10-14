@@ -46,17 +46,16 @@ final class BloodPressureQueryFunctionalTests: QueryFunctionalTest {
 
 	func testGivenOneBloodPressureInHealthKitWithUnrestrictedQuery_runQuery_returnsThatBloodPressures() {
 		// given
-		let expected = BloodPressure(systolic: 100, diastolic: 45, Date())
-		HealthKitDataTestUtil.save([expected])
+		let expectedSamples = [BloodPressure(systolic: 100, diastolic: 45, Date())]
+		HealthKitDataTestUtil.save(expectedSamples)
 
 		// when
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -64,11 +63,9 @@ final class BloodPressureQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenMultipleBloodPressuresInHealthKitAndRestrictionOnSystolicPressureThatShouldOnlyReturnOneBloodPressure_runQuery_returnsThatOneBloodPressure() {
 		// given
 		let value = 83.7
-		let expected = BloodPressure(systolic: value)
-		HealthKitDataTestUtil.save([
-			expected,
-			BloodPressure(systolic: value - 1),
-		])
+		let expectedSamples = [BloodPressure(systolic: value)]
+		HealthKitDataTestUtil.save(expectedSamples)
+		HealthKitDataTestUtil.save([BloodPressure(systolic: value - 1)])
 
 		let systolicRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: BloodPressure.systolic, value: value)
 		query.attributeRestrictions.append(systolicRestriction)
@@ -77,10 +74,9 @@ final class BloodPressureQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -89,11 +85,12 @@ final class BloodPressureQueryFunctionalTests: QueryFunctionalTest {
 		// given
 		let systolicValue = 120.0
 		let diastolicValue = 80.0
-		let expected1 = BloodPressure(systolic: systolicValue, diastolic: diastolicValue + 1)
-		let expected2 = BloodPressure(systolic: systolicValue - 1, diastolic: diastolicValue + 50)
+		let expectedSamples = [
+			BloodPressure(systolic: systolicValue, diastolic: diastolicValue + 1),
+			BloodPressure(systolic: systolicValue - 1, diastolic: diastolicValue + 50),
+		]
+		HealthKitDataTestUtil.save(expectedSamples)
 		HealthKitDataTestUtil.save([
-			expected1,
-			expected2,
 			BloodPressure(systolic: systolicValue + 1, diastolic: diastolicValue + 1),
 			BloodPressure(systolic: systolicValue, diastolic: diastolicValue - 1),
 			BloodPressure(systolic: systolicValue + 1, diastolic: diastolicValue - 1),
@@ -108,11 +105,9 @@ final class BloodPressureQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 2, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expected1) }))
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expected2) }))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -121,9 +116,9 @@ final class BloodPressureQueryFunctionalTests: QueryFunctionalTest {
 		// given
 		let systolicValue = 54.6
 		let diastolicValue =  18.3
-		let expected = BloodPressure(systolic: systolicValue, diastolic: diastolicValue, Date() - 2.days)
+		let expectedSamples = [BloodPressure(systolic: systolicValue, diastolic: diastolicValue, Date() - 2.days)]
+		HealthKitDataTestUtil.save(expectedSamples)
 		HealthKitDataTestUtil.save([
-			expected,
 			BloodPressure(systolic: diastolicValue, diastolic: systolicValue, Date() - 2.days),
 			BloodPressure(systolic: systolicValue - 1, diastolic: diastolicValue, Date() - 2.days),
 			BloodPressure(systolic: systolicValue, diastolic: diastolicValue + 2, Date() - 2.days),
@@ -142,10 +137,9 @@ final class BloodPressureQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}

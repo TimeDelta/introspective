@@ -24,7 +24,7 @@ public class AnyAttributeRestriction: AttributeRestriction {
 
 	public static let selectAnAttribute = TextAttribute(name:"Atribute", pluralName: "Attributes")
 
-	public var name: String { get { fatalError("Must override name") } }
+	public var attributedName: String { get { fatalError("Must override name") } }
 	public var description: String { get { fatalError("Must override description") } }
 	public final var attributes: [Attribute]
 	public final var restrictedAttribute: Attribute
@@ -45,7 +45,7 @@ public class AnyAttributeRestriction: AttributeRestriction {
 	}
 
 	public func samplePasses(_ sample: Sample) throws -> Bool { fatalError("Must override samplePasses()") }
-	public func value(of attribute: Attribute) throws -> Any { fatalError("Must override value(of:)") }
-	public func set(attribute: Attribute, to value: Any) throws { fatalError("Must override set(attribute:to:)") }
+	public func value(of attribute: Attribute) throws -> Any? { fatalError("Must override value(of:)") }
+	public func set(attribute: Attribute, to value: Any?) throws { fatalError("Must override set(attribute:to:)") }
 	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool { fatalError("Must override equalTo()")}
 }

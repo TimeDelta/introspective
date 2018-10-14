@@ -44,9 +44,9 @@ public final class MoodImpl: NSManagedObject, Mood {
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.timestamp
 	public final let attributes: [Attribute] = Me.attributes
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
-	public final let name: String = "Mood"
+	public final let attributedName: String = "Mood"
 	public final override var description: String { return Me.description }
 
 	// MARK: - Sample Functions
@@ -57,7 +57,7 @@ public final class MoodImpl: NSManagedObject, Mood {
 
 	// MARK: - Attributed Functions
 
-	public final func value(of attribute: Attribute) throws -> Any {
+	public final func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.maxRating) {
 			return maxRating
 		}
@@ -73,7 +73,7 @@ public final class MoodImpl: NSManagedObject, Mood {
 		throw AttributeError.unknownAttribute
 	}
 
-	public final func set(attribute: Attribute, to value: Any) throws {
+	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.maxRating) {
 			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
 			maxRating = castedValue
@@ -90,7 +90,8 @@ public final class MoodImpl: NSManagedObject, Mood {
 			return
 		}
 		if attribute.equalTo(Me.note) {
-			guard let castedValue = value as? String else { throw AttributeError.typeMismatch }
+			if !(value is String?) { throw AttributeError.typeMismatch }
+			let castedValue = value as! String?
 			note = castedValue
 			return
 		}

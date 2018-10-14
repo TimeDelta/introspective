@@ -9,9 +9,9 @@
 import Foundation
 @testable import Introspective
 
-class MoodDataTestUtil {
+public class MoodDataTestUtil {
 
-	static func createMood(note: String? = nil, rating: Double = 0.0, timestamp: Date = Date()) -> MoodImpl {
+	public static func createMood(note: String? = nil, rating: Double = 0.0, timestamp: Date = Date()) -> MoodImpl {
 		let mood = DependencyInjector.sample.mood() as! MoodImpl
 		mood.rating = rating
 		mood.timestamp = timestamp

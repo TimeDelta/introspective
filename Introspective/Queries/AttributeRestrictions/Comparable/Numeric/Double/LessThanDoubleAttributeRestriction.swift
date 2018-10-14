@@ -22,6 +22,6 @@ public final class LessThanDoubleAttributeRestriction: TypedLessThanAttributeRes
 	}
 
 	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K < %f", restrictedAttribute.variableName, value)
+		return NSPredicate(format: "%K < %f", restrictedAttribute.variableName!, value)
 	}
 }

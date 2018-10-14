@@ -8,11 +8,20 @@
 
 import UIKit
 
-final class HorizontalMultiSelectAttributeValueViewController: AttributeValueTypeViewController, MultiSelectSegmentedControlDelegate {
+final class HorizontalMultiSelectAttributeValueViewController: UIViewController, MultiSelectSegmentedControlDelegate {
 
-	public final var multiSelectAttribute: MultiSelectAttribute!
+	// MARK: - IBOutlets
 
 	@IBOutlet weak final var multiSelect: MultiSelectSegmentedControl!
+	@IBOutlet weak final var saveButton: UIButton!
+
+	// MARK: - Instance Variables
+
+	public final var multiSelectAttribute: MultiSelectAttribute!
+	public final var notificationToSendOnAccept: Notification.Name!
+	public final var currentValue: Any!
+
+	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
@@ -36,6 +45,8 @@ final class HorizontalMultiSelectAttributeValueViewController: AttributeValueTyp
 		}
 	}
 
+	// MARK: - MultiSelectSegmentedControlDelegate
+
 	public final func multiSelect(multiSelectSegmendedControl: MultiSelectSegmentedControl, didChangeValue value: Bool, atIndex index: Int) {
 		var values = [Any]()
 		for index in multiSelect.selectedSegmentIndexes {
@@ -43,5 +54,14 @@ final class HorizontalMultiSelectAttributeValueViewController: AttributeValueTyp
 			values.append(value)
 		}
 		currentValue = try! multiSelectAttribute.valueFromArray(values)
+	}
+
+	// MARK: - Actions
+
+	@IBAction final func saveButtonPressed(_ sender: Any) {
+		DispatchQueue.main.async {
+			NotificationCenter.default.post(name: self.notificationToSendOnAccept, object: self.currentValue)
+		}
+		dismiss(animated: true, completion: nil)
 	}
 }

@@ -10,12 +10,19 @@ import Foundation
 
 public final class DayOfWeekAttribute: TypedSelectOneAttribute<DayOfWeek> {
 
-	public init(name: String = "Day of the week", pluralName: String? = "Day of the week", description: String? = nil, variableName: String? = nil) {
+	public init(
+		name: String = "Day of the week",
+		pluralName: String? = "Day of the week",
+		description: String? = nil,
+		variableName: String? = nil,
+		optional: Bool = false)
+	{
 		super.init(
 			name: name,
 			pluralName: pluralName,
 			description: description,
 			variableName: variableName,
+			optional: optional,
 			possibleValues: DayOfWeek.allDays,
 			possibleValueToString: { $0.abbreviation },
 			areEqual: { $0 == $1 })

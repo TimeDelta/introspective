@@ -15,7 +15,7 @@ public class NotEqualToAttributeRestriction: AnyAttributeRestriction, Equatable 
 		return lhs.equalTo(rhs)
 	}
 
-	public final override var name: String { return "Not equal to" }
+	public final override var attributedName: String { return "Not equal to" }
 	public final override var description: String {
 		do {
 			let valueText = try restrictedAttribute.convertToDisplayableString(from: value)
@@ -26,11 +26,11 @@ public class NotEqualToAttributeRestriction: AnyAttributeRestriction, Equatable 
 		}
 	}
 
-	public final var value: Any
+	public final var value: Any?
 	fileprivate final let valueAttribute: Attribute
-	fileprivate final let areEqual: (Any, Any) throws -> Bool
+	fileprivate final let areEqual: (Any?, Any?) throws -> Bool
 
-	public init(restrictedAttribute: Attribute, value: Any, valueAttribute: Attribute, areEqual: @escaping (Any, Any) throws -> Bool) {
+	public init(restrictedAttribute: Attribute, value: Any?, valueAttribute: Attribute, areEqual: @escaping (Any?, Any?) throws -> Bool) {
 		self.value = value
 		self.valueAttribute = valueAttribute
 		self.areEqual = areEqual
@@ -41,19 +41,19 @@ public class NotEqualToAttributeRestriction: AnyAttributeRestriction, Equatable 
 		fatalError("This should never be called because this is an abstract base class")
 	}
 
-	public final override func value(of attribute: Attribute) throws -> Any {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(valueAttribute) { return value }
 		throw AttributeError.unknownAttribute
 	}
 
-	public override func set(attribute: Attribute, to value: Any) throws {
+	public override func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(valueAttribute) { throw AttributeError.unknownAttribute }
-		self.value = value
+		self.value = value as Any
 	}
 
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
 		let actualValue = try sample.value(of: restrictedAttribute)
-		return try !areEqual(actualValue, value)
+		return try !areEqual(actualValue as Any, value)
 	}
 
 	public func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -97,16 +97,21 @@ public class TypedNotEqualToAttributeRestrictionBase<ValueType: Equatable>: NotE
 		fatalError("This should never be called because this is an abstract base class")
 	}
 
-	public final override func set(attribute: Attribute, to value: Any) throws {
+	public override func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(valueAttribute) { throw AttributeError.unknownAttribute }
-		guard let castedValue = value as? ValueType else { throw AttributeError.typeMismatch }
+		if !((restrictedAttribute.optional && value is ValueType?) || (!restrictedAttribute.optional && value is ValueType)) {
+			throw AttributeError.typeMismatch
+		}
+		let castedValue = value as! ValueType?
 		self.value = castedValue
 	}
 
-	public final override func samplePasses(_ sample: Sample) throws -> Bool {
-		guard let castedValue = try sample.value(of: restrictedAttribute) as? ValueType else {
-			throw AttributeError.typeMismatch
-		}
+	public override func samplePasses(_ sample: Sample) throws -> Bool {
+		let sampleValue = try sample.value(of: restrictedAttribute)
+		if (!(sampleValue is ValueType?)) { throw AttributeError.typeMismatch }
+		if sampleValue == nil && value == nil { return false }
+		if sampleValue == nil || value == nil { return true }
+		let castedValue = sampleValue as! ValueType
 		return try !areEqual(castedValue, value)
 	}
 

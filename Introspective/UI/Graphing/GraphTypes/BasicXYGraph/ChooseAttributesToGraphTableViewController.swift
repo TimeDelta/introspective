@@ -10,7 +10,7 @@ import UIKit
 
 final class ChooseAttributesToGraphTableViewController: UITableViewController {
 
-	// MARK: - Static Member Variables
+	// MARK: - Static Variables
 
 	private typealias Me = ChooseAttributesToGraphTableViewController
 	private static let editedAttribute = Notification.Name("editedAttributesWhileChoosingWhatToGraph")
@@ -19,7 +19,7 @@ final class ChooseAttributesToGraphTableViewController: UITableViewController {
 
 	@IBOutlet weak final var addButton: UIBarButtonItem!
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	public final var notificationToSendWhenFinished: Notification.Name!
 	public final var allowedAttributes: [Attribute]! {

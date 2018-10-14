@@ -12,9 +12,9 @@ import SwiftDate
 
 class MoodQueryFunctionalTest: QueryFunctionalTest {
 
-	fileprivate var query: MoodQuery!
+	private var query: MoodQuery!
 
-	override func setUp() {
+	final override func setUp() {
 		super.setUp()
 		query = MoodQueryImpl()
 	}
@@ -33,17 +33,16 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 
 	func testGivenOneMoodInDatabaseAndQueryContainsNoRestrictions_runQuery_returnsThatMood() {
 		// given
-		let mood = createMood(note: "this is a test note")
+		let expectedSamples = [createMood(note: "this is a test note")]
 		DependencyInjector.db.save()
 
 		// when
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0] as! MoodImpl == mood)
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -51,7 +50,7 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 	func testGivenMultipleMoodsInDatabaseAndRestrictionOnNoteThatShouldOnlyReturnOneMood_runQuery_returnsThatOneMood() {
 		// given
 		let note = "this is a test note"
-		let expectedMood = createMood(note: note)
+		let expectedSamples = [createMood(note: note)]
 		let _ = createMood(note: "something that doesn't contain the target note text")
 		DependencyInjector.db.save()
 
@@ -62,10 +61,9 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0] as! MoodImpl == expectedMood)
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -73,8 +71,10 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 	func testGivenMultipleMoodsInDatabaseThatMatchGivenNoteRestriction_runQuery_returnsAllMatchingMoods() {
 		// given
 		let note = "this is a test note"
-		let expectedMood1 = createMood(note: note, rating: 1.0)
-		let expectedMood2 = createMood(note: note, rating: 2.0)
+		let expectedSamples = [
+			createMood(note: note, rating: 1.0),
+			createMood(note: note, rating: 2.0)
+		]
 		let _ = createMood()
 		DependencyInjector.db.save()
 
@@ -85,11 +85,9 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 2, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expectedMood1) }))
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expectedMood2) }))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -97,7 +95,7 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 	func testGivenQueryHasOneRestrictionForEachAttributeAndMultipleMoodsInDatabaseWithOnlyOneThatMatches_runQuery_returnsThatMood() {
 		// given
 		let note = "this is a test note"
-		let expectedMood = createMood(note: note, rating: 1.0)
+		let expectedSamples = [createMood(note: note, rating: 1.0)]
 		let _ = createMood(note: note, rating: 1.0, timestamp: Date() - 2.days)
 		let _ = createMood(note: note, rating: 2.0)
 		let _ = createMood(rating: 1.0)
@@ -115,15 +113,14 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expectedMood))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
 
-	fileprivate func createMood(note: String? = nil, rating: Double = 0.0, timestamp: Date = Date()) -> MoodImpl {
+	private func createMood(note: String? = nil, rating: Double = 0.0, timestamp: Date = Date()) -> MoodImpl {
 		return MoodDataTestUtil.createMood(note: note, rating: rating, timestamp: timestamp)
 	}
 }

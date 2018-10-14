@@ -15,7 +15,7 @@ public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 		return lhs.equalTo(rhs)
 	}
 
-	public final override var name: String { return "Equal to" }
+	public final override var attributedName: String { return "Equal to" }
 	public final override var description: String {
 		do {
 			let valueText = try restrictedAttribute.convertToDisplayableString(from: value)
@@ -26,11 +26,11 @@ public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 		}
 	}
 
-	public final var value: Any
+	public final var value: Any?
 	fileprivate final let valueAttribute: Attribute
-	fileprivate final let areEqual: (Any, Any) throws -> Bool
+	fileprivate final let areEqual: (Any?, Any?) throws -> Bool
 
-	public init(restrictedAttribute: Attribute, value: Any, valueAttribute: Attribute, areEqual: @escaping (Any, Any) throws -> Bool) {
+	public init(restrictedAttribute: Attribute, value: Any?, valueAttribute: Attribute, areEqual: @escaping (Any?, Any?) throws -> Bool) {
 		self.value = value
 		self.valueAttribute = valueAttribute
 		self.areEqual = areEqual
@@ -41,12 +41,12 @@ public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 		fatalError("This should never be called because this is an abstract base class")
 	}
 
-	public final override func value(of attribute: Attribute) throws -> Any {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(valueAttribute) { return value }
 		throw AttributeError.unknownAttribute
 	}
 
-	public override func set(attribute: Attribute, to value: Any) throws {
+	public override func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(valueAttribute) { throw AttributeError.unknownAttribute }
 		self.value = value
 	}
@@ -87,8 +87,9 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 
 	public init(restrictedAttribute: Attribute, value: ValueType, valueAttribute: Attribute) {
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: valueAttribute) {
-			guard let castedFirst = $0 as? ValueType else { throw AttributeError.typeMismatch }
-			guard let castedSecond = $1 as? ValueType else { throw AttributeError.typeMismatch }
+			if !($0 is ValueType?) || !($1 is ValueType?) { throw AttributeError.typeMismatch }
+			let castedFirst = $0 as! ValueType?
+			let castedSecond = $1 as! ValueType?
 			return castedFirst == castedSecond
 		}
 	}
@@ -97,16 +98,21 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 		fatalError("This should never be called because this is an abstract base class")
 	}
 
-	public override func set(attribute: Attribute, to value: Any) throws {
+	public override func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(valueAttribute) { throw AttributeError.unknownAttribute }
-		guard let castedValue = value as? ValueType else { throw AttributeError.typeMismatch }
+		if !((restrictedAttribute.optional && value is ValueType?) || (!restrictedAttribute.optional && value is ValueType)) {
+			throw AttributeError.typeMismatch
+		}
+		let castedValue = value as! ValueType?
 		self.value = castedValue
 	}
 
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
-		guard let castedValue = try sample.value(of: restrictedAttribute) as? ValueType else {
-			throw AttributeError.typeMismatch
-		}
+		let sampleValue = try sample.value(of: restrictedAttribute)
+		if (!(sampleValue is ValueType?)) { throw AttributeError.typeMismatch }
+		if sampleValue == nil && value == nil { return true }
+		if sampleValue == nil || value == nil { return false }
+		let castedValue = sampleValue as! ValueType
 		return try areEqual(castedValue, value)
 	}
 

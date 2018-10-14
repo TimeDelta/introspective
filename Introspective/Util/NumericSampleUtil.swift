@@ -8,6 +8,7 @@
 
 import Foundation
 import HealthKit
+import os
 
 //sourcery: AutoMockable
 public protocol NumericSampleUtil {
@@ -53,7 +54,14 @@ public final class NumericSampleUtilImpl: NumericSampleUtil {
 
 		var average: Double = 0.0
 		for sample in samples {
-			average += try! sample.value(of: attribute) as! Double
+			let value = try! sample.value(of: attribute)
+			if let castedValue = value as? Double {
+				average += castedValue
+			} else if let castedValue = value as? Int {
+				average += Double(castedValue)
+			} else if !attribute.optional {
+				os_log("non-optional attribute (%@) of sample (%@) returned '%@' while calculating average", type: .error, attribute.name, sample.attributedName, String(describing: value))
+			}
 		}
 		return average / Double(samples.count)
 	}
@@ -152,7 +160,12 @@ public final class NumericSampleUtilImpl: NumericSampleUtil {
 
 		var sum: Type = 0
 		for sample in samples {
-			sum += try! sample.value(of: attribute) as! Type
+			let value = try! sample.value(of: attribute)
+			if let castedValue = value as? Type {
+				sum += castedValue
+			} else if !attribute.optional {
+				os_log("non-optional attribute (%@) of sample (%@) returned '%@' while calculating sum", type: .error, attribute.name, sample.attributedName, String(describing: value))
+			}
 		}
 		return sum
 	}

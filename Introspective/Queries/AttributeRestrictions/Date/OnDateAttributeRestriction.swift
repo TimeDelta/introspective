@@ -22,7 +22,7 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Predica
 		dateAttribute,
 	]
 
-	public final override var name: String { return "On a specific date" }
+	public final override var attributedName: String { return "On a specific date" }
 	public final override var description: String {
 		let dateText = try! Me.dateAttribute.convertToDisplayableString(from: date)
 		return "On " + dateText
@@ -43,14 +43,14 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Predica
 		super.init(restrictedAttribute: restrictedAttribute, attributes: Me.attributes)
 	}
 
-	public final override func value(of attribute: Attribute) throws -> Any {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.name != Me.dateAttribute.name {
 			throw AttributeError.unknownAttribute
 		}
 		return date
 	}
 
-	public final override func set(attribute: Attribute, to value: Any) throws {
+	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.name != Me.dateAttribute.name {
 			throw AttributeError.unknownAttribute
 		}
@@ -65,7 +65,7 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Predica
 
 	public final func toPredicate() -> NSPredicate {
 		let nextDay = Calendar.autoupdatingCurrent.date(byAdding: .day, value: 1, to: date)!
-		return NSPredicate(format: "%K > %@ AND %K < %@", restrictedAttribute.variableName, date as NSDate, restrictedAttribute.variableName, nextDay as NSDate)
+		return NSPredicate(format: "%K >= %@ AND %K < %@", restrictedAttribute.variableName!, date as NSDate, restrictedAttribute.variableName!, nextDay as NSDate)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {

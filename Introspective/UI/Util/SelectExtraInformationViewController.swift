@@ -16,7 +16,7 @@ final class SelectExtraInformationViewController: UIViewController {
 	@IBOutlet weak final var attributePicker: UIPickerView!
 	@IBOutlet weak final var informationPicker: UIPickerView!
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	public final var attributes: [Attribute]!
 	public final var selectedAttribute: Attribute!

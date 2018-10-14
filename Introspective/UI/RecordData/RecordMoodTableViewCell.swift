@@ -18,7 +18,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	@IBOutlet weak final var doneButton: UIButton!
 	@IBOutlet weak final var addNoteButton: UIButton!
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	final var note: String? = nil
 
@@ -28,6 +28,10 @@ final class RecordMoodTableViewCell: UITableViewCell {
 		super.awakeFromNib()
 		reset()
 		NotificationCenter.default.addObserver(self, selector: #selector(noteSaved), name: MoodNoteViewController.noteSavedNotification, object: nil)
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	// MARK: - Button Actions

@@ -44,6 +44,14 @@ public final class ExtraInformationFactoryImpl: ExtraInformationFactory {
 			applicableInformationTypes.append(MinimumInformation<Int>.self)
 		} else if attribute is DateAttribute {
 			applicableInformationTypes.append(contentsOf: Me.dateInformationTypes)
+		} else if attribute is DosageAttribute {
+			applicableInformationTypes.append(MaximumInformation<Dosage>.self)
+			applicableInformationTypes.append(MinimumInformation<Dosage>.self)
+			applicableInformationTypes.append(SumInformation.self)
+			applicableInformationTypes.append(AverageInformation.self)
+		} else if attribute is FrequencyAttribute {
+			applicableInformationTypes.append(MaximumInformation<Frequency>.self)
+			applicableInformationTypes.append(MinimumInformation<Frequency>.self)
 		}
 		// TODO - additional attribute types
 		return applicableInformationTypes

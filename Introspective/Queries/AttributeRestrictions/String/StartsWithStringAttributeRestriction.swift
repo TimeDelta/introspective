@@ -21,7 +21,7 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 		prefixAttribute,
 	]
 
-	public final override var name: String { return "Text starts with" }
+	public final override var attributedName: String { return "Text starts with" }
 	public final override var description: String {
 		return restrictedAttribute.name.localizedCapitalized + " starts with '" + prefix + "'"
 	}
@@ -37,12 +37,12 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 		super.init(restrictedAttribute: restrictedAttribute, attributes: Me.attributes)
 	}
 
-	public final override func value(of attribute: Attribute) throws -> Any {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.name == Me.prefixAttribute.name { return prefix }
 		throw AttributeError.unknownAttribute
 	}
 
-	public final override func set(attribute: Attribute, to value: Any) throws {
+	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.name != Me.prefixAttribute.name { throw AttributeError.unknownAttribute }
 		guard let castedValue = value as? String else { throw AttributeError.typeMismatch }
 		prefix = castedValue
@@ -54,7 +54,7 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 	}
 
 	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K BEGINSWITH[cd] %@", restrictedAttribute.variableName, prefix)
+		return NSPredicate(format: "%K BEGINSWITH[cd] %@", restrictedAttribute.variableName!, prefix)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {

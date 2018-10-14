@@ -11,7 +11,7 @@ import Presentr
 
 final class RecordDataTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
 
-	// MARK: - Static Member Variables
+	// MARK: - Static Variables
 
 	private typealias Me = RecordDataTableViewController
 	private static let presenter: Presentr = {
@@ -28,18 +28,23 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 	@IBOutlet weak final var toolbar: UIToolbar!
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	private final var viewParams: [(id: String, height: CGFloat)] = [
 		(id: "mood", height: 100.0),
+		(id: "medication", height: 52),
 	]
 
-	// MARK: - UIViewCOntroller Overrides
+	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
 		toolbar.setItems([self.editButtonItem], animated: false)
 		NotificationCenter.default.addObserver(self, selector: #selector(showViewController), name: Me.showViewController, object: nil)
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	// MARK: - Table view data source

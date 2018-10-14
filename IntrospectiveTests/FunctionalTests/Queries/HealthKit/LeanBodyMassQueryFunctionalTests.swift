@@ -46,17 +46,16 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 
 	func testGivenOneLeanBodyMassInHealthKitWithUnrestrictedQuery_runQuery_returnsThatLeanBodyMasses() {
 		// given
-		let expected = LeanBodyMass(89)
-		HealthKitDataTestUtil.save([expected])
+		let expectedSamples = [LeanBodyMass(89)]
+		HealthKitDataTestUtil.save(expectedSamples)
 
 		// when
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -64,11 +63,9 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenMultipleLeanBodyMassesInHealthKitAndRestrictionOnLeanBodyMassThatShouldOnlyReturnOneLeanBodyMass_runQuery_returnsThatOneLeanBodyMass() {
 		// given
 		let value = 83.7
-		let expected = LeanBodyMass(value)
-		HealthKitDataTestUtil.save([
-			expected,
-			LeanBodyMass(value - 1),
-		])
+		let expectedSamples = [LeanBodyMass(value)]
+		HealthKitDataTestUtil.save(expectedSamples)
+		HealthKitDataTestUtil.save([LeanBodyMass(value - 1)])
 
 		let leanBodyMassRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: LeanBodyMass.leanBodyMass, value: value)
 		query.attributeRestrictions.append(leanBodyMassRestriction)
@@ -77,10 +74,9 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -88,13 +84,9 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenMultipleLeanBodyMassesInDatabaseThatMatchGivenLeanBodyMassRestriction_runQuery_returnsAllMatchingLeanBodyMasses() {
 		// given
 		let value = 54.6
-		let expected1 = LeanBodyMass(value)
-		let expected2 = LeanBodyMass(value - 1)
-		HealthKitDataTestUtil.save([
-			expected1,
-			expected2,
-			LeanBodyMass(value + 1),
-		])
+		let expectedSamples = [LeanBodyMass(value), LeanBodyMass(value - 1)]
+		HealthKitDataTestUtil.save(expectedSamples)
+		HealthKitDataTestUtil.save([LeanBodyMass(value + 1)])
 
 		let leanBodyMassRestriction = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: LeanBodyMass.leanBodyMass, value: value)
 		query.attributeRestrictions.append(leanBodyMassRestriction)
@@ -103,11 +95,9 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 2, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expected1) }))
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expected2) }))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -115,9 +105,9 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenQueryHasOneRestrictionForEachAttributeAndMultipleLeanBodyMassesInHealthKitWithOnlyOneThatMatches_runQuery_returnsThatLeanBodyMass() {
 		// given
 		let value = 54.6
-		let expected = LeanBodyMass(value, Date() - 2.days)
+		let expectedSamples = [LeanBodyMass(value, Date() - 2.days)]
+		HealthKitDataTestUtil.save(expectedSamples)
 		HealthKitDataTestUtil.save([
-			expected,
 			LeanBodyMass(value - 2),
 			LeanBodyMass(value - 1),
 			LeanBodyMass(),
@@ -132,10 +122,9 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 1, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples[0].equalTo(expected), self.expected(expected, butGot: self.samples[0]))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}

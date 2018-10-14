@@ -12,12 +12,12 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 
 	private typealias Me = SameTimeUnitSampleGrouper
 
-	public static let timeUnitParam = CalendarComponentAttribute(description: "Combine all samples within the same time unit")
+	public static let timeUnitAttribute = CalendarComponentAttribute(description: "Combine all samples within the same time unit")
 	public static let attributes: [Attribute] = [
-		timeUnitParam,
+		timeUnitAttribute,
 	]
 
-	public final let name = "Same time unit"
+	public final let attributedName = "Same time unit"
 	public final let attributes: [Attribute] = Me.attributes
 	public final var description: String {
 		return "per " + timeUnit.description.localizedLowercase
@@ -33,6 +33,7 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 
 	public final func group(samples: [Sample], by attribute: Attribute) -> [(Any, [Sample])] {
 		var samplesByTimeUnit: [Date: [Sample]]
+		// TODO - support grouping by day of week, hour of day, etc.
 		if attribute.equalTo(CommonSampleAttributes.startDate) || attribute.equalTo(CommonSampleAttributes.timestamp) {
 			samplesByTimeUnit = DependencyInjector.util.sampleUtil.aggregate(samples: samples, by: timeUnit, dateType: .start)
 		} else if attribute.equalTo(CommonSampleAttributes.endDate) {
@@ -45,18 +46,18 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 			.map({ (key, value) in return (key, value) })
 	}
 
-	public final func value(of attribute: Attribute) throws -> Any {
-		if attribute.name == Me.timeUnitParam.name {
+	public final func value(of attribute: Attribute) throws -> Any? {
+		if attribute.equalTo(Me.timeUnitAttribute) {
 			return timeUnit
 		}
 		throw AttributeError.unknownAttribute
 	}
 
-	public final func set(attribute: Attribute, to value: Any) throws {
-		if attribute.name != Me.timeUnitParam.name {
-			throw AttributeError.unknownAttribute
+	public final func set(attribute: Attribute, to value: Any?) throws {
+		if attribute.equalTo(Me.timeUnitAttribute) {
+			guard let castedValue = value as? Calendar.Component else { throw AttributeError.typeMismatch }
+			timeUnit = castedValue
 		}
-		guard let castedValue = value as? Calendar.Component else { throw AttributeError.typeMismatch }
-		timeUnit = castedValue
+		throw AttributeError.unknownAttribute
 	}
 }

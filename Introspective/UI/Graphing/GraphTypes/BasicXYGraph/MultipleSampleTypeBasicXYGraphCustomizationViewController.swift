@@ -13,7 +13,7 @@ import os
 
 final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGraphTypeSetupViewController {
 
-	// MARK: - Static Member Variables
+	// MARK: - Static Variables
 
 	private typealias Me = MultipleSampleTypeBasicXYGraphCustomizationViewController
 	private static let yAxisInformationChanged = Notification.Name("chosenDataToGraphChanged")
@@ -46,7 +46,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	@IBOutlet weak final var chooseGroupingButton: UIButton!
 	@IBOutlet weak var showGraphButton: UIButton!
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	private final var oldXAxisSampleType: Sample.Type!
 	private final var xAxisSampleType: Sample.Type! {

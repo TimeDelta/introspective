@@ -41,6 +41,17 @@ class QueryFunctionalTest: FunctionalTest {
 		return waitError == nil && error == nil && result != nil
 	}
 
+	func assertOnlyExpectedSamples(expectedSamples: [Sample]) {
+		let unexpectedSamples = self.samples.filter({ sample in
+			return !expectedSamples.contains(where: { sample.equalTo($0) })
+		})
+		XCTAssert(unexpectedSamples.count == 0, "Found \(unexpectedSamples.count) unexpected samples: \(unexpectedSamples.debugDescription)")
+		let missingSamples = expectedSamples.filter({ sample in
+			return !self.samples.contains(where: { sample.equalTo($0) })
+		})
+		XCTAssert(missingSamples.count == 0, "Missing \(missingSamples.count) expected samples: \(missingSamples.debugDescription)")
+	}
+
 	func expected(_ expected: Sample, butGot actual: Sample) -> String {
 		return "EXPECTED: " + expected.debugDescription + "; ACTUAL: " + actual.debugDescription
 	}

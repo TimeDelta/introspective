@@ -21,7 +21,7 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 		daysOfWeekAttribute,
 	]
 
-	public final override var name: String { return "On day(s) of the week" }
+	public final override var attributedName: String { return "On day(s) of the week" }
 	public final override var description: String {
 		let daysOfWeekText = try! Me.daysOfWeekAttribute.convertToDisplayableString(from: daysOfWeek)
 		return "On a " + daysOfWeekText
@@ -38,14 +38,14 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 		super.init(restrictedAttribute: restrictedAttribute, attributes: Me.attributes)
 	}
 
-	public final override func value(of attribute: Attribute) throws -> Any {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.name != Me.daysOfWeekAttribute.name {
 			throw AttributeError.unknownAttribute
 		}
 		return daysOfWeek
 	}
 
-	public final override func set(attribute: Attribute, to value: Any) throws {
+	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.name != Me.daysOfWeekAttribute.name {
 			throw AttributeError.unknownAttribute
 		}

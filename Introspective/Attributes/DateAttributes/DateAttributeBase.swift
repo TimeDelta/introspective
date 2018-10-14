@@ -21,6 +21,7 @@ public class DateAttributeBase: AttributeBase, DateAttribute {
 		pluralName: String? = nil,
 		description: String? = nil,
 		variableName: String? = nil,
+		optional: Bool = false,
 		includeTime: Bool = true,
 		format: String = defaultDateFormat,
 		earliestDate: Date? = nil,
@@ -30,10 +31,11 @@ public class DateAttributeBase: AttributeBase, DateAttribute {
 		self.dateFormat = format
 		self.earliestDate = earliestDate
 		self.latestDate = latestDate
-		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
+		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional)
 	}
 
-	public final override func convertToDisplayableString(from value: Any) throws -> String {
+	public final override func convertToDisplayableString(from value: Any?) throws -> String {
+		if optional && value == nil { return "" }
 		guard let castedValue = value as? Date else {
 			throw AttributeError.typeMismatch
 		}

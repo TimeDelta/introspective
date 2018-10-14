@@ -27,12 +27,13 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 		pluralName: String? = nil,
 		description: String? = nil,
 		variableName: String? = nil,
+		optional: Bool = false,
 		possibleValues: [Type] = [Type](),
 		possibleValueToString: @escaping (Type) -> String)
 	{
 		self.typedPossibleValues = possibleValues
 		self.possibleValueToString = possibleValueToString
-		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
+		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional)
 	}
 
 	public final func valueAsArray(_ value: Any) throws -> [Any] {
@@ -46,9 +47,7 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 	}
 
 	public final func valueFromArray(_ value: [Any]) throws -> Any {
-		guard let castedValue = value as? [Type] else {
-			throw AttributeError.typeMismatch
-		}
+		guard let castedValue = value as? [Type] else { throw AttributeError.typeMismatch }
 		return Set<Type>(castedValue)
 	}
 
@@ -64,7 +63,8 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 		return possibleValueToString(castedValue)
 	}
 
-	public override func convertToDisplayableString(from value: Any) throws -> String {
+	public override func convertToDisplayableString(from value: Any?) throws -> String {
+		if optional && value == nil { return "" }
 		if let castedValue = value as? Set<Type> {
 			let arrayOfTypes = castedValue.map{ $0 }
 			return convertTypesIntoDisplayString(arrayOfTypes)
@@ -101,13 +101,15 @@ public class ComparableTypedMultiSelectAttribute<Type: Hashable & Comparable>: T
 		pluralName: String? = nil,
 		description: String? = nil,
 		variableName: String? = nil,
+		optional: Bool = false,
 		possibleValues: [Type] = [Type](),
 		possibleValueToString: @escaping (Type) -> String)
 	{
-		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, possibleValues: possibleValues, possibleValueToString: possibleValueToString)
+		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional, possibleValues: possibleValues, possibleValueToString: possibleValueToString)
 	}
 
-	public final override func convertToDisplayableString(from value: Any) throws -> String {
+	public final override func convertToDisplayableString(from value: Any?) throws -> String {
+		if optional && value == nil { return "" }
 		if let castedValue = value as? Set<Type> {
 			let sortedTypes = castedValue.sorted(by: { $0 < $1 })
 			return convertTypesIntoDisplayString(sortedTypes)

@@ -25,14 +25,14 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 		}
 	}
 
-	// MARK: - Static Member Variables
+	// MARK: - Static Variables
 
 	private typealias Me = QueryResultsBasicXYGraphCustomizationViewController
 	private static let xAxisChanged = Notification.Name("xAxisChanged")
 	private static let yAxisChanged = Notification.Name("yAxisChanged")
 	private static let aggregationChanged = Notification.Name("aggregationChanged")
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	public final var samples: [Sample]!
 
@@ -217,9 +217,15 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 		} else {
 			xValuesAreNumbers = xAxis.attribute! is NumericAttribute
 			for yAttribute in yAxis.map({ $0.attribute! }) {
-				let data = samples.map({ (sample: Sample) -> [Any] in
+				let filteredSamples = samples.filter() {
+					let xValue = try! $0.value(of: self.xAxis.attribute!)
+					if xValue == nil { return false }
+					let yValue = try! $0.value(of: yAttribute)
+					return yValue != nil
+				}
+				let data = filteredSamples.map({ (sample: Sample) -> [Any] in
 					let rawXValue = try! sample.value(of: self.xAxis.attribute!)
-					var xValue: Any = rawXValue
+					var xValue: Any = rawXValue as Any
 					if !xValuesAreNumbers {
 						do {
 							xValue = try self.xAxis.attribute!.convertToDisplayableString(from: rawXValue)
@@ -228,7 +234,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 							os_log("Failed to convert value (%@) to displayable string: %@", type: .error, String(describing: rawXValue), error.localizedDescription)
 						}
 					}
-					return [xValue, try! sample.value(of: yAttribute)]
+					return [xValue, try! sample.value(of: yAttribute) as Any]
 				})
 				allData.append(AASeriesElement()
 					.name(yAttribute.name)

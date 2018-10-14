@@ -19,6 +19,14 @@ final class UiUtil {
 		return customPresenter
 	}()
 
+	public static func customPresenter(width: ModalSize = .default, height: ModalSize = .default, center: ModalCenterPosition = .center) -> Presentr {
+		let customType = PresentationType.custom(width: width, height: height, center: center)
+		let customPresenter = Presentr(presentationType: customType)
+		customPresenter.dismissTransitionType = .crossDissolve
+		customPresenter.roundCorners = true
+		return customPresenter
+	}
+
 	public static func setView(_ view: UIView, enabled: Bool? = nil, hidden: Bool? = nil) {
 		view.isHidden = hidden ?? view.isHidden
 		view.isUserInteractionEnabled = enabled ?? view.isUserInteractionEnabled

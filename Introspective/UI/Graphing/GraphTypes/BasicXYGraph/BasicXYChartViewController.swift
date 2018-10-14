@@ -18,7 +18,7 @@ class BasicXYChartViewController: UIViewController {
 	@IBOutlet weak final var errorMessageLabel: UILabel!
 	@IBOutlet weak final var chartViewOutline: UIView!
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	public final var queries: [Query]?
 	public final var dataSeries: [Dictionary<String, Any>]! {

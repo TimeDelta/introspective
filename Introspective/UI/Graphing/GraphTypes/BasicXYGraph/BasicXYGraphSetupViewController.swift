@@ -12,7 +12,7 @@ import os
 
 final class BasicXYGraphSetupViewController: BasicXYGraphTypeSetupViewController {
 
-	// MARK: - Static Member Variables
+	// MARK: - Static Variables
 
 	private typealias Me = BasicXYGraphSetupViewController
 	private static let singleDataType = 0
@@ -23,7 +23,7 @@ final class BasicXYGraphSetupViewController: BasicXYGraphTypeSetupViewController
 	@IBOutlet weak final var numberOfDataTypesSegmentedControl: UISegmentedControl!
 	@IBOutlet weak final var subView: UIView!
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	private final var subViewController: BasicXYGraphTypeSetupViewController?
 

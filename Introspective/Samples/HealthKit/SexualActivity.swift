@@ -54,9 +54,9 @@ public final class SexualActivity: HealthKitCategorySample {
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
 	public final var attributes: [Attribute] { return Me.attributes }
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
-	public final var name: String = Me.name
+	public final var attributedName: String = Me.name
 	public final var description: String = Me.description
 	public final var timestamp: Date
 	public final var protectionUsed: Protection
@@ -103,7 +103,7 @@ public final class SexualActivity: HealthKitCategorySample {
 
 	// MARK: - Attributed Functions
 
-	public final func value(of attribute: Attribute) throws -> Any {
+	public final func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.protectionUsed) {
 			return protectionUsed
 		}
@@ -113,7 +113,7 @@ public final class SexualActivity: HealthKitCategorySample {
 		throw AttributeError.unknownAttribute
 	}
 
-	public final func set(attribute: Attribute, to value: Any) throws {
+	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.protectionUsed) {
 			guard let castedValue = value as? Protection else { throw AttributeError.typeMismatch }
 			protectionUsed = castedValue

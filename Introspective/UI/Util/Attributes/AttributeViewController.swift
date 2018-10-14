@@ -11,10 +11,14 @@ import Presentr
 
 final class AttributeViewController: UIViewController {
 
-	// MARK: - Static Member Variables
+	// MARK: - Static Variables
 
 	private typealias Me = AttributeViewController
 	private static let valueChanged = Notification.Name("attributeValueChanged")
+	private static let horizontalMultiSelectPresenter = UiUtil.customPresenter(height: .custom(size: 100))
+	private static let numericPresenter = UiUtil.customPresenter(height: .custom(size: 100))
+	private static let dosagePresenter = UiUtil.customPresenter(height: .custom(size: 100))
+	private static let frequencyPresenter = UiUtil.customPresenter(width: .custom(size: 250), height: .custom(size: 250))
 
 	// MARK: - IBOutlets
 
@@ -23,7 +27,7 @@ final class AttributeViewController: UIViewController {
 	@IBOutlet weak final var attributeValueButton: UIButton!
 	@IBOutlet weak final var booleanValueSwitch: UISwitch!
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	public final var attribute: Attribute!
 	public final var attributeValue: Any!
@@ -66,11 +70,35 @@ final class AttributeViewController: UIViewController {
 	}
 
 	@IBAction final func valueButtonPressed(_ sender: Any) {
-		let controller = storyboard!.instantiateViewController(withIdentifier: "attributeValue") as! AttributeValueViewController
-		controller.attribute = attribute
-		controller.attributeValue = attributeValue
-		controller.notificationToSendOnAccept = Me.valueChanged
-		customPresentViewController(UiUtil.defaultPresenter, viewController: controller, animated: true)
+		if attribute is MultiSelectAttribute {
+			let controller = storyboard!.instantiateViewController(withIdentifier: "horizontalMultiSelectAttribute") as! HorizontalMultiSelectAttributeValueViewController
+			controller.multiSelectAttribute = (attribute as! MultiSelectAttribute)
+			controller.currentValue = attributeValue
+			controller.notificationToSendOnAccept = Me.valueChanged
+			customPresentViewController(Me.horizontalMultiSelectPresenter, viewController: controller, animated: true)
+		} else if attribute is NumericAttribute {
+			let controller = storyboard!.instantiateViewController(withIdentifier: "numericAttribute") as! NumericAttributeValueViewController
+			controller.numericAttribute = (attribute as! NumericAttribute)
+			controller.currentValue = attributeValue
+			controller.notificationToSendOnAccept = Me.valueChanged
+			customPresentViewController(Me.numericPresenter, viewController: controller, animated: true)
+		} else if attribute is DosageAttribute {
+			let controller = storyboard!.instantiateViewController(withIdentifier: "setDosage") as! SetMedicationDosageViewController
+			controller.initialDosage = attributeValue as? Dosage
+			controller.notificationToSendOnAccept = Me.valueChanged
+			customPresentViewController(Me.dosagePresenter, viewController: controller, animated: true)
+		} else if attribute is FrequencyAttribute {
+			let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "chooseFrequency") as! FrequencyEditorViewController
+			controller.initialFrequency = attributeValue as? Frequency
+			controller.notificationToSendOnAccept = Me.valueChanged
+			customPresentViewController(Me.frequencyPresenter, viewController: controller, animated: true)
+		} else {
+			let controller = storyboard!.instantiateViewController(withIdentifier: "attributeValue") as! AttributeValueViewController
+			controller.attribute = attribute
+			controller.attributeValue = attributeValue
+			controller.notificationToSendOnAccept = Me.valueChanged
+			customPresentViewController(UiUtil.defaultPresenter, viewController: controller, animated: true)
+		}
 	}
 
 	@IBAction final func booleanValueChanged(_ sender: Any) {

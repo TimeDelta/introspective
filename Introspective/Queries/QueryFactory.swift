@@ -15,6 +15,7 @@ public protocol QueryFactory {
 	func bmiQuery() -> BodyMassIndexQuery
 	func heartRateQuery() -> HeartRateQuery
 	func leanBodyMassQuery() -> LeanBodyMassQuery
+	func medicationDoseQuery() -> MedicationDoseQuery
 	func moodQuery() -> MoodQuery
 	func restingHeartRateQuery() -> RestingHeartRateQuery
 	func sexualActivityQuery() -> SexualActivityQuery
@@ -45,6 +46,10 @@ public final class QueryFactoryImpl: QueryFactory {
 		return LeanBodyMassQueryImpl()
 	}
 
+	public final func medicationDoseQuery() -> MedicationDoseQuery {
+		return MedicationDoseQueryImpl()
+	}
+
 	public final func moodQuery() -> MoodQuery {
 		return MoodQueryImpl()
 	}
@@ -71,8 +76,11 @@ public final class QueryFactoryImpl: QueryFactory {
 			case is BodyMassIndex.Type: return bmiQuery()
 			case is HeartRate.Type: return heartRateQuery()
 			case is LeanBodyMass.Type: return leanBodyMassQuery()
+			case is MedicationDose.Type: return medicationDoseQuery()
 			case is Mood.Type: return moodQuery()
+			case is RestingHeartRate.Type: return restingHeartRateQuery()
 			case is SexualActivity.Type: return sexualActivityQuery()
+			case is Sleep.Type: return sleepQuery()
 			case is Weight.Type: return weightQuery()
 			default:
 				os_log("Unknown sample type: %@", type: .error, String(describing: sampleType))

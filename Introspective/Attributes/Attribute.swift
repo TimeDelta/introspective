@@ -21,12 +21,14 @@ public protocol Attribute {
 	var name: String { get }
 	var pluralName: String { get }
 	/// This needs to be able to be used by an NSPredicate within a PredicateAttributeRestriction
-	var variableName: String { get }
+	var variableName: String? { get }
 	/// This is an explanation of this attribute that should be able to be presented to the user.
 	var extendedDescription: String? { get }
+	/// This represents whether or not this attribute is optional
+	var optional: Bool { get }
 
 	func equalTo(_ otherAttribute: Attribute) -> Bool
-	func convertToDisplayableString(from value: Any) throws -> String
+	func convertToDisplayableString(from value: Any?) throws -> String
 }
 
 extension Attribute {
@@ -42,28 +44,22 @@ public class AttributeBase: Attribute {
 	public final let name: String
 	public final let pluralName: String
 	/// This needs to be able to be used by an NSPredicate within a PredicateAttributeRestriction
-	public final let variableName: String
+	public final let variableName: String?
 	/// This is an explanation of this attribute that should be able to be presented to the user.
 	public final let extendedDescription: String?
+	/// This represents whether or not this attribute is optional
+	public final let optional: Bool
 
 	/// - Parameter pluralName: If nil, use `name` parameter.
 	/// - Parameter description: If nil, no description is needed for the user to understand this attribute.
 	/// - Parameter variableName: This should be usable by an NSPredicate to identify the associated variable. If nil, use `name` parameter.
-	public init(name: String, pluralName: String? = nil, description: String? = nil, variableName: String? = nil) {
+	public init(name: String, pluralName: String? = nil, description: String? = nil, variableName: String? = nil, optional: Bool = false) {
 		self.name = name
 		self.pluralName = pluralName ?? name
 		self.extendedDescription = description
-		if variableName == nil {
-			let words = name.split(separator: " ")
-			var defaultValue: String = String(words[0])
-			for word in words[1...] {
-				defaultValue += String(word).localizedCapitalized
-			}
-			self.variableName = defaultValue
-		} else {
-			self.variableName = variableName!
-		}
+		self.variableName = variableName
+		self.optional = optional
 	}
 
-	public func convertToDisplayableString(from value: Any) throws -> String { fatalError("Must override convertToDisplayableString") }
+	public func convertToDisplayableString(from value: Any?) throws -> String { fatalError("Must override convertToDisplayableString") }
 }

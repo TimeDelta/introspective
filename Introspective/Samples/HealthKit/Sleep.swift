@@ -63,9 +63,9 @@ public final class Sleep: HealthKitCategorySample {
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitStartDate
 	public final var attributes: [Attribute] { return Me.attributes }
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
-	public final var name: String = Me.name
+	public final var attributedName: String = Me.name
 	public final var description: String = Me.description
 	public final var startDate: Date
 	public final var endDate: Date
@@ -113,7 +113,7 @@ public final class Sleep: HealthKitCategorySample {
 
 	// MARK: - Attributed Functions
 
-	public final func value(of attribute: Attribute) throws -> Any {
+	public final func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.state) {
 			return state
 		}
@@ -126,7 +126,7 @@ public final class Sleep: HealthKitCategorySample {
 		throw AttributeError.unknownAttribute
 	}
 
-	public final func set(attribute: Attribute, to value: Any) throws {
+	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.state) {
 			guard let castedValue = value as? State else { throw AttributeError.typeMismatch }
 			state = castedValue

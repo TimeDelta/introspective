@@ -33,7 +33,7 @@ final class AttributedChooserViewController: UIViewController {
 		} else {
 			var index = 0
 			for value in possibleValues {
-				if value.name == currentValue.name {
+				if value.attributedName == currentValue.attributedName {
 					valuePicker.selectRow(index, inComponent: 0, animated: false)
 					break
 				}
@@ -52,7 +52,7 @@ final class AttributedChooserViewController: UIViewController {
 		populateScrollView()
 	}
 
-	@objc final func accepted() {
+	@objc final func saveButtonPressed() {
 		for controller in attributeViewControllers {
 			let attribute = controller.attribute!
 			let attributeValue = controller.attributeValue!
@@ -94,7 +94,7 @@ final class AttributedChooserViewController: UIViewController {
 		let controller = UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "acceptButton") as! AttributeListAcceptButtonViewController
 		let x = attributeScrollView.frame.minX
 		controller.view.frame = CGRect(x: x, y: getNextYPosForScrollView(), width: subViewWidth(), height: 30)
-		controller.acceptButton.addTarget(self, action: #selector(accepted), for: .touchUpInside)
+		controller.acceptButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
 		attributeScrollView.addSubview(controller.view)
 		controller.didMove(toParent: self)
 	}
@@ -126,7 +126,7 @@ extension AttributedChooserViewController: UIPickerViewDataSource {
 extension AttributedChooserViewController: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return possibleValues[row].name
+		return possibleValues[row].attributedName
 	}
 
 	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

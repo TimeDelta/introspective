@@ -22,6 +22,6 @@ public final class NotEqualToDoubleAttributeRestriction: TypedNotEqualToAttribut
 	}
 
 	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K != %f", restrictedAttribute.variableName, value as! Double)
+		return NSPredicate(format: "%K != %f", restrictedAttribute.variableName!, value as! Double)
 	}
 }

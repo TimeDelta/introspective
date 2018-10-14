@@ -20,7 +20,7 @@ public final class AnySample: Sample {
 		didSet { updateAttributeValuesWithDates() }
 	}
 
-	public final var name: String
+	public final var attributedName: String
 	public final var description: String
 
 	public final var debugDescription: String {
@@ -29,17 +29,17 @@ public final class AnySample: Sample {
 
 	public final var attributes: [Attribute] {
 		didSet {
-			attributeValues = [String: Any]()
+			attributeValues = [String: Any?]()
 			for attribute in attributes {
 				attributeValues[attribute.name] = ""
 			}
 		}
 	}
 
-	private final var attributeValues: [String: Any]
+	private final var attributeValues: [String: Any?]
 
 	public init(name: String = "", description: String = "", attributes: [Attribute] = [Attribute](), attributeValues: [String: Any] = [String: Any]()) {
-		self.name = name
+		self.attributedName = name
 		self.description = description
 		self.attributes = attributes
 		self.attributeValues = attributeValues
@@ -54,12 +54,12 @@ public final class AnySample: Sample {
 		return _dates
 	}
 
-	public final func value(of attribute: Attribute) throws -> Any {
+	public final func value(of attribute: Attribute) throws -> Any? {
 		guard let value = attributeValues[attribute.name] else { throw AttributeError.unknownAttribute }
 		return value
 	}
 
-	public final func set(attribute: Attribute, to value: Any) throws {
+	public final func set(attribute: Attribute, to value: Any?) throws {
 		guard let _ = attributes.first(where: { a in return a.name == attribute.name }) else { throw AttributeError.unknownAttribute }
 		attributeValues[attribute.name] = value
 	}

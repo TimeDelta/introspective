@@ -16,7 +16,7 @@ public final class NotEqualToSelectOneAttributeRestriction: NotEqualToAttributeR
 
 	private final let selectOneAttribute: SelectOneAttribute
 
-	public init(restrictedAttribute: Attribute, value: Any, valueAttribute: SelectOneAttribute) {
+	public init(restrictedAttribute: Attribute, value: Any?, valueAttribute: SelectOneAttribute) {
 		selectOneAttribute = valueAttribute
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: valueAttribute, areEqual: { valueAttribute.valuesAreEqual($0, $1) })
 	}

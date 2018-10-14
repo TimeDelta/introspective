@@ -19,10 +19,18 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 	private static let bmiRange: (min: Double, max: Double) = (min: 15, max: 50)
 	private static let heartRateRange: (min: Double, max: Double) = (min: 45, max: 200)
 	private static let leanBodyMassRange: (min: Double, max: Double) = (min: 120, max: 150)
+	private static let medicationDoseAmountRange: (min: Double, max: Double) = (min: 10, max: 100)
 	private static let moodRatingRange: (min: Double, max: Double) = (min: 0, max: DependencyInjector.settings.maximumMood)
 	private static let sleepHoursRange: (min: Int, max: Int) = (min: 1, max: 10)
 	private static let weightRange: (min: Double, max: Double) = (min: 100, max: 200)
 
+	private static let medicationNames = [
+		"1a",
+		"2b",
+		"3c",
+		"4d",
+		"abcd",
+	]
 	private static let moodNotes = [
 		"Not feeling too great", nil,
 		"Today was a great day", nil,
@@ -54,6 +62,15 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 				var sleepRecords = [Sleep]()
 				var weights = [Weight]()
 
+				var medications = try! DependencyInjector.db.query(Medication.fetchRequest())
+				for i in 0 ..< 5 {
+					let medication = try! DependencyInjector.db.new(objectType: Medication.self)
+					medication.name = Me.medicationNames[i]
+					medication.recordScreenIndex = Int16(medications.count)
+					medications.append(medication)
+				}
+				DependencyInjector.db.save()
+
 				for daysAgo in 0 ... 60 {
 					for hoursAgo in 0 ... 23 {
 						for sampleNum in 0 ... Me.samplesPerHour {
@@ -74,6 +91,12 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 
 							let leanBodyMass = LeanBodyMass(self.randomDouble(Me.leanBodyMassRange), date)
 							leanBodyMasses.append(leanBodyMass)
+
+							let medicationDose = DependencyInjector.sample.medicationDose()
+							medicationDose.timestamp = date
+							medicationDose.dosage = Dosage(self.randomDouble(Me.medicationDoseAmountRange), "mg")
+							medicationDose.medication = try! DependencyInjector.db.pull(savedObject: self.randomEntry(medications), fromSameContextAs: medicationDose)
+							medicationDose.medication.addToDoses(medicationDose)
 
 							let mood = DependencyInjector.sample.mood()
 							mood.timestamp = date

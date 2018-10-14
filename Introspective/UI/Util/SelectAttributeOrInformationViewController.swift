@@ -11,7 +11,7 @@ import os
 
 final class SelectAttributeOrInformationViewController: UIViewController {
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	public final var sampleType: Sample.Type!
 	/// This will never be nil. If the user chooses a piece of information, it will contain the attribute associated with that information.

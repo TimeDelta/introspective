@@ -22,6 +22,6 @@ public final class NotEqualToIntegerAttributeRestriction: TypedNotEqualToAttribu
 	}
 
 	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K != %d", restrictedAttribute.variableName, value as! Int)
+		return NSPredicate(format: "%K != %d", restrictedAttribute.variableName!, value as! Int)
 	}
 }

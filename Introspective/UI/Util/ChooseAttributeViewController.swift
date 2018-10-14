@@ -15,7 +15,7 @@ final class ChooseAttributeViewController: UIViewController {
 
 	@IBOutlet weak final var attributePicker: UIPickerView!
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	public final var attributes: [Attribute]!
 	public final var selectedAttribute: Attribute?

@@ -46,7 +46,7 @@ class BeforeDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
-		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: 1)) { error in
+		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: 1 as Any)) { error in
 			// then
 			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
 		}
@@ -54,7 +54,7 @@ class BeforeDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenWrongValueType_setAttributeTo_throwsTypeMismatchError() {
 		// when
-		XCTAssertThrowsError(try restriction.set(attribute: Me.dateAttribute, to: 1)) { error in
+		XCTAssertThrowsError(try restriction.set(attribute: Me.dateAttribute, to: 1 as Any)) { error in
 			// then
 			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
 		}
@@ -74,7 +74,7 @@ class BeforeDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithNonDateValueForGivenAttribute_samplePasses_throwsTypeMismatchError() {
 		// given
 		let mockSample = SampleMock()
-		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: 1))
+		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: 1 as Any))
 
 		// when
 		XCTAssertThrowsError(try restriction.samplePasses(mockSample)) { error in

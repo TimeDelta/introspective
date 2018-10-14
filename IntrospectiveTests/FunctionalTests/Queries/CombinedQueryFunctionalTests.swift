@@ -39,11 +39,12 @@ class CombinedQueryFunctionalTests: QueryFunctionalTest {
 		let latestTargetMoodDate = earliestTargetMoodDate + daySpread
 
 		query = HeartRateQueryImpl()
-		let expectedHeartRate1 = HeartRate(1, earliestTargetMoodDate - 2.days)
-		let expectedHeartRate2 = HeartRate(2, earliestTargetMoodDate - 5.days - 16.hours - 12.minutes - 3.seconds)
+		let expectedSamples = [
+			HeartRate(1, earliestTargetMoodDate - 2.days),
+			HeartRate(2, earliestTargetMoodDate - 5.days - 16.hours - 12.minutes - 3.seconds)
+		]
+		HealthKitDataTestUtil.save(expectedSamples)
 		HealthKitDataTestUtil.save([
-			expectedHeartRate1,
-			expectedHeartRate2,
 			HeartRate(3, earliestTargetMoodDate - numberOfDaysWithinMood.days - 1.days),
 			HeartRate(4, latestTargetMoodDate + numberOfDaysWithinMood.days + 1.days),
 			HeartRate(5, latestTargetMoodDate + numberOfDaysWithinMood.days + 5.days),
@@ -72,11 +73,9 @@ class CombinedQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 2, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expectedHeartRate1) }))
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expectedHeartRate2) }))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}
@@ -86,11 +85,12 @@ class CombinedQueryFunctionalTests: QueryFunctionalTest {
 		let startOfTargetDay = CalendarUtilImpl().start(of: .day, in: Date())
 
 		query = HeartRateQueryImpl()
-		let expectedHeartRate1 = HeartRate(1, startOfTargetDay + 2.hours)
-		let expectedHeartRate2 = HeartRate(2, startOfTargetDay + 5.hours + 17.minutes + 2.seconds)
+		let expectedSamples = [
+			HeartRate(1, startOfTargetDay + 2.hours),
+			HeartRate(2, startOfTargetDay + 5.hours + 17.minutes + 2.seconds)
+		]
+		HealthKitDataTestUtil.save(expectedSamples)
 		HealthKitDataTestUtil.save([
-			expectedHeartRate1,
-			expectedHeartRate2,
 			HeartRate(3, startOfTargetDay - 1.minutes),
 			HeartRate(4, startOfTargetDay + 1.days),
 			HeartRate(5, startOfTargetDay + 5.days),
@@ -124,11 +124,9 @@ class CombinedQueryFunctionalTests: QueryFunctionalTest {
 		query.runQuery(callback: queryComplete)
 
 		// then
-		waitForExpectations(timeout: 0.1) { (waitError) in
+		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				XCTAssert(self.samples.count == 2, "Found \(self.samples.count) samples")
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expectedHeartRate1) }))
-				XCTAssert(self.samples.contains(where: { m in return m.equalTo(expectedHeartRate2) }))
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
 			}
 		}
 	}

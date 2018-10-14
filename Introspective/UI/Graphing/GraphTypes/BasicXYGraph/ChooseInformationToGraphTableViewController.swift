@@ -11,12 +11,12 @@ import os
 
 final class ChooseInformationToGraphTableViewController: UITableViewController {
 
-	// MARK: - Static Member Variables
+	// MARK: - Static Variables
 
 	private typealias Me = ChooseInformationToGraphTableViewController
 	private static let editedInformation = Notification.Name("editedInformationWhileChoosingInfoToGraph")
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	public final var limitToNumericInformation: Bool = false
 	public final var notificationToSendWhenFinished: Notification.Name!

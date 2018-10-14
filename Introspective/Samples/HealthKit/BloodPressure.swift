@@ -38,9 +38,9 @@ public final class BloodPressure: HealthKitCorrelationSample {
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
 	public final var attributes: [Attribute] { return Me.attributes }
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
-	public final var name: String = Me.name
+	public final var attributedName: String = Me.name
 	public final var description: String = Me.description
 	public final var timestamp: Date
 	public final var systolic: Double
@@ -90,7 +90,7 @@ public final class BloodPressure: HealthKitCorrelationSample {
 
 	// MARK: - Attributed Functions
 
-	public final func value(of attribute: Attribute) throws -> Any {
+	public final func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.systolic) {
 			return systolic
 		}
@@ -103,7 +103,7 @@ public final class BloodPressure: HealthKitCorrelationSample {
 		throw AttributeError.unknownAttribute
 	}
 
-	public final func set(attribute: Attribute, to value: Any) throws {
+	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.systolic) {
 			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
 			systolic = castedValue

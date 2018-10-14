@@ -24,7 +24,7 @@ public final class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction
 		timeAttribute,
 	]
 
-	public final override var name: String { return "Before time of day" }
+	public final override var attributedName: String { return "Before time of day" }
 	public final override var description: String {
 		let timeText = try! Me.timeAttribute.convertToDisplayableString(from: timeOfDay)
 		return "Before " + timeText
@@ -41,14 +41,14 @@ public final class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction
 		super.init(restrictedAttribute: restrictedAttribute, attributes: Me.attributes)
 	}
 
-	public final override func value(of attribute: Attribute) throws -> Any {
+	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.name != Me.timeAttribute.name {
 			throw AttributeError.unknownAttribute
 		}
 		return timeOfDay
 	}
 
-	public final override func set(attribute: Attribute, to value: Any) throws {
+	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.name != Me.timeAttribute.name {
 			throw AttributeError.unknownAttribute
 		}

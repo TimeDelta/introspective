@@ -35,9 +35,9 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
 	public final var attributes: [Attribute] { return Me.attributes }
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
-	public final var name: String = Me.name
+	public final var attributedName: String = Me.name
 	public final var description: String = Me.description
 	public final var timestamp: Date
 	public final var bmi: Double
@@ -75,7 +75,7 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 
 	// MARK: - Attributed Functions
 
-	public final func value(of attribute: Attribute) throws -> Any {
+	public final func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.bmi) {
 			return bmi
 		}
@@ -85,7 +85,7 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 		throw AttributeError.unknownAttribute
 	}
 
-	public final func set(attribute: Attribute, to value: Any) throws {
+	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.bmi) {
 			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
 			bmi = castedValue

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import os
 
 public final class OldestDateInformation: AnyInformation {
 
@@ -28,9 +29,13 @@ public final class OldestDateInformation: AnyInformation {
 
 		var oldestSampleDate = try! filteredSamples[0].value(of: attribute) as! Date
 		for sample in filteredSamples {
-			let date = try! sample.value(of: attribute) as! Date
-			if date.isBeforeDate(oldestSampleDate, granularity: .nanosecond) {
-				oldestSampleDate = date
+			let value = try! sample.value(of: attribute)
+			if let date = value as? Date {
+				if date.isBeforeDate(oldestSampleDate, granularity: .nanosecond) {
+					oldestSampleDate = date
+				}
+			} else if !attribute.optional || value != nil {
+				os_log("non-optional attribute (%@) of sample (%@) returned %@", type: .error, attribute.name, sample.attributedName, String(describing: value))
 			}
 		}
 		return DependencyInjector.util.calendarUtil.string(for: oldestSampleDate)

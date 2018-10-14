@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import os
 
 public final class SumInformation: AnyInformation {
 
@@ -19,10 +20,81 @@ public final class SumInformation: AnyInformation {
 
 	public final override func compute(forSamples samples: [Sample]) -> String {
 		let filteredSamples = DependencyInjector.util.sampleUtil.getOnly(samples: samples, from: startDate, to: endDate)
-		return String(DependencyInjector.util.numericSampleUtil.sum(for: attribute, over: filteredSamples) as Double)
+		if filteredSamples.count == 0 { return "0" }
+		if attribute is DoubleAttribute {
+			return String(DependencyInjector.util.numericSampleUtil.sum(for: attribute, over: filteredSamples) as Double)
+		}
+		if attribute is IntegerAttribute {
+			return String(DependencyInjector.util.numericSampleUtil.sum(for: attribute, over: filteredSamples) as Int)
+		}
+		if attribute is DosageAttribute {
+			return getSumOfDosageAttribute(filteredSamples)
+		}
+		if samples.count > 0 {
+			os_log(
+				"Unknown attribute type (%@) for attribute named '%@' of sample type '%@'",
+				type: .error,
+				String(describing: type(of: attribute)),
+				attribute.name,
+				String(describing: type(of: samples[0])))
+		} else {
+			os_log(
+				"Unknown attribute type (%@) for attribute named '%@'",
+				type: .error,
+				String(describing: type(of: attribute)),
+				attribute.name)
+		}
+		return ""
 	}
 
 	public final override func equalTo(_ other: ExtraInformation) -> Bool {
 		return other is SumInformation && attribute.equalTo(other.attribute)
+	}
+
+	// MARK: - Helper Functions
+
+	private final func getSumOfDosageAttribute(_ filteredSamples: [Sample]) -> String {
+		let dosage: Dosage? = getFirstNonNilDosage(from: filteredSamples)
+		if let unit = dosage?.unit {
+			return String(dosageSum(over: filteredSamples, in: unit)) + " " + unit
+		} else {
+			return "0"
+		}
+	}
+
+	private final func getFirstNonNilDosage(from filteredSamples: [Sample]) -> Dosage? {
+		var dosage: Dosage? = nil
+		for sample in filteredSamples {
+			dosage = try! sample.value(of: attribute) as? Dosage
+			if dosage != nil { break }
+			else if !attribute.optional {
+				os_log("Non-optional dosage returned nil value for %@ sample", type: .error, sample.attributedName)
+			}
+		}
+		return dosage
+	}
+
+	private final func dosageSum(over filteredSamples: [Sample], in unit: String) -> Double {
+		var totalDosage = 0.0
+		for sample in filteredSamples {
+			if let dosage = getDosage(from: sample) {
+				totalDosage += dosage.inUnits(unit)
+			}
+		}
+		return totalDosage
+	}
+
+	private final func getDosage(from sample: Sample) -> Dosage? {
+		do {
+			return try sample.value(of: attribute) as? Dosage
+		} catch {
+			os_log(
+				"Failed to retrieve dosage attribute named '$@' of $@ sample while calculating sum information: $@",
+				type: .error,
+				attribute.name,
+				sample.attributedName,
+				error.localizedDescription)
+			return nil
+		}
 	}
 }

@@ -13,7 +13,7 @@ import os
 
 final class ResultsViewController: UITableViewController {
 
-	// MARK: - Static Member Variables
+	// MARK: - Static Variables
 
 	private typealias Me = ResultsViewController
 	private static let editedExtraInformation = Notification.Name("editedExtraInformationFromResultsView")
@@ -30,7 +30,7 @@ final class ResultsViewController: UITableViewController {
 
 	@IBOutlet weak final var actionsButton: UIBarButtonItem!
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	public final var query: Query!
 	public final var samples: [Sample]! {
@@ -79,6 +79,10 @@ final class ResultsViewController: UITableViewController {
 		finishedLoading = true
 	}
 
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
+
 	// MARK: - Table View Data Source
 
 	final override func numberOfSections(in tableView: UITableView) -> Int {
@@ -90,7 +94,7 @@ final class ResultsViewController: UITableViewController {
 			return "Extra Information"
 		} else if section == 1 {
 			if samples != nil && samples.count > 0 {
-				return samples[0].name.capitalized
+				return samples[0].attributedName.capitalized
 			}
 			return "Entries"
 		} else {
@@ -161,6 +165,10 @@ final class ResultsViewController: UITableViewController {
 					let cell = (tableView.dequeueReusableCell(withIdentifier: "healthKitQuantitySampleCell", for: indexPath) as! HealthKitQuantitySampleTableViewCell)
 					cell.sample = (sample as! HealthKitQuantitySample)
 					return cell
+				case is MedicationDose:
+					let cell = tableView.dequeueReusableCell(withIdentifier: "medicationDoseCell", for: indexPath) as! MedicationDoseTableTableViewCell
+					cell.medicationDose = (sample as! MedicationDose)
+					return cell
 				case is Mood:
 					let cell = (tableView.dequeueReusableCell(withIdentifier: "moodSampleCell", for: indexPath) as! MoodTableViewCell)
 					cell.mood = (sample as! Mood)
@@ -189,6 +197,7 @@ final class ResultsViewController: UITableViewController {
 				 is BodyMassIndex,
 				 is HeartRate,
 				 is LeanBodyMass,
+				 is MedicationDose,
 				 is RestingHeartRate,
 				 is SexualActivity,
 				 is Sleep,
@@ -280,7 +289,7 @@ final class ResultsViewController: UITableViewController {
 		}
 		actionsController?.addAction(UIAlertAction(title: "Add Information", style: .default) { _ in self.addInformation() })
 		if samplesAreDeletable() {
-			actionsController?.addAction(UIAlertAction(title: "Delete All " + samples[0].name + " Entries", style: .default) { _ in self.deleteAllSamples() })
+			actionsController?.addAction(UIAlertAction(title: "Delete All " + samples[0].attributedName + " Entries", style: .default) { _ in self.deleteAllSamples() })
 		}
 		actionsController?.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(actionsController!, animated: false, completion: nil)
@@ -316,7 +325,7 @@ final class ResultsViewController: UITableViewController {
 
 	@objc private final func deleteAllSamples() {
 		let alert = UIAlertController(
-			title: "Are you sure you want to delete all \(samples[0].name.localizedLowercase) records?",
+			title: "Are you sure you want to delete all \(samples[0].attributedName.localizedLowercase) records?",
 			message: nil,
 			preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in

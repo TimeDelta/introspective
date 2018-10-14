@@ -18,10 +18,20 @@ public enum DatabaseError: Error {
 public protocol Database {
 
 	func new<Type: NSManagedObject & CoreDataObject>(objectType: Type.Type) throws -> Type
+	func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, cacheName: String?) -> NSFetchedResultsController<Type>
 	func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type]
+	/// This method needs to be called when trying to establish a relationship between two objects in different contexts.
+	/// This will happen if one object has already been saved and the other hasn't been saved yet.
+	func pull<Type: NSManagedObject>(savedObject: Type, fromSameContextAs otherObject: NSManagedObject) throws -> Type
 	func save()
 	func delete(_ object: NSManagedObject)
 	func deleteAll(_ objects: [NSManagedObject]) throws
+}
+
+extension Database {
+	func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, cacheName: String? = nil) -> NSFetchedResultsController<Type> {
+		return fetchedResultsController(type: type, cacheName: cacheName)
+	}
 }
 
 public class DatabaseImpl: Database {
@@ -64,8 +74,27 @@ public class DatabaseImpl: Database {
 		return newObject
 	}
 
+	public final func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, cacheName: String? = nil) -> NSFetchedResultsController<Type> {
+		return NSFetchedResultsController<Type>(
+			fetchRequest: type.fetchRequest() as! NSFetchRequest<Type>,
+			managedObjectContext: persistentContainer.viewContext,
+			sectionNameKeyPath: nil,
+			cacheName: cacheName)
+	}
+
 	public final func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type] {
 		return try persistentContainer.viewContext.fetch(fetchRequest)
+	}
+
+	/// This method needs to be called when trying to establish a relationship between two objects in different contexts.
+	/// This will happen if one object has already been saved and the other hasn't been saved yet.
+	public final func pull<Type: NSManagedObject>(savedObject: Type, fromSameContextAs otherObject: NSManagedObject) throws -> Type {
+		let savedObjectInSameContext = otherObject.managedObjectContext!.object(with: savedObject.objectID)
+		guard let castedObject = savedObjectInSameContext as? Type else {
+			os_log("Could not cast saved object as %@", type: .error, savedObject.entity.name!)
+			throw DatabaseError.failedToInstantiateObject
+		}
+		return castedObject
 	}
 
 	public final func save() {

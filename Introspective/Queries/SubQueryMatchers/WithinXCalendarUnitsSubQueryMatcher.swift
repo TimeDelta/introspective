@@ -20,7 +20,7 @@ public final class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatab
 	public static let timeUnit = CalendarComponentAttribute(name: "Time unit")
 	public static let attributes = [CommonSubQueryMatcherAttributes.mostRecentOnly, amountOfTime, timeUnit]
 
-	public final let name: String = "Within <number> <time_unit>s of"
+	public final let attributedName: String = "Within <number> <time_unit>s of"
 	public final var description: String {
 		var text = "Within " + String(numberOfTimeUnits) + " " + timeUnit.description.lowercased() + "s of"
 		if mostRecentOnly {
@@ -71,7 +71,7 @@ public final class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatab
 		return matchingSamples
 	}
 
-	public final func value(of attribute: Attribute) throws -> Any {
+	public final func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.amountOfTime) {
 			return numberOfTimeUnits
 		}
@@ -84,7 +84,7 @@ public final class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatab
 		throw AttributeError.unknownAttribute
 	}
 
-	public final func set(attribute: Attribute, to value: Any) throws {
+	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.amountOfTime) {
 			guard let castedValue = value as? Int else { throw AttributeError.typeMismatch }
 			numberOfTimeUnits = castedValue

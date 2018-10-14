@@ -11,7 +11,7 @@ import UIKit
 final class RecordDataPageViewController: UIPageViewController {
 
 	private lazy final var orderedViewControllers: [UIViewController] = [
-		instantiateController(named: "recordDataTable"),
+		instantiateController(named: "recordData"),
 	]
 
 	final override func viewDidLoad() {

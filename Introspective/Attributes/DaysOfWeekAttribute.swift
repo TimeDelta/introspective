@@ -10,12 +10,19 @@ import Foundation
 
 public final class DaysOfWeekAttribute: ComparableTypedMultiSelectAttribute<DayOfWeek> {
 
-	public init(name: String = "Days of the week", pluralName: String? = "Days of the week", description: String? = nil, variableName: String? = nil) {
+	public init(
+		name: String = "Days of the week",
+		pluralName: String? = "Days of the week",
+		description: String? = nil,
+		variableName: String? = nil,
+		optional: Bool = false)
+	{
 		super.init(
 			name: name,
 			pluralName: pluralName,
 			description: description,
 			variableName: variableName,
+			optional: optional,
 			possibleValues: DayOfWeek.allDays,
 			possibleValueToString: { $0.abbreviation })
 	}

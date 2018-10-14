@@ -14,7 +14,7 @@ final class ChooseGraphTypeViewController: UIViewController {
 
 	@IBOutlet weak final var graphTypePicker: UIPickerView!
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	public final var currentValue: GraphType?
 	public final var notificationToSendOnAccept: Notification.Name!

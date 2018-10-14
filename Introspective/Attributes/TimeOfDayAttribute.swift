@@ -10,11 +10,18 @@ import Foundation
 
 public final class TimeOfDayAttribute: AttributeBase {
 
-	public required override init(name: String = "Time of day", pluralName: String? = "Times of day", description: String? = nil, variableName: String? = nil) {
-		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName)
+	public override init(
+		name: String = "Time of day",
+		pluralName: String? = "Times of day",
+		description: String? = nil,
+		variableName: String? = nil,
+		optional: Bool = false)
+	{
+		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional)
 	}
 
-	public final override func convertToDisplayableString(from value: Any) throws -> String {
+	public final override func convertToDisplayableString(from value: Any?) throws -> String {
+		if optional && value == nil { return "" }
 		guard let castedValue = value as? TimeOfDay else { throw AttributeError.typeMismatch }
 		return castedValue.toString()
 	}

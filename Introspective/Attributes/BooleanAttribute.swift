@@ -10,7 +10,8 @@ import Foundation
 
 public final class BooleanAttribute: AttributeBase {
 
-	public final override func convertToDisplayableString(from value: Any) throws -> String {
+	public final override func convertToDisplayableString(from value: Any?) throws -> String {
+		if optional && value == nil { return "" }
 		guard let castedValue = value as? Bool else { throw AttributeError.typeMismatch }
 		return castedValue ? "on" : "off"
 	}

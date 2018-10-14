@@ -10,17 +10,24 @@ import UIKit
 
 public final class EditAttributeRestrictionViewController: UIViewController {
 
+	// MARK: - Static Variables
+
 	private typealias Me = EditAttributeRestrictionViewController
 	private static let doneEditing = Notification.Name("doneChoosingAttributeRestrictionAttributes")
 
-	public final var notificationToSendWhenAccepted: Notification.Name!
-	public final var sampleType: Sample.Type!
-	public final var attributeRestriction: AttributeRestriction?
+	// MARK: - IBOutlets
 
 	@IBOutlet weak final var attributedChooserSubView: UIView!
 	@IBOutlet weak final var attributePicker: UIPickerView!
 
+	// MARK: - Instance Variables
+
+	public final var notificationToSendWhenAccepted: Notification.Name!
+	public final var sampleType: Sample.Type!
+	public final var attributeRestriction: AttributeRestriction?
 	private final var attributedChooserViewController: AttributedChooserViewController!
+
+	// MARK: - UIViewController Overrides
 
 	public final override func viewDidLoad() {
 		attributePicker.delegate = self
@@ -37,10 +44,18 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(doneEditing), name: Me.doneEditing, object: nil)
 	}
 
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
+
+	// MARK: - Received Notifications
+
 	@objc public final func doneEditing(notification: Notification) {
 		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: notification.object, userInfo: nil)
 		navigationController?.popViewController(animated: true)
 	}
+
+	// MARK: - Helper Functions
 
 	private final func createAndInstallAttributedChooserViewController() {
 		attributedChooserViewController = (UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "attributedChooserViewController") as! AttributedChooserViewController)
@@ -77,6 +92,8 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 	}
 }
 
+// MARK: - UIPickerViewDataSource
+
 extension EditAttributeRestrictionViewController: UIPickerViewDataSource {
 
 	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -87,6 +104,8 @@ extension EditAttributeRestrictionViewController: UIPickerViewDataSource {
 		return sampleType.attributes.count
 	}
 }
+
+// MARK: - UIPickerViewDelegate
 
 extension EditAttributeRestrictionViewController: UIPickerViewDelegate {
 

@@ -18,6 +18,7 @@ public protocol SampleFactory {
 	func heartRate(_ value: Double, _ date: Date) -> HeartRate
 	func heartRate(value: Double) -> HeartRate
 	func heartRate(_ sample: HKQuantitySample) -> HeartRate
+	func medicationDose() -> MedicationDose
 	func mood() -> Mood
 }
 
@@ -29,6 +30,7 @@ public final class SampleFactoryImpl: SampleFactory {
 		BodyMassIndex.self,
 		HeartRate.self,
 		LeanBodyMass.self,
+		MedicationDose.self,
 		MoodImpl.self,
 		RestingHeartRate.self,
 		SexualActivity.self,
@@ -64,6 +66,10 @@ public final class SampleFactoryImpl: SampleFactory {
 
 	public final func heartRate(_ sample: HKQuantitySample) -> HeartRate {
 		return HeartRate(sample)
+	}
+
+	public final func medicationDose() -> MedicationDose {
+		return try! DependencyInjector.db.new(objectType: MedicationDose.self)
 	}
 
 	public final func mood() -> Mood {

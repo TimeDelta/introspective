@@ -10,7 +10,7 @@ import UIKit
 
 final class QueryResultsGraphSetupViewController: UIViewController {
 
-	// MARK: - Static Member Variables
+	// MARK: - Static Variables
 
 	private typealias Me = QueryResultsGraphSetupViewController
 	private static let setGraphType = Notification.Name("changedGraphType")
@@ -20,7 +20,7 @@ final class QueryResultsGraphSetupViewController: UIViewController {
 	@IBOutlet weak final var graphTypeButton: UIButton!
 	@IBOutlet weak final var subView: UIView!
 
-	// MARK: - Instance Member Variables
+	// MARK: - Instance Variables
 
 	public final var samples: [Sample]!
 	private final var graphType: GraphType!
