@@ -8,8 +8,8 @@
 
 import Foundation
 
+//sourcery: AutoMockable
 public protocol IOUtil {
-
 	func contentsOf(_ url: URL) throws -> String
 }
 

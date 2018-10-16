@@ -12,16 +12,18 @@ import SwiftyMocky
 
 class FunctionalTest: XCTestCase {
 
-	var injectionProvider: InjectionProviderMock!
+	final var injectionProvider: InjectionProviderMock!
 
-	var database: FunctionalTestDatabase!
+	final var database: FunctionalTestDatabase!
 
-	var queryFactory: QueryFactoryImpl!
-	var sampleFactory: SampleFactoryImpl!
-	var utilFactory: UtilFactory!
-	var subQueryMatcherFactory: SubQueryMatcherFactoryImpl!
-	var extraInformationFactory: ExtraInformationFactoryImpl!
-	var sampleGrouperFactory: SampleGrouperFactoryImpl!
+	final var queryFactory: QueryFactoryImpl!
+	final var sampleFactory: SampleFactoryImpl!
+	final var utilFactory: UtilFactory!
+	final var subQueryMatcherFactory: SubQueryMatcherFactoryImpl!
+	final var extraInformationFactory: ExtraInformationFactoryImpl!
+	final var sampleGrouperFactory: SampleGrouperFactoryImpl!
+
+	final var ioUtil: IOUtilMock!
 
 	override func setUp() {
 		super.setUp()
@@ -44,6 +46,9 @@ class FunctionalTest: XCTestCase {
 		Given(injectionProvider, .subQueryMatcherFactory(willReturn: subQueryMatcherFactory))
 		Given(injectionProvider, .extraInformationFactory(willReturn: extraInformationFactory))
 		Given(injectionProvider, .sampleGrouperFactory(willReturn: sampleGrouperFactory))
+
+		ioUtil = IOUtilMock()
+		utilFactory.ioUtil = ioUtil
 	}
 
 	override func tearDown() {

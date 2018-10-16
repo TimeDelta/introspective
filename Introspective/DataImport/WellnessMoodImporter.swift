@@ -47,6 +47,9 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 					currentMood = nil
 				}
 			} else {
+				if !currentNote.isEmpty {
+					currentNote += "\n"
+				}
 				currentNote += line
 			}
 		}
