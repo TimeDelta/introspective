@@ -36,7 +36,7 @@ public class SampleCreatorTestUtil {
 	}
 
 	/// Create a single sample with the specified value for the given attribute
-	static func createSample(withValue value: Any, for attribute: Attribute, otherAttributes: [Attribute] = [Attribute]()) -> AnySample {
+	static func createSample<ValueType: Any>(withValue value: ValueType?, for attribute: Attribute, otherAttributes: [Attribute] = [Attribute]()) -> AnySample {
 		var finalAttributes = otherAttributes
 		finalAttributes.append(attribute)
 		let sample = SampleCreatorTestUtil.createSample(withAttributes: finalAttributes)
@@ -45,7 +45,7 @@ public class SampleCreatorTestUtil {
 	}
 
 	/// Create a single sample with the specified values for the given attributes
-	static func createSample(withValues values: [(Any, Attribute)]) -> AnySample {
+	static func createSample(withValues values: [(Any?, Attribute)]) -> AnySample {
 		let attributes = values.map({ (_, attribute) in return attribute })
 		let sample = SampleCreatorTestUtil.createSample(withAttributes: attributes)
 		for (value, attribute) in values {
@@ -65,7 +65,7 @@ public class SampleCreatorTestUtil {
 	}
 
 	/// Create a new sample for each given value, assigning the value to the given attribute
-	static func createSamples(withValues values: [Any], for attribute: Attribute, otherAttributes: [Attribute] = [Attribute]()) -> [AnySample] {
+	static func createSamples<ValueType: Any>(withValues values: [ValueType?], for attribute: Attribute, otherAttributes: [Attribute] = [Attribute]()) -> [AnySample] {
 		var samples = [AnySample]()
 		for value in values {
 			samples.append(SampleCreatorTestUtil.createSample(withValue: value, for: attribute))
@@ -89,7 +89,7 @@ public class SampleCreatorTestUtil {
 		return samples
 	}
 
-	static func createSamples<ValueType: Any>(_ sampleValues: [(startDate: Date, value: ValueType)], for attribute: Attribute, otherAttributes: [Attribute] = [Attribute]()) -> [AnySample] {
+	static func createSamples<ValueType: Any>(_ sampleValues: [(startDate: Date, value: ValueType?)], for attribute: Attribute, otherAttributes: [Attribute] = [Attribute]()) -> [AnySample] {
 		var finalAttributes = otherAttributes
 		finalAttributes.append(attribute)
 		var samples = [AnySample]()

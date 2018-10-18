@@ -30,20 +30,12 @@ public final class SumInformation: AnyInformation {
 		if attribute is DosageAttribute {
 			return getSumOfDosageAttribute(filteredSamples)
 		}
-		if samples.count > 0 {
-			os_log(
-				"Unknown attribute type (%@) for attribute named '%@' of sample type '%@'",
-				type: .error,
-				String(describing: type(of: attribute)),
-				attribute.name,
-				String(describing: type(of: samples[0])))
-		} else {
-			os_log(
-				"Unknown attribute type (%@) for attribute named '%@'",
-				type: .error,
-				String(describing: type(of: attribute)),
-				attribute.name)
-		}
+		os_log(
+			"Unknown attribute type (%@) for attribute named '%@' of sample type '%@'",
+			type: .error,
+			String(describing: type(of: attribute)),
+			attribute.name,
+			String(describing: type(of: samples[0])))
 		return ""
 	}
 
@@ -56,7 +48,7 @@ public final class SumInformation: AnyInformation {
 	private final func getSumOfDosageAttribute(_ filteredSamples: [Sample]) -> String {
 		let dosage: Dosage? = getFirstNonNilDosage(from: filteredSamples)
 		if let unit = dosage?.unit {
-			return String(dosageSum(over: filteredSamples, in: unit)) + " " + unit
+			return Dosage(dosageSum(over: filteredSamples, in: unit), unit).description
 		} else {
 			return "0"
 		}

@@ -108,7 +108,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 	func testGivenMultipleSamplesFromSameAggregationUnit_averagePer_returnsCorrectAverageForThatYear() {
 		// given
 		let date = Date("2018-01-01")!
-		let entries = [
+		let entries: [(startDate: Date, value: Double?)] = [
 			(startDate: date, value: 5.0),
 			(startDate: date, value: 2.0),
 			(startDate: date, value: 1.0),
@@ -119,7 +119,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
 		var expectedAverage = 0.0
 		for entry in entries {
-			expectedAverage += entry.value
+			expectedAverage += entry.value!
 		}
 		expectedAverage /= Double(entries.count)
 
@@ -140,7 +140,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let value1 = 5.0
 		let value2 = 43.3
 		let value3 = 53.3
-		let entries = [
+		let entries: [(startDate: Date, value: Double?)] = [
 			(startDate: date1, value: value1),
 			(startDate: date2, value: value2),
 			(startDate: date3, value: value3),
@@ -170,7 +170,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let date1 = Date("2018-01-01")!
 		let date2 = Date("2019-01-01")!
 		let date3 = Date("2020-01-01")!
-		let entries = [
+		let entries: [(startDate: Date, value: Double?)] = [
 			(startDate: date1, value: 5.0),
 			(startDate: date1, value: 7.0),
 			(startDate: date2, value: 1.0),
@@ -206,7 +206,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let date1 = Date("2018-01-01")!
 		let date2 = Date("2019-01-01")!
 		let date3 = Date("2020-01-01")!
-		let entries = [
+		let entries: [(startDate: Date, value: Double?)] = [
 			(startDate: date3, value: 2.0),
 			(startDate: date2, value: 1.0),
 			(startDate: date2, value: 3.0),
