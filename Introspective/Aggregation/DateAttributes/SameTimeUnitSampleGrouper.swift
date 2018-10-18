@@ -34,9 +34,9 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 	public final func group(samples: [Sample], by attribute: Attribute) -> [(Any, [Sample])] {
 		var samplesByTimeUnit: [Date: [Sample]]
 		// TODO - support grouping by day of week, hour of day, etc.
-		if attribute.equalTo(CommonSampleAttributes.startDate) || attribute.equalTo(CommonSampleAttributes.timestamp) {
+		if shouldUseStartDate(attribute) {
 			samplesByTimeUnit = DependencyInjector.util.sampleUtil.aggregate(samples: samples, by: timeUnit, dateType: .start)
-		} else if attribute.equalTo(CommonSampleAttributes.endDate) {
+		} else if attribute.equalTo(CommonSampleAttributes.endDate) || attribute.equalTo(CommonSampleAttributes.healthKitEndDate) {
 			samplesByTimeUnit = DependencyInjector.util.sampleUtil.aggregate(samples: samples, by: timeUnit, dateType: .end)
 		} else {
 			samplesByTimeUnit = DependencyInjector.util.sampleUtil.aggregate(samples: samples, by: timeUnit)
@@ -59,5 +59,12 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 			timeUnit = castedValue
 		}
 		throw AttributeError.unknownAttribute
+	}
+
+	private final func shouldUseStartDate(_ attribute: Attribute) -> Bool {
+		return attribute.equalTo(CommonSampleAttributes.startDate)
+			|| attribute.equalTo(CommonSampleAttributes.timestamp)
+			|| attribute.equalTo(CommonSampleAttributes.healthKitStartDate)
+			|| attribute.equalTo(CommonSampleAttributes.healthKitTimestamp)
 	}
 }

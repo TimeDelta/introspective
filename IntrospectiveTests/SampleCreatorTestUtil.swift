@@ -73,7 +73,7 @@ public class SampleCreatorTestUtil {
 		return samples
 	}
 
-	static func createSamples(withDates dates: [(startDate: Date, endDate: Date)]) -> [AnySample] {
+	static func createSamples(withDates dates: [(startDate: Date?, endDate: Date?)]) -> [AnySample] {
 		var samples = [AnySample]()
 		for (startDate, endDate) in dates {
 			samples.append(SampleCreatorTestUtil.createSample(startDate: startDate, endDate: endDate))
