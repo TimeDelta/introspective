@@ -54,6 +54,9 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <accessibility key="accessibilityConfiguration" hint="Edits the main data type" identifier="main data type" label="main data type">
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Attribute Restriction" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Attribute Restriction" id="MNv-3c-tDo" customClass="AttributeRestrictionTableViewCell" customModule="Introspective" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="72" width="375" height="44"/>
@@ -71,6 +74,7 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <accessibility key="accessibilityConfiguration" hint="Edits this attribute restriction"/>
                                 <connections>
                                     <outlet property="label" destination="Aw5-CB-dfa" id="QLN-4R-xpH"/>
                                     <segue destination="L2p-RU-HId" kind="show" id="2Xt-cS-96n"/>
@@ -99,6 +103,7 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <accessibility key="accessibilityConfiguration" hint="Edits this data type"/>
                                 <connections>
                                     <outlet property="dataTypeLabel" destination="b6B-aI-bLz" id="Mlm-ST-24P"/>
                                     <outlet property="subQueryMatcherDescriptionLabel" destination="3TO-4y-bYk" id="F70-Vi-p1J"/>

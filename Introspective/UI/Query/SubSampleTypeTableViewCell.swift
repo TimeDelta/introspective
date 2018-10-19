@@ -26,4 +26,17 @@ final class SubSampleTypeTableViewCell: UITableViewCell {
 
 	@IBOutlet weak final var dataTypeLabel: UILabel!
 	@IBOutlet weak final var subQueryMatcherDescriptionLabel: UILabel!
+
+	public final override var accessibilityLabel: String? {
+		get { return "Data Type" }
+		set {}
+	}
+
+	public final override var accessibilityValue: String? {
+		get {
+			guard let matcher = matcher, let sampleType = sampleType else { return nil }
+			return matcher.description + " " + sampleType.name
+		}
+		set {}
+	}
 }

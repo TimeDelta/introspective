@@ -14,7 +14,6 @@ final class AttributeViewController: UIViewController {
 	// MARK: - Static Variables
 
 	private typealias Me = AttributeViewController
-	private static let valueChanged = Notification.Name("attributeValueChanged")
 	private static let horizontalMultiSelectPresenter = UiUtil.customPresenter(height: .custom(size: 100))
 	private static let numericPresenter = UiUtil.customPresenter(height: .custom(size: 100))
 	private static let dosagePresenter = UiUtil.customPresenter(height: .custom(size: 100))
@@ -29,8 +28,14 @@ final class AttributeViewController: UIViewController {
 
 	// MARK: - Instance Variables
 
-	public final var attribute: Attribute!
+	public final var attribute: Attribute! {
+		didSet {
+			valueChangedNotification = Notification.Name("attributeValueChanged_" + attribute.name)
+			NotificationCenter.default.addObserver(self, selector: #selector(valueChanged), name: valueChangedNotification, object: nil)
+		}
+	}
 	public final var attributeValue: Any!
+	private var valueChangedNotification: Notification.Name!
 
 	// MARK: - UIViewController Overrides
 
@@ -45,9 +50,11 @@ final class AttributeViewController: UIViewController {
 			attributeDescriptionButton.isUserInteractionEnabled = false
 		}
 
-		NotificationCenter.default.addObserver(self, selector: #selector(valueChanged), name: Me.valueChanged, object: nil)
-
 		updateDisplay()
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	public final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -74,29 +81,29 @@ final class AttributeViewController: UIViewController {
 			let controller = storyboard!.instantiateViewController(withIdentifier: "horizontalMultiSelectAttribute") as! HorizontalMultiSelectAttributeValueViewController
 			controller.multiSelectAttribute = (attribute as! MultiSelectAttribute)
 			controller.currentValue = attributeValue
-			controller.notificationToSendOnAccept = Me.valueChanged
+			controller.notificationToSendOnAccept = valueChangedNotification
 			customPresentViewController(Me.horizontalMultiSelectPresenter, viewController: controller, animated: true)
 		} else if attribute is NumericAttribute {
 			let controller = storyboard!.instantiateViewController(withIdentifier: "numericAttribute") as! NumericAttributeValueViewController
 			controller.numericAttribute = (attribute as! NumericAttribute)
 			controller.currentValue = attributeValue
-			controller.notificationToSendOnAccept = Me.valueChanged
+			controller.notificationToSendOnAccept = valueChangedNotification
 			customPresentViewController(Me.numericPresenter, viewController: controller, animated: true)
 		} else if attribute is DosageAttribute {
 			let controller = storyboard!.instantiateViewController(withIdentifier: "setDosage") as! SetMedicationDosageViewController
 			controller.initialDosage = attributeValue as? Dosage
-			controller.notificationToSendOnAccept = Me.valueChanged
+			controller.notificationToSendOnAccept = valueChangedNotification
 			customPresentViewController(Me.dosagePresenter, viewController: controller, animated: true)
 		} else if attribute is FrequencyAttribute {
 			let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "chooseFrequency") as! FrequencyEditorViewController
 			controller.initialFrequency = attributeValue as? Frequency
-			controller.notificationToSendOnAccept = Me.valueChanged
+			controller.notificationToSendOnAccept = valueChangedNotification
 			customPresentViewController(Me.frequencyPresenter, viewController: controller, animated: true)
 		} else {
 			let controller = storyboard!.instantiateViewController(withIdentifier: "attributeValue") as! AttributeValueViewController
 			controller.attribute = attribute
 			controller.attributeValue = attributeValue
-			controller.notificationToSendOnAccept = Me.valueChanged
+			controller.notificationToSendOnAccept = valueChangedNotification
 			customPresentViewController(UiUtil.defaultPresenter, viewController: controller, animated: true)
 		}
 	}
