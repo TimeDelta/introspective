@@ -85,16 +85,15 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	// MARK: - TableViewDelegate
 
 	public final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+		let dose = self.medication.doses.object(at: indexPath.row) as! MedicationDose
 		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
 			let alert = UIAlertController(
 				title: "Are you sure you want to delete this dose?",
 				message: self.getTextForDoseAt(indexPath.row),
 				preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
-				let dose = self.medication.doses.object(at: indexPath.row) as! MedicationDose
 				self.medication.removeFromDoses(at: indexPath.row)
 				DependencyInjector.db.delete(dose)
-				DependencyInjector.db.save()
 				self.resetFilteredDoses()
 				tableView.deleteRows(at: [indexPath], with: .fade)
 				tableView.reloadData()
@@ -102,6 +101,13 @@ public final class MedicationDosesTableViewController: UITableViewController {
 			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
 			self.present(alert, animated: false, completion: nil)
 		}
+		delete.accessibilityLabel = "delete dose button"
+		let dateText = DependencyInjector.util.calendarUtil.string(for: dose.timestamp, inFormat: "MMMM d, yyyy 'at' H:mm")
+		var dosageText = dose.dosage?.description ?? ""
+		if !dosageText.isEmpty {
+			dosageText += " "
+		}
+		delete.accessibilityHint = "Delete the \(dosageText)dose of \(medication.name) taken on \(dateText)"
 
 		return [delete]
 	}
@@ -197,7 +203,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		if let dosage = dose.dosage {
 			doseText += dosage.description + " on "
 		}
-		doseText += DependencyInjector.util.calendarUtil.string(for: dose.timestamp, inFormat: "MMM dd, yyyy 'at' HH:mm")
+		doseText += DependencyInjector.util.calendarUtil.string(for: dose.timestamp, inFormat: "MMM dd, yyyy 'at' H:mm")
 		return doseText
 	}
 
@@ -229,10 +235,10 @@ public final class MedicationDosesTableViewController: UITableViewController {
 			dateText = "Filter Dates"
 		} else if filterEndDate == filterStartDate {
 			dateText = "On "
-			dateText += DependencyInjector.util.calendarUtil.string(for: filterStartDate!, inFormat: "MMM dd, yyyy")
+			dateText += DependencyInjector.util.calendarUtil.string(for: filterStartDate!, inFormat: "MMM d, yyyy")
 		} else if filterEndDate == nil {
 			dateText = "After "
-			dateText += DependencyInjector.util.calendarUtil.string(for: filterStartDate!, inFormat: "MMM dd, yyyy")
+			dateText += DependencyInjector.util.calendarUtil.string(for: filterStartDate!, inFormat: "MMM d, yyyy")
 		} else if filterStartDate == nil {
 			dateText = "Before "
 			dateText += DependencyInjector.util.calendarUtil.string(for: filterEndDate!, inFormat: "MMM dd, yyyy")
@@ -243,5 +249,9 @@ public final class MedicationDosesTableViewController: UITableViewController {
 			dateText += DependencyInjector.util.calendarUtil.string(for: filterEndDate!, inFormat: "M/d/yy")
 		}
 		dateRangeButton.title = dateText
+		dateRangeButton.accessibilityValue = dateText
+		dateRangeButton.accessibilityIdentifier = "filter dates button"
+		dateRangeButton.accessibilityLabel = "filter dates button"
+		dateRangeButton.accessibilityHint = "Filter the displayed doses of \(medication.name) by date range"
 	}
 }

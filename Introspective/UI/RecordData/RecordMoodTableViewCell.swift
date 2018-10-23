@@ -67,6 +67,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	@objc private final func noteSaved(notification: Notification) {
 		note = (notification.object as! String)
 		addNoteButton.setTitle(note, for: .normal)
+		addNoteButton.accessibilityValue = "Add Note"
 	}
 
 	// MARK: - Helper Functions

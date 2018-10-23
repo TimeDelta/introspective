@@ -53,4 +53,15 @@ final class UiUtil {
 		let backButton = UIBarButtonItem(customView: button)
 		viewController.navigationItem.leftBarButtonItem = backButton
 	}
+
+	public static func addDoneButtonToKeyboardFor(_ textView: UITextView, target: Any?, action: Selector?) {
+		let keyboardToolBar = UIToolbar()
+		keyboardToolBar.sizeToFit()
+
+		let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+		let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: target, action: action)
+		keyboardToolBar.setItems([flexibleSpace, doneButton, flexibleSpace], animated: true)
+
+		textView.inputAccessoryView = keyboardToolBar
+	}
 }

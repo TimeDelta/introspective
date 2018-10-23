@@ -145,8 +145,9 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 				if let index = self.medications.firstIndex(of: medication) {
 					self.medications.remove(at: index)
-					DependencyInjector.db.delete(medication)
-					DependencyInjector.db.save()
+					DispatchQueue.global(qos: .background).async {
+						DependencyInjector.db.delete(medication)
+					}
 					tableView.deleteRows(at: [indexPath], with: .fade)
 					tableView.reloadData()
 				}

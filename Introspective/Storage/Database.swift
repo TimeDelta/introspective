@@ -26,6 +26,8 @@ public protocol Database {
 	func save()
 	func delete(_ object: NSManagedObject)
 	func deleteAll(_ objects: [NSManagedObject]) throws
+	func deleteAll(_ objectType: NSManagedObject.Type) throws
+	func deleteAll(_ entityName: String) throws
 }
 
 extension Database {
@@ -39,7 +41,9 @@ public class DatabaseImpl: Database {
 	private final var persistentContainer: NSPersistentContainer
 
 	private lazy final var backgroundContext: NSManagedObjectContext = {
-		return self.persistentContainer.newBackgroundContext()
+		let background = self.persistentContainer.newBackgroundContext()
+		background.automaticallyMergesChangesFromParent = true
+		return background
 	}()
 
 	public init(_ container: NSPersistentContainer? = nil) {
@@ -91,16 +95,59 @@ public class DatabaseImpl: Database {
 	public final func pull<Type: NSManagedObject>(savedObject: Type, fromSameContextAs otherObject: NSManagedObject) throws -> Type {
 		let savedObjectInSameContext = otherObject.managedObjectContext!.object(with: savedObject.objectID)
 		guard let castedObject = savedObjectInSameContext as? Type else {
-			os_log("Could not cast saved object as %@", type: .error, savedObject.entity.name!)
+			var wasFault = "Object is "
+			if !savedObjectInSameContext.isFault {
+				wasFault += "not "
+			}
+			wasFault += "a fault"
+			os_log("Could not cast saved object as %@: %@", type: .error, savedObject.entity.name!)
 			throw DatabaseError.failedToInstantiateObject
 		}
 		return castedObject
 	}
 
 	public final func save() {
-		if backgroundContext.hasChanges {
+		saveContext(backgroundContext)
+	}
+
+	public final func delete(_ object: NSManagedObject) {
+		if context(persistentContainer.viewContext, contains: object) {
+			persistentContainer.viewContext.delete(object)
+			saveContext(persistentContainer.viewContext)
+		}
+		if context(backgroundContext, contains: object) {
+			backgroundContext.delete(object)
+			saveContext(backgroundContext)
+		}
+	}
+
+	public final func deleteAll(_ objects: [NSManagedObject]) throws {
+		try deleteAll(objects, from: persistentContainer.viewContext)
+		try deleteAll(objects, from: backgroundContext)
+	}
+
+	public final func deleteAll(_ objectType: NSManagedObject.Type) throws {
+		try deleteAll(objectType.entity().name!)
+	}
+
+	public final func deleteAll(_ entityName: String) throws {
+		let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+		let batchDelete = NSBatchDeleteRequest(fetchRequest: request)
+		try persistentContainer.viewContext.execute(batchDelete)
+		try backgroundContext.execute(batchDelete)
+	}
+
+	// MARK: - Helper Functions
+
+	private final func context(_ context: NSManagedObjectContext, contains object: NSManagedObject) -> Bool {
+		let fetchedObject = context.object(with: object.objectID)
+		return !fetchedObject.isFault
+	}
+
+	private final func saveContext(_ context: NSManagedObjectContext) {
+		if context.hasChanges {
 			do {
-				try backgroundContext.save()
+				try context.save()
 			} catch {
 				// TODO - Tell the user something went wrong while saving their data instead of crashing the app
 				let nserror = error as NSError
@@ -109,13 +156,11 @@ public class DatabaseImpl: Database {
 		}
 	}
 
-	public final func delete(_ object: NSManagedObject) {
-		persistentContainer.viewContext.delete(object)
-	}
-
-	public final func deleteAll(_ objects: [NSManagedObject]) throws {
-		let objectIds = objects.map { return $0.objectID }
-		let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: objectIds)
-		try persistentContainer.viewContext.execute(batchDeleteRequest)
+	private final func deleteAll(_ objects: [NSManagedObject], from context: NSManagedObjectContext) throws {
+		let ids = objects.filter{ self.context(context, contains: $0) }.map{ $0.objectID }
+		if ids.count > 0 {
+			let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: ids)
+			try context.execute(batchDeleteRequest)
+		}
 	}
 }

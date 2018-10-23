@@ -36,6 +36,9 @@ public final class DateRangeViewController: UIViewController {
 		fromDatePicker.datePickerMode = datePickerMode
 		toDatePicker.datePickerMode = datePickerMode
 
+		fromDatePicker.accessibilityIdentifier = "from date picker"
+		toDatePicker.accessibilityIdentifier = "to date picker"
+
 		if let fromDate = initialFromDate {
 			fromDatePicker.date = fromDate
 		} else {

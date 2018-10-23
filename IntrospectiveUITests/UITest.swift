@@ -14,9 +14,20 @@ class UITest: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
-		continueAfterFailure = false
+		continueAfterFailure = true
 		app = XCUIApplication()
-		app.launchArguments.append("--uitesting")
 		app.launch()
+	}
+
+	override func tearDown() {
+		app.tabBars.buttons["Settings"].tap()
+		app.tables.buttons["delete core data button"].tap()
+		super.tearDown()
+	}
+
+	func tapCoordinate(x: Double, y: Double) {
+		let normalized = app.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
+		let coordinate = normalized.withOffset(CGVector(dx: x, dy: y))
+		coordinate.tap()
 	}
 }

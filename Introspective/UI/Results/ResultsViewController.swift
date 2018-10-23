@@ -256,7 +256,6 @@ final class ResultsViewController: UITableViewController {
 				alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 					DispatchQueue.global(qos: .background).async {
 						DependencyInjector.db.delete(managedSample)
-						DependencyInjector.db.save()
 					}
 					self.samples.remove(at: indexPath.row)
 					tableView.deleteRows(at: [indexPath], with: .fade)

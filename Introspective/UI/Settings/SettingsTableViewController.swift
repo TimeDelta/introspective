@@ -32,14 +32,18 @@ final class SettingsTableViewController: UITableViewController {
 
 	final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if testing && section == 0 {
-			return 1
+			return 2
 		}
 		return 2
 	}
 
 	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		if testing && indexPath.section == 0 {
-			return tableView.dequeueReusableCell(withIdentifier: "generateTestData", for: indexPath)
+			if indexPath.row == 0 {
+				return tableView.dequeueReusableCell(withIdentifier: "generateTestData", for: indexPath)
+			} else {
+				return tableView.dequeueReusableCell(withIdentifier: "deleteCoreData", for: indexPath)
+			}
 		}
 		return tableView.dequeueReusableCell(withIdentifier: Me.identifiers[indexPath.row], for: indexPath)
 	}

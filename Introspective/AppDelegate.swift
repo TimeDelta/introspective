@@ -17,9 +17,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 	final var window: UIWindow?
 
 	final func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-		if CommandLine.arguments.contains("--uitesting") {
-			resetState()
-		}
 		return true
 	}
 
@@ -43,10 +40,5 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	final func applicationWillTerminate(_ application: UIApplication) {
 		// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-	}
-
-	private final func resetState() {
-		let defaultsName = Bundle.main.bundleIdentifier!
-		UserDefaults.standard.removePersistentDomain(forName: defaultsName)
 	}
 }

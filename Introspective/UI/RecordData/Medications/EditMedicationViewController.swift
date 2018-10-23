@@ -65,6 +65,7 @@ public final class EditMedicationViewController: UIViewController {
 		updateFrequencyButtonTitle()
 		updateStartedOnDateButtonTitle()
 		dosageTextField.text = medication?.dosage?.description
+		notesTextView.text = medication?.notes ?? ""
 
 		validate()
 
@@ -82,6 +83,11 @@ public final class EditMedicationViewController: UIViewController {
 
 	deinit {
 		NotificationCenter.default.removeObserver(self)
+	}
+
+	public final override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+		// this dismisses the keyboard whenever user taps on the view outside of keyboard
+		view.endEditing(true)
 	}
 
 	// MARK: - Received Notifications
@@ -206,15 +212,18 @@ public final class EditMedicationViewController: UIViewController {
 	// MARK: - Helper Functions
 
 	private final func updateFrequencyButtonTitle() {
-		frequencyButton.setTitle(frequency?.description ?? "As needed", for: .normal)
+		let frequencyText = frequency?.description ?? "As needed"
+		frequencyButton.setTitle(frequencyText, for: .normal)
+		frequencyButton.accessibilityValue = frequencyText
 	}
 
 	private final func updateStartedOnDateButtonTitle() {
+		var startedOnText = "Not set"
 		if let date = startedOnDate {
-			startedOnButton.setTitle(DependencyInjector.util.calendarUtil.string(for: date, inFormat: "MMMM d, yyyy"), for: .normal)
-		} else {
-			startedOnButton.setTitle("Not set", for: .normal)
+			startedOnText = DependencyInjector.util.calendarUtil.string(for: date, inFormat: "MMMM d, yyyy")
 		}
+		startedOnButton.setTitle(startedOnText, for: .normal)
+		startedOnButton.accessibilityValue = startedOnText
 	}
 
 	private final func validate() {

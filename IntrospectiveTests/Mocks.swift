@@ -2200,6 +2200,32 @@ class DatabaseMock: Database, Mock {
 		}
     }
 
+    func deleteAll(_ objectType: NSManagedObject.Type) throws {
+        addInvocation(.m_deleteAll__objectType(Parameter<NSManagedObject.Type>.value(`objectType`)))
+		let perform = methodPerformValue(.m_deleteAll__objectType(Parameter<NSManagedObject.Type>.value(`objectType`))) as? (NSManagedObject.Type) -> Void
+		perform?(`objectType`)
+		do {
+		    _ = try methodReturnValue(.m_deleteAll__objectType(Parameter<NSManagedObject.Type>.value(`objectType`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    func deleteAll(_ entityName: String) throws {
+        addInvocation(.m_deleteAll__entityName(Parameter<String>.value(`entityName`)))
+		let perform = methodPerformValue(.m_deleteAll__entityName(Parameter<String>.value(`entityName`))) as? (String) -> Void
+		perform?(`entityName`)
+		do {
+		    _ = try methodReturnValue(.m_deleteAll__entityName(Parameter<String>.value(`entityName`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
 
     fileprivate enum MethodType {
         case m_new__objectType_objectType(Parameter<GenericAttribute>)
@@ -2209,6 +2235,8 @@ class DatabaseMock: Database, Mock {
         case m_save
         case m_delete__object(Parameter<NSManagedObject>)
         case m_deleteAll__objects(Parameter<[NSManagedObject]>)
+        case m_deleteAll__objectType(Parameter<NSManagedObject.Type>)
+        case m_deleteAll__entityName(Parameter<String>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -2234,6 +2262,12 @@ class DatabaseMock: Database, Mock {
             case (.m_deleteAll__objects(let lhsObjects), .m_deleteAll__objects(let rhsObjects)):
                 guard Parameter.compare(lhs: lhsObjects, rhs: rhsObjects, with: matcher) else { return false } 
                 return true 
+            case (.m_deleteAll__objectType(let lhsObjecttype), .m_deleteAll__objectType(let rhsObjecttype)):
+                guard Parameter.compare(lhs: lhsObjecttype, rhs: rhsObjecttype, with: matcher) else { return false } 
+                return true 
+            case (.m_deleteAll__entityName(let lhsEntityname), .m_deleteAll__entityName(let rhsEntityname)):
+                guard Parameter.compare(lhs: lhsEntityname, rhs: rhsEntityname, with: matcher) else { return false } 
+                return true 
             default: return false
             }
         }
@@ -2247,6 +2281,8 @@ class DatabaseMock: Database, Mock {
             case .m_save: return 0
             case let .m_delete__object(p0): return p0.intValue
             case let .m_deleteAll__objects(p0): return p0.intValue
+            case let .m_deleteAll__objectType(p0): return p0.intValue
+            case let .m_deleteAll__entityName(p0): return p0.intValue
             }
         }
     }
@@ -2331,6 +2367,34 @@ class DatabaseMock: Database, Mock {
 			willProduce(stubber)
 			return given
         }
+        static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_deleteAll__objectType(`objectType`), products: willThrow.map({ Product.throw($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
+		static func deleteAll(objectType: Parameter<NSManagedObject.Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_deleteAll__objectType(`objectType`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_deleteAll__objectType(`objectType`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        static func deleteAll(_ entityName: Parameter<String>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_deleteAll__entityName(`entityName`), products: willThrow.map({ Product.throw($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `entityName` label")
+		static func deleteAll(entityName: Parameter<String>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_deleteAll__entityName(`entityName`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func deleteAll(_ entityName: Parameter<String>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_deleteAll__entityName(`entityName`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     struct Verify {
@@ -2349,6 +2413,12 @@ class DatabaseMock: Database, Mock {
         static func deleteAll(_ objects: Parameter<[NSManagedObject]>) -> Verify { return Verify(method: .m_deleteAll__objects(`objects`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objects` label")
 		static func deleteAll(objects: Parameter<[NSManagedObject]>) -> Verify { return Verify(method: .m_deleteAll__objects(`objects`))}
+        static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>) -> Verify { return Verify(method: .m_deleteAll__objectType(`objectType`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
+		static func deleteAll(objectType: Parameter<NSManagedObject.Type>) -> Verify { return Verify(method: .m_deleteAll__objectType(`objectType`))}
+        static func deleteAll(_ entityName: Parameter<String>) -> Verify { return Verify(method: .m_deleteAll__entityName(`entityName`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `entityName` label")
+		static func deleteAll(entityName: Parameter<String>) -> Verify { return Verify(method: .m_deleteAll__entityName(`entityName`))}
     }
 
     struct Perform {
@@ -2387,6 +2457,20 @@ class DatabaseMock: Database, Mock {
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objects` label")
 		static func deleteAll(objects: Parameter<[NSManagedObject]>, perform: @escaping ([NSManagedObject]) -> Void) -> Perform {
             return Perform(method: .m_deleteAll__objects(`objects`), performs: perform)
+        }
+        static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>, perform: @escaping (NSManagedObject.Type) -> Void) -> Perform {
+            return Perform(method: .m_deleteAll__objectType(`objectType`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
+		static func deleteAll(objectType: Parameter<NSManagedObject.Type>, perform: @escaping (NSManagedObject.Type) -> Void) -> Perform {
+            return Perform(method: .m_deleteAll__objectType(`objectType`), performs: perform)
+        }
+        static func deleteAll(_ entityName: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_deleteAll__entityName(`entityName`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `entityName` label")
+		static func deleteAll(entityName: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_deleteAll__entityName(`entityName`), performs: perform)
         }
     }
 

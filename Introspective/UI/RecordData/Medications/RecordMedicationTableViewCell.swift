@@ -25,6 +25,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 
 	@IBOutlet weak final var medicationNameLabel: UILabel!
 	@IBOutlet weak final var lastTakenOnDateButton: UIButton!
+	@IBOutlet weak final var takeButton: UIButton!
 
 	// MARK: - Instance Variables
 
@@ -32,6 +33,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 		didSet {
 			medicationNameLabel.text = medication.name
 			updateLastTakenButton()
+			updateTakeButtonAccessibility()
 			uniqueNotificationNameForMedication = Notification.Name("doseCreatedFor" + medication.objectID.description)
 			// have to remove old observers here because table view cells get reused
 			NotificationCenter.default.removeObserver(self)
@@ -93,5 +95,15 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 			UiUtil.setButton(lastTakenOnDateButton, enabled: false, hidden: false)
 		}
 		lastTakenOnDateButton.setTitle(lastTakenText, for: .normal)
+		lastTakenOnDateButton.accessibilityValue = lastTakenText
+		lastTakenOnDateButton.accessibilityHint = "Show all doses of \(medication.name) taken"
+		lastTakenOnDateButton.accessibilityLabel = "last \(medication.name) dose button"
+		lastTakenOnDateButton.accessibilityIdentifier = "last \(medication.name) dose button"
+	}
+
+	private final func updateTakeButtonAccessibility() {
+		takeButton.accessibilityIdentifier = "take \(medication.name) button"
+		takeButton.accessibilityLabel = "take \(medication.name) button"
+		takeButton.accessibilityHint = "Take a dose of \(medication.name)"
 	}
 }

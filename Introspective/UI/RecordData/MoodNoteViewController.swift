@@ -24,14 +24,7 @@ final class MoodNoteViewController: UIViewController {
 			textView.text = note
 		}
 
-		let keyboardToolBar = UIToolbar()
-		keyboardToolBar.sizeToFit()
-
-		let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-		let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.doneClicked))
-		keyboardToolBar.setItems([flexibleSpace, doneButton, flexibleSpace], animated: true)
-
-		textView.inputAccessoryView = keyboardToolBar
+		UiUtil.addDoneButtonToKeyboardFor(textView, target: self, action: #selector(doneClicked))
 	}
 
 	@objc private final func doneClicked() {
