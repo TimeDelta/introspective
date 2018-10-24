@@ -239,6 +239,7 @@
 		A1741703508EA4B538BF55AB8D4C19D4 /* InSameCalendarUnitSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D17C897038BC72D188BF5938E99B20 /* InSameCalendarUnitSubQueryMatcher.swift */; };
 		A1AA6C0832AB2D1D89489B4D593B373F /* RecordMoodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16EBB19F87D1ED49AC879F1EE69BEA1 /* RecordMoodTableViewCell.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
+		A1535BBF1B7655E10F5B9BCBB5DF1CCF /* Signpost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C10CC3CB0DD80F3C84F2E06DE426F03 /* Signpost.swift */; };
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
 		A34600A18766AE66F0324FF5AB10E114 /* GraphType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */; };
 		A46B458F444FF5C6A7FDBBED46E3A253 /* RecordDataPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87F6CD05F845F22D50E6097CF2DBF9C3 /* RecordDataPageViewController.swift */; };
@@ -612,6 +613,7 @@
 		A1B6336EF7C8BA63691FB3CF1C00CFAD /* DateOnlyAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOnlyAttribute.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
+		8C10CC3CB0DD80F3C84F2E06DE426F03 /* Signpost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Signpost.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A7232B8CBDA59F9550101241579EE472 /* GreaterThanFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreaterThanFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A7AA8E7D0DDBCC72BB2887FB26298A64 /* HealthKitSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitSample.swift; sourceTree = "<group>"; };
@@ -1429,6 +1431,7 @@
 				7DAE3275E008400544CB2EB1FD59CF6C /* FrequencyEditorViewController.swift */,
 				F35DAF8DD9386CDAD26BEB4FED6C597C /* DescriptionViewController.swift */,
 				3B7E6BCEB61619FCCC44F4E09B1E2E09 /* DateRangeViewController.swift */,
+				8C10CC3CB0DD80F3C84F2E06DE426F03 /* Signpost.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -2327,6 +2330,7 @@
 				8A27D3C768ED8ED642428D52BD457667 /* Weight.swift in Sources */,
 				0F1768E8F30251711DD92C193564AA51 /* SampleFactory.swift in Sources */,
 				F3FA3C0619347632B0EDC137DC12BF06 /* Database.swift in Sources */,
+				A1535BBF1B7655E10F5B9BCBB5DF1CCF /* Signpost.swift in Sources */,
 				F4FBFDA0E461D650CCDC284627717C02 /* MoodUiUtil.swift in Sources */,
 				50C34BAD031485CE926D10C19B9F90C6 /* DateAttribute.swift in Sources */,
 				0F34F5F515EE71F3B87076B70E743B12 /* DateAttributeBase.swift in Sources */,
@@ -2532,7 +2536,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = bnova.Introspective;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bnova.Introspective;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2559,7 +2563,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = bnova.Introspective;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bnova.Introspective;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;

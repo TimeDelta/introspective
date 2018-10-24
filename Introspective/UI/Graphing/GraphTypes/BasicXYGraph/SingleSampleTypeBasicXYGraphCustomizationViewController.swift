@@ -114,6 +114,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		}
 	}
 	private final var chartController: BasicXYChartViewController!
+	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "GraphCreationPerformance"))
 
 	// MARK: - UIViewController Overrides
 
@@ -227,7 +228,9 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	}
 
 	private final func runQuery() {
+		signpost.begin(name: "Query")
 		query!.runQuery { (result, error) in
+			self.signpost.end(name: "Query")
 			if error != nil {
 				os_log("X-axis query run failed: %@", type: .error, error!.localizedDescription)
 				DispatchQueue.main.async {
@@ -256,21 +259,29 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	}
 
 	private final func updateChartData(_ samples: [Sample]) {
+		signpost.begin(name: "Update Chart Data", "Number of samples: %d", samples.count)
+
 		var allData = [Dictionary<String, Any>]()
 		var xValuesAreNumbers: Bool
 		if grouping != nil {
 			let grouper = SameTimeUnitSampleGrouper(grouping!)
+			signpost.begin(name: "Grouping samples", "Grouping %d samples", samples.count)
 			let groups = grouper.group(samples: samples, by: firstDateAttributeFor(type(of: samples[0]))) as! [(Date, [Sample])]
+			signpost.end(name: "Grouping samples", "Grouped %d samples into %d groups", samples.count, groups.count)
 
 			let xValues = transform(sampleGroups: groups, information: xAxis.information!)
 			xValuesAreNumbers = areAllNumbers(xValues.map{ $0.sampleValue })
 			var sortedXValues = xValues
 			// if x values are numbers and are not sorted, graph will look very weird
 			if xValuesAreNumbers {
+				signpost.begin(name: "Sort X Values", "Number of x values: %d", xValues.count)
 				sortedXValues = xValues.sorted(by: { Double($0.sampleValue)! < Double($1.sampleValue)! })
+				signpost.end(name: "Sort X Values")
 			}
 
+			signpost.begin(name: "Creating series data", "Creating %d series", yAxis.count)
 			for yInformation in yAxis.map({ $0.information! }) {
+				signpost.begin(name: "Computing data points for information", idObject: yInformation as AnyObject, "%@", yInformation.description)
 				let yValues = transform(sampleGroups: groups, information: yInformation)
 				var seriesData = [[Any]]()
 				for (xGroupValue, xSampleValue) in sortedXValues { // loop over x values so that series data is already sorted
@@ -287,7 +298,9 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 					.name(yInformation.description.localizedCapitalized)
 					.data(seriesData)
 					.toDic()!)
+				signpost.end(name: "Computing data points for information", idObject: yInformation as AnyObject, "%@", yInformation.description)
 			}
+			signpost.end(name: "Creating series data")
 		} else {
 			xValuesAreNumbers = xAxis.attribute! is NumericAttribute
 			for yAttribute in yAxis.map({ $0.attribute! }) {
@@ -315,23 +328,31 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			self.chartController.displayXAxisValueLabels = xValuesAreNumbers
 			self.chartController.dataSeries = allData
 		}
+
+		signpost.end(name: "Update Chart Data", "Finished updating chart data")
 	}
 
 	private final func transform(sampleGroups: [(Date, [Sample])], information: ExtraInformation) -> [(groupValue: Date, sampleValue: String)] {
+		signpost.begin(name: "Transform", "Number of sample groups: %d", sampleGroups.count)
 		var values = [(groupValue: Date, sampleValue: String)]()
 		for (groupValue, samples) in sampleGroups {
 			let sampleValue = try! information.compute(forSamples: samples)
 			values.append((groupValue: groupValue, sampleValue: sampleValue))
 		}
+		signpost.end(name: "Transform", "Finished transforming %d groups", sampleGroups.count)
+
 		return values
 	}
 
 	private final func areAllNumbers(_ values: [String]) -> Bool {
+		signpost.begin(name: "Are all numbers", "Checking if %d values are all numbers", values.count)
 		for value in values {
 			if !DependencyInjector.util.stringUtil.isNumber(value) {
+				signpost.end(name: "Are all numbers", "Finished checking if %d values are all numbers", values.count)
 				return false
 			}
 		}
+		signpost.end(name: "Are all numbers", "Finished checking if %d values are all numbers", values.count)
 		return true
 	}
 

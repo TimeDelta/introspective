@@ -16,6 +16,7 @@ class UITest: XCTestCase {
 		super.setUp()
 		continueAfterFailure = true
 		app = XCUIApplication()
+		app.launchArguments.append("--testing")
 		app.launch()
 	}
 

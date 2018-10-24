@@ -39,6 +39,7 @@ extension Database {
 public class DatabaseImpl: Database {
 
 	private final var persistentContainer: NSPersistentContainer
+	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Database"))
 
 	private lazy final var backgroundContext: NSManagedObjectContext = {
 		let background = self.persistentContainer.newBackgroundContext()
@@ -70,11 +71,14 @@ public class DatabaseImpl: Database {
 	}
 
 	public final func new<Type: NSManagedObject & CoreDataObject>(objectType: Type.Type) throws -> Type {
+		signpost.begin(name: "New", idObject: objectType)
 		let entity = NSEntityDescription.entity(forEntityName: objectType.entityName, in: backgroundContext)!
 		guard let newObject = NSManagedObject(entity: entity, insertInto: backgroundContext) as? Type else {
 			os_log("Could not cast new object as %@", type: .error, objectType.entityName)
+			signpost.end(name: "New", idObject: objectType)
 			throw DatabaseError.failedToInstantiateObject
 		}
+		signpost.end(name: "New", idObject: objectType)
 		return newObject
 	}
 
@@ -87,12 +91,21 @@ public class DatabaseImpl: Database {
 	}
 
 	public final func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type] {
-		return try persistentContainer.viewContext.fetch(fetchRequest)
+		signpost.begin(name: "Database Query", idObject: fetchRequest, "%@", fetchRequest.debugDescription)
+		do {
+			let result = try persistentContainer.viewContext.fetch(fetchRequest)
+			signpost.end(name: "Database Query", idObject: fetchRequest)
+			return result
+		} catch {
+			signpost.end(name: "Database Query", idObject: fetchRequest)
+			throw error
+		}
 	}
 
 	/// This method needs to be called when trying to establish a relationship between two objects in different contexts.
 	/// This will happen if one object has already been saved and the other hasn't been saved yet.
 	public final func pull<Type: NSManagedObject>(savedObject: Type, fromSameContextAs otherObject: NSManagedObject) throws -> Type {
+		signpost.begin(name: "Pull", idObject: savedObject)
 		let savedObjectInSameContext = otherObject.managedObjectContext!.object(with: savedObject.objectID)
 		guard let castedObject = savedObjectInSameContext as? Type else {
 			var wasFault = "Object is "
@@ -101,8 +114,10 @@ public class DatabaseImpl: Database {
 			}
 			wasFault += "a fault"
 			os_log("Could not cast saved object as %@: %@", type: .error, savedObject.entity.name!)
+			signpost.end(name: "Pull", idObject: savedObject)
 			throw DatabaseError.failedToInstantiateObject
 		}
+		signpost.end(name: "Pull", idObject: savedObject)
 		return castedObject
 	}
 
@@ -111,6 +126,7 @@ public class DatabaseImpl: Database {
 	}
 
 	public final func delete(_ object: NSManagedObject) {
+		signpost.begin(name: "Delete", idObject: object)
 		if context(persistentContainer.viewContext, contains: object) {
 			persistentContainer.viewContext.delete(object)
 			saveContext(persistentContainer.viewContext)
@@ -119,6 +135,7 @@ public class DatabaseImpl: Database {
 			backgroundContext.delete(object)
 			saveContext(backgroundContext)
 		}
+		signpost.end(name: "Delete", idObject: object)
 	}
 
 	public final func deleteAll(_ objects: [NSManagedObject]) throws {
@@ -131,36 +148,58 @@ public class DatabaseImpl: Database {
 	}
 
 	public final func deleteAll(_ entityName: String) throws {
+		signpost.begin(name: "Delete all with entity name", idObject: entityName as AnyObject)
 		let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
 		let batchDelete = NSBatchDeleteRequest(fetchRequest: request)
-		try persistentContainer.viewContext.execute(batchDelete)
-		try backgroundContext.execute(batchDelete)
+		do {
+			try persistentContainer.viewContext.execute(batchDelete)
+			try backgroundContext.execute(batchDelete)
+		} catch {
+			signpost.end(name: "Delete all with entity name", idObject: entityName as AnyObject)
+			throw error
+		}
+		signpost.end(name: "Delete all with entity name", idObject: entityName as AnyObject)
 	}
 
 	// MARK: - Helper Functions
 
 	private final func context(_ context: NSManagedObjectContext, contains object: NSManagedObject) -> Bool {
+		signpost.begin(name: "Context contains object", idObject: object)
 		let fetchedObject = context.object(with: object.objectID)
-		return !fetchedObject.isFault
+		let result = !fetchedObject.isFault
+		signpost.end(name: "Context contains object", idObject: object)
+		return result
 	}
 
 	private final func saveContext(_ context: NSManagedObjectContext) {
-		if context.hasChanges {
-			do {
-				try context.save()
-			} catch {
-				// TODO - Tell the user something went wrong while saving their data instead of crashing the app
-				let nserror = error as NSError
-				fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+		signpost.begin(name: "Save", idObject: context)
+		context.performAndWait {
+			if context.hasChanges {
+				do {
+					try context.save()
+				} catch {
+					signpost.end(name: "Save", idObject: context)
+					// TODO - Tell the user something went wrong while saving their data instead of crashing the app
+					let nserror = error as NSError
+					fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+				}
 			}
 		}
+		signpost.end(name: "Save", idObject: context)
 	}
 
 	private final func deleteAll(_ objects: [NSManagedObject], from context: NSManagedObjectContext) throws {
+		signpost.begin(name: "Delete all with objects", idObject: objects as AnyObject)
 		let ids = objects.filter{ self.context(context, contains: $0) }.map{ $0.objectID }
 		if ids.count > 0 {
 			let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: ids)
-			try context.execute(batchDeleteRequest)
+			do {
+				try context.execute(batchDeleteRequest)
+			} catch {
+				signpost.end(name: "Delete all with objects", idObject: objects as AnyObject)
+				throw error
+			}
 		}
+		signpost.end(name: "Delete all with objects", idObject: objects as AnyObject)
 	}
 }

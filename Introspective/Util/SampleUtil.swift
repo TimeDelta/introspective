@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import os
 
 //sourcery: AutoMockable
 public protocol SampleUtil {
@@ -52,6 +53,8 @@ extension SampleUtil {
 }
 
 public final class SampleUtilImpl: SampleUtil {
+
+	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "SampleUtil"))
 
 	// need this because protocols don't conform to themselves
 	public final func getOnly(samples: [Sample], from startDate: Date?, to endDate: Date?) -> [Sample] {

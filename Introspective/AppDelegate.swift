@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-public var testing = true // TODO - change this to false before each release
+public var testing = false
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,6 +17,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 	final var window: UIWindow?
 
 	final func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+		testing = CommandLine.arguments.contains("--testing")
 		return true
 	}
 

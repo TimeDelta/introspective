@@ -61,14 +61,6 @@ class QueryViewController: UITableViewController {
 	private static let acceptedSampleTypeEdit = Notification.Name("acceptedSampleTypeEdit")
 	private static let runQueryNotification = Notification.Name("runQuery")
 
-	private static let addQuestionPartPresenter: Presentr = {
-		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
-
-		let customPresenter = Presentr(presentationType: customType)
-		customPresenter.dismissTransitionType = .crossDissolve
-		customPresenter.roundCorners = true
-		return customPresenter
-	}()
 	private static let editSampleTypePresenter: Presentr = {
 		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
 
