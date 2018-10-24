@@ -254,20 +254,9 @@ public final class SampleUtilImpl: SampleUtil {
 	}
 
 	private final func aggregate(_ samples: [Sample], _ aggregationUnit: Calendar.Component, _ dateType: DateType = .start) -> [Date: [Sample]] {
-		var samplesByAggregation = [Date: [Sample]]()
-		for sample in samples {
-			let date = sample.dates()[dateType]
-			if date != nil {
-				let aggregationDate = DependencyInjector.util.calendarUtil.start(of: aggregationUnit, in: date!)
-				var samplesForAggregationDate = samplesByAggregation[aggregationDate]
-				if samplesForAggregationDate == nil {
-					samplesForAggregationDate = [Sample]()
-				}
-				samplesForAggregationDate!.append(sample)
-				samplesByAggregation[aggregationDate] = samplesForAggregationDate
-			}
-		}
-		return samplesByAggregation
+		return Dictionary(grouping: samples.filter{ $0.dates()[dateType] != nil }, by: { sample in
+			return DependencyInjector.util.calendarUtil.start(of: aggregationUnit, in: sample.dates()[dateType]!)
+		})
 	}
 
 	private final func sort(_ samples: [Sample], _ dateType: DateType, _ order: ComparisonResult = .orderedAscending) -> [Sample] {
