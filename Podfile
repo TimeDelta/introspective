@@ -18,5 +18,6 @@ target 'Introspective' do
 
   target 'IntrospectiveUITests' do
     inherit! :search_paths
+    pod "SwiftDate"
   end
 end

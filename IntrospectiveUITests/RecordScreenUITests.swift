@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import SwiftDate
 
 final class RecordScreenUITests: UITest {
 
@@ -42,9 +43,7 @@ final class RecordScreenUITests: UITest {
 
 		// when
 		app.tables.buttons["Medications"].tap()
-		let searchBar = app.searchFields["Search Medications"]
-		searchBar.tap()
-		searchBar.typeText(medicationName)
+		filterMedications(by: medicationName)
 		app.tables.buttons["Add"].tap()
 
 		// then
@@ -67,7 +66,7 @@ final class RecordScreenUITests: UITest {
 		// given
 		let medicationName = "Adderall"
 		let frequency = (times: "12", unit: "Month")
-		let startedOn = Calendar.autoupdatingCurrent.date(bySetting: .hour, value: 5, of: Date())!
+		let startedOn = Date()
 		let dosage = "12 mg"
 		let note = "Take every morning after eating breakfast otherwise it will give you an upset stomach."
 		app.tables.buttons["Medications"].tap()
@@ -109,15 +108,13 @@ final class RecordScreenUITests: UITest {
 		createMedication(name: medicationName)
 		createMedication(name: medicationName2)
 
-		let searchMedicationsField = app.searchFields["Search Medications"]
-		searchMedicationsField.tap()
-		searchMedicationsField.typeText(medicationName)
+		filterMedications(by: medicationName)
 
 		// when
 		app.tables.staticTexts[medicationName].swipeLeft()
 		app.buttons["Delete"].tap()
 		app.buttons["Yes"].tap()
-		searchMedicationsField.buttons["Clear text"].tap()
+		app.searchFields["Search Medications"].buttons["Clear text"].tap()
 
 		// then
 		app.buttons["Cancel"].tap()
@@ -130,18 +127,13 @@ final class RecordScreenUITests: UITest {
 		let medicationName = "few"
 		app.tables.buttons["Medications"].tap()
 		createMedication(name: medicationName)
-		var dose1Date = Calendar.autoupdatingCurrent.date(bySetting: .hour, value: 5, of: Date())!
-		dose1Date = Calendar.autoupdatingCurrent.date(byAdding: .month, value: -1, to: dose1Date)!
-		let dose2Date = Calendar.autoupdatingCurrent.date(bySetting: .hour, value: 7, of: Date())!
+		var dose1Date = Date()
+		dose1Date = dose1Date - 1.months
+		let dose2Date = Date()
 		takeDoseOf(medicationName, at: dose1Date)
 		takeDoseOf(medicationName, at: dose2Date)
 		app.buttons["last \(medicationName) dose button"].tap()
-		app.tables.buttons["Filter Dates"].tap()
-		app.switches["from date switch"].tap()
-		setDatePicker("from date picker", to: dose1Date)
-		app.switches["to date switch"].tap()
-		setDatePicker("to date picker", to: dose1Date)
-		app.buttons["Save"].tap()
+		filterDoseDates(from: dose1Date, to: dose1Date)
 		let dose = doseDescription(date: dose1Date)
 
 		// when
@@ -158,12 +150,169 @@ final class RecordScreenUITests: UITest {
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose2Date)].exists)
 	}
 
+	func testReorderWhileFiltering_correcltyReordersMedications() {
+		// given
+		let medication1Name = "fewqgre"
+		let medication2Name = "fjor"
+		let medication3Name = "\(medication1Name)fdsjkl"
+		app.tables.buttons["Medications"].tap()
+		createMedication(name: medication1Name)
+		createMedication(name: medication2Name)
+		createMedication(name: medication3Name)
+		app.buttons["Edit"].tap()
+		filterMedications(by: medication1Name)
+
+		// when
+		let medication3ReorderButton = app.tables.buttons["Reorder \(medication3Name)"]
+		app.tables.buttons["Reorder \(medication1Name)"].press(forDuration: 0.5, thenDragTo: medication3ReorderButton)
+		app.buttons["Cancel"].tap()
+
+		// then
+		XCTAssertLessThanOrEqual(app.tables.staticTexts[medication2Name].frame.maxY, app.tables.staticTexts[medication3Name].frame.minY)
+		XCTAssertLessThanOrEqual(app.tables.staticTexts[medication3Name].frame.maxY, app.tables.staticTexts[medication1Name].frame.minY)
+	}
+
+	func testEditingMedicationName_updatesTableViewCellInMedicationsList() {
+		// given
+		let medicationName = "fgqr"
+		let additionalCharacters = "greqg"
+		let editedMedicationName = medicationName + additionalCharacters
+		app.tables.buttons["Medications"].tap()
+		createMedication(name: medicationName)
+
+		// when
+		app.tables.staticTexts[medicationName].tap()
+		app.textFields["medication name"].tap()
+		app.textFields["medication name"].typeText(additionalCharacters)
+		tapCoordinate(x: 0, y: 70)
+		app.buttons["save medication button"].tap()
+
+		// then
+		XCTAssert(!app.tables.staticTexts[medicationName].exists)
+		XCTAssert(app.tables.staticTexts[editedMedicationName].exists)
+	}
+
+	func testClearingFrequencyOnNewMedicationScreen_updatesFrequencyButtonTitle() {
+		// given
+		let medicationName = "fdsag"
+		let frequency = (times: "12", unit: "day")
+		app.tables.buttons["Medications"].tap()
+		createMedication(name: medicationName, frequency: frequency, save: false)
+
+		// when
+		app.buttons["clear frequency button"].tap()
+
+		// then
+		XCTAssertEqual(app.buttons["set frequency button"].value as? String, "As needed")
+	}
+
+	func testClearingStartedOnDateOnNewMedicationScreen_updatesStartedOnButtonTitle() {
+		// given
+		let medicationName = "fdsag"
+		let startedOn = Date()
+		app.tables.buttons["Medications"].tap()
+		createMedication(name: medicationName, startedOn: startedOn, save: false)
+
+		// when
+		app.buttons["clear started on date button"].tap()
+
+		// then
+		XCTAssertEqual(app.buttons["set started on button"].value as? String, "Not set")
+	}
+
+	func testEditingDose_updatesDoseDescriptionInDoseList() {
+		// given
+		let medicationName = "fhiou"
+		let originalDosage = "12 mg"
+		let editedDosage = "342 cL"
+		let originalDoseDate = Date()
+		let editedDoseDate = originalDoseDate - 1.months
+		app.tables.buttons["Medications"].tap()
+		createMedication(name: medicationName)
+		takeDoseOf(medicationName, at: originalDoseDate, dosage: originalDosage)
+		app.buttons["last \(medicationName) dose button"].tap()
+
+		// when
+		let originalDoseDescription = doseDescription(dosage: originalDosage, date: originalDoseDate)
+		app.tables.staticTexts[originalDoseDescription].tap()
+		let dosageTextField = app.textFields["dosage taken text field"]
+		let clearTextButton = dosageTextField.buttons["Clear text"]
+		if clearTextButton.exists {
+			clearTextButton.tap()
+		}
+		dosageTextField.tap()
+		dosageTextField.typeText(editedDosage)
+		setDatePicker(to: editedDoseDate)
+		app.buttons["save dose button"].tap()
+
+		// then
+		XCTAssert(app.tables.staticTexts[doseDescription(dosage: editedDosage, date: editedDoseDate)].exists)
+		XCTAssert(!app.tables.staticTexts[originalDoseDescription].exists)
+	}
+
+	func testPressingPreviousDateRangeButtonOnDoseList_correctlyRefiltersDosesAndDisplaysCorrectDateRangeOnDateFilterButton() {
+		// given
+		let medicationName = "ghrui"
+		let dose1Date = Date()
+		let dose2Date = dose1Date - 2.weeks + 1.days
+		app.tables.buttons["Medications"].tap()
+		createMedication(name: medicationName)
+		takeDoseOf(medicationName, at: dose1Date)
+		takeDoseOf(medicationName, at: dose2Date)
+		app.buttons["last \(medicationName) dose button"].tap()
+		filterDoseDates(from: dose1Date - 1.weeks, to: dose1Date + 1.days)
+
+		// when
+		app.tables.buttons["<"].tap()
+
+		// then
+		let expectedMinDate = (dose1Date - 1.weeks) - (dose1Date + 1.days - (dose1Date - 1.weeks))
+		let expectedMaxDate = (dose1Date + 1.days) - (dose1Date + 1.days - (dose1Date - 1.weeks))
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateStyle = .short
+		let expectedMinDateString = dateFormatter.string(from: expectedMinDate)
+		let expectedMaxDateString = dateFormatter.string(from: expectedMaxDate)
+		let expectedDateFilterButtonTitle = "From " + expectedMinDateString + " to " + expectedMaxDateString
+		XCTAssertEqual(app.tables.buttons["filter dates button"].value as? String, expectedDateFilterButtonTitle)
+
+		XCTAssert(app.tables.staticTexts[doseDescription(date: dose2Date)].exists)
+	}
+
+	func testPressingNextDateRangeButtonOnDoseList_correctlyRefiltersDosesAndDisplaysCorrectDateRangeOnDateFilterButton() {
+		// given
+		let medicationName = "ghrui"
+		let dose1Date = Date()
+		let dose2Date = dose1Date - 2.weeks
+		app.tables.buttons["Medications"].tap()
+		createMedication(name: medicationName)
+		takeDoseOf(medicationName, at: dose1Date)
+		takeDoseOf(medicationName, at: dose2Date)
+		app.buttons["last \(medicationName) dose button"].tap()
+		filterDoseDates(from: dose2Date - 1.days, to: dose2Date + 1.weeks)
+
+		// when
+		app.tables.buttons[">"].tap()
+
+		// then
+		let expectedMinDate = (dose2Date - 1.days) + (dose2Date + 1.weeks - (dose2Date - 1.days))
+		let expectedMaxDate = (dose2Date + 1.weeks) + (dose2Date + 1.weeks - (dose2Date - 1.days))
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateStyle = .short
+		let expectedMinDateString = dateFormatter.string(from: expectedMinDate)
+		let expectedMaxDateString = dateFormatter.string(from: expectedMaxDate)
+		let expectedDateFilterButtonTitle = "From " + expectedMinDateString + " to " + expectedMaxDateString
+		XCTAssertEqual(app.tables.buttons["filter dates button"].value as? String, expectedDateFilterButtonTitle)
+
+		XCTAssert(app.tables.staticTexts[doseDescription(date: dose1Date)].exists)
+	}
+
 	private final func createMedication(
 		name: String,
 		frequency: (times: String, unit: String)? = nil,
 		startedOn: Date? = nil,
 		dosage: String? = nil,
-		note: String? = nil)
+		note: String? = nil,
+		save: Bool = true)
 	{
 		app.tables.buttons["Add"].tap()
 
@@ -199,7 +348,9 @@ final class RecordScreenUITests: UITest {
 
 		tapCoordinate(x: 0, y: 70)
 
-		app.buttons["save medication button"].tap()
+		if save {
+			app.buttons["save medication button"].tap()
+		}
 	}
 
 	private final func takeDoseOf(_ medicationName: String, at date: Date, dosage: String? = nil) {
@@ -217,7 +368,25 @@ final class RecordScreenUITests: UITest {
 			dosageTextField.typeText(dosage)
 		}
 
-		app.buttons["save dosage button"].tap()
+		app.buttons["save dose button"].tap()
+	}
+
+	private final func filterDoseDates(from fromDate: Date? = nil, to toDate: Date? = nil) {
+		app.tables.buttons["Filter Dates"].tap()
+		setFromOrToDate("from", fromDate)
+		setFromOrToDate("to", toDate)
+		app.buttons["Save"].tap()
+	}
+
+	private final func setFromOrToDate(_ fromOrTo: String, _ date: Date?) {
+		let currentSwitchState = app.switches[fromOrTo + " date switch"].value as? String == "1"
+		let dateShouldExist = date != nil
+		if currentSwitchState != dateShouldExist {
+			app.switches[fromOrTo + " date switch"].tap()
+		}
+		if let date = date {
+			setDatePicker(fromOrTo + " date picker", to: date)
+		}
 	}
 
 	/// Assumes AM time
@@ -246,6 +415,12 @@ final class RecordScreenUITests: UITest {
 			datePickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: dateStrings[.minute]!)
 			datePickerWheels.element(boundBy: 3).adjust(toPickerWheelValue: dateStrings[.timeZone]!)
 		}
+	}
+
+	private final func filterMedications(by searchText: String) {
+		let searchMedicationsField = app.searchFields["Search Medications"]
+		searchMedicationsField.tap()
+		searchMedicationsField.typeText(searchText)
 	}
 
 	private final func convertDateToStringComponents(_ date: Date) -> [Calendar.Component: String]{

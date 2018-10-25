@@ -100,8 +100,10 @@ final class QueryScreenUITests: UITest {
 
 		// when
 		app.tables.buttons["Edit"].tap()
-		let attributeRestrictionButton = app.buttons.containing(NSPredicate(format: "%K BEGINSWITH[cd] %@", "label", "reorder less than")).allElementsBoundByIndex[0]
-		app.tables.buttons["Reorder Data Type"].press(forDuration: 0.5, thenDragTo: attributeRestrictionButton)
+		let attributeRestrictionReorderButton = app.buttons.containing(
+			NSPredicate(format: "%K BEGINSWITH[cd] %@", "label", "reorder less than")
+		).allElementsBoundByIndex[0]
+		app.tables.buttons["Reorder Data Type"].press(forDuration: 0.5, thenDragTo: attributeRestrictionReorderButton)
 		app.tables.buttons["Done"].tap()
 
 		// then

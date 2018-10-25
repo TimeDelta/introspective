@@ -415,7 +415,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JzX-Nh-mVB">
                                 <rect key="frame" x="335" y="133" width="27" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                <accessibility key="accessibilityConfiguration" hint="This will remove the frequency  from this medication." identifier="remove frequency button" label="remove frequency button"/>
+                                <accessibility key="accessibilityConfiguration" hint="This will remove the frequency  from this medication." identifier="clear frequency button" label="clear frequency button"/>
                                 <state key="normal" title="x"/>
                                 <connections>
                                     <action selector="resetFrequencyButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="B5c-AZ-9CL"/>
@@ -424,7 +424,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nmk-3N-DdM">
                                 <rect key="frame" x="335" y="171" width="27" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                <accessibility key="accessibilityConfiguration" hint="This will remove the started on date from this medication." identifier="delete started on date button" label="delete started on date button"/>
+                                <accessibility key="accessibilityConfiguration" hint="This will remove the started on date from this medication." identifier="clear started on date button" label="clear started on date button"/>
                                 <state key="normal" title="x"/>
                                 <connections>
                                     <action selector="resetStartedOnButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="yW3-l0-Dgi"/>
@@ -539,7 +539,7 @@
                                 <rect key="frame" x="0.0" y="220" width="300" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <accessibility key="accessibilityConfiguration" identifier="save dosage button" label="save dosage button"/>
+                                <accessibility key="accessibilityConfiguration" identifier="save dose button" label="save dose button"/>
                                 <state key="normal" title="Save">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
