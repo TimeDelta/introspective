@@ -121,4 +121,24 @@ final class QueryScreenUITests: UITest {
 		// then
 		XCTAssert(app.tables.buttons["Done"].exists)
 	}
+
+	func testDeletingDataTypeWithAttributeRestrictionsUnderneath_correctlyReassignsAttributeRestrictionsUnderneath() {
+		// given
+		app.tabBars.buttons["Explore"].tap()
+		app.collectionViews.staticTexts["Query"].tap()
+		app.tables.buttons["Add"].tap()
+		app.sheets["What would you like to add?"].buttons["Data Type"].tap()
+		app.tables.cells.allElementsBoundByIndex[1].tap()
+		app.pickerWheels["Blood Pressure"].adjust(toPickerWheelValue: "Body Mass Index")
+		app.scrollViews.otherElements.buttons["Accept"].tap()
+		app.tables.buttons["Add"].tap()
+		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
+
+		// when
+		app.tables.cells.allElementsBoundByIndex[1].swipeLeft()
+		app.tables.buttons["Delete"].tap()
+
+		// then
+		XCTAssert(app.tables.staticTexts["Diastolic blood pressure < 0.0"].exists)
+	}
 }
