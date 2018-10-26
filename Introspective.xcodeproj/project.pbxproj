@@ -59,6 +59,7 @@
 		1D18EAED02072F435D338692AC791669 /* AttributeRestrictionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95CBC6BFB30927C64AD76644FD14B257 /* AttributeRestrictionTableViewCell.swift */; };
 		1D2C3100C0DC947E26F8DD0768E89010 /* DependencyInjector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46030021E3A7CE908EF1522F353E62F2 /* DependencyInjector.swift */; };
 		1D6950CDDA8B6FDEF434AD41C730154E /* WithinXCalendarUnitsSubQueryMatcherUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44927324548AE3E4295C206AAFC1BBC8 /* WithinXCalendarUnitsSubQueryMatcherUnitTests.swift */; };
+		1DA44C15843545B33EE8A3745C1D42B7 /* GraphSetupScreenUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7394F9035B680FA05E2D80131AA15D /* GraphSetupScreenUITests.swift */; };
 		1E4984FC591F548162E6D2208413F713 /* SearchUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12DD92D450ED3B69D3180D092A27EC06 /* SearchUtil.swift */; };
 		1F16E03DE617923DA6BA3DABB7DA64B0 /* ExploreCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E51488F43C1C1AF3E357896B07AFDE4C /* ExploreCollectionViewController.swift */; };
 		1FFA4374C490F5E4FFCD3A807D364EE0 /* GreaterThanOrEqualToIntegerAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B165B45C72F67B62D3B4DBD7B380FF73 /* GreaterThanOrEqualToIntegerAttributeRestriction.swift */; };
@@ -445,6 +446,7 @@
 		2C813E03D6D7A9D8D971B32AD7C58564 /* CalendarComponentAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarComponentAttribute.swift; sourceTree = "<group>"; };
 		2D584EB3FDD35B777C8A12FEA538FF11 /* LessThanOrEqualToIntegerAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanOrEqualToIntegerAttributeRestriction.swift; sourceTree = "<group>"; };
 		2E6F5AA65EE65BA9039482230546948C /* Attributed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attributed.swift; sourceTree = "<group>"; };
+		2E7394F9035B680FA05E2D80131AA15D /* GraphSetupScreenUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphSetupScreenUITests.swift; sourceTree = "<group>"; };
 		2F4D1022C090AF57366EAF3AC8B2380B /* WeightQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightQueryFunctionalTests.swift; sourceTree = "<group>"; };
 		309E5D0D463F26860DCDBB12873716DB /* LeanBodyMassQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeanBodyMassQueryFunctionalTests.swift; sourceTree = "<group>"; };
 		30C682ABD53B835D8EEF14F16380C1EB /* LessThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
@@ -1688,6 +1690,7 @@
 				25C880947CFEABB98F66B649B9F32DE1 /* Info.plist */,
 				A8AF1BA62CF59F285D331C712F7E7FB2 /* QueryScreenUITests.swift */,
 				AF920514E05E0FADB0BDA00770DE9998 /* RecordScreenUITests.swift */,
+				2E7394F9035B680FA05E2D80131AA15D /* GraphSetupScreenUITests.swift */,
 			);
 			path = IntrospectiveUITests;
 			sourceTree = "<group>";
@@ -2041,24 +2044,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		F6EC37049C68C61C640499577E4D3677 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-IntrospectiveUITests/Pods-IntrospectiveUITests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/SwiftDate/SwiftDate.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftDate.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-IntrospectiveUITests/Pods-IntrospectiveUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		1AC720EABA981FDA25FBD935069CED49 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2173,6 +2158,24 @@
 			shellPath = /bin/sh;
 			shellScript = "rake mock";
 		};
+		F6EC37049C68C61C640499577E4D3677 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-IntrospectiveUITests/Pods-IntrospectiveUITests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/SwiftDate/SwiftDate.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftDate.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-IntrospectiveUITests/Pods-IntrospectiveUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -2273,6 +2276,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1DA44C15843545B33EE8A3745C1D42B7 /* GraphSetupScreenUITests.swift in Sources */,
 				764148555A6661D891E0723BFE875258 /* QueryScreenUITests.swift in Sources */,
 				2641BC2303A865CFD5CAA09D34F700F9 /* RecordScreenUITests.swift in Sources */,
 				A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */,

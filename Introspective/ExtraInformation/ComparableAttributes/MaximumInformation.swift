@@ -11,7 +11,7 @@ import Foundation
 public final class MaximumInformation<AttributeType: Comparable>: AnyInformation {
 
 	public final override var name: String { return "Maximum" }
-	public final override var description: String { return name + " " + attribute.name }
+	public final override var description: String { return name + " " + attribute.name.localizedLowercase }
 
 	public required init(_ attribute: Attribute) {
 		super.init(attribute)

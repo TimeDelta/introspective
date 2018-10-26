@@ -53,6 +53,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 				xAxisButton.setTitle("X-Axis: " + text, for: .normal)
 				UiUtil.setButton(yAxisButton, enabled: true)
 			}
+			xAxisButton.accessibilityValue = xAxisButton.currentTitle
 			updateShowGraphButtonState()
 		}
 	}
@@ -74,6 +75,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 				description.removeLast()
 				yAxisButton.setTitle(description, for: .normal)
 			}
+			yAxisButton.accessibilityValue = yAxisButton.currentTitle
 			updateShowGraphButtonState()
 		}
 	}

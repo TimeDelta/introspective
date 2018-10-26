@@ -61,7 +61,7 @@ extension ChooseCalendarComponentViewController: UIPickerViewDataSource {
 extension ChooseCalendarComponentViewController: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return CalendarComponentAttribute.supportedComponents[row].description
+		return CalendarComponentAttribute.supportedComponents[row].description.localizedCapitalized
 	}
 
 	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

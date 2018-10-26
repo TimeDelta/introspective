@@ -59,6 +59,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 				queryButton.setTitle("Query chosen (click to change)", for: .normal)
 				UiUtil.setButton(clearQueryButton, enabled: true, hidden: false)
 			}
+			queryButton.accessibilityValue = queryButton.currentTitle
 		}
 	}
 	private final var xAxis: AttributeOrInformation! {
@@ -68,7 +69,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 				yAxis = nil
 				UiUtil.setButton(yAxisButton, enabled: false)
 			} else if let attribute = xAxis.attribute {
-				xAxisButton.setTitle("X-Axis: " + attribute.name, for: .normal)
+				xAxisButton.setTitle("X-Axis: " + attribute.name.localizedLowercase, for: .normal)
 				UiUtil.setButton(yAxisButton, enabled: true)
 			} else if let information = xAxis.information {
 				var text = information.description.localizedLowercase
@@ -78,6 +79,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 				xAxisButton.setTitle("X-Axis: " + text, for: .normal)
 				UiUtil.setButton(yAxisButton, enabled: true)
 			}
+			xAxisButton.accessibilityValue = xAxisButton.currentTitle
 			updateShowGraphButtonState()
 		}
 	}
@@ -98,6 +100,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 				description.removeLast()
 				yAxisButton.setTitle(description, for: .normal)
 			}
+			yAxisButton.accessibilityValue = yAxisButton.currentTitle
 			updateShowGraphButtonState()
 		}
 	}

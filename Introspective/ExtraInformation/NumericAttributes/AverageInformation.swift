@@ -11,7 +11,7 @@ import Foundation
 public final class AverageInformation: AnyInformation {
 
 	public final override var name: String { return "Average" }
-	public final override var description: String { return name + " " + attribute.name }
+	public final override var description: String { return name + " " + attribute.name.localizedLowercase }
 
 	public required init(_ attribute: Attribute) {
 		super.init(attribute)

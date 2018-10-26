@@ -66,7 +66,7 @@ extension ChooseAttributeViewController: UIPickerViewDataSource {
 extension ChooseAttributeViewController: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return attributes[row].name
+		return attributes[row].name.localizedCapitalized
 	}
 
 	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

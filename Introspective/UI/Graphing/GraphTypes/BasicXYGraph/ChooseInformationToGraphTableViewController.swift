@@ -25,13 +25,14 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 		didSet { chosenInformation = chosenInformation ?? [ExtraInformation]() }
 	}
 
-	private final var attributeEditIndex: Int!
 	private final var informationEditIndex: Int!
+
+	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
-		// TODO - support editing
-		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedInformation), name: Me.editedInformation, object: nil)
+		navigationItem.rightBarButtonItem = editButtonItem
+		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedInformation), name: Me.editedInformation, object: nil) 
 	}
 
 	// MARK: - TableView Data Source
@@ -61,6 +62,16 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 		navigationController!.pushViewController(controller, animated: true)
 	}
 
+	final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
+			self.chosenInformation.remove(at: indexPath.row)
+			tableView.deleteRows(at: [indexPath], with: .fade)
+			tableView.reloadData()
+		}
+
+		return [delete]
+	}
+
 	// MARK: - Button Actions
 
 	@IBAction final func addButtonPressed(_ sender: Any) {
@@ -73,6 +84,16 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 		}
 		self.chosenInformation.append(newInformation)
 		self.tableView.reloadData()
+	}
+
+	@IBAction final func clearButtonPressed(_ sender: Any) {
+		var indexPaths = [IndexPath]()
+		for i in 0 ..< chosenInformation.count {
+			indexPaths.append(IndexPath(row: i, section: 0))
+		}
+		chosenInformation = []
+		tableView.deleteRows(at: indexPaths, with: .fade)
+		tableView.reloadData()
 	}
 
 	@IBAction final func doneButtonPressed(_ sender: Any) {

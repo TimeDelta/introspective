@@ -74,6 +74,7 @@ final class GraphSetupViewController: UIViewController {
 
 	private final func updateChooseGraphTypeButtonTitle() {
 		graphTypeButton.setTitle(graphType.description, for: .normal)
+		graphTypeButton.accessibilityValue = graphType.description
 	}
 
 	private final func updateSubView() {

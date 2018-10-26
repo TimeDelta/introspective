@@ -18,6 +18,12 @@ final class RecordScreenUITests: UITest {
 	private static let day = "12"
 	private static let year = "2012"
 
+	final override func tearDown() {
+		app.tabBars.buttons["Settings"].tap()
+		app.tables.buttons["delete core data button"].tap()
+		super.tearDown()
+	}
+
 	func testRecordMood_resetsNoteAndMoodRating() {
 		// when
 		let ratingLabel = app.tables.staticTexts["3.5 / 7"]
@@ -389,56 +395,10 @@ final class RecordScreenUITests: UITest {
 		}
 	}
 
-	/// Assumes AM time
-	private final func setDatePicker(_ queryString: String? = nil, to date: Date) {
-		let datePickers = app.datePickers
-		let datePickerWheels: XCUIElementQuery
-		if let queryString = queryString {
-			datePickerWheels = datePickers[queryString].pickerWheels
-		} else {
-			datePickerWheels = datePickers.pickerWheels
-		}
-		let dateStrings = convertDateToStringComponents(date)
-		if datePickerWheels.count == 3 { // date only
-			datePickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: dateStrings[.month]!)
-			datePickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: dateStrings[.day]!)
-			datePickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: dateStrings[.year]!)
-		} else { // date and time
-			let monthAndDayText = String(dateStrings[.month]!.prefix(3)) + " " + dateStrings[.day]!
-			var hourText = dateStrings[.hour]!
-			let hour = Int(hourText)!
-			if hour > 12 {
-				hourText = String(hour - 12)
-			}
-			datePickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: monthAndDayText)
-			datePickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: hourText)
-			datePickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: dateStrings[.minute]!)
-			datePickerWheels.element(boundBy: 3).adjust(toPickerWheelValue: dateStrings[.timeZone]!)
-		}
-	}
-
 	private final func filterMedications(by searchText: String) {
 		let searchMedicationsField = app.searchFields["Search Medications"]
 		searchMedicationsField.tap()
 		searchMedicationsField.typeText(searchText)
-	}
-
-	private final func convertDateToStringComponents(_ date: Date) -> [Calendar.Component: String]{
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "LLLL"
-		let month = dateFormatter.string(from: date)
-		dateFormatter.dateFormat = "YYYY"
-		let year = dateFormatter.string(from: date)
-		dateFormatter.dateFormat = "d"
-		let day = dateFormatter.string(from: date)
-		dateFormatter.dateFormat = "H"
-		let hour = dateFormatter.string(from: date)
-		dateFormatter.dateFormat = "mm"
-		let minute = dateFormatter.string(from: date)
-		dateFormatter.dateFormat = "a"
-		let amPm = dateFormatter.string(from: date)
-
-		return [.year: year, .month: month, .day: day, .hour: hour, .minute: minute, .timeZone: amPm]
 	}
 
 	private final func doseDescription(dosage: String? = nil, date: Date) -> String {

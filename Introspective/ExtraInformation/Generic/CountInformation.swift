@@ -11,7 +11,7 @@ import Foundation
 public final class CountInformation: AnyInformation {
 
 	public final override var name: String { return "Count" }
-	public final override var description: String { return "count" }
+	public final override var description: String { return name }
 
 	public required init(_ attribute: Attribute) {
 		super.init(attribute)

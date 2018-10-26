@@ -15,7 +15,7 @@ public final class OldestDateInformation: AnyInformation {
 	static let noSamplesMessage = "No samples between given start and end dates"
 
 	public final override var name: String { return "Oldest" }
-	public final override var description: String { return name + " " + attribute.name }
+	public final override var description: String { return name + " " + attribute.name.localizedLowercase }
 
 	public required init(_ attribute: Attribute) {
 		super.init(attribute)

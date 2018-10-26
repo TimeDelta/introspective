@@ -133,6 +133,7 @@ final class XAxisSetupViewController: UIViewController {
 				UiUtil.setView(informationPicker, enabled: true, hidden: false)
 				UiUtil.setButton(clearGroupingButton, enabled: true, hidden: false)
 			}
+			chooseGroupingButton.accessibilityValue = chooseGroupingButton.currentTitle
 		}
 	}
 }
@@ -163,10 +164,10 @@ extension XAxisSetupViewController: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		if pickerView == attributePicker {
-			return attributes[row].name
+			return attributes[row].name.localizedCapitalized
 		}
 		if pickerView == informationPicker {
-			return getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute).name
+			return getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute).name.localizedCapitalized
 		}
 		os_log("Unknown UIPickerView when determining row title: '%@'", type: .error, pickerView.restorationIdentifier ?? "")
 		return nil

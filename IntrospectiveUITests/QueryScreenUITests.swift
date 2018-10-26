@@ -10,10 +10,16 @@ import XCTest
 
 final class QueryScreenUITests: UITest {
 
+	final override func tearDown() {
+		app.tabBars.buttons["Settings"].tap()
+		app.tables.buttons["delete core data button"].tap()
+		super.tearDown()
+	}
+
 	func testChangingMainSampleType_changesDisplayedTextToNewSampleTypeName() {
 		// given
 		app.tabBars.buttons["Explore"].tap()
-		app.collectionViews.children(matching: .cell).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element.tap()
+		app.collectionViews.staticTexts["Query"].tap()
 		app.tables.staticTexts["Blood Pressure"].tap()
 
 		// when

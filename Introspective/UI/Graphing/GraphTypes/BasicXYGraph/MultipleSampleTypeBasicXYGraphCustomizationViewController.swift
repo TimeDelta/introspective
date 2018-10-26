@@ -60,6 +60,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 				chooseXAxisQueryButton.isEnabled = true
 				chooseXAxisInformationButton.isEnabled = true
 			}
+			chooseXAxisSampleTypeButton.accessibilityValue = chooseXAxisSampleTypeButton.currentTitle
 		}
 	}
 	private final var oldYAxisSampleType: Sample.Type!
@@ -74,6 +75,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 				chooseYAxisQueryButton.isEnabled = true
 				chooseYAxisInformationButton.isEnabled = true
 			}
+			chooseYAxisSampleTypeButton.accessibilityValue = chooseYAxisSampleTypeButton.currentTitle
 		}
 	}
 	private final var xAxisQuery: Query? {
@@ -82,9 +84,10 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 				chooseXAxisQueryButton.setTitle("Choose query (optional)", for: .normal)
 				UiUtil.setButton(clearXAxisQueryButton, enabled: false, hidden: true)
 			} else {
-				chooseXAxisQueryButton.setTitle("X-axis query chosen (click to change)", for: .normal)
+				chooseXAxisQueryButton.setTitle("Query chosen (click to change)", for: .normal)
 				UiUtil.setButton(clearXAxisQueryButton, enabled: true, hidden: false)
 			}
+			chooseXAxisQueryButton.accessibilityValue = chooseXAxisQueryButton.currentTitle
 		}
 	}
 	private final var yAxisQuery: Query? {
@@ -93,9 +96,10 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 				chooseYAxisQueryButton.setTitle("Choose query (optional)", for: .normal)
 				UiUtil.setButton(clearYAxisQueryButton, enabled: false, hidden: true)
 			} else {
-				chooseYAxisQueryButton.setTitle("Y-axis query chosen (click to change)", for: .normal)
+				chooseYAxisQueryButton.setTitle("Query chosen (click to change)", for: .normal)
 				UiUtil.setButton(clearYAxisQueryButton, enabled: true, hidden: false)
 			}
+			chooseYAxisQueryButton.accessibilityValue = chooseYAxisQueryButton.currentTitle
 		}
 	}
 	private final var grouping: Calendar.Component? {
@@ -103,6 +107,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			if grouping != nil {
 				chooseGroupingButton.setTitle("Group by same " + grouping!.description.localizedLowercase, for: .normal)
 			}
+			chooseGroupingButton.accessibilityValue = chooseGroupingButton.currentTitle
 			updateShowGraphButtonState()
 		}
 	}
@@ -111,8 +116,9 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			if xAxisInformation == nil {
 				chooseXAxisInformationButton.setTitle("Choose information", for: .normal)
 			} else {
-				chooseXAxisInformationButton.setTitle(xAxisInformation!.description, for: .normal)
+				chooseXAxisInformationButton.setTitle(xAxisInformation!.description.localizedLowercase, for: .normal)
 			}
+			chooseXAxisInformationButton.accessibilityValue = chooseXAxisInformationButton.currentTitle
 			updateShowGraphButtonState()
 		}
 	}
@@ -123,12 +129,13 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			} else {
 				var description = ""
 				for information in yAxisInformation! {
-					description += information.description + ", "
+					description += information.description.localizedLowercase + ", "
 				}
 				description.removeLast()
 				description.removeLast()
 				chooseYAxisInformationButton.setTitle(description, for: .normal)
 			}
+			chooseYAxisInformationButton.accessibilityValue = chooseYAxisInformationButton.currentTitle
 			updateShowGraphButtonState()
 		}
 	}

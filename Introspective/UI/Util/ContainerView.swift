@@ -19,7 +19,7 @@ public final class ContainerView<T: UIViewController>: UIView {
 	}
 
 	public required init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
+		fatalError("init(coder:) has not been implemented - cannot use with storyboards")
 	}
 
 	final func install(_ controller: T) {

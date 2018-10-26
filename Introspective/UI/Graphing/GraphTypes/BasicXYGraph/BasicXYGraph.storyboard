@@ -26,6 +26,7 @@
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Error message" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="8" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eHk-ja-Gb6">
                                 <rect key="frame" x="16" y="271" width="343" height="124"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="error message" label="error message"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -58,7 +59,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="xYE-kP-cet">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" restorationIdentifier="number of data types segmented control" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="xYE-kP-cet">
                                 <rect key="frame" x="16" y="20" width="343" height="29"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <segments>
@@ -112,6 +113,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TGf-6q-C2U">
                                 <rect key="frame" x="46" y="270" width="284" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" hint="Choose the query to use for the y-axis (optional)" identifier="choose y-axis query button" label="choose y-axis query button"/>
                                 <state key="normal" title="Choose query (optional)"/>
                                 <connections>
                                     <action selector="chooseYAxisQueryButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="w5P-bo-GF2"/>
@@ -120,6 +122,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zY6-nj-87d">
                                 <rect key="frame" x="16" y="232" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="choose y-axis data type button" label="choose y-axis data type button"/>
                                 <state key="normal" title="Choose data type"/>
                                 <connections>
                                     <action selector="chooseYAxisSampleTypeButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="iwL-3n-tFS"/>
@@ -128,6 +131,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mxe-Wc-9Po">
                                 <rect key="frame" x="16" y="308" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="choose y-axis information button" label="choose y-axis information button"/>
                                 <state key="normal" title="Choose information"/>
                                 <connections>
                                     <action selector="chooseYAxisInformationButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="Bm6-4O-3BS"/>
@@ -136,6 +140,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WWB-wl-rDn">
                                 <rect key="frame" x="16" y="363" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="choose grouping button" label="choose grouping button"/>
                                 <state key="normal" title="Choose grouping"/>
                                 <connections>
                                     <action selector="chooseGroupingButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="4iT-zj-ASk"/>
@@ -145,6 +150,7 @@
                                 <rect key="frame" x="16" y="401" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <accessibility key="accessibilityConfiguration" identifier="show me the graph button" label="show me the graph button"/>
                                 <state key="normal" title="Show me the graph">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -179,6 +185,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZbO-41-0rU">
                                 <rect key="frame" x="46" y="91" width="284" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" hint="Choose the query to use for the x-axis (optional)" identifier="choose x-axis query button" label="choose x-axis query button"/>
                                 <state key="normal" title="Choose query (optional)"/>
                                 <connections>
                                     <action selector="chooseXAxisQueryButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="PAG-PI-r7w"/>
@@ -187,6 +194,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8xU-zL-oJE">
                                 <rect key="frame" x="16" y="57" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="choose x-axis data type button" label="choose x-axis data type button"/>
                                 <state key="normal" title="Choose data type"/>
                                 <connections>
                                     <action selector="chooseXAxisSampleTypeButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="UZp-TT-3Fh"/>
@@ -195,6 +203,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hdM-QY-YKD">
                                 <rect key="frame" x="16" y="129" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="choose x-axis information button" label="choose x-axis information button"/>
                                 <state key="normal" title="Choose information"/>
                                 <connections>
                                     <action selector="chooseXAxisInformationButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="ZaT-Ca-puI"/>
@@ -203,6 +212,7 @@
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xwR-Ud-Thz">
                                 <rect key="frame" x="16" y="278" width="22" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="clear y-axis query button" label="clear y-axis query button"/>
                                 <state key="normal" title="X"/>
                                 <connections>
                                     <action selector="clearYAxisQueryButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="KE6-sK-srW"/>
@@ -211,6 +221,7 @@
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O6I-UQ-OHk">
                                 <rect key="frame" x="16" y="95" width="22" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="clear x-axis query button" label="clear x-axis query button"/>
                                 <state key="normal" title="X"/>
                                 <connections>
                                     <action selector="clearXAxisQueryButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="E5S-yk-1nW"/>
@@ -247,7 +258,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" misplaced="YES" id="cwI-mE-mJ8">
+                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="cwI-mE-mJ8">
                             <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             <items>
@@ -257,6 +268,12 @@
                                     </connections>
                                 </barButtonItem>
                                 <barButtonItem style="plain" systemItem="flexibleSpace" id="rQP-tG-DUJ"/>
+                                <barButtonItem title="Clear" id="y2c-fI-ybP">
+                                    <connections>
+                                        <action selector="clearButtonPressed:" destination="FBF-3k-koa" id="Bo2-l5-iLm"/>
+                                    </connections>
+                                </barButtonItem>
+                                <barButtonItem style="plain" systemItem="flexibleSpace" id="pBQ-cM-vlR"/>
                                 <barButtonItem title="Done" id="rVb-q8-vkS">
                                     <connections>
                                         <action selector="doneButtonPressed:" destination="FBF-3k-koa" id="Ht8-9I-nQ1"/>
@@ -293,7 +310,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yc8-qE-dOP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-519" y="155"/>
+            <point key="canvasLocation" x="-519" y="153"/>
         </scene>
         <!--Graph Setup-->
         <scene sceneID="Z8t-2U-Zhj">
@@ -307,6 +324,7 @@
                                 <rect key="frame" x="16" y="96" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <accessibility key="accessibilityConfiguration" identifier="show me the graph button" label="show me the graph button"/>
                                 <state key="normal" title="Show me the graph">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -320,6 +338,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c9B-Ny-KM0">
                                 <rect key="frame" x="16" y="20" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="choose x-axis information button" label="choose x-axis information button"/>
                                 <state key="normal" title="Choose x-axis information"/>
                                 <connections>
                                     <action selector="editXAxis:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="SIG-oF-HUC"/>
@@ -328,6 +347,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nr2-WX-IXz">
                                 <rect key="frame" x="16" y="58" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="choose y-axis information button" label="choose y-axis information button"/>
                                 <state key="normal" title="Choose y-axis information"/>
                                 <connections>
                                     <action selector="editYAxis:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="eFn-m0-eWX"/>
@@ -360,6 +380,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Oit-Yb-YZR">
                                 <rect key="frame" x="46" y="336" width="282" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <accessibility key="accessibilityConfiguration" hint="Set the time unit over which to aggregate (optional)" identifier="aggregation time unit button" label="aggregation time unit button"/>
                                 <state key="normal" title="Choose grouping (optional)"/>
                                 <connections>
                                     <action selector="chooseGroupingButtonPressed:" destination="rzj-bc-0U9" eventType="touchUpInside" id="8vx-Xg-qsz"/>
@@ -368,15 +389,22 @@
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hd0-Cd-LPt">
                                 <rect key="frame" x="0.0" y="170" width="375" height="162"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="attribute picker" label="attribute picker">
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
                             </pickerView>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Aky-Nj-Y3S">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="162"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="grouping method picker" label="grouping method picker">
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
                             </pickerView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iNB-rE-c4n">
                                 <rect key="frame" x="16" y="374" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <accessibility key="accessibilityConfiguration" identifier="save button" label="save button"/>
                                 <state key="normal" title="Accept">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -388,6 +416,7 @@
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kPG-gF-MxN">
                                 <rect key="frame" x="16" y="340" width="22" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="clear grouping button" label="clear grouping button"/>
                                 <state key="normal" title="X"/>
                                 <connections>
                                     <action selector="clearGroupingButtonPressed:" destination="rzj-bc-0U9" eventType="touchUpInside" id="EeO-xs-vF9"/>
@@ -421,6 +450,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ss2-tD-fkF">
                                 <rect key="frame" x="16" y="228" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="choose x-axis information button" label="choose x-axis information button"/>
                                 <state key="normal" title="Choose x-axis information"/>
                                 <connections>
                                     <action selector="editXAxis:" destination="lY4-vc-GUS" eventType="touchUpInside" id="Uo8-HH-HLO"/>
@@ -429,6 +459,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Pe-Ia-XeU">
                                 <rect key="frame" x="16" y="266" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="choose y-axis information button" label="choose y-axis information button"/>
                                 <state key="normal" title="Choose y-axis information"/>
                                 <connections>
                                     <action selector="editYAxis:" destination="lY4-vc-GUS" eventType="touchUpInside" id="PEc-Ec-vJe"/>
@@ -438,6 +469,7 @@
                                 <rect key="frame" x="16" y="304" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <accessibility key="accessibilityConfiguration" identifier="show me the graph button" label="show me the graph button"/>
                                 <state key="normal" title="Show me the graph">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -451,6 +483,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zb1-Dx-Wvx">
                                 <rect key="frame" x="46" y="190" width="282" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" hint="Choose the query to use (optional)" identifier="choose query button" label="choose query button"/>
                                 <state key="normal" title="Choose query (optional)"/>
                                 <connections>
                                     <action selector="chooseQueryButtonPressed:" destination="lY4-vc-GUS" eventType="touchUpInside" id="cQE-9E-XvS"/>
@@ -459,10 +492,14 @@
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o00-l3-PQb">
                                 <rect key="frame" x="0.0" y="20" width="375" height="162"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="sample type picker" label="sample type picker">
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
                             </pickerView>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JDS-g5-far">
                                 <rect key="frame" x="16" y="194" width="22" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="clear query button" label="clear query button"/>
                                 <state key="normal" title="X"/>
                                 <connections>
                                     <action selector="clearQueryButtonPressed:" destination="lY4-vc-GUS" eventType="touchUpInside" id="jbX-G2-t5T"/>
@@ -495,7 +532,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" misplaced="YES" id="506-6p-G6g">
+                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="506-6p-G6g">
                             <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             <items>
@@ -505,6 +542,12 @@
                                     </connections>
                                 </barButtonItem>
                                 <barButtonItem style="plain" systemItem="flexibleSpace" id="C2I-SV-izv"/>
+                                <barButtonItem title="Clear" id="Jmy-wE-O9E">
+                                    <connections>
+                                        <action selector="clearButtonPressed:" destination="1XS-07-gq8" id="Ynq-ak-IyJ"/>
+                                    </connections>
+                                </barButtonItem>
+                                <barButtonItem style="plain" systemItem="flexibleSpace" id="1CM-j8-2oq"/>
                                 <barButtonItem title="Done" id="SUA-SD-5nJ">
                                     <connections>
                                         <action selector="doneButtonPressed:" destination="1XS-07-gq8" id="DDD-E6-IBb"/>
@@ -544,7 +587,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kHY-VB-V0a" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1226" y="154"/>
+            <point key="canvasLocation" x="-1226" y="153"/>
         </scene>
     </scenes>
 </document>

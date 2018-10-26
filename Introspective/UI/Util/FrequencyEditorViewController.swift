@@ -86,6 +86,6 @@ extension FrequencyEditorViewController: UIPickerViewDataSource {
 extension FrequencyEditorViewController: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return Me.timeUnits[row].description
+		return Me.timeUnits[row].description.localizedCapitalized
 	}
 }

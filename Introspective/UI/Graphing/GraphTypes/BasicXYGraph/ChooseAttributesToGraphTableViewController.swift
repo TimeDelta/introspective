@@ -35,7 +35,6 @@ final class ChooseAttributesToGraphTableViewController: UITableViewController {
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
-		editButtonItem.isEnabled = true
 		if selectedAttributes.count == allowedAttributes.count {
 			addButton.isEnabled = false
 		}
@@ -47,6 +46,7 @@ final class ChooseAttributesToGraphTableViewController: UITableViewController {
 			})
 			present(alert, animated: false)
 		}
+		navigationItem.rightBarButtonItem = editButtonItem
 		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedAttribute), name: Me.editedAttribute, object: nil)
 	}
 
@@ -58,7 +58,7 @@ final class ChooseAttributesToGraphTableViewController: UITableViewController {
 
 	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-		cell.textLabel?.text = selectedAttributes[indexPath.row].name
+		cell.textLabel?.text = selectedAttributes[indexPath.row].name.localizedCapitalized
 		return cell
 	}
 
@@ -102,6 +102,17 @@ final class ChooseAttributesToGraphTableViewController: UITableViewController {
 		if selectedAttributes.count == allowedAttributes.count {
 			addButton.isEnabled = false
 		}
+		tableView.reloadData()
+	}
+
+	@IBAction final func clearButtonPressed(_ sender: Any) {
+		var indexPaths = [IndexPath]()
+		for i in 0 ..< selectedAttributes.count {
+			indexPaths.append(IndexPath(row: i, section: 0))
+		}
+		selectedAttributes = []
+		self.addButton.isEnabled = true
+		tableView.deleteRows(at: indexPaths, with: .fade)
 		tableView.reloadData()
 	}
 

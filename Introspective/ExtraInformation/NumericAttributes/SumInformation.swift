@@ -12,7 +12,7 @@ import os
 public final class SumInformation: AnyInformation {
 
 	public final override var name: String { get { return "Total" } }
-	public final override var description: String { return name + " " + attribute.name }
+	public final override var description: String { return name + " " + attribute.name.localizedLowercase }
 
 	public required init(_ attribute: Attribute) {
 		super.init(attribute)

@@ -63,7 +63,7 @@ extension ChooseSampleTypeViewController: UIPickerViewDataSource {
 extension ChooseSampleTypeViewController: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return DependencyInjector.sample.allTypes()[row].name
+		return DependencyInjector.sample.allTypes()[row].name.localizedCapitalized
 	}
 
 	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

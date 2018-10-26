@@ -120,10 +120,10 @@ extension SelectAttributeOrInformationViewController: UIPickerViewDelegate {
 
 	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		if pickerView == attributePicker {
-			return sampleType.attributes[row].name
+			return sampleType.attributes[row].name.localizedCapitalized
 		}
 		if pickerView == informationPicker {
-			return getApplicableInformationTypesForSelectedAttribute()[row].init(attribute).name
+			return getApplicableInformationTypesForSelectedAttribute()[row].init(attribute).name.localizedCapitalized
 		}
 		os_log("Unknown picker view while attempting to retrieve title for row", type: .error)
 		return nil
