@@ -33,7 +33,7 @@ public final class ExtraInformationFactoryImpl: ExtraInformationFactory {
 	]
 
 	public final func getApplicableInformationTypes(forAttribute attribute: Attribute) -> [ExtraInformation.Type] {
-		var applicableInformationTypes = Me.genericInformationTypes
+		var applicableInformationTypes = [ExtraInformation.Type]()
 		if attribute is DoubleAttribute {
 			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
 			applicableInformationTypes.append(MaximumInformation<Double>.self)
@@ -54,11 +54,12 @@ public final class ExtraInformationFactoryImpl: ExtraInformationFactory {
 			applicableInformationTypes.append(MinimumInformation<Frequency>.self)
 		}
 		// TODO - additional attribute types
+		applicableInformationTypes.append(contentsOf: Me.genericInformationTypes)
 		return applicableInformationTypes
 	}
 
 	public final func getApplicableNumericInformationTypes(forAttribute attribute: Attribute) -> [ExtraInformation.Type] {
-		var applicableInformationTypes: [ExtraInformation.Type] = [CountInformation.self]
+		var applicableInformationTypes = [ExtraInformation.Type]()
 		if attribute is DoubleAttribute {
 			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
 			applicableInformationTypes.append(MaximumInformation<Double>.self)
@@ -68,6 +69,7 @@ public final class ExtraInformationFactoryImpl: ExtraInformationFactory {
 			applicableInformationTypes.append(MaximumInformation<Int>.self)
 			applicableInformationTypes.append(MinimumInformation<Int>.self)
 		}
+		applicableInformationTypes.append(CountInformation.self)
 		return applicableInformationTypes
 	}
 }
