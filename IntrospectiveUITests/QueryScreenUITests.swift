@@ -10,12 +10,6 @@ import XCTest
 
 final class QueryScreenUITests: UITest {
 
-	final override func tearDown() {
-		app.tabBars.buttons["Settings"].tap()
-		app.tables.buttons["delete core data button"].tap()
-		super.tearDown()
-	}
-
 	func testChangingMainSampleType_changesDisplayedTextToNewSampleTypeName() {
 		// given
 		app.tabBars.buttons["Explore"].tap()
@@ -40,7 +34,7 @@ final class QueryScreenUITests: UITest {
 		// when
 		app.tables.cells.allElementsBoundByIndex[1].tap()
 		app.pickerWheels["Blood Pressure"].adjust(toPickerWheelValue: "Body Mass Index")
-		app.scrollViews.otherElements.buttons["Accept"].tap()
+		app.scrollViews.otherElements.buttons["save attributed button"].tap()
 
 		// then
 		XCTAssert(app.tables.staticTexts["Body Mass Index"].exists)
@@ -57,14 +51,14 @@ final class QueryScreenUITests: UITest {
 		app.tables.cells.allElementsBoundByIndex[1].tap()
 		app.pickerWheels["Start and end timestamps are the same as"].adjust(toPickerWheelValue: "Within <number> <time_unit>s of")
 		app.switches.allElementsBoundByIndex[0].tap()
-		app.scrollViews.otherElements.buttons["Minute"].tap()
+		app.scrollViews.otherElements.buttons["set time unit button"].tap()
 		app.pickerWheels["Minute"].adjust(toPickerWheelValue: "Day")
-		app.buttons["Save"].tap()
-		app.scrollViews.otherElements.buttons["5"].tap()
+		app.buttons["save button"].tap()
+		app.scrollViews.otherElements.buttons["set number of time units button"].tap()
 		app.textFields.containing(.button, identifier:"Clear text").element.tap()
 		app.textFields.allElementsBoundByIndex[0].typeText("7")
-		app.buttons["Save"].tap()
-		app.scrollViews.otherElements.buttons["Accept"].tap()
+		app.buttons["save button"].tap()
+		app.scrollViews.otherElements.buttons["save attributed button"].tap()
 
 		// then
 		XCTAssert(app.tables.staticTexts["Within 57 days of most recent"].exists)
@@ -85,8 +79,8 @@ final class QueryScreenUITests: UITest {
 		app.datePickers.pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "June")
 		app.datePickers.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "18")
 		app.datePickers.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "2012")
-		app.buttons["Save"].tap()
-		app.scrollViews.otherElements.buttons["Accept"].tap()
+		app.buttons["save button"].tap()
+		app.scrollViews.otherElements.buttons["save attributed button"].tap()
 
 		// then
 		XCTAssert(app.tables.staticTexts["After June 18 2012"].exists)
@@ -102,7 +96,7 @@ final class QueryScreenUITests: UITest {
 		app.sheets["What would you like to add?"].buttons["Data Type"].tap()
 		app.tables.cells.allElementsBoundByIndex[2].tap()
 		app.pickerWheels["Blood Pressure"].adjust(toPickerWheelValue: "Body Mass Index")
-		app.scrollViews.otherElements.buttons["Accept"].tap()
+		app.scrollViews.otherElements.buttons["save attributed button"].tap()
 
 		// when
 		app.tables.buttons["Edit"].tap()
@@ -136,7 +130,7 @@ final class QueryScreenUITests: UITest {
 		app.sheets["What would you like to add?"].buttons["Data Type"].tap()
 		app.tables.cells.allElementsBoundByIndex[1].tap()
 		app.pickerWheels["Blood Pressure"].adjust(toPickerWheelValue: "Body Mass Index")
-		app.scrollViews.otherElements.buttons["Accept"].tap()
+		app.scrollViews.otherElements.buttons["save attributed button"].tap()
 		app.tables.buttons["Add"].tap()
 		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
 

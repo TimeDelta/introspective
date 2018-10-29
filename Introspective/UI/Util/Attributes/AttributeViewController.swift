@@ -144,5 +144,6 @@ final class AttributeViewController: UIViewController {
 				attributeValueButton.setTitle(attributeValueDescription, for: .normal)
 			}
 		}
+		attributeValueButton.accessibilityIdentifier = "set " + attribute.name.localizedLowercase + " button"
 	}
 }
