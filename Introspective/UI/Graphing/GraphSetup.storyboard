@@ -75,7 +75,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <accessibility key="accessibilityConfiguration" identifier="save graph type button" label="save graph type button"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="Accept"/>
+                                <state key="normal" title="Save"/>
                                 <connections>
                                     <action selector="acceptButtonPressedWithSender:" destination="aVV-b1-BAQ" eventType="touchUpInside" id="Y8e-VZ-Kq6"/>
                                 </connections>

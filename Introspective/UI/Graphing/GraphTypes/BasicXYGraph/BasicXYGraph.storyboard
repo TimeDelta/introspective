@@ -404,8 +404,8 @@
                                 <rect key="frame" x="16" y="374" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <accessibility key="accessibilityConfiguration" identifier="save button" label="save button"/>
-                                <state key="normal" title="Accept">
+                                <accessibility key="accessibilityConfiguration" identifier="save x-axis button" label="save x-axis button"/>
+                                <state key="normal" title="Save">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>

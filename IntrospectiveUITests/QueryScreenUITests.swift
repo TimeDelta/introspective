@@ -24,7 +24,7 @@ final class QueryScreenUITests: UITest {
 
 		// when
 		app.pickerWheels["Blood Pressure"].adjust(toPickerWheelValue: "Heart Rate")
-		app.buttons["Accept"].tap()
+		app.buttons["save button"].tap()
 
 		// then
 		XCTAssert(app.tables.staticTexts["Heart Rate"].exists)

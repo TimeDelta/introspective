@@ -345,10 +345,10 @@ final class GraphSetupScreenUITests: UITest {
 		if let aggregation = aggregation {
 			app.buttons["aggregation time unit button"].tap()
 			setPicker("time unit picker", to: aggregation.timeUnit)
-			app.buttons["Accept"].tap()
+			app.buttons["save button"].tap()
 			setPicker("grouping method picker", to: aggregation.method)
 		}
-		app.buttons["save button"].tap()
+		app.buttons["save x-axis button"].tap()
 	}
 
 	private final func setMultipleDataTypeXAxis(attribute: String, aggregationMethod: String) {
@@ -371,7 +371,7 @@ final class GraphSetupScreenUITests: UITest {
 		if let type = type {
 			setPicker("data type picker", to: type)
 		}
-		app.buttons["Accept"].tap()
+		app.buttons["save button"].tap()
 	}
 
 	private final func setYAxisAttributes(_ attributes: [String]) {
@@ -381,7 +381,7 @@ final class GraphSetupScreenUITests: UITest {
 			app.tables.buttons["Add"].tap()
 			app.tables.staticTexts.allElementsBoundByIndex.last?.tap()
 			setPicker("attribute picker", to: attribute)
-			app.buttons["Accept"].tap()
+			app.buttons["save button"].tap()
 		}
 		app.tables.buttons["Done"].tap()
 	}
@@ -394,7 +394,7 @@ final class GraphSetupScreenUITests: UITest {
 			app.tables.staticTexts.allElementsBoundByIndex.last?.tap()
 			setPicker("attribute picker", to: entry.attribute)
 			setPicker("grouping method picker", to: entry.information)
-			app.buttons["Accept"].tap()
+			app.buttons["save button"].tap()
 		}
 		app.tables.buttons["Done"].tap()
 	}

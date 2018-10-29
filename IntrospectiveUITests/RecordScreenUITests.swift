@@ -149,7 +149,7 @@ final class RecordScreenUITests: UITest {
 		app.tables.buttons["filter dates button"].tap()
 		app.switches["from date switch"].tap()
 		app.switches["to date switch"].tap()
-		app.buttons["Save"].tap()
+		app.buttons["save button"].tap()
 
 		// then
 		XCTAssert(!app.tables.staticTexts[dose].exists)
@@ -332,13 +332,13 @@ final class RecordScreenUITests: UITest {
 			numberOfTimesField.tap()
 			numberOfTimesField.typeText(frequency.times)
 			app.pickerWheels["Day"].adjust(toPickerWheelValue: frequency.unit.capitalized)
-			app.buttons["Save"].tap()
+			app.buttons["save button"].tap()
 		}
 
 		if let startedOn = startedOn {
 			app.buttons["set started on button"].tap()
 			setDatePicker(to: startedOn)
-			app.buttons["Accept"].tap()
+			app.buttons["save button"].tap()
 		}
 
 		if let dosage = dosage {
@@ -381,7 +381,7 @@ final class RecordScreenUITests: UITest {
 		app.tables.buttons["Filter Dates"].tap()
 		setFromOrToDate("from", fromDate)
 		setFromOrToDate("to", toDate)
-		app.buttons["Save"].tap()
+		app.buttons["save button"].tap()
 	}
 
 	private final func setFromOrToDate(_ fromOrTo: String, _ date: Date?) {
