@@ -8,9 +8,9 @@
 
 import Foundation
 
-public final class EqualToStringAttributeRestriction: TypedEqualToAttributeRestrictionBase<String>, PredicateAttributeRestriction {
+public final class NotEqualToStringAttributeRestriction: TypedNotEqualToAttributeRestrictionBase<String>, PredicateAttributeRestriction {
 
-	private typealias Me = EqualToStringAttributeRestriction
+	private typealias Me = NotEqualToStringAttributeRestriction
 	public static let valueAttribute = TextAttribute(name: "Value", pluralName: "Values")
 
 	public required convenience init(restrictedAttribute: Attribute) {
@@ -27,6 +27,6 @@ public final class EqualToStringAttributeRestriction: TypedEqualToAttributeRestr
 	}
 
 	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K ==[cd] %@", restrictedAttribute.variableName!, value as! String)
+		return NSPredicate(format: "%K !=[cd] %@", restrictedAttribute.variableName!, value as! String)
 	}
 }
