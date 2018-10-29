@@ -10,13 +10,13 @@ import XCTest
 import SwiftyMocky
 @testable import Introspective
 
-class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
+final class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 
-	fileprivate typealias Me = EndsWithStringAttributeRestrictionUnitTests
-	fileprivate static let restrictedAttribute = TextAttribute(name: "text")
-	fileprivate static let suffixAttribute = EndsWithStringAttributeRestriction.suffixAttribute
+	private typealias Me = EndsWithStringAttributeRestrictionUnitTests
+	private static let restrictedAttribute = TextAttribute(name: "text")
+	private static let suffixAttribute = EndsWithStringAttributeRestriction.suffixAttribute
 
-	fileprivate var restriction: EndsWithStringAttributeRestriction!
+	private var restriction: EndsWithStringAttributeRestriction!
 
 	override func setUp() {
 		super.setUp()
@@ -31,7 +31,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSuffixAttribute_valueOf_returnsCorrectDate() {
+	func testGivenSuffixAttribute_valueOf_returnsCorrectString() {
 		// given
 		let expectedSuffix = "expected suffix"
 		restriction.suffix = expectedSuffix
@@ -59,7 +59,7 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSuffixAttributeAndValidValue_setAttributeTo_setsDateToCorrectValue() {
+	func testGivenSuffixAttributeAndValidValue_setAttributeTo_setsCorrectValue() {
 		// given
 		let expectedSuffix = "expected suffix"
 
@@ -195,6 +195,44 @@ class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 		// then
 		XCTAssertFalse(endsWith)
+	}
+
+	func testGivenSampleWithDifferentCaseVersionOfValueForRestrictedAttribute_samplePasses_returnsTrue() {
+		// given
+		let sampleValue = "JkflJdkKfejkl"
+		let restrictionValue = "jKFLjDKkFEJKL"
+		let sample = SampleCreatorTestUtil.createSample(withValue: sampleValue, for: Me.restrictedAttribute)
+		restriction.suffix = restrictionValue
+
+		// when
+		let endsWith = try! restriction.samplePasses(sample)
+
+		// then
+		XCTAssert(endsWith)
+	}
+
+	func testGivenSampleWithNilValueAndNonEmptyRestrictionValue_samplePasses_returnsFalse() {
+		// given
+		let sample = SampleCreatorTestUtil.createSample(withValue: nil as String?, for: Me.restrictedAttribute)
+		restriction.suffix = "not empty"
+
+		// when
+		let passes = try! restriction.samplePasses(sample)
+
+		// then
+		XCTAssertFalse(passes)
+	}
+
+	func testGivenSampleWithNilValueAndEmptyRestrictionValue_samplePasses_returnsTrue() {
+		// given
+		let sample = SampleCreatorTestUtil.createSample(withValue: nil as String?, for: Me.restrictedAttribute)
+		restriction.suffix = ""
+
+		// when
+		let passes = try! restriction.samplePasses(sample)
+
+		// then
+		XCTAssert(passes)
 	}
 
 	func testGivenOtherOfDifferentTypes_equalToAttributed_returnsFalse() {

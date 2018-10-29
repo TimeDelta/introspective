@@ -21,12 +21,14 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 		prefixAttribute,
 	]
 
-	public final override var attributedName: String { return "Text starts with" }
+	public final override var attributedName: String { return "Starts with" }
 	public final override var description: String {
 		return restrictedAttribute.name.localizedCapitalized + " starts with '" + prefix + "'"
 	}
 
-	public final var prefix: String
+	public final var prefix: String {
+		didSet { prefix = prefix.localizedLowercase }
+	}
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, prefix: "")
@@ -49,8 +51,8 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 	}
 
 	public final override func samplePasses(_ sample: Sample) throws -> Bool {
-		guard let value = try sample.value(of: restrictedAttribute) as? String else { throw AttributeError.typeMismatch }
-		return value.starts(with: prefix)
+		guard let value = try sample.value(of: restrictedAttribute) as? String? else { throw AttributeError.typeMismatch }
+		return value?.localizedLowercase.starts(with: prefix) ?? prefix.isEmpty
 	}
 
 	public final func toPredicate() -> NSPredicate {

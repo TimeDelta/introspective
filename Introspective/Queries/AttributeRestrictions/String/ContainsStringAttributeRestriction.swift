@@ -21,7 +21,7 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 		substringAttribute,
 	]
 
-	public final override var attributedName: String { return "Text contains" }
+	public final override var attributedName: String { return "Contains" }
 	public final override var description: String {
 		return restrictedAttribute.name.localizedCapitalized + " contains '" + substring + "'"
 	}

@@ -241,6 +241,8 @@
 		A1741703508EA4B538BF55AB8D4C19D4 /* InSameCalendarUnitSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D17C897038BC72D188BF5938E99B20 /* InSameCalendarUnitSubQueryMatcher.swift */; };
 		A1AA6C0832AB2D1D89489B4D593B373F /* RecordMoodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16EBB19F87D1ED49AC879F1EE69BEA1 /* RecordMoodTableViewCell.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
+		A7CF835D79B5D6C392661D53CB129536 /* EqualToStringAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638D433BAB1D657E8CEFF6FE176B1835 /* EqualToStringAttributeRestriction.swift */; };
+		913932D5959B86FA3F3E03901B1DBCE0 /* EqualToStringAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0911B7304AE170982BF441BD95EE48 /* EqualToStringAttributeRestrictionUnitTests.swift */; };
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
 		A34600A18766AE66F0324FF5AB10E114 /* GraphType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */; };
 		A46B458F444FF5C6A7FDBBED46E3A253 /* RecordDataPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87F6CD05F845F22D50E6097CF2DBF9C3 /* RecordDataPageViewController.swift */; };
@@ -616,6 +618,8 @@
 		A1B6336EF7C8BA63691FB3CF1C00CFAD /* DateOnlyAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOnlyAttribute.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
+		638D433BAB1D657E8CEFF6FE176B1835 /* EqualToStringAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToStringAttributeRestriction.swift; sourceTree = "<group>"; };
+		DD0911B7304AE170982BF441BD95EE48 /* EqualToStringAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToStringAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A7232B8CBDA59F9550101241579EE472 /* GreaterThanFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreaterThanFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A7AA8E7D0DDBCC72BB2887FB26298A64 /* HealthKitSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitSample.swift; sourceTree = "<group>"; };
@@ -865,6 +869,7 @@
 				5DC86A8D28A1F585F62D44F4E630D1C6 /* ContainsStringAttributeRestrictionUnitTests.swift */,
 				71631816365A8457E9D54501F903089E /* StartsWithStringAttributeRestrictionUnitTests.swift */,
 				039430D2B64ECEF427478D936F9AC389 /* EndsWithStringAttributeRestrictionUnitTests.swift */,
+				DD0911B7304AE170982BF441BD95EE48 /* EqualToStringAttributeRestrictionUnitTests.swift */,
 			);
 			path = StringAttributes;
 			sourceTree = "<group>";
@@ -1246,6 +1251,7 @@
 				BED716482B371C48E151E872B3C2CBD2 /* ContainsStringAttributeRestriction.swift */,
 				4D6AD28538F5064C8F44517A8FF6642F /* StartsWithStringAttributeRestriction.swift */,
 				00D5C7FC2BB9DCB332D524D2D185D918 /* EndsWithStringAttributeRestriction.swift */,
+				638D433BAB1D657E8CEFF6FE176B1835 /* EqualToStringAttributeRestriction.swift */,
 			);
 			path = String;
 			sourceTree = "<group>";
@@ -2188,6 +2194,7 @@
 				C48BA4B29CA41EA2E88A59AF0D38DBED /* EqualToFrequencyAttributeRestrictionUnitTests.swift in Sources */,
 				F9F0CBB8089A29AC1EBF8446795E46CD /* GreaterThanOrEqualToFrequencyAttributeRestrictionUnitTests.swift in Sources */,
 				69CF197BD406213CDBFB125B4AB48DF4 /* GreaterThanFrequencyAttributeRestrictionUnitTests.swift in Sources */,
+				913932D5959B86FA3F3E03901B1DBCE0 /* EqualToStringAttributeRestrictionUnitTests.swift in Sources */,
 				3D72B3AB61DCCF42216AA1A4A9BF4B26 /* NotEqualToFrequencyAttributeRestrictionUnitTests.swift in Sources */,
 				BF44A51B4F371F766468A2687C529AAB /* LessThanDosageAttributeRestrictionUnitTests.swift in Sources */,
 				484C18AD6C731B0D7DA03B6D4AD1D9BB /* LessThanOrEqualToDosageAttributeRestrictionUnitTests.swift in Sources */,
@@ -2289,6 +2296,7 @@
 			files = (
 				41403708A35C1826B7C49DBCA4C3E587 /* LessThanDosageAttributeRestriction.swift in Sources */,
 				3179BCD7AA54484E9E9432256560CD0D /* LessThanOrEqualToDosageAttributeRestriction.swift in Sources */,
+				A7CF835D79B5D6C392661D53CB129536 /* EqualToStringAttributeRestriction.swift in Sources */,
 				D0967A14CCCADF1BCCAB16AC9F3170E8 /* EqualToDosageAttributeRestriction.swift in Sources */,
 				022DB4DC3C2DFBDB25EF5E12B50DF876 /* GreaterThanOrEqualToDosageAttributeRestriction.swift in Sources */,
 				75E0D3B0D9FF0621538C6937594AF498 /* GreaterThanDosageAttributeRestriction.swift in Sources */,

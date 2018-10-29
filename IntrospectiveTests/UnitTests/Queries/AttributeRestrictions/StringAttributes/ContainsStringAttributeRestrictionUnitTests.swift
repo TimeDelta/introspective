@@ -10,15 +10,15 @@ import XCTest
 import SwiftyMocky
 @testable import Introspective
 
-class ContainsStringAttributeRestrictionUnitTests: UnitTest {
+final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
-	fileprivate typealias Me = ContainsStringAttributeRestrictionUnitTests
-	fileprivate static let restrictedAttribute = TextAttribute(name: "text")
-	fileprivate static let substringAttribute = ContainsStringAttributeRestriction.substringAttribute
+	private typealias Me = ContainsStringAttributeRestrictionUnitTests
+	private static let restrictedAttribute = TextAttribute(name: "text")
+	private static let substringAttribute = ContainsStringAttributeRestriction.substringAttribute
 
-	fileprivate var restriction: ContainsStringAttributeRestriction!
+	private var restriction: ContainsStringAttributeRestriction!
 
-	override func setUp() {
+	final override func setUp() {
 		super.setUp()
 		restriction = ContainsStringAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
 	}
@@ -31,7 +31,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSubstringAttribute_valueOf_returnsCorrectDate() {
+	func testGivenSubstringAttribute_valueOf_returnsCorrectString() {
 		// given
 		let expectedSubstring = "expected substring"
 		restriction.substring = expectedSubstring
@@ -59,7 +59,7 @@ class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSubstringAttributeAndValidValue_setAttributeTo_setsDateToCorrectValue() {
+	func testGivenSubstringAttributeAndValidValue_setAttributeTo_setsCorrectValue() {
 		// given
 		let expectedSubstring = "expected substring"
 

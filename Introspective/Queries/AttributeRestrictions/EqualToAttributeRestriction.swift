@@ -94,6 +94,15 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 		}
 	}
 
+	public init(restrictedAttribute: Attribute, value: ValueType, valueAttribute: Attribute, areEqual: @escaping (ValueType?, ValueType?) -> Bool) {
+		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: valueAttribute) {
+			if !($0 is ValueType?) || !($1 is ValueType?) { throw AttributeError.typeMismatch }
+			let castedFirst = $0 as! ValueType?
+			let castedSecond = $1 as! ValueType?
+			return areEqual(castedFirst, castedSecond)
+		}
+	}
+
 	public required init(restrictedAttribute: Attribute) {
 		fatalError("This should never be called because this is an abstract base class")
 	}
@@ -109,10 +118,7 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
-		if (!(sampleValue is ValueType?)) { throw AttributeError.typeMismatch }
-		if sampleValue == nil && value == nil { return true }
-		if sampleValue == nil || value == nil { return false }
-		let castedValue = sampleValue as! ValueType
+		guard let castedValue = sampleValue as? ValueType? else { throw AttributeError.typeMismatch }
 		return try areEqual(castedValue, value)
 	}
 

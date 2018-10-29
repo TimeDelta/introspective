@@ -21,12 +21,14 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 		suffixAttribute,
 	]
 
-	public final override var attributedName: String { return "Text ends with" }
+	public final override var attributedName: String { return "Ends with" }
 	public final override var description: String {
 		return restrictedAttribute.name.localizedCapitalized + " ends with '" + suffix + "'"
 	}
 
-	public final var suffix: String
+	public final var suffix: String {
+		didSet { suffix = suffix.localizedLowercase }
+	}
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, suffix: "")
@@ -49,8 +51,8 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 	}
 
 	public final override func samplePasses(_ sample: Sample) throws -> Bool {
-		guard let value = try sample.value(of: restrictedAttribute) as? String else { throw AttributeError.typeMismatch }
-		return value.hasSuffix(suffix)
+		guard let value = try sample.value(of: restrictedAttribute) as? String? else { throw AttributeError.typeMismatch }
+		return value?.localizedLowercase.hasSuffix(suffix) ?? suffix.isEmpty
 	}
 
 	public final func toPredicate() -> NSPredicate {
