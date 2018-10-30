@@ -16,7 +16,16 @@ final class ImportDataTableViewController: UITableViewController {
 	private enum Errors: Error {
 		case unknownIndexPath
 	}
-	
+
+	// medications
+	private static let medicationSection = 0
+	private static let easyPillMedicationRow = 0
+	private static let easyPillDoseRow = 1
+
+	// moods
+	private static let moodSection = 1
+	private static let wellnessMoodRow = 0
+
 	private final var importer: Importer!
 
 	// MARK: - Table View Delegate
@@ -43,12 +52,16 @@ final class ImportDataTableViewController: UITableViewController {
 	// MARK: - Helper Functions
 
 	private final func promptForDataImport(_ indexPath: IndexPath) {
-		let prompt = UIAlertController(title: "Import new data only?", message: "This will only import data that was recorded after the imported record with the most recent date and time.", preferredStyle: .alert)
-		prompt.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
-			self.importData(newDataOnly: true, indexPath: indexPath)
-		})
+		var message = "This will only import data that was recorded after the imported record with the most recent date and time."
+		if indexPath.section == Me.medicationSection && indexPath.row == Me.easyPillMedicationRow {
+			message = "This will not import any medications with the name of one that you have already saved."
+		}
+		let prompt = UIAlertController(title: "Import new data only?", message: message, preferredStyle: .alert)
 		prompt.addAction(UIAlertAction(title: "No", style: .destructive) { _ in
 			self.importData(newDataOnly: false, indexPath: indexPath)
+		})
+		prompt.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
+			self.importData(newDataOnly: true, indexPath: indexPath)
 		})
 		present(prompt, animated: false, completion: nil)
 	}
@@ -62,8 +75,12 @@ final class ImportDataTableViewController: UITableViewController {
 	}
 
 	private final func getImporterFor(_ indexPath: IndexPath) throws -> Importer {
-		if indexPath.section == 0 && indexPath.row == 0 {
+		if indexPath.section == Me.moodSection && indexPath.row == Me.wellnessMoodRow {
 			return try DependencyInjector.importer.wellnessMoodImporter()
+		} else if indexPath.section == Me.medicationSection && indexPath.row == Me.easyPillMedicationRow {
+			return try DependencyInjector.importer.easyPillMedicationImporter()
+		} else if indexPath.section == Me.medicationSection && indexPath.row == Me.easyPillDoseRow {
+			return try DependencyInjector.importer.easyPillMedicationDoseImporter()
 		} else {
 			os_log("Unknown index path: (section: %d, row: %d)", type: .error, indexPath.section, indexPath.row)
 			throw Errors.unknownIndexPath
@@ -87,7 +104,14 @@ extension ImportDataTableViewController: UIDocumentPickerDelegate {
 				}
 			} catch {
 				os_log("Failed to import data: %@", type: .error, error.localizedDescription)
-				let alert = UIAlertController(title: "Failed to import data", message: nil, preferredStyle: .alert)
+				var title = "Failed to import data"
+				var message: String? = nil
+				if let displayableError = error as? DisplayableError {
+					title = displayableError.displayableTitle
+					message = displayableError.displayableDescription
+				}
+				let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+				alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
 				self.present(alert, animated: false)
 			}
 		}

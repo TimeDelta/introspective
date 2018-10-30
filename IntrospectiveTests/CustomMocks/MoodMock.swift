@@ -13,7 +13,7 @@ import SwiftyMocky
 
 // sourcery: mock = "Mood"
 class MoodMock: Mood, Mock {
-	fileprivate var _description: String!
+	private var _description: String!
 
 	var description: String {
 		get { return _description }

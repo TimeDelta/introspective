@@ -70,4 +70,29 @@ final class FrequencyUnitTests: UnitTest {
 		// then
 		XCTAssert(equalTo)
 	}
+
+	func testGivenSameNumberAndTimeUnit_equalTo_returnsTrue() {
+		// given
+		let number = 5.0
+		let timeUnit = Calendar.Component.day
+		let first = Frequency(number, timeUnit)
+		let second = Frequency(number, timeUnit)
+
+		// when
+		let equalTo = first == second
+
+		// then
+		XCTAssert(equalTo)
+	}
+
+	func testGivenSameNumberAndTimeUnit_XCTAssertEqual_returnsTrue() {
+		// given
+		let number = 5.0
+		let timeUnit = Calendar.Component.day
+		let first = Frequency(number, timeUnit)
+		let second = Frequency(number, timeUnit)
+
+		// when / then
+		XCTAssertEqual(first, second)
+	}
 }

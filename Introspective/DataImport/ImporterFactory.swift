@@ -12,6 +12,8 @@ import Foundation
 public protocol ImporterFactory {
 
 	func wellnessMoodImporter() throws -> WellnessMoodImporter
+	func easyPillMedicationImporter() throws -> EasyPillMedicationImporter
+	func easyPillMedicationDoseImporter() throws -> EasyPillMedicationDoseImporter
 }
 
 public final class ImporterFactoryImpl: ImporterFactory {
@@ -22,5 +24,21 @@ public final class ImporterFactoryImpl: ImporterFactory {
 			return importers[0]
 		}
 		return try DependencyInjector.db.new(objectType: WellnessMoodImporterImpl.self)
+	}
+
+	public final func easyPillMedicationImporter() throws -> EasyPillMedicationImporter {
+		let importers = try DependencyInjector.db.query(EasyPillMedicationImporterImpl.fetchRequest())
+		if importers.count > 0 {
+			return importers[0]
+		}
+		return try DependencyInjector.db.new(objectType: EasyPillMedicationImporterImpl.self)
+	}
+
+	public final func easyPillMedicationDoseImporter() throws -> EasyPillMedicationDoseImporter {
+		let importers = try DependencyInjector.db.query(EasyPillMedicationDoseImporterImpl.fetchRequest())
+		if importers.count > 0 {
+			return importers[0]
+		}
+		return try DependencyInjector.db.new(objectType: EasyPillMedicationDoseImporterImpl.self)
 	}
 }

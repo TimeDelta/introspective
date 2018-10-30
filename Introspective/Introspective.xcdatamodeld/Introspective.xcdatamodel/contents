@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.14.2" systemVersion="18B57c" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="EasyPillMedicationDoseImporter" representedClassName=".EasyPillMedicationDoseImporterImpl" syncable="YES">
+        <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+    </entity>
+    <entity name="EasyPillMedicationImporter" representedClassName=".EasyPillMedicationImporterImpl" syncable="YES">
+        <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+    </entity>
     <entity name="Medication" representedClassName=".Medication" syncable="YES" coreSpotlightDisplayNameExpression="Medication">
         <attribute name="dosage" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="frequency" optional="YES" attributeType="Transformable" customClassName=".Frequency" syncable="YES"/>
@@ -32,5 +38,7 @@
         <element name="Mood" positionX="-63" positionY="-18" width="128" height="105"/>
         <element name="Settings" positionX="-63" positionY="9" width="128" height="60"/>
         <element name="WellnessMoodImporter" positionX="-54" positionY="18" width="128" height="60"/>
+        <element name="EasyPillMedicationImporter" positionX="-45" positionY="54" width="128" height="60"/>
+        <element name="EasyPillMedicationDoseImporter" positionX="-36" positionY="63" width="128" height="60"/>
     </elements>
 </model>

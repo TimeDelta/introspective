@@ -20,6 +20,7 @@ public protocol CalendarUtil {
 	func compare(_ date1: Date?, _ date2: Date?) -> ComparisonResult
 	func date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek
 	func date(_ date: Date, isOnA dayOfWeek: DayOfWeek) -> Bool
+	/// - Returns: The date represented by the passed String if it can be converted, otherwise `nil`.
 	func date(from dateStr: String, format: String) -> Date?
 }
 
@@ -27,6 +28,7 @@ extension CalendarUtil {
 	func string(for date: Date, inFormat format: String = defaultDateFormat) -> String {
 		return string(for: date, inFormat: format)
 	}
+	/// - Returns: The date represented by the passed String if it can be converted, otherwise `nil`.
 	func date(from dateStr: String, format: String = defaultDateFormat) -> Date? {
 		return date(from: dateStr, format: format)
 	}

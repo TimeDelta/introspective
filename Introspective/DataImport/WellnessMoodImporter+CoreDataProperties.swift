@@ -1,5 +1,5 @@
 //
-//  WellnessMoodImporterImpl+CoreDataProperties.swift
+//  WellnessMoodImporter+CoreDataProperties.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 10/1/18.

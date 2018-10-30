@@ -21,7 +21,7 @@ public final class Dosage: NSObject, NSCoding, Codable, Comparable {
 	// MARK: - Static Variables
 
 	private typealias Me = Dosage
-	private static let amountRegex = "^[0-9]+(\\.[0-9]+)?"
+	private static let amountRegex = "^[0-9]*\\.?[0-9]+"
 
 	// MARK: - Comparable
 
@@ -86,6 +86,13 @@ public final class Dosage: NSObject, NSCoding, Codable, Comparable {
 	public final func encode(with encoder: NSCoder) {
 		encoder.encode(amount, forKey: CodingKeys.amount.rawValue)
 		encoder.encode(unit, forKey: CodingKeys.unit.rawValue)
+	}
+
+	// MARK: - NSObject Overrides
+
+	public override func isEqual(_ object: Any?) -> Bool {
+		guard let other = object as? Dosage else { return false }
+		return self == other
 	}
 
 	// MARK: - Other

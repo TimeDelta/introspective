@@ -8,7 +8,6 @@
 
 import Foundation
 import CoreData
-import os
 
 //sourcery: AutoMockable
 public protocol WellnessMoodImporter: Importer {}
@@ -37,7 +36,7 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 				if date.isAfterDate(latestDate, granularity: .nanosecond) {
 					latestDate = date
 				}
-				if !importOnlyNewData || lastImport == nil || (importOnlyNewData && lastImport != nil && date.isAfterDate(lastImport!, granularity: .nanosecond)) {
+				if shouldImport(date) {
 					currentMood = DependencyInjector.sample.mood()
 					currentMood!.timestamp = date
 					currentMood!.maxRating = 7.0
@@ -62,7 +61,18 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 		DependencyInjector.db.save()
 	}
 
+	// MARK: - Helper Functions
+
 	private final func string(_ str: String, matches regex: String) -> Bool {
 		return str.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
+	}
+
+	private final func shouldImport(_ date: Date) -> Bool {
+		return !importOnlyNewData || // user doesn't care about data duplication -> import everything
+			lastImport == nil || (   // never imported before -> import everything
+				importOnlyNewData &&
+				lastImport != nil &&
+				date.isAfterDate(lastImport!, granularity: .nanosecond)
+			)
 	}
 }

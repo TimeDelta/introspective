@@ -145,6 +145,13 @@ public final class Frequency: NSObject, NSCoding, Codable, Comparable {
 		}
 	}
 
+	// MARK: - NSObject Overrides
+
+	public override func isEqual(_ object: Any?) -> Bool {
+		guard let other = object as? Frequency else { return false }
+		return self == other
+	}
+
 	// MARK: - Helper Functions
 
 	private final func timesPerSecond() throws -> Double {

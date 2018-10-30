@@ -33,6 +33,18 @@ final class DosageUnitTests: UnitTest {
 		XCTAssertNil(dosage)
 	}
 
+	func testGivenPointOneMilligrams_initFromString_correctlyParsesDosage() {
+		// given
+		let dosageText = ".1milligrams"
+
+		// when
+		let dosage = Dosage(dosageText)
+
+		// then
+		XCTAssertEqual(dosage?.amount, 0.1)
+		XCTAssertEqual(dosage?.unit, "milligrams")
+	}
+
 	func testGivenValidString_initFromString_returnsDosageWithCorrectlyParsedAmountAndUnit() {
 		// given
 		let amount = 12.3
@@ -155,5 +167,26 @@ final class DosageUnitTests: UnitTest {
 
 		// then
 		XCTAssert(equalTo)
+	}
+
+	func testGivenSameNumberAndTimeUnit_equalTo_returnsTrue() {
+		// given
+		let first = Dosage(2, "g")
+		let second = Dosage(2, "g")
+
+		// when
+		let equalTo = first == second
+
+		// then
+		XCTAssert(equalTo)
+	}
+
+	func testGivenSameNumberAndTimeUnit_XCTAssertEqual_returnsTrue() {
+		// given
+		let first = Dosage(2, "g")
+		let second = Dosage(2, "g")
+
+		// when / then
+		XCTAssertEqual(first, second)
 	}
 }

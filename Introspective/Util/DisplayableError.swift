@@ -10,5 +10,17 @@ import Foundation
 
 public protocol DisplayableError: Error {
 
-	var displayableDescription: String { get }
+	var displayableTitle: String { get }
+	var displayableDescription: String? { get }
+}
+
+public final class GenericDisplayableError: DisplayableError {
+
+	public final let displayableTitle: String
+	public final let displayableDescription: String?
+
+	public init(title: String, description: String? = nil) {
+		displayableTitle = title
+		displayableDescription = description
+	}
 }
