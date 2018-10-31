@@ -44,7 +44,7 @@ Pill name,Notes,Dosage,Frequency,How many times per day,How many days,Starting,E
 
 	final override func setUp() {
 		super.setUp()
-		importer = try! DependencyInjector.db.new(objectType: EasyPillMedicationImporterImpl.self)
+		importer = try! DependencyInjector.db.new(EasyPillMedicationImporterImpl.self)
 	}
 
 	// MARK: - Tests

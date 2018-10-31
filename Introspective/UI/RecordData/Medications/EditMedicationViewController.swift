@@ -182,7 +182,7 @@ public final class EditMedicationViewController: UIViewController {
 	@IBAction final func saveButtonPressed(_ sender: Any) {
 		do {
 			if medication == nil {
-				medication = try DependencyInjector.db.new(objectType: Medication.self)
+				medication = try DependencyInjector.db.new(Medication.self)
 			}
 			medication!.name = nameTextField.text!
 			medication!.frequency = frequency

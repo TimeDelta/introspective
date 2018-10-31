@@ -42,7 +42,7 @@ Pill name,Taken on,Time
 
 	final override func setUp() {
 		super.setUp()
-		importer = try! DependencyInjector.db.new(objectType: EasyPillMedicationDoseImporterImpl.self)
+		importer = try! DependencyInjector.db.new(EasyPillMedicationDoseImporterImpl.self)
 	}
 
 	func testGivenValidDataWithImportNewDataOnlyEqualToFalse_importData_correctlyImportsData() throws {

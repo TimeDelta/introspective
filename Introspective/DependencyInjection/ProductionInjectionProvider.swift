@@ -32,7 +32,7 @@ public final class ProductionInjectionProvider: InjectionProvider {
 			let fetchRequest = NSFetchRequest<SettingsImpl>(entityName: SettingsImpl.entityName)
 			let existingSettings = try! Me.realDatabase.query(fetchRequest)
 			if existingSettings.count == 0 {
-				Me.realSettings = try! Me.realDatabase.new(objectType: SettingsImpl.self)
+				Me.realSettings = try! Me.realDatabase.new(SettingsImpl.self)
 			} else {
 				Me.realSettings = existingSettings[0]
 			}

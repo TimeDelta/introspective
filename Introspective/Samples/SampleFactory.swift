@@ -69,10 +69,10 @@ public final class SampleFactoryImpl: SampleFactory {
 	}
 
 	public final func medicationDose() -> MedicationDose {
-		return try! DependencyInjector.db.new(objectType: MedicationDose.self)
+		return try! DependencyInjector.db.new(MedicationDose.self)
 	}
 
 	public final func mood() -> Mood {
-		return try! DependencyInjector.db.new(objectType: MoodImpl.self)
+		return try! DependencyInjector.db.new(MoodImpl.self)
 	}
 }

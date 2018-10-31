@@ -64,7 +64,7 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 
 				var medications = try! DependencyInjector.db.query(Medication.fetchRequest())
 				for i in 0 ..< 5 {
-					let medication = try! DependencyInjector.db.new(objectType: Medication.self)
+					let medication = try! DependencyInjector.db.new(Medication.self)
 					medication.name = Me.medicationNames[i]
 					medication.recordScreenIndex = Int16(medications.count)
 					medications.append(medication)

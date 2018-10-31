@@ -19,7 +19,7 @@ public class MedicationDataTestUtil {
 		note: String? = nil,
 		recordScreenIndex: Int16 = 0)
 	-> Medication {
-		let medication = try! DependencyInjector.db.new(objectType: Medication.self)
+		let medication = try! DependencyInjector.db.new(Medication.self)
 		medication.name = name
 		medication.frequency = frequency
 		medication.dosage = dosage

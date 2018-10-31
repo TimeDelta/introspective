@@ -2113,16 +2113,16 @@ class DatabaseMock: Database, Mock {
 
 
 
-    func new<Type: NSManagedObject & CoreDataObject>(objectType: Type.Type) throws -> Type {
-        addInvocation(.m_new__objectType_objectType(Parameter<Type.Type>.value(`objectType`).wrapAsGeneric()))
-		let perform = methodPerformValue(.m_new__objectType_objectType(Parameter<Type.Type>.value(`objectType`).wrapAsGeneric())) as? (Type.Type) -> Void
+    func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type) throws -> Type {
+        addInvocation(.m_new__objectType(Parameter<Type.Type>.value(`objectType`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_new__objectType(Parameter<Type.Type>.value(`objectType`).wrapAsGeneric())) as? (Type.Type) -> Void
 		perform?(`objectType`)
 		var __value: Type
 		do {
-		    __value = try methodReturnValue(.m_new__objectType_objectType(Parameter<Type.Type>.value(`objectType`).wrapAsGeneric())).casted()
+		    __value = try methodReturnValue(.m_new__objectType(Parameter<Type.Type>.value(`objectType`).wrapAsGeneric())).casted()
 		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for new<Type: NSManagedObject & CoreDataObject>(objectType: Type.Type). Use given")
-			Failure("Stub return value not specified for new<Type: NSManagedObject & CoreDataObject>(objectType: Type.Type). Use given")
+			onFatalFailure("Stub return value not specified for new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type). Use given")
+			Failure("Stub return value not specified for new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type). Use given")
 		} catch {
 		    throw error
 		}
@@ -2228,7 +2228,7 @@ class DatabaseMock: Database, Mock {
 
 
     fileprivate enum MethodType {
-        case m_new__objectType_objectType(Parameter<GenericAttribute>)
+        case m_new__objectType(Parameter<GenericAttribute>)
         case m_fetchedResultsController__type_typecacheName_cacheName(Parameter<GenericAttribute>, Parameter<String?>)
         case m_query__fetchRequest(Parameter<GenericAttribute>)
         case m_pull__savedObject_savedObjectfromSameContextAs_otherObject(Parameter<GenericAttribute>, Parameter<NSManagedObject>)
@@ -2240,7 +2240,7 @@ class DatabaseMock: Database, Mock {
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
-            case (.m_new__objectType_objectType(let lhsObjecttype), .m_new__objectType_objectType(let rhsObjecttype)):
+            case (.m_new__objectType(let lhsObjecttype), .m_new__objectType(let rhsObjecttype)):
                 guard Parameter.compare(lhs: lhsObjecttype, rhs: rhsObjecttype, with: matcher) else { return false } 
                 return true 
             case (.m_fetchedResultsController__type_typecacheName_cacheName(let lhsType, let lhsCachename), .m_fetchedResultsController__type_typecacheName_cacheName(let rhsType, let rhsCachename)):
@@ -2274,7 +2274,7 @@ class DatabaseMock: Database, Mock {
 
         func intValue() -> Int {
             switch self {
-            case let .m_new__objectType_objectType(p0): return p0.intValue
+            case let .m_new__objectType(p0): return p0.intValue
             case let .m_fetchedResultsController__type_typecacheName_cacheName(p0, p1): return p0.intValue + p1.intValue
             case let .m_query__fetchRequest(p0): return p0.intValue
             case let .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(p0, p1): return p0.intValue + p1.intValue
@@ -2296,8 +2296,12 @@ class DatabaseMock: Database, Mock {
         }
 
 
-        static func new<Type: NSManagedObject & CoreDataObject>(objectType: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
-            return Given(method: .m_new__objectType_objectType(`objectType`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
+        static func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
+            return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
+		static func new<Type: NSManagedObject & CoreDataObject>(objectType: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
+            return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
         static func fetchedResultsController<Type: NSManagedObject>(type: Parameter<Type.Type>, cacheName: Parameter<String?>, willReturn: NSFetchedResultsController<Type>...) -> MethodStub {
             return Given(method: .m_fetchedResultsController__type_typecacheName_cacheName(`type`.wrapAsGeneric(), `cacheName`), products: willReturn.map({ Product.return($0) }))
@@ -2319,12 +2323,16 @@ class DatabaseMock: Database, Mock {
 			willProduce(stubber)
 			return given
         }
-        static func new<Type: NSManagedObject & CoreDataObject>(objectType: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_new__objectType_objectType(`objectType`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
+        static func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
-        static func new<Type: NSManagedObject & CoreDataObject>(objectType: Parameter<Type.Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
+		static func new<Type: NSManagedObject & CoreDataObject>(objectType: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Parameter<Type.Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_new__objectType_objectType(`objectType`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
+			let given: Given = { return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Type).self)
 			willProduce(stubber)
 			return given
@@ -2400,7 +2408,9 @@ class DatabaseMock: Database, Mock {
     struct Verify {
         fileprivate var method: MethodType
 
-        static func new<Type>(objectType: Parameter<Type.Type>) -> Verify { return Verify(method: .m_new__objectType_objectType(`objectType`.wrapAsGeneric()))}
+        static func new<Type>(_ objectType: Parameter<Type.Type>) -> Verify { return Verify(method: .m_new__objectType(`objectType`.wrapAsGeneric()))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
+		static func new<Type>(objectType: Parameter<Type.Type>) -> Verify { return Verify(method: .m_new__objectType(`objectType`.wrapAsGeneric()))}
         static func fetchedResultsController<Type>(type: Parameter<Type.Type>, cacheName: Parameter<String?>) -> Verify { return Verify(method: .m_fetchedResultsController__type_typecacheName_cacheName(`type`.wrapAsGeneric(), `cacheName`))}
         static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fetchRequest` label")
@@ -2425,8 +2435,12 @@ class DatabaseMock: Database, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func new<Type>(objectType: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform {
-            return Perform(method: .m_new__objectType_objectType(`objectType`.wrapAsGeneric()), performs: perform)
+        static func new<Type>(_ objectType: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform {
+            return Perform(method: .m_new__objectType(`objectType`.wrapAsGeneric()), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
+		static func new<Type>(objectType: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform {
+            return Perform(method: .m_new__objectType(`objectType`.wrapAsGeneric()), performs: perform)
         }
         static func fetchedResultsController<Type>(type: Parameter<Type.Type>, cacheName: Parameter<String?>, perform: @escaping (Type.Type, String?) -> Void) -> Perform {
             return Perform(method: .m_fetchedResultsController__type_typecacheName_cacheName(`type`.wrapAsGeneric(), `cacheName`), performs: perform)

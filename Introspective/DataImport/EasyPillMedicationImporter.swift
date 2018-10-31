@@ -97,7 +97,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 
 		if medicationsWithCurrentName.count == 0 {
 			do {
-				let medication = try DependencyInjector.db.new(objectType: Medication.self)
+				let medication = try DependencyInjector.db.new(Medication.self)
 				let allMedications = try DependencyInjector.db.query(Medication.fetchRequest())
 				medication.recordScreenIndex = Int16(allMedications.count)
 				setMedication(medication, name: name, startedOn: startedOn, dosage: dosage, notes: notes, frequencyText: frequencyText)

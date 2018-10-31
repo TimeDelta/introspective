@@ -49,7 +49,7 @@ Date,Time,Rating,Note
 	final override func setUp() {
 		super.setUp()
 
-		importer = try! DependencyInjector.db.new(objectType: WellnessMoodImporterImpl.self)
+		importer = try! DependencyInjector.db.new(WellnessMoodImporterImpl.self)
 		mockSampleFactory = SampleFactoryMock()
 		mood1 = MoodMock()
 		mood2 = MoodMock()

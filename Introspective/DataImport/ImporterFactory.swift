@@ -23,7 +23,7 @@ public final class ImporterFactoryImpl: ImporterFactory {
 		if importers.count > 0 {
 			return importers[0]
 		}
-		return try DependencyInjector.db.new(objectType: WellnessMoodImporterImpl.self)
+		return try DependencyInjector.db.new(WellnessMoodImporterImpl.self)
 	}
 
 	public final func easyPillMedicationImporter() throws -> EasyPillMedicationImporter {
@@ -31,7 +31,7 @@ public final class ImporterFactoryImpl: ImporterFactory {
 		if importers.count > 0 {
 			return importers[0]
 		}
-		return try DependencyInjector.db.new(objectType: EasyPillMedicationImporterImpl.self)
+		return try DependencyInjector.db.new(EasyPillMedicationImporterImpl.self)
 	}
 
 	public final func easyPillMedicationDoseImporter() throws -> EasyPillMedicationDoseImporter {
@@ -39,6 +39,6 @@ public final class ImporterFactoryImpl: ImporterFactory {
 		if importers.count > 0 {
 			return importers[0]
 		}
-		return try DependencyInjector.db.new(objectType: EasyPillMedicationDoseImporterImpl.self)
+		return try DependencyInjector.db.new(EasyPillMedicationDoseImporterImpl.self)
 	}
 }

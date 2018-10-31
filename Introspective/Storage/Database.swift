@@ -17,7 +17,7 @@ public enum DatabaseError: Error {
 //sourcery: AutoMockable
 public protocol Database {
 
-	func new<Type: NSManagedObject & CoreDataObject>(objectType: Type.Type) throws -> Type
+	func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type) throws -> Type
 	func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, cacheName: String?) -> NSFetchedResultsController<Type>
 	func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type]
 	/// This method needs to be called when trying to establish a relationship between two objects in different contexts.
@@ -70,7 +70,7 @@ public class DatabaseImpl: Database {
 		}()
 	}
 
-	public final func new<Type: NSManagedObject & CoreDataObject>(objectType: Type.Type) throws -> Type {
+	public final func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type) throws -> Type {
 		signpost.begin(name: "New", idObject: objectType)
 		let entity = NSEntityDescription.entity(forEntityName: objectType.entityName, in: backgroundContext)!
 		guard let newObject = NSManagedObject(entity: entity, insertInto: backgroundContext) as? Type else {
