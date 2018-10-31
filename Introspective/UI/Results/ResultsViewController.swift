@@ -274,7 +274,7 @@ final class ResultsViewController: UITableViewController {
 	@objc final func saveEditedExtraInformation(notification: Notification) {
 		let selectedInformation = notification.object as! ExtraInformation
 		extraInformation[extraInformationEditIndex] = selectedInformation
-		recomputeExtraInformation()
+		extraInformationValues[extraInformationEditIndex] = try! extraInformation[extraInformationEditIndex].compute(forSamples: samples)
 		tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
 	}
 
@@ -286,7 +286,7 @@ final class ResultsViewController: UITableViewController {
 		if samplesAreSortable() {
 			actionsController?.addAction(UIAlertAction(title: "Sort", style: .default) { _ in self.setSampleSort() })
 		}
-		actionsController?.addAction(UIAlertAction(title: "Add Information", style: .default) { _ in self.addInformation() })
+		actionsController?.addAction(UIAlertAction(title: "Add Information", style: .default) { _ in DispatchQueue.main.async{ self.addInformation() } })
 		if samplesAreDeletable() {
 			actionsController?.addAction(UIAlertAction(title: "Delete All " + samples[0].attributedName + " Entries", style: .default) { _ in self.deleteAllSamples() })
 		}
@@ -318,7 +318,7 @@ final class ResultsViewController: UITableViewController {
 		let attribute = type(of: samples[0]).defaultDependentAttribute
 		let information = DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: attribute)[0].init(attribute)
 		extraInformation.append(information)
-		recomputeExtraInformation()
+		extraInformationValues.append(try! extraInformation.last!.compute(forSamples: samples))
 		tableView.reloadData()
 	}
 
