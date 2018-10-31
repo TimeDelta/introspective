@@ -102,7 +102,7 @@ public final class EditMedicationViewController: UIViewController {
 
 	@objc private final func setStartedOnDate(notification: Notification) {
 		if let date = notification.object as? Date {
-			startedOnDate = DependencyInjector.util.calendarUtil.start(of: .day, in: date)
+			startedOnDate = DependencyInjector.util.calendar.start(of: .day, in: date)
 			UiUtil.setButton(resetStartedOnButton, enabled: true, hidden: false)
 		} else {
 			startedOnDate = nil
@@ -220,7 +220,7 @@ public final class EditMedicationViewController: UIViewController {
 	private final func updateStartedOnDateButtonTitle() {
 		var startedOnText = "Not set"
 		if let date = startedOnDate {
-			startedOnText = DependencyInjector.util.calendarUtil.string(for: date, inFormat: "MMMM d, yyyy")
+			startedOnText = DependencyInjector.util.calendar.string(for: date, inFormat: "MMMM d, yyyy")
 		}
 		startedOnButton.setTitle(startedOnText, for: .normal)
 		startedOnButton.accessibilityValue = startedOnText

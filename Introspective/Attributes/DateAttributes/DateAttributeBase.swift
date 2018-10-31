@@ -39,6 +39,6 @@ public class DateAttributeBase: AttributeBase, DateAttribute {
 		guard let castedValue = value as? Date else {
 			throw AttributeError.typeMismatch
 		}
-		return DependencyInjector.util.calendarUtil.string(for: castedValue, inFormat: dateFormat)
+		return DependencyInjector.util.calendar.string(for: castedValue, inFormat: dateFormat)
 	}
 }

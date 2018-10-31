@@ -23,7 +23,7 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 	public final var importOnlyNewData: Bool = true
 
 	public final func importData(from url: URL) throws {
-		let contents = try DependencyInjector.util.ioUtil.contentsOf(url)
+		let contents = try DependencyInjector.util.io.contentsOf(url)
 		var currentMood: Mood? = nil
 		var currentNote = ""
 		var latestDate: Date! = lastImport // use temp var to avoid bug where initial import doesn't import anything
@@ -31,7 +31,7 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 			if string(line, matches: Me.dateRegex) { // new mood record
 				currentMood?.note = currentNote
 				let parts = line.components(separatedBy: ",")
-				let date = DependencyInjector.util.calendarUtil.date(from: parts[0...1].joined(), format: "M/d/yy HH:mm")!
+				let date = DependencyInjector.util.calendar.date(from: parts[0...1].joined(), format: "M/d/yy HH:mm")!
 				if latestDate == nil { latestDate = date }
 				if date.isAfterDate(latestDate, granularity: .nanosecond) {
 					latestDate = date

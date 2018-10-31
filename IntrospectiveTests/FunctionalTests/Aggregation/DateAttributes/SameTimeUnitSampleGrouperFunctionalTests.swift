@@ -27,9 +27,9 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 			(startDate: group3Date, endDate: Date() + 1.days),
 			(startDate: group3Date, endDate: Date() - 1.days),
 		])
-		let expectedGroup1Date = DependencyInjector.util.calendarUtil.start(of: .day, in: group1Date)
-		let expectedGroup2Date = DependencyInjector.util.calendarUtil.start(of: .day, in: group2Date)
-		let expectedGroup3Date = DependencyInjector.util.calendarUtil.start(of: .day, in: group3Date)
+		let expectedGroup1Date = DependencyInjector.util.calendar.start(of: .day, in: group1Date)
+		let expectedGroup2Date = DependencyInjector.util.calendar.start(of: .day, in: group2Date)
+		let expectedGroup3Date = DependencyInjector.util.calendar.start(of: .day, in: group3Date)
 
 		// when
 		let groups = grouper.group(samples: samples, by: CommonSampleAttributes.startDate)
@@ -55,9 +55,9 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 			(startDate: group3Date, endDate: Date() + 1.hours),
 			(startDate: group3Date, endDate: Date() - 1.hours),
 		])
-		let expectedGroup1Date = DependencyInjector.util.calendarUtil.start(of: .hour, in: group1Date)
-		let expectedGroup2Date = DependencyInjector.util.calendarUtil.start(of: .hour, in: group2Date)
-		let expectedGroup3Date = DependencyInjector.util.calendarUtil.start(of: .hour, in: group3Date)
+		let expectedGroup1Date = DependencyInjector.util.calendar.start(of: .hour, in: group1Date)
+		let expectedGroup2Date = DependencyInjector.util.calendar.start(of: .hour, in: group2Date)
+		let expectedGroup3Date = DependencyInjector.util.calendar.start(of: .hour, in: group3Date)
 
 		// when
 		let groups = grouper.group(samples: samples, by: CommonSampleAttributes.healthKitStartDate)
@@ -83,9 +83,9 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 			(startDate: Date() + 1.minutes, endDate: group3Date),
 			(startDate: Date() - 1.minutes, endDate: group3Date),
 		])
-		let expectedGroup1Date = DependencyInjector.util.calendarUtil.start(of: .minute, in: group1Date)
-		let expectedGroup2Date = DependencyInjector.util.calendarUtil.start(of: .minute, in: group2Date)
-		let expectedGroup3Date = DependencyInjector.util.calendarUtil.start(of: .minute, in: group3Date)
+		let expectedGroup1Date = DependencyInjector.util.calendar.start(of: .minute, in: group1Date)
+		let expectedGroup2Date = DependencyInjector.util.calendar.start(of: .minute, in: group2Date)
+		let expectedGroup3Date = DependencyInjector.util.calendar.start(of: .minute, in: group3Date)
 
 		// when
 		let groups = grouper.group(samples: samples, by: CommonSampleAttributes.healthKitEndDate)

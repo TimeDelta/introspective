@@ -25,7 +25,7 @@ public final class MedicationDoseTableTableViewCell: UITableViewCell {
 			if let dosage = medicationDose.dosage {
 				doseText += dosage.description + " on "
 			}
-			doseText += DependencyInjector.util.calendarUtil.string(for: medicationDose.timestamp, inFormat: "MMM dd, yyyy 'at' HH:mm")
+			doseText += DependencyInjector.util.calendar.string(for: medicationDose.timestamp, inFormat: "MMM dd, yyyy 'at' HH:mm")
 			doseAndTimestampLabel.text = doseText
 		}
 	}

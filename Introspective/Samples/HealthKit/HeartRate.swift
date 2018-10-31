@@ -130,6 +130,6 @@ extension HeartRate: Equatable {
 extension HeartRate: CustomDebugStringConvertible {
 
 	public final var debugDescription: String {
-		return "HeartRate of \(heartRate) at " + DependencyInjector.util.calendarUtil.string(for: timestamp)
+		return "HeartRate of \(heartRate) at " + DependencyInjector.util.calendar.string(for: timestamp)
 	}
 }

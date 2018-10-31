@@ -130,6 +130,6 @@ extension Weight: Equatable {
 extension Weight: CustomDebugStringConvertible {
 
 	public final var debugDescription: String {
-		return "Weight of \(weight) at " + DependencyInjector.util.calendarUtil.string(for: timestamp)
+		return "Weight of \(weight) at " + DependencyInjector.util.calendar.string(for: timestamp)
 	}
 }

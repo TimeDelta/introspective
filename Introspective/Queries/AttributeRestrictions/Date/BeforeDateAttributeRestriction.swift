@@ -29,7 +29,7 @@ public final class BeforeDateAttributeRestriction: DateAttributeRestriction, Pre
 
 	public final var date: Date {
 		didSet {
-			date = DependencyInjector.util.calendarUtil.start(of: .day, in: date)
+			date = DependencyInjector.util.calendar.start(of: .day, in: date)
 		}
 	}
 

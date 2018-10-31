@@ -48,7 +48,7 @@ class FunctionalTest: XCTestCase {
 		Given(injectionProvider, .sampleGrouperFactory(willReturn: sampleGrouperFactory))
 
 		ioUtil = IOUtilMock()
-		utilFactory.ioUtil = ioUtil
+		utilFactory.io = ioUtil
 	}
 
 	override func tearDown() {

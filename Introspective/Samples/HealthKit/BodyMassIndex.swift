@@ -130,6 +130,6 @@ extension BodyMassIndex: Equatable {
 extension BodyMassIndex: CustomDebugStringConvertible {
 
 	public final var debugDescription: String {
-		return "BodyMassIndex of \(bmi) at " + DependencyInjector.util.calendarUtil.string(for: timestamp)
+		return "BodyMassIndex of \(bmi) at " + DependencyInjector.util.calendar.string(for: timestamp)
 	}
 }

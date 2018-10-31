@@ -80,18 +80,18 @@ class UnitTest: XCTestCase {
 		Given(injectionProvider, .utilFactory(willReturn: utilFactory))
 
 		mockAttributeRestrictionUtil = AttributeRestrictionUtilMock()
-		utilFactory.attributeRestrictionUtil = mockAttributeRestrictionUtil
+		utilFactory.attributeRestriction = mockAttributeRestrictionUtil
 		mockCalendarUtil = CalendarUtilMock()
-		utilFactory.calendarUtil = mockCalendarUtil
+		utilFactory.calendar = mockCalendarUtil
 		mockNumericSampleUtil = NumericSampleUtilMock()
-		utilFactory.numericSampleUtil = mockNumericSampleUtil
+		utilFactory.numericSample = mockNumericSampleUtil
 		mockSampleUtil = SampleUtilMock()
-		utilFactory.sampleUtil = mockSampleUtil
+		utilFactory.sample = mockSampleUtil
 		mockSearchUtil = SearchUtilMock()
-		utilFactory.searchUtil = mockSearchUtil
+		utilFactory.search = mockSearchUtil
 		mockStringUtil = StringUtilMock()
-		utilFactory.stringUtil = mockStringUtil
+		utilFactory.string = mockStringUtil
 		mockTextNormalizationUtil = TextNormalizationUtilMock()
-		utilFactory.textNormalizationUtil = mockTextNormalizationUtil
+		utilFactory.textNormalization = mockTextNormalizationUtil
 	}
 }

@@ -19,9 +19,9 @@ class SleepTableViewCell: UITableViewCell {
 
 			valueLabel.text = sleep.state.description
 
-			var dateString = DependencyInjector.util.calendarUtil.string(for: sleep.startDate, inFormat: Me.dateFormat)
+			var dateString = DependencyInjector.util.calendar.string(for: sleep.startDate, inFormat: Me.dateFormat)
 			dateString += " to "
-			dateString += DependencyInjector.util.calendarUtil.string(for: sleep.endDate, inFormat: Me.dateFormat)
+			dateString += DependencyInjector.util.calendar.string(for: sleep.endDate, inFormat: Me.dateFormat)
 			timestampLabel.text = dateString
 		}
 	}

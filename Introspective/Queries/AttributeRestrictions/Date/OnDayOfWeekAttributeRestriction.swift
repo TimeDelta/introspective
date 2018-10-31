@@ -55,7 +55,7 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 
 	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		guard let sampleDate = try sample.value(of: restrictedAttribute) as? Date else { throw AttributeError.typeMismatch }
-		return DependencyInjector.util.calendarUtil.date(sampleDate, isOnOneOf: daysOfWeek)
+		return DependencyInjector.util.calendar.date(sampleDate, isOnOneOf: daysOfWeek)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {

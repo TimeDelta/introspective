@@ -130,6 +130,6 @@ extension LeanBodyMass: Equatable {
 extension LeanBodyMass: CustomDebugStringConvertible {
 
 	public final var debugDescription: String {
-		return "LeanBodyMass of \(leanBodyMass) at " + DependencyInjector.util.calendarUtil.string(for: timestamp)
+		return "LeanBodyMass of \(leanBodyMass) at " + DependencyInjector.util.calendar.string(for: timestamp)
 	}
 }

@@ -22,7 +22,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 	public final var importOnlyNewData: Bool = true
 
 	public final func importData(from url: URL) throws {
-		let contents = try DependencyInjector.util.ioUtil.contentsOf(url)
+		let contents = try DependencyInjector.util.io.contentsOf(url)
 		var lineNumber = 2
 		var latestDate: Date! = lastImport // use temp var to avoid bug where initial import doesn't import anything
 		for line in contents.components(separatedBy: "\n")[1...] {
@@ -63,14 +63,14 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 		var date: Date? = nil
 		while date == nil {
 			nextColumnText = try getColumn(currentIndex, from: parts, errorMessage: "No date found on line \(lineNumber).")
-			date = DependencyInjector.util.calendarUtil.date(from: nextColumnText, format: "M/d/yy")
+			date = DependencyInjector.util.calendar.date(from: nextColumnText, format: "M/d/yy")
 			if date == nil {
 				medicationName += "," + nextColumnText
 			}
 			currentIndex += 1
 		}
 		let timeText = try getColumn(currentIndex, from: parts, errorMessage: "No time found on line \(lineNumber).")
-		date = DependencyInjector.util.calendarUtil.date(from: nextColumnText + " " + timeText, format: "M/d/yy HH:mm")
+		date = DependencyInjector.util.calendar.date(from: nextColumnText + " " + timeText, format: "M/d/yy HH:mm")
 
 		guard let timestamp = date else { throw InvalidFileFormatError("On line \(lineNumber), expected time but found '\(timeText)'") }
 		return timestamp
@@ -104,7 +104,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 			DependencyInjector.db.save()
 		} catch {
 			os_log("Failed to pull medication into same context as dose: %@", type: .error, error.localizedDescription)
-			let dateText = DependencyInjector.util.calendarUtil.string(for: date, inFormat: "M/d/yy 'at' H:mm")
+			let dateText = DependencyInjector.util.calendar.string(for: date, inFormat: "M/d/yy 'at' H:mm")
 			throw GenericDisplayableError(
 				title: "Could not save dose",
 				description: "Dose of \(medicationName) taken on \(dateText)")

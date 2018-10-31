@@ -384,7 +384,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 
 	private final func areAllNumbers(_ values: [String]) -> Bool {
 		for value in values {
-			if !DependencyInjector.util.stringUtil.isNumber(value) {
+			if !DependencyInjector.util.string.isNumber(value) {
 				return false
 			}
 		}

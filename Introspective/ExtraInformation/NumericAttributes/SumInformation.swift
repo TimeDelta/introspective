@@ -19,13 +19,13 @@ public final class SumInformation: AnyInformation {
 	}
 
 	public final override func compute(forSamples samples: [Sample]) -> String {
-		let filteredSamples = DependencyInjector.util.sampleUtil.getOnly(samples: samples, from: startDate, to: endDate)
+		let filteredSamples = DependencyInjector.util.sample.getOnly(samples: samples, from: startDate, to: endDate)
 		if filteredSamples.count == 0 { return "0" }
 		if attribute is DoubleAttribute {
-			return String(DependencyInjector.util.numericSampleUtil.sum(for: attribute, over: filteredSamples) as Double)
+			return String(DependencyInjector.util.numericSample.sum(for: attribute, over: filteredSamples) as Double)
 		}
 		if attribute is IntegerAttribute {
-			return String(DependencyInjector.util.numericSampleUtil.sum(for: attribute, over: filteredSamples) as Int)
+			return String(DependencyInjector.util.numericSample.sum(for: attribute, over: filteredSamples) as Int)
 		}
 		if attribute is DosageAttribute {
 			return getSumOfDosageAttribute(filteredSamples)

@@ -18,7 +18,7 @@ final class MoodTableViewCell: UITableViewCell {
 			moodRatingColorLabel.backgroundColor = MoodUiUtil.colorForMood(rating: mood.rating, maxRating: mood.maxRating)
 			moodRatingColorLabel.text = nil
 			moodRatingLabel.text = MoodUiUtil.valueToString(mood.rating) + " / " + MoodUiUtil.valueToString(mood.maxRating)
-			timestampLabel.text = DependencyInjector.util.calendarUtil.string(for: mood.timestamp)
+			timestampLabel.text = DependencyInjector.util.calendar.string(for: mood.timestamp)
 			noteLabel.text = mood.note
 		}
 	}

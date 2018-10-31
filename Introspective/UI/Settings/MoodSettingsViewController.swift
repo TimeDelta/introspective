@@ -34,7 +34,7 @@ final class MoodSettingsViewController: UIViewController {
 	}
 
 	@IBAction final func doneEditingMaxMood(_ sender: Any) {
-		if !DependencyInjector.util.stringUtil.isNumber(maxMoodField.text!) {
+		if !DependencyInjector.util.string.isNumber(maxMoodField.text!) {
 			maxMoodField.text = String(DependencyInjector.settings.maximumMood)
 		}
 	}
@@ -45,7 +45,7 @@ final class MoodSettingsViewController: UIViewController {
 	}
 
 	@objc private final func done() {
-		if DependencyInjector.util.stringUtil.isNumber(maxMoodField.text!) {
+		if DependencyInjector.util.string.isNumber(maxMoodField.text!) {
 			DependencyInjector.settings.setMaxMood(Double(maxMoodField.text!)!)
 		}
 

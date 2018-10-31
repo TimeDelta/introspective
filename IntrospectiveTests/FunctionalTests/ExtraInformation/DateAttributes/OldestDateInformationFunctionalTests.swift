@@ -199,6 +199,6 @@ class OldestDateInformationFunctionalTests: FunctionalTest {
 	}
 
 	fileprivate func toString(_ date: Date) -> String {
-		return DependencyInjector.util.calendarUtil.string(for: date)
+		return DependencyInjector.util.calendar.string(for: date)
 	}
 }

@@ -19,7 +19,7 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 	}
 
 	final override func run() {
-		let dateConstraints = DependencyInjector.util.attributeRestrictionUtil.getMostRestrictiveStartAndEndDates(from: attributeRestrictions)
+		let dateConstraints = DependencyInjector.util.attributeRestriction.getMostRestrictiveStartAndEndDates(from: attributeRestrictions)
 
 		HealthManager.getAuthorization() {
 			(error: Error?) in

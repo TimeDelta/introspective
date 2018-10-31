@@ -18,7 +18,7 @@ final class WeightTableViewCell: UITableViewCell {
 			valueFormatter.numberStyle = .decimal
 			valueLabel.text = valueFormatter.string(from: NSNumber(value: weight.weight))
 
-			let dateString = DependencyInjector.util.calendarUtil.string(for: weight.timestamp)
+			let dateString = DependencyInjector.util.calendar.string(for: weight.timestamp)
 			timestampLabel.text = dateString
 		}
 	}

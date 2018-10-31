@@ -18,7 +18,7 @@ public final class CountInformation: AnyInformation {
 	}
 
 	public final override func compute(forSamples samples: [Sample]) -> String {
-		let filteredSamples = DependencyInjector.util.sampleUtil.getOnly(samples: samples, from: startDate, to: endDate)
+		let filteredSamples = DependencyInjector.util.sample.getOnly(samples: samples, from: startDate, to: endDate)
 		return String(filteredSamples.count)
 	}
 

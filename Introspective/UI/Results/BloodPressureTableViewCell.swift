@@ -25,9 +25,9 @@ class BloodPressureTableViewCell: UITableViewCell {
 
 			let start = sample.dates()[.start]!
 			let end = sample.dates()[.end]
-			var dateString = DependencyInjector.util.calendarUtil.string(for: start)
+			var dateString = DependencyInjector.util.calendar.string(for: start)
 			if end != nil && start != end {
-				dateString += " to " + DependencyInjector.util.calendarUtil.string(for: end!)
+				dateString += " to " + DependencyInjector.util.calendar.string(for: end!)
 			}
 			timestampLabel.text = dateString
 		}

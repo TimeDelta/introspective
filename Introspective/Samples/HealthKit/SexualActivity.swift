@@ -158,6 +158,6 @@ extension SexualActivity: Equatable {
 extension SexualActivity: CustomDebugStringConvertible {
 
 	public final var debugDescription: String {
-		return "SexualActivity with protection \(protectionUsed) at " + DependencyInjector.util.calendarUtil.string(for: timestamp)
+		return "SexualActivity with protection \(protectionUsed) at " + DependencyInjector.util.calendar.string(for: timestamp)
 	}
 }

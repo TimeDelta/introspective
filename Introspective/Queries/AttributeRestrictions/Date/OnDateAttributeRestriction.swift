@@ -30,7 +30,7 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Predica
 
 	public final var date: Date {
 		didSet {
-			date = DependencyInjector.util.calendarUtil.start(of: .day, in: date)
+			date = DependencyInjector.util.calendar.start(of: .day, in: date)
 		}
 	}
 
@@ -60,7 +60,7 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Predica
 
 	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		guard let sampleDate = try sample.value(of: restrictedAttribute) as? Date else { throw AttributeError.typeMismatch }
-		return DependencyInjector.util.calendarUtil.date(sampleDate, occursOnSame: .day, as: date)
+		return DependencyInjector.util.calendar.date(sampleDate, occursOnSame: .day, as: date)
 	}
 
 	public final func toPredicate() -> NSPredicate {

@@ -176,6 +176,6 @@ extension Sleep: Equatable {
 extension Sleep: CustomDebugStringConvertible {
 
 	public final var debugDescription: String {
-		return "Sleep with state \(state) from " + DependencyInjector.util.calendarUtil.string(for: startDate) + " to " + DependencyInjector.util.calendarUtil.string(for: endDate)
+		return "Sleep with state \(state) from " + DependencyInjector.util.calendar.string(for: startDate) + " to " + DependencyInjector.util.calendar.string(for: endDate)
 	}
 }

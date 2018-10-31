@@ -22,7 +22,7 @@ public final class OldestDateInformation: AnyInformation {
 	}
 
 	public final override func compute(forSamples samples: [Sample]) -> String {
-		let filteredSamples = DependencyInjector.util.sampleUtil.getOnly(samples: samples, from: startDate, to: endDate)
+		let filteredSamples = DependencyInjector.util.sample.getOnly(samples: samples, from: startDate, to: endDate)
 		if filteredSamples.count == 0 {
 			return Me.noSamplesMessage
 		}
@@ -38,7 +38,7 @@ public final class OldestDateInformation: AnyInformation {
 				os_log("non-optional attribute (%@) of sample (%@) returned %@", type: .error, attribute.name, sample.attributedName, String(describing: value))
 			}
 		}
-		return DependencyInjector.util.calendarUtil.string(for: oldestSampleDate)
+		return DependencyInjector.util.calendar.string(for: oldestSampleDate)
 	}
 
 	public final override func equalTo(_ other: ExtraInformation) -> Bool {

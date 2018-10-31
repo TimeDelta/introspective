@@ -53,18 +53,18 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 
 		var applicableSubQuerySamples = subQuerySamples
 		if mostRecentOnly {
-			applicableSubQuerySamples = DependencyInjector.util.sampleUtil.sort(samples: subQuerySamples, by: .start, in: .orderedDescending)
+			applicableSubQuerySamples = DependencyInjector.util.sample.sort(samples: subQuerySamples, by: .start, in: .orderedDescending)
 			applicableSubQuerySamples = [subQuerySamples[0]]
 		}
 
-		let aggregatedSubQuerySamplesByStartDate = DependencyInjector.util.sampleUtil.aggregate(samples: applicableSubQuerySamples, by: timeUnit, dateType: .start)
-		let aggregatedSubQuerySamplesByEndDate = DependencyInjector.util.sampleUtil.aggregate(samples: applicableSubQuerySamples, by: timeUnit, dateType: .end)
+		let aggregatedSubQuerySamplesByStartDate = DependencyInjector.util.sample.aggregate(samples: applicableSubQuerySamples, by: timeUnit, dateType: .start)
+		let aggregatedSubQuerySamplesByEndDate = DependencyInjector.util.sample.aggregate(samples: applicableSubQuerySamples, by: timeUnit, dateType: .end)
 		for sample in querySamples {
-			let startAggregationDate = DependencyInjector.util.calendarUtil.start(of: timeUnit, in: sample.dates()[.start]!)
+			let startAggregationDate = DependencyInjector.util.calendar.start(of: timeUnit, in: sample.dates()[.start]!)
 			if aggregatedSubQuerySamplesByStartDate[startAggregationDate] != nil {
 				matchingSamples.append(sample)
 			} else if let endDate = sample.dates()[.end] {
-				let endAggregationDate = DependencyInjector.util.calendarUtil.start(of: timeUnit, in: endDate)
+				let endAggregationDate = DependencyInjector.util.calendar.start(of: timeUnit, in: endDate)
 				if aggregatedSubQuerySamplesByEndDate[endAggregationDate] != nil {
 					matchingSamples.append(sample)
 				}

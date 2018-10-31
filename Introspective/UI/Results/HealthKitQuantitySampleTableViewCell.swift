@@ -29,9 +29,9 @@ final class HealthKitQuantitySampleTableViewCell: UITableViewCell {
 
 			let start = sample.dates()[.start]!
 			let end = sample.dates()[.end]
-			var dateString = DependencyInjector.util.calendarUtil.string(for: start, inFormat: Me.dateFormat)
+			var dateString = DependencyInjector.util.calendar.string(for: start, inFormat: Me.dateFormat)
 			if end != nil && start != end {
-				dateString += " to " + DependencyInjector.util.calendarUtil.string(for: end!, inFormat: Me.dateFormat)
+				dateString += " to " + DependencyInjector.util.calendar.string(for: end!, inFormat: Me.dateFormat)
 			}
 			timestampLabel.text = dateString
 		}

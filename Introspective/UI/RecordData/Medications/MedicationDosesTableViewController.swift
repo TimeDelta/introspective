@@ -102,7 +102,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 			self.present(alert, animated: false, completion: nil)
 		}
 		delete.accessibilityLabel = "delete dose button"
-		let dateText = DependencyInjector.util.calendarUtil.string(for: dose.timestamp, inFormat: "MMMM d, yyyy 'at' H:mm")
+		let dateText = DependencyInjector.util.calendar.string(for: dose.timestamp, inFormat: "MMMM d, yyyy 'at' H:mm")
 		var dosageText = dose.dosage?.description ?? ""
 		if !dosageText.isEmpty {
 			dosageText += " "
@@ -203,7 +203,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		if let dosage = dose.dosage {
 			doseText += dosage.description + " on "
 		}
-		doseText += DependencyInjector.util.calendarUtil.string(for: dose.timestamp, inFormat: "MMM dd, yyyy 'at' H:mm")
+		doseText += DependencyInjector.util.calendar.string(for: dose.timestamp, inFormat: "MMM dd, yyyy 'at' H:mm")
 		return doseText
 	}
 
@@ -213,15 +213,15 @@ public final class MedicationDosesTableViewController: UITableViewController {
 			var filterPredicates = [NSPredicate]()
 			if var startDate = filterStartDate {
 				if filterEndDate == nil {
-					startDate = DependencyInjector.util.calendarUtil.end(of: .day, in: startDate)
+					startDate = DependencyInjector.util.calendar.end(of: .day, in: startDate)
 				}
 				filterPredicates.append(NSPredicate(format: "%K > %@", "timestamp", startDate as NSDate))
 			}
 			if var endDate = filterEndDate {
 				if filterStartDate == filterEndDate {
-					endDate = DependencyInjector.util.calendarUtil.end(of: .day, in: endDate)
+					endDate = DependencyInjector.util.calendar.end(of: .day, in: endDate)
 				} else if filterStartDate == nil {
-					endDate = DependencyInjector.util.calendarUtil.start(of: .day, in: endDate)
+					endDate = DependencyInjector.util.calendar.start(of: .day, in: endDate)
 				}
 				filterPredicates.append(NSPredicate(format: "%K < %@", "timestamp", endDate as NSDate))
 			}
@@ -235,18 +235,18 @@ public final class MedicationDosesTableViewController: UITableViewController {
 			dateText = "Filter Dates"
 		} else if filterEndDate == filterStartDate {
 			dateText = "On "
-			dateText += DependencyInjector.util.calendarUtil.string(for: filterStartDate!, inFormat: "MMM d, yyyy")
+			dateText += DependencyInjector.util.calendar.string(for: filterStartDate!, inFormat: "MMM d, yyyy")
 		} else if filterEndDate == nil {
 			dateText = "After "
-			dateText += DependencyInjector.util.calendarUtil.string(for: filterStartDate!, inFormat: "MMM d, yyyy")
+			dateText += DependencyInjector.util.calendar.string(for: filterStartDate!, inFormat: "MMM d, yyyy")
 		} else if filterStartDate == nil {
 			dateText = "Before "
-			dateText += DependencyInjector.util.calendarUtil.string(for: filterEndDate!, inFormat: "MMM dd, yyyy")
+			dateText += DependencyInjector.util.calendar.string(for: filterEndDate!, inFormat: "MMM dd, yyyy")
 		} else {
 			dateText = "From "
-			dateText += DependencyInjector.util.calendarUtil.string(for: filterStartDate!, inFormat: "M/d/yy")
+			dateText += DependencyInjector.util.calendar.string(for: filterStartDate!, inFormat: "M/d/yy")
 			dateText += " to "
-			dateText += DependencyInjector.util.calendarUtil.string(for: filterEndDate!, inFormat: "M/d/yy")
+			dateText += DependencyInjector.util.calendar.string(for: filterEndDate!, inFormat: "M/d/yy")
 		}
 		dateRangeButton.title = dateText
 		dateRangeButton.accessibilityValue = dateText

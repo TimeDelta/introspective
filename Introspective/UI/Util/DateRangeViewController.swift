@@ -66,13 +66,13 @@ public final class DateRangeViewController: UIViewController {
 		if enableFromDateSwitch.isOn {
 			dates.from = fromDatePicker.date
 			if datePickerMode == .date {
-				dates.from = DependencyInjector.util.calendarUtil.start(of: .day, in: fromDatePicker.date)
+				dates.from = DependencyInjector.util.calendar.start(of: .day, in: fromDatePicker.date)
 			}
 		}
 		if enableToDateSwitch.isOn {
 			dates.to = toDatePicker.date
 			if datePickerMode == .date {
-				dates.to = DependencyInjector.util.calendarUtil.start(of: .day, in: toDatePicker.date)
+				dates.to = DependencyInjector.util.calendar.start(of: .day, in: toDatePicker.date)
 			}
 		}
 		DispatchQueue.main.async {

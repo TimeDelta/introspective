@@ -56,7 +56,7 @@ public final class FrequencyEditorViewController: UIViewController {
 	@IBAction final func saveButtonPressed(_ sender: Any) {
 		var frequency: Frequency? = nil
 		if let times = amountTextField?.text {
-			if !times.isEmpty && DependencyInjector.util.stringUtil.isNumber(times) {
+			if !times.isEmpty && DependencyInjector.util.string.isNumber(times) {
 				let timeUnit = Me.timeUnits[timeUnitPicker.selectedRow(inComponent: 0)]
 				frequency = Frequency(Double(times)!, timeUnit)
 			}

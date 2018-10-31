@@ -70,11 +70,11 @@ public final class SampleUtilImpl: SampleUtil {
 	public final func sample(_ sample: Sample, occursOnOneOf daysOfWeek: Set<DayOfWeek>) -> Bool {
 		if !daysOfWeek.isEmpty {
 			let startDate = sample.dates()[.start]!
-			if DependencyInjector.util.calendarUtil.date(startDate, isOnOneOf: daysOfWeek) {
+			if DependencyInjector.util.calendar.date(startDate, isOnOneOf: daysOfWeek) {
 				return true
 			}
 			let endDate = sample.dates()[.end]
-			if endDate != nil && DependencyInjector.util.calendarUtil.date(endDate!, isOnOneOf: daysOfWeek) {
+			if endDate != nil && DependencyInjector.util.calendar.date(endDate!, isOnOneOf: daysOfWeek) {
 				return true
 			}
 			return false
@@ -198,7 +198,7 @@ public final class SampleUtilImpl: SampleUtil {
 	public final func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2]) -> SampleType2 {
 		precondition(samples.count > 0, "Precondition violated: input array must have at least one element")
 
-		return DependencyInjector.util.searchUtil.closestItem(to: sample, in: samples) { (sample1: Sample, sample2: Sample) -> Int in
+		return DependencyInjector.util.search.closestItem(to: sample, in: samples) { (sample1: Sample, sample2: Sample) -> Int in
 			return abs(distance(between: sample1, and: sample2))
 		} as! SampleType2
 	}
@@ -207,7 +207,7 @@ public final class SampleUtilImpl: SampleUtil {
 	public final func closestInTimeTo(sample: Sample, in samples: [Sample]) -> Sample {
 		precondition(samples.count > 0, "Precondition violated: input array must have at least one element")
 
-		return DependencyInjector.util.searchUtil.closestItem(to: sample, in: samples) { (sample1: Sample, sample2: Sample) -> Int in
+		return DependencyInjector.util.search.closestItem(to: sample, in: samples) { (sample1: Sample, sample2: Sample) -> Int in
 			return abs(distance(between: sample1, and: sample2))
 		}
 	}
@@ -255,7 +255,7 @@ public final class SampleUtilImpl: SampleUtil {
 
 	private final func aggregate(_ samples: [Sample], _ aggregationUnit: Calendar.Component, _ dateType: DateType = .start) -> [Date: [Sample]] {
 		return Dictionary(grouping: samples.filter{ $0.dates()[dateType] != nil }, by: { sample in
-			return DependencyInjector.util.calendarUtil.start(of: aggregationUnit, in: sample.dates()[dateType]!)
+			return DependencyInjector.util.calendar.start(of: aggregationUnit, in: sample.dates()[dateType]!)
 		})
 	}
 
@@ -264,7 +264,7 @@ public final class SampleUtilImpl: SampleUtil {
 			let date1 = sample1.dates()[dateType]
 			let date2 = sample2.dates()[dateType]
 
-			return DependencyInjector.util.calendarUtil.compare(date1, date2) == order
+			return DependencyInjector.util.calendar.compare(date1, date2) == order
 		})
 	}
 

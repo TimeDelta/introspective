@@ -22,7 +22,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 	public final var importOnlyNewData: Bool = true
 
 	public final func importData(from url: URL) throws {
-		let contents = try DependencyInjector.util.ioUtil.contentsOf(url)
+		let contents = try DependencyInjector.util.io.contentsOf(url)
 		var lineNumber = 2
 		for line in contents.components(separatedBy: "\n")[1...] {
 			let parts = line.components(separatedBy: ",")
@@ -62,7 +62,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 			}
 			currentIndex = originalFrequencyIndex + additionalColumns + 3
 			let startedOnText = try getColumn(currentIndex, from: parts, errorMessage: "Could not get started on date from line \(lineNumber).")
-			let startedOn = DependencyInjector.util.calendarUtil.date(from: startedOnText, format: "M/d/yy")!
+			let startedOn = DependencyInjector.util.calendar.date(from: startedOnText, format: "M/d/yy")!
 
 			try storeMedication(named: medicationName, startedOn: startedOn, dosage: Dosage(dosageText), notes: notes, frequencyText: frequencyText)
 
@@ -146,7 +146,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 				return nil
 			}
 
-			if let numberRange = DependencyInjector.util.stringUtil.rangeOfNumberIn(frequencyText) {
+			if let numberRange = DependencyInjector.util.string.rangeOfNumberIn(frequencyText) {
 				let number = 1.0 / Double(frequencyText[numberRange])!
 				return Frequency(number, timeUnit!)
 			}
@@ -178,6 +178,6 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 	}
 
 	private final func isNumber(_ str: String) -> Bool {
-		return DependencyInjector.util.stringUtil.isNumber(str)
+		return DependencyInjector.util.string.isNumber(str)
 	}
 }

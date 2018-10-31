@@ -40,7 +40,7 @@ public final class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 
 		var applicableSubQuerySamples = subQuerySamples
 		if mostRecentOnly {
-			applicableSubQuerySamples = DependencyInjector.util.sampleUtil.sort(samples: subQuerySamples, by: .start, in: .orderedDescending)
+			applicableSubQuerySamples = DependencyInjector.util.sample.sort(samples: subQuerySamples, by: .start, in: .orderedDescending)
 			applicableSubQuerySamples = [subQuerySamples[0]]
 		}
 
@@ -48,7 +48,7 @@ public final class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 			return compare(s1, s2) == .orderedAscending
 		}
 		for sample in querySamples {
-			let matchingSampleIndex = DependencyInjector.util.searchUtil.binarySearch(for: sample, in: subQuerySamplesSortedByStartAndEndDates, compare: compare)
+			let matchingSampleIndex = DependencyInjector.util.search.binarySearch(for: sample, in: subQuerySamplesSortedByStartAndEndDates, compare: compare)
 			if matchingSampleIndex != nil {
 				matchingSamples.append(sample)
 			}
@@ -97,6 +97,6 @@ public final class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 			return startDateComparison
 		}
 
-		return DependencyInjector.util.calendarUtil.compare(s1.dates()[.end], s2.dates()[.end])
+		return DependencyInjector.util.calendar.compare(s1.dates()[.end], s2.dates()[.end])
 	}
 }

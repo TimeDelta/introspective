@@ -350,7 +350,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	private final func areAllNumbers(_ values: [String]) -> Bool {
 		signpost.begin(name: "Are all numbers", "Checking if %d values are all numbers", values.count)
 		for value in values {
-			if !DependencyInjector.util.stringUtil.isNumber(value) {
+			if !DependencyInjector.util.string.isNumber(value) {
 				signpost.end(name: "Are all numbers", "Finished checking if %d values are all numbers", values.count)
 				return false
 			}

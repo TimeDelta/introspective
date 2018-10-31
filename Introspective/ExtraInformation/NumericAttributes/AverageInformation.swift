@@ -18,11 +18,11 @@ public final class AverageInformation: AnyInformation {
 	}
 
 	public final override func compute(forSamples samples: [Sample]) -> String {
-		let filteredSamples = DependencyInjector.util.sampleUtil.getOnly(samples: samples, from: startDate, to: endDate)
+		let filteredSamples = DependencyInjector.util.sample.getOnly(samples: samples, from: startDate, to: endDate)
 		if attribute is DosageAttribute {
 			return averageDosage(filteredSamples)
 		}
-		return String(DependencyInjector.util.numericSampleUtil.average(for: attribute, over: filteredSamples))
+		return String(DependencyInjector.util.numericSample.average(for: attribute, over: filteredSamples))
 	}
 
 	public final override func equalTo(_ other: ExtraInformation) -> Bool {

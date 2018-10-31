@@ -21,12 +21,12 @@ public final class UtilFactory {
 	private static let realStringUtil = StringUtilImpl()
 	private static let realIOUtil = IOUtilImpl()
 
-	public final var calendarUtil: CalendarUtil = Me.realCalendarUtil
-	public final var numericSampleUtil: NumericSampleUtil = Me.realHKQuantitySampleUtil
-	public final var textNormalizationUtil: TextNormalizationUtil = Me.realTextNormalizationUtil
-	public final var sampleUtil: SampleUtil = Me.realSampleUtil
-	public final var attributeRestrictionUtil: AttributeRestrictionUtil = Me.realTimeConstraintUtil
-	public final var searchUtil: SearchUtil = Me.realSearchUtil
-	public final var stringUtil: StringUtil = Me.realStringUtil
-	public final var ioUtil: IOUtil = Me.realIOUtil
+	public final var calendar: CalendarUtil = Me.realCalendarUtil
+	public final var numericSample: NumericSampleUtil = Me.realHKQuantitySampleUtil
+	public final var textNormalization: TextNormalizationUtil = Me.realTextNormalizationUtil
+	public final var sample: SampleUtil = Me.realSampleUtil
+	public final var attributeRestriction: AttributeRestrictionUtil = Me.realTimeConstraintUtil
+	public final var search: SearchUtil = Me.realSearchUtil
+	public final var string: StringUtil = Me.realStringUtil
+	public final var io: IOUtil = Me.realIOUtil
 }

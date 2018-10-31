@@ -89,7 +89,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 			if let dosage = mostRecentDose.dosage {
 				lastTakenText += dosage.description + " on "
 			}
-			lastTakenText += DependencyInjector.util.calendarUtil.string(for: mostRecentDose.timestamp, inFormat: "MMM dd, yyyy 'at' HH:mm")
+			lastTakenText += DependencyInjector.util.calendar.string(for: mostRecentDose.timestamp, inFormat: "MMM dd, yyyy 'at' HH:mm")
 			UiUtil.setButton(lastTakenOnDateButton, enabled: true, hidden: false)
 		} else {
 			UiUtil.setButton(lastTakenOnDateButton, enabled: false, hidden: false)
