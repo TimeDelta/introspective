@@ -24,8 +24,7 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		// given
 		let querySamples = [AnySample]()
 		let subQuerySamples = [Sample]()
-		let timeUnit: Calendar.Component = .day
-		matcher.timeUnit = timeUnit
+		matcher.timeUnit = .day
 
 		// when
 		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
@@ -38,8 +37,7 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		// given
 		let querySamples = [AnySample]()
 		let subQuerySamples = SampleCreatorTestUtil.createSamples(count: 2)
-		let timeUnit: Calendar.Component = .day
-		matcher.timeUnit = timeUnit
+		matcher.timeUnit = .day
 
 		// when
 		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
@@ -52,8 +50,7 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		// given
 		let querySamples = SampleCreatorTestUtil.createSamples(count: 2)
 		let subQuerySamples = [Sample]()
-		let timeUnit: Calendar.Component = .day
-		matcher.timeUnit = timeUnit
+		matcher.timeUnit = .day
 
 		// when
 		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
@@ -69,8 +66,7 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		let subQuerySampleDate = querySampleDate1
 		let querySamples = SampleCreatorTestUtil.createSamples(withDates: [querySampleDate1, querySampleDate2])
 		let subQuerySamples: [Sample] = [SampleCreatorTestUtil.createSample(startDate: subQuerySampleDate)]
-		let timeUnit: Calendar.Component = .day
-		matcher.timeUnit = timeUnit
+		matcher.timeUnit = .day
 
 		// when
 		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
@@ -92,8 +88,7 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		let subQuerySampleDate2 = Date() + 1.days
 		let querySamples = SampleCreatorTestUtil.createSamples(withDates: [querySampleDate1, querySampleDate2])
 		let subQuerySamples: [Sample] = SampleCreatorTestUtil.createSamples(withDates: [subQuerySampleDate1, subQuerySampleDate2])
-		let timeUnit: Calendar.Component = .day
-		matcher.timeUnit = timeUnit
+		matcher.timeUnit = .day
 
 		// when
 		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
@@ -125,8 +120,7 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 			(startDate: subQuerySampleStartDate1, endDate: subQuerySampleEndDate1),
 			(startDate: subQuerySampleStartDate2, endDate: subQuerySampleEndDate2),
 		])
-		let timeUnit: Calendar.Component = .day
-		matcher.timeUnit = timeUnit
+		matcher.timeUnit = .day
 
 		// when
 		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
@@ -145,11 +139,10 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		let querySampleDate1 = Date() - 1.days
 		let querySampleDate2 = Date()
 		let subQuerySampleDate1 = querySampleDate1
-		let subQuerySampleDate2 = Date() + 1.days
+		let subQuerySampleDate2 = Date() - 2.days
 		let querySamples = SampleCreatorTestUtil.createSamples(withDates: [querySampleDate1, querySampleDate2])
 		let subQuerySamples: [Sample] = SampleCreatorTestUtil.createSamples(withDates: [subQuerySampleDate1, subQuerySampleDate2])
-		let timeUnit: Calendar.Component = .day
-		matcher.timeUnit = timeUnit
+		matcher.timeUnit = .day
 		matcher.mostRecentOnly = true
 
 		// when
@@ -170,10 +163,10 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		let querySampleEndDate1 = Date() - 1.days
 		let querySampleStartDate2 = Date() + 1.days
 		let querySampleEndDate2 = Date() + 1.days
-		let subQuerySampleStartDate1 = querySampleStartDate1
-		let subQuerySampleEndDate1 = querySampleEndDate1
-		let subQuerySampleStartDate2 = querySampleStartDate2 + 1.days
-		let subQuerySampleEndDate2 = querySampleEndDate2 + 1.days
+		let subQuerySampleStartDate1 = querySampleStartDate2
+		let subQuerySampleEndDate1 = querySampleEndDate2
+		let subQuerySampleStartDate2 = querySampleStartDate2 - 1.days
+		let subQuerySampleEndDate2 = querySampleEndDate2 - 1.days
 		let querySamples = SampleCreatorTestUtil.createSamples(withDates: [
 			(startDate: querySampleStartDate1, endDate: querySampleEndDate1),
 			(startDate: querySampleStartDate2, endDate: querySampleEndDate2),
@@ -182,8 +175,7 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 			(startDate: subQuerySampleStartDate1, endDate: subQuerySampleEndDate1),
 			(startDate: subQuerySampleStartDate2, endDate: subQuerySampleEndDate2),
 		])
-		let timeUnit: Calendar.Component = .day
-		matcher.timeUnit = timeUnit
+		matcher.timeUnit = .day
 		matcher.mostRecentOnly = true
 
 		// when
@@ -193,8 +185,8 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		XCTAssert(matchingSamples.count == 1, "Found \(matchingSamples.count) samples")
 		if matchingSamples.count > 0 {
 			XCTAssert(
-				matchingSamples[0].equalTo(querySamples[0]),
-				"Expected \(querySamples[0].debugDescription) but got \(matchingSamples[0].debugDescription)")
+				matchingSamples[0].equalTo(querySamples[1]),
+				"Expected \(querySamples[1].debugDescription) but got \(matchingSamples[0].debugDescription)")
 		}
 	}
 }

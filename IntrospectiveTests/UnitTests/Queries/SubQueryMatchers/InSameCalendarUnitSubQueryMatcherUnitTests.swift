@@ -26,8 +26,12 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		let subQuerySamples = [Sample]()
 		let timeUnit: Calendar.Component = .day
 		matcher.timeUnit = timeUnit
-		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), dateType: .value(.start), willReturn: [Date: [Sample]]()))
-		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), dateType: .value(.end), willReturn: [Date: [Sample]]()))
+		Given(mockSampleUtil,
+			.aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), for: .value(CommonSampleAttributes.startDate),
+			willReturn: [Date: [Sample]]()))
+		Given(mockSampleUtil,
+			.aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), for: .value(CommonSampleAttributes.endDate),
+			willReturn: [Date: [Sample]]()))
 
 		// when
 		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
@@ -42,8 +46,8 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		let subQuerySamples = SampleCreatorTestUtil.createSamples(count: 2)
 		let timeUnit: Calendar.Component = .day
 		matcher.timeUnit = timeUnit
-		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), dateType: .value(.start), willReturn: [Date: [Sample]]()))
-		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), dateType: .value(.end), willReturn: [Date: [Sample]]()))
+		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), for: .value(CommonSampleAttributes.startDate), willReturn: [Date: [Sample]]()))
+		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), for: .value(CommonSampleAttributes.endDate), willReturn: [Date: [Sample]]()))
 
 		// when
 		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
@@ -58,8 +62,8 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		let subQuerySamples = [Sample]()
 		let timeUnit: Calendar.Component = .day
 		matcher.timeUnit = timeUnit
-		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), dateType: .value(.start), willReturn: [Date: [Sample]]()))
-		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), dateType: .value(.end), willReturn: [Date: [Sample]]()))
+		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), for: .value(CommonSampleAttributes.startDate), willReturn: [Date: [Sample]]()))
+		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), for: .value(CommonSampleAttributes.endDate), willReturn: [Date: [Sample]]()))
 		Given(mockCalendarUtil, .start(of: .value(timeUnit), in: .any(Date.self), willReturn: Date()))
 
 		// when
@@ -78,8 +82,8 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		let subQuerySamples: [Sample] = [SampleCreatorTestUtil.createSample(startDate: subQuerySampleDate)]
 		let timeUnit: Calendar.Component = .day
 		matcher.timeUnit = timeUnit
-		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), dateType: .value(.start), willReturn: [subQuerySampleDate: subQuerySamples]))
-		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), dateType: .value(.end), willReturn: [Date: [Sample]]()))
+		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), for: .value(CommonSampleAttributes.startDate), willReturn: [subQuerySampleDate: subQuerySamples]))
+		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), for: .value(CommonSampleAttributes.endDate), willReturn: [Date: [Sample]]()))
 		Given(mockCalendarUtil, .start(of: .value(timeUnit), in: .value(querySampleDate1), willReturn: subQuerySampleDate))
 		Given(mockCalendarUtil, .start(of: .value(timeUnit), in: .value(querySampleDate2), willReturn: querySampleDate2))
 
@@ -105,8 +109,8 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		let subQuerySamples: [Sample] = SampleCreatorTestUtil.createSamples(withDates: [subQuerySampleDate1, subQuerySampleDate2])
 		let timeUnit: Calendar.Component = .day
 		matcher.timeUnit = timeUnit
-		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), dateType: .value(.start), willReturn: [subQuerySampleDate1: subQuerySamples]))
-		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), dateType: .value(.end), willReturn: [Date: [Sample]]()))
+		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), for: .value(CommonSampleAttributes.startDate), willReturn: [subQuerySampleDate1: subQuerySamples]))
+		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), for: .value(CommonSampleAttributes.endDate), willReturn: [Date: [Sample]]()))
 		Given(mockCalendarUtil, .start(of: .value(timeUnit), in: .value(querySampleDate1), willReturn: subQuerySampleDate1))
 		Given(mockCalendarUtil, .start(of: .value(timeUnit), in: .value(querySampleDate2), willReturn: querySampleDate2))
 
@@ -134,8 +138,8 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		matcher.timeUnit = timeUnit
 		matcher.mostRecentOnly = true
 		Given(mockSampleUtil, .sort(samples: .value(subQuerySamples), by: .value(.start), in: .value(.orderedDescending), willReturn: subQuerySamples))
-		Given(mockSampleUtil, .aggregate(samples: .value([subQuerySamples[0]]), by: .value(timeUnit), dateType: .value(.start), willReturn: [subQuerySampleDate1: [subQuerySamples[0]]]))
-		Given(mockSampleUtil, .aggregate(samples: .value([subQuerySamples[0]]), by: .value(timeUnit), dateType: .value(.end), willReturn: [Date: [Sample]]()))
+		Given(mockSampleUtil, .aggregate(samples: .value([subQuerySamples[0]]), by: .value(timeUnit), for: .value(CommonSampleAttributes.startDate), willReturn: [subQuerySampleDate1: [subQuerySamples[0]]]))
+		Given(mockSampleUtil, .aggregate(samples: .value([subQuerySamples[0]]), by: .value(timeUnit), for: .value(CommonSampleAttributes.endDate), willReturn: [Date: [Sample]]()))
 		Given(mockCalendarUtil, .start(of: .value(timeUnit), in: .value(querySampleDate1), willReturn: subQuerySampleDate1))
 		Given(mockCalendarUtil, .start(of: .value(timeUnit), in: .value(querySampleDate2), willReturn: querySampleDate2))
 

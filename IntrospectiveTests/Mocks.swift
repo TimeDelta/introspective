@@ -6874,30 +6874,30 @@ class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    func aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, dateType: DateType) -> [Date: [Sample]] {
-        addInvocation(.m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<DateType>.value(`dateType`)))
-		let perform = methodPerformValue(.m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<DateType>.value(`dateType`))) as? ([Sample], Calendar.Component, DateType) -> Void
-		perform?(`samples`, `aggregationUnit`, `dateType`)
+    func aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, for attribute: Attribute) -> [Date: [Sample]] {
+        addInvocation(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`)))
+		let perform = methodPerformValue(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`))) as? ([Sample], Calendar.Component, Attribute) -> Void
+		perform?(`samples`, `aggregationUnit`, `attribute`)
 		var __value: [Date: [Sample]]
 		do {
-		    __value = try methodReturnValue(.m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<DateType>.value(`dateType`))).casted()
+		    __value = try methodReturnValue(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, dateType: DateType). Use given")
-			Failure("Stub return value not specified for aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, dateType: DateType). Use given")
+			onFatalFailure("Stub return value not specified for aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, for attribute: Attribute). Use given")
+			Failure("Stub return value not specified for aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, for attribute: Attribute). Use given")
 		}
 		return __value
     }
 
-    func aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, dateType: DateType) -> [Date: [SampleType]] {
-        addInvocation(.m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<DateType>.value(`dateType`)))
-		let perform = methodPerformValue(.m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<DateType>.value(`dateType`))) as? ([SampleType], Calendar.Component, DateType) -> Void
-		perform?(`samples`, `aggregationUnit`, `dateType`)
+    func aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, for attribute: Attribute) -> [Date: [SampleType]] {
+        addInvocation(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`)))
+		let perform = methodPerformValue(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`))) as? ([SampleType], Calendar.Component, Attribute) -> Void
+		perform?(`samples`, `aggregationUnit`, `attribute`)
 		var __value: [Date: [SampleType]]
 		do {
-		    __value = try methodReturnValue(.m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<DateType>.value(`dateType`))).casted()
+		    __value = try methodReturnValue(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, dateType: DateType). Use given")
-			Failure("Stub return value not specified for aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, dateType: DateType). Use given")
+			onFatalFailure("Stub return value not specified for aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, for attribute: Attribute). Use given")
+			Failure("Stub return value not specified for aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, for attribute: Attribute). Use given")
 		}
 		return __value
     }
@@ -7033,8 +7033,8 @@ class SampleUtilMock: SampleUtil, Mock {
         case m_getOnly__samples_samplesfrom_startDateto_endDate_1(Parameter<[Sample]>, Parameter<Date?>, Parameter<Date?>)
         case m_getOnly__samples_samplesfrom_startDateto_endDate_2(Parameter<GenericAttribute>, Parameter<Date?>, Parameter<Date?>)
         case m_sample__sampleoccursOnOneOf_daysOfWeek(Parameter<Sample>, Parameter<Set<DayOfWeek>>)
-        case m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_1(Parameter<[Sample]>, Parameter<Calendar.Component>, Parameter<DateType>)
-        case m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_2(Parameter<GenericAttribute>, Parameter<Calendar.Component>, Parameter<DateType>)
+        case m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(Parameter<[Sample]>, Parameter<Calendar.Component>, Parameter<Attribute>)
+        case m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(Parameter<GenericAttribute>, Parameter<Calendar.Component>, Parameter<Attribute>)
         case m_sort__samples_samplesby_aggregationUnit_1(Parameter<[Sample]>, Parameter<Calendar.Component>)
         case m_sort__samples_samplesby_aggregationUnit_2(Parameter<GenericAttribute>, Parameter<Calendar.Component>)
         case m_sort__samples_samplesby_dateTypein_order_1(Parameter<[Sample]>, Parameter<DateType>, Parameter<ComparisonResult>)
@@ -7061,15 +7061,15 @@ class SampleUtilMock: SampleUtil, Mock {
                 guard Parameter.compare(lhs: lhsSample, rhs: rhsSample, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsDaysofweek, rhs: rhsDaysofweek, with: matcher) else { return false } 
                 return true 
-            case (.m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_1(let lhsSamples, let lhsAggregationunit, let lhsDatetype), .m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_1(let rhsSamples, let rhsAggregationunit, let rhsDatetype)):
+            case (.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(let lhsSamples, let lhsAggregationunit, let lhsAttribute), .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(let rhsSamples, let rhsAggregationunit, let rhsAttribute)):
                 guard Parameter.compare(lhs: lhsSamples, rhs: rhsSamples, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsAggregationunit, rhs: rhsAggregationunit, with: matcher) else { return false } 
-                guard Parameter.compare(lhs: lhsDatetype, rhs: rhsDatetype, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
                 return true 
-            case (.m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_2(let lhsSamples, let lhsAggregationunit, let lhsDatetype), .m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_2(let rhsSamples, let rhsAggregationunit, let rhsDatetype)):
+            case (.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(let lhsSamples, let lhsAggregationunit, let lhsAttribute), .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(let rhsSamples, let rhsAggregationunit, let rhsAttribute)):
                 guard Parameter.compare(lhs: lhsSamples, rhs: rhsSamples, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsAggregationunit, rhs: rhsAggregationunit, with: matcher) else { return false } 
-                guard Parameter.compare(lhs: lhsDatetype, rhs: rhsDatetype, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
                 return true 
             case (.m_sort__samples_samplesby_aggregationUnit_1(let lhsSamples, let lhsAggregationunit), .m_sort__samples_samplesby_aggregationUnit_1(let rhsSamples, let rhsAggregationunit)):
                 guard Parameter.compare(lhs: lhsSamples, rhs: rhsSamples, with: matcher) else { return false } 
@@ -7121,8 +7121,8 @@ class SampleUtilMock: SampleUtil, Mock {
             case let .m_getOnly__samples_samplesfrom_startDateto_endDate_1(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_getOnly__samples_samplesfrom_startDateto_endDate_2(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_sample__sampleoccursOnOneOf_daysOfWeek(p0, p1): return p0.intValue + p1.intValue
-            case let .m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_1(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
-            case let .m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_2(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_sort__samples_samplesby_aggregationUnit_1(p0, p1): return p0.intValue + p1.intValue
             case let .m_sort__samples_samplesby_aggregationUnit_2(p0, p1): return p0.intValue + p1.intValue
             case let .m_sort__samples_samplesby_dateTypein_order_1(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
@@ -7158,11 +7158,11 @@ class SampleUtilMock: SampleUtil, Mock {
 		static func sample(sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_sample__sampleoccursOnOneOf_daysOfWeek(`sample`, `daysOfWeek`), products: willReturn.map({ Product.return($0) }))
         }
-        static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, dateType: Parameter<DateType>, willReturn: [Date: [Sample]]...) -> MethodStub {
-            return Given(method: .m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_1(`samples`, `aggregationUnit`, `dateType`), products: willReturn.map({ Product.return($0) }))
+        static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willReturn: [Date: [Sample]]...) -> MethodStub {
+            return Given(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(`samples`, `aggregationUnit`, `attribute`), products: willReturn.map({ Product.return($0) }))
         }
-        static func aggregate<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, dateType: Parameter<DateType>, willReturn: [Date: [SampleType]]...) -> MethodStub {
-            return Given(method: .m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_2(`samples`.wrapAsGeneric(), `aggregationUnit`, `dateType`), products: willReturn.map({ Product.return($0) }))
+        static func aggregate<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willReturn: [Date: [SampleType]]...) -> MethodStub {
+            return Given(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(`samples`.wrapAsGeneric(), `aggregationUnit`, `attribute`), products: willReturn.map({ Product.return($0) }))
         }
         static func sort(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, willReturn: [(date: Date, samples: [Sample])]...) -> MethodStub {
             return Given(method: .m_sort__samples_samplesby_aggregationUnit_1(`samples`, `aggregationUnit`), products: willReturn.map({ Product.return($0) }))
@@ -7220,16 +7220,16 @@ class SampleUtilMock: SampleUtil, Mock {
 			willProduce(stubber)
 			return given
         }
-        static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, dateType: Parameter<DateType>, willProduce: (Stubber<[Date: [Sample]]>) -> Void) -> MethodStub {
+        static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willProduce: (Stubber<[Date: [Sample]]>) -> Void) -> MethodStub {
             let willReturn: [[Date: [Sample]]] = []
-			let given: Given = { return Given(method: .m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_1(`samples`, `aggregationUnit`, `dateType`), products: willReturn.map({ Product.return($0) })) }()
+			let given: Given = { return Given(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(`samples`, `aggregationUnit`, `attribute`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: ([Date: [Sample]]).self)
 			willProduce(stubber)
 			return given
         }
-        static func aggregate<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, dateType: Parameter<DateType>, willProduce: (Stubber<[Date: [SampleType]]>) -> Void) -> MethodStub {
+        static func aggregate<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willProduce: (Stubber<[Date: [SampleType]]>) -> Void) -> MethodStub {
             let willReturn: [[Date: [SampleType]]] = []
-			let given: Given = { return Given(method: .m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_2(`samples`.wrapAsGeneric(), `aggregationUnit`, `dateType`), products: willReturn.map({ Product.return($0) })) }()
+			let given: Given = { return Given(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(`samples`.wrapAsGeneric(), `aggregationUnit`, `attribute`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: ([Date: [SampleType]]).self)
 			willProduce(stubber)
 			return given
@@ -7307,8 +7307,8 @@ class SampleUtilMock: SampleUtil, Mock {
         static func sample(_ sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>) -> Verify { return Verify(method: .m_sample__sampleoccursOnOneOf_daysOfWeek(`sample`, `daysOfWeek`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `sample` label")
 		static func sample(sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>) -> Verify { return Verify(method: .m_sample__sampleoccursOnOneOf_daysOfWeek(`sample`, `daysOfWeek`))}
-        static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, dateType: Parameter<DateType>) -> Verify { return Verify(method: .m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_1(`samples`, `aggregationUnit`, `dateType`))}
-        static func aggregate<SampleType>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, dateType: Parameter<DateType>) -> Verify { return Verify(method: .m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_2(`samples`.wrapAsGeneric(), `aggregationUnit`, `dateType`))}
+        static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(`samples`, `aggregationUnit`, `attribute`))}
+        static func aggregate<SampleType>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(`samples`.wrapAsGeneric(), `aggregationUnit`, `attribute`))}
         static func sort(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>) -> Verify { return Verify(method: .m_sort__samples_samplesby_aggregationUnit_1(`samples`, `aggregationUnit`))}
         static func sort<SampleType>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>) -> Verify { return Verify(method: .m_sort__samples_samplesby_aggregationUnit_2(`samples`.wrapAsGeneric(), `aggregationUnit`))}
         static func sort(samples: Parameter<[Sample]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>) -> Verify { return Verify(method: .m_sort__samples_samplesby_dateTypein_order_1(`samples`, `dateType`, `order`))}
@@ -7341,11 +7341,11 @@ class SampleUtilMock: SampleUtil, Mock {
 		static func sample(sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>, perform: @escaping (Sample, Set<DayOfWeek>) -> Void) -> Perform {
             return Perform(method: .m_sample__sampleoccursOnOneOf_daysOfWeek(`sample`, `daysOfWeek`), performs: perform)
         }
-        static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, dateType: Parameter<DateType>, perform: @escaping ([Sample], Calendar.Component, DateType) -> Void) -> Perform {
-            return Perform(method: .m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_1(`samples`, `aggregationUnit`, `dateType`), performs: perform)
+        static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, perform: @escaping ([Sample], Calendar.Component, Attribute) -> Void) -> Perform {
+            return Perform(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(`samples`, `aggregationUnit`, `attribute`), performs: perform)
         }
-        static func aggregate<SampleType>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, dateType: Parameter<DateType>, perform: @escaping ([SampleType], Calendar.Component, DateType) -> Void) -> Perform {
-            return Perform(method: .m_aggregate__samples_samplesby_aggregationUnitdateType_dateType_2(`samples`.wrapAsGeneric(), `aggregationUnit`, `dateType`), performs: perform)
+        static func aggregate<SampleType>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, perform: @escaping ([SampleType], Calendar.Component, Attribute) -> Void) -> Perform {
+            return Perform(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(`samples`.wrapAsGeneric(), `aggregationUnit`, `attribute`), performs: perform)
         }
         static func sort(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, perform: @escaping ([Sample], Calendar.Component) -> Void) -> Perform {
             return Perform(method: .m_sort__samples_samplesby_aggregationUnit_1(`samples`, `aggregationUnit`), performs: perform)

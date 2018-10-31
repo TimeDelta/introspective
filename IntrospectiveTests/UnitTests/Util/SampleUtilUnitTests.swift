@@ -478,7 +478,7 @@ class SampleUtilUnitTests: UnitTest {
 		let unit = Calendar.Component.day
 
 		// when
-		let aggregatedSamples = util.aggregate(samples: samples, by: unit)
+		let aggregatedSamples = util.aggregate(samples: samples, by: unit, for: CommonSampleAttributes.startDate)
 
 		// then
 		XCTAssert(aggregatedSamples.count == 0, "Found \(aggregatedSamples.count) aggregations")
@@ -493,7 +493,7 @@ class SampleUtilUnitTests: UnitTest {
 		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date), willReturn: beginningOfHour))
 
 		// when
-		let aggregatedSamples = util.aggregate(samples: samples, by: unit)
+		let aggregatedSamples = util.aggregate(samples: samples, by: unit, for: CommonSampleAttributes.startDate)
 
 		// then
 		XCTAssert(aggregatedSamples.count == 1, "Found \(aggregatedSamples.count) aggregations")
@@ -517,7 +517,7 @@ class SampleUtilUnitTests: UnitTest {
 		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date2), willReturn: beginningOfDay))
 
 		// when
-		let aggregatedSamples = util.aggregate(samples: samples, by: unit)
+		let aggregatedSamples = util.aggregate(samples: samples, by: unit, for: CommonSampleAttributes.startDate)
 
 		// then
 		XCTAssert(aggregatedSamples.count == 1, "Found \(aggregatedSamples.count) aggregations")
@@ -542,7 +542,7 @@ class SampleUtilUnitTests: UnitTest {
 		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date2), willReturn: beginningOfDay2))
 
 		// when
-		let aggregatedSamples = util.aggregate(samples: samples, by: unit)
+		let aggregatedSamples = util.aggregate(samples: samples, by: unit, for: CommonSampleAttributes.startDate)
 
 		// then
 		XCTAssert(aggregatedSamples.count == 2, "Found \(aggregatedSamples.count) aggregations")

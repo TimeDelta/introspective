@@ -35,18 +35,9 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 	}
 
 	public final func group(samples: [Sample], by attribute: Attribute) -> [(Any, [Sample])] {
-		var samplesByTimeUnit: [Date: [Sample]]
 		// TODO - support grouping by day of week, hour of day, etc.
 		signpost.begin(name: "Aggregation", "Aggregating %d samples", samples.count)
-		if shouldUseStartDate(attribute) {
-			samplesByTimeUnit = DependencyInjector.util.sample.aggregate(samples: samples, by: timeUnit, dateType: .start)
-		} else if attribute.equalTo(CommonSampleAttributes.endDate) || attribute.equalTo(CommonSampleAttributes.healthKitEndDate) {
-			signpost.begin(name: "Aggregation", "Aggregating %d samples by %s using end date", samples.count, timeUnit.description)
-			samplesByTimeUnit = DependencyInjector.util.sample.aggregate(samples: samples, by: timeUnit, dateType: .end)
-		} else {
-			signpost.begin(name: "Aggregation", "Aggregating %d samples by %s", samples.count, timeUnit.description)
-			samplesByTimeUnit = DependencyInjector.util.sample.aggregate(samples: samples, by: timeUnit)
-		}
+		let samplesByTimeUnit = DependencyInjector.util.sample.aggregate(samples: samples, by: timeUnit, for: attribute)
 		signpost.end(name: "Aggregation", "Aggregated %d samples into %d groups", samples.count, samplesByTimeUnit.count)
 
 		signpost.begin(name: "Sort aggregated samples")
@@ -68,12 +59,5 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 			timeUnit = castedValue
 		}
 		throw AttributeError.unknownAttribute
-	}
-
-	private final func shouldUseStartDate(_ attribute: Attribute) -> Bool {
-		return attribute.equalTo(CommonSampleAttributes.startDate)
-			|| attribute.equalTo(CommonSampleAttributes.timestamp)
-			|| attribute.equalTo(CommonSampleAttributes.healthKitStartDate)
-			|| attribute.equalTo(CommonSampleAttributes.healthKitTimestamp)
 	}
 }

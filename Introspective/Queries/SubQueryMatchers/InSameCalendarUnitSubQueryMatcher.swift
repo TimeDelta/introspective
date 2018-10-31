@@ -49,16 +49,22 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 		from querySamples: [QuerySampleType],
 		matching subQuerySamples: [Sample])
 	-> [QuerySampleType] {
+		if subQuerySamples.count == 0 { return [] }
+
 		var matchingSamples = [QuerySampleType]()
 
 		var applicableSubQuerySamples = subQuerySamples
 		if mostRecentOnly {
 			applicableSubQuerySamples = DependencyInjector.util.sample.sort(samples: subQuerySamples, by: .start, in: .orderedDescending)
-			applicableSubQuerySamples = [subQuerySamples[0]]
+			applicableSubQuerySamples = [applicableSubQuerySamples[0]]
 		}
 
-		let aggregatedSubQuerySamplesByStartDate = DependencyInjector.util.sample.aggregate(samples: applicableSubQuerySamples, by: timeUnit, dateType: .start)
-		let aggregatedSubQuerySamplesByEndDate = DependencyInjector.util.sample.aggregate(samples: applicableSubQuerySamples, by: timeUnit, dateType: .end)
+		var startDateAttribute = CommonSampleAttributes.startDate
+		if !sample(applicableSubQuerySamples[0], has: startDateAttribute) {
+			startDateAttribute = CommonSampleAttributes.timestamp
+		}
+		let aggregatedSubQuerySamplesByStartDate = DependencyInjector.util.sample.aggregate(samples: applicableSubQuerySamples, by: timeUnit, for: startDateAttribute)
+		let aggregatedSubQuerySamplesByEndDate = DependencyInjector.util.sample.aggregate(samples: applicableSubQuerySamples, by: timeUnit, for: CommonSampleAttributes.endDate)
 		for sample in querySamples {
 			let startAggregationDate = DependencyInjector.util.calendar.start(of: timeUnit, in: sample.dates()[.start]!)
 			if aggregatedSubQuerySamplesByStartDate[startAggregationDate] != nil {
@@ -109,5 +115,11 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 
 	public final func equalTo(_ other: InSameCalendarUnitSubQueryMatcher) -> Bool {
 		return timeUnit == other.timeUnit && mostRecentOnly == other.mostRecentOnly
+	}
+
+	// MARK: - Helper Functions
+
+	private final func sample(_ sample: Sample, has attribute: Attribute) -> Bool {
+		return sample.attributes.filter{ $0.equalTo(attribute) }.count > 0
 	}
 }
