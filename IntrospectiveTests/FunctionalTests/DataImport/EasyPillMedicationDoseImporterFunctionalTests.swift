@@ -59,6 +59,7 @@ Pill name,Taken on,Time
 		XCTAssert(try doseWasImported(for: Me.medicationName1, at: Me.date1))
 		XCTAssert(try doseWasImported(for: Me.medicationName2, at: Me.date2))
 		XCTAssert(try doseWasImported(for: Me.medicationName3, at: Me.date3))
+		XCTAssertEqual(importer.lastImport, Me.date1)
 	}
 
 	func testGivenValidDataWithImportNewDataOnlyEqualToTrue_importData_correctlyImportsData() throws {
@@ -75,6 +76,7 @@ Pill name,Taken on,Time
 		XCTAssert(try doseWasImported(for: Me.medicationName1, at: Me.date1))
 		XCTAssert(try doseWasImported(for: Me.medicationName2, at: Me.date2))
 		XCTAssertFalse(try doseWasImported(for: Me.medicationName3, at: Me.date3))
+		XCTAssertEqual(importer.lastImport, Me.date1)
 	}
 
 	func testGivenNeverImportedBefore_importData_correctlyImportsData() throws {
@@ -91,6 +93,7 @@ Pill name,Taken on,Time
 		XCTAssert(try doseWasImported(for: Me.medicationName1, at: Me.date1))
 		XCTAssert(try doseWasImported(for: Me.medicationName2, at: Me.date2))
 		XCTAssert(try doseWasImported(for: Me.medicationName3, at: Me.date3))
+		XCTAssertEqual(importer.lastImport, Me.date1)
 	}
 
 	func testGivenMedicationNameDoesNotExist_importData_throwsDisplayableError() throws {
@@ -114,6 +117,17 @@ Pill name,Taken on,Time
 			// then
 			XCTAssert(error is InvalidFileFormatError)
 		}
+	}
+
+	func testGivenNonNilLastImportDate_resetLastImportDate_setsLastImportToNil() {
+		// given
+		importer.lastImport = Date()
+
+		// when
+		importer.resetLastImportDate()
+
+		// then
+		XCTAssertNil(importer.lastImport)
 	}
 
 	// MARK: - Helper Functions

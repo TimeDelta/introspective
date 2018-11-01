@@ -14,7 +14,7 @@ import CoreData
 extension MoodImpl {
 
 	@nonobjc public class func fetchRequest() -> NSFetchRequest<MoodImpl> {
-		return NSFetchRequest<MoodImpl>(entityName: "MoodImpl")
+		return NSFetchRequest<MoodImpl>(entityName: "Mood")
 	}
 
 	@NSManaged public var note: String?

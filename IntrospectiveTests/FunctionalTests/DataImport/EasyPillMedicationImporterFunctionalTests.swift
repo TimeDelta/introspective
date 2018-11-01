@@ -103,6 +103,17 @@ a,,,as needed
 		}
 	}
 
+	func testGivenNonNilLastImportDate_resetLastImportDate_setsLastImportToNil() {
+		// given
+		importer.lastImport = Date()
+
+		// when
+		importer.resetLastImportDate()
+
+		// then
+		XCTAssertNil(importer.lastImport)
+	}
+
 	// MARK: - Helper Functions
 
 	private final func useValidInput() {

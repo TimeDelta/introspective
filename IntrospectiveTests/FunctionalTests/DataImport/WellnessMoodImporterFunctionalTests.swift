@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import CoreData
 import SwiftyMocky
 @testable import Introspective
 
@@ -15,116 +16,131 @@ final class WellnessMoodImporterFunctionalTests: FunctionalTest {
 
 	private typealias Me = WellnessMoodImporterFunctionalTests
 	private static let url = URL(fileURLWithPath: "/")
+	private static let maxRating = 7.0
 	private static let date1Text = "4/4/18, 17:18"
 	private static let date1 = CalendarUtilImpl().date(from: date1Text, format: "M/d/yy, HH:mm")!
+	private static let rating1: Double = 4
 	private static let date2Text = "4/4/18, 19:27"
 	private static let date2 = CalendarUtilImpl().date(from: date2Text, format: "M/d/yy, HH:mm")!
+	private static let rating2: Double = 6
 	private static let date3Text = "4/5/18, 10:39"
 	private static let date3 = CalendarUtilImpl().date(from: date3Text, format: "M/d/yy, HH:mm")!
+	private static let rating3: Double = 2
 	private static let date4Text = "4/5/18, 11:24"
 	private static let date4 = CalendarUtilImpl().date(from: date4Text, format: "M/d/yy, HH:mm")!
+	private static let rating4: Double = 3
 	private static let date5Text = "4/6/18, 15:06"
 	private static let date5 = CalendarUtilImpl().date(from: date5Text, format: "M/d/yy, HH:mm")!
+	private static let rating5: Double = 4
 	private static let note1 = "Uncertain about future\nFrustrated with work\nPinched nerve in my neck all day"
 	private static let note2 = "Just got a great massage from Nicole for my pinched neck. It feels a lot better"
 	private static let note3 = "Longing for a closer fit to my dream job\nDisheartened about current job because it doesn’t seem to be what I was hoping for"
 	private static let note4 = "Feeling a little better after talking to Nicole and crying"
-	private static let importFileText = """
+	private static let validImportFileText = """
 Date,Time,Rating,Note
-\(date1Text),4,\(note1)
-\(date2Text),6,\(note2)
-\(date3Text),2,\(note3)
-\(date4Text),3,\(note4)
-\(date5Text),4,
+\(date1Text),\(rating1),\(note1)
+\(date2Text),\(rating2),\(note2)
+\(date3Text),\(rating3),\(note3)
+\(date4Text),\(rating4),\(note4)
+\(date5Text),\(rating5),
 """
 
 	private final var importer: WellnessMoodImporterImpl!
-	private final var mockSampleFactory: SampleFactoryMock!
-	private final var mood1: MoodMock!
-	private final var mood2: MoodMock!
-	private final var mood3: MoodMock!
-	private final var mood4: MoodMock!
-	private final var mood5: MoodMock!
 
 	final override func setUp() {
 		super.setUp()
-
 		importer = try! DependencyInjector.db.new(WellnessMoodImporterImpl.self)
-		mockSampleFactory = SampleFactoryMock()
-		mood1 = MoodMock()
-		mood2 = MoodMock()
-		mood3 = MoodMock()
-		mood4 = MoodMock()
-		mood5 = MoodMock()
-
-		Given(ioUtil, .contentsOf(.value(Me.url), willReturn: Me.importFileText))
-		Given(injectionProvider, .sampleFactory(willReturn: mockSampleFactory))
 	}
+
+	// MARK: - Tests
 
 	func testGivenValidDataWithImportNewDataOnlyEqualToFalse_importData_correctlyImportsData() throws {
 		// given
-		importer.lastImport = Date()
+		importer.lastImport = Me.date5
 		importer.importOnlyNewData = false
-		Given(mockSampleFactory, .mood(willReturn: mood1, mood2, mood3, mood4, mood5))
+		useInput(Me.validImportFileText)
 
 		// when
 		try importer.importData(from: Me.url)
 
 		// then
-		verifyMood1()
-		verifyMood2()
-		verifyMood3()
-		verifyMood4()
-		verifyMood5()
+		XCTAssert(mood1WasImported())
+		XCTAssert(mood2WasImported())
+		XCTAssert(mood3WasImported())
+		XCTAssert(mood4WasImported())
+		XCTAssert(mood5WasImported())
+		XCTAssertEqual(importer.lastImport, Me.date5)
 	}
 
 	func testGivenValidDataWithImportNewDataOnlyEqualToTrueAndLastImportDateEqualToDate2_importData_correctlyImportsData() throws {
 		// given
 		importer.lastImport = Me.date2
 		importer.importOnlyNewData = true
-		Given(mockSampleFactory, .mood(willReturn: mood3, mood4, mood5))
+		useInput(Me.validImportFileText)
 
 		// when
 		try importer.importData(from: Me.url)
 
 		// then
-		verifyMood3()
-		verifyMood4()
-		verifyMood5()
+		XCTAssertFalse(mood1WasImported())
+		XCTAssertFalse(mood2WasImported())
+		XCTAssert(mood3WasImported())
+		XCTAssert(mood4WasImported())
+		XCTAssert(mood5WasImported())
+		XCTAssertEqual(importer.lastImport, Me.date5)
 	}
 
-	private final func verifyMood1() {
-		Verify(mood1, 1, .timestamp(set: .value(Me.date1)))
-		Verify(mood1, 1, .maxRating(set: .value(7.0)))
-		Verify(mood1, 1, .rating(set: .value(4.0)))
-		Verify(mood1, 1, .note(set: .value(Me.note1)))
+	func testGivenNonNilLastImportDate_resetLastImportDate_setsLastImportToNil() {
+		// given
+		importer.lastImport = Date()
+
+		// when
+		importer.resetLastImportDate()
+
+		// then
+		XCTAssertNil(importer.lastImport)
 	}
 
-	private final func verifyMood2() {
-		Verify(mood2, 1, .timestamp(set: .value(Me.date2)))
-		Verify(mood2, 1, .maxRating(set: .value(7.0)))
-		Verify(mood2, 1, .rating(set: .value(6.0)))
-		Verify(mood2, 1, .note(set: .value(Me.note2)))
+	// MARK: - Helper Functions
+
+	private final func useInput(_ input: String) {
+		Given(ioUtil, .contentsOf(.value(Me.url), willReturn: input))
 	}
 
-	private final func verifyMood3() {
-		Verify(mood3, 1, .timestamp(set: .value(Me.date3)))
-		Verify(mood3, 1, .maxRating(set: .value(7.0)))
-		Verify(mood3, 1, .rating(set: .value(2.0)))
-		Verify(mood3, 1, .note(set: .value(Me.note3)))
+	private final func mood1WasImported() -> Bool {
+		return moodWasImportedA(at: Me.date1, withRating: Me.rating1, outOf: Me.maxRating, andNote: Me.note1)
 	}
 
-	private final func verifyMood4() {
-		Verify(mood4, 1, .timestamp(set: .value(Me.date4)))
-		Verify(mood4, 1, .maxRating(set: .value(7.0)))
-		Verify(mood4, 1, .rating(set: .value(3.0)))
-		Verify(mood4, 1, .note(set: .value(Me.note4)))
+	private final func mood2WasImported() -> Bool {
+		return moodWasImportedA(at: Me.date2, withRating: Me.rating2, outOf: Me.maxRating, andNote: Me.note2)
 	}
 
-	private final func verifyMood5() {
-		Verify(mood5, 1, .timestamp(set: .value(Me.date5)))
-		Verify(mood5, 1, .maxRating(set: .value(7.0)))
-		Verify(mood5, 1, .rating(set: .value(4.0)))
-		Verify(mood5, 0, .note(set: .any))
+	private final func mood3WasImported() -> Bool {
+		return moodWasImportedA(at: Me.date3, withRating: Me.rating3, outOf: Me.maxRating, andNote: Me.note3)
+	}
+
+	private final func mood4WasImported() -> Bool {
+		return moodWasImportedA(at: Me.date4, withRating: Me.rating4, outOf: Me.maxRating, andNote: Me.note4)
+	}
+
+	private final func mood5WasImported() -> Bool {
+		return moodWasImportedA(at: Me.date5, withRating: Me.rating5, outOf: Me.maxRating, andNote: nil)
+	}
+
+	private final func moodWasImportedA(at timestamp: Date, withRating rating: Double, outOf maxRating: Double, andNote note: String?) -> Bool {
+		let moodsFetchRequest: NSFetchRequest<MoodImpl> = MoodImpl.fetchRequest()
+		moodsFetchRequest.predicate = NSPredicate(
+			format: "%K == %@ AND %K == %f AND %K == %f",
+			"timestamp", timestamp as NSDate,
+			"rating", rating,
+			"maxRating", maxRating)
+		var notePredicate: NSPredicate
+		if let note = note {
+			notePredicate = NSPredicate(format: "%K == %@", "note", note)
+		} else {
+			notePredicate = NSPredicate(format: "%K == nil", "note")
+		}
+		moodsFetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [moodsFetchRequest.predicate!, notePredicate])
+		return try! DependencyInjector.db.query(moodsFetchRequest).count > 0
 	}
 }
