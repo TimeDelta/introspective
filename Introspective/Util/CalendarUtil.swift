@@ -22,6 +22,7 @@ public protocol CalendarUtil {
 	func date(_ date: Date, isOnA dayOfWeek: DayOfWeek) -> Bool
 	/// - Returns: The date represented by the passed String if it can be converted, otherwise `nil`.
 	func date(from dateStr: String, format: String) -> Date?
+	func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) -> Int
 }
 
 extension CalendarUtil {
@@ -93,6 +94,10 @@ public final class CalendarUtilImpl: CalendarUtil {
 		let calendar = Calendar.autoupdatingCurrent
 		let region = Region(calendar: calendar, zone: calendar.timeZone)
 		return Date(dateStr, format: format, region: region)
+	}
+
+	public final func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) -> Int {
+		return abs(Calendar.autoupdatingCurrent.dateComponents([unit], from: date1, to: date2).in(unit)!)
 	}
 }
 

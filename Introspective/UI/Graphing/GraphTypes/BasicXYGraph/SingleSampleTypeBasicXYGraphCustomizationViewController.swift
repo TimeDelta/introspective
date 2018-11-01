@@ -274,12 +274,12 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 
 			let xValues = transform(sampleGroups: groups, information: xAxis.information!)
 			xValuesAreNumbers = areAllNumbers(xValues.map{ $0.sampleValue })
+			// if x values are numbers or dates and are not sorted, graph will look very weird
 			var sortedXValues = xValues
-			// if x values are numbers and are not sorted, graph will look very weird
 			if xValuesAreNumbers {
-				signpost.begin(name: "Sort X Values", "Number of x values: %d", xValues.count)
-				sortedXValues = xValues.sorted(by: { Double($0.sampleValue)! < Double($1.sampleValue)! })
-				signpost.end(name: "Sort X Values")
+				sortedXValues = sortXValuesByNumber(xValues)
+			} else if areAllDates(xValues.map{ $0.sampleValue }) {
+				sortedXValues = sortXValuesByDate(xValues)
 			}
 
 			signpost.begin(name: "Creating series data", "Creating %d series", yAxis.count)
@@ -306,10 +306,15 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			signpost.end(name: "Creating series data")
 		} else {
 			xValuesAreNumbers = xAxis.attribute! is NumericAttribute
+
+			var sortedSamples = samples.filter{ (try? $0.value(of: xAxis.attribute!)) != nil }
+			// if x values are numbers or dates and are not sorted, graph will look very weird
+			if xValuesAreNumbers || xAxis.attribute! is DateAttribute {
+				sortedSamples = sortSamples(sortedSamples, by: xAxis.attribute!)
+			}
+
 			for yAttribute in yAxis.map({ $0.attribute! }) {
-				let filteredSamples = samples.filter() {
-					let xValue = try! $0.value(of: self.xAxis.attribute!)
-					if xValue == nil { return false }
+				let filteredSamples = sortedSamples.filter() {
 					let yValue = try! $0.value(of: yAttribute)
 					return yValue != nil
 				}
@@ -359,6 +364,19 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		return true
 	}
 
+	private final func areAllDates(_ values: [String]) -> Bool {
+		signpost.begin(name: "Are all dates", "Checking if %d values are all dates", values.count)
+		for value in values {
+			let date = getDate(value)
+			if date == nil {
+				signpost.end(name: "Are all dates", "Finished checking if %d values are all dates", values.count)
+				return false
+			}
+		}
+		signpost.end(name: "Are all dates", "Finished checking if %d values are all dates", values.count)
+		return true
+	}
+
 	private final func formatNumber(_ value: String) -> String {
 		var copiedValue = value
 		if let decimalIndex = value.index(where: { $0 == "." }) {
@@ -367,6 +385,52 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			}
 		}
 		return copiedValue
+	}
+
+	private final func getDate(_ value: String) -> Date? {
+		return DependencyInjector.util.calendar.date(from: value)
+	}
+
+	/// - Precondition: Samples array is not empty and no samples have invalid or nil value for given attribute
+	private final func sortSamples(_ samples: [Sample], by attribute: Attribute) -> [Sample] {
+		signpost.begin(name: "Sort samples", "Sorting %d sample by %@", samples.count, attribute.name)
+		let sortedSamples = samples.sorted(by: {
+			if let attribute = attribute as? DoubleAttribute {
+				let first = try! $0.value(of: attribute) as! Double
+				let second = try! $1.value(of: attribute) as! Double
+				return first < second
+			}
+			if let attribute = attribute as? IntegerAttribute {
+				let first = try! $0.value(of: attribute) as! Int
+				let second = try! $1.value(of: attribute) as! Int
+				return first < second
+			}
+			if let attribute = attribute as? DateAttribute {
+				let first = try! $0.value(of: attribute) as! Date
+				let second = try! $1.value(of: attribute) as! Date
+				return first < second
+			}
+			return true
+		})
+		signpost.end(name: "Sort samples")
+		return sortedSamples
+	}
+
+	private final func sortXValuesByNumber(_ xValues: [(groupValue: Date, sampleValue: String)]) -> [(groupValue: Date, sampleValue: String)] {
+		var sortedXValues = xValues
+		signpost.begin(name: "Sort x values as numbers", "Number of x values: %d", xValues.count)
+		sortedXValues = xValues.sorted(by: { Double($0.sampleValue)! < Double($1.sampleValue)! })
+		signpost.end(name: "Sort x values as numbers")
+		return sortedXValues
+	}
+
+	/// - Precondition: All sample values are valid date strings
+	private final func sortXValuesByDate(_ xValues: [(groupValue: Date, sampleValue: String)]) -> [(groupValue: Date, sampleValue: String)] {
+		var sortedXValues = xValues
+		signpost.begin(name: "Sort x values as dates", "Number of x values: %d", xValues.count)
+		sortedXValues = xValues.sorted(by: { getDate($0.sampleValue)! < getDate($1.sampleValue)! })
+		signpost.end(name: "Sort x values as dates")
+		return sortedXValues
 	}
 }
 

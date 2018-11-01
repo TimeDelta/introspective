@@ -203,7 +203,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		if let dosage = dose.dosage {
 			doseText += dosage.description + " on "
 		}
-		doseText += DependencyInjector.util.calendar.string(for: dose.timestamp, inFormat: "MMM dd, yyyy 'at' H:mm")
+		doseText += DependencyInjector.util.calendar.string(for: dose.timestamp, inFormat: "MMM d, yyyy 'at' H:mm")
 		return doseText
 	}
 

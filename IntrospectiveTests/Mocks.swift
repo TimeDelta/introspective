@@ -1435,6 +1435,20 @@ class CalendarUtilMock: CalendarUtil, Mock {
 		return __value
     }
 
+    func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) -> Int {
+        addInvocation(.m_distance__from_date1to_date2in_unit(Parameter<Date>.value(`date1`), Parameter<Date>.value(`date2`), Parameter<Calendar.Component>.value(`unit`)))
+		let perform = methodPerformValue(.m_distance__from_date1to_date2in_unit(Parameter<Date>.value(`date1`), Parameter<Date>.value(`date2`), Parameter<Calendar.Component>.value(`unit`))) as? (Date, Date, Calendar.Component) -> Void
+		perform?(`date1`, `date2`, `unit`)
+		var __value: Int
+		do {
+		    __value = try methodReturnValue(.m_distance__from_date1to_date2in_unit(Parameter<Date>.value(`date1`), Parameter<Date>.value(`date2`), Parameter<Calendar.Component>.value(`unit`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for distance(from date1: Date, to date2: Date, in unit: Calendar.Component). Use given")
+			Failure("Stub return value not specified for distance(from date1: Date, to date2: Date, in unit: Calendar.Component). Use given")
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_start__of_componentin_date(Parameter<Calendar.Component>, Parameter<Date>)
@@ -1445,6 +1459,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
         case m_date__dateisOnOneOf_daysOfWeek(Parameter<Date>, Parameter<GenericAttribute>)
         case m_date__dateisOnA_dayOfWeek(Parameter<Date>, Parameter<DayOfWeek>)
         case m_date__from_dateStrformat_format(Parameter<String>, Parameter<String>)
+        case m_distance__from_date1to_date2in_unit(Parameter<Date>, Parameter<Date>, Parameter<Calendar.Component>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -1481,6 +1496,11 @@ class CalendarUtilMock: CalendarUtil, Mock {
                 guard Parameter.compare(lhs: lhsDatestr, rhs: rhsDatestr, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsFormat, rhs: rhsFormat, with: matcher) else { return false } 
                 return true 
+            case (.m_distance__from_date1to_date2in_unit(let lhsDate1, let lhsDate2, let lhsUnit), .m_distance__from_date1to_date2in_unit(let rhsDate1, let rhsDate2, let rhsUnit)):
+                guard Parameter.compare(lhs: lhsDate1, rhs: rhsDate1, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsDate2, rhs: rhsDate2, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsUnit, rhs: rhsUnit, with: matcher) else { return false } 
+                return true 
             default: return false
             }
         }
@@ -1495,6 +1515,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
             case let .m_date__dateisOnOneOf_daysOfWeek(p0, p1): return p0.intValue + p1.intValue
             case let .m_date__dateisOnA_dayOfWeek(p0, p1): return p0.intValue + p1.intValue
             case let .m_date__from_dateStrformat_format(p0, p1): return p0.intValue + p1.intValue
+            case let .m_distance__from_date1to_date2in_unit(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             }
         }
     }
@@ -1547,6 +1568,9 @@ class CalendarUtilMock: CalendarUtil, Mock {
         }
         static func date(from dateStr: Parameter<String>, format: Parameter<String>, willReturn: Date?...) -> MethodStub {
             return Given(method: .m_date__from_dateStrformat_format(`dateStr`, `format`), products: willReturn.map({ Product.return($0) }))
+        }
+        static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, willReturn: Int...) -> MethodStub {
+            return Given(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`), products: willReturn.map({ Product.return($0) }))
         }
         static func start(of component: Parameter<Calendar.Component>, in date: Parameter<Date>, willProduce: (Stubber<Date>) -> Void) -> MethodStub {
             let willReturn: [Date] = []
@@ -1604,6 +1628,13 @@ class CalendarUtilMock: CalendarUtil, Mock {
 			willProduce(stubber)
 			return given
         }
+        static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, willProduce: (Stubber<Int>) -> Void) -> MethodStub {
+            let willReturn: [Int] = []
+			let given: Given = { return Given(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (Int).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     struct Verify {
@@ -1625,6 +1656,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date` label")
 		static func date(date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>) -> Verify { return Verify(method: .m_date__dateisOnA_dayOfWeek(`date`, `dayOfWeek`))}
         static func date(from dateStr: Parameter<String>, format: Parameter<String>) -> Verify { return Verify(method: .m_date__from_dateStrformat_format(`dateStr`, `format`))}
+        static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>) -> Verify { return Verify(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`))}
     }
 
     struct Perform {
@@ -1670,6 +1702,9 @@ class CalendarUtilMock: CalendarUtil, Mock {
         }
         static func date(from dateStr: Parameter<String>, format: Parameter<String>, perform: @escaping (String, String) -> Void) -> Perform {
             return Perform(method: .m_date__from_dateStrformat_format(`dateStr`, `format`), performs: perform)
+        }
+        static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, perform: @escaping (Date, Date, Calendar.Component) -> Void) -> Perform {
+            return Perform(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`), performs: perform)
         }
     }
 

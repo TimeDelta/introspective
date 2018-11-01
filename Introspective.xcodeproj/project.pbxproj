@@ -243,7 +243,7 @@
 		A1535BBF1B7655E10F5B9BCBB5DF1CCF /* Signpost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C10CC3CB0DD80F3C84F2E06DE426F03 /* Signpost.swift */; };
 		A1741703508EA4B538BF55AB8D4C19D4 /* InSameCalendarUnitSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D17C897038BC72D188BF5938E99B20 /* InSameCalendarUnitSubQueryMatcher.swift */; };
 		A1AA6C0832AB2D1D89489B4D593B373F /* RecordMoodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16EBB19F87D1ED49AC879F1EE69BEA1 /* RecordMoodTableViewCell.swift */; };
-		E33F36B8CD78180C5B70E05BE1CD9667 /* EasyPillMedicationDoseImporterFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07DAC563920620D990A708494B9BBBB3 /* EasyPillMedicationDoseImporterFunctionalTests.swift */; };
+		E59B9B94D84AEC185324D373724893D4 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDC7F20D3FAFCB0DEE353E907A9F6888 /* UIViewControllerExtension.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
 		A34600A18766AE66F0324FF5AB10E114 /* GraphType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */; };
@@ -330,6 +330,7 @@
 		DF7AC3C2CD9C45A60E903CDD6A384AE6 /* AfterDateAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382031F5D8315F9200F00E8681262E01 /* AfterDateAttributeRestrictionUnitTests.swift */; };
 		DF7D1F3E86F26032005D542504A64D0D /* BasicXYGraphTypeSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3459BF8F561B8FCE604634D207F9624E /* BasicXYGraphTypeSetupViewController.swift */; };
 		E2445B71C733E048934BCA1C4DFEDA5F /* SampleGrouper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0148DC38B4754ECE4D5C8142FEFD66F /* SampleGrouper.swift */; };
+		E33F36B8CD78180C5B70E05BE1CD9667 /* EasyPillMedicationDoseImporterFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07DAC563920620D990A708494B9BBBB3 /* EasyPillMedicationDoseImporterFunctionalTests.swift */; };
 		E3B78A64F8537481F4B46B13DC41652E /* SubQueryMatcherFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1844D82BB4B4D25943E737DCDBB118C0 /* SubQueryMatcherFactory.swift */; };
 		E6C5A7123D66575B8F9E6D9854D06C81 /* NotEqualToFrequencyAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC15F798274056F794100C770A8AFFC /* NotEqualToFrequencyAttributeRestriction.swift */; };
 		E9FF7FD2BF15D7608B847C63F63E9990 /* HealthKitCorrelationSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = B157957A1308483778689A3603E5C5FD /* HealthKitCorrelationSample.swift */; };
@@ -392,6 +393,7 @@
 		05A656ED03A7074F968B827D1D08CD88 /* Dosage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dosage.swift; sourceTree = "<group>"; };
 		060CBEA709752EC9CF2E1582CB07A0F9 /* Medication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Medication.swift; sourceTree = "<group>"; };
 		07D78D8E980E7C1AD069E4410133097F /* SelectAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectAttribute.swift; sourceTree = "<group>"; };
+		07DAC563920620D990A708494B9BBBB3 /* EasyPillMedicationDoseImporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyPillMedicationDoseImporterFunctionalTests.swift; sourceTree = "<group>"; };
 		07EDB709E4887D385D9ADC4DEDE89DF8 /* LessThanDoubleAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestriction.swift; sourceTree = "<group>"; };
 		0899E7701B18079DAF762ECE262BCFE1 /* Mocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
 		09AFC6665469259B2CFADF67FA3A9ABF /* SampleGrouperFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleGrouperFactory.swift; sourceTree = "<group>"; };
@@ -631,8 +633,8 @@
 		9FAD6A8CE5B12D85BB43F2F13128C320 /* BloodPressureQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPressureQueryFunctionalTests.swift; sourceTree = "<group>"; };
 		A1B6336EF7C8BA63691FB3CF1C00CFAD /* DateOnlyAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOnlyAttribute.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
-		07DAC563920620D990A708494B9BBBB3 /* EasyPillMedicationDoseImporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyPillMedicationDoseImporterFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
+		FDC7F20D3FAFCB0DEE353E907A9F6888 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A7232B8CBDA59F9550101241579EE472 /* GreaterThanFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreaterThanFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A7AA8E7D0DDBCC72BB2887FB26298A64 /* HealthKitSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitSample.swift; sourceTree = "<group>"; };
@@ -1460,6 +1462,7 @@
 				F35DAF8DD9386CDAD26BEB4FED6C597C /* DescriptionViewController.swift */,
 				3B7E6BCEB61619FCCC44F4E09B1E2E09 /* DateRangeViewController.swift */,
 				8C10CC3CB0DD80F3C84F2E06DE426F03 /* Signpost.swift */,
+				FDC7F20D3FAFCB0DEE353E907A9F6888 /* UIViewControllerExtension.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -2347,6 +2350,7 @@
 				01DDB53BA224996ACAE1709CA132C6D0 /* Frequency.swift in Sources */,
 				EEB1C933A2FC827C9DD8837A151602D2 /* AppDelegate.swift in Sources */,
 				5F81125779798BD7EBFA488FD63434E0 /* Attribute.swift in Sources */,
+				E59B9B94D84AEC185324D373724893D4 /* UIViewControllerExtension.swift in Sources */,
 				505E6E534128B5E4C96CC46DB07520A0 /* WellnessMoodImporter.swift in Sources */,
 				8ED7593663F82ECA368D9237DF98E177 /* AttributeDescriptionViewController.swift in Sources */,
 				381FCC856B759908E50930C738375992 /* AttributeFactory.swift in Sources */,
