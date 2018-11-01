@@ -226,7 +226,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			xAxis != nil &&
 			(xAxis.attribute != nil || xAxis.information != nil) &&
 			yAxis != nil &&
-			grouping != nil
+			!yAxis.isEmpty
 		showGraphButton.backgroundColor = showGraphButton.isEnabled ? .black : .gray
 	}
 
