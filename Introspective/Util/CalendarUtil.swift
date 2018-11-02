@@ -14,10 +14,10 @@ public let defaultDateFormat = "MMMM d yyyy 'at' H:mm:ss"
 //sourcery: AutoMockable
 public protocol CalendarUtil {
 	/// Set all components of the specified date less than the specified component to the minimum value for that component.
-	/// - Parameter toBeginningOf: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
+	/// - Parameter component: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
 	func start(of component: Calendar.Component, in date: Date) -> Date
 	/// Set all components of the specified date less than the specified component to the maximum value for that component.
-	/// - Parameter toBeginningOf: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
+	/// - Parameter component: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
 	func end(of component: Calendar.Component, in date: Date) -> Date
 	func string(for date: Date, inFormat format: String) -> String
 	func string(for date: Date, dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> String
@@ -25,8 +25,10 @@ public protocol CalendarUtil {
 	func compare(_ date1: Date?, _ date2: Date?) -> ComparisonResult
 	func date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek
 	func date(_ date: Date, isOnA dayOfWeek: DayOfWeek) -> Bool
+	/// If `format` is `nil`, will attempt to convert the date string to a date using standard formats,
+	/// otherwise will only attempt using the given format.
 	/// - Returns: The date represented by the passed String if it can be converted, otherwise `nil`.
-	func date(from dateStr: String, format: String) -> Date?
+	func date(from dateStr: String, format: String?) -> Date?
 	func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) -> Int
 }
 
@@ -34,8 +36,10 @@ extension CalendarUtil {
 	func string(for date: Date, inFormat format: String = defaultDateFormat) -> String {
 		return string(for: date, inFormat: format)
 	}
+	/// If `format` is `nil`, will attempt to convert the date string to a date using standard formats,
+	/// otherwise will only attempt using the given format.
 	/// - Returns: The date represented by the passed String if it can be converted, otherwise `nil`.
-	func date(from dateStr: String, format: String = defaultDateFormat) -> Date? {
+	func date(from dateStr: String, format: String? = nil) -> Date? {
 		return date(from: dateStr, format: format)
 	}
 }
@@ -43,7 +47,7 @@ extension CalendarUtil {
 public final class CalendarUtilImpl: CalendarUtil {
 
 	/// Set all components of the specified date less than the specified component to the minimum value for that component.
-	/// - Parameter toBeginningOf: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
+	/// - Parameter component: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
 	public final func start(of component: Calendar.Component, in date: Date) -> Date {
 		let calendar = Calendar.autoupdatingCurrent
 		let dateInRegion = DateInRegion(date, region: Region(calendar: calendar, zone: calendar.timeZone))
@@ -52,7 +56,7 @@ public final class CalendarUtilImpl: CalendarUtil {
 	}
 
 	/// Set all components of the specified date less than the specified component to the maximum value for that component.
-	/// - Parameter toBeginningOf: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
+	/// - Parameter component: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
 	public final func end(of component: Calendar.Component, in date: Date) -> Date {
 		let calendar = Calendar.autoupdatingCurrent
 		let dateInRegion = DateInRegion(date, region: Region(calendar: calendar, zone: calendar.timeZone))
@@ -102,10 +106,21 @@ public final class CalendarUtilImpl: CalendarUtil {
 		return dayOfWeekForDate == dayOfWeek
 	}
 
-	public final func date(from dateStr: String, format: String) -> Date? {
+	/// If `format` is `nil`, will attempt to convert the date string to a date using standard formats, otherwise will only attempt using the given format.
+	/// - Returns: The date represented by the passed String if it can be converted, otherwise `nil`.
+	public final func date(from dateStr: String, format: String?) -> Date? {
+		let realFormat = format ?? defaultDateFormat
 		let calendar = Calendar.autoupdatingCurrent
 		let region = Region(calendar: calendar, zone: calendar.timeZone)
-		return Date(dateStr, format: format, region: region)
+		if let date = Date(dateStr, format: realFormat, region: region) {
+			return date
+		}
+		if format == nil {
+			return (try? NSDataDetector(types: NSTextCheckingResult.CheckingType.date.rawValue)
+				.matches(in: dateStr, range: NSRange(location: 0, length: dateStr.count))
+				.compactMap{$0.date})?[0]
+		}
+		return nil
 	}
 
 	public final func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) -> Int {

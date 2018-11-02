@@ -43,6 +43,11 @@ final class SelectExtraInformationViewController: UIViewController {
 		if let selectedInformationIndex = indexOfSelectedInformation() {
 			informationPicker.selectRow(selectedInformationIndex, inComponent: 0, animated: false)
 		}
+
+		if selectedInformation == nil {
+			let row = informationPicker.selectedRow(inComponent: 0)
+			selectedInformation = getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute)
+		}
 	}
 
 	@IBAction final func acceptButtonPressed(_ sender: Any) {

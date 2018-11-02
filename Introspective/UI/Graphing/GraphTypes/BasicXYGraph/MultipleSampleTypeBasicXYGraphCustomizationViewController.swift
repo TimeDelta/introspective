@@ -142,6 +142,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	private final var xAxisSampleGroups: [(Date, [Sample])]! { didSet { updateChartData() } }
 	private final var yAxisSampleGroups: [(Date, [Sample])]! { didSet { updateChartData() } }
 	private final var chartController: BasicXYChartViewController!
+	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "MultiplSampleTypeGraphCreationPerformance"))
 
 	// MARK: - UIViewController Overloads
 
@@ -157,6 +158,10 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		NotificationCenter.default.addObserver(self, selector: #selector(yAxisInformationChanged), name: Me.yAxisInformationChanged, object: nil)
 
 		updateShowGraphButtonState()
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	// MARK: - Button Actions
@@ -296,8 +301,10 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 				return
 			}
 			if let samples = result?.samples {
+				self.signpost.begin(name: "Grouping x-axis samples", "Grouping %d samples", samples.count)
 				let grouper = SameTimeUnitSampleGrouper(self.grouping!)
 				self.xAxisSampleGroups = (grouper.group(samples: samples, by: self.firstDateAttributeFor(self.xAxisSampleType)) as! [(Date, [Sample])])
+				self.signpost.end(name: "Grouping x-axis samples", "Grouped %d samples into %d groups", samples.count, self.yAxisSampleGroups.count)
 			} else {
 				os_log("X-axis query run did not return an error or any results", type: .error)
 			}
@@ -312,8 +319,10 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 				return
 			}
 			if let samples = result?.samples {
+				self.signpost.begin(name: "Grouping y-axis samples", "Grouping %d samples", samples.count)
 				let grouper = SameTimeUnitSampleGrouper(self.grouping!)
 				self.yAxisSampleGroups = (grouper.group(samples: samples, by: self.firstDateAttributeFor(self.yAxisSampleType)) as! [(Date, [Sample])])
+				self.signpost.end(name: "Grouping y-axis samples", "Grouped %d samples into %d groups", samples.count, self.yAxisSampleGroups.count)
 			} else {
 				os_log("Y-axis query run did not return an error or any results", type: .error)
 			}
@@ -339,16 +348,22 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			return
 		}
 
+		signpost.begin(name: "Update Chart Data", "Number of groups: (x-axis: %d, y-axis: %d)", xAxisSampleGroups.count, yAxisSampleGroups.count)
+
 		let xValues = transform(sampleGroups: xAxisSampleGroups, information: xAxisInformation!)
 		let xValuesAreNumbers = areAllNumbers(xValues.map{ $0.sampleValue })
 		var sortedXValues = xValues
-		// if x values are numbers and are not sorted, graph will look very weird
+		// if x values are numbers or dates and are not sorted, graph will look very weird
 		if xValuesAreNumbers {
-			sortedXValues = xValues.sorted(by: { Double($0.sampleValue)! < Double($1.sampleValue)! })
+			sortedXValues = sortXValuesByNumber(xValues)
+		} else if areAllDates(xValues.map{ $0.sampleValue }) {
+			sortedXValues = sortXValuesByDate(xValues)
 		}
 
+		signpost.begin(name: "Creating series data", "Creating %d series", yAxisInformation!.count)
 		var allData = [Dictionary<String, Any>]()
 		for yInformation in yAxisInformation! {
+			signpost.begin(name: "Computing data points for information", idObject: yInformation as AnyObject, "%@", yInformation.description)
 			let yValues = transform(sampleGroups: yAxisSampleGroups, information: yInformation)
 			var seriesData = [[Any]]()
 			for (xGroupValue, xSampleValue) in sortedXValues { // loop over x values so that series data is already sorted
@@ -365,30 +380,69 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 				.name(yInformation.description.localizedCapitalized)
 				.data(seriesData)
 				.toDic()!)
+			signpost.end(name: "Computing data points for information", idObject: yInformation as AnyObject, "%@", yInformation.description)
 		}
+		signpost.end(name: "Creating series data")
 
 		DispatchQueue.main.async {
 			self.chartController.displayXAxisValueLabels = xValuesAreNumbers
 			self.chartController.dataSeries = allData
 		}
+
+		signpost.end(name: "Update Chart Data", "Finished updating chart data")
 	}
 
 	private final func transform(sampleGroups: [(Date, [Sample])], information: ExtraInformation) -> [(groupValue: Date, sampleValue: String)] {
+		signpost.begin(name: "Transform", "Number of sample groups: %d", sampleGroups.count)
 		var values = [(groupValue: Date, sampleValue: String)]()
 		for (groupValue, samples) in sampleGroups {
 			let sampleValue = try! information.compute(forSamples: samples)
 			values.append((groupValue: groupValue, sampleValue: sampleValue))
 		}
+		signpost.end(name: "Transform", "Finished transforming %d groups", sampleGroups.count)
 		return values
 	}
 
 	private final func areAllNumbers(_ values: [String]) -> Bool {
+		signpost.begin(name: "Are all numbers", "Checking if %d values are all numbers", values.count)
 		for value in values {
 			if !DependencyInjector.util.string.isNumber(value) {
+				signpost.end(name: "Are all numbers", "Finished checking if %d values are all numbers", values.count)
 				return false
 			}
 		}
+		signpost.end(name: "Are all numbers", "Finished checking if %d values are all numbers", values.count)
 		return true
+	}
+
+	private final func areAllDates(_ values: [String]) -> Bool {
+		signpost.begin(name: "Are all dates", "Checking if %d values are all dates", values.count)
+		for value in values {
+			let date = getDate(value)
+			if date == nil {
+				signpost.end(name: "Are all dates", "Finished checking if %d values are all dates", values.count)
+				return false
+			}
+		}
+		signpost.end(name: "Are all dates", "Finished checking if %d values are all dates", values.count)
+		return true
+	}
+
+	private final func sortXValuesByNumber(_ xValues: [(groupValue: Date, sampleValue: String)]) -> [(groupValue: Date, sampleValue: String)] {
+		var sortedXValues = xValues
+		signpost.begin(name: "Sort x values as numbers", "Number of x values: %d", xValues.count)
+		sortedXValues = xValues.sorted(by: { Double($0.sampleValue)! < Double($1.sampleValue)! })
+		signpost.end(name: "Sort x values as numbers")
+		return sortedXValues
+	}
+
+	/// - Precondition: All sample values are valid date strings
+	private final func sortXValuesByDate(_ xValues: [(groupValue: Date, sampleValue: String)]) -> [(groupValue: Date, sampleValue: String)] {
+		var sortedXValues = xValues
+		signpost.begin(name: "Sort x values as dates", "Number of x values: %d", xValues.count)
+		sortedXValues = xValues.sorted(by: { getDate($0.sampleValue)! < getDate($1.sampleValue)! })
+		signpost.end(name: "Sort x values as dates")
+		return sortedXValues
 	}
 
 	private final func formatNumber(_ value: String) -> String {
@@ -399,6 +453,10 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			}
 		}
 		return copiedValue
+	}
+
+	private final func getDate(_ value: String) -> Date? {
+		return DependencyInjector.util.calendar.date(from: value)
 	}
 }
 

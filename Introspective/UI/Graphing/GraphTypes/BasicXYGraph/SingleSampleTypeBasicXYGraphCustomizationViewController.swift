@@ -117,7 +117,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		}
 	}
 	private final var chartController: BasicXYChartViewController!
-	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "GraphCreationPerformance"))
+	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "SingleSampleTypeGraphCreationPerformance"))
 
 	// MARK: - UIViewController Overrides
 
@@ -348,7 +348,6 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			values.append((groupValue: groupValue, sampleValue: sampleValue))
 		}
 		signpost.end(name: "Transform", "Finished transforming %d groups", sampleGroups.count)
-
 		return values
 	}
 
