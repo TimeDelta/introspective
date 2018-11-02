@@ -104,7 +104,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 			DependencyInjector.db.save()
 		} catch {
 			os_log("Failed to pull medication into same context as dose: %@", type: .error, error.localizedDescription)
-			let dateText = DependencyInjector.util.calendar.string(for: date, inFormat: "M/d/yy 'at' H:mm")
+			let dateText = DependencyInjector.util.calendar.string(for: date, dateStyle: .medium, timeStyle: .short)
 			throw GenericDisplayableError(
 				title: "Could not save dose",
 				description: "Dose of \(medicationName) taken on \(dateText)")

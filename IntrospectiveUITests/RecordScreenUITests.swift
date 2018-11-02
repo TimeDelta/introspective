@@ -408,7 +408,7 @@ final class RecordScreenUITests: UITest {
 		if let dosage = dosage {
 			dosageDescription = "\(dosage) on "
 		}
-		dosageDescription += "\(monthAndDayText), \(dateStrings[.year]!) at \(dateStrings[.hour]!):\(dateStrings[.minute]!)"
+		dosageDescription += "\(monthAndDayText), \(dateStrings[.year]!) at \(dateStrings[.hour]!):\(dateStrings[.minute]!) \(dateStrings[.timeZone]!)"
 		return dosageDescription
 	}
 }

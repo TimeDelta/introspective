@@ -38,7 +38,7 @@ public final class OldestDateInformation: AnyInformation {
 				os_log("non-optional attribute (%@) of sample (%@) returned %@", type: .error, attribute.name, sample.attributedName, String(describing: value))
 			}
 		}
-		return DependencyInjector.util.calendar.string(for: oldestSampleDate)
+		return DependencyInjector.util.calendar.string(for: oldestSampleDate, dateStyle: .short, timeStyle: .short)
 	}
 
 	public final override func equalTo(_ other: ExtraInformation) -> Bool {

@@ -38,7 +38,7 @@ public final class MostRecentDateInformation: AnyInformation {
 				os_log("non-optional attribute (%@) of sample (%@) returned %@", type: .error, attribute.name, sample.attributedName, String(describing: value))
 			}
 		}
-		return DependencyInjector.util.calendar.string(for: mostRecentDate)
+		return DependencyInjector.util.calendar.string(for: mostRecentDate, dateStyle: .short, timeStyle: .short)
 	}
 
 	public final override func equalTo(_ other: ExtraInformation) -> Bool {

@@ -10,18 +10,15 @@ import UIKit
 
 class SleepTableViewCell: UITableViewCell {
 
-	private typealias Me = SleepTableViewCell
-	private static let dateFormat = "MMM dd, yyyy 'at' HH:mm"
-
 	public final var sleep: Sleep! {
 		didSet {
 			guard let sleep = sleep else { return }
 
 			valueLabel.text = sleep.state.description
 
-			var dateString = DependencyInjector.util.calendar.string(for: sleep.startDate, inFormat: Me.dateFormat)
+			var dateString = DependencyInjector.util.calendar.string(for: sleep.startDate, dateStyle: .medium, timeStyle: .short)
 			dateString += " to "
-			dateString += DependencyInjector.util.calendar.string(for: sleep.endDate, inFormat: Me.dateFormat)
+			dateString += DependencyInjector.util.calendar.string(for: sleep.endDate, dateStyle: .medium, timeStyle: .short)
 			timestampLabel.text = dateString
 		}
 	}

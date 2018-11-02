@@ -220,7 +220,7 @@ public final class EditMedicationViewController: UIViewController {
 	private final func updateStartedOnDateButtonTitle() {
 		var startedOnText = "Not set"
 		if let date = startedOnDate {
-			startedOnText = DependencyInjector.util.calendar.string(for: date, inFormat: "MMMM d, yyyy")
+			startedOnText = DependencyInjector.util.calendar.string(for: date, dateStyle: .long, timeStyle: .none)
 		}
 		startedOnButton.setTitle(startedOnText, for: .normal)
 		startedOnButton.accessibilityValue = startedOnText

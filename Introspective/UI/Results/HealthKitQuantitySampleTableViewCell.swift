@@ -12,7 +12,6 @@ import SwiftDate
 final class HealthKitQuantitySampleTableViewCell: UITableViewCell {
 
 	private typealias Me = HealthKitQuantitySampleTableViewCell
-	private static let dateFormat = "M-d-yy 'at' HH:mm"
 	private static let valueFormatter: NumberFormatter = {
 		let formatter = NumberFormatter()
 		formatter.numberStyle = .decimal
@@ -29,9 +28,9 @@ final class HealthKitQuantitySampleTableViewCell: UITableViewCell {
 
 			let start = sample.dates()[.start]!
 			let end = sample.dates()[.end]
-			var dateString = DependencyInjector.util.calendar.string(for: start, inFormat: Me.dateFormat)
+			var dateString = DependencyInjector.util.calendar.string(for: start, dateStyle: .medium, timeStyle: .short)
 			if end != nil && start != end {
-				dateString += " to " + DependencyInjector.util.calendar.string(for: end!, inFormat: Me.dateFormat)
+				dateString += " to " + DependencyInjector.util.calendar.string(for: end!, dateStyle: .medium, timeStyle: .short)
 			}
 			timestampLabel.text = dateString
 		}

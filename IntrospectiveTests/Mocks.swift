@@ -1366,6 +1366,20 @@ class CalendarUtilMock: CalendarUtil, Mock {
 		return __value
     }
 
+    func string(for date: Date, dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> String {
+        addInvocation(.m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(Parameter<Date>.value(`date`), Parameter<DateFormatter.Style>.value(`dateStyle`), Parameter<DateFormatter.Style>.value(`timeStyle`)))
+		let perform = methodPerformValue(.m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(Parameter<Date>.value(`date`), Parameter<DateFormatter.Style>.value(`dateStyle`), Parameter<DateFormatter.Style>.value(`timeStyle`))) as? (Date, DateFormatter.Style, DateFormatter.Style) -> Void
+		perform?(`date`, `dateStyle`, `timeStyle`)
+		var __value: String
+		do {
+		    __value = try methodReturnValue(.m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(Parameter<Date>.value(`date`), Parameter<DateFormatter.Style>.value(`dateStyle`), Parameter<DateFormatter.Style>.value(`timeStyle`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for string(for date: Date, dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style). Use given")
+			Failure("Stub return value not specified for string(for date: Date, dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style). Use given")
+		}
+		return __value
+    }
+
     func date(_ date1: Date, occursOnSame component: Calendar.Component, as date2: Date) -> Bool {
         addInvocation(.m_date__date1occursOnSame_componentas_date2(Parameter<Date>.value(`date1`), Parameter<Calendar.Component>.value(`component`), Parameter<Date>.value(`date2`)))
 		let perform = methodPerformValue(.m_date__date1occursOnSame_componentas_date2(Parameter<Date>.value(`date1`), Parameter<Calendar.Component>.value(`component`), Parameter<Date>.value(`date2`))) as? (Date, Calendar.Component, Date) -> Void
@@ -1454,6 +1468,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
         case m_start__of_componentin_date(Parameter<Calendar.Component>, Parameter<Date>)
         case m_end__of_componentin_date(Parameter<Calendar.Component>, Parameter<Date>)
         case m_string__for_dateinFormat_format(Parameter<Date>, Parameter<String>)
+        case m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(Parameter<Date>, Parameter<DateFormatter.Style>, Parameter<DateFormatter.Style>)
         case m_date__date1occursOnSame_componentas_date2(Parameter<Date>, Parameter<Calendar.Component>, Parameter<Date>)
         case m_compare__date1_date2(Parameter<Date?>, Parameter<Date?>)
         case m_date__dateisOnOneOf_daysOfWeek(Parameter<Date>, Parameter<GenericAttribute>)
@@ -1474,6 +1489,11 @@ class CalendarUtilMock: CalendarUtil, Mock {
             case (.m_string__for_dateinFormat_format(let lhsDate, let lhsFormat), .m_string__for_dateinFormat_format(let rhsDate, let rhsFormat)):
                 guard Parameter.compare(lhs: lhsDate, rhs: rhsDate, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsFormat, rhs: rhsFormat, with: matcher) else { return false } 
+                return true 
+            case (.m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(let lhsDate, let lhsDatestyle, let lhsTimestyle), .m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(let rhsDate, let rhsDatestyle, let rhsTimestyle)):
+                guard Parameter.compare(lhs: lhsDate, rhs: rhsDate, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsDatestyle, rhs: rhsDatestyle, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsTimestyle, rhs: rhsTimestyle, with: matcher) else { return false } 
                 return true 
             case (.m_date__date1occursOnSame_componentas_date2(let lhsDate1, let lhsComponent, let lhsDate2), .m_date__date1occursOnSame_componentas_date2(let rhsDate1, let rhsComponent, let rhsDate2)):
                 guard Parameter.compare(lhs: lhsDate1, rhs: rhsDate1, with: matcher) else { return false } 
@@ -1510,6 +1530,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
             case let .m_start__of_componentin_date(p0, p1): return p0.intValue + p1.intValue
             case let .m_end__of_componentin_date(p0, p1): return p0.intValue + p1.intValue
             case let .m_string__for_dateinFormat_format(p0, p1): return p0.intValue + p1.intValue
+            case let .m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_date__date1occursOnSame_componentas_date2(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_compare__date1_date2(p0, p1): return p0.intValue + p1.intValue
             case let .m_date__dateisOnOneOf_daysOfWeek(p0, p1): return p0.intValue + p1.intValue
@@ -1537,6 +1558,9 @@ class CalendarUtilMock: CalendarUtil, Mock {
         }
         static func string(for date: Parameter<Date>, inFormat format: Parameter<String>, willReturn: String...) -> MethodStub {
             return Given(method: .m_string__for_dateinFormat_format(`date`, `format`), products: willReturn.map({ Product.return($0) }))
+        }
+        static func string(for date: Parameter<Date>, dateStyle: Parameter<DateFormatter.Style>, timeStyle: Parameter<DateFormatter.Style>, willReturn: String...) -> MethodStub {
+            return Given(method: .m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(`date`, `dateStyle`, `timeStyle`), products: willReturn.map({ Product.return($0) }))
         }
         static func date(_ date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_date__date1occursOnSame_componentas_date2(`date1`, `component`, `date2`), products: willReturn.map({ Product.return($0) }))
@@ -1593,6 +1617,13 @@ class CalendarUtilMock: CalendarUtil, Mock {
 			willProduce(stubber)
 			return given
         }
+        static func string(for date: Parameter<Date>, dateStyle: Parameter<DateFormatter.Style>, timeStyle: Parameter<DateFormatter.Style>, willProduce: (Stubber<String>) -> Void) -> MethodStub {
+            let willReturn: [String] = []
+			let given: Given = { return Given(method: .m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(`date`, `dateStyle`, `timeStyle`), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (String).self)
+			willProduce(stubber)
+			return given
+        }
         static func date(_ date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_date__date1occursOnSame_componentas_date2(`date1`, `component`, `date2`), products: willReturn.map({ Product.return($0) })) }()
@@ -1643,6 +1674,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
         static func start(of component: Parameter<Calendar.Component>, in date: Parameter<Date>) -> Verify { return Verify(method: .m_start__of_componentin_date(`component`, `date`))}
         static func end(of component: Parameter<Calendar.Component>, in date: Parameter<Date>) -> Verify { return Verify(method: .m_end__of_componentin_date(`component`, `date`))}
         static func string(for date: Parameter<Date>, inFormat format: Parameter<String>) -> Verify { return Verify(method: .m_string__for_dateinFormat_format(`date`, `format`))}
+        static func string(for date: Parameter<Date>, dateStyle: Parameter<DateFormatter.Style>, timeStyle: Parameter<DateFormatter.Style>) -> Verify { return Verify(method: .m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(`date`, `dateStyle`, `timeStyle`))}
         static func date(_ date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>) -> Verify { return Verify(method: .m_date__date1occursOnSame_componentas_date2(`date1`, `component`, `date2`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date1` label")
 		static func date(date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>) -> Verify { return Verify(method: .m_date__date1occursOnSame_componentas_date2(`date1`, `component`, `date2`))}
@@ -1671,6 +1703,9 @@ class CalendarUtilMock: CalendarUtil, Mock {
         }
         static func string(for date: Parameter<Date>, inFormat format: Parameter<String>, perform: @escaping (Date, String) -> Void) -> Perform {
             return Perform(method: .m_string__for_dateinFormat_format(`date`, `format`), performs: perform)
+        }
+        static func string(for date: Parameter<Date>, dateStyle: Parameter<DateFormatter.Style>, timeStyle: Parameter<DateFormatter.Style>, perform: @escaping (Date, DateFormatter.Style, DateFormatter.Style) -> Void) -> Perform {
+            return Perform(method: .m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(`date`, `dateStyle`, `timeStyle`), performs: perform)
         }
         static func date(_ date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>, perform: @escaping (Date, Calendar.Component, Date) -> Void) -> Perform {
             return Perform(method: .m_date__date1occursOnSame_componentas_date2(`date1`, `component`, `date2`), performs: perform)

@@ -13,9 +13,14 @@ public let defaultDateFormat = "MMMM d yyyy 'at' H:mm:ss"
 
 //sourcery: AutoMockable
 public protocol CalendarUtil {
+	/// Set all components of the specified date less than the specified component to the minimum value for that component.
+	/// - Parameter toBeginningOf: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
 	func start(of component: Calendar.Component, in date: Date) -> Date
+	/// Set all components of the specified date less than the specified component to the maximum value for that component.
+	/// - Parameter toBeginningOf: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
 	func end(of component: Calendar.Component, in date: Date) -> Date
 	func string(for date: Date, inFormat format: String) -> String
+	func string(for date: Date, dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> String
 	func date(_ date1: Date, occursOnSame component: Calendar.Component, as date2: Date) -> Bool
 	func compare(_ date1: Date?, _ date2: Date?) -> ComparisonResult
 	func date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek
@@ -59,6 +64,13 @@ public final class CalendarUtilImpl: CalendarUtil {
 		let calendar = Calendar.autoupdatingCurrent
 		let dateInRegion = DateInRegion(date, region: Region(calendar: calendar, zone: calendar.timeZone))
 		return dateInRegion.toFormat(format)
+	}
+
+	public final func string(for date: Date, dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> String {
+		let formatter = DateFormatter()
+		formatter.dateStyle = dateStyle
+		formatter.timeStyle = timeStyle
+		return formatter.string(from: date)
 	}
 
 	public final func date(_ date1: Date, occursOnSame component: Calendar.Component, as date2: Date) -> Bool {

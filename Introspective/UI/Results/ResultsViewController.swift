@@ -137,7 +137,10 @@ final class ResultsViewController: UITableViewController {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "errorCell", for: indexPath)
 			var errorText = error!.localizedDescription
 			if let error = error as? DisplayableError {
-				errorText = error.displayableTitle + ": " + (error.displayableDescription ?? "")
+				errorText = error.displayableTitle
+				if let description = error.displayableDescription {
+					errorText += ": " + description
+				}
 			}
 			cell.textLabel!.text = errorText
 			return cell

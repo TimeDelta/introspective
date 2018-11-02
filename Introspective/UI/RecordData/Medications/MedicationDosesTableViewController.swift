@@ -102,7 +102,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 			self.present(alert, animated: false, completion: nil)
 		}
 		delete.accessibilityLabel = "delete dose button"
-		let dateText = DependencyInjector.util.calendar.string(for: dose.timestamp, inFormat: "MMMM d, yyyy 'at' H:mm")
+		let dateText = DependencyInjector.util.calendar.string(for: dose.timestamp, dateStyle: .long, timeStyle: .short)
 		var dosageText = dose.dosage?.description ?? ""
 		if !dosageText.isEmpty {
 			dosageText += " "
@@ -203,7 +203,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		if let dosage = dose.dosage {
 			doseText += dosage.description + " on "
 		}
-		doseText += DependencyInjector.util.calendar.string(for: dose.timestamp, inFormat: "MMM d, yyyy 'at' H:mm")
+		doseText += DependencyInjector.util.calendar.string(for: dose.timestamp, dateStyle: .medium, timeStyle: .short)
 		return doseText
 	}
 
@@ -235,18 +235,18 @@ public final class MedicationDosesTableViewController: UITableViewController {
 			dateText = "Filter Dates"
 		} else if filterEndDate == filterStartDate {
 			dateText = "On "
-			dateText += DependencyInjector.util.calendar.string(for: filterStartDate!, inFormat: "MMM d, yyyy")
+			dateText += DependencyInjector.util.calendar.string(for: filterStartDate!, dateStyle: .medium, timeStyle: .none)
 		} else if filterEndDate == nil {
 			dateText = "After "
-			dateText += DependencyInjector.util.calendar.string(for: filterStartDate!, inFormat: "MMM d, yyyy")
+			dateText += DependencyInjector.util.calendar.string(for: filterStartDate!, dateStyle: .medium, timeStyle: .none)
 		} else if filterStartDate == nil {
 			dateText = "Before "
-			dateText += DependencyInjector.util.calendar.string(for: filterEndDate!, inFormat: "MMM dd, yyyy")
+			dateText += DependencyInjector.util.calendar.string(for: filterEndDate!, dateStyle: .medium, timeStyle: .none)
 		} else {
 			dateText = "From "
-			dateText += DependencyInjector.util.calendar.string(for: filterStartDate!, inFormat: "M/d/yy")
+			dateText += DependencyInjector.util.calendar.string(for: filterStartDate!, dateStyle: .short, timeStyle: .none)
 			dateText += " to "
-			dateText += DependencyInjector.util.calendar.string(for: filterEndDate!, inFormat: "M/d/yy")
+			dateText += DependencyInjector.util.calendar.string(for: filterEndDate!, dateStyle: .short, timeStyle: .none)
 		}
 		dateRangeButton.title = dateText
 		dateRangeButton.accessibilityValue = dateText
