@@ -74,7 +74,7 @@
                                         </label>
                                         <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="ymG-KL-FCQ">
                                             <rect key="frame" x="71" y="16" width="155" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <color key="tintColor" red="0.71373039484024048" green="0.71371680498123169" blue="0.71372604370117188" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <connections>
                                                 <action selector="ratingChanged:" destination="fJm-WJ-Cyf" eventType="valueChanged" id="FxS-vn-GTe"/>
