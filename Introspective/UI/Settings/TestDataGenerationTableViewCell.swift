@@ -21,7 +21,7 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 	private static let leanBodyMassRange: (min: Double, max: Double) = (min: 120, max: 150)
 	private static let medicationDoseAmountRange: (min: Double, max: Double) = (min: 10, max: 100)
 	private static let moodRatingRange: (min: Double, max: Double) = (min: 0, max: DependencyInjector.settings.maximumMood)
-	private static let sleepHoursRange: (min: Int, max: Int) = (min: 1, max: 10)
+	private static let sleepHoursRange: (min: Int, max: Int) = (min: 5, max: 10)
 	private static let weightRange: (min: Double, max: Double) = (min: 100, max: 200)
 
 	private static let medicationNames = [
@@ -62,61 +62,25 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 				var sleepRecords = [Sleep]()
 				var weights = [Weight]()
 
-				var medications = try! DependencyInjector.db.query(Medication.fetchRequest())
-				for i in 0 ..< 5 {
-					let medication = try! DependencyInjector.db.new(Medication.self)
-					medication.name = Me.medicationNames[i]
-					medication.recordScreenIndex = Int16(medications.count)
-					medications.append(medication)
-				}
+				let medications = self.createRandomMedications(5)
 				DependencyInjector.db.save()
 
 				for daysAgo in 0 ... 60 {
+					sleepRecords.append(self.randomSleepSample(daysAgo))
 					for hoursAgo in 0 ... 23 {
 						for sampleNum in 0 ... Me.samplesPerHour {
 							let minutesAgo: Int = 60 * sampleNum / Me.samplesPerHour
 							let date = Date() - daysAgo.days - hoursAgo.hours - minutesAgo.minutes
 
-							let bloodPressure = BloodPressure(
-								systolic: self.randomDouble(Me.bloodPressureRange.systolic),
-								diastolic: self.randomDouble(Me.bloodPressureRange.diastolic),
-								date)
-							bloodPressures.append(bloodPressure)
-
-							let bmi = BodyMassIndex(self.randomDouble(Me.bmiRange), date)
-							bmis.append(bmi)
-
-							let heartRate = HeartRate(self.randomDouble(Me.heartRateRange), date)
-							heartRates.append(heartRate)
-
-							let leanBodyMass = LeanBodyMass(self.randomDouble(Me.leanBodyMassRange), date)
-							leanBodyMasses.append(leanBodyMass)
-
-							let medicationDose = DependencyInjector.sample.medicationDose()
-							medicationDose.timestamp = date
-							medicationDose.dosage = Dosage(self.randomDouble(Me.medicationDoseAmountRange), "mg")
-							medicationDose.medication = try! DependencyInjector.db.pull(savedObject: self.randomEntry(medications), fromSameContextAs: medicationDose)
-							medicationDose.medication.addToDoses(medicationDose)
-
-							let mood = DependencyInjector.sample.mood()
-							mood.timestamp = date
-							mood.maxRating = DependencyInjector.settings.maximumMood
-							mood.rating = self.randomDouble(Me.moodRatingRange)
-							mood.note = self.randomEntry(Me.moodNotes)
-
-							let restingHeartRate = RestingHeartRate(self.randomDouble(Me.heartRateRange), date)
-							restingHeartRates.append(restingHeartRate)
-
-							let sleep = Sleep(startDate: date, endDate: date + self.randomInt(Me.sleepHoursRange).hours)
-							sleep.state = self.randomEntry(Sleep.State.allValues)
-							sleepRecords.append(sleep)
-
-							let sexualActivity = SexualActivity(date)
-							sexualActivity.protectionUsed = self.randomEntry(SexualActivity.Protection.allValues)
-							sexualActivities.append(sexualActivity)
-
-							let weight = Weight(self.randomDouble(Me.weightRange), date)
-							weights.append(weight)
+							bloodPressures.append(self.randomBloodPressure(date))
+							bmis.append(BodyMassIndex(self.randomDouble(Me.bmiRange), date))
+							heartRates.append(HeartRate(self.randomDouble(Me.heartRateRange), date))
+							leanBodyMasses.append(LeanBodyMass(self.randomDouble(Me.leanBodyMassRange), date))
+							self.createRandomMedicationDose(date, medications)
+							self.createRandomMood(date)
+							restingHeartRates.append(RestingHeartRate(self.randomDouble(Me.heartRateRange), date))
+							sexualActivities.append(self.randomSexualActivity(date))
+							weights.append(Weight(self.randomDouble(Me.weightRange), date))
 						}
 					}
 				}
@@ -139,6 +103,55 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 				}
 			}
 		}
+	}
+
+	private final func randomBloodPressure(_ date: Date) -> BloodPressure {
+		return BloodPressure(
+			systolic: randomDouble(Me.bloodPressureRange.systolic),
+			diastolic: randomDouble(Me.bloodPressureRange.diastolic),
+			date)
+	}
+
+	private final func createRandomMedications(_ numberToCreate: Int) -> [Medication] {
+		var medications = try! DependencyInjector.db.query(Medication.fetchRequest())
+		for i in 0 ..< numberToCreate {
+			let medication = try! DependencyInjector.db.new(Medication.self)
+			medication.name = Me.medicationNames[i]
+			medication.recordScreenIndex = Int16(medications.count)
+			medications.append(medication)
+		}
+		return medications
+	}
+
+	private final func createRandomMedicationDose(_ date: Date, _ medications: [Medication]) {
+		let medicationDose = DependencyInjector.sample.medicationDose()
+		medicationDose.timestamp = date
+		medicationDose.dosage = Dosage(randomDouble(Me.medicationDoseAmountRange), "mg")
+		medicationDose.medication = try! DependencyInjector.db.pull(savedObject: randomEntry(medications), fromSameContextAs: medicationDose)
+		medicationDose.medication.addToDoses(medicationDose)
+	}
+
+	private final func createRandomMood(_ date: Date) {
+		let mood = DependencyInjector.sample.mood()
+		mood.timestamp = date
+		mood.maxRating = DependencyInjector.settings.maximumMood
+		mood.rating = randomDouble(Me.moodRatingRange)
+		mood.note = randomEntry(Me.moodNotes)
+	}
+
+	private final func randomSexualActivity(_ date: Date) -> SexualActivity {
+		let sexualActivity = SexualActivity(date)
+		sexualActivity.protectionUsed = self.randomEntry(SexualActivity.Protection.allValues)
+		return sexualActivity
+	}
+
+	private final func randomSleepSample(_ daysAgo: Int) -> Sleep {
+		let sleepStartDate = DependencyInjector.util.calendar.start(of: .day, in: Date() - daysAgo.days) -
+			randomInt((min: 0, max: 2)).hours -
+			randomInt((min: 0, max: 59)).minutes
+		let sleep = Sleep(startDate: sleepStartDate, endDate: sleepStartDate + randomInt(Me.sleepHoursRange).hours)
+		sleep.state = randomEntry(Sleep.State.allValues)
+		return sleep
 	}
 
 	private final func randomEntry<EntryType>(_ array: [EntryType]) -> EntryType {

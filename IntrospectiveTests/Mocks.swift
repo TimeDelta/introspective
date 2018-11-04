@@ -1436,13 +1436,13 @@ class CalendarUtilMock: CalendarUtil, Mock {
 		return __value
     }
 
-    func date(from dateStr: String, format: String) -> Date? {
-        addInvocation(.m_date__from_dateStrformat_format(Parameter<String>.value(`dateStr`), Parameter<String>.value(`format`)))
-		let perform = methodPerformValue(.m_date__from_dateStrformat_format(Parameter<String>.value(`dateStr`), Parameter<String>.value(`format`))) as? (String, String) -> Void
+    func date(from dateStr: String, format: String?) -> Date? {
+        addInvocation(.m_date__from_dateStrformat_format(Parameter<String>.value(`dateStr`), Parameter<String?>.value(`format`)))
+		let perform = methodPerformValue(.m_date__from_dateStrformat_format(Parameter<String>.value(`dateStr`), Parameter<String?>.value(`format`))) as? (String, String?) -> Void
 		perform?(`dateStr`, `format`)
 		var __value: Date? = nil
 		do {
-		    __value = try methodReturnValue(.m_date__from_dateStrformat_format(Parameter<String>.value(`dateStr`), Parameter<String>.value(`format`))).casted()
+		    __value = try methodReturnValue(.m_date__from_dateStrformat_format(Parameter<String>.value(`dateStr`), Parameter<String?>.value(`format`))).casted()
 		} catch {
 			// do nothing
 		}
@@ -1473,7 +1473,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
         case m_compare__date1_date2(Parameter<Date?>, Parameter<Date?>)
         case m_date__dateisOnOneOf_daysOfWeek(Parameter<Date>, Parameter<GenericAttribute>)
         case m_date__dateisOnA_dayOfWeek(Parameter<Date>, Parameter<DayOfWeek>)
-        case m_date__from_dateStrformat_format(Parameter<String>, Parameter<String>)
+        case m_date__from_dateStrformat_format(Parameter<String>, Parameter<String?>)
         case m_distance__from_date1to_date2in_unit(Parameter<Date>, Parameter<Date>, Parameter<Calendar.Component>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
@@ -1590,7 +1590,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 		static func date(date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_date__dateisOnA_dayOfWeek(`date`, `dayOfWeek`), products: willReturn.map({ Product.return($0) }))
         }
-        static func date(from dateStr: Parameter<String>, format: Parameter<String>, willReturn: Date?...) -> MethodStub {
+        static func date(from dateStr: Parameter<String>, format: Parameter<String?>, willReturn: Date?...) -> MethodStub {
             return Given(method: .m_date__from_dateStrformat_format(`dateStr`, `format`), products: willReturn.map({ Product.return($0) }))
         }
         static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, willReturn: Int...) -> MethodStub {
@@ -1652,7 +1652,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 			willProduce(stubber)
 			return given
         }
-        static func date(from dateStr: Parameter<String>, format: Parameter<String>, willProduce: (Stubber<Date?>) -> Void) -> MethodStub {
+        static func date(from dateStr: Parameter<String>, format: Parameter<String?>, willProduce: (Stubber<Date?>) -> Void) -> MethodStub {
             let willReturn: [Date?] = []
 			let given: Given = { return Given(method: .m_date__from_dateStrformat_format(`dateStr`, `format`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Date?).self)
@@ -1687,7 +1687,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
         static func date(_ date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>) -> Verify { return Verify(method: .m_date__dateisOnA_dayOfWeek(`date`, `dayOfWeek`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date` label")
 		static func date(date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>) -> Verify { return Verify(method: .m_date__dateisOnA_dayOfWeek(`date`, `dayOfWeek`))}
-        static func date(from dateStr: Parameter<String>, format: Parameter<String>) -> Verify { return Verify(method: .m_date__from_dateStrformat_format(`dateStr`, `format`))}
+        static func date(from dateStr: Parameter<String>, format: Parameter<String?>) -> Verify { return Verify(method: .m_date__from_dateStrformat_format(`dateStr`, `format`))}
         static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>) -> Verify { return Verify(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`))}
     }
 
@@ -1735,7 +1735,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 		static func date(date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>, perform: @escaping (Date, DayOfWeek) -> Void) -> Perform {
             return Perform(method: .m_date__dateisOnA_dayOfWeek(`date`, `dayOfWeek`), performs: perform)
         }
-        static func date(from dateStr: Parameter<String>, format: Parameter<String>, perform: @escaping (String, String) -> Void) -> Perform {
+        static func date(from dateStr: Parameter<String>, format: Parameter<String?>, perform: @escaping (String, String?) -> Void) -> Perform {
             return Perform(method: .m_date__from_dateStrformat_format(`dateStr`, `format`), performs: perform)
         }
         static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, perform: @escaping (Date, Date, Calendar.Component) -> Void) -> Perform {

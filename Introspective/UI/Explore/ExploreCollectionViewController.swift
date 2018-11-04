@@ -14,7 +14,7 @@ final class ExploreCollectionViewController: UICollectionViewController {
 	private typealias Me = ExploreCollectionViewController
 	private static let queryCellReuseIdentifier = "query"
 	private static let graphCellReuseIdentifier = "graph"
-	private static let runQueryNotification = Notification.Name("runQueryFromExploreTab")
+	private static let unifiedViewCellReuseIdentifier = "unifiedView"
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
@@ -28,7 +28,7 @@ final class ExploreCollectionViewController: UICollectionViewController {
 
 
 	final override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return 2
+		return 3
 	}
 
 	final override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -37,6 +37,9 @@ final class ExploreCollectionViewController: UICollectionViewController {
 		}
 		if indexPath.row == 1 {
 			return collectionView.dequeueReusableCell(withReuseIdentifier: Me.graphCellReuseIdentifier, for: indexPath)
+		}
+		if indexPath.row == 2 {
+			return collectionView.dequeueReusableCell(withReuseIdentifier: Me.unifiedViewCellReuseIdentifier, for: indexPath)
 		}
 
 		os_log("Unknown row when trying to create UICollectionViewCell: %d", type: .error, indexPath.row)

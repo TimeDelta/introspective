@@ -12,6 +12,7 @@ import HealthKit
 public protocol HealthKitQuantitySample: HealthKitSample {
 
 	static var quantityType: HKQuantityType { get }
+	static var unit: HKUnit { get }
 
 	var unitString: String { get }
 

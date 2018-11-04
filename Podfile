@@ -10,6 +10,7 @@ target 'Introspective' do
   pod "SwiftDate"
   pod 'AAInfographics'
   pod 'NotificationBannerSwift'
+  pod 'CalendarKit'
 
   target 'IntrospectiveTests' do
     inherit! :search_paths

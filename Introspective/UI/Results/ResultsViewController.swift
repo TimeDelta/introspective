@@ -159,7 +159,7 @@ final class ResultsViewController: UITableViewController {
 
 		if section == 1 {
 			let sample = samples[row]
-			switch (samples[0]) {
+			switch (sample) {
 				case is BloodPressure:
 					let cell = (tableView.dequeueReusableCell(withIdentifier: "bloodPressureCell", for: indexPath) as! BloodPressureTableViewCell)
 					cell.sample = (sample as! BloodPressure)
