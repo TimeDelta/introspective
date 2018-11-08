@@ -9,6 +9,7 @@
 import UIKit
 import CalendarKit
 import HealthKit
+import CoreData
 import SwiftDate
 import os
 
@@ -36,6 +37,16 @@ public final class UnifiedDayViewController: DayViewController {
 			self.calculateAndDisplay(.discreteMin, for: HeartRate.self, during: eventView)
 		})
 
+		actionSheet.addAction(UIAlertAction(title: "What was my average mood during this time?", style: .default) { _ in
+			self.calculateAndDisplayForMood(AverageInformation(MoodImpl.rating), during: eventView)
+		})
+		actionSheet.addAction(UIAlertAction(title: "What was my maximum mood during this time?", style: .default) { _ in
+			self.calculateAndDisplayForMood(MaximumInformation<Double>(MoodImpl.rating), during: eventView)
+		})
+		actionSheet.addAction(UIAlertAction(title: "What was my minimum mood during this time?", style: .default) { _ in
+			self.calculateAndDisplayForMood(MinimumInformation<Double>(MoodImpl.rating), during: eventView)
+		})
+
 		actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 
 		present(actionSheet, animated: true, completion: nil)
@@ -43,15 +54,37 @@ public final class UnifiedDayViewController: DayViewController {
 
 	// MARK: - Helper Functions
 
-	private final func calculateAndDisplay(_ operation: HKStatisticsOptions, for type: HealthKitQuantitySample.Type, during eventView: EventView) {
-		let (startDate, endDate) = self.getStartAndEndDatesFrom(eventView)
-		HealthManager.calculate(operation, type, from: startDate, to: endDate) { value, error in
-			let operationName: String = self.getOperationName(for: operation)
-			self.display("\(operationName) \(type.name.localizedLowercase)", value, error, startDate, endDate)
+	private final func calculateAndDisplayForMood(_ operation: ExtraInformation, during eventView: EventView) {
+		let valueDescription = "\(operation.name.localizedLowercase) mood"
+		let (startDate, endDate) = getStartAndEndDatesFrom(eventView)
+		let fetchRequest: NSFetchRequest<MoodImpl> = MoodImpl.fetchRequest()
+		fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+			NSPredicate(format: "timestamp > %@", startDate as NSDate),
+			NSPredicate(format: "timestamp < %@", endDate as NSDate)])
+		do {
+			let moods = try DependencyInjector.db.query(fetchRequest)
+			if moods.count == 0 {
+				showError(title: "You have no mood ratings during this time period")
+				return
+			}
+			let value = try operation.compute(forSamples: moods)
+			display(valueDescription, value, nil, startDate, endDate)
+		} catch {
+			os_log("Failed to calculate %@ for mood: %@", type: .error, operation.description, error.localizedDescription)
+			showError(title: "Could not calculate \(valueDescription)", message: "Sorry for the inconvenience")
 		}
 	}
 
-	private final func display(_ description: String, _ value: Double?, _ error: Error?, _ startDate: Date, _ endDate: Date) {
+	private final func calculateAndDisplay(_ operation: HKStatisticsOptions, for type: HealthKitQuantitySample.Type, during eventView: EventView) {
+		let (startDate, endDate) = getStartAndEndDatesFrom(eventView)
+		HealthManager.calculate(operation, type, from: startDate, to: endDate) { value, error in
+			let operationName: String = self.getOperationName(for: operation)
+			let stringValue: String? = value == nil ? nil : String(value!)
+			self.display("\(operationName) \(type.name.localizedLowercase)", stringValue, error, startDate, endDate)
+		}
+	}
+
+	private final func display(_ description: String, _ value: String?, _ error: Error?, _ startDate: Date, _ endDate: Date) {
 		guard error == nil && value != nil else {
 			if let error = error {
 				os_log("Failed to calculate %@: %@", type: .error, description, error.localizedDescription)
