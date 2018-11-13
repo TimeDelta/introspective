@@ -52,6 +52,11 @@ public final class ExtraInformationFactoryImpl: ExtraInformationFactory {
 		} else if attribute is FrequencyAttribute {
 			applicableInformationTypes.append(MaximumInformation<Frequency>.self)
 			applicableInformationTypes.append(MinimumInformation<Frequency>.self)
+		} else if attribute is DurationAttribute {
+			applicableInformationTypes.append(SumInformation.self)
+			applicableInformationTypes.append(AverageInformation.self)
+			applicableInformationTypes.append(MaximumInformation<Duration>.self)
+			applicableInformationTypes.append(MinimumInformation<Duration>.self)
 		}
 		// TODO - additional attribute types
 		applicableInformationTypes.append(contentsOf: Me.genericInformationTypes)

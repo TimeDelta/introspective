@@ -114,6 +114,46 @@ final class SumInformationFunctionalTests: FunctionalTest {
 		XCTAssertEqual(sum, Dosage(10.0, "L").description)
 	}
 
+	func testGivenDurationAttribute_compute_returnsCorrectValue() {
+		// given
+		let attribute = DurationAttribute()
+		let date = Date()
+		let samples = SampleCreatorTestUtil.createSamples(withValues: [
+			Duration(start: date, end: date + 4.days),
+			Duration(start: date, end: date + 5.hours),
+			Duration(start: date, end: date + 6.minutes),
+			Duration(start: date, end: date + 7.seconds),
+		], for: attribute)
+		let information = SumInformation(attribute)
+
+		// when
+		let sum = information.compute(forSamples: samples)
+
+		// then
+		XCTAssertEqual(sum, "4d 5:06:07")
+	}
+
+	func testGivenOptionalDurationAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() {
+		// given
+		let attribute = DurationAttribute()
+		let date = Date()
+		let samples = SampleCreatorTestUtil.createSamples(withValues: [
+			Duration(start: date, end: date + 4.days),
+			nil, nil,
+			Duration(start: date, end: date + 5.hours),
+			Duration(start: date, end: date + 6.minutes),
+			nil,
+			Duration(start: date, end: date + 7.seconds),
+		], for: attribute)
+		let information = SumInformation(attribute)
+
+		// when
+		let sum = information.compute(forSamples: samples)
+
+		// then
+		XCTAssertEqual(sum, "4d 5:06:07")
+	}
+
 	func testGivenUnknownAttributeTypeWithNonEmptySampleArray_compute_returnsEmptyString() {
 		// given
 		let attribute = TextAttribute(name: "a")

@@ -18,12 +18,19 @@ public enum DatabaseError: Error {
 public protocol Database {
 
 	func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type) throws -> Type
+
 	func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, cacheName: String?) -> NSFetchedResultsController<Type>
 	func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type]
+
 	/// This method needs to be called when trying to establish a relationship between two objects in different contexts.
 	/// This will happen if one object has already been saved and the other hasn't been saved yet.
 	func pull<Type: NSManagedObject>(savedObject: Type, fromSameContextAs otherObject: NSManagedObject) throws -> Type
+	func getUpdated<Type: NSManagedObject>(object: Type) throws -> Type
+
 	func save()
+	/// Use this cautiously as it will rollback unsaved stuff created from other tabs also
+	func clearUnsavedChanges()
+
 	func delete(_ object: NSManagedObject)
 	func deleteAll(_ objects: [NSManagedObject]) throws
 	func deleteAll(_ objectType: NSManagedObject.Type) throws
@@ -107,22 +114,28 @@ public class DatabaseImpl: Database {
 	public final func pull<Type: NSManagedObject>(savedObject: Type, fromSameContextAs otherObject: NSManagedObject) throws -> Type {
 		signpost.begin(name: "Pull", idObject: savedObject)
 		let savedObjectInSameContext = otherObject.managedObjectContext!.object(with: savedObject.objectID)
-		guard let castedObject = savedObjectInSameContext as? Type else {
-			var wasFault = "Object is "
-			if !savedObjectInSameContext.isFault {
-				wasFault += "not "
-			}
-			wasFault += "a fault"
-			os_log("Could not cast saved object as %@: %@", type: .error, savedObject.entity.name!)
+		do {
+			let castedObject = try getObject(savedObjectInSameContext, as: Type.self)
 			signpost.end(name: "Pull", idObject: savedObject)
-			throw DatabaseError.failedToInstantiateObject
+			return castedObject
+		} catch {
+			signpost.end(name: "Pull", idObject: savedObject)
+			throw error
 		}
-		signpost.end(name: "Pull", idObject: savedObject)
-		return castedObject
+	}
+
+	public final func getUpdated<Type: NSManagedObject>(object: Type) throws -> Type {
+		return try getObject(object.managedObjectContext!.object(with: object.objectID), as: Type.self)
 	}
 
 	public final func save() {
 		saveContext(backgroundContext)
+		saveContext(persistentContainer.viewContext)
+	}
+
+	public final func clearUnsavedChanges() {
+		backgroundContext.undo()
+		persistentContainer.viewContext.undo()
 	}
 
 	public final func delete(_ object: NSManagedObject) {
@@ -201,5 +214,18 @@ public class DatabaseImpl: Database {
 			}
 		}
 		signpost.end(name: "Delete all with objects", idObject: objects as AnyObject)
+	}
+
+	private final func getObject<Type: NSManagedObject>(_ object: NSManagedObject, as type: Type.Type) throws -> Type {
+		guard let castedObject = object as? Type else {
+			var wasFault = "Object is "
+			if !object.isFault {
+				wasFault += "not "
+			}
+			wasFault += "a fault"
+			os_log("Could not cast managed object as %@: %@", type: .error, type.entity().name!)
+			throw DatabaseError.failedToInstantiateObject
+		}
+		return castedObject
 	}
 }

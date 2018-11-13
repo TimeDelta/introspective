@@ -39,9 +39,10 @@ public class TypedSelectOneAttribute<Type>: AttributeBase, SelectOneAttribute {
 		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional)
 	}
 
-	public final func indexOf(possibleValue: Any) -> Int? {
+	public final func indexOf(possibleValue: Any, in values: [Any]? = nil) -> Int? {
 		guard let castedValue = possibleValue as? Type else { return nil }
-		return typedPossibleValues.index(where: { self.areEqual(castedValue, $0) })
+		let values: [Type] = (values as? [Type]) ?? typedPossibleValues
+		return values.index(where: { self.areEqual(castedValue, $0) })
 	}
 
 	public final override func convertToDisplayableString(from value: Any?) throws -> String {

@@ -15,6 +15,8 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 
 	private static let samplesPerHour = 12
 
+	private static let activityDurationHoursRange: (min: Int, max: Int) = (min: 1, max: 10)
+	private static let activityDurationMinutesRange: (min: Int, max: Int) = (min: 0, max: 60)
 	private static let bloodPressureRange: (systolic: (min: Double, max: Double), diastolic: (min: Double, max: Double)) = (systolic: (min: 100, max: 140), diastolic: (min: 50, max: 100))
 	private static let bmiRange: (min: Double, max: Double) = (min: 15, max: 50)
 	private static let heartRateRange: (min: Double, max: Double) = (min: 45, max: 200)
@@ -35,7 +37,7 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 		"Not feeling too great", nil,
 		"Today was a great day", nil,
 		"I'm a little teapot", nil,
-		"Hello world", nil,
+		"This\nhas\nmultiple\nlines", nil,
 		"This is a note", nil,
 	]
 
@@ -62,12 +64,18 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 				var sleepRecords = [Sleep]()
 				var weights = [Weight]()
 
+				let activityDefinitions = self.createRandomActivityDefinitions(5)
+				DependencyInjector.db.save()
+
 				let medications = self.createRandomMedications(5)
 				DependencyInjector.db.save()
 
 				for daysAgo in 0 ... 60 {
 					sleepRecords.append(self.randomSleepSample(daysAgo))
 					for hoursAgo in 0 ... 23 {
+						if hoursAgo % 5 == 0 {
+							self.createRandomActivity(Date() - daysAgo.days - hoursAgo.hours, activityDefinitions)
+						}
 						for sampleNum in 0 ... Me.samplesPerHour {
 							let minutesAgo: Int = 60 * sampleNum / Me.samplesPerHour
 							let date = Date() - daysAgo.days - hoursAgo.hours - minutesAgo.minutes
@@ -103,6 +111,26 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 				}
 			}
 		}
+	}
+
+	private final func createRandomActivity(_ date: Date, _ activityDefinitions: [ActivityDefinition]) {
+		let activity = try! DependencyInjector.db.new(Activity.self)
+		activity.definition = randomEntry(activityDefinitions)
+		activity.startDate = date
+		if randomInt((min: 0, max: 1)) == 0 {
+			activity.endDate = date + randomInt(Me.activityDurationHoursRange).hours + randomInt(Me.activityDurationMinutesRange).minutes
+		}
+	}
+
+	private final func createRandomActivityDefinitions(_ numberToCreate: Int) -> [ActivityDefinition] {
+		var activityDefinitions = try! DependencyInjector.db.query(ActivityDefinition.fetchRequest())
+		for i in 0 ..< numberToCreate {
+			let definition = try! DependencyInjector.db.new(ActivityDefinition.self)
+			definition.name = Me.medicationNames[i]
+			definition.recordScreenIndex = Int16(activityDefinitions.count)
+			activityDefinitions.append(definition)
+		}
+		return activityDefinitions
 	}
 
 	private final func randomBloodPressure(_ date: Date) -> BloodPressure {

@@ -8,9 +8,15 @@
 
 import Foundation
 
-public final class FrequencyAttribute: AttributeBase {
+public final class FrequencyAttribute: AttributeBase, ComparableAttribute {
 
-	public override init(name: String = "Frequency", pluralName: String? = "Frequencies", description: String? = nil, variableName: String? = nil, optional: Bool = false) {
+	public override init(
+		name: String = "Frequency",
+		pluralName: String? = "Frequencies",
+		description: String? = nil,
+		variableName: String? = nil,
+		optional: Bool = false)
+	{
 		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional)
 	}
 

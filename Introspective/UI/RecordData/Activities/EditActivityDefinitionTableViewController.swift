@@ -1,0 +1,223 @@
+//
+//  EditActivityDefinitionTableViewController.swift
+//  Introspective
+//
+//  Created by Bryan Nova on 11/20/18.
+//  Copyright © 2018 Bryan Nova. All rights reserved.
+//
+
+import UIKit
+import WSTagsField
+import CoreData
+import os
+
+public final class EditActivityDefinitionTableViewController: UITableViewController {
+
+	// MARK: - Static Variables
+
+	private typealias Me = EditActivityDefinitionTableViewController
+
+	private static let nameIndex = IndexPath(row: 0, section: 0)
+	private static let descriptionIndex = IndexPath(row: 0, section: 1)
+	private static let tagsIndex = IndexPath(row: 0, section: 2)
+
+	private static let nameChanged = Notification.Name("activityDefinitionNameChanged")
+	private static let descriptionChanged = Notification.Name("activityDefinitionDescriptionChanged")
+	private static let tagsChanged = Notification.Name("activityDefinitionTagsChanged")
+	private static let invalid = Notification.Name("activityDefinitionInvalid")
+
+	// MARK: - Instance Variables
+
+	public final var notificationToSendOnAccept: Notification.Name!
+	/// This will only be used in the case that `activityDefinition` is not set
+	public final var initialName: String?
+	public final var activityDefinition: ActivityDefinition? {
+		didSet {
+			guard let activityDefinition = activityDefinition else { return }
+			activityDescription = activityDefinition.activityDescription
+			tagNames = Set(activityDefinition.tagsArray().map{ $0.name })
+		}
+	}
+
+	private final var name: String = ""
+	private final var activityDescription: String?
+	private final var tagNames = Set<String>()
+
+	private final var saveButton: UIBarButtonItem!
+
+	// MARK: - UIViewController Overrides
+
+	public override func viewDidLoad() {
+		super.viewDidLoad()
+
+		name = activityDefinition?.name ?? initialName ?? ""
+
+		saveButton = UIBarButtonItem(
+			title: "Save",
+			style: .done,
+			target: self,
+			action: #selector(saveButtonPressed))
+		saveButton.isEnabled = !name.isEmpty
+		navigationItem.rightBarButtonItem = saveButton!
+
+		NotificationCenter.default.addObserver(self, selector: #selector(nameChanged), name: Me.nameChanged, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(descriptionChanged), name: Me.descriptionChanged, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(tagsChanged), name: Me.tagsChanged, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(invalid), name: Me.invalid, object: nil)
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
+
+	// MARK: - Table view data source
+
+	public final override func numberOfSections(in tableView: UITableView) -> Int {
+		return 3
+	}
+
+	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return 1
+	}
+
+	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		if indexPath == Me.nameIndex {
+			let cell = tableView.dequeueReusableCell(withIdentifier: "name", for: indexPath) as! ActivityDefinitionNameTableViewCell
+			cell.initialName = name
+			cell.notificationToSendOnNameChange = Me.nameChanged
+			cell.notificationToSendOnInvalidName = Me.invalid
+			return cell
+		} else if indexPath == Me.descriptionIndex {
+			let cell = tableView.dequeueReusableCell(withIdentifier: "description", for: indexPath) as! ActivityDefinitionDescriptionTableViewCell
+			cell.activityDescription = activityDescription
+			cell.notificationToSendOnChange = Me.descriptionChanged
+			return cell
+		} else if indexPath == Me.tagsIndex {
+			let cell = tableView.dequeueReusableCell(withIdentifier: "tags", for: indexPath) as! ActivityDefinitionTagsTableViewCell
+			cell.tagNames = tagNames
+			cell.notificationToSendOnChange = Me.tagsChanged
+			return cell
+		} else {
+			os_log("Missing cell customization case for edit activity", type: .error)
+			return UITableViewCell()
+		}
+	}
+
+	public final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		if indexPath == Me.descriptionIndex || indexPath == Me.tagsIndex {
+			return 131
+		}
+		return 50
+	}
+
+	// MARK: - Table view delegate
+
+	public final override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		if section == 1 {
+			return "Description"
+		}
+		if section == 2 {
+			return "Tags"
+		}
+		return nil
+	}
+
+	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		tableView.deselectRow(at: indexPath, animated: false) // selecting a cell should not change the UI
+	}
+
+	// MARK: - Received Notifications
+
+	@objc private final func nameChanged(notification: Notification) {
+		if let name = notification.object as? String {
+			self.name = name
+			saveButton.isEnabled = true
+		} else {
+			os_log("Wrong object type for name changed notification", type: .error)
+		}
+	}
+
+	@objc private final func invalid(notification: Notification) {
+		saveButton.isEnabled = false
+	}
+
+	@objc private final func descriptionChanged(notification: Notification) {
+		if let activityDescription = notification.object as? String? {
+			self.activityDescription = activityDescription
+		} else {
+			os_log("Wrong object type for note changed notification", type: .error)
+		}
+	}
+
+	@objc private final func tagsChanged(notification: Notification) {
+		if let tagNames = notification.object as? Set<String> {
+			self.tagNames = tagNames
+		} else {
+			os_log("Wrong object type for tags changed notification", type: .error)
+		}
+	}
+
+	// MARK: - Actions
+
+	@objc private final func saveButtonPressed(_ sender: Any) {
+		do {
+			// have to use local variable here otherwise description will be
+			// overwritten when self.activityDefinition is set
+			var activityDefinition: ActivityDefinition! = self.activityDefinition
+			if activityDefinition == nil {
+				activityDefinition = try DependencyInjector.db.new(ActivityDefinition.self)
+			}
+
+			activityDefinition.name = name
+			activityDefinition.activityDescription = activityDescription
+			try updateTagsForActivityDefinition(&activityDefinition)
+
+			DependencyInjector.db.save()
+
+			DispatchQueue.main.async {
+				NotificationCenter.default.post(name: self.notificationToSendOnAccept, object: activityDefinition)
+			}
+			navigationController?.popViewController(animated: true)
+		} catch {
+			DependencyInjector.db.clearUnsavedChanges()
+
+			os_log("Failed to edit ActivityDefinition: %@", type: .error, error.localizedDescription)
+			showError(title: "Could not save", message: "Something went wrong while trying to save this activity. Sorry for the inconvenience.")
+		}
+	}
+
+	// MARK: - Helper Functions
+
+	/// - Returns: Only the tags that did not already exist before calling this method.
+	private final func updateTagsForActivityDefinition(_ activityDefinition: inout ActivityDefinition) throws {
+		var tagsCreated = [Tag]()
+		var allTags = [Tag]()
+		do {
+			for tagName in tagNames {
+				var tag: Tag! = try findTagWithName(tagName)
+				if tag == nil {
+					tag = try DependencyInjector.db.new(Tag.self)
+					tag.name = tagName
+					tagsCreated.append(tag)
+				}
+				allTags.append(tag)
+			}
+			try activityDefinition.setTags(allTags)
+		} catch {
+			for tag in tagsCreated {
+				DependencyInjector.db.delete(tag)
+			}
+			throw error
+		}
+	}
+
+	private final func findTagWithName(_ name: String) throws -> Tag? {
+		let fetchRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
+		let tags = try DependencyInjector.db.query(fetchRequest)
+		if tags.count > 0 {
+			return tags[0]
+		}
+		return nil
+	}
+}

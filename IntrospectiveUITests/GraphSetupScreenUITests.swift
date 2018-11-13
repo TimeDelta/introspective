@@ -31,6 +31,7 @@ final class GraphSetupScreenUITests: UITest {
 		let aggregationTimeUnit = "week"
 		let aggregationMethod = "average"
 		goToSingleDataTypeGraphSetupScreen()
+		setPicker(to: "Blood Pressure")
 		setSingleDataTypeXAxis(attribute: xAxisAttribute, aggregation: (timeUnit: aggregationTimeUnit, method: aggregationMethod))
 
 		// when
@@ -50,6 +51,7 @@ final class GraphSetupScreenUITests: UITest {
 		let aggregationTimeUnit = "week"
 		let aggregationMethod = "average"
 		goToSingleDataTypeGraphSetupScreen()
+		setPicker(to: "Blood Pressure")
 		setSingleDataTypeXAxis(attribute: xAxisAttribute, aggregation: (timeUnit: aggregationTimeUnit, method: aggregationMethod))
 		set(graphType: originalGraphType)
 
@@ -69,6 +71,7 @@ final class GraphSetupScreenUITests: UITest {
 		let xAxisAttribute = "diastolic blood pressure"
 		let originalXAxisAttribute = "systolic blood pressure"
 		goToSingleDataTypeGraphSetupScreen()
+		setPicker(to: "Blood Pressure")
 		setSingleDataTypeXAxis(attribute: originalXAxisAttribute)
 
 		// when
@@ -86,6 +89,7 @@ final class GraphSetupScreenUITests: UITest {
 		let originalYAxisAttributes = ["diastolic blood pressure", "systolic blood pressure"]
 		let yAxisAttributes = ["systolic blood pressure"]
 		goToSingleDataTypeGraphSetupScreen()
+		setPicker(to: "Blood Pressure")
 		setSingleDataTypeXAxis(attribute: xAxisAttribute)
 		setYAxisAttributes(originalYAxisAttributes)
 
@@ -105,6 +109,7 @@ final class GraphSetupScreenUITests: UITest {
 		let originalAggregationTimeUnit = "day"
 		let originalAggregationMethod = "minimum"
 		goToSingleDataTypeGraphSetupScreen()
+		setPicker(to: "Blood Pressure")
 		setSingleDataTypeXAxis(attribute: originalXAxisAttribute, aggregation: (timeUnit: originalAggregationTimeUnit, method: originalAggregationMethod))
 
 		// when
@@ -130,6 +135,7 @@ final class GraphSetupScreenUITests: UITest {
 			(attribute: "systolic blood pressure", information: "minimum"),
 		]
 		goToSingleDataTypeGraphSetupScreen()
+		setPicker(to: "Blood Pressure")
 		setSingleDataTypeXAxis(attribute: xAxisAttribute, aggregation: (timeUnit: aggregationTimeUnit, method: xAxisAggregationMethod))
 		setYAxisInformation(originalYAxis)
 
@@ -145,6 +151,7 @@ final class GraphSetupScreenUITests: UITest {
 		let xAxisAttribute = "diastolic blood pressure"
 		let yAxisAttributes = ["systolic blood pressure", "diastolic blood pressure"]
 		goToSingleDataTypeGraphSetupScreen()
+		setPicker(to: "Blood Pressure")
 		setSingleDataTypeXAxis(attribute: xAxisAttribute)
 		setYAxisAttributes(yAxisAttributes)
 		app.buttons["choose y-axis information button"].tap()
@@ -168,6 +175,7 @@ final class GraphSetupScreenUITests: UITest {
 			(attribute: "systolic blood pressure", information: "Minimum"),
 		]
 		goToSingleDataTypeGraphSetupScreen()
+		setPicker(to: "Blood Pressure")
 		setSingleDataTypeXAxis(attribute: xAxisAttribute, aggregation: (timeUnit: aggregationTimeUnit, method: xAxisAggregationMethod))
 		setYAxisInformation(yAxis)
 		app.buttons["choose y-axis information button"].tap()
@@ -211,6 +219,7 @@ final class GraphSetupScreenUITests: UITest {
 	func testChangingSampleTypeOnSingleDataTypeScreen_resetsAllButtonTitles() {
 		// given
 		goToSingleDataTypeGraphSetupScreen()
+		setPicker(to: "Blood Pressure")
 		app.buttons["choose query button"].tap()
 		app.buttons["Use Query"].tap()
 		setSingleDataTypeXAxis(attribute: "timestamp", aggregation: (timeUnit: "day", method: "count"))
@@ -234,7 +243,7 @@ final class GraphSetupScreenUITests: UITest {
 		let originalXAxisAttribute = "systolic blood pressure"
 		let originalAggregationMethod = "minimum"
 		goToMultipleDataTypesGraphSetupScreen()
-		setXAxisDataType()
+		setXAxisDataType("Blood Pressure")
 		setMultipleDataTypeXAxis(attribute: originalXAxisAttribute, aggregationMethod: originalAggregationMethod)
 
 		// when
@@ -257,7 +266,7 @@ final class GraphSetupScreenUITests: UITest {
 			(attribute: "systolic blood pressure", information: "minimum"),
 		]
 		goToMultipleDataTypesGraphSetupScreen()
-		setYAxisDataType()
+		setYAxisDataType("Blood Pressure")
 		setYAxisInformation(originalYAxis)
 
 		// when

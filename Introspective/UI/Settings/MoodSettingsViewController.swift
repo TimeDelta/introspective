@@ -19,7 +19,6 @@ final class MoodSettingsViewController: UIViewController {
 		customPresenter.dismissTransitionType = .crossDissolve
 		customPresenter.roundCorners = true
 		customPresenter.dismissOnSwipe = false
-		customPresenter.dismissOnTap = false
 		return customPresenter
 	}()
 

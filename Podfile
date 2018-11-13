@@ -11,6 +11,8 @@ target 'Introspective' do
   pod 'AAInfographics'
   pod 'NotificationBannerSwift'
   pod 'CalendarKit'
+  pod "WSTagsField"
+  pod "SearchTextField"
 
   target 'IntrospectiveTests' do
     inherit! :search_paths

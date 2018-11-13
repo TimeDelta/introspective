@@ -14,10 +14,10 @@ final class QueryScreenUITests: UITest {
 		// given
 		app.tabBars.buttons["Explore"].tap()
 		app.collectionViews.staticTexts["Query"].tap()
-		app.tables.staticTexts["Blood Pressure"].tap()
+		app.tables.staticTexts["Activity"].tap()
 
 		// when
-		app.pickerWheels["Blood Pressure"].adjust(toPickerWheelValue: "Heart Rate")
+		app.pickerWheels["Activity"].adjust(toPickerWheelValue: "Heart Rate")
 		app.buttons["save button"].tap()
 
 		// then
@@ -33,7 +33,7 @@ final class QueryScreenUITests: UITest {
 
 		// when
 		app.tables.cells.allElementsBoundByIndex[1].tap()
-		app.pickerWheels["Blood Pressure"].adjust(toPickerWheelValue: "Body Mass Index")
+		app.pickerWheels["Activity"].adjust(toPickerWheelValue: "Body Mass Index")
 		app.scrollViews.otherElements.buttons["save attributed button"].tap()
 
 		// then
@@ -68,6 +68,9 @@ final class QueryScreenUITests: UITest {
 		// given
 		app.tabBars.buttons["Explore"].tap()
 		app.collectionViews.staticTexts["Query"].tap()
+		app.tables.staticTexts["Activity"].tap()
+		app.pickerWheels["Activity"].adjust(toPickerWheelValue: "Blood Pressure")
+		app.buttons["save button"].tap()
 		app.tables.buttons["Add"].tap()
 		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
 
@@ -95,7 +98,7 @@ final class QueryScreenUITests: UITest {
 		app.tables.buttons["Add"].tap()
 		app.sheets["What would you like to add?"].buttons["Data Type"].tap()
 		app.tables.cells.allElementsBoundByIndex[2].tap()
-		app.pickerWheels["Blood Pressure"].adjust(toPickerWheelValue: "Body Mass Index")
+		app.pickerWheels["Activity"].adjust(toPickerWheelValue: "Body Mass Index")
 		app.scrollViews.otherElements.buttons["save attributed button"].tap()
 
 		// when
@@ -129,7 +132,7 @@ final class QueryScreenUITests: UITest {
 		app.tables.buttons["Add"].tap()
 		app.sheets["What would you like to add?"].buttons["Data Type"].tap()
 		app.tables.cells.allElementsBoundByIndex[1].tap()
-		app.pickerWheels["Blood Pressure"].adjust(toPickerWheelValue: "Body Mass Index")
+		app.pickerWheels["Activity"].adjust(toPickerWheelValue: "Body Mass Index")
 		app.scrollViews.otherElements.buttons["save attributed button"].tap()
 		app.tables.buttons["Add"].tap()
 		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
@@ -139,6 +142,6 @@ final class QueryScreenUITests: UITest {
 		app.tables.buttons["Delete"].tap()
 
 		// then
-		XCTAssert(app.tables.staticTexts["Diastolic blood pressure < 0.0"].exists)
+		XCTAssert(app.tables.staticTexts["Duration ≤ 0:00:00"].exists)
 	}
 }

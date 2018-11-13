@@ -21,6 +21,7 @@ public final class SumInformation: AnyInformation {
 	public final override func compute(forSamples samples: [Sample]) -> String {
 		let filteredSamples = DependencyInjector.util.sample.getOnly(samples: samples, from: startDate, to: endDate)
 		if filteredSamples.count == 0 { return "0" }
+
 		if attribute is DoubleAttribute {
 			return String(DependencyInjector.util.numericSample.sum(for: attribute, over: filteredSamples) as Double)
 		}
@@ -30,6 +31,10 @@ public final class SumInformation: AnyInformation {
 		if attribute is DosageAttribute {
 			return getSumOfDosageAttribute(filteredSamples)
 		}
+		if attribute is DurationAttribute {
+			return getSumOfDurationAttribute(filteredSamples)
+		}
+
 		os_log(
 			"Unknown attribute type (%@) for attribute named '%@' of sample type '%@'",
 			type: .error,
@@ -43,7 +48,7 @@ public final class SumInformation: AnyInformation {
 		return other is SumInformation && attribute.equalTo(other.attribute)
 	}
 
-	// MARK: - Helper Functions
+	// MARK: - Dosage Helper Functions
 
 	private final func getSumOfDosageAttribute(_ filteredSamples: [Sample]) -> String {
 		let dosage: Dosage? = getFirstNonNilDosage(from: filteredSamples)
@@ -79,6 +84,32 @@ public final class SumInformation: AnyInformation {
 	private final func getDosage(from sample: Sample) -> Dosage? {
 		do {
 			return try sample.value(of: attribute) as? Dosage
+		} catch {
+			os_log(
+				"Failed to retrieve dosage attribute named '$@' of $@ sample while calculating sum information: $@",
+				type: .error,
+				attribute.name,
+				sample.attributedName,
+				error.localizedDescription)
+			return nil
+		}
+	}
+
+	// MARK: - Duration Helper Functions
+
+	private final func getSumOfDurationAttribute(_ filteredSamples: [Sample]) -> String {
+		var totalDuration = Duration(0)
+		for sample in filteredSamples {
+			if let duration = getDuration(from: sample) {
+				totalDuration += duration
+			}
+		}
+		return totalDuration.description
+	}
+
+	private final func getDuration(from sample: Sample) -> Duration? {
+		do {
+			return try sample.value(of: attribute) as? Duration
 		} catch {
 			os_log(
 				"Failed to retrieve dosage attribute named '$@' of $@ sample while calculating sum information: $@",

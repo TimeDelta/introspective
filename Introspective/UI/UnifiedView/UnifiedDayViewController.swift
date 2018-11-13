@@ -22,6 +22,7 @@ public final class UnifiedDayViewController: DayViewController {
 	public override func eventsForDate(_ date: Date) -> [EventDescriptor] {
 		var descriptors = [EventDescriptor]()
 		descriptors.append(contentsOf: getSleepEventDescriptorsForDate(date))
+		descriptors.append(contentsOf: getActivityEventDescriptorsForDate(date))
 		return descriptors
 	}
 
@@ -102,18 +103,47 @@ public final class UnifiedDayViewController: DayViewController {
 		self.present(alert, animated: false, completion: nil)
 	}
 
+	private final func getActivityEventDescriptorsForDate(_ date: Date) -> [EventDescriptor] {
+		return getActivitiesForDate(date).map { activity in
+			let event = Event()
+			event.startDate = activity.startDate
+			event.endDate = activity.endDate ?? Date()
+			let timeText = getTimeTextFor(event)
+			event.text = "Activity\n\(timeText)"
+			return event
+		}
+	}
+
+	private final func getActivitiesForDate(_ date: Date) -> [Activity] {
+		let startDateKey = CommonSampleAttributes.startDate.variableName!
+		let endDateKey = CommonSampleAttributes.endDate.variableName!
+		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
+		let startOfDate = DependencyInjector.util.calendar.start(of: .day, in: date)
+		let endOfDate = DependencyInjector.util.calendar.end(of: .day, in: date)
+		fetchRequest.predicate = NSPredicate(
+			format: "(%K >= %@ AND %K <= %@) OR (%K >= %@ AND %K <= %@)",
+			startDateKey, startOfDate as NSDate,
+			startDateKey, endOfDate as NSDate,
+			endDateKey, startOfDate as NSDate,
+			endDateKey, endOfDate as NSDate)
+		do {
+			return try DependencyInjector.db.query(fetchRequest)
+		} catch {
+			os_log("Failed to query for activities on %@: %@", type: .error, String(describing: date), error.localizedDescription)
+			showError(title: "Something went wrong while loading your activity data", message: "Sorry for the inconvenience.")
+			return []
+		}
+	}
+
 	private final func getSleepEventDescriptorsForDate(_ date: Date) -> [EventDescriptor] {
-		let sleepSamples = getSleepSamplesForDate(date)
-		var descriptors = [EventDescriptor]()
-		for sleep in sleepSamples {
+		return getSleepSamplesForDate(date).map { sleep in
 			let event = Event()
 			event.startDate = sleep.startDate
 			event.endDate = sleep.endDate
 			let timeText = getTimeTextFor(event)
 			event.text = "Sleeping\n\(timeText)"
-			descriptors.append(event)
+			return event
 		}
-		return descriptors
 	}
 
 	private final func getSleepSamplesForDate(_ date: Date) -> [Sleep] {
@@ -163,7 +193,8 @@ public final class UnifiedDayViewController: DayViewController {
 	private final func getTimeTextFor(_ event: Event) -> String {
 		let startText = DependencyInjector.util.calendar.string(for: event.startDate, dateStyle: .none, timeStyle: .short)
 		let endText = DependencyInjector.util.calendar.string(for: event.endDate, dateStyle: .none, timeStyle: .short)
-		return startText + " - " + endText
+		let duration = Duration(start: event.startDate, end: event.endDate)
+		return startText + " - " + endText + " (\(duration.description)))"
 	}
 
 	private final func getStartAndEndDatesFrom(_ eventView: EventView) -> (Date, Date) {

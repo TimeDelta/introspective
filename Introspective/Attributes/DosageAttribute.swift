@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class DosageAttribute: AttributeBase {
+public final class DosageAttribute: AttributeBase, ComparableAttribute {
 
 	public override init(
 		name: String = "Dosage",

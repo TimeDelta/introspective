@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class SelectOneAttributeValueViewController: AttributeValueTypeViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+public final class SelectOneAttributeValueViewController: AttributeValueTypeViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 
 	public final var selectOneAttribute: SelectOneAttribute!
 

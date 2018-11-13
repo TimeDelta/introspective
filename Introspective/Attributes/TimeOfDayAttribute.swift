@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class TimeOfDayAttribute: AttributeBase {
+public final class TimeOfDayAttribute: AttributeBase, ComparableAttribute {
 
 	public override init(
 		name: String = "Time of day",

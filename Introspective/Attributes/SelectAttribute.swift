@@ -12,5 +12,14 @@ public protocol SelectAttribute: Attribute {
 
 	var possibleValues: [Any] { get }
 
-	func indexOf(possibleValue: Any) -> Int?
+	/// - Parameter values: If `nil`, return the index within the `possibleValues` array, otherwise return the index within `values`.
+	func indexOf(possibleValue: Any, in values: [Any]?) -> Int?
+}
+
+extension SelectAttribute {
+
+	/// - Parameter values: If `nil`, return the index within the `possibleValues` array, otherwise return the index within `values`.
+	func indexOf(possibleValue: Any, in values: [Any]? = nil) -> Int? {
+		return indexOf(possibleValue: possibleValue, in: values)
+	}
 }

@@ -53,6 +53,10 @@ final class AttributeValueViewController: UIViewController {
 			controller.textAttribute = (attribute as! TextAttribute)
 			controller.currentValue = attributeValue
 			subViewController = controller
+		} else if attribute is DurationAttribute {
+			let controller = storyboard!.instantiateViewController(withIdentifier: "durationAttribute") as! DurationAttributeValueViewController
+			controller.currentValue = attributeValue
+			subViewController = controller
 		} else {
 			os_log("Unknown attribute type: ", type: .error, String(describing: type(of: attribute)))
 		}

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class DayOfWeekAttribute: TypedSelectOneAttribute<DayOfWeek> {
+public final class DayOfWeekAttribute: TypedSelectOneAttribute<DayOfWeek>, ComparableAttribute {
 
 	public init(
 		name: String = "Day of the week",

@@ -18,6 +18,7 @@ final class AttributeViewController: UIViewController {
 	private static let numericPresenter = UiUtil.customPresenter(height: .custom(size: 100))
 	private static let dosagePresenter = UiUtil.customPresenter(height: .custom(size: 100))
 	private static let frequencyPresenter = UiUtil.customPresenter(width: .custom(size: 250), height: .custom(size: 250))
+	private static let multiSelectPresenter = UiUtil.customPresenter(width: .custom(size: 300), height: .custom(size: 400))
 
 	// MARK: - IBOutlets
 
@@ -77,12 +78,18 @@ final class AttributeViewController: UIViewController {
 	}
 
 	@IBAction final func valueButtonPressed(_ sender: Any) {
-		if attribute is MultiSelectAttribute {
+		if attribute is DaysOfWeekAttribute {
 			let controller = storyboard!.instantiateViewController(withIdentifier: "horizontalMultiSelectAttribute") as! HorizontalMultiSelectAttributeValueViewController
 			controller.multiSelectAttribute = (attribute as! MultiSelectAttribute)
 			controller.currentValue = attributeValue
 			controller.notificationToSendOnAccept = valueChangedNotification
 			customPresentViewController(Me.horizontalMultiSelectPresenter, viewController: controller, animated: true)
+		} else if attribute is MultiSelectAttribute {
+			let controller = storyboard!.instantiateViewController(withIdentifier: "multiSelectAttribute") as! MultiSelectAttributeValueViewController
+			controller.multiSelectAttribute = (attribute as! MultiSelectAttribute)
+			controller.initialValue = attributeValue
+			controller.notificationToSendOnAccept = valueChangedNotification
+			customPresentViewController(Me.multiSelectPresenter, viewController: controller, animated: true)
 		} else if attribute is NumericAttribute {
 			let controller = storyboard!.instantiateViewController(withIdentifier: "numericAttribute") as! NumericAttributeValueViewController
 			controller.numericAttribute = (attribute as! NumericAttribute)

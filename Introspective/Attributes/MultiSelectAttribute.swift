@@ -51,11 +51,12 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 		return Set<Type>(castedValue)
 	}
 
-	public final func indexOf(possibleValue: Any) -> Int? {
+	public final func indexOf(possibleValue: Any, in values: [Any]? = nil) -> Int? {
 		guard let castedValue = possibleValue as? Type else {
 			return nil
 		}
-		return typedPossibleValues.index(of: castedValue)
+		let values: [Type] = (values as? [Type]) ?? typedPossibleValues
+		return values.index(of: castedValue)
 	}
 
 	public func convertPossibleValueToDisplayableString(_ value: Any) throws -> String {

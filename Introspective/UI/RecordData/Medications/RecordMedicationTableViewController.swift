@@ -93,7 +93,11 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(medicationEdited), name: Me.medicationEdited, object: nil)
 	}
 
-	// MARK: - TableViewDataSource
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
+
+	// MARK: - UITableViewDataSource
 
 	public final override func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
@@ -127,7 +131,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		return 81
 	}
 
-	// MARK: - TableViewDelegate
+	// MARK: - UITableViewDelegate
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let controller = storyboard!.instantiateViewController(withIdentifier: "editMedication") as! EditMedicationViewController
@@ -256,6 +260,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 // MARK: - UISearchResultsUpdating
 
 extension RecordMedicationTableViewController: UISearchResultsUpdating {
+
 	public func updateSearchResults(for searchController: UISearchController) {
 		resetFilteredMedications()
 		tableView.reloadData()

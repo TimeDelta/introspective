@@ -8,14 +8,14 @@
 
 import UIKit
 
-final class DateOrTimeAttributeValueViewController: AttributeValueTypeViewController {
+public final class DateOrTimeAttributeValueViewController: AttributeValueTypeViewController {
 
 	public final var dateAttribute: DateAttribute!
 	public final var timeOfDayAttribute: TimeOfDayAttribute!
 
 	@IBOutlet weak final var datePicker: UIDatePicker!
 
-	final override func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		if dateAttribute != nil {

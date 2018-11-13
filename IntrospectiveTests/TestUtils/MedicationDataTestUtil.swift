@@ -32,9 +32,12 @@ public class MedicationDataTestUtil {
 
 	public static func createDose(medication: Medication = createMedication(), dosage: Dosage? = nil, timestamp: Date = Date()) -> MedicationDose {
 		let dose = DependencyInjector.sample.medicationDose()
-		dose.medication = try! DependencyInjector.db.pull(savedObject: medication, fromSameContextAs: dose)
+		let sameContextMedication = try! DependencyInjector.db.pull(savedObject: medication, fromSameContextAs: dose)
+		dose.medication = sameContextMedication
 		dose.timestamp = timestamp
 		dose.dosage = dosage
+		sameContextMedication.addToDoses(dose)
+		DependencyInjector.db.save()
 		return dose
 	}
 }

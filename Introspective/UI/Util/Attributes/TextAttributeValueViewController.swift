@@ -8,14 +8,14 @@
 
 import UIKit
 
-final class TextAttributeValueViewController: AttributeValueTypeViewController, UITextViewDelegate {
+public final class TextAttributeValueViewController: AttributeValueTypeViewController, UITextViewDelegate {
 
 	public final var textAttribute: TextAttribute!
 
 	@IBOutlet weak final var textView: UITextView!
 	@IBOutlet weak final var validationLabel: UILabel!
 
-	final override func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 		textView.delegate = self
 		if currentValue != nil {

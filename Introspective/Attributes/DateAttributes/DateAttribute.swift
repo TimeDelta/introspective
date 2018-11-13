@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol DateAttribute: Attribute {
+public protocol DateAttribute: ComparableAttribute {
 
 	var includeTime: Bool { get }
 	var earliestDate: Date? { get }

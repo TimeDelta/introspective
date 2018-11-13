@@ -53,17 +53,20 @@ public final class NumericSampleUtilImpl: NumericSampleUtil {
 		precondition(samples.count > 0, "Precondition violated: provided samples array must not be empty")
 
 		var average: Double = 0.0
+		var totalNonNilSamples = 0.0
 		for sample in samples {
 			let value = try! sample.value(of: attribute)
 			if let castedValue = value as? Double {
 				average += castedValue
+				totalNonNilSamples += 1
 			} else if let castedValue = value as? Int {
 				average += Double(castedValue)
+				totalNonNilSamples += 1
 			} else if !attribute.optional {
 				os_log("non-optional attribute (%@) of sample (%@) returned '%@' while calculating average", type: .error, attribute.name, sample.attributedName, String(describing: value))
 			}
 		}
-		return average / Double(samples.count)
+		return average / totalNonNilSamples
 	}
 
 	/// - Precondition: The provided samples array is not empty.

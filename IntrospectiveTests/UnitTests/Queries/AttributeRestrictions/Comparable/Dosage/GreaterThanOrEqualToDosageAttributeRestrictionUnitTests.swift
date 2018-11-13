@@ -23,6 +23,8 @@ final class GreaterThanOrEqualToDosageAttributeRestrictionUnitTests: UnitTest {
 		restriction = GreaterThanOrEqualToDosageAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
 	}
 
+	// MARK: - value(of:)
+
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// when
 		XCTAssertThrowsError(try restriction.value(of: Me.restrictedAttribute)) { error in
@@ -42,6 +44,8 @@ final class GreaterThanOrEqualToDosageAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(actualValue, expectedValue)
 	}
+
+	// MARK: - set(attribute:to:)
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
@@ -69,6 +73,8 @@ final class GreaterThanOrEqualToDosageAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(restriction.value, expectedValue)
 	}
+
+	// MARK: - samplePasses()
 
 	func testGivenSampleWithIncorrectValueTypeForGivenAttribute_samplePasses_throwsTypeMismatchError() {
 		// given
@@ -124,6 +130,8 @@ final class GreaterThanOrEqualToDosageAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(samplePasses)
 	}
 
+	// MARK: - equalTo(attributed:)
+
 	func testGivenOtherOfDifferentType_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = SameDatesSubQueryMatcher()
@@ -176,6 +184,8 @@ final class GreaterThanOrEqualToDosageAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
+	// MARK: - equalTo(restriction:)
+
 	func testGivenOtherOfDifferentType_equalToRestriction_returnsFalse() {
 		// given
 		let otherAttributed: AttributeRestriction = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
@@ -227,6 +237,8 @@ final class GreaterThanOrEqualToDosageAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssert(equal)
 	}
+
+	// MARK: - equalTo()
 
 	func testGivenSameObjectTwice_equalTo_returnsTrue() {
 		// when

@@ -11,6 +11,7 @@ import os
 
 //sourcery: AutoMockable
 public protocol QueryFactory {
+	func activityQuery() -> ActivityQuery
 	func bloodPressureQuery() -> BloodPressureQuery
 	func bmiQuery() -> BodyMassIndexQuery
 	func heartRateQuery() -> HeartRateQuery
@@ -28,6 +29,10 @@ public final class QueryFactoryImpl: QueryFactory {
 
 	public enum Errors: Error {
 		case unknownSampleType
+	}
+
+	public final func activityQuery() -> ActivityQuery {
+		return ActivityQueryImpl()
 	}
 
 	public final func bloodPressureQuery() -> BloodPressureQuery {
@@ -72,6 +77,7 @@ public final class QueryFactoryImpl: QueryFactory {
 
 	public func queryFor(_ sampleType: Sample.Type) throws -> Query {
 		switch (sampleType) {
+			case is Activity.Type: return activityQuery()
 			case is BloodPressure.Type: return bloodPressureQuery()
 			case is BodyMassIndex.Type: return bmiQuery()
 			case is HeartRate.Type: return heartRateQuery()

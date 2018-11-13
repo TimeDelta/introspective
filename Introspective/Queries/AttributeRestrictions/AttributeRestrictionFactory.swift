@@ -79,6 +79,29 @@ public final class AttributeRestrictionFactoryImpl: AttributeRestrictionFactory 
 		NotEqualToFrequencyAttributeRestriction.self,
 	]
 
+	private static let tagTypes: [AttributeRestriction.Type] = [
+		HasOneOfTagAttributeRestriction.self,
+		DoesNotHaveOneOfTagAttributeRestriction.self,
+		HasTagAttributeRestriction.self,
+		DoesNotHaveTagAttributeRestriction.self,
+	]
+
+	private static let tagsTypes: [AttributeRestriction.Type] = [
+		HasOneOfTagAttributeRestriction.self,
+		DoesNotHaveOneOfTagAttributeRestriction.self,
+		HasTagAttributeRestriction.self,
+		DoesNotHaveTagAttributeRestriction.self,
+	]
+
+	private static let durationTypes: [AttributeRestriction.Type] = [
+		LessThanOrEqualToDurationAttributeRestriction.self,
+		LessThanOrEqualToDurationAttributeRestriction.self,
+		EqualToDurationAttributeRestriction.self,
+		GreaterThanOrEqualToDurationAttributeRestriction.self,
+		GreaterThanDurationAttributeRestriction.self,
+		NotEqualToDurationAttributeRestriction.self,
+	]
+
 	public final func typesFor(_ attribute: Attribute) -> [AttributeRestriction.Type] {
 		switch (attribute) {
 			case is TextAttribute: return Me.textTypes
@@ -88,6 +111,9 @@ public final class AttributeRestrictionFactoryImpl: AttributeRestrictionFactory 
 			case is SelectOneAttribute: return Me.selectOneTypes
 			case is DosageAttribute: return Me.dosageTypes
 			case is FrequencyAttribute: return Me.frequencyTypes
+			case is TagAttribute: return Me.tagTypes
+			case is TagsAttribute: return Me.tagsTypes
+			case is DurationAttribute: return Me.durationTypes
 			default:
 				os_log("Forgot a type of attribute: %@", type: .error, String(describing: type(of: attribute)))
 				return []

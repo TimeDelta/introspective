@@ -33,6 +33,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 	private final var viewParams: [(id: String, height: CGFloat)] = [
 		(id: "mood", height: 100.0),
 		(id: "medication", height: 52),
+		(id: "activity", height: 52),
 	]
 
 	// MARK: - UIViewController Overrides

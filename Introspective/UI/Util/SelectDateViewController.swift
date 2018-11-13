@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os
 
 public final class SelectDateViewController: UIViewController {
 
@@ -19,12 +20,19 @@ public final class SelectDateViewController: UIViewController {
 	public final var initialDate: Date?
 	public final var earliestPossibleDate: Date?
 	public final var latestPossibleDate: Date?
-	public final var datePickerMode: UIDatePicker.Mode = .dateAndTime
+	public final var datePickerMode: UIDatePicker.Mode = .dateAndTime {
+		didSet {
+			if datePickerMode == .countDownTimer {
+				os_log("this view is not meant to do timers", type: .error)
+			}
+		}
+	}
 
 	public final var notificationToSendOnAccept: Notification.Name!
 
 	// MARK: - UIViewController Overrides
 
+	#warning("Add now / last buttons")
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
 		if let date = initialDate {
@@ -35,10 +43,16 @@ public final class SelectDateViewController: UIViewController {
 		datePicker.datePickerMode = datePickerMode
 	}
 
-	// MARK: - Button Actions
+	// MARK: - Actions
 
 	@IBAction final func acceptButtonPressed(_ sender: Any) {
-		NotificationCenter.default.post(name: notificationToSendOnAccept, object: datePicker.date)
+		var date = datePicker.date
+		if datePickerMode == .date {
+			date = DependencyInjector.util.calendar.start(of: .day, in: date)
+		} else if date != initialDate {
+			date = DependencyInjector.util.calendar.start(of: .minute, in: date)
+		}
+		NotificationCenter.default.post(name: notificationToSendOnAccept, object: date)
 		dismiss(animated: true, completion: nil)
 	}
 }

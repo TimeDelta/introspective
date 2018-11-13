@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import SwiftDate
 
 class UITest: XCTestCase {
 
@@ -30,9 +31,12 @@ class UITest: XCTestCase {
 		coordinate.tap()
 	}
 
-	final func setPicker(_ pickerQueryText: String? = nil, to value: String) {
+	final func setPicker(_ pickerQueryText: String? = nil, to value: String, changeCase: Bool = true) {
 		let pickers = app.pickers
-		let value = value.localizedCapitalized
+		var value = value
+		if changeCase {
+			value = value.localizedCapitalized
+		}
 		if let pickerQueryText = pickerQueryText {
 			pickers[pickerQueryText].pickerWheels.allElementsBoundByIndex[0].adjust(toPickerWheelValue: value)
 		} else {
@@ -93,5 +97,51 @@ class UITest: XCTestCase {
 		list.removeLast()
 		list.removeLast()
 		return list
+	}
+
+	final func setTextFor(field: XCUIElement, to text: String? = nil) {
+		if (field.value as? String)?.count ?? 0 > 0 {
+			deleteContentOf(textField: field)
+		}
+		if let text = text {
+			field.tap()
+			field.typeText(text)
+		}
+	}
+
+	final func deleteContentOf(textField: XCUIElement) {
+		textField.tap()
+		textField.tap()
+		app.menuItems["Select All"].tap()
+		app.keyboards.keys["delete"].tap()
+	}
+
+	final func delete(numberOfTags: Int, fromTagsField tagsField: XCUIElement) {
+		tagsField.tap()
+		for _ in 0 ..< numberOfTags * 2 { // you have to press backspace twice to delete a tag
+			app.keyboards.keys["delete"].tap()
+		}
+	}
+
+	final func setTags(for tagsField: XCUIElement, to tags: [String]? = nil, from originalTags: [String]? = nil) {
+		if let originalTags = originalTags {
+			tagsField.tap()
+			for _ in 0 ..< originalTags.count * 2 { // you have to press backspace twice to delete a tag
+				app.keyboards.keys["delete"].tap()
+			}
+		}
+		if let tags = tags {
+			for tag in tags {
+				tagsField.tap()
+				tagsField.typeText(tag + "\n")
+			}
+		}
+	}
+
+	final func isToday(_ date: Date) -> Bool {
+		let calendar = Calendar.autoupdatingCurrent
+		let dateInRegion = DateInRegion(date, region: Region(calendar: calendar, zone: calendar.timeZone))
+		let startOfDay = dateInRegion.dateAtStartOf(.day).date
+		return date.isAfterDate(startOfDay, orEqual: true, granularity: .nanosecond)
 	}
 }

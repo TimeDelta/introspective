@@ -26,6 +26,7 @@ public final class SampleFactoryImpl: SampleFactory {
 
 	private typealias Me = SampleFactoryImpl
 	private static let allTypes: [Sample.Type] = [
+		Activity.self,
 		BloodPressure.self,
 		BodyMassIndex.self,
 		HeartRate.self,
@@ -69,10 +70,12 @@ public final class SampleFactoryImpl: SampleFactory {
 	}
 
 	public final func medicationDose() -> MedicationDose {
+		#warning("allow this to throw")
 		return try! DependencyInjector.db.new(MedicationDose.self)
 	}
 
 	public final func mood() -> Mood {
+		#warning("allow this to throw")
 		return try! DependencyInjector.db.new(MoodImpl.self)
 	}
 }

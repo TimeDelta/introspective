@@ -14,7 +14,7 @@ public protocol TextAttributeDelegate {
 	func errorMessageFor(invalidValue: String?) -> String
 }
 
-public final class TextAttribute: AttributeBase {
+public final class TextAttribute: AttributeBase, ComparableAttribute {
 
 	private final let delegate: TextAttributeDelegate?
 

@@ -14,14 +14,12 @@ public struct TimeOfDay: Comparable {
 		return lhs.hour == rhs.hour
 			&& lhs.minute == rhs.minute
 			&& lhs.second == rhs.second
-			&& lhs.nanosecond == rhs.nanosecond
 	}
 
 	public static func !=(lhs: TimeOfDay, rhs: TimeOfDay) -> Bool {
 		return lhs.hour != rhs.hour
 			|| lhs.minute != rhs.minute
 			|| lhs.second != rhs.second
-			|| lhs.nanosecond == rhs.nanosecond
 	}
 
 	public static func < (lhs: TimeOfDay, rhs: TimeOfDay) -> Bool {
@@ -35,7 +33,6 @@ public struct TimeOfDay: Comparable {
 	public var hour: Int = 0
 	public var minute: Int = 0
 	public var second: Int = 0
-	public var nanosecond: Int = 0
 
 	public init() {}
 
@@ -44,7 +41,6 @@ public struct TimeOfDay: Comparable {
 		hour = calendar.component(.hour, from: date)
 		minute = calendar.component(.minute, from: date)
 		second = calendar.component(.second, from: date)
-		nanosecond = calendar.component(.nanosecond, from: date)
 	}
 
 	public init?(_ str: String) {
@@ -69,58 +65,11 @@ public struct TimeOfDay: Comparable {
 			guard let s = Int(parts[2]) else { return nil }
 			second = s
 		}
-		if parts.count > 3 {
-			guard let n = Int(parts[3]) else { return nil }
-			nanosecond = n
-		}
 	}
 
-	public nonmutating func toString() -> String {
-		var text = ""
-		if userPrefers12hrTime() {
-			if hour > 12 {
-				text += padLeft(String(hour - 12))
-			} else if hour == 0 {
-				text += "12"
-			} else {
-				text += padLeft(String(hour))
-			}
-		} else {
-			text += padLeft(String(hour))
-		}
-
-		text += ":" + padLeft(String(minute))
-
-		if second > 0 || nanosecond > 0 {
-			text += ":" + padLeft(String(second))
-		}
-
-		if nanosecond > 0 {
-			text += ":" + padLeft(String(nanosecond))
-		}
-
-		if userPrefers12hrTime() {
-			if hour > 11 {
-				text += " " + Calendar.autoupdatingCurrent.pmSymbol
-			} else {
-				text += " " + Calendar.autoupdatingCurrent.amSymbol
-			}
-		}
-
-		return text
-	}
-
-	private func userPrefers12hrTime() -> Bool {
-		let locale = NSLocale.current
-		let formatter = DateFormatter.dateFormat(fromTemplate: "j", options:0, locale:locale)!
-		return formatter.contains("a")
-	}
-
-	private func padLeft(_ str: String) -> String {
-		if str.count == 1 {
-			return "0" + str
-		}
-		return str
+	public nonmutating func toString(_ style: DateFormatter.Style = .medium) -> String {
+		let date = Calendar.autoupdatingCurrent.date(bySettingHour: hour, minute: minute, second: second, of: Date())!
+		return DependencyInjector.util.calendar.string(for: date, dateStyle: .none, timeStyle: style)
 	}
 
 	private func compare(to other: TimeOfDay) -> ComparisonResult {
@@ -132,9 +81,6 @@ public struct TimeOfDay: Comparable {
 
 		if second < other.second { return .orderedAscending }
 		if second > other.second { return .orderedDescending }
-
-		if nanosecond < other.nanosecond { return .orderedAscending }
-		if nanosecond > other.nanosecond { return .orderedDescending }
 
 		return .orderedSame
 	}
@@ -164,7 +110,7 @@ extension Date {
 		self.init()
 		let calendar = Calendar.autoupdatingCurrent
 		self = calendar.date(bySettingHour: timeOfDay.hour, minute: timeOfDay.minute, second: timeOfDay.second, of: self)!
-		self = calendar.date(bySetting: .nanosecond, value: timeOfDay.nanosecond, of: self)!
+		self = calendar.date(bySetting: .nanosecond, value: 0, of: self)!
 	}
 
 	public func isBefore(timeOfDay: TimeOfDay) -> Bool {
@@ -189,10 +135,6 @@ extension Date {
 		let second = calendar.component(.second, from: self)
 		if second < timeOfDay.second { return .orderedAscending }
 		if second > timeOfDay.second { return .orderedDescending }
-
-		let nanosecond = calendar.component(.nanosecond, from: self)
-		if nanosecond < timeOfDay.nanosecond { return .orderedAscending }
-		if nanosecond > timeOfDay.nanosecond { return .orderedDescending }
 
 		return .orderedSame
 	}

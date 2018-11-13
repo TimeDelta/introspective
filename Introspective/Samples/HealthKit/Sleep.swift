@@ -52,14 +52,20 @@ public final class Sleep: HealthKitCategorySample {
 
 	// MARK: - Attributes
 
-	public static let state = TypedSelectOneAttribute<State>(
+	public static let stateAttribute = TypedSelectOneAttribute<State>(
 		name: "Waking state",
 		variableName: HKPredicateKeyPathCategoryValue,
 		possibleValues: State.allValues,
 		possibleValueToString: { $0.description },
 		areEqual: { $0 == $1 })
-	public static let attributes: [Attribute] = [CommonSampleAttributes.healthKitStartDate, CommonSampleAttributes.healthKitEndDate, state]
-	public static let defaultDependentAttribute: Attribute = state
+	public static let durationAttribute = DurationAttribute()
+	public static let attributes: [Attribute] = [
+		durationAttribute,
+		CommonSampleAttributes.healthKitStartDate,
+		CommonSampleAttributes.healthKitEndDate,
+		stateAttribute,
+	]
+	public static let defaultDependentAttribute: Attribute = durationAttribute
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitStartDate
 	public final var attributes: [Attribute] { return Me.attributes }
 
@@ -114,7 +120,10 @@ public final class Sleep: HealthKitCategorySample {
 	// MARK: - Attributed Functions
 
 	public final func value(of attribute: Attribute) throws -> Any? {
-		if attribute.equalTo(Me.state) {
+		if attribute.equalTo(Me.durationAttribute) {
+			return Duration(start: startDate, end: endDate)
+		}
+		if attribute.equalTo(Me.stateAttribute) {
 			return state
 		}
 		if attribute.equalTo(CommonSampleAttributes.healthKitStartDate) {
@@ -127,7 +136,7 @@ public final class Sleep: HealthKitCategorySample {
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
-		if attribute.equalTo(Me.state) {
+		if attribute.equalTo(Me.stateAttribute) {
 			guard let castedValue = value as? State else { throw AttributeError.typeMismatch }
 			state = castedValue
 			return

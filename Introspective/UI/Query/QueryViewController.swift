@@ -354,6 +354,8 @@ class QueryViewController: UITableViewController {
 
 			let sampleTypeInfo = parts[0].sampleTypeInfo!
 			switch (sampleTypeInfo.sampleType) {
+				case is Activity.Type:
+					currentQuery = DependencyInjector.query.activityQuery(); break
 				case is BloodPressure.Type:
 					currentQuery = DependencyInjector.query.bloodPressureQuery(); break
 				case is BodyMassIndex.Type:

@@ -20,7 +20,7 @@
                         <subviews>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PjO-Az-SgO">
                                 <rect key="frame" x="0.0" y="0.0" width="300" height="162"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <accessibility key="accessibilityConfiguration" identifier="data type picker" label="data type picker">
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
@@ -173,7 +173,7 @@
                         <subviews>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zc7-S7-QkG">
                                 <rect key="frame" x="0.0" y="0.0" width="300" height="162"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <accessibility key="accessibilityConfiguration" identifier="time unit picker" label="time unit picker">
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
@@ -290,6 +290,47 @@
             </objects>
             <point key="canvasLocation" x="983.20000000000005" y="-1278.2608695652175"/>
         </scene>
+        <!--Choose Activity Definition View Controller-->
+        <scene sceneID="OvX-fA-3DO">
+            <objects>
+                <viewController storyboardIdentifier="chooseActivityDefinition" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ge8-MX-wTf" customClass="ChooseActivityDefinitionViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="iIm-6s-SwY">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fcc-4k-qjA">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="162"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </pickerView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kyo-aa-YNE">
+                                <rect key="frame" x="0.0" y="170" width="375" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <accessibility key="accessibilityConfiguration" identifier="save button" label="save button"/>
+                                <state key="normal" title="Save">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="saveButtonPressed:" destination="ge8-MX-wTf" eventType="touchUpInside" id="Rqi-h9-G39"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="hV5-Um-SEJ"/>
+                    </view>
+                    <value key="contentSizeForViewInPopover" type="size" width="300" height="200"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="375" height="200"/>
+                    <connections>
+                        <outlet property="picker" destination="fcc-4k-qjA" id="Lo0-T4-zc2"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NCD-JS-U5K" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="983" y="-931"/>
+        </scene>
         <!--Select Date View Controller-->
         <scene sceneID="RgX-LB-RsE">
             <objects>
@@ -300,7 +341,7 @@
                         <subviews>
                             <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="MIp-es-gdi">
                                 <rect key="frame" x="0.0" y="0.0" width="300" height="162"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <date key="date" timeIntervalSinceReferenceDate="560965920.68524504">
                                     <!--2018-10-11 15:52:00 +0000-->
                                 </date>
@@ -341,7 +382,7 @@
                         <subviews>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hu4-TJ-lZl">
                                 <rect key="frame" x="0.0" y="0.0" width="300" height="162"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <accessibility key="accessibilityConfiguration" identifier="attribute picker" label="attribute picker">
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
@@ -431,7 +472,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Wb-7G-Ybl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1573" y="-1334"/>
+            <point key="canvasLocation" x="1573" y="-1379"/>
         </scene>
         <!--Description View Controller-->
         <scene sceneID="t7c-u8-VRz">
@@ -459,7 +500,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cfv-vN-4a5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1572.8" y="-1060.5697151424288"/>
+            <point key="canvasLocation" x="1573" y="-1112"/>
         </scene>
     </scenes>
 </document>

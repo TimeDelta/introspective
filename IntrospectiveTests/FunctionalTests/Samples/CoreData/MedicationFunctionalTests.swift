@@ -120,7 +120,7 @@ final class MedicationFunctionalTests: FunctionalTest {
 		XCTAssertEqual(expectedFrequency, medication.frequency)
 	}
 
-	func testGivenStartedOnAttribute_set_correctlySetsStarted() throws {
+	func testGivenStartedOnAttribute_set_correctlySetsStartedOn() throws {
 		// given
 		let expectedStartedOn = Date()
 		let medication = MedicationDataTestUtil.createMedication()

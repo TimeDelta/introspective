@@ -34,9 +34,9 @@ class CombinedQueryFunctionalTests: QueryFunctionalTest {
 	func testGivenQueryForAllHeartRatesWithinTenDaysOfAMoodGreaterThanOrEqualToTwoWithNoteThatContainsTheWordSad_runQuery_returnsCorrectHeartRates() {
 		// given
 		let numberOfDaysWithinMood = 10
-		let daySpread = 10.days
+		let daySpread = 10
 		let earliestTargetMoodDate = Date()
-		let latestTargetMoodDate = earliestTargetMoodDate + daySpread
+		let latestTargetMoodDate = earliestTargetMoodDate + daySpread.days
 
 		query = HeartRateQueryImpl()
 		let expectedSamples = [
