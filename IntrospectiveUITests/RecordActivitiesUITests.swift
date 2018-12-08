@@ -456,20 +456,51 @@ final class RecordActivitiesUITests: UITest {
 		XCTAssertEqual(app.tables.cells.staticTexts["most recent duration"].value as? String, "")
 	}
 
-	func testDeleteActivityDefinition_removesRowFromActivityList() {
+	func testDeleteActivityDefinitionWhileNotFiltering_removesCorrectRowFromActivityList() {
 		// given
 		let activityName1 = "geq"
 		let activityName2 = "tqe"
+		let activityName3 = "ghrjeq"
 		createActivityDefinition(name: activityName1)
 		createActivityDefinition(name: activityName2)
+		createActivityDefinition(name: activityName3)
 
 		// when
-		app.tables.cells.staticTexts[activityName1].swipeRight()
+		app.tables.cells.staticTexts[activityName2].swipeRight()
 		app.tables.buttons["🗑️ All"].tap()
 		app.buttons["Yes"].tap()
 
 		// then
-		XCTAssertEqual(app.tables.cells.allElementsBoundByIndex.count, 1)
+		XCTAssertEqual(app.tables.cells.allElementsBoundByIndex.count, 2)
+		XCTAssert(app.tables.cells.staticTexts[activityName1].exists)
+		XCTAssert(!app.tables.cells.staticTexts[activityName2].exists)
+		XCTAssert(app.tables.cells.staticTexts[activityName3].exists)
+	}
+
+	func testDeletingActivityDefinitionWhileFiltering_removesCorrectRowFromActivityList() {
+		// given
+		let activityName1 = "doesn't contain filter string"
+		let activityName2 = "z"
+		let activityName3 = "zz"
+		let activityName4 = "zzz"
+		createActivityDefinition(name: activityName1)
+		createActivityDefinition(name: activityName2)
+		createActivityDefinition(name: activityName3)
+		createActivityDefinition(name: activityName4)
+		filterActivities(by: "z")
+
+		// when
+		app.tables.cells.staticTexts[activityName3].swipeRight()
+		app.tables.buttons["🗑️ All"].tap()
+		app.buttons["Yes"].tap()
+		app.buttons["Cancel"].tap() // clear search text
+
+		// then
+		XCTAssertEqual(app.tables.cells.allElementsBoundByIndex.count, 3)
+		XCTAssert(app.tables.cells.staticTexts[activityName1].exists)
+		XCTAssert(app.tables.cells.staticTexts[activityName2].exists)
+		XCTAssert(!app.tables.cells.staticTexts[activityName3].exists)
+		XCTAssert(app.tables.cells.staticTexts[activityName4].exists)
 	}
 
 	// MARK: - Reordering ActivityDefinitions
