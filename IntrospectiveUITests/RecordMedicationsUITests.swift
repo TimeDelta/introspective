@@ -35,7 +35,7 @@ final class RecordMedicationsUITests: UITest {
 		filterMedications(by: medicationName)
 
 		// when
-		app.tables.buttons["Add"].tap()
+		app.buttons["Add"].tap()
 
 		// then
 		XCTAssertEqual(app.textFields["medication name"].value as? String, medicationName)
@@ -164,23 +164,29 @@ final class RecordMedicationsUITests: UITest {
 
 	func testReorderWhileFiltering_correcltyReordersMedications() {
 		// given
-		let medication1Name = "fewqgre"
+		let filterString = "filter string"
+		let medication1Name = filterString
 		let medication2Name = "fjor"
-		let medication3Name = "\(medication1Name)fdsjkl"
+		let medication3Name = "\(filterString)fdsjkl"
+		let medication4Name = "gteqrfwds\(filterString)"
 		createMedication(name: medication1Name)
 		createMedication(name: medication2Name)
 		createMedication(name: medication3Name)
-		app.buttons["Edit"].tap()
-		filterMedications(by: medication1Name)
+		createMedication(name: medication4Name)
+		filterMedications(by: filterString)
 
 		// when
-		let medication3ReorderButton = app.tables.buttons["Reorder \(medication3Name)"]
-		app.tables.buttons["Reorder \(medication1Name)"].press(forDuration: 0.5, thenDragTo: medication3ReorderButton)
+		var medication1Cell = app.tables.cells.staticTexts[medication1Name]
+		var medication3Cell = app.tables.cells.staticTexts[medication3Name]
+		medication1Cell.press(forDuration: 0.5, thenDragTo: medication3Cell)
 		app.buttons["Cancel"].tap()
 
 		// then
+		medication1Cell = app.tables.cells.staticTexts[medication1Name]
+		medication3Cell = app.tables.cells.staticTexts[medication3Name]
 		XCTAssertLessThanOrEqual(app.tables.staticTexts[medication2Name].frame.maxY, app.tables.staticTexts[medication3Name].frame.minY)
 		XCTAssertLessThanOrEqual(app.tables.staticTexts[medication3Name].frame.maxY, app.tables.staticTexts[medication1Name].frame.minY)
+		XCTAssertLessThanOrEqual(app.tables.staticTexts[medication1Name].frame.maxY, app.tables.staticTexts[medication4Name].frame.minY)
 	}
 
 	func testEditingMedicationName_updatesTableViewCellInMedicationsList() {
@@ -319,7 +325,7 @@ final class RecordMedicationsUITests: UITest {
 		note: String? = nil,
 		save: Bool = true)
 	{
-		app.tables.buttons["Add"].tap()
+		app.buttons["Add"].tap()
 
 		let nameField = app.textFields["medication name"]
 		nameField.tap()

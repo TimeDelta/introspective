@@ -58,7 +58,12 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
-		self.navigationItem.rightBarButtonItem = self.editButtonItem
+
+		navigationItem.rightBarButtonItem = UIBarButtonItem(
+			barButtonSystemItem: .add,
+			target: self,
+			action: #selector(addButtonPressed))
+
 		DispatchQueue.global(qos: .userInteractive).async {
 			do {
 				let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
@@ -78,6 +83,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		searchController.searchResultsUpdater = self
 		searchController.obscuresBackgroundDuringPresentation = false
 		searchController.searchBar.placeholder = "Search Medications"
+		searchController.hidesNavigationBarDuringPresentation = false
 		navigationItem.searchController = searchController
 		navigationItem.hidesSearchBarWhenScrolling = false
 		definesPresentationContext = true
@@ -91,6 +97,8 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			name: RecordMedicationTableViewCell.shouldPresentDosesView,
 			object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(medicationEdited), name: Me.medicationEdited, object: nil)
+
+		super.reorderOnLongPress()
 	}
 
 	deinit {

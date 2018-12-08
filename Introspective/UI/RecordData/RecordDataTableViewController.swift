@@ -24,10 +24,6 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 	public static let showViewController = Notification.Name("showViewController")
 
-	// MARK: - IBOutlets
-
-	@IBOutlet weak final var toolbar: UIToolbar!
-
 	// MARK: - Instance Variables
 
 	private final var viewParams: [(id: String, height: CGFloat)] = [
@@ -40,7 +36,6 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
-		toolbar.setItems([self.editButtonItem], animated: false)
 		NotificationCenter.default.addObserver(self, selector: #selector(showViewController), name: Me.showViewController, object: nil)
 	}
 
