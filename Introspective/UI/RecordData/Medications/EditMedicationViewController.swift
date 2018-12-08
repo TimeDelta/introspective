@@ -39,11 +39,10 @@ public final class EditMedicationViewController: UIViewController {
 	@IBOutlet weak final var dosageLabel: UILabel!
 	@IBOutlet weak final var dosageTextField: UITextField!
 
+	@IBOutlet weak final var notesLabel: UILabel!
 	@IBOutlet weak final var notesTextView: UITextView!
 
 	@IBOutlet weak final var scrollView: UIScrollView!
-
-	@IBOutlet final var keyboardHeightLayoutConstraint: NSLayoutConstraint?
 
 	// MARK: - Instance Variables
 
@@ -85,7 +84,10 @@ public final class EditMedicationViewController: UIViewController {
 			UiUtil.setButton(resetStartedOnButton, enabled: false, hidden: true)
 		}
 
-		NotificationCenter.default.addObserver(self, selector: #selector(keyboardNotification), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+		notesTextView.delegate = self
+		scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height * 2)
+
+		NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(setFrequency), name: Me.frequencyChanged, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(setStartedOnDate), name: Me.startedOnChanged, object: nil)
 	}
@@ -119,26 +121,8 @@ public final class EditMedicationViewController: UIViewController {
 		updateStartedOnDateButtonTitle()
 	}
 
-	@objc private final func keyboardNotification(notification: NSNotification) {
-		if let userInfo = notification.userInfo {
-			let endFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
-			let endFrameY = endFrame?.origin.y ?? 0
-			let duration:TimeInterval = (userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
-			let animationCurveRawNSN = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber
-			let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIView.AnimationOptions.curveEaseInOut.rawValue
-			let animationCurve:UIView.AnimationOptions = UIView.AnimationOptions(rawValue: animationCurveRaw)
-			if endFrameY >= UIScreen.main.bounds.size.height {
-				self.keyboardHeightLayoutConstraint?.constant = 0.0
-			} else {
-				self.keyboardHeightLayoutConstraint?.constant = endFrame?.size.height ?? 0.0
-			}
-			UIView.animate(
-				withDuration: duration,
-				delay: TimeInterval(0),
-				options: animationCurve,
-				animations: { self.view.layoutIfNeeded() },
-				completion: nil)
-		}
+	@objc private final func keyboardWillHide(notification: Notification) {
+		scrollView.scrollTo(direction: .top, animated: false)
 	}
 
 	// MARK: - Button Actions
@@ -259,5 +243,15 @@ public final class EditMedicationViewController: UIViewController {
 		 return dosageTextField.text == nil ||
 			dosageTextField.text!.isEmpty ||
 			Dosage(dosageTextField.text!) != nil
+	}
+}
+
+// MARK: - UITextViewDelegate
+
+extension EditMedicationViewController: UITextViewDelegate {
+
+	public func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+		scrollView.scrollToView(view: notesLabel, animated: true)
+		return true
 	}
 }

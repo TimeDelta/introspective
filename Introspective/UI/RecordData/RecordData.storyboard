@@ -610,8 +610,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nNY-pw-7FE">
-                                <rect key="frame" x="0.0" y="61" width="375" height="557"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="nNY-pw-7FE">
+                                <rect key="frame" x="0.0" y="64" width="375" height="557"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="afc-CQ-sBv">
@@ -689,9 +689,9 @@
                                             <action selector="frequencyDescriptionButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="IQC-oM-ZkW"/>
                                         </connections>
                                     </button>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" keyboardDismissMode="onDrag" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="qvW-vV-GoN">
-                                        <rect key="frame" x="20" y="215" width="332" height="260"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" keyboardDismissMode="interactive" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="qvW-vV-GoN">
+                                        <rect key="frame" x="20" y="215" width="332" height="199"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="0.92814949394783297" green="0.91913833381241705" blue="0.93716065408324878" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <accessibility key="accessibilityConfiguration" hint="Records any notes about this medication." identifier="notes" label="notes"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -761,6 +761,7 @@
                         <outlet property="frequencyButton" destination="kNQ-ay-6w9" id="oo0-eJ-eIZ"/>
                         <outlet property="nameLabel" destination="eEb-rM-2K1" id="N0B-Sr-zlj"/>
                         <outlet property="nameTextField" destination="afc-CQ-sBv" id="Ezp-Be-tXV"/>
+                        <outlet property="notesLabel" destination="AUu-bs-NEw" id="OvH-Ek-tMs"/>
                         <outlet property="notesTextView" destination="qvW-vV-GoN" id="OpO-Ph-ehq"/>
                         <outlet property="resetFrequencyButton" destination="JzX-Nh-mVB" id="aje-SE-rv0"/>
                         <outlet property="resetStartedOnButton" destination="Nmk-3N-DdM" id="jCm-vk-2er"/>
