@@ -41,7 +41,7 @@ public final class EditMedicationViewController: UIViewController {
 
 	@IBOutlet weak final var notesTextView: UITextView!
 
-	@IBOutlet weak final var saveButton: UIButton!
+	@IBOutlet weak final var scrollView: UIScrollView!
 
 	@IBOutlet final var keyboardHeightLayoutConstraint: NSLayoutConstraint?
 
@@ -53,6 +53,8 @@ public final class EditMedicationViewController: UIViewController {
 	public final var medication: Medication?
 	private final var startedOnDate: Date?
 	private final var frequency: Frequency?
+
+	private final var saveButton: UIBarButtonItem!
 
 	// MARK: - UIViewController Overrides
 
@@ -66,6 +68,13 @@ public final class EditMedicationViewController: UIViewController {
 		updateStartedOnDateButtonTitle()
 		dosageTextField.text = medication?.dosage?.description
 		notesTextView.text = medication?.notes ?? ""
+
+		saveButton = UIBarButtonItem(
+			title: "Save",
+			style: .done,
+			target: self,
+			action: #selector(saveButtonPressed))
+		navigationItem.rightBarButtonItem = saveButton
 
 		validate()
 
@@ -228,8 +237,7 @@ public final class EditMedicationViewController: UIViewController {
 
 	private final func validate() {
 		if markFieldAsValid(nameIsValid(), nameLabel) && markFieldAsValid(dosageIsValid(), dosageLabel) {
-			saveButton.backgroundColor = .black
-			UiUtil.setButton(saveButton, enabled: true, hidden: false)
+			saveButton.isEnabled = true
 		}
 	}
 
@@ -238,8 +246,7 @@ public final class EditMedicationViewController: UIViewController {
 			label.textColor = .black
 		} else {
 			label.textColor = .red
-			saveButton.backgroundColor = .lightGray
-			UiUtil.setButton(saveButton, enabled: false, hidden: false)
+			saveButton.isEnabled = false
 		}
 		return valid
 	}

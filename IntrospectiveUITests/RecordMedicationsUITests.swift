@@ -200,8 +200,7 @@ final class RecordMedicationsUITests: UITest {
 		app.tables.staticTexts[medicationName].tap()
 		app.textFields["medication name"].tap()
 		app.textFields["medication name"].typeText(additionalCharacters)
-		tapCoordinate(x: 0, y: 70)
-		app.buttons["save medication button"].tap()
+		app.buttons["Save"].tap()
 
 		// then
 		XCTAssert(!app.tables.staticTexts[medicationName].exists)
@@ -219,6 +218,7 @@ final class RecordMedicationsUITests: UITest {
 
 		// then
 		XCTAssertEqual(app.buttons["set frequency button"].value as? String, "As needed")
+		app.buttons["Save"].tap() // keyboard is hiding the settings tab
 	}
 
 	func testClearingStartedOnDateOnNewMedicationScreen_updatesStartedOnButtonTitle() {
@@ -232,6 +232,7 @@ final class RecordMedicationsUITests: UITest {
 
 		// then
 		XCTAssertEqual(app.buttons["set started on button"].value as? String, "Not set")
+		app.buttons["Save"].tap() // keyboard is hiding the settings tab
 	}
 
 	func testEditingDose_updatesDoseDescriptionInDoseList() {
@@ -357,10 +358,8 @@ final class RecordMedicationsUITests: UITest {
 			app.textViews["notes"].typeText(note)
 		}
 
-		tapCoordinate(x: 0, y: 70)
-
 		if save {
-			app.buttons["save medication button"].tap()
+			app.buttons["Save"].tap()
 		}
 	}
 
