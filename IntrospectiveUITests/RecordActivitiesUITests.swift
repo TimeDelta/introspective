@@ -326,6 +326,44 @@ final class RecordActivitiesUITests: UITest {
 		XCTAssertEqual(activityTagsFieldAccessibilityValueAsSet(), Set(tags))
 	}
 
+	func testSettingStartDateAfterEndDate_disablesSaveButtonOnEditActivityScreen() {
+		// given
+		let activityName = "gteqas"
+		let startDate = Date() + 1.days
+
+		createActivityDefinition(name: activityName)
+		app.tables.cells.staticTexts[activityName].tap()
+		sleep(1)
+		app.tables.cells.staticTexts[activityName].tap()
+		app.tables.cells.staticTexts[activityName].swipeLeft()
+		app.tables.cells.buttons["✎ Last"].tap()
+
+		// when
+		setActivityStartDate(to: startDate)
+
+		// then
+		XCTAssert(!app.buttons["Save"].isEnabled)
+	}
+
+	func testSettingEndDateBeforeStartDate_disablesSaveButtonOnEditActivityScreen() {
+		// given
+		let activityName = "gteqas"
+		let endDate = Date() - 1.days
+
+		createActivityDefinition(name: activityName)
+		app.tables.cells.staticTexts[activityName].tap()
+		sleep(1)
+		app.tables.cells.staticTexts[activityName].tap()
+		app.tables.cells.staticTexts[activityName].swipeLeft()
+		app.tables.cells.buttons["✎ Last"].tap()
+
+		// when
+		setActivityEndDate(to: endDate)
+
+		// then
+		XCTAssert(!app.buttons["Save"].isEnabled)
+	}
+
 	// MARK: - Quick Create / Start
 
 	func testLongPressOnAddButtonWhenSearchBarIsEmpty_doesNotCreateActivity() {

@@ -49,11 +49,9 @@ public final class EditActivityTableViewController: UITableViewController {
 	}
 
 	/// This will be overridden if `activity` is set after this is
-	public final var definition: ActivityDefinition? = nil {
-		didSet { saveButton?.isEnabled = definition != nil }
-	}
-	private final var startDate: Date = Date()
-	private final var endDate: Date?
+	public final var definition: ActivityDefinition? = nil { didSet { validate() } }
+	private final var startDate: Date = Date() { didSet { validate() } }
+	private final var endDate: Date? { didSet { validate() } }
 	private final var note: String?
 	private final var tagNames = Set<String>()
 
@@ -276,5 +274,13 @@ public final class EditActivityTableViewController: UITableViewController {
 			return tags[0]
 		}
 		return nil
+	}
+
+	private final func validate() {
+		saveButton?.isEnabled = definition != nil && !endDateIsBeforeStartDate()
+	}
+
+	private final func endDateIsBeforeStartDate() -> Bool {
+		return endDate?.isBeforeDate(startDate, granularity: .second) ?? false
 	}
 }
