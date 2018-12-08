@@ -113,27 +113,53 @@ final class RecordMedicationsUITests: UITest {
 		// given
 		let medicationName = "few"
 		createMedication(name: medicationName)
-		var dose1Date = Date()
-		dose1Date = dose1Date - 1.months
+		let dose1Date = Date() - 1.months
 		let dose2Date = Date()
+		let dose3Date = Date() - 1.minutes
+		let dose4Date = Date() - 2.minutes
 		takeDoseOf(medicationName, at: dose1Date)
 		takeDoseOf(medicationName, at: dose2Date)
+		takeDoseOf(medicationName, at: dose3Date)
+		takeDoseOf(medicationName, at: dose4Date)
 		app.buttons["last \(medicationName) dose button"].tap()
-		filterDoseDates(from: dose1Date, to: dose1Date)
-		let dose = doseDescription(date: dose1Date)
+		filterDoseDates(from: dose2Date, to: dose4Date)
+		let dose3Description = doseDescription(date: dose3Date)
 
 		// when
-		app.tables.staticTexts[dose].swipeLeft()
+		app.tables.staticTexts[dose3Description].swipeLeft()
 		app.tables.buttons["Delete"].tap()
 		app.buttons["Yes"].tap()
-		app.tables.buttons["filter dates button"].tap()
-		app.switches["from date switch"].tap()
-		app.switches["to date switch"].tap()
-		app.buttons["save button"].tap()
+		filterDoseDates()
 
 		// then
-		XCTAssert(!app.tables.staticTexts[dose].exists)
+		XCTAssert(app.tables.staticTexts[doseDescription(date: dose1Date)].exists)
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose2Date)].exists)
+		XCTAssert(!app.tables.staticTexts[dose3Description].exists)
+		XCTAssert(app.tables.staticTexts[doseDescription(date: dose4Date)].exists)
+	}
+
+	func testDeletingDoseWhileNotFiltering_removesCorrectDoseFromTableView() {
+		// given
+		let medicationName = "few"
+		createMedication(name: medicationName)
+		let dose1Date = Date()
+		let dose2Date = Date() - 1.days
+		let dose3Date = Date() - 2.days
+		takeDoseOf(medicationName, at: dose1Date)
+		takeDoseOf(medicationName, at: dose2Date)
+		takeDoseOf(medicationName, at: dose3Date)
+		app.buttons["last \(medicationName) dose button"].tap()
+		let dose2Description = doseDescription(date: dose2Date)
+
+		// when
+		app.tables.staticTexts[dose2Description].swipeLeft()
+		app.tables.buttons["Delete"].tap()
+		app.buttons["Yes"].tap()
+
+		// then
+		XCTAssert(app.tables.staticTexts[doseDescription(date: dose1Date)].exists)
+		XCTAssert(!app.tables.staticTexts[dose2Description].exists)
+		XCTAssert(app.tables.staticTexts[doseDescription(date: dose3Date)].exists)
 	}
 
 	func testReorderWhileFiltering_correcltyReordersMedications() {
@@ -351,7 +377,7 @@ final class RecordMedicationsUITests: UITest {
 	}
 
 	private final func filterDoseDates(from fromDate: Date? = nil, to toDate: Date? = nil) {
-		app.tables.buttons["Filter Dates"].tap()
+		app.tables.buttons["filter dates button"].tap()
 		setFromOrToDate("from", fromDate)
 		setFromOrToDate("to", toDate)
 		app.buttons["save button"].tap()

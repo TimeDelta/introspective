@@ -56,6 +56,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
+		dateRangeButton.accessibilityLabel = "filter dates button"
 		navigationItem.rightBarButtonItem = self.editButtonItem
 		navigationItem.title = medication.name
 		NotificationCenter.default.addObserver(self, selector: #selector(dateRangeSet), name: Me.dateRangeSet, object: nil)
@@ -85,14 +86,15 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	// MARK: - TableViewDelegate
 
 	public final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		let dose = self.medication.doses.object(at: indexPath.row) as! MedicationDose
+		let dose = filteredDoses.object(at: indexPath.row) as! MedicationDose
 		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
 			let alert = UIAlertController(
 				title: "Are you sure you want to delete this dose?",
 				message: self.getTextForDoseAt(indexPath.row),
 				preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
-				self.medication.removeFromDoses(at: indexPath.row)
+				let indexToDelete = self.medication.doses.index(of: dose)
+				self.medication.removeFromDoses(at: indexToDelete)
 				DependencyInjector.db.delete(dose)
 				self.resetFilteredDoses()
 				tableView.deleteRows(at: [indexPath], with: .fade)
