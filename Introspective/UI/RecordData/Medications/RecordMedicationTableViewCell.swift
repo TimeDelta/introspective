@@ -58,7 +58,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 			}
 		} catch {
 			os_log("Failed to mark medication (%@) as taken: %@", type: .error, medication.name, error.localizedDescription)
-			NotificationCenter.default.post(name: Me.errorOccurred, object: "Unable to mark \(medication.name) as taken.")
+			NotificationCenter.default.post(name: Me.errorOccurred, object: "Failed to mark \(medication.name) as taken.")
 		}
 	}
 

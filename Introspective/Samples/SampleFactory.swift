@@ -15,11 +15,12 @@ public protocol SampleFactory {
 	func allTypes() -> [Sample.Type]
 	func healthKitTypes() -> [HealthKitSample.Type]
 
+	func activity() throws -> Activity
 	func heartRate(_ value: Double, _ date: Date) -> HeartRate
 	func heartRate(value: Double) -> HeartRate
 	func heartRate(_ sample: HKQuantitySample) -> HeartRate
-	func medicationDose() -> MedicationDose
-	func mood() -> Mood
+	func medicationDose() throws -> MedicationDose
+	func mood() throws -> Mood
 }
 
 public final class SampleFactoryImpl: SampleFactory {
@@ -57,6 +58,10 @@ public final class SampleFactoryImpl: SampleFactory {
 		return Me.healthKitTypes
 	}
 
+	public final func activity() throws -> Activity {
+		return try DependencyInjector.db.new(Activity.self)
+	}
+
 	public final func heartRate(_ value: Double, _ date: Date) -> HeartRate {
 		return HeartRate(value, date)
 	}
@@ -69,13 +74,11 @@ public final class SampleFactoryImpl: SampleFactory {
 		return HeartRate(sample)
 	}
 
-	public final func medicationDose() -> MedicationDose {
-		#warning("allow this to throw")
-		return try! DependencyInjector.db.new(MedicationDose.self)
+	public final func medicationDose() throws -> MedicationDose {
+		return try DependencyInjector.db.new(MedicationDose.self)
 	}
 
-	public final func mood() -> Mood {
-		#warning("allow this to throw")
-		return try! DependencyInjector.db.new(MoodImpl.self)
+	public final func mood() throws -> Mood {
+		return try DependencyInjector.db.new(MoodImpl.self)
 	}
 }

@@ -6889,6 +6889,22 @@ class SampleFactoryMock: SampleFactory, Mock {
 		return __value
     }
 
+    func activity() throws -> Activity {
+        addInvocation(.m_activity)
+		let perform = methodPerformValue(.m_activity) as? () -> Void
+		perform?()
+		var __value: Activity
+		do {
+		    __value = try methodReturnValue(.m_activity).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for activity(). Use given")
+			Failure("Stub return value not specified for activity(). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     func heartRate(_ value: Double, _ date: Date) -> HeartRate {
         addInvocation(.m_heartRate__value_date(Parameter<Double>.value(`value`), Parameter<Date>.value(`date`)))
 		let perform = methodPerformValue(.m_heartRate__value_date(Parameter<Double>.value(`value`), Parameter<Date>.value(`date`))) as? (Double, Date) -> Void
@@ -6931,30 +6947,34 @@ class SampleFactoryMock: SampleFactory, Mock {
 		return __value
     }
 
-    func medicationDose() -> MedicationDose {
+    func medicationDose() throws -> MedicationDose {
         addInvocation(.m_medicationDose)
 		let perform = methodPerformValue(.m_medicationDose) as? () -> Void
 		perform?()
 		var __value: MedicationDose
 		do {
 		    __value = try methodReturnValue(.m_medicationDose).casted()
-		} catch {
+		} catch MockError.notStubed {
 			onFatalFailure("Stub return value not specified for medicationDose(). Use given")
 			Failure("Stub return value not specified for medicationDose(). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
 
-    func mood() -> Mood {
+    func mood() throws -> Mood {
         addInvocation(.m_mood)
 		let perform = methodPerformValue(.m_mood) as? () -> Void
 		perform?()
 		var __value: Mood
 		do {
 		    __value = try methodReturnValue(.m_mood).casted()
-		} catch {
+		} catch MockError.notStubed {
 			onFatalFailure("Stub return value not specified for mood(). Use given")
 			Failure("Stub return value not specified for mood(). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
@@ -6963,6 +6983,7 @@ class SampleFactoryMock: SampleFactory, Mock {
     fileprivate enum MethodType {
         case m_allTypes
         case m_healthKitTypes
+        case m_activity
         case m_heartRate__value_date(Parameter<Double>, Parameter<Date>)
         case m_heartRate__value_value(Parameter<Double>)
         case m_heartRate__sample(Parameter<HKQuantitySample>)
@@ -6974,6 +6995,8 @@ class SampleFactoryMock: SampleFactory, Mock {
             case (.m_allTypes, .m_allTypes):
                 return true 
             case (.m_healthKitTypes, .m_healthKitTypes):
+                return true 
+            case (.m_activity, .m_activity):
                 return true 
             case (.m_heartRate__value_date(let lhsValue, let lhsDate), .m_heartRate__value_date(let rhsValue, let rhsDate)):
                 guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
@@ -6997,6 +7020,7 @@ class SampleFactoryMock: SampleFactory, Mock {
             switch self {
             case .m_allTypes: return 0
             case .m_healthKitTypes: return 0
+            case .m_activity: return 0
             case let .m_heartRate__value_date(p0, p1): return p0.intValue + p1.intValue
             case let .m_heartRate__value_value(p0): return p0.intValue
             case let .m_heartRate__sample(p0): return p0.intValue
@@ -7020,6 +7044,9 @@ class SampleFactoryMock: SampleFactory, Mock {
         }
         static func healthKitTypes(willReturn: [HealthKitSample.Type]...) -> MethodStub {
             return Given(method: .m_healthKitTypes, products: willReturn.map({ Product.return($0) }))
+        }
+        static func activity(willReturn: Activity...) -> MethodStub {
+            return Given(method: .m_activity, products: willReturn.map({ Product.return($0) }))
         }
         static func heartRate(_ value: Parameter<Double>, _ date: Parameter<Date>, willReturn: HeartRate...) -> MethodStub {
             return Given(method: .m_heartRate__value_date(`value`, `date`), products: willReturn.map({ Product.return($0) }))
@@ -7079,17 +7106,33 @@ class SampleFactoryMock: SampleFactory, Mock {
 			willProduce(stubber)
 			return given
         }
-        static func medicationDose(willProduce: (Stubber<MedicationDose>) -> Void) -> MethodStub {
-            let willReturn: [MedicationDose] = []
-			let given: Given = { return Given(method: .m_medicationDose, products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: (MedicationDose).self)
+        static func activity(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_activity, products: willThrow.map({ Product.throw($0) }))
+        }
+        static func activity(willProduce: (StubberThrows<Activity>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_activity, products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Activity).self)
 			willProduce(stubber)
 			return given
         }
-        static func mood(willProduce: (Stubber<Mood>) -> Void) -> MethodStub {
-            let willReturn: [Mood] = []
-			let given: Given = { return Given(method: .m_mood, products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: (Mood).self)
+        static func medicationDose(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_medicationDose, products: willThrow.map({ Product.throw($0) }))
+        }
+        static func medicationDose(willProduce: (StubberThrows<MedicationDose>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_medicationDose, products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (MedicationDose).self)
+			willProduce(stubber)
+			return given
+        }
+        static func mood(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_mood, products: willThrow.map({ Product.throw($0) }))
+        }
+        static func mood(willProduce: (StubberThrows<Mood>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_mood, products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Mood).self)
 			willProduce(stubber)
 			return given
         }
@@ -7100,6 +7143,7 @@ class SampleFactoryMock: SampleFactory, Mock {
 
         static func allTypes() -> Verify { return Verify(method: .m_allTypes)}
         static func healthKitTypes() -> Verify { return Verify(method: .m_healthKitTypes)}
+        static func activity() -> Verify { return Verify(method: .m_activity)}
         static func heartRate(_ value: Parameter<Double>, _ date: Parameter<Date>) -> Verify { return Verify(method: .m_heartRate__value_date(`value`, `date`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label, remove `date` label")
 		static func heartRate(value: Parameter<Double>, date: Parameter<Date>) -> Verify { return Verify(method: .m_heartRate__value_date(`value`, `date`))}
@@ -7120,6 +7164,9 @@ class SampleFactoryMock: SampleFactory, Mock {
         }
         static func healthKitTypes(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_healthKitTypes, performs: perform)
+        }
+        static func activity(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_activity, performs: perform)
         }
         static func heartRate(_ value: Parameter<Double>, _ date: Parameter<Date>, perform: @escaping (Double, Date) -> Void) -> Perform {
             return Perform(method: .m_heartRate__value_date(`value`, `date`), performs: perform)

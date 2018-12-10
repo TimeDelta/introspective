@@ -95,15 +95,21 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 				description: "No medications named '\(medicationName)' exist.")
 		}
 
-		let dose = DependencyInjector.sample.medicationDose()
+		var doseCreated = false
+		var dose: MedicationDose!
 		do {
+			dose = try DependencyInjector.sample.medicationDose()
+			doseCreated = true
 			let medication = try DependencyInjector.db.pull(savedObject: medicationsWithName[0], fromSameContextAs: dose)
 			dose.medication = medication
 			dose.timestamp = date
 			medication.addToDoses(dose)
 			DependencyInjector.db.save()
 		} catch {
-			os_log("Failed to pull medication into same context as dose: %@", type: .error, error.localizedDescription)
+			os_log("Failed to create and modify medication dose: %@", type: .error, error.localizedDescription)
+			if doseCreated {
+				DependencyInjector.db.delete(dose)
+			}
 			let dateText = DependencyInjector.util.calendar.string(for: date, dateStyle: .medium, timeStyle: .short)
 			throw GenericDisplayableError(
 				title: "Could not save dose",

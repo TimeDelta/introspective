@@ -8,6 +8,7 @@
 
 import UIKit
 import Presentr
+import os
 
 final class RecordMoodTableViewCell: UITableViewCell {
 
@@ -52,14 +53,24 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	}
 
 	@IBAction final func doneButtonPressed(_ sender: Any) {
-		let mood = DependencyInjector.sample.mood()
-		mood.timestamp = Date()
-		mood.rating = Double(ratingSlider.value) * DependencyInjector.settings.maximumMood
-		mood.note = note
-		mood.maxRating = DependencyInjector.settings.maximumMood
-		DependencyInjector.db.save()
+		do {
+			let mood = try DependencyInjector.sample.mood()
+			mood.timestamp = Date()
+			mood.rating = Double(ratingSlider.value) * DependencyInjector.settings.maximumMood
+			mood.note = note
+			mood.maxRating = DependencyInjector.settings.maximumMood
+			DependencyInjector.db.save()
 
-		reset()
+			reset()
+		} catch {
+			os_log("Failed to create mood: %@", type: .error, error.localizedDescription)
+			NotificationCenter.default.post(
+				name: RecordDataTableViewController.showErrorMessage,
+				object: (
+					title: "Failed to save mood rating",
+					message: "Sorry for the inconvenience"
+			))
+		}
 	}
 
 	// MARK: - Received Notifications

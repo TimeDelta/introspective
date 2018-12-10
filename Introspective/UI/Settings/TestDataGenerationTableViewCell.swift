@@ -152,7 +152,7 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 	}
 
 	private final func createRandomMedicationDose(_ date: Date, _ medications: [Medication]) {
-		let medicationDose = DependencyInjector.sample.medicationDose()
+		let medicationDose = try! DependencyInjector.sample.medicationDose()
 		medicationDose.timestamp = date
 		medicationDose.dosage = Dosage(randomDouble(Me.medicationDoseAmountRange), "mg")
 		medicationDose.medication = try! DependencyInjector.db.pull(savedObject: randomEntry(medications), fromSameContextAs: medicationDose)
@@ -160,7 +160,7 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 	}
 
 	private final func createRandomMood(_ date: Date) {
-		let mood = DependencyInjector.sample.mood()
+		let mood = try! DependencyInjector.sample.mood()
 		mood.timestamp = date
 		mood.maxRating = DependencyInjector.settings.maximumMood
 		mood.rating = randomDouble(Me.moodRatingRange)

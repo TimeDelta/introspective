@@ -46,15 +46,20 @@ public final class MedicationDoseEditorViewController: UIViewController {
 		if let dosageText = dosageTextField.text {
 			dosage = Dosage(dosageText)
 		}
-		if medicationDose == nil {
-			medicationDose = DependencyInjector.sample.medicationDose()
+		do {
+			if medicationDose == nil {
+				medicationDose = try DependencyInjector.sample.medicationDose()
+			}
+			medicationDose!.dosage = dosage
+			medicationDose!.timestamp = datePicker.date
+			DispatchQueue.main.async {
+				NotificationCenter.default.post(name: self.notificationToSendOnAccept, object: self.medicationDose)
+			}
+			dismiss(animated: true, completion: nil)
+		} catch {
+			os_log("Failed to create medication dose: %@", type: .error, error.localizedDescription)
+			showError(title: "Failed to save", message: "Sorry for the inconvenience")
 		}
-		medicationDose!.dosage = dosage
-		medicationDose!.timestamp = datePicker.date
-		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: self.notificationToSendOnAccept, object: self.medicationDose)
-		}
-		dismiss(animated: true, completion: nil)
 	}
 
 	@IBAction final func dosageTextChanged(_ sender: Any) {

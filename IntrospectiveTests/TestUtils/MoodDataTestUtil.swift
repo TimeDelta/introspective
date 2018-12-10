@@ -12,7 +12,7 @@ import Foundation
 public class MoodDataTestUtil {
 
 	public static func createMood(note: String? = nil, rating: Double = 0.0, timestamp: Date = Date()) -> MoodImpl {
-		let mood = DependencyInjector.sample.mood() as! MoodImpl
+		let mood = try! DependencyInjector.sample.mood() as! MoodImpl
 		mood.rating = rating
 		mood.timestamp = timestamp
 		mood.note = note

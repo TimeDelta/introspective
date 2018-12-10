@@ -179,7 +179,6 @@ public final class EditActivityTableViewController: UITableViewController {
 	}
 
 	@objc private final func startDateChanged(notification: Notification) {
-		#warning("need to disable save button when start date is after end date")
 		if let date = notification.object as? Date {
 			startDate = date
 			tableView.reloadData()
@@ -220,7 +219,7 @@ public final class EditActivityTableViewController: UITableViewController {
 		var deleteActivityOnFail = false
 		do {
 			if activity == nil {
-				activity = try DependencyInjector.db.new(Activity.self)
+				activity = try DependencyInjector.sample.activity()
 				deleteActivityOnFail = true
 			}
 			activity.definition = try DependencyInjector.db.pull(savedObject: definition!, fromSameContextAs: activity)
