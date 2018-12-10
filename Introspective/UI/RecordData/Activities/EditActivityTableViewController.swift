@@ -67,7 +67,7 @@ public final class EditActivityTableViewController: UITableViewController {
 			style: .done,
 			target: self,
 			action: #selector(saveButtonPressed))
-		navigationItem.rightBarButtonItem = saveButton!
+		navigationItem.rightBarButtonItem = saveButton
 
 		NotificationCenter.default.addObserver(self, selector: #selector(activityDefinitionChanged), name: Me.activityDefinitionChanged, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(startDateChanged), name: Me.startDateChanged, object: nil)

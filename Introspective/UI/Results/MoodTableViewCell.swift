@@ -20,6 +20,9 @@ final class MoodTableViewCell: UITableViewCell {
 			moodRatingLabel.text = MoodUiUtil.valueToString(mood.rating) + " / " + MoodUiUtil.valueToString(mood.maxRating)
 			timestampLabel.text = DependencyInjector.util.calendar.string(for: mood.timestamp, dateStyle: .medium, timeStyle: .short)
 			noteLabel.text = mood.note
+			moodRatingLabel.accessibilityValue = moodRatingLabel.text
+			timestampLabel.accessibilityValue = timestampLabel.text
+			noteLabel.accessibilityValue = noteLabel.text
 		}
 	}
 

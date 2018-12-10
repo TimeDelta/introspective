@@ -204,30 +204,11 @@ final class ResultsViewController: UITableViewController {
 
 	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.section == 0 {
-			extraInformationEditIndex = indexPath.row
-			let selectedInformation = extraInformation[extraInformationEditIndex]
-
-			let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "editExtraInformation") as! SelectExtraInformationViewController
-			controller.notificationToSendWhenFinished = Me.editedExtraInformation
-			controller.attributes = samples[0].attributes
-			controller.selectedAttribute = selectedInformation.attribute
-			controller.selectedInformation = selectedInformation
-			if navigationController != nil {
-				navigationController!.pushViewController(controller, animated: false)
-			} else {
-				present(controller, animated: false, completion: nil)
-			}
+			showEditInformationView(indexPath)
 		} else if samples[indexPath.row] is Activity {
-			lastSelectedRowIndex = indexPath.row
-
-			let controller = UIStoryboard(name: "RecordData", bundle: nil).instantiateViewController(withIdentifier: "editActivity") as! EditActivityTableViewController
-			controller.activity = (samples[indexPath.row] as! Activity)
-			controller.notificationToSendOnAccept = Me.editedSample
-			if navigationController != nil {
-				navigationController!.pushViewController(controller, animated: false)
-			} else {
-				present(controller, animated: false, completion: nil)
-			}
+			showEditActivityView(indexPath)
+		} else if samples[indexPath.row] is Mood {
+			showEditMoodView(indexPath)
 		}
 	}
 
@@ -293,6 +274,46 @@ final class ResultsViewController: UITableViewController {
 		}
 	}
 
+	@objc private final func sortSamplesBy(notification: Notification) {
+		sortController?.dismiss(animated: false, completion: nil)
+
+		let sortCriteria = notification.object as! (attribute: Attribute, order: ComparisonResult)
+		self.sortOrder = sortCriteria.order
+		self.sortAttribute = sortCriteria.attribute
+		self.sortTask = DispatchWorkItem {
+			DispatchQueue.main.sync{
+				self.tableView.reloadData()
+				self.sortActionSheet = UIAlertController(title: "Sorting by \(self.sortAttribute!.name)", message: nil, preferredStyle: .actionSheet)
+				self.sortActionSheet?.addAction(UIAlertAction(title: "Cancel", style: .cancel){ _ in
+					self.sortTask?.cancel()
+					self.sortTask = nil
+					self.tableView.reloadData()
+				})
+				self.present(self.sortActionSheet!, animated: false, completion: nil)
+			}
+
+			switch (self.sortAttribute) {
+				case is DoubleAttribute: self.sort(by: Double.self); break
+				case is IntegerAttribute: self.sort(by: Int.self); break
+				case is TextAttribute: self.sort(by: String.self); break
+				case is DateAttribute: self.sort(by: Date.self); break
+				case is DayOfWeekAttribute: self.sort(by: DayOfWeek.self); break
+				case is TimeOfDayAttribute: self.sort(by: TimeOfDay.self); break
+				case is DurationAttribute: self.sort(by: Duration.self); break
+				case is FrequencyAttribute: self.sort(by: Frequency.self); break
+				case is DosageAttribute: self.sort(by: Dosage.self); break
+				default:
+					os_log("Unknown sort attribute type: %@", type: .error, String(describing: type(of: self.sortAttribute)))
+			}
+			self.sortTask = nil
+			DispatchQueue.main.async{
+				self.sortActionSheet?.dismiss(animated: false, completion: nil)
+				self.tableView.reloadData()
+			}
+		}
+		DispatchQueue.global(qos: .userInteractive).async(execute: self.sortTask!)
+	}
+
 	// MARK: - Button Actions
 
 	@objc private final func presentActions() {
@@ -354,46 +375,48 @@ final class ResultsViewController: UITableViewController {
 		self.present(alert, animated: false, completion: nil)
 	}
 
-	// MARK: - Received Notifications
+	// MARK: - Display Edit Screen Functions
 
-	@objc private final func sortSamplesBy(notification: Notification) {
-		sortController?.dismiss(animated: false, completion: nil)
+	private final func showEditInformationView(_ indexPath: IndexPath) {
+		extraInformationEditIndex = indexPath.row
+		let selectedInformation = extraInformation[extraInformationEditIndex]
 
-		let sortCriteria = notification.object as! (attribute: Attribute, order: ComparisonResult)
-		self.sortOrder = sortCriteria.order
-		self.sortAttribute = sortCriteria.attribute
-		self.sortTask = DispatchWorkItem {
-			DispatchQueue.main.sync{
-				self.tableView.reloadData()
-				self.sortActionSheet = UIAlertController(title: "Sorting by \(self.sortAttribute!.name)", message: nil, preferredStyle: .actionSheet)
-				self.sortActionSheet?.addAction(UIAlertAction(title: "Cancel", style: .cancel){ _ in
-					self.sortTask?.cancel()
-					self.sortTask = nil
-					self.tableView.reloadData()
-				})
-				self.present(self.sortActionSheet!, animated: false, completion: nil)
-			}
-
-			switch (self.sortAttribute) {
-				case is DoubleAttribute: self.sort(by: Double.self); break
-				case is IntegerAttribute: self.sort(by: Int.self); break
-				case is TextAttribute: self.sort(by: String.self); break
-				case is DateAttribute: self.sort(by: Date.self); break
-				case is DayOfWeekAttribute: self.sort(by: DayOfWeek.self); break
-				case is TimeOfDayAttribute: self.sort(by: TimeOfDay.self); break
-				case is DurationAttribute: self.sort(by: Duration.self); break
-				case is FrequencyAttribute: self.sort(by: Frequency.self); break
-				case is DosageAttribute: self.sort(by: Dosage.self); break
-				default:
-					os_log("Unknown sort attribute type: %@", type: .error, String(describing: type(of: self.sortAttribute)))
-			}
-			self.sortTask = nil
-			DispatchQueue.main.async{
-				self.sortActionSheet?.dismiss(animated: false, completion: nil)
-				self.tableView.reloadData()
-			}
+		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "editExtraInformation") as! SelectExtraInformationViewController
+		controller.notificationToSendWhenFinished = Me.editedExtraInformation
+		controller.attributes = samples[0].attributes
+		controller.selectedAttribute = selectedInformation.attribute
+		controller.selectedInformation = selectedInformation
+		if navigationController != nil {
+			navigationController!.pushViewController(controller, animated: false)
+		} else {
+			present(controller, animated: false, completion: nil)
 		}
-		DispatchQueue.global(qos: .userInteractive).async(execute: self.sortTask!)
+	}
+
+	private final func showEditActivityView(_ indexPath: IndexPath) {
+		lastSelectedRowIndex = indexPath.row
+
+		let controller = UIStoryboard(name: "RecordData", bundle: nil).instantiateViewController(withIdentifier: "editActivity") as! EditActivityTableViewController
+		controller.activity = (samples[indexPath.row] as! Activity)
+		controller.notificationToSendOnAccept = Me.editedSample
+		if navigationController != nil {
+			navigationController!.pushViewController(controller, animated: false)
+		} else {
+			present(controller, animated: false, completion: nil)
+		}
+	}
+
+	private final func showEditMoodView(_ indexPath: IndexPath) {
+		lastSelectedRowIndex = indexPath.row
+
+		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "editMood") as! EditMoodTableViewController
+		controller.mood = (samples[indexPath.row] as! Mood)
+		controller.notificationToSendOnAccept = Me.editedSample
+		if navigationController != nil {
+			navigationController!.pushViewController(controller, animated: false)
+		} else {
+			present(controller, animated: false, completion: nil)
+		}
 	}
 
 	// MARK: - Helper functions

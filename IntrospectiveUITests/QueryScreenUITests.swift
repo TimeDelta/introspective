@@ -10,11 +10,15 @@ import XCTest
 
 final class QueryScreenUITests: UITest {
 
-	func testChangingMainSampleType_changesDisplayedTextToNewSampleTypeName() {
-		// given
+	final override func setUp() {
+		super.setUp()
 		app.tabBars.buttons["Explore"].tap()
 		app.collectionViews.staticTexts["Query"].tap()
-		app.tables.staticTexts["Activity"].tap()
+	}
+
+	func testChangingMainSampleType_changesDisplayedTextToNewSampleTypeName() {
+		// given
+		app.tables.cells.allElementsBoundByIndex[0].tap()
 
 		// when
 		app.pickerWheels["Activity"].adjust(toPickerWheelValue: "Heart Rate")
@@ -26,8 +30,6 @@ final class QueryScreenUITests: UITest {
 
 	func testChangingSubQuerySampleType_changesDisplayedTextToNewSampleTypeName() {
 		// given
-		app.tabBars.buttons["Explore"].tap()
-		app.collectionViews.staticTexts["Query"].tap()
 		app.tables.buttons["Add"].tap()
 		app.sheets["What would you like to add?"].buttons["Data Type"].tap()
 
@@ -42,8 +44,6 @@ final class QueryScreenUITests: UITest {
 
 	func testChangingSubQueryMatcher_changesDisplayedTextInTableViewCell() {
 		// given
-		app.tabBars.buttons["Explore"].tap()
-		app.collectionViews.staticTexts["Query"].tap()
 		app.tables.buttons["Add"].tap()
 		app.sheets["What would you like to add?"].buttons["Data Type"].tap()
 
@@ -66,9 +66,7 @@ final class QueryScreenUITests: UITest {
 
 	func testChangingAttributeRestriction_changesDisplayedTextInTableViewCell() {
 		// given
-		app.tabBars.buttons["Explore"].tap()
-		app.collectionViews.staticTexts["Query"].tap()
-		app.tables.staticTexts["Activity"].tap()
+		app.tables.cells.allElementsBoundByIndex[0].tap()
 		app.pickerWheels["Activity"].adjust(toPickerWheelValue: "Blood Pressure")
 		app.buttons["save button"].tap()
 		app.tables.buttons["Add"].tap()
@@ -91,8 +89,6 @@ final class QueryScreenUITests: UITest {
 
 	func testMovingSampleTypeAboveAttributeRestriction_correctlyChangesAttributeRestriction() {
 		// given
-		app.tabBars.buttons["Explore"].tap()
-		app.collectionViews.staticTexts["Query"].tap()
 		app.tables.buttons["Add"].tap()
 		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
 		app.tables.buttons["Add"].tap()
@@ -115,8 +111,6 @@ final class QueryScreenUITests: UITest {
 
 	func testPressingEditButton_changesTitleOfEditButtonToDone() {
 		// given
-		app.tabBars.buttons["Explore"].tap()
-		app.collectionViews.staticTexts["Query"].tap()
 
 		// when
 		app.tables.buttons["Edit"].tap()
@@ -127,8 +121,6 @@ final class QueryScreenUITests: UITest {
 
 	func testDeletingDataTypeWithAttributeRestrictionsUnderneath_correctlyReassignsAttributeRestrictionsUnderneath() {
 		// given
-		app.tabBars.buttons["Explore"].tap()
-		app.collectionViews.staticTexts["Query"].tap()
 		app.tables.buttons["Add"].tap()
 		app.sheets["What would you like to add?"].buttons["Data Type"].tap()
 		app.tables.cells.allElementsBoundByIndex[1].tap()
