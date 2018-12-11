@@ -16,6 +16,7 @@ public final class DateTimeAttribute: DateAttributeBase {
 		description: String? = nil,
 		variableName: String? = nil,
 		optional: Bool = false,
+		format: String = defaultDateFormat,
 		earliestDate: Date? = nil,
 		latestDate: Date? = nil)
 	{
@@ -26,6 +27,7 @@ public final class DateTimeAttribute: DateAttributeBase {
 			variableName: variableName,
 			optional: optional,
 			includeTime: true,
+			format: format,
 			earliestDate: earliestDate,
 			latestDate: latestDate)
 	}
