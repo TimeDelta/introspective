@@ -304,7 +304,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 				self.signpost.begin(name: "Grouping x-axis samples", "Grouping %d samples", samples.count)
 				let grouper = SameTimeUnitSampleGrouper(self.grouping!)
 				self.xAxisSampleGroups = (grouper.group(samples: samples, by: self.firstDateAttributeFor(self.xAxisSampleType)) as! [(Date, [Sample])])
-				self.signpost.end(name: "Grouping x-axis samples", "Grouped %d samples into %d groups", samples.count, self.yAxisSampleGroups.count)
+				self.signpost.end(name: "Grouping x-axis samples", "Grouped %d samples into %d groups", samples.count, self.xAxisSampleGroups.count)
 			} else {
 				os_log("X-axis query run did not return an error or any results", type: .error)
 			}
