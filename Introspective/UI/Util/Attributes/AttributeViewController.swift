@@ -14,11 +14,12 @@ final class AttributeViewController: UIViewController {
 	// MARK: - Static Variables
 
 	private typealias Me = AttributeViewController
-	private static let horizontalMultiSelectPresenter = UiUtil.customPresenter(height: .custom(size: 100))
-	private static let numericPresenter = UiUtil.customPresenter(height: .custom(size: 100))
-	private static let dosagePresenter = UiUtil.customPresenter(height: .custom(size: 100))
-	private static let frequencyPresenter = UiUtil.customPresenter(width: .custom(size: 250), height: .custom(size: 250))
-	private static let multiSelectPresenter = UiUtil.customPresenter(width: .custom(size: 300), height: .custom(size: 400))
+	private static let horizontalMultiSelectPresenter = UiUtil.customPresenter(height: .custom(size: 100), center: .topCenter)
+	private static let numericPresenter = UiUtil.customPresenter(width: .full, height: .custom(size: 100), center: .topCenter)
+	private static let dosagePresenter = UiUtil.customPresenter(height: .custom(size: 100), center: .topCenter)
+	private static let frequencyPresenter = UiUtil.customPresenter(width: .custom(size: 250), height: .custom(size: 250), center: .topCenter)
+	private static let multiSelectPresenter = UiUtil.customPresenter(width: .full, height: .fluid(percentage: 0.45), center: .topCenter)
+	private static let defaultPresenter = UiUtil.customPresenter(width: .full, height: .custom(size: 200), center: .topCenter)
 
 	// MARK: - IBOutlets
 
@@ -111,7 +112,7 @@ final class AttributeViewController: UIViewController {
 			controller.attribute = attribute
 			controller.attributeValue = attributeValue
 			controller.notificationToSendOnAccept = valueChangedNotification
-			customPresentViewController(UiUtil.defaultPresenter, viewController: controller, animated: true)
+			customPresentViewController(Me.defaultPresenter, viewController: controller, animated: true)
 		}
 	}
 
