@@ -229,7 +229,7 @@ final class ResultsViewController: UITableViewController {
 
 	final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		guard let managedSample = self.samples[indexPath.row] as? NSManagedObject else { return [] }
-		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
+		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { _, indexPath in
 			if indexPath.section == 0 {
 				self.extraInformation.remove(at: indexPath.row)
 				self.extraInformationValues.remove(at: indexPath.row)
@@ -238,12 +238,17 @@ final class ResultsViewController: UITableViewController {
 			} else if indexPath.section == 1 {
 				let alert = UIAlertController(title: "Are you sure you want to delete this?", message: nil, preferredStyle: .alert)
 				alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
+					let goBackAfterDelete = self.samples.count == 1
 					DispatchQueue.global(qos: .background).async {
 						DependencyInjector.db.delete(managedSample)
 					}
-					self.samples.remove(at: indexPath.row)
-					tableView.deleteRows(at: [indexPath], with: .fade)
-					tableView.reloadData()
+					if goBackAfterDelete {
+						self.navigationController?.popViewController(animated: true)
+					} else {
+						self.samples.remove(at: indexPath.row)
+						tableView.deleteRows(at: [indexPath], with: .fade)
+						tableView.reloadData()
+					}
 				})
 				alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
 				self.present(alert, animated: false, completion: nil)
