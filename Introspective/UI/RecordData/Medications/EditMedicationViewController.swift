@@ -7,8 +7,9 @@
 //
 
 import UIKit
-import os
 import Presentr
+import CoreData
+import os
 
 public final class EditMedicationViewController: UIViewController {
 
@@ -94,11 +95,6 @@ public final class EditMedicationViewController: UIViewController {
 
 	deinit {
 		NotificationCenter.default.removeObserver(self)
-	}
-
-	public final override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-		// this dismisses the keyboard whenever user taps on the view outside of keyboard
-		view.endEditing(true)
 	}
 
 	// MARK: - Received Notifications
@@ -236,7 +232,24 @@ public final class EditMedicationViewController: UIViewController {
 	}
 
 	private final func nameIsValid() -> Bool {
-		return nameTextField.text != nil && !nameTextField.text!.isEmpty
+		if let nameText = nameTextField.text {
+			return !nameText.isEmpty && !isDuplicate(nameText)
+		}
+		return false
+	}
+
+	private final func isDuplicate(_ name: String) -> Bool {
+		let originalName = medication?.name ?? initialName ?? ""
+		guard name.localizedLowercase != originalName.localizedLowercase else { return false }
+		let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
+		do {
+			let medicationsWithSameName = try DependencyInjector.db.query(fetchRequest)
+			return medicationsWithSameName.count > 0
+		} catch {
+			os_log("Failed to check for medication name duplication", type: .error)
+		}
+		return false
 	}
 
 	private final func dosageIsValid() -> Bool {

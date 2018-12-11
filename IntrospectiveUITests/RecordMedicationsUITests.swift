@@ -29,6 +29,8 @@ final class RecordMedicationsUITests: UITest {
 		super.tearDown()
 	}
 
+	// MARK: - Creation
+
 	func testAddNewMedication_usesTextFromSearchBarAsInitialName() {
 		// given
 		let medicationName = "Adderall"
@@ -52,6 +54,49 @@ final class RecordMedicationsUITests: UITest {
 		XCTAssert(app.tables.cells.staticTexts[medicationName].exists)
 	}
 
+	func testClearingFrequencyOnNewMedicationScreen_updatesFrequencyButtonTitle() {
+		// given
+		let medicationName = "fdsag"
+		let frequency = (times: "12", unit: "day")
+		createMedication(name: medicationName, frequency: frequency, save: false)
+
+		// when
+		app.buttons["clear frequency button"].tap()
+
+		// then
+		XCTAssertEqual(app.buttons["set frequency button"].value as? String, "As needed")
+		app.buttons["Save"].tap() // keyboard is hiding the settings tab
+	}
+
+	func testClearingStartedOnDateOnNewMedicationScreen_updatesStartedOnButtonTitle() {
+		// given
+		let medicationName = "fdsag"
+		let startedOn = Date()
+		createMedication(name: medicationName, startedOn: startedOn, save: false)
+
+		// when
+		app.buttons["clear started on date button"].tap()
+
+		// then
+		XCTAssertEqual(app.buttons["set started on button"].value as? String, "Not set")
+		app.buttons["Save"].tap() // keyboard is hiding the settings tab
+	}
+
+	func testSettingNameToNameOfOtherMedicationOnNewMedicationScreen_disablesSaveButton() {
+		// given
+		let medicationName = "grenqjik"
+		createMedication(name: medicationName)
+
+		// when
+		createMedication(name: medicationName, save: false)
+
+		// then
+		XCTAssert(!app.buttons["Save"].isEnabled)
+		app.navigationBars.buttons["Medications"].tap() // keyboard is hiding the settings tab
+	}
+
+	// MARK: - Editing
+
 	func testEditMedication_showsCorrectInformationWhenEditing() {
 		// given
 		let medicationName = "Adderall"
@@ -73,6 +118,69 @@ final class RecordMedicationsUITests: UITest {
 		XCTAssertEqual(app.textViews["notes"].value as? String, note)
 	}
 
+	func testEditingMedicationName_updatesTableViewCellInMedicationsList() {
+		// given
+		let medicationName = "fgqr"
+		let additionalCharacters = "greqg"
+		let editedMedicationName = medicationName + additionalCharacters
+		createMedication(name: medicationName)
+
+		// when
+		app.tables.staticTexts[medicationName].tap()
+		app.textFields["medication name"].tap()
+		app.textFields["medication name"].typeText(additionalCharacters)
+		app.buttons["Save"].tap()
+
+		// then
+		XCTAssert(!app.tables.staticTexts[medicationName].exists)
+		XCTAssert(app.tables.staticTexts[editedMedicationName].exists)
+	}
+
+	func testSettingNameToOriginalNameOfMedicationWithDifferentCase_doesNotDisableSaveButton() {
+		// given
+		let medicationName = "gterq"
+		createMedication(name: medicationName)
+
+		// when
+		app.tables.staticTexts[medicationName].tap()
+		setTextFor(field: app.textFields["medication name"], to: medicationName.localizedUppercase)
+
+		// then
+		XCTAssert(app.buttons["Save"].isEnabled)
+		app.buttons["Save"].tap() // keyboard is hiding the settings tab
+	}
+
+	func testEditingDose_updatesDoseDescriptionInDoseList() {
+		// given
+		let medicationName = "fhiou"
+		let originalDosage = "12 mg"
+		let editedDosage = "342 cL"
+		let originalDoseDate = Date()
+		let editedDoseDate = originalDoseDate - 1.months
+		createMedication(name: medicationName)
+		takeDoseOf(medicationName, at: originalDoseDate, dosage: originalDosage)
+		app.buttons["last \(medicationName) dose button"].tap()
+
+		// when
+		let originalDoseDescription = doseDescription(dosage: originalDosage, date: originalDoseDate)
+		app.tables.staticTexts[originalDoseDescription].tap()
+		let dosageTextField = app.textFields["dosage taken text field"]
+		let clearTextButton = dosageTextField.buttons["Clear text"]
+		if clearTextButton.exists {
+			clearTextButton.tap()
+		}
+		dosageTextField.tap()
+		dosageTextField.typeText(editedDosage)
+		setDatePicker(to: editedDoseDate)
+		app.buttons["save dose button"].tap()
+
+		// then
+		XCTAssert(app.tables.staticTexts[doseDescription(dosage: editedDosage, date: editedDoseDate)].exists)
+		XCTAssert(!app.tables.staticTexts[originalDoseDescription].exists)
+	}
+
+	// MARK: - Taking Doses
+
 	func testDoseTaken_showsInMedicationDosesView() {
 		// given
 		let medicationName = "abjkdf"
@@ -87,6 +195,8 @@ final class RecordMedicationsUITests: UITest {
 		// then
 		XCTAssert(app.tables.staticTexts[doseDescription(dosage: dosage, date: doseTakenDate)].exists)
 	}
+
+	// MARK - Deletion
 
 	func testDeletingMedicationWhileFiltering_removesCorrectMedicationFromTableView() {
 		// given
@@ -162,6 +272,8 @@ final class RecordMedicationsUITests: UITest {
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose3Date)].exists)
 	}
 
+	// MARK: - Reordering
+
 	func testReorderWhileFiltering_correcltyReordersMedications() {
 		// given
 		let filterString = "filter string"
@@ -189,80 +301,7 @@ final class RecordMedicationsUITests: UITest {
 		XCTAssertLessThanOrEqual(app.tables.staticTexts[medication1Name].frame.maxY, app.tables.staticTexts[medication4Name].frame.minY)
 	}
 
-	func testEditingMedicationName_updatesTableViewCellInMedicationsList() {
-		// given
-		let medicationName = "fgqr"
-		let additionalCharacters = "greqg"
-		let editedMedicationName = medicationName + additionalCharacters
-		createMedication(name: medicationName)
-
-		// when
-		app.tables.staticTexts[medicationName].tap()
-		app.textFields["medication name"].tap()
-		app.textFields["medication name"].typeText(additionalCharacters)
-		app.buttons["Save"].tap()
-
-		// then
-		XCTAssert(!app.tables.staticTexts[medicationName].exists)
-		XCTAssert(app.tables.staticTexts[editedMedicationName].exists)
-	}
-
-	func testClearingFrequencyOnNewMedicationScreen_updatesFrequencyButtonTitle() {
-		// given
-		let medicationName = "fdsag"
-		let frequency = (times: "12", unit: "day")
-		createMedication(name: medicationName, frequency: frequency, save: false)
-
-		// when
-		app.buttons["clear frequency button"].tap()
-
-		// then
-		XCTAssertEqual(app.buttons["set frequency button"].value as? String, "As needed")
-		app.buttons["Save"].tap() // keyboard is hiding the settings tab
-	}
-
-	func testClearingStartedOnDateOnNewMedicationScreen_updatesStartedOnButtonTitle() {
-		// given
-		let medicationName = "fdsag"
-		let startedOn = Date()
-		createMedication(name: medicationName, startedOn: startedOn, save: false)
-
-		// when
-		app.buttons["clear started on date button"].tap()
-
-		// then
-		XCTAssertEqual(app.buttons["set started on button"].value as? String, "Not set")
-		app.buttons["Save"].tap() // keyboard is hiding the settings tab
-	}
-
-	func testEditingDose_updatesDoseDescriptionInDoseList() {
-		// given
-		let medicationName = "fhiou"
-		let originalDosage = "12 mg"
-		let editedDosage = "342 cL"
-		let originalDoseDate = Date()
-		let editedDoseDate = originalDoseDate - 1.months
-		createMedication(name: medicationName)
-		takeDoseOf(medicationName, at: originalDoseDate, dosage: originalDosage)
-		app.buttons["last \(medicationName) dose button"].tap()
-
-		// when
-		let originalDoseDescription = doseDescription(dosage: originalDosage, date: originalDoseDate)
-		app.tables.staticTexts[originalDoseDescription].tap()
-		let dosageTextField = app.textFields["dosage taken text field"]
-		let clearTextButton = dosageTextField.buttons["Clear text"]
-		if clearTextButton.exists {
-			clearTextButton.tap()
-		}
-		dosageTextField.tap()
-		dosageTextField.typeText(editedDosage)
-		setDatePicker(to: editedDoseDate)
-		app.buttons["save dose button"].tap()
-
-		// then
-		XCTAssert(app.tables.staticTexts[doseDescription(dosage: editedDosage, date: editedDoseDate)].exists)
-		XCTAssert(!app.tables.staticTexts[originalDoseDescription].exists)
-	}
+	// MARK: - Dose History
 
 	func testPressingPreviousDateRangeButtonOnDoseList_correctlyRefiltersDosesAndDisplaysCorrectDateRangeOnDateFilterButton() {
 		// given
@@ -317,6 +356,8 @@ final class RecordMedicationsUITests: UITest {
 
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose1Date)].exists)
 	}
+
+	// MARK: - Helper Functions
 
 	private final func createMedication(
 		name: String,
