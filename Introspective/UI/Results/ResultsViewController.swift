@@ -262,9 +262,13 @@ final class ResultsViewController: UITableViewController {
 
 	@objc private final func saveEditedExtraInformation(notification: Notification) {
 		if let selectedInformation = notification.object as? ExtraInformation {
-			extraInformation[extraInformationEditIndex] = selectedInformation
-			extraInformationValues[extraInformationEditIndex] = try! extraInformation[extraInformationEditIndex].compute(forSamples: samples)
-			tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+			if let editIndex = extraInformationEditIndex {
+				extraInformation[editIndex] = selectedInformation
+				extraInformationValues[editIndex] = try! extraInformation[editIndex].compute(forSamples: samples)
+				tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+			} else {
+				os_log("Extra Information edit index was nil", type: .error)
+			}
 		} else {
 			os_log("Wrong object type for save edited extra information notification", type: .error)
 		}
