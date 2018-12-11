@@ -16,7 +16,7 @@ public final class BeforeDateAndTimeAttributeRestriction: DateAttributeRestricti
 		return lhs.equalTo(rhs)
 	}
 
-	public static let dateAttribute = DateTimeAttribute()
+	public static let dateAttribute = DateTimeAttribute(name: "Date")
 	public static var attributes: [Attribute] = [
 		dateAttribute,
 	]

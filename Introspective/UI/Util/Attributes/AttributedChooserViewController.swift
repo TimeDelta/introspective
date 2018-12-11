@@ -11,15 +11,40 @@ import os
 
 final class AttributedChooserViewController: UIViewController {
 
-	public final var possibleValues: [Attributed]!
-	public final var currentValue: Attributed!
-	public final var notificationToSendWhenAccepted: Notification.Name!
+	// MARK: - IBOutlets
 
-	@IBOutlet weak final var valuePicker: UIPickerView!
+	@IBOutlet weak final var valuePicker: UIPickerView! {
+		didSet {
+			guard let valuePicker = valuePicker else { return }
+			valuePicker.accessibilityIdentifier = pickerAccessibilityIdentifier
+		}
+	}
 	@IBOutlet weak final var attributeScrollView: UIScrollView!
+
+	// MARK: - Instance Variables
+
+	public final var possibleValues: [Attributed]!
+	public final var currentValue: Attributed! {
+		didSet {
+			guard !initialSetDone else { return }
+			sendValueChangeNotification()
+			initialSetDone = true
+		}
+	}
+	public final var notificationToSendWhenAccepted: Notification.Name!
+	public final var notificationToSendOnValueChange: Notification.Name?
+	public final var pickerAccessibilityIdentifier: String? {
+		didSet {
+			guard let valuePicker = valuePicker else { return }
+			valuePicker.accessibilityIdentifier = pickerAccessibilityIdentifier
+		}
+	}
 
 	private final var attributeViewControllers: [AttributeViewController]!
 	private final let verticalSpacing = CGFloat(5)
+	private final var initialSetDone = false
+
+	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
@@ -45,12 +70,32 @@ final class AttributedChooserViewController: UIViewController {
 		populateScrollView()
 	}
 
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
+
 	public final override func reloadInputViews() {
 		super.reloadInputViews()
 		valuePicker.reloadAllComponents()
 		resetScrollView()
 		populateScrollView()
 	}
+
+	// MARK: - Received Notifications
+
+	@objc private final func valueChanged(notification: Notification) {
+		if let controllerIndex = attributeViewControllers.firstIndex(where: { $0.notificationToSendOnValueChange == notification.name }) {
+			do {
+				let attribute = attributeViewControllers[controllerIndex].attribute!
+				try currentValue.set(attribute: attribute, to: notification.object)
+				sendValueChangeNotification()
+			} catch {
+				os_log("Wrong object type for attribute value changed notification", type: .error)
+			}
+		}
+	}
+
+	// MARK: - Actions
 
 	@objc final func saveButtonPressed() {
 		for controller in attributeViewControllers {
@@ -59,6 +104,16 @@ final class AttributedChooserViewController: UIViewController {
 			try! currentValue.set(attribute: attribute, to: attributeValue)
 		}
 		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: currentValue)
+	}
+
+	// MARK: - Helper Functions
+
+	private final func sendValueChangeNotification() {
+		if let valueChangedNotification = notificationToSendOnValueChange {
+			DispatchQueue.main.async {
+				NotificationCenter.default.post(name: valueChangedNotification, object: self.currentValue)
+			}
+		}
 	}
 
 	private final func resetScrollView() {
@@ -81,6 +136,9 @@ final class AttributedChooserViewController: UIViewController {
 			let controller = UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "attributeView") as! AttributeViewController
 			controller.attribute = attribute
 			controller.attributeValue = try! currentValue.value(of: attribute)
+			let valueChangedNotification = Notification.Name("attributeValueChanged_" + attribute.name)
+			NotificationCenter.default.addObserver(self, selector: #selector(valueChanged), name: valueChangedNotification, object: nil)
+			controller.notificationToSendOnValueChange = valueChangedNotification
 			let x = attributeScrollView.frame.minX
 			controller.view.frame = CGRect(x: x, y: yPos, width: subViewWidth(), height: height)
 			attributeViewControllers.append(controller)
@@ -112,6 +170,8 @@ final class AttributedChooserViewController: UIViewController {
 	}
 }
 
+// MARK: - UIPickerViewDataSource
+
 extension AttributedChooserViewController: UIPickerViewDataSource {
 
 	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -123,6 +183,8 @@ extension AttributedChooserViewController: UIPickerViewDataSource {
 	}
 }
 
+// MARK: - UIPickerViewDelegate
+
 extension AttributedChooserViewController: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
@@ -130,7 +192,19 @@ extension AttributedChooserViewController: UIPickerViewDelegate {
 	}
 
 	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-		currentValue = possibleValues[row]
+		let newValue = possibleValues[row]
+		for attribute in newValue.attributes {
+			if currentValue.attributes.contains(where: { $0.equalTo(attribute) }) {
+				do {
+					let attributeCurrentValue = try currentValue.value(of: attribute)
+					try newValue.set(attribute: attribute, to: attributeCurrentValue)
+				} catch {
+					os_log("Failed to set or retrieve attribute value of Attributed object: %@", type: .error, error.localizedDescription)
+					// ignore and move on
+				}
+			}
+		}
+		currentValue = newValue
 		resetScrollView()
 		populateScrollView()
 	}

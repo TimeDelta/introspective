@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import SwiftDate
 
 final class QueryScreenUITests: UITest {
 
@@ -52,7 +53,7 @@ final class QueryScreenUITests: UITest {
 		app.pickerWheels["Start and end timestamps are the same as"].adjust(toPickerWheelValue: "Within <number> <time_unit>s of")
 		app.switches.allElementsBoundByIndex[0].tap()
 		app.scrollViews.otherElements.buttons["set time unit button"].tap()
-		app.pickerWheels["Minute"].adjust(toPickerWheelValue: "Day")
+		app.pickerWheels["Day"].adjust(toPickerWheelValue: "Hour")
 		app.buttons["save button"].tap()
 		app.scrollViews.otherElements.buttons["set number of time units button"].tap()
 		app.textFields.containing(.button, identifier:"Clear text").element.tap()
@@ -61,7 +62,7 @@ final class QueryScreenUITests: UITest {
 		app.scrollViews.otherElements.buttons["save attributed button"].tap()
 
 		// then
-		XCTAssert(app.tables.staticTexts["Within 57 days of most recent"].exists)
+		XCTAssert(app.tables.staticTexts["Within 57 hours of most recent"].exists)
 	}
 
 	func testChangingAttributeRestriction_changesDisplayedTextInTableViewCell() {
@@ -84,7 +85,51 @@ final class QueryScreenUITests: UITest {
 		app.scrollViews.otherElements.buttons["save attributed button"].tap()
 
 		// then
-		XCTAssert(app.tables.staticTexts["After June 18 2012"].exists)
+		XCTAssert(app.tables.staticTexts["After June 18, 2012"].exists)
+	}
+
+	func testChangingRestrictedAttributeToAttributeOfSameType_doesNotChangeAttributeRestrictionValues() {
+		// given
+		let date = Date() - 1.days
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateStyle = .long
+		dateFormatter.timeStyle = .none
+		let dateText = dateFormatter.string(from: date)
+		app.tables.buttons["Add"].tap()
+		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
+		app.tables.cells.allElementsBoundByIndex[1].tap()
+		setPicker("restricted attribute", to: "Start Date")
+		app.buttons.allElementsBoundByIndex[5].tap()
+		setDatePicker(to: date)
+		app.buttons["save button"].tap()
+
+		// when
+		setPicker("restricted attribute", to: "End Date")
+
+		// then
+		XCTAssertEqual(app.buttons["set date button"].value as? String, dateText)
+	}
+
+	func testChangingAttributeRestrictionToRestrictionWithMatchingAttribute_keepsSameValueForThatAttribute() {
+		// given
+		let date = Date() - 1.days
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateStyle = .long
+		dateFormatter.timeStyle = .none
+		let dateText = dateFormatter.string(from: date)
+		app.tables.buttons["Add"].tap()
+		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
+		app.tables.cells.allElementsBoundByIndex[1].tap()
+		setPicker("restricted attribute", to: "Start Date")
+		app.buttons.allElementsBoundByIndex[5].tap()
+		setDatePicker(to: date)
+		app.buttons["save button"].tap()
+
+		// when
+		setPicker("attribute restriction", to: "After date", changeCase: false)
+
+		// then
+		XCTAssertEqual(app.buttons["set date button"].value as? String, dateText)
 	}
 
 	func testMovingSampleTypeAboveAttributeRestriction_correctlyChangesAttributeRestriction() {
@@ -110,8 +155,6 @@ final class QueryScreenUITests: UITest {
 	}
 
 	func testPressingEditButton_changesTitleOfEditButtonToDone() {
-		// given
-
 		// when
 		app.tables.buttons["Edit"].tap()
 

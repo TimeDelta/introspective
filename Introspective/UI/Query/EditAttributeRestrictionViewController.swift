@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os
 
 public final class EditAttributeRestrictionViewController: UIViewController {
 
@@ -14,6 +15,7 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 
 	private typealias Me = EditAttributeRestrictionViewController
 	private static let doneEditing = Notification.Name("doneChoosingAttributeRestrictionAttributes")
+	private static let valueChanged = Notification.Name("attributeRestrictionValueChanged")
 
 	// MARK: - IBOutlets
 
@@ -42,6 +44,7 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 		createAndInstallAttributedChooserViewController()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(doneEditing), name: Me.doneEditing, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(valueChanged), name: Me.valueChanged, object: nil)
 	}
 
 	deinit {
@@ -50,9 +53,17 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 
 	// MARK: - Received Notifications
 
-	@objc public final func doneEditing(notification: Notification) {
+	@objc private final func doneEditing(notification: Notification) {
 		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: notification.object, userInfo: nil)
 		navigationController?.popViewController(animated: true)
+	}
+
+	@objc private final func valueChanged(notification: Notification) {
+		if let attributeRestriction = notification.object as? AttributeRestriction {
+			self.attributeRestriction = attributeRestriction
+		} else {
+			os_log("Wrong object type for attribute restriction value changed notification", type: .error)
+		}
 	}
 
 	// MARK: - Helper Functions
@@ -61,7 +72,9 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 		attributedChooserViewController = (UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "attributedChooserViewController") as! AttributedChooserViewController)
 		updateAttributedChooserViewValues()
 		attributedChooserViewController.notificationToSendWhenAccepted = Me.doneEditing
+		attributedChooserViewController.notificationToSendOnValueChange = Me.valueChanged
 		attributedChooserViewController.currentValue = attributeRestriction
+		attributedChooserViewController.pickerAccessibilityIdentifier = "attribute restriction"
 		attributedChooserSubView.addSubview(attributedChooserViewController.view)
 	}
 
