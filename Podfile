@@ -13,6 +13,7 @@ target 'Introspective' do
   pod 'CalendarKit'
   pod "WSTagsField"
   pod "SearchTextField"
+  pod 'CSV.swift', '~> 2.3.1'
 
   target 'IntrospectiveTests' do
     inherit! :search_paths

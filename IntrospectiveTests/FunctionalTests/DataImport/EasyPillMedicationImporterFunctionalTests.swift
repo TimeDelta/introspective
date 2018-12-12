@@ -11,10 +11,9 @@ import CoreData
 import SwiftyMocky
 @testable import Introspective
 
-final class EasyPillMedicationImporterFunctionalTests: FunctionalTest {
+final class EasyPillMedicationImporterFunctionalTests: ImporterTest {
 
 	private typealias Me = EasyPillMedicationImporterFunctionalTests
-	private static let url = URL(fileURLWithPath: "/")
 
 	private static let name1 = "Bupropion"
 	private static let notes1 = "hello, world"
@@ -47,16 +46,16 @@ Pill name,Notes,Dosage,Frequency,How many times per day,How many days,Starting,E
 		importer = try! DependencyInjector.db.new(EasyPillMedicationImporterImpl.self)
 	}
 
-	// MARK: - Tests
+	// MARK: - Valid Data
 
 	func testGivenValidDataWithImportNewDataOnlyEqualToFalse_importData_correctlyImportsData() throws {
 		// given
 		importer.importOnlyNewData = false
 		try createMedication1()
-		useValidInput()
+		useInput(Me.validImportFileText)
 
 		// when
-		try importer.importData(from: Me.url)
+		try importer.importData(from: url)
 
 		// then
 		try verifyMedication1Imported()
@@ -67,15 +66,17 @@ Pill name,Notes,Dosage,Frequency,How many times per day,How many days,Starting,E
 		// given
 		importer.importOnlyNewData = true
 		try createMedication1()
-		useValidInput()
+		useInput(Me.validImportFileText)
 
 		// when
-		try importer.importData(from: Me.url)
+		try importer.importData(from: url)
 
 		// then
 		XCTAssert(try medication1WasNotImported())
 		try verifyMedication2Imported()
 	}
+
+	// MARK: - Invalid Data
 
 	func testGivenInvalidInputWithValidNameAndFrequency_importData_throwsInvalidFileFormatError() throws {
 		// given
@@ -83,10 +84,10 @@ Pill name,Notes,Dosage,Frequency,How many times per day,How many days,Starting,E
 Pill name,Notes,Dosage,Frequency,How many times per day,How many days,Starting,Ending,Completed,Doses taken,Taking consistency,Quantity per dose,Current quantity,Required quantity,Pills will last until
 a,,,as needed
 """
-		Given(ioUtil, .contentsOf(.value(Me.url), willReturn: invalidFileContents))
+		useInput(invalidFileContents)
 
 		// when
-		XCTAssertThrowsError(try importer.importData(from: Me.url)) { error in
+		XCTAssertThrowsError(try importer.importData(from: url)) { error in
 			// then
 			XCTAssert(error is InvalidFileFormatError)
 		}
@@ -94,14 +95,16 @@ a,,,as needed
 
 	func testGivenInvalidInputWithNothingValid_importData_throwsInvalidFileFormatError() throws {
 		let invalidFileContents = "\n\n"
-		Given(ioUtil, .contentsOf(.value(Me.url), willReturn: invalidFileContents))
+		useInput(invalidFileContents)
 
 		// when
-		XCTAssertThrowsError(try importer.importData(from: Me.url)) { error in
+		XCTAssertThrowsError(try importer.importData(from: url)) { error in
 			// then
 			XCTAssert(error is InvalidFileFormatError)
 		}
 	}
+
+	// MARK: - resetLastImportDate()
 
 	func testGivenNonNilLastImportDate_resetLastImportDate_setsLastImportToNil() {
 		// given
@@ -115,10 +118,6 @@ a,,,as needed
 	}
 
 	// MARK: - Helper Functions
-
-	private final func useValidInput() {
-		Given(ioUtil, .contentsOf(.value(Me.url), willReturn: Me.validImportFileText))
-	}
 
 	private final func createMedication1() throws {
 		let _ = MedicationDataTestUtil.createMedication(name: Me.name1)

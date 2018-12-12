@@ -6,6 +6,9 @@
         <attribute name="startDate" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="definition" maxCount="1" deletionRule="Nullify" destinationEntity="ActivityDefinition" inverseName="activities" inverseEntity="ActivityDefinition" syncable="YES"/>
         <relationship name="tags" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" syncable="YES"/>
+        <fetchIndex name="byDefinition">
+            <fetchIndexElement property="definition" type="Binary" order="ascending"/>
+        </fetchIndex>
     </entity>
     <entity name="ActivityDefinition" representedClassName=".ActivityDefinition" syncable="YES">
         <attribute name="activityDescription" optional="YES" attributeType="String" syncable="YES"/>
@@ -13,6 +16,15 @@
         <attribute name="recordScreenIndex" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="activities" toMany="YES" deletionRule="Cascade" destinationEntity="Activity" inverseName="definition" inverseEntity="Activity" syncable="YES"/>
         <relationship name="tags" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" syncable="YES"/>
+        <fetchIndex name="byName">
+            <fetchIndexElement property="name" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byRecordScreenIndex">
+            <fetchIndexElement property="recordScreenIndex" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
+    <entity name="ATrackerActivityImporter" representedClassName=".ATrackerActivityImporterImpl" syncable="YES">
+        <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
     </entity>
     <entity name="EasyPillMedicationDoseImporter" representedClassName=".EasyPillMedicationDoseImporterImpl" syncable="YES">
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -52,6 +64,7 @@
     <elements>
         <element name="Activity" positionX="-36" positionY="63" width="128" height="120"/>
         <element name="ActivityDefinition" positionX="-45" positionY="54" width="128" height="120"/>
+        <element name="ATrackerActivityImporter" positionX="-36" positionY="72" width="128" height="60"/>
         <element name="EasyPillMedicationDoseImporter" positionX="-36" positionY="63" width="128" height="60"/>
         <element name="EasyPillMedicationImporter" positionX="-45" positionY="54" width="128" height="60"/>
         <element name="Medication" positionX="-54" positionY="9" width="128" height="30"/>

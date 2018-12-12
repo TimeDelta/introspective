@@ -11,10 +11,9 @@ import CoreData
 import SwiftyMocky
 @testable import Introspective
 
-final class EasyPillMedicationDoseImporterFunctionalTests: FunctionalTest {
+final class EasyPillMedicationDoseImporterFunctionalTests: ImporterTest {
 
 	private typealias Me = EasyPillMedicationDoseImporterFunctionalTests
-	private static let url = URL(fileURLWithPath: "/")
 
 	private static let medicationName1 = ",f,new,ou"
 	private static let date1Text = "4/4/18"
@@ -53,7 +52,7 @@ Pill name,Taken on,Time
 		useInput(Me.validImportFileText)
 
 		// when
-		try importer.importData(from: Me.url)
+		try importer.importData(from: url)
 
 		// then
 		XCTAssert(try doseWasImported(for: Me.medicationName1, at: Me.date1))
@@ -70,7 +69,7 @@ Pill name,Taken on,Time
 		useInput(Me.validImportFileText)
 
 		// when
-		try importer.importData(from: Me.url)
+		try importer.importData(from: url)
 
 		// then
 		XCTAssert(try doseWasImported(for: Me.medicationName1, at: Me.date1))
@@ -87,7 +86,7 @@ Pill name,Taken on,Time
 		useInput(Me.validImportFileText)
 
 		// when
-		try importer.importData(from: Me.url)
+		try importer.importData(from: url)
 
 		// then
 		XCTAssert(try doseWasImported(for: Me.medicationName1, at: Me.date1))
@@ -101,7 +100,7 @@ Pill name,Taken on,Time
 		useInput(Me.validImportFileText)
 
 		// when
-		XCTAssertThrowsError(try importer.importData(from: Me.url)) { error in
+		XCTAssertThrowsError(try importer.importData(from: url)) { error in
 			// then
 			XCTAssert(error is DisplayableError)
 		}
@@ -113,7 +112,7 @@ Pill name,Taken on,Time
 		useInput(invalidInput)
 
 		// when
-		XCTAssertThrowsError(try importer.importData(from: Me.url)) { error in
+		XCTAssertThrowsError(try importer.importData(from: url)) { error in
 			// then
 			XCTAssert(error is InvalidFileFormatError)
 		}
@@ -131,10 +130,6 @@ Pill name,Taken on,Time
 	}
 
 	// MARK: - Helper Functions
-
-	private final func useInput(_ input: String) {
-		Given(ioUtil, .contentsOf(.value(Me.url), willReturn: input))
-	}
 
 	private final func createAllMedications() {
 		let _ = MedicationDataTestUtil.createMedication(name: Me.medicationName1)

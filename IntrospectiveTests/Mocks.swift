@@ -45,6 +45,236 @@ import SourceryRuntime
 
 
 
+// MARK: - ATrackerActivityImporter
+class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    typealias PropertyStub = Given
+    typealias MethodStub = Given
+    typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    var dataTypePluralName: String {
+		get {	invocations.append(.p_dataTypePluralName_get); return __p_dataTypePluralName ?? givenGetterValue(.p_dataTypePluralName_get, "ATrackerActivityImporterMock - stub value for dataTypePluralName was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_dataTypePluralName = newValue }
+	}
+	private var __p_dataTypePluralName: (String)?
+
+    var sourceName: String {
+		get {	invocations.append(.p_sourceName_get); return __p_sourceName ?? givenGetterValue(.p_sourceName_get, "ATrackerActivityImporterMock - stub value for sourceName was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_sourceName = newValue }
+	}
+	private var __p_sourceName: (String)?
+
+    var lastImport: Date? {
+		get {	invocations.append(.p_lastImport_get); return __p_lastImport ?? optionalGivenGetterValue(.p_lastImport_get, "ATrackerActivityImporterMock - stub value for lastImport was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_lastImport = newValue }
+	}
+	private var __p_lastImport: (Date)?
+
+    var importOnlyNewData: Bool {
+		get {	invocations.append(.p_importOnlyNewData_get); return __p_importOnlyNewData ?? givenGetterValue(.p_importOnlyNewData_get, "ATrackerActivityImporterMock - stub value for importOnlyNewData was not defined") }
+		set {	invocations.append(.p_importOnlyNewData_set(.value(newValue))); __p_importOnlyNewData = newValue }
+	}
+	private var __p_importOnlyNewData: (Bool)?
+
+
+
+
+
+    func importData(from url: URL) throws {
+        addInvocation(.m_importData__from_url(Parameter<URL>.value(`url`)))
+		let perform = methodPerformValue(.m_importData__from_url(Parameter<URL>.value(`url`))) as? (URL) -> Void
+		perform?(`url`)
+		do {
+		    _ = try methodReturnValue(.m_importData__from_url(Parameter<URL>.value(`url`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    func resetLastImportDate() {
+        addInvocation(.m_resetLastImportDate)
+		let perform = methodPerformValue(.m_resetLastImportDate) as? () -> Void
+		perform?()
+    }
+
+
+    fileprivate enum MethodType {
+        case m_importData__from_url(Parameter<URL>)
+        case m_resetLastImportDate
+        case p_dataTypePluralName_get
+        case p_sourceName_get
+        case p_lastImport_get
+        case p_importOnlyNewData_get
+		case p_importOnlyNewData_set(Parameter<Bool>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_importData__from_url(let lhsUrl), .m_importData__from_url(let rhsUrl)):
+                guard Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher) else { return false } 
+                return true 
+            case (.m_resetLastImportDate, .m_resetLastImportDate):
+                return true 
+            case (.p_dataTypePluralName_get,.p_dataTypePluralName_get): return true
+            case (.p_sourceName_get,.p_sourceName_get): return true
+            case (.p_lastImport_get,.p_lastImport_get): return true
+            case (.p_importOnlyNewData_get,.p_importOnlyNewData_get): return true
+			case (.p_importOnlyNewData_set(let left),.p_importOnlyNewData_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_importData__from_url(p0): return p0.intValue
+            case .m_resetLastImportDate: return 0
+            case .p_dataTypePluralName_get: return 0
+            case .p_sourceName_get: return 0
+            case .p_lastImport_get: return 0
+            case .p_importOnlyNewData_get: return 0
+			case .p_importOnlyNewData_set(let newValue): return newValue.intValue
+            }
+        }
+    }
+
+    class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [Product]) {
+            self.method = method
+            super.init(products)
+        }
+
+        static func dataTypePluralName(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_dataTypePluralName_get, products: defaultValue.map({ Product.return($0) }))
+        }
+        static func sourceName(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_sourceName_get, products: defaultValue.map({ Product.return($0) }))
+        }
+        static func lastImport(getter defaultValue: Date?...) -> PropertyStub {
+            return Given(method: .p_lastImport_get, products: defaultValue.map({ Product.return($0) }))
+        }
+        static func importOnlyNewData(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_importOnlyNewData_get, products: defaultValue.map({ Product.return($0) }))
+        }
+
+        static func importData(from url: Parameter<URL>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func importData(from url: Parameter<URL>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    struct Verify {
+        fileprivate var method: MethodType
+
+        static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
+        static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
+        static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
+        static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
+        static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
+        static var importOnlyNewData: Verify { return Verify(method: .p_importOnlyNewData_get) }
+		static func importOnlyNewData(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_importOnlyNewData_set(newValue)) }
+    }
+
+    struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        static func importData(from url: Parameter<URL>, perform: @escaping (URL) -> Void) -> Perform {
+            return Perform(method: .m_importData__from_url(`url`), performs: perform)
+        }
+        static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resetLastImportDate, performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> Product {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
 // MARK: - ActivityQuery
 class ActivityQueryMock: ActivityQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {

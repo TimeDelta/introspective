@@ -17,14 +17,18 @@ final class ImportDataTableViewController: UITableViewController {
 		case unknownIndexPath
 	}
 
+	// activities
+	private static let activitiesSection = 0
+	private static let aTrackerActivityIndex = IndexPath(row: 0, section: activitiesSection)
+
 	// medications
-	private static let medicationSection = 0
-	private static let easyPillMedicationRow = 0
-	private static let easyPillDoseRow = 1
+	private static let medicationSection = 1
+	private static let easyPillMedicationIndex = IndexPath(row: 0, section: medicationSection)
+	private static let easyPillDoseIndex = IndexPath(row: 1, section: medicationSection)
 
 	// moods
-	private static let moodSection = 1
-	private static let wellnessMoodRow = 0
+	private static let moodSection = 2
+	private static let wellnessMoodIndex = IndexPath(row: 0, section: moodSection)
 
 	private final var importer: Importer!
 
@@ -53,7 +57,7 @@ final class ImportDataTableViewController: UITableViewController {
 
 	private final func promptForDataImport(_ indexPath: IndexPath) {
 		var message = "This will only import data that was recorded after the imported record with the most recent date and time."
-		if indexPath.section == Me.medicationSection && indexPath.row == Me.easyPillMedicationRow {
+		if indexPath == Me.easyPillMedicationIndex {
 			message = "This will not import any medications with the name of one that you have already saved."
 		}
 		let prompt = UIAlertController(title: "Import new data only?", message: message, preferredStyle: .alert)
@@ -75,11 +79,13 @@ final class ImportDataTableViewController: UITableViewController {
 	}
 
 	private final func getImporterFor(_ indexPath: IndexPath) throws -> Importer {
-		if indexPath.section == Me.moodSection && indexPath.row == Me.wellnessMoodRow {
+		if indexPath == Me.aTrackerActivityIndex {
+			return try DependencyInjector.importer.aTrackerActivityImporter()
+		} else if indexPath == Me.wellnessMoodIndex {
 			return try DependencyInjector.importer.wellnessMoodImporter()
-		} else if indexPath.section == Me.medicationSection && indexPath.row == Me.easyPillMedicationRow {
+		} else if indexPath == Me.easyPillMedicationIndex {
 			return try DependencyInjector.importer.easyPillMedicationImporter()
-		} else if indexPath.section == Me.medicationSection && indexPath.row == Me.easyPillDoseRow {
+		} else if indexPath == Me.easyPillDoseIndex {
 			return try DependencyInjector.importer.easyPillMedicationDoseImporter()
 		} else {
 			os_log("Unknown index path: (section: %d, row: %d)", type: .error, indexPath.section, indexPath.row)
@@ -94,7 +100,7 @@ extension ImportDataTableViewController: UIDocumentPickerDelegate {
 
 	public final func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
 		let localImporter = self.importer!
-		DispatchQueue.global(qos: .userInitiated).async {
+		DispatchQueue.global(qos: .background).async {
 			do {
 				try localImporter.importData(from: url)
 				let messageText = "Sucessfully imported " + localImporter.dataTypePluralName.localizedLowercase + " from " + localImporter.sourceName

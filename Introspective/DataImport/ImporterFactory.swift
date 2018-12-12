@@ -14,6 +14,7 @@ public protocol ImporterFactory {
 	func wellnessMoodImporter() throws -> WellnessMoodImporter
 	func easyPillMedicationImporter() throws -> EasyPillMedicationImporter
 	func easyPillMedicationDoseImporter() throws -> EasyPillMedicationDoseImporter
+	func aTrackerActivityImporter() throws -> ATrackerActivityImporter
 }
 
 public final class ImporterFactoryImpl: ImporterFactory {
@@ -40,5 +41,13 @@ public final class ImporterFactoryImpl: ImporterFactory {
 			return importers[0]
 		}
 		return try DependencyInjector.db.new(EasyPillMedicationDoseImporterImpl.self)
+	}
+
+	public final func aTrackerActivityImporter() throws -> ATrackerActivityImporter {
+		let importers = try DependencyInjector.db.query(ATrackerActivityImporterImpl.fetchRequest())
+		if importers.count > 0 {
+			return importers[0]
+		}
+		return try DependencyInjector.db.new(ATrackerActivityImporterImpl.self)
 	}
 }

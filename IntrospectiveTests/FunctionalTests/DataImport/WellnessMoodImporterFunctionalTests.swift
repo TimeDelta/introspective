@@ -12,10 +12,9 @@ import SwiftyMocky
 @testable import Introspective
 
 // This has to be a functional test because can't make a constructor for WellnessMoodImporter that doesn't require standing up CoreData
-final class WellnessMoodImporterFunctionalTests: FunctionalTest {
+final class WellnessMoodImporterFunctionalTests: ImporterTest {
 
 	private typealias Me = WellnessMoodImporterFunctionalTests
-	private static let url = URL(fileURLWithPath: "/")
 	private static let maxRating = 7.0
 	private static let date1Text = "4/4/18, 17:18"
 	private static let date1 = CalendarUtilImpl().date(from: date1Text, format: "M/d/yy, HH:mm")!
@@ -52,7 +51,7 @@ Date,Time,Rating,Note
 		importer = try! DependencyInjector.db.new(WellnessMoodImporterImpl.self)
 	}
 
-	// MARK: - Tests
+	// MARK: - Valid Data
 
 	func testGivenValidDataWithImportNewDataOnlyEqualToFalse_importData_correctlyImportsData() throws {
 		// given
@@ -61,7 +60,7 @@ Date,Time,Rating,Note
 		useInput(Me.validImportFileText)
 
 		// when
-		try importer.importData(from: Me.url)
+		try importer.importData(from: url)
 
 		// then
 		XCTAssert(mood1WasImported())
@@ -79,7 +78,7 @@ Date,Time,Rating,Note
 		useInput(Me.validImportFileText)
 
 		// when
-		try importer.importData(from: Me.url)
+		try importer.importData(from: url)
 
 		// then
 		XCTAssertFalse(mood1WasImported())
@@ -89,6 +88,8 @@ Date,Time,Rating,Note
 		XCTAssert(mood5WasImported())
 		XCTAssertEqual(importer.lastImport, Me.date5)
 	}
+
+	// MARK: - resetLastImportDate()
 
 	func testGivenNonNilLastImportDate_resetLastImportDate_setsLastImportToNil() {
 		// given
@@ -102,10 +103,6 @@ Date,Time,Rating,Note
 	}
 
 	// MARK: - Helper Functions
-
-	private final func useInput(_ input: String) {
-		Given(ioUtil, .contentsOf(.value(Me.url), willReturn: input))
-	}
 
 	private final func mood1WasImported() -> Bool {
 		return moodWasImportedA(at: Me.date1, withRating: Me.rating1, outOf: Me.maxRating, andNote: Me.note1)
