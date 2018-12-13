@@ -25,26 +25,26 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	private final var lineNumber: Int = -1
 
 	public final func importData(from url: URL) throws {
-		let contents = try DependencyInjector.util.io.contentsOf(url)
-		let csv = try CSVReader(string: contents, hasHeaderRow: true)
-		var createdActivities = [Activity]()
-		var createdDefinitions = [ActivityDefinition]()
+		let csv = try DependencyInjector.util.io.csvReader(url: url, hasHeaderRow: true)
 		lineNumber = 2
 		var latestDate: Date! = lastImport // use temp var to avoid bug where initial import doesn't import anything
 		do {
 			while csv.next() != nil {
-				try importActivity(from: csv, latestDate: &latestDate, &createdActivities, &createdDefinitions)
+				try importActivity(from: csv, latestDate: &latestDate)
 				lineNumber += 1
+				let _ = csv.dropFirst()
 			}
+
+			os_log("Cleaning up Activity import", type: .info)
+			try DependencyInjector.util.importer.cleanUpImportedData(forType: ActivityDefinition.self)
+			try DependencyInjector.util.importer.cleanUpImportedData(forType: Activity.self)
 		} catch {
 			os_log("Deleting created activities due to error: %@", error.localizedDescription)
-			// db.deleteAll() can fail and throw because batch deletes don't
-			// update relationships according to delete rule before end of transaction
-			for activity in createdActivities {
-				DependencyInjector.db.delete(activity)
-			}
-			for definition in createdDefinitions {
-				DependencyInjector.db.delete(definition)
+			do {
+				try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: ActivityDefinition.fetchRequest())
+				try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: Activity.fetchRequest())
+			} catch {
+				os_log("Failed to delete created activities: %@", type: .error, error.localizedDescription)
 			}
 
 			throw error
@@ -62,16 +62,10 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	// MARK: - Helper Functions
 
 	/// - Returns: `nil` if no new Activity object was created, otherwise the newly created activityObject
-	private final func importActivity(
-		from csv: CSVReader,
-		latestDate: inout Date!,
-		_ createdActivities: inout [Activity],
-		_ createdDefinitions: inout [ActivityDefinition])
-	throws {
+	private final func importActivity(from csv: CSVReader, latestDate: inout Date!) throws {
 		var definition: ActivityDefinition! = try retrieveExistingDefinition(from: csv)
 		if definition == nil {
 			definition = try createDefinition(from: csv)
-			createdDefinitions.append(definition)
 		}
 
 		let startDate: Date = try getStartDate(from: csv)
@@ -83,8 +77,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		if let activity = try unfinishedActivity(at: startDate, for: definition) {
 			try update(activity, from: csv)
 		} else if shouldImport(startDate) {
-			let activity = try createActivity(for: definition, startingAt: startDate, from: csv)
-			createdActivities.append(activity)
+			try createActivity(for: definition, startingAt: startDate, from: csv)
 		}
 	}
 
@@ -115,7 +108,6 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	private final func update(_ activity: Activity, from csv: CSVReader) throws {
 		activity.endDate = try getEndDate(from: csv)
 		activity.note = csv[" Note"]
-		DependencyInjector.db.save()
 	}
 
 	private final func retrieveExistingDefinition(from csv: CSVReader) throws -> ActivityDefinition? {
@@ -144,19 +136,18 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		let allDefinitions = try DependencyInjector.db.query(ActivityDefinition.fetchRequest())
 		definition.recordScreenIndex = Int16(allDefinitions.count)
 		definition.setSource(.aTracker)
-		DependencyInjector.db.save()
+		definition.partOfCurrentImport = true
 		return definition
 	}
 
-	private final func createActivity(for definition: ActivityDefinition, startingAt start: Date, from csv: CSVReader) throws -> Activity {
+	private final func createActivity(for definition: ActivityDefinition, startingAt start: Date, from csv: CSVReader) throws {
 		let activity = try DependencyInjector.db.new(Activity.self)
 		activity.definition = try DependencyInjector.db.pull(savedObject: definition, fromSameContextAs: activity)
 		activity.startDate = start
 		activity.endDate = try getEndDate(from: csv)
 		activity.note = csv[" Note"]
 		activity.setSource(.aTracker)
-		DependencyInjector.db.save()
-		return activity
+		activity.partOfCurrentImport = true
 	}
 
 	private final func createOrRetrieveTag(named tagName: String, for definition: ActivityDefinition) throws -> Tag {

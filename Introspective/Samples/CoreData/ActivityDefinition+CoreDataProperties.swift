@@ -24,6 +24,7 @@ extension ActivityDefinition {
 	@NSManaged public var activities: NSSet
 	@NSManaged public var recordScreenIndex: Int16
 	@NSManaged public var source: Int16
+	@NSManaged public var partOfCurrentImport: Bool
 }
 
 // MARK: Generated accessors for tags

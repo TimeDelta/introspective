@@ -9,6 +9,7 @@
 import XCTest
 import SwiftyMocky
 import CoreData
+import CSV
 @testable import Introspective
 
 final class ATrackerActivityImporterFunctionalTests: ImporterTest {
@@ -213,6 +214,28 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 		}
 	}
 
+	func testGivenInvalidData_importData_doesNotDeleteActivitiesOrDefinitionsNotPartOfImport() throws {
+		// given
+		let invalidInput = """
+\(Me.headerRow)
+not enough columns
+"""
+
+		useInput(invalidInput)
+		importer.lastImport = nil
+		importer.importOnlyNewData = false
+
+		let definition = ActivityDataTestUtil.createActivityDefinition(name: "fdsjkl")
+		let activity = ActivityDataTestUtil.createActivity(definition: definition)
+
+		// when
+		XCTAssertThrowsError(try importer.importData(from: url)) { error in
+			// then
+			XCTAssert(try! objectExists(activity))
+			XCTAssert(try! objectExists(definition))
+		}
+	}
+
 	// MARK: - resetLastImportDate()
 
 	func testGivenNonNilLastImportDate_resetLastImportDate_setsLastImportToNil() {
@@ -227,6 +250,10 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 	}
 
 	// MARK: - Helper Functions
+
+	final override func useInput(_ input: String) {
+		Given(ioUtil, .csvReader(url: .value(url), hasHeaderRow: .value(true), willReturn: try! CSVReader(string: input, hasHeaderRow: true)))
+	}
 
 	private final func createAllDefinitions() {
 		let _ = ActivityDataTestUtil.createActivityDefinition(name: Me.activityName1)
@@ -274,5 +301,9 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 		fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
 		let activities = try DependencyInjector.db.query(fetchRequest)
 		return activities.count > 0
+	}
+
+	private final func objectExists(_ object: NSManagedObject) throws -> Bool {
+		return !(try DependencyInjector.db.getUpdated(object: object).isFault)
 	}
 }

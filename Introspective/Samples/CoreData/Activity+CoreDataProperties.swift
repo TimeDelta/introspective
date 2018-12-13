@@ -23,6 +23,7 @@ extension Activity {
 	@NSManaged public var definition: ActivityDefinition
 	@NSManaged public var tags: NSSet
 	@NSManaged public var source: Int16
+	@NSManaged public var partOfCurrentImport: Bool
 }
 
 // MARK: Generated accessors for tags

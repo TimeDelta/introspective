@@ -13,6 +13,7 @@ import SwiftyMocky
 import HealthKit
 import CoreData
 import Presentr
+import CSV
 @testable import Introspective
 
     public final class MockyAssertion {
@@ -33,6 +34,7 @@ import XCTest
 import HealthKit
 import CoreData
 import Presentr
+import CSV
 @testable import Introspective
 
     func MockyAssert(_ expression: @autoclosure () -> Bool, _ message: @autoclosure () -> String = "Verification failed", file: StaticString = #file, line: UInt = #line) {
@@ -2753,6 +2755,36 @@ class DatabaseMock: Database, Mock {
 		perform?()
     }
 
+    func batchUpdateRequest<Type: CoreDataObject>(for type: Type.Type) -> NSBatchUpdateRequest {
+        addInvocation(.m_batchUpdateRequest__for_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_batchUpdateRequest__for_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric())) as? (Type.Type) -> Void
+		perform?(`type`)
+		var __value: NSBatchUpdateRequest
+		do {
+		    __value = try methodReturnValue(.m_batchUpdateRequest__for_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric())).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for batchUpdateRequest<Type: CoreDataObject>(for type: Type.Type). Use given")
+			Failure("Stub return value not specified for batchUpdateRequest<Type: CoreDataObject>(for type: Type.Type). Use given")
+		}
+		return __value
+    }
+
+    func batchUpdate(_ request: NSBatchUpdateRequest) throws -> NSBatchUpdateResult {
+        addInvocation(.m_batchUpdate__request(Parameter<NSBatchUpdateRequest>.value(`request`)))
+		let perform = methodPerformValue(.m_batchUpdate__request(Parameter<NSBatchUpdateRequest>.value(`request`))) as? (NSBatchUpdateRequest) -> Void
+		perform?(`request`)
+		var __value: NSBatchUpdateResult
+		do {
+		    __value = try methodReturnValue(.m_batchUpdate__request(Parameter<NSBatchUpdateRequest>.value(`request`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for batchUpdate(_ request: NSBatchUpdateRequest). Use given")
+			Failure("Stub return value not specified for batchUpdate(_ request: NSBatchUpdateRequest). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     func delete(_ object: NSManagedObject) {
         addInvocation(.m_delete__object(Parameter<NSManagedObject>.value(`object`)))
 		let perform = methodPerformValue(.m_delete__object(Parameter<NSManagedObject>.value(`object`))) as? (NSManagedObject) -> Void
@@ -2807,6 +2839,8 @@ class DatabaseMock: Database, Mock {
         case m_getUpdated__object_object(Parameter<GenericAttribute>)
         case m_save
         case m_clearUnsavedChanges
+        case m_batchUpdateRequest__for_type(Parameter<GenericAttribute>)
+        case m_batchUpdate__request(Parameter<NSBatchUpdateRequest>)
         case m_delete__object(Parameter<NSManagedObject>)
         case m_deleteAll__objects(Parameter<[NSManagedObject]>)
         case m_deleteAll__objectType(Parameter<NSManagedObject.Type>)
@@ -2836,6 +2870,12 @@ class DatabaseMock: Database, Mock {
                 return true 
             case (.m_clearUnsavedChanges, .m_clearUnsavedChanges):
                 return true 
+            case (.m_batchUpdateRequest__for_type(let lhsType), .m_batchUpdateRequest__for_type(let rhsType)):
+                guard Parameter.compare(lhs: lhsType, rhs: rhsType, with: matcher) else { return false } 
+                return true 
+            case (.m_batchUpdate__request(let lhsRequest), .m_batchUpdate__request(let rhsRequest)):
+                guard Parameter.compare(lhs: lhsRequest, rhs: rhsRequest, with: matcher) else { return false } 
+                return true 
             case (.m_delete__object(let lhsObject), .m_delete__object(let rhsObject)):
                 guard Parameter.compare(lhs: lhsObject, rhs: rhsObject, with: matcher) else { return false } 
                 return true 
@@ -2861,6 +2901,8 @@ class DatabaseMock: Database, Mock {
             case let .m_getUpdated__object_object(p0): return p0.intValue
             case .m_save: return 0
             case .m_clearUnsavedChanges: return 0
+            case let .m_batchUpdateRequest__for_type(p0): return p0.intValue
+            case let .m_batchUpdate__request(p0): return p0.intValue
             case let .m_delete__object(p0): return p0.intValue
             case let .m_deleteAll__objects(p0): return p0.intValue
             case let .m_deleteAll__objectType(p0): return p0.intValue
@@ -2901,10 +2943,27 @@ class DatabaseMock: Database, Mock {
         static func getUpdated<Type: NSManagedObject>(object: Parameter<Type>, willReturn: Type...) -> MethodStub {
             return Given(method: .m_getUpdated__object_object(`object`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
+        static func batchUpdateRequest<Type: CoreDataObject>(for type: Parameter<Type.Type>, willReturn: NSBatchUpdateRequest...) -> MethodStub {
+            return Given(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
+        }
+        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, willReturn: NSBatchUpdateResult...) -> MethodStub {
+            return Given(method: .m_batchUpdate__request(`request`), products: willReturn.map({ Product.return($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `request` label")
+		static func batchUpdate(request: Parameter<NSBatchUpdateRequest>, willReturn: NSBatchUpdateResult...) -> MethodStub {
+            return Given(method: .m_batchUpdate__request(`request`), products: willReturn.map({ Product.return($0) }))
+        }
         static func fetchedResultsController<Type: NSManagedObject>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>, willProduce: (Stubber<NSFetchedResultsController<Type>>) -> Void) -> MethodStub {
             let willReturn: [NSFetchedResultsController<Type>] = []
 			let given: Given = { return Given(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (NSFetchedResultsController<Type>).self)
+			willProduce(stubber)
+			return given
+        }
+        static func batchUpdateRequest<Type: CoreDataObject>(for type: Parameter<Type.Type>, willProduce: (Stubber<NSBatchUpdateRequest>) -> Void) -> MethodStub {
+            let willReturn: [NSBatchUpdateRequest] = []
+			let given: Given = { return Given(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (NSBatchUpdateRequest).self)
 			willProduce(stubber)
 			return given
         }
@@ -2953,6 +3012,20 @@ class DatabaseMock: Database, Mock {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_getUpdated__object_object(`object`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Type).self)
+			willProduce(stubber)
+			return given
+        }
+        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_batchUpdate__request(`request`), products: willThrow.map({ Product.throw($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `request` label")
+		static func batchUpdate(request: Parameter<NSBatchUpdateRequest>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_batchUpdate__request(`request`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, willProduce: (StubberThrows<NSBatchUpdateResult>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_batchUpdate__request(`request`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (NSBatchUpdateResult).self)
 			willProduce(stubber)
 			return given
         }
@@ -3014,6 +3087,10 @@ class DatabaseMock: Database, Mock {
         static func getUpdated<Type>(object: Parameter<Type>) -> Verify { return Verify(method: .m_getUpdated__object_object(`object`.wrapAsGeneric()))}
         static func save() -> Verify { return Verify(method: .m_save)}
         static func clearUnsavedChanges() -> Verify { return Verify(method: .m_clearUnsavedChanges)}
+        static func batchUpdateRequest<Type>(for type: Parameter<Type.Type>) -> Verify { return Verify(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()))}
+        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>) -> Verify { return Verify(method: .m_batchUpdate__request(`request`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `request` label")
+		static func batchUpdate(request: Parameter<NSBatchUpdateRequest>) -> Verify { return Verify(method: .m_batchUpdate__request(`request`))}
         static func delete(_ object: Parameter<NSManagedObject>) -> Verify { return Verify(method: .m_delete__object(`object`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `object` label")
 		static func delete(object: Parameter<NSManagedObject>) -> Verify { return Verify(method: .m_delete__object(`object`))}
@@ -3060,6 +3137,16 @@ class DatabaseMock: Database, Mock {
         }
         static func clearUnsavedChanges(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_clearUnsavedChanges, performs: perform)
+        }
+        static func batchUpdateRequest<Type>(for type: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform {
+            return Perform(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()), performs: perform)
+        }
+        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, perform: @escaping (NSBatchUpdateRequest) -> Void) -> Perform {
+            return Perform(method: .m_batchUpdate__request(`request`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `request` label")
+		static func batchUpdate(request: Parameter<NSBatchUpdateRequest>, perform: @escaping (NSBatchUpdateRequest) -> Void) -> Perform {
+            return Perform(method: .m_batchUpdate__request(`request`), performs: perform)
         }
         static func delete(_ object: Parameter<NSManagedObject>, perform: @escaping (NSManagedObject) -> Void) -> Perform {
             return Perform(method: .m_delete__object(`object`), performs: perform)
@@ -3903,21 +3990,44 @@ class IOUtilMock: IOUtil, Mock {
 		return __value
     }
 
+    func csvReader(url: URL, hasHeaderRow: Bool) throws -> CSVReader {
+        addInvocation(.m_csvReader__url_urlhasHeaderRow_hasHeaderRow(Parameter<URL>.value(`url`), Parameter<Bool>.value(`hasHeaderRow`)))
+		let perform = methodPerformValue(.m_csvReader__url_urlhasHeaderRow_hasHeaderRow(Parameter<URL>.value(`url`), Parameter<Bool>.value(`hasHeaderRow`))) as? (URL, Bool) -> Void
+		perform?(`url`, `hasHeaderRow`)
+		var __value: CSVReader
+		do {
+		    __value = try methodReturnValue(.m_csvReader__url_urlhasHeaderRow_hasHeaderRow(Parameter<URL>.value(`url`), Parameter<Bool>.value(`hasHeaderRow`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for csvReader(url: URL, hasHeaderRow: Bool). Use given")
+			Failure("Stub return value not specified for csvReader(url: URL, hasHeaderRow: Bool). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_contentsOf__url(Parameter<URL>)
+        case m_csvReader__url_urlhasHeaderRow_hasHeaderRow(Parameter<URL>, Parameter<Bool>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
             case (.m_contentsOf__url(let lhsUrl), .m_contentsOf__url(let rhsUrl)):
                 guard Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher) else { return false } 
                 return true 
+            case (.m_csvReader__url_urlhasHeaderRow_hasHeaderRow(let lhsUrl, let lhsHasheaderrow), .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(let rhsUrl, let rhsHasheaderrow)):
+                guard Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsHasheaderrow, rhs: rhsHasheaderrow, with: matcher) else { return false } 
+                return true 
+            default: return false
             }
         }
 
         func intValue() -> Int {
             switch self {
             case let .m_contentsOf__url(p0): return p0.intValue
+            case let .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(p0, p1): return p0.intValue + p1.intValue
             }
         }
     }
@@ -3938,6 +4048,9 @@ class IOUtilMock: IOUtil, Mock {
 		static func contentsOf(url: Parameter<URL>, willReturn: String...) -> MethodStub {
             return Given(method: .m_contentsOf__url(`url`), products: willReturn.map({ Product.return($0) }))
         }
+        static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>, willReturn: CSVReader...) -> MethodStub {
+            return Given(method: .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(`url`, `hasHeaderRow`), products: willReturn.map({ Product.return($0) }))
+        }
         static func contentsOf(_ url: Parameter<URL>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_contentsOf__url(`url`), products: willThrow.map({ Product.throw($0) }))
         }
@@ -3952,6 +4065,16 @@ class IOUtilMock: IOUtil, Mock {
 			willProduce(stubber)
 			return given
         }
+        static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(`url`, `hasHeaderRow`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>, willProduce: (StubberThrows<CSVReader>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(`url`, `hasHeaderRow`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (CSVReader).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     struct Verify {
@@ -3960,6 +4083,7 @@ class IOUtilMock: IOUtil, Mock {
         static func contentsOf(_ url: Parameter<URL>) -> Verify { return Verify(method: .m_contentsOf__url(`url`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `url` label")
 		static func contentsOf(url: Parameter<URL>) -> Verify { return Verify(method: .m_contentsOf__url(`url`))}
+        static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>) -> Verify { return Verify(method: .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(`url`, `hasHeaderRow`))}
     }
 
     struct Perform {
@@ -3972,6 +4096,9 @@ class IOUtilMock: IOUtil, Mock {
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `url` label")
 		static func contentsOf(url: Parameter<URL>, perform: @escaping (URL) -> Void) -> Perform {
             return Perform(method: .m_contentsOf__url(`url`), performs: perform)
+        }
+        static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>, perform: @escaping (URL, Bool) -> Void) -> Perform {
+            return Perform(method: .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(`url`, `hasHeaderRow`), performs: perform)
         }
     }
 
@@ -4245,6 +4372,195 @@ class ImporterFactoryMock: ImporterFactory, Mock {
         }
         static func aTrackerActivityImporter(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_aTrackerActivityImporter, performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> Product {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
+// MARK: - ImporterUtil
+class ImporterUtilMock: ImporterUtil, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    typealias PropertyStub = Given
+    typealias MethodStub = Given
+    typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    func deleteImportedEntities<Type: NSManagedObject>(fetchRequest: NSFetchRequest<Type>) throws {
+        addInvocation(.m_deleteImportedEntities__fetchRequest_fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_deleteImportedEntities__fetchRequest_fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric())) as? (NSFetchRequest<Type>) -> Void
+		perform?(`fetchRequest`)
+		do {
+		    _ = try methodReturnValue(.m_deleteImportedEntities__fetchRequest_fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric())).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    func cleanUpImportedData<Type: NSManagedObject & CoreDataObject & Importable>(forType type: Type.Type) throws {
+        addInvocation(.m_cleanUpImportedData__forType_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_cleanUpImportedData__forType_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric())) as? (Type.Type) -> Void
+		perform?(`type`)
+		do {
+		    _ = try methodReturnValue(.m_cleanUpImportedData__forType_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric())).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+
+    fileprivate enum MethodType {
+        case m_deleteImportedEntities__fetchRequest_fetchRequest(Parameter<GenericAttribute>)
+        case m_cleanUpImportedData__forType_type(Parameter<GenericAttribute>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_deleteImportedEntities__fetchRequest_fetchRequest(let lhsFetchrequest), .m_deleteImportedEntities__fetchRequest_fetchRequest(let rhsFetchrequest)):
+                guard Parameter.compare(lhs: lhsFetchrequest, rhs: rhsFetchrequest, with: matcher) else { return false } 
+                return true 
+            case (.m_cleanUpImportedData__forType_type(let lhsType), .m_cleanUpImportedData__forType_type(let rhsType)):
+                guard Parameter.compare(lhs: lhsType, rhs: rhsType, with: matcher) else { return false } 
+                return true 
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_deleteImportedEntities__fetchRequest_fetchRequest(p0): return p0.intValue
+            case let .m_cleanUpImportedData__forType_type(p0): return p0.intValue
+            }
+        }
+    }
+
+    class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [Product]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        static func deleteImportedEntities<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_deleteImportedEntities__fetchRequest_fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func deleteImportedEntities<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_deleteImportedEntities__fetchRequest_fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        static func cleanUpImportedData<Type: NSManagedObject & CoreDataObject & Importable>(forType type: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_cleanUpImportedData__forType_type(`type`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func cleanUpImportedData<Type: NSManagedObject & CoreDataObject & Importable>(forType type: Parameter<Type.Type>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_cleanUpImportedData__forType_type(`type`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    struct Verify {
+        fileprivate var method: MethodType
+
+        static func deleteImportedEntities<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify { return Verify(method: .m_deleteImportedEntities__fetchRequest_fetchRequest(`fetchRequest`.wrapAsGeneric()))}
+        static func cleanUpImportedData<Type>(forType type: Parameter<Type.Type>) -> Verify { return Verify(method: .m_cleanUpImportedData__forType_type(`type`.wrapAsGeneric()))}
+    }
+
+    struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        static func deleteImportedEntities<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform {
+            return Perform(method: .m_deleteImportedEntities__fetchRequest_fetchRequest(`fetchRequest`.wrapAsGeneric()), performs: perform)
+        }
+        static func cleanUpImportedData<Type>(forType type: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform {
+            return Perform(method: .m_cleanUpImportedData__forType_type(`type`.wrapAsGeneric()), performs: perform)
         }
     }
 

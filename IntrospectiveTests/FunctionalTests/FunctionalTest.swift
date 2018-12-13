@@ -27,6 +27,8 @@ class FunctionalTest: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
+		testing = true
+
 		injectionProvider = InjectionProviderMock()
 		DependencyInjector.injectionProvider = injectionProvider
 
@@ -53,6 +55,7 @@ class FunctionalTest: XCTestCase {
 
 	override func tearDown() {
 		DependencyInjector.injectionProvider = ProductionInjectionProvider()
+		testing = false
 		super.tearDown()
 	}
 }

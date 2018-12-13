@@ -13,7 +13,7 @@ class ImporterTest: FunctionalTest {
 
 	final let url = URL(fileURLWithPath: "/")
 
-	final func useInput(_ input: String) {
+	func useInput(_ input: String) {
 		Given(ioUtil, .contentsOf(.value(url), willReturn: input))
 	}
 }

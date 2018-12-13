@@ -31,6 +31,9 @@ public protocol Database {
 	/// Use this cautiously as it will rollback unsaved stuff created from other tabs also
 	func clearUnsavedChanges()
 
+	func batchUpdateRequest<Type: CoreDataObject>(for type: Type.Type) -> NSBatchUpdateRequest
+	func batchUpdate(_ request: NSBatchUpdateRequest) throws -> NSBatchUpdateResult
+
 	func delete(_ object: NSManagedObject)
 	func deleteAll(_ objects: [NSManagedObject]) throws
 	func deleteAll(_ objectType: NSManagedObject.Type) throws
@@ -142,6 +145,15 @@ public class DatabaseImpl: Database {
 	public final func clearUnsavedChanges() {
 		backgroundContext.undo()
 		persistentContainer.viewContext.undo()
+	}
+
+	public final func batchUpdateRequest<Type: CoreDataObject>(for type: Type.Type) -> NSBatchUpdateRequest {
+		let entity = NSEntityDescription.entity(forEntityName: type.entityName, in: backgroundContext)!
+		return NSBatchUpdateRequest(entity: entity)
+	}
+
+	public final func batchUpdate(_ request: NSBatchUpdateRequest) throws -> NSBatchUpdateResult {
+		return try backgroundContext.execute(request) as! NSBatchUpdateResult
 	}
 
 	public final func delete(_ object: NSManagedObject) {
