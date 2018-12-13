@@ -2677,16 +2677,16 @@ class DatabaseMock: Database, Mock {
 		return __value
     }
 
-    func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, cacheName: String?) -> NSFetchedResultsController<Type> {
-        addInvocation(.m_fetchedResultsController__type_typecacheName_cacheName(Parameter<Type.Type>.value(`type`).wrapAsGeneric(), Parameter<String?>.value(`cacheName`)))
-		let perform = methodPerformValue(.m_fetchedResultsController__type_typecacheName_cacheName(Parameter<Type.Type>.value(`type`).wrapAsGeneric(), Parameter<String?>.value(`cacheName`))) as? (Type.Type, String?) -> Void
-		perform?(`type`, `cacheName`)
+    func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, sortDescriptors: [NSSortDescriptor], cacheName: String?) -> NSFetchedResultsController<Type> {
+        addInvocation(.m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(Parameter<Type.Type>.value(`type`).wrapAsGeneric(), Parameter<[NSSortDescriptor]>.value(`sortDescriptors`), Parameter<String?>.value(`cacheName`)))
+		let perform = methodPerformValue(.m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(Parameter<Type.Type>.value(`type`).wrapAsGeneric(), Parameter<[NSSortDescriptor]>.value(`sortDescriptors`), Parameter<String?>.value(`cacheName`))) as? (Type.Type, [NSSortDescriptor], String?) -> Void
+		perform?(`type`, `sortDescriptors`, `cacheName`)
 		var __value: NSFetchedResultsController<Type>
 		do {
-		    __value = try methodReturnValue(.m_fetchedResultsController__type_typecacheName_cacheName(Parameter<Type.Type>.value(`type`).wrapAsGeneric(), Parameter<String?>.value(`cacheName`))).casted()
+		    __value = try methodReturnValue(.m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(Parameter<Type.Type>.value(`type`).wrapAsGeneric(), Parameter<[NSSortDescriptor]>.value(`sortDescriptors`), Parameter<String?>.value(`cacheName`))).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for fetchedResultsController<Type: NSManagedObject>(type: Type.Type, cacheName: String?). Use given")
-			Failure("Stub return value not specified for fetchedResultsController<Type: NSManagedObject>(type: Type.Type, cacheName: String?). Use given")
+			onFatalFailure("Stub return value not specified for fetchedResultsController<Type: NSManagedObject>(type: Type.Type, sortDescriptors: [NSSortDescriptor], cacheName: String?). Use given")
+			Failure("Stub return value not specified for fetchedResultsController<Type: NSManagedObject>(type: Type.Type, sortDescriptors: [NSSortDescriptor], cacheName: String?). Use given")
 		}
 		return __value
     }
@@ -2799,7 +2799,7 @@ class DatabaseMock: Database, Mock {
 
     fileprivate enum MethodType {
         case m_new__objectType(Parameter<GenericAttribute>)
-        case m_fetchedResultsController__type_typecacheName_cacheName(Parameter<GenericAttribute>, Parameter<String?>)
+        case m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(Parameter<GenericAttribute>, Parameter<[NSSortDescriptor]>, Parameter<String?>)
         case m_query__fetchRequest(Parameter<GenericAttribute>)
         case m_pull__savedObject_savedObjectfromSameContextAs_otherObject(Parameter<GenericAttribute>, Parameter<NSManagedObject>)
         case m_getUpdated__object_object(Parameter<GenericAttribute>)
@@ -2815,8 +2815,9 @@ class DatabaseMock: Database, Mock {
             case (.m_new__objectType(let lhsObjecttype), .m_new__objectType(let rhsObjecttype)):
                 guard Parameter.compare(lhs: lhsObjecttype, rhs: rhsObjecttype, with: matcher) else { return false } 
                 return true 
-            case (.m_fetchedResultsController__type_typecacheName_cacheName(let lhsType, let lhsCachename), .m_fetchedResultsController__type_typecacheName_cacheName(let rhsType, let rhsCachename)):
+            case (.m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(let lhsType, let lhsSortdescriptors, let lhsCachename), .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(let rhsType, let rhsSortdescriptors, let rhsCachename)):
                 guard Parameter.compare(lhs: lhsType, rhs: rhsType, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsSortdescriptors, rhs: rhsSortdescriptors, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsCachename, rhs: rhsCachename, with: matcher) else { return false } 
                 return true 
             case (.m_query__fetchRequest(let lhsFetchrequest), .m_query__fetchRequest(let rhsFetchrequest)):
@@ -2852,7 +2853,7 @@ class DatabaseMock: Database, Mock {
         func intValue() -> Int {
             switch self {
             case let .m_new__objectType(p0): return p0.intValue
-            case let .m_fetchedResultsController__type_typecacheName_cacheName(p0, p1): return p0.intValue + p1.intValue
+            case let .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_query__fetchRequest(p0): return p0.intValue
             case let .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(p0, p1): return p0.intValue + p1.intValue
             case let .m_getUpdated__object_object(p0): return p0.intValue
@@ -2882,8 +2883,8 @@ class DatabaseMock: Database, Mock {
 		static func new<Type: NSManagedObject & CoreDataObject>(objectType: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
             return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func fetchedResultsController<Type: NSManagedObject>(type: Parameter<Type.Type>, cacheName: Parameter<String?>, willReturn: NSFetchedResultsController<Type>...) -> MethodStub {
-            return Given(method: .m_fetchedResultsController__type_typecacheName_cacheName(`type`.wrapAsGeneric(), `cacheName`), products: willReturn.map({ Product.return($0) }))
+        static func fetchedResultsController<Type: NSManagedObject>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>, willReturn: NSFetchedResultsController<Type>...) -> MethodStub {
+            return Given(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`), products: willReturn.map({ Product.return($0) }))
         }
         static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: [Type]...) -> MethodStub {
             return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
@@ -2898,9 +2899,9 @@ class DatabaseMock: Database, Mock {
         static func getUpdated<Type: NSManagedObject>(object: Parameter<Type>, willReturn: Type...) -> MethodStub {
             return Given(method: .m_getUpdated__object_object(`object`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func fetchedResultsController<Type: NSManagedObject>(type: Parameter<Type.Type>, cacheName: Parameter<String?>, willProduce: (Stubber<NSFetchedResultsController<Type>>) -> Void) -> MethodStub {
+        static func fetchedResultsController<Type: NSManagedObject>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>, willProduce: (Stubber<NSFetchedResultsController<Type>>) -> Void) -> MethodStub {
             let willReturn: [NSFetchedResultsController<Type>] = []
-			let given: Given = { return Given(method: .m_fetchedResultsController__type_typecacheName_cacheName(`type`.wrapAsGeneric(), `cacheName`), products: willReturn.map({ Product.return($0) })) }()
+			let given: Given = { return Given(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (NSFetchedResultsController<Type>).self)
 			willProduce(stubber)
 			return given
@@ -3003,7 +3004,7 @@ class DatabaseMock: Database, Mock {
         static func new<Type>(_ objectType: Parameter<Type.Type>) -> Verify { return Verify(method: .m_new__objectType(`objectType`.wrapAsGeneric()))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
 		static func new<Type>(objectType: Parameter<Type.Type>) -> Verify { return Verify(method: .m_new__objectType(`objectType`.wrapAsGeneric()))}
-        static func fetchedResultsController<Type>(type: Parameter<Type.Type>, cacheName: Parameter<String?>) -> Verify { return Verify(method: .m_fetchedResultsController__type_typecacheName_cacheName(`type`.wrapAsGeneric(), `cacheName`))}
+        static func fetchedResultsController<Type>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>) -> Verify { return Verify(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`))}
         static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fetchRequest` label")
 		static func query<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
@@ -3036,8 +3037,8 @@ class DatabaseMock: Database, Mock {
 		static func new<Type>(objectType: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform {
             return Perform(method: .m_new__objectType(`objectType`.wrapAsGeneric()), performs: perform)
         }
-        static func fetchedResultsController<Type>(type: Parameter<Type.Type>, cacheName: Parameter<String?>, perform: @escaping (Type.Type, String?) -> Void) -> Perform {
-            return Perform(method: .m_fetchedResultsController__type_typecacheName_cacheName(`type`.wrapAsGeneric(), `cacheName`), performs: perform)
+        static func fetchedResultsController<Type>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>, perform: @escaping (Type.Type, [NSSortDescriptor], String?) -> Void) -> Perform {
+            return Perform(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`), performs: perform)
         }
         static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform {
             return Perform(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), performs: perform)
@@ -4108,11 +4109,28 @@ class ImporterFactoryMock: ImporterFactory, Mock {
 		return __value
     }
 
+    func aTrackerActivityImporter() throws -> ATrackerActivityImporter {
+        addInvocation(.m_aTrackerActivityImporter)
+		let perform = methodPerformValue(.m_aTrackerActivityImporter) as? () -> Void
+		perform?()
+		var __value: ATrackerActivityImporter
+		do {
+		    __value = try methodReturnValue(.m_aTrackerActivityImporter).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for aTrackerActivityImporter(). Use given")
+			Failure("Stub return value not specified for aTrackerActivityImporter(). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_wellnessMoodImporter
         case m_easyPillMedicationImporter
         case m_easyPillMedicationDoseImporter
+        case m_aTrackerActivityImporter
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -4121,6 +4139,8 @@ class ImporterFactoryMock: ImporterFactory, Mock {
             case (.m_easyPillMedicationImporter, .m_easyPillMedicationImporter):
                 return true 
             case (.m_easyPillMedicationDoseImporter, .m_easyPillMedicationDoseImporter):
+                return true 
+            case (.m_aTrackerActivityImporter, .m_aTrackerActivityImporter):
                 return true 
             default: return false
             }
@@ -4131,6 +4151,7 @@ class ImporterFactoryMock: ImporterFactory, Mock {
             case .m_wellnessMoodImporter: return 0
             case .m_easyPillMedicationImporter: return 0
             case .m_easyPillMedicationDoseImporter: return 0
+            case .m_aTrackerActivityImporter: return 0
             }
         }
     }
@@ -4152,6 +4173,9 @@ class ImporterFactoryMock: ImporterFactory, Mock {
         }
         static func easyPillMedicationDoseImporter(willReturn: EasyPillMedicationDoseImporter...) -> MethodStub {
             return Given(method: .m_easyPillMedicationDoseImporter, products: willReturn.map({ Product.return($0) }))
+        }
+        static func aTrackerActivityImporter(willReturn: ATrackerActivityImporter...) -> MethodStub {
+            return Given(method: .m_aTrackerActivityImporter, products: willReturn.map({ Product.return($0) }))
         }
         static func wellnessMoodImporter(willThrow: Error...) -> MethodStub {
             return Given(method: .m_wellnessMoodImporter, products: willThrow.map({ Product.throw($0) }))
@@ -4183,6 +4207,16 @@ class ImporterFactoryMock: ImporterFactory, Mock {
 			willProduce(stubber)
 			return given
         }
+        static func aTrackerActivityImporter(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_aTrackerActivityImporter, products: willThrow.map({ Product.throw($0) }))
+        }
+        static func aTrackerActivityImporter(willProduce: (StubberThrows<ATrackerActivityImporter>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_aTrackerActivityImporter, products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (ATrackerActivityImporter).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     struct Verify {
@@ -4191,6 +4225,7 @@ class ImporterFactoryMock: ImporterFactory, Mock {
         static func wellnessMoodImporter() -> Verify { return Verify(method: .m_wellnessMoodImporter)}
         static func easyPillMedicationImporter() -> Verify { return Verify(method: .m_easyPillMedicationImporter)}
         static func easyPillMedicationDoseImporter() -> Verify { return Verify(method: .m_easyPillMedicationDoseImporter)}
+        static func aTrackerActivityImporter() -> Verify { return Verify(method: .m_aTrackerActivityImporter)}
     }
 
     struct Perform {
@@ -4205,6 +4240,9 @@ class ImporterFactoryMock: ImporterFactory, Mock {
         }
         static func easyPillMedicationDoseImporter(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_easyPillMedicationDoseImporter, performs: perform)
+        }
+        static func aTrackerActivityImporter(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_aTrackerActivityImporter, performs: perform)
         }
     }
 

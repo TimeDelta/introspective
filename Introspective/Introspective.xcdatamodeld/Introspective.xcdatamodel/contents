@@ -22,6 +22,15 @@
         <fetchIndex name="byRecordScreenIndex">
             <fetchIndexElement property="recordScreenIndex" type="Binary" order="ascending"/>
         </fetchIndex>
+        <fetchIndex name="byTag">
+            <fetchIndexElement property="tags" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byRecordScreenSearch">
+            <fetchIndexElement property="recordScreenIndex" type="Binary" order="ascending"/>
+            <fetchIndexElement property="name" type="Binary" order="ascending"/>
+            <fetchIndexElement property="activityDescription" type="Binary" order="ascending"/>
+            <fetchIndexElement property="tags" type="Binary" order="ascending"/>
+        </fetchIndex>
     </entity>
     <entity name="ATrackerActivityImporter" representedClassName=".ATrackerActivityImporterImpl" syncable="YES">
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -61,6 +70,7 @@
     <entity name="WellnessMoodImporter" representedClassName=".WellnessMoodImporterImpl" syncable="YES">
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
     </entity>
+    <fetchRequest name="allActivityDefinitions" entity="ActivityDefinition" predicateString="TRUEPREDICATE"/>
     <elements>
         <element name="Activity" positionX="-36" positionY="63" width="128" height="120"/>
         <element name="ActivityDefinition" positionX="-45" positionY="54" width="128" height="120"/>

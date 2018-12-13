@@ -22,17 +22,16 @@ public final class RecordActivityTableViewController: UITableViewController {
 	// MARK: - Instance Variables
 
 	private final let searchController = UISearchController(searchResultsController: nil)
-	private final var activityDefinitions = [ActivityDefinition]() {
-		didSet { resetFilteredActivityDefinitions() }
-	}
-	private final var filteredActivityDefinitions = [ActivityDefinition]()
 	private final var finishedLoading = false {
 		didSet {
 			searchController.searchBar.isUserInteractionEnabled = finishedLoading
 			tableView.reloadData()
 		}
 	}
-	private final var definitionEditIndex: Int?
+	private final var definitionEditIndex: IndexPath?
+	private final var fetchedResultsController: NSFetchedResultsController<ActivityDefinition>!
+
+	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Activity Display"))
 
 	// MARK: - UIViewController Overrides
 
@@ -75,7 +74,11 @@ public final class RecordActivityTableViewController: UITableViewController {
 		if !finishedLoading {
 			return 1
 		}
-		return filteredActivityDefinitions.count
+		if let fetchedObjects = fetchedResultsController.fetchedObjects {
+			return fetchedObjects.count
+		}
+		os_log("Unable to determine number of expected rows because fetched objects was nil", type: .error)
+		return 0
 	}
 
 	// MARK: - TableView Delegate
@@ -86,7 +89,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		}
 
 		let cell = tableView.dequeueReusableCell(withIdentifier: "activity", for: indexPath) as! RecordActivityDefinitionTableViewCell
-		cell.activityDefinition = filteredActivityDefinitions[indexPath.row]
+		cell.activityDefinition = fetchedResultsController.object(at: indexPath)
 		return cell
 	}
 
@@ -95,7 +98,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let activityDefinition = filteredActivityDefinitions[indexPath.row]
+		let activityDefinition = fetchedResultsController.object(at: indexPath)
 		guard let cell = tableView.visibleCells[indexPath.row] as? RecordActivityDefinitionTableViewCell else {
 			return
 		}
@@ -133,38 +136,39 @@ public final class RecordActivityTableViewController: UITableViewController {
 	// MARK: - TableView Reordering
 
 	public final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-		let definitionsFromIndex = Int(filteredActivityDefinitions[fromIndexPath.row].recordScreenIndex)
-		let definitionsToIndex = Int(filteredActivityDefinitions[to.row].recordScreenIndex)
+		let definitionsFromIndex = Int(fetchedResultsController.object(at: fromIndexPath).recordScreenIndex)
+		let definitionsToIndex = Int(fetchedResultsController.object(at: to).recordScreenIndex)
+		let searchText = getSearchText()
+		searchController.searchBar.text = ""
+		resetFetchedResultsController()
 		if definitionsFromIndex < definitionsToIndex {
 			for i in definitionsFromIndex + 1 ... definitionsToIndex {
-				activityDefinitions[i].recordScreenIndex -= 1
+				fetchedResultsController.fetchedObjects?[i].recordScreenIndex -= 1
 			}
 		} else {
 			for i in definitionsToIndex ..< definitionsFromIndex {
-				activityDefinitions[i].recordScreenIndex += 1
+				fetchedResultsController.fetchedObjects?[i].recordScreenIndex += 1
 			}
 		}
-		activityDefinitions[definitionsFromIndex].recordScreenIndex = Int16(definitionsToIndex)
-		let activityDefinition = activityDefinitions.remove(at: definitionsFromIndex)
-		activityDefinitions.insert(activityDefinition, at: Int(activityDefinition.recordScreenIndex))
+		fetchedResultsController.fetchedObjects?[definitionsFromIndex].recordScreenIndex = Int16(definitionsToIndex)
 		DependencyInjector.db.save()
-		resetFilteredActivityDefinitions()
-		tableView.reloadData()
+		searchController.searchBar.text = searchText
+		loadActivitiyDefinitions()
 	}
 
 	// MARK: - Swipe Actions
 
 	public final override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		let activityDefinition = self.filteredActivityDefinitions[indexPath.row]
+		let activityDefinition = fetchedResultsController.object(at: indexPath)
 
 		var actions = [UIContextualAction]()
 		actions.append(getDeleteActivityDefinitionActionFor(activityDefinition, at: indexPath))
-		actions.append(getEditActivityDefinitionActionFor(activityDefinition))
+		actions.append(getEditActivityDefinitionActionFor(activityDefinition, at: indexPath))
 		return UISwipeActionsConfiguration(actions: actions)
 	}
 
 	public final override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		let activityDefinition = self.filteredActivityDefinitions[indexPath.row]
+		let activityDefinition = fetchedResultsController.object(at: indexPath)
 
 		var actions = [UIContextualAction]()
 		if let activity = self.getMostRecentActivity(activityDefinition) {
@@ -227,23 +231,18 @@ public final class RecordActivityTableViewController: UITableViewController {
 				message: "This will delete all history for this activity.",
 				preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
-				if let index = self.activityDefinitions.firstIndex(of: activityDefinition) {
-					self.activityDefinitions.remove(at: index)
-					DispatchQueue.global(qos: .background).async {
-						DependencyInjector.db.delete(activityDefinition)
-					}
-					self.tableView.deleteRows(at: [indexPath], with: .fade)
-					self.tableView.reloadData()
-				}
+				DependencyInjector.db.delete(activityDefinition)
+//				self.tableView.deleteRows(at: [indexPath], with: .fade)
+				self.loadActivitiyDefinitions()
 			})
 			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
 			self.present(alert, animated: false, completion: nil)
 		}
 	}
 
-	private final func getEditActivityDefinitionActionFor(_ activityDefinition: ActivityDefinition) -> UIContextualAction {
+	private final func getEditActivityDefinitionActionFor(_ activityDefinition: ActivityDefinition, at indexPath: IndexPath) -> UIContextualAction {
 		let editDefinitionAction = UIContextualAction(style: .normal, title: "✎ All") { _, _, completionHandler in
-			self.definitionEditIndex = self.activityDefinitions.index(where: { activityDefinition.equalTo($0) })
+			self.definitionEditIndex = indexPath
 			let controller = self.storyboard!.instantiateViewController(withIdentifier: "editActivityDefinition") as! EditActivityDefinitionTableViewController
 			controller.activityDefinition = activityDefinition
 			controller.notificationToSendOnAccept = Me.activityDefinitionEdited
@@ -259,11 +258,9 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	@objc private final func activityDefinitionCreated(notification: Notification) {
 		if let activityDefinition = notification.object as? ActivityDefinition {
-			activityDefinition.recordScreenIndex = Int16(activityDefinitions.count)
+			activityDefinition.recordScreenIndex = Int16(fetchedResultsController.fetchedObjects?.count ?? 0)
 			DependencyInjector.db.save()
-			activityDefinitions.append(activityDefinition)
-			resetFilteredActivityDefinitions()
-			tableView.reloadData()
+			loadActivitiyDefinitions()
 		} else {
 			os_log("Wrong object type for activity definition created notification", type: .error)
 		}
@@ -274,16 +271,11 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	@objc private final func activityDefinitionEdited(notification: Notification) {
-		if let activityDefinition = notification.object as? ActivityDefinition {
-			if let index = definitionEditIndex {
-				activityDefinitions[index] = activityDefinition
-				tableView.reloadData()
-			} else {
-				os_log("Failed to find activity definition in original set. Resorting to reload of activity definitions.", type: .error)
-				loadActivitiyDefinitions()
-			}
+		if let indexPath = definitionEditIndex {
+			tableView.reloadRows(at: [indexPath], with: .automatic)
 		} else {
-			os_log("Wrong object type for activity definition edited notification", type: .error)
+			os_log("Failed to find activity definition in original set. Resorting to reload of activity definitions.", type: .error)
+			loadActivitiyDefinitions()
 		}
 	}
 
@@ -305,40 +297,40 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func loadActivitiyDefinitions() {
 		DispatchQueue.global(qos: .userInteractive).async {
-			do {
-				let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
-				fetchRequest.sortDescriptors = [NSSortDescriptor(key: "recordScreenIndex", ascending: true)]
-				let activityDefinitions = try DependencyInjector.db.query(fetchRequest)
-				DispatchQueue.main.async {
-					self.activityDefinitions = activityDefinitions
-					self.finishedLoading = true
-					self.tableView.reloadData()
-				}
-			} catch {
-				self.showError(title: "Could not retrieve activities", message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.", tryAgain: self.loadActivitiyDefinitions)
-				os_log("Failed to fetch medications: %@", type: .error, error.localizedDescription)
+			self.resetFetchedResultsController()
+			DispatchQueue.main.async {
+				self.finishedLoading = true
+				self.tableView.reloadData()
 			}
 		}
 	}
 
-	private final func resetFilteredActivityDefinitions() {
-		let searchText = getSearchText().localizedLowercase
-		filteredActivityDefinitions = activityDefinitions
-		if !searchText.isEmpty {
-			filteredActivityDefinitions = filteredActivityDefinitions.filter({ definition in
-				if let description = definition.activityDescription?.localizedLowercase {
-					if description.contains(searchText) {
-						return true
-					}
+	private final func resetFetchedResultsController() {
+		do {
+			signpost.begin(name: "resetting fetched results controller")
+			fetchedResultsController = DependencyInjector.db.fetchedResultsController(
+				type: ActivityDefinition.self,
+				sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
+				cacheName: "definitions")
+			let fetchRequest = fetchedResultsController.fetchRequest
+			DispatchQueue.main.sync {
+				let searchText: String = self.getSearchText()
+				if !searchText.isEmpty {
+					fetchRequest.predicate = NSPredicate(
+						format: "name CONTAINS[cd] %@ OR activityDescription CONTAINS[cd] %@ OR SUBQUERY(tags, $tag, $tag.name CONTAINS[cd] %@) .@count > 0",
+						searchText,
+						searchText,
+						searchText)
 				}
-				let tags = definition.tagsArray()
-				for tag in tags {
-					if tag.name.contains(searchText) {
-						return true
-					}
-				}
-				return definition.name.localizedLowercase.contains(searchText)
-			})
+			}
+			try fetchedResultsController.performFetch()
+			signpost.end(name: "resetting fetched results controller")
+		} catch {
+			self.showError(
+				title: "Could not retrieve activities",
+				message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.",
+				tryAgain: loadActivitiyDefinitions)
+			os_log("Failed to fetch medications: %@", type: .error, error.localizedDescription)
 		}
 	}
 
@@ -357,9 +349,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 				activity.startDate = Date()
 				DependencyInjector.db.save()
 				searchController.searchBar.text = ""
-				activityDefinitions.append(activityDefinition)
-				resetFilteredActivityDefinitions()
-				tableView.reloadData()
+				loadActivitiyDefinitions()
 			} catch {
 				os_log("Failed to quick create / start activity: %@", error.localizedDescription)
 				showError(title: "Failed to create and start", message: "Something went wrong while trying to save this activity. Sorry for the inconvenience.")
@@ -439,7 +429,6 @@ public final class RecordActivityTableViewController: UITableViewController {
 extension RecordActivityTableViewController: UISearchResultsUpdating {
 
 	public func updateSearchResults(for searchController: UISearchController) {
-		resetFilteredActivityDefinitions()
-		tableView.reloadData()
+		loadActivitiyDefinitions()
 	}
 }

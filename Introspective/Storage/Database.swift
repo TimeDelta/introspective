@@ -19,7 +19,7 @@ public protocol Database {
 
 	func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type) throws -> Type
 
-	func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, cacheName: String?) -> NSFetchedResultsController<Type>
+	func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, sortDescriptors: [NSSortDescriptor], cacheName: String?) -> NSFetchedResultsController<Type>
 	func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type]
 
 	/// This method needs to be called when trying to establish a relationship between two objects in different contexts.
@@ -38,8 +38,8 @@ public protocol Database {
 }
 
 extension Database {
-	func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, cacheName: String? = nil) -> NSFetchedResultsController<Type> {
-		return fetchedResultsController(type: type, cacheName: cacheName)
+	func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, sortDescriptors: [NSSortDescriptor], cacheName: String? = nil) -> NSFetchedResultsController<Type> {
+		return fetchedResultsController(type: type, sortDescriptors: sortDescriptors, cacheName: cacheName)
 	}
 }
 
@@ -89,9 +89,15 @@ public class DatabaseImpl: Database {
 		return newObject
 	}
 
-	public final func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, cacheName: String? = nil) -> NSFetchedResultsController<Type> {
+	public final func fetchedResultsController<Type: NSManagedObject>(
+		type: Type.Type,
+		sortDescriptors: [NSSortDescriptor],
+		cacheName: String? = nil)
+	-> NSFetchedResultsController<Type> {
+		let fetchRequest = type.fetchRequest() as! NSFetchRequest<Type>
+		fetchRequest.sortDescriptors = sortDescriptors
 		return NSFetchedResultsController<Type>(
-			fetchRequest: type.fetchRequest() as! NSFetchRequest<Type>,
+			fetchRequest: fetchRequest,
 			managedObjectContext: persistentContainer.viewContext,
 			sectionNameKeyPath: nil,
 			cacheName: cacheName)

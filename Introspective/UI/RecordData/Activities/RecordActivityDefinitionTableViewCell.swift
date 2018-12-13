@@ -35,6 +35,8 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 	}
 	private final var timer: Timer!
 
+	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "ActivityDefinition Table Cell"))
+
 	deinit { timer?.invalidate() }
 
 	// MARK: - Helper Functions
@@ -116,11 +118,16 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 	}
 
 	private final func getMostRecentlyStartedActivity() -> Activity? {
+		signpost.begin(
+			name: "getMostRecentlyStartedActivity",
+			idObject: activityDefinition,
+			"# activities: %d", activityDefinition.activities.count)
 		let keyName = CommonSampleAttributes.startDate.variableName!
 		let fetchRequest: NSFetchRequest<Activity> = basicFetchRequest()
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: keyName, ascending: false)]
 		do {
 			let activities = try DependencyInjector.db.query(fetchRequest)
+			signpost.end(name: "getMostRecentlyStartedActivity", idObject: activityDefinition)
 			if activities.count > 0 {
 				return activities[0]
 			}
@@ -133,35 +140,41 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 
 	private final func getAllActivitiesForToday() -> [Activity] {
 		do {
-			let activities = try DependencyInjector.db.query(basicFetchRequest())
-			var activitiesForToday = [Activity]()
-			for activity in activities {
-				if let endDate = activity.endDate {
-					if endDate.isToday() {
-						activitiesForToday.append(activity)
-					}
-				} else { // since nothing can have a future start date, there must be some overlap with today
-					activitiesForToday.append(activity)
-				}
-			}
-			return activitiesForToday
+			signpost.begin(
+				name: "getAllActivitiesForToday",
+				idObject: activityDefinition,
+				"# activities: %d", activityDefinition.activities.count)
+			let startOfDay = DependencyInjector.util.calendar.start(of: .day, in: Date()) as NSDate
+			let endOfDay = DependencyInjector.util.calendar.end(of: .day, in: Date()) as NSDate
+			let fetchRequest = basicFetchRequest()
+			fetchRequest.predicate = NSPredicate(
+				format: "(endDate == nil AND startDate > %@ AND startDate < %@) OR (endDate > %@ AND endDate < %@)",
+				startOfDay, endOfDay, startOfDay, endOfDay)
+			let activities = try DependencyInjector.db.query(fetchRequest)
+			signpost.end(name: "getAllActivitiesForToday", idObject: activityDefinition)
+			return activities
 		} catch {
 			os_log("Failed to fetch activities: %@", type: .error, error.localizedDescription)
+			signpost.end(name: "getAllActivitiesForToday", idObject: activityDefinition)
 			return []
 		}
 	}
 
 	private final func hasUnfinishedActivity() -> Bool {
+		signpost.begin(name: "hasUnfinishedActivity", idObject: activityDefinition)
 		let fetchRequest = basicFetchRequest()
 		fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
 			fetchRequest.predicate!,
 			NSPredicate(format: "endDate == nil"),
 		])
 		do {
-			return (try DependencyInjector.db.query(fetchRequest)).count > 0
+			let unfinishedActivities = try DependencyInjector.db.query(fetchRequest)
+			signpost.end(name: "hasUnfinishedActivity", idObject: activityDefinition)
+			return unfinishedActivities.count > 0
 		} catch {
 			os_log("Failed to query for unfinished activities: %@", type: .error, error.localizedDescription)
 		}
+		signpost.end(name: "hasUnfinishedActivity", idObject: activityDefinition)
 		return false
 	}
 
