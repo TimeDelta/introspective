@@ -174,7 +174,7 @@ final class QueryScreenUITests: UITest {
 
 		// when
 		app.tables.cells.allElementsBoundByIndex[1].swipeLeft()
-		app.tables.buttons["Delete"].tap()
+		app.tables.buttons["🗑️"].tap()
 
 		// then
 		XCTAssert(app.tables.staticTexts["Duration ≤ 0:00:00"].exists)

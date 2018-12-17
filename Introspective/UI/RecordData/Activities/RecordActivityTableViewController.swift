@@ -232,7 +232,6 @@ public final class RecordActivityTableViewController: UITableViewController {
 				preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 				DependencyInjector.db.delete(activityDefinition)
-//				self.tableView.deleteRows(at: [indexPath], with: .fade)
 				self.loadActivitiyDefinitions()
 			})
 			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))

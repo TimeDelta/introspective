@@ -84,7 +84,7 @@ final class ChooseAttributesToGraphTableViewController: UITableViewController {
 	}
 
 	final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
+		let delete = UITableViewRowAction(style: .destructive, title: "🗑️") { (_, indexPath) in
 			self.selectedAttributes.remove(at: indexPath.row)
 			self.addButton.isEnabled = true
 			tableView.deleteRows(at: [indexPath], with: .fade)

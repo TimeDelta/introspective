@@ -63,7 +63,7 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 	}
 
 	final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
+		let delete = UITableViewRowAction(style: .destructive, title: "🗑️") { (_, indexPath) in
 			self.chosenInformation.remove(at: indexPath.row)
 			tableView.deleteRows(at: [indexPath], with: .fade)
 			tableView.reloadData()

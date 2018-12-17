@@ -87,7 +87,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 
 	public final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let dose = filteredDoses.object(at: indexPath.row) as! MedicationDose
-		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
+		let delete = UITableViewRowAction(style: .destructive, title: "🗑️") { (_, indexPath) in
 			let alert = UIAlertController(
 				title: "Are you sure you want to delete this dose?",
 				message: self.getTextForDoseAt(indexPath.row),

@@ -184,7 +184,7 @@ class QueryViewController: UITableViewController {
 	}
 
 	final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
+		let delete = UITableViewRowAction(style: .destructive, title: "🗑️") { (_, indexPath) in
 			let sampleType = self.parts[indexPath.row].sampleTypeInfo
 			self.parts.remove(at: indexPath.row)
 			if sampleType != nil && indexPath.row < self.parts.count {

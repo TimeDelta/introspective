@@ -151,7 +151,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	// MARK: - Table view editing
 
 	public final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (_, indexPath) in
+		let delete = UITableViewRowAction(style: .destructive, title: "🗑️") { (_, indexPath) in
 			let medication = self.filteredMedications[indexPath.row]
 			let alert = UIAlertController(title: "Are you sure you want to delete \(medication.name)?", message: nil, preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in

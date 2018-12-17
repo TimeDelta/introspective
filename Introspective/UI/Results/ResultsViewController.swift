@@ -229,7 +229,7 @@ final class ResultsViewController: UITableViewController {
 
 	final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		guard let managedSample = self.samples[indexPath.row] as? NSManagedObject else { return [] }
-		let delete = UITableViewRowAction(style: .destructive, title: "Delete") { _, indexPath in
+		let delete = UITableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
 			if indexPath.section == 0 {
 				self.extraInformation.remove(at: indexPath.row)
 				self.extraInformationValues.remove(at: indexPath.row)

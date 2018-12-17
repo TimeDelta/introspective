@@ -209,7 +209,7 @@ final class RecordMedicationsUITests: UITest {
 
 		// when
 		app.tables.staticTexts[medicationName].swipeLeft()
-		app.buttons["Delete"].tap()
+		app.buttons["🗑️"].tap()
 		app.buttons["Yes"].tap()
 		app.searchFields["Search Medications"].buttons["Clear text"].tap()
 
@@ -237,7 +237,7 @@ final class RecordMedicationsUITests: UITest {
 
 		// when
 		app.tables.staticTexts[dose3Description].swipeLeft()
-		app.tables.buttons["Delete"].tap()
+		app.tables.buttons["🗑️"].tap()
 		app.buttons["Yes"].tap()
 		filterDoseDates()
 
@@ -263,7 +263,7 @@ final class RecordMedicationsUITests: UITest {
 
 		// when
 		app.tables.staticTexts[dose2Description].swipeLeft()
-		app.tables.buttons["Delete"].tap()
+		app.tables.buttons["🗑️"].tap()
 		app.buttons["Yes"].tap()
 
 		// then
