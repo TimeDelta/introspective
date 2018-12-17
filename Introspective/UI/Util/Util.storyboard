@@ -340,11 +340,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="MIp-es-gdi">
-                                <rect key="frame" x="0.0" y="0.0" width="300" height="162"/>
+                                <rect key="frame" x="0.0" y="38" width="300" height="124"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <date key="date" timeIntervalSinceReferenceDate="560965920.68524504">
                                     <!--2018-10-11 15:52:00 +0000-->
                                 </date>
+                                <connections>
+                                    <action selector="datePickerValueChanged:" destination="6Iz-O7-qxY" eventType="valueChanged" id="I7f-pJ-t9v"/>
+                                </connections>
                             </datePicker>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jdD-DW-9Fl">
                                 <rect key="frame" x="0.0" y="170" width="300" height="30"/>
@@ -359,6 +362,22 @@
                                     <action selector="userPressedAccept:" destination="1Uh-4R-NlM" eventType="touchUpInside" id="tdy-dO-iwb"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DnJ-s8-DZd">
+                                <rect key="frame" x="16" y="0.0" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Last"/>
+                                <connections>
+                                    <action selector="lastButtonPressed:" destination="6Iz-O7-qxY" eventType="touchUpInside" id="uBH-hT-vl4"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vbz-7Z-5ti">
+                                <rect key="frame" x="253" y="0.0" width="31" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Now"/>
+                                <connections>
+                                    <action selector="nowButtonPressed:" destination="6Iz-O7-qxY" eventType="touchUpInside" id="lbf-if-o1O"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="Ame-bs-9km"/>
@@ -366,6 +385,7 @@
                     <size key="freeformSize" width="300" height="200"/>
                     <connections>
                         <outlet property="datePicker" destination="MIp-es-gdi" id="7sc-V0-TOQ"/>
+                        <outlet property="lastButton" destination="DnJ-s8-DZd" id="ABB-zH-tkZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zj9-ZU-Syd" userLabel="First Responder" sceneMemberID="firstResponder"/>

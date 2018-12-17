@@ -156,11 +156,13 @@ public final class EditActivityTableViewController: UITableViewController {
 			let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "datePicker") as! SelectDateViewController
 			controller.initialDate = startDate
 			controller.notificationToSendOnAccept = Me.startDateChanged
+			controller.lastDate = getMostRecentActivityDate()
 			customPresentViewController(Me.presenter, viewController: controller, animated: false)
 		} else if indexPath == Me.endIndex {
 			let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "datePicker") as! SelectDateViewController
 			controller.initialDate = endDate
 			controller.notificationToSendOnAccept = Me.endDateChanged
+			controller.lastDate = getMostRecentActivityDate()
 			customPresentViewController(Me.presenter, viewController: controller, animated: false)
 		}
 		tableView.deselectRow(at: indexPath, animated: false)
@@ -281,5 +283,20 @@ public final class EditActivityTableViewController: UITableViewController {
 
 	private final func endDateIsBeforeStartDate() -> Bool {
 		return endDate?.isBeforeDate(startDate, granularity: .second) ?? false
+	}
+
+	private final func getMostRecentActivityDate() -> Date? {
+		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "endDate != nil")
+		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "endDate", ascending: false)]
+		do {
+			let activities = try DependencyInjector.db.query(fetchRequest)
+			if activities.count > 0 {
+				return activities[0].endDate
+			}
+		} catch {
+			os_log("Failed to fetch most recent activity: %@", type: .error, error.localizedDescription)
+		}
+		return nil
 	}
 }

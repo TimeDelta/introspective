@@ -14,6 +14,7 @@ public final class SelectDateViewController: UIViewController {
 	// MARK: - IBOutlets
 
 	@IBOutlet weak final var datePicker: UIDatePicker!
+	@IBOutlet weak final var lastButton: UIButton!
 
 	// MARK: - Member Variables
 
@@ -27,12 +28,13 @@ public final class SelectDateViewController: UIViewController {
 			}
 		}
 	}
-
+	public final var lastDate: Date?
 	public final var notificationToSendOnAccept: Notification.Name!
+
+	private final var currentDateIsFromNowOrLastButton = false
 
 	// MARK: - UIViewController Overrides
 
-	#warning("Add now / last buttons")
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
 		if let date = initialDate {
@@ -41,15 +43,37 @@ public final class SelectDateViewController: UIViewController {
 		datePicker.minimumDate = earliestPossibleDate
 		datePicker.maximumDate = latestPossibleDate
 		datePicker.datePickerMode = datePickerMode
+
+		lastButton.isEnabled = lastDate != nil
+		lastButton.isUserInteractionEnabled = lastDate != nil
+		lastButton.isHidden = lastDate == nil
 	}
 
 	// MARK: - Actions
+
+	@IBAction final func lastButtonPressed(_ sender: Any) {
+		if let date = lastDate {
+			datePicker.date = date
+			currentDateIsFromNowOrLastButton = true
+		} else {
+			os_log("last date was unexpectedly nil", type: .error)
+		}
+	}
+
+	@IBAction final func nowButtonPressed(_ sender: Any) {
+		datePicker.date = Date()
+		currentDateIsFromNowOrLastButton = true
+	}
+
+	@IBAction func datePickerValueChanged(_ sender: Any) {
+		currentDateIsFromNowOrLastButton = false
+	}
 
 	@IBAction final func acceptButtonPressed(_ sender: Any) {
 		var date = datePicker.date
 		if datePickerMode == .date {
 			date = DependencyInjector.util.calendar.start(of: .day, in: date)
-		} else if date != initialDate {
+		} else if date != initialDate && !currentDateIsFromNowOrLastButton {
 			date = DependencyInjector.util.calendar.start(of: .minute, in: date)
 		}
 		NotificationCenter.default.post(name: notificationToSendOnAccept, object: date)
