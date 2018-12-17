@@ -147,9 +147,12 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 			let startOfDay = DependencyInjector.util.calendar.start(of: .day, in: Date()) as NSDate
 			let endOfDay = DependencyInjector.util.calendar.end(of: .day, in: Date()) as NSDate
 			let fetchRequest = basicFetchRequest()
-			fetchRequest.predicate = NSPredicate(
-				format: "(endDate == nil AND startDate > %@ AND startDate < %@) OR (endDate > %@ AND endDate < %@)",
-				startOfDay, endOfDay, startOfDay, endOfDay)
+			fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+				fetchRequest.predicate!,
+				NSPredicate(
+					format: "(endDate == nil AND startDate > %@ AND startDate < %@) OR (endDate > %@ AND endDate < %@)",
+					startOfDay, endOfDay, startOfDay, endOfDay),
+			])
 			let activities = try DependencyInjector.db.query(fetchRequest)
 			signpost.end(name: "getAllActivitiesForToday", idObject: activityDefinition)
 			return activities
