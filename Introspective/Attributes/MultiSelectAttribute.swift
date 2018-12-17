@@ -86,7 +86,7 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 			if index > 0 && index < valueStrings.count - 1 {
 				text += ", "
 			}
-			if index == valueStrings.count - 1 {
+			if index == valueStrings.count - 1 && valueStrings.count > 1 {
 				text += " or "
 			}
 			text += valueStrings[index]
