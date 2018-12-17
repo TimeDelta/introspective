@@ -175,7 +175,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	@IBAction final func editYAxis(_ sender: Any) {
 		if grouping == nil {
 			let controller = storyboard!.instantiateViewController(withIdentifier: "chooseAttributes") as! ChooseAttributesToGraphTableViewController
-			controller.allowedAttributes = sampleType.attributes.filter{ $0 is NumericAttribute }
+			controller.allowedAttributes = sampleType.attributes.filter{ $0 is NumericAttribute || $0 is DurationAttribute }
 			controller.selectedAttributes = yAxis?.map{ $0.attribute! }
 			controller.notificationToSendWhenFinished = Me.yAxisChanged
 			realNavigationController?.pushViewController(controller, animated: true)
@@ -305,9 +305,9 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			}
 			signpost.end(name: "Creating series data")
 		} else {
-			xValuesAreNumbers = xAxis.attribute! is NumericAttribute
+			xValuesAreNumbers = xAxis.attribute! is NumericAttribute || xAxis.attribute! is DurationAttribute
 
-			var sortedSamples = samples.filter{ (try? $0.value(of: xAxis.attribute!)) != nil }
+			var sortedSamples = samples.filter{ (try? $0.graphableValue(of: xAxis.attribute!)) != nil }
 			// if x values are numbers or dates and are not sorted, graph will look very weird
 			if xValuesAreNumbers || xAxis.attribute! is DateAttribute {
 				sortedSamples = sortSamples(sortedSamples, by: xAxis.attribute!)
@@ -315,16 +315,16 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 
 			for yAttribute in yAxis.map({ $0.attribute! }) {
 				let filteredSamples = sortedSamples.filter() {
-					let yValue = try! $0.value(of: yAttribute)
+					let yValue = try! $0.graphableValue(of: yAttribute)
 					return yValue != nil
 				}
 				let data = filteredSamples.map({ (sample: Sample) -> [Any] in
-					let rawXValue = try! sample.value(of: self.xAxis.attribute!)
+					let rawXValue = try! sample.graphableValue(of: self.xAxis.attribute!)
 					var xValue: Any = rawXValue as Any
 					if !xValuesAreNumbers {
 						xValue = try! self.xAxis.attribute!.convertToDisplayableString(from: rawXValue)
 					}
-					return [xValue, try! sample.value(of: yAttribute) as Any]
+					return [xValue, try! sample.graphableValue(of: yAttribute) as Any]
 				})
 				allData.append(AASeriesElement()
 					.name(yAttribute.name)
@@ -344,7 +344,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		signpost.begin(name: "Transform", "Number of sample groups: %d", sampleGroups.count)
 		var values = [(groupValue: Date, sampleValue: String)]()
 		for (groupValue, samples) in sampleGroups {
-			let sampleValue = try! information.compute(forSamples: samples)
+			let sampleValue = try! information.computeGraphable(forSamples: samples)
 			values.append((groupValue: groupValue, sampleValue: sampleValue))
 		}
 		signpost.end(name: "Transform", "Finished transforming %d groups", sampleGroups.count)
@@ -395,18 +395,18 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		signpost.begin(name: "Sort samples", "Sorting %d sample by %@", samples.count, attribute.name)
 		let sortedSamples = samples.sorted(by: {
 			if let attribute = attribute as? DoubleAttribute {
-				let first = try! $0.value(of: attribute) as! Double
-				let second = try! $1.value(of: attribute) as! Double
+				let first = try! $0.graphableValue(of: attribute) as! Double
+				let second = try! $1.graphableValue(of: attribute) as! Double
 				return first < second
 			}
 			if let attribute = attribute as? IntegerAttribute {
-				let first = try! $0.value(of: attribute) as! Int
-				let second = try! $1.value(of: attribute) as! Int
+				let first = try! $0.graphableValue(of: attribute) as! Int
+				let second = try! $1.graphableValue(of: attribute) as! Int
 				return first < second
 			}
 			if let attribute = attribute as? DateAttribute {
-				let first = try! $0.value(of: attribute) as! Date
-				let second = try! $1.value(of: attribute) as! Date
+				let first = try! $0.graphableValue(of: attribute) as! Date
+				let second = try! $1.graphableValue(of: attribute) as! Date
 				return first < second
 			}
 			return true

@@ -220,13 +220,13 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 			xValuesAreNumbers = xAxis.attribute! is NumericAttribute
 			for yAttribute in yAxis.map({ $0.attribute! }) {
 				let filteredSamples = samples.filter() {
-					let xValue = try! $0.value(of: self.xAxis.attribute!)
+					let xValue = try! $0.graphableValue(of: self.xAxis.attribute!)
 					if xValue == nil { return false }
-					let yValue = try! $0.value(of: yAttribute)
+					let yValue = try! $0.graphableValue(of: yAttribute)
 					return yValue != nil
 				}
 				let data = filteredSamples.map({ (sample: Sample) -> [Any] in
-					let rawXValue = try! sample.value(of: self.xAxis.attribute!)
+					let rawXValue = try! sample.graphableValue(of: self.xAxis.attribute!)
 					var xValue: Any = rawXValue as Any
 					if !xValuesAreNumbers {
 						do {
@@ -236,7 +236,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 							os_log("Failed to convert value (%@) to displayable string: %@", type: .error, String(describing: rawXValue), error.localizedDescription)
 						}
 					}
-					return [xValue, try! sample.value(of: yAttribute) as Any]
+					return [xValue, try! sample.graphableValue(of: yAttribute) as Any]
 				})
 				allData.append(AASeriesElement()
 					.name(yAttribute.name)
@@ -253,7 +253,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	private final func transform(sampleGroups: [(Date, [Sample])], information: ExtraInformation) -> [(groupValue: Date, sampleValue: String)] {
 		var values = [(groupValue: Date, sampleValue: String)]()
 		for (groupValue, samples) in sampleGroups {
-			let sampleValue = try! information.compute(forSamples: samples)
+			let sampleValue = try! information.computeGraphable(forSamples: samples)
 			values.append((groupValue: groupValue, sampleValue: sampleValue))
 		}
 		return values

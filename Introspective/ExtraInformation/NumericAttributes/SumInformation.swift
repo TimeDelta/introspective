@@ -32,7 +32,33 @@ public final class SumInformation: AnyInformation {
 			return getSumOfDosageAttribute(filteredSamples)
 		}
 		if attribute is DurationAttribute {
-			return getSumOfDurationAttribute(filteredSamples)
+			return getSumOfDurationAttribute(filteredSamples).description
+		}
+
+		os_log(
+			"Unknown attribute type (%@) for attribute named '%@' of sample type '%@'",
+			type: .error,
+			String(describing: type(of: attribute)),
+			attribute.name,
+			String(describing: type(of: samples[0])))
+		return ""
+	}
+
+	public final override func computeGraphable(forSamples samples: [Sample]) -> String {
+		let filteredSamples = DependencyInjector.util.sample.getOnly(samples: samples, from: startDate, to: endDate)
+		if filteredSamples.count == 0 { return "0" }
+
+		if attribute is DoubleAttribute {
+			return String(DependencyInjector.util.numericSample.sum(for: attribute, over: filteredSamples) as Double)
+		}
+		if attribute is IntegerAttribute {
+			return String(DependencyInjector.util.numericSample.sum(for: attribute, over: filteredSamples) as Int)
+		}
+		if attribute is DosageAttribute {
+			return getSumOfDosageAttribute(filteredSamples)
+		}
+		if attribute is DurationAttribute {
+			return String(getSumOfDurationAttribute(filteredSamples).inUnit(.hour))
 		}
 
 		os_log(
@@ -97,14 +123,14 @@ public final class SumInformation: AnyInformation {
 
 	// MARK: - Duration Helper Functions
 
-	private final func getSumOfDurationAttribute(_ filteredSamples: [Sample]) -> String {
+	private final func getSumOfDurationAttribute(_ filteredSamples: [Sample]) -> Duration {
 		var totalDuration = Duration(0)
 		for sample in filteredSamples {
 			if let duration = getDuration(from: sample) {
 				totalDuration += duration
 			}
 		}
-		return totalDuration.description
+		return totalDuration
 	}
 
 	private final func getDuration(from sample: Sample) -> Duration? {

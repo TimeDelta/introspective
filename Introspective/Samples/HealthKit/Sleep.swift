@@ -117,6 +117,13 @@ public final class Sleep: HealthKitCategorySample {
 		return [.start: startDate, .end: endDate]
 	}
 
+	public final func graphableValue(of attribute: Attribute) throws -> Any? {
+		if attribute.equalTo(Me.durationAttribute) {
+			return Duration(start: startDate, end: endDate).inUnit(.hour)
+		}
+		return try value(of: attribute)
+	}
+
 	// MARK: - Attributed Functions
 
 	public final func value(of attribute: Attribute) throws -> Any? {

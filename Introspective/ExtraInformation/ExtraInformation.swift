@@ -17,7 +17,8 @@ public protocol ExtraInformation: CustomStringConvertible {
 
 	init(_ attribute: Attribute)
 
-	func compute(forSamples: [Sample]) throws -> String
+	func compute(forSamples samples: [Sample]) throws -> String
+	func computeGraphable(forSamples samples: [Sample]) throws -> String
 	func equalTo(_ other: ExtraInformation) -> Bool
 }
 
@@ -35,7 +36,8 @@ public class AnyInformation: ExtraInformation {
 		self.attribute = attribute
 	}
 
-	public func compute(forSamples: [Sample]) -> String { fatalError("Must override compute()") }
+	public func compute(forSamples samples: [Sample]) -> String { fatalError("Must override compute()") }
+	public func computeGraphable(forSamples samples: [Sample]) -> String { fatalError("Must override computeGraphable()") }
 
 	public func equalTo(_ other: ExtraInformation) -> Bool { fatalError("Must override equalTo()") }
 }

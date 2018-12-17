@@ -23,11 +23,17 @@ public protocol Sample: Attributed {
 	static var defaultDependentAttribute: Attribute { get }
 	static var defaultIndependentAttribute: Attribute { get }
 
+	func graphableValue(of attribute: Attribute) throws -> Any?
+
 	func dates() -> [DateType: Date]
 	func equalTo(_ otherSample: Sample) -> Bool
 }
 
 extension Sample {
+
+	public func graphableValue(of attribute: Attribute) throws -> Any? {
+		return try value(of: attribute)
+	}
 
 	public func equalTo(_ otherSample: Sample) -> Bool {
 		if attributedName != otherSample.attributedName { return false }

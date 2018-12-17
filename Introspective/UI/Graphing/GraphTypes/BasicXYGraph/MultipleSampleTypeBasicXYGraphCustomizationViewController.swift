@@ -396,7 +396,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		signpost.begin(name: "Transform", "Number of sample groups: %d", sampleGroups.count)
 		var values = [(groupValue: Date, sampleValue: String)]()
 		for (groupValue, samples) in sampleGroups {
-			let sampleValue = try! information.compute(forSamples: samples)
+			let sampleValue = try! information.computeGraphable(forSamples: samples)
 			values.append((groupValue: groupValue, sampleValue: sampleValue))
 		}
 		signpost.end(name: "Transform", "Finished transforming %d groups", sampleGroups.count)

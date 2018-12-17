@@ -56,6 +56,13 @@ public final class Duration: Equatable, Comparable {
 		return interval.toUnits(units)
 	}
 
+	/// Supported units are: .second, .minute, .hour, .day, .weekOfYear
+	public final func inUnit(_ unit: Calendar.Component) -> Double {
+		precondition(Me.unitMultipliers[unit] != nil, "Unsupported unit passed: \(unit.description)")
+
+		return Double(interval) / Double(Me.unitMultipliers[unit]!)
+	}
+
 	// MARK: - Operators
 
 	public static func -(lhs: Duration, rhs: Duration) -> Duration {

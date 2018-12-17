@@ -22,6 +22,10 @@ public final class CountInformation: AnyInformation {
 		return String(filteredSamples.count)
 	}
 
+	public final override func computeGraphable(forSamples samples: [Sample]) -> String {
+		return compute(forSamples: samples)
+	}
+
 	public final override func equalTo(_ other: ExtraInformation) -> Bool {
 		return other is CountInformation && attribute.equalTo(other.attribute)
 	}

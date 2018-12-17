@@ -66,6 +66,13 @@ public class Activity: NSManagedObject, CoreDataSample {
 		return dates
 	}
 
+	public final func graphableValue(of attribute: Attribute) throws -> Any? {
+		if attribute.equalTo(Me.durationAttribute) {
+			return duration.inUnit(.hour)
+		}
+		return try value(of: attribute)
+	}
+
 	// MARK: - Attributed Functions
 
 	public final func value(of attribute: Attribute) throws -> Any? {

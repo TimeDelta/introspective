@@ -41,6 +41,10 @@ public final class MostRecentDateInformation: AnyInformation {
 		return DependencyInjector.util.calendar.string(for: mostRecentDate, dateStyle: .short, timeStyle: .short)
 	}
 
+	public final override func computeGraphable(forSamples samples: [Sample]) -> String {
+		return compute(forSamples: samples)
+	}
+
 	public final override func equalTo(_ other: ExtraInformation) -> Bool {
 		return other is MostRecentDateInformation && attribute.equalTo(other.attribute)
 	}
