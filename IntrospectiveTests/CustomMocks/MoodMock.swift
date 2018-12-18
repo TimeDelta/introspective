@@ -216,6 +216,21 @@ class MoodMock: Mood, Mock {
 		return __value
     }
 
+    func graphableValue(of attribute: Attribute) throws -> Any? {
+        addInvocation(.m_graphableValue__of_attribute(Parameter<Attribute>.value(`attribute`)))
+		let perform = methodPerformValue(.m_graphableValue__of_attribute(Parameter<Attribute>.value(`attribute`))) as? (Attribute) -> Void
+		perform?(`attribute`)
+		var __value: Any? = nil
+		do {
+		    __value = try methodReturnValue(.m_graphableValue__of_attribute(Parameter<Attribute>.value(`attribute`))).casted()
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     func dates() -> [DateType: Date] {
         addInvocation(.m_dates)
 		let perform = methodPerformValue(.m_dates) as? () -> Void
@@ -341,6 +356,7 @@ class MoodMock: Mood, Mock {
         case m_value__of_attribute(Parameter<Attribute>)
         case m_set__attribute_attributeto_value(Parameter<Attribute>, Parameter<Any?>)
         case m_equalTo__otherAttributed(Parameter<Attributed>)
+        case m_graphableValue__of_attribute(Parameter<Attribute>)
         case m_dates
         case m_equalTo__otherSample(Parameter<Sample>)
         case p_maxRating_get
@@ -367,6 +383,9 @@ class MoodMock: Mood, Mock {
             case (.m_equalTo__otherAttributed(let lhsOtherattributed), .m_equalTo__otherAttributed(let rhsOtherattributed)):
                 guard Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher) else { return false } 
                 return true 
+            case (.m_graphableValue__of_attribute(let lhsAttribute), .m_graphableValue__of_attribute(let rhsAttribute)):
+                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
+                return true 
             case (.m_dates, .m_dates):
                 return true 
             case (.m_equalTo__otherSample(let lhsOthersample), .m_equalTo__otherSample(let rhsOthersample)):
@@ -392,6 +411,7 @@ class MoodMock: Mood, Mock {
             case let .m_value__of_attribute(p0): return p0.intValue
             case let .m_set__attribute_attributeto_value(p0, p1): return p0.intValue + p1.intValue
             case let .m_equalTo__otherAttributed(p0): return p0.intValue
+            case let .m_graphableValue__of_attribute(p0): return p0.intValue
             case .m_dates: return 0
             case let .m_equalTo__otherSample(p0): return p0.intValue
             case .p_maxRating_get: return 0
@@ -449,6 +469,9 @@ class MoodMock: Mood, Mock {
 		static func equalTo(otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) }))
         }
+        static func graphableValue(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
+            return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willReturn.map({ Product.return($0) }))
+        }
         static func dates(willReturn: [DateType: Date]...) -> MethodStub {
             return Given(method: .m_dates, products: willReturn.map({ Product.return($0) }))
         }
@@ -500,6 +523,16 @@ class MoodMock: Mood, Mock {
 			willProduce(stubber)
 			return given
         }
+        static func graphableValue(of attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func graphableValue(of attribute: Parameter<Attribute>, willProduce: (StubberThrows<Any?>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Any?).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     struct Verify {
@@ -510,6 +543,7 @@ class MoodMock: Mood, Mock {
         static func equalTo(_ otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
 		static func equalTo(otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
+        static func graphableValue(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_graphableValue__of_attribute(`attribute`))}
         static func dates() -> Verify { return Verify(method: .m_dates)}
         static func equalTo(_ otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherSample` label")
@@ -543,6 +577,9 @@ class MoodMock: Mood, Mock {
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
 		static func equalTo(otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherAttributed(`otherAttributed`), performs: perform)
+        }
+        static func graphableValue(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
+            return Perform(method: .m_graphableValue__of_attribute(`attribute`), performs: perform)
         }
         static func dates(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_dates, performs: perform)

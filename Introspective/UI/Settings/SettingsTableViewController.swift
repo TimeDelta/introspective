@@ -13,13 +13,9 @@ final class SettingsTableViewController: UITableViewController {
 	private typealias Me = SettingsTableViewController
 
 	private static let identifiers = [
-		"generalSettings",
+		"activitySettings",
 		"moodSettings",
 	]
-
-	final override func viewDidLoad() {
-		super.viewDidLoad()
-	}
 
 	// MARK: - Table view data source
 

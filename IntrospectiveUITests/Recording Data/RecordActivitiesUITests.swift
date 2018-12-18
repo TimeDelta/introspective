@@ -364,6 +364,50 @@ final class RecordActivitiesUITests: UITest {
 		XCTAssert(!app.buttons["Save"].isEnabled)
 	}
 
+	func testAutoIgnoreEnabledAndActivityStoppedBeforeMinimumTime_doesNotSaveActivity() {
+		// given
+		let activityName = "grehuiq"
+		let minTime = 2
+		createActivityDefinition(name: activityName)
+		app.tabBars.buttons["Settings"].tap()
+		app.tables.cells.staticTexts["Activity"].tap()
+		setAutoIgnore(enabled: true, seconds: String(minTime))
+		app.navigationBars.buttons["Settings"].tap()
+		app.tabBars.buttons["Record Data"].tap()
+
+		// when
+		app.tables.cells.staticTexts[activityName].tap()
+		sleep(UInt32(minTime) - 1)
+		app.tables.cells.staticTexts[activityName].tap()
+
+		// then
+		XCTAssertEqual(app.tables.cells.staticTexts["total duration for today"].value as? String, "")
+	}
+
+	func testAutoIgnoreEnabledAndActivityStoppedAfterMinimumTime_savesActivity() {
+		// given
+		let activityName = "grehuiq"
+		let minTime = 1
+		createActivityDefinition(name: activityName)
+		app.tabBars.buttons["Settings"].tap()
+		app.tables.cells.staticTexts["Activity"].tap()
+		setAutoIgnore(enabled: true, seconds: String(minTime))
+		app.navigationBars.buttons["Settings"].tap()
+		app.tabBars.buttons["Record Data"].tap()
+
+		// when
+		app.tables.cells.staticTexts[activityName].tap()
+		sleep(UInt32(minTime) + 1)
+		app.tables.cells.staticTexts[activityName].tap()
+
+		// then
+		var seconds = String(minTime + 1)
+		if seconds.count == 1 {
+			seconds = "0" + seconds
+		}
+		XCTAssertEqual(app.tables.cells.staticTexts["total duration for today"].value as? String, "0:00:" + seconds)
+	}
+
 	// MARK: - Quick Create / Start
 
 	func testLongPressOnAddButtonWhenSearchBarIsEmpty_doesNotCreateActivity() {
@@ -610,14 +654,6 @@ final class RecordActivitiesUITests: UITest {
 		app.buttons["Save"].tap()
 	}
 
-	private final func activityDefinitionTagsField() -> XCUIElement {
-		return app.tables.children(matching: .cell).element(boundBy: 2).children(matching: .textField).element
-	}
-
-	private final func activityTagsField() -> XCUIElement {
-		return app.tables.children(matching: .cell).element(boundBy: 4).children(matching: .textField).element
-	}
-
 	private final func definitionTagsFieldAccessibilityValueAsSet() -> Set<String> {
 		if let tags = activityDefinitionTagsField().value as? String {
 			return Set(tags.split(separator: ";").map{ String($0) })
@@ -677,5 +713,38 @@ final class RecordActivitiesUITests: UITest {
 			}
 		}
 		return text
+	}
+
+	private final func setAutoIgnore(enabled: Bool, seconds: String) {
+		var currentlyEnabled = autoIgnoreEnabledSwitch().value as? String == "1"
+		if currentlyEnabled {
+			setTextFor(field: autoIgnoreSecondsTextField(), to: seconds)
+		} else {
+			autoIgnoreEnabledSwitch().tap()
+			setTextFor(field: autoIgnoreSecondsTextField(), to: seconds)
+		}
+
+		currentlyEnabled = autoIgnoreEnabledSwitch().value as? String == "1"
+		if currentlyEnabled != enabled {
+			autoIgnoreEnabledSwitch().tap()
+		}
+	}
+
+	// MARK: - Element Functions
+
+	private final func activityDefinitionTagsField() -> XCUIElement {
+		return app.tables.children(matching: .cell).element(boundBy: 2).children(matching: .textField).element
+	}
+
+	private final func activityTagsField() -> XCUIElement {
+		return app.tables.children(matching: .cell).element(boundBy: 4).children(matching: .textField).element
+	}
+
+	private final func autoIgnoreEnabledSwitch() -> XCUIElement {
+		return app.tables.cells.switches["auto-ignore enabled"]
+	}
+
+	private final func autoIgnoreSecondsTextField() -> XCUIElement {
+		return app.tables.cells.textFields["auto-ignore seconds"]
 	}
 }

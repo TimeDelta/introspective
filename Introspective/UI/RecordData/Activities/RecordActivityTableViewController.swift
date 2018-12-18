@@ -104,7 +104,16 @@ public final class RecordActivityTableViewController: UITableViewController {
 		}
 		if cell.running {
 			if let activity = getMostRecentlyStartedIncompleteActivity(for: activityDefinition) {
-				activity.endDate = Date()
+				let now = Date()
+				if DependencyInjector.settings.autoIgnoreEnabled {
+					let minSeconds = DependencyInjector.settings.autoIgnoreSeconds
+					if Duration(start: activity.startDate, end: now).inUnit(.second) < Double(minSeconds) {
+						DependencyInjector.db.delete(activity)
+						cell.updateUiElements()
+						return
+					}
+				}
+				activity.endDate = now
 				DependencyInjector.db.save()
 				cell.updateUiElements()
 			} else {

@@ -22,7 +22,7 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 	public final var rating: Double = 0 {
 		didSet { updateUI() }
 	}
-	public final var maxRating: Double = DependencyInjector.settings.maximumMood {
+	public final var maxRating: Double = DependencyInjector.settings.maxMood {
 		didSet { updateUI() }
 	}
 

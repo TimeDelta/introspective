@@ -22,7 +22,7 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 	private static let heartRateRange: (min: Double, max: Double) = (min: 45, max: 200)
 	private static let leanBodyMassRange: (min: Double, max: Double) = (min: 120, max: 150)
 	private static let medicationDoseAmountRange: (min: Double, max: Double) = (min: 10, max: 100)
-	private static let moodRatingRange: (min: Double, max: Double) = (min: 0, max: DependencyInjector.settings.maximumMood)
+	private static let moodRatingRange: (min: Double, max: Double) = (min: 0, max: DependencyInjector.settings.maxMood)
 	private static let sleepHoursRange: (min: Int, max: Int) = (min: 5, max: 10)
 	private static let weightRange: (min: Double, max: Double) = (min: 100, max: 200)
 
@@ -162,7 +162,7 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 	private final func createRandomMood(_ date: Date) {
 		let mood = try! DependencyInjector.sample.mood()
 		mood.timestamp = date
-		mood.maxRating = DependencyInjector.settings.maximumMood
+		mood.maxRating = DependencyInjector.settings.maxMood
 		mood.rating = randomDouble(Me.moodRatingRange)
 		mood.note = randomEntry(Me.moodNotes)
 	}

@@ -24,4 +24,12 @@ extension UIViewController {
 		}
 		present(alert, animated: false, completion: nil)
 	}
+
+	final func value<Type>(for key: UiUtil.UserInfoKey, from notification: Notification) -> Type? {
+		return UiUtil.value(for: key, from: notification)
+	}
+
+	final func info(_ info: [UiUtil.UserInfoKey: Any]) -> [AnyHashable: Any] {
+		return UiUtil.info(info)
+	}
 }

@@ -34,7 +34,7 @@ final class MoodSettingsViewController: UIViewController {
 
 	@IBAction final func doneEditingMaxMood(_ sender: Any) {
 		if !DependencyInjector.util.string.isNumber(maxMoodField.text!) {
-			maxMoodField.text = String(DependencyInjector.settings.maximumMood)
+			maxMoodField.text = String(DependencyInjector.settings.maxMood)
 		}
 	}
 
@@ -67,8 +67,8 @@ final class MoodSettingsViewController: UIViewController {
 							let mood = (sample as! Mood)
 							let oldMax = mood.maxRating
 							let oldRating = mood.rating
-							mood.maxRating = DependencyInjector.settings.maximumMood
-							mood.rating = (oldRating / oldMax) * DependencyInjector.settings.maximumMood
+							mood.maxRating = DependencyInjector.settings.maxMood
+							mood.rating = (oldRating / oldMax) * DependencyInjector.settings.maxMood
 						}
 						DependencyInjector.db.save()
 						MoodQueryImpl.updatingMoodsInBackground = false
@@ -92,6 +92,6 @@ final class MoodSettingsViewController: UIViewController {
 	private final func updateUI() {
 		let formatter = NumberFormatter()
 		formatter.numberStyle = .decimal
-		maxMoodField.text = MoodUiUtil.valueToString(DependencyInjector.settings.maximumMood)
+		maxMoodField.text = MoodUiUtil.valueToString(DependencyInjector.settings.maxMood)
 	}
 }

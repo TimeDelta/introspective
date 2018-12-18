@@ -113,7 +113,12 @@ class UITest: XCTestCase {
 		textField.tap()
 		textField.tap()
 		app.menuItems["Select All"].tap()
-		app.keyboards.keys["delete"].tap()
+		var deleteKey = app.keyboards.keys["delete"]
+		if !deleteKey.exists {
+			// key label is different on number pad keyboard
+			deleteKey = app.keyboards.keys["Delete"]
+		}
+		deleteKey.tap()
 	}
 
 	final func delete(numberOfTags: Int, fromTagsField tagsField: XCUIElement) {

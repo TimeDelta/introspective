@@ -38,7 +38,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	// MARK: - Button Actions
 
 	@IBAction final func ratingChanged(_ sender: Any) {
-		let maxValue = DependencyInjector.settings.maximumMood
+		let maxValue = DependencyInjector.settings.maxMood
 		let newValue = Double(ratingSlider.value) * maxValue
 
 		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: newValue, maxRating: maxValue)
@@ -56,9 +56,9 @@ final class RecordMoodTableViewCell: UITableViewCell {
 		do {
 			let mood = try DependencyInjector.sample.mood()
 			mood.timestamp = Date()
-			mood.rating = Double(ratingSlider.value) * DependencyInjector.settings.maximumMood
+			mood.rating = Double(ratingSlider.value) * DependencyInjector.settings.maxMood
 			mood.note = note
-			mood.maxRating = DependencyInjector.settings.maximumMood
+			mood.maxRating = DependencyInjector.settings.maxMood
 			DependencyInjector.db.save()
 
 			reset()

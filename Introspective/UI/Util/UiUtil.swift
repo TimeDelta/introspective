@@ -8,8 +8,21 @@
 
 import UIKit
 import Presentr
+import os
 
 final class UiUtil {
+
+	public enum UserInfoKey: Hashable, CustomStringConvertible {
+		case autoIgnoreEnabled
+		case autoIgnoreSeconds
+
+		public var description: String {
+			switch (self) {
+				case .autoIgnoreEnabled: return "autoIgnoreEnabled"
+				case .autoIgnoreSeconds: return "autoIgnoreSeconds"
+			}
+		}
+	}
 
 	public static let defaultPresenter: Presentr = {
 		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
@@ -63,5 +76,27 @@ final class UiUtil {
 		keyboardToolBar.setItems([flexibleSpace, doneButton, flexibleSpace], animated: true)
 
 		textView.inputAccessoryView = keyboardToolBar
+	}
+
+	public static func value<Type>(for key: UserInfoKey, from notification: Notification) -> Type? {
+		if let userInfo = notification.userInfo {
+			let value = userInfo[key]
+			if value is Type {
+				return value as? Type
+			}
+			if value == nil {
+				os_log("Missing property for '%@' notification: %@", type: .error, notification.name.rawValue, key.description)
+			} else {
+				os_log("Wrong object type for '%@' notification: %@", type: .error, notification.name.rawValue, key.description)
+			}
+		} else {
+			os_log("No user info for '%@' notification", type: .error, notification.name.rawValue)
+		}
+		return nil
+	}
+
+	/// this is just a convenience method so that you don't have to type "UserInfoKey." a bunch of times
+	public static func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any] {
+		return info
 	}
 }

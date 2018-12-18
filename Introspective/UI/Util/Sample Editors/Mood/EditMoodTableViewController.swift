@@ -44,7 +44,7 @@ public final class EditMoodTableViewController: UITableViewController {
 
 	private final var timestamp: Date = Date()
 	private final var rating: Double = 0
-	private final var maxRating: Double = DependencyInjector.settings.maximumMood
+	private final var maxRating: Double = DependencyInjector.settings.maxMood
 	private final var note: String? = nil
 
 	// MARK: - UIViewController Overrides

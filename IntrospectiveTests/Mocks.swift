@@ -8425,12 +8425,26 @@ class SettingsMock: Settings, Mock, StaticMock {
         methodPerformValues = []
     }
 
-    var maximumMood: Double {
-		get {	invocations.append(.p_maximumMood_get); return __p_maximumMood ?? givenGetterValue(.p_maximumMood_get, "SettingsMock - stub value for maximumMood was not defined") }
+    var maxMood: Double {
+		get {	invocations.append(.p_maxMood_get); return __p_maxMood ?? givenGetterValue(.p_maxMood_get, "SettingsMock - stub value for maxMood was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	__p_maximumMood = newValue }
+		set {	__p_maxMood = newValue }
 	}
-	private var __p_maximumMood: (Double)?
+	private var __p_maxMood: (Double)?
+
+    var autoIgnoreEnabled: Bool {
+		get {	invocations.append(.p_autoIgnoreEnabled_get); return __p_autoIgnoreEnabled ?? givenGetterValue(.p_autoIgnoreEnabled_get, "SettingsMock - stub value for autoIgnoreEnabled was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_autoIgnoreEnabled = newValue }
+	}
+	private var __p_autoIgnoreEnabled: (Bool)?
+
+    var autoIgnoreSeconds: Int {
+		get {	invocations.append(.p_autoIgnoreSeconds_get); return __p_autoIgnoreSeconds ?? givenGetterValue(.p_autoIgnoreSeconds_get, "SettingsMock - stub value for autoIgnoreSeconds was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_autoIgnoreSeconds = newValue }
+	}
+	private var __p_autoIgnoreSeconds: (Int)?
 
 
     static var entityName: String {
@@ -8446,6 +8460,18 @@ class SettingsMock: Settings, Mock, StaticMock {
     func setMaxMood(_ value: Double) {
         addInvocation(.m_setMaxMood__value(Parameter<Double>.value(`value`)))
 		let perform = methodPerformValue(.m_setMaxMood__value(Parameter<Double>.value(`value`))) as? (Double) -> Void
+		perform?(`value`)
+    }
+
+    func setAutoIgnoreEnabled(_ value: Bool) {
+        addInvocation(.m_setAutoIgnoreEnabled__value(Parameter<Bool>.value(`value`)))
+		let perform = methodPerformValue(.m_setAutoIgnoreEnabled__value(Parameter<Bool>.value(`value`))) as? (Bool) -> Void
+		perform?(`value`)
+    }
+
+    func setAutoIgnoreSeconds(_ value: Int) {
+        addInvocation(.m_setAutoIgnoreSeconds__value(Parameter<Int>.value(`value`)))
+		let perform = methodPerformValue(.m_setAutoIgnoreSeconds__value(Parameter<Int>.value(`value`))) as? (Int) -> Void
 		perform?(`value`)
     }
 
@@ -8520,14 +8546,24 @@ class SettingsMock: Settings, Mock, StaticMock {
     
     fileprivate enum MethodType {
         case m_setMaxMood__value(Parameter<Double>)
+        case m_setAutoIgnoreEnabled__value(Parameter<Bool>)
+        case m_setAutoIgnoreSeconds__value(Parameter<Int>)
         case m_changed__setting(Parameter<Setting>)
         case m_reset
         case m_save
-        case p_maximumMood_get
+        case p_maxMood_get
+        case p_autoIgnoreEnabled_get
+        case p_autoIgnoreSeconds_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
             case (.m_setMaxMood__value(let lhsValue), .m_setMaxMood__value(let rhsValue)):
+                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                return true 
+            case (.m_setAutoIgnoreEnabled__value(let lhsValue), .m_setAutoIgnoreEnabled__value(let rhsValue)):
+                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                return true 
+            case (.m_setAutoIgnoreSeconds__value(let lhsValue), .m_setAutoIgnoreSeconds__value(let rhsValue)):
                 guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
                 return true 
             case (.m_changed__setting(let lhsSetting), .m_changed__setting(let rhsSetting)):
@@ -8537,7 +8573,9 @@ class SettingsMock: Settings, Mock, StaticMock {
                 return true 
             case (.m_save, .m_save):
                 return true 
-            case (.p_maximumMood_get,.p_maximumMood_get): return true
+            case (.p_maxMood_get,.p_maxMood_get): return true
+            case (.p_autoIgnoreEnabled_get,.p_autoIgnoreEnabled_get): return true
+            case (.p_autoIgnoreSeconds_get,.p_autoIgnoreSeconds_get): return true
             default: return false
             }
         }
@@ -8545,10 +8583,14 @@ class SettingsMock: Settings, Mock, StaticMock {
         func intValue() -> Int {
             switch self {
             case let .m_setMaxMood__value(p0): return p0.intValue
+            case let .m_setAutoIgnoreEnabled__value(p0): return p0.intValue
+            case let .m_setAutoIgnoreSeconds__value(p0): return p0.intValue
             case let .m_changed__setting(p0): return p0.intValue
             case .m_reset: return 0
             case .m_save: return 0
-            case .p_maximumMood_get: return 0
+            case .p_maxMood_get: return 0
+            case .p_autoIgnoreEnabled_get: return 0
+            case .p_autoIgnoreSeconds_get: return 0
             }
         }
     }
@@ -8561,8 +8603,14 @@ class SettingsMock: Settings, Mock, StaticMock {
             super.init(products)
         }
 
-        static func maximumMood(getter defaultValue: Double...) -> PropertyStub {
-            return Given(method: .p_maximumMood_get, products: defaultValue.map({ Product.return($0) }))
+        static func maxMood(getter defaultValue: Double...) -> PropertyStub {
+            return Given(method: .p_maxMood_get, products: defaultValue.map({ Product.return($0) }))
+        }
+        static func autoIgnoreEnabled(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_autoIgnoreEnabled_get, products: defaultValue.map({ Product.return($0) }))
+        }
+        static func autoIgnoreSeconds(getter defaultValue: Int...) -> PropertyStub {
+            return Given(method: .p_autoIgnoreSeconds_get, products: defaultValue.map({ Product.return($0) }))
         }
 
         static func changed(_ setting: Parameter<Setting>, willReturn: Bool...) -> MethodStub {
@@ -8587,12 +8635,20 @@ class SettingsMock: Settings, Mock, StaticMock {
         static func setMaxMood(_ value: Parameter<Double>) -> Verify { return Verify(method: .m_setMaxMood__value(`value`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
 		static func setMaxMood(value: Parameter<Double>) -> Verify { return Verify(method: .m_setMaxMood__value(`value`))}
+        static func setAutoIgnoreEnabled(_ value: Parameter<Bool>) -> Verify { return Verify(method: .m_setAutoIgnoreEnabled__value(`value`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
+		static func setAutoIgnoreEnabled(value: Parameter<Bool>) -> Verify { return Verify(method: .m_setAutoIgnoreEnabled__value(`value`))}
+        static func setAutoIgnoreSeconds(_ value: Parameter<Int>) -> Verify { return Verify(method: .m_setAutoIgnoreSeconds__value(`value`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
+		static func setAutoIgnoreSeconds(value: Parameter<Int>) -> Verify { return Verify(method: .m_setAutoIgnoreSeconds__value(`value`))}
         static func changed(_ setting: Parameter<Setting>) -> Verify { return Verify(method: .m_changed__setting(`setting`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `setting` label")
 		static func changed(setting: Parameter<Setting>) -> Verify { return Verify(method: .m_changed__setting(`setting`))}
         static func reset() -> Verify { return Verify(method: .m_reset)}
         static func save() -> Verify { return Verify(method: .m_save)}
-        static var maximumMood: Verify { return Verify(method: .p_maximumMood_get) }
+        static var maxMood: Verify { return Verify(method: .p_maxMood_get) }
+        static var autoIgnoreEnabled: Verify { return Verify(method: .p_autoIgnoreEnabled_get) }
+        static var autoIgnoreSeconds: Verify { return Verify(method: .p_autoIgnoreSeconds_get) }
     }
 
     struct Perform {
@@ -8605,6 +8661,20 @@ class SettingsMock: Settings, Mock, StaticMock {
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
 		static func setMaxMood(value: Parameter<Double>, perform: @escaping (Double) -> Void) -> Perform {
             return Perform(method: .m_setMaxMood__value(`value`), performs: perform)
+        }
+        static func setAutoIgnoreEnabled(_ value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
+            return Perform(method: .m_setAutoIgnoreEnabled__value(`value`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
+		static func setAutoIgnoreEnabled(value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
+            return Perform(method: .m_setAutoIgnoreEnabled__value(`value`), performs: perform)
+        }
+        static func setAutoIgnoreSeconds(_ value: Parameter<Int>, perform: @escaping (Int) -> Void) -> Perform {
+            return Perform(method: .m_setAutoIgnoreSeconds__value(`value`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
+		static func setAutoIgnoreSeconds(value: Parameter<Int>, perform: @escaping (Int) -> Void) -> Perform {
+            return Perform(method: .m_setAutoIgnoreSeconds__value(`value`), performs: perform)
         }
         static func changed(_ setting: Parameter<Setting>, perform: @escaping (Setting) -> Void) -> Perform {
             return Perform(method: .m_changed__setting(`setting`), performs: perform)
