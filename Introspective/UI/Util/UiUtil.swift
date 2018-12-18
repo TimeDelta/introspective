@@ -16,8 +16,8 @@ public enum UserInfoKey: Hashable, CustomStringConvertible {
 
 	public var description: String {
 		switch (self) {
-		case .autoIgnoreEnabled: return "autoIgnoreEnabled"
-		case .autoIgnoreSeconds: return "autoIgnoreSeconds"
+			case .autoIgnoreEnabled: return "autoIgnoreEnabled"
+			case .autoIgnoreSeconds: return "autoIgnoreSeconds"
 		}
 	}
 }
@@ -34,6 +34,7 @@ public protocol UiUtil {
 	func addDoneButtonToKeyboardFor(_ textView: UITextView, target: Any?, action: Selector?)
 	func value<Type>(for key: UserInfoKey, from notification: Notification) -> Type?
 	func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any]
+	func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String) -> Type
 }
 
 extension UiUtil {
@@ -127,5 +128,9 @@ public final class UiUtilImpl: UiUtil {
 	/// this is just a convenience method so that you don't have to type "UserInfoKey." a bunch of times
 	public func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any] {
 		return info
+	}
+
+	public func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String) -> Type {
+		return UIStoryboard(name: storyboardName, bundle: nil).instantiateViewController(withIdentifier: controllerName) as! Type
 	}
 }
