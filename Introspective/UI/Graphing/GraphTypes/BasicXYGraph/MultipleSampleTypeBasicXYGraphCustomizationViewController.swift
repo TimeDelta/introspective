@@ -82,10 +82,10 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		didSet {
 			if xAxisQuery == nil {
 				chooseXAxisQueryButton.setTitle("Choose query (optional)", for: .normal)
-				UiUtil.setButton(clearXAxisQueryButton, enabled: false, hidden: true)
+				DependencyInjector.util.ui.setButton(clearXAxisQueryButton, enabled: false, hidden: true)
 			} else {
 				chooseXAxisQueryButton.setTitle("Query chosen (click to change)", for: .normal)
-				UiUtil.setButton(clearXAxisQueryButton, enabled: true, hidden: false)
+				DependencyInjector.util.ui.setButton(clearXAxisQueryButton, enabled: true, hidden: false)
 			}
 			chooseXAxisQueryButton.accessibilityValue = chooseXAxisQueryButton.currentTitle
 		}
@@ -94,10 +94,10 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		didSet {
 			if yAxisQuery == nil {
 				chooseYAxisQueryButton.setTitle("Choose query (optional)", for: .normal)
-				UiUtil.setButton(clearYAxisQueryButton, enabled: false, hidden: true)
+				DependencyInjector.util.ui.setButton(clearYAxisQueryButton, enabled: false, hidden: true)
 			} else {
 				chooseYAxisQueryButton.setTitle("Query chosen (click to change)", for: .normal)
-				UiUtil.setButton(clearYAxisQueryButton, enabled: true, hidden: false)
+				DependencyInjector.util.ui.setButton(clearYAxisQueryButton, enabled: true, hidden: false)
 			}
 			chooseYAxisQueryButton.accessibilityValue = chooseYAxisQueryButton.currentTitle
 		}

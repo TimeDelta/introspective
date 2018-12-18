@@ -27,7 +27,7 @@ public final class ActivityEndDateTableViewCell: UITableViewCell {
 			}
 			endDateLabel.accessibilityValue = endDateLabel.text
 			let hideClearButton = endDate == nil
-			UiUtil.setButton(clearButton, enabled: !hideClearButton, hidden: hideClearButton)
+			DependencyInjector.util.ui.setButton(clearButton, enabled: !hideClearButton, hidden: hideClearButton)
 		}
 	}
 

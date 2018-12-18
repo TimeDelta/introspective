@@ -72,11 +72,11 @@ public final class MedicationDoseEditorViewController: UIViewController {
 		if dosageIsValid() {
 			dosageLabel.textColor = .black
 			saveButton.backgroundColor = .black
-			UiUtil.setButton(saveButton, enabled: true, hidden: false)
+			DependencyInjector.util.ui.setButton(saveButton, enabled: true, hidden: false)
 		} else {
 			dosageLabel.textColor = .red
 			saveButton.backgroundColor = .lightGray
-			UiUtil.setButton(saveButton, enabled: false, hidden: false)
+			DependencyInjector.util.ui.setButton(saveButton, enabled: false, hidden: false)
 		}
 	}
 

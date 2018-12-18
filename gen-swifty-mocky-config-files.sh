@@ -12,6 +12,7 @@ addArgs() {
     echo "  import:" >> "$1"
     echo "    - HealthKit" >> "$1"
     echo "    - CoreData" >> "$1"
+    echo "    - Presentr" >> "$1"
     echo "  excludedSwiftLintRules:" >> "$1"
     echo "    - force_cast" >> "$1"
     echo "    - function_body_length" >> "$1"

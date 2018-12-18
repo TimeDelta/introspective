@@ -10,11 +10,11 @@ import UIKit
 
 extension UITableViewCell {
 
-	final func value<Type>(for key: UiUtil.UserInfoKey, from notification: Notification) -> Type? {
-		return UiUtil.value(for: key, from: notification)
+	final func value<Type>(for key: UserInfoKey, from notification: Notification) -> Type? {
+		return DependencyInjector.util.ui.value(for: key, from: notification)
 	}
 
-	final func info(_ info: [UiUtil.UserInfoKey: Any]) -> [AnyHashable: Any] {
-		return UiUtil.info(info)
+	final func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any] {
+		return DependencyInjector.util.ui.info(info)
 	}
 }

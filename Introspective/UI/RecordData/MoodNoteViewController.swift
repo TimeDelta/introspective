@@ -24,7 +24,7 @@ final class MoodNoteViewController: UIViewController {
 			textView.text = note
 		}
 
-		UiUtil.addDoneButtonToKeyboardFor(textView, target: self, action: #selector(doneClicked))
+		DependencyInjector.util.ui.addDoneButtonToKeyboardFor(textView, target: self, action: #selector(doneClicked))
 	}
 
 	@objc private final func doneClicked() {

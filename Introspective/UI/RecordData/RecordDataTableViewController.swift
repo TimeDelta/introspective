@@ -15,7 +15,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 	// MARK: - Static Variables
 
 	private typealias Me = RecordDataTableViewController
-	private static let presenter: Presentr = UiUtil.customPresenter(width: .custom(size: 300), height: .custom(size: 200), center: .topCenter)
+	private static let presenter: Presentr = DependencyInjector.util.ui.customPresenter(width: .custom(size: 300), height: .custom(size: 200), center: .topCenter)
 
 	public static let showErrorMessage = Notification.Name("showErrorOnRecordDataScreen")
 	public static let showViewController = Notification.Name("showViewController")

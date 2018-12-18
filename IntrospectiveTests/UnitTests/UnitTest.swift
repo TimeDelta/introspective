@@ -27,6 +27,7 @@ class UnitTest: XCTestCase {
 	var mockSearchUtil: SearchUtilMock!
 	var mockStringUtil: StringUtilMock!
 	var mockTextNormalizationUtil: TextNormalizationUtilMock!
+	var mockUiUtil: UiUtilMock!
 
 	var mockSampleFactory: SampleFactoryMock!
 	var mockQueryFactory: QueryFactoryMock!
@@ -93,5 +94,7 @@ class UnitTest: XCTestCase {
 		utilFactory.string = mockStringUtil
 		mockTextNormalizationUtil = TextNormalizationUtilMock()
 		utilFactory.textNormalization = mockTextNormalizationUtil
+		mockUiUtil = UiUtilMock()
+		utilFactory.ui = mockUiUtil
 	}
 }

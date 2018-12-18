@@ -29,7 +29,7 @@ final class MoodSettingsViewController: UIViewController {
 		updateUI()
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(reset))
 
-		UiUtil.setBackButton(for: self, title: "Settings", action: #selector(done))
+		DependencyInjector.util.ui.setBackButton(for: self, title: "Settings", action: #selector(done))
 	}
 
 	@IBAction final func doneEditingMaxMood(_ sender: Any) {

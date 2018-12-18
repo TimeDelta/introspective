@@ -24,7 +24,7 @@ public final class EditMoodTableViewController: UITableViewController {
 	private static let ratingIndex = IndexPath(row: 1, section: 0)
 	private static let noteIndex = IndexPath(row: 0, section: 1)
 
-	private static let datePresenter = UiUtil.customPresenter(
+	private static let datePresenter = DependencyInjector.util.ui.customPresenter(
 		width: .full,
 		height: .fluid(percentage: 0.4),
 		center: .bottomCenter)

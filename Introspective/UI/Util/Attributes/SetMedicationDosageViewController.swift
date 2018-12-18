@@ -43,10 +43,10 @@ public final class SetMedicationDosageViewController: UIViewController {
 	@IBAction final func dosageTextChanged(_ sender: Any) {
 		if dosageIsValid() {
 			saveButton.backgroundColor = .black
-			UiUtil.setButton(saveButton, enabled: true, hidden: false)
+			DependencyInjector.util.ui.setButton(saveButton, enabled: true, hidden: false)
 		} else {
 			saveButton.backgroundColor = .lightGray
-			UiUtil.setButton(saveButton, enabled: false, hidden: false)
+			DependencyInjector.util.ui.setButton(saveButton, enabled: false, hidden: false)
 		}
 	}
 

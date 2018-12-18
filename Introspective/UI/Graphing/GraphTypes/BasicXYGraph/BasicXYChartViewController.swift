@@ -59,7 +59,7 @@ class BasicXYChartViewController: UIViewController {
 		chartView.scrollEnabled = false
 		view.insertSubview(chartView, at: 0)
 
-		UiUtil.setBackButton(for: self, title: "Graph Setup", action: #selector(back))
+		DependencyInjector.util.ui.setBackButton(for: self, title: "Graph Setup", action: #selector(back))
 
 		finishedSetup = true
 	}

@@ -90,9 +90,9 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 				lastTakenText += dosage.description + " on "
 			}
 			lastTakenText += DependencyInjector.util.calendar.string(for: mostRecentDose.timestamp, dateStyle: .medium, timeStyle: .short)
-			UiUtil.setButton(lastTakenOnDateButton, enabled: true, hidden: false)
+			DependencyInjector.util.ui.setButton(lastTakenOnDateButton, enabled: true, hidden: false)
 		} else {
-			UiUtil.setButton(lastTakenOnDateButton, enabled: false, hidden: false)
+			DependencyInjector.util.ui.setButton(lastTakenOnDateButton, enabled: false, hidden: false)
 		}
 		lastTakenOnDateButton.setTitle(lastTakenText, for: .normal)
 		lastTakenOnDateButton.accessibilityValue = lastTakenText

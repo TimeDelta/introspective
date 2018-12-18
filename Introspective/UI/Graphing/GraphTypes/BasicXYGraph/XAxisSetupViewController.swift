@@ -126,12 +126,12 @@ final class XAxisSetupViewController: UIViewController {
 		if finishedLoading {
 			if grouping == nil {
 				chooseGroupingButton.setTitle("Choose grouping (optional)", for: .normal)
-				UiUtil.setView(informationPicker, enabled: false, hidden: true)
-				UiUtil.setButton(clearGroupingButton, enabled: false, hidden: true)
+				DependencyInjector.util.ui.setView(informationPicker, enabled: false, hidden: true)
+				DependencyInjector.util.ui.setButton(clearGroupingButton, enabled: false, hidden: true)
 			} else {
 				chooseGroupingButton.setTitle("Per " + grouping!.description.localizedLowercase, for: .normal)
-				UiUtil.setView(informationPicker, enabled: true, hidden: false)
-				UiUtil.setButton(clearGroupingButton, enabled: true, hidden: false)
+				DependencyInjector.util.ui.setView(informationPicker, enabled: true, hidden: false)
+				DependencyInjector.util.ui.setButton(clearGroupingButton, enabled: true, hidden: false)
 			}
 			chooseGroupingButton.accessibilityValue = chooseGroupingButton.currentTitle
 		}

@@ -44,7 +44,7 @@ final class QueryResultsGraphSetupViewController: UIViewController {
 		let controller = storyboard!.instantiateViewController(withIdentifier: "chooseGraphType") as! ChooseGraphTypeViewController
 		controller.currentValue = graphType
 		controller.notificationToSendOnAccept = Me.setGraphType
-		customPresentViewController(UiUtil.defaultPresenter, viewController: controller, animated: false)
+		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
 	}
 
 	// MARK: - Received Notifications

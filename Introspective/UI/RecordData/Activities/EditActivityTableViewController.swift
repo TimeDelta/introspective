@@ -23,7 +23,7 @@ public final class EditActivityTableViewController: UITableViewController {
 	private static let noteIndex = IndexPath(row: 0, section: 1)
 	private static let tagsIndex = IndexPath(row: 0, section: 2)
 
-	private static let presenter: Presentr = UiUtil.customPresenter(
+	private static let presenter: Presentr = DependencyInjector.util.ui.customPresenter(
 		width: .full,
 		height: .fluid(percentage: 0.4),
 		center: .bottomCenter)

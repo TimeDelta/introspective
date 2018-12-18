@@ -79,10 +79,10 @@ public final class EditMedicationViewController: UIViewController {
 		validate()
 
 		if frequency == nil {
-			UiUtil.setButton(resetFrequencyButton, enabled: false, hidden: true)
+			DependencyInjector.util.ui.setButton(resetFrequencyButton, enabled: false, hidden: true)
 		}
 		if startedOnDate == nil {
-			UiUtil.setButton(resetStartedOnButton, enabled: false, hidden: true)
+			DependencyInjector.util.ui.setButton(resetStartedOnButton, enabled: false, hidden: true)
 		}
 
 		notesTextView.delegate = self
@@ -103,14 +103,14 @@ public final class EditMedicationViewController: UIViewController {
 		frequency = notification.object as? Frequency
 		updateFrequencyButtonTitle()
 		if frequency != nil {
-			UiUtil.setButton(resetFrequencyButton, enabled: true, hidden: false)
+			DependencyInjector.util.ui.setButton(resetFrequencyButton, enabled: true, hidden: false)
 		}
 	}
 
 	@objc private final func setStartedOnDate(notification: Notification) {
 		if let date = notification.object as? Date {
 			startedOnDate = DependencyInjector.util.calendar.start(of: .day, in: date)
-			UiUtil.setButton(resetStartedOnButton, enabled: true, hidden: false)
+			DependencyInjector.util.ui.setButton(resetStartedOnButton, enabled: true, hidden: false)
 		} else {
 			startedOnDate = nil
 		}
@@ -126,7 +126,7 @@ public final class EditMedicationViewController: UIViewController {
 	@IBAction final func frequencyDescriptionButtonPressed(_ sender: Any) {
 		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "description") as! DescriptionViewController
 		controller.descriptionText = Medication.frequency.extendedDescription ?? "No description"
-		customPresentViewController(UiUtil.defaultPresenter, viewController: controller, animated: false)
+		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func frequencyButtonPressed(_ sender: Any) {
@@ -139,13 +139,13 @@ public final class EditMedicationViewController: UIViewController {
 	@IBAction final func resetFrequencyButtonPressed(_ sender: Any) {
 		frequency = nil
 		updateFrequencyButtonTitle()
-		UiUtil.setButton(resetFrequencyButton, enabled: false, hidden: true)
+		DependencyInjector.util.ui.setButton(resetFrequencyButton, enabled: false, hidden: true)
 	}
 
 	@IBAction final func startedOnDescriptionButtonPressed(_ sender: Any) {
 		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "description") as! DescriptionViewController
 		controller.descriptionText = Medication.startedOn.extendedDescription ?? "No description"
-		customPresentViewController(UiUtil.defaultPresenter, viewController: controller, animated: false)
+		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func startedOnButtonPressed(_ sender: Any) {
@@ -153,19 +153,19 @@ public final class EditMedicationViewController: UIViewController {
 		controller.initialDate = startedOnDate
 		controller.notificationToSendOnAccept = Me.startedOnChanged
 		controller.datePickerMode = .date
-		customPresentViewController(UiUtil.defaultPresenter, viewController: controller, animated: true)
+		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: true)
 	}
 
 	@IBAction final func resetStartedOnButtonPressed(_ sender: Any) {
 		startedOnDate = nil
 		updateStartedOnDateButtonTitle()
-		UiUtil.setButton(resetStartedOnButton, enabled: false, hidden: true)
+		DependencyInjector.util.ui.setButton(resetStartedOnButton, enabled: false, hidden: true)
 	}
 
 	@IBAction final func dosageDescriptionButtonPressed(_ sender: Any) {
 		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "description") as! DescriptionViewController
 		controller.descriptionText = Medication.dosage.extendedDescription ?? "No description"
-		customPresentViewController(UiUtil.defaultPresenter, viewController: controller, animated: false)
+		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func saveButtonPressed(_ sender: Any) {

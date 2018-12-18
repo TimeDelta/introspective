@@ -75,7 +75,7 @@ final class ResultsViewController: UITableViewController {
 
 		self.navigationItem.setRightBarButton(actionsButton, animated: true)
 
-		UiUtil.setBackButton(for: self, title: "Query", action: #selector(done))
+		DependencyInjector.util.ui.setBackButton(for: self, title: "Query", action: #selector(done))
 
 		tableView.flashScrollIndicators()
 		finishedLoading = true

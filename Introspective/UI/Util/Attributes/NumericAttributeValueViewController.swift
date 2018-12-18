@@ -62,12 +62,12 @@ final class NumericAttributeValueViewController: UIViewController {
 	}
 
 	private final func disableSaveButton() {
-		UiUtil.setButton(saveButton, enabled: false, hidden: false)
+		DependencyInjector.util.ui.setButton(saveButton, enabled: false, hidden: false)
 		saveButton.backgroundColor = UIColor.gray
 	}
 
 	private final func enableSaveButton() {
-		UiUtil.setButton(saveButton, enabled: true, hidden: false)
+		DependencyInjector.util.ui.setButton(saveButton, enabled: true, hidden: false)
 		saveButton.backgroundColor = UIColor.black
 	}
 }

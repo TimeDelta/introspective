@@ -74,7 +74,7 @@ final class ChooseAttributesToGraphTableViewController: UITableViewController {
 		}
 		unselectedAttributes.append(selectedAttributes[editIndex])
 		controller.attributes = unselectedAttributes
-		customPresentViewController(UiUtil.defaultPresenter, viewController: controller, animated: true)
+		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: true)
 	}
 
 	// MARK: - TableView Editing

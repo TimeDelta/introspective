@@ -20,6 +20,7 @@ public final class UtilFactory {
 	private static let realSearchUtil = SearchUtilImpl()
 	private static let realStringUtil = StringUtilImpl()
 	private static let realIOUtil = IOUtilImpl()
+	private static let realUiUtil = UiUtilImpl()
 
 	public final var calendar: CalendarUtil = Me.realCalendarUtil
 	public final var numericSample: NumericSampleUtil = Me.realHKQuantitySampleUtil
@@ -29,4 +30,5 @@ public final class UtilFactory {
 	public final var search: SearchUtil = Me.realSearchUtil
 	public final var string: StringUtil = Me.realStringUtil
 	public final var io: IOUtil = Me.realIOUtil
+	public final var ui: UiUtil = Me.realUiUtil
 }

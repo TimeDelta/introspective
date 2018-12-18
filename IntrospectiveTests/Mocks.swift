@@ -12,6 +12,7 @@
 import SwiftyMocky
 import HealthKit
 import CoreData
+import Presentr
 @testable import Introspective
 
     public final class MockyAssertion {
@@ -31,6 +32,7 @@ import SwiftyMocky
 import XCTest
 import HealthKit
 import CoreData
+import Presentr
 @testable import Introspective
 
     func MockyAssert(_ expression: @autoclosure () -> Bool, _ message: @autoclosure () -> String = "Verification failed", file: StaticString = #file, line: UInt = #line) {
@@ -10024,6 +10026,342 @@ class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `text` label")
 		static func removePunctuation(text: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_removePunctuation__text(`text`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> Product {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
+// MARK: - UiUtil
+class UiUtilMock: UiUtil, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    typealias PropertyStub = Given
+    typealias MethodStub = Given
+    typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    var defaultPresenter: Presentr {
+		get {	invocations.append(.p_defaultPresenter_get); return __p_defaultPresenter ?? givenGetterValue(.p_defaultPresenter_get, "UiUtilMock - stub value for defaultPresenter was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_defaultPresenter = newValue }
+	}
+	private var __p_defaultPresenter: (Presentr)?
+
+
+
+
+
+    func customPresenter(width: ModalSize, height: ModalSize, center: ModalCenterPosition) -> Presentr {
+        addInvocation(.m_customPresenter__width_widthheight_heightcenter_center(Parameter<ModalSize>.value(`width`), Parameter<ModalSize>.value(`height`), Parameter<ModalCenterPosition>.value(`center`)))
+		let perform = methodPerformValue(.m_customPresenter__width_widthheight_heightcenter_center(Parameter<ModalSize>.value(`width`), Parameter<ModalSize>.value(`height`), Parameter<ModalCenterPosition>.value(`center`))) as? (ModalSize, ModalSize, ModalCenterPosition) -> Void
+		perform?(`width`, `height`, `center`)
+		var __value: Presentr
+		do {
+		    __value = try methodReturnValue(.m_customPresenter__width_widthheight_heightcenter_center(Parameter<ModalSize>.value(`width`), Parameter<ModalSize>.value(`height`), Parameter<ModalCenterPosition>.value(`center`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for customPresenter(width: ModalSize, height: ModalSize, center: ModalCenterPosition). Use given")
+			Failure("Stub return value not specified for customPresenter(width: ModalSize, height: ModalSize, center: ModalCenterPosition). Use given")
+		}
+		return __value
+    }
+
+    func setView(_ view: UIView, enabled: Bool?, hidden: Bool?) {
+        addInvocation(.m_setView__viewenabled_enabledhidden_hidden(Parameter<UIView>.value(`view`), Parameter<Bool?>.value(`enabled`), Parameter<Bool?>.value(`hidden`)))
+		let perform = methodPerformValue(.m_setView__viewenabled_enabledhidden_hidden(Parameter<UIView>.value(`view`), Parameter<Bool?>.value(`enabled`), Parameter<Bool?>.value(`hidden`))) as? (UIView, Bool?, Bool?) -> Void
+		perform?(`view`, `enabled`, `hidden`)
+    }
+
+    func setButton(_ button: UIButton, enabled: Bool?, hidden: Bool?) {
+        addInvocation(.m_setButton__buttonenabled_enabledhidden_hidden(Parameter<UIButton>.value(`button`), Parameter<Bool?>.value(`enabled`), Parameter<Bool?>.value(`hidden`)))
+		let perform = methodPerformValue(.m_setButton__buttonenabled_enabledhidden_hidden(Parameter<UIButton>.value(`button`), Parameter<Bool?>.value(`enabled`), Parameter<Bool?>.value(`hidden`))) as? (UIButton, Bool?, Bool?) -> Void
+		perform?(`button`, `enabled`, `hidden`)
+    }
+
+    func setBackButton(for viewController: UIViewController, title: String, action selector: Selector) {
+        addInvocation(.m_setBackButton__for_viewControllertitle_titleaction_selector(Parameter<UIViewController>.value(`viewController`), Parameter<String>.value(`title`), Parameter<Selector>.value(`selector`)))
+		let perform = methodPerformValue(.m_setBackButton__for_viewControllertitle_titleaction_selector(Parameter<UIViewController>.value(`viewController`), Parameter<String>.value(`title`), Parameter<Selector>.value(`selector`))) as? (UIViewController, String, Selector) -> Void
+		perform?(`viewController`, `title`, `selector`)
+    }
+
+    func addDoneButtonToKeyboardFor(_ textView: UITextView, target: Any?, action: Selector?) {
+        addInvocation(.m_addDoneButtonToKeyboardFor__textViewtarget_targetaction_action(Parameter<UITextView>.value(`textView`), Parameter<Any?>.value(`target`), Parameter<Selector?>.value(`action`)))
+		let perform = methodPerformValue(.m_addDoneButtonToKeyboardFor__textViewtarget_targetaction_action(Parameter<UITextView>.value(`textView`), Parameter<Any?>.value(`target`), Parameter<Selector?>.value(`action`))) as? (UITextView, Any?, Selector?) -> Void
+		perform?(`textView`, `target`, `action`)
+    }
+
+    func value<Type>(for key: UserInfoKey, from notification: Notification) -> Type? {
+        addInvocation(.m_value__for_keyfrom_notification(Parameter<UserInfoKey>.value(`key`), Parameter<Notification>.value(`notification`)))
+		let perform = methodPerformValue(.m_value__for_keyfrom_notification(Parameter<UserInfoKey>.value(`key`), Parameter<Notification>.value(`notification`))) as? (UserInfoKey, Notification) -> Void
+		perform?(`key`, `notification`)
+		var __value: Type? = nil
+		do {
+		    __value = try methodReturnValue(.m_value__for_keyfrom_notification(Parameter<UserInfoKey>.value(`key`), Parameter<Notification>.value(`notification`))).casted()
+		} catch {
+			// do nothing
+		}
+		return __value
+    }
+
+    func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any] {
+        addInvocation(.m_info__info(Parameter<[UserInfoKey: Any]>.value(`info`)))
+		let perform = methodPerformValue(.m_info__info(Parameter<[UserInfoKey: Any]>.value(`info`))) as? ([UserInfoKey: Any]) -> Void
+		perform?(`info`)
+		var __value: [AnyHashable: Any]
+		do {
+		    __value = try methodReturnValue(.m_info__info(Parameter<[UserInfoKey: Any]>.value(`info`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for info(_ info: [UserInfoKey: Any]). Use given")
+			Failure("Stub return value not specified for info(_ info: [UserInfoKey: Any]). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_customPresenter__width_widthheight_heightcenter_center(Parameter<ModalSize>, Parameter<ModalSize>, Parameter<ModalCenterPosition>)
+        case m_setView__viewenabled_enabledhidden_hidden(Parameter<UIView>, Parameter<Bool?>, Parameter<Bool?>)
+        case m_setButton__buttonenabled_enabledhidden_hidden(Parameter<UIButton>, Parameter<Bool?>, Parameter<Bool?>)
+        case m_setBackButton__for_viewControllertitle_titleaction_selector(Parameter<UIViewController>, Parameter<String>, Parameter<Selector>)
+        case m_addDoneButtonToKeyboardFor__textViewtarget_targetaction_action(Parameter<UITextView>, Parameter<Any?>, Parameter<Selector?>)
+        case m_value__for_keyfrom_notification(Parameter<UserInfoKey>, Parameter<Notification>)
+        case m_info__info(Parameter<[UserInfoKey: Any]>)
+        case p_defaultPresenter_get
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_customPresenter__width_widthheight_heightcenter_center(let lhsWidth, let lhsHeight, let lhsCenter), .m_customPresenter__width_widthheight_heightcenter_center(let rhsWidth, let rhsHeight, let rhsCenter)):
+                guard Parameter.compare(lhs: lhsWidth, rhs: rhsWidth, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsHeight, rhs: rhsHeight, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsCenter, rhs: rhsCenter, with: matcher) else { return false } 
+                return true 
+            case (.m_setView__viewenabled_enabledhidden_hidden(let lhsView, let lhsEnabled, let lhsHidden), .m_setView__viewenabled_enabledhidden_hidden(let rhsView, let rhsEnabled, let rhsHidden)):
+                guard Parameter.compare(lhs: lhsView, rhs: rhsView, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsEnabled, rhs: rhsEnabled, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsHidden, rhs: rhsHidden, with: matcher) else { return false } 
+                return true 
+            case (.m_setButton__buttonenabled_enabledhidden_hidden(let lhsButton, let lhsEnabled, let lhsHidden), .m_setButton__buttonenabled_enabledhidden_hidden(let rhsButton, let rhsEnabled, let rhsHidden)):
+                guard Parameter.compare(lhs: lhsButton, rhs: rhsButton, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsEnabled, rhs: rhsEnabled, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsHidden, rhs: rhsHidden, with: matcher) else { return false } 
+                return true 
+            case (.m_setBackButton__for_viewControllertitle_titleaction_selector(let lhsViewcontroller, let lhsTitle, let lhsSelector), .m_setBackButton__for_viewControllertitle_titleaction_selector(let rhsViewcontroller, let rhsTitle, let rhsSelector)):
+                guard Parameter.compare(lhs: lhsViewcontroller, rhs: rhsViewcontroller, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsTitle, rhs: rhsTitle, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsSelector, rhs: rhsSelector, with: matcher) else { return false } 
+                return true 
+            case (.m_addDoneButtonToKeyboardFor__textViewtarget_targetaction_action(let lhsTextview, let lhsTarget, let lhsAction), .m_addDoneButtonToKeyboardFor__textViewtarget_targetaction_action(let rhsTextview, let rhsTarget, let rhsAction)):
+                guard Parameter.compare(lhs: lhsTextview, rhs: rhsTextview, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsTarget, rhs: rhsTarget, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAction, rhs: rhsAction, with: matcher) else { return false } 
+                return true 
+            case (.m_value__for_keyfrom_notification(let lhsKey, let lhsNotification), .m_value__for_keyfrom_notification(let rhsKey, let rhsNotification)):
+                guard Parameter.compare(lhs: lhsKey, rhs: rhsKey, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsNotification, rhs: rhsNotification, with: matcher) else { return false } 
+                return true 
+            case (.m_info__info(let lhsInfo), .m_info__info(let rhsInfo)):
+                guard Parameter.compare(lhs: lhsInfo, rhs: rhsInfo, with: matcher) else { return false } 
+                return true 
+            case (.p_defaultPresenter_get,.p_defaultPresenter_get): return true
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_customPresenter__width_widthheight_heightcenter_center(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_setView__viewenabled_enabledhidden_hidden(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_setButton__buttonenabled_enabledhidden_hidden(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_setBackButton__for_viewControllertitle_titleaction_selector(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_addDoneButtonToKeyboardFor__textViewtarget_targetaction_action(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_value__for_keyfrom_notification(p0, p1): return p0.intValue + p1.intValue
+            case let .m_info__info(p0): return p0.intValue
+            case .p_defaultPresenter_get: return 0
+            }
+        }
+    }
+
+    class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [Product]) {
+            self.method = method
+            super.init(products)
+        }
+
+        static func defaultPresenter(getter defaultValue: Presentr...) -> PropertyStub {
+            return Given(method: .p_defaultPresenter_get, products: defaultValue.map({ Product.return($0) }))
+        }
+
+        static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>, willReturn: Presentr...) -> MethodStub {
+            return Given(method: .m_customPresenter__width_widthheight_heightcenter_center(`width`, `height`, `center`), products: willReturn.map({ Product.return($0) }))
+        }
+        static func value<Type>(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, willReturn: Type?...) -> MethodStub {
+            return Given(method: .m_value__for_keyfrom_notification(`key`, `notification`), products: willReturn.map({ Product.return($0) }))
+        }
+        static func info(_ info: Parameter<[UserInfoKey: Any]>, willReturn: [AnyHashable: Any]...) -> MethodStub {
+            return Given(method: .m_info__info(`info`), products: willReturn.map({ Product.return($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `info` label")
+		static func info(info: Parameter<[UserInfoKey: Any]>, willReturn: [AnyHashable: Any]...) -> MethodStub {
+            return Given(method: .m_info__info(`info`), products: willReturn.map({ Product.return($0) }))
+        }
+        static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>, willProduce: (Stubber<Presentr>) -> Void) -> MethodStub {
+            let willReturn: [Presentr] = []
+			let given: Given = { return Given(method: .m_customPresenter__width_widthheight_heightcenter_center(`width`, `height`, `center`), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (Presentr).self)
+			willProduce(stubber)
+			return given
+        }
+        static func value<Type>(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, willProduce: (Stubber<Type?>) -> Void) -> MethodStub {
+            let willReturn: [Type?] = []
+			let given: Given = { return Given(method: .m_value__for_keyfrom_notification(`key`, `notification`), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (Type?).self)
+			willProduce(stubber)
+			return given
+        }
+        static func info(_ info: Parameter<[UserInfoKey: Any]>, willProduce: (Stubber<[AnyHashable: Any]>) -> Void) -> MethodStub {
+            let willReturn: [[AnyHashable: Any]] = []
+			let given: Given = { return Given(method: .m_info__info(`info`), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: ([AnyHashable: Any]).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    struct Verify {
+        fileprivate var method: MethodType
+
+        static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>) -> Verify { return Verify(method: .m_customPresenter__width_widthheight_heightcenter_center(`width`, `height`, `center`))}
+        static func setView(_ view: Parameter<UIView>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>) -> Verify { return Verify(method: .m_setView__viewenabled_enabledhidden_hidden(`view`, `enabled`, `hidden`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `view` label")
+		static func setView(view: Parameter<UIView>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>) -> Verify { return Verify(method: .m_setView__viewenabled_enabledhidden_hidden(`view`, `enabled`, `hidden`))}
+        static func setButton(_ button: Parameter<UIButton>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>) -> Verify { return Verify(method: .m_setButton__buttonenabled_enabledhidden_hidden(`button`, `enabled`, `hidden`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `button` label")
+		static func setButton(button: Parameter<UIButton>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>) -> Verify { return Verify(method: .m_setButton__buttonenabled_enabledhidden_hidden(`button`, `enabled`, `hidden`))}
+        static func setBackButton(for viewController: Parameter<UIViewController>, title: Parameter<String>, action selector: Parameter<Selector>) -> Verify { return Verify(method: .m_setBackButton__for_viewControllertitle_titleaction_selector(`viewController`, `title`, `selector`))}
+        static func addDoneButtonToKeyboardFor(_ textView: Parameter<UITextView>, target: Parameter<Any?>, action: Parameter<Selector?>) -> Verify { return Verify(method: .m_addDoneButtonToKeyboardFor__textViewtarget_targetaction_action(`textView`, `target`, `action`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `textView` label")
+		static func addDoneButtonToKeyboardFor(textView: Parameter<UITextView>, target: Parameter<Any?>, action: Parameter<Selector?>) -> Verify { return Verify(method: .m_addDoneButtonToKeyboardFor__textViewtarget_targetaction_action(`textView`, `target`, `action`))}
+        static func value(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>) -> Verify { return Verify(method: .m_value__for_keyfrom_notification(`key`, `notification`))}
+        static func info(_ info: Parameter<[UserInfoKey: Any]>) -> Verify { return Verify(method: .m_info__info(`info`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `info` label")
+		static func info(info: Parameter<[UserInfoKey: Any]>) -> Verify { return Verify(method: .m_info__info(`info`))}
+        static var defaultPresenter: Verify { return Verify(method: .p_defaultPresenter_get) }
+    }
+
+    struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>, perform: @escaping (ModalSize, ModalSize, ModalCenterPosition) -> Void) -> Perform {
+            return Perform(method: .m_customPresenter__width_widthheight_heightcenter_center(`width`, `height`, `center`), performs: perform)
+        }
+        static func setView(_ view: Parameter<UIView>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>, perform: @escaping (UIView, Bool?, Bool?) -> Void) -> Perform {
+            return Perform(method: .m_setView__viewenabled_enabledhidden_hidden(`view`, `enabled`, `hidden`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `view` label")
+		static func setView(view: Parameter<UIView>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>, perform: @escaping (UIView, Bool?, Bool?) -> Void) -> Perform {
+            return Perform(method: .m_setView__viewenabled_enabledhidden_hidden(`view`, `enabled`, `hidden`), performs: perform)
+        }
+        static func setButton(_ button: Parameter<UIButton>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>, perform: @escaping (UIButton, Bool?, Bool?) -> Void) -> Perform {
+            return Perform(method: .m_setButton__buttonenabled_enabledhidden_hidden(`button`, `enabled`, `hidden`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `button` label")
+		static func setButton(button: Parameter<UIButton>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>, perform: @escaping (UIButton, Bool?, Bool?) -> Void) -> Perform {
+            return Perform(method: .m_setButton__buttonenabled_enabledhidden_hidden(`button`, `enabled`, `hidden`), performs: perform)
+        }
+        static func setBackButton(for viewController: Parameter<UIViewController>, title: Parameter<String>, action selector: Parameter<Selector>, perform: @escaping (UIViewController, String, Selector) -> Void) -> Perform {
+            return Perform(method: .m_setBackButton__for_viewControllertitle_titleaction_selector(`viewController`, `title`, `selector`), performs: perform)
+        }
+        static func addDoneButtonToKeyboardFor(_ textView: Parameter<UITextView>, target: Parameter<Any?>, action: Parameter<Selector?>, perform: @escaping (UITextView, Any?, Selector?) -> Void) -> Perform {
+            return Perform(method: .m_addDoneButtonToKeyboardFor__textViewtarget_targetaction_action(`textView`, `target`, `action`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `textView` label")
+		static func addDoneButtonToKeyboardFor(textView: Parameter<UITextView>, target: Parameter<Any?>, action: Parameter<Selector?>, perform: @escaping (UITextView, Any?, Selector?) -> Void) -> Perform {
+            return Perform(method: .m_addDoneButtonToKeyboardFor__textViewtarget_targetaction_action(`textView`, `target`, `action`), performs: perform)
+        }
+        static func value(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, perform: @escaping (UserInfoKey, Notification) -> Void) -> Perform {
+            return Perform(method: .m_value__for_keyfrom_notification(`key`, `notification`), performs: perform)
+        }
+        static func info(_ info: Parameter<[UserInfoKey: Any]>, perform: @escaping ([UserInfoKey: Any]) -> Void) -> Perform {
+            return Perform(method: .m_info__info(`info`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `info` label")
+		static func info(info: Parameter<[UserInfoKey: Any]>, perform: @escaping ([UserInfoKey: Any]) -> Void) -> Perform {
+            return Perform(method: .m_info__info(`info`), performs: perform)
         }
     }
 

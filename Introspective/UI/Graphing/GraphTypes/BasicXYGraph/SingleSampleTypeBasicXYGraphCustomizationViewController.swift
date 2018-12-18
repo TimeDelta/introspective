@@ -54,10 +54,10 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		didSet {
 			if query == nil {
 				queryButton.setTitle("Choose query (optional)", for: .normal)
-				UiUtil.setButton(clearQueryButton, enabled: false, hidden: true)
+				DependencyInjector.util.ui.setButton(clearQueryButton, enabled: false, hidden: true)
 			} else {
 				queryButton.setTitle("Query chosen (click to change)", for: .normal)
-				UiUtil.setButton(clearQueryButton, enabled: true, hidden: false)
+				DependencyInjector.util.ui.setButton(clearQueryButton, enabled: true, hidden: false)
 			}
 			queryButton.accessibilityValue = queryButton.currentTitle
 		}
@@ -67,17 +67,17 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			if xAxis == nil {
 				xAxisButton.setTitle("Choose x-axis information", for: .normal)
 				yAxis = nil
-				UiUtil.setButton(yAxisButton, enabled: false)
+				DependencyInjector.util.ui.setButton(yAxisButton, enabled: false)
 			} else if let attribute = xAxis.attribute {
 				xAxisButton.setTitle("X-Axis: " + attribute.name.localizedLowercase, for: .normal)
-				UiUtil.setButton(yAxisButton, enabled: true)
+				DependencyInjector.util.ui.setButton(yAxisButton, enabled: true)
 			} else if let information = xAxis.information {
 				var text = information.description.localizedLowercase
 				if grouping != nil {
 					text += " per " + grouping!.description.localizedLowercase
 				}
 				xAxisButton.setTitle("X-Axis: " + text, for: .normal)
-				UiUtil.setButton(yAxisButton, enabled: true)
+				DependencyInjector.util.ui.setButton(yAxisButton, enabled: true)
 			}
 			xAxisButton.accessibilityValue = xAxisButton.currentTitle
 			updateShowGraphButtonState()

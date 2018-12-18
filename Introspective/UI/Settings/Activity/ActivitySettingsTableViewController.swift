@@ -36,7 +36,7 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 	public final override func viewDidLoad() {
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(reset))
 
-		UiUtil.setBackButton(for: self, title: "Settings", action: #selector(done))
+		DependencyInjector.util.ui.setBackButton(for: self, title: "Settings", action: #selector(done))
 		observe(selector: #selector(autoIgnoreChanged), name: Me.changeNotifications[0])
 	}
 
