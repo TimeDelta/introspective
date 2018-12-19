@@ -10189,6 +10189,20 @@ class UiUtilMock: UiUtil, Mock {
 		return __value
     }
 
+    func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String) -> Type {
+        addInvocation(.m_controller__named_controllerNamefrom_storyboardName(Parameter<String>.value(`controllerName`), Parameter<String>.value(`storyboardName`)))
+		let perform = methodPerformValue(.m_controller__named_controllerNamefrom_storyboardName(Parameter<String>.value(`controllerName`), Parameter<String>.value(`storyboardName`))) as? (String, String) -> Void
+		perform?(`controllerName`, `storyboardName`)
+		var __value: Type
+		do {
+		    __value = try methodReturnValue(.m_controller__named_controllerNamefrom_storyboardName(Parameter<String>.value(`controllerName`), Parameter<String>.value(`storyboardName`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for controller<Type: UIViewController>(named controllerName: String, from storyboardName: String). Use given")
+			Failure("Stub return value not specified for controller<Type: UIViewController>(named controllerName: String, from storyboardName: String). Use given")
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_customPresenter__width_widthheight_heightcenter_center(Parameter<ModalSize>, Parameter<ModalSize>, Parameter<ModalCenterPosition>)
@@ -10198,6 +10212,7 @@ class UiUtilMock: UiUtil, Mock {
         case m_addDoneButtonToKeyboardFor__textViewtarget_targetaction_action(Parameter<UITextView>, Parameter<Any?>, Parameter<Selector?>)
         case m_value__for_keyfrom_notification(Parameter<UserInfoKey>, Parameter<Notification>)
         case m_info__info(Parameter<[UserInfoKey: Any]>)
+        case m_controller__named_controllerNamefrom_storyboardName(Parameter<String>, Parameter<String>)
         case p_defaultPresenter_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
@@ -10234,6 +10249,10 @@ class UiUtilMock: UiUtil, Mock {
             case (.m_info__info(let lhsInfo), .m_info__info(let rhsInfo)):
                 guard Parameter.compare(lhs: lhsInfo, rhs: rhsInfo, with: matcher) else { return false } 
                 return true 
+            case (.m_controller__named_controllerNamefrom_storyboardName(let lhsControllername, let lhsStoryboardname), .m_controller__named_controllerNamefrom_storyboardName(let rhsControllername, let rhsStoryboardname)):
+                guard Parameter.compare(lhs: lhsControllername, rhs: rhsControllername, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsStoryboardname, rhs: rhsStoryboardname, with: matcher) else { return false } 
+                return true 
             case (.p_defaultPresenter_get,.p_defaultPresenter_get): return true
             default: return false
             }
@@ -10248,6 +10267,7 @@ class UiUtilMock: UiUtil, Mock {
             case let .m_addDoneButtonToKeyboardFor__textViewtarget_targetaction_action(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_value__for_keyfrom_notification(p0, p1): return p0.intValue + p1.intValue
             case let .m_info__info(p0): return p0.intValue
+            case let .m_controller__named_controllerNamefrom_storyboardName(p0, p1): return p0.intValue + p1.intValue
             case .p_defaultPresenter_get: return 0
             }
         }
@@ -10278,6 +10298,9 @@ class UiUtilMock: UiUtil, Mock {
 		static func info(info: Parameter<[UserInfoKey: Any]>, willReturn: [AnyHashable: Any]...) -> MethodStub {
             return Given(method: .m_info__info(`info`), products: willReturn.map({ Product.return($0) }))
         }
+        static func controller<Type: UIViewController>(named controllerName: Parameter<String>, from storyboardName: Parameter<String>, willReturn: Type...) -> MethodStub {
+            return Given(method: .m_controller__named_controllerNamefrom_storyboardName(`controllerName`, `storyboardName`), products: willReturn.map({ Product.return($0) }))
+        }
         static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>, willProduce: (Stubber<Presentr>) -> Void) -> MethodStub {
             let willReturn: [Presentr] = []
 			let given: Given = { return Given(method: .m_customPresenter__width_widthheight_heightcenter_center(`width`, `height`, `center`), products: willReturn.map({ Product.return($0) })) }()
@@ -10296,6 +10319,13 @@ class UiUtilMock: UiUtil, Mock {
             let willReturn: [[AnyHashable: Any]] = []
 			let given: Given = { return Given(method: .m_info__info(`info`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: ([AnyHashable: Any]).self)
+			willProduce(stubber)
+			return given
+        }
+        static func controller<Type: UIViewController>(named controllerName: Parameter<String>, from storyboardName: Parameter<String>, willProduce: (Stubber<Type>) -> Void) -> MethodStub {
+            let willReturn: [Type] = []
+			let given: Given = { return Given(method: .m_controller__named_controllerNamefrom_storyboardName(`controllerName`, `storyboardName`), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (Type).self)
 			willProduce(stubber)
 			return given
         }
@@ -10319,6 +10349,7 @@ class UiUtilMock: UiUtil, Mock {
         static func info(_ info: Parameter<[UserInfoKey: Any]>) -> Verify { return Verify(method: .m_info__info(`info`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `info` label")
 		static func info(info: Parameter<[UserInfoKey: Any]>) -> Verify { return Verify(method: .m_info__info(`info`))}
+        static func controller(named controllerName: Parameter<String>, from storyboardName: Parameter<String>) -> Verify { return Verify(method: .m_controller__named_controllerNamefrom_storyboardName(`controllerName`, `storyboardName`))}
         static var defaultPresenter: Verify { return Verify(method: .p_defaultPresenter_get) }
     }
 
@@ -10362,6 +10393,9 @@ class UiUtilMock: UiUtil, Mock {
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `info` label")
 		static func info(info: Parameter<[UserInfoKey: Any]>, perform: @escaping ([UserInfoKey: Any]) -> Void) -> Perform {
             return Perform(method: .m_info__info(`info`), performs: perform)
+        }
+        static func controller(named controllerName: Parameter<String>, from storyboardName: Parameter<String>, perform: @escaping (String, String) -> Void) -> Perform {
+            return Perform(method: .m_controller__named_controllerNamefrom_storyboardName(`controllerName`, `storyboardName`), performs: perform)
         }
     }
 

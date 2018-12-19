@@ -158,7 +158,7 @@ final class GraphSetupScreenUITests: UITest {
 
 		// when
 		app.tables.staticTexts[yAxisAttributes[0].localizedCapitalized].swipeLeft()
-		app.tables.cells.buttons["Delete"].tap()
+		app.tables.cells.buttons["🗑️"].tap()
 
 		// then
 		XCTAssert(!app.tables.staticTexts[yAxisAttributes[0].localizedCapitalized].exists)
@@ -183,7 +183,7 @@ final class GraphSetupScreenUITests: UITest {
 		// when
 		let cellTitleToDelete = yAxis[0].information + " " + yAxis[0].attribute
 		app.tables.staticTexts[cellTitleToDelete].swipeLeft()
-		app.tables.cells.buttons["Delete"].tap()
+		app.tables.cells.buttons["🗑️"].tap()
 
 		// then
 		let cellTitleThatShouldStillExist = yAxis[1].information + " " + yAxis[1].attribute

@@ -25,7 +25,7 @@ final class ActivityResultsUITests: UITest {
 
 		// when
 		app.tables.cells.staticTexts[activityName].swipeLeft()
-		app.tables.cells.buttons["Delete"].tap()
+		app.tables.cells.buttons["🗑️"].tap()
 		app.buttons["Yes"].tap()
 
 		// then

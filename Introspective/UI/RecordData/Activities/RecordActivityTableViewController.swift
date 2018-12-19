@@ -304,12 +304,10 @@ public final class RecordActivityTableViewController: UITableViewController {
 	// MARK: - Helper Functions
 
 	private final func loadActivitiyDefinitions() {
-		DispatchQueue.global(qos: .userInteractive).async {
-			self.resetFetchedResultsController()
-			DispatchQueue.main.async {
-				self.finishedLoading = true
-				self.tableView.reloadData()
-			}
+		self.resetFetchedResultsController()
+		DispatchQueue.main.async {
+			self.finishedLoading = true
+			self.tableView.reloadData()
 		}
 	}
 
@@ -321,15 +319,13 @@ public final class RecordActivityTableViewController: UITableViewController {
 				sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
 				cacheName: "definitions")
 			let fetchRequest = fetchedResultsController.fetchRequest
-			DispatchQueue.main.sync {
-				let searchText: String = self.getSearchText()
-				if !searchText.isEmpty {
-					fetchRequest.predicate = NSPredicate(
-						format: "name CONTAINS[cd] %@ OR activityDescription CONTAINS[cd] %@ OR SUBQUERY(tags, $tag, $tag.name CONTAINS[cd] %@) .@count > 0",
-						searchText,
-						searchText,
-						searchText)
-				}
+			let searchText: String = self.getSearchText()
+			if !searchText.isEmpty {
+				fetchRequest.predicate = NSPredicate(
+					format: "name CONTAINS[cd] %@ OR activityDescription CONTAINS[cd] %@ OR SUBQUERY(tags, $tag, $tag.name CONTAINS[cd] %@) .@count > 0",
+					searchText,
+					searchText,
+					searchText)
 			}
 			try fetchedResultsController.performFetch()
 			signpost.end(name: "resetting fetched results controller")
