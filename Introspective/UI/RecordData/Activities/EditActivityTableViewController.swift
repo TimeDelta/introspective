@@ -47,6 +47,7 @@ public final class EditActivityTableViewController: UITableViewController {
 			tagNames = Set(activity.tagsArray().map{ $0.name })
 		}
 	}
+	public final var autoFocusNote = false
 
 	/// This will be overridden if `activity` is set after this is
 	public final var definition: ActivityDefinition? = nil { didSet { validate() } }
@@ -113,6 +114,7 @@ public final class EditActivityTableViewController: UITableViewController {
 			let noteCell = tableView.dequeueReusableCell(withIdentifier: "note", for: indexPath) as! ActivityNoteTableViewCell
 			noteCell.note = note
 			noteCell.notificationToSendOnChange = Me.noteChanged
+			noteCell.autoFocus = autoFocusNote
 			cell = noteCell
 		} else if indexPath == Me.tagsIndex {
 			let tagsCell = tableView.dequeueReusableCell(withIdentifier: "tags", for: indexPath) as! ActivityTagsTableViewCell

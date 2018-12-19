@@ -12,15 +12,35 @@ public final class ActivityNoteTableViewCell: UITableViewCell {
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var noteView: UITextView!
+	@IBOutlet weak final var noteView: UITextView! {
+		didSet { updateUI() }
+	}
 
 	// MARK: - Instance Variables
 
 	public final var notificationToSendOnChange: Notification.Name!
 	public final var note: String? {
 		didSet {
-			noteView.text = note ?? ""
-			noteView.delegate = self
+			noteSet = true
+			updateUI()
+		}
+	}
+	public final var autoFocus: Bool! {
+		didSet { updateUI() }
+	}
+
+	private final var noteSet = false
+
+	// MARK: - Helper Functions
+
+	private final func updateUI() {
+		guard let noteView = noteView else { return }
+		guard let autoFocus = autoFocus else { return }
+		guard noteSet else { return }
+		noteView.text = note ?? ""
+		noteView.delegate = self
+		if autoFocus {
+			noteView.becomeFirstResponder()
 		}
 	}
 }

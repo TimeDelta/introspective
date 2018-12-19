@@ -116,6 +116,9 @@ public final class RecordActivityTableViewController: UITableViewController {
 				activity.endDate = now
 				DependencyInjector.db.save()
 				cell.updateUiElements()
+				if activityDefinition.autoNote {
+					showEditScreenForActivity(activity, autoFocusNote: true)
+				}
 			} else {
 				os_log("Could not find activity to stop.", type: .error)
 				showError(title: "Could not stop activity", message: "Sorry for the inconvenience.")
@@ -211,11 +214,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func getEditLastActionFor(_ activity: Activity) -> UIContextualAction {
 		let editLast = UIContextualAction(style: .normal, title: "✎ Last") { _, _, completionHandler in
-			let controller = self.storyboard!.instantiateViewController(withIdentifier: "editActivity") as! EditActivityTableViewController
-			controller.activity = activity
-			controller.notificationToSendOnAccept = Me.activityEditedOrCreated
-
-			self.navigationController?.pushViewController(controller, animated: false)
+			self.showEditScreenForActivity(activity)
 		}
 		editLast.backgroundColor = .orange
 		return editLast
@@ -387,6 +386,15 @@ public final class RecordActivityTableViewController: UITableViewController {
 		controller.notificationToSendOnAccept = Me.activityDefinitionCreated
 		controller.initialName = getSearchText()
 		navigationController?.pushViewController(controller, animated: true)
+	}
+
+	private final func showEditScreenForActivity(_ activity: Activity, autoFocusNote: Bool = false) {
+		let controller = self.storyboard!.instantiateViewController(withIdentifier: "editActivity") as! EditActivityTableViewController
+		controller.activity = activity
+		controller.notificationToSendOnAccept = Me.activityEditedOrCreated
+		controller.autoFocusNote = autoFocusNote
+
+		self.navigationController?.pushViewController(controller, animated: false)
 	}
 
 	private final func getMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) -> Activity? {

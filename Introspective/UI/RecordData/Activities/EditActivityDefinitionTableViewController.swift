@@ -8,6 +8,7 @@
 
 import UIKit
 import WSTagsField
+import Presentr
 import CoreData
 import os
 
@@ -18,13 +19,16 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 	private typealias Me = EditActivityDefinitionTableViewController
 
 	private static let nameIndex = IndexPath(row: 0, section: 0)
+	private static let autoNoteIndex = IndexPath(row: 1, section: 0)
 	private static let descriptionIndex = IndexPath(row: 0, section: 1)
 	private static let tagsIndex = IndexPath(row: 0, section: 2)
 
 	private static let nameChanged = Notification.Name("activityDefinitionNameChanged")
 	private static let descriptionChanged = Notification.Name("activityDefinitionDescriptionChanged")
 	private static let tagsChanged = Notification.Name("activityDefinitionTagsChanged")
+	private static let autoNoteChanged = Notification.Name("autoNoteChanged")
 	private static let invalid = Notification.Name("activityDefinitionInvalid")
+	private static let showPopup = Notification.Name("showPopup")
 
 	// MARK: - Instance Variables
 
@@ -36,12 +40,14 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			guard let activityDefinition = activityDefinition else { return }
 			activityDescription = activityDefinition.activityDescription
 			tagNames = Set(activityDefinition.tagsArray().map{ $0.name })
+			autoNote = activityDefinition.autoNote
 		}
 	}
 
-	private final var name: String = ""
+	private final var name = ""
 	private final var activityDescription: String?
 	private final var tagNames = Set<String>()
+	private final var autoNote = false
 
 	private final var saveButton: UIBarButtonItem!
 
@@ -60,10 +66,12 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 		saveButton.isEnabled = !name.isEmpty
 		navigationItem.rightBarButtonItem = saveButton!
 
-		NotificationCenter.default.addObserver(self, selector: #selector(nameChanged), name: Me.nameChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(descriptionChanged), name: Me.descriptionChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(tagsChanged), name: Me.tagsChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(invalid), name: Me.invalid, object: nil)
+		observe(selector: #selector(nameChanged), name: Me.nameChanged)
+		observe(selector: #selector(descriptionChanged), name: Me.descriptionChanged)
+		observe(selector: #selector(tagsChanged), name: Me.tagsChanged)
+		observe(selector: #selector(invalid), name: Me.invalid)
+		observe(selector: #selector(autoNoteChanged), name: Me.autoNoteChanged)
+		observe(selector: #selector(showPopup), name: Me.showPopup)
 	}
 
 	deinit {
@@ -77,6 +85,9 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 	}
 
 	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		if section == 0 {
+			return 2
+		}
 		return 1
 	}
 
@@ -86,6 +97,12 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			cell.initialName = name
 			cell.notificationToSendOnNameChange = Me.nameChanged
 			cell.notificationToSendOnInvalidName = Me.invalid
+			return cell
+		} else if indexPath == Me.autoNoteIndex {
+			let cell = tableView.dequeueReusableCell(withIdentifier: "autoNote", for: indexPath) as! ActivityDefinitionAutoNoteTableViewCell
+			cell.autoNote = autoNote
+			cell.notificationToSendOnChange = Me.autoNoteChanged
+			cell.notificationToSendForPopup = Me.showPopup
 			return cell
 		} else if indexPath == Me.descriptionIndex {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "description", for: indexPath) as! ActivityDefinitionDescriptionTableViewCell
@@ -97,10 +114,9 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			cell.tagNames = tagNames
 			cell.notificationToSendOnChange = Me.tagsChanged
 			return cell
-		} else {
-			os_log("Missing cell customization case for edit activity", type: .error)
-			return UITableViewCell()
 		}
+		os_log("Missing cell customization case for edit activity", type: .error)
+		return UITableViewCell()
 	}
 
 	public final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -157,6 +173,20 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 		}
 	}
 
+	@objc private final func autoNoteChanged(notification: Notification) {
+		if let autoNote: Bool = value(for: .activityDefinitionAutoNote, from: notification) {
+			self.autoNote = autoNote
+		}
+	}
+
+	@objc private final func showPopup(notification: Notification) {
+		if let controller: UIViewController = value(for: .controller, from: notification) {
+			if let presenter: Presentr = value(for: .presenter, from: notification) {
+				customPresentViewController(presenter, viewController: controller, animated: false)
+			}
+		}
+	}
+
 	// MARK: - Actions
 
 	@objc private final func saveButtonPressed(_ sender: Any) {
@@ -170,6 +200,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 
 			activityDefinition.name = name
 			activityDefinition.activityDescription = activityDescription
+			activityDefinition.autoNote = autoNote
 			try updateTagsForActivityDefinition(&activityDefinition)
 
 			DependencyInjector.db.save()

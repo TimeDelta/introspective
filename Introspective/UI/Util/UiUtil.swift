@@ -11,13 +11,19 @@ import Presentr
 import os
 
 public enum UserInfoKey: Hashable, CustomStringConvertible {
+	case activityDefinitionAutoNote
 	case autoIgnoreEnabled
 	case autoIgnoreSeconds
+	case controller
+	case presenter
 
 	public var description: String {
 		switch (self) {
+			case .activityDefinitionAutoNote: return "activityDefinitionAutoNote"
 			case .autoIgnoreEnabled: return "autoIgnoreEnabled"
 			case .autoIgnoreSeconds: return "autoIgnoreSeconds"
+			case .controller: return "controller"
+			case .presenter: return "presenter"
 		}
 	}
 }

@@ -54,16 +54,17 @@ final class RecordActivitiesUITests: UITest {
 		let activityName = "hfuewipq"
 		let description = "fejhwioqp fewj qiop"
 		let tags = ["fhewui", "geqr", "hyrw"]
-		createActivityDefinition(name: activityName, description: description, tags: tags)
+		createActivityDefinition(name: activityName, autoNote: true, description: description, tags: tags)
 
 		// when
 		app.tables.staticTexts[activityName].swipeRight()
 		app.tables.buttons["✎ All"].tap()
 
 		// then
-		XCTAssertEqual(app.textFields["activity name"].value as? String, activityName)
+		XCTAssertEqual(activityDefinitionNameField().value as? String, activityName)
 		XCTAssertEqual(app.textViews["activity description"].value as? String, description)
 		XCTAssertEqual(definitionTagsFieldAccessibilityValueAsSet(), Set(tags))
+		XCTAssertEqual(activityDefinitionAutoNoteField().value as? String, "1")
 		app.buttons["Save"].tap() // keyboard is in the way of the settings tab so tearDown fails without this
 	}
 
@@ -81,7 +82,7 @@ final class RecordActivitiesUITests: UITest {
 		delete(numberOfTags: tags.count, fromTagsField: activityDefinitionTagsField())
 
 		// then
-		XCTAssertEqual(app.textFields["activity name"].value as? String, activityName)
+		XCTAssertEqual(activityDefinitionNameField().value as? String, activityName)
 		XCTAssertEqual(app.textViews["activity description"].value as? String, "")
 		XCTAssertEqual(activityDefinitionTagsField().value as? String, "Tags") // placeholder value is "Tags"
 		app.buttons["Save"].tap() // keyboard is in the way of the settings tab so tearDown fails without this
@@ -102,8 +103,7 @@ final class RecordActivitiesUITests: UITest {
 
 		// when
 		app.buttons["Add"].tap()
-		app.tables.textFields["activity name"].tap()
-		app.tables.textFields["activity name"].typeText(activityName)
+		setTextFor(field: activityDefinitionNameField(), to:activityName)
 
 		// then
 		XCTAssert(!app.buttons["Save"].isEnabled)
@@ -408,6 +408,20 @@ final class RecordActivitiesUITests: UITest {
 		XCTAssertEqual(app.tables.cells.staticTexts["total duration for today"].value as? String, "0:00:" + seconds)
 	}
 
+	func testFinishingActivityWithAutoNoteEnabled_showsEditActivityScreen() {
+		// given
+		let activityName = "njgkort"
+		createActivityDefinition(name: activityName, autoNote: true)
+		app.tables.cells.staticTexts[activityName].tap()
+
+		// when
+		app.tables.cells.staticTexts[activityName].tap()
+
+		// then
+		XCTAssert(app.tables.cells.textViews["activity note"].exists)
+		app.navigationBars.buttons["Activities"].tap() // keyboard is hiding tab bar
+	}
+
 	// MARK: - Quick Create / Start
 
 	func testLongPressOnAddButtonWhenSearchBarIsEmpty_doesNotCreateActivity() {
@@ -635,10 +649,15 @@ final class RecordActivitiesUITests: UITest {
 		searchActivitiesField.typeText(searchText)
 	}
 
-	private final func createActivityDefinition(name: String, description: String? = nil, tags: [String]? = nil) {
+	private final func createActivityDefinition(name: String, autoNote: Bool? = nil, description: String? = nil, tags: [String]? = nil) {
 		app.buttons["Add"].tap()
-		app.tables.textFields["activity name"].tap()
-		app.tables.textFields["activity name"].typeText(name)
+		setTextFor(field: app.tables.textFields["activity name"], to: name)
+		if let autoNote = autoNote {
+			let currentlyEnabled = activityDefinitionAutoNoteField().value as? String == "1"
+			if currentlyEnabled != autoNote {
+				activityDefinitionAutoNoteField().tap()
+			}
+		}
 		setTextFor(field: app.tables.cells.textViews["activity description"], to: description)
 		setTags(for: activityDefinitionTagsField(), to: tags)
 		app.buttons["Save"].tap()
@@ -731,6 +750,14 @@ final class RecordActivitiesUITests: UITest {
 	}
 
 	// MARK: - Element Functions
+
+	private final func activityDefinitionNameField() -> XCUIElement {
+		return app.tables.cells.textFields["activity name"]
+	}
+
+	private final func activityDefinitionAutoNoteField() -> XCUIElement {
+		return app.tables.cells.switches["auto note"]
+	}
 
 	private final func activityDefinitionTagsField() -> XCUIElement {
 		return app.tables.children(matching: .cell).element(boundBy: 2).children(matching: .textField).element

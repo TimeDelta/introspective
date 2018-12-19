@@ -18,6 +18,7 @@ extension ActivityDefinition {
 	}
 
 	@NSManaged public var name: String
+	@NSManaged public var autoNote: Bool
 	@NSManaged public var activityDescription: String?
 	@NSManaged public var tags: NSSet
 	@NSManaged public var activities: NSSet

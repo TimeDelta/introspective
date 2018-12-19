@@ -12,6 +12,7 @@
     </entity>
     <entity name="ActivityDefinition" representedClassName=".ActivityDefinition" syncable="YES">
         <attribute name="activityDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="autoNote" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" attributeType="String" spotlightIndexingEnabled="YES" syncable="YES"/>
         <attribute name="recordScreenIndex" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="activities" toMany="YES" deletionRule="Cascade" destinationEntity="Activity" inverseName="definition" inverseEntity="Activity" syncable="YES"/>
@@ -75,7 +76,7 @@
     <fetchRequest name="allActivityDefinitions" entity="ActivityDefinition" predicateString="TRUEPREDICATE"/>
     <elements>
         <element name="Activity" positionX="-36" positionY="63" width="128" height="120"/>
-        <element name="ActivityDefinition" positionX="-45" positionY="54" width="128" height="120"/>
+        <element name="ActivityDefinition" positionX="-45" positionY="54" width="128" height="135"/>
         <element name="ATrackerActivityImporter" positionX="-36" positionY="72" width="128" height="60"/>
         <element name="EasyPillMedicationDoseImporter" positionX="-36" positionY="63" width="128" height="60"/>
         <element name="EasyPillMedicationImporter" positionX="-45" positionY="54" width="128" height="60"/>
