@@ -28,8 +28,8 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 
 	// MARK: - Instance Variables
 
-	private final var autoIgnoreEnabled: Bool!
-	private final var numberOfSeconds: Int!
+	private final var autoIgnoreEnabled: Bool = DependencyInjector.settings.autoIgnoreEnabled
+	private final var numberOfSeconds: Int = DependencyInjector.settings.autoIgnoreSeconds
 
 	// MARK: - UIViewController Overrides
 
@@ -73,7 +73,7 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 	// MARK: - Received Notifications
 
 	@objc private final func autoIgnoreChanged(notification: Notification) {
-		if let enabled: Bool? = value(for: .autoIgnoreEnabled, from: notification) {
+		if let enabled: Bool = value(for: .autoIgnoreEnabled, from: notification) {
 			autoIgnoreEnabled = enabled
 		}
 		if let seconds: Int = value(for: .autoIgnoreSeconds, from: notification) {

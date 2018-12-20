@@ -760,7 +760,7 @@ final class RecordActivitiesUITests: UITest {
 	}
 
 	private final func activityDefinitionTagsField() -> XCUIElement {
-		return app.tables.children(matching: .cell).element(boundBy: 2).children(matching: .textField).element
+		return app.tables.children(matching: .cell).element(boundBy: 3).children(matching: .textField).element
 	}
 
 	private final func activityTagsField() -> XCUIElement {
