@@ -25,6 +25,7 @@ public final class ActivityDefinitionTagsTableViewCell: UITableViewCell {
 			tagsField.onDidAddTag = addedTag
 			tagsField.onDidRemoveTag = removedTag
 			tagsField.textField.accessibilityLabel = "activity tags"
+			tagsField.textDelegate = self
 
 			do {
 				let tags = try DependencyInjector.db.query(Tag.fetchRequest() as NSFetchRequest<Tag>)
@@ -73,5 +74,12 @@ public final class ActivityDefinitionTagsTableViewCell: UITableViewCell {
 		DispatchQueue.main.async {
 			NotificationCenter.default.post(name: self.notificationToSendOnChange, object: self.tagNames)
 		}
+	}
+}
+
+extension ActivityDefinitionTagsTableViewCell: UITextFieldDelegate {
+
+	public func textFieldDidEndEditing(_ textField: UITextField) {
+		tagsField.acceptCurrentTextAsTag()
 	}
 }
