@@ -37,7 +37,14 @@ final class ImportDataTableViewController: UITableViewController {
 	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		do {
 			importer = try getImporterFor(indexPath)
-			let actionSheet = UIAlertController(title: importer.sourceName, message: nil, preferredStyle: .actionSheet)
+			var lastImportedText: String
+			if let importDate = importer.lastImport {
+				let dateText = DependencyInjector.util.calendar.string(for: importDate, dateStyle: .medium, timeStyle: .medium)
+				lastImportedText = "Last import date: \(dateText)"
+			} else {
+				lastImportedText = "Never imported"
+			}
+			let actionSheet = UIAlertController(title: lastImportedText, message: nil, preferredStyle: .actionSheet)
 			actionSheet.addAction(UIAlertAction(title: "Import", style: .default){ _ in
 				self.promptForDataImport(indexPath)
 			})
