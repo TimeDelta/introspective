@@ -196,6 +196,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			var activityDefinition: ActivityDefinition! = self.activityDefinition
 			if activityDefinition == nil {
 				activityDefinition = try DependencyInjector.db.new(ActivityDefinition.self)
+				activityDefinition.setSource(.introspective)
 			}
 
 			activityDefinition.name = name

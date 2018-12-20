@@ -63,3 +63,26 @@ public class TypedSelectOneAttribute<Type>: AttributeBase, SelectOneAttribute {
 		return areEqual(castedFirst, castedSecond)
 	}
 }
+
+public class TypedEquatableSelectOneAttribute<Type: Equatable>: TypedSelectOneAttribute<Type> {
+
+	public init(
+		name: String,
+		pluralName: String? = nil,
+		description: String? = nil,
+		variableName: String? = nil,
+		optional: Bool = false,
+		possibleValues: [Type] = [Type](),
+		possibleValueToString: @escaping (Type) -> String)
+	{
+		super.init(
+			name: name,
+			pluralName: pluralName,
+			description: description,
+			variableName: variableName,
+			optional: optional,
+			possibleValues: possibleValues,
+			possibleValueToString: possibleValueToString,
+			areEqual: { $0 == $1 })
+	}
+}

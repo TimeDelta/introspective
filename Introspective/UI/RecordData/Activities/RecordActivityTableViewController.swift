@@ -127,6 +127,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 			var activity: Activity? = nil
 			do {
 				activity = try DependencyInjector.db.new(Activity.self)
+				activity!.setSource(.introspective)
 				let definition = try DependencyInjector.db.pull(savedObject: activityDefinition, fromSameContextAs: activity!)
 				activity!.definition = definition
 				activity!.startDate = Date()

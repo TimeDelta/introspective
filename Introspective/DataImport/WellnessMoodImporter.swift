@@ -41,6 +41,7 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 					currentMood!.timestamp = date
 					currentMood!.maxRating = 7.0
 					currentMood!.rating = Double(parts[2])!
+					currentMood!.setSource(.wellness)
 					currentNote = parts[3...].joined()
 				} else {
 					currentMood = nil

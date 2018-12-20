@@ -143,6 +143,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		}
 		let allDefinitions = try DependencyInjector.db.query(ActivityDefinition.fetchRequest())
 		definition.recordScreenIndex = Int16(allDefinitions.count)
+		definition.setSource(.aTracker)
 		DependencyInjector.db.save()
 		return definition
 	}
@@ -153,6 +154,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		activity.startDate = start
 		activity.endDate = try getEndDate(from: csv)
 		activity.note = csv[" Note"]
+		activity.setSource(.aTracker)
 		DependencyInjector.db.save()
 		return activity
 	}

@@ -172,6 +172,7 @@ public final class EditMedicationViewController: UIViewController {
 		do {
 			if medication == nil {
 				medication = try DependencyInjector.db.new(Medication.self)
+				medication!.setSource(.introspective)
 			}
 			medication!.name = nameTextField.text!
 			medication!.frequency = frequency
@@ -189,8 +190,7 @@ public final class EditMedicationViewController: UIViewController {
 			navigationController?.popViewController(animated: true)
 		} catch {
 			os_log("Failed to save medication: %@", type: .error, error.localizedDescription)
-			let alert = UIAlertController(title: "Could not save medication", message: "Sorry for the inconvenience", preferredStyle: .alert)
-			present(alert, animated: false, completion: nil)
+			showError(title: "Could not save medication", message: "Sorry for the inconvenience")
 		}
 	}
 

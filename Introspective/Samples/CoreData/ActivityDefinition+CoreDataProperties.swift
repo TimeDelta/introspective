@@ -23,6 +23,7 @@ extension ActivityDefinition {
 	@NSManaged public var tags: NSSet
 	@NSManaged public var activities: NSSet
 	@NSManaged public var recordScreenIndex: Int16
+	@NSManaged public var source: Int16
 }
 
 // MARK: Generated accessors for tags

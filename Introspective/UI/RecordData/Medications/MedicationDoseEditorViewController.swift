@@ -49,6 +49,7 @@ public final class MedicationDoseEditorViewController: UIViewController {
 		do {
 			if medicationDose == nil {
 				medicationDose = try DependencyInjector.sample.medicationDose()
+				medicationDose!.setSource(.introspective)
 			}
 			medicationDose!.dosage = dosage
 			medicationDose!.timestamp = datePicker.date

@@ -159,6 +159,7 @@ public final class EditMoodTableViewController: UITableViewController {
 		do {
 			if mood == nil {
 				mood = try DependencyInjector.sample.mood()
+				mood?.setSource(.introspective)
 			}
 			mood?.timestamp = timestamp
 			mood?.rating = rating

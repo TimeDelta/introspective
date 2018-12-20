@@ -224,6 +224,7 @@ public final class EditActivityTableViewController: UITableViewController {
 		do {
 			if activity == nil {
 				activity = try DependencyInjector.sample.activity()
+				activity.setSource(.introspective)
 				deleteActivityOnFail = true
 			}
 			activity.definition = try DependencyInjector.db.pull(savedObject: definition!, fromSameContextAs: activity)

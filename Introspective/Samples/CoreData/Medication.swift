@@ -25,7 +25,12 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed {
 	public static let frequency = FrequencyAttribute(description: "How frequently you are supposed to take this medication.")
 	public static let startedOn = DateOnlyAttribute(name: "Started On", description: "When did you start this medication?", variableName: "startedOn", optional: true)
 	public static let notes = TextAttribute(name: "Notes", variableName: "notes", optional: true)
-	public static let attributes: [Attribute] = [nameAttribute, dosage, frequency, startedOn, notes]
+	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
+		name: "Source",
+		pluralName: "Sources",
+		possibleValues: Sources.medicationSources,
+		possibleValueToString: { $0 })
+	public static let attributes: [Attribute] = [nameAttribute, dosage, frequency, startedOn, notes, sourceAttribute]
 	public final let attributes: [Attribute] = Me.attributes
 
 	// MARK: - Instance Variables
@@ -52,6 +57,9 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed {
 		}
 		if attribute.equalTo(Me.notes) {
 			return notes
+		}
+		if attribute.equalTo(Me.sourceAttribute) {
+			return Sources.resolveMedicationSource(source)
 		}
 		throw AttributeError.unknownAttribute
 	}
@@ -92,6 +100,10 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed {
 
 	public final func sortedDoses(ascending: Bool) -> [MedicationDose] {
 		return doses.sortedArray(using: [NSSortDescriptor(key: "timestamp", ascending: ascending)]) as! [MedicationDose]
+	}
+
+	public final func setSource(_ source: Sources.MedicationSourceNum) {
+		self.source = source.rawValue
 	}
 
 	// MARK: - Equatable

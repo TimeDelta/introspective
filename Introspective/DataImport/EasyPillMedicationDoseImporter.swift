@@ -103,6 +103,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 			let medication = try DependencyInjector.db.pull(savedObject: medicationsWithName[0], fromSameContextAs: dose)
 			dose.medication = medication
 			dose.timestamp = date
+			dose.setSource(.easyPill)
 			medication.addToDoses(dose)
 			DependencyInjector.db.save()
 		} catch {

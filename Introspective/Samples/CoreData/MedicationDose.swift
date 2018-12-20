@@ -27,7 +27,12 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 
 	public static let nameAttribute = TextAttribute(name: "Name", pluralName: "Names")
 	public static let dosage = DosageAttribute(optional: true)
-	public static let attributes: [Attribute] = [CommonSampleAttributes.timestamp, nameAttribute, dosage]
+	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
+		name: "Source",
+		pluralName: "Sources",
+		possibleValues: Sources.medicationSources,
+		possibleValueToString: { $0 })
+	public static let attributes: [Attribute] = [CommonSampleAttributes.timestamp, nameAttribute, dosage, sourceAttribute]
 	public static let defaultDependentAttribute: Attribute = dosage
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.timestamp
 	public final let attributes: [Attribute] = Me.attributes
@@ -43,6 +48,12 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 		return [.start: timestamp]
 	}
 
+	// MARK: - Other
+
+	public final func setSource(_ source: Sources.MedicationSourceNum) {
+		self.source = source.rawValue
+	}
+
 	// MARK: - Attributed Functions
 
 	public final func value(of attribute: Attribute) throws -> Any? {
@@ -54,6 +65,9 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 		}
 		if attribute.equalTo(CommonSampleAttributes.timestamp) {
 			return timestamp
+		}
+		if attribute.equalTo(Me.sourceAttribute) {
+			return Sources.resolveMedicationSource(source)
 		}
 		throw AttributeError.unknownAttribute
 	}

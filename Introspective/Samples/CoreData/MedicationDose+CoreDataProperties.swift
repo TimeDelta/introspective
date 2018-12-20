@@ -20,4 +20,5 @@ extension MedicationDose {
 	@NSManaged public var timestamp: Date
 	@NSManaged public var dosage: Dosage?
 	@NSManaged public var medication: Medication
+	@NSManaged public var source: Int16
 }

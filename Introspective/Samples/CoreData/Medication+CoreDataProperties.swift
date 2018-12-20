@@ -24,6 +24,7 @@ extension Medication {
 	@NSManaged public var dosage: Dosage?
 	@NSManaged public var recordScreenIndex: Int16
 	@NSManaged public var doses: NSOrderedSet
+	@NSManaged public var source: Int16
 }
 
 // MARK: Generated accessors for doses

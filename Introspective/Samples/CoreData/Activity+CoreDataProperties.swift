@@ -22,6 +22,7 @@ extension Activity {
 	@NSManaged public var note: String?
 	@NSManaged public var definition: ActivityDefinition
 	@NSManaged public var tags: NSSet
+	@NSManaged public var source: Int16
 }
 
 // MARK: Generated accessors for tags

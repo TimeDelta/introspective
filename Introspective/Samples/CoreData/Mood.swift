@@ -19,6 +19,8 @@ public protocol Mood: CoreDataSample {
 	var rating: Double { get set }
 	var note: String? { get set }
 	var timestamp: Date { get set }
+
+	func setSource(_ source: Sources.MoodSourceNum)
 }
 
 public final class MoodImpl: NSManagedObject, Mood {
@@ -39,9 +41,22 @@ public final class MoodImpl: NSManagedObject, Mood {
 	public static let rating = DoubleAttribute(name: "Mood Rating", pluralName: "Mood Ratings", variableName: "rating")
 	public static let maxRating = DoubleAttribute(name: "Max Mood Rating", pluralName: "Max mood rating", variableName: "maxRating")
 	public static let note = TextAttribute(name: "Note", pluralName: "Notes", variableName: "note")
-	public static let attributes: [Attribute] = [CommonSampleAttributes.timestamp, rating, maxRating, note]
+	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
+		name: "Source",
+		pluralName: "Sources",
+		possibleValues: Sources.moodSources,
+		possibleValueToString: { $0 })
+
 	public static let defaultDependentAttribute: Attribute = rating
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.timestamp
+
+	public static let attributes: [Attribute] = [
+		CommonSampleAttributes.timestamp,
+		rating,
+		maxRating,
+		note,
+		sourceAttribute,
+	]
 	public final let attributes: [Attribute] = Me.attributes
 
 	// MARK: - Instance Variables
@@ -70,6 +85,9 @@ public final class MoodImpl: NSManagedObject, Mood {
 		if attribute.equalTo(Me.note) {
 			return note
 		}
+		if attribute.equalTo(Me.sourceAttribute) {
+			return Sources.resolveMoodSource(source)
+		}
 		throw AttributeError.unknownAttribute
 	}
 
@@ -96,6 +114,12 @@ public final class MoodImpl: NSManagedObject, Mood {
 			return
 		}
 		throw AttributeError.unknownAttribute
+	}
+
+	// MARK: - Other
+
+	public final func setSource(_ source: Sources.MoodSourceNum) {
+		self.source = source.rawValue
 	}
 
 	// MARK: - Equatable

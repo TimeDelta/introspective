@@ -59,6 +59,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 			mood.rating = Double(ratingSlider.value) * DependencyInjector.settings.maxMood
 			mood.note = note
 			mood.maxRating = DependencyInjector.settings.maxMood
+			mood.setSource(.introspective)
 			DependencyInjector.db.save()
 
 			reset()

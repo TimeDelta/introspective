@@ -174,6 +174,12 @@ class MoodMock: Mood, Mock {
 
 
 
+    func setSource(_ source: Sources.MoodSourceNum) {
+        addInvocation(.m_setSource__source(Parameter<Sources.MoodSourceNum>.value(`source`)))
+		let perform = methodPerformValue(.m_setSource__source(Parameter<Sources.MoodSourceNum>.value(`source`))) as? (Sources.MoodSourceNum) -> Void
+		perform?(`source`)
+    }
+
     func value(of attribute: Attribute) throws -> Any? {
         addInvocation(.m_value__of_attribute(Parameter<Attribute>.value(`attribute`)))
 		let perform = methodPerformValue(.m_value__of_attribute(Parameter<Attribute>.value(`attribute`))) as? (Attribute) -> Void
@@ -353,6 +359,7 @@ class MoodMock: Mood, Mock {
 
     
     fileprivate enum MethodType {
+        case m_setSource__source(Parameter<Sources.MoodSourceNum>)
         case m_value__of_attribute(Parameter<Attribute>)
         case m_set__attribute_attributeto_value(Parameter<Attribute>, Parameter<Any?>)
         case m_equalTo__otherAttributed(Parameter<Attributed>)
@@ -373,6 +380,9 @@ class MoodMock: Mood, Mock {
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
+            case (.m_setSource__source(let lhsSource), .m_setSource__source(let rhsSource)):
+                guard Parameter.compare(lhs: lhsSource, rhs: rhsSource, with: matcher) else { return false } 
+                return true 
             case (.m_value__of_attribute(let lhsAttribute), .m_value__of_attribute(let rhsAttribute)):
                 guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
                 return true 
@@ -408,6 +418,7 @@ class MoodMock: Mood, Mock {
 
         func intValue() -> Int {
             switch self {
+            case let .m_setSource__source(p0): return p0.intValue
             case let .m_value__of_attribute(p0): return p0.intValue
             case let .m_set__attribute_attributeto_value(p0, p1): return p0.intValue + p1.intValue
             case let .m_equalTo__otherAttributed(p0): return p0.intValue
@@ -538,6 +549,9 @@ class MoodMock: Mood, Mock {
     struct Verify {
         fileprivate var method: MethodType
 
+        static func setSource(_ source: Parameter<Sources.MoodSourceNum>) -> Verify { return Verify(method: .m_setSource__source(`source`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `source` label")
+		static func setSource(source: Parameter<Sources.MoodSourceNum>) -> Verify { return Verify(method: .m_setSource__source(`source`))}
         static func value(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_value__of_attribute(`attribute`))}
         static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>) -> Verify { return Verify(method: .m_set__attribute_attributeto_value(`attribute`, `value`))}
         static func equalTo(_ otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
@@ -565,6 +579,13 @@ class MoodMock: Mood, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
+        static func setSource(_ source: Parameter<Sources.MoodSourceNum>, perform: @escaping (Sources.MoodSourceNum) -> Void) -> Perform {
+            return Perform(method: .m_setSource__source(`source`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `source` label")
+		static func setSource(source: Parameter<Sources.MoodSourceNum>, perform: @escaping (Sources.MoodSourceNum) -> Void) -> Perform {
+            return Perform(method: .m_setSource__source(`source`), performs: perform)
+        }
         static func value(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
             return Perform(method: .m_value__of_attribute(`attribute`), performs: perform)
         }

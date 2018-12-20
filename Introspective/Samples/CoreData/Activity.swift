@@ -30,6 +30,11 @@ public class Activity: NSManagedObject, CoreDataSample {
 	public static let noteAttribute = TextAttribute(name: "Note", pluralName: "Notes", variableName: "note")
 	public static let tagsAttribute = TagsAttribute()
 	public static let durationAttribute = DurationAttribute()
+	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
+		name: "Source",
+		pluralName: "Sources",
+		possibleValues: Sources.activitySources,
+		possibleValueToString: { $0 })
 
 	public static let defaultDependentAttribute: Attribute = durationAttribute
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.startDate
@@ -41,6 +46,7 @@ public class Activity: NSManagedObject, CoreDataSample {
 		endDateAttribute,
 		noteAttribute,
 		tagsAttribute,
+		sourceAttribute,
 	]
 	public final let attributes: [Attribute] = Me.attributes
 
@@ -96,6 +102,9 @@ public class Activity: NSManagedObject, CoreDataSample {
 		if attribute.equalTo(Me.noteAttribute) {
 			return note
 		}
+		if attribute.equalTo(Me.sourceAttribute) {
+			return Sources.resolveActivitySource(source)
+		}
 		throw AttributeError.unknownAttribute
 	}
 
@@ -133,6 +142,10 @@ public class Activity: NSManagedObject, CoreDataSample {
 	}
 
 	// MARK: - Other
+
+	public final func setSource(_ source: Sources.ActivitySourceNum) {
+		self.source = source.rawValue
+	}
 
 	/// - Returns: Only tags directly associated with this `Activity`.
 	///            Does not include tags associated with this activitiy's `ActivityDefinition`.

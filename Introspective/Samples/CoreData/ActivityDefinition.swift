@@ -18,16 +18,11 @@ public class ActivityDefinition: NSManagedObject, CoreDataObject {
 
 	public static let entityName = "ActivityDefinition"
 
-	// MARK: - Attributes
-
-	public static let nameAttribute = TextAttribute(name: "Name", pluralName: "Names", description: "The name of this activity", variableName: "name")
-	public static let descriptionAttribute = TextAttribute(name: "Description", pluralName: "Descriptions", variableName: "activityDescription", optional: true)
-	public static let tagsAttribute = TagsAttribute(variableName: "tags")
-
-	public static let attributes = [nameAttribute, descriptionAttribute, tagsAttribute]
-	public final let attributes = Me.attributes
-
 	// MARK: - Other
+
+	public final func setSource(_ source: Sources.ActivitySourceNum) {
+		self.source = source.rawValue
+	}
 
 	public final func tagsArray() -> [Tag] {
 		return tags.allObjects as! [Tag]
