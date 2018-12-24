@@ -60,7 +60,7 @@ final class SelectExtraInformationViewController: UIViewController {
 				]))
 		}
 		if let navigationController = navigationController {
-			navigationController.popViewController(animated: true)
+			navigationController.popViewController(animated: false)
 		} else {
 			dismiss(animated: false, completion: nil)
 		}

@@ -44,7 +44,7 @@ final class ChooseCalendarComponentViewController: UIViewController {
 			userInfo: info([
 				.calendarComponent: selectedComponent as Any,
 			]))
-		dismiss(animated: true, completion: nil)
+		dismiss(animated: false, completion: nil)
 	}
 }
 

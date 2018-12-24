@@ -207,7 +207,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 						.activityDefinition: activityDefinition,
 					]))
 			}
-			navigationController?.popViewController(animated: true)
+			navigationController?.popViewController(animated: false)
 		} catch {
 			DependencyInjector.db.clearUnsavedChanges()
 

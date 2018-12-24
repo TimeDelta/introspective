@@ -22,7 +22,7 @@ final class RecordDataPageViewController: UIPageViewController {
 			setViewControllers(
 				[firstViewController],
 				direction: .forward,
-				animated: true,
+				animated: false,
 				completion: nil)
 		}
 	}

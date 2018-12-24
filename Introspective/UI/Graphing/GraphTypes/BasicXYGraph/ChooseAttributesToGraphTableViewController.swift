@@ -78,7 +78,7 @@ final class ChooseAttributesToGraphTableViewController: UITableViewController {
 		}
 		unselectedAttributes.append(selectedAttributes[editIndex])
 		controller.attributes = unselectedAttributes
-		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: true)
+		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
 	}
 
 	// MARK: - TableView Editing
@@ -127,7 +127,7 @@ final class ChooseAttributesToGraphTableViewController: UITableViewController {
 			userInfo: info([
 				.attributes: selectedAttributes,
 			]))
-		navigationController!.popViewController(animated: true)
+		navigationController!.popViewController(animated: false)
 	}
 
 	// MARK: - Received Notifications

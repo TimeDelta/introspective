@@ -80,7 +80,7 @@ final class AttributeValueViewController: UIViewController {
 			userInfo: info([
 				.attributeValue: subViewController.currentValue,
 			]))
-		dismiss(animated: true, completion: nil)
+		dismiss(animated: false, completion: nil)
 	}
 
 	@objc private final func disableSaveButton() {

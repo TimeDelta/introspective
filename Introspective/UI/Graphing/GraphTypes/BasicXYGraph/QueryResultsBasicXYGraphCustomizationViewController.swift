@@ -110,7 +110,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 		controller.grouping = grouping
 		controller.notificationToSendWhenFinished = Me.xAxisChanged
 		controller.attributes = samples[0].attributes
-		realNavigationController?.pushViewController(controller, animated: true)
+		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
 	@IBAction func editYAxis(_ sender: Any) {
@@ -119,14 +119,14 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 			controller.allowedAttributes = type(of: samples[0]).attributes.filter{ $0 is NumericAttribute }
 			controller.selectedAttributes = yAxis?.map{ $0.attribute! }
 			controller.notificationToSendWhenFinished = Me.yAxisChanged
-			realNavigationController?.pushViewController(controller, animated: true)
+			realNavigationController?.pushViewController(controller, animated: false)
 		} else {
 			let controller: ChooseInformationToGraphTableViewController = viewController(named: "chooseInformation")
 			controller.attributes = type(of: samples[0]).attributes
 			controller.limitToNumericInformation = true
 			controller.chosenInformation = yAxis?.map{ $0.information! }
 			controller.notificationToSendWhenFinished = Me.yAxisChanged
-			realNavigationController?.pushViewController(controller, animated: true)
+			realNavigationController?.pushViewController(controller, animated: false)
 		}
 	}
 
@@ -136,7 +136,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 		DispatchQueue.global(qos: .userInitiated).async {
 			self.updateChartData()
 		}
-		realNavigationController?.pushViewController(chartController, animated: true)
+		realNavigationController?.pushViewController(chartController, animated: false)
 	}
 
 	// MARK: - Received Notifications

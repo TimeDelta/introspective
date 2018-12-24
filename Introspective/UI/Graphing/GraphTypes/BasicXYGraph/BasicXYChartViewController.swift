@@ -72,7 +72,7 @@ class BasicXYChartViewController: UIViewController {
 				query.stop()
 			}
 		}
-		self.navigationController?.popViewController(animated: true)
+		self.navigationController?.popViewController(animated: false)
 	}
 
 	// MARK: - Helper Functions

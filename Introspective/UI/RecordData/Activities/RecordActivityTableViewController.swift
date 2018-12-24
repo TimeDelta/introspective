@@ -384,7 +384,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		let controller: EditActivityDefinitionTableViewController = viewController(named: "editActivityDefinition")
 		controller.notificationToSendOnAccept = Me.activityDefinitionCreated
 		controller.initialName = getSearchText()
-		navigationController?.pushViewController(controller, animated: true)
+		navigationController?.pushViewController(controller, animated: false)
 	}
 
 	private final func showEditScreenForActivity(_ activity: Activity, autoFocusNote: Bool = false) {

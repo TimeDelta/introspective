@@ -61,7 +61,7 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 				userInfo: info([
 					.attributeRestriction: attributeRestriction as Any,
 				]))
-			navigationController?.popViewController(animated: true)
+			navigationController?.popViewController(animated: false)
 		}
 	}
 

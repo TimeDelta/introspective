@@ -52,7 +52,7 @@ final class NumericAttributeValueViewController: UIViewController {
 					.attributeValue: self.currentValue,
 				]))
 		}
-		dismiss(animated: true, completion: nil)
+		dismiss(animated: false, completion: nil)
 	}
 
 	// MARK: - Helper Functions

@@ -67,6 +67,6 @@ final class HorizontalMultiSelectAttributeValueViewController: UIViewController,
 					.attributeValue: self.currentValue,
 				]))
 		}
-		dismiss(animated: true, completion: nil)
+		dismiss(animated: false, completion: nil)
 	}
 }

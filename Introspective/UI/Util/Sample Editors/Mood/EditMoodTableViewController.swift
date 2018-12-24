@@ -166,7 +166,7 @@ public final class EditMoodTableViewController: UITableViewController {
 						self.userInfoKey: self.mood as Any,
 					]))
 			}
-			navigationController?.popViewController(animated: true)
+			navigationController?.popViewController(animated: false)
 		} catch {
 			os_log("Failed to save create mood: %@", type: .error, error.localizedDescription)
 			showError(title: "Failed to save mood", message: "Sorry for the inconvenience")

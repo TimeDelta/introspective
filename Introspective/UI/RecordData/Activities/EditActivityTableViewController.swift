@@ -232,7 +232,7 @@ public final class EditActivityTableViewController: UITableViewController {
 						self.userInfoKey: activity,
 					]))
 			}
-			navigationController?.popViewController(animated: true)
+			navigationController?.popViewController(animated: false)
 		} catch {
 			if deleteActivityOnFail {
 				DependencyInjector.db.delete(activity)

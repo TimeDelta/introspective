@@ -85,7 +85,7 @@ public final class DateRangeViewController: UIViewController {
 					.toDate: toDate as Any,
 				]))
 		}
-		dismiss(animated: true, completion: nil)
+		dismiss(animated: false, completion: nil)
 	}
 
 	@IBAction final func fromDateSwitchToggled(_ sender: Any) {

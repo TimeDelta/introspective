@@ -203,8 +203,8 @@ class QueryViewController: UITableViewController {
 			editedIndex = 0
 			controller.selectedSampleType = parts[0].sampleTypeInfo!.sampleType
 			controller.notificationToSendOnAccept = Me.acceptedSampleTypeEdit
-			tableView.deselectRow(at: indexPath, animated: true)
-			customPresentViewController(Me.editSampleTypePresenter, viewController: controller, animated: true)
+			tableView.deselectRow(at: indexPath, animated: false)
+			customPresentViewController(Me.editSampleTypePresenter, viewController: controller, animated: false)
 		}
 	}
 
@@ -219,7 +219,7 @@ class QueryViewController: UITableViewController {
 				userInfo: info([
 					.query: query,
 				]))
-			navigationController?.popViewController(animated: true)
+			navigationController?.popViewController(animated: false)
 		} else {
 			let controller: ResultsViewController = viewController(named: "results", fromStoryboard: "Results")
 			query.runQuery { (result: QueryResult?, error: Error?) in
@@ -230,7 +230,7 @@ class QueryViewController: UITableViewController {
 				controller.samples = result?.samples
 			}
 			controller.query = query
-			navigationController?.pushViewController(controller, animated: true)
+			navigationController?.pushViewController(controller, animated: false)
 		}
 	}
 
@@ -246,7 +246,7 @@ class QueryViewController: UITableViewController {
 			self.partWasAdded()
 		})
 		actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-		present(actionSheet, animated: true, completion: nil)
+		present(actionSheet, animated: false, completion: nil)
 	}
 
 	@objc private final func editButtonPressed() {

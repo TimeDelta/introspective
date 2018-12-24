@@ -49,7 +49,7 @@ final class ChooseAttributeViewController: UIViewController {
 			userInfo: info([
 				.attribute: selectedAttribute as Any,
 			]))
-		dismiss(animated: true, completion: nil)
+		dismiss(animated: false, completion: nil)
 	}
 }
 

@@ -134,7 +134,7 @@ public final class EditMedicationViewController: UIViewController {
 		let controller: FrequencyEditorViewController = viewController(named: "chooseFrequency", fromStoryboard: "Util")
 		controller.initialFrequency = medication?.frequency
 		controller.notificationToSendOnAccept = Me.frequencyChanged
-		customPresentViewController(Me.frequencyPresenter, viewController: controller, animated: true)
+		customPresentViewController(Me.frequencyPresenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func resetFrequencyButtonPressed(_ sender: Any) {
@@ -154,7 +154,7 @@ public final class EditMedicationViewController: UIViewController {
 		controller.initialDate = startedOnDate
 		controller.notificationToSendOnAccept = Me.startedOnChanged
 		controller.datePickerMode = .date
-		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: true)
+		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func resetStartedOnButtonPressed(_ sender: Any) {
@@ -193,7 +193,7 @@ public final class EditMedicationViewController: UIViewController {
 						.medication: self.medication as Any,
 					]))
 			}
-			navigationController?.popViewController(animated: true)
+			navigationController?.popViewController(animated: false)
 		} catch {
 			os_log("Failed to save medication: %@", type: .error, error.localizedDescription)
 			showError(title: "Could not save medication", message: "Sorry for the inconvenience")
@@ -270,7 +270,7 @@ public final class EditMedicationViewController: UIViewController {
 extension EditMedicationViewController: UITextViewDelegate {
 
 	public func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-		scrollView.scrollToView(view: notesLabel, animated: true)
+		scrollView.scrollToView(view: notesLabel, animated: false)
 		return true
 	}
 }

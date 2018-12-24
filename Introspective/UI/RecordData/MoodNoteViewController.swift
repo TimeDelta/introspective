@@ -43,6 +43,6 @@ final class MoodNoteViewController: UIViewController {
 			userInfo: info([
 				.text: textView.text,
 			]))
-		self.dismiss(animated: true, completion: nil)
+		self.dismiss(animated: false, completion: nil)
 	}
 }

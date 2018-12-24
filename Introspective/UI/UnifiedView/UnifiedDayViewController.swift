@@ -50,7 +50,7 @@ public final class UnifiedDayViewController: DayViewController {
 
 		actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 
-		present(actionSheet, animated: true, completion: nil)
+		present(actionSheet, animated: false, completion: nil)
 	}
 
 	// MARK: - Helper Functions

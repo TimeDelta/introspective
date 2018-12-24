@@ -59,7 +59,7 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 		controller.limitToNumericInformation = limitToNumericInformation
 		controller.selectedAttribute = selectedInformation.attribute
 		controller.selectedInformation = selectedInformation
-		navigationController!.pushViewController(controller, animated: true)
+		navigationController!.pushViewController(controller, animated: false)
 	}
 
 	final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -103,7 +103,7 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 			userInfo: info([
 				.information: chosenInformation,
 			]))
-		navigationController!.popViewController(animated: true)
+		navigationController!.popViewController(animated: false)
 	}
 
 	// MARK: - Received Notifications

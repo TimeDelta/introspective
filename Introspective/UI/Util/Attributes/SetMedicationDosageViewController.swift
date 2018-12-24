@@ -42,7 +42,7 @@ public final class SetMedicationDosageViewController: UIViewController {
 					.attributeValue: dosage as Any,
 				]))
 		}
-		dismiss(animated: true, completion: nil)
+		dismiss(animated: false, completion: nil)
 	}
 
 	@IBAction final func dosageTextChanged(_ sender: Any) {

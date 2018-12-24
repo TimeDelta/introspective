@@ -119,7 +119,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		controller.medicationDose = medication.doses.object(at: indexPath.row) as? MedicationDose
 		controller.notificationToSendOnAccept = Me.medicationDoseEdited
 		lastClickedIndex = indexPath.row
-		customPresentViewController(Me.medicationDosePresenter, viewController: controller, animated: true)
+		customPresentViewController(Me.medicationDosePresenter, viewController: controller, animated: false)
 	}
 
 	// MARK: - Received Notificaitons
@@ -154,7 +154,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		controller.maxToDate = Date() + 1.days
 		controller.datePickerMode = .date
 		controller.notificationToSendOnAccept = Me.dateRangeSet
-		customPresentViewController(Me.dateFiliterPresenter, viewController: controller, animated: true)
+		customPresentViewController(Me.dateFiliterPresenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func previousDateRangeButtonPressed(_ sender: Any) {

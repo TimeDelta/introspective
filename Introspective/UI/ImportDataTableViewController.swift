@@ -54,7 +54,7 @@ final class ImportDataTableViewController: UITableViewController {
 			actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel){ _ in
 				self.tableView.deselectRow(at: indexPath, animated: false)
 			})
-			present(actionSheet, animated: true, completion: nil)
+			present(actionSheet, animated: false, completion: nil)
 		} catch {
 			os_log("Failed to create data importer while presenting menu: %@", error.localizedDescription)
 		}
@@ -82,7 +82,7 @@ final class ImportDataTableViewController: UITableViewController {
 		documentPickerController.allowsMultipleSelection = false
 		documentPickerController.delegate = self
 		importer.importOnlyNewData = newDataOnly
-		self.present(documentPickerController, animated: true, completion: nil)
+		self.present(documentPickerController, animated: false, completion: nil)
 	}
 
 	private final func getImporterFor(_ indexPath: IndexPath) throws -> Importer {

@@ -75,7 +75,7 @@ final class AttributeViewController: UIViewController {
 	@IBAction final func descriptionButtonPressed(_ sender: Any) {
 		let controller: AttributeDescriptionViewController = viewController(named: "attributeDescription")
 		controller.descriptionText = attribute.extendedDescription
-		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: true)
+		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func valueButtonPressed(_ sender: Any) {
@@ -84,35 +84,35 @@ final class AttributeViewController: UIViewController {
 			controller.multiSelectAttribute = (attribute as! MultiSelectAttribute)
 			controller.currentValue = attributeValue
 			controller.notificationToSendOnAccept = notificationToSendOnValueChange
-			customPresentViewController(Me.horizontalMultiSelectPresenter, viewController: controller, animated: true)
+			customPresentViewController(Me.horizontalMultiSelectPresenter, viewController: controller, animated: false)
 		} else if attribute is MultiSelectAttribute {
 			let controller: MultiSelectAttributeValueViewController = viewController(named: "multiSelectAttribute")
 			controller.multiSelectAttribute = (attribute as! MultiSelectAttribute)
 			controller.initialValue = attributeValue
 			controller.notificationToSendOnAccept = notificationToSendOnValueChange
-			customPresentViewController(Me.multiSelectPresenter, viewController: controller, animated: true)
+			customPresentViewController(Me.multiSelectPresenter, viewController: controller, animated: false)
 		} else if attribute is NumericAttribute {
 			let controller: NumericAttributeValueViewController = viewController(named: "numericAttribute")
 			controller.numericAttribute = (attribute as! NumericAttribute)
 			controller.currentValue = attributeValue
 			controller.notificationToSendOnAccept = notificationToSendOnValueChange
-			customPresentViewController(Me.numericPresenter, viewController: controller, animated: true)
+			customPresentViewController(Me.numericPresenter, viewController: controller, animated: false)
 		} else if attribute is DosageAttribute {
 			let controller: SetMedicationDosageViewController = viewController(named: "setDosage")
 			controller.initialDosage = attributeValue as? Dosage
 			controller.notificationToSendOnAccept = notificationToSendOnValueChange
-			customPresentViewController(Me.dosagePresenter, viewController: controller, animated: true)
+			customPresentViewController(Me.dosagePresenter, viewController: controller, animated: false)
 		} else if attribute is FrequencyAttribute {
 			let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "chooseFrequency") as! FrequencyEditorViewController
 			controller.initialFrequency = attributeValue as? Frequency
 			controller.notificationToSendOnAccept = notificationToSendOnValueChange
-			customPresentViewController(Me.frequencyPresenter, viewController: controller, animated: true)
+			customPresentViewController(Me.frequencyPresenter, viewController: controller, animated: false)
 		} else {
 			let controller: AttributeValueViewController = viewController(named: "attributeValue")
 			controller.attribute = attribute
 			controller.attributeValue = attributeValue
 			controller.notificationToSendOnAccept = notificationToSendOnValueChange
-			customPresentViewController(Me.defaultPresenter, viewController: controller, animated: true)
+			customPresentViewController(Me.defaultPresenter, viewController: controller, animated: false)
 		}
 	}
 

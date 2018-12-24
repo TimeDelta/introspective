@@ -73,7 +73,7 @@ final class ResultsViewController: UITableViewController {
 		observe(selector: #selector(sortSamplesBy), name: Me.sortSamples)
 		observe(selector: #selector(editedSample), name: Me.editedSample)
 
-		self.navigationItem.setRightBarButton(actionsButton, animated: true)
+		self.navigationItem.setRightBarButton(actionsButton, animated: false)
 
 		DependencyInjector.util.ui.setBackButton(for: self, title: "Query", action: #selector(done))
 
@@ -243,7 +243,7 @@ final class ResultsViewController: UITableViewController {
 						DependencyInjector.db.delete(managedSample)
 					}
 					if goBackAfterDelete {
-						self.navigationController?.popViewController(animated: true)
+						self.navigationController?.popViewController(animated: false)
 					} else {
 						self.samples.remove(at: indexPath.row)
 						tableView.deleteRows(at: [indexPath], with: .fade)
@@ -338,7 +338,7 @@ final class ResultsViewController: UITableViewController {
 
 	@objc private final func done() {
 		query.stop()
-		self.navigationController?.popViewController(animated: true)
+		self.navigationController?.popViewController(animated: false)
 	}
 
 	@objc private final func graph() {
@@ -353,7 +353,7 @@ final class ResultsViewController: UITableViewController {
 		controller.sortAttribute = self.sortAttribute
 		controller.sortOrder = self.sortOrder
 		controller.notificationToSendOnAccept = Me.sortSamples
-		self.customPresentViewController(Me.sortPresenter, viewController: controller, animated: true)
+		self.customPresentViewController(Me.sortPresenter, viewController: controller, animated: false)
 	}
 
 	@objc private final func addInformation() {
@@ -375,7 +375,7 @@ final class ResultsViewController: UITableViewController {
 				try! DependencyInjector.db.deleteAll(self.samples as! [NSManagedObject])
 				DependencyInjector.db.save()
 			}
-			self.navigationController!.popViewController(animated: true)
+			self.navigationController!.popViewController(animated: false)
 		})
 		alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
 		self.present(alert, animated: false, completion: nil)

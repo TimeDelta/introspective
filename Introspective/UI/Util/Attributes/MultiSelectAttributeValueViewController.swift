@@ -40,7 +40,7 @@ public final class MultiSelectAttributeValueViewController: UIViewController {
 					.attributeValue: self.subViewController.selectedValues,
 				]))
 		}
-		dismiss(animated: true, completion: nil)
+		dismiss(animated: false, completion: nil)
 	}
 
 	// MARK: - Helper Functions

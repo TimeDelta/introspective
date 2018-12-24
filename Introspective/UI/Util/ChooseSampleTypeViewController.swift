@@ -46,7 +46,7 @@ final class ChooseSampleTypeViewController: UIViewController {
 			userInfo: info([
 				.sampleType: selectedSampleType,
 			]))
-		dismiss(animated: true, completion: nil)
+		dismiss(animated: false, completion: nil)
 	}
 }
 

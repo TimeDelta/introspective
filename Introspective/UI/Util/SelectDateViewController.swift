@@ -82,6 +82,6 @@ public final class SelectDateViewController: UIViewController {
 			userInfo: info([
 				.date: date,
 			]))
-		dismiss(animated: true, completion: nil)
+		dismiss(animated: false, completion: nil)
 	}
 }

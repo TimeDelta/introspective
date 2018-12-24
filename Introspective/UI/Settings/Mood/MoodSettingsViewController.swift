@@ -79,14 +79,14 @@ final class MoodSettingsViewController: UIViewController {
 			scaleOldMoodsController.addAction(UIAlertAction(title: "No", style: .default) { _ in
 				self.saveAndGoBackToSettings()
 			})
-			customPresentViewController(presenter, viewController: scaleOldMoodsController, animated: true)
+			customPresentViewController(presenter, viewController: scaleOldMoodsController, animated: false)
 		}
 		saveAndGoBackToSettings()
 	}
 
 	@objc private final func saveAndGoBackToSettings() {
 		DependencyInjector.settings.save()
-		self.navigationController?.popViewController(animated: true)
+		self.navigationController?.popViewController(animated: false)
 	}
 
 	private final func updateUI() {

@@ -61,7 +61,7 @@ public final class MedicationDoseEditorViewController: UIViewController {
 						.dose: self.medicationDose as Any,
 					]))
 			}
-			dismiss(animated: true, completion: nil)
+			dismiss(animated: false, completion: nil)
 		} catch {
 			os_log("Failed to create medication dose: %@", type: .error, error.localizedDescription)
 			showError(title: "Failed to save", message: "Sorry for the inconvenience")

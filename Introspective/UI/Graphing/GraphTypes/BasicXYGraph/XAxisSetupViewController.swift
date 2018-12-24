@@ -89,7 +89,7 @@ final class XAxisSetupViewController: UIViewController {
 		let controller: ChooseCalendarComponentViewController = viewController(named: "chooseCalendarComponent", fromStoryboard: "Util")
 		controller.selectedComponent = grouping
 		controller.notificationToSendOnAccept = Me.groupingChanged
-		customPresentViewController(Me.presenter, viewController: controller, animated: true)
+		customPresentViewController(Me.presenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func acceptButtonPressed(_ sender: Any) {
@@ -111,7 +111,7 @@ final class XAxisSetupViewController: UIViewController {
 				]))
 		}
 		if let navigationController = navigationController {
-			navigationController.popViewController(animated: true)
+			navigationController.popViewController(animated: false)
 		} else {
 			dismiss(animated: false, completion: nil)
 		}

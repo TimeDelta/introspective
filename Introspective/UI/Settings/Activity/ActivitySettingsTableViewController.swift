@@ -106,6 +106,6 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 
 	@objc private final func saveAndGoBackToSettings() {
 		DependencyInjector.settings.save()
-		self.navigationController?.popViewController(animated: true)
+		self.navigationController?.popViewController(animated: false)
 	}
 }

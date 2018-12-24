@@ -61,7 +61,7 @@ final class EditSubSampleTypeViewController: UIViewController {
 			userInfo: info([
 				.sampleType: savedValue,
 			]))
-		navigationController?.popViewController(animated: true)
+		navigationController?.popViewController(animated: false)
 	}
 
 	// MARK: - Helper Functions

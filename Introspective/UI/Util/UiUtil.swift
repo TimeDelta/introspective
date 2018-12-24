@@ -103,7 +103,7 @@ public final class UiUtilImpl: UiUtil {
 
 		let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 		let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: target, action: action)
-		keyboardToolBar.setItems([flexibleSpace, doneButton, flexibleSpace], animated: true)
+		keyboardToolBar.setItems([flexibleSpace, doneButton, flexibleSpace], animated: false)
 
 		textView.inputAccessoryView = keyboardToolBar
 	}

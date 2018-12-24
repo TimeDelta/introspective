@@ -171,14 +171,14 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		let controller: ChooseCalendarComponentViewController = viewController(named: "chooseCalendarComponent", fromStoryboard: "Util")
 		controller.selectedComponent = grouping
 		controller.notificationToSendOnAccept = Me.groupingChanged
-		customPresentViewController(Me.presenter, viewController: controller, animated: true)
+		customPresentViewController(Me.presenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func chooseXAxisSampleTypeButtonPressed(_ sender: Any) {
 		let controller: ChooseSampleTypeViewController = viewController(named: "chooseSampleType", fromStoryboard: "Util")
 		controller.selectedSampleType = xAxisSampleType
 		controller.notificationToSendOnAccept = Me.xAxisSampleTypeChanged
-		customPresentViewController(Me.presenter, viewController: controller, animated: true)
+		customPresentViewController(Me.presenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func clearXAxisQueryButtonPressed(_ sender: Any) {
@@ -191,7 +191,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = xAxisSampleType
 		controller.finishedButtonNotification = Me.xAxisQueryChanged
-		realNavigationController!.pushViewController(controller, animated: true)
+		realNavigationController!.pushViewController(controller, animated: false)
 	}
 
 	@IBAction final func chooseXAxisInformationButtonPressed(_ sender: Any) {
@@ -200,14 +200,14 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		controller.selectedAttribute = xAxisInformation?.attribute
 		controller.selectedInformation = xAxisInformation
 		controller.notificationToSendWhenFinished = Me.xAxisInformationChanged
-		realNavigationController!.pushViewController(controller, animated: true)
+		realNavigationController!.pushViewController(controller, animated: false)
 	}
 
 	@IBAction final func chooseYAxisSampleTypeButtonPressed(_ sender: Any) {
 		let controller: ChooseSampleTypeViewController = viewController(named: "chooseSampleType", fromStoryboard: "Util")
 		controller.selectedSampleType = yAxisSampleType
 		controller.notificationToSendOnAccept = Me.yAxisSampleTypeChanged
-		customPresentViewController(Me.presenter, viewController: controller, animated: true)
+		customPresentViewController(Me.presenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func clearYAxisQueryButtonPressed(_ sender: Any) {
@@ -220,7 +220,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = yAxisSampleType
 		controller.finishedButtonNotification = Me.yAxisQueryChanged
-		realNavigationController?.pushViewController(controller, animated: true)
+		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
 	@IBAction final func chooseYAxisInformationButtonPressed(_ sender: Any) {
@@ -228,7 +228,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		controller.attributes = yAxisSampleType.attributes
 		controller.chosenInformation = yAxisInformation
 		controller.notificationToSendWhenFinished = Me.yAxisInformationChanged
-		realNavigationController?.pushViewController(controller, animated: true)
+		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
 	@IBAction final func showMeTheGraphButtonPressed(_ sender: Any) {
@@ -246,7 +246,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		DispatchQueue.global(qos: .userInteractive).async {
 			self.runQueries()
 		}
-		realNavigationController!.pushViewController(chartController, animated: true)
+		realNavigationController!.pushViewController(chartController, animated: false)
 	}
 
 	// MARK: - Received Notifications

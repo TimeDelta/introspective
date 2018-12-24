@@ -146,7 +146,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = sampleType
 		controller.finishedButtonNotification = Me.queryChanged
-		realNavigationController?.pushViewController(controller, animated: true)
+		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
 	@IBAction final func showGraph(_ sender: Any) {
@@ -159,7 +159,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		DispatchQueue.global(qos: .userInitiated).async {
 			self.runQuery()
 		}
-		realNavigationController?.pushViewController(chartController, animated: true)
+		realNavigationController?.pushViewController(chartController, animated: false)
 	}
 
 	@IBAction final func editXAxis(_ sender: Any) {
@@ -169,7 +169,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		controller.selectedInformation = xAxis?.information
 		controller.grouping = grouping
 		controller.notificationToSendWhenFinished = Me.xAxisChanged
-		realNavigationController?.pushViewController(controller, animated: true)
+		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
 	@IBAction final func editYAxis(_ sender: Any) {
@@ -178,14 +178,14 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			controller.allowedAttributes = sampleType.attributes.filter{ $0 is NumericAttribute || $0 is DurationAttribute }
 			controller.selectedAttributes = yAxis?.map{ $0.attribute! }
 			controller.notificationToSendWhenFinished = Me.yAxisChanged
-			realNavigationController?.pushViewController(controller, animated: true)
+			realNavigationController?.pushViewController(controller, animated: false)
 		} else {
 			let controller: ChooseInformationToGraphTableViewController = viewController(named: "chooseInformation")
 			controller.attributes = sampleType.attributes
 			controller.limitToNumericInformation = true
 			controller.chosenInformation = yAxis?.map{ $0.information! }
 			controller.notificationToSendWhenFinished = Me.yAxisChanged
-			realNavigationController?.pushViewController(controller, animated: true)
+			realNavigationController?.pushViewController(controller, animated: false)
 		}
 	}
 

@@ -141,7 +141,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		let controller: EditMedicationViewController = viewController(named: "editMedication")
 		controller.notificationToSendOnAccept = Me.medicationEdited
 		controller.medication = filteredMedications[indexPath.row]
-		navigationController?.pushViewController(controller, animated: true)
+		navigationController?.pushViewController(controller, animated: false)
 	}
 
 	// MARK: - Table view editing
@@ -224,7 +224,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		if let medication: Medication = value(for: .medication, from: notification) {
 			let controller: MedicationDosesTableViewController = viewController(named: "medicationDoses")
 			controller.medication = medication
-			navigationController?.pushViewController(controller, animated: true)
+			navigationController?.pushViewController(controller, animated: false)
 		}
 	}
 
@@ -241,7 +241,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		let controller: EditMedicationViewController = viewController(named: "editMedication")
 		controller.notificationToSendOnAccept = Me.medicationCreated
 		controller.initialName = getSearchText()
-		navigationController?.pushViewController(controller, animated: true)
+		navigationController?.pushViewController(controller, animated: false)
 	}
 
 	// MARK: - Helper Functions

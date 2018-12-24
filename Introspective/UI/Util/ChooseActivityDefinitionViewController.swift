@@ -64,7 +64,7 @@ public final class ChooseActivityDefinitionViewController: UIViewController {
 					.activityDefinition: self.selectedDefinition!,
 				]))
 		}
-		dismiss(animated: true, completion: nil)
+		dismiss(animated: false, completion: nil)
 	}
 }
 

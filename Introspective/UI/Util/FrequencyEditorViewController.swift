@@ -69,7 +69,7 @@ public final class FrequencyEditorViewController: UIViewController {
 					.frequency: frequency as Any,
 				]))
 		}
-		dismiss(animated: true, completion: nil)
+		dismiss(animated: false, completion: nil)
 	}
 }
 
