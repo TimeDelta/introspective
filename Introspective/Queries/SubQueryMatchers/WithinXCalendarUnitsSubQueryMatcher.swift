@@ -17,7 +17,18 @@ public final class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatab
 	private typealias Me = WithinXCalendarUnitsSubQueryMatcher
 
 	public static let amountOfTime = IntegerAttribute(name: "Number of time units")
-	public static let timeUnit = CalendarComponentAttribute(name: "Time unit")
+	public static let timeUnit = CalendarComponentAttribute(name: "Time unit", possibleValues: [
+		.year,
+		.quarter,
+		.month,
+		.weekOfMonth,
+		.weekOfYear,
+		.day,
+		.hour,
+		.minute,
+		.second,
+		.nanosecond,
+	])
 	public static let attributes = [CommonSubQueryMatcherAttributes.mostRecentOnly, amountOfTime, timeUnit]
 
 	public final let attributedName: String = "Within <number> <time_unit>s of"

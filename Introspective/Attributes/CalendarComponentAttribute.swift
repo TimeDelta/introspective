@@ -26,7 +26,20 @@ public final class CalendarComponentAttribute: TypedSelectOneAttribute<Calendar.
 		.nanosecond,
 	]
 
-	public init(name: String = "Time unit", pluralName: String? = "Time units", description: String? = nil, variableName: String? = nil) {
-		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, possibleValues: Me.supportedComponents, possibleValueToString: { $0.description }, areEqual: { $0 == $1 })
+	public init(
+		name: String = "Time unit",
+		pluralName: String? = "Time units",
+		description: String? = nil,
+		variableName: String? = nil,
+		possibleValues: [Calendar.Component] = Me.supportedComponents)
+	{
+		super.init(
+			name: name,
+			pluralName: pluralName,
+			description: description,
+			variableName: variableName,
+			possibleValues: possibleValues,
+			possibleValueToString: { $0.description },
+			areEqual: { $0 == $1 })
 	}
 }

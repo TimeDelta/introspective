@@ -16,7 +16,18 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 
 	private typealias Me = InSameCalendarUnitSubQueryMatcher
 
-	public static let timeUnit = CalendarComponentAttribute(name: "Time unit")
+	public static let timeUnit = CalendarComponentAttribute(name: "Time unit", possibleValues: [
+		.year,
+		.quarter,
+		.month,
+		.weekOfMonth,
+		.weekOfYear,
+		.day,
+		.hour,
+		.minute,
+		.second,
+		.nanosecond,
+	])
 	public static let attributes: [Attribute] = [CommonSubQueryMatcherAttributes.mostRecentOnly, timeUnit]
 
 	public final let attributedName: String = "Within the same <time_unit> of"
