@@ -32,6 +32,7 @@ public final class EditMoodTableViewController: UITableViewController {
 	// MARK: - Instance Variables
 
 	public final var notificationToSendOnAccept: Notification.Name!
+	public final var userInfoKey: UserInfoKey = .mood
 	public final var mood: Mood? {
 		didSet {
 			guard let mood = mood else { return }
@@ -58,9 +59,9 @@ public final class EditMoodTableViewController: UITableViewController {
 			target: self,
 			action: #selector(saveButtonPressed))
 
-		NotificationCenter.default.addObserver(self, selector: #selector(timestampChanged), name: Me.timestampChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(ratingChanged), name: Me.ratingChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(noteChanged), name: Me.noteChanged, object: nil)
+		observe(selector: #selector(timestampChanged), name: Me.timestampChanged)
+		observe(selector: #selector(ratingChanged), name: Me.ratingChanged)
+		observe(selector: #selector(noteChanged), name: Me.noteChanged)
 	}
 
 	deinit {
@@ -119,7 +120,7 @@ public final class EditMoodTableViewController: UITableViewController {
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath == Me.timestampIndex {
-			let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "datePicker") as! SelectDateViewController
+			let controller: SelectDateViewController = viewController(named: "datePicker", fromStoryboard: "Util")
 			controller.initialDate = timestamp
 			controller.notificationToSendOnAccept = Me.timestampChanged
 			customPresentViewController(Me.datePresenter, viewController: controller, animated: false)
@@ -129,28 +130,20 @@ public final class EditMoodTableViewController: UITableViewController {
 	// MARK: - Received Notifications
 
 	@objc private final func timestampChanged(notification: Notification) {
-		if let timestamp = notification.object as? Date {
+		if let timestamp: Date = value(for: .date, from: notification) {
 			self.timestamp = timestamp
 			tableView.reloadData()
-		} else {
-			os_log("Wrong object type for mood timestamp changed notification", type: .error)
 		}
 	}
 
 	@objc private final func ratingChanged(notification: Notification) {
-		if let rating = notification.object as? Double {
+		if let rating: Double = value(for: .number, from: notification) {
 			self.rating = rating
-		} else {
-			os_log("Wrong object type for mood rating changed notification", type: .error)
 		}
 	}
 
 	@objc private final func noteChanged(notification: Notification) {
-		if let note = notification.object as? String? {
-			self.note = note
-		} else {
-			os_log("Wrong object type for mood note change notification", type: .error)
-		}
+		self.note = value(for: .text, from: notification)
 	}
 
 	// MARK: - Actions
@@ -166,7 +159,12 @@ public final class EditMoodTableViewController: UITableViewController {
 			mood?.note = note
 			DependencyInjector.db.save()
 			DispatchQueue.main.async {
-				NotificationCenter.default.post(name: self.notificationToSendOnAccept, object: self.mood!)
+				NotificationCenter.default.post(
+					name: self.notificationToSendOnAccept,
+					object: self,
+					userInfo: self.info([
+						self.userInfoKey: self.mood as Any,
+					]))
 			}
 			navigationController?.popViewController(animated: true)
 		} catch {

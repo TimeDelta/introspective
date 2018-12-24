@@ -40,7 +40,12 @@ final class ChooseSampleTypeViewController: UIViewController {
 	@IBAction final func userPressedAccept(_ sender: Any) {
 		let selectedIndex = sampleTypePicker.selectedRow(inComponent: 0)
 		let selectedSampleType = DependencyInjector.sample.allTypes()[selectedIndex]
-		NotificationCenter.default.post(name: notificationToSendOnAccept, object: selectedSampleType)
+		NotificationCenter.default.post(
+			name: notificationToSendOnAccept,
+			object: self,
+			userInfo: info([
+				.sampleType: selectedSampleType,
+			]))
 		dismiss(animated: true, completion: nil)
 	}
 }

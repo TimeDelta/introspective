@@ -76,7 +76,12 @@ public final class SelectDateViewController: UIViewController {
 		} else if date != initialDate && !currentDateIsFromNowOrLastButton {
 			date = DependencyInjector.util.calendar.start(of: .minute, in: date)
 		}
-		NotificationCenter.default.post(name: notificationToSendOnAccept, object: date)
+		NotificationCenter.default.post(
+			name: notificationToSendOnAccept,
+			object: self,
+			userInfo: info([
+				.date: date,
+			]))
 		dismiss(animated: true, completion: nil)
 	}
 }

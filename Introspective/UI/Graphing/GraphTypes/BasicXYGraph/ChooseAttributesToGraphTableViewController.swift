@@ -41,13 +41,17 @@ final class ChooseAttributesToGraphTableViewController: UITableViewController {
 		if allowedAttributes.count == 0 {
 			let alert = UIAlertController(title: "No graphable attributes", message: "There are no graphable attributes on the chosen data type.", preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
-				NotificationCenter.default.post(name: self.notificationToSendWhenFinished, object: nil)
+				NotificationCenter.default.post(name: self.notificationToSendWhenFinished, object: nil, userInfo: self.info([:]))
 				self.navigationController!.popViewController(animated: false)
 			})
 			present(alert, animated: false)
 		}
 		navigationItem.rightBarButtonItem = editButtonItem
-		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedAttribute), name: Me.editedAttribute, object: nil)
+		observe(selector: #selector(saveEditedAttribute), name: Me.editedAttribute)
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	// MARK: - TableView Data Source
@@ -66,7 +70,7 @@ final class ChooseAttributesToGraphTableViewController: UITableViewController {
 
 	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		editIndex = indexPath.row
-		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "chooseAttribute") as! ChooseAttributeViewController
+		let controller: ChooseAttributeViewController = viewController(named: "chooseAttribute", fromStoryboard: "Util")
 		controller.notificationToSendOnAccept = Me.editedAttribute
 		controller.selectedAttribute = selectedAttributes[editIndex]
 		var unselectedAttributes = allowedAttributes.filter{ attribute in
@@ -117,15 +121,22 @@ final class ChooseAttributesToGraphTableViewController: UITableViewController {
 	}
 
 	@IBAction final func doneButtonPressed(_ sender: Any) {
-		NotificationCenter.default.post(name: notificationToSendWhenFinished, object: selectedAttributes)
+		NotificationCenter.default.post(
+			name: notificationToSendWhenFinished,
+			object: self,
+			userInfo: info([
+				.attributes: selectedAttributes,
+			]))
 		navigationController!.popViewController(animated: true)
 	}
 
 	// MARK: - Received Notifications
 
 	@objc private final func saveEditedAttribute(notification: Notification) {
-		selectedAttributes[editIndex] = notification.object as! Attribute
-		tableView.reloadData()
+		if let attribute: Attribute? = value(for: .attribute, from: notification) {
+			selectedAttributes[editIndex] = attribute!
+			tableView.reloadData()
+		}
 	}
 
 	// MARK: - Helper Functions

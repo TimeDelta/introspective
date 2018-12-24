@@ -62,7 +62,12 @@ public final class FrequencyEditorViewController: UIViewController {
 			}
 		}
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: self.notificationToSendOnAccept, object: frequency)
+			NotificationCenter.default.post(
+				name: self.notificationToSendOnAccept,
+				object: self,
+				userInfo: self.info([
+					.frequency: frequency as Any,
+				]))
 		}
 		dismiss(animated: true, completion: nil)
 	}

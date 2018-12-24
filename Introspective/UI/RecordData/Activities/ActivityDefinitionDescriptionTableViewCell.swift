@@ -26,9 +26,14 @@ public final class ActivityDefinitionDescriptionTableViewCell: UITableViewCell {
 
 	// MARK: - Helper Functions
 
-	private final func sendNameChangeNotification() {
+	private final func sendDescriptionChangeNotification() {
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: self.notificationToSendOnChange, object: self.descriptionView.text)
+			NotificationCenter.default.post(
+				name: self.notificationToSendOnChange,
+				object: self,
+				userInfo: self.info([
+					.text: self.descriptionView.text,
+				]))
 		}
 	}
 }
@@ -38,14 +43,14 @@ public final class ActivityDefinitionDescriptionTableViewCell: UITableViewCell {
 extension ActivityDefinitionDescriptionTableViewCell: UITextViewDelegate {
 
 	public final func textViewDidChange(_ textView: UITextView) {
-		sendNameChangeNotification()
+		sendDescriptionChangeNotification()
 	}
 
 	public final func textViewDidBeginEditing(_ textView: UITextView) {
-		sendNameChangeNotification()
+		sendDescriptionChangeNotification()
 	}
 
 	public final func textViewDidEndEditing(_ textView: UITextView) {
-		sendNameChangeNotification()
+		sendDescriptionChangeNotification()
 	}
 }

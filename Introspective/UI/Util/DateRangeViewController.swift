@@ -56,27 +56,34 @@ public final class DateRangeViewController: UIViewController {
 		fromDatePicker.maximumDate = maxFromDate
 		toDatePicker.minimumDate = minToDate
 		toDatePicker.maximumDate = maxToDate
-		// TODO - add validation to ensure that to date is after from date
+		#warning("add validation to ensure that to date is after from date")
 	}
 
 	// MARK: - Actions
 
 	@IBAction final func saveButtonPressed(_ sender: Any) {
-		var dates: (from: Date?, to: Date?) = (from: nil, to: nil)
+		var fromDate: Date? = nil
 		if enableFromDateSwitch.isOn {
-			dates.from = fromDatePicker.date
+			fromDate = fromDatePicker.date
 			if datePickerMode == .date {
-				dates.from = DependencyInjector.util.calendar.start(of: .day, in: fromDatePicker.date)
+				fromDate = DependencyInjector.util.calendar.start(of: .day, in: fromDatePicker.date)
 			}
 		}
+		var toDate: Date? = nil
 		if enableToDateSwitch.isOn {
-			dates.to = toDatePicker.date
+			toDate = toDatePicker.date
 			if datePickerMode == .date {
-				dates.to = DependencyInjector.util.calendar.start(of: .day, in: toDatePicker.date)
+				toDate = DependencyInjector.util.calendar.start(of: .day, in: toDatePicker.date)
 			}
 		}
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: self.notificationToSendOnAccept, object: dates)
+			NotificationCenter.default.post(
+				name: self.notificationToSendOnAccept,
+				object: self,
+				userInfo: self.info([
+					.fromDate: fromDate as Any,
+					.toDate: toDate as Any,
+				]))
 		}
 		dismiss(animated: true, completion: nil)
 	}

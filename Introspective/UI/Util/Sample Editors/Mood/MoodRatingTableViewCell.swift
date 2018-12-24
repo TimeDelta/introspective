@@ -57,7 +57,12 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 
 	private final func sendRatingChangedNotification() {
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: self.notificationToSendOnChange, object: self.rating)
+			NotificationCenter.default.post(
+				name: self.notificationToSendOnChange,
+				object: self,
+				userInfo: self.info([
+					.number: self.rating
+				]))
 		}
 	}
 }

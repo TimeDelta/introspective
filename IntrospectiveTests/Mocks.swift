@@ -10162,13 +10162,13 @@ class UiUtilMock: UiUtil, Mock {
 		perform?(`textView`, `target`, `action`)
     }
 
-    func value<Type>(for key: UserInfoKey, from notification: Notification) -> Type? {
-        addInvocation(.m_value__for_keyfrom_notification(Parameter<UserInfoKey>.value(`key`), Parameter<Notification>.value(`notification`)))
-		let perform = methodPerformValue(.m_value__for_keyfrom_notification(Parameter<UserInfoKey>.value(`key`), Parameter<Notification>.value(`notification`))) as? (UserInfoKey, Notification) -> Void
-		perform?(`key`, `notification`)
+    func value<Type>(for key: UserInfoKey, from notification: Notification, keyIsOptional: Bool) -> Type? {
+        addInvocation(.m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(Parameter<UserInfoKey>.value(`key`), Parameter<Notification>.value(`notification`), Parameter<Bool>.value(`keyIsOptional`)))
+		let perform = methodPerformValue(.m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(Parameter<UserInfoKey>.value(`key`), Parameter<Notification>.value(`notification`), Parameter<Bool>.value(`keyIsOptional`))) as? (UserInfoKey, Notification, Bool) -> Void
+		perform?(`key`, `notification`, `keyIsOptional`)
 		var __value: Type? = nil
 		do {
-		    __value = try methodReturnValue(.m_value__for_keyfrom_notification(Parameter<UserInfoKey>.value(`key`), Parameter<Notification>.value(`notification`))).casted()
+		    __value = try methodReturnValue(.m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(Parameter<UserInfoKey>.value(`key`), Parameter<Notification>.value(`notification`), Parameter<Bool>.value(`keyIsOptional`))).casted()
 		} catch {
 			// do nothing
 		}
@@ -10210,7 +10210,7 @@ class UiUtilMock: UiUtil, Mock {
         case m_setButton__buttonenabled_enabledhidden_hidden(Parameter<UIButton>, Parameter<Bool?>, Parameter<Bool?>)
         case m_setBackButton__for_viewControllertitle_titleaction_selector(Parameter<UIViewController>, Parameter<String>, Parameter<Selector>)
         case m_addDoneButtonToKeyboardFor__textViewtarget_targetaction_action(Parameter<UITextView>, Parameter<Any?>, Parameter<Selector?>)
-        case m_value__for_keyfrom_notification(Parameter<UserInfoKey>, Parameter<Notification>)
+        case m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(Parameter<UserInfoKey>, Parameter<Notification>, Parameter<Bool>)
         case m_info__info(Parameter<[UserInfoKey: Any]>)
         case m_controller__named_controllerNamefrom_storyboardName(Parameter<String>, Parameter<String>)
         case p_defaultPresenter_get
@@ -10242,9 +10242,10 @@ class UiUtilMock: UiUtil, Mock {
                 guard Parameter.compare(lhs: lhsTarget, rhs: rhsTarget, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsAction, rhs: rhsAction, with: matcher) else { return false } 
                 return true 
-            case (.m_value__for_keyfrom_notification(let lhsKey, let lhsNotification), .m_value__for_keyfrom_notification(let rhsKey, let rhsNotification)):
+            case (.m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(let lhsKey, let lhsNotification, let lhsKeyisoptional), .m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(let rhsKey, let rhsNotification, let rhsKeyisoptional)):
                 guard Parameter.compare(lhs: lhsKey, rhs: rhsKey, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsNotification, rhs: rhsNotification, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsKeyisoptional, rhs: rhsKeyisoptional, with: matcher) else { return false } 
                 return true 
             case (.m_info__info(let lhsInfo), .m_info__info(let rhsInfo)):
                 guard Parameter.compare(lhs: lhsInfo, rhs: rhsInfo, with: matcher) else { return false } 
@@ -10265,7 +10266,7 @@ class UiUtilMock: UiUtil, Mock {
             case let .m_setButton__buttonenabled_enabledhidden_hidden(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_setBackButton__for_viewControllertitle_titleaction_selector(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_addDoneButtonToKeyboardFor__textViewtarget_targetaction_action(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
-            case let .m_value__for_keyfrom_notification(p0, p1): return p0.intValue + p1.intValue
+            case let .m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_info__info(p0): return p0.intValue
             case let .m_controller__named_controllerNamefrom_storyboardName(p0, p1): return p0.intValue + p1.intValue
             case .p_defaultPresenter_get: return 0
@@ -10288,8 +10289,8 @@ class UiUtilMock: UiUtil, Mock {
         static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>, willReturn: Presentr...) -> MethodStub {
             return Given(method: .m_customPresenter__width_widthheight_heightcenter_center(`width`, `height`, `center`), products: willReturn.map({ Product.return($0) }))
         }
-        static func value<Type>(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, willReturn: Type?...) -> MethodStub {
-            return Given(method: .m_value__for_keyfrom_notification(`key`, `notification`), products: willReturn.map({ Product.return($0) }))
+        static func value<Type>(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, keyIsOptional: Parameter<Bool>, willReturn: Type?...) -> MethodStub {
+            return Given(method: .m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(`key`, `notification`, `keyIsOptional`), products: willReturn.map({ Product.return($0) }))
         }
         static func info(_ info: Parameter<[UserInfoKey: Any]>, willReturn: [AnyHashable: Any]...) -> MethodStub {
             return Given(method: .m_info__info(`info`), products: willReturn.map({ Product.return($0) }))
@@ -10308,9 +10309,9 @@ class UiUtilMock: UiUtil, Mock {
 			willProduce(stubber)
 			return given
         }
-        static func value<Type>(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, willProduce: (Stubber<Type?>) -> Void) -> MethodStub {
+        static func value<Type>(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, keyIsOptional: Parameter<Bool>, willProduce: (Stubber<Type?>) -> Void) -> MethodStub {
             let willReturn: [Type?] = []
-			let given: Given = { return Given(method: .m_value__for_keyfrom_notification(`key`, `notification`), products: willReturn.map({ Product.return($0) })) }()
+			let given: Given = { return Given(method: .m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(`key`, `notification`, `keyIsOptional`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Type?).self)
 			willProduce(stubber)
 			return given
@@ -10345,7 +10346,7 @@ class UiUtilMock: UiUtil, Mock {
         static func addDoneButtonToKeyboardFor(_ textView: Parameter<UITextView>, target: Parameter<Any?>, action: Parameter<Selector?>) -> Verify { return Verify(method: .m_addDoneButtonToKeyboardFor__textViewtarget_targetaction_action(`textView`, `target`, `action`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `textView` label")
 		static func addDoneButtonToKeyboardFor(textView: Parameter<UITextView>, target: Parameter<Any?>, action: Parameter<Selector?>) -> Verify { return Verify(method: .m_addDoneButtonToKeyboardFor__textViewtarget_targetaction_action(`textView`, `target`, `action`))}
-        static func value(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>) -> Verify { return Verify(method: .m_value__for_keyfrom_notification(`key`, `notification`))}
+        static func value(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, keyIsOptional: Parameter<Bool>) -> Verify { return Verify(method: .m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(`key`, `notification`, `keyIsOptional`))}
         static func info(_ info: Parameter<[UserInfoKey: Any]>) -> Verify { return Verify(method: .m_info__info(`info`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `info` label")
 		static func info(info: Parameter<[UserInfoKey: Any]>) -> Verify { return Verify(method: .m_info__info(`info`))}
@@ -10384,8 +10385,8 @@ class UiUtilMock: UiUtil, Mock {
 		static func addDoneButtonToKeyboardFor(textView: Parameter<UITextView>, target: Parameter<Any?>, action: Parameter<Selector?>, perform: @escaping (UITextView, Any?, Selector?) -> Void) -> Perform {
             return Perform(method: .m_addDoneButtonToKeyboardFor__textViewtarget_targetaction_action(`textView`, `target`, `action`), performs: perform)
         }
-        static func value(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, perform: @escaping (UserInfoKey, Notification) -> Void) -> Perform {
-            return Perform(method: .m_value__for_keyfrom_notification(`key`, `notification`), performs: perform)
+        static func value(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, keyIsOptional: Parameter<Bool>, perform: @escaping (UserInfoKey, Notification, Bool) -> Void) -> Perform {
+            return Perform(method: .m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(`key`, `notification`, `keyIsOptional`), performs: perform)
         }
         static func info(_ info: Parameter<[UserInfoKey: Any]>, perform: @escaping ([UserInfoKey: Any]) -> Void) -> Perform {
             return Perform(method: .m_info__info(`info`), performs: perform)

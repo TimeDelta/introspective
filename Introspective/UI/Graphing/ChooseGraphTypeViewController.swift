@@ -37,7 +37,12 @@ final class ChooseGraphTypeViewController: UIViewController {
 	// MARK: - Actions
 
 	@IBAction final func acceptButtonPressed(sender: Any) {
-		NotificationCenter.default.post(name: notificationToSendOnAccept, object: currentValue!)
+		NotificationCenter.default.post(
+			name: notificationToSendOnAccept,
+			object: self,
+			userInfo: info([
+				.graphType: currentValue!,
+			]))
 		dismiss(animated: false, completion: nil)
 	}
 }

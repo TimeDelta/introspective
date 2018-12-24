@@ -43,7 +43,7 @@ final class EditSubSampleTypeViewController: UIViewController {
 
 		createAndInstallAttributedChooserViewController()
 
-		NotificationCenter.default.addObserver(self, selector: #selector(doneEditing), name: Me.doneEditing, object: nil)
+		observe(selector: #selector(doneEditing), name: Me.doneEditing)
 	}
 
 	deinit {
@@ -53,15 +53,21 @@ final class EditSubSampleTypeViewController: UIViewController {
 	// MARK: - Received Notifications
 
 	@objc public final func doneEditing(notification: Notification) {
-		let savedValue = QueryViewController.SampleTypeInfo(sampleType, notification.object as! SubQueryMatcher)
-		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: savedValue, userInfo: nil)
-		_ = navigationController?.popViewController(animated: true)
+		guard let subQueryMatcher: SubQueryMatcher? = value(for: .attributed, from: notification) else { return }
+		let savedValue = QueryViewController.SampleTypeInfo(sampleType, subQueryMatcher!)
+		NotificationCenter.default.post(
+			name: notificationToSendWhenAccepted,
+			object: self,
+			userInfo: info([
+				.sampleType: savedValue,
+			]))
+		navigationController?.popViewController(animated: true)
 	}
 
 	// MARK: - Helper Functions
 
 	private final func createAndInstallAttributedChooserViewController() {
-		attributedChooserViewController = (UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "attributedChooserViewController") as! AttributedChooserViewController)
+		attributedChooserViewController = viewController(named: "attributedChooserViewController", fromStoryboard: "AttributeList")
 		updateAttributedChooserViewValues()
 		attributedChooserViewController.notificationToSendWhenAccepted = Me.doneEditing
 		attributedChooserSubView.addSubview(attributedChooserViewController.view)

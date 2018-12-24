@@ -57,7 +57,12 @@ public final class ChooseActivityDefinitionViewController: UIViewController {
 
 	@IBAction final func saveButtonPressed(_ sender: Any) {
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: self.notificationToSendOnAccept, object: self.selectedDefinition!)
+			NotificationCenter.default.post(
+				name: self.notificationToSendOnAccept,
+				object: self,
+				userInfo: self.info([
+					.activityDefinition: self.selectedDefinition!,
+				]))
 		}
 		dismiss(animated: true, completion: nil)
 	}

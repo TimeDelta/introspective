@@ -15,7 +15,6 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 	// MARK: - Static Variables
 
 	private typealias Me = RecordDataTableViewController
-	private static let presenter: Presentr = DependencyInjector.util.ui.customPresenter(width: .custom(size: 300), height: .custom(size: 200), center: .topCenter)
 
 	public static let showErrorMessage = Notification.Name("showErrorOnRecordDataScreen")
 	public static let showViewController = Notification.Name("showViewController")
@@ -32,8 +31,8 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
-		NotificationCenter.default.addObserver(self, selector: #selector(showViewController), name: Me.showViewController, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(showErrorMessage), name: Me.showErrorMessage, object: nil)
+		observe(selector: #selector(showViewController), name: Me.showViewController)
+		observe(selector: #selector(showErrorMessage), name: Me.showErrorMessage)
 	}
 
 	deinit {
@@ -67,18 +66,16 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 	// MARK: - Received Notifications
 
 	@objc private final func showViewController(notification: Notification) {
-		if let controller = notification.object as? UIViewController {
-			customPresentViewController(Me.presenter, viewController: controller, animated: true)
-		} else {
-			os_log("Wrong object type for show view controller notification", type: .error)
+		if let controller: UIViewController = value(for: .controller, from: notification) {
+			let presenter: Presentr! = value(for: .presenter, from: notification) ?? DependencyInjector.util.ui.defaultPresenter
+			customPresentViewController(presenter, viewController: controller, animated: false)
 		}
 	}
 
 	@objc private final func showErrorMessage(notification: Notification) {
-		if let error = notification.object as? (title: String, message: String?) {
-			showError(title: error.title, message: error.message)
-		} else {
-			os_log("Wrong object type for show error message notification", type: .error)
+		if let title: String = value(for: .title, from: notification) {
+			let message: String? = value(for: .message, from: notification) ?? "Sorry for the inconvenience."
+			showError(title: title, message: message)
 		}
 	}
 }

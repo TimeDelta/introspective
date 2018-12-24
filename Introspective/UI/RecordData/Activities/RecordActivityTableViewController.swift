@@ -223,7 +223,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func getAddNewActionFor(_ activityDefinition: ActivityDefinition) -> UIContextualAction {
 		let addNew = UIContextualAction(style: .normal, title: "+") { _, _, completionHandler in
-			let controller = self.storyboard!.instantiateViewController(withIdentifier: "editActivity") as! EditActivityTableViewController
+			let controller: EditActivityTableViewController = self.viewController(named: "editActivity")
 			controller.definition = activityDefinition
 			controller.notificationToSendOnAccept = Me.activityEditedOrCreated
 
@@ -251,7 +251,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	private final func getEditActivityDefinitionActionFor(_ activityDefinition: ActivityDefinition, at indexPath: IndexPath) -> UIContextualAction {
 		let editDefinitionAction = UIContextualAction(style: .normal, title: "✎ All") { _, _, completionHandler in
 			self.definitionEditIndex = indexPath
-			let controller = self.storyboard!.instantiateViewController(withIdentifier: "editActivityDefinition") as! EditActivityDefinitionTableViewController
+			let controller: EditActivityDefinitionTableViewController = self.viewController(named: "editActivityDefinition")
 			controller.activityDefinition = activityDefinition
 			controller.notificationToSendOnAccept = Me.activityDefinitionEdited
 
@@ -265,12 +265,10 @@ public final class RecordActivityTableViewController: UITableViewController {
 	// MARK: - Received Notifications
 
 	@objc private final func activityDefinitionCreated(notification: Notification) {
-		if let activityDefinition = notification.object as? ActivityDefinition {
-			activityDefinition.recordScreenIndex = Int16(fetchedResultsController.fetchedObjects?.count ?? 0)
+		if let activityDefinition: ActivityDefinition? = value(for: .activityDefinition, from: notification) {
+			activityDefinition?.recordScreenIndex = Int16(fetchedResultsController.fetchedObjects?.count ?? 0)
 			DependencyInjector.db.save()
 			loadActivitiyDefinitions()
-		} else {
-			os_log("Wrong object type for activity definition created notification", type: .error)
 		}
 	}
 
@@ -383,14 +381,14 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func showActivityDefinitionCreationScreen() {
-		let controller = storyboard!.instantiateViewController(withIdentifier: "editActivityDefinition") as! EditActivityDefinitionTableViewController
+		let controller: EditActivityDefinitionTableViewController = viewController(named: "editActivityDefinition")
 		controller.notificationToSendOnAccept = Me.activityDefinitionCreated
 		controller.initialName = getSearchText()
 		navigationController?.pushViewController(controller, animated: true)
 	}
 
 	private final func showEditScreenForActivity(_ activity: Activity, autoFocusNote: Bool = false) {
-		let controller = self.storyboard!.instantiateViewController(withIdentifier: "editActivity") as! EditActivityTableViewController
+		let controller: EditActivityTableViewController = viewController(named: "editActivity")
 		controller.activity = activity
 		controller.notificationToSendOnAccept = Me.activityEditedOrCreated
 		controller.autoFocusNote = autoFocusNote

@@ -43,7 +43,12 @@ final class ChooseAttributeViewController: UIViewController {
 	// MARK: - Button Actions
 
 	@IBAction final func userPressedAccept(_ sender: Any) {
-		NotificationCenter.default.post(name: notificationToSendOnAccept, object: selectedAttribute)
+		NotificationCenter.default.post(
+			name: notificationToSendOnAccept,
+			object: self,
+			userInfo: info([
+				.attribute: selectedAttribute as Any,
+			]))
 		dismiss(animated: true, completion: nil)
 	}
 }

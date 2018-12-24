@@ -31,7 +31,12 @@ extension MoodNoteTableViewCell: UITextViewDelegate {
 
 	public final func textViewDidChange(_ textView: UITextView) {
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: self.notificationToSendOnChange, object: textView.text)
+			NotificationCenter.default.post(
+				name: self.notificationToSendOnChange,
+				object: self,
+				userInfo: self.info([
+					.text: textView.text,
+				]))
 		}
 	}
 }

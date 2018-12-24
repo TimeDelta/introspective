@@ -36,7 +36,12 @@ public final class ActivityEndDateTableViewCell: UITableViewCell {
 	@IBAction final func clearButtonPressed(_ sender: Any) {
 		endDate = nil
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: self.notificationToSendOnDateChange, object: self.endDate)
+			NotificationCenter.default.post(
+				name: self.notificationToSendOnDateChange,
+				object: self,
+				userInfo: self.info([
+					.date: self.endDate as Any,
+				]))
 		}
 	}
 }

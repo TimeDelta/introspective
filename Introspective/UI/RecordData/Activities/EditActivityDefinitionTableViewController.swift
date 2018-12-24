@@ -145,11 +145,9 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 	// MARK: - Received Notifications
 
 	@objc private final func nameChanged(notification: Notification) {
-		if let name = notification.object as? String {
-			self.name = name
+		if let name: String? = value(for: .text, from: notification) {
+			self.name = name!
 			saveButton.isEnabled = true
-		} else {
-			os_log("Wrong object type for name changed notification", type: .error)
 		}
 	}
 
@@ -158,32 +156,27 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 	}
 
 	@objc private final func descriptionChanged(notification: Notification) {
-		if let activityDescription = notification.object as? String? {
-			self.activityDescription = activityDescription
-		} else {
-			os_log("Wrong object type for note changed notification", type: .error)
-		}
+		self.activityDescription = value(for: .text, from: notification)
 	}
 
 	@objc private final func tagsChanged(notification: Notification) {
-		if let tagNames = notification.object as? Set<String> {
+		if let tagNames: Set<String> = value(for: .tagNames, from: notification) {
 			self.tagNames = tagNames
-		} else {
-			os_log("Wrong object type for tags changed notification", type: .error)
 		}
 	}
 
 	@objc private final func autoNoteChanged(notification: Notification) {
-		if let autoNote: Bool = value(for: .activityDefinitionAutoNote, from: notification) {
-			self.autoNote = autoNote
+		if let autoNote: Bool? = value(for: .activityDefinitionAutoNote, from: notification) {
+			self.autoNote = autoNote!
 		}
 	}
 
 	@objc private final func showPopup(notification: Notification) {
-		if let controller: UIViewController = value(for: .controller, from: notification) {
-			if let presenter: Presentr = value(for: .presenter, from: notification) {
-				customPresentViewController(presenter, viewController: controller, animated: false)
-			}
+		if
+			let controller: UIViewController = value(for: .controller, from: notification),
+			let presenter: Presentr = value(for: .presenter, from: notification)
+		{
+			customPresentViewController(presenter, viewController: controller, animated: false)
 		}
 	}
 
@@ -207,7 +200,12 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			DependencyInjector.db.save()
 
 			DispatchQueue.main.async {
-				NotificationCenter.default.post(name: self.notificationToSendOnAccept, object: activityDefinition)
+				NotificationCenter.default.post(
+					name: self.notificationToSendOnAccept,
+					object: self,
+					userInfo: self.info([
+						.activityDefinition: activityDefinition,
+					]))
 			}
 			navigationController?.popViewController(animated: true)
 		} catch {

@@ -88,9 +88,9 @@ public final class EditMedicationViewController: UIViewController {
 		notesTextView.delegate = self
 		scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height * 2)
 
-		NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(setFrequency), name: Me.frequencyChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(setStartedOnDate), name: Me.startedOnChanged, object: nil)
+		observe(selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification)
+		observe(selector: #selector(setFrequency), name: Me.frequencyChanged)
+		observe(selector: #selector(setStartedOnDate), name: Me.startedOnChanged)
 	}
 
 	deinit {
@@ -100,7 +100,7 @@ public final class EditMedicationViewController: UIViewController {
 	// MARK: - Received Notifications
 
 	@objc private final func setFrequency(notification: Notification) {
-		frequency = notification.object as? Frequency
+		frequency = value(for: .frequency, from: notification)
 		updateFrequencyButtonTitle()
 		if frequency != nil {
 			DependencyInjector.util.ui.setButton(resetFrequencyButton, enabled: true, hidden: false)
@@ -108,8 +108,9 @@ public final class EditMedicationViewController: UIViewController {
 	}
 
 	@objc private final func setStartedOnDate(notification: Notification) {
-		if let date = notification.object as? Date {
-			startedOnDate = DependencyInjector.util.calendar.start(of: .day, in: date)
+		let date: Date? = value(for: .date, from: notification)
+		if date != nil {
+			startedOnDate = DependencyInjector.util.calendar.start(of: .day, in: date!)
 			DependencyInjector.util.ui.setButton(resetStartedOnButton, enabled: true, hidden: false)
 		} else {
 			startedOnDate = nil
@@ -124,13 +125,13 @@ public final class EditMedicationViewController: UIViewController {
 	// MARK: - Button Actions
 
 	@IBAction final func frequencyDescriptionButtonPressed(_ sender: Any) {
-		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "description") as! DescriptionViewController
+		let controller: DescriptionViewController = viewController(named:"description", fromStoryboard: "Util")
 		controller.descriptionText = Medication.frequency.extendedDescription ?? "No description"
 		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func frequencyButtonPressed(_ sender: Any) {
-		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "chooseFrequency") as! FrequencyEditorViewController
+		let controller: FrequencyEditorViewController = viewController(named: "chooseFrequency", fromStoryboard: "Util")
 		controller.initialFrequency = medication?.frequency
 		controller.notificationToSendOnAccept = Me.frequencyChanged
 		customPresentViewController(Me.frequencyPresenter, viewController: controller, animated: true)
@@ -143,13 +144,13 @@ public final class EditMedicationViewController: UIViewController {
 	}
 
 	@IBAction final func startedOnDescriptionButtonPressed(_ sender: Any) {
-		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "description") as! DescriptionViewController
+		let controller: DescriptionViewController = viewController(named:"description", fromStoryboard: "Util")
 		controller.descriptionText = Medication.startedOn.extendedDescription ?? "No description"
 		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func startedOnButtonPressed(_ sender: Any) {
-		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "datePicker") as! SelectDateViewController
+		let controller: SelectDateViewController = viewController(named:"datePicker", fromStoryboard: "Util")
 		controller.initialDate = startedOnDate
 		controller.notificationToSendOnAccept = Me.startedOnChanged
 		controller.datePickerMode = .date
@@ -163,7 +164,7 @@ public final class EditMedicationViewController: UIViewController {
 	}
 
 	@IBAction final func dosageDescriptionButtonPressed(_ sender: Any) {
-		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "description") as! DescriptionViewController
+		let controller: DescriptionViewController = viewController(named:"description", fromStoryboard: "Util")
 		controller.descriptionText = Medication.dosage.extendedDescription ?? "No description"
 		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
 	}
@@ -185,7 +186,12 @@ public final class EditMedicationViewController: UIViewController {
 			}
 
 			DispatchQueue.main.async {
-				NotificationCenter.default.post(name: self.notificationToSendOnAccept, object: self.medication)
+				NotificationCenter.default.post(
+					name: self.notificationToSendOnAccept,
+					object: self,
+					userInfo: self.info([
+						.medication: self.medication as Any,
+					]))
 			}
 			navigationController?.popViewController(animated: true)
 		} catch {

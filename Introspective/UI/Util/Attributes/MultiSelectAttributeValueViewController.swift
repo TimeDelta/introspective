@@ -35,7 +35,10 @@ public final class MultiSelectAttributeValueViewController: UIViewController {
 		DispatchQueue.main.async {
 			NotificationCenter.default.post(
 				name: self.notificationToSendOnAccept,
-				object: self.subViewController.selectedValues)
+				object: self,
+				userInfo: self.info([
+					.attributeValue: self.subViewController.selectedValues,
+				]))
 		}
 		dismiss(animated: true, completion: nil)
 	}
@@ -43,7 +46,7 @@ public final class MultiSelectAttributeValueViewController: UIViewController {
 	// MARK: - Helper Functions
 
 	private final func createAndInstallSubViewController() {
-		subViewController = (UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "multiSelect") as! MultiSelectAttributeValueSelectTableViewController)
+		subViewController = viewController(named: "multiSelect", fromStoryboard: "AttributeList")
 		subViewController.initialValue = initialValue
 		subViewController.multiSelectAttribute = multiSelectAttribute
 		subView.addSubview(subViewController.view)

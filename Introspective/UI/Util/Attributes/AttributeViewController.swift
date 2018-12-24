@@ -35,7 +35,7 @@ final class AttributeViewController: UIViewController {
 	public final var attributeValue: Any!
 	public final var notificationToSendOnValueChange: Notification.Name! {
 		didSet {
-			NotificationCenter.default.addObserver(self, selector: #selector(valueChanged), name: notificationToSendOnValueChange, object: nil)
+			observe(selector: #selector(valueChanged), name: notificationToSendOnValueChange)
 		}
 	}
 
@@ -73,32 +73,32 @@ final class AttributeViewController: UIViewController {
 	// MARK: - Button Actions
 
 	@IBAction final func descriptionButtonPressed(_ sender: Any) {
-		let controller = storyboard!.instantiateViewController(withIdentifier: "attributeDescription") as! AttributeDescriptionViewController
+		let controller: AttributeDescriptionViewController = viewController(named: "attributeDescription")
 		controller.descriptionText = attribute.extendedDescription
 		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: true)
 	}
 
 	@IBAction final func valueButtonPressed(_ sender: Any) {
 		if attribute is DaysOfWeekAttribute {
-			let controller = storyboard!.instantiateViewController(withIdentifier: "horizontalMultiSelectAttribute") as! HorizontalMultiSelectAttributeValueViewController
+			let controller: HorizontalMultiSelectAttributeValueViewController = viewController(named: "horizontalMultiSelectAttribute")
 			controller.multiSelectAttribute = (attribute as! MultiSelectAttribute)
 			controller.currentValue = attributeValue
 			controller.notificationToSendOnAccept = notificationToSendOnValueChange
 			customPresentViewController(Me.horizontalMultiSelectPresenter, viewController: controller, animated: true)
 		} else if attribute is MultiSelectAttribute {
-			let controller = storyboard!.instantiateViewController(withIdentifier: "multiSelectAttribute") as! MultiSelectAttributeValueViewController
+			let controller: MultiSelectAttributeValueViewController = viewController(named: "multiSelectAttribute")
 			controller.multiSelectAttribute = (attribute as! MultiSelectAttribute)
 			controller.initialValue = attributeValue
 			controller.notificationToSendOnAccept = notificationToSendOnValueChange
 			customPresentViewController(Me.multiSelectPresenter, viewController: controller, animated: true)
 		} else if attribute is NumericAttribute {
-			let controller = storyboard!.instantiateViewController(withIdentifier: "numericAttribute") as! NumericAttributeValueViewController
+			let controller: NumericAttributeValueViewController = viewController(named: "numericAttribute")
 			controller.numericAttribute = (attribute as! NumericAttribute)
 			controller.currentValue = attributeValue
 			controller.notificationToSendOnAccept = notificationToSendOnValueChange
 			customPresentViewController(Me.numericPresenter, viewController: controller, animated: true)
 		} else if attribute is DosageAttribute {
-			let controller = storyboard!.instantiateViewController(withIdentifier: "setDosage") as! SetMedicationDosageViewController
+			let controller: SetMedicationDosageViewController = viewController(named: "setDosage")
 			controller.initialDosage = attributeValue as? Dosage
 			controller.notificationToSendOnAccept = notificationToSendOnValueChange
 			customPresentViewController(Me.dosagePresenter, viewController: controller, animated: true)
@@ -108,7 +108,7 @@ final class AttributeViewController: UIViewController {
 			controller.notificationToSendOnAccept = notificationToSendOnValueChange
 			customPresentViewController(Me.frequencyPresenter, viewController: controller, animated: true)
 		} else {
-			let controller = storyboard!.instantiateViewController(withIdentifier: "attributeValue") as! AttributeValueViewController
+			let controller: AttributeValueViewController = viewController(named: "attributeValue")
 			controller.attribute = attribute
 			controller.attributeValue = attributeValue
 			controller.notificationToSendOnAccept = notificationToSendOnValueChange
@@ -119,14 +119,19 @@ final class AttributeViewController: UIViewController {
 	@IBAction final func booleanValueChanged(_ sender: Any) {
 		attributeValue = booleanValueSwitch.isOn
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: self.notificationToSendOnValueChange, object: self.attributeValue)
+			NotificationCenter.default.post(
+				name: self.notificationToSendOnValueChange,
+				object: self,
+				userInfo: self.info([
+					.attributeValue: self.attributeValue,
+				]))
 		}
 	}
 
 	// MARK: - Received Notifications
 
 	@objc private final func valueChanged(notification: Notification) {
-		attributeValue = notification.object
+		attributeValue = value(for: .attributeValue, from: notification)
 		updateDisplay()
 	}
 

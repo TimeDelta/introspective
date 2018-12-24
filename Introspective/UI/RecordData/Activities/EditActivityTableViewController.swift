@@ -37,6 +37,7 @@ public final class EditActivityTableViewController: UITableViewController {
 	// MARK: - Instance Variables
 
 	public final var notificationToSendOnAccept: Notification.Name!
+	public final var userInfoKey: UserInfoKey = .activity
 	public final var activity: Activity? {
 		didSet {
 			guard let activity = activity else { return }
@@ -70,11 +71,11 @@ public final class EditActivityTableViewController: UITableViewController {
 			action: #selector(saveButtonPressed))
 		navigationItem.rightBarButtonItem = saveButton
 
-		NotificationCenter.default.addObserver(self, selector: #selector(activityDefinitionChanged), name: Me.activityDefinitionChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(startDateChanged), name: Me.startDateChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(endDateChanged), name: Me.endDateChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(noteChanged), name: Me.noteChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(tagsChanged), name: Me.tagsChanged, object: nil)
+		observe(selector: #selector(activityDefinitionChanged), name: Me.activityDefinitionChanged)
+		observe(selector: #selector(startDateChanged), name: Me.startDateChanged)
+		observe(selector: #selector(endDateChanged), name: Me.endDateChanged)
+		observe(selector: #selector(noteChanged), name: Me.noteChanged)
+		observe(selector: #selector(tagsChanged), name: Me.tagsChanged)
 	}
 
 	deinit {
@@ -150,18 +151,18 @@ public final class EditActivityTableViewController: UITableViewController {
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath == Me.activityIndex {
-			let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "chooseActivityDefinition") as! ChooseActivityDefinitionViewController
+			let controller: ChooseActivityDefinitionViewController = viewController(named: "chooseActivityDefinition", fromStoryboard: "Util")
 			controller.selectedDefinition = definition
 			controller.notificationToSendOnAccept = Me.activityDefinitionChanged
 			customPresentViewController(Me.presenter, viewController: controller, animated: false)
 		} else if indexPath == Me.startIndex {
-			let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "datePicker") as! SelectDateViewController
+			let controller: SelectDateViewController = viewController(named: "datePicker", fromStoryboard: "Util")
 			controller.initialDate = startDate
 			controller.notificationToSendOnAccept = Me.startDateChanged
 			controller.lastDate = getMostRecentActivityDate()
 			customPresentViewController(Me.presenter, viewController: controller, animated: false)
 		} else if indexPath == Me.endIndex {
-			let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "datePicker") as! SelectDateViewController
+			let controller: SelectDateViewController = viewController(named: "datePicker", fromStoryboard: "Util")
 			controller.initialDate = endDate
 			controller.notificationToSendOnAccept = Me.endDateChanged
 			controller.lastDate = getMostRecentActivityDate()
@@ -174,25 +175,21 @@ public final class EditActivityTableViewController: UITableViewController {
 	// MARK: - Received Notifications
 
 	@objc private final func activityDefinitionChanged(notification: Notification) {
-		if let newDefinition = notification.object as? ActivityDefinition {
+		if let newDefinition: ActivityDefinition? = value(for: .activityDefinition, from: notification) {
 			definition = newDefinition
 			tableView.reloadData()
-		} else {
-			os_log("Wrong object type for activity definition changed notification", type: .error)
 		}
 	}
 
 	@objc private final func startDateChanged(notification: Notification) {
-		if let date = notification.object as? Date {
+		if let date: Date = value(for: .date, from: notification) {
 			startDate = date
 			tableView.reloadData()
-		} else {
-			os_log("Wrong object type for start date changed notification", type: .error)
 		}
 	}
 
 	@objc private final func endDateChanged(notification: Notification) {
-		endDate = notification.object as? Date
+		endDate = value(for: .date, from: notification)
 		// clearing the end date is done by the cell itself so no need to have
 		// it update its UI when set to nil
 		if endDate != nil {
@@ -201,18 +198,12 @@ public final class EditActivityTableViewController: UITableViewController {
 	}
 
 	@objc private final func noteChanged(notification: Notification) {
-		if let note = notification.object as? String? {
-			self.note = note
-		} else {
-			os_log("Wrong object type for note changed notification", type: .error)
-		}
+		self.note = value(for: .text, from: notification)
 	}
 
 	@objc private final func tagsChanged(notification: Notification) {
-		if let tagNames = notification.object as? Set<String> {
+		if let tagNames: Set<String> = value(for: .tagNames, from: notification) {
 			self.tagNames = tagNames
-		} else {
-			os_log("Wrong object type for tags changed notification", type: .error)
 		}
 	}
 
@@ -234,7 +225,12 @@ public final class EditActivityTableViewController: UITableViewController {
 			try updateTagsForActivity(activity)
 			DependencyInjector.db.save()
 			DispatchQueue.main.async {
-				NotificationCenter.default.post(name: self.notificationToSendOnAccept, object: activity)
+				NotificationCenter.default.post(
+					name: self.notificationToSendOnAccept,
+					object: self,
+					userInfo: self.info([
+						self.userInfoKey: activity,
+					]))
 			}
 			navigationController?.popViewController(animated: true)
 		} catch {

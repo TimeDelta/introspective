@@ -72,7 +72,12 @@ public final class ActivityDefinitionTagsTableViewCell: UITableViewCell {
 
 	private final func sendTagsChangedNotification() {
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: self.notificationToSendOnChange, object: self.tagNames)
+			NotificationCenter.default.post(
+				name: self.notificationToSendOnChange,
+				object: self,
+				userInfo: self.info([
+					.tagNames: self.tagNames,
+				]))
 		}
 	}
 }

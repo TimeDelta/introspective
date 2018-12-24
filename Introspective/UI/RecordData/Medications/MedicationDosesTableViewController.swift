@@ -59,8 +59,8 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		dateRangeButton.accessibilityLabel = "filter dates button"
 		navigationItem.rightBarButtonItem = self.editButtonItem
 		navigationItem.title = medication.name
-		NotificationCenter.default.addObserver(self, selector: #selector(dateRangeSet), name: Me.dateRangeSet, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(medicationDoseEdited), name: Me.medicationDoseEdited, object: nil)
+		observe(selector: #selector(dateRangeSet), name: Me.dateRangeSet)
+		observe(selector: #selector(medicationDoseEdited), name: Me.medicationDoseEdited)
 	}
 
 	deinit {
@@ -115,7 +115,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	}
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let controller = storyboard!.instantiateViewController(withIdentifier: "medicationDoseEditor") as! MedicationDoseEditorViewController
+		let controller: MedicationDoseEditorViewController = viewController(named: "medicationDoseEditor")
 		controller.medicationDose = medication.doses.object(at: indexPath.row) as? MedicationDose
 		controller.notificationToSendOnAccept = Me.medicationDoseEdited
 		lastClickedIndex = indexPath.row
@@ -125,22 +125,18 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	// MARK: - Received Notificaitons
 
 	@objc private final func dateRangeSet(notification: Notification) {
-		if let dates = notification.object as? (from: Date?, to: Date?) {
-			filterStartDate = dates.from
-			filterEndDate = dates.to
-			let enablePreviousAndNextButtons = filterStartDate != nil || filterEndDate != nil
-			previousDateRangeButton.isEnabled = enablePreviousAndNextButtons
-			nextDateRangeButton.isEnabled = enablePreviousAndNextButtons
-			resetFilteredDoses()
-			tableView.reloadData()
-			resetDateRangeButtonTitle()
-		} else {
-			os_log("Wrong type returned from notification: %@", type: .error, String(describing: type(of: notification.object)))
-		}
+		filterStartDate = value(for: .fromDate, from: notification)
+		filterEndDate = value(for: .toDate, from: notification)
+		let enablePreviousAndNextButtons = filterStartDate != nil || filterEndDate != nil
+		previousDateRangeButton.isEnabled = enablePreviousAndNextButtons
+		nextDateRangeButton.isEnabled = enablePreviousAndNextButtons
+		resetFilteredDoses()
+		tableView.reloadData()
+		resetDateRangeButtonTitle()
 	}
 
 	@objc private final func medicationDoseEdited(notification: Notification) {
-		if let dose = notification.object as? MedicationDose {
+		if let dose: MedicationDose = value(for: .dose, from: notification) {
 			medication.replaceDoses(at: lastClickedIndex, with: dose)
 			DependencyInjector.db.save()
 			resetFilteredDoses()
@@ -151,7 +147,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	// MARK: - Actions
 
 	@IBAction final func filterDatesButtonPressed(_ sender: Any) {
-		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "dateRangeChooser") as! DateRangeViewController
+		let controller: DateRangeViewController = viewController(named: "dateRangeChooser", fromStoryboard: "Util")
 		controller.initialFromDate = filterStartDate
 		controller.initialToDate = filterEndDate
 		controller.maxFromDate = Date()

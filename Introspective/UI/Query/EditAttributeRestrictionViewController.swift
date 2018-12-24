@@ -43,8 +43,8 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 		}
 		createAndInstallAttributedChooserViewController()
 
-		NotificationCenter.default.addObserver(self, selector: #selector(doneEditing), name: Me.doneEditing, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(valueChanged), name: Me.valueChanged, object: nil)
+		observe(selector: #selector(doneEditing), name: Me.doneEditing)
+		observe(selector: #selector(valueChanged), name: Me.valueChanged)
 	}
 
 	deinit {
@@ -54,22 +54,25 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 	// MARK: - Received Notifications
 
 	@objc private final func doneEditing(notification: Notification) {
-		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: notification.object, userInfo: nil)
-		navigationController?.popViewController(animated: true)
+		if let attributeRestriction: AttributeRestriction? = value(for: .attributed, from: notification) {
+			NotificationCenter.default.post(
+				name: notificationToSendWhenAccepted,
+				object: notification.object,
+				userInfo: info([
+					.attributeRestriction: attributeRestriction as Any,
+				]))
+			navigationController?.popViewController(animated: true)
+		}
 	}
 
 	@objc private final func valueChanged(notification: Notification) {
-		if let attributeRestriction = notification.object as? AttributeRestriction {
-			self.attributeRestriction = attributeRestriction
-		} else {
-			os_log("Wrong object type for attribute restriction value changed notification", type: .error)
-		}
+		self.attributeRestriction = value(for: .attributed, from: notification)
 	}
 
 	// MARK: - Helper Functions
 
 	private final func createAndInstallAttributedChooserViewController() {
-		attributedChooserViewController = (UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "attributedChooserViewController") as! AttributedChooserViewController)
+		attributedChooserViewController = viewController(named: "attributedChooserViewController", fromStoryboard: "AttributeList")
 		updateAttributedChooserViewValues()
 		attributedChooserViewController.notificationToSendWhenAccepted = Me.doneEditing
 		attributedChooserViewController.notificationToSendOnValueChange = Me.valueChanged

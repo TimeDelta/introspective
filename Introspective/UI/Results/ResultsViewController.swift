@@ -69,9 +69,9 @@ final class ResultsViewController: UITableViewController {
 		actionsButton.target = self
 		actionsButton.action = #selector(presentActions)
 
-		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedExtraInformation), name: Me.editedExtraInformation, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(sortSamplesBy), name: Me.sortSamples, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(editedSample), name: Me.editedSample, object: nil)
+		observe(selector: #selector(saveEditedExtraInformation), name: Me.editedExtraInformation)
+		observe(selector: #selector(sortSamplesBy), name: Me.sortSamples)
+		observe(selector: #selector(editedSample), name: Me.editedSample)
 
 		self.navigationItem.setRightBarButton(actionsButton, animated: true)
 
@@ -261,34 +261,31 @@ final class ResultsViewController: UITableViewController {
 	// MARK: - Received Notifications
 
 	@objc private final func saveEditedExtraInformation(notification: Notification) {
-		if let selectedInformation = notification.object as? ExtraInformation {
+		if let selectedInformation: ExtraInformation? = value(for: .information, from: notification) {
 			if let editIndex = extraInformationEditIndex {
-				extraInformation[editIndex] = selectedInformation
+				extraInformation[editIndex] = selectedInformation!
 				extraInformationValues[editIndex] = try! extraInformation[editIndex].compute(forSamples: samples)
 				tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
 			} else {
 				os_log("Extra Information edit index was nil", type: .error)
 			}
-		} else {
-			os_log("Wrong object type for save edited extra information notification", type: .error)
 		}
 	}
 
 	@objc private final func editedSample(notification: Notification) {
-		if let sample = notification.object as? Sample {
-			samples[lastSelectedRowIndex] = sample
+		if let sample: Sample? = value(for: .sample, from: notification) {
+			samples[lastSelectedRowIndex] = sample!
 			tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
-		} else {
-			os_log("Wrong object type for edited sample notification", type: .error)
 		}
 	}
 
 	@objc private final func sortSamplesBy(notification: Notification) {
 		sortController?.dismiss(animated: false, completion: nil)
 
-		let sortCriteria = notification.object as! (attribute: Attribute, order: ComparisonResult)
-		self.sortOrder = sortCriteria.order
-		self.sortAttribute = sortCriteria.attribute
+		guard let attribute: Attribute? = value(for: .attribute, from: notification) else { return }
+		guard let order: ComparisonResult? = value(for: .comparisonResult, from: notification) else { return }
+		self.sortOrder = order
+		self.sortAttribute = attribute
 		self.sortTask = DispatchWorkItem {
 			DispatchQueue.main.sync{
 				self.tableView.reloadData()
@@ -345,13 +342,13 @@ final class ResultsViewController: UITableViewController {
 	}
 
 	@objc private final func graph() {
-		let controller = UIStoryboard(name: "GraphSetup", bundle: nil).instantiateViewController(withIdentifier: "queryResultsGraphSetup") as! QueryResultsGraphSetupViewController
+		let controller: QueryResultsGraphSetupViewController = viewController(named: "queryResultsGraphSetup", fromStoryboard: "GraphSetup")
 		controller.samples = samples
 		navigationController?.pushViewController(controller, animated: false)
 	}
 
 	@objc private final func setSampleSort() {
-		let controller = self.storyboard!.instantiateViewController(withIdentifier: "sortResults") as! SortResultsViewController
+		let controller: SortResultsViewController = viewController(named: "sortResults")
 		controller.attributes = self.sortableAttributes()
 		controller.sortAttribute = self.sortAttribute
 		controller.sortOrder = self.sortOrder
@@ -390,7 +387,7 @@ final class ResultsViewController: UITableViewController {
 		extraInformationEditIndex = indexPath.row
 		let selectedInformation = extraInformation[extraInformationEditIndex]
 
-		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "editExtraInformation") as! SelectExtraInformationViewController
+		let controller: SelectExtraInformationViewController = viewController(named: "editExtraInformation", fromStoryboard: "Util")
 		controller.notificationToSendWhenFinished = Me.editedExtraInformation
 		controller.attributes = samples[0].attributes
 		controller.selectedAttribute = selectedInformation.attribute
@@ -405,9 +402,10 @@ final class ResultsViewController: UITableViewController {
 	private final func showEditActivityView(_ indexPath: IndexPath) {
 		lastSelectedRowIndex = indexPath.row
 
-		let controller = UIStoryboard(name: "RecordData", bundle: nil).instantiateViewController(withIdentifier: "editActivity") as! EditActivityTableViewController
+		let controller: EditActivityTableViewController = viewController(named: "editActivity", fromStoryboard: "RecordData")
 		controller.activity = (samples[indexPath.row] as! Activity)
 		controller.notificationToSendOnAccept = Me.editedSample
+		controller.userInfoKey = .sample
 		if navigationController != nil {
 			navigationController!.pushViewController(controller, animated: false)
 		} else {
@@ -418,9 +416,10 @@ final class ResultsViewController: UITableViewController {
 	private final func showEditMoodView(_ indexPath: IndexPath) {
 		lastSelectedRowIndex = indexPath.row
 
-		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "editMood") as! EditMoodTableViewController
+		let controller: EditMoodTableViewController = viewController(named: "editMood", fromStoryboard: "Util")
 		controller.mood = (samples[indexPath.row] as! Mood)
 		controller.notificationToSendOnAccept = Me.editedSample
+		controller.userInfoKey = .sample
 		if navigationController != nil {
 			navigationController!.pushViewController(controller, animated: false)
 		} else {

@@ -33,7 +33,7 @@ final class QueryResultsGraphSetupViewController: UIViewController {
 		if graphType == nil {
 			graphType = GraphType.allTypes[0]
 		}
-		NotificationCenter.default.addObserver(self, selector: #selector(setGraphType), name: Me.setGraphType, object: nil)
+		observe(selector: #selector(setGraphType), name: Me.setGraphType)
 		updateChooseGraphTypeButtonTitle()
 		updateSubView()
 	}
@@ -41,7 +41,7 @@ final class QueryResultsGraphSetupViewController: UIViewController {
 	// MARK: - Actions
 
 	@IBAction final func setGraphTypewButtonPressed(sender: Any) {
-		let controller = storyboard!.instantiateViewController(withIdentifier: "chooseGraphType") as! ChooseGraphTypeViewController
+		let controller: ChooseGraphTypeViewController = viewController(named: "chooseGraphType")
 		controller.currentValue = graphType
 		controller.notificationToSendOnAccept = Me.setGraphType
 		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
@@ -50,7 +50,7 @@ final class QueryResultsGraphSetupViewController: UIViewController {
 	// MARK: - Received Notifications
 
 	@objc private final func setGraphType(notification: Notification) {
-		let newGraphType = notification.object as! GraphType
+		guard let newGraphType: GraphType = value(for: .graphType, from: notification) else { return }
 		let skipUpdateSubView = shouldNotResetSubView(newGraphType)
 		graphType = newGraphType
 		if let controller = subViewController as? BasicXYGraphTypeSetupViewController {
@@ -82,7 +82,7 @@ final class QueryResultsGraphSetupViewController: UIViewController {
 		subViewController?.removeFromParent()
 		switch (graphType!) {
 			case .line, .bar, .scatter:
-				let controller = UIStoryboard(name: "BasicXYGraph", bundle: nil).instantiateViewController(withIdentifier: "queryResultsGraphSetup") as! QueryResultsBasicXYGraphCustomizationViewController
+				let controller: QueryResultsBasicXYGraphCustomizationViewController = viewController(named: "queryResultsGraphSetup", fromStoryboard: "BasicXYGraph")
 				controller.realNavigationController = navigationController
 				controller.chartType = graphType.aaChartType
 				controller.samples = samples

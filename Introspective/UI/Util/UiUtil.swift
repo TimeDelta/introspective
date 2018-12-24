@@ -10,24 +10,6 @@ import UIKit
 import Presentr
 import os
 
-public enum UserInfoKey: Hashable, CustomStringConvertible {
-	case activityDefinitionAutoNote
-	case autoIgnoreEnabled
-	case autoIgnoreSeconds
-	case controller
-	case presenter
-
-	public var description: String {
-		switch (self) {
-			case .activityDefinitionAutoNote: return "activityDefinitionAutoNote"
-			case .autoIgnoreEnabled: return "autoIgnoreEnabled"
-			case .autoIgnoreSeconds: return "autoIgnoreSeconds"
-			case .controller: return "controller"
-			case .presenter: return "presenter"
-		}
-	}
-}
-
 //sourcery: AutoMockable
 public protocol UiUtil {
 
@@ -38,7 +20,12 @@ public protocol UiUtil {
 	func setButton(_ button: UIButton, enabled: Bool?, hidden: Bool?)
 	func setBackButton(for viewController: UIViewController, title: String, action selector: Selector)
 	func addDoneButtonToKeyboardFor(_ textView: UITextView, target: Any?, action: Selector?)
-	func value<Type>(for key: UserInfoKey, from notification: Notification) -> Type?
+	/// Retrieve the value for the specified `UserInfoKey` from the given notification.
+	/// - Parameter keyIsOptional: If true, no error will be logged if the specified key does not exist in the user info.
+	/// - Note: Automatically logs when key is missing, wrong type or the notification does not have any user info.
+	func value<Type>(for key: UserInfoKey, from notification: Notification, keyIsOptional: Bool) -> Type?
+	/// This is just a pass-through method that will return the input. It is solely for syntactic
+	/// sugar so that you don't have to type out "UserInfoKey." everywhere.
 	func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any]
 	func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String) -> Type
 }
@@ -55,6 +42,13 @@ extension UiUtil {
 
 	func setButton(_ button: UIButton, enabled: Bool? = nil, hidden: Bool? = nil) {
 		setButton(button, enabled: enabled, hidden: hidden)
+	}
+
+	/// Retrieve the value for the specified `UserInfoKey` from the given notification.
+	/// - Parameter keyIsOptional: If true, no error will be logged if the specified key does not exist in the user info.
+	/// - Note: Automatically logs when key is missing, wrong type or the notification does not have any user info.
+	func value<Type>(for key: UserInfoKey, from notification: Notification, keyIsOptional: Bool = false) -> Type? {
+		return value(for: key, from: notification, keyIsOptional: keyIsOptional)
 	}
 }
 
@@ -114,24 +108,30 @@ public final class UiUtilImpl: UiUtil {
 		textView.inputAccessoryView = keyboardToolBar
 	}
 
-	public func value<Type>(for key: UserInfoKey, from notification: Notification) -> Type? {
+	/// Retrieve the value for the specified `UserInfoKey` from the given notification.
+	/// - Parameter keyIsOptional: If true, no error will be logged if the specified key does not exist in the user info.
+	/// - Note: Automatically logs when key is missing, wrong type or the notification does not have any user info.
+	public func value<Type>(for key: UserInfoKey, from notification: Notification, keyIsOptional: Bool = false) -> Type? {
 		if let userInfo = notification.userInfo {
+			guard userInfo.keys.contains(key) else {
+				if !keyIsOptional {
+					os_log("Missing user info key for '%@' notification: %@", type: .error, notification.name.rawValue, key.description)
+				}
+				return nil
+			}
 			let value = userInfo[key]
-			if value is Type {
+			if value is Type || value is Optional<Type> {
 				return value as? Type
 			}
-			if value == nil {
-				os_log("Missing property for '%@' notification: %@", type: .error, notification.name.rawValue, key.description)
-			} else {
-				os_log("Wrong object type for '%@' notification: %@", type: .error, notification.name.rawValue, key.description)
-			}
-		} else {
-			os_log("No user info for '%@' notification", type: .error, notification.name.rawValue)
+			os_log("Wrong object type for '%@' notification: %@", type: .error, notification.name.rawValue, key.description)
+			return nil
 		}
+		os_log("No user info for '%@' notification", type: .error, notification.name.rawValue)
 		return nil
 	}
 
-	/// this is just a convenience method so that you don't have to type "UserInfoKey." a bunch of times
+	/// This is just a pass-through method that will return the input. It is solely for syntactic
+	/// sugar so that you don't have to type out "UserInfoKey." everywhere.
 	public func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any] {
 		return info
 	}

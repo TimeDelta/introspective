@@ -35,7 +35,12 @@ public final class SetMedicationDosageViewController: UIViewController {
 			dosage = Dosage(dosageText)
 		}
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: self.notificationToSendOnAccept, object: dosage)
+			NotificationCenter.default.post(
+				name: self.notificationToSendOnAccept,
+				object: self,
+				userInfo: self.info([
+					.attributeValue: dosage as Any,
+				]))
 		}
 		dismiss(animated: true, completion: nil)
 	}

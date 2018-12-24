@@ -28,7 +28,7 @@ final class RecordDataPageViewController: UIPageViewController {
 	}
 
 	private final func instantiateController(named name: String) -> UIViewController {
-		return UIStoryboard(name: "RecordData", bundle: nil).instantiateViewController(withIdentifier: name)
+		return viewController(named: name, fromStoryboard: "RecordData")
 	}
 }
 

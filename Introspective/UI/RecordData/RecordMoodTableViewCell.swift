@@ -12,6 +12,11 @@ import os
 
 final class RecordMoodTableViewCell: UITableViewCell {
 
+	// MARK: - Static Variables
+
+	private typealias Me = RecordMoodTableViewCell
+	private static let presenter: Presentr = DependencyInjector.util.ui.customPresenter(width: .custom(size: 300), height: .custom(size: 200), center: .topCenter)
+
 	// MARK: - IBOutlets
 
 	@IBOutlet weak final var ratingSlider: UISlider!
@@ -28,7 +33,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	public final override func awakeFromNib() {
 		super.awakeFromNib()
 		reset()
-		NotificationCenter.default.addObserver(self, selector: #selector(noteSaved), name: MoodNoteViewController.noteSavedNotification, object: nil)
+		observe(selector: #selector(noteSaved), name: MoodNoteViewController.noteSavedNotification)
 	}
 
 	deinit {
@@ -47,9 +52,15 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	}
 
 	@IBAction final func presentMoodNoteController(_ sender: Any) {
-		let controller = UIStoryboard(name: "RecordData", bundle: nil).instantiateViewController(withIdentifier: "moodNote") as! MoodNoteViewController
+		let controller: MoodNoteViewController = viewController(named: "moodNote", fromStoryboard: "RecordData")
 		controller.note = note ?? ""
-		NotificationCenter.default.post(name: RecordDataTableViewController.showViewController, object: controller)
+		NotificationCenter.default.post(
+			name: RecordDataTableViewController.showViewController,
+			object: self,
+			userInfo: info([
+				.controller: controller,
+				.presenter: Me.presenter,
+			]))
 	}
 
 	@IBAction final func doneButtonPressed(_ sender: Any) {
@@ -67,19 +78,22 @@ final class RecordMoodTableViewCell: UITableViewCell {
 			os_log("Failed to create mood: %@", type: .error, error.localizedDescription)
 			NotificationCenter.default.post(
 				name: RecordDataTableViewController.showErrorMessage,
-				object: (
-					title: "Failed to save mood rating",
-					message: "Sorry for the inconvenience"
-			))
+				object: self,
+				userInfo: info([
+					.title: "Failed to save mood rating",
+					.message: "Sorry for the inconvenience",
+				]))
 		}
 	}
 
 	// MARK: - Received Notifications
 
 	@objc private final func noteSaved(notification: Notification) {
-		note = (notification.object as! String)
-		addNoteButton.setTitle(note, for: .normal)
-		addNoteButton.accessibilityValue = "Add Note"
+		if let note: String = value(for: .text, from: notification) {
+			self.note = note
+			addNoteButton.setTitle(note, for: .normal)
+			addNoteButton.accessibilityValue = "Add Note"
+		}
 	}
 
 	// MARK: - Helper Functions

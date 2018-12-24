@@ -47,7 +47,7 @@ final class BasicXYGraphSetupViewController: BasicXYGraphTypeSetupViewController
 		subViewController?.removeFromParent()
 		switch (numberOfDataTypesSegmentedControl.selectedSegmentIndex) {
 			case Me.singleDataType:
-				let controller = storyboard!.instantiateViewController(withIdentifier: "singleSampleTypeSetup") as! SingleSampleTypeBasicXYGraphCustomizationViewController
+				let controller: SingleSampleTypeBasicXYGraphCustomizationViewController = viewController(named: "singleSampleTypeSetup")
 				controller.realNavigationController = realNavigationController
 				controller.chartType = chartType
 				controller.view.frame = subView.frame
@@ -57,7 +57,7 @@ final class BasicXYGraphSetupViewController: BasicXYGraphTypeSetupViewController
 				addChild(controller)
 				break
 			case Me.multipleDataTypes:
-				let controller = storyboard!.instantiateViewController(withIdentifier: "multipleSampleTypeSetup") as! MultipleSampleTypeBasicXYGraphCustomizationViewController
+				let controller: MultipleSampleTypeBasicXYGraphCustomizationViewController = viewController(named: "multipleSampleTypeSetup")
 				controller.realNavigationController = realNavigationController
 				controller.chartType = chartType
 				controller.view.frame = subView.frame

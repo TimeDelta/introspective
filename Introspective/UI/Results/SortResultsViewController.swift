@@ -37,21 +37,28 @@ final class SortResultsViewController: UIViewController {
 
 		installSubView()
 
-		NotificationCenter.default.addObserver(self, selector: #selector(userPressedAccept), name: Me.userAccepted, object: nil)
+		observe(selector: #selector(userPressedAccept), name: Me.userAccepted)
 	}
 
 	// MARK: - Received Notifications
 
 	@objc private final func userPressedAccept(notification: Notification) {
-		sortAttribute = (notification.object as! Attribute)
+		guard let attribute: Attribute = value(for: .attribute, from: notification) else { return }
+		sortAttribute = attribute
 		sortOrder = sortAscendingSwitch.isOn ? .orderedAscending : .orderedDescending
-		NotificationCenter.default.post(name: notificationToSendOnAccept, object: (attribute: sortAttribute, order: sortOrder))
+		NotificationCenter.default.post(
+			name: notificationToSendOnAccept,
+			object: self,
+			userInfo: info([
+				.attribute: sortAttribute,
+				.comparisonResult: sortOrder,
+			]))
 	}
 
 	// MARK: - Helper Functions
 
 	private final func installSubView() {
-		chooseAttributeController = (UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "chooseAttribute") as! ChooseAttributeViewController)
+		chooseAttributeController = viewController(named: "chooseAttribute", fromStoryboard: "Util")
 		chooseAttributeController.attributes = attributes
 		chooseAttributeController.selectedAttribute = sortAttribute
 		chooseAttributeController.notificationToSendOnAccept = Me.userAccepted

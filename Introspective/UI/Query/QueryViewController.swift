@@ -104,9 +104,9 @@ class QueryViewController: UITableViewController {
 
 		partWasAdded()
 
-		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedAttributeRestriction), name: Me.acceptedAttributeRestrictionEdit, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedSubQuerySampleType), name: Me.acceptedSubSampleTypeEdit, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedSampleType), name: Me.acceptedSampleTypeEdit, object: nil)
+		observe(selector: #selector(saveEditedAttributeRestriction), name: Me.acceptedAttributeRestrictionEdit)
+		observe(selector: #selector(saveEditedSubQuerySampleType), name: Me.acceptedSubSampleTypeEdit)
+		observe(selector: #selector(saveEditedSampleType), name: Me.acceptedSampleTypeEdit)
 
 		addPartButton?.target = self
 		addPartButton?.action = #selector(addPartButtonWasPressed)
@@ -199,7 +199,7 @@ class QueryViewController: UITableViewController {
 
 	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.section == 0 && indexPath.row == 0 {
-			let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "chooseSampleType") as! ChooseSampleTypeViewController
+			let controller: ChooseSampleTypeViewController = viewController(named: "chooseSampleType", fromStoryboard: "Util")
 			editedIndex = 0
 			controller.selectedSampleType = parts[0].sampleTypeInfo!.sampleType
 			controller.notificationToSendOnAccept = Me.acceptedSampleTypeEdit
@@ -213,10 +213,15 @@ class QueryViewController: UITableViewController {
 	@IBAction final func finishedButtonPressed(_ sender: Any) {
 		let query = buildQuery()
 		if finishedButtonNotification != Me.runQueryNotification {
-			NotificationCenter.default.post(name: finishedButtonNotification, object: query)
+			NotificationCenter.default.post(
+				name: finishedButtonNotification,
+				object: self,
+				userInfo: info([
+					.query: query,
+				]))
 			navigationController?.popViewController(animated: true)
 		} else {
-			let controller = UIStoryboard(name: "Results", bundle: nil).instantiateViewController(withIdentifier: "results") as! ResultsViewController
+			let controller: ResultsViewController = viewController(named: "results", fromStoryboard: "Results")
 			query.runQuery { (result: QueryResult?, error: Error?) in
 				if error != nil {
 					controller.error = error
@@ -272,20 +277,23 @@ class QueryViewController: UITableViewController {
 	// MARK: - Received Notifications
 
 	@objc final func saveEditedSampleType(notification: Notification) {
-		let sampleType = notification.object as! Sample.Type
-		parts[editedIndex] = Part(SampleTypeInfo(sampleType))
+		guard let sampleType: Sample.Type? = value(for: .sampleType, from: notification) else { return }
+		parts[editedIndex] = Part(SampleTypeInfo(sampleType!))
 
 		updateAttributesForSampleType(at: editedIndex)
 		tableView.reloadData()
 	}
 
 	@objc final func saveEditedAttributeRestriction(notification: Notification) {
-		parts[editedIndex] = Part(notification.object as! AttributeRestriction)
-		tableView.reloadData()
+		if let attributeRestriction: AttributeRestriction? = value(for: .attributeRestriction, from: notification) {
+			parts[editedIndex] = Part(attributeRestriction!)
+			tableView.reloadData()
+		}
 	}
 
 	@objc final func saveEditedSubQuerySampleType(notification: Notification) {
-		parts[editedIndex] = Part(notification.object as! SampleTypeInfo)
+		guard let sampleTypeInfo: SampleTypeInfo = value(for: .sampleType, from: notification) else { return }
+		parts[editedIndex] = Part(sampleTypeInfo)
 		updateAttributesForSampleType(at: editedIndex)
 		tableView.reloadData()
 	}

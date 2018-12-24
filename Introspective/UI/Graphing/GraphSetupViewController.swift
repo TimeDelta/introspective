@@ -32,24 +32,15 @@ final class GraphSetupViewController: UIViewController {
 		if graphType == nil {
 			graphType = GraphType.allTypes[0]
 		}
-		NotificationCenter.default.addObserver(self, selector: #selector(setGraphType), name: Me.setGraphType, object: nil)
+		observe(selector: #selector(setGraphType), name: Me.setGraphType)
 		updateChooseGraphTypeButtonTitle()
 		updateSubView()
-	}
-
-	// MARK: - Actions
-
-	@IBAction final func setGraphTypewButtonPressed(sender: Any) {
-		let controller = storyboard!.instantiateViewController(withIdentifier: "chooseGraphType") as! ChooseGraphTypeViewController
-		controller.currentValue = graphType
-		controller.notificationToSendOnAccept = Me.setGraphType
-		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
 	}
 
 	// MARK: - Received Notifications
 
 	@objc private final func setGraphType(notification: Notification) {
-		let newGraphType = notification.object as! GraphType
+		guard let newGraphType: GraphType = value(for: .graphType, from: notification) else { return }
 		let skipUpdateSubView = shouldNotResetSubView(newGraphType)
 		graphType = newGraphType
 		if let controller = subViewController as? BasicXYGraphTypeSetupViewController {
@@ -60,6 +51,15 @@ final class GraphSetupViewController: UIViewController {
 		if skipUpdateSubView { return }
 
 		updateSubView()
+	}
+
+	// MARK: - Actions
+
+	@IBAction final func setGraphTypewButtonPressed(sender: Any) {
+		let controller: ChooseGraphTypeViewController = viewController(named: "chooseGraphType")
+		controller.currentValue = graphType
+		controller.notificationToSendOnAccept = Me.setGraphType
+		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
 	}
 
 	// MARK: - Helper Functions
@@ -82,7 +82,7 @@ final class GraphSetupViewController: UIViewController {
 		subViewController?.removeFromParent()
 		switch (graphType!) {
 			case .line, .bar, .scatter:
-				let controller = UIStoryboard(name: "BasicXYGraph", bundle: nil).instantiateViewController(withIdentifier: "graphSetup") as! BasicXYGraphSetupViewController
+				let controller: BasicXYGraphSetupViewController = viewController(named: "graphSetup", fromStoryboard: "BasicXYGraph")
 				controller.realNavigationController = navigationController
 				controller.chartType = graphType.aaChartType
 				controller.view.frame = subView.frame

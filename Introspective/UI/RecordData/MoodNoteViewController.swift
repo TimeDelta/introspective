@@ -10,13 +10,20 @@ import UIKit
 
 final class MoodNoteViewController: UIViewController {
 
-	private typealias Me = MoodNoteViewController
+	// MARK: - Static Variables
 
+	private typealias Me = MoodNoteViewController
 	public static let noteSavedNotification = Notification.Name("moodNoteSaved")
+
+	// MARK: - IBOutlets
+
+	@IBOutlet weak final var textView: UITextView!
+
+	// MARK: - Instance Variables
 
 	public final var note: String!
 
-	@IBOutlet weak final var textView: UITextView!
+	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
@@ -27,8 +34,15 @@ final class MoodNoteViewController: UIViewController {
 		DependencyInjector.util.ui.addDoneButtonToKeyboardFor(textView, target: self, action: #selector(doneClicked))
 	}
 
+	// MARK: - Actions
+
 	@objc private final func doneClicked() {
-		NotificationCenter.default.post(name: Me.noteSavedNotification, object: textView.text, userInfo: nil)
+		NotificationCenter.default.post(
+			name: Me.noteSavedNotification,
+			object: self,
+			userInfo: info([
+				.text: textView.text,
+			]))
 		self.dismiss(animated: true, completion: nil)
 	}
 }

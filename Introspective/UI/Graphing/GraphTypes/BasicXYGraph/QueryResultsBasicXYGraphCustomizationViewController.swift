@@ -94,8 +94,8 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	final override func viewDidLoad() {
 		super.viewDidLoad()
 
-		NotificationCenter.default.addObserver(self, selector: #selector(xAxisChanged), name: Me.xAxisChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(yAxisChanged), name: Me.yAxisChanged, object: nil)
+		observe(selector: #selector(xAxisChanged), name: Me.xAxisChanged)
+		observe(selector: #selector(yAxisChanged), name: Me.yAxisChanged)
 
 		updateShowGraphButtonState()
 	}
@@ -103,7 +103,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	// MARK: - Button Actions
 
 	@IBAction func editXAxis(_ sender: Any) {
-		let controller = storyboard!.instantiateViewController(withIdentifier: "xAxisSetup") as! XAxisSetupViewController
+		let controller: XAxisSetupViewController = viewController(named: "xAxisSetup")
 		controller.attributes = type(of: samples[0]).attributes
 		controller.selectedAttribute = xAxis?.attribute
 		controller.selectedInformation = xAxis?.information
@@ -115,13 +115,13 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 
 	@IBAction func editYAxis(_ sender: Any) {
 		if grouping == nil {
-			let controller = storyboard!.instantiateViewController(withIdentifier: "chooseAttributes") as! ChooseAttributesToGraphTableViewController
+			let controller: ChooseAttributesToGraphTableViewController = viewController(named: "chooseAttributes")
 			controller.allowedAttributes = type(of: samples[0]).attributes.filter{ $0 is NumericAttribute }
 			controller.selectedAttributes = yAxis?.map{ $0.attribute! }
 			controller.notificationToSendWhenFinished = Me.yAxisChanged
 			realNavigationController?.pushViewController(controller, animated: true)
 		} else {
-			let controller = storyboard!.instantiateViewController(withIdentifier: "chooseInformation") as! ChooseInformationToGraphTableViewController
+			let controller: ChooseInformationToGraphTableViewController = viewController(named: "chooseInformation")
 			controller.attributes = type(of: samples[0]).attributes
 			controller.limitToNumericInformation = true
 			controller.chosenInformation = yAxis?.map{ $0.information! }
@@ -131,7 +131,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	}
 
 	@IBAction final func showGraph(_ sender: Any) {
-		chartController = (storyboard!.instantiateViewController(withIdentifier: "BasicXYChartViewController") as! BasicXYChartViewController)
+		chartController = viewController(named: "BasicXYChartViewController")
 		chartController.chartType = chartType
 		DispatchQueue.global(qos: .userInitiated).async {
 			self.updateChartData()
@@ -142,26 +142,23 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	// MARK: - Received Notifications
 
 	@objc private final func xAxisChanged(notification: Notification) {
-		if let value = notification.object as? (grouping: Calendar.Component?, xAxis: Attribute) {
-			grouping = value.grouping
-			xAxis = AttributeOrInformation(attribute: value.xAxis)
-		} else if let value = notification.object as? (grouping: Calendar.Component?, xAxis: ExtraInformation) {
-			grouping = value.grouping
-			xAxis = AttributeOrInformation(information: value.xAxis)
+		grouping = value(for: .calendarComponent, from: notification)
+		if let attribute: Attribute? = value(for: .attribute, from: notification, keyIsOptional: true) {
+			xAxis = AttributeOrInformation(attribute: attribute)
+		} else if let information: ExtraInformation = value(for: .information, from: notification, keyIsOptional: true) {
+			xAxis = AttributeOrInformation(information: information)
 		} else {
-			os_log("Unknown object type returned from x-axis setup: %@", type: .error, String(describing: type(of: notification.object)))
+			os_log("Missing both optional attributes in x-axis setup notification", type: .error)
 		}
 	}
 
 	@objc private final func yAxisChanged(notification: Notification) {
-		if let attributes = notification.object as? [Attribute] {
+		if let attributes: [Attribute] = value(for: .attributes, from: notification, keyIsOptional: true) {
 			yAxis = attributes.map{ AttributeOrInformation(attribute: $0) }
-		} else if let information = notification.object as? [ExtraInformation] {
+		} else if let information: [ExtraInformation] = value(for: .information, from: notification, keyIsOptional: true) {
 			yAxis = information.map{ AttributeOrInformation(information: $0) }
-		} else if notification.object == nil {
-			yAxis = nil
 		} else {
-			os_log("Unknown object type returned from y-axis setup: %@", type: .error, String(describing: type(of: notification.object)))
+			yAxis = nil
 		}
 	}
 

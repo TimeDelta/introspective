@@ -88,15 +88,11 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		navigationItem.hidesSearchBarWhenScrolling = false
 		definesPresentationContext = true
 
-		NotificationCenter.default.addObserver(self, selector: #selector(medicationCreated), name: Me.medicationCreated, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(presentSetDoseView), name: RecordMedicationTableViewCell.shouldPresentMedicationDoseView, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(errorOccurred), name: RecordMedicationTableViewCell.errorOccurred, object: nil)
-		NotificationCenter.default.addObserver(
-			self,
-			selector: #selector(presentMedicationDosesTableView),
-			name: RecordMedicationTableViewCell.shouldPresentDosesView,
-			object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(medicationEdited), name: Me.medicationEdited, object: nil)
+		observe(selector: #selector(medicationCreated), name: Me.medicationCreated)
+		observe(selector: #selector(presentSetDoseView), name: RecordMedicationTableViewCell.shouldPresentMedicationDoseView)
+		observe(selector: #selector(errorOccurred), name: RecordMedicationTableViewCell.errorOccurred)
+		observe(selector: #selector(presentMedicationDosesTableView), name: RecordMedicationTableViewCell.shouldPresentDosesView)
+		observe(selector: #selector(medicationEdited), name: Me.medicationEdited)
 
 		super.reorderOnLongPress()
 	}
@@ -142,7 +138,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	// MARK: - UITableViewDelegate
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let controller = storyboard!.instantiateViewController(withIdentifier: "editMedication") as! EditMedicationViewController
+		let controller: EditMedicationViewController = viewController(named: "editMedication")
 		controller.notificationToSendOnAccept = Me.medicationEdited
 		controller.medication = filteredMedications[indexPath.row]
 		navigationController?.pushViewController(controller, animated: true)
@@ -194,7 +190,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	// MARK: - Received Notifications
 
 	@objc private final func medicationCreated(notification: Notification) {
-		if let medication = notification.object as? Medication {
+		if let medication: Medication = value(for: .medication, from: notification) {
 			medication.recordScreenIndex = Int16(medications.count)
 			DependencyInjector.db.save()
 			medications.append(medication)
@@ -204,7 +200,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	}
 
 	@objc private final func medicationEdited(notification: Notification) {
-		if let medication = notification.object as? Medication {
+		if let medication: Medication = value(for: .medication, from: notification) {
 			DependencyInjector.db.save()
 			medications[Int(medication.recordScreenIndex)] = medication
 			resetFilteredMedications()
@@ -213,32 +209,36 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	}
 
 	@objc private final func presentSetDoseView(notification: Notification) {
-		if let userInfo = notification.userInfo {
-			let controller = storyboard!.instantiateViewController(withIdentifier: "medicationDoseEditor") as! MedicationDoseEditorViewController
-			controller.medication = userInfo[RecordMedicationTableViewCell.medicationUserInfoKey] as? Medication
-			controller.notificationToSendOnAccept = userInfo[RecordMedicationTableViewCell.notificationUserInfoKey] as? Notification.Name
+		if
+			let notificationToSend: Notification.Name = value(for: .notificationName, from: notification),
+			let medication: Medication = value(for: .medication, from: notification)
+		{
+			let controller: MedicationDoseEditorViewController = viewController(named: "medicationDoseEditor")
+			controller.notificationToSendOnAccept = notificationToSend
+			controller.medication = medication
 			customPresentViewController(Me.setDosePresenter, viewController: controller, animated: false)
-		} else {
-			os_log("Required UserInfo not set on notification: %@", type: .error, notification.debugDescription)
 		}
 	}
 
 	@objc private final func presentMedicationDosesTableView(notification: Notification) {
-		let controller = storyboard!.instantiateViewController(withIdentifier: "medicationDoses") as! MedicationDosesTableViewController
-		controller.medication = notification.object as? Medication
-		navigationController?.pushViewController(controller, animated: true)
+		if let medication: Medication = value(for: .medication, from: notification) {
+			let controller: MedicationDosesTableViewController = viewController(named: "medicationDoses")
+			controller.medication = medication
+			navigationController?.pushViewController(controller, animated: true)
+		}
 	}
 
 	@objc private final func errorOccurred(notification: Notification) {
-		let alert = UIAlertController(title: notification.object as? String, message: "Sorry for the inconvenience.", preferredStyle: .alert)
-		alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
-		present(alert, animated: false, completion: nil)
+		if let title: String = value(for: .title, from: notification) {
+			let message: String? = value(for: .message, from: notification) ?? "Sorry for the inconvenience."
+			showError(title: title, message: message)
+		}
 	}
 
 	// MARK: - Button Actions
 
 	@IBAction final func addButtonPressed(_ sender: Any) {
-		let controller = storyboard!.instantiateViewController(withIdentifier: "editMedication") as! EditMedicationViewController
+		let controller: EditMedicationViewController = viewController(named: "editMedication")
 		controller.notificationToSendOnAccept = Me.medicationCreated
 		controller.initialName = getSearchText()
 		navigationController?.pushViewController(controller, animated: true)

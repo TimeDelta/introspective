@@ -87,10 +87,10 @@ final class AttributedChooserViewController: UIViewController {
 		if let controllerIndex = attributeViewControllers.firstIndex(where: { $0.notificationToSendOnValueChange == notification.name }) {
 			do {
 				let attribute = attributeViewControllers[controllerIndex].attribute!
-				try currentValue.set(attribute: attribute, to: notification.object)
+				try currentValue.set(attribute: attribute, to: value(for: .attributeValue, from: notification))
 				sendValueChangeNotification()
 			} catch {
-				os_log("Wrong object type for attribute value changed notification", type: .error)
+				os_log("Failed to set attribute value: %@", type: .error, error.localizedDescription)
 			}
 		}
 	}
@@ -103,7 +103,12 @@ final class AttributedChooserViewController: UIViewController {
 			let attributeValue = controller.attributeValue!
 			try! currentValue.set(attribute: attribute, to: attributeValue)
 		}
-		NotificationCenter.default.post(name: notificationToSendWhenAccepted, object: currentValue)
+		NotificationCenter.default.post(
+			name: notificationToSendWhenAccepted,
+			object: self,
+			userInfo: info([
+				.attributed: currentValue,
+			]))
 	}
 
 	// MARK: - Helper Functions
@@ -111,7 +116,12 @@ final class AttributedChooserViewController: UIViewController {
 	private final func sendValueChangeNotification() {
 		if let valueChangedNotification = notificationToSendOnValueChange {
 			DispatchQueue.main.async {
-				NotificationCenter.default.post(name: valueChangedNotification, object: self.currentValue)
+				NotificationCenter.default.post(
+					name: valueChangedNotification,
+					object: self,
+					userInfo: self.info([
+						.attributed: self.currentValue,
+					]))
 			}
 		}
 	}
@@ -133,11 +143,11 @@ final class AttributedChooserViewController: UIViewController {
 		var yPos = CGFloat(0)
 		let height = CGFloat(70)
 		for attribute in currentValue.attributes {
-			let controller = UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "attributeView") as! AttributeViewController
+			let controller: AttributeViewController = viewController(named: "attributeView", fromStoryboard: "AttributeList")
 			controller.attribute = attribute
 			controller.attributeValue = try! currentValue.value(of: attribute)
 			let valueChangedNotification = Notification.Name("attributeValueChanged_" + attribute.name)
-			NotificationCenter.default.addObserver(self, selector: #selector(valueChanged), name: valueChangedNotification, object: nil)
+			observe(selector: #selector(valueChanged), name: valueChangedNotification)
 			controller.notificationToSendOnValueChange = valueChangedNotification
 			let x = attributeScrollView.frame.minX
 			controller.view.frame = CGRect(x: x, y: yPos, width: subViewWidth(), height: height)
@@ -149,7 +159,7 @@ final class AttributedChooserViewController: UIViewController {
 	}
 
 	private final func createAndAddAcceptButton() {
-		let controller = UIStoryboard(name: "AttributeList", bundle: nil).instantiateViewController(withIdentifier: "acceptButton") as! AttributeListAcceptButtonViewController
+		let controller: AttributeListAcceptButtonViewController = viewController(named: "acceptButton", fromStoryboard: "AttributeList")
 		let x = attributeScrollView.frame.minX
 		controller.view.frame = CGRect(x: x, y: getNextYPosForScrollView(), width: subViewWidth(), height: 30)
 		controller.acceptButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)

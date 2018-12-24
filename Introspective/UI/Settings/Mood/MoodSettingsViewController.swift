@@ -58,7 +58,7 @@ final class MoodSettingsViewController: UIViewController {
 					MoodQueryImpl.updatingMoodsInBackground = true
 					DependencyInjector.query.moodQuery().runQuery { (result, error) in
 						if error != nil {
-							// TODO - send user a notification that this failed
+							#warning("send user a notification that this failed")
 							os_log("Failed to scale old moods: %@", type: .error, error!.localizedDescription)
 							MoodQueryImpl.updatingMoodsInBackground = false
 							return

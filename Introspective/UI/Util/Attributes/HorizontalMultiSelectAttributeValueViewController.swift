@@ -60,7 +60,12 @@ final class HorizontalMultiSelectAttributeValueViewController: UIViewController,
 
 	@IBAction final func saveButtonPressed(_ sender: Any) {
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: self.notificationToSendOnAccept, object: self.currentValue)
+			NotificationCenter.default.post(
+				name: self.notificationToSendOnAccept,
+				object: self,
+				userInfo: self.info([
+					.attributeValue: self.currentValue,
+				]))
 		}
 		dismiss(animated: true, completion: nil)
 	}

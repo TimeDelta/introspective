@@ -52,10 +52,15 @@ final class SelectExtraInformationViewController: UIViewController {
 
 	@IBAction final func acceptButtonPressed(_ sender: Any) {
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: self.notificationToSendWhenFinished, object: self.selectedInformation)
+			NotificationCenter.default.post(
+				name: self.notificationToSendWhenFinished,
+				object: self,
+				userInfo: self.info([
+					.information: self.selectedInformation,
+				]))
 		}
-		if navigationController != nil {
-			let _ = navigationController!.popViewController(animated: true)
+		if let navigationController = navigationController {
+			navigationController.popViewController(animated: true)
 		} else {
 			dismiss(animated: false, completion: nil)
 		}

@@ -43,7 +43,7 @@ public final class ActivityDefinitionAutoNoteTableViewCell: UITableViewCell {
 			object: self,
 			userInfo: info([
 				.controller: controller,
-				.presenter: DependencyInjector.util.ui.defaultPresenter
+				.presenter: DependencyInjector.util.ui.defaultPresenter,
 			]))
 	}
 

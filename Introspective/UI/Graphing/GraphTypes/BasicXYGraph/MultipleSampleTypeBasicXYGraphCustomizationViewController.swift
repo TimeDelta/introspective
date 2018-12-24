@@ -149,13 +149,13 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	final override func viewDidLoad() {
 		super.viewDidLoad()
 
-		NotificationCenter.default.addObserver(self, selector: #selector(groupingChanged), name: Me.groupingChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(xAxisQueryChanged), name: Me.xAxisQueryChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(yAxisQueryChanged), name: Me.yAxisQueryChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(xAxisSampleTypeChanged), name: Me.xAxisSampleTypeChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(yAxisSampleTypeChanged), name: Me.yAxisSampleTypeChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(xAxisInformationChanged), name: Me.xAxisInformationChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(yAxisInformationChanged), name: Me.yAxisInformationChanged, object: nil)
+		observe(selector: #selector(groupingChanged), name: Me.groupingChanged)
+		observe(selector: #selector(xAxisQueryChanged), name: Me.xAxisQueryChanged)
+		observe(selector: #selector(yAxisQueryChanged), name: Me.yAxisQueryChanged)
+		observe(selector: #selector(xAxisSampleTypeChanged), name: Me.xAxisSampleTypeChanged)
+		observe(selector: #selector(yAxisSampleTypeChanged), name: Me.yAxisSampleTypeChanged)
+		observe(selector: #selector(xAxisInformationChanged), name: Me.xAxisInformationChanged)
+		observe(selector: #selector(yAxisInformationChanged), name: Me.yAxisInformationChanged)
 
 		updateShowGraphButtonState()
 	}
@@ -168,14 +168,14 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 
 	@IBAction final func chooseGroupingButtonPressed(_ sender: Any) {
 		// TODO - limit the available calendar components to ones that will produce a date (e.g. exclude .dayOfWeek)
-		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "chooseCalendarComponent") as! ChooseCalendarComponentViewController
+		let controller: ChooseCalendarComponentViewController = viewController(named: "chooseCalendarComponent", fromStoryboard: "Util")
 		controller.selectedComponent = grouping
 		controller.notificationToSendOnAccept = Me.groupingChanged
 		customPresentViewController(Me.presenter, viewController: controller, animated: true)
 	}
 
 	@IBAction final func chooseXAxisSampleTypeButtonPressed(_ sender: Any) {
-		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "chooseSampleType") as! ChooseSampleTypeViewController
+		let controller: ChooseSampleTypeViewController = viewController(named: "chooseSampleType", fromStoryboard: "Util")
 		controller.selectedSampleType = xAxisSampleType
 		controller.notificationToSendOnAccept = Me.xAxisSampleTypeChanged
 		customPresentViewController(Me.presenter, viewController: controller, animated: true)
@@ -186,7 +186,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	}
 
 	@IBAction final func chooseXAxisQueryButtonPressed(_ sender: Any) {
-		let controller = UIStoryboard(name: "Query", bundle: nil).instantiateViewController(withIdentifier: "queryView") as! QueryViewController
+		let controller: QueryViewController = viewController(named: "queryView", fromStoryboard: "Query")
 		// TODO - support passing in existing query
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = xAxisSampleType
@@ -195,7 +195,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	}
 
 	@IBAction final func chooseXAxisInformationButtonPressed(_ sender: Any) {
-		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "editExtraInformation") as! SelectExtraInformationViewController
+		let controller: SelectExtraInformationViewController = viewController(named: "editExtraInformation", fromStoryboard: "Util")
 		controller.attributes = xAxisSampleType.attributes
 		controller.selectedAttribute = xAxisInformation?.attribute
 		controller.selectedInformation = xAxisInformation
@@ -204,7 +204,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	}
 
 	@IBAction final func chooseYAxisSampleTypeButtonPressed(_ sender: Any) {
-		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "chooseSampleType") as! ChooseSampleTypeViewController
+		let controller: ChooseSampleTypeViewController = viewController(named: "chooseSampleType", fromStoryboard: "Util")
 		controller.selectedSampleType = yAxisSampleType
 		controller.notificationToSendOnAccept = Me.yAxisSampleTypeChanged
 		customPresentViewController(Me.presenter, viewController: controller, animated: true)
@@ -215,7 +215,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	}
 
 	@IBAction final func chooseYAxisQueryButtonPressed(_ sender: Any) {
-		let controller = UIStoryboard(name: "Query", bundle: nil).instantiateViewController(withIdentifier: "queryView") as! QueryViewController
+		let controller: QueryViewController = viewController(named: "queryView", fromStoryboard: "Query")
 		// TODO - support passing in existing query
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = yAxisSampleType
@@ -224,7 +224,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	}
 
 	@IBAction final func chooseYAxisInformationButtonPressed(_ sender: Any) {
-		let controller = storyboard!.instantiateViewController(withIdentifier: "chooseInformation") as! ChooseInformationToGraphTableViewController
+		let controller: ChooseInformationToGraphTableViewController = viewController(named: "chooseInformation")
 		controller.attributes = yAxisSampleType.attributes
 		controller.chosenInformation = yAxisInformation
 		controller.notificationToSendWhenFinished = Me.yAxisInformationChanged
@@ -232,7 +232,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	}
 
 	@IBAction final func showMeTheGraphButtonPressed(_ sender: Any) {
-		chartController = (storyboard!.instantiateViewController(withIdentifier: "BasicXYChartViewController") as! BasicXYChartViewController)
+		chartController = viewController(named: "BasicXYChartViewController")
 
 		if xAxisQuery == nil {
 			xAxisQuery = try! DependencyInjector.query.queryFor(xAxisSampleType)
@@ -252,31 +252,45 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	// MARK: - Received Notifications
 
 	@objc private final func groupingChanged(notification: Notification) {
-		grouping = (notification.object as! Calendar.Component)
+		if let grouping: Calendar.Component = value(for: .calendarComponent, from: notification) {
+			self.grouping = grouping
+		}
 	}
 
 	@objc private final func xAxisSampleTypeChanged(notification: Notification) {
-		xAxisSampleType = (notification.object as! Sample.Type)
+		if let sampleType: Sample.Type = value(for: .sampleType, from: notification) {
+			xAxisSampleType = sampleType
+		}
 	}
 
 	@objc private final func yAxisSampleTypeChanged(notification: Notification) {
-		yAxisSampleType = (notification.object as! Sample.Type)
+		if let sampleType: Sample.Type = value(for: .sampleType, from: notification) {
+			yAxisSampleType = sampleType
+		}
 	}
 
 	@objc private final func xAxisQueryChanged(notification: Notification) {
-		xAxisQuery = (notification.object as! Query)
+		if let query: Query = value(for: .query, from: notification) {
+			xAxisQuery = query
+		}
 	}
 
 	@objc private final func yAxisQueryChanged(notification: Notification) {
-		yAxisQuery = (notification.object as! Query)
+		if let query: Query = value(for: .query, from: notification) {
+			yAxisQuery = query
+		}
 	}
 
 	@objc private final func xAxisInformationChanged(notification: Notification) {
-		xAxisInformation = (notification.object as! ExtraInformation)
+		if let information: ExtraInformation? = value(for: .information, from: notification) {
+			xAxisInformation = information
+		}
 	}
 
 	@objc private final func yAxisInformationChanged(notification: Notification) {
-		yAxisInformation = (notification.object as! [ExtraInformation])
+		 if let information: [ExtraInformation] = value(for: .information, from: notification) {
+			yAxisInformation = information
+		}
 	}
 
 	// MARK: - Helper Functions

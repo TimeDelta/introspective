@@ -45,13 +45,18 @@ public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
 
 	private final func sendNameChangeNotification() {
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: self.notificationToSendOnNameChange, object: self.nameTextField.text ?? "")
+			NotificationCenter.default.post(
+				name: self.notificationToSendOnNameChange,
+				object: self,
+				userInfo: self.info([
+					.text: self.nameTextField.text ?? "",
+				]))
 		}
 	}
 
 	private final func sendInvalidNameNotification() {
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: self.notificationToSendOnInvalidName, object: nil)
+			NotificationCenter.default.post(name: self.notificationToSendOnInvalidName, object: self)
 		}
 	}
 

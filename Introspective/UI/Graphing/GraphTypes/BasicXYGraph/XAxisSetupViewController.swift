@@ -73,7 +73,7 @@ final class XAxisSetupViewController: UIViewController {
 			informationPicker.selectRow(selectedInformationIndex, inComponent: 0, animated: false)
 		}
 
-		NotificationCenter.default.addObserver(self, selector: #selector(groupingChanged), name: Me.groupingChanged, object: nil)
+		observe(selector: #selector(groupingChanged), name: Me.groupingChanged)
 
 		finishedLoading = true
 		updateDisplay()
@@ -86,7 +86,7 @@ final class XAxisSetupViewController: UIViewController {
 	}
 
 	@IBAction final func chooseGroupingButtonPressed(_ sender: Any) {
-		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "chooseCalendarComponent") as! ChooseCalendarComponentViewController
+		let controller: ChooseCalendarComponentViewController = viewController(named: "chooseCalendarComponent", fromStoryboard: "Util")
 		controller.selectedComponent = grouping
 		controller.notificationToSendOnAccept = Me.groupingChanged
 		customPresentViewController(Me.presenter, viewController: controller, animated: true)
@@ -94,12 +94,24 @@ final class XAxisSetupViewController: UIViewController {
 
 	@IBAction final func acceptButtonPressed(_ sender: Any) {
 		if grouping == nil {
-			NotificationCenter.default.post(name: notificationToSendWhenFinished, object: (grouping: grouping, xAxis: selectedAttribute))
+			NotificationCenter.default.post(
+				name: notificationToSendWhenFinished,
+				object: self,
+				userInfo: info([
+					.calendarComponent: grouping as Any,
+					.attribute: selectedAttribute,
+				]))
 		} else {
-			NotificationCenter.default.post(name: notificationToSendWhenFinished, object: (grouping: grouping, xAxis: selectedInformation))
+			NotificationCenter.default.post(
+				name: notificationToSendWhenFinished,
+				object: self,
+				userInfo: info([
+					.calendarComponent: grouping as Any,
+					.information: selectedInformation,
+				]))
 		}
-		if navigationController != nil {
-			navigationController!.popViewController(animated: true)
+		if let navigationController = navigationController {
+			navigationController.popViewController(animated: true)
 		} else {
 			dismiss(animated: false, completion: nil)
 		}
@@ -108,7 +120,9 @@ final class XAxisSetupViewController: UIViewController {
 	// MARK: - Received Notifications
 
 	@objc private final func groupingChanged(notification: Notification) {
-		grouping = (notification.object as! Calendar.Component)
+		if let grouping: Calendar.Component = value(for: .calendarComponent, from: notification) {
+			self.grouping = grouping
+		}
 	}
 
 	// MARK: - Helper Functions

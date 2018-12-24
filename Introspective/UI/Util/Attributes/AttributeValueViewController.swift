@@ -68,13 +68,18 @@ final class AttributeValueViewController: UIViewController {
 			containerView.install(subViewController)
 			stackView.addArrangedSubview(containerView)
 
-			NotificationCenter.default.addObserver(self, selector: #selector(disableSaveButton), name: Me.valueIsInvalidNotification, object: nil)
-			NotificationCenter.default.addObserver(self, selector: #selector(enableSaveButton), name: Me.valueIsValidNotification, object: nil)
+			observe(selector: #selector(disableSaveButton), name: Me.valueIsInvalidNotification)
+			observe(selector: #selector(enableSaveButton), name: Me.valueIsValidNotification)
 		}
 	}
 
 	@IBAction final func saveButtonPressed(_ sender: Any) {
-		NotificationCenter.default.post(name: notificationToSendOnAccept, object: subViewController.currentValue)
+		NotificationCenter.default.post(
+			name: notificationToSendOnAccept,
+			object: self,
+			userInfo: info([
+				.attributeValue: subViewController.currentValue,
+			]))
 		dismiss(animated: true, completion: nil)
 	}
 

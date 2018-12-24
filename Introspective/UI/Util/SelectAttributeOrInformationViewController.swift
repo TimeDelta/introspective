@@ -71,15 +71,15 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 
 	@IBAction func acceptButtonPressed(_ sender: Any) {
 		let index = typeSelectSegmentedControl.selectedSegmentIndex
-		var value: Any? = nil
+		var userInfo: [AnyHashable: Any]? = nil
 		if index == 0 {
-			value = attribute
+			userInfo = info([.attribute: attribute])
 		} else if index == 1 {
-			value = information
+			userInfo = info([.information: information as Any])
 		} else {
 			os_log("Unexpected selected index (%d) for segmented control when user pressed Accept", type: .error, index)
 		}
-		NotificationCenter.default.post(name: notificationToSendOnAccept, object: value)
+		NotificationCenter.default.post(name: notificationToSendOnAccept, object: self, userInfo: userInfo)
 	}
 
 	// MARK: - Helper Functions

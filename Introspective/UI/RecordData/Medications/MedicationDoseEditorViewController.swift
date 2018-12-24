@@ -54,7 +54,12 @@ public final class MedicationDoseEditorViewController: UIViewController {
 			medicationDose!.dosage = dosage
 			medicationDose!.timestamp = datePicker.date
 			DispatchQueue.main.async {
-				NotificationCenter.default.post(name: self.notificationToSendOnAccept, object: self.medicationDose)
+				NotificationCenter.default.post(
+					name: self.notificationToSendOnAccept,
+					object: self,
+					userInfo: self.info([
+						.dose: self.medicationDose as Any,
+					]))
 			}
 			dismiss(animated: true, completion: nil)
 		} catch {

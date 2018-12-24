@@ -32,7 +32,7 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 	final override func viewDidLoad() {
 		super.viewDidLoad()
 		navigationItem.rightBarButtonItem = editButtonItem
-		NotificationCenter.default.addObserver(self, selector: #selector(saveEditedInformation), name: Me.editedInformation, object: nil) 
+		observe(selector: #selector(saveEditedInformation), name: Me.editedInformation)
 	}
 
 	// MARK: - TableView Data Source
@@ -53,7 +53,7 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 		informationEditIndex = indexPath.row
 		let selectedInformation = chosenInformation[informationEditIndex]
 
-		let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "editExtraInformation") as! SelectExtraInformationViewController
+		let controller: SelectExtraInformationViewController = viewController(named: "editExtraInformation", fromStoryboard: "Util")
 		controller.notificationToSendWhenFinished = Me.editedInformation
 		controller.attributes = attributes
 		controller.limitToNumericInformation = limitToNumericInformation
@@ -97,14 +97,21 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 	}
 
 	@IBAction final func doneButtonPressed(_ sender: Any) {
-		NotificationCenter.default.post(name: notificationToSendWhenFinished, object: chosenInformation)
+		NotificationCenter.default.post(
+			name: notificationToSendWhenFinished,
+			object: self,
+			userInfo: info([
+				.information: chosenInformation,
+			]))
 		navigationController!.popViewController(animated: true)
 	}
 
 	// MARK: - Received Notifications
 
 	@objc private final func saveEditedInformation(notification: Notification) {
-		chosenInformation[informationEditIndex] = notification.object as! ExtraInformation
-		tableView.reloadData()
+		if let information: ExtraInformation? = value(for: .information, from: notification) {
+			chosenInformation[informationEditIndex] = information!
+			tableView.reloadData()
+		}
 	}
 }

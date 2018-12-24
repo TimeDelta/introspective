@@ -18,8 +18,6 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 	public static let errorOccurred = Notification.Name("recordMedicationErrorOcurred")
 	public static let shouldPresentMedicationDoseView = Notification.Name("shouldPresentDoseViewFromRecordScreen")
 	public static let shouldPresentDosesView = Notification.Name("shouldPresentDosesViewFromRecordScreen")
-	public static let medicationUserInfoKey = "dosage"
-	public static let notificationUserInfoKey = "notificationToSendWhenDosageSet"
 
 	// MARK: - IBOutlets
 
@@ -37,7 +35,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 			uniqueNotificationNameForMedication = Notification.Name("doseCreatedFor" + medication.objectID.description)
 			// have to remove old observers here because table view cells get reused
 			NotificationCenter.default.removeObserver(self)
-			NotificationCenter.default.addObserver(self, selector: #selector(doseCreated), name: uniqueNotificationNameForMedication, object: nil)
+			observe(selector: #selector(doseCreated), name: uniqueNotificationNameForMedication)
 		}
 	}
 	private final var uniqueNotificationNameForMedication: Notification.Name!
@@ -47,18 +45,21 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 
 	@objc private final func doseCreated(notification: Notification) {
 		do {
-			if let dose = notification.object as? MedicationDose {
+			if let dose: MedicationDose = value(for: .dose, from: notification) {
 				medication = try DependencyInjector.db.pull(savedObject: medication, fromSameContextAs: dose)
 				dose.medication = medication
 				medication.addToDoses(dose)
 				DependencyInjector.db.save()
 				updateLastTakenButton()
-			} else {
-				os_log("Expected MedicationDose as notification object but received %@", type: .error, String(describing: type(of: notification.object)))
 			}
 		} catch {
 			os_log("Failed to mark medication (%@) as taken: %@", type: .error, medication.name, error.localizedDescription)
-			NotificationCenter.default.post(name: Me.errorOccurred, object: "Failed to mark \(medication.name) as taken.")
+			NotificationCenter.default.post(
+				name: Me.errorOccurred,
+				object: self,
+				userInfo: info([
+					.title: "Failed to mark \(medication.name) as taken.",
+				]))
 		}
 	}
 
@@ -66,17 +67,24 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 
 	@IBAction final func takeButtonPressed(_ sender: Any) {
 		DispatchQueue.main.async {
-			let userInfo: [String: Any] = [
-				Me.notificationUserInfoKey: self.uniqueNotificationNameForMedication,
-				Me.medicationUserInfoKey: self.medication,
-			]
-			NotificationCenter.default.post(name: Me.shouldPresentMedicationDoseView, object: nil, userInfo: userInfo)
+			NotificationCenter.default.post(
+				name: Me.shouldPresentMedicationDoseView,
+				object: self,
+				userInfo: self.info([
+					.notificationName: self.uniqueNotificationNameForMedication,
+					.medication: self.medication,
+				]))
 		}
 	}
 
 	@IBAction final func lastTakenButtonPressed(_ sender: Any) {
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: Me.shouldPresentDosesView, object: self.medication)
+			NotificationCenter.default.post(
+				name: Me.shouldPresentDosesView,
+				object: self,
+				userInfo: self.info([
+					.medication: self.medication,
+				]))
 		}
 	}
 
