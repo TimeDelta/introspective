@@ -18,7 +18,8 @@ public protocol UiUtil {
 	func customPresenter(width: ModalSize, height: ModalSize, center: ModalCenterPosition) -> Presentr
 	func setView(_ view: UIView, enabled: Bool?, hidden: Bool?)
 	func setButton(_ button: UIButton, enabled: Bool?, hidden: Bool?)
-	func setBackButton(for viewController: UIViewController, title: String, action selector: Selector)
+	@discardableResult
+	func setBackButton(for viewController: UIViewController, title: String, action selector: Selector) -> UIBarButtonItem
 	func addSaveButtonToKeyboardFor(_ textView: UITextView, target: Any?, action: Selector?)
 	func addSaveButtonToKeyboardFor(_ textField: UITextField, target: Any?, action: Selector?)
 	/// Retrieve the value for the specified `UserInfoKey` from the given notification.
@@ -81,7 +82,8 @@ public final class UiUtilImpl: UiUtil {
 		setView(button, enabled: enabled, hidden: hidden)
 	}
 
-	public func setBackButton(for viewController: UIViewController, title: String, action selector: Selector) {
+	@discardableResult
+	public func setBackButton(for viewController: UIViewController, title: String, action selector: Selector) -> UIBarButtonItem {
 		// Disable the swipe to make sure user presses button
 		viewController.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
 
@@ -96,6 +98,8 @@ public final class UiUtilImpl: UiUtil {
 
 		let backButton = UIBarButtonItem(customView: button)
 		viewController.navigationItem.leftBarButtonItem = backButton
+
+		return backButton
 	}
 
 	public func addSaveButtonToKeyboardFor(_ textView: UITextView, target: Any?, action: Selector?) {

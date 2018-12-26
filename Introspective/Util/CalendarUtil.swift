@@ -49,6 +49,7 @@ public final class CalendarUtilImpl: CalendarUtil {
 	/// Set all components of the specified date less than the specified component to the minimum value for that component.
 	/// - Parameter component: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
 	public final func start(of component: Calendar.Component, in date: Date) -> Date {
+		if component == .nanosecond { return date }
 		let calendar = Calendar.autoupdatingCurrent
 		let dateInRegion = DateInRegion(date, region: Region(calendar: calendar, zone: calendar.timeZone))
 		let start = dateInRegion.dateAtStartOf(component)
@@ -58,6 +59,7 @@ public final class CalendarUtilImpl: CalendarUtil {
 	/// Set all components of the specified date less than the specified component to the maximum value for that component.
 	/// - Parameter component: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
 	public final func end(of component: Calendar.Component, in date: Date) -> Date {
+		if component == .nanosecond { return date }
 		let calendar = Calendar.autoupdatingCurrent
 		let dateInRegion = DateInRegion(date, region: Region(calendar: calendar, zone: calendar.timeZone))
 		let end = dateInRegion.dateAtEndOf(component)

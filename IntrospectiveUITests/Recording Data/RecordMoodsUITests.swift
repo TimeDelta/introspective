@@ -18,7 +18,7 @@ final class RecordMoodsUITests: UITest {
 
 	func testRecordMood_resetsNoteAndMoodRating() {
 		// given
-		app.tables.cells.sliders["mood slider"].press(forDuration: 0.5, thenDragTo: maxRatingLabel());
+		app.tables.cells.sliders["mood slider"].press(forDuration: 0.5, thenDragTo: ratingRangeLabel());
 
 		app.tables.buttons["set mood note button"].tap()
 
@@ -51,15 +51,47 @@ final class RecordMoodsUITests: UITest {
 
 	func testMovingSlider_updatesSetMoodButtonTitle() {
 		// when
-		app.tables.cells.sliders["mood slider"].press(forDuration: 0.5, thenDragTo: maxRatingLabel());
+		app.tables.cells.sliders["mood slider"].press(forDuration: 0.5, thenDragTo: ratingRangeLabel());
 
 		// then
 		XCTAssertEqual(moodRatingButton().value as? String, "7")
 	}
 
+	func testChangingRatingToValueGreaterThanMaxMood_setsRatingToMaxMood() {
+		// given
+		moodRatingButton().tap()
+		moodRatingTextField().tap()
+		moodRatingTextField().tap()
+
+		// when
+		moodRatingTextField().typeText("9")
+
+		// then
+		XCTAssertEqual(moodRatingTextField().value as? String, "7")
+
+		// clean up
+		app.toolbars.buttons["Save"].tap()
+	}
+
+	func testChangingRatingToValueLessThanMinMood_setsRatingToMinMood() {
+		// given
+		moodRatingButton().tap()
+		moodRatingTextField().tap()
+		moodRatingTextField().tap()
+
+		// when
+		moodRatingTextField().typeText("-1")
+
+		// then
+		XCTAssertEqual(moodRatingTextField().value as? String, "0")
+
+		// clean up
+		app.toolbars.buttons["Save"].tap()
+	}
+
 	// MARK: - Element Functions
 
-	private final func maxRatingLabel() -> XCUIElement {
+	private final func ratingRangeLabel() -> XCUIElement {
 		return app.tables.cells.staticTexts["max rating"]
 	}
 

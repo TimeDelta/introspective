@@ -44,4 +44,10 @@ extension UIViewController {
 		}
 		return storyboard!.instantiateViewController(withIdentifier: controllerName) as! Type
 	}
+
+	final func post(_ name: Notification.Name, object: Any? = self, userInfo: [AnyHashable: Any]? = nil) {
+		DispatchQueue.main.async {
+			NotificationCenter.default.post(name: name, object: object, userInfo: userInfo)
+		}
+	}
 }

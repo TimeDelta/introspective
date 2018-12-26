@@ -39,7 +39,8 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 				if shouldImport(date) {
 					currentMood = try DependencyInjector.sample.mood()
 					currentMood!.timestamp = date
-					currentMood!.maxRating = 7.0
+					currentMood!.minRating = 1
+					currentMood!.maxRating = 7
 					currentMood!.rating = Double(parts[2])!
 					currentMood!.setSource(.wellness)
 					currentNote = parts[3...].joined()

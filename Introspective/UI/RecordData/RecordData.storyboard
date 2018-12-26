@@ -53,7 +53,7 @@
                                             </connections>
                                         </button>
                                         <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="ymG-KL-FCQ">
-                                            <rect key="frame" x="14" y="53" width="216" height="30"/>
+                                            <rect key="frame" x="14" y="53" width="201" height="30"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                             <color key="tintColor" red="0.71373039484024048" green="0.71371680498123169" blue="0.71372604370117188" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <accessibility key="accessibilityConfiguration" identifier="mood slider" label="mood slider"/>
@@ -62,7 +62,7 @@
                                             </connections>
                                         </slider>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="/ max" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aJJ-MQ-2tK">
-                                            <rect key="frame" x="317" y="57" width="42" height="21"/>
+                                            <rect key="frame" x="302" y="57" width="57" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                             <accessibility key="accessibilityConfiguration" identifier="max rating" label="max rating"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -70,7 +70,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lfL-qr-4hB">
-                                            <rect key="frame" x="236" y="52" width="73" height="30"/>
+                                            <rect key="frame" x="221" y="53" width="73" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                             <accessibility key="accessibilityConfiguration" identifier="set mood button" label="set mood button"/>
                                             <state key="normal" title="rating"/>
@@ -83,8 +83,8 @@
                                 <connections>
                                     <outlet property="addNoteButton" destination="ho7-yT-Grz" id="oNp-aw-s1j"/>
                                     <outlet property="doneButton" destination="LbB-hc-tae" id="pmV-gd-zkR"/>
-                                    <outlet property="outOfMaxRatingLabel" destination="aJJ-MQ-2tK" id="heJ-Vq-Q05"/>
                                     <outlet property="ratingButton" destination="lfL-qr-4hB" id="nRB-tt-CVD"/>
+                                    <outlet property="ratingRangeLabel" destination="aJJ-MQ-2tK" id="heJ-Vq-Q05"/>
                                     <outlet property="ratingSlider" destination="ymG-KL-FCQ" id="X88-2h-GKl"/>
                                 </connections>
                             </tableViewCell>

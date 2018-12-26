@@ -33,14 +33,18 @@ public final class RecordMoodRatingViewController: UIViewController {
 
 	@IBAction final func textFieldValueChanged(_ sender: Any) {
 		let ratingText = ratingTextField.text!
+		let minRating = DependencyInjector.settings.minMood
 		let maxRating = DependencyInjector.settings.maxMood
 		guard !ratingText.hasSuffix(".") else { return }
 		if let rating = Double(ratingText) {
-			if rating <= maxRating {
+			if minRating <= rating && rating <= maxRating {
 				self.rating = rating
-			} else {
+			} else if rating > maxRating {
 				self.rating = maxRating
 				ratingTextField.text = MoodUiUtil.valueToString(maxRating)
+			} else {
+				self.rating = minRating
+				ratingTextField.text = MoodUiUtil.valueToString(minRating)
 			}
 		}
 	}

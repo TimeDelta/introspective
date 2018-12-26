@@ -17,6 +17,7 @@
 		03D138E0C3BA32790B67BAC9BE406A4A /* CoreDataQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB973A4A218D45BD89400E19B418311 /* CoreDataQuery.swift */; };
 		03D4337C8147067EED7E1F7110DA8C1D /* HealthKitQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B663D6CA80758E7C431F565E6615F7F6 /* HealthKitQuery.swift */; };
 		03E65E9C63968EF2CA7DB075E0974D91 /* TextAttributeValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E41B485EDAE311FB0EEBEB834E0F375 /* TextAttributeValueViewController.swift */; };
+		044BD2EAA208A635496E5B9AAB576EC3 /* WellnessMoodImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D23712A045EA903C093A99B965E0F8 /* WellnessMoodImporter.swift */; };
 		056BBD64FE76F0B81E572D1264BF0ED1 /* CodableStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CD659FD9F3A6C70494176E33EAD3368 /* CodableStorage.swift */; };
 		05D17E9C87E71699F1F77E7227B68DD6 /* TypedLessThanAttributeRestrictionBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB2C04ABD793578578CAE957261F530 /* TypedLessThanAttributeRestrictionBase.swift */; };
 		05ED54108F3654C47FD3997495FDD7E1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3304AC4E4C3B7DBD5C7AC53D48561D59 /* Assets.xcassets */; };
@@ -39,6 +40,7 @@
 		0F34F5F515EE71F3B87076B70E743B12 /* DateAttributeBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6944362CAEAF06213D418E149844D1EA /* DateAttributeBase.swift */; };
 		0F5AF793A9CE3ECC77E0C2CA861D00BA /* AttributeRestrictionMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617C6BCCF0165B9473761AEFDD8AD1CF /* AttributeRestrictionMock.swift */; };
 		0F9BC9D427412BABD17891D1E8FE21CB /* MultipleSampleTypeBasicXYGraphCustomizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2355F2BADF3EA05A8C326AC2665B82B /* MultipleSampleTypeBasicXYGraphCustomizationViewController.swift */; };
+		1070B088D24336BC019A190086896CE2 /* ImporterUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56AF4411780451C2627C27F941EC6D9 /* ImporterUtil.swift */; };
 		1098F028A6B910CDD949D742C4580B53 /* RecordMoodRatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6633BB94153F634280855EAA4F06319A /* RecordMoodRatingViewController.swift */; };
 		11EB3B1A70E6EB52304A62A44145CB76 /* Query.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8540E15D404F937D84E0729AF6E4A545 /* Query.storyboard */; };
 		11F463C3025BB3582EA2B6FCCB900219 /* RestingHeartRate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E7142AF9A2D5CD6F54C548C517F484 /* RestingHeartRate.swift */; };
@@ -80,6 +82,7 @@
 		25B2A242F5959B3773B014A7524B4F99 /* InjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7BBAF8BDAD34ADC4D1030CFBE73E411 /* InjectionProvider.swift */; };
 		2827405EDF38A5924ACFBBB5EC256146 /* SameStartDatesSubQueryMatcherUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE92103BE7FA3F73CAFCCEE92C88812B /* SameStartDatesSubQueryMatcherUnitTests.swift */; };
 		285D8151684BC370F1BE0A2E72F90651 /* Util.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F49FDC841BC67626719128AB437E57F9 /* Util.storyboard */; };
+		286689154282BFC5DEBEEE2EFA5182D0 /* ATrackerActivityImporter+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5477170D6E34AEEED83EBC45DE499492 /* ATrackerActivityImporter+CoreDataProperties.swift */; };
 		2942CBCAAB795952A25BBD7E19DB255C /* PredicateAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A25D6CFB75782C55714E73C5F9E9FAD /* PredicateAttributeRestriction.swift */; };
 		2982A1E90800CA08A7D39D48EB1566FE /* CoreDataSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C2A33585A153743EEA8E88D6C4C2B0 /* CoreDataSample.swift */; };
 		29EA4AF4B1FB32E83D19E98D9847FCD4 /* MedicationDose+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DF943F61428B579583246976839AD9 /* MedicationDose+CoreDataProperties.swift */; };
@@ -122,6 +125,7 @@
 		3D72B3AB61DCCF42216AA1A4A9BF4B26 /* NotEqualToFrequencyAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 292F66D25047A58D2248AFBBBB0383B7 /* NotEqualToFrequencyAttributeRestrictionUnitTests.swift */; };
 		3DAA395CA2812516BDDBE5AAB5DAEA60 /* NotEqualToNumericAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047D64E93BD1CB51926612C35D58BE66 /* NotEqualToNumericAttributeRestriction.swift */; };
 		3F2F0445371A2E8676F7693EF003EAD9 /* MoodNoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB370D6A0B83BE96D32B3DB2BC0B5B7C /* MoodNoteViewController.swift */; };
+		3F593B7269A125B73FC9AB60327990A5 /* WellnessMoodImporter+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677F86DAE5E2C4C12311CBD1DA64E5FC /* WellnessMoodImporter+CoreDataProperties.swift */; };
 		4055690B3EB5EB046D44B9AB8FA9F801 /* MedicationFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C4B550FFD974458EB56C21773B8359 /* MedicationFunctionalTests.swift */; };
 		41403708A35C1826B7C49DBCA4C3E587 /* LessThanDosageAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32EA313225005D198BA8D46E345B374 /* LessThanDosageAttributeRestriction.swift */; };
 		41413F8FA184F57C958DA1C72A9B0CC1 /* QueryFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B0C510FF593ABB3663EDE18DAA324F /* QueryFunctionalTest.swift */; };
@@ -132,6 +136,7 @@
 		440405510B26C0413558B53C32FAA6CA /* StartsWithStringAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6AD28538F5064C8F44517A8FF6642F /* StartsWithStringAttributeRestriction.swift */; };
 		44F83E0DC647FCA427F7EEE03ECE1172 /* WeightQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = C62A3AC3AEA8E497B110D0AB765E3D1F /* WeightQuery.swift */; };
 		452902FEB60DBEF3BD3AEDB166E116DA /* LessThanDurationAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046CEEE87E54FA3F89B71EF2CAD7B480 /* LessThanDurationAttributeRestrictionUnitTests.swift */; };
+		472DECD6F8BB6F569AF18E9CACE0CEE7 /* EasyPillMedicationDoseImporter+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8874E4D65F8F069AC67B0923B9A46325 /* EasyPillMedicationDoseImporter+CoreDataProperties.swift */; };
 		484C18AD6C731B0D7DA03B6D4AD1D9BB /* LessThanOrEqualToDosageAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F91FCE3ECDA99955A0BA2FD46FCD7C8F /* LessThanOrEqualToDosageAttributeRestrictionUnitTests.swift */; };
 		49CC08309E1DD5197878A5B4192BAB38 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B92DA528764AFD9485523C2D90108219 /* Settings.swift */; };
 		49DE98EC9E77FE10DC149F4D839B6163 /* BeforeTimeOfDayAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0E1A8EB0AF2AC3628B479689B638EB /* BeforeTimeOfDayAttributeRestrictionUnitTests.swift */; };
@@ -141,11 +146,10 @@
 		4E5B5B931CC8DEE7B35CC01ED932C175 /* ActivityQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 608EF7612DC9ED8BB4BB7D5BF17CA50B /* ActivityQuery.swift */; };
 		4E84D6B713E478F5CFEE04AE5CA5D6E0 /* EqualToFrequencyAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC33258129A84319A4D2C2FDCDA7345E /* EqualToFrequencyAttributeRestriction.swift */; };
 		4EC14123C9DA435FA66458C7725FD7E7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25A6380704409DE67B4271402452EADB /* LaunchScreen.storyboard */; };
-		044BD2EAA208A635496E5B9AAB576EC3 /* WellnessMoodImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D23712A045EA903C093A99B965E0F8 /* WellnessMoodImporter.swift */; };
 		50C34BAD031485CE926D10C19B9F90C6 /* DateAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E7D8C185641EE101C9E081300DBE3E /* DateAttribute.swift */; };
 		515AD496D1E739A19121C8E1EFA93A3D /* DoubleAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85532611D0175ED2498EE3ECC851FC90 /* DoubleAttributeRestriction.swift */; };
+		52041BAA75AFC35FC2B896A3113C3971 /* EasyPillMedicationDoseImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40699DB9BA6B3DB06E2C6FA82B2190DC /* EasyPillMedicationDoseImporter.swift */; };
 		5253B6020BBCC6ABBA67CF987064B3D3 /* Introspective.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A7581418039FB6FD454DA7AA8C114E56 /* Introspective.xcdatamodeld */; };
-		FD39BE2826C9119C97FD74580987F765 /* ATrackerActivityImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A96A14FAAFB9FC29789952D0BF92778 /* ATrackerActivityImporter.swift */; };
 		52958C2476B23EA38CD4697EE9E8C7E8 /* LessThanOrEqualToIntegerAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41396AFDD0EE7C6B54F13591D389E44F /* LessThanOrEqualToIntegerAttributeRestrictionUnitTests.swift */; };
 		52AAB601B3B2D104881DA9CA03505DB6 /* SexualActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184416EAAB43B80AC400EEDDDE0BCBCC /* SexualActivity.swift */; };
 		53278F207E68BD7AC1887096D1362666 /* MedicationDoseTableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A133E176A02EE48F676DB7C62801AAE /* MedicationDoseTableTableViewCell.swift */; };
@@ -180,7 +184,6 @@
 		642C02E0417CE0460CA21208063DECE9 /* UnifiedDayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E84EE1522808F74198F2FC66D406961 /* UnifiedDayViewController.swift */; };
 		65C4A00FA9BF1E5154D3D897AC0A0624 /* SampleQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97F922970E7B917FBFC1295E1C32B55D /* SampleQuery.swift */; };
 		6698A9DD24F0C351341828ACC194C78A /* SampleGrouperFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AFC6665469259B2CFADF67FA3A9ABF /* SampleGrouperFactory.swift */; };
-		52041BAA75AFC35FC2B896A3113C3971 /* EasyPillMedicationDoseImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40699DB9BA6B3DB06E2C6FA82B2190DC /* EasyPillMedicationDoseImporter.swift */; };
 		67C2486D0B48D086366119EBE818531B /* BasicXYGraph.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 609A79C0E8C1E8A7E8F7EF97CE09688C /* BasicXYGraph.storyboard */; };
 		67EB531BEEEFBE9F2ECE521E62C3DCDE /* SubQueryMatcherMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E83649D2DFDE9BB5C58A43926C87302 /* SubQueryMatcherMock.swift */; };
 		68A53581AFBD70BA773C25D20C89A674 /* SleepTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59C3DBD0DB93809B8F6DF1DBAFE18DB /* SleepTableViewCell.swift */; };
@@ -232,6 +235,7 @@
 		7DB57004D2DDDE944DB3351DF027007D /* ActivityDefinitionTagsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674B09FF74E10645BCAE0A9BAF1D94BA /* ActivityDefinitionTagsTableViewCell.swift */; };
 		7E29FF9C028B4B97C0E72AF9B4D1AD58 /* RecordActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBA5C806D2CB850992E9E1E60A8E687 /* RecordActivityTableViewController.swift */; };
 		7E4A23ED1C0CE71E292719A11C7D9269 /* BloodPressureQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1D3AA834C0C3B269920AE7BB555C80 /* BloodPressureQuery.swift */; };
+		7E693B3014C4CD0DFC4709183E105F6D /* EasyPillMedicationImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FA0BDEC1F0AB55D97C59026CFB66C84 /* EasyPillMedicationImporter.swift */; };
 		7FA482E7DD0A87C01B3B24722BC7837E /* AttributeValueTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC626E45A1CA42F75A6370ABDABA45B1 /* AttributeValueTypeViewController.swift */; };
 		80226DE0C6DDD7846056D5CDCB955A2E /* Importer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3434D7FB01C25CD9775CA37226A9376 /* Importer.swift */; };
 		8044F1124674103C1E29F961E62103AF /* NotEqualToDosageAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D7C285F9CF1B696CE82E08E7BCBD1A /* NotEqualToDosageAttributeRestriction.swift */; };
@@ -264,8 +268,8 @@
 		90C1EFAE6284F47DC18431BE6B1028B3 /* MedicationDoseEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 132059F129208172D078C8BCA0AEF2BA /* MedicationDoseEditorViewController.swift */; };
 		913932D5959B86FA3F3E03901B1DBCE0 /* EqualToStringAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0911B7304AE170982BF441BD95EE48 /* EqualToStringAttributeRestrictionUnitTests.swift */; };
 		9140E28DD002D15CE66F60E9BFAECF00 /* ChooseActivityDefinitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC70C386637BDF6B192F08EA5933467A /* ChooseActivityDefinitionViewController.swift */; };
-		286689154282BFC5DEBEEE2EFA5182D0 /* ATrackerActivityImporter+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5477170D6E34AEEED83EBC45DE499492 /* ATrackerActivityImporter+CoreDataProperties.swift */; };
 		91EEF80CC55487A4B79D859E78C90529 /* SameDatesSubQueryMatcherUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1769D25D6D2474DE946EB14D0D8822EB /* SameDatesSubQueryMatcherUnitTests.swift */; };
+		92299AFBCF1A61D294142C8E715AF49E /* Importable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A83AAC05C63A412C48EC2D95FE989D1 /* Importable.swift */; };
 		92D7044F0A5978AD6BF1E1A2840AB665 /* GreaterThanOrEqualToDosageAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79BD91F985AC86587F40725F4EA6C3EE /* GreaterThanOrEqualToDosageAttributeRestrictionUnitTests.swift */; };
 		943B110893DC6740F6F648837C79DD05 /* NotEqualToSelectOneAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B285E4C393313FCF5C466A2254AF5D0 /* NotEqualToSelectOneAttribute.swift */; };
 		980C44ECDDC40A978CCA69D62B2175FD /* BeforeDateAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243F266B57D417B39656C6C3598DA23 /* BeforeDateAttributeRestriction.swift */; };
@@ -279,7 +283,6 @@
 		9B98F484709C5406BDD74A0A57B6A21E /* DateTimeAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FFF2E93826013530F7A3BEECB892403 /* DateTimeAttribute.swift */; };
 		9C565DF836067E13CA97679E3336E14D /* Dosage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05A656ED03A7074F968B827D1D08CD88 /* Dosage.swift */; };
 		9E3D919F128FA9751F097C327FFD3638 /* NumericAttributeValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266DDC6A30798B18CAAEEDA0AFEB896A /* NumericAttributeValueViewController.swift */; };
-		F8272A3BDF2C61CA5E59440D1C53A346 /* EasyPillMedicationImporter+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C17B4CB3A9895EC3A1CB603C3CA3D3 /* EasyPillMedicationImporter+CoreDataProperties.swift */; };
 		9E9C87383066C88336FAB067ABC278A4 /* SameEndDatesSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CE227F628F3B36F895AD85FF557CB7D /* SameEndDatesSubQueryMatcher.swift */; };
 		9EBD72AEB42EF8A25AF5847C73598E53 /* RecordMedicationsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A2610C2CEA85EC335746A770116FDE /* RecordMedicationsUITests.swift */; };
 		9ECCE9507EEC6A006E9C3C745EF81501 /* TableViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E7B4530CE529ED23F4BF6D762FA239 /* TableViewExtensions.swift */; };
@@ -293,8 +296,9 @@
 		A0ACDA46E85F2ECEFBDA115171002AEF /* MoodMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE301C2F2247DBBEDE6822A654DD4F1 /* MoodMock.swift */; };
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
 		A1741703508EA4B538BF55AB8D4C19D4 /* InSameCalendarUnitSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D17C897038BC72D188BF5938E99B20 /* InSameCalendarUnitSubQueryMatcher.swift */; };
-		92299AFBCF1A61D294142C8E715AF49E /* Importable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A83AAC05C63A412C48EC2D95FE989D1 /* Importable.swift */; };
-		1070B088D24336BC019A190086896CE2 /* ImporterUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56AF4411780451C2627C27F941EC6D9 /* ImporterUtil.swift */; };
+		B43835F697DF64433E3174ED2CEBD515 /* MoodUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518351BD9929C4DA67E304BF4C019FCC /* MoodUtil.swift */; };
+		CBE468CB9230F4C096244CA444CA3AB8 /* MoodUtilFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433EE05DFD4EB8CBFE5EE88DFB0AFD71 /* MoodUtilFunctionalTests.swift */; };
+		A7264B95F89DE776D6F6657107FBEA3A /* MoodSettingsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C35532A23B2E9003BCE045F29E3CAA /* MoodSettingsUITests.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A29CEA756966FF63181D103F30EE2E29 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C87A3B46E853FFC3382ED9BC4A609 /* Activity.swift */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -319,7 +323,6 @@
 		AD1F2D8F380682512CC3B77A3E794665 /* LeanBodyMassQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 309E5D0D463F26860DCDBB12873716DB /* LeanBodyMassQueryFunctionalTests.swift */; };
 		AD4C07D5BA51911E1707DD2A664BE006 /* LessThanOrEqualToFrequencyAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72CC82CB330CBA1D925A4BFC7F67ADD6 /* LessThanOrEqualToFrequencyAttributeRestriction.swift */; };
 		AD94854700D5937A3C79C4CE31D939E8 /* UiUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8E8B653BBCB96BC0C307B9699B65CAE /* UiUtil.swift */; };
-		472DECD6F8BB6F569AF18E9CACE0CEE7 /* EasyPillMedicationDoseImporter+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8874E4D65F8F069AC67B0923B9A46325 /* EasyPillMedicationDoseImporter+CoreDataProperties.swift */; };
 		AEF1581E69A36DC6690701AEC140AD23 /* TagsAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1285C7C22BE7C6A1460AB16D355C2DB3 /* TagsAttribute.swift */; };
 		AF54D2A5CABAFC8A4C9C0869108607A0 /* MultiSelectAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 104AF3E31013C4CD2BEE1F854E420087 /* MultiSelectAttribute.swift */; };
 		B05AF5BF43D0BEFE530278433255B6BC /* SampleQueryMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9AD32F1EE1369EDE699A6AAF6B8A98 /* SampleQueryMock.swift */; };
@@ -389,7 +392,6 @@
 		D8DFAD1F7AAE12A63EBC18FC2D2720FA /* SameDatesSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E829A98BC6EC66AD87147A7CB5665950 /* SameDatesSubQueryMatcher.swift */; };
 		D938FD76C29E90D70F4A92CC1B5A2BDB /* BloodPressureQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FAD6A8CE5B12D85BB43F2F13128C320 /* BloodPressureQueryFunctionalTests.swift */; };
 		D9BF9DA390CFB9D88ED051E485240AB4 /* EditSubDataTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00DE3A8CC4C204EC257C34A20769422 /* EditSubDataTypeViewController.swift */; };
-		3F593B7269A125B73FC9AB60327990A5 /* WellnessMoodImporter+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677F86DAE5E2C4C12311CBD1DA64E5FC /* WellnessMoodImporter+CoreDataProperties.swift */; };
 		DC4A8AA382FF63646A5DC8565D3CBDD0 /* RestingHeartRateQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC29D9B7E557F52033C7E618D8AEDFC /* RestingHeartRateQuery.swift */; };
 		DD536BA8B33319ED9E5EF71F5A734532 /* SameDatesSubQueryMatcherFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DD3D79EE3D78A7B993F10FA5CA5F2E /* SameDatesSubQueryMatcherFunctionalTests.swift */; };
 		DE299EDE2D72D12C9E8C2F521A955F20 /* RecordMoodsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D19F77E53A722E0A719EEAE3254F9D /* RecordMoodsUITests.swift */; };
@@ -420,7 +422,6 @@
 		EFE79CAE679DCA6840649C3DBE88AB65 /* StringAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAA78D443AD2219384251450B98F72F /* StringAttributeRestriction.swift */; };
 		F17BB396F3E3FD1D65CA78E4485101D7 /* FrequencyUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4141F18385C28758F14028AB662077BB /* FrequencyUnitTests.swift */; };
 		F17EADEE5E4BBA7BB9A5EA5FC1BEC493 /* CombinedQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6910AD6CD11BFC1F4EC6E2EC4E286DBA /* CombinedQueryFunctionalTests.swift */; };
-		7E693B3014C4CD0DFC4709183E105F6D /* EasyPillMedicationImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FA0BDEC1F0AB55D97C59026CFB66C84 /* EasyPillMedicationImporter.swift */; };
 		F217A4CCDB5C38E0DA2895D9663C33B7 /* DeleteCoreDataTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648171EBF769F68BFB49F7AE0DFA1192 /* DeleteCoreDataTableViewCell.swift */; };
 		F28A9D568E1DFEE15D1702F7D4A16251 /* Explore.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA9BDBBE86B58A0695737C9DFE09315D /* Explore.storyboard */; };
 		F30B6A702FEA3D24F2FFD3D82872B9F9 /* DoesNotHaveOneOfTagAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D9277409C32599DAB075D109C3E408 /* DoesNotHaveOneOfTagAttributeRestriction.swift */; };
@@ -429,12 +430,14 @@
 		F4FBFDA0E461D650CCDC284627717C02 /* MoodUiUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF81F48E9922601CE4906A8CFD92DB32 /* MoodUiUtil.swift */; };
 		F5DF8F3D2881A4A662B1860F263C5145 /* MedicationDoseQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F8D4C3826BE890608B61E5DA4B93A6 /* MedicationDoseQuery.swift */; };
 		F61F8DFEFC7373E2E8993D1E22A11CC3 /* QueryResultsGraphSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65209A8E8DF56DC2926BADB9F9E3C012 /* QueryResultsGraphSetupViewController.swift */; };
+		F8272A3BDF2C61CA5E59440D1C53A346 /* EasyPillMedicationImporter+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C17B4CB3A9895EC3A1CB603C3CA3D3 /* EasyPillMedicationImporter+CoreDataProperties.swift */; };
 		F9F0CBB8089A29AC1EBF8446795E46CD /* GreaterThanOrEqualToFrequencyAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADD077AAE8184EFB5FE14FD73A329B1 /* GreaterThanOrEqualToFrequencyAttributeRestrictionUnitTests.swift */; };
 		FAE9B07CDA7A6D73AB62823372A14BF0 /* Mood.swift in Sources */ = {isa = PBXBuildFile; fileRef = F860CC5F15C5F99B730C7C91F557FFC7 /* Mood.swift */; };
 		FB2CA17522C3F0B999E23636B62DB416 /* Sources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C910991787CEEB6C68CC5A6DF1F9532 /* Sources.swift */; };
 		FB766E88F8666E7F554A6C7F151C0FDE /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67708640D7AC084D6DE82AB15BE7E521 /* Query.swift */; };
 		FC87A4E8884AA8796CA6A7F9BAFE4B2C /* DosageUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B7EADC414E7602ACFDC20A2A80D09E /* DosageUnitTests.swift */; };
 		FCBC490E43CDC41202F7113AE2508CD8 /* TagAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76C89DECAFF0C4C7E0826CC04FC6795E /* TagAttribute.swift */; };
+		FD39BE2826C9119C97FD74580987F765 /* ATrackerActivityImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A96A14FAAFB9FC29789952D0BF92778 /* ATrackerActivityImporter.swift */; };
 		FD42B2287D0F781F5850D635423904EE /* GreaterThanOrEqualToDoubleAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512D23F2F77EB9E80E66696AC2309077 /* GreaterThanOrEqualToDoubleAttributeRestriction.swift */; };
 		FDBF71260DDBA9C9786B966BB0E6F69B /* Pods_IntrospectiveUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41F9E79038690A6E79F32EC5F1CDFAEE /* Pods_IntrospectiveUITests.framework */; };
 		FE1288339F72BAB76802B74616AC5AE0 /* SampleQueryResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4B9E173302A4AD7CA5A9A914C82D0FE /* SampleQueryResult.swift */; };
@@ -464,7 +467,6 @@
 		0000C513B75DD279DB5E35C5F4E2FFAA /* CoreDataObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataObject.swift; sourceTree = "<group>"; };
 		00D5779221DC3FB1B8D1D8452AE49B43 /* AutoCases.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; path = AutoCases.stencil; sourceTree = "<group>"; };
 		00D5C7FC2BB9DCB332D524D2D185D918 /* EndsWithStringAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndsWithStringAttributeRestriction.swift; sourceTree = "<group>"; };
-		8874E4D65F8F069AC67B0923B9A46325 /* EasyPillMedicationDoseImporter+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EasyPillMedicationDoseImporter+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		00F973D234E1E1E1C5A7780A6B60C651 /* TypedLessThanOrEqualToAttributeRestrictionBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypedLessThanOrEqualToAttributeRestrictionBase.swift; sourceTree = "<group>"; };
 		02C571570D1475C97812174EDBB43871 /* GreaterThanDosageAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreaterThanDosageAttributeRestriction.swift; sourceTree = "<group>"; };
 		039430D2B64ECEF427478D936F9AC389 /* EndsWithStringAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndsWithStringAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
@@ -549,6 +551,7 @@
 		29109D0FCF7BF51CF595D19A95D83671 /* ImporterFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImporterFactory.swift; sourceTree = "<group>"; };
 		292F66D25047A58D2248AFBBBB0383B7 /* NotEqualToFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotEqualToFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		297BB019924DD8DC5F9563BEF3060077 /* SameEndDatesSubQueryMatcherFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SameEndDatesSubQueryMatcherFunctionalTests.swift; sourceTree = "<group>"; };
+		29C17B4CB3A9895EC3A1CB603C3CA3D3 /* EasyPillMedicationImporter+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EasyPillMedicationImporter+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		29C71FDB2A0716C179F5C6A253A2B39B /* MoodDataTestUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodDataTestUtil.swift; sourceTree = "<group>"; };
 		2A126FBE0CD5DFB9E6DFC53C5A15E0B6 /* ResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewController.swift; sourceTree = "<group>"; };
 		2C581A98795409923201E3BA843D50F7 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
@@ -579,9 +582,9 @@
 		3EFAB954DD14AD34A4031F2254362C64 /* HasOneOfTagAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasOneOfTagAttributeRestriction.swift; sourceTree = "<group>"; };
 		3F55E87E5BCE597BFE8ACB6B1850C7FE /* SampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleMock.swift; sourceTree = "<group>"; };
 		3F606EFF3ACB023928CA4F88FBB679CB /* SleepQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepQuery.swift; sourceTree = "<group>"; };
+		40699DB9BA6B3DB06E2C6FA82B2190DC /* EasyPillMedicationDoseImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyPillMedicationDoseImporter.swift; sourceTree = "<group>"; };
 		41396AFDD0EE7C6B54F13591D389E44F /* LessThanOrEqualToIntegerAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessThanOrEqualToIntegerAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		4141F18385C28758F14028AB662077BB /* FrequencyUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencyUnitTests.swift; sourceTree = "<group>"; };
-		677F86DAE5E2C4C12311CBD1DA64E5FC /* WellnessMoodImporter+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WellnessMoodImporter+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		41F9E79038690A6E79F32EC5F1CDFAEE /* Pods_IntrospectiveUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IntrospectiveUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		420B6E90D1AF33B94AC28A6F3D4B7158 /* Sleep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sleep.swift; sourceTree = "<group>"; };
 		420ECB6A373357D2A422F200F4089767 /* LessThanOrEqualToDurationAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanOrEqualToDurationAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
@@ -619,6 +622,7 @@
 		522AFDE19E02DD43E046E7DACD5AD439 /* IntegerAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegerAttributeRestriction.swift; sourceTree = "<group>"; };
 		53CF826B2FCB58950573E38FE04669C2 /* NumericSampleUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericSampleUtil.swift; sourceTree = "<group>"; };
 		53D3A81EA047B69CCDA37651B8B446C6 /* DurationAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationAttribute.swift; sourceTree = "<group>"; };
+		5477170D6E34AEEED83EBC45DE499492 /* ATrackerActivityImporter+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ATrackerActivityImporter+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		54D85E3BAAAAA752012535B1CF5EB9E8 /* UnitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitTest.swift; sourceTree = "<group>"; };
 		55115D0FAEE54F01C77FEAAFB671CEAE /* MultiSelectSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSelectSegmentedControl.swift; sourceTree = "<group>"; };
 		5512DDF37E9A87BAB151E744959A6190 /* ExtraInformationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtraInformationTableViewCell.swift; sourceTree = "<group>"; };
@@ -628,6 +632,7 @@
 		572E92A8F5EA7AA0D13779B8D686B489 /* DoesNotHaveOneOfTagAttributeRestrictionFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoesNotHaveOneOfTagAttributeRestrictionFunctionalTests.swift; sourceTree = "<group>"; };
 		59E7B4530CE529ED23F4BF6D762FA239 /* TableViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewExtensions.swift; sourceTree = "<group>"; };
 		5A133E176A02EE48F676DB7C62801AAE /* MedicationDoseTableTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDoseTableTableViewCell.swift; sourceTree = "<group>"; };
+		5A83AAC05C63A412C48EC2D95FE989D1 /* Importable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Importable.swift; sourceTree = "<group>"; };
 		5B0232D84BF6CE1C7F6C9D4074D07106 /* Introspective.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Introspective.entitlements; sourceTree = "<group>"; };
 		5BB2C04ABD793578578CAE957261F530 /* TypedLessThanAttributeRestrictionBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypedLessThanAttributeRestrictionBase.swift; sourceTree = "<group>"; };
 		5C3E5C649E374AD3DB9E5DB16589DA8F /* Pods-IntrospectiveTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IntrospectiveTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-IntrospectiveTests/Pods-IntrospectiveTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -665,6 +670,7 @@
 		669505CB6D449CC0496E1B897F9A453C /* GraphTypeSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphTypeSetupViewController.swift; sourceTree = "<group>"; };
 		674B09FF74E10645BCAE0A9BAF1D94BA /* ActivityDefinitionTagsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDefinitionTagsTableViewCell.swift; sourceTree = "<group>"; };
 		67708640D7AC084D6DE82AB15BE7E521 /* Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
+		677F86DAE5E2C4C12311CBD1DA64E5FC /* WellnessMoodImporter+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WellnessMoodImporter+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		67B04BF06CB6E574461F9D2AC78CF7A5 /* StringUtilUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringUtilUnitTests.swift; sourceTree = "<group>"; };
 		68B1369BC474277575BFEED9ECCC455B /* NotEqualToStringAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotEqualToStringAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		68DD57215533EA5802B23B472E4BEDC9 /* FrequencyAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencyAttribute.swift; sourceTree = "<group>"; };
@@ -714,7 +720,6 @@
 		7D838B6B11F5A3BA6D237A1803C7A7CC /* WellnessMoodImporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WellnessMoodImporterFunctionalTests.swift; sourceTree = "<group>"; };
 		7DAE3275E008400544CB2EB1FD59CF6C /* FrequencyEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencyEditorViewController.swift; sourceTree = "<group>"; };
 		7E71A40F4AA2C10AB0C507C48A1C983D /* AutoLenses.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; path = AutoLenses.stencil; sourceTree = "<group>"; };
-		5477170D6E34AEEED83EBC45DE499492 /* ATrackerActivityImporter+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ATrackerActivityImporter+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7FFF2E93826013530F7A3BEECB892403 /* DateTimeAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTimeAttribute.swift; sourceTree = "<group>"; };
 		809BEB786B6E3A771CFFA8A7ED5FA2D2 /* ChooseAttributesToGraphTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseAttributesToGraphTableViewController.swift; sourceTree = "<group>"; };
 		8189577674AD0799858DF3AB9100E348 /* BooleanAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooleanAttribute.swift; sourceTree = "<group>"; };
@@ -728,7 +733,9 @@
 		87D17C897038BC72D188BF5938E99B20 /* InSameCalendarUnitSubQueryMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InSameCalendarUnitSubQueryMatcher.swift; sourceTree = "<group>"; };
 		87D7C285F9CF1B696CE82E08E7BCBD1A /* NotEqualToDosageAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotEqualToDosageAttributeRestriction.swift; sourceTree = "<group>"; };
 		87F6CD05F845F22D50E6097CF2DBF9C3 /* RecordDataPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordDataPageViewController.swift; sourceTree = "<group>"; };
+		8874E4D65F8F069AC67B0923B9A46325 /* EasyPillMedicationDoseImporter+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EasyPillMedicationDoseImporter+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		89A2708AFAC376E92063E612010071A1 /* MultiSelectAttributeValueSelectTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSelectAttributeValueSelectTableViewController.swift; sourceTree = "<group>"; };
+		8A96A14FAAFB9FC29789952D0BF92778 /* ATrackerActivityImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATrackerActivityImporter.swift; sourceTree = "<group>"; };
 		8A98136930AFF96E95FBE9BAFF8D457D /* SameTimeUnitSampleGrouperFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SameTimeUnitSampleGrouperFunctionalTests.swift; sourceTree = "<group>"; };
 		8AEC843A9367FDB05CCACB0F6454E178 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		8B0F592D4791AF31D3CFB94C7302E347 /* OnDayOfWeekAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDayOfWeekAttributeRestriction.swift; sourceTree = "<group>"; };
@@ -743,6 +750,7 @@
 		8E3E22075D1D96F016516CC33CB0926C /* NumericAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericAttribute.swift; sourceTree = "<group>"; };
 		8ECF803DE85297C577FBE071ABC37BFC /* GraphSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphSetupViewController.swift; sourceTree = "<group>"; };
 		8F3E7692AC0B16A09616F7F06F6B6E35 /* DoesNotHaveTagAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoesNotHaveTagAttributeRestriction.swift; sourceTree = "<group>"; };
+		8FA0BDEC1F0AB55D97C59026CFB66C84 /* EasyPillMedicationImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyPillMedicationImporter.swift; sourceTree = "<group>"; };
 		90BC5D2468D758ADE734A4835F5E1C50 /* NumericSampleUtilUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericSampleUtilUnitTests.swift; sourceTree = "<group>"; };
 		934FD7CF9DE94FF7A5571438532DAAB4 /* AttributeRestrictionFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeRestrictionFactory.swift; sourceTree = "<group>"; };
 		93C8EAD831164B17E8AA299FA9FE6D6F /* InSameCalendarUnitSubQueryMatcherFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InSameCalendarUnitSubQueryMatcherFunctionalTests.swift; sourceTree = "<group>"; };
@@ -768,8 +776,9 @@
 		9FAD6A8CE5B12D85BB43F2F13128C320 /* BloodPressureQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPressureQueryFunctionalTests.swift; sourceTree = "<group>"; };
 		A1B6336EF7C8BA63691FB3CF1C00CFAD /* DateOnlyAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOnlyAttribute.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
-		5A83AAC05C63A412C48EC2D95FE989D1 /* Importable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Importable.swift; sourceTree = "<group>"; };
-		B56AF4411780451C2627C27F941EC6D9 /* ImporterUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImporterUtil.swift; sourceTree = "<group>"; };
+		518351BD9929C4DA67E304BF4C019FCC /* MoodUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodUtil.swift; sourceTree = "<group>"; };
+		433EE05DFD4EB8CBFE5EE88DFB0AFD71 /* MoodUtilFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodUtilFunctionalTests.swift; sourceTree = "<group>"; };
+		42C35532A23B2E9003BCE045F29E3CAA /* MoodSettingsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodSettingsUITests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A342AF1968189AC86554DAEAED555EA4 /* HasTagAttributeRestrictionFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTagAttributeRestrictionFunctionalTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
@@ -778,7 +787,6 @@
 		A7AA8E7D0DDBCC72BB2887FB26298A64 /* HealthKitSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitSample.swift; sourceTree = "<group>"; };
 		A8AF1BA62CF59F285D331C712F7E7FB2 /* QueryScreenUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryScreenUITests.swift; sourceTree = "<group>"; };
 		A97C2E852D585DB55B6F4CCE827222F0 /* IOUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOUtil.swift; sourceTree = "<group>"; };
-		8FA0BDEC1F0AB55D97C59026CFB66C84 /* EasyPillMedicationImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyPillMedicationImporter.swift; sourceTree = "<group>"; };
 		AB92F33DBC5AE261E4CEC74E65DB29EA /* AutoHashable.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; path = AutoHashable.stencil; sourceTree = "<group>"; };
 		AC626E45A1CA42F75A6370ABDABA45B1 /* AttributeValueTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeValueTypeViewController.swift; sourceTree = "<group>"; };
 		ACCDB2BD28C6ADB5A2956FFCAF74BC3B /* RecordMedicationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordMedicationTableViewController.swift; sourceTree = "<group>"; };
@@ -794,8 +802,8 @@
 		B165B45C72F67B62D3B4DBD7B380FF73 /* GreaterThanOrEqualToIntegerAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GreaterThanOrEqualToIntegerAttributeRestriction.swift; sourceTree = "<group>"; };
 		B1A3009B868D953A72240F4A1DC9D85B /* ActivityEndDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEndDateTableViewCell.swift; sourceTree = "<group>"; };
 		B3434D7FB01C25CD9775CA37226A9376 /* Importer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Importer.swift; sourceTree = "<group>"; };
-		8A96A14FAAFB9FC29789952D0BF92778 /* ATrackerActivityImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATrackerActivityImporter.swift; sourceTree = "<group>"; };
 		B548BD54DFF6B47A609E95D7414C1BA5 /* BasicXYGraphSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicXYGraphSetupViewController.swift; sourceTree = "<group>"; };
+		B56AF4411780451C2627C27F941EC6D9 /* ImporterUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImporterUtil.swift; sourceTree = "<group>"; };
 		B59C3DBD0DB93809B8F6DF1DBAFE18DB /* SleepTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepTableViewCell.swift; sourceTree = "<group>"; };
 		B5F8BF11900044421A50FB27C0A83A25 /* RecordData.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = RecordData.storyboard; sourceTree = "<group>"; };
 		B663D6CA80758E7C431F565E6615F7F6 /* HealthKitQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitQuery.swift; sourceTree = "<group>"; };
@@ -807,9 +815,7 @@
 		B92DA528764AFD9485523C2D90108219 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		B9B13DF90201861B02704E01954C5CEA /* LinuxMain.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; path = LinuxMain.stencil; sourceTree = "<group>"; };
 		BAB1E5E5E8F59B7FF7D696FD3731A330 /* GreaterThanFrequencyAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreaterThanFrequencyAttributeRestriction.swift; sourceTree = "<group>"; };
-		F9D23712A045EA903C093A99B965E0F8 /* WellnessMoodImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WellnessMoodImporter.swift; sourceTree = "<group>"; };
 		BCD21CB0874BF98210CF493503E39140 /* IntegerAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegerAttribute.swift; sourceTree = "<group>"; };
-		40699DB9BA6B3DB06E2C6FA82B2190DC /* EasyPillMedicationDoseImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyPillMedicationDoseImporter.swift; sourceTree = "<group>"; };
 		BD4CAC4486A26AE07A51C4E86B438FEF /* AnySample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnySample.swift; sourceTree = "<group>"; };
 		BD908AB0DA76E31AC50DEFC71B597CC3 /* MoodNoteTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodNoteTableViewCell.swift; sourceTree = "<group>"; };
 		BDA443ADD187394E07F866365EC08685 /* DayOfWeekAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeekAttribute.swift; sourceTree = "<group>"; };
@@ -873,7 +879,6 @@
 		E001147FED2051B6FB6B75AA8A8BDCDB /* TableViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewControllerExtensions.swift; sourceTree = "<group>"; };
 		E0C459591513219111FB49E86E65DD67 /* SubQueryMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubQueryMatcher.swift; sourceTree = "<group>"; };
 		E207DA91F979401926A3DB2621F4D89A /* TextNormalizationUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextNormalizationUtil.swift; sourceTree = "<group>"; };
-		29C17B4CB3A9895EC3A1CB603C3CA3D3 /* EasyPillMedicationImporter+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EasyPillMedicationImporter+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		E27A253A64E22592AE40EE14140A3068 /* MoodQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQuery.swift; sourceTree = "<group>"; };
 		E2B7EADC414E7602ACFDC20A2A80D09E /* DosageUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DosageUnitTests.swift; sourceTree = "<group>"; };
 		E32EA313225005D198BA8D46E345B374 /* LessThanDosageAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDosageAttributeRestriction.swift; sourceTree = "<group>"; };
@@ -914,6 +919,7 @@
 		F49FDC841BC67626719128AB437E57F9 /* Util.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Util.storyboard; sourceTree = "<group>"; };
 		F860CC5F15C5F99B730C7C91F557FFC7 /* Mood.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mood.swift; sourceTree = "<group>"; };
 		F91FCE3ECDA99955A0BA2FD46FCD7C8F /* LessThanOrEqualToDosageAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanOrEqualToDosageAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
+		F9D23712A045EA903C093A99B965E0F8 /* WellnessMoodImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WellnessMoodImporter.swift; sourceTree = "<group>"; };
 		F9FCE3E632FCB52C9740256A97D6CC5D /* HealthKitCategorySample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitCategorySample.swift; sourceTree = "<group>"; };
 		FA1D0A28FCAA782F2BA7246F2454707D /* ImporterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImporterTest.swift; sourceTree = "<group>"; };
 		FA9B48EEF13B538612DBF6D001F497F6 /* EqualToSelectOneAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToSelectOneAttributeRestriction.swift; sourceTree = "<group>"; };
@@ -1133,6 +1139,7 @@
 				694630D40676DF135D3464D9D1FB014F /* ExtraInformation */,
 				234368F1C5B63162809F5ADD586BBF64 /* Queries */,
 				EB652C76957BFD851C474C8CF3710F41 /* DataImport */,
+				701BA686320A2C00E704A7F566A731FE /* Util */,
 			);
 			path = FunctionalTests;
 			sourceTree = "<group>";
@@ -1386,6 +1393,17 @@
 			path = AttributeRestrictions;
 			sourceTree = "<group>";
 		};
+		4D95B1BF022121E1BE7166A5BA60E083 /* Medications */ = {
+			isa = PBXGroup;
+			children = (
+				8FA0BDEC1F0AB55D97C59026CFB66C84 /* EasyPillMedicationImporter.swift */,
+				29C17B4CB3A9895EC3A1CB603C3CA3D3 /* EasyPillMedicationImporter+CoreDataProperties.swift */,
+				40699DB9BA6B3DB06E2C6FA82B2190DC /* EasyPillMedicationDoseImporter.swift */,
+				8874E4D65F8F069AC67B0923B9A46325 /* EasyPillMedicationDoseImporter+CoreDataProperties.swift */,
+			);
+			path = Medications;
+			sourceTree = "<group>";
+		};
 		4E5881442AF947340780C1BDAF149A62 /* Results */ = {
 			isa = PBXGroup;
 			children = (
@@ -1529,6 +1547,7 @@
 				A97C2E852D585DB55B6F4CCE827222F0 /* IOUtil.swift */,
 				2219B7C8E35DB543E9F556E8093756FC /* Duration.swift */,
 				EB05A3006337ECCC6BE4381076303CC1 /* GlobalFunctions.swift */,
+				518351BD9929C4DA67E304BF4C019FCC /* MoodUtil.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -1537,6 +1556,7 @@
 			isa = PBXGroup;
 			children = (
 				6ECA7C820330FEC844B4184615FA9250 /* ActivitySettingsUITests.swift */,
+				42C35532A23B2E9003BCE045F29E3CAA /* MoodSettingsUITests.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1812,33 +1832,12 @@
 			path = "Sample Editors";
 			sourceTree = "<group>";
 		};
-		4D95B1BF022121E1BE7166A5BA60E083 /* Medications */ = {
+		701BA686320A2C00E704A7F566A731FE /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				8FA0BDEC1F0AB55D97C59026CFB66C84 /* EasyPillMedicationImporter.swift */,
-				29C17B4CB3A9895EC3A1CB603C3CA3D3 /* EasyPillMedicationImporter+CoreDataProperties.swift */,
-				40699DB9BA6B3DB06E2C6FA82B2190DC /* EasyPillMedicationDoseImporter.swift */,
-				8874E4D65F8F069AC67B0923B9A46325 /* EasyPillMedicationDoseImporter+CoreDataProperties.swift */,
+				433EE05DFD4EB8CBFE5EE88DFB0AFD71 /* MoodUtilFunctionalTests.swift */,
 			);
-			path = Medications;
-			sourceTree = "<group>";
-		};
-		EEDDAF35E688617EE5E5181E35221974 /* Activities */ = {
-			isa = PBXGroup;
-			children = (
-				8A96A14FAAFB9FC29789952D0BF92778 /* ATrackerActivityImporter.swift */,
-				5477170D6E34AEEED83EBC45DE499492 /* ATrackerActivityImporter+CoreDataProperties.swift */,
-			);
-			path = Activities;
-			sourceTree = "<group>";
-		};
-		F3EE4465BC21353916D1FCD6EA27017C /* Moods */ = {
-			isa = PBXGroup;
-			children = (
-				F9D23712A045EA903C093A99B965E0F8 /* WellnessMoodImporter.swift */,
-				677F86DAE5E2C4C12311CBD1DA64E5FC /* WellnessMoodImporter+CoreDataProperties.swift */,
-			);
-			path = Moods;
+			path = Util;
 			sourceTree = "<group>";
 		};
 		A42A3755C14DFA73187CC83B596D96EF /* RecordData */ = {
@@ -2212,6 +2211,15 @@
 			path = AttributeRestrictions;
 			sourceTree = "<group>";
 		};
+		EEDDAF35E688617EE5E5181E35221974 /* Activities */ = {
+			isa = PBXGroup;
+			children = (
+				8A96A14FAAFB9FC29789952D0BF92778 /* ATrackerActivityImporter.swift */,
+				5477170D6E34AEEED83EBC45DE499492 /* ATrackerActivityImporter+CoreDataProperties.swift */,
+			);
+			path = Activities;
+			sourceTree = "<group>";
+		};
 		EFC0EB180DC71BDE424FD17ADA812AE2 /* Mood */ = {
 			isa = PBXGroup;
 			children = (
@@ -2242,6 +2250,15 @@
 				F00DE3A8CC4C204EC257C34A20769422 /* EditSubDataTypeViewController.swift */,
 			);
 			path = Query;
+			sourceTree = "<group>";
+		};
+		F3EE4465BC21353916D1FCD6EA27017C /* Moods */ = {
+			isa = PBXGroup;
+			children = (
+				F9D23712A045EA903C093A99B965E0F8 /* WellnessMoodImporter.swift */,
+				677F86DAE5E2C4C12311CBD1DA64E5FC /* WellnessMoodImporter+CoreDataProperties.swift */,
+			);
+			path = Moods;
 			sourceTree = "<group>";
 		};
 		F6AAC9A4BE328DACC513C8E2D91C496C /* ModelTraining */ = {
@@ -2694,6 +2711,7 @@
 				C6F2BBA13A45D425C42BA556083F43C9 /* EasyPillMedicationImporterFunctionalTests.swift in Sources */,
 				430920C59B29C0AE2D20F76553F5DE92 /* HeartRateQueryFunctionalTests.swift in Sources */,
 				8342D608B77176551392FD5BD22DDA1D /* QueryViewControllerUnitTests.swift in Sources */,
+				CBE468CB9230F4C096244CA444CA3AB8 /* MoodUtilFunctionalTests.swift in Sources */,
 				CEFCA3CE8BAA36214166542C77BDD0D1 /* NotEqualToStringAttributeRestrictionUnitTests.swift in Sources */,
 				13F57B079A07676B52B6760AFD40256D /* OldestDateInformationFunctionalTests.swift in Sources */,
 				A9B635D7898BCE04ED402B538FB5CDE7 /* ATrackerActivityImporterFunctionalTests.swift in Sources */,
@@ -2752,6 +2770,7 @@
 				764148555A6661D891E0723BFE875258 /* QueryScreenUITests.swift in Sources */,
 				5712775AEDE823441B06BA0A9970B92E /* MoodResultsUITests.swift in Sources */,
 				9EBD72AEB42EF8A25AF5847C73598E53 /* RecordMedicationsUITests.swift in Sources */,
+				A7264B95F89DE776D6F6657107FBEA3A /* MoodSettingsUITests.swift in Sources */,
 				A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */,
 				DE299EDE2D72D12C9E8C2F521A955F20 /* RecordMoodsUITests.swift in Sources */,
 				89291EB333490BA8A44A72ADF44089C4 /* ActivitySettingsUITests.swift in Sources */,
@@ -2957,6 +2976,7 @@
 				B6B276E2CCB5913A01D868A48F40D5A8 /* OldestDateInformation.swift in Sources */,
 				C82FE0C2157E79F67378E37E721A48C5 /* MultiSelectAttributeValueViewController.swift in Sources */,
 				6F5324AA89BEA95C1494234DDD7E7286 /* OnDateAttributeRestriction.swift in Sources */,
+				B43835F697DF64433E3174ED2CEBD515 /* MoodUtil.swift in Sources */,
 				6EB2DAD22404A111F2E80125852CEE3F /* OnDayOfWeekAttributeRestriction.swift in Sources */,
 				183D0C7E9549C6A9C32C22ACB6D32691 /* LessThanOrEqualToDurationAttributeRestriction.swift in Sources */,
 				63F7B7E46848243CB4C7414EFE77C3CF /* ProductionInjectionProvider.swift in Sources */,

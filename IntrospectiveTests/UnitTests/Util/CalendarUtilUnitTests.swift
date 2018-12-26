@@ -35,13 +35,13 @@ class CalendarUtilUnitTests: UnitTest {
 		let zeroedDate = util.start(of: .year, in: date)
 
 		// then
-		XCTAssert(calendar.component(.year, from: zeroedDate) == expectedYear)
-		XCTAssert(calendar.component(.month, from: zeroedDate) == expectedMonth)
-		XCTAssert(calendar.component(.day, from: zeroedDate) == expectedDay)
-		XCTAssert(calendar.component(.hour, from: zeroedDate) == expectedHour)
-		XCTAssert(calendar.component(.minute, from: zeroedDate) == expectedMinute)
-		XCTAssert(calendar.component(.second, from: zeroedDate) == expectedSecond)
-		XCTAssert(calendar.component(.nanosecond, from: zeroedDate) == expectedNanosecond)
+		XCTAssertEqual(calendar.component(.year, from: zeroedDate), expectedYear)
+		XCTAssertEqual(calendar.component(.month, from: zeroedDate), expectedMonth)
+		XCTAssertEqual(calendar.component(.day, from: zeroedDate), expectedDay)
+		XCTAssertEqual(calendar.component(.hour, from: zeroedDate), expectedHour)
+		XCTAssertEqual(calendar.component(.minute, from: zeroedDate), expectedMinute)
+		XCTAssertEqual(calendar.component(.second, from: zeroedDate), expectedSecond)
+		XCTAssertEqual(calendar.component(.nanosecond, from: zeroedDate), expectedNanosecond)
 	}
 
 	func testGivenMonth_startOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
@@ -60,21 +60,29 @@ class CalendarUtilUnitTests: UnitTest {
 		let zeroedDate = util.start(of: .month, in: date)
 
 		// then
-		XCTAssert(calendar.component(.year, from: zeroedDate) == expectedYear)
-		XCTAssert(calendar.component(.month, from: zeroedDate) == expectedMonth)
-		XCTAssert(calendar.component(.day, from: zeroedDate) == expectedDay)
-		XCTAssert(calendar.component(.hour, from: zeroedDate) == expectedHour)
-		XCTAssert(calendar.component(.minute, from: zeroedDate) == expectedMinute)
-		XCTAssert(calendar.component(.second, from: zeroedDate) == expectedSecond)
-		XCTAssert(calendar.component(.nanosecond, from: zeroedDate) == expectedNanosecond)
+		XCTAssertEqual(calendar.component(.year, from: zeroedDate), expectedYear)
+		XCTAssertEqual(calendar.component(.month, from: zeroedDate), expectedMonth)
+		XCTAssertEqual(calendar.component(.day, from: zeroedDate), expectedDay)
+		XCTAssertEqual(calendar.component(.hour, from: zeroedDate), expectedHour)
+		XCTAssertEqual(calendar.component(.minute, from: zeroedDate), expectedMinute)
+		XCTAssertEqual(calendar.component(.second, from: zeroedDate), expectedSecond)
+		XCTAssertEqual(calendar.component(.nanosecond, from: zeroedDate), expectedNanosecond)
 	}
 
 	func testGivenWeekOfYear_startOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
 		// given
 		let calendar = Calendar.autoupdatingCurrent
 		let date = Date()
-		let expectedYear = calendar.component(.year, from: date)
+
+		var expectedYear = calendar.component(.year, from: date)
 		let expectedWeekOfYear = calendar.component(.weekOfYear, from: date)
+		let currentWeekday = calendar.component(.weekday, from: date)
+		let currentDayOfMonth = calendar.component(.day, from: date)
+		// if it's the first week of the year and the first week did not start on the first day of the week
+		if expectedWeekOfYear == 1 && currentWeekday > currentDayOfMonth {
+			// weekOfYear SHOULD still be 1. See https://github.com/malcommac/SwiftDate/issues/391 for more info.
+			expectedYear -= 1
+		}
 		let expectedWeekday = 1
 		let expectedHour = 0
 		let expectedMinute = 0
@@ -85,13 +93,13 @@ class CalendarUtilUnitTests: UnitTest {
 		let zeroedDate = util.start(of: .weekOfYear, in: date)
 
 		// then
-		XCTAssert(calendar.component(.year, from: zeroedDate) == expectedYear)
-		XCTAssert(calendar.component(.weekOfYear, from: zeroedDate) == expectedWeekOfYear)
-		XCTAssert(calendar.component(.weekday, from: zeroedDate) == expectedWeekday)
-		XCTAssert(calendar.component(.hour, from: zeroedDate) == expectedHour)
-		XCTAssert(calendar.component(.minute, from: zeroedDate) == expectedMinute)
-		XCTAssert(calendar.component(.second, from: zeroedDate) == expectedSecond)
-		XCTAssert(calendar.component(.nanosecond, from: zeroedDate) == expectedNanosecond)
+		XCTAssertEqual(calendar.component(.year, from: zeroedDate), expectedYear)
+		XCTAssertEqual(calendar.component(.weekOfYear, from: zeroedDate), expectedWeekOfYear)
+		XCTAssertEqual(calendar.component(.weekday, from: zeroedDate), expectedWeekday)
+		XCTAssertEqual(calendar.component(.hour, from: zeroedDate), expectedHour)
+		XCTAssertEqual(calendar.component(.minute, from: zeroedDate), expectedMinute)
+		XCTAssertEqual(calendar.component(.second, from: zeroedDate), expectedSecond)
+		XCTAssertEqual(calendar.component(.nanosecond, from: zeroedDate), expectedNanosecond)
 	}
 
 	func testGivenDay_startOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
@@ -100,6 +108,8 @@ class CalendarUtilUnitTests: UnitTest {
 		let date = Date()
 		let expectedYear = calendar.component(.year, from: date)
 		let expectedMonth = calendar.component(.month, from: date)
+		let expectedWeekOfYear = calendar.component(.weekOfYear, from: date)
+		let expectedWeekday = calendar.component(.weekday, from: date)
 		let expectedDay = calendar.component(.day, from: date)
 		let expectedHour = 0
 		let expectedMinute = 0
@@ -110,13 +120,15 @@ class CalendarUtilUnitTests: UnitTest {
 		let zeroedDate = util.start(of: .day, in: date)
 
 		// then
-		XCTAssert(calendar.component(.year, from: zeroedDate) == expectedYear)
-		XCTAssert(calendar.component(.month, from: zeroedDate) == expectedMonth)
-		XCTAssert(calendar.component(.day, from: zeroedDate) == expectedDay)
-		XCTAssert(calendar.component(.hour, from: zeroedDate) == expectedHour)
-		XCTAssert(calendar.component(.minute, from: zeroedDate) == expectedMinute)
-		XCTAssert(calendar.component(.second, from: zeroedDate) == expectedSecond)
-		XCTAssert(calendar.component(.nanosecond, from: zeroedDate) == expectedNanosecond)
+		XCTAssertEqual(calendar.component(.year, from: zeroedDate), expectedYear)
+		XCTAssertEqual(calendar.component(.month, from: zeroedDate), expectedMonth)
+		XCTAssertEqual(calendar.component(.weekOfYear, from: zeroedDate), expectedWeekOfYear)
+		XCTAssertEqual(calendar.component(.weekday, from: zeroedDate), expectedWeekday)
+		XCTAssertEqual(calendar.component(.day, from: zeroedDate), expectedDay)
+		XCTAssertEqual(calendar.component(.hour, from: zeroedDate), expectedHour)
+		XCTAssertEqual(calendar.component(.minute, from: zeroedDate), expectedMinute)
+		XCTAssertEqual(calendar.component(.second, from: zeroedDate), expectedSecond)
+		XCTAssertEqual(calendar.component(.nanosecond, from: zeroedDate), expectedNanosecond)
 	}
 
 	func testGivenHour_startOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
@@ -125,6 +137,8 @@ class CalendarUtilUnitTests: UnitTest {
 		let date = Date()
 		let expectedYear = calendar.component(.year, from: date)
 		let expectedMonth = calendar.component(.month, from: date)
+		let expectedWeekOfYear = calendar.component(.weekOfYear, from: date)
+		let expectedWeekday = calendar.component(.weekday, from: date)
 		let expectedDay = calendar.component(.day, from: date)
 		let expectedHour = calendar.component(.hour, from: date)
 		let expectedMinute = 0
@@ -135,13 +149,15 @@ class CalendarUtilUnitTests: UnitTest {
 		let zeroedDate = util.start(of: .hour, in: date)
 
 		// then
-		XCTAssert(calendar.component(.year, from: zeroedDate) == expectedYear)
-		XCTAssert(calendar.component(.month, from: zeroedDate) == expectedMonth)
-		XCTAssert(calendar.component(.day, from: zeroedDate) == expectedDay)
-		XCTAssert(calendar.component(.hour, from: zeroedDate) == expectedHour)
-		XCTAssert(calendar.component(.minute, from: zeroedDate) == expectedMinute)
-		XCTAssert(calendar.component(.second, from: zeroedDate) == expectedSecond)
-		XCTAssert(calendar.component(.nanosecond, from: zeroedDate) == expectedNanosecond)
+		XCTAssertEqual(calendar.component(.year, from: zeroedDate), expectedYear)
+		XCTAssertEqual(calendar.component(.month, from: zeroedDate), expectedMonth)
+		XCTAssertEqual(calendar.component(.weekOfYear, from: zeroedDate), expectedWeekOfYear)
+		XCTAssertEqual(calendar.component(.weekday, from: zeroedDate), expectedWeekday)
+		XCTAssertEqual(calendar.component(.day, from: zeroedDate), expectedDay)
+		XCTAssertEqual(calendar.component(.hour, from: zeroedDate), expectedHour)
+		XCTAssertEqual(calendar.component(.minute, from: zeroedDate), expectedMinute)
+		XCTAssertEqual(calendar.component(.second, from: zeroedDate), expectedSecond)
+		XCTAssertEqual(calendar.component(.nanosecond, from: zeroedDate), expectedNanosecond)
 	}
 
 	func testGivenMinute_startOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
@@ -150,6 +166,8 @@ class CalendarUtilUnitTests: UnitTest {
 		let date = Date()
 		let expectedYear = calendar.component(.year, from: date)
 		let expectedMonth = calendar.component(.month, from: date)
+		let expectedWeekOfYear = calendar.component(.weekOfYear, from: date)
+		let expectedWeekday = calendar.component(.weekday, from: date)
 		let expectedDay = calendar.component(.day, from: date)
 		let expectedHour = calendar.component(.hour, from: date)
 		let expectedMinute = calendar.component(.minute, from: date)
@@ -160,13 +178,15 @@ class CalendarUtilUnitTests: UnitTest {
 		let zeroedDate = util.start(of: .minute, in: date)
 
 		// then
-		XCTAssert(calendar.component(.year, from: zeroedDate) == expectedYear)
-		XCTAssert(calendar.component(.month, from: zeroedDate) == expectedMonth)
-		XCTAssert(calendar.component(.day, from: zeroedDate) == expectedDay)
-		XCTAssert(calendar.component(.hour, from: zeroedDate) == expectedHour)
-		XCTAssert(calendar.component(.minute, from: zeroedDate) == expectedMinute)
-		XCTAssert(calendar.component(.second, from: zeroedDate) == expectedSecond)
-		XCTAssert(calendar.component(.nanosecond, from: zeroedDate) == expectedNanosecond)
+		XCTAssertEqual(calendar.component(.year, from: zeroedDate), expectedYear)
+		XCTAssertEqual(calendar.component(.month, from: zeroedDate), expectedMonth)
+		XCTAssertEqual(calendar.component(.weekOfYear, from: zeroedDate), expectedWeekOfYear)
+		XCTAssertEqual(calendar.component(.weekday, from: zeroedDate), expectedWeekday)
+		XCTAssertEqual(calendar.component(.day, from: zeroedDate), expectedDay)
+		XCTAssertEqual(calendar.component(.hour, from: zeroedDate), expectedHour)
+		XCTAssertEqual(calendar.component(.minute, from: zeroedDate), expectedMinute)
+		XCTAssertEqual(calendar.component(.second, from: zeroedDate), expectedSecond)
+		XCTAssertEqual(calendar.component(.nanosecond, from: zeroedDate), expectedNanosecond)
 	}
 
 	func testGivenSecond_startOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
@@ -175,6 +195,8 @@ class CalendarUtilUnitTests: UnitTest {
 		let date = Date()
 		let expectedYear = calendar.component(.year, from: date)
 		let expectedMonth = calendar.component(.month, from: date)
+		let expectedWeekOfYear = calendar.component(.weekOfYear, from: date)
+		let expectedWeekday = calendar.component(.weekday, from: date)
 		let expectedDay = calendar.component(.day, from: date)
 		let expectedHour = calendar.component(.hour, from: date)
 		let expectedMinute = calendar.component(.minute, from: date)
@@ -185,13 +207,15 @@ class CalendarUtilUnitTests: UnitTest {
 		let zeroedDate = util.start(of: .second, in: date)
 
 		// then
-		XCTAssert(calendar.component(.year, from: zeroedDate) == expectedYear)
-		XCTAssert(calendar.component(.month, from: zeroedDate) == expectedMonth)
-		XCTAssert(calendar.component(.day, from: zeroedDate) == expectedDay)
-		XCTAssert(calendar.component(.hour, from: zeroedDate) == expectedHour)
-		XCTAssert(calendar.component(.minute, from: zeroedDate) == expectedMinute)
-		XCTAssert(calendar.component(.second, from: zeroedDate) == expectedSecond)
-		XCTAssert(calendar.component(.nanosecond, from: zeroedDate) == expectedNanosecond)
+		XCTAssertEqual(calendar.component(.year, from: zeroedDate), expectedYear)
+		XCTAssertEqual(calendar.component(.month, from: zeroedDate), expectedMonth)
+		XCTAssertEqual(calendar.component(.weekOfYear, from: zeroedDate), expectedWeekOfYear)
+		XCTAssertEqual(calendar.component(.weekday, from: zeroedDate), expectedWeekday)
+		XCTAssertEqual(calendar.component(.day, from: zeroedDate), expectedDay)
+		XCTAssertEqual(calendar.component(.hour, from: zeroedDate), expectedHour)
+		XCTAssertEqual(calendar.component(.minute, from: zeroedDate), expectedMinute)
+		XCTAssertEqual(calendar.component(.second, from: zeroedDate), expectedSecond)
+		XCTAssertEqual(calendar.component(.nanosecond, from: zeroedDate), expectedNanosecond)
 	}
 
 	func testGivenNanosecond_startOf_changesNothing() {
@@ -202,7 +226,7 @@ class CalendarUtilUnitTests: UnitTest {
 		let zeroedDate = util.start(of: .nanosecond, in: date)
 
 		// then
-		XCTAssert(zeroedDate == date)
+		XCTAssertEqual(zeroedDate, date)
 	}
 
 	func testGivenYear_endOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
@@ -221,13 +245,13 @@ class CalendarUtilUnitTests: UnitTest {
 		let zeroedDate = util.end(of: .year, in: date)
 
 		// then
-		XCTAssert(calendar.component(.year, from: zeroedDate) == expectedYear)
-		XCTAssert(calendar.component(.month, from: zeroedDate) == expectedMonth)
-		XCTAssert(calendar.component(.day, from: zeroedDate) == expectedDay)
-		XCTAssert(calendar.component(.hour, from: zeroedDate) == expectedHour)
-		XCTAssert(calendar.component(.minute, from: zeroedDate) == expectedMinute)
-		XCTAssert(calendar.component(.second, from: zeroedDate) == expectedSecond)
-		XCTAssert(calendar.component(.nanosecond, from: zeroedDate) == expectedNanosecond)
+		XCTAssertEqual(calendar.component(.year, from: zeroedDate), expectedYear)
+		XCTAssertEqual(calendar.component(.month, from: zeroedDate), expectedMonth)
+		XCTAssertEqual(calendar.component(.day, from: zeroedDate), expectedDay)
+		XCTAssertEqual(calendar.component(.hour, from: zeroedDate), expectedHour)
+		XCTAssertEqual(calendar.component(.minute, from: zeroedDate), expectedMinute)
+		XCTAssertEqual(calendar.component(.second, from: zeroedDate), expectedSecond)
+		XCTAssertEqual(calendar.component(.nanosecond, from: zeroedDate), expectedNanosecond)
 	}
 
 	func testGivenMonth_endOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
@@ -246,13 +270,13 @@ class CalendarUtilUnitTests: UnitTest {
 		let zeroedDate = util.end(of: .month, in: date)
 
 		// then
-		XCTAssert(calendar.component(.year, from: zeroedDate) == expectedYear)
-		XCTAssert(calendar.component(.month, from: zeroedDate) == expectedMonth)
-		XCTAssert(calendar.component(.day, from: zeroedDate) == expectedDay)
-		XCTAssert(calendar.component(.hour, from: zeroedDate) == expectedHour)
-		XCTAssert(calendar.component(.minute, from: zeroedDate) == expectedMinute)
-		XCTAssert(calendar.component(.second, from: zeroedDate) == expectedSecond)
-		XCTAssert(calendar.component(.nanosecond, from: zeroedDate) == expectedNanosecond)
+		XCTAssertEqual(calendar.component(.year, from: zeroedDate), expectedYear)
+		XCTAssertEqual(calendar.component(.month, from: zeroedDate), expectedMonth)
+		XCTAssertEqual(calendar.component(.day, from: zeroedDate), expectedDay)
+		XCTAssertEqual(calendar.component(.hour, from: zeroedDate), expectedHour)
+		XCTAssertEqual(calendar.component(.minute, from: zeroedDate), expectedMinute)
+		XCTAssertEqual(calendar.component(.second, from: zeroedDate), expectedSecond)
+		XCTAssertEqual(calendar.component(.nanosecond, from: zeroedDate), expectedNanosecond)
 	}
 
 	func testGivenWeekOfYear_endOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
@@ -271,13 +295,13 @@ class CalendarUtilUnitTests: UnitTest {
 		let zeroedDate = util.end(of: .weekOfYear, in: date)
 
 		// then
-		XCTAssert(calendar.component(.year, from: zeroedDate) == expectedYear)
-		XCTAssert(calendar.component(.weekOfYear, from: zeroedDate) == expectedWeekOfYear)
-		XCTAssert(calendar.component(.weekday, from: zeroedDate) == expectedWeekday)
-		XCTAssert(calendar.component(.hour, from: zeroedDate) == expectedHour)
-		XCTAssert(calendar.component(.minute, from: zeroedDate) == expectedMinute)
-		XCTAssert(calendar.component(.second, from: zeroedDate) == expectedSecond)
-		XCTAssert(calendar.component(.nanosecond, from: zeroedDate) == expectedNanosecond)
+		XCTAssertEqual(calendar.component(.year, from: zeroedDate), expectedYear)
+		XCTAssertEqual(calendar.component(.weekOfYear, from: zeroedDate), expectedWeekOfYear)
+		XCTAssertEqual(calendar.component(.weekday, from: zeroedDate), expectedWeekday)
+		XCTAssertEqual(calendar.component(.hour, from: zeroedDate), expectedHour)
+		XCTAssertEqual(calendar.component(.minute, from: zeroedDate), expectedMinute)
+		XCTAssertEqual(calendar.component(.second, from: zeroedDate), expectedSecond)
+		XCTAssertEqual(calendar.component(.nanosecond, from: zeroedDate), expectedNanosecond)
 	}
 
 	func testGivenDay_endOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
@@ -286,6 +310,8 @@ class CalendarUtilUnitTests: UnitTest {
 		let date = Date()
 		let expectedYear = calendar.component(.year, from: date)
 		let expectedMonth = calendar.component(.month, from: date)
+		let expectedWeekOfYear = calendar.component(.weekOfYear, from: date)
+		let expectedWeekday = calendar.component(.weekday, from: date)
 		let expectedDay = calendar.component(.day, from: date)
 		let expectedHour = 23
 		let expectedMinute = 59
@@ -296,13 +322,15 @@ class CalendarUtilUnitTests: UnitTest {
 		let zeroedDate = util.end(of: .day, in: date)
 
 		// then
-		XCTAssert(calendar.component(.year, from: zeroedDate) == expectedYear)
-		XCTAssert(calendar.component(.month, from: zeroedDate) == expectedMonth)
-		XCTAssert(calendar.component(.day, from: zeroedDate) == expectedDay)
-		XCTAssert(calendar.component(.hour, from: zeroedDate) == expectedHour)
-		XCTAssert(calendar.component(.minute, from: zeroedDate) == expectedMinute)
-		XCTAssert(calendar.component(.second, from: zeroedDate) == expectedSecond)
-		XCTAssert(calendar.component(.nanosecond, from: zeroedDate) == expectedNanosecond)
+		XCTAssertEqual(calendar.component(.year, from: zeroedDate), expectedYear)
+		XCTAssertEqual(calendar.component(.month, from: zeroedDate), expectedMonth)
+		XCTAssertEqual(calendar.component(.weekOfYear, from: zeroedDate), expectedWeekOfYear)
+		XCTAssertEqual(calendar.component(.weekday, from: zeroedDate), expectedWeekday)
+		XCTAssertEqual(calendar.component(.day, from: zeroedDate), expectedDay)
+		XCTAssertEqual(calendar.component(.hour, from: zeroedDate), expectedHour)
+		XCTAssertEqual(calendar.component(.minute, from: zeroedDate), expectedMinute)
+		XCTAssertEqual(calendar.component(.second, from: zeroedDate), expectedSecond)
+		XCTAssertEqual(calendar.component(.nanosecond, from: zeroedDate), expectedNanosecond)
 	}
 
 	func testGivenHour_endOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
@@ -311,6 +339,8 @@ class CalendarUtilUnitTests: UnitTest {
 		let date = Date()
 		let expectedYear = calendar.component(.year, from: date)
 		let expectedMonth = calendar.component(.month, from: date)
+		let expectedWeekOfYear = calendar.component(.weekOfYear, from: date)
+		let expectedWeekday = calendar.component(.weekday, from: date)
 		let expectedDay = calendar.component(.day, from: date)
 		let expectedHour = calendar.component(.hour, from: date)
 		let expectedMinute = 59
@@ -321,13 +351,15 @@ class CalendarUtilUnitTests: UnitTest {
 		let zeroedDate = util.end(of: .hour, in: date)
 
 		// then
-		XCTAssert(calendar.component(.year, from: zeroedDate) == expectedYear)
-		XCTAssert(calendar.component(.month, from: zeroedDate) == expectedMonth)
-		XCTAssert(calendar.component(.day, from: zeroedDate) == expectedDay)
-		XCTAssert(calendar.component(.hour, from: zeroedDate) == expectedHour)
-		XCTAssert(calendar.component(.minute, from: zeroedDate) == expectedMinute)
-		XCTAssert(calendar.component(.second, from: zeroedDate) == expectedSecond)
-		XCTAssert(calendar.component(.nanosecond, from: zeroedDate) == expectedNanosecond)
+		XCTAssertEqual(calendar.component(.year, from: zeroedDate), expectedYear)
+		XCTAssertEqual(calendar.component(.month, from: zeroedDate), expectedMonth)
+		XCTAssertEqual(calendar.component(.weekOfYear, from: zeroedDate), expectedWeekOfYear)
+		XCTAssertEqual(calendar.component(.weekday, from: zeroedDate), expectedWeekday)
+		XCTAssertEqual(calendar.component(.day, from: zeroedDate), expectedDay)
+		XCTAssertEqual(calendar.component(.hour, from: zeroedDate), expectedHour)
+		XCTAssertEqual(calendar.component(.minute, from: zeroedDate), expectedMinute)
+		XCTAssertEqual(calendar.component(.second, from: zeroedDate), expectedSecond)
+		XCTAssertEqual(calendar.component(.nanosecond, from: zeroedDate), expectedNanosecond)
 	}
 
 	func testGivenMinute_endOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
@@ -336,6 +368,8 @@ class CalendarUtilUnitTests: UnitTest {
 		let date = Date()
 		let expectedYear = calendar.component(.year, from: date)
 		let expectedMonth = calendar.component(.month, from: date)
+		let expectedWeekOfYear = calendar.component(.weekOfYear, from: date)
+		let expectedWeekday = calendar.component(.weekday, from: date)
 		let expectedDay = calendar.component(.day, from: date)
 		let expectedHour = calendar.component(.hour, from: date)
 		let expectedMinute = calendar.component(.minute, from: date)
@@ -346,13 +380,15 @@ class CalendarUtilUnitTests: UnitTest {
 		let zeroedDate = util.end(of: .minute, in: date)
 
 		// then
-		XCTAssert(calendar.component(.year, from: zeroedDate) == expectedYear)
-		XCTAssert(calendar.component(.month, from: zeroedDate) == expectedMonth)
-		XCTAssert(calendar.component(.day, from: zeroedDate) == expectedDay)
-		XCTAssert(calendar.component(.hour, from: zeroedDate) == expectedHour)
-		XCTAssert(calendar.component(.minute, from: zeroedDate) == expectedMinute)
-		XCTAssert(calendar.component(.second, from: zeroedDate) == expectedSecond)
-		XCTAssert(calendar.component(.nanosecond, from: zeroedDate) == expectedNanosecond)
+		XCTAssertEqual(calendar.component(.year, from: zeroedDate), expectedYear)
+		XCTAssertEqual(calendar.component(.month, from: zeroedDate), expectedMonth)
+		XCTAssertEqual(calendar.component(.weekOfYear, from: zeroedDate), expectedWeekOfYear)
+		XCTAssertEqual(calendar.component(.weekday, from: zeroedDate), expectedWeekday)
+		XCTAssertEqual(calendar.component(.day, from: zeroedDate), expectedDay)
+		XCTAssertEqual(calendar.component(.hour, from: zeroedDate), expectedHour)
+		XCTAssertEqual(calendar.component(.minute, from: zeroedDate), expectedMinute)
+		XCTAssertEqual(calendar.component(.second, from: zeroedDate), expectedSecond)
+		XCTAssertEqual(calendar.component(.nanosecond, from: zeroedDate), expectedNanosecond)
 	}
 
 	func testGivenSecond_endOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
@@ -361,6 +397,8 @@ class CalendarUtilUnitTests: UnitTest {
 		let date = Date()
 		let expectedYear = calendar.component(.year, from: date)
 		let expectedMonth = calendar.component(.month, from: date)
+		let expectedWeekOfYear = calendar.component(.weekOfYear, from: date)
+		let expectedWeekday = calendar.component(.weekday, from: date)
 		let expectedDay = calendar.component(.day, from: date)
 		let expectedHour = calendar.component(.hour, from: date)
 		let expectedMinute = calendar.component(.minute, from: date)
@@ -371,13 +409,15 @@ class CalendarUtilUnitTests: UnitTest {
 		let zeroedDate = util.end(of: .second, in: date)
 
 		// then
-		XCTAssert(calendar.component(.year, from: zeroedDate) == expectedYear)
-		XCTAssert(calendar.component(.month, from: zeroedDate) == expectedMonth)
-		XCTAssert(calendar.component(.day, from: zeroedDate) == expectedDay)
-		XCTAssert(calendar.component(.hour, from: zeroedDate) == expectedHour)
-		XCTAssert(calendar.component(.minute, from: zeroedDate) == expectedMinute)
-		XCTAssert(calendar.component(.second, from: zeroedDate) == expectedSecond)
-		XCTAssert(calendar.component(.nanosecond, from: zeroedDate) == expectedNanosecond)
+		XCTAssertEqual(calendar.component(.year, from: zeroedDate), expectedYear)
+		XCTAssertEqual(calendar.component(.month, from: zeroedDate), expectedMonth)
+		XCTAssertEqual(calendar.component(.weekOfYear, from: zeroedDate), expectedWeekOfYear)
+		XCTAssertEqual(calendar.component(.weekday, from: zeroedDate), expectedWeekday)
+		XCTAssertEqual(calendar.component(.day, from: zeroedDate), expectedDay)
+		XCTAssertEqual(calendar.component(.hour, from: zeroedDate), expectedHour)
+		XCTAssertEqual(calendar.component(.minute, from: zeroedDate), expectedMinute)
+		XCTAssertEqual(calendar.component(.second, from: zeroedDate), expectedSecond)
+		XCTAssertEqual(calendar.component(.nanosecond, from: zeroedDate), expectedNanosecond)
 	}
 
 	func testGivenNanosecond_endOf_changesNothing() {
@@ -388,7 +428,7 @@ class CalendarUtilUnitTests: UnitTest {
 		let zeroedDate = util.end(of: .nanosecond, in: date)
 
 		// then
-		XCTAssert(zeroedDate == date)
+		XCTAssertEqual(zeroedDate, date)
 	}
 
 	func test_stringForDateInFormat_returnsCorrectlyFormattedDateString() {
@@ -400,7 +440,7 @@ class CalendarUtilUnitTests: UnitTest {
 		let dateString = util.string(for: date, inFormat: format)
 
 		// then
-		XCTAssert(dateString == "2 of January, 2018 at 3:04:05")
+		XCTAssertEqual(dateString, "2 of January, 2018 at 3:04:05")
 	}
 
 	func testGivenYearComponentAndTwoDatesInSameYear_dateOccursOnSameAs_returnsTrue() {

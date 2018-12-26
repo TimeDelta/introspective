@@ -15,6 +15,7 @@ public protocol Mood: CoreDataSample {
 	static var maxRating: DoubleAttribute { get }
 	static var note: TextAttribute { get }
 
+	var minRating: Double { get set }
 	var maxRating: Double { get set }
 	var rating: Double { get set }
 	var note: String? { get set }
@@ -39,13 +40,14 @@ public final class MoodImpl: NSManagedObject, Mood {
 	// MARK: - Attributes
 
 	public static let rating = DoubleAttribute(name: "Mood Rating", pluralName: "Mood Ratings", variableName: "rating")
-	public static let maxRating = DoubleAttribute(name: "Max Mood Rating", pluralName: "Max mood rating", variableName: "maxRating")
 	public static let note = TextAttribute(name: "Note", pluralName: "Notes", variableName: "note")
 	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
 		name: "Source",
 		pluralName: "Sources",
 		possibleValues: Sources.moodSources,
 		possibleValueToString: { $0 })
+	public static let minRating = DoubleAttribute(name: "Min Mood Rating", pluralName: "Min mood ratings", variableName: "minRating")
+	public static let maxRating = DoubleAttribute(name: "Max Mood Rating", pluralName: "Max mood ratings", variableName: "maxRating")
 
 	public static let defaultDependentAttribute: Attribute = rating
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.timestamp
@@ -53,9 +55,10 @@ public final class MoodImpl: NSManagedObject, Mood {
 	public static let attributes: [Attribute] = [
 		CommonSampleAttributes.timestamp,
 		rating,
-		maxRating,
 		note,
 		sourceAttribute,
+		minRating,
+		maxRating,
 	]
 	public final let attributes: [Attribute] = Me.attributes
 

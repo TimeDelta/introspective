@@ -5955,6 +5955,161 @@ class MoodQueryMock: MoodQuery, Mock, StaticMock {
     }
 }
 
+// MARK: - MoodUtil
+class MoodUtilMock: MoodUtil, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    typealias PropertyStub = Given
+    typealias MethodStub = Given
+    typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    func scaleMoods() throws {
+        addInvocation(.m_scaleMoods)
+		let perform = methodPerformValue(.m_scaleMoods) as? () -> Void
+		perform?()
+		do {
+		    _ = try methodReturnValue(.m_scaleMoods).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+
+    fileprivate enum MethodType {
+        case m_scaleMoods
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_scaleMoods, .m_scaleMoods):
+                return true 
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .m_scaleMoods: return 0
+            }
+        }
+    }
+
+    class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [Product]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        static func scaleMoods(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_scaleMoods, products: willThrow.map({ Product.throw($0) }))
+        }
+        static func scaleMoods(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_scaleMoods, products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    struct Verify {
+        fileprivate var method: MethodType
+
+        static func scaleMoods() -> Verify { return Verify(method: .m_scaleMoods)}
+    }
+
+    struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        static func scaleMoods(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_scaleMoods, performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> Product {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
 // MARK: - NumericSampleUtil
 class NumericSampleUtilMock: NumericSampleUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
@@ -8743,6 +8898,13 @@ class SettingsMock: Settings, Mock, StaticMock {
         methodPerformValues = []
     }
 
+    var minMood: Double {
+		get {	invocations.append(.p_minMood_get); return __p_minMood ?? givenGetterValue(.p_minMood_get, "SettingsMock - stub value for minMood was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_minMood = newValue }
+	}
+	private var __p_minMood: (Double)?
+
     var maxMood: Double {
 		get {	invocations.append(.p_maxMood_get); return __p_maxMood ?? givenGetterValue(.p_maxMood_get, "SettingsMock - stub value for maxMood was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
@@ -8774,6 +8936,12 @@ class SettingsMock: Settings, Mock, StaticMock {
 
 
 
+
+    func setMinMood(_ value: Double) {
+        addInvocation(.m_setMinMood__value(Parameter<Double>.value(`value`)))
+		let perform = methodPerformValue(.m_setMinMood__value(Parameter<Double>.value(`value`))) as? (Double) -> Void
+		perform?(`value`)
+    }
 
     func setMaxMood(_ value: Double) {
         addInvocation(.m_setMaxMood__value(Parameter<Double>.value(`value`)))
@@ -8863,18 +9031,23 @@ class SettingsMock: Settings, Mock, StaticMock {
 
     
     fileprivate enum MethodType {
+        case m_setMinMood__value(Parameter<Double>)
         case m_setMaxMood__value(Parameter<Double>)
         case m_setAutoIgnoreEnabled__value(Parameter<Bool>)
         case m_setAutoIgnoreSeconds__value(Parameter<Int>)
         case m_changed__setting(Parameter<Setting>)
         case m_reset
         case m_save
+        case p_minMood_get
         case p_maxMood_get
         case p_autoIgnoreEnabled_get
         case p_autoIgnoreSeconds_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
+            case (.m_setMinMood__value(let lhsValue), .m_setMinMood__value(let rhsValue)):
+                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                return true 
             case (.m_setMaxMood__value(let lhsValue), .m_setMaxMood__value(let rhsValue)):
                 guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
                 return true 
@@ -8891,6 +9064,7 @@ class SettingsMock: Settings, Mock, StaticMock {
                 return true 
             case (.m_save, .m_save):
                 return true 
+            case (.p_minMood_get,.p_minMood_get): return true
             case (.p_maxMood_get,.p_maxMood_get): return true
             case (.p_autoIgnoreEnabled_get,.p_autoIgnoreEnabled_get): return true
             case (.p_autoIgnoreSeconds_get,.p_autoIgnoreSeconds_get): return true
@@ -8900,12 +9074,14 @@ class SettingsMock: Settings, Mock, StaticMock {
 
         func intValue() -> Int {
             switch self {
+            case let .m_setMinMood__value(p0): return p0.intValue
             case let .m_setMaxMood__value(p0): return p0.intValue
             case let .m_setAutoIgnoreEnabled__value(p0): return p0.intValue
             case let .m_setAutoIgnoreSeconds__value(p0): return p0.intValue
             case let .m_changed__setting(p0): return p0.intValue
             case .m_reset: return 0
             case .m_save: return 0
+            case .p_minMood_get: return 0
             case .p_maxMood_get: return 0
             case .p_autoIgnoreEnabled_get: return 0
             case .p_autoIgnoreSeconds_get: return 0
@@ -8921,6 +9097,9 @@ class SettingsMock: Settings, Mock, StaticMock {
             super.init(products)
         }
 
+        static func minMood(getter defaultValue: Double...) -> PropertyStub {
+            return Given(method: .p_minMood_get, products: defaultValue.map({ Product.return($0) }))
+        }
         static func maxMood(getter defaultValue: Double...) -> PropertyStub {
             return Given(method: .p_maxMood_get, products: defaultValue.map({ Product.return($0) }))
         }
@@ -8950,6 +9129,9 @@ class SettingsMock: Settings, Mock, StaticMock {
     struct Verify {
         fileprivate var method: MethodType
 
+        static func setMinMood(_ value: Parameter<Double>) -> Verify { return Verify(method: .m_setMinMood__value(`value`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
+		static func setMinMood(value: Parameter<Double>) -> Verify { return Verify(method: .m_setMinMood__value(`value`))}
         static func setMaxMood(_ value: Parameter<Double>) -> Verify { return Verify(method: .m_setMaxMood__value(`value`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
 		static func setMaxMood(value: Parameter<Double>) -> Verify { return Verify(method: .m_setMaxMood__value(`value`))}
@@ -8964,6 +9146,7 @@ class SettingsMock: Settings, Mock, StaticMock {
 		static func changed(setting: Parameter<Setting>) -> Verify { return Verify(method: .m_changed__setting(`setting`))}
         static func reset() -> Verify { return Verify(method: .m_reset)}
         static func save() -> Verify { return Verify(method: .m_save)}
+        static var minMood: Verify { return Verify(method: .p_minMood_get) }
         static var maxMood: Verify { return Verify(method: .p_maxMood_get) }
         static var autoIgnoreEnabled: Verify { return Verify(method: .p_autoIgnoreEnabled_get) }
         static var autoIgnoreSeconds: Verify { return Verify(method: .p_autoIgnoreSeconds_get) }
@@ -8973,6 +9156,13 @@ class SettingsMock: Settings, Mock, StaticMock {
         fileprivate var method: MethodType
         var performs: Any
 
+        static func setMinMood(_ value: Parameter<Double>, perform: @escaping (Double) -> Void) -> Perform {
+            return Perform(method: .m_setMinMood__value(`value`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
+		static func setMinMood(value: Parameter<Double>, perform: @escaping (Double) -> Void) -> Perform {
+            return Perform(method: .m_setMinMood__value(`value`), performs: perform)
+        }
         static func setMaxMood(_ value: Parameter<Double>, perform: @escaping (Double) -> Void) -> Perform {
             return Perform(method: .m_setMaxMood__value(`value`), performs: perform)
         }
@@ -10466,10 +10656,18 @@ class UiUtilMock: UiUtil, Mock {
 		perform?(`button`, `enabled`, `hidden`)
     }
 
-    func setBackButton(for viewController: UIViewController, title: String, action selector: Selector) {
+    func setBackButton(for viewController: UIViewController, title: String, action selector: Selector) -> UIBarButtonItem {
         addInvocation(.m_setBackButton__for_viewControllertitle_titleaction_selector(Parameter<UIViewController>.value(`viewController`), Parameter<String>.value(`title`), Parameter<Selector>.value(`selector`)))
 		let perform = methodPerformValue(.m_setBackButton__for_viewControllertitle_titleaction_selector(Parameter<UIViewController>.value(`viewController`), Parameter<String>.value(`title`), Parameter<Selector>.value(`selector`))) as? (UIViewController, String, Selector) -> Void
 		perform?(`viewController`, `title`, `selector`)
+		var __value: UIBarButtonItem
+		do {
+		    __value = try methodReturnValue(.m_setBackButton__for_viewControllertitle_titleaction_selector(Parameter<UIViewController>.value(`viewController`), Parameter<String>.value(`title`), Parameter<Selector>.value(`selector`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for setBackButton(for viewController: UIViewController, title: String, action selector: Selector). Use given")
+			Failure("Stub return value not specified for setBackButton(for viewController: UIViewController, title: String, action selector: Selector). Use given")
+		}
+		return __value
     }
 
     func addSaveButtonToKeyboardFor(_ textView: UITextView, target: Any?, action: Selector?) {
@@ -10618,6 +10816,9 @@ class UiUtilMock: UiUtil, Mock {
         static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>, willReturn: Presentr...) -> MethodStub {
             return Given(method: .m_customPresenter__width_widthheight_heightcenter_center(`width`, `height`, `center`), products: willReturn.map({ Product.return($0) }))
         }
+        static func setBackButton(for viewController: Parameter<UIViewController>, title: Parameter<String>, action selector: Parameter<Selector>, willReturn: UIBarButtonItem...) -> MethodStub {
+            return Given(method: .m_setBackButton__for_viewControllertitle_titleaction_selector(`viewController`, `title`, `selector`), products: willReturn.map({ Product.return($0) }))
+        }
         static func value<Type>(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, keyIsOptional: Parameter<Bool>, willReturn: Type?...) -> MethodStub {
             return Given(method: .m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(`key`, `notification`, `keyIsOptional`), products: willReturn.map({ Product.return($0) }))
         }
@@ -10635,6 +10836,13 @@ class UiUtilMock: UiUtil, Mock {
             let willReturn: [Presentr] = []
 			let given: Given = { return Given(method: .m_customPresenter__width_widthheight_heightcenter_center(`width`, `height`, `center`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Presentr).self)
+			willProduce(stubber)
+			return given
+        }
+        static func setBackButton(for viewController: Parameter<UIViewController>, title: Parameter<String>, action selector: Parameter<Selector>, willProduce: (Stubber<UIBarButtonItem>) -> Void) -> MethodStub {
+            let willReturn: [UIBarButtonItem] = []
+			let given: Given = { return Given(method: .m_setBackButton__for_viewControllertitle_titleaction_selector(`viewController`, `title`, `selector`), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (UIBarButtonItem).self)
 			willProduce(stubber)
 			return given
         }

@@ -3,8 +3,8 @@
     <entity name="Activity" representedClassName=".Activity" syncable="YES">
         <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="note" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="partOfCurrentImport" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="startDate" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="definition" maxCount="1" deletionRule="Nullify" destinationEntity="ActivityDefinition" inverseName="activities" inverseEntity="ActivityDefinition" syncable="YES"/>
         <relationship name="tags" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" syncable="YES"/>
@@ -64,6 +64,7 @@
     </entity>
     <entity name="Mood" representedClassName=".MoodImpl" syncable="YES">
         <attribute name="maxRating" attributeType="Double" defaultValueString="7" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="minRating" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="note" optional="YES" attributeType="String" spotlightIndexingEnabled="YES" syncable="YES"/>
         <attribute name="rating" attributeType="Double" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -73,6 +74,7 @@
         <attribute name="storedAutoIgnoreEnabled" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="storedAutoIgnoreSeconds" attributeType="Integer 64" defaultValueString="15" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="storedMaxMood" attributeType="Double" defaultValueString="7" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="storedMinMood" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <entity name="Tag" representedClassName=".Tag" syncable="YES">
         <attribute name="name" attributeType="String" syncable="YES"/>
@@ -89,8 +91,8 @@
         <element name="EasyPillMedicationImporter" positionX="-45" positionY="54" width="128" height="60"/>
         <element name="Medication" positionX="-54" positionY="9" width="128" height="165"/>
         <element name="MedicationDose" positionX="-45" positionY="45" width="128" height="105"/>
-        <element name="Mood" positionX="-63" positionY="-18" width="128" height="120"/>
-        <element name="Settings" positionX="-63" positionY="9" width="128" height="90"/>
+        <element name="Mood" positionX="-63" positionY="-18" width="128" height="135"/>
+        <element name="Settings" positionX="-63" positionY="9" width="128" height="105"/>
         <element name="Tag" positionX="-18" positionY="81" width="128" height="60"/>
         <element name="WellnessMoodImporter" positionX="-54" positionY="18" width="128" height="60"/>
     </elements>

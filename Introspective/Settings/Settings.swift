@@ -11,6 +11,7 @@ import Foundation
 import CoreData
 
 public enum Setting {
+	case minMood
 	case maxMood
 	case autoIgnoreEnabled
 	case autoIgnoreSeconds
@@ -20,6 +21,9 @@ public enum Setting {
 public protocol Settings: CoreDataObject {
 
 	// have to do it this way because the dependency injection system does not allow assignment
+	var minMood: Double { get }
+	func setMinMood(_ value: Double)
+
 	var maxMood: Double { get }
 	func setMaxMood(_ value: Double)
 
@@ -42,6 +46,18 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	private typealias Me = SettingsImpl
 	public static let entityName = "Settings"
 
+	// MARK: - Min Mood
+
+	private final var newMinMood: Double? = nil
+	public final var minMood: Double {
+		return newMinMood ?? storedMinMood
+	}
+	public final func setMinMood(_ value: Double) {
+		if value != storedMinMood {
+			newMinMood = value
+		}
+	}
+
 	// MARK: - Max Mood
 
 	private final var newMaxMood: Double? = nil
@@ -49,7 +65,9 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		return newMaxMood ?? storedMaxMood
 	}
 	public final func setMaxMood(_ value: Double) {
-		newMaxMood = value
+		if value != storedMaxMood {
+			newMaxMood = value
+		}
 	}
 
 	// MARK: - Auto Ignore Enabled
@@ -59,7 +77,9 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		return newAutoIgnoreEnabled ?? storedAutoIgnoreEnabled
 	}
 	public final func setAutoIgnoreEnabled(_ value: Bool) {
-		newAutoIgnoreEnabled = value
+		if value != storedAutoIgnoreEnabled {
+			newAutoIgnoreEnabled = value
+		}
 	}
 
 	// MARK: - Auto Ignore Seconds
@@ -69,13 +89,16 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		return newAutoIgnoreSeconds ?? storedAutoIgnoreSeconds
 	}
 	public final func setAutoIgnoreSeconds(_ value: Int) {
-		newAutoIgnoreSeconds = value
+		if value != storedAutoIgnoreSeconds {
+			newAutoIgnoreSeconds = value
+		}
 	}
 
 	// MARK: - Other Functions
 
 	public final func changed(_ setting: Setting) -> Bool {
 		switch (setting) {
+			case .minMood: return newMinMood != nil
 			case .maxMood: return newMaxMood != nil
 			case .autoIgnoreEnabled: return newAutoIgnoreEnabled != nil
 			case .autoIgnoreSeconds: return newAutoIgnoreSeconds != nil
@@ -83,12 +106,14 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	}
 
 	public final func reset() {
+		newMinMood = nil
 		newMaxMood = nil
 		newAutoIgnoreEnabled = nil
 		newAutoIgnoreSeconds = nil
 	}
 
 	public final func save() {
+		storedMinMood = minMood
 		storedMaxMood = maxMood
 		storedAutoIgnoreEnabled = autoIgnoreEnabled
 		storedAutoIgnoreSeconds = autoIgnoreSeconds
@@ -105,6 +130,7 @@ extension SettingsImpl {
 		return NSFetchRequest<SettingsImpl>(entityName: "Settings")
 	}
 
+	@NSManaged fileprivate var storedMinMood: Double
 	@NSManaged fileprivate var storedMaxMood: Double
 	@NSManaged fileprivate var storedAutoIgnoreEnabled: Bool
 	@NSManaged fileprivate var storedAutoIgnoreSeconds: Int

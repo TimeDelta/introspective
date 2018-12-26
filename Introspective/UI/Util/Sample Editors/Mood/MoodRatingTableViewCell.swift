@@ -22,6 +22,9 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 	public final var rating: Double = 0 {
 		didSet { updateUI() }
 	}
+	public final var minRating: Double = DependencyInjector.settings.minMood {
+		didSet { updateUI() }
+	}
 	public final var maxRating: Double = DependencyInjector.settings.maxMood {
 		didSet { updateUI() }
 	}
@@ -37,12 +40,15 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 		let ratingText = ratingTextField.text!
 		guard !ratingText.hasSuffix(".") else { return }
 		if let rating = Double(ratingText) {
-			if rating <= maxRating {
+			if minRating <= rating && rating <= maxRating {
 				self.rating = rating
-			} else {
+			} else if rating > maxRating {
 				self.rating = maxRating
+				ratingTextField.text = MoodUiUtil.valueToString(maxRating)
+			} else {
+				self.rating = minRating
+				ratingTextField.text = MoodUiUtil.valueToString(minRating)
 			}
-			sendRatingChangedNotification()
 		}
 	}
 

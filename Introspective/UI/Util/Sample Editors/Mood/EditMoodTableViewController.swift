@@ -38,6 +38,7 @@ public final class EditMoodTableViewController: UITableViewController {
 			guard let mood = mood else { return }
 			timestamp = mood.timestamp
 			rating = mood.rating
+			minRating = mood.minRating
 			maxRating = mood.maxRating
 			note = mood.note
 		}
@@ -45,6 +46,7 @@ public final class EditMoodTableViewController: UITableViewController {
 
 	private final var timestamp: Date = Date()
 	private final var rating: Double = 0
+	private final var minRating: Double = DependencyInjector.settings.minMood
 	private final var maxRating: Double = DependencyInjector.settings.maxMood
 	private final var note: String? = nil
 
@@ -96,6 +98,7 @@ public final class EditMoodTableViewController: UITableViewController {
 		} else if indexPath == Me.ratingIndex {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "rating", for: indexPath) as! MoodRatingTableViewCell
 			cell.rating = rating
+			cell.minRating = minRating
 			cell.maxRating = maxRating
 			cell.notificationToSendOnChange = Me.ratingChanged
 			return cell

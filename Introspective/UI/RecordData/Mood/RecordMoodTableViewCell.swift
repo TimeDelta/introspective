@@ -23,7 +23,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	// MARK: - IBOutlets
 
 	@IBOutlet weak final var ratingSlider: UISlider!
-	@IBOutlet weak final var outOfMaxRatingLabel: UILabel!
+	@IBOutlet weak final var ratingRangeLabel: UILabel!
 	@IBOutlet weak final var doneButton: UIButton!
 	@IBOutlet weak final var addNoteButton: UIButton!
 	@IBOutlet weak final var ratingButton: UIButton!
@@ -44,6 +44,8 @@ final class RecordMoodTableViewCell: UITableViewCell {
 		updateUI()
 		observe(selector: #selector(noteSaved), name: MoodNoteViewController.noteSavedNotification)
 		observe(selector: #selector(ratingSaved), name: Me.ratingChanged)
+		observe(selector: #selector(updateUI), name: MoodUiUtil.minRatingChanged)
+		observe(selector: #selector(updateUI), name: MoodUiUtil.maxRatingChanged)
 	}
 
 	deinit {
@@ -88,6 +90,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 			mood.timestamp = Date()
 			mood.rating = Double(ratingSlider.value) * DependencyInjector.settings.maxMood
 			mood.note = note
+			mood.minRating = DependencyInjector.settings.minMood
 			mood.maxRating = DependencyInjector.settings.maxMood
 			mood.setSource(.introspective)
 			DependencyInjector.db.save()
@@ -128,12 +131,13 @@ final class RecordMoodTableViewCell: UITableViewCell {
 		rating = DependencyInjector.settings.maxMood / 2
 	}
 
-	private final func updateUI() {
+	@objc private final func updateUI() {
+		let minRating = DependencyInjector.settings.minMood
 		let maxRating = DependencyInjector.settings.maxMood
-		ratingSlider.setValue(Float(rating / maxRating), animated: false)
+		ratingSlider.setValue(Float(rating / (maxRating - minRating)), animated: false)
 		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: rating, maxRating: maxRating)
 		ratingButton.setTitle(MoodUiUtil.valueToString(rating), for: .normal)
 		ratingButton.accessibilityValue = MoodUiUtil.valueToString(rating)
-		outOfMaxRatingLabel.text = "/ " + MoodUiUtil.valueToString(maxRating)
+		ratingRangeLabel.text = "(\(MoodUiUtil.valueToString(minRating))-\(MoodUiUtil.valueToString(maxRating)))"
 	}
 }

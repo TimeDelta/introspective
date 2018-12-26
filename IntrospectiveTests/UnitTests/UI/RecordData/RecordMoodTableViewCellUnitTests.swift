@@ -18,7 +18,7 @@ final class RecordMoodTableViewCellUnitTests: UnitTest {
 	private static let ratingSlider = UISlider(frame: frame)
 	private static let addNoteButton = UIButton(type: .system)
 	private static let doneButton = UIButton(type: .system)
-	private static let outOfMaxRatingLabel = UILabel(frame: frame)
+	private static let ratingRangeLabel = UILabel(frame: frame)
 	private static let ratingButton = UIButton()
 
 	private var cell: RecordMoodTableViewCell!
@@ -30,13 +30,14 @@ final class RecordMoodTableViewCellUnitTests: UnitTest {
 		mockMood = MoodMock()
 		Given(mockSampleFactory, .mood(willReturn: mockMood))
 
+		Given(mockSettings, .minMood(getter: 0.0))
 		Given(mockSettings, .maxMood(getter: 7.0))
 
 		cell = RecordMoodTableViewCell()
 		cell.ratingSlider = Me.ratingSlider
 		cell.addNoteButton = Me.addNoteButton
 		cell.doneButton = Me.doneButton
-		cell.outOfMaxRatingLabel = Me.outOfMaxRatingLabel
+		cell.ratingRangeLabel = Me.ratingRangeLabel
 		cell.ratingButton = Me.ratingButton
 	}
 

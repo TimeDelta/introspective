@@ -13,6 +13,9 @@ public final class MoodUiUtil {
 
 	private typealias Me = MoodUiUtil
 
+	public static let minRatingChanged = Notification.Name("minimumMoodRatingChanged")
+	public static let maxRatingChanged = Notification.Name("maximumMoodRatingChanged")
+
 	public static let minRatingColor = UIColor.black
 	public static let maxRatingColor = UIColor.yellow
 

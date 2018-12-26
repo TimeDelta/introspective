@@ -54,6 +54,13 @@ class MoodMock: Mood, Mock {
     }
 
 
+    var minRating: Double {
+		get {	invocations.append(.p_minRating_get); return __p_minRating ?? givenGetterValue(.p_minRating_get, "MoodMock - stub value for minRating was not defined") }
+		set {	invocations.append(.p_minRating_set(.value(newValue))); __p_minRating = newValue }
+	}
+	private var __p_minRating: (Double)?
+
+
     var maxRating: Double {
 		get {	invocations.append(.p_maxRating_get); return __p_maxRating ?? givenGetterValue(.p_maxRating_get, "MoodMock - stub value for maxRating was not defined") }
 		set {	invocations.append(.p_maxRating_set(.value(newValue))); __p_maxRating = newValue }
@@ -366,6 +373,8 @@ class MoodMock: Mood, Mock {
         case m_graphableValue__of_attribute(Parameter<Attribute>)
         case m_dates
         case m_equalTo__otherSample(Parameter<Sample>)
+        case p_minRating_get
+		case p_minRating_set(Parameter<Double>)
         case p_maxRating_get
 		case p_maxRating_set(Parameter<Double>)
         case p_rating_get
@@ -401,6 +410,8 @@ class MoodMock: Mood, Mock {
             case (.m_equalTo__otherSample(let lhsOthersample), .m_equalTo__otherSample(let rhsOthersample)):
                 guard Parameter.compare(lhs: lhsOthersample, rhs: rhsOthersample, with: matcher) else { return false } 
                 return true 
+            case (.p_minRating_get,.p_minRating_get): return true
+			case (.p_minRating_set(let left),.p_minRating_set(let right)): return Parameter<Double>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_maxRating_get,.p_maxRating_get): return true
 			case (.p_maxRating_set(let left),.p_maxRating_set(let right)): return Parameter<Double>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_rating_get,.p_rating_get): return true
@@ -425,6 +436,8 @@ class MoodMock: Mood, Mock {
             case let .m_graphableValue__of_attribute(p0): return p0.intValue
             case .m_dates: return 0
             case let .m_equalTo__otherSample(p0): return p0.intValue
+            case .p_minRating_get: return 0
+			case .p_minRating_set(let newValue): return newValue.intValue
             case .p_maxRating_get: return 0
 			case .p_maxRating_set(let newValue): return newValue.intValue
             case .p_rating_get: return 0
@@ -448,6 +461,9 @@ class MoodMock: Mood, Mock {
             super.init(products)
         }
 
+        static func minRating(getter defaultValue: Double...) -> PropertyStub {
+            return Given(method: .p_minRating_get, products: defaultValue.map({ Product.return($0) }))
+        }
         static func maxRating(getter defaultValue: Double...) -> PropertyStub {
             return Given(method: .p_maxRating_get, products: defaultValue.map({ Product.return($0) }))
         }
@@ -562,6 +578,8 @@ class MoodMock: Mood, Mock {
         static func equalTo(_ otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherSample` label")
 		static func equalTo(otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
+        static var minRating: Verify { return Verify(method: .p_minRating_get) }
+		static func minRating(set newValue: Parameter<Double>) -> Verify { return Verify(method: .p_minRating_set(newValue)) }
         static var maxRating: Verify { return Verify(method: .p_maxRating_get) }
 		static func maxRating(set newValue: Parameter<Double>) -> Verify { return Verify(method: .p_maxRating_set(newValue)) }
         static var rating: Verify { return Verify(method: .p_rating_get) }

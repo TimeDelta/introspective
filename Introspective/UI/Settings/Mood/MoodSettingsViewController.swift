@@ -8,21 +8,17 @@
 
 import UIKit
 import Presentr
+import NotificationBannerSwift
 import os
 
 final class MoodSettingsViewController: UIViewController {
 
-	private final let presenter: Presentr = {
-		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
+	// MARK: - IBOutlets
 
-		let customPresenter = Presentr(presentationType: customType)
-		customPresenter.dismissTransitionType = .crossDissolve
-		customPresenter.roundCorners = true
-		customPresenter.dismissOnSwipe = false
-		return customPresenter
-	}()
-
+	@IBOutlet weak final var minMoodField: UITextField!
 	@IBOutlet weak final var maxMoodField: UITextField!
+
+	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
@@ -32,11 +28,7 @@ final class MoodSettingsViewController: UIViewController {
 		DependencyInjector.util.ui.setBackButton(for: self, title: "Settings", action: #selector(done))
 	}
 
-	@IBAction final func doneEditingMaxMood(_ sender: Any) {
-		if !DependencyInjector.util.string.isNumber(maxMoodField.text!) {
-			maxMoodField.text = String(DependencyInjector.settings.maxMood)
-		}
-	}
+	// MARK: - Actions
 
 	@objc private func reset(_ sender: Any) {
 		DependencyInjector.settings.reset()
@@ -44,42 +36,32 @@ final class MoodSettingsViewController: UIViewController {
 	}
 
 	@objc private final func done() {
-		if DependencyInjector.util.string.isNumber(maxMoodField.text!) {
-			DependencyInjector.settings.setMaxMood(Double(maxMoodField.text!)!)
+		guard let minMoodText = minMoodField.text else { return }
+		guard let maxMoodText = maxMoodField.text else { return }
+		guard let minRating = Double(minMoodText) else {
+			showError(title: "Invalid minimum mood", message: "'\(minMoodText)' is not a number.")
+			return
+		}
+		guard let maxRating = Double(maxMoodText) else {
+			showError(title: "Invalid minimum mood", message: "'\(minMoodText)' is not a number.")
+			return
+		}
+		guard minRating <= maxRating else {
+			showError(title: "Maximum mood must be greater than minimum mood.")
+			return
 		}
 
-		if DependencyInjector.settings.changed(.maxMood) {
-			let scaleOldMoodsController = UIAlertController(
-				title: "Scale old moods?",
-				message: "Applying this new maximum to old moods will scale them to have the same ratio with this max that they had with the max at the time they were created.",
-				preferredStyle: .alert)
-			scaleOldMoodsController.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
-				DispatchQueue.global(qos: .userInitiated).async {
-					MoodQueryImpl.updatingMoodsInBackground = true
-					DependencyInjector.query.moodQuery().runQuery { (result, error) in
-						if error != nil {
-							#warning("send user a notification that this failed")
-							os_log("Failed to scale old moods: %@", type: .error, error!.localizedDescription)
-							MoodQueryImpl.updatingMoodsInBackground = false
-							return
-						}
-						for sample in result!.samples {
-							let mood = (sample as! Mood)
-							let oldMax = mood.maxRating
-							let oldRating = mood.rating
-							mood.maxRating = DependencyInjector.settings.maxMood
-							mood.rating = (oldRating / oldMax) * DependencyInjector.settings.maxMood
-						}
-						DependencyInjector.db.save()
-						MoodQueryImpl.updatingMoodsInBackground = false
-					}
-				}
-				self.saveAndGoBackToSettings()
-			})
-			scaleOldMoodsController.addAction(UIAlertAction(title: "No", style: .default) { _ in
-				self.saveAndGoBackToSettings()
-			})
-			customPresentViewController(presenter, viewController: scaleOldMoodsController, animated: false)
+		DependencyInjector.settings.setMinMood(minRating)
+		DependencyInjector.settings.setMaxMood(maxRating)
+
+		if DependencyInjector.settings.changed(.maxMood) || DependencyInjector.settings.changed(.minMood) {
+			if DependencyInjector.settings.changed(.minMood) {
+				post(MoodUiUtil.minRatingChanged)
+			}
+			if DependencyInjector.settings.changed(.maxMood) {
+				post(MoodUiUtil.maxRatingChanged)
+			}
+			presentScaleMoodsAlert()
 		}
 		saveAndGoBackToSettings()
 	}
@@ -89,9 +71,41 @@ final class MoodSettingsViewController: UIViewController {
 		self.navigationController?.popViewController(animated: false)
 	}
 
+	// MARK: - Helper Functions
+
 	private final func updateUI() {
-		let formatter = NumberFormatter()
-		formatter.numberStyle = .decimal
+		minMoodField.text = MoodUiUtil.valueToString(DependencyInjector.settings.minMood)
 		maxMoodField.text = MoodUiUtil.valueToString(DependencyInjector.settings.maxMood)
+	}
+
+	private final func presentScaleMoodsAlert() {
+		let scaleOldMoodsController = UIAlertController(
+			title: "Scale existing moods?",
+			message: "Applying this new \(minAndOrMax()) to existing moods will scale them to have the same ratio with the new range as they have with their current range.",
+			preferredStyle: .alert)
+		scaleOldMoodsController.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
+			DispatchQueue.global(qos: .userInitiated).async {
+				do {
+					try DependencyInjector.util.mood.scaleMoods()
+				} catch {
+					let banner = StatusBarNotificationBanner(title: "Failed to scale existing moods", style: .danger)
+					banner.show()
+				}
+			}
+			self.saveAndGoBackToSettings()
+		})
+		scaleOldMoodsController.addAction(UIAlertAction(title: "No", style: .default) { _ in
+			self.saveAndGoBackToSettings()
+		})
+		present(scaleOldMoodsController, animated: false)
+	}
+
+	private final func minAndOrMax() -> String {
+		if DependencyInjector.settings.changed(.maxMood) && DependencyInjector.settings.changed(.minMood) {
+			return "minimum and maximum"
+		} else if DependencyInjector.settings.changed(.maxMood) {
+			return "maximum"
+		}
+		return "minimum"
 	}
 }

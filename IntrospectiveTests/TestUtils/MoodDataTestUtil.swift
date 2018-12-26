@@ -11,11 +11,20 @@ import Foundation
 
 public class MoodDataTestUtil {
 
-	public static func createMood(note: String? = nil, rating: Double = 0.0, timestamp: Date = Date()) -> MoodImpl {
+	@discardableResult
+	public static func createMood(
+		note: String? = nil,
+		rating: Double = 0.0,
+		timestamp: Date = Date(),
+		min: Double = 1,
+		max: Double = 7)
+	-> MoodImpl {
 		let mood = try! DependencyInjector.sample.mood() as! MoodImpl
 		mood.rating = rating
 		mood.timestamp = timestamp
 		mood.note = note
+		mood.minRating = min
+		mood.maxRating = max
 		return mood
 	}
 }

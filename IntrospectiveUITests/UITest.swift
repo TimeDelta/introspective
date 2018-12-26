@@ -35,6 +35,12 @@ class UITest: XCTestCase {
 		coordinate.tap()
 	}
 
+	final func tapIfExists(_ element: XCUIElement) {
+		if element.exists {
+			element.tap()
+		}
+	}
+
 	// MARK: - Picker Helpers
 
 	final func setPicker(_ pickerQueryText: String? = nil, to value: String, changeCase: Bool = true) {
