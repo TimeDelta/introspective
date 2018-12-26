@@ -533,6 +533,7 @@ final class RecordActivitiesUITests: UITest {
 
 	// MARK: - Deleting
 
+	/// This test is flaky - run it a few times before believing a failure
 	func testDeletingRunningActivity_correctlyUpdatesUI() {
 		// given
 		let activityName = "grenqj"
