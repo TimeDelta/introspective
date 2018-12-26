@@ -110,6 +110,23 @@ final class QueryScreenUITests: UITest {
 		XCTAssertEqual(app.buttons["set date button"].value as? String, dateText)
 	}
 
+	func testChangingRestrictedAttributeToAttributeOfSameType_updatesAttributeRestrictionDescription() {
+		// given
+		app.tables.buttons["Add"].tap()
+		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
+		app.tables.cells.allElementsBoundByIndex[1].tap()
+		setPicker("restricted attribute", to: "Note")
+		app.buttons["save attributed button"].tap()
+
+		// when
+		app.tables.cells.allElementsBoundByIndex[1].tap()
+		setPicker("restricted attribute", to: "Name")
+		app.buttons["save attributed button"].tap()
+
+		// then
+		XCTAssert(app.tables.cells.staticTexts["Name contains ''"].exists)
+	}
+
 	func testChangingAttributeRestrictionToRestrictionWithMatchingAttribute_keepsSameValueForThatAttribute() {
 		// given
 		let date = Date() - 1.days

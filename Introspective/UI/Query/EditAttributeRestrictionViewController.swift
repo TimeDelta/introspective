@@ -89,6 +89,7 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 			return type.init(restrictedAttribute: selectedAttribute)
 		}
 		if attributeRestrictionMatchesAttribute() {
+			attributeRestriction?.restrictedAttribute = selectedAttribute
 			attributedChooserViewController.currentValue = attributeRestriction
 		} else {
 			attributedChooserViewController.currentValue = possibleValues[0]
