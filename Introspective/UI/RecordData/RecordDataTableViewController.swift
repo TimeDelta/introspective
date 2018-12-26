@@ -22,7 +22,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 	// MARK: - Instance Variables
 
 	private final var viewParams: [(id: String, height: CGFloat)] = [
-		(id: "mood", height: 100.0),
+		(id: "mood", height: 145),
 		(id: "medication", height: 52),
 		(id: "activity", height: 52),
 	]

@@ -15,7 +15,10 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	// MARK: - Static Variables
 
 	private typealias Me = RecordMoodTableViewCell
-	private static let presenter: Presentr = DependencyInjector.util.ui.customPresenter(width: .custom(size: 300), height: .custom(size: 200), center: .topCenter)
+	private static let notePresenter: Presentr = DependencyInjector.util.ui.customPresenter(width: .custom(size: 300), height: .custom(size: 200), center: .topCenter)
+	private static let ratingPresenter: Presentr = DependencyInjector.util.ui.customPresenter(width: .custom(size: 300), height: .custom(size: 70), center: .topCenter)
+
+	private static let ratingChanged = Notification.Name("moodRatingChanged")
 
 	// MARK: - IBOutlets
 
@@ -23,32 +26,48 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	@IBOutlet weak final var outOfMaxRatingLabel: UILabel!
 	@IBOutlet weak final var doneButton: UIButton!
 	@IBOutlet weak final var addNoteButton: UIButton!
+	@IBOutlet weak final var ratingButton: UIButton!
 
 	// MARK: - Instance Variables
 
+	/// This is not made private solely for testing purposes
 	final var note: String? = nil
+	private final var rating: Double = DependencyInjector.settings.maxMood / 2 {
+		didSet { updateUI() }
+	}
 
 	// MARK: - UIView Overrides
 
 	public final override func awakeFromNib() {
 		super.awakeFromNib()
 		reset()
+		updateUI()
 		observe(selector: #selector(noteSaved), name: MoodNoteViewController.noteSavedNotification)
+		observe(selector: #selector(ratingSaved), name: Me.ratingChanged)
 	}
 
 	deinit {
 		NotificationCenter.default.removeObserver(self)
 	}
 
-	// MARK: - Button Actions
+	// MARK: - Actions
 
 	@IBAction final func ratingChanged(_ sender: Any) {
 		let maxValue = DependencyInjector.settings.maxMood
-		let newValue = Double(ratingSlider.value) * maxValue
+		rating = Double(ratingSlider.value) * maxValue
+	}
 
-		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: newValue, maxRating: maxValue)
-
-		outOfMaxRatingLabel.text = MoodUiUtil.valueToString(newValue) + " / " + MoodUiUtil.valueToString(maxValue)
+	@IBAction final func setRating(_ sender: Any) {
+		let controller: RecordMoodRatingViewController = viewController(named: "moodRating", fromStoryboard: "RecordData")
+		controller.rating = rating
+		controller.notificationToSendOnAccept = Me.ratingChanged
+		NotificationCenter.default.post(
+			name: RecordDataTableViewController.showViewController,
+			object: self,
+			userInfo: info([
+				.controller: controller,
+				.presenter: Me.ratingPresenter,
+			]))
 	}
 
 	@IBAction final func presentMoodNoteController(_ sender: Any) {
@@ -59,7 +78,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 			object: self,
 			userInfo: info([
 				.controller: controller,
-				.presenter: Me.presenter,
+				.presenter: Me.notePresenter,
 			]))
 	}
 
@@ -96,12 +115,25 @@ final class RecordMoodTableViewCell: UITableViewCell {
 		}
 	}
 
+	@objc private final func ratingSaved(notification: Notification) {
+		guard let rating: Double = value(for: .number, from: notification) else { return }
+		self.rating = rating
+	}
+
 	// MARK: - Helper Functions
 
 	private final func reset() {
 		note = nil
 		addNoteButton.setTitle("Add Note", for: .normal)
-		ratingSlider.value = (ratingSlider.maximumValue - ratingSlider.minimumValue) / 2.0
-		ratingChanged(self)
+		rating = DependencyInjector.settings.maxMood / 2
+	}
+
+	private final func updateUI() {
+		let maxRating = DependencyInjector.settings.maxMood
+		ratingSlider.setValue(Float(rating / maxRating), animated: false)
+		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: rating, maxRating: maxRating)
+		ratingButton.setTitle(MoodUiUtil.valueToString(rating), for: .normal)
+		ratingButton.accessibilityValue = MoodUiUtil.valueToString(rating)
+		outOfMaxRatingLabel.text = "/ " + MoodUiUtil.valueToString(maxRating)
 	}
 }

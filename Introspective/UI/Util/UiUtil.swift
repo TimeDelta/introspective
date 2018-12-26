@@ -19,7 +19,8 @@ public protocol UiUtil {
 	func setView(_ view: UIView, enabled: Bool?, hidden: Bool?)
 	func setButton(_ button: UIButton, enabled: Bool?, hidden: Bool?)
 	func setBackButton(for viewController: UIViewController, title: String, action selector: Selector)
-	func addDoneButtonToKeyboardFor(_ textView: UITextView, target: Any?, action: Selector?)
+	func addSaveButtonToKeyboardFor(_ textView: UITextView, target: Any?, action: Selector?)
+	func addSaveButtonToKeyboardFor(_ textField: UITextField, target: Any?, action: Selector?)
 	/// Retrieve the value for the specified `UserInfoKey` from the given notification.
 	/// - Parameter keyIsOptional: If true, no error will be logged if the specified key does not exist in the user info.
 	/// - Note: Automatically logs when key is missing, wrong type or the notification does not have any user info.
@@ -97,15 +98,12 @@ public final class UiUtilImpl: UiUtil {
 		viewController.navigationItem.leftBarButtonItem = backButton
 	}
 
-	public func addDoneButtonToKeyboardFor(_ textView: UITextView, target: Any?, action: Selector?) {
-		let keyboardToolBar = UIToolbar()
-		keyboardToolBar.sizeToFit()
+	public func addSaveButtonToKeyboardFor(_ textView: UITextView, target: Any?, action: Selector?) {
+		textView.inputAccessoryView = getKeyboardToolbarWithSaveButton(target: target, action: action)
+	}
 
-		let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-		let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: target, action: action)
-		keyboardToolBar.setItems([flexibleSpace, doneButton, flexibleSpace], animated: false)
-
-		textView.inputAccessoryView = keyboardToolBar
+	public func addSaveButtonToKeyboardFor(_ textField: UITextField, target: Any?, action: Selector?) {
+		textField.inputAccessoryView = getKeyboardToolbarWithSaveButton(target: target, action: action)
 	}
 
 	/// Retrieve the value for the specified `UserInfoKey` from the given notification.
@@ -138,5 +136,18 @@ public final class UiUtilImpl: UiUtil {
 
 	public func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String) -> Type {
 		return UIStoryboard(name: storyboardName, bundle: nil).instantiateViewController(withIdentifier: controllerName) as! Type
+	}
+
+	// MARK: - Helper Functions
+
+	private final func getKeyboardToolbarWithSaveButton(target: Any?, action: Selector?) -> UIToolbar {
+		let keyboardToolbar = UIToolbar()
+		keyboardToolbar.sizeToFit()
+
+		let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+		let doneButton = UIBarButtonItem(barButtonSystemItem: .save, target: target, action: action)
+		keyboardToolbar.setItems([flexibleSpace, doneButton, flexibleSpace], animated: false)
+
+		return keyboardToolbar
 	}
 }

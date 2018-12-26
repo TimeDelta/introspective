@@ -31,12 +31,13 @@ final class MoodNoteViewController: UIViewController {
 			textView.text = note
 		}
 
-		DependencyInjector.util.ui.addDoneButtonToKeyboardFor(textView, target: self, action: #selector(doneClicked))
+		DependencyInjector.util.ui.addSaveButtonToKeyboardFor(textView, target: self, action: #selector(saveClicked))
+		textView.becomeFirstResponder()
 	}
 
 	// MARK: - Actions
 
-	@objc private final func doneClicked() {
+	@objc private final func saveClicked() {
 		NotificationCenter.default.post(
 			name: Me.noteSavedNotification,
 			object: self,

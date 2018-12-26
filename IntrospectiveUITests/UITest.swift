@@ -11,6 +11,8 @@ import SwiftDate
 
 class UITest: XCTestCase {
 
+	// MARK: - Set up / tear down
+
 	var app: XCUIApplication!
 
 	override func setUp() {
@@ -25,11 +27,15 @@ class UITest: XCTestCase {
 		super.tearDown()
 	}
 
+	// MARK: - Generic UI Helpers
+
 	final func tapCoordinate(x: Double, y: Double) {
 		let normalized = app.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
 		let coordinate = normalized.withOffset(CGVector(dx: x, dy: y))
 		coordinate.tap()
 	}
+
+	// MARK: - Picker Helpers
 
 	final func setPicker(_ pickerQueryText: String? = nil, to value: String, changeCase: Bool = true) {
 		let pickers = app.pickers
@@ -71,6 +77,8 @@ class UITest: XCTestCase {
 		}
 	}
 
+	// MARK: - Value Helpers
+
 	final func convertDateToStringComponents(_ date: Date) -> [Calendar.Component: String]{
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "LLLL"
@@ -98,6 +106,15 @@ class UITest: XCTestCase {
 		list.removeLast()
 		return list
 	}
+
+	final func isToday(_ date: Date) -> Bool {
+		let calendar = Calendar.autoupdatingCurrent
+		let dateInRegion = DateInRegion(date, region: Region(calendar: calendar, zone: calendar.timeZone))
+		let startOfDay = dateInRegion.dateAtStartOf(.day).date
+		return date.isAfterDate(startOfDay, orEqual: true, granularity: .nanosecond)
+	}
+
+	// MARK: - Text Field Helpers
 
 	final func setTextFor(field: XCUIElement, to text: String? = nil) {
 		if (field.value as? String)?.count ?? 0 > 0 {
@@ -143,10 +160,48 @@ class UITest: XCTestCase {
 		}
 	}
 
-	final func isToday(_ date: Date) -> Bool {
-		let calendar = Calendar.autoupdatingCurrent
-		let dateInRegion = DateInRegion(date, region: Region(calendar: calendar, zone: calendar.timeZone))
-		let startOfDay = dateInRegion.dateAtStartOf(.day).date
-		return date.isAfterDate(startOfDay, orEqual: true, granularity: .nanosecond)
+	// MARK: - Element Functions
+
+	private final func moodNoteButton() -> XCUIElement {
+		return app.tables.cells.buttons["set mood note button"]
+	}
+
+	private final func moodRatingButton() -> XCUIElement {
+		return app.tables.cells.buttons["set mood button"]
+	}
+
+	private final func moodRatingTextField() -> XCUIElement {
+		return app.textFields["mood rating"]
+	}
+
+	// MARK: - Sample Creators
+
+	struct Mood {
+		var rating: Double
+		var note: String?
+
+		init(_ rating: Double = 0, _ note: String? = nil) {
+			self.rating = rating
+			self.note = note
+		}
+	}
+
+	final func createMoods(_ moods: [Mood]) {
+		app.tabBars.buttons["Record Data"].tap()
+		for mood in moods {
+			moodRatingButton().tap()
+			moodRatingTextField().tap()
+			moodRatingTextField().tap()
+			moodRatingTextField().typeText(String(mood.rating))
+			app.toolbars.buttons["Save"].tap()
+			if let note = mood.note {
+				app.tables.buttons["set mood note button"].tap()
+				let noteField = app.textViews.allElementsBoundByIndex[0]
+				setTextFor(field: noteField, to: note)
+				app.toolbars.buttons["Save"].tap()
+			}
+
+			app.tables.buttons["save mood button"].tap()
+		}
 	}
 }

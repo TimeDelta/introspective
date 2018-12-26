@@ -52,7 +52,7 @@ class UnitTest: XCTestCase {
 		return Calendar.autoupdatingCurrent.date(from: dateComponents)!
 	}
 
-	fileprivate func registerMatchers() {
+	private func registerMatchers() {
 		Matcher.default.register(AnySample.self) { lhs,rhs in return lhs.equalTo(rhs) }
 		Matcher.default.register(Attribute.self) { lhs,rhs in return lhs.equalTo(rhs) }
 		Matcher.default.register(AttributeRestriction.self) { lhs,rhs in return lhs.equalTo(rhs) }
@@ -61,7 +61,7 @@ class UnitTest: XCTestCase {
 		Matcher.default.register(Sample.self) { lhs,rhs in return lhs.equalTo(rhs) }
 	}
 
-	fileprivate func resetMocks() {
+	private func resetMocks() {
 		injectionProvider = InjectionProviderMock()
 		DependencyInjector.injectionProvider = injectionProvider
 

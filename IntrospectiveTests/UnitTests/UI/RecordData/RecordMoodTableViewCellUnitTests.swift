@@ -11,31 +11,33 @@ import SwiftyMocky
 import UIKit
 @testable import Introspective
 
-class RecordMoodTableViewCellUnitTests: UnitTest {
+final class RecordMoodTableViewCellUnitTests: UnitTest {
 
-	fileprivate typealias Me = RecordMoodTableViewCellUnitTests
+	private typealias Me = RecordMoodTableViewCellUnitTests
 	private static let frame = CGRect(x: 0, y: 0, width: 100, height: 30)
 	private static let ratingSlider = UISlider(frame: frame)
 	private static let addNoteButton = UIButton(type: .system)
 	private static let doneButton = UIButton(type: .system)
 	private static let outOfMaxRatingLabel = UILabel(frame: frame)
+	private static let ratingButton = UIButton()
 
-	fileprivate var cell: RecordMoodTableViewCell!
-	fileprivate var mockMood: MoodMock!
+	private var cell: RecordMoodTableViewCell!
+	private var mockMood: MoodMock!
 
 	override func setUp() {
 		super.setUp()
+
+		mockMood = MoodMock()
+		Given(mockSampleFactory, .mood(willReturn: mockMood))
+
+		Given(mockSettings, .maxMood(getter: 7.0))
 
 		cell = RecordMoodTableViewCell()
 		cell.ratingSlider = Me.ratingSlider
 		cell.addNoteButton = Me.addNoteButton
 		cell.doneButton = Me.doneButton
 		cell.outOfMaxRatingLabel = Me.outOfMaxRatingLabel
-
-		mockMood = MoodMock()
-		Given(mockSampleFactory, .mood(willReturn: mockMood))
-
-		Given(mockSettings, .maxMood(getter: 7.0))
+		cell.ratingButton = Me.ratingButton
 	}
 
 	func testNoteGetsClearedOnSave() {

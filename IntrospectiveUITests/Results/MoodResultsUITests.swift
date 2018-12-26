@@ -11,16 +11,6 @@ import SwiftDate
 
 final class MoodResultsUITests: UITest {
 
-	private struct Mood {
-		var rating: Double
-		var note: String?
-
-		init(_ rating: Double = 0, _ note: String? = nil) {
-			self.rating = rating
-			self.note = note
-		}
-	}
-
 	final override func tearDown() {
 		app.tabBars.buttons["Settings"].tap()
 		app.tables.buttons["delete core data button"].tap()
@@ -44,7 +34,7 @@ final class MoodResultsUITests: UITest {
 		runAllMoodsQuery()
 
 		// then
-		XCTAssertEqual(app.tables.cells.staticTexts["mood"].value as? String, "4.895 / 7")
+		XCTAssertEqual(app.tables.cells.staticTexts["mood"].value as? String, "5 / 7")
 		XCTAssertEqual(app.tables.cells.staticTexts["note"].value as? String, mood.note!)
 	}
 
@@ -76,25 +66,6 @@ final class MoodResultsUITests: UITest {
 	}
 
 	// MARK: - Helper Functions
-
-	private final func createMoods(_ moods: [Mood]) {
-		app.tabBars.buttons["Record Data"].tap()
-		for mood in moods {
-			let slider = app.tables.cells.sliders["50%"]
-			let percent = CGFloat(mood.rating / 7.0)
-			let fromCoordinate = slider.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-			let targetSpot = slider.coordinate(withNormalizedOffset: CGVector(dx: percent, dy: 0.5))
-			fromCoordinate.press(forDuration: 0.1, thenDragTo: targetSpot)
-			if let note = mood.note {
-				app.tables.buttons["set mood note button"].tap()
-				let noteField = app.textViews.allElementsBoundByIndex[0]
-				setTextFor(field: noteField, to: note)
-				app.toolbars["Toolbar"].buttons["Done"].tap()
-			}
-
-			app.tables.buttons["save mood button"].tap()
-		}
-	}
 
 	private final func runAllMoodsQuery() {
 		app.tabBars.buttons["Explore"].tap()
