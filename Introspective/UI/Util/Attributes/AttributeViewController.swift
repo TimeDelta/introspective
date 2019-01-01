@@ -159,16 +159,17 @@ final class AttributeViewController: UIViewController {
 				}
 				attributeValueButton.setTitle(attributeValueDescription, for: .normal)
 			}
-		}
-		attributeValueButton.accessibilityIdentifier = "set " + attribute.name.localizedLowercase + " button"
-		do {
-			attributeValueButton.accessibilityValue = try attribute.convertToDisplayableString(from: attributeValue)
-		} catch {
-			os_log(
-				"Failed to set accessibility value on %@: %@",
-				type: .error,
-				attributeValueButton.accessibilityIdentifier!,
-				error.localizedDescription)
+
+			attributeValueButton.accessibilityIdentifier = "set " + attribute.name.localizedLowercase + " button"
+			do {
+				attributeValueButton.accessibilityValue = try attribute.convertToDisplayableString(from: attributeValue)
+			} catch {
+				os_log(
+					"Failed to set accessibility value on %@: %@",
+					type: .error,
+					attributeValueButton.accessibilityIdentifier!,
+					error.localizedDescription)
+			}
 		}
 	}
 }

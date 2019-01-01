@@ -66,9 +66,10 @@ class UITest: XCTestCase {
 		}
 		let dateStrings = convertDateToStringComponents(date)
 		if datePickerWheels.count == 3 { // date only
+			// changing the order of these can break things when the date picker has a min / max date. make sure to run all UI tests if doing so
+			datePickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: dateStrings[.year]!)
 			datePickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: dateStrings[.month]!)
 			datePickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: dateStrings[.day]!)
-			datePickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: dateStrings[.year]!)
 		} else { // date and time
 			let monthAndDayText = String(dateStrings[.month]!.prefix(3)) + " " + dateStrings[.day]!
 			var hourText = dateStrings[.hour]!
@@ -89,7 +90,7 @@ class UITest: XCTestCase {
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "LLLL"
 		let month = dateFormatter.string(from: date)
-		dateFormatter.dateFormat = "YYYY"
+		dateFormatter.dateFormat = "yyyy"
 		let year = dateFormatter.string(from: date)
 		dateFormatter.dateFormat = "d"
 		let day = dateFormatter.string(from: date)

@@ -14,7 +14,7 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 
 	@IBOutlet weak final var ratingSlider: UISlider!
 	@IBOutlet weak final var ratingTextField: UITextField!
-	@IBOutlet weak final var maxRatingLabel: UILabel!
+	@IBOutlet weak final var ratingRangeLabel: UILabel!
 
 	// MARK: - Instance Variables
 
@@ -49,6 +49,7 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 				self.rating = minRating
 				ratingTextField.text = MoodUiUtil.valueToString(minRating)
 			}
+			sendRatingChangedNotification()
 		}
 	}
 
@@ -58,7 +59,7 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 		ratingSlider.setValue(Float(rating / maxRating), animated: false)
 		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: rating, maxRating: maxRating)
 		ratingTextField.text = MoodUiUtil.valueToString(rating)
-		maxRatingLabel.text = "/ " + MoodUiUtil.valueToString(maxRating)
+		ratingRangeLabel.text = "(\(MoodUiUtil.valueToString(minRating))-\(MoodUiUtil.valueToString(maxRating)))"
 	}
 
 	private final func sendRatingChangedNotification() {

@@ -55,8 +55,9 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	// MARK: - Actions
 
 	@IBAction final func ratingChanged(_ sender: Any) {
-		let maxValue = DependencyInjector.settings.maxMood
-		rating = Double(ratingSlider.value) * maxValue
+		let min = DependencyInjector.settings.minMood
+		let max = DependencyInjector.settings.maxMood
+		rating = Double(ratingSlider.value) * (max - min) + min
 	}
 
 	@IBAction final func setRating(_ sender: Any) {
@@ -88,7 +89,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 		do {
 			let mood = try DependencyInjector.sample.mood()
 			mood.timestamp = Date()
-			mood.rating = Double(ratingSlider.value) * DependencyInjector.settings.maxMood
+			mood.rating = rating
 			mood.note = note
 			mood.minRating = DependencyInjector.settings.minMood
 			mood.maxRating = DependencyInjector.settings.maxMood
@@ -128,16 +129,18 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	private final func reset() {
 		note = nil
 		addNoteButton.setTitle("Add Note", for: .normal)
-		rating = DependencyInjector.settings.maxMood / 2
+		let min = DependencyInjector.settings.minMood
+		let max = DependencyInjector.settings.maxMood
+		rating = (max - min) / 2 + min
 	}
 
 	@objc private final func updateUI() {
-		let minRating = DependencyInjector.settings.minMood
-		let maxRating = DependencyInjector.settings.maxMood
-		ratingSlider.setValue(Float(rating / (maxRating - minRating)), animated: false)
-		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: rating, maxRating: maxRating)
+		let min = DependencyInjector.settings.minMood
+		let max = DependencyInjector.settings.maxMood
+		ratingSlider.setValue(Float((rating - min) / (max - min)), animated: false)
+		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: rating, maxRating: max)
 		ratingButton.setTitle(MoodUiUtil.valueToString(rating), for: .normal)
 		ratingButton.accessibilityValue = MoodUiUtil.valueToString(rating)
-		ratingRangeLabel.text = "(\(MoodUiUtil.valueToString(minRating))-\(MoodUiUtil.valueToString(maxRating)))"
+		ratingRangeLabel.text = "(\(MoodUiUtil.valueToString(min))-\(MoodUiUtil.valueToString(max)))"
 	}
 }

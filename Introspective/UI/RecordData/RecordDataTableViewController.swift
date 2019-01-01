@@ -63,6 +63,14 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		return viewParams[indexPath.row].height
 	}
 
+	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		if indexPath.row == 1 {
+			navigationController?.pushViewController(viewController(named: "medicationsTable"), animated: false)
+		} else if indexPath.row == 2 {
+			navigationController?.pushViewController(viewController(named: "activitiesTable"), animated: false)
+		}
+	}
+
 	// MARK: - Received Notifications
 
 	@objc private final func showViewController(notification: Notification) {

@@ -434,15 +434,23 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="ydT-Bc-tIx">
-                                            <rect key="frame" x="16" y="6" width="214" height="30"/>
+                                            <rect key="frame" x="16" y="6" width="197" height="30"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             <accessibility key="accessibilityConfiguration" identifier="rating slider" label="rating slider"/>
                                             <connections>
                                                 <action selector="sliderValueChanged:" destination="4Ko-sN-MHE" eventType="valueChanged" id="8ae-qY-c4h"/>
                                             </connections>
                                         </slider>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="/ max" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ohS-xB-Xcb">
+                                            <rect key="frame" x="301" y="12" width="58" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                            <accessibility key="accessibilityConfiguration" identifier="rating range" label="rating range"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                         <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="baC-7h-5Uh">
-                                            <rect key="frame" x="236" y="6" width="74" height="30"/>
+                                            <rect key="frame" x="219" y="6" width="74" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                             <accessibility key="accessibilityConfiguration" identifier="mood rating" label="mood rating"/>
                                             <nil key="textColor"/>
@@ -452,18 +460,10 @@
                                                 <action selector="textFieldValueChanged:" destination="4Ko-sN-MHE" eventType="editingChanged" id="25m-hh-5ax"/>
                                             </connections>
                                         </textField>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="/ max" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ohS-xB-Xcb">
-                                            <rect key="frame" x="317" y="12" width="42" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                            <accessibility key="accessibilityConfiguration" identifier="max rating" label="max rating"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="maxRatingLabel" destination="ohS-xB-Xcb" id="ADh-WI-t5E"/>
+                                    <outlet property="ratingRangeLabel" destination="ohS-xB-Xcb" id="ADh-WI-t5E"/>
                                     <outlet property="ratingSlider" destination="ydT-Bc-tIx" id="FUw-zH-qHL"/>
                                     <outlet property="ratingTextField" destination="baC-7h-5Uh" id="Ttf-S9-rzS"/>
                                 </connections>

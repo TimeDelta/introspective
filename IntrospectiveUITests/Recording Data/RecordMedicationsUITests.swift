@@ -20,7 +20,7 @@ final class RecordMedicationsUITests: UITest {
 
 	final override func setUp() {
 		super.setUp()
-		app.tables.buttons["Medications"].tap()
+		app.tables.cells.staticTexts["Medications"].tap()
 	}
 
 	final override func tearDown() {

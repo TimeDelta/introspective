@@ -60,8 +60,10 @@ final class MoodSettingsUITests: UITest {
 		app.tables.staticTexts["Mood"].tap()
 
 		// then
-		XCTAssertEqual(app.textFields["minimum mood"].value as? String, "12")
-		XCTAssertEqual(app.textFields["maximum mood"].value as? String, "13")
+		let expectedMin = originalMin == "0" ? "2" : originalMin + "2"
+		let expectedMax = originalMax == "0" ? "3" : originalMax + "3"
+		XCTAssertEqual(app.textFields["minimum mood"].value as? String, expectedMin)
+		XCTAssertEqual(app.textFields["maximum mood"].value as? String, expectedMax)
 	}
 
 	func testPressingReset_resetsAllASettings() {

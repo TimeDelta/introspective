@@ -92,7 +92,7 @@ final class RecordMoodsUITests: UITest {
 	// MARK: - Element Functions
 
 	private final func ratingRangeLabel() -> XCUIElement {
-		return app.tables.cells.staticTexts["max rating"]
+		return app.tables.cells.staticTexts["rating range"]
 	}
 
 	private final func moodSlider() -> XCUIElement {

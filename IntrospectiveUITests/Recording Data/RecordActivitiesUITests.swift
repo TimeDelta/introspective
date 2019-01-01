@@ -13,7 +13,7 @@ final class RecordActivitiesUITests: UITest {
 
 	final override func setUp() {
 		super.setUp()
-		app.tables.buttons["Activities"].tap()
+		app.tables.cells.staticTexts["Activities"].tap()
 	}
 
 	final override func tearDown() {
@@ -614,7 +614,7 @@ final class RecordActivitiesUITests: UITest {
 
 		// when
 		app.navigationBars.buttons["Back"].tap()
-		app.tables.cells.buttons["Activities"].tap()
+		app.tables.cells.staticTexts["Activities"].tap()
 
 		// then
 		activityCell1 = app.tables.cells.staticTexts[activityName1]
@@ -634,7 +634,7 @@ final class RecordActivitiesUITests: UITest {
 
 		// when
 		app.navigationBars.buttons["Back"].tap()
-		app.tables.cells.buttons["Activities"].tap()
+		app.tables.cells.staticTexts["Activities"].tap()
 
 		// then
 		activityCell1 = app.tables.cells.staticTexts[activityName1]

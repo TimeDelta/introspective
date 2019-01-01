@@ -26,7 +26,7 @@ public final class DateOnlyAttribute: DateAttributeBase {
 			variableName: variableName,
 			optional: optional,
 			includeTime: false,
-			format: "MMMM dd, YYYY",
+			format: "MMMM d, yyyy",
 			earliestDate: earliestDate,
 			latestDate: latestDate)
 	}
