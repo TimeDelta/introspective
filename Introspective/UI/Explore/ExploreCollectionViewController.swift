@@ -28,7 +28,7 @@ final class ExploreCollectionViewController: UICollectionViewController {
 
 
 	final override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return 3
+		return 2
 	}
 
 	final override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -37,9 +37,6 @@ final class ExploreCollectionViewController: UICollectionViewController {
 		}
 		if indexPath.row == 1 {
 			return collectionView.dequeueReusableCell(withReuseIdentifier: Me.graphCellReuseIdentifier, for: indexPath)
-		}
-		if indexPath.row == 2 {
-			return collectionView.dequeueReusableCell(withReuseIdentifier: Me.unifiedViewCellReuseIdentifier, for: indexPath)
 		}
 
 		os_log("Unknown row when trying to create UICollectionViewCell: %d", type: .error, indexPath.row)
