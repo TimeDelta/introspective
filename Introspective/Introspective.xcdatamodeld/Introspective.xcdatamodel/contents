@@ -73,8 +73,8 @@
     <entity name="Settings" representedClassName=".SettingsImpl" syncable="YES">
         <attribute name="storedAutoIgnoreEnabled" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="storedAutoIgnoreSeconds" attributeType="Integer 64" defaultValueString="15" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="storedMaxMood" attributeType="Double" defaultValueString="7" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="storedMinMood" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="storedMaxMood" attributeType="Double" defaultValueString="10" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="storedMinMood" attributeType="Double" defaultValueString="1" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="storedScaleMoodsOnImport" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <entity name="Tag" representedClassName=".Tag" syncable="YES">

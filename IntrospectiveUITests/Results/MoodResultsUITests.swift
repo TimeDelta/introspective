@@ -34,7 +34,7 @@ final class MoodResultsUITests: UITest {
 		runAllMoodsQuery()
 
 		// then
-		XCTAssertEqual(app.tables.cells.staticTexts["mood"].value as? String, "5 / 7")
+		XCTAssertEqual(app.tables.cells.staticTexts["mood"].value as? String, "5 / 10")
 		XCTAssertEqual(app.tables.cells.staticTexts["note"].value as? String, mood.note!)
 	}
 
@@ -61,7 +61,7 @@ final class MoodResultsUITests: UITest {
 		// then
 		let timestampText = DateFormatter.localizedString(from: newTimestamp, dateStyle: .medium, timeStyle: .short)
 		XCTAssertEqual(app.tables.cells.staticTexts["timestamp"].value as? String, timestampText)
-		XCTAssertEqual(app.tables.cells.staticTexts["mood"].value as? String, "6 / 7")
+		XCTAssertEqual(app.tables.cells.staticTexts["mood"].value as? String, "6 / 10")
 		XCTAssertEqual(app.tables.cells.staticTexts["note"].value as? String, newNote)
 	}
 
