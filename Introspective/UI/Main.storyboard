@@ -13,7 +13,7 @@
         <scene sceneID="ge1-LL-uDT">
             <objects>
                 <viewControllerPlaceholder storyboardName="Explore" id="Pfg-2j-xxE" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="RXL-Ah-Xlu"/>
+                    <tabBarItem key="tabBarItem" title="Explore" image="magnifying-glass" id="RXL-Ah-Xlu"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lXc-vy-2Z0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -134,7 +134,7 @@
                             <outlet property="delegate" destination="kls-EK-Qha" id="dre-vx-fqH"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Import Data" id="QVs-3A-O61"/>
+                    <tabBarItem key="tabBarItem" title="Import" image="import" id="QVs-3A-O61"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="loR-PS-4LR" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -145,7 +145,7 @@
         <scene sceneID="eij-4H-gzb">
             <objects>
                 <viewControllerPlaceholder storyboardName="Settings" id="ZBu-td-hVa" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="yyz-Wk-J7o"/>
+                    <tabBarItem key="tabBarItem" title="Settings" image="gear" id="yyz-Wk-J7o"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wkJ-jE-4Vj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -155,11 +155,17 @@
         <scene sceneID="Ie7-6y-X3K">
             <objects>
                 <viewControllerPlaceholder storyboardName="RecordData" id="bye-Kw-rc5" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="zXa-3o-mY9"/>
+                    <tabBarItem key="tabBarItem" title="Record" image="hand-with-pen" selectedImage="hand-with-pen" id="zXa-3o-mY9"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r9B-KK-gFj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-262" y="454"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="gear" width="45" height="45"/>
+        <image name="hand-with-pen" width="45" height="45"/>
+        <image name="import" width="45" height="45"/>
+        <image name="magnifying-glass" width="45" height="45"/>
+    </resources>
 </document>
