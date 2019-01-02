@@ -5,6 +5,8 @@
 **/xcuserdata/
 **/xcdebugger/
 *.framework/
+*.png
+*.xcf
 mocky.yml
 Pods/
 Podfile.lock
