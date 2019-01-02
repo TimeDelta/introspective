@@ -44,7 +44,7 @@ final class ActivityResultsUITests: UITest {
 	}
 
 	private final func createActivityDefinition(name: String) {
-		app.tabBars.buttons["Record Data"].tap()
+		app.tabBars.buttons["Record"].tap()
 		app.tables.cells.staticTexts["Activities"].tap()
 		app.buttons["Add"].tap()
 		app.tables.textFields["activity name"].tap()

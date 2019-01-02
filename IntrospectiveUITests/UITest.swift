@@ -194,7 +194,7 @@ class UITest: XCTestCase {
 	}
 
 	final func createMoods(_ moods: [Mood]) {
-		app.tabBars.buttons["Record Data"].tap()
+		app.tabBars.buttons["Record"].tap()
 		for mood in moods {
 			moodRatingButton().tap()
 			moodRatingTextField().tap()

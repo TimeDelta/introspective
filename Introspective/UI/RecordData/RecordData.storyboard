@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ya5-iB-kDg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="81h-K0-B6G">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -10,14 +10,6 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Record Data-->
-        <scene sceneID="yff-7W-zX8">
-            <objects>
-                <pageViewController title="Record Data" transitionStyle="pageCurl" navigationOrientation="horizontal" spineLocation="min" id="Ya5-iB-kDg" customClass="RecordDataPageViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="mzD-Pd-QnE" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-38" y="-460"/>
-        </scene>
         <!--Record Data-->
         <scene sceneID="NkV-lw-EHo">
             <objects>
@@ -840,10 +832,10 @@
             </objects>
             <point key="canvasLocation" x="2812" y="-460.11994002998506"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Record-->
         <scene sceneID="Kiu-Iy-IFB">
             <objects>
-                <navigationController storyboardIdentifier="recordData" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="81h-K0-B6G" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="recordData" title="Record" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="81h-K0-B6G" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Dd7-zq-5ni">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>

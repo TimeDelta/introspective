@@ -373,7 +373,7 @@ final class RecordActivitiesUITests: UITest {
 		app.tables.cells.staticTexts["Activity"].tap()
 		setAutoIgnore(enabled: true, seconds: String(minTime))
 		app.navigationBars.buttons["Settings"].tap()
-		app.tabBars.buttons["Record Data"].tap()
+		app.tabBars.buttons["Record"].tap()
 
 		// when
 		app.tables.cells.staticTexts[activityName].tap()
@@ -393,7 +393,7 @@ final class RecordActivitiesUITests: UITest {
 		app.tables.cells.staticTexts["Activity"].tap()
 		setAutoIgnore(enabled: true, seconds: String(minTime))
 		app.navigationBars.buttons["Settings"].tap()
-		app.tabBars.buttons["Record Data"].tap()
+		app.tabBars.buttons["Record"].tap()
 
 		// when
 		app.tables.cells.staticTexts[activityName].tap()
