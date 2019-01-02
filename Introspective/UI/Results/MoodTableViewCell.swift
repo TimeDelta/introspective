@@ -17,7 +17,10 @@ final class MoodTableViewCell: UITableViewCell {
 			guard let mood = mood else { return }
 			moodRatingColorLabel.backgroundColor = MoodUiUtil.colorForMood(rating: mood.rating, maxRating: mood.maxRating)
 			moodRatingColorLabel.text = nil
-			moodRatingLabel.text = MoodUiUtil.valueToString(mood.rating) + " / " + MoodUiUtil.valueToString(mood.maxRating)
+			let ratingText = MoodUiUtil.valueToString(mood.rating)
+			let minText = MoodUiUtil.valueToString(mood.minRating)
+			let maxText = MoodUiUtil.valueToString(mood.maxRating)
+			moodRatingLabel.text = ratingText + " (\(minText)-\(maxText))"
 			timestampLabel.text = DependencyInjector.util.calendar.string(for: mood.timestamp, dateStyle: .medium, timeStyle: .short)
 			noteLabel.text = mood.note
 			moodRatingLabel.accessibilityValue = moodRatingLabel.text
