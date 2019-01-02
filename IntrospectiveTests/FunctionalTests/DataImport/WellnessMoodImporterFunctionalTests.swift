@@ -14,8 +14,9 @@ import SwiftyMocky
 // This has to be a functional test because can't make a constructor for WellnessMoodImporter that doesn't require standing up CoreData
 final class WellnessMoodImporterFunctionalTests: ImporterTest {
 
+	// MARK: - Static Variables
+
 	private typealias Me = WellnessMoodImporterFunctionalTests
-	private static let maxRating = 7.0
 	private static let date1Text = "4/4/18, 17:18"
 	private static let date1 = CalendarUtilImpl().date(from: date1Text, format: "M/d/yy, HH:mm")!
 	private static let rating1: Double = 4
@@ -44,11 +45,34 @@ Date,Time,Rating,Note
 \(date5Text),\(rating5),
 """
 
+	// MARK: - Instance Variables
+
 	private final var importer: WellnessMoodImporterImpl!
+	private final var scaleMoods: Bool! {
+		didSet {
+			DependencyInjector.settings.setScaleMoodsOnImport(scaleMoods)
+			DependencyInjector.settings.save()
+		}
+	}
+	private var minMood = 1.0 {
+		didSet {
+			DependencyInjector.settings.setMinMood(minMood)
+			DependencyInjector.settings.save()
+		}
+	}
+	private var maxMood = 7.0 {
+		didSet {
+			DependencyInjector.settings.setMaxMood(maxMood)
+			DependencyInjector.settings.save()
+		}
+	}
+
+	// MARK: - Setup
 
 	final override func setUp() {
 		super.setUp()
 		importer = try! DependencyInjector.db.new(WellnessMoodImporterImpl.self)
+		DependencyInjector.settings.save()
 	}
 
 	// MARK: - Valid Data
@@ -57,17 +81,18 @@ Date,Time,Rating,Note
 		// given
 		importer.lastImport = Me.date5
 		importer.importOnlyNewData = false
+		scaleMoods = false
 		useInput(Me.validImportFileText)
 
 		// when
 		try importer.importData(from: url)
 
 		// then
-		XCTAssert(mood1WasImported())
-		XCTAssert(mood2WasImported())
-		XCTAssert(mood3WasImported())
-		XCTAssert(mood4WasImported())
-		XCTAssert(mood5WasImported())
+		XCTAssert(mood1WasImported(), "Mood 1 was not imported correctly")
+		XCTAssert(mood2WasImported(), "Mood 2 was not imported correctly")
+		XCTAssert(mood3WasImported(), "Mood 3 was not imported correctly")
+		XCTAssert(mood4WasImported(), "Mood 4 was not imported correctly")
+		XCTAssert(mood5WasImported(), "Mood 5 was not imported correctly")
 		XCTAssertEqual(importer.lastImport, Me.date5)
 	}
 
@@ -75,17 +100,40 @@ Date,Time,Rating,Note
 		// given
 		importer.lastImport = Me.date2
 		importer.importOnlyNewData = true
+		scaleMoods = false
 		useInput(Me.validImportFileText)
 
 		// when
 		try importer.importData(from: url)
 
 		// then
-		XCTAssertFalse(mood1WasImported())
-		XCTAssertFalse(mood2WasImported())
-		XCTAssert(mood3WasImported())
-		XCTAssert(mood4WasImported())
-		XCTAssert(mood5WasImported())
+		XCTAssertFalse(mood1WasImported(), "Mood 1 should not have been imported")
+		XCTAssertFalse(mood2WasImported(), "Mood 2 should not have been imported")
+		XCTAssert(mood3WasImported(), "Mood 3 was not imported correctly")
+		XCTAssert(mood4WasImported(), "Mood 4 was not imported correctly")
+		XCTAssert(mood5WasImported(), "Mood 5 was not imported correctly")
+		XCTAssertEqual(importer.lastImport, Me.date5)
+	}
+
+	func testGivenValidDataWithScaleMoodsEnabled_importData_correctlyImportsData() throws {
+		// given
+		importer.lastImport = nil
+		importer.importOnlyNewData = true
+		scaleMoods = true
+		minMood = 3.0
+		maxMood = 15.0
+
+		useInput(Me.validImportFileText)
+
+		// when
+		try importer.importData(from: url)
+
+		// then
+		XCTAssert(mood1WasImported(), "Mood 1 was not imported correctly")
+		XCTAssert(mood2WasImported(), "Mood 2 was not imported correctly")
+		XCTAssert(mood3WasImported(), "Mood 3 was not imported correctly")
+		XCTAssert(mood4WasImported(), "Mood 4 was not imported correctly")
+		XCTAssert(mood5WasImported(), "Mood 5 was not imported correctly")
 		XCTAssertEqual(importer.lastImport, Me.date5)
 	}
 
@@ -105,32 +153,34 @@ Date,Time,Rating,Note
 	// MARK: - Helper Functions
 
 	private final func mood1WasImported() -> Bool {
-		return moodWasImportedA(at: Me.date1, withRating: Me.rating1, outOf: Me.maxRating, andNote: Me.note1)
+		return moodWasImported(at: Me.date1, withRating: Me.rating1, andNote: Me.note1)
 	}
 
 	private final func mood2WasImported() -> Bool {
-		return moodWasImportedA(at: Me.date2, withRating: Me.rating2, outOf: Me.maxRating, andNote: Me.note2)
+		return moodWasImported(at: Me.date2, withRating: Me.rating2, andNote: Me.note2)
 	}
 
 	private final func mood3WasImported() -> Bool {
-		return moodWasImportedA(at: Me.date3, withRating: Me.rating3, outOf: Me.maxRating, andNote: Me.note3)
+		return moodWasImported(at: Me.date3, withRating: Me.rating3, andNote: Me.note3)
 	}
 
 	private final func mood4WasImported() -> Bool {
-		return moodWasImportedA(at: Me.date4, withRating: Me.rating4, outOf: Me.maxRating, andNote: Me.note4)
+		return moodWasImported(at: Me.date4, withRating: Me.rating4, andNote: Me.note4)
 	}
 
 	private final func mood5WasImported() -> Bool {
-		return moodWasImportedA(at: Me.date5, withRating: Me.rating5, outOf: Me.maxRating, andNote: nil)
+		return moodWasImported(at: Me.date5, withRating: Me.rating5, andNote: nil)
 	}
 
-	private final func moodWasImportedA(at timestamp: Date, withRating rating: Double, outOf maxRating: Double, andNote note: String?) -> Bool {
+	private final func moodWasImported(at timestamp: Date, withRating rating: Double, andNote note: String?) -> Bool {
+		let scaledRating = scaleMoods ? scale(rating) : rating
 		let moodsFetchRequest: NSFetchRequest<MoodImpl> = MoodImpl.fetchRequest()
 		moodsFetchRequest.predicate = NSPredicate(
 			format: "%K == %@ AND %K == %f AND %K == %f",
 			"timestamp", timestamp as NSDate,
-			"rating", rating,
-			"maxRating", maxRating)
+			"rating", scaledRating,
+			"minRating", minMood,
+			"maxRating", maxMood)
 		var notePredicate: NSPredicate
 		if let note = note {
 			notePredicate = NSPredicate(format: "%K == %@", "note", note)
@@ -139,5 +189,13 @@ Date,Time,Rating,Note
 		}
 		moodsFetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [moodsFetchRequest.predicate!, notePredicate])
 		return try! DependencyInjector.db.query(moodsFetchRequest).count > 0
+	}
+
+	private final func scale(_ rating: Double) -> Double {
+		let newMin = DependencyInjector.settings.minMood
+		let newMax = DependencyInjector.settings.maxMood
+		let oldMin = 1.0
+		let oldMax = 7.0
+		return ((newMax - newMin) * (rating - oldMin) / (oldMax - oldMin)) + newMin
 	}
 }

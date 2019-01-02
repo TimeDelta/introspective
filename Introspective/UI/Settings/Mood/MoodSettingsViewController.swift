@@ -17,6 +17,7 @@ final class MoodSettingsViewController: UIViewController {
 
 	@IBOutlet weak final var minMoodField: UITextField!
 	@IBOutlet weak final var maxMoodField: UITextField!
+	@IBOutlet weak final var scaleMoodsOnImportSwitch: UISwitch!
 
 	// MARK: - UIViewController Overrides
 
@@ -29,6 +30,12 @@ final class MoodSettingsViewController: UIViewController {
 	}
 
 	// MARK: - Actions
+
+	@IBAction final func showAutoScaleMoodsOnImportDescription(_ sender: Any) {
+		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
+		controller.descriptionText = "Automatically scale any imported moods to match the minimum and maximum moods at the time of import."
+		present(controller, using: DependencyInjector.util.ui.defaultPresenter)
+	}
 
 	@objc private func reset(_ sender: Any) {
 		DependencyInjector.settings.reset()
@@ -53,6 +60,7 @@ final class MoodSettingsViewController: UIViewController {
 
 		DependencyInjector.settings.setMinMood(minRating)
 		DependencyInjector.settings.setMaxMood(maxRating)
+		DependencyInjector.settings.setScaleMoodsOnImport(scaleMoodsOnImportSwitch.isOn)
 
 		if DependencyInjector.settings.changed(.maxMood) || DependencyInjector.settings.changed(.minMood) {
 			if DependencyInjector.settings.changed(.minMood) {
@@ -76,6 +84,7 @@ final class MoodSettingsViewController: UIViewController {
 	private final func updateUI() {
 		minMoodField.text = MoodUiUtil.valueToString(DependencyInjector.settings.minMood)
 		maxMoodField.text = MoodUiUtil.valueToString(DependencyInjector.settings.maxMood)
+		scaleMoodsOnImportSwitch.isOn = DependencyInjector.settings.scaleMoodsOnImport
 	}
 
 	private final func presentScaleMoodsAlert() {

@@ -15,6 +15,7 @@ class FunctionalTest: XCTestCase {
 	final var injectionProvider: InjectionProviderMock!
 
 	final var database: FunctionalTestDatabase!
+	final var settings: SettingsImpl!
 
 	final var queryFactory: QueryFactoryImpl!
 	final var sampleFactory: SampleFactoryImpl!
@@ -34,6 +35,9 @@ class FunctionalTest: XCTestCase {
 
 		database = FunctionalTestDatabase()
 		Given(injectionProvider, .database(willReturn: database))
+
+		settings = try! database.new(SettingsImpl.self)
+		Given(injectionProvider, .settings(willReturn: settings))
 
 		queryFactory = QueryFactoryImpl()
 		sampleFactory = SampleFactoryImpl()

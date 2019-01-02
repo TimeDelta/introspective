@@ -75,6 +75,7 @@
         <attribute name="storedAutoIgnoreSeconds" attributeType="Integer 64" defaultValueString="15" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="storedMaxMood" attributeType="Double" defaultValueString="7" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="storedMinMood" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="storedScaleMoodsOnImport" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <entity name="Tag" representedClassName=".Tag" syncable="YES">
         <attribute name="name" attributeType="String" syncable="YES"/>
@@ -92,7 +93,7 @@
         <element name="Medication" positionX="-54" positionY="9" width="128" height="165"/>
         <element name="MedicationDose" positionX="-45" positionY="45" width="128" height="105"/>
         <element name="Mood" positionX="-63" positionY="-18" width="128" height="135"/>
-        <element name="Settings" positionX="-63" positionY="9" width="128" height="105"/>
+        <element name="Settings" positionX="-63" positionY="9" width="128" height="120"/>
         <element name="Tag" positionX="-18" positionY="81" width="128" height="60"/>
         <element name="WellnessMoodImporter" positionX="-54" positionY="18" width="128" height="60"/>
     </elements>

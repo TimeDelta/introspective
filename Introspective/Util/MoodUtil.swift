@@ -13,6 +13,7 @@ import os
 public protocol MoodUtil {
 
 	func scaleMoods() throws
+	func scaleMood(_ mood: Mood)
 }
 
 public final class MoodUtilImpl: MoodUtil {

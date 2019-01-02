@@ -13,6 +13,7 @@ import CoreData
 public enum Setting {
 	case minMood
 	case maxMood
+	case scaleMoodsOnImport
 	case autoIgnoreEnabled
 	case autoIgnoreSeconds
 }
@@ -26,6 +27,9 @@ public protocol Settings: CoreDataObject {
 
 	var maxMood: Double { get }
 	func setMaxMood(_ value: Double)
+
+	var scaleMoodsOnImport: Bool { get }
+	func setScaleMoodsOnImport(_ value: Bool)
 
 	var autoIgnoreEnabled: Bool { get }
 	func setAutoIgnoreEnabled(_ value: Bool)
@@ -70,6 +74,18 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		}
 	}
 
+	// MARK: - Scale Moods On Import
+
+	private final var newScaleMoodsOnImport: Bool? = nil
+	public final var scaleMoodsOnImport: Bool {
+		return newScaleMoodsOnImport ?? storedScaleMoodsOnImport
+	}
+	public final func setScaleMoodsOnImport(_ value: Bool) {
+		if value != storedScaleMoodsOnImport {
+			newScaleMoodsOnImport = value
+		}
+	}
+
 	// MARK: - Auto Ignore Enabled
 
 	private final var newAutoIgnoreEnabled: Bool? = nil
@@ -100,6 +116,7 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		switch (setting) {
 			case .minMood: return newMinMood != nil
 			case .maxMood: return newMaxMood != nil
+			case .scaleMoodsOnImport: return newScaleMoodsOnImport != nil
 			case .autoIgnoreEnabled: return newAutoIgnoreEnabled != nil
 			case .autoIgnoreSeconds: return newAutoIgnoreSeconds != nil
 		}
@@ -108,6 +125,7 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	public final func reset() {
 		newMinMood = nil
 		newMaxMood = nil
+		newScaleMoodsOnImport = nil
 		newAutoIgnoreEnabled = nil
 		newAutoIgnoreSeconds = nil
 	}
@@ -115,6 +133,7 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	public final func save() {
 		storedMinMood = minMood
 		storedMaxMood = maxMood
+		storedScaleMoodsOnImport = scaleMoodsOnImport
 		storedAutoIgnoreEnabled = autoIgnoreEnabled
 		storedAutoIgnoreSeconds = autoIgnoreSeconds
 		DependencyInjector.db.save()
@@ -132,6 +151,7 @@ extension SettingsImpl {
 
 	@NSManaged fileprivate var storedMinMood: Double
 	@NSManaged fileprivate var storedMaxMood: Double
+	@NSManaged fileprivate var storedScaleMoodsOnImport: Bool
 	@NSManaged fileprivate var storedAutoIgnoreEnabled: Bool
 	@NSManaged fileprivate var storedAutoIgnoreSeconds: Int
 }

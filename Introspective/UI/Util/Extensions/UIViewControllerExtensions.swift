@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Presentr
 
 extension UIViewController {
 
@@ -49,5 +50,9 @@ extension UIViewController {
 		DispatchQueue.main.async {
 			NotificationCenter.default.post(name: name, object: object, userInfo: userInfo)
 		}
+	}
+
+	final func present(_ viewController: UIViewController, using presenter: Presentr, animated: Bool = false) {
+		customPresentViewController(presenter, viewController: viewController, animated: animated)
 	}
 }

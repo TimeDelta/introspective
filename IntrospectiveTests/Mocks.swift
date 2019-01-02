@@ -6000,20 +6000,32 @@ class MoodUtilMock: MoodUtil, Mock {
 		}
     }
 
+    func scaleMood(_ mood: Mood) {
+        addInvocation(.m_scaleMood__mood(Parameter<Mood>.value(`mood`)))
+		let perform = methodPerformValue(.m_scaleMood__mood(Parameter<Mood>.value(`mood`))) as? (Mood) -> Void
+		perform?(`mood`)
+    }
+
 
     fileprivate enum MethodType {
         case m_scaleMoods
+        case m_scaleMood__mood(Parameter<Mood>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
             case (.m_scaleMoods, .m_scaleMoods):
                 return true 
+            case (.m_scaleMood__mood(let lhsMood), .m_scaleMood__mood(let rhsMood)):
+                guard Parameter.compare(lhs: lhsMood, rhs: rhsMood, with: matcher) else { return false } 
+                return true 
+            default: return false
             }
         }
 
         func intValue() -> Int {
             switch self {
             case .m_scaleMoods: return 0
+            case let .m_scaleMood__mood(p0): return p0.intValue
             }
         }
     }
@@ -6043,6 +6055,9 @@ class MoodUtilMock: MoodUtil, Mock {
         fileprivate var method: MethodType
 
         static func scaleMoods() -> Verify { return Verify(method: .m_scaleMoods)}
+        static func scaleMood(_ mood: Parameter<Mood>) -> Verify { return Verify(method: .m_scaleMood__mood(`mood`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `mood` label")
+		static func scaleMood(mood: Parameter<Mood>) -> Verify { return Verify(method: .m_scaleMood__mood(`mood`))}
     }
 
     struct Perform {
@@ -6051,6 +6066,13 @@ class MoodUtilMock: MoodUtil, Mock {
 
         static func scaleMoods(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_scaleMoods, performs: perform)
+        }
+        static func scaleMood(_ mood: Parameter<Mood>, perform: @escaping (Mood) -> Void) -> Perform {
+            return Perform(method: .m_scaleMood__mood(`mood`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `mood` label")
+		static func scaleMood(mood: Parameter<Mood>, perform: @escaping (Mood) -> Void) -> Perform {
+            return Perform(method: .m_scaleMood__mood(`mood`), performs: perform)
         }
     }
 
@@ -8912,6 +8934,13 @@ class SettingsMock: Settings, Mock, StaticMock {
 	}
 	private var __p_maxMood: (Double)?
 
+    var scaleMoodsOnImport: Bool {
+		get {	invocations.append(.p_scaleMoodsOnImport_get); return __p_scaleMoodsOnImport ?? givenGetterValue(.p_scaleMoodsOnImport_get, "SettingsMock - stub value for scaleMoodsOnImport was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_scaleMoodsOnImport = newValue }
+	}
+	private var __p_scaleMoodsOnImport: (Bool)?
+
     var autoIgnoreEnabled: Bool {
 		get {	invocations.append(.p_autoIgnoreEnabled_get); return __p_autoIgnoreEnabled ?? givenGetterValue(.p_autoIgnoreEnabled_get, "SettingsMock - stub value for autoIgnoreEnabled was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
@@ -8946,6 +8975,12 @@ class SettingsMock: Settings, Mock, StaticMock {
     func setMaxMood(_ value: Double) {
         addInvocation(.m_setMaxMood__value(Parameter<Double>.value(`value`)))
 		let perform = methodPerformValue(.m_setMaxMood__value(Parameter<Double>.value(`value`))) as? (Double) -> Void
+		perform?(`value`)
+    }
+
+    func setScaleMoodsOnImport(_ value: Bool) {
+        addInvocation(.m_setScaleMoodsOnImport__value(Parameter<Bool>.value(`value`)))
+		let perform = methodPerformValue(.m_setScaleMoodsOnImport__value(Parameter<Bool>.value(`value`))) as? (Bool) -> Void
 		perform?(`value`)
     }
 
@@ -9033,6 +9068,7 @@ class SettingsMock: Settings, Mock, StaticMock {
     fileprivate enum MethodType {
         case m_setMinMood__value(Parameter<Double>)
         case m_setMaxMood__value(Parameter<Double>)
+        case m_setScaleMoodsOnImport__value(Parameter<Bool>)
         case m_setAutoIgnoreEnabled__value(Parameter<Bool>)
         case m_setAutoIgnoreSeconds__value(Parameter<Int>)
         case m_changed__setting(Parameter<Setting>)
@@ -9040,6 +9076,7 @@ class SettingsMock: Settings, Mock, StaticMock {
         case m_save
         case p_minMood_get
         case p_maxMood_get
+        case p_scaleMoodsOnImport_get
         case p_autoIgnoreEnabled_get
         case p_autoIgnoreSeconds_get
 
@@ -9049,6 +9086,9 @@ class SettingsMock: Settings, Mock, StaticMock {
                 guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
                 return true 
             case (.m_setMaxMood__value(let lhsValue), .m_setMaxMood__value(let rhsValue)):
+                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                return true 
+            case (.m_setScaleMoodsOnImport__value(let lhsValue), .m_setScaleMoodsOnImport__value(let rhsValue)):
                 guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
                 return true 
             case (.m_setAutoIgnoreEnabled__value(let lhsValue), .m_setAutoIgnoreEnabled__value(let rhsValue)):
@@ -9066,6 +9106,7 @@ class SettingsMock: Settings, Mock, StaticMock {
                 return true 
             case (.p_minMood_get,.p_minMood_get): return true
             case (.p_maxMood_get,.p_maxMood_get): return true
+            case (.p_scaleMoodsOnImport_get,.p_scaleMoodsOnImport_get): return true
             case (.p_autoIgnoreEnabled_get,.p_autoIgnoreEnabled_get): return true
             case (.p_autoIgnoreSeconds_get,.p_autoIgnoreSeconds_get): return true
             default: return false
@@ -9076,6 +9117,7 @@ class SettingsMock: Settings, Mock, StaticMock {
             switch self {
             case let .m_setMinMood__value(p0): return p0.intValue
             case let .m_setMaxMood__value(p0): return p0.intValue
+            case let .m_setScaleMoodsOnImport__value(p0): return p0.intValue
             case let .m_setAutoIgnoreEnabled__value(p0): return p0.intValue
             case let .m_setAutoIgnoreSeconds__value(p0): return p0.intValue
             case let .m_changed__setting(p0): return p0.intValue
@@ -9083,6 +9125,7 @@ class SettingsMock: Settings, Mock, StaticMock {
             case .m_save: return 0
             case .p_minMood_get: return 0
             case .p_maxMood_get: return 0
+            case .p_scaleMoodsOnImport_get: return 0
             case .p_autoIgnoreEnabled_get: return 0
             case .p_autoIgnoreSeconds_get: return 0
             }
@@ -9102,6 +9145,9 @@ class SettingsMock: Settings, Mock, StaticMock {
         }
         static func maxMood(getter defaultValue: Double...) -> PropertyStub {
             return Given(method: .p_maxMood_get, products: defaultValue.map({ Product.return($0) }))
+        }
+        static func scaleMoodsOnImport(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_scaleMoodsOnImport_get, products: defaultValue.map({ Product.return($0) }))
         }
         static func autoIgnoreEnabled(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_autoIgnoreEnabled_get, products: defaultValue.map({ Product.return($0) }))
@@ -9135,6 +9181,9 @@ class SettingsMock: Settings, Mock, StaticMock {
         static func setMaxMood(_ value: Parameter<Double>) -> Verify { return Verify(method: .m_setMaxMood__value(`value`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
 		static func setMaxMood(value: Parameter<Double>) -> Verify { return Verify(method: .m_setMaxMood__value(`value`))}
+        static func setScaleMoodsOnImport(_ value: Parameter<Bool>) -> Verify { return Verify(method: .m_setScaleMoodsOnImport__value(`value`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
+		static func setScaleMoodsOnImport(value: Parameter<Bool>) -> Verify { return Verify(method: .m_setScaleMoodsOnImport__value(`value`))}
         static func setAutoIgnoreEnabled(_ value: Parameter<Bool>) -> Verify { return Verify(method: .m_setAutoIgnoreEnabled__value(`value`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
 		static func setAutoIgnoreEnabled(value: Parameter<Bool>) -> Verify { return Verify(method: .m_setAutoIgnoreEnabled__value(`value`))}
@@ -9148,6 +9197,7 @@ class SettingsMock: Settings, Mock, StaticMock {
         static func save() -> Verify { return Verify(method: .m_save)}
         static var minMood: Verify { return Verify(method: .p_minMood_get) }
         static var maxMood: Verify { return Verify(method: .p_maxMood_get) }
+        static var scaleMoodsOnImport: Verify { return Verify(method: .p_scaleMoodsOnImport_get) }
         static var autoIgnoreEnabled: Verify { return Verify(method: .p_autoIgnoreEnabled_get) }
         static var autoIgnoreSeconds: Verify { return Verify(method: .p_autoIgnoreSeconds_get) }
     }
@@ -9169,6 +9219,13 @@ class SettingsMock: Settings, Mock, StaticMock {
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
 		static func setMaxMood(value: Parameter<Double>, perform: @escaping (Double) -> Void) -> Perform {
             return Perform(method: .m_setMaxMood__value(`value`), performs: perform)
+        }
+        static func setScaleMoodsOnImport(_ value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
+            return Perform(method: .m_setScaleMoodsOnImport__value(`value`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
+		static func setScaleMoodsOnImport(value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
+            return Perform(method: .m_setScaleMoodsOnImport__value(`value`), performs: perform)
         }
         static func setAutoIgnoreEnabled(_ value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
             return Perform(method: .m_setAutoIgnoreEnabled__value(`value`), performs: perform)

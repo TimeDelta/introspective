@@ -43,6 +43,9 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 					currentMood!.maxRating = 7
 					currentMood!.rating = Double(parts[2])!
 					currentMood!.setSource(.wellness)
+					if DependencyInjector.settings.scaleMoodsOnImport {
+						DependencyInjector.util.mood.scaleMood(currentMood!)
+					}
 					currentNote = parts[3...].joined()
 				} else {
 					currentMood = nil
