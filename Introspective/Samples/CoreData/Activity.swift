@@ -112,25 +112,25 @@ public class Activity: NSManagedObject, CoreDataSample, Importable {
 		if attribute.equalTo(Me.nameAttribute) {
 			guard let castedValue = value as? String else { throw AttributeError.typeMismatch }
 			definition.name = castedValue
-			DependencyInjector.db.save()
+			try DependencyInjector.db.save()
 			return
 		}
 		if attribute.equalTo(CommonSampleAttributes.startDate) {
 			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
 			startDate = castedValue
-			DependencyInjector.db.save()
+			try DependencyInjector.db.save()
 			return
 		}
 		if attribute.equalTo(Me.endDateAttribute) {
 			if !(value is Date?) { throw AttributeError.typeMismatch }
 			endDate = (value as! Date?)
-			DependencyInjector.db.save()
+			try DependencyInjector.db.save()
 			return
 		}
 		if attribute.equalTo(Me.noteAttribute) {
 			if !(value is String?) { throw AttributeError.typeMismatch }
 			note = (value as! String?)
-			DependencyInjector.db.save()
+			try DependencyInjector.db.save()
 			return
 		}
 		if attribute.equalTo(Me.tagsAttribute) {
@@ -165,7 +165,7 @@ public class Activity: NSManagedObject, CoreDataSample, Importable {
 				addToTags(tag)
 			}
 		}
-		DependencyInjector.db.save()
+		try DependencyInjector.db.save()
 	}
 
 	// MARK: - Equatable

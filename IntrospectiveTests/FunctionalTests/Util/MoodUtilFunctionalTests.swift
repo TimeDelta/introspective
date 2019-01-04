@@ -23,7 +23,7 @@ final class MoodUtilFunctionalTests: FunctionalTest {
 		MoodDataTestUtil.createMood(rating: 6, min: 0, max: 7)
 		DependencyInjector.settings.setMinMood(1)
 		DependencyInjector.settings.setMaxMood(8)
-		DependencyInjector.settings.save()
+		try DependencyInjector.settings.save()
 
 		// when
 		try util.scaleMoods()
@@ -37,7 +37,7 @@ final class MoodUtilFunctionalTests: FunctionalTest {
 		MoodDataTestUtil.createMood(rating: 6, min: 0, max: 7)
 		DependencyInjector.settings.setMinMood(1)
 		DependencyInjector.settings.setMaxMood(15)
-		DependencyInjector.settings.save()
+		try DependencyInjector.settings.save()
 
 		// when
 		try util.scaleMoods()
@@ -51,7 +51,7 @@ final class MoodUtilFunctionalTests: FunctionalTest {
 		MoodDataTestUtil.createMood(rating: 10, min: 1, max: 11)
 		DependencyInjector.settings.setMinMood(0)
 		DependencyInjector.settings.setMaxMood(5)
-		DependencyInjector.settings.save()
+		try DependencyInjector.settings.save()
 
 		// when
 		try util.scaleMoods()
@@ -66,7 +66,7 @@ final class MoodUtilFunctionalTests: FunctionalTest {
 		MoodDataTestUtil.createMood(rating: 4, min: 1, max: 4)
 		DependencyInjector.settings.setMinMood(1)
 		DependencyInjector.settings.setMaxMood(8)
-		DependencyInjector.settings.save()
+		try DependencyInjector.settings.save()
 
 		// when
 		try util.scaleMoods()

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import os
 
 public protocol ExtraInformation: CustomStringConvertible {
 
@@ -25,8 +26,18 @@ public protocol ExtraInformation: CustomStringConvertible {
 // An abstract base class for everything that implements ExtraInformation
 public class AnyInformation: ExtraInformation {
 
-	public var name: String { get { fatalError("Must override name") } }
-	public var description: String { get { fatalError("Must override description") } }
+	public var name: String {
+		get {
+			os_log("Must override name", type: .error)
+			return ""
+		}
+	}
+	public var description: String {
+		get {
+			os_log("Must override description", type: .error)
+			return ""
+		}
+	}
 	public final var attribute: Attribute
 
 	public final var startDate: Date?
@@ -36,8 +47,17 @@ public class AnyInformation: ExtraInformation {
 		self.attribute = attribute
 	}
 
-	public func compute(forSamples samples: [Sample]) -> String { fatalError("Must override compute()") }
-	public func computeGraphable(forSamples samples: [Sample]) -> String { fatalError("Must override computeGraphable()") }
+	public func compute(forSamples samples: [Sample]) -> String {
+		os_log("Must override compute()", type: .error)
+		return ""
+	}
+	public func computeGraphable(forSamples samples: [Sample]) -> String {
+		os_log("Must override computeGraphable()", type: .error)
+		return ""
+	}
 
-	public func equalTo(_ other: ExtraInformation) -> Bool { fatalError("Must override equalTo()") }
+	public func equalTo(_ other: ExtraInformation) -> Bool {
+		os_log("Must override equalTo()", type: .error)
+		return type(of: self) == type(of: other)
+	}
 }

@@ -118,12 +118,12 @@ Pill name,Taken on,Time
 		}
 	}
 
-	func testGivenNonNilLastImportDate_resetLastImportDate_setsLastImportToNil() {
+	func testGivenNonNilLastImportDate_resetLastImportDate_setsLastImportToNil() throws {
 		// given
 		importer.lastImport = Date()
 
 		// when
-		importer.resetLastImportDate()
+		try importer.resetLastImportDate()
 
 		// then
 		XCTAssertNil(importer.lastImport)

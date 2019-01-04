@@ -19,7 +19,7 @@ public final class ActivityDataTestUtil {
 			definition.addToTags(try! DependencyInjector.db.pull(savedObject: tag, fromSameContextAs: definition))
 		}
 		definition.recordScreenIndex = 0
-		DependencyInjector.db.save()
+		try! DependencyInjector.db.save()
 		return definition
 	}
 
@@ -38,7 +38,7 @@ public final class ActivityDataTestUtil {
 		for tag in tags {
 			activity.addToTags(try! DependencyInjector.db.pull(savedObject: tag, fromSameContextAs: activity))
 		}
-		DependencyInjector.db.save()
+		try! DependencyInjector.db.save()
 		return activity
 	}
 

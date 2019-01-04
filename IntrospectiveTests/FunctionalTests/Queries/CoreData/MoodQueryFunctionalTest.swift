@@ -31,10 +31,10 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		}
 	}
 
-	func testGivenOneMoodInDatabaseAndQueryContainsNoRestrictions_runQuery_returnsThatMood() {
+	func testGivenOneMoodInDatabaseAndQueryContainsNoRestrictions_runQuery_returnsThatMood() throws {
 		// given
 		let expectedSamples = [createMood(note: "this is a test note")]
-		DependencyInjector.db.save()
+		try DependencyInjector.db.save()
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -47,12 +47,12 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		}
 	}
 
-	func testGivenMultipleMoodsInDatabaseAndRestrictionOnNoteThatShouldOnlyReturnOneMood_runQuery_returnsThatOneMood() {
+	func testGivenMultipleMoodsInDatabaseAndRestrictionOnNoteThatShouldOnlyReturnOneMood_runQuery_returnsThatOneMood() throws {
 		// given
 		let note = "this is a test note"
 		let expectedSamples = [createMood(note: note)]
 		let _ = createMood(note: "something that doesn't contain the target note text")
-		DependencyInjector.db.save()
+		try DependencyInjector.db.save()
 
 		let noteRestriction = ContainsStringAttributeRestriction(restrictedAttribute: MoodImpl.note, substring: note)
 		query.attributeRestrictions.append(noteRestriction)
@@ -68,7 +68,7 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		}
 	}
 
-	func testGivenMultipleMoodsInDatabaseThatMatchGivenNoteRestriction_runQuery_returnsAllMatchingMoods() {
+	func testGivenMultipleMoodsInDatabaseThatMatchGivenNoteRestriction_runQuery_returnsAllMatchingMoods() throws {
 		// given
 		let note = "this is a test note"
 		let expectedSamples = [
@@ -76,7 +76,7 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 			createMood(note: note, rating: 2.0)
 		]
 		let _ = createMood()
-		DependencyInjector.db.save()
+		try DependencyInjector.db.save()
 
 		let noteRestriction = ContainsStringAttributeRestriction(restrictedAttribute: MoodImpl.note, substring: note)
 		query.attributeRestrictions.append(noteRestriction)
@@ -92,7 +92,7 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		}
 	}
 
-	func testGivenQueryHasOneRestrictionForEachAttributeAndMultipleMoodsInDatabaseWithOnlyOneThatMatches_runQuery_returnsThatMood() {
+	func testGivenQueryHasOneRestrictionForEachAttributeAndMultipleMoodsInDatabaseWithOnlyOneThatMatches_runQuery_returnsThatMood() throws {
 		// given
 		let note = "this is a test note"
 		let expectedSamples = [createMood(note: note, rating: 1.0)]
@@ -100,7 +100,7 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		let _ = createMood(note: note, rating: 2.0)
 		let _ = createMood(rating: 1.0)
 		let _ = createMood()
-		DependencyInjector.db.save()
+		try DependencyInjector.db.save()
 
 		let noteRestriction = ContainsStringAttributeRestriction(restrictedAttribute: MoodImpl.note, substring: note)
 		let timestampRestriction = AfterDateAndTimeAttributeRestriction(restrictedAttribute: CommonSampleAttributes.timestamp, date: Date() - 1.days)

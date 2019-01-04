@@ -14,7 +14,7 @@ public final class TagDataTestUtil {
 	public static func createTag(name: String = "") -> Tag {
 		let tag = try! DependencyInjector.db.new(Tag.self)
 		tag.name = name
-		DependencyInjector.db.save()
+		try! DependencyInjector.db.save()
 		return tag
 	}
 }

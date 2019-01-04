@@ -26,7 +26,7 @@ public class MedicationDataTestUtil {
 		medication.startedOn = startedOn
 		medication.notes = note
 		medication.recordScreenIndex = recordScreenIndex
-		DependencyInjector.db.save()
+		try! DependencyInjector.db.save()
 		return medication
 	}
 
@@ -37,7 +37,7 @@ public class MedicationDataTestUtil {
 		dose.timestamp = timestamp
 		dose.dosage = dosage
 		sameContextMedication.addToDoses(dose)
-		DependencyInjector.db.save()
+		try! DependencyInjector.db.save()
 		return dose
 	}
 }

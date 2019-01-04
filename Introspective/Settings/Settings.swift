@@ -40,7 +40,7 @@ public protocol Settings: CoreDataObject {
 	func changed(_ setting: Setting) -> Bool
 
 	func reset()
-	func save()
+	func save() throws
 }
 
 public final class SettingsImpl: NSManagedObject, Settings {
@@ -130,13 +130,13 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		newAutoIgnoreSeconds = nil
 	}
 
-	public final func save() {
+	public final func save() throws {
 		storedMinMood = minMood
 		storedMaxMood = maxMood
 		storedScaleMoodsOnImport = scaleMoodsOnImport
 		storedAutoIgnoreEnabled = autoIgnoreEnabled
 		storedAutoIgnoreSeconds = autoIgnoreSeconds
-		DependencyInjector.db.save()
+		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 		reset()
 	}
 }

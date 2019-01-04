@@ -51,19 +51,19 @@ Date,Time,Rating,Note
 	private final var scaleMoods: Bool! {
 		didSet {
 			DependencyInjector.settings.setScaleMoodsOnImport(scaleMoods)
-			DependencyInjector.settings.save()
+			try! DependencyInjector.settings.save()
 		}
 	}
 	private var minMood = 1.0 {
 		didSet {
 			DependencyInjector.settings.setMinMood(minMood)
-			DependencyInjector.settings.save()
+			try! DependencyInjector.settings.save()
 		}
 	}
 	private var maxMood = 7.0 {
 		didSet {
 			DependencyInjector.settings.setMaxMood(maxMood)
-			DependencyInjector.settings.save()
+			try! DependencyInjector.settings.save()
 		}
 	}
 
@@ -72,7 +72,7 @@ Date,Time,Rating,Note
 	final override func setUp() {
 		super.setUp()
 		importer = try! DependencyInjector.db.new(WellnessMoodImporterImpl.self)
-		DependencyInjector.settings.save()
+		try! DependencyInjector.settings.save()
 	}
 
 	// MARK: - Valid Data
@@ -139,12 +139,12 @@ Date,Time,Rating,Note
 
 	// MARK: - resetLastImportDate()
 
-	func testGivenNonNilLastImportDate_resetLastImportDate_setsLastImportToNil() {
+	func testGivenNonNilLastImportDate_resetLastImportDate_setsLastImportToNil() throws {
 		// given
 		importer.lastImport = Date()
 
 		// when
-		importer.resetLastImportDate()
+		try importer.resetLastImportDate()
 
 		// then
 		XCTAssertNil(importer.lastImport)

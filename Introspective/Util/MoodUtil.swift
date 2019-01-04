@@ -25,7 +25,7 @@ public final class MoodUtilImpl: MoodUtil {
 			for mood in moods {
 				scaleMood(mood)
 			}
-			DependencyInjector.db.save()
+			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 			MoodQueryImpl.updatingMoodsInBackground = false
 		} catch {
 			os_log("Failed to scale old moods: %@", type: .error, error.localizedDescription)

@@ -49,7 +49,12 @@ final class ImportDataTableViewController: UITableViewController {
 				self.promptForDataImport(indexPath)
 			})
 			actionSheet.addAction(UIAlertAction(title: "Reset Last Import Date", style: .default){ _ in
-				self.importer.resetLastImportDate()
+				do {
+					try self.importer.resetLastImportDate()
+				} catch {
+					os_log("Failed to reset last import date: %@", type: .error, error.localizedDescription)
+					self.showError(title: "Failed to reset last import date", message: "Sorry for the inconvenience.")
+				}
 			})
 			actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel){ _ in
 				self.tableView.deselectRow(at: indexPath, animated: false)

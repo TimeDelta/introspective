@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os
 
 public final class ContainerView<T: UIViewController>: UIView {
 
@@ -19,7 +20,8 @@ public final class ContainerView<T: UIViewController>: UIView {
 	}
 
 	public required init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented - cannot use with storyboards")
+		os_log("init(coder:) has not been implemented - cannot use with storyboards")
+		return nil
 	}
 
 	final func install(_ controller: T) {

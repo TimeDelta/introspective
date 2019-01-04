@@ -170,10 +170,14 @@ public final class EditMedicationViewController: UIViewController {
 	}
 
 	@IBAction final func saveButtonPressed(_ sender: Any) {
+		var medication: Medication! = self.medication
+		var deleteMedicationOnFail = false
 		do {
 			if medication == nil {
 				medication = try DependencyInjector.db.new(Medication.self)
 				medication!.setSource(.introspective)
+				medication.recordScreenIndex = Int16(try DependencyInjector.db.query(Medication.fetchRequest()).count)
+				deleteMedicationOnFail = true
 			}
 			medication!.name = nameTextField.text!
 			medication!.frequency = frequency
@@ -184,19 +188,23 @@ public final class EditMedicationViewController: UIViewController {
 			if !notesTextView.text.isEmpty {
 				medication!.notes = notesTextView.text
 			}
+			try DependencyInjector.db.save()
 
-			DispatchQueue.main.async {
-				NotificationCenter.default.post(
-					name: self.notificationToSendOnAccept,
-					object: self,
-					userInfo: self.info([
-						.medication: self.medication as Any,
-					]))
-			}
+			post(
+				notificationToSendOnAccept,
+				userInfo: info([
+					.medication: medication as Any,
+				]))
 			navigationController?.popViewController(animated: false)
 		} catch {
-			os_log("Failed to save medication: %@", type: .error, error.localizedDescription)
-			showError(title: "Could not save medication", message: "Sorry for the inconvenience")
+			os_log("Failed to save medication: %@%@", type: .error, error.localizedDescription, (error as NSError).userInfo)
+			if deleteMedicationOnFail {
+				try? DependencyInjector.db.delete(medication)
+			}
+			showError(
+				title: "Could not save medication",
+				message: "Sorry for the inconvenience",
+				tryAgain: { self.saveButtonPressed(sender) })
 		}
 	}
 

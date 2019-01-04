@@ -95,10 +95,15 @@ public final class MedicationDosesTableViewController: UITableViewController {
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 				let indexToDelete = self.medication.doses.index(of: dose)
 				self.medication.removeFromDoses(at: indexToDelete)
-				DependencyInjector.db.delete(dose)
-				self.resetFilteredDoses()
-				tableView.deleteRows(at: [indexPath], with: .fade)
-				tableView.reloadData()
+				do {
+					try retryOnFail({ try DependencyInjector.db.delete(dose) }, maxRetries: 2)
+					self.resetFilteredDoses()
+					tableView.deleteRows(at: [indexPath], with: .fade)
+					tableView.reloadData()
+				} catch {
+					os_log("Failed to delete medication dose: %@", type: .error, error.localizedDescription)
+					self.showError(title: "Failed to dleete dose", message: "Sorry for the inconvenience.")
+				}
 			})
 			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
 			self.present(alert, animated: false, completion: nil)
@@ -135,10 +140,10 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		resetDateRangeButtonTitle()
 	}
 
-	@objc private final func medicationDoseEdited(notification: Notification) {
+	@objc private final func medicationDoseEdited(notification: Notification) throws {
 		if let dose: MedicationDose = value(for: .dose, from: notification) {
 			medication.replaceDoses(at: lastClickedIndex, with: dose)
-			DependencyInjector.db.save()
+			try DependencyInjector.db.save()
 			resetFilteredDoses()
 			tableView.reloadData()
 		}

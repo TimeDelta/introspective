@@ -38,7 +38,11 @@ public class NotEqualToAttributeRestriction: AnyAttributeRestriction, Equatable 
 	}
 
 	public required init(restrictedAttribute: Attribute) {
-		fatalError("This should never be called because this is an abstract base class")
+		os_log("This should never be called because this is an abstract base class", type: .error)
+		self.valueAttribute = restrictedAttribute
+		self.value = nil
+		self.areEqual = { _,_  in true }
+		super.init(restrictedAttribute: restrictedAttribute, attributes: [])
 	}
 
 	public final override func value(of attribute: Attribute) throws -> Any? {
@@ -103,7 +107,8 @@ public class TypedNotEqualToAttributeRestrictionBase<ValueType: Equatable>: NotE
 	}
 
 	public required init(restrictedAttribute: Attribute) {
-		fatalError("This should never be called because this is an abstract base class")
+		os_log("This should never be called because this is an abstract base class")
+		super.init(restrictedAttribute: restrictedAttribute)
 	}
 
 	public override func set(attribute: Attribute, to value: Any?) throws {

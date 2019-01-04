@@ -197,7 +197,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			activityDefinition.autoNote = autoNote
 			try updateTagsForActivityDefinition(&activityDefinition)
 
-			DependencyInjector.db.save()
+			try DependencyInjector.db.save()
 
 			DispatchQueue.main.async {
 				NotificationCenter.default.post(
@@ -211,7 +211,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 		} catch {
 			DependencyInjector.db.clearUnsavedChanges()
 
-			os_log("Failed to edit ActivityDefinition: %@", type: .error, error.localizedDescription)
+			os_log("Failed to create, edit or save ActivityDefinition: %@", type: .error, error.localizedDescription)
 			showError(title: "Could not save", message: "Something went wrong while trying to save this activity. Sorry for the inconvenience.")
 		}
 	}
@@ -235,7 +235,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			try activityDefinition.setTags(allTags)
 		} catch {
 			for tag in tagsCreated {
-				DependencyInjector.db.delete(tag)
+				try? DependencyInjector.db.delete(tag)
 			}
 			throw error
 		}

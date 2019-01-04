@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import os
 
 public protocol SampleQuery: Query {
 	associatedtype SampleType: Sample
@@ -52,9 +53,8 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 		}
 	}
 
-	/// - Returns: A method that can be called to stop the query
 	func run() {
-		fatalError("Must override and call queryDone() when finished")
+		os_log("Must override and call queryDone() when finished", type: .error)
 	}
 
 	public func stop() {

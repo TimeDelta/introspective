@@ -160,7 +160,7 @@ public final class EditMoodTableViewController: UITableViewController {
 			mood?.timestamp = timestamp
 			mood?.rating = rating
 			mood?.note = note
-			DependencyInjector.db.save()
+			try DependencyInjector.db.save()
 			DispatchQueue.main.async {
 				NotificationCenter.default.post(
 					name: self.notificationToSendOnAccept,
@@ -171,7 +171,7 @@ public final class EditMoodTableViewController: UITableViewController {
 			}
 			navigationController?.popViewController(animated: false)
 		} catch {
-			os_log("Failed to save create mood: %@", type: .error, error.localizedDescription)
+			os_log("Failed to save create or save mood: %@", type: .error, error.localizedDescription)
 			showError(title: "Failed to save mood", message: "Sorry for the inconvenience")
 		}
 	}

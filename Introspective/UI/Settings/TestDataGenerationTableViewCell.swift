@@ -65,10 +65,10 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 				var weights = [Weight]()
 
 				let activityDefinitions = self.createRandomActivityDefinitions(5)
-				DependencyInjector.db.save()
+				try! DependencyInjector.db.save()
 
 				let medications = self.createRandomMedications(5)
-				DependencyInjector.db.save()
+				try! DependencyInjector.db.save()
 
 				for daysAgo in 0 ... 60 {
 					sleepRecords.append(self.randomSleepSample(daysAgo))
@@ -93,7 +93,7 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 					}
 				}
 
-				DependencyInjector.db.save()
+				try! DependencyInjector.db.save()
 				HealthKitDataTestUtil.save(bloodPressures)
 				HealthKitDataTestUtil.save(bmis)
 				HealthKitDataTestUtil.save(heartRates)

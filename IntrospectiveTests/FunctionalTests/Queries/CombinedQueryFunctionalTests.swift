@@ -10,9 +10,9 @@ import XCTest
 import SwiftDate
 @testable import Introspective
 
-class CombinedQueryFunctionalTests: QueryFunctionalTest {
+final class CombinedQueryFunctionalTests: QueryFunctionalTest {
 
-	fileprivate var query: Query!
+	private final var query: Query!
 
 	override func setUp() {
 		super.setUp()
@@ -31,7 +31,7 @@ class CombinedQueryFunctionalTests: QueryFunctionalTest {
 		super.tearDown()
 	}
 
-	func testGivenQueryForAllHeartRatesWithinTenDaysOfAMoodGreaterThanOrEqualToTwoWithNoteThatContainsTheWordSad_runQuery_returnsCorrectHeartRates() {
+	func testGivenQueryForAllHeartRatesWithinTenDaysOfAMoodGreaterThanOrEqualToTwoWithNoteThatContainsTheWordSad_runQuery_returnsCorrectHeartRates() throws {
 		// given
 		let numberOfDaysWithinMood = 10
 		let daySpread = 10
@@ -65,7 +65,7 @@ class CombinedQueryFunctionalTests: QueryFunctionalTest {
 		let _ = createMood(timestamp: latestTargetMoodDate)
 		let _ = createMood(note: targetSubstring, rating: minMood - 0.1)
 		let _ = createMood(rating: minMood + 1)
-		DependencyInjector.db.save()
+		try DependencyInjector.db.save()
 
 		query.subQuery = (matcher: matcher, query: subQuery)
 
@@ -80,7 +80,7 @@ class CombinedQueryFunctionalTests: QueryFunctionalTest {
 		}
 	}
 
-	func testGivenQueryForHeartRatesOnDaysWithAWeightGreaterThan170AndAMoodLessThan2_runQuery_returnsCorrectHeartRates() {
+	func testGivenQueryForHeartRatesOnDaysWithAWeightGreaterThan170AndAMoodLessThan2_runQuery_returnsCorrectHeartRates() throws {
 		// given
 		let startOfTargetDay = CalendarUtilImpl().start(of: .day, in: Date())
 
@@ -105,7 +105,7 @@ class CombinedQueryFunctionalTests: QueryFunctionalTest {
 		let _ = createMood(rating: maxMood + 1, timestamp: startOfTargetDay - 1.hours)
 		let _ = createMood(rating: maxMood + 2, timestamp: startOfTargetDay + 1.days)
 		let _ = createMood(rating: maxMood + 2, timestamp: startOfTargetDay + 5.days) // on same wrong day as an expected weight
-		DependencyInjector.db.save()
+		try DependencyInjector.db.save()
 
 		let weightSubQuery = WeightQueryImpl()
 		let minWeight = 170.0
@@ -131,7 +131,7 @@ class CombinedQueryFunctionalTests: QueryFunctionalTest {
 		}
 	}
 
-	fileprivate func createMood(note: String? = nil, rating: Double = 0.0, timestamp: Date = Date()) -> MoodImpl {
+	private func createMood(note: String? = nil, rating: Double = 0.0, timestamp: Date = Date()) -> MoodImpl {
 		return MoodDataTestUtil.createMood(note: note, rating: rating, timestamp: timestamp)
 	}
 }

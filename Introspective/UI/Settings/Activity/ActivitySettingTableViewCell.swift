@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os
 
 public class ActivitySettingTableViewCell: UITableViewCell {
 
@@ -17,6 +18,6 @@ public class ActivitySettingTableViewCell: UITableViewCell {
 	// MARK: - Functions
 
 	func reset() {
-		fatalError("reset() not overriden")
+		os_log("reset() not overriden", type: .error)
 	}
 }

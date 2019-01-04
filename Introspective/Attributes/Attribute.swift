@@ -63,5 +63,7 @@ public class AttributeBase: Attribute {
 		self.optional = optional
 	}
 
-	public func convertToDisplayableString(from value: Any?) throws -> String { fatalError("Must override convertToDisplayableString") }
+	public func convertToDisplayableString(from value: Any?) throws -> String {
+		throw NotOverridenError(functionName: "convertToDisplayableString")
+	}
 }

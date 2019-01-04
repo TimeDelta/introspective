@@ -49,7 +49,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 				medication = try DependencyInjector.db.pull(savedObject: medication, fromSameContextAs: dose)
 				dose.medication = medication
 				medication.addToDoses(dose)
-				DependencyInjector.db.save()
+				try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 				updateLastTakenButton()
 			}
 		} catch {

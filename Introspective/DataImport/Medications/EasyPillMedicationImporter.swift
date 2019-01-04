@@ -70,9 +70,9 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 		}
 	}
 
-	public final func resetLastImportDate() {
+	public final func resetLastImportDate() throws {
 		lastImport = nil
-		DependencyInjector.db.save()
+		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 	}
 
 	// MARK: - Helper Functions
@@ -101,7 +101,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 				let allMedications = try DependencyInjector.db.query(Medication.fetchRequest())
 				medication.recordScreenIndex = Int16(allMedications.count)
 				medication.setSource(.easyPill)
-				setMedication(medication, name: name, startedOn: startedOn, dosage: dosage, notes: notes, frequencyText: frequencyText)
+				try setMedication(medication, name: name, startedOn: startedOn, dosage: dosage, notes: notes, frequencyText: frequencyText)
 			} catch {
 				throw GenericDisplayableError(
 					title: "Data Write Error",
@@ -109,14 +109,14 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 			}
 		} else if medicationsWithCurrentName.count == 1 && !importOnlyNewData {
 			let medication = medicationsWithCurrentName[0]
-			setMedication(medication, name: name, startedOn: startedOn, dosage: dosage, notes: notes, frequencyText: frequencyText)
+			try setMedication(medication, name: name, startedOn: startedOn, dosage: dosage, notes: notes, frequencyText: frequencyText)
 		} else if !importOnlyNewData {
 			throw AmbiguousUpdateToExistingDataError(
 				"Update requested for '\(name)' but found \(medicationsWithCurrentName.count) medications with that name.")
 		}
 	}
 
-	private final func setMedication(_ medication: Medication, name: String, startedOn: Date, dosage: Dosage?, notes: String, frequencyText: String) {
+	private final func setMedication(_ medication: Medication, name: String, startedOn: Date, dosage: Dosage?, notes: String, frequencyText: String) throws {
 		medication.name = name
 		medication.dosage = dosage
 		if !frequencyText.isEmpty {
@@ -129,7 +129,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 			medication.notes = notes
 		}
 		medication.startedOn = startedOn
-		DependencyInjector.db.save()
+		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 	}
 
 	private final func getFrequency(_ frequencyText: String) -> Frequency? {

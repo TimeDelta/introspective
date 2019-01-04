@@ -58,12 +58,12 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 			}
 		}
 		lastImport = latestDate
-		DependencyInjector.db.save()
+		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 	}
 
-	public final func resetLastImportDate() {
+	public final func resetLastImportDate() throws {
 		lastImport = nil
-		DependencyInjector.db.save()
+		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 	}
 
 	// MARK: - Helper Functions

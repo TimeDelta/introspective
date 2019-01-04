@@ -35,9 +35,13 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 				let _ = csv.dropFirst()
 			}
 
+			lastImport = latestDate
+			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+
 			os_log("Cleaning up Activity import", type: .info)
 			try DependencyInjector.util.importer.cleanUpImportedData(forType: ActivityDefinition.self)
 			try DependencyInjector.util.importer.cleanUpImportedData(forType: Activity.self)
+			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 		} catch {
 			os_log("Deleting created activities due to error: %@", error.localizedDescription)
 			do {
@@ -49,14 +53,11 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 
 			throw error
 		}
-
-		lastImport = latestDate
-		DependencyInjector.db.save()
 	}
 
-	public func resetLastImportDate() {
+	public func resetLastImportDate() throws {
 		lastImport = nil
-		DependencyInjector.db.save()
+		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 	}
 
 	// MARK: - Helper Functions

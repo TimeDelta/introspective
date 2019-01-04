@@ -94,11 +94,11 @@ final class RecordMoodTableViewCell: UITableViewCell {
 			mood.minRating = DependencyInjector.settings.minMood
 			mood.maxRating = DependencyInjector.settings.maxMood
 			mood.setSource(.introspective)
-			DependencyInjector.db.save()
+			try DependencyInjector.db.save()
 
 			reset()
 		} catch {
-			os_log("Failed to create mood: %@", type: .error, error.localizedDescription)
+			os_log("Failed to create or save mood: %@", type: .error, error.localizedDescription)
 			NotificationCenter.default.post(
 				name: RecordDataTableViewController.showErrorMessage,
 				object: self,

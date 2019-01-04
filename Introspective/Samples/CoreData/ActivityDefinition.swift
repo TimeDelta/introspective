@@ -38,7 +38,7 @@ public class ActivityDefinition: NSManagedObject, CoreDataObject, Importable {
 				addToTags(tag)
 			}
 		}
-		DependencyInjector.db.save()
+		try DependencyInjector.db.save()
 	}
 
 	// MARK: - Equatable

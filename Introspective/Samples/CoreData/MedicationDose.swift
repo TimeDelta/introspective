@@ -82,19 +82,19 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 				throw AttributeError.unsupportedValue
 			}
 			medication = matchingMedications[0]
-			DependencyInjector.db.save()
+			try DependencyInjector.db.save()
 			return
 		}
 		if attribute.equalTo(Me.dosage) {
 			guard let castedValue = value as? Dosage? else { throw AttributeError.typeMismatch }
 			dosage = castedValue
-			DependencyInjector.db.save()
+			try DependencyInjector.db.save()
 			return
 		}
 		if attribute.equalTo(CommonSampleAttributes.timestamp) {
 			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
 			timestamp = castedValue
-			DependencyInjector.db.save()
+			try DependencyInjector.db.save()
 			return
 		}
 		throw AttributeError.unknownAttribute

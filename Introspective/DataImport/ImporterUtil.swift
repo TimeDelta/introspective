@@ -25,7 +25,7 @@ public final class ImporterUtilImpl: ImporterUtil {
 		// db.deleteAll() can fail and throw because batch deletes don't
 		// update relationships according to delete rule before end of transaction
 		for entity in entities {
-			DependencyInjector.db.delete(entity)
+			try DependencyInjector.db.delete(entity)
 		}
 	}
 
@@ -48,7 +48,7 @@ public final class ImporterUtilImpl: ImporterUtil {
 			for var entity in importedEntities {
 				entity.partOfCurrentImport = false
 			}
-			DependencyInjector.db.save()
+			try DependencyInjector.db.save()
 		}
 	}
 }

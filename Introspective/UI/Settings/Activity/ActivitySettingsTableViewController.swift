@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os
 
 public final class ActivitySettingsTableViewController: UITableViewController {
 
@@ -105,7 +106,15 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 	}
 
 	@objc private final func saveAndGoBackToSettings() {
-		DependencyInjector.settings.save()
-		self.navigationController?.popViewController(animated: false)
+		do {
+			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+			self.navigationController?.popViewController(animated: false)
+		} catch {
+			os_log("Failed to save activity settings: %@", type: .error, error.localizedDescription)
+			showError(
+				title: "Failed to save settins",
+				message: "Sorry for the inconvenience.",
+				tryAgain: saveAndGoBackToSettings)
+		}
 	}
 }

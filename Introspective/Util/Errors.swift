@@ -1,5 +1,5 @@
 //
-//  DisplayableError.swift
+//  Errors.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 7/28/18.
@@ -19,8 +19,28 @@ public final class GenericDisplayableError: DisplayableError {
 	public final let displayableTitle: String
 	public final let displayableDescription: String?
 
+	public final var localizedDescription: String {
+		var text = displayableTitle
+		if let description = displayableDescription {
+			text += ": \(description)"
+		}
+		return text
+	}
+
 	public init(title: String, description: String? = nil) {
 		displayableTitle = title
 		displayableDescription = description
+	}
+}
+
+public final class NotOverridenError: Error {
+
+	private final let functionName: String
+	public final var localizedDescription: String {
+		return "Must override \(functionName)"
+	}
+
+	public init(functionName: String) {
+		self.functionName = functionName
 	}
 }

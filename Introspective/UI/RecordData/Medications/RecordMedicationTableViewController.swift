@@ -152,12 +152,20 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			let alert = UIAlertController(title: "Are you sure you want to delete \(medication.name)?", message: nil, preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 				if let index = self.medications.firstIndex(of: medication) {
-					self.medications.remove(at: index)
 					DispatchQueue.global(qos: .background).async {
-						DependencyInjector.db.delete(medication)
+						do {
+							try DependencyInjector.db.delete(medication)
+							DispatchQueue.main.async {
+								self.medications.remove(at: index)
+								tableView.deleteRows(at: [indexPath], with: .fade)
+								tableView.reloadData()
+							}
+						} catch {
+							self.showError(
+								title: "Failed to delete medication",
+								message: "Sorry for the inconvenience.")
+						}
 					}
-					tableView.deleteRows(at: [indexPath], with: .fade)
-					tableView.reloadData()
 				}
 			})
 			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
@@ -182,7 +190,11 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		medications[medicationsFromIndex].recordScreenIndex = Int16(medicationsToIndex)
 		let medication = medications.remove(at: medicationsFromIndex)
 		medications.insert(medication, at: Int(medication.recordScreenIndex))
-		DependencyInjector.db.save()
+		do {
+			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+		} catch {
+			os_log("Failed to reorder medications: %@", type: .error, error.localizedDescription)
+		}
 		resetFilteredMedications()
 		tableView.reloadData()
 	}
@@ -191,8 +203,6 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	@objc private final func medicationCreated(notification: Notification) {
 		if let medication: Medication = value(for: .medication, from: notification) {
-			medication.recordScreenIndex = Int16(medications.count)
-			DependencyInjector.db.save()
 			medications.append(medication)
 			resetFilteredMedications()
 			tableView.reloadData()
@@ -201,7 +211,6 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	@objc private final func medicationEdited(notification: Notification) {
 		if let medication: Medication = value(for: .medication, from: notification) {
-			DependencyInjector.db.save()
 			medications[Int(medication.recordScreenIndex)] = medication
 			resetFilteredMedications()
 			tableView.reloadData()

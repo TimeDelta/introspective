@@ -108,20 +108,29 @@ public final class RecordActivityTableViewController: UITableViewController {
 				if DependencyInjector.settings.autoIgnoreEnabled {
 					let minSeconds = DependencyInjector.settings.autoIgnoreSeconds
 					if Duration(start: activity.startDate, end: now).inUnit(.second) < Double(minSeconds) {
-						DependencyInjector.db.delete(activity)
-						cell.updateUiElements()
-						return
+						do {
+							// can't really explain this to the user
+							try retryOnFail({ try DependencyInjector.db.delete(activity) }, maxRetries: 3)
+							cell.updateUiElements()
+							return
+						} catch {
+							os_log("Failed to delete activity that should be auto-ignored: %@", type: .error, error.localizedDescription)
+						}
 					}
 				}
-				activity.endDate = now
-				DependencyInjector.db.save()
-				cell.updateUiElements()
-				if activityDefinition.autoNote {
-					showEditScreenForActivity(activity, autoFocusNote: true)
+				do {
+					activity.endDate = now
+					try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 3)
+					cell.updateUiElements()
+					if activityDefinition.autoNote {
+						showEditScreenForActivity(activity, autoFocusNote: true)
+					}
+				} catch {
+					showError(title: "Failed to stop activity", message: "Sorry for the inconvenience.")
 				}
 			} else {
 				os_log("Could not find activity to stop.", type: .error)
-				showError(title: "Could not stop activity", message: "Sorry for the inconvenience.")
+				showError(title: "Failed to stop activity", message: "Sorry for the inconvenience.")
 			}
 		} else {
 			var activity: Activity? = nil
@@ -132,12 +141,12 @@ public final class RecordActivityTableViewController: UITableViewController {
 				activity!.definition = definition
 				activity!.startDate = Date()
 				definition.addToActivities(activity!)
-				DependencyInjector.db.save()
+				try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 3)
 				// just calling updateUiElements here doesn't display the progress indicator for some reason
 				cell.activityDefinition = definition
 			} catch {
-				if let activityToDelete = activity {
-					DependencyInjector.db.delete(activityToDelete)
+				if let activity = activity {
+					try? retryOnFail({ try DependencyInjector.db.delete(activity) }, maxRetries: 2)
 				}
 				showError(title: "Could not start activity", message: "Sorry for the inconvenience.")
 				os_log("Failed to start activity: %@", type: .error, error.localizedDescription)
@@ -164,7 +173,11 @@ public final class RecordActivityTableViewController: UITableViewController {
 			}
 		}
 		fetchedResultsController.fetchedObjects?[definitionsFromIndex].recordScreenIndex = Int16(definitionsToIndex)
-		DependencyInjector.db.save()
+		do {
+			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+		} catch {
+			os_log("Failed to reorder activities: %@", type: .error, error.localizedDescription)
+		}
 		searchController.searchBar.text = searchText
 		loadActivitiyDefinitions()
 	}
@@ -201,10 +214,13 @@ public final class RecordActivityTableViewController: UITableViewController {
 				message: "This will only delete the most recent instance \(timeText).",
 				preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
-				DispatchQueue.global(qos: .background).async {
-					DependencyInjector.db.delete(activity)
+				do {
+					try retryOnFail({ try DependencyInjector.db.delete(activity) }, maxRetries: 2)
+					self.tableView.reloadData()
+				} catch {
+					os_log("Failed to delete activity: %@", type: .error, error.localizedDescription)
+					self.showError(title: "Failed to delete activity instance", message: "Sorry for the inconvenience.")
 				}
-				self.tableView.reloadData()
 			})
 			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
 			self.present(alert, animated: false, completion: nil)
@@ -240,8 +256,13 @@ public final class RecordActivityTableViewController: UITableViewController {
 				message: "This will delete all history for this activity.",
 				preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
-				DependencyInjector.db.delete(activityDefinition)
-				self.loadActivitiyDefinitions()
+				do {
+					try retryOnFail({ try DependencyInjector.db.delete(activityDefinition) }, maxRetries: 2)
+					self.loadActivitiyDefinitions()
+				} catch {
+					os_log("Failed to delete activity definition: %@", type: .error, error.localizedDescription)
+					self.showError(title: "Failed to delete activity", message: "Sorry for the inconvenience.")
+				}
 			})
 			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
 			self.present(alert, animated: false, completion: nil)
@@ -266,9 +287,17 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	@objc private final func activityDefinitionCreated(notification: Notification) {
 		if let activityDefinition: ActivityDefinition? = value(for: .activityDefinition, from: notification) {
-			activityDefinition?.recordScreenIndex = Int16(fetchedResultsController.fetchedObjects?.count ?? 0)
-			DependencyInjector.db.save()
-			loadActivitiyDefinitions()
+			do {
+				activityDefinition?.recordScreenIndex = Int16(fetchedResultsController.fetchedObjects?.count ?? 0)
+				try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+				loadActivitiyDefinitions()
+			} catch {
+				os_log("Failed to save activity definition: %@", type: .error, error.localizedDescription)
+				showError(
+					title: "Failed to save activity",
+					message: "Sorry for the inconvenience.",
+					tryAgain: { self.activityDefinitionCreated(notification: notification) })
+			}
 		}
 	}
 
@@ -349,7 +378,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 				let activity = try DependencyInjector.db.new(Activity.self)
 				activity.definition = activityDefinition
 				activity.startDate = Date()
-				DependencyInjector.db.save()
+				try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 				searchController.searchBar.text = ""
 				loadActivitiyDefinitions()
 			} catch {

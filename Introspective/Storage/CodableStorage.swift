@@ -117,8 +117,8 @@ public final class CodableStorageImpl: CodableStorage {
 
 		if let url = FileManager.default.urls(for: searchPathDirectory, in: .userDomainMask).first {
 			return url
-		} else {
-			fatalError("Could not create URL for specified directory!")
 		}
+		os_log("Could not create URL for specified directory!", type: .error)
+		return URL(fileURLWithPath: "/")
 	}
 }

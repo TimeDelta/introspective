@@ -75,8 +75,16 @@ final class MoodSettingsViewController: UIViewController {
 	}
 
 	@objc private final func saveAndGoBackToSettings() {
-		DependencyInjector.settings.save()
-		self.navigationController?.popViewController(animated: false)
+		do {
+			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+			self.navigationController?.popViewController(animated: false)
+		} catch {
+			os_log("Failed to save mood settings: %@", type: .error, error.localizedDescription)
+			showError(
+				title: "Failed to save settings",
+				message: "Sorry for the inconvenience.",
+				tryAgain: saveAndGoBackToSettings)
+		}
 	}
 
 	// MARK: - Helper Functions

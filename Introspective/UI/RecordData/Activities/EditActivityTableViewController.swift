@@ -223,7 +223,7 @@ public final class EditActivityTableViewController: UITableViewController {
 			activity.endDate = endDate
 			activity.note = note
 			try updateTagsForActivity(activity)
-			DependencyInjector.db.save()
+			try DependencyInjector.db.save()
 			DispatchQueue.main.async {
 				NotificationCenter.default.post(
 					name: self.notificationToSendOnAccept,
@@ -234,11 +234,11 @@ public final class EditActivityTableViewController: UITableViewController {
 			}
 			navigationController?.popViewController(animated: false)
 		} catch {
+			os_log("Failed to create, edit or save activity: %@", type: .error, error.localizedDescription)
 			if deleteActivityOnFail {
-				DependencyInjector.db.delete(activity)
+				try? DependencyInjector.db.delete(activity)
 			}
-			os_log("Failed to save activity: %@", type: .error, error.localizedDescription)
-			showError(title: "Failed to save", message: "Sorry for the inconvenience")
+			showError(title: "Failed to save activity instance", message: "Sorry for the inconvenience")
 		}
 	}
 
@@ -260,7 +260,7 @@ public final class EditActivityTableViewController: UITableViewController {
 			try activity.setTags(allTags)
 		} catch {
 			for tag in tagsCreated {
-				DependencyInjector.db.delete(tag)
+				try? DependencyInjector.db.delete(tag)
 			}
 			throw error
 		}

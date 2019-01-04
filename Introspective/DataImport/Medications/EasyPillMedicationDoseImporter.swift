@@ -43,12 +43,12 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 			lineNumber += 1
 		}
 		lastImport = latestDate
-		DependencyInjector.db.save()
+		try DependencyInjector.db.save()
 	}
 
-	public final func resetLastImportDate() {
+	public final func resetLastImportDate() throws {
 		lastImport = nil
-		DependencyInjector.db.save()
+		try DependencyInjector.db.save()
 	}
 
 	// MARK: - Helper Functions
@@ -105,11 +105,11 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 			dose.timestamp = date
 			dose.setSource(.easyPill)
 			medication.addToDoses(dose)
-			DependencyInjector.db.save()
+			try DependencyInjector.db.save()
 		} catch {
 			os_log("Failed to create and modify medication dose: %@", type: .error, error.localizedDescription)
 			if doseCreated {
-				DependencyInjector.db.delete(dose)
+				try? DependencyInjector.db.delete(dose)
 			}
 			let dateText = DependencyInjector.util.calendar.string(for: date, dateStyle: .medium, timeStyle: .short)
 			throw GenericDisplayableError(

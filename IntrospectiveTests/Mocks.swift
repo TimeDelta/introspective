@@ -121,10 +121,17 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
 		}
     }
 
-    func resetLastImportDate() {
+    func resetLastImportDate() throws {
         addInvocation(.m_resetLastImportDate)
 		let perform = methodPerformValue(.m_resetLastImportDate) as? () -> Void
 		perform?()
+		do {
+		    _ = try methodReturnValue(.m_resetLastImportDate).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
     }
 
 
@@ -193,6 +200,16 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
         static func importData(from url: Parameter<URL>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        static func resetLastImportDate(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_resetLastImportDate, products: willThrow.map({ Product.throw($0) }))
+        }
+        static func resetLastImportDate(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_resetLastImportDate, products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
@@ -2743,10 +2760,17 @@ class DatabaseMock: Database, Mock {
 		return __value
     }
 
-    func save() {
+    func save() throws {
         addInvocation(.m_save)
 		let perform = methodPerformValue(.m_save) as? () -> Void
 		perform?()
+		do {
+		    _ = try methodReturnValue(.m_save).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
     }
 
     func clearUnsavedChanges() {
@@ -2785,10 +2809,17 @@ class DatabaseMock: Database, Mock {
 		return __value
     }
 
-    func delete(_ object: NSManagedObject) {
+    func delete(_ object: NSManagedObject) throws {
         addInvocation(.m_delete__object(Parameter<NSManagedObject>.value(`object`)))
 		let perform = methodPerformValue(.m_delete__object(Parameter<NSManagedObject>.value(`object`))) as? (NSManagedObject) -> Void
 		perform?(`object`)
+		do {
+		    _ = try methodReturnValue(.m_delete__object(Parameter<NSManagedObject>.value(`object`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
     }
 
     func deleteAll(_ objects: [NSManagedObject]) throws {
@@ -3015,6 +3046,16 @@ class DatabaseMock: Database, Mock {
 			willProduce(stubber)
 			return given
         }
+        static func save(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_save, products: willThrow.map({ Product.throw($0) }))
+        }
+        static func save(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_save, products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
         static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_batchUpdate__request(`request`), products: willThrow.map({ Product.throw($0) }))
         }
@@ -3026,6 +3067,20 @@ class DatabaseMock: Database, Mock {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_batchUpdate__request(`request`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (NSBatchUpdateResult).self)
+			willProduce(stubber)
+			return given
+        }
+        static func delete(_ object: Parameter<NSManagedObject>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_delete__object(`object`), products: willThrow.map({ Product.throw($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `object` label")
+		static func delete(object: Parameter<NSManagedObject>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_delete__object(`object`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func delete(_ object: Parameter<NSManagedObject>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_delete__object(`object`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
         }
@@ -3306,10 +3361,17 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
 		}
     }
 
-    func resetLastImportDate() {
+    func resetLastImportDate() throws {
         addInvocation(.m_resetLastImportDate)
 		let perform = methodPerformValue(.m_resetLastImportDate) as? () -> Void
 		perform?()
+		do {
+		    _ = try methodReturnValue(.m_resetLastImportDate).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
     }
 
 
@@ -3378,6 +3440,16 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
         static func importData(from url: Parameter<URL>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        static func resetLastImportDate(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_resetLastImportDate, products: willThrow.map({ Product.throw($0) }))
+        }
+        static func resetLastImportDate(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_resetLastImportDate, products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
@@ -3536,10 +3608,17 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
 		}
     }
 
-    func resetLastImportDate() {
+    func resetLastImportDate() throws {
         addInvocation(.m_resetLastImportDate)
 		let perform = methodPerformValue(.m_resetLastImportDate) as? () -> Void
 		perform?()
+		do {
+		    _ = try methodReturnValue(.m_resetLastImportDate).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
     }
 
 
@@ -3608,6 +3687,16 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
         static func importData(from url: Parameter<URL>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        static func resetLastImportDate(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_resetLastImportDate, products: willThrow.map({ Product.throw($0) }))
+        }
+        static func resetLastImportDate(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_resetLastImportDate, products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
@@ -9016,10 +9105,17 @@ class SettingsMock: Settings, Mock, StaticMock {
 		perform?()
     }
 
-    func save() {
+    func save() throws {
         addInvocation(.m_save)
 		let perform = methodPerformValue(.m_save) as? () -> Void
 		perform?()
+		do {
+		    _ = try methodReturnValue(.m_save).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
     }
 
     fileprivate enum StaticMethodType {
@@ -9167,6 +9263,16 @@ class SettingsMock: Settings, Mock, StaticMock {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_changed__setting(`setting`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        static func save(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_save, products: willThrow.map({ Product.throw($0) }))
+        }
+        static func save(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_save, products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
         }
@@ -11380,10 +11486,17 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
 		}
     }
 
-    func resetLastImportDate() {
+    func resetLastImportDate() throws {
         addInvocation(.m_resetLastImportDate)
 		let perform = methodPerformValue(.m_resetLastImportDate) as? () -> Void
 		perform?()
+		do {
+		    _ = try methodReturnValue(.m_resetLastImportDate).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
     }
 
 
@@ -11452,6 +11565,16 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
         static func importData(from url: Parameter<URL>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        static func resetLastImportDate(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_resetLastImportDate, products: willThrow.map({ Product.throw($0) }))
+        }
+        static func resetLastImportDate(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_resetLastImportDate, products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given

@@ -31,10 +31,10 @@ class ActivityQueryFunctionalTests: QueryFunctionalTest {
 		}
 	}
 
-	func testGivenOneActivityInDatabaseAndQueryContainsNoRestrictions_runQuery_returnsThatActivity() {
+	func testGivenOneActivityInDatabaseAndQueryContainsNoRestrictions_runQuery_returnsThatActivity() throws {
 		// given
 		let expectedSamples: [Sample] = [createActivity(name: "expected")]
-		DependencyInjector.db.save()
+		try DependencyInjector.db.save()
 
 		// when
 		query.runQuery(callback: queryComplete)

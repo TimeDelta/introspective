@@ -8,6 +8,7 @@
 
 import UIKit
 import Presentr
+import NotificationBannerSwift
 import CoreData
 import os
 
@@ -239,15 +240,20 @@ final class ResultsViewController: UITableViewController {
 				let alert = UIAlertController(title: "Are you sure you want to delete this?", message: nil, preferredStyle: .alert)
 				alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 					let goBackAfterDelete = self.samples.count == 1
-					DispatchQueue.global(qos: .background).async {
-						DependencyInjector.db.delete(managedSample)
-					}
-					if goBackAfterDelete {
-						self.navigationController?.popViewController(animated: false)
-					} else {
-						self.samples.remove(at: indexPath.row)
-						tableView.deleteRows(at: [indexPath], with: .fade)
-						tableView.reloadData()
+					do {
+						try retryOnFail({ try DependencyInjector.db.delete(managedSample) }, maxRetries: 2)
+						if goBackAfterDelete {
+							self.navigationController?.popViewController(animated: false)
+						} else {
+							self.samples.remove(at: indexPath.row)
+							tableView.deleteRows(at: [indexPath], with: .fade)
+							tableView.reloadData()
+						}
+					} catch {
+						os_log("Failed to delete sample: %@", type: .error, error.localizedDescription)
+						self.showError(
+							title: "Failed to delete " + self.samples[indexPath.row].attributedName.localizedLowercase,
+							message: "Sorry for the inconvenience.")
 					}
 				})
 				alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
@@ -365,15 +371,20 @@ final class ResultsViewController: UITableViewController {
 	}
 
 	@objc private final func deleteAllSamples() {
+		let sampleType = samples[0].attributedName.localizedLowercase
 		let alert = UIAlertController(
-			title: "Are you sure you want to delete all \(samples[0].attributedName.localizedLowercase) records?",
+			title: "Are you sure you want to delete all \(sampleType) records?",
 			message: nil,
 			preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 			DispatchQueue.global(qos: .userInitiated).async {
-				// TODO - tell the user something went wrong if an error is thrown here
-				try! DependencyInjector.db.deleteAll(self.samples as! [NSManagedObject])
-				DependencyInjector.db.save()
+				do {
+					try DependencyInjector.db.deleteAll(self.samples as! [NSManagedObject])
+					try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+				} catch {
+					os_log("Failed to delete all %@: %@", type: .error, sampleType, error.localizedDescription)
+					NotificationBanner(title: "Failed to delete all \(sampleType) records", style: .danger).show()
+				}
 			}
 			self.navigationController!.popViewController(animated: false)
 		})

@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import NotificationBannerSwift
 import os
 
 public enum DatabaseError: Error {
@@ -27,14 +28,14 @@ public protocol Database {
 	func pull<Type: NSManagedObject>(savedObject: Type, fromSameContextAs otherObject: NSManagedObject) throws -> Type
 	func getUpdated<Type: NSManagedObject>(object: Type) throws -> Type
 
-	func save()
+	func save() throws
 	/// Use this cautiously as it will rollback unsaved stuff created from other tabs also
 	func clearUnsavedChanges()
 
 	func batchUpdateRequest<Type: CoreDataObject>(for type: Type.Type) -> NSBatchUpdateRequest
 	func batchUpdate(_ request: NSBatchUpdateRequest) throws -> NSBatchUpdateResult
 
-	func delete(_ object: NSManagedObject)
+	func delete(_ object: NSManagedObject) throws
 	func deleteAll(_ objects: [NSManagedObject]) throws
 	func deleteAll(_ objectType: NSManagedObject.Type) throws
 	func deleteAll(_ entityName: String) throws
@@ -62,8 +63,6 @@ public class DatabaseImpl: Database {
 			let container = NSPersistentContainer(name: "Introspective")
 			container.loadPersistentStores(completionHandler: { (storeDescription, error) in
 				if let error = error as NSError? {
-					// TODO - tell the user something went wrong with accessing their data instead of crashing the app
-
 					/*
 					Typical reasons for an error here include:
 					* The parent directory does not exist, cannot be created, or disallows writing.
@@ -72,13 +71,20 @@ public class DatabaseImpl: Database {
 					* The store could not be migrated to the current model version.
 					Check the error message to determine what the actual problem was.
 					*/
-					fatalError("Unresolved error \(error), \(error.userInfo)")
+					os_log("Unresolved error: %@", type: .error, error.userInfo)
+					NotificationBanner(
+						title: "Failed to load saved data",
+						subtitle: "App functionality will be limited.",
+						style: .danger
+					).show()
 				}
 			})
 			container.viewContext.automaticallyMergesChangesFromParent = true
 			return container
 		}()
 	}
+
+	// MARK: - Creating
 
 	public final func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type) throws -> Type {
 		signpost.begin(name: "New", idObject: objectType)
@@ -91,6 +97,8 @@ public class DatabaseImpl: Database {
 		signpost.end(name: "New", idObject: objectType)
 		return newObject
 	}
+
+	// MARK: - Fetching
 
 	public final func fetchedResultsController<Type: NSManagedObject>(
 		type: Type.Type,
@@ -137,9 +145,11 @@ public class DatabaseImpl: Database {
 		return try getObject(object.managedObjectContext!.object(with: object.objectID), as: Type.self)
 	}
 
-	public final func save() {
-		saveContext(backgroundContext)
-		saveContext(persistentContainer.viewContext)
+	// MARK: - Updating
+
+	public final func save() throws {
+		try saveContext(backgroundContext)
+		try saveContext(persistentContainer.viewContext)
 	}
 
 	public final func clearUnsavedChanges() {
@@ -156,15 +166,17 @@ public class DatabaseImpl: Database {
 		return try backgroundContext.execute(request) as! NSBatchUpdateResult
 	}
 
-	public final func delete(_ object: NSManagedObject) {
+	// MARK: - Deleting
+
+	public final func delete(_ object: NSManagedObject) throws {
 		signpost.begin(name: "Delete", idObject: object)
 		if context(persistentContainer.viewContext, contains: object) {
 			persistentContainer.viewContext.delete(object)
-			saveContext(persistentContainer.viewContext)
+			try saveContext(persistentContainer.viewContext)
 		}
 		if context(backgroundContext, contains: object) {
 			backgroundContext.delete(object)
-			saveContext(backgroundContext)
+			try saveContext(backgroundContext)
 		}
 		signpost.end(name: "Delete", idObject: object)
 	}
@@ -202,21 +214,22 @@ public class DatabaseImpl: Database {
 		return result
 	}
 
-	private final func saveContext(_ context: NSManagedObjectContext) {
+	private final func saveContext(_ context: NSManagedObjectContext) throws {
 		signpost.begin(name: "Save", idObject: context)
+		var errorToThrow: Error? = nil
 		context.performAndWait {
 			if context.hasChanges {
 				do {
 					try context.save()
 				} catch {
-					signpost.end(name: "Save", idObject: context)
-					// TODO - Tell the user something went wrong while saving their data instead of crashing the app
-					let nserror = error as NSError
-					fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+					errorToThrow = error
 				}
 			}
 		}
 		signpost.end(name: "Save", idObject: context)
+		if let error = errorToThrow {
+			throw error
+		}
 	}
 
 	private final func deleteAll(_ objects: [NSManagedObject], from context: NSManagedObjectContext) throws {
