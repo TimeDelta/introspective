@@ -7,19 +7,28 @@
 //
 
 import Foundation
-import os
 
 public final class OldestDateInformation: AnyInformation {
+
+	// MARK: - Static Variables
 
 	private typealias Me = OldestDateInformation
 	static let noSamplesMessage = "No samples between given start and end dates"
 
+	// MARK: - Instance Variables
+
 	public final override var name: String { return "Oldest" }
 	public final override var description: String { return name + " " + attribute.name.localizedLowercase }
+
+	private final let log = Log()
+
+	// MARK: - Initializers
 
 	public required init(_ attribute: Attribute) {
 		super.init(attribute)
 	}
+
+	// MARK: - Functions
 
 	public final override func compute(forSamples samples: [Sample]) -> String {
 		let filteredSamples = DependencyInjector.util.sample.getOnly(samples: samples, from: startDate, to: endDate)
@@ -35,7 +44,7 @@ public final class OldestDateInformation: AnyInformation {
 					oldestSampleDate = date
 				}
 			} else if !attribute.optional || value != nil {
-				os_log("non-optional attribute (%@) of sample (%@) returned %@", type: .error, attribute.name, sample.attributedName, String(describing: value))
+				log.error("non-optional attribute (%@) of sample (%@) returned %@", attribute.name, sample.attributedName, String(describing: value))
 			}
 		}
 		return DependencyInjector.util.calendar.string(for: oldestSampleDate, dateStyle: .short, timeStyle: .short)

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import os
 
 public protocol AttributeRestriction: Attributed {
 
@@ -21,19 +20,22 @@ public protocol AttributeRestriction: Attributed {
 
 public class AnyAttributeRestriction: AttributeRestriction {
 
-	private typealias Me = AnyAttributeRestriction
+	// MARK: - Static Variables
 
+	private typealias Me = AnyAttributeRestriction
 	public static let selectAnAttribute = TextAttribute(name:"Atribute", pluralName: "Attributes")
+
+	// MARK: - Instance Variables
 
 	public var attributedName: String {
 		get {
-			os_log("Must override name", type: .error)
+			log.error("Must override name")
 			return ""
 		}
 	}
 	public var description: String {
 		get {
-			os_log("Must override description", type: .error)
+			log.error("Must override description")
 			return ""
 		}
 	}
@@ -41,6 +43,10 @@ public class AnyAttributeRestriction: AttributeRestriction {
 	public final var restrictedAttribute: Attribute {
 		didSet { restrictedAttributeWasSet() }
 	}
+
+	private final let log = Log()
+
+	// MARK: - Initializers
 
 	public init(attributes: [Attribute]) {
 		self.restrictedAttribute = Me.selectAnAttribute
@@ -57,11 +63,13 @@ public class AnyAttributeRestriction: AttributeRestriction {
 		attributes = [Attribute]()
 	}
 
+	// MARK: - Functions
+
 	public func samplePasses(_ sample: Sample) throws -> Bool { throw NotOverridenError(functionName: "samplePasses") }
 	public func value(of attribute: Attribute) throws -> Any? { throw NotOverridenError(functionName: "value(of:)") }
 	public func set(attribute: Attribute, to value: Any?) throws { throw NotOverridenError(functionName: "set(attribute:to:)") }
 	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
-		os_log("Must override equalTo()", type: .error)
+		log.error("Must override equalTo()")
 		return type(of: self) == type(of: otherRestriction)
 	}
 

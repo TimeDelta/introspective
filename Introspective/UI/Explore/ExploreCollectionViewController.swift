@@ -7,14 +7,21 @@
 //
 
 import UIKit
-import os
 
 final class ExploreCollectionViewController: UICollectionViewController {
+
+	// MARK: - Static Variables
 
 	private typealias Me = ExploreCollectionViewController
 	private static let queryCellReuseIdentifier = "query"
 	private static let graphCellReuseIdentifier = "graph"
 	private static let unifiedViewCellReuseIdentifier = "unifiedView"
+
+	// MARK: - Instance Variables
+
+	private final let log = Log()
+
+	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
@@ -39,7 +46,7 @@ final class ExploreCollectionViewController: UICollectionViewController {
 			return collectionView.dequeueReusableCell(withReuseIdentifier: Me.graphCellReuseIdentifier, for: indexPath)
 		}
 
-		os_log("Unknown row when trying to create UICollectionViewCell: %d", type: .error, indexPath.row)
+		log.error("Unknown row when trying to create UICollectionViewCell: %d", indexPath.row)
 		return UICollectionViewCell()
 	}
 

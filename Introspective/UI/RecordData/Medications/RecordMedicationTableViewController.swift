@@ -9,7 +9,6 @@
 import UIKit
 import CoreData
 import Presentr
-import os
 
 public final class RecordMedicationTableViewController: UITableViewController {
 
@@ -54,6 +53,8 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		}
 	}
 
+	private final let log = Log()
+
 	// MARK: - UIViewController Overrides
 
 	public final override func viewDidLoad() {
@@ -76,7 +77,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 				}
 			} catch {
 				self.errorMessage = "Something went wrong while trying to retrieve the list of your medications."
-				os_log("Failed to fetch medications: %@", type: .error, error.localizedDescription)
+				self.log.error("Failed to fetch medications: %@", errorInfo(error))
 			}
 		}
 
@@ -193,7 +194,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		do {
 			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 		} catch {
-			os_log("Failed to reorder medications: %@", type: .error, error.localizedDescription)
+			log.error("Failed to reorder medications: %@", errorInfo(error))
 		}
 		resetFilteredMedications()
 		tableView.reloadData()

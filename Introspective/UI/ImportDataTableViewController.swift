@@ -8,9 +8,10 @@
 
 import UIKit
 import NotificationBannerSwift
-import os
 
 final class ImportDataTableViewController: UITableViewController {
+
+	// MARK: - Static Variables
 
 	private typealias Me = ImportDataTableViewController
 	private enum Errors: Error {
@@ -30,7 +31,11 @@ final class ImportDataTableViewController: UITableViewController {
 	private static let moodSection = 2
 	private static let wellnessMoodIndex = IndexPath(row: 0, section: moodSection)
 
+	// MARK: - Instance Variables
+
 	private final var importer: Importer!
+
+	private final let log = Log()
 
 	// MARK: - Table View Delegate
 
@@ -52,7 +57,7 @@ final class ImportDataTableViewController: UITableViewController {
 				do {
 					try self.importer.resetLastImportDate()
 				} catch {
-					os_log("Failed to reset last import date: %@", type: .error, error.localizedDescription)
+					self.log.error("Failed to reset last import date: %@", errorInfo(error))
 					self.showError(title: "Failed to reset last import date", message: "Sorry for the inconvenience.")
 				}
 			})
@@ -61,7 +66,7 @@ final class ImportDataTableViewController: UITableViewController {
 			})
 			present(actionSheet, animated: false, completion: nil)
 		} catch {
-			os_log("Failed to create data importer while presenting menu: %@", error.localizedDescription)
+			log.error("Failed to create data importer while presenting menu: %@", errorInfo(error))
 		}
 	}
 
@@ -100,7 +105,7 @@ final class ImportDataTableViewController: UITableViewController {
 		} else if indexPath == Me.easyPillDoseIndex {
 			return try DependencyInjector.importer.easyPillMedicationDoseImporter()
 		} else {
-			os_log("Unknown index path: (section: %d, row: %d)", type: .error, indexPath.section, indexPath.row)
+			log.error("Unknown index path: (section: %d, row: %d)", indexPath.section, indexPath.row)
 			throw Errors.unknownIndexPath
 		}
 	}
@@ -121,7 +126,7 @@ extension ImportDataTableViewController: UIDocumentPickerDelegate {
 					banner.show()
 				}
 			} catch {
-				os_log("Failed to import data: %@", type: .error, error.localizedDescription)
+				self.log.error("Failed to import data: %@", errorInfo(error))
 				var title = "Failed to import data"
 				var message: String? = nil
 				if let displayableError = error as? DisplayableError {

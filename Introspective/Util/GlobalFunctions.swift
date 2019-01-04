@@ -30,3 +30,7 @@ func retryOnFail(_ code: () throws -> Void, maxRetries: Int? = nil, _ firstError
 		try retryOnFail(code, error)
 	}
 }
+
+func errorInfo(_ error: Error) -> String {
+	return String(format: "%@ %@", error.localizedDescription, (error as NSError).userInfo)
+}

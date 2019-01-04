@@ -8,7 +8,6 @@
 
 import UIKit
 import Presentr
-import os
 
 final class RecordMoodTableViewCell: UITableViewCell {
 
@@ -35,6 +34,8 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	private final var rating: Double = DependencyInjector.settings.maxMood / 2 {
 		didSet { updateUI() }
 	}
+
+	private final let log = Log()
 
 	// MARK: - UIView Overrides
 
@@ -98,7 +99,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 
 			reset()
 		} catch {
-			os_log("Failed to create or save mood: %@", type: .error, error.localizedDescription)
+			log.error("Failed to create or save mood: %@", errorInfo(error))
 			NotificationCenter.default.post(
 				name: RecordDataTableViewController.showErrorMessage,
 				object: self,

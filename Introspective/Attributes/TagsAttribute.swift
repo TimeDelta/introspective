@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import os
 
 public final class TagsAttribute: AttributeBase, MultiSelectAttribute {
 
@@ -16,6 +15,8 @@ public final class TagsAttribute: AttributeBase, MultiSelectAttribute {
 	public final var possibleValues: [Any] {
 		return fetchAllTags()
 	}
+
+	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -84,7 +85,7 @@ public final class TagsAttribute: AttributeBase, MultiSelectAttribute {
 		do {
 			return try DependencyInjector.db.query(Tag.fetchRequest())
 		} catch {
-			os_log("Failed to fetch tags: %@", type: .error, error.localizedDescription)
+			log.error("Failed to fetch tags: %@", errorInfo(error))
 			return []
 		}
 	}

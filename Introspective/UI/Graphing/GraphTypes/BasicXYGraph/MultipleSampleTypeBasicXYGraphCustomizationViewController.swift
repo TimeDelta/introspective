@@ -142,7 +142,9 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	private final var xAxisSampleGroups: [(Date, [Sample])]! { didSet { updateChartData() } }
 	private final var yAxisSampleGroups: [(Date, [Sample])]! { didSet { updateChartData() } }
 	private final var chartController: BasicXYChartViewController!
+
 	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "MultiplSampleTypeGraphCreationPerformance"))
+	private final let log = Log()
 
 	// MARK: - UIViewController Overloads
 
@@ -307,8 +309,8 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 
 	private final func runQueries() {
 		xAxisQuery!.runQuery { (result, error) in
-			if error != nil {
-				os_log("X-axis query run failed: %@", type: .error, error!.localizedDescription)
+			if let error = error {
+				self.log.error("X-axis query run failed: %@", errorInfo(error))
 				DispatchQueue.main.async {
 					self.chartController.errorMessage = "Something went wrong while running the query. Sorry for the inconvenience this has caused you."
 				}
@@ -320,13 +322,13 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 				self.xAxisSampleGroups = (grouper.group(samples: samples, by: self.firstDateAttributeFor(self.xAxisSampleType)) as! [(Date, [Sample])])
 				self.signpost.end(name: "Grouping x-axis samples", "Grouped %d samples into %d groups", samples.count, self.xAxisSampleGroups.count)
 			} else {
-				os_log("X-axis query run did not return an error or any results", type: .error)
+				self.log.error("X-axis query run did not return an error or any results")
 			}
 		}
 
 		yAxisQuery!.runQuery { (result, error) in
-			if error != nil {
-				os_log("Y-axis query run failed: %@", type: .error, error!.localizedDescription)
+			if let error = error {
+				self.log.error("Y-axis query run failed: %@", errorInfo(error))
 				DispatchQueue.main.async {
 					self.chartController.errorMessage = "Something went wrong while running the query. Sorry for the inconvenience this has caused you."
 				}
@@ -338,7 +340,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 				self.yAxisSampleGroups = (grouper.group(samples: samples, by: self.firstDateAttributeFor(self.yAxisSampleType)) as! [(Date, [Sample])])
 				self.signpost.end(name: "Grouping y-axis samples", "Grouped %d samples into %d groups", samples.count, self.yAxisSampleGroups.count)
 			} else {
-				os_log("Y-axis query run did not return an error or any results", type: .error)
+				self.log.error("Y-axis query run did not return an error or any results")
 			}
 		}
 	}
@@ -347,7 +349,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		if let index = sampleType.attributes.index(where: { $0 is DateAttribute }) {
 			return sampleType.attributes[index] as! DateAttribute
 		}
-		os_log("No DateAttribute found for sample type: %@", type: .error, String(describing: sampleType))
+		log.error("No DateAttribute found for sample type: %@", String(describing: sampleType))
 		return CommonSampleAttributes.timestamp
 	}
 

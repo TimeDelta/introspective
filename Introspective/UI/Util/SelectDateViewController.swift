@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import os
 
 public final class SelectDateViewController: UIViewController {
 
@@ -16,7 +15,7 @@ public final class SelectDateViewController: UIViewController {
 	@IBOutlet weak final var datePicker: UIDatePicker!
 	@IBOutlet weak final var lastButton: UIButton!
 
-	// MARK: - Member Variables
+	// MARK: - Instance Variables
 
 	public final var initialDate: Date?
 	public final var earliestPossibleDate: Date?
@@ -24,7 +23,7 @@ public final class SelectDateViewController: UIViewController {
 	public final var datePickerMode: UIDatePicker.Mode = .dateAndTime {
 		didSet {
 			if datePickerMode == .countDownTimer {
-				os_log("this view is not meant to do timers", type: .error)
+				log.error("this view is not meant to do timers")
 			}
 		}
 	}
@@ -32,6 +31,8 @@ public final class SelectDateViewController: UIViewController {
 	public final var notificationToSendOnAccept: Notification.Name!
 
 	private final var currentDateIsFromNowOrLastButton = false
+
+	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -56,7 +57,7 @@ public final class SelectDateViewController: UIViewController {
 			datePicker.date = date
 			currentDateIsFromNowOrLastButton = true
 		} else {
-			os_log("last date was unexpectedly nil", type: .error)
+			log.error("last date was unexpectedly nil")
 		}
 	}
 

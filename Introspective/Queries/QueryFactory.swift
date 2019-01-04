@@ -27,6 +27,8 @@ public protocol QueryFactory {
 
 public final class QueryFactoryImpl: QueryFactory {
 
+	private final let log = Log()
+
 	public enum Errors: Error {
 		case unknownSampleType
 	}
@@ -89,7 +91,7 @@ public final class QueryFactoryImpl: QueryFactory {
 			case is Sleep.Type: return sleepQuery()
 			case is Weight.Type: return weightQuery()
 			default:
-				os_log("Unknown sample type: %@", type: .error, String(describing: sampleType))
+				log.error("Unknown sample type: %@", String(describing: sampleType))
 				throw Errors.unknownSampleType
 		}
 	}

@@ -8,7 +8,6 @@
 
 import UIKit
 import Presentr
-import os
 
 public final class RecordMedicationTableViewCell: UITableViewCell {
 
@@ -41,6 +40,8 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 	private final var uniqueNotificationNameForMedication: Notification.Name!
 	private final var dateThatTakenButtonWasPressed: Date?
 
+	private final let log = Log()
+
 	// MARK: - Received Notifications
 
 	@objc private final func doseCreated(notification: Notification) {
@@ -53,7 +54,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 				updateLastTakenButton()
 			}
 		} catch {
-			os_log("Failed to mark medication (%@) as taken: %@", type: .error, medication.name, error.localizedDescription)
+			log.error("Failed to mark medication (%@) as taken: %@", medication.name, errorInfo(error))
 			NotificationCenter.default.post(
 				name: Me.errorOccurred,
 				object: self,

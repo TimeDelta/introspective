@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import os
 
 public protocol ExtraInformation: CustomStringConvertible {
 
@@ -28,13 +27,13 @@ public class AnyInformation: ExtraInformation {
 
 	public var name: String {
 		get {
-			os_log("Must override name", type: .error)
+			log.error("Must override name")
 			return ""
 		}
 	}
 	public var description: String {
 		get {
-			os_log("Must override description", type: .error)
+			log.error("Must override description")
 			return ""
 		}
 	}
@@ -43,21 +42,23 @@ public class AnyInformation: ExtraInformation {
 	public final var startDate: Date?
 	public final var endDate: Date?
 
+	private final let log = Log()
+
 	public required init(_ attribute: Attribute) {
 		self.attribute = attribute
 	}
 
 	public func compute(forSamples samples: [Sample]) -> String {
-		os_log("Must override compute()", type: .error)
+		log.error("Must override compute()")
 		return ""
 	}
 	public func computeGraphable(forSamples samples: [Sample]) -> String {
-		os_log("Must override computeGraphable()", type: .error)
+		log.error("Must override computeGraphable()")
 		return ""
 	}
 
 	public func equalTo(_ other: ExtraInformation) -> Bool {
-		os_log("Must override equalTo()", type: .error)
+		log.error("Must override equalTo()")
 		return type(of: self) == type(of: other)
 	}
 }

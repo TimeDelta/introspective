@@ -11,11 +11,12 @@ import CalendarKit
 import HealthKit
 import CoreData
 import SwiftDate
-import os
 
 public final class UnifiedDayViewController: DayViewController {
 
 	private final var stopQueryFunctions = [()->()]()
+
+	private final let log = Log()
 
 	// MARK: - DayViewController Overrides
 
@@ -71,7 +72,7 @@ public final class UnifiedDayViewController: DayViewController {
 			let value = try operation.compute(forSamples: moods)
 			display(valueDescription, value, nil, startDate, endDate)
 		} catch {
-			os_log("Failed to calculate %@ for mood: %@", type: .error, operation.description, error.localizedDescription)
+			log.error("Failed to calculate %@ for mood: %@", operation.description, errorInfo(error))
 			showError(title: "Could not calculate \(valueDescription)", message: "Sorry for the inconvenience")
 		}
 	}
@@ -88,9 +89,9 @@ public final class UnifiedDayViewController: DayViewController {
 	private final func display(_ description: String, _ value: String?, _ error: Error?, _ startDate: Date, _ endDate: Date) {
 		guard error == nil && value != nil else {
 			if let error = error {
-				os_log("Failed to calculate %@: %@", type: .error, description, error.localizedDescription)
+				log.error("Failed to calculate %@: %@", description, errorInfo(error))
 			} else {
-				os_log("Failed to calculate %@ but no error was returned", type: .error, description)
+				log.error("Failed to calculate %@ but no error was returned", description)
 			}
 			self.showError(title: "Could not calculate \(description)", message: "Sorry for the inconvenience")
 			return
@@ -129,7 +130,7 @@ public final class UnifiedDayViewController: DayViewController {
 		do {
 			return try DependencyInjector.db.query(fetchRequest)
 		} catch {
-			os_log("Failed to query for activities on %@: %@", type: .error, String(describing: date), error.localizedDescription)
+			log.error("Failed to query for activities on %@: %@", String(describing: date), errorInfo(error))
 			showError(title: "Something went wrong while loading your activity data", message: "Sorry for the inconvenience.")
 			return []
 		}
@@ -159,9 +160,9 @@ public final class UnifiedDayViewController: DayViewController {
 		var errorMessage: String? = nil
 		let group = DispatchGroup()
 		let callback = { (samples: Array<HKSample>?, error: Error?) in
-			if error != nil {
+			if let error = error {
 				errorMessage = "Could not retrieve sleep data."
-				os_log("Failed to retrieve sleep samples: %@", type: .error, error!.localizedDescription)
+				self.log.error("Failed to retrieve sleep samples: %@", errorInfo(error))
 				group.leave()
 				return
 			}
@@ -169,7 +170,7 @@ public final class UnifiedDayViewController: DayViewController {
 				typeSamples.append(contentsOf: samples.map{ initSample($0 as! HKType) })
 			} else {
 				errorMessage = "Could not retrieve sleep data."
-				os_log("Both samples and error variables are nil", type: .error)
+				self.log.error("Both samples and error variables are nil")
 			}
 			group.leave()
 		}
@@ -208,7 +209,7 @@ public final class UnifiedDayViewController: DayViewController {
 			case .discreteMax: return "maximum"
 			case .discreteMin: return "minimum"
 			default:
-				os_log("Unsupported operation type passed", type: .error)
+				log.error("Unsupported operation type passed")
 				return ""
 		}
 	}

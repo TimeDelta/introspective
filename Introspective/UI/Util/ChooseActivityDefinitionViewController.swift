@@ -8,7 +8,6 @@
 
 import UIKit
 import CoreData
-import os
 
 public final class ChooseActivityDefinitionViewController: UIViewController {
 
@@ -23,6 +22,8 @@ public final class ChooseActivityDefinitionViewController: UIViewController {
 	public final var availableDefinitions: [ActivityDefinition]!
 	public final var selectedDefinition: ActivityDefinition?
 
+	private final let log = Log()
+
 	// MARK: - UIViewController Overrides
 
 	public final override func viewDidLoad() {
@@ -35,7 +36,7 @@ public final class ChooseActivityDefinitionViewController: UIViewController {
 				let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 				availableDefinitions = try DependencyInjector.db.query(fetchRequest)
 			} catch {
-				os_log("Failed to load activities: %@", error.localizedDescription)
+				log.error("Failed to load activities: %@", errorInfo(error))
 				parent?.showError(title: "Failed to load activities", message: "Sorry for the inconvenience")
 				dismiss(animated: false, completion: nil)
 			}
@@ -48,7 +49,7 @@ public final class ChooseActivityDefinitionViewController: UIViewController {
 			if let index = availableDefinitions.firstIndex(of: selectedDefinition) {
 				picker.selectRow(index, inComponent: 0, animated: false)
 			} else {
-				os_log("Failed to find selected definition in available definitions", type: .error)
+				log.error("Failed to find selected definition in available definitions")
 			}
 		}
 	}

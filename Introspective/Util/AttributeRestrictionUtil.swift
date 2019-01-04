@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import os
 
 //sourcery: AutoMockable
 public protocol AttributeRestrictionUtil {
@@ -15,6 +14,8 @@ public protocol AttributeRestrictionUtil {
 }
 
 public final class AttributeRestrictionUtilImpl: AttributeRestrictionUtil {
+
+	private final let log = Log()
 
 	public final func getMostRestrictiveStartAndEndDates(from attributeRestrictions: [AttributeRestriction]) -> (start: Date?, end: Date?) {
 		var latestStartDate: Date? = nil
@@ -42,7 +43,7 @@ public final class AttributeRestrictionUtilImpl: AttributeRestrictionUtil {
 					}
 					break
 				default:
-					os_log("Skipping attribute restriction: %@", type: .debug, attributeRestriction.description)
+					log.debug("Skipping attribute restriction: %@", attributeRestriction.description)
 					break
 			}
 		}

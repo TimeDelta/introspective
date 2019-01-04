@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import os
 
 public final class MedicationDoseEditorViewController: UIViewController {
 
@@ -24,6 +23,8 @@ public final class MedicationDoseEditorViewController: UIViewController {
 	/// This is only used if `medicationDose` is not set
 	public final var medication: Medication?
 	public final var notificationToSendOnAccept: Notification.Name!
+
+	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -63,7 +64,7 @@ public final class MedicationDoseEditorViewController: UIViewController {
 			}
 			dismiss(animated: false, completion: nil)
 		} catch {
-			os_log("Failed to create medication dose: %@", type: .error, error.localizedDescription)
+			log.error("Failed to create medication dose: %@", errorInfo(error))
 			showError(title: "Failed to save", message: "Sorry for the inconvenience")
 		}
 	}

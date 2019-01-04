@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import os
 
 public final class TagAttribute: AttributeBase, SelectOneAttribute {
 
@@ -16,6 +15,8 @@ public final class TagAttribute: AttributeBase, SelectOneAttribute {
 	public final var possibleValues: [Any] {
 		return fetchAllTags()
 	}
+
+	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -51,11 +52,11 @@ public final class TagAttribute: AttributeBase, SelectOneAttribute {
 
 	public func valuesAreEqual(_ first: Any?, _ second: Any?) -> Bool {
 		guard let castedFirst = first as? Tag else {
-			os_log("Failed to cast first value when testing tag equality: %@", type: .error, String(describing: first))
+			log.error("Failed to cast first value when testing tag equality: %@", String(describing: first))
 			return false
 		}
 		guard let castedSecond = second as? Tag else {
-			os_log("Failed to cast second value when testing tag equality: %@", type: .error, String(describing: first))
+			log.error("Failed to cast second value when testing tag equality: %@", String(describing: first))
 			return false
 		}
 		return castedFirst == castedSecond
@@ -67,7 +68,7 @@ public final class TagAttribute: AttributeBase, SelectOneAttribute {
 		do {
 			return try DependencyInjector.db.query(Tag.fetchRequest())
 		} catch {
-			os_log("Failed to fetch tags: %@", type: .error, error.localizedDescription)
+			log.error("Failed to fetch tags: %@", errorInfo(error))
 			return []
 		}
 	}

@@ -10,7 +10,6 @@ import UIKit
 import WSTagsField
 import Presentr
 import CoreData
-import os
 
 public final class EditActivityDefinitionTableViewController: UITableViewController {
 
@@ -50,6 +49,8 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 	private final var autoNote = false
 
 	private final var saveButton: UIBarButtonItem!
+
+	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -115,7 +116,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			cell.notificationToSendOnChange = Me.tagsChanged
 			return cell
 		}
-		os_log("Missing cell customization case for edit activity", type: .error)
+		log.error("Missing cell customization case for edit activity")
 		return UITableViewCell()
 	}
 
@@ -211,7 +212,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 		} catch {
 			DependencyInjector.db.clearUnsavedChanges()
 
-			os_log("Failed to create, edit or save ActivityDefinition: %@", type: .error, error.localizedDescription)
+			log.error("Failed to create, edit or save ActivityDefinition: %@", errorInfo(error))
 			showError(title: "Could not save", message: "Something went wrong while trying to save this activity. Sorry for the inconvenience.")
 		}
 	}

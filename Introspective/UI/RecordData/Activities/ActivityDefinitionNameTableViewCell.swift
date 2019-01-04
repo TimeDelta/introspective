@@ -8,7 +8,6 @@
 
 import UIKit
 import CoreData
-import os
 
 public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
 
@@ -27,6 +26,8 @@ public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
 			nameChanged(self)
 		}
 	}
+
+	private final let log = Log()
 
 	// MARK: - Actions
 
@@ -69,7 +70,7 @@ public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
 				let results = try DependencyInjector.db.query(fetchRequest)
 				return results.count > 0
 			} catch {
-				os_log("Failed to check for activity name duplication", type: .error)
+				log.error("Failed to check for activity name duplication")
 			}
 		}
 		return false

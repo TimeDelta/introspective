@@ -9,7 +9,6 @@
 import UIKit
 import Presentr
 import SwiftDate
-import os
 
 public final class MedicationDosesTableViewController: UITableViewController {
 
@@ -51,6 +50,8 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	private final var filterStartDate: Date?
 	private final var filterEndDate: Date?
 	private final var lastClickedIndex: Int!
+
+	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -101,7 +102,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 					tableView.deleteRows(at: [indexPath], with: .fade)
 					tableView.reloadData()
 				} catch {
-					os_log("Failed to delete medication dose: %@", type: .error, error.localizedDescription)
+					self.log.error("Failed to delete medication dose: %@", errorInfo(error))
 					self.showError(title: "Failed to dleete dose", message: "Sorry for the inconvenience.")
 				}
 			})

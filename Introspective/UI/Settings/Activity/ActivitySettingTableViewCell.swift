@@ -15,9 +15,11 @@ public class ActivitySettingTableViewCell: UITableViewCell {
 
 	final var changeNotification: Notification.Name!
 
+	private final let log = Log()
+
 	// MARK: - Functions
 
 	func reset() {
-		os_log("reset() not overriden", type: .error)
+		log.error("reset() not overriden")
 	}
 }

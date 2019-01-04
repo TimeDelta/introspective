@@ -8,7 +8,6 @@
 
 import Foundation
 import SwiftDate
-import os
 
 public final class Duration: Equatable, Comparable {
 
@@ -26,6 +25,7 @@ public final class Duration: Equatable, Comparable {
 	// MARK: - Instance Variables
 
 	private final let interval: TimeInterval
+	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -44,7 +44,7 @@ public final class Duration: Equatable, Comparable {
 			if let multiplier = Me.unitMultipliers[unit] {
 				tempInterval.addProduct(Double(multiplier), Double(amount))
 			} else {
-				os_log("Missing multiplier for component type in Duration initializer: ", type: .error, unit.description)
+				log.error("Missing multiplier for component type in Duration initializer: ", unit.description)
 			}
 		}
 		interval = tempInterval

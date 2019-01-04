@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import os
 
 extension Calendar.Component {
 
@@ -30,7 +29,7 @@ extension Calendar.Component {
 			case 14: return .calendar
 			case 15: return .timeZone
 			default:
-				os_log("Missing Calendar Component type: %d", type: .error, i)
+				Log().error("Missing Calendar Component type: %d", i)
 				return .day // random default that should never happen
 		}
 	}

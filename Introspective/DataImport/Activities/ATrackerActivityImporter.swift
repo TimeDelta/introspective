@@ -9,20 +9,26 @@
 import Foundation
 import CoreData
 import CSV
-import os
 
 //sourcery: AutoMockable
 public protocol ATrackerActivityImporter: Importer {}
 
 public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivityImporter, CoreDataObject {
 
+	// MARK: - Static Variables
+
 	public static let entityName = "ATrackerActivityImporter"
+
+	// MARK: - Instance Variables
 
 	public final let dataTypePluralName: String = "activity"
 	public final let sourceName: String = "ATracker"
 	public final var importOnlyNewData: Bool = true
 
 	private final var lineNumber: Int = -1
+	private final let log = Log()
+
+	// MARK: - Functions
 
 	public final func importData(from url: URL) throws {
 		let csv = try DependencyInjector.util.io.csvReader(url: url, hasHeaderRow: true)
@@ -38,17 +44,17 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 			lastImport = latestDate
 			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 
-			os_log("Cleaning up Activity import", type: .info)
+			log.info("Cleaning up Activity import")
 			try DependencyInjector.util.importer.cleanUpImportedData(forType: ActivityDefinition.self)
 			try DependencyInjector.util.importer.cleanUpImportedData(forType: Activity.self)
 			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 		} catch {
-			os_log("Deleting created activities due to error: %@", error.localizedDescription)
+			log.error("Deleting created activities due to error: %@", errorInfo(error))
 			do {
 				try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: ActivityDefinition.fetchRequest())
 				try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: Activity.fetchRequest())
 			} catch {
-				os_log("Failed to delete created activities: %@", type: .error, error.localizedDescription)
+				log.error("Failed to delete created activities: %@", errorInfo(error))
 			}
 
 			throw error

@@ -18,60 +18,60 @@ public final class Signpost {
 		self.log = log
 	}
 
-	public final func begin(name: StaticString, idObject: AnyObject? = nil) {
+	public final func begin(name: StaticString, dso: UnsafeRawPointer = #dsohandle, idObject: AnyObject? = nil) {
 		if #available(iOS 12.0, *) {
-			signpost(.begin, name: name, idObject: idObject)
+			signpost(.begin, dso: dso, name: name, idObject: idObject)
 		}
 	}
 
-	public final func begin(name: StaticString, idObject: AnyObject? = nil, _ format: StaticString, _ arguments: CVarArg...) {
+	public final func begin(name: StaticString, dso: UnsafeRawPointer = #dsohandle, idObject: AnyObject? = nil, _ format: StaticString, _ arguments: CVarArg...) {
 		if #available(iOS 12.0, *) {
-			signpost(.begin, name: name, idObject: idObject, format, arguments)
+			signpost(.begin, dso: dso, name: name, idObject: idObject, format, arguments)
 		}
 	}
 
-	public final func event(name: StaticString, idObject: AnyObject? = nil) {
+	public final func event(name: StaticString, dso: UnsafeRawPointer = #dsohandle, idObject: AnyObject? = nil) {
 		if #available(iOS 12.0, *) {
-			signpost(.event, name: name, idObject: idObject)
+			signpost(.event, dso: dso, name: name, idObject: idObject)
 		}
 	}
 
-	public final func event(name: StaticString, idObject: AnyObject? = nil, _ format: StaticString, _ arguments: CVarArg...) {
+	public final func event(name: StaticString, dso: UnsafeRawPointer = #dsohandle, idObject: AnyObject? = nil, _ format: StaticString, _ arguments: CVarArg...) {
 		if #available(iOS 12.0, *) {
-			signpost(.event, name: name, idObject: idObject, format, arguments)
+			signpost(.event, dso: dso, name: name, idObject: idObject, format, arguments)
 		}
 	}
 
-	public final func end(name: StaticString, idObject: AnyObject? = nil) {
+	public final func end(name: StaticString, dso: UnsafeRawPointer = #dsohandle, idObject: AnyObject? = nil) {
 		if #available(iOS 12.0, *) {
-			signpost(.end, name: name)
+			signpost(.end, dso: dso, name: name, idObject: idObject)
 		}
 	}
 
-	public final func end(name: StaticString, idObject: AnyObject? = nil, _ format: StaticString, _ arguments: CVarArg...) {
+	public final func end(name: StaticString, dso: UnsafeRawPointer = #dsohandle, idObject: AnyObject? = nil, _ format: StaticString, _ arguments: CVarArg...) {
 		if #available(iOS 12.0, *) {
-			signpost(.end, name: name, idObject: idObject, format, arguments)
+			signpost(.end, dso: dso, name: name, idObject: idObject, format, arguments)
 		}
 	}
 
 	@available(iOS 12.0, *)
-	private final func signpost(_ type: OSSignpostType, name: StaticString, idObject: AnyObject? = nil) {
+	private final func signpost(_ type: OSSignpostType, dso: UnsafeRawPointer = #dsohandle, name: StaticString, idObject: AnyObject? = nil) {
 		guard log.signpostsEnabled else { return }
 		let signpostID = getSignpostId(forObject: idObject)
-		os_signpost(type, log: log, name: name, signpostID: signpostID)
+		os_signpost(type, dso: dso, log: log, name: name, signpostID: signpostID)
 	}
 
 	@available(iOS 12.0, *)
 	private final func signpost(
 		_ type: OSSignpostType,
-		dso: UnsafeRawPointer = #dsohandle,
+		dso: UnsafeRawPointer,
 		name: StaticString,
 		idObject: AnyObject? = nil,
 		_ format: StaticString,
 		_ arguments: [CVarArg])
 	{
 		// This crazy mess is because [CVarArg] gets treated as a single CVarArg and repassing a CVarArg... actually passes a [CVarArg]
-		// This was copied from the publicly available Swift source code at https://github.com/apple/swift/blob/master/stdlib/public/SDK/os/os_signpost.swift#L40
+		// This was copied from the publicly available Swift source code at https://github.com/apple/swift/blob/master/stdlib/public/Darwin/os/os_signpost.swift#L40
 		// THIS IS A HACK
 		guard log.signpostsEnabled else { return }
 		let signpostID = getSignpostId(forObject: idObject)

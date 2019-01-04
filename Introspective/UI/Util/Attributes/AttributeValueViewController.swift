@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import os
 
 final class AttributeValueViewController: UIViewController {
 
@@ -29,6 +28,10 @@ final class AttributeValueViewController: UIViewController {
 	public final var attributeValue: Any!
 
 	private final var subViewController: AttributeValueTypeViewController!
+
+	private final let log = Log()
+
+	// MARK: UIViewController Overrides
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
@@ -58,7 +61,7 @@ final class AttributeValueViewController: UIViewController {
 			controller.currentValue = attributeValue
 			subViewController = controller
 		} else {
-			os_log("Unknown attribute type: ", type: .error, String(describing: type(of: attribute)))
+			log.error("Unknown attribute type: %@", String(describing: type(of: attribute)))
 		}
 
 		if subViewController != nil {
@@ -73,6 +76,8 @@ final class AttributeValueViewController: UIViewController {
 		}
 	}
 
+	// MARK: - Actions
+
 	@IBAction final func saveButtonPressed(_ sender: Any) {
 		NotificationCenter.default.post(
 			name: notificationToSendOnAccept,
@@ -82,6 +87,8 @@ final class AttributeValueViewController: UIViewController {
 			]))
 		dismiss(animated: false, completion: nil)
 	}
+
+	// MARK: - Received Notifications
 
 	@objc private final func disableSaveButton() {
 		acceptButton.isEnabled = false

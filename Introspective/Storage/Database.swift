@@ -51,6 +51,7 @@ public class DatabaseImpl: Database {
 
 	private final var persistentContainer: NSPersistentContainer
 	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Database"))
+	private final let log = Log(OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Database"))
 
 	private lazy final var backgroundContext: NSManagedObjectContext = {
 		let background = self.persistentContainer.newBackgroundContext()
@@ -62,7 +63,7 @@ public class DatabaseImpl: Database {
 		persistentContainer = container ?? {
 			let container = NSPersistentContainer(name: "Introspective")
 			container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-				if let error = error as NSError? {
+				if let error = error {
 					/*
 					Typical reasons for an error here include:
 					* The parent directory does not exist, cannot be created, or disallows writing.
@@ -71,7 +72,8 @@ public class DatabaseImpl: Database {
 					* The store could not be migrated to the current model version.
 					Check the error message to determine what the actual problem was.
 					*/
-					os_log("Unresolved error: %@", type: .error, error.userInfo)
+					Log(OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Database"))
+						.fault("Unresolved error while loading persistent stores: %@", errorInfo(error))
 					NotificationBanner(
 						title: "Failed to load saved data",
 						subtitle: "App functionality will be limited.",
@@ -90,7 +92,7 @@ public class DatabaseImpl: Database {
 		signpost.begin(name: "New", idObject: objectType)
 		let entity = NSEntityDescription.entity(forEntityName: objectType.entityName, in: backgroundContext)!
 		guard let newObject = NSManagedObject(entity: entity, insertInto: backgroundContext) as? Type else {
-			os_log("Could not cast new object as %@", type: .error, objectType.entityName)
+			log.error("Could not cast new object as %@", objectType.entityName)
 			signpost.end(name: "New", idObject: objectType)
 			throw DatabaseError.failedToInstantiateObject
 		}
@@ -254,7 +256,7 @@ public class DatabaseImpl: Database {
 				wasFault += "not "
 			}
 			wasFault += "a fault"
-			os_log("Could not cast managed object as %@: %@", type: .error, type.entity().name!)
+			log.error("Could not cast managed object as %@: %@", type.entity().name!)
 			throw DatabaseError.failedToInstantiateObject
 		}
 		return castedObject

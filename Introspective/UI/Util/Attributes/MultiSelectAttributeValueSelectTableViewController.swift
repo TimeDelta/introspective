@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import os
 
 public final class MultiSelectAttributeValueSelectTableViewController: UITableViewController {
 
@@ -20,6 +19,8 @@ public final class MultiSelectAttributeValueSelectTableViewController: UITableVi
 	private final let searchController = UISearchController(searchResultsController: nil)
 	private final var filteredValues = [Any]()
 
+	private final let log = Log()
+
 	// MARK: - UIViewController Overrides
 
 	public final override func viewDidLoad() {
@@ -31,7 +32,7 @@ public final class MultiSelectAttributeValueSelectTableViewController: UITableVi
 				let initiallySelectedValues = try multiSelectAttribute.valueAsArray(initialValue)
 				selectRowsForValues(initiallySelectedValues)
 			} catch {
-				os_log("Failed to set initial multi-select value: %@", type: .error, error.localizedDescription)
+				log.error("Failed to set initial multi-select value: %@", errorInfo(error))
 			}
 		}
 
@@ -59,7 +60,7 @@ public final class MultiSelectAttributeValueSelectTableViewController: UITableVi
 		do {
 			displayValue = try multiSelectAttribute.convertPossibleValueToDisplayableString(value)
 		} catch {
-			os_log("Failed to convert '$@' displayable value: %@", type: .error, String(describing: value), error.localizedDescription)
+			log.error("Failed to convert '$@' displayable value: %@", String(describing: value), errorInfo(error))
 			displayValue = String(describing: value)
 		}
 		cell.textLabel!.text = displayValue
@@ -77,7 +78,7 @@ public final class MultiSelectAttributeValueSelectTableViewController: UITableVi
 		if let indexToRemove = multiSelectAttribute.indexOf(possibleValue: filteredValues[indexPath.row], in: selectedValues) {
 			selectedValues.remove(at: indexToRemove)
 		} else {
-			os_log("Did not find value to remove from selection in selected values", type: .error)
+			log.error("Did not find value to remove from selection in selected values")
 			// do nothing because we're already in the state the user is currently requesting
 		}
 	}
@@ -106,7 +107,7 @@ extension MultiSelectAttributeValueSelectTableViewController: UISearchResultsUpd
 					let stringValue = try self.multiSelectAttribute.convertPossibleValueToDisplayableString(value)
 					return stringValue.localizedLowercase.contains(searchText)
 				} catch {
-					os_log("Failed to convert '$@' displayable value: %@", type: .error, String(describing: value), error.localizedDescription)
+					log.error("Failed to convert '$@' displayable value: %@", String(describing: value), errorInfo(error))
 					return false
 				}
 			})

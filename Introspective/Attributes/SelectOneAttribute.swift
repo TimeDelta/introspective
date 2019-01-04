@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import os
 
 public protocol SelectOneAttribute: SelectAttribute {
 
@@ -22,6 +21,8 @@ public class TypedSelectOneAttribute<Type>: AttributeBase, SelectOneAttribute {
 	public final let areEqual: (Type, Type) -> Bool
 
 	private final let possibleValueToString: (Type) -> String
+
+	private final let log = Log()
 
 	public init(
 		name: String,
@@ -53,11 +54,11 @@ public class TypedSelectOneAttribute<Type>: AttributeBase, SelectOneAttribute {
 
 	public final func valuesAreEqual(_ first: Any?, _ second: Any?) -> Bool {
 		guard let castedFirst = first as? Type else {
-			os_log("Failed to cast first value when testing equality: %@", type: .error, String(describing: first))
+			log.error("Failed to cast first value when testing equality: %@", String(describing: first))
 			return false
 		}
 		guard let castedSecond = second as? Type else {
-			os_log("Failed to cast second value when testing equality: %@", type: .error, String(describing: first))
+			log.error("Failed to cast second value when testing equality: %@", String(describing: first))
 			return false
 		}
 		return areEqual(castedFirst, castedSecond)

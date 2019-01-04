@@ -8,11 +8,11 @@
 
 import Foundation
 import HealthKit
-import os
 
 public final class HealthManager {
 
 	private typealias Me = HealthManager
+	private static let log = Log()
 	private static let healthStore = HKHealthStore()
 	private static let readPermissions: Set<HKObjectType> = {
 		var allPermissions = Set<HKObjectType>()
@@ -44,7 +44,7 @@ public final class HealthManager {
 			} else if #available(iOS 12.0, *), calculation == .discreteMostRecent {
 				value = result?.mostRecentQuantity()?.doubleValue(for: type.unit)
 			} else {
-				os_log("Unsupported calculation parameter passed", type: .error)
+				Me.log.error("Unsupported calculation parameter passed")
 			}
 
 			callback(value, error)
@@ -72,8 +72,8 @@ public final class HealthManager {
 		let quantityType = HKQuantityType.quantityType(forIdentifier: typeId)!
 		var unit: HKUnit? = nil
 		Me.healthStore.preferredUnits(for: Set([quantityType])) { (units, error) in
-			if error != nil {
-				os_log("Failed to determine preferred unit for %@: %@", type: .error, String(describing: typeId), error!.localizedDescription)
+			if let error = error {
+				Me.log.error("Failed to determine preferred unit for %@: %@", String(describing: typeId), errorInfo(error))
 			}
 			unit = units[quantityType]
 			group.leave()
@@ -85,17 +85,17 @@ public final class HealthManager {
 	static public func getAuthorization(callback: @escaping (Error?) -> ()) {
 		var requesting = false
 		for objectType in readPermissions {
-			os_log("Checking authorization to read %@ data", type: .info, objectType.identifier)
+			Me.log.info("Checking authorization to read %@ data", objectType.identifier)
 			let status = Me.healthStore.authorizationStatus(for: objectType)
-			os_log("Finished checking authorization to read %@ data", type: .info, objectType.identifier)
+			Me.log.info("Finished checking authorization to read %@ data", objectType.identifier)
 			if status == .notDetermined {
 				requesting = true
-				os_log("Requesting authorization to HealthKit data", type: .info)
+				Me.log.info("Requesting authorization to HealthKit data")
 				let writePermissions: Set<HKSampleType>? = testing ? Me.writePermissions : nil
 				Me.healthStore.requestAuthorization(toShare: writePermissions, read: Me.readPermissions) { (success, error) in
-					os_log("Finished requesting access to HealthKit data: %@", type: .info, success ? "Success" : "Failure")
-					if error != nil {
-						os_log("Error occurred while trying to request access to HealthKit data: %@", type: .info, error!.localizedDescription)
+					Me.log.info("Finished requesting access to HealthKit data: %@", success ? "Success" : "Failure")
+					if let error = error {
+						Me.log.error("Error occurred while trying to request access to HealthKit data: %@", errorInfo(error))
 					}
 					callback(error)
 				}

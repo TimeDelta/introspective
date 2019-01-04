@@ -7,12 +7,13 @@
 //
 
 import UIKit
-import os
 
 public final class ContainerView<T: UIViewController>: UIView {
 
 	unowned final var parentController: UIViewController
 	weak final var currentController: T?
+
+	private final let log = Log()
 
 	init(parentController: UIViewController) {
 		self.parentController = parentController
@@ -20,7 +21,7 @@ public final class ContainerView<T: UIViewController>: UIView {
 	}
 
 	public required init?(coder aDecoder: NSCoder) {
-		os_log("init(coder:) has not been implemented - cannot use with storyboards")
+		log.error("init(coder:) has not been implemented - cannot use with storyboards")
 		return nil
 	}
 

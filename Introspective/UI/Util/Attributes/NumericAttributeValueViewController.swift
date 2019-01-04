@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import os
 
 final class NumericAttributeValueViewController: UIViewController {
 
@@ -22,6 +21,8 @@ final class NumericAttributeValueViewController: UIViewController {
 	public final var notificationToSendOnAccept: Notification.Name!
 	public final var currentValue: Any!
 
+	private final let log = Log()
+
 	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
@@ -32,7 +33,7 @@ final class NumericAttributeValueViewController: UIViewController {
 			} else if numericAttribute is IntegerAttribute {
 				textField.text = String(currentValue as! Int)
 			} else {
-				os_log("Forgot a type of NumericAttribute when setting initial value for text field", type: .error)
+				log.error("Forgot a type of NumericAttribute when setting initial value for text field")
 			}
 		}
 	}

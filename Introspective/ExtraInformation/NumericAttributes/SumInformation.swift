@@ -7,16 +7,23 @@
 //
 
 import Foundation
-import os
 
 public final class SumInformation: AnyInformation {
+
+	// MARK: - Instance Variables
 
 	public final override var name: String { get { return "Total" } }
 	public final override var description: String { return name + " " + attribute.name.localizedLowercase }
 
+	private final let log = Log()
+
+	// MARK: - Initializers
+
 	public required init(_ attribute: Attribute) {
 		super.init(attribute)
 	}
+
+	// MARK: - Functions
 
 	public final override func compute(forSamples samples: [Sample]) -> String {
 		let filteredSamples = DependencyInjector.util.sample.getOnly(samples: samples, from: startDate, to: endDate)
@@ -35,9 +42,8 @@ public final class SumInformation: AnyInformation {
 			return getSumOfDurationAttribute(filteredSamples).description
 		}
 
-		os_log(
+		log.error(
 			"Unknown attribute type (%@) for attribute named '%@' of sample type '%@'",
-			type: .error,
 			String(describing: type(of: attribute)),
 			attribute.name,
 			String(describing: type(of: samples[0])))
@@ -61,9 +67,8 @@ public final class SumInformation: AnyInformation {
 			return String(getSumOfDurationAttribute(filteredSamples).inUnit(.hour))
 		}
 
-		os_log(
+		log.error(
 			"Unknown attribute type (%@) for attribute named '%@' of sample type '%@'",
-			type: .error,
 			String(describing: type(of: attribute)),
 			attribute.name,
 			String(describing: type(of: samples[0])))
@@ -91,7 +96,7 @@ public final class SumInformation: AnyInformation {
 			dosage = try! sample.value(of: attribute) as? Dosage
 			if dosage != nil { break }
 			else if !attribute.optional {
-				os_log("Non-optional dosage returned nil value for %@ sample", type: .error, sample.attributedName)
+				log.error("Non-optional dosage returned nil value for %@ sample", sample.attributedName)
 			}
 		}
 		return dosage
@@ -111,12 +116,11 @@ public final class SumInformation: AnyInformation {
 		do {
 			return try sample.value(of: attribute) as? Dosage
 		} catch {
-			os_log(
+			log.error(
 				"Failed to retrieve dosage attribute named '$@' of $@ sample while calculating sum information: $@",
-				type: .error,
 				attribute.name,
 				sample.attributedName,
-				error.localizedDescription)
+				errorInfo(error))
 			return nil
 		}
 	}
@@ -137,12 +141,11 @@ public final class SumInformation: AnyInformation {
 		do {
 			return try sample.value(of: attribute) as? Duration
 		} catch {
-			os_log(
+			log.error(
 				"Failed to retrieve dosage attribute named '$@' of $@ sample while calculating sum information: $@",
-				type: .error,
 				attribute.name,
 				sample.attributedName,
-				error.localizedDescription)
+				errorInfo(error))
 			return nil
 		}
 	}

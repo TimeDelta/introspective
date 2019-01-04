@@ -8,18 +8,25 @@
 
 import Foundation
 import CoreData
-import os
 
 //sourcery: AutoMockable
 public protocol EasyPillMedicationDoseImporter: Importer {}
 
 public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPillMedicationDoseImporter, CoreDataObject {
 
+	// MARK: - Static Variables
+
 	public static let entityName = "EasyPillMedicationDoseImporter"
+
+	// MARK: - Instance Variables
 
 	public final let dataTypePluralName: String = "medication doses"
 	public final let sourceName: String = "EasyPill"
 	public final var importOnlyNewData: Bool = true
+
+	private final let log = Log()
+
+	// MARK: - Functions
 
 	public final func importData(from url: URL) throws {
 		let contents = try DependencyInjector.util.io.contentsOf(url)
@@ -83,7 +90,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 		do {
 			medicationsWithName = try DependencyInjector.db.query(medicationsWithNameFetchRequest)
 		} catch {
-			os_log("Failed to check for existing medications named '%@': %@", type: .error, medicationName, error.localizedDescription)
+			log.error("Failed to check for existing medications named '%@': %@", medicationName, errorInfo(error))
 			throw GenericDisplayableError(
 				title: "Data Access Error",
 				description: "Unable to check for medication named \(medicationName).")
@@ -107,7 +114,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 			medication.addToDoses(dose)
 			try DependencyInjector.db.save()
 		} catch {
-			os_log("Failed to create and modify medication dose: %@", type: .error, error.localizedDescription)
+			log.error("Failed to create and modify medication dose: %@", errorInfo(error))
 			if doseCreated {
 				try? DependencyInjector.db.delete(dose)
 			}

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import os
 
 //sourcery: AutoMockable
 public protocol AttributeRestrictionFactory {
@@ -102,6 +101,8 @@ public final class AttributeRestrictionFactoryImpl: AttributeRestrictionFactory 
 		NotEqualToDurationAttributeRestriction.self,
 	]
 
+	private final let log = Log()
+
 	public final func typesFor(_ attribute: Attribute) -> [AttributeRestriction.Type] {
 		switch (attribute) {
 			case is TextAttribute: return Me.textTypes
@@ -115,7 +116,7 @@ public final class AttributeRestrictionFactoryImpl: AttributeRestrictionFactory 
 			case is TagsAttribute: return Me.tagsTypes
 			case is DurationAttribute: return Me.durationTypes
 			default:
-				os_log("Forgot a type of attribute: %@", type: .error, String(describing: type(of: attribute)))
+				log.error("Forgot a type of attribute: %@", String(describing: type(of: attribute)))
 				return []
 		}
 	}

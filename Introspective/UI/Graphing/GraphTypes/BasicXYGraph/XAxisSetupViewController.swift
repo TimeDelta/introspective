@@ -8,7 +8,6 @@
 
 import UIKit
 import Presentr
-import os
 
 final class XAxisSetupViewController: UIViewController {
 
@@ -52,6 +51,8 @@ final class XAxisSetupViewController: UIViewController {
 	public final var selectedInformation: ExtraInformation!
 	public final var notificationToSendWhenFinished: Notification.Name!
 	private final var finishedLoading = false
+
+	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -167,7 +168,7 @@ extension XAxisSetupViewController: UIPickerViewDataSource {
 		if pickerView == informationPicker {
 			return getApplicableInformationTypesForSelectedAttribute().count
 		}
-		os_log("Unknown UIPickerView when determining number of rows: '%@'", type: .error, pickerView.restorationIdentifier ?? "")
+		log.error("Unknown UIPickerView when determining number of rows: '%@'", pickerView.restorationIdentifier ?? "")
 		return 0
 	}
 }
@@ -183,7 +184,7 @@ extension XAxisSetupViewController: UIPickerViewDelegate {
 		if pickerView == informationPicker {
 			return getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute).name.localizedCapitalized
 		}
-		os_log("Unknown UIPickerView when determining row title: '%@'", type: .error, pickerView.restorationIdentifier ?? "")
+		log.error("Unknown UIPickerView when determining row title: '%@'", pickerView.restorationIdentifier ?? "")
 		return nil
 	}
 
@@ -194,6 +195,6 @@ extension XAxisSetupViewController: UIPickerViewDelegate {
 		if pickerView == informationPicker {
 			selectedInformation = getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute)
 		}
-		os_log("Unknown UIPickerView when determining row title: '%@'", type: .error, pickerView.restorationIdentifier ?? "")
+		log.error("Unknown UIPickerView when determining row title: '%@'", pickerView.restorationIdentifier ?? "")
 	}
 }

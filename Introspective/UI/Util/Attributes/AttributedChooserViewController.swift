@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import os
 
 final class AttributedChooserViewController: UIViewController {
 
@@ -43,6 +42,8 @@ final class AttributedChooserViewController: UIViewController {
 	private final var attributeViewControllers: [AttributeViewController]!
 	private final let verticalSpacing = CGFloat(5)
 	private final var initialSetDone = false
+
+	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -90,7 +91,7 @@ final class AttributedChooserViewController: UIViewController {
 				try currentValue.set(attribute: attribute, to: value(for: .attributeValue, from: notification))
 				sendValueChangeNotification()
 			} catch {
-				os_log("Failed to set attribute value: %@", type: .error, error.localizedDescription)
+				log.error("Failed to set attribute value: %@", errorInfo(error))
 			}
 		}
 	}
@@ -209,7 +210,7 @@ extension AttributedChooserViewController: UIPickerViewDelegate {
 					let attributeCurrentValue = try currentValue.value(of: attribute)
 					try newValue.set(attribute: attribute, to: attributeCurrentValue)
 				} catch {
-					os_log("Failed to set or retrieve attribute value of Attributed object: %@", type: .error, error.localizedDescription)
+					log.error("Failed to set or retrieve attribute value of Attributed object: %@", errorInfo(error))
 					// ignore and move on
 				}
 			}

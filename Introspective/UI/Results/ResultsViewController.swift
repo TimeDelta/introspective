@@ -10,7 +10,6 @@ import UIKit
 import Presentr
 import NotificationBannerSwift
 import CoreData
-import os
 
 final class ResultsViewController: UITableViewController {
 
@@ -63,6 +62,8 @@ final class ResultsViewController: UITableViewController {
 	private final var sortActionSheet: UIAlertController?
 	private final var sortController: SortResultsViewController?
 
+	private final let log = Log()
+
 	// MARK: - UIViewController Overloads
 
 	public final override func viewDidLoad() {
@@ -104,7 +105,7 @@ final class ResultsViewController: UITableViewController {
 			}
 			return "Entries"
 		} else {
-			os_log("Unexpected section index while getting section title", type: .error)
+			log.error("Unexpected section index while getting section title")
 			return nil
 		}
 	}
@@ -129,7 +130,7 @@ final class ResultsViewController: UITableViewController {
 			return samples.count
 		}
 
-		os_log("Unexpected section index (%@) while determining number of rows in section", type: .error, String(section))
+		log.error("Unexpected section index (%@) while determining number of rows in section", String(section))
 		return 0
 	}
 
@@ -199,7 +200,7 @@ final class ResultsViewController: UITableViewController {
 			}
 		}
 
-		os_log("Unexpected section index (%@) while instantiating cell", type: .error, String(section))
+		log.error("Unexpected section index (%@) while instantiating cell", String(section))
 		return UITableViewCell()
 	}
 
@@ -250,7 +251,7 @@ final class ResultsViewController: UITableViewController {
 							tableView.reloadData()
 						}
 					} catch {
-						os_log("Failed to delete sample: %@", type: .error, error.localizedDescription)
+						self.log.error("Failed to delete sample: %@", errorInfo(error))
 						self.showError(
 							title: "Failed to delete " + self.samples[indexPath.row].attributedName.localizedLowercase,
 							message: "Sorry for the inconvenience.")
@@ -273,7 +274,7 @@ final class ResultsViewController: UITableViewController {
 				extraInformationValues[editIndex] = try! extraInformation[editIndex].compute(forSamples: samples)
 				tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
 			} else {
-				os_log("Extra Information edit index was nil", type: .error)
+				log.error("Extra Information edit index was nil")
 			}
 		}
 	}
@@ -315,7 +316,7 @@ final class ResultsViewController: UITableViewController {
 				case is FrequencyAttribute: self.sort(by: Frequency.self); break
 				case is DosageAttribute: self.sort(by: Dosage.self); break
 				default:
-					os_log("Unknown sort attribute type: %@", type: .error, String(describing: type(of: self.sortAttribute)))
+					self.log.error("Unknown sort attribute type: %@", String(describing: type(of: self.sortAttribute)))
 			}
 			self.sortTask = nil
 			DispatchQueue.main.async{
@@ -382,7 +383,7 @@ final class ResultsViewController: UITableViewController {
 					try DependencyInjector.db.deleteAll(self.samples as! [NSManagedObject])
 					try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 				} catch {
-					os_log("Failed to delete all %@: %@", type: .error, sampleType, error.localizedDescription)
+					self.log.error("Failed to delete all %@: %@", sampleType, errorInfo(error))
 					NotificationBanner(title: "Failed to delete all \(sampleType) records", style: .danger).show()
 				}
 			}
@@ -518,7 +519,7 @@ final class ResultsViewController: UITableViewController {
 				return value1! >= value2!
 			}
 		} catch {
-			os_log("Failed to sort by %@: %@", type: .error, String(describing: type), error.localizedDescription)
+			log.error("Failed to sort by %@: %@", String(describing: type), errorInfo(error))
 			tellUserSortFailed()
 		}
 	}

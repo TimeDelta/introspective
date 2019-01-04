@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import os
 
 final class ChooseSampleTypeViewController: UIViewController {
 
@@ -20,6 +19,8 @@ final class ChooseSampleTypeViewController: UIViewController {
 	public final var selectedSampleType: Sample.Type?
 	public final var notificationToSendOnAccept: Notification.Name!
 
+	private final let log = Log()
+
 	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
@@ -30,7 +31,7 @@ final class ChooseSampleTypeViewController: UIViewController {
 			if let selectedIndex = DependencyInjector.sample.allTypes().index(where: { $0 == selectedSampleType }) {
 				sampleTypePicker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
-				os_log("Could not find index for specified type", type: .error)
+				log.error("Could not find index for specified type")
 			}
 		}
 	}

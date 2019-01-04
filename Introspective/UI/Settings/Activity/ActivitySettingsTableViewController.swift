@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import os
 
 public final class ActivitySettingsTableViewController: UITableViewController {
 
@@ -31,6 +30,8 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 
 	private final var autoIgnoreEnabled: Bool = DependencyInjector.settings.autoIgnoreEnabled
 	private final var numberOfSeconds: Int = DependencyInjector.settings.autoIgnoreSeconds
+
+	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -110,7 +111,7 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 			self.navigationController?.popViewController(animated: false)
 		} catch {
-			os_log("Failed to save activity settings: %@", type: .error, error.localizedDescription)
+			log.error("Failed to save activity settings: %@", errorInfo(error))
 			showError(
 				title: "Failed to save settins",
 				message: "Sorry for the inconvenience.",

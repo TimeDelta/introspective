@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import os
 
 //sourcery: AutoMockable
 public protocol MoodUtil {
@@ -17,6 +16,8 @@ public protocol MoodUtil {
 }
 
 public final class MoodUtilImpl: MoodUtil {
+
+	private final let log = Log()
 
 	public final func scaleMoods() throws {
 		MoodQueryImpl.updatingMoodsInBackground = true
@@ -28,7 +29,7 @@ public final class MoodUtilImpl: MoodUtil {
 			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 			MoodQueryImpl.updatingMoodsInBackground = false
 		} catch {
-			os_log("Failed to scale old moods: %@", type: .error, error.localizedDescription)
+			log.error("Failed to scale old moods: %@", errorInfo(error))
 			MoodQueryImpl.updatingMoodsInBackground = false
 			throw error
 		}

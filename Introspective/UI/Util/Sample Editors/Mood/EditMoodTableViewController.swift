@@ -8,7 +8,6 @@
 
 import UIKit
 import Presentr
-import os
 
 public final class EditMoodTableViewController: UITableViewController {
 
@@ -49,6 +48,8 @@ public final class EditMoodTableViewController: UITableViewController {
 	private final var minRating: Double = DependencyInjector.settings.minMood
 	private final var maxRating: Double = DependencyInjector.settings.maxMood
 	private final var note: String? = nil
+
+	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -108,7 +109,7 @@ public final class EditMoodTableViewController: UITableViewController {
 			cell.notificationToSendOnChange = Me.noteChanged
 			return cell
 		}
-		os_log("Missing cell customization case for edit mood", type: .error)
+		log.error("Missing cell customization case for edit mood")
 		return UITableViewCell()
 	}
 
@@ -171,7 +172,7 @@ public final class EditMoodTableViewController: UITableViewController {
 			}
 			navigationController?.popViewController(animated: false)
 		} catch {
-			os_log("Failed to save create or save mood: %@", type: .error, error.localizedDescription)
+			log.error("Failed to save create or save mood: %@", errorInfo(error))
 			showError(title: "Failed to save mood", message: "Sorry for the inconvenience")
 		}
 	}

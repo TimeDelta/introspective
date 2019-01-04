@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import os
 
 final class ChooseCalendarComponentViewController: UIViewController {
 
@@ -20,6 +19,8 @@ final class ChooseCalendarComponentViewController: UIViewController {
 	public final var selectedComponent: Calendar.Component?
 	public final var notificationToSendOnAccept: Notification.Name!
 
+	private final let log = Log()
+
 	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
@@ -30,7 +31,7 @@ final class ChooseCalendarComponentViewController: UIViewController {
 			if let selectedIndex = CalendarComponentAttribute.supportedComponents.index(of: selectedComponent!) {
 				calendarComponentPicker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
-				os_log("Could not find index for specified component", type: .error)
+				log.error("Could not find index for specified component")
 			}
 		}
 	}

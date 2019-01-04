@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import os
 
 final class ChooseAttributeViewController: UIViewController {
 
@@ -21,6 +20,8 @@ final class ChooseAttributeViewController: UIViewController {
 	public final var selectedAttribute: Attribute?
 	public final var notificationToSendOnAccept: Notification.Name!
 
+	private final let log = Log()
+
 	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
@@ -31,12 +32,12 @@ final class ChooseAttributeViewController: UIViewController {
 			if let selectedIndex = attributes.index(where: { $0.equalTo(selectedAttribute!) }) {
 				attributePicker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
-				os_log("Could not find index for specified component", type: .error)
+				log.error("Could not find index for specified component")
 			}
 		} else if attributes.count > 0 {
 			selectedAttribute = attributes[0]
 		} else {
-			os_log("No attributes passed", type: .error)
+			log.error("No attributes passed")
 		}
 	}
 

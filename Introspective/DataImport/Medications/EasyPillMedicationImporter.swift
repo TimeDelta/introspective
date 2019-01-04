@@ -8,18 +8,25 @@
 
 import Foundation
 import CoreData
-import os
 
 //sourcery: AutoMockable
 public protocol EasyPillMedicationImporter: Importer {}
 
 public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedicationImporter, CoreDataObject {
 
+	// MARK: - Static Variables
+
 	public static let entityName = "EasyPillMedicationImporter"
+
+	// MARK: - Instance Variables
 
 	public final let dataTypePluralName: String = "medications"
 	public final let sourceName: String = "EasyPill"
 	public final var importOnlyNewData: Bool = true
+
+	private final let log = Log()
+
+	// MARK: - Functions
 
 	public final func importData(from url: URL) throws {
 		let contents = try DependencyInjector.util.io.contentsOf(url)
@@ -89,7 +96,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 		do {
 			medicationsWithCurrentName = try DependencyInjector.db.query(medicationsWithCurrentNameFetchRequest)
 		} catch {
-			os_log("Failed to check for existing medications named '%@': %@", type: .error, name, error.localizedDescription)
+			log.error("Failed to check for existing medications named '%@': %@", name, errorInfo(error))
 			throw GenericDisplayableError(
 				title: "Data Access Error",
 				description: "Unable to check for existing medications named \(name).")

@@ -7,13 +7,10 @@
 //
 
 import Foundation
-import os
 
 public class TypedGreaterThanAttributeRestrictionBase<ValueType: Comparable>: AnyAttributeRestriction, Equatable {
 
-	public static func ==(lhs: TypedGreaterThanAttributeRestrictionBase, rhs: TypedGreaterThanAttributeRestrictionBase) -> Bool {
-		return lhs.equalTo(rhs)
-	}
+	// MARK: - Display Information
 
 	public final override var attributedName: String { return "Greater than" }
 	public final override var description: String {
@@ -21,13 +18,19 @@ public class TypedGreaterThanAttributeRestrictionBase<ValueType: Comparable>: An
 			let valueText = try restrictedAttribute.convertToDisplayableString(from: value)
 			return restrictedAttribute.name + " > " + valueText
 		} catch {
-			os_log("Could not convert current value (%@) to displayable string: %@", type: .error, String(describing: value), error.localizedDescription)
+			log.error("Could not convert current value (%@) to displayable string: %@", String(describing: value), errorInfo(error))
 			return restrictedAttribute.name + " > ?"
 		}
 	}
 
+	// MARK: - Instance Variables
+
 	public final var value: ValueType
 	private final var valueAttribute: Attribute
+
+	private final let log = Log()
+
+	// MARK: - Initializers
 
 	public init(restrictedAttribute: Attribute, value: ValueType, valueAttribute: Attribute) {
 		self.value = value
@@ -36,8 +39,11 @@ public class TypedGreaterThanAttributeRestrictionBase<ValueType: Comparable>: An
 	}
 
 	public required init(restrictedAttribute: Attribute) {
+		// can't do anything to initialize value member variable
 		fatalError("This should never be called because this is an abstract base class")
 	}
+
+	// MARK: - Attribute Functions
 
 	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(valueAttribute) { return value }
@@ -50,11 +56,19 @@ public class TypedGreaterThanAttributeRestrictionBase<ValueType: Comparable>: An
 		self.value = castedValue
 	}
 
+	// MARK: - Attribute Restriction Functions
+
 	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return false }
 		guard let castedValue = sampleValue as? ValueType else { throw AttributeError.typeMismatch }
 		return castedValue > value
+	}
+
+	// MARK: - Equality
+
+	public static func ==(lhs: TypedGreaterThanAttributeRestrictionBase, rhs: TypedGreaterThanAttributeRestrictionBase) -> Bool {
+		return lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {

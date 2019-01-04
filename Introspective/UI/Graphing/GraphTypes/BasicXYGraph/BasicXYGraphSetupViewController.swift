@@ -8,7 +8,6 @@
 
 import UIKit
 import AAInfographics
-import os
 
 final class BasicXYGraphSetupViewController: BasicXYGraphTypeSetupViewController {
 
@@ -26,6 +25,8 @@ final class BasicXYGraphSetupViewController: BasicXYGraphTypeSetupViewController
 	// MARK: - Instance Variables
 
 	private final var subViewController: BasicXYGraphTypeSetupViewController?
+
+	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -67,7 +68,7 @@ final class BasicXYGraphSetupViewController: BasicXYGraphTypeSetupViewController
 				addChild(controller)
 				break
 			default:
-				os_log("Unknown segmented control index: %d", type: .error, numberOfDataTypesSegmentedControl.selectedSegmentIndex)
+				log.error("Unknown segmented control index: %d", numberOfDataTypesSegmentedControl.selectedSegmentIndex)
 		}
 	}
 }

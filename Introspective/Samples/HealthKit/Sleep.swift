@@ -8,7 +8,6 @@
 
 import Foundation
 import HealthKit
-import os
 
 public final class Sleep: HealthKitCategorySample {
 
@@ -77,6 +76,8 @@ public final class Sleep: HealthKitCategorySample {
 	public final var endDate: Date
 	public final var state: State
 
+	private final let log = Log()
+
 	// MARK: - Initializers
 
 	public init(_ state: State = .awake, startDate: Date = Date(), endDate: Date = Date()) {
@@ -97,7 +98,7 @@ public final class Sleep: HealthKitCategorySample {
 				state = .asleep
 				break
 			default:
-				os_log("Unknown state: %d", type: .error, sample.value)
+				log.error("Unknown state: %d", sample.value)
 				state = .awake
 				break
 		}

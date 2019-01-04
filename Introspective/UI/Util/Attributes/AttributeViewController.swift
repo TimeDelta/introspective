@@ -8,7 +8,6 @@
 
 import UIKit
 import Presentr
-import os
 
 final class AttributeViewController: UIViewController {
 
@@ -38,6 +37,8 @@ final class AttributeViewController: UIViewController {
 			observe(selector: #selector(valueChanged), name: notificationToSendOnValueChange)
 		}
 	}
+
+	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -164,11 +165,10 @@ final class AttributeViewController: UIViewController {
 			do {
 				attributeValueButton.accessibilityValue = try attribute.convertToDisplayableString(from: attributeValue)
 			} catch {
-				os_log(
+				log.error(
 					"Failed to set accessibility value on %@: %@",
-					type: .error,
 					attributeValueButton.accessibilityIdentifier!,
-					error.localizedDescription)
+					errorInfo(error))
 			}
 		}
 	}

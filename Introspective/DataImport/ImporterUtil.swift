@@ -19,6 +19,8 @@ public protocol ImporterUtil {
 
 public final class ImporterUtilImpl: ImporterUtil {
 
+	private final let log = Log()
+
 	public final func deleteImportedEntities<Type: NSManagedObject>(fetchRequest: NSFetchRequest<Type>) throws {
 		fetchRequest.predicate = NSPredicate(format: "partOfCurrentImport == true")
 		let entities = try DependencyInjector.db.query(fetchRequest)
@@ -39,7 +41,7 @@ public final class ImporterUtilImpl: ImporterUtil {
 			updateRequest.propertiesToUpdate = ["partOfCurrentImport": false]
 			let result = try DependencyInjector.db.batchUpdate(updateRequest)
 			if result.result as? Bool == false {
-				os_log("Failed to clean up imported data for %@", type: .error, type.entityName)
+				log.error("Failed to clean up imported data for %@", type.entityName)
 			}
 		} else {
 			let fetchRequest = NSFetchRequest<Type>(entityName: type.entityName)

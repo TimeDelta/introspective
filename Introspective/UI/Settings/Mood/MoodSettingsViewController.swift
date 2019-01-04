@@ -9,7 +9,6 @@
 import UIKit
 import Presentr
 import NotificationBannerSwift
-import os
 
 final class MoodSettingsViewController: UIViewController {
 
@@ -18,6 +17,10 @@ final class MoodSettingsViewController: UIViewController {
 	@IBOutlet weak final var minMoodField: UITextField!
 	@IBOutlet weak final var maxMoodField: UITextField!
 	@IBOutlet weak final var scaleMoodsOnImportSwitch: UISwitch!
+
+	// MARK: - Instance Variables
+
+	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -79,7 +82,7 @@ final class MoodSettingsViewController: UIViewController {
 			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 			self.navigationController?.popViewController(animated: false)
 		} catch {
-			os_log("Failed to save mood settings: %@", type: .error, error.localizedDescription)
+			log.error("Failed to save mood settings: %@", errorInfo(error))
 			showError(
 				title: "Failed to save settings",
 				message: "Sorry for the inconvenience.",
@@ -105,6 +108,7 @@ final class MoodSettingsViewController: UIViewController {
 				do {
 					try DependencyInjector.util.mood.scaleMoods()
 				} catch {
+					self.log.error("Failed to scale existing moods: %@", errorInfo(error))
 					let banner = StatusBarNotificationBanner(title: "Failed to scale existing moods", style: .danger)
 					banner.show()
 				}

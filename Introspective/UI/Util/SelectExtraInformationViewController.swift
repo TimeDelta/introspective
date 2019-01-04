@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import os
 
 final class SelectExtraInformationViewController: UIViewController {
 
@@ -23,6 +22,8 @@ final class SelectExtraInformationViewController: UIViewController {
 	public final var selectedInformation: ExtraInformation!
 	public final var limitToNumericInformation: Bool = false
 	public final var notificationToSendWhenFinished: Notification.Name!
+
+	private final let log = Log()
 
 	// MARK: - UIViewController Overloads
 
@@ -97,7 +98,7 @@ extension SelectExtraInformationViewController: UIPickerViewDataSource {
 		if pickerView == informationPicker {
 			return getApplicableInformationTypesForSelectedAttribute().count
 		}
-		os_log("Unknown picker view while attempting to retrieve number of rows", type: .error)
+		log.error("Unknown picker view while attempting to retrieve number of rows")
 		return 0
 	}
 }
@@ -113,7 +114,7 @@ extension SelectExtraInformationViewController: UIPickerViewDelegate {
 		if pickerView == informationPicker {
 			return getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute).name.localizedCapitalized
 		}
-		os_log("Unknown picker view while attempting to retrieve title for row", type: .error)
+		log.error("Unknown picker view while attempting to retrieve title for row")
 		return nil
 	}
 
@@ -131,6 +132,6 @@ extension SelectExtraInformationViewController: UIPickerViewDelegate {
 		if pickerView == informationPicker {
 			selectedInformation = getApplicableInformationTypesForSelectedAttribute()[row].init(selectedAttribute)
 		}
-		os_log("Unknown picker view while running didSelectRow", type: .error)
+		log.error("Unknown picker view while running didSelectRow")
 	}
 }

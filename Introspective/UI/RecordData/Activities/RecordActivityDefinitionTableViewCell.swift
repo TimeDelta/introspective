@@ -36,6 +36,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 	private final var timer: Timer!
 
 	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "ActivityDefinition Table Cell"))
+	private final let log = Log()
 
 	deinit { timer?.invalidate() }
 
@@ -132,7 +133,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 				return activities[0]
 			}
 		} catch {
-			os_log("Failed to fetch activities: %@", type: .error, error.localizedDescription)
+			log.error("Failed to fetch activities: %@", errorInfo(error))
 		}
 
 		return nil
@@ -157,7 +158,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 			signpost.end(name: "getAllActivitiesForToday", idObject: activityDefinition)
 			return activities
 		} catch {
-			os_log("Failed to fetch activities: %@", type: .error, error.localizedDescription)
+			log.error("Failed to fetch activities: %@", errorInfo(error))
 			signpost.end(name: "getAllActivitiesForToday", idObject: activityDefinition)
 			return []
 		}
@@ -175,7 +176,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 			signpost.end(name: "hasUnfinishedActivity", idObject: activityDefinition)
 			return unfinishedActivities.count > 0
 		} catch {
-			os_log("Failed to query for unfinished activities: %@", type: .error, error.localizedDescription)
+			log.error("Failed to query for unfinished activities: %@", errorInfo(error))
 		}
 		signpost.end(name: "hasUnfinishedActivity", idObject: activityDefinition)
 		return false

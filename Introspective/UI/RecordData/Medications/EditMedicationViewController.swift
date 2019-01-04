@@ -9,7 +9,6 @@
 import UIKit
 import Presentr
 import CoreData
-import os
 
 public final class EditMedicationViewController: UIViewController {
 
@@ -55,6 +54,8 @@ public final class EditMedicationViewController: UIViewController {
 	private final var frequency: Frequency?
 
 	private final var saveButton: UIBarButtonItem!
+
+	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -197,7 +198,7 @@ public final class EditMedicationViewController: UIViewController {
 				]))
 			navigationController?.popViewController(animated: false)
 		} catch {
-			os_log("Failed to save medication: %@%@", type: .error, error.localizedDescription, (error as NSError).userInfo)
+			log.error("Failed to save medication: %@", errorInfo(error))
 			if deleteMedicationOnFail {
 				try? DependencyInjector.db.delete(medication)
 			}
@@ -261,7 +262,7 @@ public final class EditMedicationViewController: UIViewController {
 			let medicationsWithSameName = try DependencyInjector.db.query(fetchRequest)
 			return medicationsWithSameName.count > 0
 		} catch {
-			os_log("Failed to check for medication name duplication", type: .error)
+			log.error("Failed to check for medication name duplication: %@", errorInfo(error))
 		}
 		return false
 	}

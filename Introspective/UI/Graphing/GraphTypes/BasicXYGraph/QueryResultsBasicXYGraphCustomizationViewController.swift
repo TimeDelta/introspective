@@ -9,7 +9,6 @@
 import UIKit
 import Presentr
 import AAInfographics
-import os
 
 final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTypeSetupViewController, QueryResultsGraphCustomizationViewController {
 
@@ -83,6 +82,8 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	private final var grouping: Calendar.Component?
 	private final var chartController: BasicXYChartViewController!
 
+	private final let log = Log()
+
 	// MARK: - IBOutlets
 
 	@IBOutlet weak final var xAxisButton: UIButton!
@@ -148,7 +149,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 		} else if let information: ExtraInformation = value(for: .information, from: notification, keyIsOptional: true) {
 			xAxis = AttributeOrInformation(information: information)
 		} else {
-			os_log("Missing both optional attributes in x-axis setup notification", type: .error)
+			log.error("Missing both optional attributes in x-axis setup notification")
 		}
 	}
 
@@ -176,7 +177,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 		if let index = sampleType.attributes.index(where: { $0 is DateAttribute }) {
 			return sampleType.attributes[index] as! DateAttribute
 		}
-		os_log("No DateAttribute found for sample type: %@", type: .error, String(describing: sampleType))
+		log.error("No DateAttribute found for sample type: %@", String(describing: sampleType))
 		return CommonSampleAttributes.timestamp
 	}
 
@@ -230,7 +231,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 							xValue = try self.xAxis.attribute!.convertToDisplayableString(from: rawXValue)
 						} catch {
 							xValue = ""
-							os_log("Failed to convert value (%@) to displayable string: %@", type: .error, String(describing: rawXValue), error.localizedDescription)
+							log.error("Failed to convert value (%@) to displayable string: %@", String(describing: rawXValue), errorInfo(error))
 						}
 					}
 					return [xValue, try! sample.graphableValue(of: yAttribute) as Any]

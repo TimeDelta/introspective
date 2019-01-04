@@ -7,9 +7,14 @@
 //
 
 import UIKit
-import os
 
 final class SelectAttributeOrInformationViewController: UIViewController {
+
+	// MARK: - IBOutlets
+
+	@IBOutlet weak final var typeSelectSegmentedControl: UISegmentedControl!
+	@IBOutlet weak final var attributePicker: UIPickerView!
+	@IBOutlet weak final var informationPicker: UIPickerView!
 
 	// MARK: - Instance Variables
 
@@ -20,11 +25,7 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 	public final var information: ExtraInformation?
 	public final var notificationToSendOnAccept: Notification.Name!
 
-	// MARK: - IBOutlets
-
-	@IBOutlet weak final var typeSelectSegmentedControl: UISegmentedControl!
-	@IBOutlet weak final var attributePicker: UIPickerView!
-	@IBOutlet weak final var informationPicker: UIPickerView!
+	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -40,7 +41,7 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 			if let index = sampleType.attributes.index(where: { $0.equalTo(attribute) }) {
 				attributePicker.selectRow(index, inComponent: 0, animated: false)
 			} else {
-				os_log("Attribute passed is incompatible with specified sample type", type: .error)
+				log.error("Attribute passed is incompatible with specified sample type")
 			}
 		}
 
@@ -65,7 +66,7 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 		} else if index == 1 {
 			set(informationPicker, enabled: true)
 		} else {
-			os_log("Unexpected selected index (%d) for segmented control when user changed value", type: .error, index)
+			log.error("Unexpected selected index (%d) for segmented control when user changed value", index)
 		}
 	}
 
@@ -77,7 +78,7 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 		} else if index == 1 {
 			userInfo = info([.information: information as Any])
 		} else {
-			os_log("Unexpected selected index (%d) for segmented control when user pressed Accept", type: .error, index)
+			log.error("Unexpected selected index (%d) for segmented control when user pressed Accept", index)
 		}
 		NotificationCenter.default.post(name: notificationToSendOnAccept, object: self, userInfo: userInfo)
 	}
@@ -109,7 +110,7 @@ extension SelectAttributeOrInformationViewController: UIPickerViewDataSource {
 		if pickerView == informationPicker {
 			return getApplicableInformationTypesForSelectedAttribute().count
 		}
-		os_log("Unknown picker view while attempting to retrieve number of rows", type: .error)
+		log.error("Unknown picker view while attempting to retrieve number of rows")
 		return 0
 	}
 }
@@ -125,7 +126,7 @@ extension SelectAttributeOrInformationViewController: UIPickerViewDelegate {
 		if pickerView == informationPicker {
 			return getApplicableInformationTypesForSelectedAttribute()[row].init(attribute).name.localizedCapitalized
 		}
-		os_log("Unknown picker view while attempting to retrieve title for row", type: .error)
+		log.error("Unknown picker view while attempting to retrieve title for row")
 		return nil
 	}
 
@@ -141,6 +142,6 @@ extension SelectAttributeOrInformationViewController: UIPickerViewDelegate {
 		if pickerView == informationPicker {
 			information = getApplicableInformationTypesForSelectedAttribute()[row].init(attribute)
 		}
-		os_log("Unknown picker view while running didSelectRow", type: .error)
+		log.error("Unknown picker view while running didSelectRow")
 	}
 }

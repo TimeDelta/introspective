@@ -9,7 +9,6 @@
 import UIKit
 import Presentr
 import CoreData
-import os
 
 public final class EditActivityTableViewController: UITableViewController {
 
@@ -58,6 +57,8 @@ public final class EditActivityTableViewController: UITableViewController {
 	private final var tagNames = Set<String>()
 
 	private final var saveButton: UIBarButtonItem!
+
+	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -124,7 +125,7 @@ public final class EditActivityTableViewController: UITableViewController {
 			cell = tagsCell
 		} else {
 			cell = UITableViewCell()
-			os_log("Missing cell customization case for edit activity", type: .error)
+			log.error("Missing cell customization case for edit activity")
 		}
 
 		return cell
@@ -234,7 +235,7 @@ public final class EditActivityTableViewController: UITableViewController {
 			}
 			navigationController?.popViewController(animated: false)
 		} catch {
-			os_log("Failed to create, edit or save activity: %@", type: .error, error.localizedDescription)
+			log.error("Failed to create, edit or save activity: %@", errorInfo(error))
 			if deleteActivityOnFail {
 				try? DependencyInjector.db.delete(activity)
 			}
@@ -294,7 +295,7 @@ public final class EditActivityTableViewController: UITableViewController {
 				return activities[0].endDate
 			}
 		} catch {
-			os_log("Failed to fetch most recent activity: %@", type: .error, error.localizedDescription)
+			log.error("Failed to fetch most recent activity: %@", errorInfo(error))
 		}
 		return nil
 	}

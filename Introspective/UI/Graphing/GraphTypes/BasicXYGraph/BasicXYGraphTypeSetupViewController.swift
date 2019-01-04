@@ -8,13 +8,14 @@
 
 import UIKit
 import AAInfographics
-import os
 
 public class BasicXYGraphTypeSetupViewController: GraphTypeSetupViewController {
 
 	public final var chartType: AAChartType! { didSet { chartTypeSet() } }
 
+	private final let log = Log()
+
 	func chartTypeSet() {
-		os_log("chartTypeSet() not overriden", type: .debug)
+		log.debug("chartTypeSet() not overriden")
 	}
 }

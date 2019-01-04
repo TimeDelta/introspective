@@ -8,7 +8,6 @@
 
 import UIKit
 import Presentr
-import os
 
 class QueryViewController: UITableViewController {
 
@@ -86,6 +85,8 @@ class QueryViewController: UITableViewController {
 	final var parts: [Part]!
 	private final var editedIndex: Int!
 
+	private final let log = Log()
+
 	// MARK: - UIViewController Overloads
 
 	override func viewDidLoad() {
@@ -147,7 +148,7 @@ class QueryViewController: UITableViewController {
 			cell.attributeRestriction = attributeRestriction
 			return cell
 		}
-		os_log("Forgot a type of cell: %@", type: .error, String(describing: part))
+		log.error("Forgot a type of cell: %@", String(describing: part))
 		return UITableViewCell()
 	}
 
@@ -178,7 +179,7 @@ class QueryViewController: UITableViewController {
 				updateAttributesForSampleType(at: indexOfSampleTypeAbove)
 			}
 		} else {
-			os_log("Unknown part type while moving row to %d", type: .debug, to.row)
+			log.debug("Unknown part type while moving row to %d", to.row)
 		}
 		tableView.reloadData()
 	}
@@ -403,7 +404,7 @@ class QueryViewController: UITableViewController {
 			if let attributeRestriction = part.attributeRestriction {
 				query.attributeRestrictions.append(attributeRestriction)
 			} else if part.sampleTypeInfo == nil {
-				os_log("Forgot a type of query part: %@", type: .error, String(describing: part))
+				log.error("Forgot a type of query part: %@", String(describing: part))
 			}
 		}
 	}

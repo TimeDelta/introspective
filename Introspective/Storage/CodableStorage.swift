@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import os
 
 public enum StorageDirectory {
 	/// Only documents and other data that is user-generated, or that cannot otherwise be recreated by your application, should be stored in the <Application_Home>/Documents directory and will be automatically backed up by iCloud.
@@ -34,6 +33,8 @@ public protocol CodableStorage {
 
 public final class CodableStorageImpl: CodableStorage {
 
+	private final let log = Log()
+
 	/// Store an encodable struct to the specified directory on disk
 	///
 	/// - Parameters:
@@ -51,7 +52,12 @@ public final class CodableStorageImpl: CodableStorage {
 			}
 			FileManager.default.createFile(atPath: url.path, contents: data, attributes: nil)
 		} catch {
-			os_log("Failed to store object (%@) in '%@' as '%@': %@", type: .error, String(describing: object), String(describing: directory), fileName, error.localizedDescription)
+			log.error(
+				"Failed to store object (%@) in '%@' as '%@': %@",
+				String(describing: object),
+				String(describing: directory),
+				fileName,
+				errorInfo(error))
 			throw error
 		}
 	}
@@ -67,7 +73,7 @@ public final class CodableStorageImpl: CodableStorage {
 		let url = getURL(for: directory).appendingPathComponent(fileName, isDirectory: false)
 
 		if !FileManager.default.fileExists(atPath: url.path) {
-			os_log("File at path '%@' does not exist!", type: .error, url.path)
+			log.error("File at path '%@' does not exist!", url.path)
 			throw CodableStorageError.fileDoesNotExist
 		}
 
@@ -76,7 +82,7 @@ public final class CodableStorageImpl: CodableStorage {
 			let model = try decoder.decode(type, from: data)
 			return model
 		} else {
-			os_log("No data at %@", type: .error, url.path)
+			log.error("No data at %@", url.path)
 			throw CodableStorageError.noDataFound
 		}
 	}
@@ -118,7 +124,7 @@ public final class CodableStorageImpl: CodableStorage {
 		if let url = FileManager.default.urls(for: searchPathDirectory, in: .userDomainMask).first {
 			return url
 		}
-		os_log("Could not create URL for specified directory!", type: .error)
+		log.error("Could not create URL for specified directory!")
 		return URL(fileURLWithPath: "/")
 	}
 }

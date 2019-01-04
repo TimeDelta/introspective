@@ -7,16 +7,23 @@
 //
 
 import Foundation
-import os
 
 public final class AverageInformation: AnyInformation {
+
+	// MARK: - Instance Variables
 
 	public final override var name: String { return "Average" }
 	public final override var description: String { return name + " " + attribute.name.localizedLowercase }
 
+	private final let log = Log()
+
+	// MARK: - Initializers
+
 	public required init(_ attribute: Attribute) {
 		super.init(attribute)
 	}
+
+	// MARK: - Functions
 
 	public final override func compute(forSamples samples: [Sample]) -> String {
 		let filteredSamples = DependencyInjector.util.sample.getOnly(samples: samples, from: startDate, to: endDate)
@@ -32,9 +39,8 @@ public final class AverageInformation: AnyInformation {
 			return averageDuration(filteredSamples).description
 		}
 
-		os_log(
+		log.error(
 			"Unknown attribute type (%@) for attribute named '%@' of sample type '%@'",
-			type: .error,
 			String(describing: type(of: attribute)),
 			attribute.name,
 			String(describing: type(of: samples[0])))
@@ -55,9 +61,8 @@ public final class AverageInformation: AnyInformation {
 			return String(averageDuration(filteredSamples).inUnit(.hour))
 		}
 
-		os_log(
+		log.error(
 			"Unknown attribute type (%@) for attribute named '%@' of sample type '%@'",
-			type: .error,
 			String(describing: type(of: attribute)),
 			attribute.name,
 			String(describing: type(of: samples[0])))
@@ -100,12 +105,11 @@ public final class AverageInformation: AnyInformation {
 		do {
 			return try sample.value(of: attribute) as? Duration
 		} catch {
-			os_log(
+			log.error(
 				"Failed to retrieve duration attribute named '$@' of $@ sample while calculating average information: $@",
-				type: .error,
 				attribute.name,
 				sample.attributedName,
-				error.localizedDescription)
+				errorInfo(error))
 			return nil
 		}
 	}

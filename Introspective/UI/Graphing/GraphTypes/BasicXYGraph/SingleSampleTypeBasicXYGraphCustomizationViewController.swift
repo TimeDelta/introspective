@@ -117,7 +117,9 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		}
 	}
 	private final var chartController: BasicXYChartViewController!
+
 	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "SingleSampleTypeGraphCreationPerformance"))
+	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
 
@@ -202,7 +204,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		} else if let information: ExtraInformation? = value(for: .information, from: notification, keyIsOptional: true) {
 			xAxis = AttributeOrInformation(information: information)
 		} else {
-			os_log("Missing both optional attributes in x-axis setup notification", type: .error)
+			log.error("Missing both optional attributes in x-axis setup notification")
 		}
 	}
 
@@ -231,8 +233,8 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		signpost.begin(name: "Query")
 		query!.runQuery { (result, error) in
 			self.signpost.end(name: "Query")
-			if error != nil {
-				os_log("X-axis query run failed: %@", type: .error, error!.localizedDescription)
+			if let error = error {
+				self.log.error("X-axis query run failed: %@", errorInfo(error))
 				DispatchQueue.main.async {
 					if let displayableError = error as? DisplayableError {
 						self.chartController.errorMessage = displayableError.displayableDescription
@@ -245,7 +247,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			if let samples = result?.samples {
 				self.updateChartData(samples)
 			} else {
-				os_log("X-axis query run did not return an error or any results", type: .error)
+				self.log.error("X-axis query run did not return an error or any results")
 			}
 		}
 	}
@@ -254,7 +256,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		if let index = sampleType.attributes.index(where: { $0 is DateAttribute }) {
 			return sampleType.attributes[index] as! DateAttribute
 		}
-		os_log("No DateAttribute found for sample type: %@", type: .error, String(describing: sampleType))
+		log.error("No DateAttribute found for sample type: %@", String(describing: sampleType))
 		return CommonSampleAttributes.timestamp
 	}
 

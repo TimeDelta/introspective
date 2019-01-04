@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import os
 
 public class NotEqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 
@@ -21,7 +20,7 @@ public class NotEqualToAttributeRestriction: AnyAttributeRestriction, Equatable 
 			let valueText = try restrictedAttribute.convertToDisplayableString(from: value)
 			return restrictedAttribute.name + " ≠ " + valueText
 		} catch {
-			os_log("Could not convert current value (%@) to displayable string: %@", type: .error, String(describing: value), error.localizedDescription)
+			log.error("Could not convert current value (%@) to displayable string: %@", String(describing: value), errorInfo(error))
 			return restrictedAttribute.name + " ≠ ?"
 		}
 	}
@@ -29,6 +28,8 @@ public class NotEqualToAttributeRestriction: AnyAttributeRestriction, Equatable 
 	public final var value: Any?
 	fileprivate final let valueAttribute: Attribute
 	fileprivate final let areEqual: (Any?, Any?) throws -> Bool
+
+	fileprivate final let log = Log()
 
 	public init(restrictedAttribute: Attribute, value: Any?, valueAttribute: Attribute, areEqual: @escaping (Any?, Any?) throws -> Bool) {
 		self.value = value
@@ -38,7 +39,7 @@ public class NotEqualToAttributeRestriction: AnyAttributeRestriction, Equatable 
 	}
 
 	public required init(restrictedAttribute: Attribute) {
-		os_log("This should never be called because this is an abstract base class", type: .error)
+		log.error("This should never be called because this is an abstract base class")
 		self.valueAttribute = restrictedAttribute
 		self.value = nil
 		self.areEqual = { _,_  in true }
@@ -77,7 +78,7 @@ public class NotEqualToAttributeRestriction: AnyAttributeRestriction, Equatable 
 			let valuesEqual = try areEqual(value, other.value)
 			return restrictedAttribute.equalTo(other.restrictedAttribute) && valuesEqual
 		} catch {
-			os_log("Failed to check equality: %@", type: .error, error.localizedDescription)
+			log.error("Failed to check equality: %@", errorInfo(error))
 			return false
 		}
 	}
@@ -107,8 +108,8 @@ public class TypedNotEqualToAttributeRestrictionBase<ValueType: Equatable>: NotE
 	}
 
 	public required init(restrictedAttribute: Attribute) {
-		os_log("This should never be called because this is an abstract base class")
 		super.init(restrictedAttribute: restrictedAttribute)
+		log.error("This should never be called because this is an abstract base class")
 	}
 
 	public override func set(attribute: Attribute, to value: Any?) throws {
@@ -143,7 +144,7 @@ public class TypedNotEqualToAttributeRestrictionBase<ValueType: Equatable>: NotE
 			let valuesEqual = try areEqual(value, other.value)
 			return restrictedAttribute.equalTo(other.restrictedAttribute) && valuesEqual
 		} catch {
-			os_log("Failed to check equality: %@", type: .error, error.localizedDescription)
+			log.error("Failed to check equality: %@", errorInfo(error))
 			return  false
 		}
 	}

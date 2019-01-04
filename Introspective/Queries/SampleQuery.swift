@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import os
 
 public protocol SampleQuery: Query {
 	associatedtype SampleType: Sample
@@ -30,6 +29,8 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 
 	private final var subQueryCallbackParameters: (result: QueryResult?, error: Error?)? = nil
 	private final var queryCallbackParameters: (result: SampleQueryResult<SampleType>?, error: Error?)? = nil
+
+	private final let log = Log()
 
 	public init() {
 		attributeRestrictions = [AttributeRestriction]()
@@ -54,7 +55,7 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 	}
 
 	func run() {
-		os_log("Must override and call queryDone() when finished", type: .error)
+		log.error("Must override and call queryDone() when finished")
 	}
 
 	public func stop() {

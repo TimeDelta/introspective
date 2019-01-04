@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import os
 
 public final class Frequency: NSObject, NSCoding, Codable, Comparable {
 
@@ -54,10 +53,10 @@ public final class Frequency: NSObject, NSCoding, Codable, Comparable {
 				let right = try rhs.timesPerSecond()
 				return left == right
 			} catch {
-				os_log("Could not convert frequency (%@) to times per second: %@", type: .error, rhs.description, error.localizedDescription)
+				Log().error("Could not convert frequency (%@) to times per second: %@", rhs.description, errorInfo(error))
 			}
 		} catch {
-			os_log("Could not convert frequency (%@) to times per second: %@", type: .error, lhs.description, error.localizedDescription)
+			Log().error("Could not convert frequency (%@) to times per second: %@", lhs.description, errorInfo(error))
 		}
 		return lhs.timesPerTimeUnit == rhs.timesPerTimeUnit && lhs.timeUnit == rhs.timeUnit // best guess as last resort
 	}
@@ -69,10 +68,10 @@ public final class Frequency: NSObject, NSCoding, Codable, Comparable {
 				let right = try rhs.timesPerSecond()
 				return left < right
 			} catch {
-				os_log("Could not convert frequency (%@) to times per second: %@", type: .error, rhs.description, error.localizedDescription)
+				Log().error("Could not convert frequency (%@) to times per second: %@", rhs.description, errorInfo(error))
 			}
 		} catch {
-			os_log("Could not convert frequency (%@) to times per second: %@", type: .error, lhs.description, error.localizedDescription)
+			Log().error("Could not convert frequency (%@) to times per second: %@", lhs.description, errorInfo(error))
 		}
 		return lhs.timesPerTimeUnit < rhs.timesPerTimeUnit // best guess as last resort
 	}

@@ -9,7 +9,6 @@
 import UIKit
 import WSTagsField
 import CoreData
-import os
 
 public final class ActivityTagsTableViewCell: UITableViewCell {
 
@@ -30,7 +29,7 @@ public final class ActivityTagsTableViewCell: UITableViewCell {
 				let tags = try DependencyInjector.db.query(Tag.fetchRequest() as NSFetchRequest<Tag>)
 				tagsField.textField.filterStrings(tags.map{ $0.name })
 			} catch {
-				os_log("Auto complete failure: %@", type: .error, error.localizedDescription)
+				log.error("Auto complete failure: %@", errorInfo(error))
 			}
 		}
 	}
@@ -48,6 +47,8 @@ public final class ActivityTagsTableViewCell: UITableViewCell {
 		}
 	}
 	private final var initialTagsSet = false
+
+	private final let log = Log()
 
 	// MARK: - Helper Functions
 

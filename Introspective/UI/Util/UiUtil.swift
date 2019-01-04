@@ -8,7 +8,6 @@
 
 import UIKit
 import Presentr
-import os
 
 //sourcery: AutoMockable
 public protocol UiUtil {
@@ -55,6 +54,8 @@ extension UiUtil {
 }
 
 public final class UiUtilImpl: UiUtil {
+
+	private final let log = Log()
 
 	public final let defaultPresenter: Presentr = {
 		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
@@ -117,7 +118,7 @@ public final class UiUtilImpl: UiUtil {
 		if let userInfo = notification.userInfo {
 			guard userInfo.keys.contains(key) else {
 				if !keyIsOptional {
-					os_log("Missing user info key for '%@' notification: %@", type: .error, notification.name.rawValue, key.description)
+					log.error("Missing user info key for '%@' notification: %@", notification.name.rawValue, key.description)
 				}
 				return nil
 			}
@@ -125,10 +126,10 @@ public final class UiUtilImpl: UiUtil {
 			if value is Type || value is Optional<Type> {
 				return value as? Type
 			}
-			os_log("Wrong object type for '%@' notification: %@", type: .error, notification.name.rawValue, key.description)
+			log.error("Wrong object type for '%@' notification: %@", notification.name.rawValue, key.description)
 			return nil
 		}
-		os_log("No user info for '%@' notification", type: .error, notification.name.rawValue)
+		log.error("No user info for '%@' notification", notification.name.rawValue)
 		return nil
 	}
 

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import os
 
 public final class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestriction, Equatable {
 
@@ -35,6 +34,7 @@ public final class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestrict
 	// MARK: - Instance Variables
 
 	public final var tags: [Tag]
+	private final let log = Log()
 
 	// MARK: - Initializers
 
@@ -68,7 +68,7 @@ public final class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestrict
 			}
 			return true
 		}
-		os_log("Unsupported restricted attribute type", type: .error)
+		log.error("Unsupported restricted attribute type")
 		return false
 	}
 
