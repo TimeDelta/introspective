@@ -1,5 +1,5 @@
 //
-//  MaximumInformationFunctionalTests.swift
+//  MinimumInformationFunctionalTests.swift
 //  IntrospectiveTests
 //
 //  Created by Bryan Nova on 1/6/19.
@@ -10,16 +10,16 @@ import XCTest
 import SwiftDate
 @testable import Introspective
 
-final class MaximumInformationFunctionalTests: FunctionalTest {
+final class MinimumInformationFunctionalTests: FunctionalTest {
 
-	private typealias Me = MaximumInformationFunctionalTests
+	private typealias Me = MinimumInformationFunctionalTests
 	private static let restrictedAttribute = IntegerAttribute(name: "abc")
 
-	private final var information: MaximumInformation<Int>!
+	private final var information: MinimumInformation<Int>!
 
 	final override func setUp() {
 		super.setUp()
-		information = MaximumInformation<Int>(Me.restrictedAttribute)
+		information = MinimumInformation<Int>(Me.restrictedAttribute)
 	}
 
 	// MARK: - compute()
@@ -49,14 +49,14 @@ final class MaximumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenNonEmptySampleArray_compute_returnsCorrectValue() throws {
 		// given
-		let highestValue = 5
-		let samples = SampleCreatorTestUtil.createSamples(withValues: [highestValue, highestValue - 1], for: Me.restrictedAttribute)
+		let lowestValue = 5
+		let samples = SampleCreatorTestUtil.createSamples(withValues: [lowestValue, lowestValue + 1], for: Me.restrictedAttribute)
 
 		// when
 		let value = try information.compute(forSamples: samples)
 
 		// then
-		XCTAssertEqual(value, String(highestValue))
+		XCTAssertEqual(value, String(lowestValue))
 	}
 
 	// MARK: - computeGraphable()
@@ -86,21 +86,21 @@ final class MaximumInformationFunctionalTests: FunctionalTest {
 
 	func testGivenNonEmptySampleArray_computeGraphable_returnsCorrectValue() throws {
 		// given
-		let highestValue = 5
-		let samples = SampleCreatorTestUtil.createSamples(withValues: [highestValue, highestValue - 1], for: Me.restrictedAttribute)
+		let lowestValue = 5
+		let samples = SampleCreatorTestUtil.createSamples(withValues: [lowestValue, lowestValue + 1], for: Me.restrictedAttribute)
 
 		// when
 		let value = try information.computeGraphable(forSamples: samples)
 
 		// then
-		XCTAssertEqual(value, String(highestValue))
+		XCTAssertEqual(value, String(lowestValue))
 	}
 
 	// MARK: - equalTo()
 
 	func testGivenTwoInformationObjectsOfDifferentTypesWithSameRestrictedAttribute_equalTo_returnsFalse() throws {
 		// given
-		let otherInformation = MinimumInformation<Int>(Me.restrictedAttribute)
+		let otherInformation = MaximumInformation<Int>(Me.restrictedAttribute)
 
 		// when
 		let areEqual = information.equalTo(otherInformation)
@@ -112,7 +112,7 @@ final class MaximumInformationFunctionalTests: FunctionalTest {
 	func testGivenTwoInformationObjectsOfSameTypeWithDifferentRestrictedAttributes_equalTo_returnsFalse() throws {
 		// given
 		let otherAttribute = IntegerAttribute(name: Me.restrictedAttribute.name + "some other stuff")
-		let otherInformation = MaximumInformation<Int>(otherAttribute)
+		let otherInformation = MinimumInformation<Int>(otherAttribute)
 
 		// when
 		let areEqual = information.equalTo(otherInformation)
@@ -121,9 +121,9 @@ final class MaximumInformationFunctionalTests: FunctionalTest {
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenTwoMaximumInformationObjectsWithDifferentGenericTypesAndSameRestrictedAttribute_equalTo_returnsFalse() throws {
+	func testGivenTwoMinimumInformationObjectsWithDifferentGenericTypesAndSameRestrictedAttribute_equalTo_returnsFalse() throws {
 		// given
-		let otherInformation = MaximumInformation<Double>(Me.restrictedAttribute)
+		let otherInformation = MinimumInformation<Double>(Me.restrictedAttribute)
 
 		// when
 		let areEqual = information.equalTo(otherInformation)
@@ -132,9 +132,9 @@ final class MaximumInformationFunctionalTests: FunctionalTest {
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenTwoMaximumInformationObjectsWithSameGenericTypesAndSameRestrictedAttribute_equalTo_returnsTrue() throws {
+	func testGivenTwoMinimumInformationObjectsWithSameGenericTypesAndSameRestrictedAttribute_equalTo_returnsTrue() throws {
 		// given
-		let otherInformation = MaximumInformation<Int>(Me.restrictedAttribute)
+		let otherInformation = MinimumInformation<Int>(Me.restrictedAttribute)
 
 		// when
 		let areEqual = information.equalTo(otherInformation)
