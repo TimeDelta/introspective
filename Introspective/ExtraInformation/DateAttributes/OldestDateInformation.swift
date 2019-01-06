@@ -33,14 +33,34 @@ public final class OldestDateInformation: AnyInformation {
 	// MARK: - Information Functions
 
 	public final override func compute(forSamples samples: [Sample]) throws -> String {
+		return try compute(samples, shouldThrowOnEmptyFilter: false)
+	}
+
+	public final override func computeGraphable(forSamples samples: [Sample]) throws -> String {
+		return try compute(samples, shouldThrowOnEmptyFilter: true)
+	}
+
+	// MARK: - Equality
+
+	public final override func equalTo(_ other: ExtraInformation) -> Bool {
+		return other is OldestDateInformation && attribute.equalTo(other.attribute)
+	}
+
+	// MARK: - Helper Functions
+
+	private final func compute(_ samples: [Sample], shouldThrowOnEmptyFilter: Bool) throws -> String {
 		let filteredSamples = try filterSamples(samples, as: Date.self)
 		if filteredSamples.count == 0 {
+			if shouldThrowOnEmptyFilter {
+				throw GenericDisplayableError(title: "No samples match filter")
+			}
 			return Me.noSamplesMessage
 		}
 
-		guard var oldestSampleDate = (try? filteredSamples[0].value(of: attribute)) as? Date else {
+		let firstSampleValue = try filteredSamples[0].value(of: attribute)
+		guard var oldestSampleDate = firstSampleValue as? Date else {
 			log.error("Failed to get initial date when computing oldest")
-			return ""
+			throw TypeMismatchError(attribute: attribute, of: filteredSamples[0], wasA: type(of: firstSampleValue))
 		}
 		for sample in filteredSamples {
 			let value = try sample.value(of: attribute)
@@ -49,19 +69,9 @@ public final class OldestDateInformation: AnyInformation {
 					oldestSampleDate = date
 				}
 			} else if !attribute.optional || value != nil {
-				log.error("non-optional attribute (%@) of %@ sample returned %@", attribute.name, sample.attributedName, String(describing: value))
+				log.error("non-optional attribute (%@) of sample (%@) returned %@", attribute.name, sample.attributedName, String(describing: value))
 			}
 		}
 		return DependencyInjector.util.calendar.string(for: oldestSampleDate, dateStyle: .short, timeStyle: .short)
-	}
-
-	public final override func computeGraphable(forSamples samples: [Sample]) throws -> String {
-		return try compute(forSamples: samples)
-	}
-
-	// MARK: - Equality
-
-	public final override func equalTo(_ other: ExtraInformation) -> Bool {
-		return other is OldestDateInformation && attribute.equalTo(other.attribute)
 	}
 }
