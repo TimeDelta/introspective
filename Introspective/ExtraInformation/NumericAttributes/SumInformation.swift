@@ -30,61 +30,57 @@ public final class SumInformation: AnyInformation {
 	public final override func compute(forSamples samples: [Sample]) throws -> String {
 		if attribute is DoubleAttribute {
 			let filteredSamples = try filterSamples(samples, as: Double.self)
-			if filteredSamples.count == 0 { return "0" }
+			if filteredSamples.count == 0 { return "No samples match filter" }
 			return String(try DependencyInjector.util.numericSample.sum(for: attribute, over: filteredSamples, as: Double.self))
 		}
 		if attribute is IntegerAttribute {
 			let filteredSamples = try filterSamples(samples, as: Int.self)
-			if filteredSamples.count == 0 { return "0" }
+			if filteredSamples.count == 0 { return "No samples match filter" }
 			return String(try DependencyInjector.util.numericSample.sum(for: attribute, over: filteredSamples, as: Int.self))
 		}
 		if attribute is DosageAttribute {
 			let filteredSamples = try filterSamples(samples, as: Dosage.self)
-			if filteredSamples.count == 0 { return "0" }
+			if filteredSamples.count == 0 { return "No samples match filter" }
 			return try getSumOfDosageAttribute(filteredSamples)
 		}
 		if attribute is DurationAttribute {
 			let filteredSamples = try filterSamples(samples, as: Duration.self)
-			if filteredSamples.count == 0 { return "0" }
+			if filteredSamples.count == 0 { return "No samples match filter" }
 			return try getSumOfDurationAttribute(filteredSamples).description
 		}
 
-		log.error(
-			"Unknown attribute type (%@) for attribute named '%@' of sample type '%@'",
-			String(describing: type(of: attribute)),
-			attribute.name,
-			String(describing: type(of: samples[0])))
-		return ""
+		if samples.count == 0 {
+			throw GenericDisplayableError(title: "No samples found")
+		}
+		throw UnknownAttributeError(attribute: attribute, for: samples[0])
 	}
 
 	public final override func computeGraphable(forSamples samples: [Sample]) throws -> String {
 		if attribute is DoubleAttribute {
 			let filteredSamples = try filterSamples(samples, as: Double.self)
-			if filteredSamples.count == 0 { return "0" }
+			if filteredSamples.count == 0 { throw GenericDisplayableError(title: "No samples match filter") }
 			return String(try DependencyInjector.util.numericSample.sum(for: attribute, over: filteredSamples, as: Double.self))
 		}
 		if attribute is IntegerAttribute {
 			let filteredSamples = try filterSamples(samples, as: Int.self)
-			if filteredSamples.count == 0 { return "0" }
+			if filteredSamples.count == 0 { throw GenericDisplayableError(title: "No samples match filter") }
 			return String(try DependencyInjector.util.numericSample.sum(for: attribute, over: filteredSamples, as: Int.self))
 		}
 		if attribute is DosageAttribute {
 			let filteredSamples = try filterSamples(samples, as: Dosage.self)
-			if filteredSamples.count == 0 { return "0" }
+			if filteredSamples.count == 0 { throw GenericDisplayableError(title: "No samples match filter") }
 			return try getSumOfDosageAttribute(filteredSamples)
 		}
 		if attribute is DurationAttribute {
 			let filteredSamples = try filterSamples(samples, as: Duration.self)
-			if filteredSamples.count == 0 { return "0" }
+			if filteredSamples.count == 0 { throw GenericDisplayableError(title: "No samples match filter") }
 			return String(try getSumOfDurationAttribute(filteredSamples).inUnit(.hour))
 		}
 
-		log.error(
-			"Unknown attribute type (%@) for attribute named '%@' of sample type '%@'",
-			String(describing: type(of: attribute)),
-			attribute.name,
-			String(describing: type(of: samples[0])))
-		return ""
+		if samples.count == 0 {
+			throw GenericDisplayableError(title: "No samples found")
+		}
+		throw UnknownAttributeError(attribute: attribute, for: samples[0])
 	}
 
 	// MARK: - Equality
