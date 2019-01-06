@@ -38,12 +38,12 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 	}
 
 	public final override func value(of attribute: Attribute) throws -> Any? {
-		if attribute.name == Me.substringAttribute.name { return substring }
+		if attribute.equalTo(Me.substringAttribute) { return substring }
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	public final override func set(attribute: Attribute, to value: Any?) throws {
-		if attribute.name != Me.substringAttribute.name {
+		if !attribute.equalTo(Me.substringAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		guard let castedValue = value as? String else {

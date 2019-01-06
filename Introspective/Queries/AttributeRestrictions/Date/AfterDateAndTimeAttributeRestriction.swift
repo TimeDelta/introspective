@@ -53,14 +53,14 @@ public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestrictio
 	// MARK: - Attribute Functions
 
 	public final override func value(of attribute: Attribute) throws -> Any? {
-		if attribute.name != Me.dateAttribute.name {
+		if !attribute.equalTo(Me.dateAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		return date
 	}
 
 	public final override func set(attribute: Attribute, to value: Any?) throws {
-		if attribute.name != Me.dateAttribute.name {
+		if !attribute.equalTo(Me.dateAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		guard let castedValue = value as? Date else {

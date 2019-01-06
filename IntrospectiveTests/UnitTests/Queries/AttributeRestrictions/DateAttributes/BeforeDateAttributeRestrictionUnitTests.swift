@@ -15,7 +15,7 @@ class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 
 	fileprivate typealias Me = BeforeDateAttributeRestrictionUnitTests
 	fileprivate static let dateAttribute = BeforeDateAttributeRestriction.dateAttribute
-	fileprivate static let restrictedAttribute = DateOnlyAttribute(name: "date")
+	fileprivate static let restrictedAttribute = DateOnlyAttribute(name: "unknown")
 
 	fileprivate var restriction: BeforeDateAttributeRestriction!
 

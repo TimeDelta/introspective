@@ -38,8 +38,11 @@ final class SelectExtraInformationViewController: UIViewController {
 		if selectedAttribute == nil {
 			selectedAttribute = attributes[0]
 		}
-		let selectedAttributeIndex = attributes.index(where: { attribute in return attribute.name == selectedAttribute.name })!
-		attributePicker.selectRow(selectedAttributeIndex, inComponent: 0, animated: false)
+		if let selectedAttributeIndex = attributes.index(where: { $0.equalTo(selectedAttribute) }) {
+			attributePicker.selectRow(selectedAttributeIndex, inComponent: 0, animated: false)
+		} else {
+			log.error("Failed to find attribute in attributes array")
+		}
 
 		if let selectedInformationIndex = indexOfSelectedInformation() {
 			informationPicker.selectRow(selectedInformationIndex, inComponent: 0, animated: false)
@@ -79,7 +82,11 @@ final class SelectExtraInformationViewController: UIViewController {
 
 	private final func indexOfSelectedInformation() -> Int? {
 		if selectedInformation == nil { return nil }
-		return getApplicableInformationTypesForSelectedAttribute().index(where: { $0.init(selectedAttribute).equalTo(selectedInformation!) })
+		let index = getApplicableInformationTypesForSelectedAttribute().index(where: { $0.init(selectedAttribute).equalTo(selectedInformation!) })
+		if index == nil {
+			log.error("Failed to find information in information array")
+		}
+		return index
 	}
 }
 

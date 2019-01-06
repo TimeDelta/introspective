@@ -67,8 +67,11 @@ final class XAxisSetupViewController: UIViewController {
 		if selectedAttribute == nil {
 			selectedAttribute = attributes[0]
 		}
-		let selectedAttributeIndex = attributes.index(where: { attribute in return attribute.name == selectedAttribute.name })!
-		attributePicker.selectRow(selectedAttributeIndex, inComponent: 0, animated: false)
+		if let selectedAttributeIndex = attributes.index(where: { $0.equalTo(selectedAttribute) }) {
+			attributePicker.selectRow(selectedAttributeIndex, inComponent: 0, animated: false)
+		} else {
+			log.error("Failed to find selected attribute in attributes array")
+		}
 
 		if let selectedInformationIndex = indexOfSelectedInformation() {
 			informationPicker.selectRow(selectedInformationIndex, inComponent: 0, animated: false)

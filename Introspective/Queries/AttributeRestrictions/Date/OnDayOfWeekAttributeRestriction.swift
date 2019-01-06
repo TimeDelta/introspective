@@ -61,14 +61,14 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 	// MARK: - Attribute Functions
 
 	public final override func value(of attribute: Attribute) throws -> Any? {
-		if attribute.name != Me.daysOfWeekAttribute.name {
+		if !attribute.equalTo(Me.daysOfWeekAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		return daysOfWeek
 	}
 
 	public final override func set(attribute: Attribute, to value: Any?) throws {
-		if attribute.name != Me.daysOfWeekAttribute.name {
+		if !attribute.equalTo(Me.daysOfWeekAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		guard let castedValue = value as? Set<DayOfWeek> else {

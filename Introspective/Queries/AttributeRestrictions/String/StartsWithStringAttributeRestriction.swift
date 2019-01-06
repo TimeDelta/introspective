@@ -40,7 +40,7 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 	}
 
 	public final override func value(of attribute: Attribute) throws -> Any? {
-		if attribute.name == Me.prefixAttribute.name { return prefix }
+		if attribute.equalTo(Me.prefixAttribute) { return prefix }
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
