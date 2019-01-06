@@ -61,39 +61,49 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed {
 		if attribute.equalTo(Me.sourceAttribute) {
 			return Sources.resolveMedicationSource(source)
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.nameAttribute) {
-			guard let castedValue = value as? String else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? String else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			name = castedValue
 			return
 		}
 		if attribute.equalTo(Me.dosage) {
-			if !(value is Dosage?) { throw AttributeError.typeMismatch }
+			if !(value is Dosage?) {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			let castedValue = value as! Dosage?
 			dosage = castedValue
 			return
 		}
 		if attribute.equalTo(Me.frequency) {
-			guard let castedValue = value as? Frequency else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Frequency else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			frequency = castedValue
 			return
 		}
 		if attribute.equalTo(Me.startedOn) {
-			if !(value is Date?) { throw AttributeError.typeMismatch }
+			if !(value is Date?) {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			let castedValue = value as! Date?
 			startedOn = castedValue
 			return
 		}
 		if attribute.equalTo(Me.notes) {
-			if !(value is String?) { throw AttributeError.typeMismatch }
+			if !(value is String?) {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			let castedValue = value as! String?
 			notes = castedValue
 			return
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	// MARK: - Other

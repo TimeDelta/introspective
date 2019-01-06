@@ -10,30 +10,32 @@ import XCTest
 import SwiftDate
 @testable import Introspective
 
-class OldestDateInformationFunctionalTests: FunctionalTest {
+final class OldestDateInformationFunctionalTests: FunctionalTest {
 
-	fileprivate typealias Me = OldestDateInformationFunctionalTests
-	fileprivate static let attribute = CommonSampleAttributes.startDate
+	private typealias Me = OldestDateInformationFunctionalTests
+	private static let attribute = CommonSampleAttributes.startDate
 
-	fileprivate var information: OldestDateInformation!
+	private var information: OldestDateInformation!
 
 	override func setUp() {
 		super.setUp()
 		information = OldestDateInformation(Me.attribute)
 	}
 
-	func testGivenEmptySampleArray_compute_returnsMessageAboutNoSamplesExiting() {
+	// MARK: - compute()
+
+	func testGivenEmptySampleArray_compute_returnsMessageAboutNoSamplesExiting() throws {
 		// given
 		let samples = [Sample]()
 
 		// when
-		let value = information.compute(forSamples: samples)
+		let value = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(value, OldestDateInformation.noSamplesMessage)
 	}
 
-	func testGivenNonEmptySampleArrayWithNilStartAndEndDates_compute_returnsCorrectValue() {
+	func testGivenNonEmptySampleArrayWithNilStartAndEndDates_compute_returnsCorrectValue() throws {
 		// given
 		let expectedDate = Date()
 		let samples = SampleCreatorTestUtil.createSamples(withDates: [expectedDate, expectedDate + 1.hours])
@@ -41,13 +43,13 @@ class OldestDateInformationFunctionalTests: FunctionalTest {
 		information.endDate = nil
 
 		// when
-		let value = information.compute(forSamples: samples)
+		let value = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(value, toString(expectedDate))
 	}
 
-	func testGivenNonEmptySampleArrayWithNilEndDateAndStartDateThatIsAfterAllSampleStartDates_compute_returnsZero() {
+	func testGivenNonEmptySampleArrayWithNilEndDateAndStartDateThatIsAfterAllSampleStartDates_compute_returnsZero() throws {
 		// given
 		let sampleDate1 = Date()
 		let sampleDate2 = sampleDate1 + 2.hours
@@ -56,13 +58,13 @@ class OldestDateInformationFunctionalTests: FunctionalTest {
 		information.endDate = nil
 
 		// when
-		let value = information.compute(forSamples: samples)
+		let value = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(value, OldestDateInformation.noSamplesMessage)
 	}
 
-	func testGivenNonEmptySampleArrayWithNilStartDateAndEndDateThatIsBeforeAllSampleEndDates_compute_returnsZero() {
+	func testGivenNonEmptySampleArrayWithNilStartDateAndEndDateThatIsBeforeAllSampleEndDates_compute_returnsZero() throws {
 		// given
 		let sampleStartDate1 = Date()
 		let sampleEndDate1 = sampleStartDate1 + 1.hours
@@ -76,13 +78,13 @@ class OldestDateInformationFunctionalTests: FunctionalTest {
 		information.endDate = sampleEndDate1 - 1.days
 
 		// when
-		let value = information.compute(forSamples: samples)
+		let value = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(value, OldestDateInformation.noSamplesMessage)
 	}
 
-	func testGivenNonEmptySampleArrayWithStartDateThatIsBeforeAllSampleStartDatesAndEndDateThatIsBeforeAllSampleStartDates_compute_returnsZero() {
+	func testGivenNonEmptySampleArrayWithStartDateThatIsBeforeAllSampleStartDatesAndEndDateThatIsBeforeAllSampleStartDates_compute_returnsZero() throws {
 		// given
 		let sampleStartDate1 = Date()
 		let sampleEndDate1 = sampleStartDate1 + 1.days
@@ -96,13 +98,13 @@ class OldestDateInformationFunctionalTests: FunctionalTest {
 		information.endDate = sampleEndDate1 - 1.hours
 
 		// when
-		let value = information.compute(forSamples: samples)
+		let value = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(value, OldestDateInformation.noSamplesMessage)
 	}
 
-	func testGivenNonEmptySampleArrayWithStartDateThatIsAfterAllSampleStartDatesAndEndDateThatIsAfterAllSampleStartDates_compute_returnsZero() {
+	func testGivenNonEmptySampleArrayWithStartDateThatIsAfterAllSampleStartDatesAndEndDateThatIsAfterAllSampleStartDates_compute_returnsZero() throws {
 		// given
 		let sampleStartDate1 = Date()
 		let sampleEndDate1 = sampleStartDate1 + 1.days
@@ -116,13 +118,13 @@ class OldestDateInformationFunctionalTests: FunctionalTest {
 		information.endDate = sampleEndDate2 + 1.days
 
 		// when
-		let value = information.compute(forSamples: samples)
+		let value = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(value, OldestDateInformation.noSamplesMessage)
 	}
 
-	func testGivenNonEmptySampleArrayWithStartDateBeforeSomeSampleStartDatesAndEndDateThatIsAfterSomeEndDates_compute_returnsCorrectValue() {
+	func testGivenNonEmptySampleArrayWithStartDateBeforeSomeSampleStartDatesAndEndDateThatIsAfterSomeEndDates_compute_returnsCorrectValue() throws {
 		// given
 		let sampleStartDate1 = Date()
 		let sampleEndDate1 = sampleStartDate1 + 1.days
@@ -136,13 +138,13 @@ class OldestDateInformationFunctionalTests: FunctionalTest {
 		information.endDate = sampleEndDate1 + 1.hours
 
 		// when
-		let value = information.compute(forSamples: samples)
+		let value = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(value, toString(sampleStartDate1))
 	}
 
-	func testGivenNonEmptySampleArrayWithNilEndDateAndStartDateThatIsBeforeSomeSampleStartDates_compute_returnsCorrectValue() {
+	func testGivenNonEmptySampleArrayWithNilEndDateAndStartDateThatIsBeforeSomeSampleStartDates_compute_returnsCorrectValue() throws {
 		// given
 		let sampleStartDate1 = Date()
 		let sampleEndDate1 = sampleStartDate1 + 1.days
@@ -156,13 +158,13 @@ class OldestDateInformationFunctionalTests: FunctionalTest {
 		information.endDate = nil
 
 		// when
-		let value = information.compute(forSamples: samples)
+		let value = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(value, toString(sampleStartDate2))
 	}
 
-	func testGivenSampleArrayWithCorrectDateAfterIndexTwoAndNilStartAndEndDates_compute_returnsCorrectValue() {
+	func testGivenSampleArrayWithCorrectDateAfterIndexTwoAndNilStartAndEndDates_compute_returnsCorrectValue() throws {
 		// given
 		let sampleDate1 = Date()
 		let sampleDate2 = sampleDate1 - 2.hours
@@ -172,13 +174,13 @@ class OldestDateInformationFunctionalTests: FunctionalTest {
 		information.endDate = nil
 
 		// when
-		let value = information.compute(forSamples: samples)
+		let value = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(value, toString(sampleDate3))
 	}
 
-	func testGivenNonEmptySampleArrayWithNilStartDateAndEndDateThatIsAfterSomeSampleEndDates_compute_returnsCorrectValue() {
+	func testGivenNonEmptySampleArrayWithNilStartDateAndEndDateThatIsAfterSomeSampleEndDates_compute_returnsCorrectValue() throws {
 		// given
 		let sampleStartDate1 = Date()
 		let sampleEndDate1 = sampleStartDate1 + 1.days
@@ -192,13 +194,15 @@ class OldestDateInformationFunctionalTests: FunctionalTest {
 		information.endDate = sampleEndDate1 + 1.hours
 
 		// when
-		let value = information.compute(forSamples: samples)
+		let value = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(value, toString(sampleStartDate1))
 	}
 
-	fileprivate func toString(_ date: Date) -> String {
+	// MARK: - Helper Functions
+
+	private func toString(_ date: Date) -> String {
 		return DependencyInjector.util.calendar.string(for: date, dateStyle: .short, timeStyle: .short)
 	}
 }

@@ -44,3 +44,15 @@ public final class NotOverridenError: Error {
 		self.functionName = functionName
 	}
 }
+
+public final class UnknownSampleType: Error {
+
+	private final let sampleType: Sample.Type
+	public final var localizedDescription: String {
+		return "Unknown sample type: \(sampleType.name)"
+	}
+
+	public init(_ sampleType: Sample.Type) {
+		self.sampleType = sampleType
+	}
+}

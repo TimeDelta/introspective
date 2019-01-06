@@ -11,55 +11,55 @@ import XCTest
 import SwiftDate
 @testable import Introspective
 
-class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
+final class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 
-	fileprivate var matcher: InSameCalendarUnitSubQueryMatcher!
+	private var matcher: InSameCalendarUnitSubQueryMatcher!
 
-	override func setUp() {
+	final override func setUp() {
 		super.setUp()
 		matcher = InSameCalendarUnitSubQueryMatcher()
 	}
 
-	func testGivenEmptyArrayOfQuerySamplesAndEmptyArrayOfSubQuerySamples_getSamples_returnsEmptyArray() {
+	func testGivenEmptyArrayOfQuerySamplesAndEmptyArrayOfSubQuerySamples_getSamples_returnsEmptyArray() throws {
 		// given
 		let querySamples = [AnySample]()
 		let subQuerySamples = [Sample]()
 		matcher.timeUnit = .day
 
 		// when
-		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
+		let matchingSamples = try matcher.getSamples(from: querySamples, matching: subQuerySamples)
 
 		// then
 		XCTAssert(matchingSamples.count == 0, "Found \(matchingSamples.count) samples")
 	}
 
-	func testGivenEmptyArrayOfQuerySamplesAndNonEmptyArrayOfSubQuerySamples_getSamples_returnsEmptyArray() {
+	func testGivenEmptyArrayOfQuerySamplesAndNonEmptyArrayOfSubQuerySamples_getSamples_returnsEmptyArray() throws {
 		// given
 		let querySamples = [AnySample]()
 		let subQuerySamples = SampleCreatorTestUtil.createSamples(count: 2)
 		matcher.timeUnit = .day
 
 		// when
-		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
+		let matchingSamples = try matcher.getSamples(from: querySamples, matching: subQuerySamples)
 
 		// then
 		XCTAssert(matchingSamples.count == 0, "Found \(matchingSamples.count) samples")
 	}
 
-	func testGivenEmptyArrayOfSubQuerySamplesAndNonEmptyArrayOfQuerySamples_getSamples_returnsEmptyArray() {
+	func testGivenEmptyArrayOfSubQuerySamplesAndNonEmptyArrayOfQuerySamples_getSamples_returnsEmptyArray() throws {
 		// given
 		let querySamples = SampleCreatorTestUtil.createSamples(count: 2)
 		let subQuerySamples = [Sample]()
 		matcher.timeUnit = .day
 
 		// when
-		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
+		let matchingSamples = try matcher.getSamples(from: querySamples, matching: subQuerySamples)
 
 		// then
 		XCTAssert(matchingSamples.count == 0, "Found \(matchingSamples.count) samples")
 	}
 
-	func testGivenOneSubQuerySampleAndMultipleQuerySamples_getSamples_returnsOnlyMatchingSamples() {
+	func testGivenOneSubQuerySampleAndMultipleQuerySamples_getSamples_returnsOnlyMatchingSamples() throws {
 		// given
 		let querySampleDate1 = Date() - 1.days
 		let querySampleDate2 = Date()
@@ -69,7 +69,7 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		matcher.timeUnit = .day
 
 		// when
-		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
+		let matchingSamples = try matcher.getSamples(from: querySamples, matching: subQuerySamples)
 
 		// then
 		XCTAssert(matchingSamples.count == 1, "Found \(matchingSamples.count) samples")
@@ -80,7 +80,7 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		}
 	}
 
-	func testGivenMultipleSubQuerySamplesAndMultipleQuerySamples_getSamples_returnsOnlyMatchingSamples() {
+	func testGivenMultipleSubQuerySamplesAndMultipleQuerySamples_getSamples_returnsOnlyMatchingSamples() throws {
 		// given
 		let querySampleDate1 = Date() - 1.days
 		let querySampleDate2 = Date()
@@ -91,7 +91,7 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		matcher.timeUnit = .day
 
 		// when
-		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
+		let matchingSamples = try matcher.getSamples(from: querySamples, matching: subQuerySamples)
 
 		// then
 		XCTAssert(matchingSamples.count == 1, "Found \(matchingSamples.count) samples")
@@ -102,7 +102,7 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		}
 	}
 
-	func testGivenQuerySamplesWithEndDatesInSameCalendarUnitButStartDatesNotInSameCalendarUnitAsSubQuerySample_getSamples_returnsSamplesWithEndDatesInSameCalendarUnit() {
+	func testGivenQuerySamplesWithEndDatesInSameCalendarUnitButStartDatesNotInSameCalendarUnitAsSubQuerySample_getSamples_returnsSamplesWithEndDatesInSameCalendarUnit() throws {
 		// given
 		let querySampleStartDate1 = Date() - 2.days
 		let querySampleEndDate1 = Date()
@@ -123,7 +123,7 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		matcher.timeUnit = .day
 
 		// when
-		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
+		let matchingSamples = try matcher.getSamples(from: querySamples, matching: subQuerySamples)
 
 		// then
 		XCTAssert(matchingSamples.count == 1, "Found \(matchingSamples.count) samples")
@@ -134,7 +134,7 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		}
 	}
 
-	func testGivenMostRecentOnlyIsTrueAndMultipleSubQuerySamplesAndMultipleQuerySamples_getSamples_returnsOnlyMatchingSamples() {
+	func testGivenMostRecentOnlyIsTrueAndMultipleSubQuerySamplesAndMultipleQuerySamples_getSamples_returnsOnlyMatchingSamples() throws {
 		// given
 		let querySampleDate1 = Date() - 1.days
 		let querySampleDate2 = Date()
@@ -146,7 +146,7 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		matcher.mostRecentOnly = true
 
 		// when
-		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
+		let matchingSamples = try matcher.getSamples(from: querySamples, matching: subQuerySamples)
 
 		// then
 		XCTAssert(matchingSamples.count == 1, "Found \(matchingSamples.count) samples")
@@ -157,7 +157,7 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		}
 	}
 
-	func testGivenMostRecentOnlyIsTrueAndMultipleSubQuerySamplesAndMultipleQuerySamplesAndAllSamplesHaveStartAndEndDates_getSamples_returnsOnlyMatchingSamples() {
+	func testGivenMostRecentOnlyIsTrueAndMultipleSubQuerySamplesAndMultipleQuerySamplesAndAllSamplesHaveStartAndEndDates_getSamples_returnsOnlyMatchingSamples() throws {
 		// given
 		let querySampleStartDate1 = Date() - 1.days
 		let querySampleEndDate1 = Date() - 1.days
@@ -179,7 +179,7 @@ class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 		matcher.mostRecentOnly = true
 
 		// when
-		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
+		let matchingSamples = try matcher.getSamples(from: querySamples, matching: subQuerySamples)
 
 		// then
 		XCTAssert(matchingSamples.count == 1, "Found \(matchingSamples.count) samples")

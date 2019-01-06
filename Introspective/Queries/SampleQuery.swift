@@ -85,7 +85,12 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 		for attributeRestriction in attributeRestrictions {
 			if stopped { return false }
 			if attributeRestriction.restrictedAttribute.variableName == nil || !(attributeRestriction is PredicateAttributeRestriction) {
-				if try! !attributeRestriction.samplePasses(sample) {
+				do {
+					if try !attributeRestriction.samplePasses(sample) {
+						return false
+					}
+				} catch {
+					log.error("Failed to test for sample passing: %@", errorInfo(error))
 					return false
 				}
 			}
@@ -102,10 +107,16 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 			callback(nil, queryCallbackParameters!.error)
 			return
 		}
-		callback(filterResults(), nil)
+
+		do {
+			callback(try filterResults(), nil)
+		} catch {
+			log.error("Failed to filter query results: %@", errorInfo(error))
+			callback(nil, error)
+		}
 	}
 
-	private final func filterResults() -> SampleQueryResult<SampleType>? {
+	private final func filterResults() throws -> SampleQueryResult<SampleType>? {
 		assert(queryCallbackParameters!.result != nil, "query result is nil")
 
 		if subQuery == nil {
@@ -115,7 +126,7 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 		let querySamples = queryResult.typedSamples
 		let subQuerySamples = subQueryCallbackParameters!.result!.samples
 
-		let filteredSamples: [SampleType] = subQuery!.matcher.getSamples(from: querySamples, matching: subQuerySamples)
+		let filteredSamples: [SampleType] = try subQuery!.matcher.getSamples(from: querySamples, matching: subQuerySamples)
 		let filteredResult = SampleQueryResult<SampleType>(filteredSamples)
 
 		return filteredResult

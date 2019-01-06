@@ -69,35 +69,41 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 		if attribute.equalTo(Me.sourceAttribute) {
 			return Sources.resolveMedicationSource(source)
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.nameAttribute) {
-			guard let castedValue = value as? String else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? String else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 			fetchRequest.predicate = NSPredicate(format: "%K == %@", Medication.nameAttribute.variableName!, castedValue)
 			let matchingMedications = try DependencyInjector.db.query(fetchRequest)
 			if matchingMedications.count == 0 {
-				throw AttributeError.unsupportedValue
+				throw UnsupportedValueError(attribute: attribute, of: self, is: value)
 			}
 			medication = matchingMedications[0]
 			try DependencyInjector.db.save()
 			return
 		}
 		if attribute.equalTo(Me.dosage) {
-			guard let castedValue = value as? Dosage? else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Dosage? else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			dosage = castedValue
 			try DependencyInjector.db.save()
 			return
 		}
 		if attribute.equalTo(CommonSampleAttributes.timestamp) {
-			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Date else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			timestamp = castedValue
 			try DependencyInjector.db.save()
 			return
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	// MARK: - Equatable

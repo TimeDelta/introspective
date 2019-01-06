@@ -47,26 +47,57 @@ extension Sample {
 		}
 		for attribute in attributes {
 			switch (attribute) {
-				case is DateAttribute:
-					let myDate = try! value(of: attribute) as! Date
-					let otherDate = try! otherSample.value(of: attribute) as! Date
-					if myDate != otherDate { return false }
+				case is BooleanAttribute:
+					if !safeEqualityCheck(attribute, otherSample, as: Bool.self) { return false }
 					break
-				case is IntegerAttribute:
-					let myInt = try! value(of: attribute) as! Int
-					let otherInt = try! otherSample.value(of: attribute) as! Int
-					if myInt != otherInt { return false }
+				case is CalendarComponentAttribute:
+					if !safeEqualityCheck(attribute, otherSample, as: Calendar.Component.self) { return false }
+					break
+				case is DateAttribute:
+					if !safeEqualityCheck(attribute, otherSample, as: Date.self) { return false }
+					break
+				case is DayOfWeekAttribute:
+					if !safeEqualityCheck(attribute, otherSample, as: DayOfWeek.self) { return false }
 					break
 				case is DoubleAttribute:
-					let myDouble = try! value(of: attribute) as! Double
-					let otherDouble = try! otherSample.value(of: attribute) as! Double
-					if myDouble != otherDouble { return false }
+					if !safeEqualityCheck(attribute, otherSample, as: Double.self) { return false }
+					break
+				case is DurationAttribute:
+					if !safeEqualityCheck(attribute, otherSample, as: Duration.self) { return false }
+					break
+				case is FrequencyAttribute:
+					if !safeEqualityCheck(attribute, otherSample, as: Frequency.self) { return false }
+					break
+				case is IntegerAttribute:
+					if !safeEqualityCheck(attribute, otherSample, as: Int.self) { return false }
+					break
+				case is TagAttribute:
+					if !safeEqualityCheck(attribute, otherSample, as: Tag.self) { return false }
+					break
+				case is TextAttribute:
+					if !safeEqualityCheck(attribute, otherSample, as: String.self) { return false }
+					break
+				case is TimeOfDayAttribute:
+					if !safeEqualityCheck(attribute, otherSample, as: TimeOfDay.self) { return false }
 					break
 				default:
 					os_log("Sample - Need to include equal comparison for attribute type: %@", type: .debug, String(describing: type(of: attribute)))
 			}
 		}
 		return true
+	}
+
+	private func safeEqualityCheck<Type: Equatable>(_ attribute: Attribute, _ otherSample: Sample, as type: Type.Type) -> Bool {
+		do {
+			let myValue = try value(of: attribute)
+			if !(myValue is Type) && !(myValue is Optional<Type> && attribute.optional) { return false }
+			let otherValue = try otherSample.value(of: attribute)
+			if !(otherValue is Type) && !(otherValue is Optional<Type> && attribute.optional) { return false }
+			return myValue as? Type == otherValue as? Type
+		} catch {
+			os_log("Failed to safely check equality of sample attribute '%@': %@", attribute.name, errorInfo(error))
+			return false
+		}
 	}
 }
 

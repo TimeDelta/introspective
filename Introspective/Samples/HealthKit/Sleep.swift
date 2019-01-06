@@ -140,26 +140,32 @@ public final class Sleep: HealthKitCategorySample {
 		if attribute.equalTo(CommonSampleAttributes.healthKitEndDate) {
 			return endDate
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.stateAttribute) {
-			guard let castedValue = value as? State else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? State else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			state = castedValue
 			return
 		}
 		if attribute.equalTo(CommonSampleAttributes.healthKitStartDate) {
-			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Date else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			startDate = castedValue
 			return
 		}
 		if attribute.equalTo(CommonSampleAttributes.healthKitEndDate) {
-			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Date else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			endDate = castedValue
 			return
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 }
 

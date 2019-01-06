@@ -12,71 +12,71 @@ import SwiftDate
 
 final class SumInformationFunctionalTests: FunctionalTest {
 
-	func testGivenNoSamples_compute_returnsZero() {
+	func testGivenNoSamples_compute_returnsZero() throws {
 		// given
 		let samples = [Sample]()
 		let information = SumInformation(IntegerAttribute(name: "doesn't matter"))
 
 		// when
-		let sum = information.compute(forSamples: samples)
+		let sum = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(sum, "0")
 	}
 
-	func testGivenIntegerAttribute_compute_returnsCorrectValue() {
+	func testGivenIntegerAttribute_compute_returnsCorrectValue() throws {
 		// given
 		let attribute = IntegerAttribute(name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1, 2, 3, 4, 5], for: attribute)
 		let information = SumInformation(attribute)
 
 		// when
-		let sum = information.compute(forSamples: samples)
+		let sum = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(sum, "15")
 	}
 
-	func testGivenOptionalIntegerAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() {
+	func testGivenOptionalIntegerAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() throws {
 		// given
 		let attribute = IntegerAttribute(name: "a", optional: true)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1, nil, nil, 4, 5] as [Int?], for: attribute)
 		let information = SumInformation(attribute)
 
 		// when
-		let sum = information.compute(forSamples: samples)
+		let sum = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(sum, "10")
 	}
 
-	func testGivenDoubleAttribute_compute_returnsCorrectValue() {
+	func testGivenDoubleAttribute_compute_returnsCorrectValue() throws {
 		// given
 		let attribute = DoubleAttribute(name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, 2.0, 3.0, 4.0, 5.0], for: attribute)
 		let information = SumInformation(attribute)
 
 		// when
-		let sum = information.compute(forSamples: samples)
+		let sum = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(sum, "15.0")
 	}
 
-	func testGivenOptionalDoubleAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() {
+	func testGivenOptionalDoubleAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() throws {
 		// given
 		let attribute = DoubleAttribute(name: "a", optional: true)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, nil, nil, 4.0, 5.0] as [Double?], for: attribute)
 		let information = SumInformation(attribute)
 
 		// when
-		let sum = information.compute(forSamples: samples)
+		let sum = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(sum, "10.0")
 	}
 
-	func testGivenDosageAttribute_compute_returnsCorrectValue() {
+	func testGivenDosageAttribute_compute_returnsCorrectValue() throws {
 		// given
 		let attribute = DosageAttribute()
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
@@ -89,13 +89,13 @@ final class SumInformationFunctionalTests: FunctionalTest {
 		let information = SumInformation(attribute)
 
 		// when
-		let sum = information.compute(forSamples: samples)
+		let sum = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(sum, Dosage(15.0, "L").description)
 	}
 
-	func testGivenOptionalDosageAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() {
+	func testGivenOptionalDosageAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() throws {
 		// given
 		let attribute = DosageAttribute(optional: true)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
@@ -108,13 +108,13 @@ final class SumInformationFunctionalTests: FunctionalTest {
 		let information = SumInformation(attribute)
 
 		// when
-		let sum = information.compute(forSamples: samples)
+		let sum = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(sum, Dosage(10.0, "L").description)
 	}
 
-	func testGivenDurationAttribute_compute_returnsCorrectValue() {
+	func testGivenDurationAttribute_compute_returnsCorrectValue() throws {
 		// given
 		let attribute = DurationAttribute()
 		let date = Date()
@@ -127,13 +127,13 @@ final class SumInformationFunctionalTests: FunctionalTest {
 		let information = SumInformation(attribute)
 
 		// when
-		let sum = information.compute(forSamples: samples)
+		let sum = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(sum, "4d 5:06:07")
 	}
 
-	func testGivenOptionalDurationAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() {
+	func testGivenOptionalDurationAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() throws {
 		// given
 		let attribute = DurationAttribute()
 		let date = Date()
@@ -148,26 +148,26 @@ final class SumInformationFunctionalTests: FunctionalTest {
 		let information = SumInformation(attribute)
 
 		// when
-		let sum = information.compute(forSamples: samples)
+		let sum = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(sum, "4d 5:06:07")
 	}
 
-	func testGivenUnknownAttributeTypeWithNonEmptySampleArray_compute_returnsEmptyString() {
+	func testGivenUnknownAttributeTypeWithNonEmptySampleArray_compute_returnsEmptyString() throws {
 		// given
 		let attribute = TextAttribute(name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: ["a", "4"], for: attribute)
 		let information = SumInformation(attribute)
 
 		// when
-		let sum = information.compute(forSamples: samples)
+		let sum = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(sum, "")
 	}
 
-	func testGivenEndDateRestrictionThatFilterOutAllSamples_compute_returnsZero() {
+	func testGivenEndDateRestrictionThatFilterOutAllSamples_compute_returnsZero() throws {
 		// given
 		let attribute = DoubleAttribute(name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, 2.0, 3.0, 4.0, 5.0], for: attribute)
@@ -175,13 +175,13 @@ final class SumInformationFunctionalTests: FunctionalTest {
 		information.endDate = Date() - 1.days
 
 		// when
-		let sum = information.compute(forSamples: samples)
+		let sum = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(sum, "0")
 	}
 
-	func testGivenStartDateRestrictionThatFilterOutAllSamples_compute_returnsZero() {
+	func testGivenStartDateRestrictionThatFilterOutAllSamples_compute_returnsZero() throws {
 		// given
 		let attribute = DoubleAttribute(name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, 2.0, 3.0, 4.0, 5.0], for: attribute)
@@ -189,7 +189,7 @@ final class SumInformationFunctionalTests: FunctionalTest {
 		information.startDate = Date() + 1.days
 
 		// when
-		let sum = information.compute(forSamples: samples)
+		let sum = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(sum, "0")

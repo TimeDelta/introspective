@@ -14,7 +14,8 @@ public protocol SubQueryMatcher: Attributed {
 
 	init()
 
-	func getSamples<QuerySampleType: Sample>(from querySamples: [QuerySampleType], matching subQuerySamples: [Sample]) -> [QuerySampleType]
+	func getSamples<QuerySampleType: Sample>(from querySamples: [QuerySampleType], matching subQuerySamples: [Sample])
+		throws -> [QuerySampleType]
 	func equalTo(_ otherMatcher: SubQueryMatcher) -> Bool
 }
 

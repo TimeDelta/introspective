@@ -105,40 +105,50 @@ public class Activity: NSManagedObject, CoreDataSample, Importable {
 		if attribute.equalTo(Me.sourceAttribute) {
 			return Sources.resolveActivitySource(source)
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.nameAttribute) {
-			guard let castedValue = value as? String else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? String else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			definition.name = castedValue
 			try DependencyInjector.db.save()
 			return
 		}
 		if attribute.equalTo(CommonSampleAttributes.startDate) {
-			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Date else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			startDate = castedValue
 			try DependencyInjector.db.save()
 			return
 		}
 		if attribute.equalTo(Me.endDateAttribute) {
-			if !(value is Date?) { throw AttributeError.typeMismatch }
+			if !(value is Date?) {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			endDate = (value as! Date?)
 			try DependencyInjector.db.save()
 			return
 		}
 		if attribute.equalTo(Me.noteAttribute) {
-			if !(value is String?) { throw AttributeError.typeMismatch }
+			if !(value is String?) {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			note = (value as! String?)
 			try DependencyInjector.db.save()
 			return
 		}
 		if attribute.equalTo(Me.tagsAttribute) {
-			guard let castedValue = value as? [Tag] else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? [Tag] else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			try setTags(castedValue)
 			return
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	// MARK: - Other

@@ -82,21 +82,25 @@ public final class Weight: HealthKitQuantitySample {
 		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
 			return timestamp
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.weight) {
-			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Double else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			weight = castedValue
 			return
 		}
 		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
-			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Date else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			timestamp = castedValue
 			return
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 }
 

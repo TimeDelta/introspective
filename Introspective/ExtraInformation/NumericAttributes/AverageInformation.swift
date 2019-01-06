@@ -10,10 +10,12 @@ import Foundation
 
 public final class AverageInformation: AnyInformation {
 
-	// MARK: - Instance Variables
+	// MARK: - Display Information
 
 	public final override var name: String { return "Average" }
 	public final override var description: String { return name + " " + attribute.name.localizedLowercase }
+
+	// MARK: - Instance Variables
 
 	private final let log = Log()
 
@@ -23,20 +25,24 @@ public final class AverageInformation: AnyInformation {
 		super.init(attribute)
 	}
 
-	// MARK: - Functions
+	// MARK: - Information Functions
 
-	public final override func compute(forSamples samples: [Sample]) -> String {
-		let filteredSamples = DependencyInjector.util.sample.getOnly(samples: samples, from: startDate, to: endDate)
-		if filteredSamples.count == 0 { return "0" }
-
-		if attribute is NumericAttribute {
-			return String(DependencyInjector.util.numericSample.average(for: attribute, over: filteredSamples))
+	public final override func compute(forSamples samples: [Sample]) throws -> String {
+		if attribute is DoubleAttribute {
+			let filteredSamples = try filterSamples(samples, as: Double.self)
+			if filteredSamples.count == 0 { return "0" }
+			return String(try DependencyInjector.util.numericSample.average(for: attribute, over: filteredSamples))
+		}
+		if attribute is IntegerAttribute {
+			let filteredSamples = try filterSamples(samples, as: Int.self)
+			if filteredSamples.count == 0 { return "0" }
+			return String(try DependencyInjector.util.numericSample.average(for: attribute, over: filteredSamples))
 		}
 		if attribute is DosageAttribute {
-			return averageDosage(filteredSamples)
+			return try averageDosage(samples)
 		}
 		if attribute is DurationAttribute {
-			return averageDuration(filteredSamples).description
+			return (try averageDuration(samples)).description
 		}
 
 		log.error(
@@ -47,18 +53,22 @@ public final class AverageInformation: AnyInformation {
 		return ""
 	}
 
-	public final override func computeGraphable(forSamples samples: [Sample]) -> String {
-		let filteredSamples = DependencyInjector.util.sample.getOnly(samples: samples, from: startDate, to: endDate)
-		if filteredSamples.count == 0 { return "0" }
-
-		if attribute is NumericAttribute {
-			return String(DependencyInjector.util.numericSample.average(for: attribute, over: filteredSamples))
+	public final override func computeGraphable(forSamples samples: [Sample]) throws -> String {
+		if attribute is DoubleAttribute {
+			let filteredSamples = try filterSamples(samples, as: Double.self)
+			if filteredSamples.count == 0 { return "0" }
+			return String(try DependencyInjector.util.numericSample.average(for: attribute, over: filteredSamples))
+		}
+		if attribute is IntegerAttribute {
+			let filteredSamples = try filterSamples(samples, as: Int.self)
+			if filteredSamples.count == 0 { return "0" }
+			return String(try DependencyInjector.util.numericSample.average(for: attribute, over: filteredSamples))
 		}
 		if attribute is DosageAttribute {
-			return averageDosage(filteredSamples)
+			return try averageDosage(samples)
 		}
 		if attribute is DurationAttribute {
-			return String(averageDuration(filteredSamples).inUnit(.hour))
+			return String(try averageDuration(samples).inUnit(.hour))
 		}
 
 		log.error(
@@ -68,6 +78,8 @@ public final class AverageInformation: AnyInformation {
 			String(describing: type(of: samples[0])))
 		return ""
 	}
+
+	// MARK: - Equality
 
 	public final override func equalTo(_ other: ExtraInformation) -> Bool {
 		return other is AverageInformation && attribute.equalTo(other.attribute)
@@ -75,42 +87,36 @@ public final class AverageInformation: AnyInformation {
 
 	// MARK: - Helper Functions
 
-	private final func averageDosage(_ filteredSamples: [Sample]) -> String {
-		let sumString = SumInformation(attribute).compute(forSamples: filteredSamples)
+	private final func averageDosage(_ samples: [Sample]) throws -> String {
+		let filteredSamples = try filterSamples(samples, as: Dosage.self)
+		if filteredSamples.count == 0 { return "0" }
+
+		let sumString = try SumInformation(attribute).compute(forSamples: filteredSamples)
 		if let totalDosage = Dosage(sumString) {
-			let averageDosage = Dosage(totalDosage.amount / numberOfSamplesWithNonNilDosage(filteredSamples), totalDosage.unit)
+			let numberOfNonNilDosages = try numberOfSamplesWithNonNilDosage(filteredSamples)
+			let averageDosage = Dosage(totalDosage.amount / numberOfNonNilDosages, totalDosage.unit)
 			return averageDosage.description
 		} else {
 			return "0"
 		}
 	}
 
-	private final func numberOfSamplesWithNonNilDosage(_ samples: [Sample]) -> Double {
-		return Double(samples.filter({ (try? $0.value(of: attribute)) as? Dosage != nil }).count)
+	private final func numberOfSamplesWithNonNilDosage(_ samples: [Sample]) throws -> Double {
+		return Double(try samples.filter({ (try $0.value(of: attribute)) as? Dosage != nil }).count)
 	}
 
-	private final func averageDuration(_ filteredSamples: [Sample]) -> Duration {
+	private final func averageDuration(_ samples: [Sample]) throws -> Duration {
+		let filteredSamples = try filterSamples(samples, as: Duration.self)
+		if filteredSamples.count == 0 { return Duration(0) }
+
 		var totalDuration = Duration(0)
 		var totalNonNilSamples = 0
 		for sample in filteredSamples {
-			if let duration = getDuration(from: sample) {
+			if let duration = try sample.value(of: attribute) as? Duration {
 				totalDuration += duration
 				totalNonNilSamples += 1
 			}
 		}
 		return totalDuration / totalNonNilSamples
-	}
-
-	private final func getDuration(from sample: Sample) -> Duration? {
-		do {
-			return try sample.value(of: attribute) as? Duration
-		} catch {
-			log.error(
-				"Failed to retrieve duration attribute named '$@' of $@ sample while calculating average information: $@",
-				attribute.name,
-				sample.attributedName,
-				errorInfo(error))
-			return nil
-		}
 	}
 }

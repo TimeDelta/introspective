@@ -12,26 +12,39 @@ public final class AfterDateAttributeRestriction: DateAttributeRestriction, Pred
 
 	private typealias Me = AfterDateAttributeRestriction
 
-	public static func ==(lhs: AfterDateAttributeRestriction, rhs: AfterDateAttributeRestriction) -> Bool {
-		return lhs.equalTo(rhs)
-	}
+	// MARK: - Static Variables
 
 	public static let dateAttribute = DateOnlyAttribute()
 	public static var attributes: [Attribute] = [
 		dateAttribute,
 	]
 
+	// MARK: - Display Information
+
 	public final override var attributedName: String { return "After date" }
 	public final override var description: String {
-		let dateText = try! Me.dateAttribute.convertToDisplayableString(from: date)
-		return "After " + dateText
+		do {
+			let dateText = try Me.dateAttribute.convertToDisplayableString(from: date)
+			return "After " + dateText
+		} catch {
+			log.error("Failed to convert date into displayable string: %@", errorInfo(error))
+			let formatter = DateFormatter()
+			formatter.dateStyle = .medium
+			formatter.timeStyle = .none
+			return "After " + formatter.string(from: date)
+		}
 	}
+
+	// MARK: - Instance Variables
 
 	public final var date: Date {
 		didSet {
 			date = DependencyInjector.util.calendar.end(of: .day, in: date)
 		}
 	}
+	private final let log = Log()
+
+	// MARK: Initializers
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, date: Date())
@@ -42,28 +55,44 @@ public final class AfterDateAttributeRestriction: DateAttributeRestriction, Pred
 		super.init(restrictedAttribute: restrictedAttribute, attributes: Me.attributes)
 	}
 
+	// MARK: - Attribute Functions
+
 	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.name != Me.dateAttribute.name {
-			throw AttributeError.unknownAttribute
+			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		return date
 	}
 
 	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.name != Me.dateAttribute.name {
-			throw AttributeError.unknownAttribute
+			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
-		guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
+		guard let castedValue = value as? Date else {
+			throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+		}
 		date = castedValue
 	}
 
+	// MARK: - Attribute Restriction Functions
+
 	public final override func samplePasses(_ sample: Sample) throws -> Bool {
-		guard let sampleDate = try sample.value(of: restrictedAttribute) as? Date else { throw AttributeError.typeMismatch }
+		let sampleValue = try sample.value(of: restrictedAttribute)
+		if sampleValue == nil { return false }
+		guard let sampleDate = sampleValue as? Date else {
+			throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: sampleValue))
+		}
 		return sampleDate.isAfterDate(date, granularity: .second)
 	}
 
 	public final func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K > %@", restrictedAttribute.variableName!, date as NSDate)
+	}
+
+	// MARK: - Equality
+
+	public static func ==(lhs: AfterDateAttributeRestriction, rhs: AfterDateAttributeRestriction) -> Bool {
+		return lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {

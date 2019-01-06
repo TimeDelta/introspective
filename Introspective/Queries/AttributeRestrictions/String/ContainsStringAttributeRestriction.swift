@@ -39,17 +39,25 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 
 	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.name == Me.substringAttribute.name { return substring }
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	public final override func set(attribute: Attribute, to value: Any?) throws {
-		if attribute.name != Me.substringAttribute.name { throw AttributeError.unknownAttribute }
-		guard let castedValue = value as? String else { throw AttributeError.typeMismatch }
+		if attribute.name != Me.substringAttribute.name {
+			throw UnknownAttributeError(attribute: attribute, for: self)
+		}
+		guard let castedValue = value as? String else {
+			throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+		}
 		substring = castedValue
 	}
 
 	public final override func samplePasses(_ sample: Sample) throws -> Bool {
-		guard let value = try sample.value(of: restrictedAttribute) as? String else { throw AttributeError.typeMismatch }
+		let sampleValue = try sample.value(of: restrictedAttribute)
+		if sampleValue == nil { return substring.isEmpty }
+		guard let value = sampleValue as? String else {
+			throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: sampleValue))
+		}
 		return value.contains(substring)
 	}
 

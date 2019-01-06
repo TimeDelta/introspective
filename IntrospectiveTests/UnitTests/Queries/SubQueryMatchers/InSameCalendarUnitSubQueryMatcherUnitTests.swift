@@ -11,16 +11,16 @@ import SwiftDate
 import SwiftyMocky
 @testable import Introspective
 
-class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
+final class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 
-	fileprivate var matcher: InSameCalendarUnitSubQueryMatcher!
+	private final var matcher: InSameCalendarUnitSubQueryMatcher!
 
-	override func setUp() {
+	final override func setUp() {
 		super.setUp()
 		matcher = InSameCalendarUnitSubQueryMatcher()
 	}
 
-	func testGivenEmptyArrayOfQuerySamplesAndEmptyArrayOfSubQuerySamples_getSamples_returnsEmptyArray() {
+	func testGivenEmptyArrayOfQuerySamplesAndEmptyArrayOfSubQuerySamples_getSamples_returnsEmptyArray() throws {
 		// given
 		let querySamples = [AnySample]()
 		let subQuerySamples = [Sample]()
@@ -34,13 +34,13 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 			willReturn: [Date: [Sample]]()))
 
 		// when
-		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
+		let matchingSamples = try matcher.getSamples(from: querySamples, matching: subQuerySamples)
 
 		// then
 		XCTAssert(matchingSamples.count == 0, "Found \(matchingSamples.count) samples")
 	}
 
-	func testGivenEmptyArrayOfQuerySamplesAndNonEmptyArrayOfSubQuerySamples_getSamples_returnsEmptyArray() {
+	func testGivenEmptyArrayOfQuerySamplesAndNonEmptyArrayOfSubQuerySamples_getSamples_returnsEmptyArray() throws {
 		// given
 		let querySamples = [AnySample]()
 		let subQuerySamples = SampleCreatorTestUtil.createSamples(count: 2)
@@ -50,13 +50,13 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		Given(mockSampleUtil, .aggregate(samples: .value(subQuerySamples), by: .value(timeUnit), for: .value(CommonSampleAttributes.endDate), willReturn: [Date: [Sample]]()))
 
 		// when
-		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
+		let matchingSamples = try matcher.getSamples(from: querySamples, matching: subQuerySamples)
 
 		// then
 		XCTAssert(matchingSamples.count == 0, "Found \(matchingSamples.count) samples")
 	}
 
-	func testGivenEmptyArrayOfSubQuerySamplesAndNonEmptyArrayOfQuerySamples_getSamples_returnsEmptyArray() {
+	func testGivenEmptyArrayOfSubQuerySamplesAndNonEmptyArrayOfQuerySamples_getSamples_returnsEmptyArray() throws {
 		// given
 		let querySamples = SampleCreatorTestUtil.createSamples(count: 2)
 		let subQuerySamples = [Sample]()
@@ -67,13 +67,13 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		Given(mockCalendarUtil, .start(of: .value(timeUnit), in: .any(Date.self), willReturn: Date()))
 
 		// when
-		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
+		let matchingSamples = try matcher.getSamples(from: querySamples, matching: subQuerySamples)
 
 		// then
 		XCTAssert(matchingSamples.count == 0, "Found \(matchingSamples.count) samples")
 	}
 
-	func testGivenOneSubQuerySampleAndMultipleQuerySamples_getSamples_returnsOnlyMatchingSamples() {
+	func testGivenOneSubQuerySampleAndMultipleQuerySamples_getSamples_returnsOnlyMatchingSamples() throws {
 		// given
 		let querySampleDate1 = Date() - 1.days
 		let querySampleDate2 = Date()
@@ -88,7 +88,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		Given(mockCalendarUtil, .start(of: .value(timeUnit), in: .value(querySampleDate2), willReturn: querySampleDate2))
 
 		// when
-		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
+		let matchingSamples = try matcher.getSamples(from: querySamples, matching: subQuerySamples)
 
 		// then
 		XCTAssert(matchingSamples.count == 1, "Found \(matchingSamples.count) samples")
@@ -99,7 +99,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenMultipleSubQuerySamplesAndMultipleQuerySamples_getSamples_returnsOnlyMatchingSamples() {
+	func testGivenMultipleSubQuerySamplesAndMultipleQuerySamples_getSamples_returnsOnlyMatchingSamples() throws {
 		// given
 		let querySampleDate1 = Date() - 1.days
 		let querySampleDate2 = Date()
@@ -115,7 +115,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		Given(mockCalendarUtil, .start(of: .value(timeUnit), in: .value(querySampleDate2), willReturn: querySampleDate2))
 
 		// when
-		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
+		let matchingSamples = try matcher.getSamples(from: querySamples, matching: subQuerySamples)
 
 		// then
 		XCTAssert(matchingSamples.count == 1, "Found \(matchingSamples.count) samples")
@@ -126,7 +126,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenMostRecentOnlyIsTrueAndMultipleSubQuerySamplesAndMultipleQuerySamples_getSamples_returnsOnlyMatchingSamples() {
+	func testGivenMostRecentOnlyIsTrueAndMultipleSubQuerySamplesAndMultipleQuerySamples_getSamples_returnsOnlyMatchingSamples() throws {
 		// given
 		let querySampleDate1 = Date() - 1.days
 		let querySampleDate2 = Date()
@@ -144,7 +144,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		Given(mockCalendarUtil, .start(of: .value(timeUnit), in: .value(querySampleDate2), willReturn: querySampleDate2))
 
 		// when
-		let matchingSamples = matcher.getSamples(from: querySamples, matching: subQuerySamples)
+		let matchingSamples = try matcher.getSamples(from: querySamples, matching: subQuerySamples)
 
 		// then
 		XCTAssert(matchingSamples.count == 1, "Found \(matchingSamples.count) samples")
@@ -155,7 +155,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenUnknownAttribute_set_throwsUnknownAttributeError() {
+	func testGivenUnknownAttribute_set_throwsUnknownAttributeError() throws {
 		// given
 		let attribute = CommonSampleAttributes.endDate
 		let value = 1
@@ -163,11 +163,11 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try matcher.set(attribute: attribute, to: value)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
+			XCTAssert(error is UnknownAttributeError)
 		}
 	}
 
-	func testGivenTimeUnitAttributeWithInvalidValue_set_throwsTypeMismatchError() {
+	func testGivenTimeUnitAttributeWithInvalidValue_set_throwsTypeMismatchError() throws {
 		// given
 		let attribute = InSameCalendarUnitSubQueryMatcher.timeUnit
 		let value = "abc"
@@ -175,11 +175,11 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try matcher.set(attribute: attribute, to: value)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
+			XCTAssert(error is TypeMismatchError)
 		}
 	}
 
-	func testGivenTimeUnitAttributeWithValidValue_set_correctlySetsValue() {
+	func testGivenTimeUnitAttributeWithValidValue_set_correctlySetsValue() throws {
 		// given
 		let attribute = InSameCalendarUnitSubQueryMatcher.timeUnit
 		let value = Calendar.Component.day
@@ -191,7 +191,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssert(matcher.timeUnit == value)
 	}
 
-	func testGivenMostRecentOnlyAttributeWithInvalidValue_set_throwsTypeMismatchError() {
+	func testGivenMostRecentOnlyAttributeWithInvalidValue_set_throwsTypeMismatchError() throws {
 		// given
 		let attribute = CommonSubQueryMatcherAttributes.mostRecentOnly
 		let value = "abc"
@@ -199,11 +199,11 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try matcher.set(attribute: attribute, to: value)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
+			XCTAssert(error is TypeMismatchError)
 		}
 	}
 
-	func testGivenMostRecentOnlyAttributeWithValidValue_set_correctlySetsValue() {
+	func testGivenMostRecentOnlyAttributeWithValidValue_set_correctlySetsValue() throws {
 		// given
 		let attribute = CommonSubQueryMatcherAttributes.mostRecentOnly
 		let value = true
@@ -215,18 +215,18 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssert(matcher.mostRecentOnly == value)
 	}
 
-	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
+	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() throws {
 		// given
 		let attribute = CommonSampleAttributes.endDate
 
 		// when
 		XCTAssertThrowsError(try matcher.value(of: attribute)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
+			XCTAssert(error is UnknownAttributeError)
 		}
 	}
 
-	func testGivenTimeUnitAttribute_valueOf_returnsCorrectValue() {
+	func testGivenTimeUnitAttribute_valueOf_returnsCorrectValue() throws {
 		// given
 		let attribute = InSameCalendarUnitSubQueryMatcher.timeUnit
 		let expectedValue = Calendar.Component.day
@@ -239,7 +239,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssert(actualValue == expectedValue)
 	}
 
-	func testGivenMostRecentOnlyAttribute_valueOf_returnsCorrectValue() {
+	func testGivenMostRecentOnlyAttribute_valueOf_returnsCorrectValue() throws {
 		// given
 		let attribute = CommonSubQueryMatcherAttributes.mostRecentOnly
 		let expectedValue = true
@@ -252,7 +252,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssert(actualValue == expectedValue)
 	}
 
-	func testGivenTwoMatchersOfDifferentTypes_equalToAttributed_returnsFalse() {
+	func testGivenTwoMatchersOfDifferentTypes_equalToAttributed_returnsFalse() throws {
 		// given
 		let otherAttributed: Attributed = SameDatesSubQueryMatcher()
 
@@ -263,7 +263,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameObjectTwice_equalToAttributed_returnsTrue() {
+	func testGivenSameObjectTwice_equalToAttributed_returnsTrue() throws {
 		// when
 		let equal = matcher.equalTo(matcher as Attributed)
 
@@ -271,7 +271,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
-	func testGivenSameMatcherTypeWithDifferentTimeUnits_equalToAttributed_returnsFalse() {
+	func testGivenSameMatcherTypeWithDifferentTimeUnits_equalToAttributed_returnsFalse() throws {
 		// given
 		let otherAttributed: Attributed = InSameCalendarUnitSubQueryMatcher(timeUnit: Calendar.Component.hour)
 
@@ -282,7 +282,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameMatcherTypeWithDifferentMostRecentOnly_equalToAttributed_returnsFalse() {
+	func testGivenSameMatcherTypeWithDifferentMostRecentOnly_equalToAttributed_returnsFalse() throws {
 		// given
 		let otherAttributed: Attributed = InSameCalendarUnitSubQueryMatcher(mostRecentOnly: true)
 
@@ -293,7 +293,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameMatcherTypeWithAllSameAttributes_equalToAttributed_returnsTrue() {
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalToAttributed_returnsTrue() throws {
 		// given
 		let otherAttributed: Attributed = InSameCalendarUnitSubQueryMatcher()
 
@@ -304,7 +304,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
-	func testGivenTwoMatchersOfDifferentTypes_equalToMatcher_returnsFalse() {
+	func testGivenTwoMatchersOfDifferentTypes_equalToMatcher_returnsFalse() throws {
 		// given
 		let otherMatcher: SubQueryMatcher = SameDatesSubQueryMatcher()
 
@@ -315,7 +315,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameObjectTwice_equalToMatcher_returnsTrue() {
+	func testGivenSameObjectTwice_equalToMatcher_returnsTrue() throws {
 		// when
 		let equal = matcher.equalTo(matcher as SubQueryMatcher)
 
@@ -323,7 +323,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
-	func testGivenSameMatcherTypeWithDifferentTimeUnits_equalToMatcher_returnsFalse() {
+	func testGivenSameMatcherTypeWithDifferentTimeUnits_equalToMatcher_returnsFalse() throws {
 		// given
 		let otherMatcher: SubQueryMatcher = InSameCalendarUnitSubQueryMatcher(timeUnit: Calendar.Component.hour)
 
@@ -334,7 +334,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameMatcherTypeWithDifferentMostRecentOnly_equalToMatcher_returnsFalse() {
+	func testGivenSameMatcherTypeWithDifferentMostRecentOnly_equalToMatcher_returnsFalse() throws {
 		// given
 		let otherMatcher: SubQueryMatcher = InSameCalendarUnitSubQueryMatcher(mostRecentOnly: true)
 
@@ -345,7 +345,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameMatcherTypeWithAllSameAttributes_equalToMatcher_returnsTrue() {
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalToMatcher_returnsTrue() throws {
 		// given
 		let otherMatcher: SubQueryMatcher = InSameCalendarUnitSubQueryMatcher()
 
@@ -356,7 +356,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
-	func testGivenSameObjectTwice_equalTo_returnsTrue() {
+	func testGivenSameObjectTwice_equalTo_returnsTrue() throws {
 		// when
 		let equal = matcher.equalTo(matcher)
 
@@ -364,7 +364,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
-	func testGivenSameMatcherTypeWithDifferentTimeUnits_equalTo_returnsFalse() {
+	func testGivenSameMatcherTypeWithDifferentTimeUnits_equalTo_returnsFalse() throws {
 		// given
 		let other = InSameCalendarUnitSubQueryMatcher(timeUnit: Calendar.Component.hour)
 
@@ -375,7 +375,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameMatcherTypeWithDifferentMostRecentOnly_equalTo_returnsFalse() {
+	func testGivenSameMatcherTypeWithDifferentMostRecentOnly_equalTo_returnsFalse() throws {
 		// given
 		let other = InSameCalendarUnitSubQueryMatcher(mostRecentOnly: true)
 
@@ -386,7 +386,7 @@ class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() {
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() throws {
 		// given
 		let other = InSameCalendarUnitSubQueryMatcher()
 

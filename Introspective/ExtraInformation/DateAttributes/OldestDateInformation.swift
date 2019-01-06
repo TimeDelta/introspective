@@ -15,10 +15,12 @@ public final class OldestDateInformation: AnyInformation {
 	private typealias Me = OldestDateInformation
 	static let noSamplesMessage = "No samples between given start and end dates"
 
-	// MARK: - Instance Variables
+	// MARK: Display Information
 
 	public final override var name: String { return "Oldest" }
 	public final override var description: String { return name + " " + attribute.name.localizedLowercase }
+
+	// MARK: - Instance Variables
 
 	private final let log = Log()
 
@@ -28,31 +30,36 @@ public final class OldestDateInformation: AnyInformation {
 		super.init(attribute)
 	}
 
-	// MARK: - Functions
+	// MARK: - Information Functions
 
-	public final override func compute(forSamples samples: [Sample]) -> String {
-		let filteredSamples = DependencyInjector.util.sample.getOnly(samples: samples, from: startDate, to: endDate)
+	public final override func compute(forSamples samples: [Sample]) throws -> String {
+		let filteredSamples = try filterSamples(samples, as: Date.self)
 		if filteredSamples.count == 0 {
 			return Me.noSamplesMessage
 		}
 
-		var oldestSampleDate = try! filteredSamples[0].value(of: attribute) as! Date
+		guard var oldestSampleDate = (try? filteredSamples[0].value(of: attribute)) as? Date else {
+			log.error("Failed to get initial date when computing oldest")
+			return ""
+		}
 		for sample in filteredSamples {
-			let value = try! sample.value(of: attribute)
+			let value = try sample.value(of: attribute)
 			if let date = value as? Date {
 				if date.isBeforeDate(oldestSampleDate, granularity: .nanosecond) {
 					oldestSampleDate = date
 				}
 			} else if !attribute.optional || value != nil {
-				log.error("non-optional attribute (%@) of sample (%@) returned %@", attribute.name, sample.attributedName, String(describing: value))
+				log.error("non-optional attribute (%@) of %@ sample returned %@", attribute.name, sample.attributedName, String(describing: value))
 			}
 		}
 		return DependencyInjector.util.calendar.string(for: oldestSampleDate, dateStyle: .short, timeStyle: .short)
 	}
 
-	public final override func computeGraphable(forSamples samples: [Sample]) -> String {
-		return compute(forSamples: samples)
+	public final override func computeGraphable(forSamples samples: [Sample]) throws -> String {
+		return try compute(forSamples: samples)
 	}
+
+	// MARK: - Equality
 
 	public final override func equalTo(_ other: ExtraInformation) -> Bool {
 		return other is OldestDateInformation && attribute.equalTo(other.attribute)

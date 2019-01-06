@@ -29,7 +29,7 @@ final class EqualToDosageAttributeRestrictionUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try restriction.value(of: Me.restrictedAttribute)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
+			XCTAssert(error is UnknownAttributeError)
 		}
 	}
 
@@ -51,7 +51,7 @@ final class EqualToDosageAttributeRestrictionUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: Dosage(15, "mL"))) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
+			XCTAssert(error is UnknownAttributeError)
 		}
 	}
 
@@ -59,7 +59,7 @@ final class EqualToDosageAttributeRestrictionUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try restriction.set(attribute: Me.valueAttribute, to: Date())) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
+			XCTAssert(error is TypeMismatchError)
 		}
 	}
 
@@ -84,7 +84,7 @@ final class EqualToDosageAttributeRestrictionUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try restriction.samplePasses(mockSample)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
+			XCTAssert(error is TypeMismatchError)
 		}
 	}
 

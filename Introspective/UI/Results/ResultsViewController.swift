@@ -269,12 +269,21 @@ final class ResultsViewController: UITableViewController {
 
 	@objc private final func saveEditedExtraInformation(notification: Notification) {
 		if let selectedInformation: ExtraInformation? = value(for: .information, from: notification) {
+			// selectedInformation can no longer be nil
 			if let editIndex = extraInformationEditIndex {
 				extraInformation[editIndex] = selectedInformation!
-				extraInformationValues[editIndex] = try! extraInformation[editIndex].compute(forSamples: samples)
-				tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+				do {
+					extraInformationValues[editIndex] = try extraInformation[editIndex].compute(forSamples: samples)
+					tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+				} catch {
+					log.error("Failed to compute %@ information: %@", selectedInformation!.name, errorInfo(error))
+					showError(
+						title: "Failed to compute \(selectedInformation!.name) information",
+						message: "Sorry for the inconvenience.")
+				}
 			} else {
 				log.error("Extra Information edit index was nil")
+				showError(title: "Failed to edit selected information", message: "Sorry for the inconvenience.")
 			}
 		}
 	}
@@ -364,18 +373,23 @@ final class ResultsViewController: UITableViewController {
 	}
 
 	@objc private final func addInformation() {
-		let attribute = type(of: samples[0]).defaultDependentAttribute
-		let information = DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: attribute)[0].init(attribute)
-		extraInformation.append(information)
-		extraInformationValues.append(try! extraInformation.last!.compute(forSamples: samples))
-		tableView.reloadData()
+		do {
+			let attribute = type(of: samples[0]).defaultDependentAttribute
+			let information = DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: attribute)[0].init(attribute)
+			extraInformation.append(information)
+			extraInformationValues.append(try extraInformation.last!.compute(forSamples: samples))
+			tableView.reloadData()
+		} catch {
+			log.error("Failed to compute information: %@", errorInfo(error))
+			showError(title: "You found a bug.")
+		}
 	}
 
 	@objc private final func deleteAllSamples() {
 		let sampleType = samples[0].attributedName.localizedLowercase
 		let alert = UIAlertController(
-			title: "Are you sure you want to delete all \(sampleType) records?",
-			message: nil,
+			title: "Are you sure you want to delete all of these \(sampleType) records?",
+			message: "This will only delete the ones displayed here.",
 			preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 			DispatchQueue.global(qos: .userInitiated).async {
@@ -384,7 +398,9 @@ final class ResultsViewController: UITableViewController {
 					try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 				} catch {
 					self.log.error("Failed to delete all %@: %@", sampleType, errorInfo(error))
-					NotificationBanner(title: "Failed to delete all \(sampleType) records", style: .danger).show()
+					DispatchQueue.main.async {
+						self.showError(title: "Failed to delete all \(sampleType) records")
+					}
 				}
 			}
 			self.navigationController!.popViewController(animated: false)
@@ -457,7 +473,12 @@ final class ResultsViewController: UITableViewController {
 	private final func recomputeExtraInformation() {
 		extraInformationValues = [String]()
 		for index in 0 ..< extraInformation.count {
-			extraInformationValues.append(try! extraInformation[index].compute(forSamples: samples))
+			do {
+				extraInformationValues.append(try extraInformation[index].compute(forSamples: samples))
+			} catch {
+				log.error("Failed to compute %@ information: %@", extraInformation[index].name, errorInfo(error))
+				extraInformationValues.append("") // avoid any index out of bounds errors
+			}
 		}
 	}
 

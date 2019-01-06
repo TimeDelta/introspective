@@ -12,5 +12,5 @@ public protocol SampleGrouper: Attributed {
 
 	init()
 
-	func group(samples: [Sample], by attribute: Attribute) -> [(Any, [Sample])]
+	func group(samples: [Sample], by attribute: Attribute) throws -> [(Any, [Sample])]
 }

@@ -10,12 +10,9 @@ import Foundation
 
 public final class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction, Equatable {
 
+	// MARK: - Static Variables
+
 	private typealias Me = BeforeTimeOfDayAttributeRestriction
-
-	public static func ==(lhs: BeforeTimeOfDayAttributeRestriction, rhs: BeforeTimeOfDayAttributeRestriction) -> Bool {
-		return lhs.equalTo(rhs)
-	}
-
 	public static let timeAttribute = TimeOfDayAttribute(
 		name: "Time",
 		pluralName: "Times",
@@ -24,13 +21,25 @@ public final class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction
 		timeAttribute,
 	]
 
+	// MARK: - Display Information
+
 	public final override var attributedName: String { return "Before time of day" }
 	public final override var description: String {
-		let timeText = try! Me.timeAttribute.convertToDisplayableString(from: timeOfDay)
-		return "Before " + timeText
+		do {
+			let timeText = try Me.timeAttribute.convertToDisplayableString(from: timeOfDay)
+			return "Before " + timeText
+		} catch {
+			log.error("Failed to convert time of day to displayable string: %@", errorInfo(error))
+			return "Before " + timeOfDay.toString()
+		}
 	}
 
+	// MARK: - Instance Variables
+
 	public final var timeOfDay: TimeOfDay
+	private final let log = Log()
+
+	// MARK: - Initializers
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, timeOfDay: TimeOfDay())
@@ -41,24 +50,40 @@ public final class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction
 		super.init(restrictedAttribute: restrictedAttribute, attributes: Me.attributes)
 	}
 
+	// MARK: - Attribute Functions
+
 	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.name != Me.timeAttribute.name {
-			throw AttributeError.unknownAttribute
+			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		return timeOfDay
 	}
 
 	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.name != Me.timeAttribute.name {
-			throw AttributeError.unknownAttribute
+			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
-		guard let castedValue = value as? TimeOfDay else { throw AttributeError.typeMismatch }
+		guard let castedValue = value as? TimeOfDay else {
+			throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+		}
 		timeOfDay = castedValue
 	}
 
+	// MARK: - Attribute Restriction Functions
+
 	public final override func samplePasses(_ sample: Sample) throws -> Bool {
-		guard let sampleDate = try sample.value(of: restrictedAttribute) as? Date else { throw AttributeError.typeMismatch }
+		let sampleValue = try sample.value(of: restrictedAttribute)
+		if sampleValue == nil { return false }
+		guard let sampleDate = sampleValue as? Date else {
+			throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: sampleValue))
+		}
 		return sampleDate < timeOfDay
+	}
+
+	// MARK: - Equality
+
+	public static func ==(lhs: BeforeTimeOfDayAttributeRestriction, rhs: BeforeTimeOfDayAttributeRestriction) -> Bool {
+		return lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {

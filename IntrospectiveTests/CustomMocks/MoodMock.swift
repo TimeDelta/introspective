@@ -272,6 +272,20 @@ class MoodMock: Mood, Mock {
 		return __value
     }
 
+    func safeEqualityCheck<Type: Equatable>(_ attribute: Attribute, _ otherSample: Sample, as type: Type.Type) -> Bool {
+        addInvocation(.m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>.value(`attribute`), Parameter<Sample>.value(`otherSample`), Parameter<Type.Type>.value(`type`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>.value(`attribute`), Parameter<Sample>.value(`otherSample`), Parameter<Type.Type>.value(`type`).wrapAsGeneric())) as? (Attribute, Sample, Type.Type) -> Void
+		perform?(`attribute`, `otherSample`, `type`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>.value(`attribute`), Parameter<Sample>.value(`otherSample`), Parameter<Type.Type>.value(`type`).wrapAsGeneric())).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for safeEqualityCheck<Type: Equatable>(_ attribute: Attribute, _ otherSample: Sample, as type: Type.Type). Use given")
+			Failure("Stub return value not specified for safeEqualityCheck<Type: Equatable>(_ attribute: Attribute, _ otherSample: Sample, as type: Type.Type). Use given")
+		}
+		return __value
+    }
+
     fileprivate enum StaticMethodType {
         case p_rating_get
         case p_maxRating_get
@@ -373,6 +387,7 @@ class MoodMock: Mood, Mock {
         case m_graphableValue__of_attribute(Parameter<Attribute>)
         case m_dates
         case m_equalTo__otherSample(Parameter<Sample>)
+        case m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>, Parameter<Sample>, Parameter<GenericAttribute>)
         case p_minRating_get
 		case p_minRating_set(Parameter<Double>)
         case p_maxRating_get
@@ -410,6 +425,11 @@ class MoodMock: Mood, Mock {
             case (.m_equalTo__otherSample(let lhsOthersample), .m_equalTo__otherSample(let rhsOthersample)):
                 guard Parameter.compare(lhs: lhsOthersample, rhs: rhsOthersample, with: matcher) else { return false } 
                 return true 
+            case (.m_safeEqualityCheck__attribute_otherSampleas_type(let lhsAttribute, let lhsOthersample, let lhsType), .m_safeEqualityCheck__attribute_otherSampleas_type(let rhsAttribute, let rhsOthersample, let rhsType)):
+                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsOthersample, rhs: rhsOthersample, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsType, rhs: rhsType, with: matcher) else { return false } 
+                return true 
             case (.p_minRating_get,.p_minRating_get): return true
 			case (.p_minRating_set(let left),.p_minRating_set(let right)): return Parameter<Double>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_maxRating_get,.p_maxRating_get): return true
@@ -436,6 +456,7 @@ class MoodMock: Mood, Mock {
             case let .m_graphableValue__of_attribute(p0): return p0.intValue
             case .m_dates: return 0
             case let .m_equalTo__otherSample(p0): return p0.intValue
+            case let .m_safeEqualityCheck__attribute_otherSampleas_type(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case .p_minRating_get: return 0
 			case .p_minRating_set(let newValue): return newValue.intValue
             case .p_maxRating_get: return 0
@@ -509,6 +530,13 @@ class MoodMock: Mood, Mock {
 		static func equalTo(otherSample: Parameter<Sample>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherSample(`otherSample`), products: willReturn.map({ Product.return($0) }))
         }
+        static func safeEqualityCheck<Type: Equatable>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `attribute` label, remove `otherSample` label")
+		static func safeEqualityCheck<Type: Equatable>(attribute: Parameter<Attribute>, otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
+        }
         static func equalTo(_ otherAttributed: Parameter<Attributed>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) })) }()
@@ -526,6 +554,13 @@ class MoodMock: Mood, Mock {
         static func equalTo(_ otherSample: Parameter<Sample>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherSample(`otherSample`), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        static func safeEqualityCheck<Type: Equatable>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
@@ -578,6 +613,9 @@ class MoodMock: Mood, Mock {
         static func equalTo(_ otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherSample` label")
 		static func equalTo(otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
+        static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>) -> Verify { return Verify(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `attribute` label, remove `otherSample` label")
+		static func safeEqualityCheck<Type>(attribute: Parameter<Attribute>, otherSample: Parameter<Sample>, as type: Parameter<Type.Type>) -> Verify { return Verify(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()))}
         static var minRating: Verify { return Verify(method: .p_minRating_get) }
 		static func minRating(set newValue: Parameter<Double>) -> Verify { return Verify(method: .p_minRating_set(newValue)) }
         static var maxRating: Verify { return Verify(method: .p_maxRating_get) }
@@ -629,6 +667,13 @@ class MoodMock: Mood, Mock {
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherSample` label")
 		static func equalTo(otherSample: Parameter<Sample>, perform: @escaping (Sample) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherSample(`otherSample`), performs: perform)
+        }
+        static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, perform: @escaping (Attribute, Sample, Type.Type) -> Void) -> Perform {
+            return Perform(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `attribute` label, remove `otherSample` label")
+		static func safeEqualityCheck<Type>(attribute: Parameter<Attribute>, otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, perform: @escaping (Attribute, Sample, Type.Type) -> Void) -> Perform {
+            return Perform(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), performs: perform)
         }
     }
 

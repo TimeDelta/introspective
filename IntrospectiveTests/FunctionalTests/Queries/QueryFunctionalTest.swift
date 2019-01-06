@@ -37,7 +37,7 @@ class QueryFunctionalTest: FunctionalTest {
 		if error != nil {
 			XCTFail(error!.localizedDescription)
 		}
-		XCTAssert(result != nil)
+		XCTAssertNotNil(result)
 		return waitError == nil && error == nil && result != nil
 	}
 

@@ -22,7 +22,9 @@ public final class DosageAttribute: AttributeBase, ComparableAttribute {
 
 	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
-		guard let castedValue = value as? Dosage else { throw AttributeError.typeMismatch }
+		guard let castedValue = value as? Dosage else {
+			throw TypeMismatchError(attribute: self, wasA: type(of: value))
+		}
 		return castedValue.description
 	}
 }

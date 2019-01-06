@@ -81,52 +81,27 @@ final class AttributeViewController: UIViewController {
 
 	@IBAction final func valueButtonPressed(_ sender: Any) {
 		if attribute is DaysOfWeekAttribute {
-			let controller: HorizontalMultiSelectAttributeValueViewController = viewController(named: "horizontalMultiSelectAttribute")
-			controller.multiSelectAttribute = (attribute as! MultiSelectAttribute)
-			controller.currentValue = attributeValue
-			controller.notificationToSendOnAccept = notificationToSendOnValueChange
-			customPresentViewController(Me.horizontalMultiSelectPresenter, viewController: controller, animated: false)
+			showDaysOfWeekView()
 		} else if attribute is MultiSelectAttribute {
-			let controller: MultiSelectAttributeValueViewController = viewController(named: "multiSelectAttribute")
-			controller.multiSelectAttribute = (attribute as! MultiSelectAttribute)
-			controller.initialValue = attributeValue
-			controller.notificationToSendOnAccept = notificationToSendOnValueChange
-			customPresentViewController(Me.multiSelectPresenter, viewController: controller, animated: false)
+			showMultiSelectView()
 		} else if attribute is NumericAttribute {
-			let controller: NumericAttributeValueViewController = viewController(named: "numericAttribute")
-			controller.numericAttribute = (attribute as! NumericAttribute)
-			controller.currentValue = attributeValue
-			controller.notificationToSendOnAccept = notificationToSendOnValueChange
-			customPresentViewController(Me.numericPresenter, viewController: controller, animated: false)
+			showNumericView()
 		} else if attribute is DosageAttribute {
-			let controller: SetMedicationDosageViewController = viewController(named: "setDosage")
-			controller.initialDosage = attributeValue as? Dosage
-			controller.notificationToSendOnAccept = notificationToSendOnValueChange
-			customPresentViewController(Me.dosagePresenter, viewController: controller, animated: false)
+			showDosageView()
 		} else if attribute is FrequencyAttribute {
-			let controller = UIStoryboard(name: "Util", bundle: nil).instantiateViewController(withIdentifier: "chooseFrequency") as! FrequencyEditorViewController
-			controller.initialFrequency = attributeValue as? Frequency
-			controller.notificationToSendOnAccept = notificationToSendOnValueChange
-			customPresentViewController(Me.frequencyPresenter, viewController: controller, animated: false)
+			showFrequencyView()
 		} else {
-			let controller: AttributeValueViewController = viewController(named: "attributeValue")
-			controller.attribute = attribute
-			controller.attributeValue = attributeValue
-			controller.notificationToSendOnAccept = notificationToSendOnValueChange
-			customPresentViewController(Me.defaultPresenter, viewController: controller, animated: false)
+			showDefaultValueView()
 		}
 	}
 
 	@IBAction final func booleanValueChanged(_ sender: Any) {
 		attributeValue = booleanValueSwitch.isOn
-		DispatchQueue.main.async {
-			NotificationCenter.default.post(
-				name: self.notificationToSendOnValueChange,
-				object: self,
-				userInfo: self.info([
-					.attributeValue: self.attributeValue,
-				]))
-		}
+		post(
+			notificationToSendOnValueChange,
+			userInfo: info([
+				.attributeValue: attributeValue,
+			]))
 	}
 
 	// MARK: - Received Notifications
@@ -134,6 +109,54 @@ final class AttributeViewController: UIViewController {
 	@objc private final func valueChanged(notification: Notification) {
 		attributeValue = value(for: .attributeValue, from: notification)
 		updateDisplay()
+	}
+
+	// MARK: - Show View Functions
+
+	private final func showDaysOfWeekView() {
+		let controller: HorizontalMultiSelectAttributeValueViewController = viewController(named: "horizontalMultiSelectAttribute")
+		controller.multiSelectAttribute = (attribute as! MultiSelectAttribute)
+		controller.currentValue = attributeValue
+		controller.notificationToSendOnAccept = notificationToSendOnValueChange
+		customPresentViewController(Me.horizontalMultiSelectPresenter, viewController: controller, animated: false)
+	}
+
+	private final func showMultiSelectView() {
+		let controller: MultiSelectAttributeValueViewController = viewController(named: "multiSelectAttribute")
+		controller.multiSelectAttribute = (attribute as! MultiSelectAttribute)
+		controller.initialValue = attributeValue
+		controller.notificationToSendOnAccept = notificationToSendOnValueChange
+		customPresentViewController(Me.multiSelectPresenter, viewController: controller, animated: false)
+	}
+
+	private final func showNumericView() {
+		let controller: NumericAttributeValueViewController = viewController(named: "numericAttribute")
+		controller.numericAttribute = (attribute as! NumericAttribute)
+		controller.currentValue = attributeValue
+		controller.notificationToSendOnAccept = notificationToSendOnValueChange
+		customPresentViewController(Me.numericPresenter, viewController: controller, animated: false)
+	}
+
+	private final func showDosageView() {
+		let controller: SetMedicationDosageViewController = viewController(named: "setDosage")
+		controller.initialDosage = attributeValue as? Dosage
+		controller.notificationToSendOnAccept = notificationToSendOnValueChange
+		customPresentViewController(Me.dosagePresenter, viewController: controller, animated: false)
+	}
+
+	private final func showFrequencyView() {
+		let controller: FrequencyEditorViewController = viewController(named: "chooseFrequency", fromStoryboard: "Util")
+		controller.initialFrequency = attributeValue as? Frequency
+		controller.notificationToSendOnAccept = notificationToSendOnValueChange
+		customPresentViewController(Me.frequencyPresenter, viewController: controller, animated: false)
+	}
+
+	private final func showDefaultValueView() {
+		let controller: AttributeValueViewController = viewController(named: "attributeValue")
+		controller.attribute = attribute
+		controller.attributeValue = attributeValue
+		controller.notificationToSendOnAccept = notificationToSendOnValueChange
+		customPresentViewController(Me.defaultPresenter, viewController: controller, animated: false)
 	}
 
 	// MARK: - Helper Functions
@@ -144,32 +167,56 @@ final class AttributeViewController: UIViewController {
 				attributeValue = true
 			}
 			booleanValueSwitch.isOn = attributeValue as! Bool
-			attributeValueButton.isEnabled = false
-			attributeValueButton.isUserInteractionEnabled = false
-			attributeValueButton.isHidden = true
+			hideAttributeValueButton()
 		} else {
-			booleanValueSwitch.isEnabled = false
-			booleanValueSwitch.isUserInteractionEnabled = false
-			booleanValueSwitch.isHidden = true
-			if attributeValue == nil {
-				attributeValueButton.setTitle("Set value", for: .normal)
-			} else {
-				var attributeValueDescription = try! attribute.convertToDisplayableString(from: attributeValue)
+			updateDisplayForNonBooleanAttribute()
+		}
+	}
+
+	private final func updateDisplayForNonBooleanAttribute() {
+		hideSwitch()
+		if attributeValue == nil {
+			attributeValueButton.setTitle("Set value", for: .normal)
+		} else {
+			do {
+				var attributeValueDescription = try attribute.convertToDisplayableString(from: attributeValue)
 				if attributeValueDescription.isEmpty {
 					attributeValueDescription = "Set value"
 				}
 				attributeValueButton.setTitle(attributeValueDescription, for: .normal)
-			}
-
-			attributeValueButton.accessibilityIdentifier = "set " + attribute.name.localizedLowercase + " button"
-			do {
-				attributeValueButton.accessibilityValue = try attribute.convertToDisplayableString(from: attributeValue)
 			} catch {
 				log.error(
-					"Failed to set accessibility value on %@: %@",
-					attributeValueButton.accessibilityIdentifier!,
+					"Failed to convert %@ as %@ to displayable string: %@",
+					String(describing: attributeValue),
+					attribute.name,
 					errorInfo(error))
 			}
 		}
+
+		setAccessibility()
+	}
+
+	private final func setAccessibility() {
+		attributeValueButton.accessibilityIdentifier = "set " + attribute.name.localizedLowercase + " button"
+		do {
+			attributeValueButton.accessibilityValue = try attribute.convertToDisplayableString(from: attributeValue)
+		} catch {
+			log.error(
+				"Failed to set accessibility value on %@: %@",
+				attributeValueButton.accessibilityIdentifier!,
+				errorInfo(error))
+		}
+	}
+
+	private final func hideSwitch() {
+		booleanValueSwitch.isEnabled = false
+		booleanValueSwitch.isUserInteractionEnabled = false
+		booleanValueSwitch.isHidden = true
+	}
+
+	private final func hideAttributeValueButton() {
+		attributeValueButton.isEnabled = false
+		attributeValueButton.isUserInteractionEnabled = false
+		attributeValueButton.isHidden = true
 	}
 }

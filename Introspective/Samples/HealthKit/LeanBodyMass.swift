@@ -82,21 +82,25 @@ public final class LeanBodyMass: HealthKitQuantitySample {
 		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
 			return timestamp
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.leanBodyMass) {
-			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Double else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			leanBodyMass = castedValue
 			return
 		}
 		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
-			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Date else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			timestamp = castedValue
 			return
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 }
 

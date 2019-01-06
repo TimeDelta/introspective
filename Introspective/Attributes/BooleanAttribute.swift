@@ -12,7 +12,9 @@ public final class BooleanAttribute: AttributeBase {
 
 	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
-		guard let castedValue = value as? Bool else { throw AttributeError.typeMismatch }
+		guard let castedValue = value as? Bool else {
+			throw TypeMismatchError(attribute: self, wasA: type(of: value))
+		}
 		return castedValue ? "on" : "off"
 	}
 }

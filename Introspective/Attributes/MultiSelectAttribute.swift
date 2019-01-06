@@ -43,11 +43,13 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 		if let castedValue = value as? [Type] {
 			return castedValue
 		}
-		throw AttributeError.unsupportedValue
+		throw UnsupportedValueError(attribute: self, is: value)
 	}
 
 	public final func valueFromArray(_ value: [Any]) throws -> Any {
-		guard let castedValue = value as? [Type] else { throw AttributeError.typeMismatch }
+		guard let castedValue = value as? [Type] else {
+			throw TypeMismatchError(attribute: self, wasA: type(of: value))
+		}
 		return Set<Type>(castedValue)
 	}
 
@@ -60,7 +62,9 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 	}
 
 	public func convertPossibleValueToDisplayableString(_ value: Any) throws -> String {
-		guard let castedValue = value as? Type else { throw AttributeError.typeMismatch }
+		guard let castedValue = value as? Type else {
+			throw TypeMismatchError(attribute: self, wasA: type(of: value))
+		}
 		return possibleValueToString(castedValue)
 	}
 
@@ -76,7 +80,7 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 		if let castedValue = value as? Type {
 			return possibleValueToString(castedValue)
 		}
-		throw AttributeError.typeMismatch
+		throw TypeMismatchError(attribute: self, wasA: type(of: value))
 	}
 
 	fileprivate final func convertTypesIntoDisplayString(_ sortedTypes: [Type]) -> String {
@@ -122,6 +126,6 @@ public class ComparableTypedMultiSelectAttribute<Type: Hashable & Comparable>: T
 		if let castedValue = value as? Type {
 			return possibleValueToString(castedValue)
 		}
-		throw AttributeError.typeMismatch
+		throw TypeMismatchError(attribute: self, wasA: type(of: value))
 	}
 }

@@ -26,7 +26,7 @@ class SameStartDatesSubQueryMatcherUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try matcher.set(attribute: attribute, to: value)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
+			XCTAssert(error is UnknownAttributeError)
 		}
 	}
 
@@ -38,7 +38,7 @@ class SameStartDatesSubQueryMatcherUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try matcher.set(attribute: attribute, to: value)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
+			XCTAssert(error is TypeMismatchError)
 		}
 	}
 
@@ -61,7 +61,7 @@ class SameStartDatesSubQueryMatcherUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try matcher.value(of: attribute)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
+			XCTAssert(error is UnknownAttributeError)
 		}
 	}
 

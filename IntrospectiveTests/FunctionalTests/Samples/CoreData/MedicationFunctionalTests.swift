@@ -19,7 +19,7 @@ final class MedicationFunctionalTests: FunctionalTest {
 		// when
 		XCTAssertThrowsError(try medication.value(of: unknownAttribute)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
+			XCTAssert(error is UnknownAttributeError)
 		}
 	}
 

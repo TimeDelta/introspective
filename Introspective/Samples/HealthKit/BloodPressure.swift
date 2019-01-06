@@ -100,26 +100,32 @@ public final class BloodPressure: HealthKitCorrelationSample {
 		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
 			return timestamp
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.systolic) {
-			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Double else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			systolic = castedValue
 			return
 		}
 		if attribute.equalTo(Me.diastolic) {
-			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Double else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			diastolic = castedValue
 			return
 		}
 		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
-			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Date else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			timestamp = castedValue
 			return
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 }
 

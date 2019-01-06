@@ -26,7 +26,7 @@ public final class DurationAttribute: AttributeBase, ComparableAttribute {
 
 	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		guard let castedValue = value as? Duration else {
-			throw AttributeError.typeMismatch
+			throw TypeMismatchError(attribute: self, wasA: type(of: value))
 		}
 		return castedValue.description
 	}

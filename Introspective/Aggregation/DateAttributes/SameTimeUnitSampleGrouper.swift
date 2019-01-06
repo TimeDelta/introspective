@@ -13,20 +13,27 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 
 	private typealias Me = SameTimeUnitSampleGrouper
 
+	// MARK: - Attributes
+
 	public static let timeUnitAttribute = CalendarComponentAttribute(description: "Combine all samples within the same time unit")
 	public static let attributes: [Attribute] = [
 		timeUnitAttribute,
 	]
+	public final let attributes: [Attribute] = Me.attributes
+
+	// MARK: - Display Information
 
 	public final let attributedName = "Same time unit"
-	public final let attributes: [Attribute] = Me.attributes
 	public final var description: String {
 		return "per " + timeUnit.description.localizedLowercase
 	}
 
-	public final var timeUnit: Calendar.Component = .day
+	// MARK: - Instance Variables
 
+	public final var timeUnit: Calendar.Component = .day
 	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "SameTimeUnitSampleGrouper"))
+
+	// MARK: - Initializers
 
 	public required init() {}
 
@@ -34,10 +41,12 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 		self.timeUnit = timeUnit
 	}
 
-	public final func group(samples: [Sample], by attribute: Attribute) -> [(Any, [Sample])] {
+	// MARK: - Grouper Functions
+
+	public final func group(samples: [Sample], by attribute: Attribute) throws -> [(Any, [Sample])] {
 		// TODO - support grouping by day of week, hour of day, etc.
 		signpost.begin(name: "Aggregation", "Aggregating %d samples", samples.count)
-		let samplesByTimeUnit = DependencyInjector.util.sample.aggregate(samples: samples, by: timeUnit, for: attribute)
+		let samplesByTimeUnit = try DependencyInjector.util.sample.aggregate(samples: samples, by: timeUnit, for: attribute)
 		signpost.end(name: "Aggregation", "Aggregated %d samples into %d groups", samples.count, samplesByTimeUnit.count)
 
 		signpost.begin(name: "Sort aggregated samples")
@@ -50,14 +59,16 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 		if attribute.equalTo(Me.timeUnitAttribute) {
 			return timeUnit
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.timeUnitAttribute) {
-			guard let castedValue = value as? Calendar.Component else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Calendar.Component else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			timeUnit = castedValue
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 }

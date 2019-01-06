@@ -47,12 +47,16 @@ public class TypedLessThanOrEqualToAttributeRestrictionBase<ValueType: Comparabl
 
 	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(valueAttribute) { return value }
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	public final override func set(attribute: Attribute, to value: Any?) throws {
-		if !attribute.equalTo(valueAttribute) { throw AttributeError.unknownAttribute }
-		guard let castedValue = value as? ValueType else { throw AttributeError.typeMismatch }
+		if !attribute.equalTo(valueAttribute) {
+			throw UnknownAttributeError(attribute: attribute, for: self)
+		}
+		guard let castedValue = value as? ValueType else {
+			throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+		}
 		self.value = castedValue
 	}
 
@@ -61,7 +65,9 @@ public class TypedLessThanOrEqualToAttributeRestrictionBase<ValueType: Comparabl
 	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return false }
-		guard let castedValue = sampleValue as? ValueType else { throw AttributeError.typeMismatch }
+		guard let castedValue = sampleValue as? ValueType else {
+			throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: sampleValue))
+		}
 		return castedValue <= value
 	}
 

@@ -10,9 +10,11 @@ import Foundation
 
 public final class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 
-	public static func ==(lhs: SameDatesSubQueryMatcher, rhs: SameDatesSubQueryMatcher) -> Bool {
-		return lhs.equalTo(rhs)
-	}
+	// MARK: - Attributes
+
+	public final let attributes: [Attribute] = [CommonSubQueryMatcherAttributes.mostRecentOnly]
+
+	// MARK: - Display Information
 
 	public final let attributedName: String = "Start and end timestamps are the same as"
 	public final var description: String {
@@ -23,14 +25,19 @@ public final class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 		return text
 	}
 
-	public final let attributes: [Attribute] = [CommonSubQueryMatcherAttributes.mostRecentOnly]
+	// MARK: - Instance Variables
+
 	public final var mostRecentOnly: Bool = false
+
+	// MARK: - Initializers
 
 	public required init() {}
 
 	public init(mostRecentOnly: Bool = false) {
 		self.mostRecentOnly = mostRecentOnly
 	}
+
+	// MARK: - SubQueryMatcher Functions
 
 	public final func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
@@ -56,20 +63,30 @@ public final class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 		return matchingSamples
 	}
 
+	// MARK: - Attribute Functions
+
 	public final func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(CommonSubQueryMatcherAttributes.mostRecentOnly) {
 			return mostRecentOnly
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(CommonSubQueryMatcherAttributes.mostRecentOnly) {
-			guard let castedValue = value as? Bool else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Bool else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			mostRecentOnly = castedValue
 		} else {
-			throw AttributeError.unknownAttribute
+			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
+	}
+
+	// MARK: - Equality
+
+	public static func ==(lhs: SameDatesSubQueryMatcher, rhs: SameDatesSubQueryMatcher) -> Bool {
+		return lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
@@ -87,6 +104,8 @@ public final class SameDatesSubQueryMatcher: SubQueryMatcher, Equatable {
 	public final func equalTo(_ other: SameDatesSubQueryMatcher) -> Bool {
 		return mostRecentOnly == other.mostRecentOnly
 	}
+
+	// MARK: - Helper Functions
 
 	private final func compare(_ s1: Sample, _ s2: Sample) -> ComparisonResult {
 		let start1 = s1.dates()[.start]!

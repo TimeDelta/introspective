@@ -20,13 +20,17 @@ public final class DoubleAttribute: AttributeBase, NumericAttribute {
 
 	public final func convertToValue(from strValue: String) throws -> Any? {
 		if optional && strValue == "" { return "" }
-		if !isValid(value: strValue) { throw  AttributeError.unsupportedValue }
-		return Double(strValue)!
+		guard isValid(value: strValue), let doubleValue = Double(strValue) else {
+			throw UnsupportedValueError(attribute: self, is: strValue)
+		}
+		return doubleValue
 	}
 
 	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
-		guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
+		guard let castedValue = value as? Double else {
+			throw TypeMismatchError(attribute: self, wasA: type(of: value))
+		}
 		return String(castedValue)
 	}
 }

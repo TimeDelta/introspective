@@ -28,7 +28,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try restriction.value(of: Me.restrictedAttribute)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
+			XCTAssert(error is UnknownAttributeError)
 		}
 	}
 
@@ -49,7 +49,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: 1 as Any)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
+			XCTAssert(error is UnknownAttributeError)
 		}
 	}
 
@@ -57,7 +57,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try restriction.set(attribute: Me.dateAttribute, to: 1 as Any)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
+			XCTAssert(error is TypeMismatchError)
 		}
 	}
 
@@ -81,7 +81,7 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try restriction.samplePasses(mockSample)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
+			XCTAssert(error is TypeMismatchError)
 		}
 	}
 

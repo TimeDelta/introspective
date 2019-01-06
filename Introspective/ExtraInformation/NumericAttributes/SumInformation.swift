@@ -10,10 +10,12 @@ import Foundation
 
 public final class SumInformation: AnyInformation {
 
-	// MARK: - Instance Variables
+	// MARK: - Display Information
 
 	public final override var name: String { get { return "Total" } }
 	public final override var description: String { return name + " " + attribute.name.localizedLowercase }
+
+	// MARK: - Instance Variables
 
 	private final let log = Log()
 
@@ -23,23 +25,28 @@ public final class SumInformation: AnyInformation {
 		super.init(attribute)
 	}
 
-	// MARK: - Functions
+	// MARK: - Information Functions
 
-	public final override func compute(forSamples samples: [Sample]) -> String {
-		let filteredSamples = DependencyInjector.util.sample.getOnly(samples: samples, from: startDate, to: endDate)
-		if filteredSamples.count == 0 { return "0" }
-
+	public final override func compute(forSamples samples: [Sample]) throws -> String {
 		if attribute is DoubleAttribute {
-			return String(DependencyInjector.util.numericSample.sum(for: attribute, over: filteredSamples) as Double)
+			let filteredSamples = try filterSamples(samples, as: Double.self)
+			if filteredSamples.count == 0 { return "0" }
+			return String(try DependencyInjector.util.numericSample.sum(for: attribute, over: filteredSamples, as: Double.self))
 		}
 		if attribute is IntegerAttribute {
-			return String(DependencyInjector.util.numericSample.sum(for: attribute, over: filteredSamples) as Int)
+			let filteredSamples = try filterSamples(samples, as: Int.self)
+			if filteredSamples.count == 0 { return "0" }
+			return String(try DependencyInjector.util.numericSample.sum(for: attribute, over: filteredSamples, as: Int.self))
 		}
 		if attribute is DosageAttribute {
-			return getSumOfDosageAttribute(filteredSamples)
+			let filteredSamples = try filterSamples(samples, as: Dosage.self)
+			if filteredSamples.count == 0 { return "0" }
+			return try getSumOfDosageAttribute(filteredSamples)
 		}
 		if attribute is DurationAttribute {
-			return getSumOfDurationAttribute(filteredSamples).description
+			let filteredSamples = try filterSamples(samples, as: Duration.self)
+			if filteredSamples.count == 0 { return "0" }
+			return try getSumOfDurationAttribute(filteredSamples).description
 		}
 
 		log.error(
@@ -50,21 +57,26 @@ public final class SumInformation: AnyInformation {
 		return ""
 	}
 
-	public final override func computeGraphable(forSamples samples: [Sample]) -> String {
-		let filteredSamples = DependencyInjector.util.sample.getOnly(samples: samples, from: startDate, to: endDate)
-		if filteredSamples.count == 0 { return "0" }
-
+	public final override func computeGraphable(forSamples samples: [Sample]) throws -> String {
 		if attribute is DoubleAttribute {
-			return String(DependencyInjector.util.numericSample.sum(for: attribute, over: filteredSamples) as Double)
+			let filteredSamples = try filterSamples(samples, as: Double.self)
+			if filteredSamples.count == 0 { return "0" }
+			return String(try DependencyInjector.util.numericSample.sum(for: attribute, over: filteredSamples, as: Double.self))
 		}
 		if attribute is IntegerAttribute {
-			return String(DependencyInjector.util.numericSample.sum(for: attribute, over: filteredSamples) as Int)
+			let filteredSamples = try filterSamples(samples, as: Int.self)
+			if filteredSamples.count == 0 { return "0" }
+			return String(try DependencyInjector.util.numericSample.sum(for: attribute, over: filteredSamples, as: Int.self))
 		}
 		if attribute is DosageAttribute {
-			return getSumOfDosageAttribute(filteredSamples)
+			let filteredSamples = try filterSamples(samples, as: Dosage.self)
+			if filteredSamples.count == 0 { return "0" }
+			return try getSumOfDosageAttribute(filteredSamples)
 		}
 		if attribute is DurationAttribute {
-			return String(getSumOfDurationAttribute(filteredSamples).inUnit(.hour))
+			let filteredSamples = try filterSamples(samples, as: Duration.self)
+			if filteredSamples.count == 0 { return "0" }
+			return String(try getSumOfDurationAttribute(filteredSamples).inUnit(.hour))
 		}
 
 		log.error(
@@ -74,6 +86,8 @@ public final class SumInformation: AnyInformation {
 			String(describing: type(of: samples[0])))
 		return ""
 	}
+
+	// MARK: - Equality
 
 	public final override func equalTo(_ other: ExtraInformation) -> Bool {
 		return other is SumInformation && attribute.equalTo(other.attribute)
@@ -81,72 +95,47 @@ public final class SumInformation: AnyInformation {
 
 	// MARK: - Dosage Helper Functions
 
-	private final func getSumOfDosageAttribute(_ filteredSamples: [Sample]) -> String {
-		let dosage: Dosage? = getFirstNonNilDosage(from: filteredSamples)
+	private final func getSumOfDosageAttribute(_ filteredSamples: [Sample]) throws -> String {
+		let dosage: Dosage? = try getFirstNonNilDosage(from: filteredSamples)
 		if let unit = dosage?.unit {
-			return Dosage(dosageSum(over: filteredSamples, in: unit), unit).description
+			return Dosage(try dosageSum(over: filteredSamples, in: unit), unit).description
 		} else {
 			return "0"
 		}
 	}
 
-	private final func getFirstNonNilDosage(from filteredSamples: [Sample]) -> Dosage? {
+	private final func getFirstNonNilDosage(from filteredSamples: [Sample]) throws -> Dosage? {
 		var dosage: Dosage? = nil
 		for sample in filteredSamples {
-			dosage = try! sample.value(of: attribute) as? Dosage
-			if dosage != nil { break }
-			else if !attribute.optional {
+			dosage = try sample.value(of: attribute) as? Dosage
+			if dosage != nil {
+				break
+			} else if !attribute.optional {
 				log.error("Non-optional dosage returned nil value for %@ sample", sample.attributedName)
 			}
 		}
 		return dosage
 	}
 
-	private final func dosageSum(over filteredSamples: [Sample], in unit: String) -> Double {
+	private final func dosageSum(over filteredSamples: [Sample], in unit: String) throws -> Double {
 		var totalDosage = 0.0
 		for sample in filteredSamples {
-			if let dosage = getDosage(from: sample) {
+			if let dosage = try sample.value(of: attribute) as? Dosage {
 				totalDosage += dosage.inUnits(unit)
 			}
 		}
 		return totalDosage
 	}
 
-	private final func getDosage(from sample: Sample) -> Dosage? {
-		do {
-			return try sample.value(of: attribute) as? Dosage
-		} catch {
-			log.error(
-				"Failed to retrieve dosage attribute named '$@' of $@ sample while calculating sum information: $@",
-				attribute.name,
-				sample.attributedName,
-				errorInfo(error))
-			return nil
-		}
-	}
-
 	// MARK: - Duration Helper Functions
 
-	private final func getSumOfDurationAttribute(_ filteredSamples: [Sample]) -> Duration {
+	private final func getSumOfDurationAttribute(_ filteredSamples: [Sample]) throws -> Duration {
 		var totalDuration = Duration(0)
 		for sample in filteredSamples {
-			if let duration = getDuration(from: sample) {
+			if let duration = try sample.value(of: attribute) as? Duration {
 				totalDuration += duration
 			}
 		}
 		return totalDuration
-	}
-
-	private final func getDuration(from sample: Sample) -> Duration? {
-		do {
-			return try sample.value(of: attribute) as? Duration
-		} catch {
-			log.error(
-				"Failed to retrieve dosage attribute named '$@' of $@ sample while calculating sum information: $@",
-				attribute.name,
-				sample.attributedName,
-				errorInfo(error))
-			return nil
-		}
 	}
 }

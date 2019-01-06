@@ -29,10 +29,6 @@ public final class QueryFactoryImpl: QueryFactory {
 
 	private final let log = Log()
 
-	public enum Errors: Error {
-		case unknownSampleType
-	}
-
 	public final func activityQuery() -> ActivityQuery {
 		return ActivityQueryImpl()
 	}
@@ -91,8 +87,7 @@ public final class QueryFactoryImpl: QueryFactory {
 			case is Sleep.Type: return sleepQuery()
 			case is Weight.Type: return weightQuery()
 			default:
-				log.error("Unknown sample type: %@", String(describing: sampleType))
-				throw Errors.unknownSampleType
+				throw UnknownSampleType(sampleType)
 		}
 	}
 }

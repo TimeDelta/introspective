@@ -12,71 +12,73 @@ import SwiftDate
 
 final class AverageInformationFunctionalTests: FunctionalTest {
 
-	func testGivenNoSamples_compute_returnsZero() {
+	// MARK: - compute()
+
+	func testGivenNoSamples_compute_returnsZero() throws {
 		// given
 		let samples = [Sample]()
 		let information = AverageInformation(IntegerAttribute(name: "doesn't matter"))
 
 		// when
-		let average = information.compute(forSamples: samples)
+		let average = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(average, "0")
 	}
 
-	func testGivenIntegerAttribute_compute_returnsCorrectValue() {
+	func testGivenIntegerAttribute_compute_returnsCorrectValue() throws {
 		// given
 		let attribute = IntegerAttribute(name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1, 2, 3, 4, 5], for: attribute)
 		let information = AverageInformation(attribute)
 
 		// when
-		let average = information.compute(forSamples: samples)
+		let average = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(average, "3.0")
 	}
 
-	func testGivenOptionalIntegerAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() {
+	func testGivenOptionalIntegerAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() throws {
 		// given
 		let attribute = IntegerAttribute(name: "a", optional: true)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1, nil, nil, 2, 3] as [Int?], for: attribute)
 		let information = AverageInformation(attribute)
 
 		// when
-		let average = information.compute(forSamples: samples)
+		let average = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(average, "2.0")
 	}
 
-	func testGivenDoubleAttribute_compute_returnsCorrectValue() {
+	func testGivenDoubleAttribute_compute_returnsCorrectValue() throws {
 		// given
 		let attribute = DoubleAttribute(name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, 2.0, 3.0, 4.0, 5.0], for: attribute)
 		let information = AverageInformation(attribute)
 
 		// when
-		let average = information.compute(forSamples: samples)
+		let average = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(average, "3.0")
 	}
 
-	func testGivenOptionalDoubleAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() {
+	func testGivenOptionalDoubleAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() throws {
 		// given
 		let attribute = DoubleAttribute(name: "a", optional: true)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, nil, nil, 2.0, 3.0] as [Double?], for: attribute)
 		let information = AverageInformation(attribute)
 
 		// when
-		let average = information.compute(forSamples: samples)
+		let average = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(average, "2.0")
 	}
 
-	func testGivenDosageAttribute_compute_returnsCorrectValue() {
+	func testGivenDosageAttribute_compute_returnsCorrectValue() throws {
 		// given
 		let attribute = DosageAttribute()
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
@@ -89,13 +91,13 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 		let information = AverageInformation(attribute)
 
 		// when
-		let average = information.compute(forSamples: samples)
+		let average = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(average, Dosage(3.0, "L").description)
 	}
 
-	func testGivenOptionalDosageAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() {
+	func testGivenOptionalDosageAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() throws {
 		// given
 		let attribute = DosageAttribute(optional: true)
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
@@ -108,13 +110,13 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 		let information = AverageInformation(attribute)
 
 		// when
-		let average = information.compute(forSamples: samples)
+		let average = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(average, Dosage(2.0, "L").description)
 	}
 
-	func testGivenDurationAttribute_compute_returnsCorrectValue() {
+	func testGivenDurationAttribute_compute_returnsCorrectValue() throws {
 		// given
 		let attribute = DurationAttribute()
 		let date = Date()
@@ -127,13 +129,13 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 		let information = AverageInformation(attribute)
 
 		// when
-		let average = information.compute(forSamples: samples)
+		let average = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(average, "1d 2:03:04")
 	}
 
-	func testGivenOptionalDurationAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() {
+	func testGivenOptionalDurationAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() throws {
 		// given
 		let attribute = DurationAttribute()
 		let date = Date()
@@ -148,26 +150,26 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 		let information = AverageInformation(attribute)
 
 		// when
-		let average = information.compute(forSamples: samples)
+		let average = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(average, "1d 2:03:04")
 	}
 
-	func testGivenUnknownAttributeTypeWithNonEmptySampleArray_compute_returnsEmptyString() {
+	func testGivenUnknownAttributeTypeWithNonEmptySampleArray_compute_returnsEmptyString() throws {
 		// given
 		let attribute = TextAttribute(name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: ["a", "4"], for: attribute)
 		let information = AverageInformation(attribute)
 
 		// when
-		let average = information.compute(forSamples: samples)
+		let average = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(average, "")
 	}
 
-	func testGivenEndDateRestrictionThatFilterOutAllSamples_compute_returnsZero() {
+	func testGivenEndDateRestrictionThatFilterOutAllSamples_compute_returnsZero() throws {
 		// given
 		let attribute = DoubleAttribute(name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, 2.0, 3.0, 4.0, 5.0], for: attribute)
@@ -175,13 +177,13 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 		information.endDate = Date() - 1.days
 
 		// when
-		let average = information.compute(forSamples: samples)
+		let average = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(average, "0")
 	}
 
-	func testGivenStartDateRestrictionThatFilterOutAllSamples_compute_returnsZero() {
+	func testGivenStartDateRestrictionThatFilterOutAllSamples_compute_returnsZero() throws {
 		// given
 		let attribute = DoubleAttribute(name: "a")
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [1.0, 2.0, 3.0, 4.0, 5.0], for: attribute)
@@ -189,7 +191,7 @@ final class AverageInformationFunctionalTests: FunctionalTest {
 		information.startDate = Date() + 1.days
 
 		// when
-		let average = information.compute(forSamples: samples)
+		let average = try information.compute(forSamples: samples)
 
 		// then
 		XCTAssertEqual(average, "0")

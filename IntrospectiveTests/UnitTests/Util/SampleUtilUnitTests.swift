@@ -12,16 +12,16 @@ import SwiftyMocky
 import SwiftDate
 @testable import Introspective
 
-class SampleUtilUnitTests: UnitTest {
+final class SampleUtilUnitTests: UnitTest {
 
-	fileprivate var util: SampleUtilImpl!
+	private var util: SampleUtilImpl!
 
-	override func setUp() {
+	final override func setUp() {
 		super.setUp()
 		util = SampleUtilImpl()
 	}
 
-	func testGivenEmptyDayOfWeekSet_sampleOccursOnOneOf_returnsTrue() {
+	func testGivenEmptyDayOfWeekSet_sampleOccursOnOneOf_returnsTrue() throws {
 		// given
 		let sample = SampleCreatorTestUtil.createSample()
 
@@ -32,7 +32,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(onOneOf)
 	}
 
-	func testGivenEveryDayOfWeekExceptOneForDate_dateIsOnOneOf_returnsFalse() {
+	func testGivenEveryDayOfWeekExceptOneForDate_dateIsOnOneOf_returnsFalse() throws {
 		// given
 		let date = DateInRegion().dateAt(.nextWeekday(.saturday)).date
 		let sample = SampleCreatorTestUtil.createSample(startDate: date)
@@ -53,7 +53,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssertFalse(onOneOf)
 	}
 
-	func testGivenEveryDayOfWeek_dateIsOnOneOf_returnsTrue() {
+	func testGivenEveryDayOfWeek_dateIsOnOneOf_returnsTrue() throws {
 		// given
 		let sample = SampleCreatorTestUtil.createSample(startDate: Date())
 		let daysOfWeek = Set<DayOfWeek>(DayOfWeek.allDays)
@@ -66,7 +66,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(onOneOf)
 	}
 
-	func testGivenOnlyDayOfWeekOnWhichDateOccurs_dateIsOnOneOf_returnsTrue() {
+	func testGivenOnlyDayOfWeekOnWhichDateOccurs_dateIsOnOneOf_returnsTrue() throws {
 		// given
 		let date = DateInRegion().dateAt(.nextWeekday(.saturday)).date
 		let sample = SampleCreatorTestUtil.createSample(startDate: date)
@@ -80,7 +80,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(onOneOf)
 	}
 
-	func testGivenSampleWithStartDateOnDifferentDayAndEndDateOnOneOfTheDays_dateIsOnOneOf_returnsTrue() {
+	func testGivenSampleWithStartDateOnDifferentDayAndEndDateOnOneOfTheDays_dateIsOnOneOf_returnsTrue() throws {
 		// given
 		let startDate = Date()
 		let endDate = DateInRegion().dateAt(.nextWeekday(.saturday)).date
@@ -96,7 +96,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(onOneOf)
 	}
 
-	func testGivenSampleWithStartAndEndDatesOnDifferentDays_dateIsOnOneOf_returnsFalse() {
+	func testGivenSampleWithStartAndEndDatesOnDifferentDays_dateIsOnOneOf_returnsFalse() throws {
 		// given
 		let sample = SampleCreatorTestUtil.createSample(startDate: Date(), endDate: Date())
 		let daysOfWeek = Set<DayOfWeek>(DayOfWeek.allDays)
@@ -109,7 +109,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssertFalse(onOneOf)
 	}
 
-	func testGivenEmptySamplesArray_convertOneDateSamplesToTwoDateSamples_returnsEmptyArray() {
+	func testGivenEmptySamplesArray_convertOneDateSamplesToTwoDateSamples_returnsEmptyArray() throws {
 		// given
 		let samples = [Sample]()
 
@@ -128,7 +128,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(convertedSamples.count == 0, "Found \(convertedSamples.count) samples")
 	}
 
-	func testGivenTwoSamplesThatShouldBeCombined_convertOneDateSamplesToTwoDateSamples_combinesThemWithCorrectDates() {
+	func testGivenTwoSamplesThatShouldBeCombined_convertOneDateSamplesToTwoDateSamples_combinesThemWithCorrectDates() throws {
 		// given
 		let expectedStartDate = Date()
 		let expectedEndDate = expectedStartDate + 1.years
@@ -153,7 +153,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(convertedSamples[0].dates()[.end] == expectedEndDate)
 	}
 
-	func testGivenTwoSamplesThatShouldNotBeCombined_convertOneDateSamplesToTwoDateSamples_doesNotCombineThem() {
+	func testGivenTwoSamplesThatShouldNotBeCombined_convertOneDateSamplesToTwoDateSamples_doesNotCombineThem() throws {
 		// given
 		let date1 = Date()
 		let date2 = Date() + 1.years
@@ -188,7 +188,7 @@ class SampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenManySamples_convertOneDateSamplesToTwoDateSamples_correctlyCombinesThem() {
+	func testGivenManySamples_convertOneDateSamplesToTwoDateSamples_correctlyCombinesThem() throws {
 		// given
 		let date1 = Date()
 		let date2 = Date() + 5.hours
@@ -238,7 +238,7 @@ class SampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenEmptySamplesArray_genericConvertOneDateSamplesToTwoDateSamples_returnsEmptyArray() {
+	func testGivenEmptySamplesArray_genericConvertOneDateSamplesToTwoDateSamples_returnsEmptyArray() throws {
 		// given
 		let samples = [AnySample]()
 
@@ -257,7 +257,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(convertedSamples.count == 0, "Found \(convertedSamples.count) samples")
 	}
 
-	func testGivenTwoSamplesThatShouldBeCombined_genericConvertOneDateSamplesToTwoDateSamples_combinesThemWithCorrectDates() {
+	func testGivenTwoSamplesThatShouldBeCombined_genericConvertOneDateSamplesToTwoDateSamples_combinesThemWithCorrectDates() throws {
 		// given
 		let expectedStartDate = Date()
 		let expectedEndDate = expectedStartDate + 1.years
@@ -282,7 +282,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(convertedSamples[0].dates()[.end] == expectedEndDate)
 	}
 
-	func testGivenTwoSamplesThatShouldNotBeCombined_genericConvertOneDateSamplesToTwoDateSamples_doesNotCombineThem() {
+	func testGivenTwoSamplesThatShouldNotBeCombined_genericConvertOneDateSamplesToTwoDateSamples_doesNotCombineThem() throws {
 		// given
 		let date1 = Date()
 		let date2 = Date() + 1.years
@@ -317,7 +317,7 @@ class SampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenManySamples_genericConvertOneDateSamplesToTwoDateSamples_correctlyCombinesThem() {
+	func testGivenManySamples_genericConvertOneDateSamplesToTwoDateSamples_correctlyCombinesThem() throws {
 		// given
 		let date1 = Date()
 		let date2 = Date() + 5.hours
@@ -367,7 +367,7 @@ class SampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSameExactSampleTwice_distance_returnsZero() {
+	func testGivenSameExactSampleTwice_distance_returnsZero() throws {
 		// given
 		let sample = SampleCreatorTestUtil.createSample(startDate: Date(), endDate: Date())
 
@@ -378,7 +378,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(distance == 0, "Distance: \(distance)")
 	}
 
-	func testGivenSamplesWithSameStartDatesAndNoEndDates_distance_returnsZero() {
+	func testGivenSamplesWithSameStartDatesAndNoEndDates_distance_returnsZero() throws {
 		// given
 		let date = Date()
 		let sample1 = SampleCreatorTestUtil.createSample(startDate: date)
@@ -391,7 +391,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(distance == 0, "Distance: \(distance)")
 	}
 
-	func testGivenSamplesWithSameEndDatesButDifferentStartDates_distance_returnsZero() {
+	func testGivenSamplesWithSameEndDatesButDifferentStartDates_distance_returnsZero() throws {
 		// given
 		let date = Date()
 		let sample1 = SampleCreatorTestUtil.createSample(startDate: Date() - 1.days, endDate: date)
@@ -404,7 +404,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(distance == 0, "Distance: \(distance)")
 	}
 
-	func testGivenFirstSampleHasStartDateThatIsSameAsEndDateOfSecondSample_distance_returnsZero() {
+	func testGivenFirstSampleHasStartDateThatIsSameAsEndDateOfSecondSample_distance_returnsZero() throws {
 		// given
 		let date = Date()
 		let sample1 = SampleCreatorTestUtil.createSample(startDate: date, endDate: Date() - 1.days)
@@ -417,7 +417,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(distance == 0, "Distance: \(distance)")
 	}
 
-	func testGivenFirstSampleHasEndDateThatIsSameAsStartDateOfSecondSample_distance_returnsZero() {
+	func testGivenFirstSampleHasEndDateThatIsSameAsStartDateOfSecondSample_distance_returnsZero() throws {
 		// given
 		let date = Date()
 		let sample1 = SampleCreatorTestUtil.createSample(startDate: Date() - 1.days, endDate: date)
@@ -430,7 +430,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(distance == 0, "Distance: \(distance)")
 	}
 
-	func testGivenSamplesHaveStartDatesThatAreOneDayApartAndEndDatesThatAreTwoDaysApart_distanceInDays_returnsOne() {
+	func testGivenSamplesHaveStartDatesThatAreOneDayApartAndEndDatesThatAreTwoDaysApart_distanceInDays_returnsOne() throws {
 		// given
 		let startDate = Date()
 		let endDate = Date()
@@ -444,7 +444,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(distance == 1, "Distance: \(distance)")
 	}
 
-	func testGivenSamplesHaveStartDatesThatAreTwoDaysApartAndEndDatesThatAreOneDayApart_distanceInDays_returnsOne() {
+	func testGivenSamplesHaveStartDatesThatAreTwoDaysApartAndEndDatesThatAreOneDayApart_distanceInDays_returnsOne() throws {
 		// given
 		let startDate = Date()
 		let endDate = Date()
@@ -458,7 +458,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(distance == 1, "Distance: \(distance)")
 	}
 
-	func testGivenSamplesHaveStartDatesThatAreOneHourApartAndEndDatesThatAreOneDayApart_distanceInHours_returnsOne() {
+	func testGivenSamplesHaveStartDatesThatAreOneHourApartAndEndDatesThatAreOneDayApart_distanceInHours_returnsOne() throws {
 		// given
 		let startDate = Date()
 		let endDate = Date()
@@ -472,19 +472,19 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(distance == 1, "Distance: \(distance)")
 	}
 
-	func testGivenEmptySampleArray_aggregate_returnsEmptyAggregation() {
+	func testGivenEmptySampleArray_aggregate_returnsEmptyAggregation() throws {
 		// given
 		let samples = [Sample]()
 		let unit = Calendar.Component.day
 
 		// when
-		let aggregatedSamples = util.aggregate(samples: samples, by: unit, for: CommonSampleAttributes.startDate)
+		let aggregatedSamples = try util.aggregate(samples: samples, by: unit, for: CommonSampleAttributes.startDate)
 
 		// then
 		XCTAssert(aggregatedSamples.count == 0, "Found \(aggregatedSamples.count) aggregations")
 	}
 
-	func testGivenOneSampleAndAggregationUnitOfHour_aggregate_returnsThatSampleAtBeginningOfHour() {
+	func testGivenOneSampleAndAggregationUnitOfHour_aggregate_returnsThatSampleAtBeginningOfHour() throws {
 		// given
 		let date = Date()
 		let beginningOfHour = date.dateAtStartOf(.hour)
@@ -493,7 +493,7 @@ class SampleUtilUnitTests: UnitTest {
 		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date), willReturn: beginningOfHour))
 
 		// when
-		let aggregatedSamples = util.aggregate(samples: samples, by: unit, for: CommonSampleAttributes.startDate)
+		let aggregatedSamples = try util.aggregate(samples: samples, by: unit, for: CommonSampleAttributes.startDate)
 
 		// then
 		XCTAssert(aggregatedSamples.count == 1, "Found \(aggregatedSamples.count) aggregations")
@@ -506,7 +506,7 @@ class SampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenTwoSamplesOnSameDayAndAggregationUnitOfDay_aggregate_aggregatesBothSamplesToBeginningOfDay() {
+	func testGivenTwoSamplesOnSameDayAndAggregationUnitOfDay_aggregate_aggregatesBothSamplesToBeginningOfDay() throws {
 		// given
 		let date1 = Date()
 		let date2 = Date()
@@ -517,7 +517,7 @@ class SampleUtilUnitTests: UnitTest {
 		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date2), willReturn: beginningOfDay))
 
 		// when
-		let aggregatedSamples = util.aggregate(samples: samples, by: unit, for: CommonSampleAttributes.startDate)
+		let aggregatedSamples = try util.aggregate(samples: samples, by: unit, for: CommonSampleAttributes.startDate)
 
 		// then
 		XCTAssert(aggregatedSamples.count == 1, "Found \(aggregatedSamples.count) aggregations")
@@ -530,7 +530,7 @@ class SampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenTwoSamplesOnDifferentDaysWithAggregationUnitOfDay_aggregate_aggregatesSamplesCorrectly() {
+	func testGivenTwoSamplesOnDifferentDaysWithAggregationUnitOfDay_aggregate_aggregatesSamplesCorrectly() throws {
 		// given
 		let date1 = Date()
 		let date2 = Date() + 1.days
@@ -542,7 +542,7 @@ class SampleUtilUnitTests: UnitTest {
 		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date2), willReturn: beginningOfDay2))
 
 		// when
-		let aggregatedSamples = util.aggregate(samples: samples, by: unit, for: CommonSampleAttributes.startDate)
+		let aggregatedSamples = try util.aggregate(samples: samples, by: unit, for: CommonSampleAttributes.startDate)
 
 		// then
 		XCTAssert(aggregatedSamples.count == 2, "Found \(aggregatedSamples.count) aggregations")
@@ -562,7 +562,7 @@ class SampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenEmptySampleArray_getOnlySamplesFromTo_returnsEmptyArray() {
+	func testGivenEmptySampleArray_getOnlySamplesFromTo_returnsEmptyArray() throws {
 		// given
 		let fromDate: Date? = Date()
 		let toDate: Date? = Date()
@@ -575,7 +575,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(returnedSamples.count == 0, "Found \(returnedSamples.count) samples")
 	}
 
-	func testGivenNonEmptySampleArrayWithNilFromaAndToDates_getOnlySamplesFromTo_returnsOriginalSamplesArray() {
+	func testGivenNonEmptySampleArrayWithNilFromaAndToDates_getOnlySamplesFromTo_returnsOriginalSamplesArray() throws {
 		// given
 		let fromDate: Date? = nil
 		let toDate: Date? = nil
@@ -589,7 +589,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(returnedSamples.elementsEqual(samples, by: { $0.equalTo($1) }), "Wrong samples found")
 	}
 
-	func testGivenNonEmptySampleArrayNonNilFromDateAndNilToDate_getOnlySamplesFromTo_returnsOnlySamplesThatStartAfterFromDate() {
+	func testGivenNonEmptySampleArrayNonNilFromDateAndNilToDate_getOnlySamplesFromTo_returnsOnlySamplesThatStartAfterFromDate() throws {
 		// given
 		let fromDate: Date? = Date()
 		let toDate: Date? = nil
@@ -605,7 +605,7 @@ class SampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenNilFromDateNonNilToDateAndNonEmptySampleArrayWithOnlyStartDates_getOnlySamplesFromTo_returnsOnlySamplesThatStartBeforeToDate() {
+	func testGivenNilFromDateNonNilToDateAndNonEmptySampleArrayWithOnlyStartDates_getOnlySamplesFromTo_returnsOnlySamplesThatStartBeforeToDate() throws {
 		// given
 		let fromDate: Date? = nil
 		let toDate: Date? = Date()
@@ -622,7 +622,7 @@ class SampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenNilFromDateNonNilToDateAndNonEmptySampleArrayWithStartAndEndDates_getOnlySamplesFromTo_returnsOnlySamplesThatEndBeforeToDate() {
+	func testGivenNilFromDateNonNilToDateAndNonEmptySampleArrayWithStartAndEndDates_getOnlySamplesFromTo_returnsOnlySamplesThatEndBeforeToDate() throws {
 		// given
 		let fromDate: Date? = nil
 		let toDate: Date? = Date()
@@ -643,7 +643,7 @@ class SampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenNonNilFromAndToDatesAndNonEmptySampleArrayWithStartAndEndDates_getOnlySamplesFromTo_returnsOnlySamplesThatStartAfterFromDateAndEndBeforeToDate() {
+	func testGivenNonNilFromAndToDatesAndNonEmptySampleArrayWithStartAndEndDates_getOnlySamplesFromTo_returnsOnlySamplesThatStartAfterFromDateAndEndBeforeToDate() throws {
 		// given
 		let fromDate: Date? = Date() - 2.days
 		let toDate: Date? = Date() + 1.days
@@ -665,7 +665,7 @@ class SampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenEmptySampleArray_genericGetOnlySamplesFromTo_returnsEmptyArray() {
+	func testGivenEmptySampleArray_genericGetOnlySamplesFromTo_returnsEmptyArray() throws {
 		// given
 		let fromDate: Date? = Date()
 		let toDate: Date? = Date()
@@ -678,7 +678,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(returnedSamples.count == 0, "Found \(returnedSamples.count) samples")
 	}
 
-	func testGivenNonEmptySampleArrayWithNilFromaAndToDates_genericGetOnlySamplesFromTo_returnsOriginalSamplesArray() {
+	func testGivenNonEmptySampleArrayWithNilFromaAndToDates_genericGetOnlySamplesFromTo_returnsOriginalSamplesArray() throws {
 		// given
 		let fromDate: Date? = nil
 		let toDate: Date? = nil
@@ -692,7 +692,7 @@ class SampleUtilUnitTests: UnitTest {
 		XCTAssert(returnedSamples.elementsEqual(samples, by: { $0.equalTo($1) }), "Wrong samples found")
 	}
 
-	func testGivenNonEmptySampleArrayNonNilFromDateAndNilToDate_genericGetOnlySamplesFromTo_returnsOnlySamplesThatStartAfterFromDate() {
+	func testGivenNonEmptySampleArrayNonNilFromDateAndNilToDate_genericGetOnlySamplesFromTo_returnsOnlySamplesThatStartAfterFromDate() throws {
 		// given
 		let fromDate: Date? = Date()
 		let toDate: Date? = nil
@@ -708,7 +708,7 @@ class SampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenNilFromDateNonNilToDateAndNonEmptySampleArrayWithOnlyStartDates_genericGetOnlySamplesFromTo_returnsOnlySamplesThatStartBeforeToDate() {
+	func testGivenNilFromDateNonNilToDateAndNonEmptySampleArrayWithOnlyStartDates_genericGetOnlySamplesFromTo_returnsOnlySamplesThatStartBeforeToDate() throws {
 		// given
 		let fromDate: Date? = nil
 		let toDate: Date? = Date()
@@ -725,7 +725,7 @@ class SampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenNilFromDateNonNilToDateAndNonEmptySampleArrayWithStartAndEndDates_genericGetOnlySamplesFromTo_returnsOnlySamplesThatEndBeforeToDate() {
+	func testGivenNilFromDateNonNilToDateAndNonEmptySampleArrayWithStartAndEndDates_genericGetOnlySamplesFromTo_returnsOnlySamplesThatEndBeforeToDate() throws {
 		// given
 		let fromDate: Date? = nil
 		let toDate: Date? = Date()
@@ -746,7 +746,7 @@ class SampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenNonNilFromAndToDatesAndNonEmptySampleArrayWithStartAndEndDates_genericGetOnlySamplesFromTo_returnsOnlySamplesThatStartAfterFromDateAndEndBeforeToDate() {
+	func testGivenNonNilFromAndToDatesAndNonEmptySampleArrayWithStartAndEndDates_genericGetOnlySamplesFromTo_returnsOnlySamplesThatStartAfterFromDateAndEndBeforeToDate() throws {
 		// given
 		let fromDate: Date? = Date() - 2.days
 		let toDate: Date? = Date() + 1.days

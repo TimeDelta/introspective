@@ -13,6 +13,7 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 
 	private final var stopFunction: (() -> ())?
 	private final var finishedQuery: Bool = false
+	private final let log = Log()
 
 	func initFromHKSample(_ hkSample: HKSample) -> SampleType {
 		fatalError("Must override")
@@ -68,7 +69,12 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 
 	final override func samplePassesFilters(_ sample: Sample) -> Bool {
 		for attributeRestriction in attributeRestrictions {
-			if try! !attributeRestriction.samplePasses(sample) {
+			do {
+				if try !attributeRestriction.samplePasses(sample) {
+					return false
+				}
+			} catch {
+				log.error("Failed to test for sample passing: %@", errorInfo(error))
 				return false
 			}
 		}

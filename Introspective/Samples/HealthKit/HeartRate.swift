@@ -25,7 +25,9 @@ public final class HeartRate: HealthKitQuantitySample {
 	// MARK: - Display Information
 
 	public static let name: String = "Heart Rate"
+	public final let attributedName: String = Me.name
 	public static let description: String = "A measurement of how fast your heart is beating (in beats per minute)."
+	public final let description: String = Me.description
 
 	// MARK: - Attributes
 
@@ -37,8 +39,6 @@ public final class HeartRate: HealthKitQuantitySample {
 
 	// MARK: - Instance Variables
 
-	public final var attributedName: String = Me.name
-	public final var description: String = Me.description
 	public final var timestamp: Date
 	public final var heartRate: Double
 
@@ -82,21 +82,25 @@ public final class HeartRate: HealthKitQuantitySample {
 		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
 			return timestamp
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.heartRate) {
-			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Double else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			heartRate = castedValue
 			return
 		}
 		if attribute.equalTo(CommonSampleAttributes.healthKitTimestamp) {
-			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Date else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			timestamp = castedValue
 			return
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 }
 

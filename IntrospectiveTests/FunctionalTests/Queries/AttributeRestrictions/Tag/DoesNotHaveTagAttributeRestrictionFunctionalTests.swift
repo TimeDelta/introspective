@@ -68,7 +68,7 @@ final class DoesNotHaveTagAttributeRestrictionFunctionalTests: FunctionalTest {
 		// when
 		XCTAssertThrowsError(try restriction.samplePasses(sample)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
+			XCTAssert(error is TypeMismatchError)
 		}
 	}
 
@@ -151,7 +151,7 @@ final class DoesNotHaveTagAttributeRestrictionFunctionalTests: FunctionalTest {
 		// when
 		XCTAssertThrowsError(try restriction.samplePasses(sample)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
+			XCTAssert(error is TypeMismatchError)
 		}
 	}
 
@@ -182,7 +182,7 @@ final class DoesNotHaveTagAttributeRestrictionFunctionalTests: FunctionalTest {
 		// when
 		XCTAssertThrowsError(try restriction.value(of: unknownAttribute)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
+			XCTAssert(error is UnknownAttributeError)
 		}
 	}
 
@@ -209,7 +209,7 @@ final class DoesNotHaveTagAttributeRestrictionFunctionalTests: FunctionalTest {
 		// when
 		XCTAssertThrowsError(try restriction.set(attribute: unknownAttribute, to: tag)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
+			XCTAssert(error is UnknownAttributeError)
 		}
 	}
 
@@ -220,7 +220,7 @@ final class DoesNotHaveTagAttributeRestrictionFunctionalTests: FunctionalTest {
 		// when
 		XCTAssertThrowsError(try restriction.set(attribute: Me.tagAttribute, to: "" as Any)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
+			XCTAssert(error is TypeMismatchError)
 		}
 	}
 

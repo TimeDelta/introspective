@@ -91,32 +91,40 @@ public final class MoodImpl: NSManagedObject, Mood {
 		if attribute.equalTo(Me.sourceAttribute) {
 			return Sources.resolveMoodSource(source)
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.maxRating) {
-			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Double else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			maxRating = castedValue
 			return
 		}
 		if attribute.equalTo(Me.rating) {
-			guard let castedValue = value as? Double else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Double else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			rating = castedValue
 			return
 		}
 		if attribute.equalTo(CommonSampleAttributes.timestamp) {
-			guard let castedValue = value as? Date else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Date else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			timestamp = castedValue
 			return
 		}
 		if attribute.equalTo(Me.note) {
-			if !(value is String?) { throw AttributeError.typeMismatch }
+			if !(value is String?) {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			let castedValue = value as! String?
 			note = castedValue
 			return
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	// MARK: - Other

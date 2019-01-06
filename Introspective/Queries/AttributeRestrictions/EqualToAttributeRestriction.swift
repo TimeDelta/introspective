@@ -48,11 +48,13 @@ public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 
 	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(valueAttribute) { return value }
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	public override func set(attribute: Attribute, to value: Any?) throws {
-		if !attribute.equalTo(valueAttribute) { throw AttributeError.unknownAttribute }
+		if !attribute.equalTo(valueAttribute) {
+			throw UnknownAttributeError(attribute: attribute, for: self)
+		}
 		self.value = value
 	}
 
@@ -92,7 +94,9 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 
 	public init(restrictedAttribute: Attribute, value: ValueType, valueAttribute: Attribute) {
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: valueAttribute) {
-			if !($0 is ValueType?) || !($1 is ValueType?) { throw AttributeError.typeMismatch }
+			if !($0 is ValueType?) || !($1 is ValueType?) {
+				throw TypeMismatchError(attribute: restrictedAttribute, wasA: type(of: value))
+			}
 			let castedFirst = $0 as! ValueType?
 			let castedSecond = $1 as! ValueType?
 			return castedFirst == castedSecond
@@ -101,7 +105,9 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 
 	public init(restrictedAttribute: Attribute, value: ValueType, valueAttribute: Attribute, areEqual: @escaping (ValueType?, ValueType?) -> Bool) {
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: valueAttribute) {
-			if !($0 is ValueType?) || !($1 is ValueType?) { throw AttributeError.typeMismatch }
+			if !($0 is ValueType?) || !($1 is ValueType?) {
+				throw TypeMismatchError(attribute: restrictedAttribute, wasA: type(of: value))
+			}
 			let castedFirst = $0 as! ValueType?
 			let castedSecond = $1 as! ValueType?
 			return areEqual(castedFirst, castedSecond)
@@ -114,9 +120,11 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 	}
 
 	public override func set(attribute: Attribute, to value: Any?) throws {
-		if !attribute.equalTo(valueAttribute) { throw AttributeError.unknownAttribute }
+		if !attribute.equalTo(valueAttribute) {
+			throw UnknownAttributeError(attribute: attribute, for: self)
+		}
 		if !((restrictedAttribute.optional && value is ValueType?) || (!restrictedAttribute.optional && value is ValueType)) {
-			throw AttributeError.typeMismatch
+			throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 		}
 		let castedValue = value as! ValueType?
 		self.value = castedValue
@@ -124,7 +132,9 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
-		guard let castedValue = sampleValue as? ValueType? else { throw AttributeError.typeMismatch }
+		guard let castedValue = sampleValue as? ValueType? else {
+			throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: sampleValue))
+		}
 		return try areEqual(castedValue, value)
 	}
 

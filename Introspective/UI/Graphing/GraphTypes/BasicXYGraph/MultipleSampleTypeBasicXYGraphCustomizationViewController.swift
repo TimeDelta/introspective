@@ -139,8 +139,8 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			updateShowGraphButtonState()
 		}
 	}
-	private final var xAxisSampleGroups: [(Date, [Sample])]! { didSet { updateChartData() } }
-	private final var yAxisSampleGroups: [(Date, [Sample])]! { didSet { updateChartData() } }
+	private final var xAxisSampleGroups: [(Date, [Sample])]! { didSet { sampleGroupsAssigned() } }
+	private final var yAxisSampleGroups: [(Date, [Sample])]! { didSet { sampleGroupsAssigned() } }
 	private final var chartController: BasicXYChartViewController!
 
 	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "MultiplSampleTypeGraphCreationPerformance"))
@@ -236,19 +236,24 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	@IBAction final func showMeTheGraphButtonPressed(_ sender: Any) {
 		chartController = viewController(named: "BasicXYChartViewController")
 
-		if xAxisQuery == nil {
-			xAxisQuery = try! DependencyInjector.query.queryFor(xAxisSampleType)
-		}
-		if yAxisQuery == nil {
-			yAxisQuery = try! DependencyInjector.query.queryFor(yAxisSampleType)
-		}
+		do {
+			if xAxisQuery == nil {
+				xAxisQuery = try DependencyInjector.query.queryFor(xAxisSampleType)
+			}
+			if yAxisQuery == nil {
+				yAxisQuery = try DependencyInjector.query.queryFor(yAxisSampleType)
+			}
 
-		chartController.queries = [xAxisQuery!, yAxisQuery!]
-		chartController.chartType = chartType
-		DispatchQueue.global(qos: .userInteractive).async {
-			self.runQueries()
+			chartController.queries = [xAxisQuery!, yAxisQuery!]
+			chartController.chartType = chartType
+			DispatchQueue.global(qos: .userInteractive).async {
+				self.runQueries()
+			}
+			realNavigationController!.pushViewController(chartController, animated: false)
+		} catch {
+			log.error("Failed to get query: %@", errorInfo(error))
+			showError(title: "You found a bug", message: "Sorry for the inconvenience.")
 		}
-		realNavigationController!.pushViewController(chartController, animated: false)
 	}
 
 	// MARK: - Received Notifications
@@ -319,7 +324,13 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			if let samples = result?.samples {
 				self.signpost.begin(name: "Grouping x-axis samples", "Grouping %d samples", samples.count)
 				let grouper = SameTimeUnitSampleGrouper(self.grouping!)
-				self.xAxisSampleGroups = (grouper.group(samples: samples, by: self.firstDateAttributeFor(self.xAxisSampleType)) as! [(Date, [Sample])])
+				let firstDateAttribute = self.firstDateAttributeFor(self.xAxisSampleType)
+				do {
+					self.xAxisSampleGroups = (try grouper.group(samples: samples, by: firstDateAttribute) as! [(Date, [Sample])])
+				} catch {
+					self.log.error("Failed to group x-axis samples: %@", errorInfo(error))
+					self.chartController.errorMessage = "Something went wrong while trying to group the x-axis samples. Sorry for the inconvenience."
+				}
 				self.signpost.end(name: "Grouping x-axis samples", "Grouped %d samples into %d groups", samples.count, self.xAxisSampleGroups.count)
 			} else {
 				self.log.error("X-axis query run did not return an error or any results")
@@ -337,7 +348,13 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			if let samples = result?.samples {
 				self.signpost.begin(name: "Grouping y-axis samples", "Grouping %d samples", samples.count)
 				let grouper = SameTimeUnitSampleGrouper(self.grouping!)
-				self.yAxisSampleGroups = (grouper.group(samples: samples, by: self.firstDateAttributeFor(self.yAxisSampleType)) as! [(Date, [Sample])])
+				let firstDateAttribute = self.firstDateAttributeFor(self.yAxisSampleType)
+				do {
+					self.yAxisSampleGroups = (try grouper.group(samples: samples, by: firstDateAttribute) as! [(Date, [Sample])])
+				} catch {
+					self.log.error("Failed to group y-axis samples: %@", errorInfo(error))
+					self.chartController.errorMessage = "Something went wrong while trying to group the y-axis samples. Sorry for the inconvenience."
+				}
 				self.signpost.end(name: "Grouping y-axis samples", "Grouped %d samples into %d groups", samples.count, self.yAxisSampleGroups.count)
 			} else {
 				self.log.error("Y-axis query run did not return an error or any results")
@@ -353,7 +370,16 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		return CommonSampleAttributes.timestamp
 	}
 
-	private final func updateChartData() {
+	private final func sampleGroupsAssigned() {
+		do {
+			try updateChartData()
+		} catch {
+			log.error("Failed to update chart data: %@", errorInfo(error))
+			chartController.errorMessage = "Something went wrong while gathering the required data"
+		}
+	}
+
+	private final func updateChartData() throws {
 		if xAxisSampleGroups == nil || yAxisSampleGroups == nil { return }
 		if xAxisSampleGroups.count == 0 {
 			DispatchQueue.main.async { self.chartController.errorMessage = "No data returned for x-axis query" }
@@ -366,7 +392,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 
 		signpost.begin(name: "Update Chart Data", "Number of groups: (x-axis: %d, y-axis: %d)", xAxisSampleGroups.count, yAxisSampleGroups.count)
 
-		let xValues = transform(sampleGroups: xAxisSampleGroups, information: xAxisInformation!)
+		let xValues = try transform(sampleGroups: xAxisSampleGroups, information: xAxisInformation!)
 		let xValuesAreNumbers = areAllNumbers(xValues.map{ $0.sampleValue })
 		var sortedXValues = xValues
 		// if x values are numbers or dates and are not sorted, graph will look very weird
@@ -380,7 +406,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		var allData = [Dictionary<String, Any>]()
 		for yInformation in yAxisInformation! {
 			signpost.begin(name: "Computing data points for information", idObject: yInformation as AnyObject, "%@", yInformation.description)
-			let yValues = transform(sampleGroups: yAxisSampleGroups, information: yInformation)
+			let yValues = try transform(sampleGroups: yAxisSampleGroups, information: yInformation)
 			var seriesData = [[Any]]()
 			for (xGroupValue, xSampleValue) in sortedXValues { // loop over x values so that series data is already sorted
 				if let yValueIndex = yValues.index(where: { $0.groupValue == xGroupValue }) {
@@ -408,11 +434,12 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		signpost.end(name: "Update Chart Data", "Finished updating chart data")
 	}
 
-	private final func transform(sampleGroups: [(Date, [Sample])], information: ExtraInformation) -> [(groupValue: Date, sampleValue: String)] {
+	private final func transform(sampleGroups: [(Date, [Sample])], information: ExtraInformation)
+	throws -> [(groupValue: Date, sampleValue: String)] {
 		signpost.begin(name: "Transform", "Number of sample groups: %d", sampleGroups.count)
 		var values = [(groupValue: Date, sampleValue: String)]()
 		for (groupValue, samples) in sampleGroups {
-			let sampleValue = try! information.computeGraphable(forSamples: samples)
+			let sampleValue = try information.computeGraphable(forSamples: samples)
 			values.append((groupValue: groupValue, sampleValue: sampleValue))
 		}
 		signpost.end(name: "Transform", "Finished transforming %d groups", sampleGroups.count)

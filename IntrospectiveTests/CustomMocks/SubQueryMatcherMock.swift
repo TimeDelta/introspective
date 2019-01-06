@@ -77,16 +77,18 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
 
     required init() { }
 
-    func getSamples<QuerySampleType: Sample>(from querySamples: [QuerySampleType], matching subQuerySamples: [Sample]) -> [QuerySampleType] {
+    func getSamples<QuerySampleType: Sample>(from querySamples: [QuerySampleType], matching subQuerySamples: [Sample]) throws -> [QuerySampleType] {
         addInvocation(.m_getSamples__from_querySamplesmatching_subQuerySamples(Parameter<[QuerySampleType]>.value(`querySamples`).wrapAsGeneric(), Parameter<[Sample]>.value(`subQuerySamples`)))
 		let perform = methodPerformValue(.m_getSamples__from_querySamplesmatching_subQuerySamples(Parameter<[QuerySampleType]>.value(`querySamples`).wrapAsGeneric(), Parameter<[Sample]>.value(`subQuerySamples`))) as? ([QuerySampleType], [Sample]) -> Void
 		perform?(`querySamples`, `subQuerySamples`)
 		var __value: [QuerySampleType]
 		do {
 		    __value = try methodReturnValue(.m_getSamples__from_querySamplesmatching_subQuerySamples(Parameter<[QuerySampleType]>.value(`querySamples`).wrapAsGeneric(), Parameter<[Sample]>.value(`subQuerySamples`))).casted()
-		} catch {
+		} catch MockError.notStubed {
 			onFatalFailure("Stub return value not specified for getSamples<QuerySampleType: Sample>(from querySamples: [QuerySampleType], matching subQuerySamples: [Sample]). Use given")
 			Failure("Stub return value not specified for getSamples<QuerySampleType: Sample>(from querySamples: [QuerySampleType], matching subQuerySamples: [Sample]). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
@@ -245,13 +247,6 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
 		static func equalTo(otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) }))
         }
-        static func getSamples<QuerySampleType: Sample>(from querySamples: Parameter<[QuerySampleType]>, matching subQuerySamples: Parameter<[Sample]>, willProduce: (Stubber<[QuerySampleType]>) -> Void) -> MethodStub {
-            let willReturn: [[QuerySampleType]] = []
-			let given: Given = { return Given(method: .m_getSamples__from_querySamplesmatching_subQuerySamples(`querySamples`.wrapAsGeneric(), `subQuerySamples`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: ([QuerySampleType]).self)
-			willProduce(stubber)
-			return given
-        }
         static func equalTo(_ otherMatcher: Parameter<SubQueryMatcher>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherMatcher(`otherMatcher`), products: willReturn.map({ Product.return($0) })) }()
@@ -263,6 +258,16 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        static func getSamples<QuerySampleType: Sample>(from querySamples: Parameter<[QuerySampleType]>, matching subQuerySamples: Parameter<[Sample]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_getSamples__from_querySamplesmatching_subQuerySamples(`querySamples`.wrapAsGeneric(), `subQuerySamples`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func getSamples<QuerySampleType: Sample>(from querySamples: Parameter<[QuerySampleType]>, matching subQuerySamples: Parameter<[Sample]>, willProduce: (StubberThrows<[QuerySampleType]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_getSamples__from_querySamplesmatching_subQuerySamples(`querySamples`.wrapAsGeneric(), `subQuerySamples`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([QuerySampleType]).self)
 			willProduce(stubber)
 			return given
         }

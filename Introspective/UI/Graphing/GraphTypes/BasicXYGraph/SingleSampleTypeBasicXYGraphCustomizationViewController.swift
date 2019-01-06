@@ -152,16 +152,21 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	}
 
 	@IBAction final func showGraph(_ sender: Any) {
-		if query == nil {
-			query = try! DependencyInjector.query.queryFor(sampleType)
+		do {
+			if query == nil {
+				query = try DependencyInjector.query.queryFor(sampleType)
+			}
+			chartController = viewController(named: "BasicXYChartViewController")
+			chartController.chartType = chartType
+			chartController.queries = [query!]
+			DispatchQueue.global(qos: .userInitiated).async {
+				self.runQuery()
+			}
+			realNavigationController?.pushViewController(chartController, animated: false)
+		} catch {
+			log.error("Failed to get %@ query: %@", sampleType.name, errorInfo(error))
+			showError(title: "You found a bug", message: "Sorry for the inconvenience.")
 		}
-		chartController = viewController(named: "BasicXYChartViewController")
-		chartController.chartType = chartType
-		chartController.queries = [query!]
-		DispatchQueue.global(qos: .userInitiated).async {
-			self.runQuery()
-		}
-		realNavigationController?.pushViewController(chartController, animated: false)
 	}
 
 	@IBAction final func editXAxis(_ sender: Any) {
@@ -231,10 +236,11 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 
 	private final func runQuery() {
 		signpost.begin(name: "Query")
-		query!.runQuery { (result, error) in
+		if query == nil { log.error("Query was unexpectedly nil") }
+		query?.runQuery { (result, error) in
 			self.signpost.end(name: "Query")
 			if let error = error {
-				self.log.error("X-axis query run failed: %@", errorInfo(error))
+				self.log.error("Query run failed: %@", errorInfo(error))
 				DispatchQueue.main.async {
 					if let displayableError = error as? DisplayableError {
 						self.chartController.errorMessage = displayableError.displayableDescription
@@ -245,9 +251,14 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 				return
 			}
 			if let samples = result?.samples {
-				self.updateChartData(samples)
+				do {
+					try self.updateChartData(samples)
+				} catch {
+					self.log.error("Failed to update chart data: %@", errorInfo(error))
+					self.chartController.errorMessage = "Something went wrong while gathering the required data"
+				}
 			} else {
-				self.log.error("X-axis query run did not return an error or any results")
+				self.log.error("Query run did not return an error or any results")
 			}
 		}
 	}
@@ -260,7 +271,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		return CommonSampleAttributes.timestamp
 	}
 
-	private final func updateChartData(_ samples: [Sample]) {
+	private final func updateChartData(_ samples: [Sample]) throws {
 		signpost.begin(name: "Update Chart Data", "Number of samples: %d", samples.count)
 
 		var allData = [Dictionary<String, Any>]()
@@ -268,10 +279,10 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		if grouping != nil {
 			let grouper = SameTimeUnitSampleGrouper(grouping!)
 			signpost.begin(name: "Grouping samples", "Grouping %d samples", samples.count)
-			let groups = grouper.group(samples: samples, by: firstDateAttributeFor(type(of: samples[0]))) as! [(Date, [Sample])]
+			let groups = try grouper.group(samples: samples, by: firstDateAttributeFor(type(of: samples[0]))) as! [(Date, [Sample])]
 			signpost.end(name: "Grouping samples", "Grouped %d samples into %d groups", samples.count, groups.count)
 
-			let xValues = transform(sampleGroups: groups, information: xAxis.information!)
+			let xValues = try transform(sampleGroups: groups, information: xAxis.information!)
 			xValuesAreNumbers = areAllNumbers(xValues.map{ $0.sampleValue })
 			// if x values are numbers or dates and are not sorted, graph will look very weird
 			var sortedXValues = xValues
@@ -284,7 +295,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			signpost.begin(name: "Creating series data", "Creating %d series", yAxis.count)
 			for yInformation in yAxis.map({ $0.information! }) {
 				signpost.begin(name: "Computing data points for information", idObject: yInformation as AnyObject, "%@", yInformation.description)
-				let yValues = transform(sampleGroups: groups, information: yInformation)
+				let yValues = try transform(sampleGroups: groups, information: yInformation)
 				var seriesData = [[Any]]()
 				for (xGroupValue, xSampleValue) in sortedXValues { // loop over x values so that series data is already sorted
 					if let yValueIndex = yValues.index(where: { $0.groupValue == xGroupValue }) {
@@ -306,24 +317,24 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		} else {
 			xValuesAreNumbers = xAxis.attribute! is NumericAttribute || xAxis.attribute! is DurationAttribute
 
-			var sortedSamples = samples.filter{ (try? $0.graphableValue(of: xAxis.attribute!)) != nil }
+			var sortedSamples = try samples.filter{ try $0.graphableValue(of: xAxis.attribute!) != nil }
 			// if x values are numbers or dates and are not sorted, graph will look very weird
 			if xValuesAreNumbers || xAxis.attribute! is DateAttribute {
-				sortedSamples = sortSamples(sortedSamples, by: xAxis.attribute!)
+				sortedSamples = try sortSamples(sortedSamples, by: xAxis.attribute!)
 			}
 
 			for yAttribute in yAxis.map({ $0.attribute! }) {
-				let filteredSamples = sortedSamples.filter() {
-					let yValue = try! $0.graphableValue(of: yAttribute)
+				let filteredSamples = try sortedSamples.filter{
+					let yValue = try $0.graphableValue(of: yAttribute)
 					return yValue != nil
 				}
-				let data = filteredSamples.map({ (sample: Sample) -> [Any] in
-					let rawXValue = try! sample.graphableValue(of: self.xAxis.attribute!)
+				let data = try filteredSamples.map({ (sample: Sample) -> [Any] in
+					let rawXValue = try sample.graphableValue(of: self.xAxis.attribute!)
 					var xValue: Any = rawXValue as Any
 					if !xValuesAreNumbers {
-						xValue = try! self.xAxis.attribute!.convertToDisplayableString(from: rawXValue)
+						xValue = try self.xAxis.attribute!.convertToDisplayableString(from: rawXValue)
 					}
-					return [xValue, try! sample.graphableValue(of: yAttribute) as Any]
+					return [xValue, try sample.graphableValue(of: yAttribute) as Any]
 				})
 				allData.append(AASeriesElement()
 					.name(yAttribute.name)
@@ -339,11 +350,12 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		signpost.end(name: "Update Chart Data", "Finished updating chart data")
 	}
 
-	private final func transform(sampleGroups: [(Date, [Sample])], information: ExtraInformation) -> [(groupValue: Date, sampleValue: String)] {
+	private final func transform(sampleGroups: [(Date, [Sample])], information: ExtraInformation)
+	throws -> [(groupValue: Date, sampleValue: String)] {
 		signpost.begin(name: "Transform", "Number of sample groups: %d", sampleGroups.count)
 		var values = [(groupValue: Date, sampleValue: String)]()
 		for (groupValue, samples) in sampleGroups {
-			let sampleValue = try! information.computeGraphable(forSamples: samples)
+			let sampleValue = try information.computeGraphable(forSamples: samples)
 			values.append((groupValue: groupValue, sampleValue: sampleValue))
 		}
 		signpost.end(name: "Transform", "Finished transforming %d groups", sampleGroups.count)
@@ -390,22 +402,22 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	}
 
 	/// - Precondition: Samples array is not empty and no samples have invalid or nil value for given attribute
-	private final func sortSamples(_ samples: [Sample], by attribute: Attribute) -> [Sample] {
+	private final func sortSamples(_ samples: [Sample], by attribute: Attribute) throws -> [Sample] {
 		signpost.begin(name: "Sort samples", "Sorting %d sample by %@", samples.count, attribute.name)
-		let sortedSamples = samples.sorted(by: {
+		let sortedSamples = try samples.sorted(by: {
 			if let attribute = attribute as? DoubleAttribute {
-				let first = try! $0.graphableValue(of: attribute) as! Double
-				let second = try! $1.graphableValue(of: attribute) as! Double
+				let first = try $0.graphableValue(of: attribute) as! Double
+				let second = try $1.graphableValue(of: attribute) as! Double
 				return first < second
 			}
 			if let attribute = attribute as? IntegerAttribute {
-				let first = try! $0.graphableValue(of: attribute) as! Int
-				let second = try! $1.graphableValue(of: attribute) as! Int
+				let first = try $0.graphableValue(of: attribute) as! Int
+				let second = try $1.graphableValue(of: attribute) as! Int
 				return first < second
 			}
 			if let attribute = attribute as? DateAttribute {
-				let first = try! $0.graphableValue(of: attribute) as! Date
-				let second = try! $1.graphableValue(of: attribute) as! Date
+				let first = try $0.graphableValue(of: attribute) as! Date
+				let second = try $1.graphableValue(of: attribute) as! Date
 				return first < second
 			}
 			return true

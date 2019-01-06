@@ -135,7 +135,12 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 		chartController = viewController(named: "BasicXYChartViewController")
 		chartController.chartType = chartType
 		DispatchQueue.global(qos: .userInitiated).async {
-			self.updateChartData()
+			do {
+				try self.updateChartData()
+			} catch {
+				self.log.error("Failed to update chart data: %@", errorInfo(error))
+				self.chartController.errorMessage = "Something went wrong while gathering the required data"
+			}
 		}
 		realNavigationController?.pushViewController(chartController, animated: false)
 	}
@@ -181,14 +186,14 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 		return CommonSampleAttributes.timestamp
 	}
 
-	private final func updateChartData() {
+	private final func updateChartData() throws {
 		var allData = [Dictionary<String, Any>]()
 		var xValuesAreNumbers: Bool
 		if grouping != nil {
 			let grouper = SameTimeUnitSampleGrouper(grouping!)
-			let groups = grouper.group(samples: samples, by: firstDateAttributeFor(type(of: samples[0]))) as! [(Date, [Sample])]
+			let groups = try grouper.group(samples: samples, by: firstDateAttributeFor(type(of: samples[0]))) as! [(Date, [Sample])]
 
-			let xValues = transform(sampleGroups: groups, information: xAxis.information!)
+			let xValues = try transform(sampleGroups: groups, information: xAxis.information!)
 			xValuesAreNumbers = areAllNumbers(xValues.map{ $0.sampleValue })
 			var sortedXValues = xValues
 			// if x values are numbers and are not sorted, graph will look very weird
@@ -197,7 +202,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 			}
 
 			for yInformation in yAxis.map({ $0.information! }) {
-				let yValues = transform(sampleGroups: groups, information: yInformation)
+				let yValues = try transform(sampleGroups: groups, information: yInformation)
 				var seriesData = [[Any]]()
 				for (xGroupValue, xSampleValue) in sortedXValues { // loop over x values so that series data is already sorted
 					if let yValueIndex = yValues.index(where: { $0.groupValue == xGroupValue }) {
@@ -217,24 +222,19 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 		} else {
 			xValuesAreNumbers = xAxis.attribute! is NumericAttribute
 			for yAttribute in yAxis.map({ $0.attribute! }) {
-				let filteredSamples = samples.filter() {
-					let xValue = try! $0.graphableValue(of: self.xAxis.attribute!)
+				let filteredSamples = try samples.filter{
+					let xValue = try $0.graphableValue(of: self.xAxis.attribute!)
 					if xValue == nil { return false }
 					let yValue = try! $0.graphableValue(of: yAttribute)
 					return yValue != nil
 				}
-				let data = filteredSamples.map({ (sample: Sample) -> [Any] in
-					let rawXValue = try! sample.graphableValue(of: self.xAxis.attribute!)
+				let data = try filteredSamples.map({ (sample: Sample) -> [Any] in
+					let rawXValue = try sample.graphableValue(of: self.xAxis.attribute!)
 					var xValue: Any = rawXValue as Any
 					if !xValuesAreNumbers {
-						do {
-							xValue = try self.xAxis.attribute!.convertToDisplayableString(from: rawXValue)
-						} catch {
-							xValue = ""
-							log.error("Failed to convert value (%@) to displayable string: %@", String(describing: rawXValue), errorInfo(error))
-						}
+						xValue = try self.xAxis.attribute!.convertToDisplayableString(from: rawXValue)
 					}
-					return [xValue, try! sample.graphableValue(of: yAttribute) as Any]
+					return [xValue, try sample.graphableValue(of: yAttribute) as Any]
 				})
 				allData.append(AASeriesElement()
 					.name(yAttribute.name)
@@ -248,10 +248,11 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 		}
 	}
 
-	private final func transform(sampleGroups: [(Date, [Sample])], information: ExtraInformation) -> [(groupValue: Date, sampleValue: String)] {
+	private final func transform(sampleGroups: [(Date, [Sample])], information: ExtraInformation)
+	throws -> [(groupValue: Date, sampleValue: String)] {
 		var values = [(groupValue: Date, sampleValue: String)]()
 		for (groupValue, samples) in sampleGroups {
-			let sampleValue = try! information.computeGraphable(forSamples: samples)
+			let sampleValue = try information.computeGraphable(forSamples: samples)
 			values.append((groupValue: groupValue, sampleValue: sampleValue))
 		}
 		return values

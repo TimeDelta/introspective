@@ -21,27 +21,19 @@ final class HorizontalMultiSelectAttributeValueViewController: UIViewController,
 	public final var notificationToSendOnAccept: Notification.Name!
 	public final var currentValue: Any!
 
+	private final let log = Log()
+
 	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		multiSelect.removeAllSegments()
-		var index = 0
-		for value in multiSelectAttribute.possibleValues {
-			let segmentTitle = try! multiSelectAttribute.convertPossibleValueToDisplayableString(value)
-			multiSelect.insertSegment(withTitle: segmentTitle, at: index, animated: false)
-			index += 1
-		}
+		populatePossibleValues()
 		multiSelect.delegate = self
 
 		if currentValue != nil {
-			for value in try! multiSelectAttribute.valueAsArray(currentValue) {
-				let index = multiSelectAttribute.indexOf(possibleValue: value)
-				if index != nil {
-					multiSelect.selectedSegmentIndexes.insert(index!)
-				}
-			}
+			updateCurrentValue()
 		}
 	}
 
@@ -53,7 +45,11 @@ final class HorizontalMultiSelectAttributeValueViewController: UIViewController,
 			let value = multiSelectAttribute.possibleValues[Int(index)]
 			values.append(value)
 		}
-		currentValue = try! multiSelectAttribute.valueFromArray(values)
+		do {
+			currentValue = try multiSelectAttribute.valueFromArray(values)
+		} catch {
+			log.error("Failed to turn %@ as %@ into array: %@", String(describing: values), multiSelectAttribute.name, errorInfo(error))
+		}
 	}
 
 	// MARK: - Actions
@@ -68,5 +64,42 @@ final class HorizontalMultiSelectAttributeValueViewController: UIViewController,
 				]))
 		}
 		dismiss(animated: false, completion: nil)
+	}
+
+	// MARK: - Helper Functions
+
+	private final func populatePossibleValues() {
+		var index = 0
+		for value in multiSelectAttribute.possibleValues {
+			do {
+				let segmentTitle = try multiSelectAttribute.convertPossibleValueToDisplayableString(value)
+				multiSelect.insertSegment(withTitle: segmentTitle, at: index, animated: false)
+				index += 1
+			} catch {
+				log.error(
+					"Failed to convert %@ as %@ to displayable string: %@",
+					String(describing: value),
+					multiSelectAttribute.name,
+					errorInfo(error))
+			}
+		}
+	}
+
+	 private final func updateCurrentValue() {
+		do {
+			let valueArray = try multiSelectAttribute.valueAsArray(currentValue)
+			for value in valueArray {
+				let index = multiSelectAttribute.indexOf(possibleValue: value)
+				if index != nil {
+					multiSelect.selectedSegmentIndexes.insert(index!)
+				}
+			}
+		} catch {
+			log.error(
+				"Failed to convert %@ as %@ into array: %@",
+				String(describing: currentValue),
+				multiSelectAttribute.name,
+				errorInfo(error))
+		}
 	}
 }

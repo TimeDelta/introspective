@@ -12,7 +12,7 @@ import SwiftDate
 
 final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 
-	func testGivenGroupStartDateBySameDay_group_returnsCorrectlyGroupedSamples() {
+	func testGivenGroupStartDateBySameDay_group_returnsCorrectlyGroupedSamples() throws {
 		// given
 		let grouper = SameTimeUnitSampleGrouper(.day)
 		let group1Date = Date()
@@ -32,7 +32,7 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 		let expectedGroup3Date = DependencyInjector.util.calendar.start(of: .day, in: group3Date)
 
 		// when
-		let groups = grouper.group(samples: samples, by: CommonSampleAttributes.startDate)
+		let groups = try grouper.group(samples: samples, by: CommonSampleAttributes.startDate)
 
 		// then
 		assertGroupExists(in: groups, withDate: expectedGroup1Date, andSamples: samples[0...1].map({ $0 }))
@@ -40,7 +40,7 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 		assertGroupExists(in: groups, withDate: expectedGroup3Date, andSamples: samples[5...6].map({ $0 }))
 	}
 
-	func testGivenGroupHealthKitStartDateBySameHour_group_returnsCorrectlyGroupedSamples() {
+	func testGivenGroupHealthKitStartDateBySameHour_group_returnsCorrectlyGroupedSamples() throws {
 		// given
 		let grouper = SameTimeUnitSampleGrouper(.hour)
 		let group1Date = Date()
@@ -60,7 +60,7 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 		let expectedGroup3Date = DependencyInjector.util.calendar.start(of: .hour, in: group3Date)
 
 		// when
-		let groups = grouper.group(samples: samples, by: CommonSampleAttributes.healthKitStartDate)
+		let groups = try grouper.group(samples: samples, by: CommonSampleAttributes.healthKitStartDate)
 
 		// then
 		assertGroupExists(in: groups, withDate: expectedGroup1Date, andSamples: samples[0...1].map({ $0 }))
@@ -68,7 +68,7 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 		assertGroupExists(in: groups, withDate: expectedGroup3Date, andSamples: samples[5...6].map({ $0 }))
 	}
 
-	func testGivenGroupHealthKitEndDateBySameMinute_group_returnsCorrectlyGroupedSamples() {
+	func testGivenGroupHealthKitEndDateBySameMinute_group_returnsCorrectlyGroupedSamples() throws {
 		// given
 		let grouper = SameTimeUnitSampleGrouper(.minute)
 		let group1Date = Date()
@@ -88,7 +88,7 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 		let expectedGroup3Date = DependencyInjector.util.calendar.start(of: .minute, in: group3Date)
 
 		// when
-		let groups = grouper.group(samples: samples, by: CommonSampleAttributes.healthKitEndDate)
+		let groups = try grouper.group(samples: samples, by: CommonSampleAttributes.healthKitEndDate)
 
 		// then
 		assertGroupExists(in: groups, withDate: expectedGroup1Date, andSamples: samples[0...1].map({ $0 }))

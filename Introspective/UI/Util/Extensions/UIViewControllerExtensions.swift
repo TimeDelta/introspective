@@ -15,7 +15,7 @@ extension UIViewController {
 		NotificationCenter.default.addObserver(self, selector: selector, name: name, object: object)
 	}
 
-	final func showError(title: String, message: String? = nil, tryAgain: (() -> Void)? = nil) {
+	final func showError(title: String, message: String? = "Sorry for the inconvenience.", tryAgain: (() -> Void)? = nil) {
 		let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
 		if let tryAgain = tryAgain {

@@ -45,14 +45,14 @@ public final class HasTagAttributeRestriction: AnyAttributeRestriction, Equatabl
 			if let sampleTag = try sample.value(of: restrictedAttribute) as? Tag {
 				return sampleTag.equalTo(tag)
 			} else if !restrictedAttribute.optional {
-				throw AttributeError.typeMismatch
+				throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: value))
 			}
 			return false
 		} else if restrictedAttribute is TagsAttribute {
 			if let sampleTags = try sample.value(of: restrictedAttribute) as? [Tag] {
 				return sampleTags.contains(where: { $0.equalTo(tag) })
 			} else if !restrictedAttribute.optional {
-				throw AttributeError.typeMismatch
+				throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: value))
 			}
 			return false
 		}
@@ -64,17 +64,17 @@ public final class HasTagAttributeRestriction: AnyAttributeRestriction, Equatabl
 
 	public final override func value(of attribute: Attribute) throws -> Any? {
 		if !attribute.equalTo(Me.tagAttribute) {
-			throw AttributeError.unknownAttribute
+			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		return tag
 	}
 
 	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(Me.tagAttribute) {
-			throw AttributeError.unknownAttribute
+			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		guard let castedValue = value as? Tag else {
-			throw AttributeError.typeMismatch
+			throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 		}
 		tag = castedValue
 	}

@@ -8,12 +8,6 @@
 
 import Foundation
 
-public enum AttributeError: Error {
-	case typeMismatch
-	case unsupportedValue
-	case unknownAttribute
-}
-
 //sourcery: AutoMockable
 public protocol Attribute {
 

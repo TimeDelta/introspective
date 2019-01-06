@@ -10,11 +10,9 @@ import Foundation
 
 public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable {
 
-	public static func ==(lhs: InSameCalendarUnitSubQueryMatcher, rhs: InSameCalendarUnitSubQueryMatcher) -> Bool {
-		return lhs.equalTo(rhs)
-	}
-
 	private typealias Me = InSameCalendarUnitSubQueryMatcher
+
+	// MARK: - Attributes
 
 	public static let timeUnit = CalendarComponentAttribute(name: "Time unit", possibleValues: [
 		.year,
@@ -29,6 +27,9 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 		.nanosecond,
 	])
 	public static let attributes: [Attribute] = [CommonSubQueryMatcherAttributes.mostRecentOnly, timeUnit]
+	public final let attributes: [Attribute] = Me.attributes
+
+	// MARK: - Display Information
 
 	public final let attributedName: String = "Within the same <time_unit> of"
 	public final var description: String {
@@ -45,9 +46,12 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 		return text
 	}
 
-	public final let attributes: [Attribute] = Me.attributes
+	// MARK: - Instance Variables
+
 	public final var timeUnit: Calendar.Component = .day
 	public final var mostRecentOnly: Bool = false
+
+	// MARK: - Initializers
 
 	public required init() {}
 
@@ -56,10 +60,12 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 		self.mostRecentOnly = mostRecentOnly
 	}
 
+	// MARK: - SubQueryMatcher Functions
+
 	public final func getSamples<QuerySampleType: Sample>(
 		from querySamples: [QuerySampleType],
 		matching subQuerySamples: [Sample])
-	-> [QuerySampleType] {
+	throws -> [QuerySampleType] {
 		if subQuerySamples.count == 0 { return [] }
 
 		var matchingSamples = [QuerySampleType]()
@@ -74,21 +80,33 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 		if !sample(applicableSubQuerySamples[0], has: startDateAttribute) {
 			startDateAttribute = CommonSampleAttributes.timestamp
 		}
-		let aggregatedSubQuerySamplesByStartDate = DependencyInjector.util.sample.aggregate(samples: applicableSubQuerySamples, by: timeUnit, for: startDateAttribute)
-		let aggregatedSubQuerySamplesByEndDate = DependencyInjector.util.sample.aggregate(samples: applicableSubQuerySamples, by: timeUnit, for: CommonSampleAttributes.endDate)
-		for sample in querySamples {
-			let startAggregationDate = DependencyInjector.util.calendar.start(of: timeUnit, in: sample.dates()[.start]!)
+		let aggregatedSubQuerySamplesByStartDate = try DependencyInjector.util.sample.aggregate(
+			samples: applicableSubQuerySamples,
+			by: timeUnit,
+			for: startDateAttribute)
+		for currentSample in querySamples {
+			let startAggregationDate = DependencyInjector.util.calendar.start(of: timeUnit, in: currentSample.dates()[.start]!)
 			if aggregatedSubQuerySamplesByStartDate[startAggregationDate] != nil {
-				matchingSamples.append(sample)
-			} else if let endDate = sample.dates()[.end] {
+				matchingSamples.append(currentSample)
+			} else if
+				let endDate = currentSample.dates()[.end],
+				sample(applicableSubQuerySamples[0], has: CommonSampleAttributes.endDate)
+			{
+				let aggregatedSubQuerySamplesByEndDate = try DependencyInjector.util.sample.aggregate(
+					samples: applicableSubQuerySamples,
+					by: timeUnit,
+					for: CommonSampleAttributes.endDate)
+
 				let endAggregationDate = DependencyInjector.util.calendar.start(of: timeUnit, in: endDate)
 				if aggregatedSubQuerySamplesByEndDate[endAggregationDate] != nil {
-					matchingSamples.append(sample)
+					matchingSamples.append(currentSample)
 				}
 			}
 		}
 		return matchingSamples
 	}
+
+	// MARK: - Attribute Functions
 
 	public final func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.timeUnit) {
@@ -97,19 +115,29 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 		if attribute.equalTo(CommonSubQueryMatcherAttributes.mostRecentOnly) {
 			return mostRecentOnly
 		}
-		throw AttributeError.unknownAttribute
+		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
 		if attribute.equalTo(Me.timeUnit) {
-			guard let castedValue = value as? Calendar.Component else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Calendar.Component else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			timeUnit = castedValue
 		} else if attribute.equalTo(CommonSubQueryMatcherAttributes.mostRecentOnly) {
-			guard let castedValue = value as? Bool else { throw AttributeError.typeMismatch }
+			guard let castedValue = value as? Bool else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
 			mostRecentOnly = castedValue
 		} else {
-			throw AttributeError.unknownAttribute
+			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
+	}
+
+	// MARK: - Equality
+
+	public static func ==(lhs: InSameCalendarUnitSubQueryMatcher, rhs: InSameCalendarUnitSubQueryMatcher) -> Bool {
+		return lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {

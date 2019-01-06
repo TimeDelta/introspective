@@ -60,8 +60,12 @@ final class NumericAttributeValueViewController: UIViewController {
 
 	private final func validate(value: String?) {
 		if value != nil && numericAttribute.isValid(value: value!) {
-			currentValue = try! numericAttribute.convertToValue(from: value!)
-			enableSaveButton()
+			do {
+				currentValue = try numericAttribute.convertToValue(from: value ?? "")
+				enableSaveButton()
+			} catch {
+				log.error("Failed to convert value of '%@' to number: %@", value ?? "", errorInfo(error))
+			}
 		} else {
 			disableSaveButton()
 		}

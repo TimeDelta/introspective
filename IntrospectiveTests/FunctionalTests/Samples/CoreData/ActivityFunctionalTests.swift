@@ -22,7 +22,7 @@ final class ActivityFunctionalTests: FunctionalTest {
 		// when
 		XCTAssertThrowsError(try activity.value(of: unknownAttribute)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
+			XCTAssert(error is UnknownAttributeError)
 		}
 	}
 
@@ -124,7 +124,7 @@ final class ActivityFunctionalTests: FunctionalTest {
 		// when
 		XCTAssertThrowsError(try activity.set(attribute: Activity.durationAttribute, to: Duration(0))) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
+			XCTAssert(error is UnknownAttributeError)
 		}
 	}
 

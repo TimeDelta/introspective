@@ -6253,128 +6253,146 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
 
 
 
-    func average(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Double)] {
+    func average(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) throws -> [(date: Date?, value: Double)] {
         addInvocation(.m_average__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`)))
 		let perform = methodPerformValue(.m_average__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`))) as? (Attribute, [Sample], Calendar.Component?) -> Void
 		perform?(`attribute`, `samples`, `aggregationUnit`)
 		var __value: [(date: Date?, value: Double)]
 		do {
 		    __value = try methodReturnValue(.m_average__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`))).casted()
-		} catch {
+		} catch MockError.notStubed {
 			onFatalFailure("Stub return value not specified for average(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?). Use given")
 			Failure("Stub return value not specified for average(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
 
-    func average(for attribute: Attribute, over samples: [Sample]) -> Double {
+    func average(for attribute: Attribute, over samples: [Sample]) throws -> Double {
         addInvocation(.m_average__for_attributeover_samples(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`)))
 		let perform = methodPerformValue(.m_average__for_attributeover_samples(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`))) as? (Attribute, [Sample]) -> Void
 		perform?(`attribute`, `samples`)
 		var __value: Double
 		do {
 		    __value = try methodReturnValue(.m_average__for_attributeover_samples(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`))).casted()
-		} catch {
+		} catch MockError.notStubed {
 			onFatalFailure("Stub return value not specified for average(for attribute: Attribute, over samples: [Sample]). Use given")
 			Failure("Stub return value not specified for average(for attribute: Attribute, over samples: [Sample]). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
 
-    func count(over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Int)] {
+    func count(over samples: [Sample], per aggregationUnit: Calendar.Component?) throws -> [(date: Date?, value: Int)] {
         addInvocation(.m_count__over_samplesper_aggregationUnit(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`)))
 		let perform = methodPerformValue(.m_count__over_samplesper_aggregationUnit(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`))) as? ([Sample], Calendar.Component?) -> Void
 		perform?(`samples`, `aggregationUnit`)
 		var __value: [(date: Date?, value: Int)]
 		do {
 		    __value = try methodReturnValue(.m_count__over_samplesper_aggregationUnit(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`))).casted()
-		} catch {
+		} catch MockError.notStubed {
 			onFatalFailure("Stub return value not specified for count(over samples: [Sample], per aggregationUnit: Calendar.Component?). Use given")
 			Failure("Stub return value not specified for count(over samples: [Sample], per aggregationUnit: Calendar.Component?). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
 
-    func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Type)] {
-        addInvocation(.m_max__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`)))
-		let perform = methodPerformValue(.m_max__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`))) as? (Attribute, [Sample], Calendar.Component?) -> Void
-		perform?(`attribute`, `samples`, `aggregationUnit`)
+    func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type) throws -> [(date: Date?, value: Type)] {
+        addInvocation(.m_max__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_max__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void
+		perform?(`attribute`, `samples`, `aggregationUnit`, `as`)
 		var __value: [(date: Date?, value: Type)]
 		do {
-		    __value = try methodReturnValue(.m_max__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`))).casted()
+		    __value = try methodReturnValue(.m_max__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type). Use given")
+			Failure("Stub return value not specified for max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type). Use given")
 		} catch {
-			onFatalFailure("Stub return value not specified for max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?). Use given")
-			Failure("Stub return value not specified for max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?). Use given")
+		    throw error
 		}
 		return __value
     }
 
-    func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample]) -> Type {
-        addInvocation(.m_max__for_attributeover_samples(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`)))
-		let perform = methodPerformValue(.m_max__for_attributeover_samples(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`))) as? (Attribute, [Sample]) -> Void
-		perform?(`attribute`, `samples`)
+    func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], as: Type.Type) throws -> Type {
+        addInvocation(.m_max__for_attributeover_samplesas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_max__for_attributeover_samplesas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (Attribute, [Sample], Type.Type) -> Void
+		perform?(`attribute`, `samples`, `as`)
 		var __value: Type
 		do {
-		    __value = try methodReturnValue(.m_max__for_attributeover_samples(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`))).casted()
+		    __value = try methodReturnValue(.m_max__for_attributeover_samplesas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], as: Type.Type). Use given")
+			Failure("Stub return value not specified for max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], as: Type.Type). Use given")
 		} catch {
-			onFatalFailure("Stub return value not specified for max<Type: Comparable>(for attribute: Attribute, over samples: [Sample]). Use given")
-			Failure("Stub return value not specified for max<Type: Comparable>(for attribute: Attribute, over samples: [Sample]). Use given")
+		    throw error
 		}
 		return __value
     }
 
-    func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Type)] {
-        addInvocation(.m_min__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`)))
-		let perform = methodPerformValue(.m_min__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`))) as? (Attribute, [Sample], Calendar.Component?) -> Void
-		perform?(`attribute`, `samples`, `aggregationUnit`)
+    func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type) throws -> [(date: Date?, value: Type)] {
+        addInvocation(.m_min__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_min__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void
+		perform?(`attribute`, `samples`, `aggregationUnit`, `as`)
 		var __value: [(date: Date?, value: Type)]
 		do {
-		    __value = try methodReturnValue(.m_min__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`))).casted()
+		    __value = try methodReturnValue(.m_min__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type). Use given")
+			Failure("Stub return value not specified for min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type). Use given")
 		} catch {
-			onFatalFailure("Stub return value not specified for min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?). Use given")
-			Failure("Stub return value not specified for min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?). Use given")
+		    throw error
 		}
 		return __value
     }
 
-    func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample]) -> Type {
-        addInvocation(.m_min__for_attributeover_samples(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`)))
-		let perform = methodPerformValue(.m_min__for_attributeover_samples(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`))) as? (Attribute, [Sample]) -> Void
-		perform?(`attribute`, `samples`)
+    func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], as: Type.Type) throws -> Type {
+        addInvocation(.m_min__for_attributeover_samplesas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_min__for_attributeover_samplesas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (Attribute, [Sample], Type.Type) -> Void
+		perform?(`attribute`, `samples`, `as`)
 		var __value: Type
 		do {
-		    __value = try methodReturnValue(.m_min__for_attributeover_samples(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`))).casted()
+		    __value = try methodReturnValue(.m_min__for_attributeover_samplesas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], as: Type.Type). Use given")
+			Failure("Stub return value not specified for min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], as: Type.Type). Use given")
 		} catch {
-			onFatalFailure("Stub return value not specified for min<Type: Comparable>(for attribute: Attribute, over samples: [Sample]). Use given")
-			Failure("Stub return value not specified for min<Type: Comparable>(for attribute: Attribute, over samples: [Sample]). Use given")
+		    throw error
 		}
 		return __value
     }
 
-    func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) -> [(date: Date?, value: Type)] {
-        addInvocation(.m_sum__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`)))
-		let perform = methodPerformValue(.m_sum__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`))) as? (Attribute, [Sample], Calendar.Component?) -> Void
-		perform?(`attribute`, `samples`, `aggregationUnit`)
+    func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type) throws -> [(date: Date?, value: Type)] {
+        addInvocation(.m_sum__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_sum__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void
+		perform?(`attribute`, `samples`, `aggregationUnit`, `as`)
 		var __value: [(date: Date?, value: Type)]
 		do {
-		    __value = try methodReturnValue(.m_sum__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`))).casted()
+		    __value = try methodReturnValue(.m_sum__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type). Use given")
+			Failure("Stub return value not specified for sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type). Use given")
 		} catch {
-			onFatalFailure("Stub return value not specified for sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?). Use given")
-			Failure("Stub return value not specified for sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?). Use given")
+		    throw error
 		}
 		return __value
     }
 
-    func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample]) -> Type {
-        addInvocation(.m_sum__for_attributeover_samples(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`)))
-		let perform = methodPerformValue(.m_sum__for_attributeover_samples(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`))) as? (Attribute, [Sample]) -> Void
-		perform?(`attribute`, `samples`)
+    func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], as: Type.Type) throws -> Type {
+        addInvocation(.m_sum__for_attributeover_samplesas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_sum__for_attributeover_samplesas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (Attribute, [Sample], Type.Type) -> Void
+		perform?(`attribute`, `samples`, `as`)
 		var __value: Type
 		do {
-		    __value = try methodReturnValue(.m_sum__for_attributeover_samples(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`))).casted()
+		    __value = try methodReturnValue(.m_sum__for_attributeover_samplesas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], as: Type.Type). Use given")
+			Failure("Stub return value not specified for sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], as: Type.Type). Use given")
 		} catch {
-			onFatalFailure("Stub return value not specified for sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample]). Use given")
-			Failure("Stub return value not specified for sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample]). Use given")
+		    throw error
 		}
 		return __value
     }
@@ -6384,12 +6402,12 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
         case m_average__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>, Parameter<[Sample]>, Parameter<Calendar.Component?>)
         case m_average__for_attributeover_samples(Parameter<Attribute>, Parameter<[Sample]>)
         case m_count__over_samplesper_aggregationUnit(Parameter<[Sample]>, Parameter<Calendar.Component?>)
-        case m_max__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>, Parameter<[Sample]>, Parameter<Calendar.Component?>)
-        case m_max__for_attributeover_samples(Parameter<Attribute>, Parameter<[Sample]>)
-        case m_min__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>, Parameter<[Sample]>, Parameter<Calendar.Component?>)
-        case m_min__for_attributeover_samples(Parameter<Attribute>, Parameter<[Sample]>)
-        case m_sum__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>, Parameter<[Sample]>, Parameter<Calendar.Component?>)
-        case m_sum__for_attributeover_samples(Parameter<Attribute>, Parameter<[Sample]>)
+        case m_max__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>, Parameter<[Sample]>, Parameter<Calendar.Component?>, Parameter<GenericAttribute>)
+        case m_max__for_attributeover_samplesas_as(Parameter<Attribute>, Parameter<[Sample]>, Parameter<GenericAttribute>)
+        case m_min__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>, Parameter<[Sample]>, Parameter<Calendar.Component?>, Parameter<GenericAttribute>)
+        case m_min__for_attributeover_samplesas_as(Parameter<Attribute>, Parameter<[Sample]>, Parameter<GenericAttribute>)
+        case m_sum__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>, Parameter<[Sample]>, Parameter<Calendar.Component?>, Parameter<GenericAttribute>)
+        case m_sum__for_attributeover_samplesas_as(Parameter<Attribute>, Parameter<[Sample]>, Parameter<GenericAttribute>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -6406,32 +6424,38 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
                 guard Parameter.compare(lhs: lhsSamples, rhs: rhsSamples, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsAggregationunit, rhs: rhsAggregationunit, with: matcher) else { return false } 
                 return true 
-            case (.m_max__for_attributeover_samplesper_aggregationUnit(let lhsAttribute, let lhsSamples, let lhsAggregationunit), .m_max__for_attributeover_samplesper_aggregationUnit(let rhsAttribute, let rhsSamples, let rhsAggregationunit)):
+            case (.m_max__for_attributeover_samplesper_aggregationUnitas_as(let lhsAttribute, let lhsSamples, let lhsAggregationunit, let lhsAs), .m_max__for_attributeover_samplesper_aggregationUnitas_as(let rhsAttribute, let rhsSamples, let rhsAggregationunit, let rhsAs)):
                 guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsSamples, rhs: rhsSamples, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsAggregationunit, rhs: rhsAggregationunit, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAs, rhs: rhsAs, with: matcher) else { return false } 
                 return true 
-            case (.m_max__for_attributeover_samples(let lhsAttribute, let lhsSamples), .m_max__for_attributeover_samples(let rhsAttribute, let rhsSamples)):
+            case (.m_max__for_attributeover_samplesas_as(let lhsAttribute, let lhsSamples, let lhsAs), .m_max__for_attributeover_samplesas_as(let rhsAttribute, let rhsSamples, let rhsAs)):
                 guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsSamples, rhs: rhsSamples, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAs, rhs: rhsAs, with: matcher) else { return false } 
                 return true 
-            case (.m_min__for_attributeover_samplesper_aggregationUnit(let lhsAttribute, let lhsSamples, let lhsAggregationunit), .m_min__for_attributeover_samplesper_aggregationUnit(let rhsAttribute, let rhsSamples, let rhsAggregationunit)):
-                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
-                guard Parameter.compare(lhs: lhsSamples, rhs: rhsSamples, with: matcher) else { return false } 
-                guard Parameter.compare(lhs: lhsAggregationunit, rhs: rhsAggregationunit, with: matcher) else { return false } 
-                return true 
-            case (.m_min__for_attributeover_samples(let lhsAttribute, let lhsSamples), .m_min__for_attributeover_samples(let rhsAttribute, let rhsSamples)):
-                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
-                guard Parameter.compare(lhs: lhsSamples, rhs: rhsSamples, with: matcher) else { return false } 
-                return true 
-            case (.m_sum__for_attributeover_samplesper_aggregationUnit(let lhsAttribute, let lhsSamples, let lhsAggregationunit), .m_sum__for_attributeover_samplesper_aggregationUnit(let rhsAttribute, let rhsSamples, let rhsAggregationunit)):
+            case (.m_min__for_attributeover_samplesper_aggregationUnitas_as(let lhsAttribute, let lhsSamples, let lhsAggregationunit, let lhsAs), .m_min__for_attributeover_samplesper_aggregationUnitas_as(let rhsAttribute, let rhsSamples, let rhsAggregationunit, let rhsAs)):
                 guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsSamples, rhs: rhsSamples, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsAggregationunit, rhs: rhsAggregationunit, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAs, rhs: rhsAs, with: matcher) else { return false } 
                 return true 
-            case (.m_sum__for_attributeover_samples(let lhsAttribute, let lhsSamples), .m_sum__for_attributeover_samples(let rhsAttribute, let rhsSamples)):
+            case (.m_min__for_attributeover_samplesas_as(let lhsAttribute, let lhsSamples, let lhsAs), .m_min__for_attributeover_samplesas_as(let rhsAttribute, let rhsSamples, let rhsAs)):
                 guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsSamples, rhs: rhsSamples, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAs, rhs: rhsAs, with: matcher) else { return false } 
+                return true 
+            case (.m_sum__for_attributeover_samplesper_aggregationUnitas_as(let lhsAttribute, let lhsSamples, let lhsAggregationunit, let lhsAs), .m_sum__for_attributeover_samplesper_aggregationUnitas_as(let rhsAttribute, let rhsSamples, let rhsAggregationunit, let rhsAs)):
+                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsSamples, rhs: rhsSamples, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAggregationunit, rhs: rhsAggregationunit, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAs, rhs: rhsAs, with: matcher) else { return false } 
+                return true 
+            case (.m_sum__for_attributeover_samplesas_as(let lhsAttribute, let lhsSamples, let lhsAs), .m_sum__for_attributeover_samplesas_as(let rhsAttribute, let rhsSamples, let rhsAs)):
+                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsSamples, rhs: rhsSamples, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAs, rhs: rhsAs, with: matcher) else { return false } 
                 return true 
             default: return false
             }
@@ -6442,12 +6466,12 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
             case let .m_average__for_attributeover_samplesper_aggregationUnit(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_average__for_attributeover_samples(p0, p1): return p0.intValue + p1.intValue
             case let .m_count__over_samplesper_aggregationUnit(p0, p1): return p0.intValue + p1.intValue
-            case let .m_max__for_attributeover_samplesper_aggregationUnit(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
-            case let .m_max__for_attributeover_samples(p0, p1): return p0.intValue + p1.intValue
-            case let .m_min__for_attributeover_samplesper_aggregationUnit(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
-            case let .m_min__for_attributeover_samples(p0, p1): return p0.intValue + p1.intValue
-            case let .m_sum__for_attributeover_samplesper_aggregationUnit(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
-            case let .m_sum__for_attributeover_samples(p0, p1): return p0.intValue + p1.intValue
+            case let .m_max__for_attributeover_samplesper_aggregationUnitas_as(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
+            case let .m_max__for_attributeover_samplesas_as(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_min__for_attributeover_samplesper_aggregationUnitas_as(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
+            case let .m_min__for_attributeover_samplesas_as(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_sum__for_attributeover_samplesper_aggregationUnitas_as(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
+            case let .m_sum__for_attributeover_samplesas_as(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             }
         }
     }
@@ -6470,84 +6494,111 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
         static func count(over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willReturn: [(date: Date?, value: Int)]...) -> MethodStub {
             return Given(method: .m_count__over_samplesper_aggregationUnit(`samples`, `aggregationUnit`), products: willReturn.map({ Product.return($0) }))
         }
-        static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willReturn: [(date: Date?, value: Type)]...) -> MethodStub {
-            return Given(method: .m_max__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`), products: willReturn.map({ Product.return($0) }))
+        static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willReturn: [(date: Date?, value: Type)]...) -> MethodStub {
+            return Given(method: .m_max__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, willReturn: Type...) -> MethodStub {
-            return Given(method: .m_max__for_attributeover_samples(`attribute`, `samples`), products: willReturn.map({ Product.return($0) }))
+        static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
+            return Given(method: .m_max__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willReturn: [(date: Date?, value: Type)]...) -> MethodStub {
-            return Given(method: .m_min__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`), products: willReturn.map({ Product.return($0) }))
+        static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willReturn: [(date: Date?, value: Type)]...) -> MethodStub {
+            return Given(method: .m_min__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, willReturn: Type...) -> MethodStub {
-            return Given(method: .m_min__for_attributeover_samples(`attribute`, `samples`), products: willReturn.map({ Product.return($0) }))
+        static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
+            return Given(method: .m_min__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willReturn: [(date: Date?, value: Type)]...) -> MethodStub {
-            return Given(method: .m_sum__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`), products: willReturn.map({ Product.return($0) }))
+        static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willReturn: [(date: Date?, value: Type)]...) -> MethodStub {
+            return Given(method: .m_sum__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, willReturn: Type...) -> MethodStub {
-            return Given(method: .m_sum__for_attributeover_samples(`attribute`, `samples`), products: willReturn.map({ Product.return($0) }))
+        static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
+            return Given(method: .m_sum__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willProduce: (Stubber<[(date: Date?, value: Double)]>) -> Void) -> MethodStub {
-            let willReturn: [[(date: Date?, value: Double)]] = []
-			let given: Given = { return Given(method: .m_average__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: ([(date: Date?, value: Double)]).self)
+        static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_average__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willProduce: (StubberThrows<[(date: Date?, value: Double)]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_average__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([(date: Date?, value: Double)]).self)
 			willProduce(stubber)
 			return given
         }
-        static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, willProduce: (Stubber<Double>) -> Void) -> MethodStub {
-            let willReturn: [Double] = []
-			let given: Given = { return Given(method: .m_average__for_attributeover_samples(`attribute`, `samples`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: (Double).self)
+        static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_average__for_attributeover_samples(`attribute`, `samples`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, willProduce: (StubberThrows<Double>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_average__for_attributeover_samples(`attribute`, `samples`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Double).self)
 			willProduce(stubber)
 			return given
         }
-        static func count(over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willProduce: (Stubber<[(date: Date?, value: Int)]>) -> Void) -> MethodStub {
-            let willReturn: [[(date: Date?, value: Int)]] = []
-			let given: Given = { return Given(method: .m_count__over_samplesper_aggregationUnit(`samples`, `aggregationUnit`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: ([(date: Date?, value: Int)]).self)
+        static func count(over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_count__over_samplesper_aggregationUnit(`samples`, `aggregationUnit`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func count(over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willProduce: (StubberThrows<[(date: Date?, value: Int)]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_count__over_samplesper_aggregationUnit(`samples`, `aggregationUnit`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([(date: Date?, value: Int)]).self)
 			willProduce(stubber)
 			return given
         }
-        static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willProduce: (Stubber<[(date: Date?, value: Type)]>) -> Void) -> MethodStub {
-            let willReturn: [[(date: Date?, value: Type)]] = []
-			let given: Given = { return Given(method: .m_max__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: ([(date: Date?, value: Type)]).self)
+        static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_max__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willProduce: (StubberThrows<[(date: Date?, value: Type)]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_max__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([(date: Date?, value: Type)]).self)
 			willProduce(stubber)
 			return given
         }
-        static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, willProduce: (Stubber<Type>) -> Void) -> MethodStub {
-            let willReturn: [Type] = []
-			let given: Given = { return Given(method: .m_max__for_attributeover_samples(`attribute`, `samples`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: (Type).self)
+        static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_max__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_max__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Type).self)
 			willProduce(stubber)
 			return given
         }
-        static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willProduce: (Stubber<[(date: Date?, value: Type)]>) -> Void) -> MethodStub {
-            let willReturn: [[(date: Date?, value: Type)]] = []
-			let given: Given = { return Given(method: .m_min__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: ([(date: Date?, value: Type)]).self)
+        static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_min__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willProduce: (StubberThrows<[(date: Date?, value: Type)]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_min__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([(date: Date?, value: Type)]).self)
 			willProduce(stubber)
 			return given
         }
-        static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, willProduce: (Stubber<Type>) -> Void) -> MethodStub {
-            let willReturn: [Type] = []
-			let given: Given = { return Given(method: .m_min__for_attributeover_samples(`attribute`, `samples`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: (Type).self)
+        static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_min__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_min__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Type).self)
 			willProduce(stubber)
 			return given
         }
-        static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willProduce: (Stubber<[(date: Date?, value: Type)]>) -> Void) -> MethodStub {
-            let willReturn: [[(date: Date?, value: Type)]] = []
-			let given: Given = { return Given(method: .m_sum__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: ([(date: Date?, value: Type)]).self)
+        static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_sum__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willProduce: (StubberThrows<[(date: Date?, value: Type)]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_sum__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([(date: Date?, value: Type)]).self)
 			willProduce(stubber)
 			return given
         }
-        static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, willProduce: (Stubber<Type>) -> Void) -> MethodStub {
-            let willReturn: [Type] = []
-			let given: Given = { return Given(method: .m_sum__for_attributeover_samples(`attribute`, `samples`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: (Type).self)
+        static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_sum__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_sum__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Type).self)
 			willProduce(stubber)
 			return given
         }
@@ -6559,12 +6610,12 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
         static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>) -> Verify { return Verify(method: .m_average__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`))}
         static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>) -> Verify { return Verify(method: .m_average__for_attributeover_samples(`attribute`, `samples`))}
         static func count(over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>) -> Verify { return Verify(method: .m_count__over_samplesper_aggregationUnit(`samples`, `aggregationUnit`))}
-        static func max(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>) -> Verify { return Verify(method: .m_max__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`))}
-        static func max(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>) -> Verify { return Verify(method: .m_max__for_attributeover_samples(`attribute`, `samples`))}
-        static func min(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>) -> Verify { return Verify(method: .m_min__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`))}
-        static func min(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>) -> Verify { return Verify(method: .m_min__for_attributeover_samples(`attribute`, `samples`))}
-        static func sum(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>) -> Verify { return Verify(method: .m_sum__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`))}
-        static func sum(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>) -> Verify { return Verify(method: .m_sum__for_attributeover_samples(`attribute`, `samples`))}
+        static func max<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>) -> Verify { return Verify(method: .m_max__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()))}
+        static func max<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>) -> Verify { return Verify(method: .m_max__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()))}
+        static func min<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>) -> Verify { return Verify(method: .m_min__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()))}
+        static func min<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>) -> Verify { return Verify(method: .m_min__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()))}
+        static func sum<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>) -> Verify { return Verify(method: .m_sum__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()))}
+        static func sum<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>) -> Verify { return Verify(method: .m_sum__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()))}
     }
 
     struct Perform {
@@ -6580,23 +6631,23 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
         static func count(over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, perform: @escaping ([Sample], Calendar.Component?) -> Void) -> Perform {
             return Perform(method: .m_count__over_samplesper_aggregationUnit(`samples`, `aggregationUnit`), performs: perform)
         }
-        static func max(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, perform: @escaping (Attribute, [Sample], Calendar.Component?) -> Void) -> Perform {
-            return Perform(method: .m_max__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`), performs: perform)
+        static func max<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void) -> Perform {
+            return Perform(method: .m_max__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), performs: perform)
         }
-        static func max(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, perform: @escaping (Attribute, [Sample]) -> Void) -> Perform {
-            return Perform(method: .m_max__for_attributeover_samples(`attribute`, `samples`), performs: perform)
+        static func max<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Type.Type) -> Void) -> Perform {
+            return Perform(method: .m_max__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), performs: perform)
         }
-        static func min(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, perform: @escaping (Attribute, [Sample], Calendar.Component?) -> Void) -> Perform {
-            return Perform(method: .m_min__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`), performs: perform)
+        static func min<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void) -> Perform {
+            return Perform(method: .m_min__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), performs: perform)
         }
-        static func min(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, perform: @escaping (Attribute, [Sample]) -> Void) -> Perform {
-            return Perform(method: .m_min__for_attributeover_samples(`attribute`, `samples`), performs: perform)
+        static func min<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Type.Type) -> Void) -> Perform {
+            return Perform(method: .m_min__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), performs: perform)
         }
-        static func sum(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, perform: @escaping (Attribute, [Sample], Calendar.Component?) -> Void) -> Perform {
-            return Perform(method: .m_sum__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`), performs: perform)
+        static func sum<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void) -> Perform {
+            return Perform(method: .m_sum__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), performs: perform)
         }
-        static func sum(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, perform: @escaping (Attribute, [Sample]) -> Void) -> Perform {
-            return Perform(method: .m_sum__for_attributeover_samples(`attribute`, `samples`), performs: perform)
+        static func sum<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Type.Type) -> Void) -> Perform {
+            return Perform(method: .m_sum__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), performs: perform)
         }
     }
 
@@ -8175,58 +8226,66 @@ class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    func aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, for attribute: Attribute) -> [Date: [Sample]] {
+    func aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, for attribute: Attribute) throws -> [Date: [Sample]] {
         addInvocation(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`)))
 		let perform = methodPerformValue(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`))) as? ([Sample], Calendar.Component, Attribute) -> Void
 		perform?(`samples`, `aggregationUnit`, `attribute`)
 		var __value: [Date: [Sample]]
 		do {
 		    __value = try methodReturnValue(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`))).casted()
-		} catch {
+		} catch MockError.notStubed {
 			onFatalFailure("Stub return value not specified for aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, for attribute: Attribute). Use given")
 			Failure("Stub return value not specified for aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, for attribute: Attribute). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
 
-    func aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, for attribute: Attribute) -> [Date: [SampleType]] {
+    func aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, for attribute: Attribute) throws -> [Date: [SampleType]] {
         addInvocation(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`)))
 		let perform = methodPerformValue(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`))) as? ([SampleType], Calendar.Component, Attribute) -> Void
 		perform?(`samples`, `aggregationUnit`, `attribute`)
 		var __value: [Date: [SampleType]]
 		do {
 		    __value = try methodReturnValue(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`))).casted()
-		} catch {
+		} catch MockError.notStubed {
 			onFatalFailure("Stub return value not specified for aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, for attribute: Attribute). Use given")
 			Failure("Stub return value not specified for aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, for attribute: Attribute). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
 
-    func sort(samples: [Sample], by aggregationUnit: Calendar.Component) -> [(date: Date, samples: [Sample])] {
+    func sort(samples: [Sample], by aggregationUnit: Calendar.Component) throws -> [(date: Date, samples: [Sample])] {
         addInvocation(.m_sort__samples_samplesby_aggregationUnit_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`)))
 		let perform = methodPerformValue(.m_sort__samples_samplesby_aggregationUnit_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`))) as? ([Sample], Calendar.Component) -> Void
 		perform?(`samples`, `aggregationUnit`)
 		var __value: [(date: Date, samples: [Sample])]
 		do {
 		    __value = try methodReturnValue(.m_sort__samples_samplesby_aggregationUnit_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`))).casted()
-		} catch {
+		} catch MockError.notStubed {
 			onFatalFailure("Stub return value not specified for sort(samples: [Sample], by aggregationUnit: Calendar.Component). Use given")
 			Failure("Stub return value not specified for sort(samples: [Sample], by aggregationUnit: Calendar.Component). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
 
-    func sort<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component) -> [(date: Date, samples: [SampleType])] {
+    func sort<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component) throws -> [(date: Date, samples: [SampleType])] {
         addInvocation(.m_sort__samples_samplesby_aggregationUnit_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`)))
 		let perform = methodPerformValue(.m_sort__samples_samplesby_aggregationUnit_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`))) as? ([SampleType], Calendar.Component) -> Void
 		perform?(`samples`, `aggregationUnit`)
 		var __value: [(date: Date, samples: [SampleType])]
 		do {
 		    __value = try methodReturnValue(.m_sort__samples_samplesby_aggregationUnit_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`))).casted()
-		} catch {
+		} catch MockError.notStubed {
 			onFatalFailure("Stub return value not specified for sort<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component). Use given")
 			Failure("Stub return value not specified for sort<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
@@ -8521,34 +8580,6 @@ class SampleUtilMock: SampleUtil, Mock {
 			willProduce(stubber)
 			return given
         }
-        static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willProduce: (Stubber<[Date: [Sample]]>) -> Void) -> MethodStub {
-            let willReturn: [[Date: [Sample]]] = []
-			let given: Given = { return Given(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(`samples`, `aggregationUnit`, `attribute`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: ([Date: [Sample]]).self)
-			willProduce(stubber)
-			return given
-        }
-        static func aggregate<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willProduce: (Stubber<[Date: [SampleType]]>) -> Void) -> MethodStub {
-            let willReturn: [[Date: [SampleType]]] = []
-			let given: Given = { return Given(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(`samples`.wrapAsGeneric(), `aggregationUnit`, `attribute`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: ([Date: [SampleType]]).self)
-			willProduce(stubber)
-			return given
-        }
-        static func sort(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, willProduce: (Stubber<[(date: Date, samples: [Sample])]>) -> Void) -> MethodStub {
-            let willReturn: [[(date: Date, samples: [Sample])]] = []
-			let given: Given = { return Given(method: .m_sort__samples_samplesby_aggregationUnit_1(`samples`, `aggregationUnit`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: ([(date: Date, samples: [Sample])]).self)
-			willProduce(stubber)
-			return given
-        }
-        static func sort<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, willProduce: (Stubber<[(date: Date, samples: [SampleType])]>) -> Void) -> MethodStub {
-            let willReturn: [[(date: Date, samples: [SampleType])]] = []
-			let given: Given = { return Given(method: .m_sort__samples_samplesby_aggregationUnit_2(`samples`.wrapAsGeneric(), `aggregationUnit`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: ([(date: Date, samples: [SampleType])]).self)
-			willProduce(stubber)
-			return given
-        }
         static func sort(samples: Parameter<[Sample]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>, willProduce: (Stubber<[Sample]>) -> Void) -> MethodStub {
             let willReturn: [[Sample]] = []
 			let given: Given = { return Given(method: .m_sort__samples_samplesby_dateTypein_order_1(`samples`, `dateType`, `order`), products: willReturn.map({ Product.return($0) })) }()
@@ -8595,6 +8626,46 @@ class SampleUtilMock: SampleUtil, Mock {
             let willReturn: [Int] = []
 			let given: Given = { return Given(method: .m_distance__between_sample1and_sample2in_unit(`sample1`, `sample2`, `unit`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Int).self)
+			willProduce(stubber)
+			return given
+        }
+        static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(`samples`, `aggregationUnit`, `attribute`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willProduce: (StubberThrows<[Date: [Sample]]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(`samples`, `aggregationUnit`, `attribute`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([Date: [Sample]]).self)
+			willProduce(stubber)
+			return given
+        }
+        static func aggregate<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(`samples`.wrapAsGeneric(), `aggregationUnit`, `attribute`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func aggregate<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willProduce: (StubberThrows<[Date: [SampleType]]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(`samples`.wrapAsGeneric(), `aggregationUnit`, `attribute`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([Date: [SampleType]]).self)
+			willProduce(stubber)
+			return given
+        }
+        static func sort(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_sort__samples_samplesby_aggregationUnit_1(`samples`, `aggregationUnit`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func sort(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, willProduce: (StubberThrows<[(date: Date, samples: [Sample])]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_sort__samples_samplesby_aggregationUnit_1(`samples`, `aggregationUnit`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([(date: Date, samples: [Sample])]).self)
+			willProduce(stubber)
+			return given
+        }
+        static func sort<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_sort__samples_samplesby_aggregationUnit_2(`samples`.wrapAsGeneric(), `aggregationUnit`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func sort<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, willProduce: (StubberThrows<[(date: Date, samples: [SampleType])]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_sort__samples_samplesby_aggregationUnit_2(`samples`.wrapAsGeneric(), `aggregationUnit`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([(date: Date, samples: [SampleType])]).self)
 			willProduce(stubber)
 			return given
         }

@@ -102,7 +102,17 @@ final class AttributedChooserViewController: UIViewController {
 		for controller in attributeViewControllers {
 			let attribute = controller.attribute!
 			let attributeValue = controller.attributeValue!
-			try! currentValue.set(attribute: attribute, to: attributeValue)
+			do {
+				try currentValue.set(attribute: attribute, to: attributeValue)
+			} catch {
+				log.error(
+					"Failed to set %@ of %@ to %@: %@",
+					attribute.name,
+					currentValue.attributedName,
+					String(describing: attributeValue),
+					errorInfo(error))
+				showError(title: "Failed to set \(attribute.name)")
+			}
 		}
 		NotificationCenter.default.post(
 			name: notificationToSendWhenAccepted,
@@ -146,7 +156,12 @@ final class AttributedChooserViewController: UIViewController {
 		for attribute in currentValue.attributes {
 			let controller: AttributeViewController = viewController(named: "attributeView", fromStoryboard: "AttributeList")
 			controller.attribute = attribute
-			controller.attributeValue = try! currentValue.value(of: attribute)
+			do {
+				controller.attributeValue = try currentValue.value(of: attribute)
+			} catch {
+				log.error("Failed to retrieve %@ of %@: %@", attribute.name, currentValue.attributedName, errorInfo(error))
+				// let the user continue
+			}
 			let valueChangedNotification = Notification.Name("attributeValueChanged_" + attribute.name)
 			observe(selector: #selector(valueChanged), name: valueChangedNotification)
 			controller.notificationToSendOnValueChange = valueChangedNotification
@@ -210,7 +225,12 @@ extension AttributedChooserViewController: UIPickerViewDelegate {
 					let attributeCurrentValue = try currentValue.value(of: attribute)
 					try newValue.set(attribute: attribute, to: attributeCurrentValue)
 				} catch {
-					log.error("Failed to set or retrieve attribute value of Attributed object: %@", errorInfo(error))
+					log.error(
+						"Failed to set or retrieve %@ of %@ or %@: %@",
+						attribute.name,
+						currentValue.attributedName,
+						newValue.attributedName,
+						errorInfo(error))
 					// ignore and move on
 				}
 			}

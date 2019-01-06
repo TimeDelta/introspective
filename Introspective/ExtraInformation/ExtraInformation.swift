@@ -48,11 +48,11 @@ public class AnyInformation: ExtraInformation {
 		self.attribute = attribute
 	}
 
-	public func compute(forSamples samples: [Sample]) -> String {
+	public func compute(forSamples samples: [Sample]) throws -> String {
 		log.error("Must override compute()")
 		return ""
 	}
-	public func computeGraphable(forSamples samples: [Sample]) -> String {
+	public func computeGraphable(forSamples samples: [Sample]) throws -> String {
 		log.error("Must override computeGraphable()")
 		return ""
 	}
@@ -60,5 +60,25 @@ public class AnyInformation: ExtraInformation {
 	public func equalTo(_ other: ExtraInformation) -> Bool {
 		log.error("Must override equalTo()")
 		return type(of: self) == type(of: other)
+	}
+
+	func filterSamples<Type>(_ samples: [Sample], as: Type.Type) throws -> [Sample] {
+		let filteredSamples = DependencyInjector.util.sample.getOnly(samples: samples, from: startDate, to: endDate)
+		return try filteredSamples.filter{
+			do {
+				let include = try $0.value(of: attribute) as? Type != nil
+				if !include && !attribute.optional {
+					log.error("Found nil value for non-optional attribute '%@' in %@ sample", attribute.name, $0.attributedName)
+				}
+				return include
+			} catch {
+				log.error(
+					"Failed to get value of '%@' for '%@' sample while filtering: %@",
+					attribute.name,
+					$0.attributedName,
+					errorInfo(error))
+				throw error
+			}
+		}
 	}
 }

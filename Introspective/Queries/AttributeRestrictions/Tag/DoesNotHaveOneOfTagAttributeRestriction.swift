@@ -55,7 +55,7 @@ public final class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestrict
 			if let sampleTag = try sample.value(of: restrictedAttribute) as? Tag {
 				return !tags.contains(where: { $0.equalTo(sampleTag) })
 			} else if !restrictedAttribute.optional {
-				throw AttributeError.typeMismatch
+				throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: value))
 			}
 			return true
 		} else if restrictedAttribute is TagsAttribute {
@@ -64,7 +64,7 @@ public final class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestrict
 					return tags.contains(where: { $0.equalTo(sampleTag) })
 				}.count == 0
 			} else if !restrictedAttribute.optional {
-				throw AttributeError.typeMismatch
+				throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: value))
 			}
 			return true
 		}
@@ -76,14 +76,14 @@ public final class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestrict
 
 	public final override func value(of attribute: Attribute) throws -> Any? {
 		if !attribute.equalTo(Me.tagsAttribute) {
-			throw AttributeError.unknownAttribute
+			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		return tags
 	}
 
 	public final override func set(attribute: Attribute, to value: Any?) throws {
 		if !attribute.equalTo(Me.tagsAttribute) {
-			throw AttributeError.unknownAttribute
+			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
 		if let castedValue = value as? [Tag] {
 			tags = castedValue
@@ -92,7 +92,7 @@ public final class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestrict
 			tags = castedValue.map{ $0 }
 			return
 		}
-		throw AttributeError.typeMismatch
+		throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 	}
 
 	// MARK: - Equality

@@ -27,7 +27,7 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try restriction.value(of: Me.restrictedAttribute)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
+			XCTAssert(error is UnknownAttributeError)
 		}
 	}
 
@@ -49,7 +49,7 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: 1 as Any)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.unknownAttribute)
+			XCTAssert(error is UnknownAttributeError)
 		}
 	}
 
@@ -57,7 +57,7 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try restriction.set(attribute: Me.timeAttribute, to: 1 as Any)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
+			XCTAssert(error is TypeMismatchError)
 		}
 	}
 
@@ -82,7 +82,7 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try restriction.samplePasses(mockSample)) { error in
 			// then
-			XCTAssertEqual(error as? AttributeError, AttributeError.typeMismatch)
+			XCTAssert(error is TypeMismatchError)
 		}
 	}
 

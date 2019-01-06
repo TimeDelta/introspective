@@ -37,7 +37,7 @@ public class DateAttributeBase: AttributeBase, DateAttribute {
 	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		guard let castedValue = value as? Date else {
-			throw AttributeError.typeMismatch
+			throw TypeMismatchError(attribute: self, wasA: type(of: value))
 		}
 		return DependencyInjector.util.calendar.string(for: castedValue, inFormat: dateFormat)
 	}

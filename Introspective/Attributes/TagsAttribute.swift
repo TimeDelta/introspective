@@ -44,7 +44,7 @@ public final class TagsAttribute: AttributeBase, MultiSelectAttribute {
 		if let castedValue = value as? Tag {
 			return castedValue.name
 		}
-		throw AttributeError.typeMismatch
+		throw TypeMismatchError(attribute: self, wasA: type(of: value))
 	}
 
 	// MARK: - MultiSelectAttribute Functions
@@ -56,11 +56,13 @@ public final class TagsAttribute: AttributeBase, MultiSelectAttribute {
 		if let castedValue = value as? [Tag] {
 			return castedValue
 		}
-		throw AttributeError.unsupportedValue
+		throw UnsupportedValueError(attribute: self, is: value)
 	}
 
 	public final func valueFromArray(_ value: [Any]) throws -> Any {
-		guard let castedValue = value as? [Tag] else { throw AttributeError.typeMismatch }
+		guard let castedValue = value as? [Tag] else {
+			throw TypeMismatchError(attribute: self, wasA: type(of: value))
+		}
 		return Set<Tag>(castedValue)
 	}
 
@@ -75,7 +77,9 @@ public final class TagsAttribute: AttributeBase, MultiSelectAttribute {
 	}
 
 	public final func convertPossibleValueToDisplayableString(_ value: Any) throws -> String {
-		guard let castedValue = value as? Tag else { throw AttributeError.typeMismatch }
+		guard let castedValue = value as? Tag else {
+			throw TypeMismatchError(attribute: self, wasA: type(of: value))
+		}
 		return castedValue.name
 	}
 

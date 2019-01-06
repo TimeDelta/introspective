@@ -13,29 +13,31 @@ import SwiftyMocky
 
 class NumericSampleUtilUnitTests: UnitTest {
 
-	fileprivate typealias Me = NumericSampleUtilUnitTests
-	fileprivate static let attribute = HeartRate.heartRate
+	private typealias Me = NumericSampleUtilUnitTests
+	private static let attribute = HeartRate.heartRate
 
-	fileprivate var util: NumericSampleUtilImpl!
+	private var util: NumericSampleUtilImpl!
 
-	override func setUp() {
+	final override func setUp() {
 		super.setUp()
 		util = NumericSampleUtilImpl()
 	}
 
-	func testGivenOneSample_average_returnsValueOfThatSample() {
+	// MARK: - average
+
+	func testGivenOneSample_average_returnsValueOfThatSample() throws {
 		// given
 		let expectedAverage = 5.0
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [expectedAverage], for: Me.attribute)
 
 		// when
-		let average = util.average(for: Me.attribute, over: samples)
+		let average = try util.average(for: Me.attribute, over: samples)
 
 		// then
 		XCTAssert(average == expectedAverage)
 	}
 
-	func testGivenMultipleSamples_average_returnsCorrectValue() {
+	func testGivenMultipleSamples_average_returnsCorrectValue() throws {
 		// given
 		let values = [1.23, 5.7, 19.2, 8.6]
 		var expectedAverage = 0.0
@@ -46,20 +48,22 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let samples = SampleCreatorTestUtil.createSamples(withValues: values, for: Me.attribute)
 
 		// when
-		let average = util.average(for: Me.attribute, over: samples)
+		let average = try util.average(for: Me.attribute, over: samples)
 
 		// then
 		XCTAssert(average == expectedAverage)
 	}
 
-	func testGivenOnlyOneSampleWithNilAggregation_averagePer_returnsValueForThatSample() {
+	// MARK: - averagePer
+
+	func testGivenOnlyOneSampleWithNilAggregation_averagePer_returnsValueForThatSample() throws {
 		// given
 		let values = [5.0]
 		let samples = SampleCreatorTestUtil.createSamples(withValues: values, for: Me.attribute)
 		let expectedAverages: [(date: Date?, value: Double)] = [(date: nil, value: 5.0)]
 
 		// when
-		let averages = util.average(for: Me.attribute, over: samples, per: nil)
+		let averages = try util.average(for: Me.attribute, over: samples, per: nil)
 
 		// then
 		XCTAssert(averages.count == expectedAverages.count)
@@ -69,7 +73,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenMultipleSamplesWithNilAggregation_averagePer_returnsCorrectValue() {
+	func testGivenMultipleSamplesWithNilAggregation_averagePer_returnsCorrectValue() throws {
 		// given
 		let values = [1.23, 5.7, 19.2, 8.6]
 		var expectedAverage = 0.0
@@ -80,7 +84,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let samples = SampleCreatorTestUtil.createSamples(withValues: values, for: Me.attribute)
 
 		// when
-		let averages = util.average(for: Me.attribute, over: samples, per: nil)
+		let averages = try util.average(for: Me.attribute, over: samples, per: nil)
 
 		// then
 		XCTAssert(averages.count == 1)
@@ -88,7 +92,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		XCTAssert(averages[0].value == expectedAverage)
 	}
 
-	func testGivenOnlyOneSampleInOneAggregationUnit_averagePer_returnsValueForThatSample() {
+	func testGivenOnlyOneSampleInOneAggregationUnit_averagePer_returnsValueForThatSample() throws {
 		// given
 		let values = [5.0]
 		let samples = SampleCreatorTestUtil.createSamples(withValues: values, for: Me.attribute)
@@ -97,7 +101,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
 
 		// when
-		let averages = util.average(for: Me.attribute, over: samples, per: aggregationUnit)
+		let averages = try util.average(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(averages.count == 1)
@@ -105,7 +109,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		XCTAssert(averages[0].value == 5.0)
 	}
 
-	func testGivenMultipleSamplesFromSameAggregationUnit_averagePer_returnsCorrectAverageForThatYear() {
+	func testGivenMultipleSamplesFromSameAggregationUnit_averagePer_returnsCorrectAverageForThatYear() throws {
 		// given
 		let date = Date("2018-01-01")!
 		let entries: [(startDate: Date, value: Double?)] = [
@@ -124,7 +128,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		expectedAverage /= Double(entries.count)
 
 		// when
-		let averages = util.average(for: Me.attribute, over: samples, per: aggregationUnit)
+		let averages = try util.average(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(averages.count == 1)
@@ -132,7 +136,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		XCTAssert(averages[0].value == expectedAverage)
 	}
 
-	func testGivenThreeSamplesWithOneSamplePerAggregationUnit_averagePer_returnsCorrectValueForEachYear() {
+	func testGivenThreeSamplesWithOneSamplePerAggregationUnit_averagePer_returnsCorrectValueForEachYear() throws {
 		// given
 		let date1 = Date("2018-01-01")!
 		let date2 = Date("2019-01-01")!
@@ -155,7 +159,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let averages = util.average(for: Me.attribute, over: samples, per: aggregationUnit)
+		let averages = try util.average(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(averages.count == expectedAverages.count)
@@ -165,7 +169,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenMultipleSamplesPerAggregationUnitOverMultipleAggregations_averagePer_returnsCorrectValueForEachYear() {
+	func testGivenMultipleSamplesPerAggregationUnitOverMultipleAggregations_averagePer_returnsCorrectValueForEachYear() throws {
 		// given
 		let date1 = Date("2018-01-01")!
 		let date2 = Date("2019-01-01")!
@@ -191,7 +195,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let averages = util.average(for: Me.attribute, over: samples, per: aggregationUnit)
+		let averages = try util.average(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(averages.count == expectedAverages.count)
@@ -201,7 +205,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenMultipleSamplesOutOfOrderPerAggregationUnitOverMultipleAggregations_averagePer_returnsCorrectValueForEachYear() {
+	func testGivenMultipleSamplesOutOfOrderPerAggregationUnitOverMultipleAggregations_averagePer_returnsCorrectValueForEachYear() throws {
 		// given
 		let date1 = Date("2018-01-01")!
 		let date2 = Date("2019-01-01")!
@@ -227,7 +231,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let averages = util.average(for: Me.attribute, over: samples, per: aggregationUnit)
+		let averages = try util.average(for: Me.attribute, over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(averages.count == expectedAverages.count)
@@ -237,12 +241,14 @@ class NumericSampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSampleArrayWithOnlyOneSampleAndNilAggregation_countPer_returnsOne() {
+	// MARK: - countPer
+
+	func testGivenSampleArrayWithOnlyOneSampleAndNilAggregation_countPer_returnsOne() throws {
 		// given
 		let samples = SampleCreatorTestUtil.createSamples(count: 1)
 
 		// when
-		let counts = util.count(over: samples, per: nil)
+		let counts = try util.count(over: samples, per: nil)
 
 		// then
 		XCTAssert(counts.count == 1)
@@ -250,12 +256,12 @@ class NumericSampleUtilUnitTests: UnitTest {
 		XCTAssert(counts[0].value == 1)
 	}
 
-	func testGivenSampleArrayWithMultipleSamplesAndNilAggregation_countPer_returnsCorrectValue() {
+	func testGivenSampleArrayWithMultipleSamplesAndNilAggregation_countPer_returnsCorrectValue() throws {
 		// given
 		let samples = SampleCreatorTestUtil.createSamples(count: 3)
 
 		// when
-		let counts = util.count(over: samples, per: nil)
+		let counts = try util.count(over: samples, per: nil)
 
 		// then
 		XCTAssert(counts.count == 1)
@@ -263,7 +269,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		XCTAssert(counts[0].value == 3)
 	}
 
-	func testGivenSampleArrayWithOnlyOneSample_countPer_returnsOne() {
+	func testGivenSampleArrayWithOnlyOneSample_countPer_returnsOne() throws {
 		// given
 		let aggregationUnit: Calendar.Component = .year
 		let samples = [SampleCreatorTestUtil.createSample()]
@@ -271,7 +277,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
 
 		// when
-		let counts = util.count(over: samples, per: aggregationUnit)
+		let counts = try util.count(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(counts.count == 1)
@@ -279,7 +285,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		XCTAssert(counts[0].value == 1)
 	}
 
-	func testGivenSampleArrayWithOneSamplePerAggregationAndMultipleAggregations_countPer_returnsOneForEachAggregation() {
+	func testGivenSampleArrayWithOneSamplePerAggregationAndMultipleAggregations_countPer_returnsOneForEachAggregation() throws {
 		// given
 		let aggregationUnit: Calendar.Component = .month
 		let date1 = Date("2018-01-01")!
@@ -294,7 +300,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let counts = util.count(over: samples, per: aggregationUnit)
+		let counts = try util.count(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(counts.count == expectedCounts.count)
@@ -304,7 +310,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSampleArrayWithMultipleSamplesPerAggregationAndMultipleAggregations_countPer_returnsCorrectValueForEachAggregation() {
+	func testGivenSampleArrayWithMultipleSamplesPerAggregationAndMultipleAggregations_countPer_returnsCorrectValueForEachAggregation() throws {
 		// given
 		let aggregationUnit: Calendar.Component = .day
 		let date1 = Date("2018-01-01")!
@@ -319,7 +325,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let counts = util.count(over: samples, per: aggregationUnit)
+		let counts = try util.count(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(counts.count == expectedCounts.count)
@@ -329,7 +335,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSampleArrayWithMultipleSamplesOutOfOrderPerAggregationAndMultipleAggregations_countPer_returnsCorrectValueForEachAggregation() {
+	func testGivenSampleArrayWithMultipleSamplesOutOfOrderPerAggregationAndMultipleAggregations_countPer_returnsCorrectValueForEachAggregation() throws {
 		// given
 		let aggregationUnit: Calendar.Component = .day
 		let date1 = Date("2018-01-01")!
@@ -344,7 +350,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let counts = util.count(over: samples, per: aggregationUnit)
+		let counts = try util.count(over: samples, per: aggregationUnit)
 
 		// then
 		XCTAssert(counts.count == expectedCounts.count)
@@ -354,37 +360,41 @@ class NumericSampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSampleArrayWithOnlyOneValue_max_returnsThatValue() {
+	// MARK: - max
+
+	func testGivenSampleArrayWithOnlyOneValue_max_returnsThatValue() throws {
 		// given
 		let value = 3.4
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [value], for: Me.attribute)
 
 		// when
-		let max: Double = util.max(for: Me.attribute, over: samples)
+		let max: Double = try util.max(for: Me.attribute, over: samples, as: Double.self)
 
 		// then
 		XCTAssert(max == value)
 	}
 
-	func testGivenSampleArrayWithMultipleValues_max_returnsMaximumValue() {
+	func testGivenSampleArrayWithMultipleValues_max_returnsMaximumValue() throws {
 		// given
 		let expectedMax = 3.4
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [expectedMax - 1, expectedMax, expectedMax - 2], for: Me.attribute)
 
 		// when
-		let max: Double = util.max(for: Me.attribute, over: samples)
+		let max: Double = try util.max(for: Me.attribute, over: samples, as: Double.self)
 
 		// then
 		XCTAssert(max == expectedMax)
 	}
 
-	func testGivenSampleArrayWithOnlyOneSampleAndNilAggregation_maxPer_returnsValueForThatSample() {
+	// MARK: - maxPer
+
+	func testGivenSampleArrayWithOnlyOneSampleAndNilAggregation_maxPer_returnsValueForThatSample() throws {
 		// given
 		let value = 5.2
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [value], for: Me.attribute)
 
 		// when
-		let maxs: [(date: Date?, value: Double)] = util.max(for: Me.attribute, over: samples, per: nil)
+		let maxs: [(date: Date?, value: Double)] = try util.max(for: Me.attribute, over: samples, per: nil, as: Double.self)
 
 		// then
 		XCTAssert(maxs.count == 1)
@@ -392,13 +402,13 @@ class NumericSampleUtilUnitTests: UnitTest {
 		XCTAssert(maxs[0].value == value)
 	}
 
-	func testGivenSampleArrayWithMultipleSamplesAndNilAggregation_maxPer_returnsCorrectValue() {
+	func testGivenSampleArrayWithMultipleSamplesAndNilAggregation_maxPer_returnsCorrectValue() throws {
 		// given
 		let maxValue = 2.0
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [maxValue - 1, maxValue - 2, maxValue], for: Me.attribute)
 
 		// when
-		let maxs: [(date: Date?, value: Double)] = util.max(for: Me.attribute, over: samples, per: nil)
+		let maxs: [(date: Date?, value: Double)] = try util.max(for: Me.attribute, over: samples, per: nil, as: Double.self)
 
 		// then
 		XCTAssert(maxs.count == 1)
@@ -406,7 +416,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		XCTAssert(maxs[0].value == maxValue)
 	}
 
-	func testGivenSampleArrayWithOnlyOneSample_maxPer_returnsValueOfThatSample() {
+	func testGivenSampleArrayWithOnlyOneSample_maxPer_returnsValueOfThatSample() throws {
 		// given
 		let aggregationUnit: Calendar.Component = .year
 		let value = 5.4
@@ -415,7 +425,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
 
 		// when
-		let maxs: [(date: Date?, value: Double)] = util.max(for: Me.attribute, over: samples, per: aggregationUnit)
+		let maxs: [(date: Date?, value: Double)] = try util.max(for: Me.attribute, over: samples, per: aggregationUnit, as: Double.self)
 
 		// then
 		XCTAssert(maxs.count == 1)
@@ -423,7 +433,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		XCTAssert(maxs[0].value == value)
 	}
 
-	func testGivenSampleArrayWithOneSamplePerAggregationAndMultipleAggregations_maxPer_returnsCorrectValueForEachAggregation() {
+	func testGivenSampleArrayWithOneSamplePerAggregationAndMultipleAggregations_maxPer_returnsCorrectValueForEachAggregation() throws {
 		// given
 		let aggregationUnit: Calendar.Component = .month
 		let date1 = Date("2018-01-01")!
@@ -445,7 +455,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let maxs: [(date: Date?, value: Double)] = util.max(for: Me.attribute, over: samples, per: aggregationUnit)
+		let maxs: [(date: Date?, value: Double)] = try util.max(for: Me.attribute, over: samples, per: aggregationUnit, as: Double.self)
 
 		// then
 		XCTAssert(maxs.count == expectedMaxs.count)
@@ -455,7 +465,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSampleArrayWithMultipleSamplesPerAggregationAndMultipleAggregations_maxPer_returnsCorrectValueForEachAggregation() {
+	func testGivenSampleArrayWithMultipleSamplesPerAggregationAndMultipleAggregations_maxPer_returnsCorrectValueForEachAggregation() throws {
 		// given
 		let aggregationUnit: Calendar.Component = .day
 		let date1 = Date("2018-01-01")!
@@ -483,7 +493,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let maxs: [(date: Date?, value: Double)] = util.max(for: Me.attribute, over: samples, per: aggregationUnit)
+		let maxs: [(date: Date?, value: Double)] = try util.max(for: Me.attribute, over: samples, per: aggregationUnit, as: Double.self)
 
 		// then
 		XCTAssert(maxs.count == expectedMaxs.count)
@@ -493,7 +503,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSampleArrayWithMultipleSamplesOutOfOrderPerAggregationAndMultipleAggregations_maxPer_returnsCorrectValueForEachAggregation() {
+	func testGivenSampleArrayWithMultipleSamplesOutOfOrderPerAggregationAndMultipleAggregations_maxPer_returnsCorrectValueForEachAggregation() throws {
 		// given
 		let aggregationUnit: Calendar.Component = .day
 		let date1 = Date("2018-01-01")!
@@ -521,7 +531,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let maxs: [(date: Date?, value: Double)] = util.max(for: Me.attribute, over: samples, per: aggregationUnit)
+		let maxs: [(date: Date?, value: Double)] = try util.max(for: Me.attribute, over: samples, per: aggregationUnit, as: Double.self)
 
 		// then
 		XCTAssert(maxs.count == expectedMaxs.count)
@@ -531,37 +541,41 @@ class NumericSampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSampleArrayWithOnlyOneValue_min_returnsThatValue() {
+	// MARK: - min
+
+	func testGivenSampleArrayWithOnlyOneValue_min_returnsThatValue() throws {
 		// given
 		let value = 3.4
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [value], for: Me.attribute)
 
 		// when
-		let min: Double = util.min(for: Me.attribute, over: samples)
+		let min: Double = try util.min(for: Me.attribute, over: samples, as: Double.self)
 
 		// then
 		XCTAssert(min == value)
 	}
 
-	func testGivenSampleArrayWithMultipleValues_min_returnsMinimumValue() {
+	func testGivenSampleArrayWithMultipleValues_min_returnsMinimumValue() throws {
 		// given
 		let expectedMin = 3.4
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [expectedMin + 1, expectedMin, expectedMin + 2], for: Me.attribute)
 
 		// when
-		let min: Double = util.min(for: Me.attribute, over: samples)
+		let min: Double = try util.min(for: Me.attribute, over: samples, as: Double.self)
 
 		// then
 		XCTAssert(min == expectedMin)
 	}
 
-	func testGivenSampleArrayWithOnlyOneSampleAndNilAggregation_minPer_returnsValueForThatSample() {
+	// MARK: - minPer
+
+	func testGivenSampleArrayWithOnlyOneSampleAndNilAggregation_minPer_returnsValueForThatSample() throws {
 		// given
 		let value = 4.3
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [value], for: Me.attribute)
 
 		// when
-		let mins: [(date: Date?, value: Double)] = util.min(for: Me.attribute, over: samples, per: nil)
+		let mins: [(date: Date?, value: Double)] = try util.min(for: Me.attribute, over: samples, per: nil, as: Double.self)
 
 		// then
 		XCTAssert(mins.count == 1)
@@ -569,13 +583,13 @@ class NumericSampleUtilUnitTests: UnitTest {
 		XCTAssert(mins[0].value == value)
 	}
 
-	func testGivenSampleArrayWithMultipleSamplesAndNilAggregation_minPer_returnsCorrectValue() {
+	func testGivenSampleArrayWithMultipleSamplesAndNilAggregation_minPer_returnsCorrectValue() throws {
 		// given
 		let minValue = 4.2432
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [minValue + 1, minValue, minValue + 2], for: Me.attribute)
 
 		// when
-		let mins: [(date: Date?, value: Double)] = util.min(for: Me.attribute, over: samples, per: nil)
+		let mins: [(date: Date?, value: Double)] = try util.min(for: Me.attribute, over: samples, per: nil, as: Double.self)
 
 		// then
 		XCTAssert(mins.count == 1)
@@ -583,7 +597,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		XCTAssert(mins[0].value == minValue)
 	}
 
-	func testGivenSampleArrayWithOnlyOneSample_minPer_returnsValueOfThatSample() {
+	func testGivenSampleArrayWithOnlyOneSample_minPer_returnsValueOfThatSample() throws {
 		// given
 		let aggregationUnit: Calendar.Component = .year
 		let value = 23.5
@@ -592,7 +606,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
 
 		// when
-		let mins: [(date: Date?, value: Double)] = util.min(for: Me.attribute, over: samples, per: aggregationUnit)
+		let mins: [(date: Date?, value: Double)] = try util.min(for: Me.attribute, over: samples, per: aggregationUnit, as: Double.self)
 
 		// then
 		XCTAssert(mins.count == 1)
@@ -600,7 +614,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		XCTAssert(mins[0].value == value)
 	}
 
-	func testGivenSampleArrayWithOneSamplePerAggregationAndMultipleAggregations_minPer_returnsCorrectValueForEachAggregation() {
+	func testGivenSampleArrayWithOneSamplePerAggregationAndMultipleAggregations_minPer_returnsCorrectValueForEachAggregation() throws {
 		// given
 		let aggregationUnit: Calendar.Component = .month
 		let date1 = Date("2018-01-01")!
@@ -622,7 +636,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let mins: [(date: Date?, value: Double)] = util.min(for: Me.attribute, over: samples, per: aggregationUnit)
+		let mins: [(date: Date?, value: Double)] = try util.min(for: Me.attribute, over: samples, per: aggregationUnit, as: Double.self)
 
 		// then
 		XCTAssert(mins.count == expectedMins.count)
@@ -632,7 +646,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSampleArrayWithMultipleSamplesPerAggregationAndMultipleAggregations_minPer_returnsCorrectValueForEachAggregation() {
+	func testGivenSampleArrayWithMultipleSamplesPerAggregationAndMultipleAggregations_minPer_returnsCorrectValueForEachAggregation() throws {
 		// given
 		let aggregationUnit: Calendar.Component = .day
 		let date1 = Date("2018-01-01")!
@@ -660,7 +674,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let mins: [(date: Date?, value: Double)] = util.min(for: Me.attribute, over: samples, per: aggregationUnit)
+		let mins: [(date: Date?, value: Double)] = try util.min(for: Me.attribute, over: samples, per: aggregationUnit, as: Double.self)
 
 		// then
 		XCTAssert(mins.count == expectedMins.count)
@@ -670,7 +684,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSampleArrayWithMultipleSamplesOutOfOrderPerAggregationAndMultipleAggregations_minPer_returnsCorrectValueForEachAggregation() {
+	func testGivenSampleArrayWithMultipleSamplesOutOfOrderPerAggregationAndMultipleAggregations_minPer_returnsCorrectValueForEachAggregation() throws {
 		// given
 		let aggregationUnit: Calendar.Component = .day
 		let date1 = Date("2018-01-01")!
@@ -698,7 +712,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let mins: [(date: Date?, value: Double)] = util.min(for: Me.attribute, over: samples, per: aggregationUnit)
+		let mins: [(date: Date?, value: Double)] = try util.min(for: Me.attribute, over: samples, per: aggregationUnit, as: Double.self)
 
 		// then
 		XCTAssert(mins.count == expectedMins.count)
@@ -708,19 +722,21 @@ class NumericSampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSampleArrayWithOnlyOneValue_sum_returnsThatValue() {
+	// MARK: - sum
+
+	func testGivenSampleArrayWithOnlyOneValue_sum_returnsThatValue() throws {
 		// given
 		let value = 3.4
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [value], for: Me.attribute)
 
 		// when
-		let sum: Double = util.sum(for: Me.attribute, over: samples)
+		let sum: Double = try util.sum(for: Me.attribute, over: samples, as: Double.self)
 
 		// then
 		XCTAssert(sum == value)
 	}
 
-	func testGivenSampleArrayWithMultipleValues_sum_returnsCorrectValue() {
+	func testGivenSampleArrayWithMultipleValues_sum_returnsCorrectValue() throws {
 		// given
 		let value1 = 1.0
 		let value2 = 4.3
@@ -729,19 +745,21 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let expectedSum = value1 + value2 + value3
 
 		// when
-		let sum: Double = util.sum(for: Me.attribute, over: samples)
+		let sum: Double = try util.sum(for: Me.attribute, over: samples, as: Double.self)
 
 		// then
 		XCTAssert(sum == expectedSum)
 	}
 
-	func testGivenSampleArrayWithOnlyOneSampleAndNilAggregation_sumPer_returnsValueForThatSample() {
+	// MARK: - sumPer
+
+	func testGivenSampleArrayWithOnlyOneSampleAndNilAggregation_sumPer_returnsValueForThatSample() throws {
 		// given
 		let value = 23.3
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [value], for: Me.attribute)
 
 		// when
-		let sums: [(date: Date?, value: Double)] = util.sum(for: Me.attribute, over: samples, per: nil)
+		let sums: [(date: Date?, value: Double)] = try util.sum(for: Me.attribute, over: samples, per: nil, as: Double.self)
 
 		// then
 		XCTAssert(sums.count == 1)
@@ -749,7 +767,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		XCTAssert(sums[0].value == value)
 	}
 
-	func testGivenSampleArrayWithMultipleSamplesAndNilAggregation_sumPer_returnsCorrectValue() {
+	func testGivenSampleArrayWithMultipleSamplesAndNilAggregation_sumPer_returnsCorrectValue() throws {
 		// given
 		let value1 = 6.4
 		let value2 = 1005.4
@@ -758,7 +776,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		let expectedSum = value1 + value2 + value3
 
 		// when
-		let sums: [(date: Date?, value: Double)] = util.sum(for: Me.attribute, over: samples, per: nil)
+		let sums: [(date: Date?, value: Double)] = try util.sum(for: Me.attribute, over: samples, per: nil, as: Double.self)
 
 		// then
 		XCTAssert(sums.count == 1)
@@ -766,7 +784,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		XCTAssert(sums[0].value == expectedSum)
 	}
 
-	func testGivenSampleArrayWithOnlyOneSample_sumPer_returnsValueOfThatSample() {
+	func testGivenSampleArrayWithOnlyOneSample_sumPer_returnsValueOfThatSample() throws {
 		// given
 		let aggregationUnit: Calendar.Component = .year
 		let value = 4.2
@@ -775,7 +793,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		Given(mockSampleUtil, .sort(samples: .any([Sample].self), by: .value(aggregationUnit), willReturn: [(date: aggregationDate, samples: samples)]))
 
 		// when
-		let sums: [(date: Date?, value: Double)] = util.sum(for: Me.attribute, over: samples, per: aggregationUnit)
+		let sums: [(date: Date?, value: Double)] = try util.sum(for: Me.attribute, over: samples, per: aggregationUnit, as: Double.self)
 
 		// then
 		XCTAssert(sums.count == 1)
@@ -783,7 +801,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		XCTAssert(sums[0].value == value)
 	}
 
-	func testGivenSampleArrayWithOneSamplePerAggregationAndMultipleAggregations_sumPer_returnsCorrectValueForEachAggregation() {
+	func testGivenSampleArrayWithOneSamplePerAggregationAndMultipleAggregations_sumPer_returnsCorrectValueForEachAggregation() throws {
 		// given
 		let aggregationUnit: Calendar.Component = .month
 		let date1 = Date("2018-01-01")!
@@ -805,7 +823,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let sums: [(date: Date?, value: Double)] = util.sum(for: Me.attribute, over: samples, per: aggregationUnit)
+		let sums: [(date: Date?, value: Double)] = try util.sum(for: Me.attribute, over: samples, per: aggregationUnit, as: Double.self)
 
 		// then
 		XCTAssert(sums.count == expectedSums.count)
@@ -815,7 +833,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSampleArrayWithMultipleSamplesPerAggregationAndMultipleAggregations_sumPer_returnsCorrectValueForEachAggregation() {
+	func testGivenSampleArrayWithMultipleSamplesPerAggregationAndMultipleAggregations_sumPer_returnsCorrectValueForEachAggregation() throws {
 		// given
 		let aggregationUnit: Calendar.Component = .day
 		let date1 = Date("2018-01-01")!
@@ -843,7 +861,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let sums: [(date: Date?, value: Double)] = util.sum(for: Me.attribute, over: samples, per: aggregationUnit)
+		let sums: [(date: Date?, value: Double)] = try util.sum(for: Me.attribute, over: samples, per: aggregationUnit, as: Double.self)
 
 		// then
 		XCTAssert(sums.count == expectedSums.count)
@@ -853,7 +871,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSampleArrayWithMultipleSamplesOutOfOrderPerAggregationAndMultipleAggregations_sumPer_returnsCorrectValueForEachAggregation() {
+	func testGivenSampleArrayWithMultipleSamplesOutOfOrderPerAggregationAndMultipleAggregations_sumPer_returnsCorrectValueForEachAggregation() throws {
 		// given
 		let aggregationUnit: Calendar.Component = .day
 		let date1 = Date("2018-01-01")!
@@ -881,7 +899,7 @@ class NumericSampleUtilUnitTests: UnitTest {
 		]
 
 		// when
-		let sums: [(date: Date?, value: Double)] = util.sum(for: Me.attribute, over: samples, per: aggregationUnit)
+		let sums: [(date: Date?, value: Double)] = try util.sum(for: Me.attribute, over: samples, per: aggregationUnit, as: Double.self)
 
 		// then
 		XCTAssert(sums.count == expectedSums.count)
@@ -893,7 +911,9 @@ class NumericSampleUtilUnitTests: UnitTest {
 
 	// TODO - write unit tests for sortSamplesByAggregation
 
-	fileprivate func generateAggregationSortReturnValue(for samples: [Sample]) -> [(date: Date, samples: [Sample])] {
+	// MARK: - Helper Functions
+
+	private func generateAggregationSortReturnValue(for samples: [Sample]) -> [(date: Date, samples: [Sample])] {
 		var samplesByDate = [Date: [Sample]]()
 		for sample in samples {
 			let date = sample.dates()[.start]!
