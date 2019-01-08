@@ -254,7 +254,7 @@ final class ResultsViewController: UITableViewController {
 						self.log.error("Failed to delete sample: %@", errorInfo(error))
 						self.showError(
 							title: "Failed to delete " + self.samples[indexPath.row].attributedName.localizedLowercase,
-							message: "Sorry for the inconvenience.")
+							error: error)
 					}
 				})
 				alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
@@ -277,13 +277,11 @@ final class ResultsViewController: UITableViewController {
 					tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
 				} catch {
 					log.error("Failed to compute %@ information: %@", selectedInformation!.name, errorInfo(error))
-					showError(
-						title: "Failed to compute \(selectedInformation!.name) information",
-						message: "Sorry for the inconvenience.")
+					showError(title: "Failed to compute \(selectedInformation!.name) information", error: error)
 				}
 			} else {
 				log.error("Extra Information edit index was nil")
-				showError(title: "Failed to edit selected information", message: "Sorry for the inconvenience.")
+				showError(title: "Failed to edit selected information")
 			}
 		}
 	}
@@ -381,7 +379,7 @@ final class ResultsViewController: UITableViewController {
 			tableView.reloadData()
 		} catch {
 			log.error("Failed to compute information: %@", errorInfo(error))
-			showError(title: "You found a bug.")
+			showError(title: "You found a bug.", error: error)
 		}
 	}
 
@@ -399,7 +397,7 @@ final class ResultsViewController: UITableViewController {
 				} catch {
 					self.log.error("Failed to delete all %@: %@", sampleType, errorInfo(error))
 					DispatchQueue.main.async {
-						self.showError(title: "Failed to delete all \(sampleType) records")
+						self.showError(title: "Failed to delete all \(sampleType) records", error: error)
 					}
 				}
 			}
@@ -546,7 +544,6 @@ final class ResultsViewController: UITableViewController {
 	}
 
 	private final func tellUserSortFailed() {
-		let alert = UIAlertController(title: "Failed to sort", message: "Sorry for the inconvenience.", preferredStyle: .alert)
-		present(alert, animated: false, completion: nil)
+		showError(title: "Failed to sort")
 	}
 }

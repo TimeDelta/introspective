@@ -127,11 +127,11 @@ public final class RecordActivityTableViewController: UITableViewController {
 						showEditScreenForActivity(activity, autoFocusNote: true)
 					}
 				} catch {
-					showError(title: "Failed to stop activity", message: "Sorry for the inconvenience.")
+					showError(title: "Failed to stop activity", error: error)
 				}
 			} else {
 				log.error("Could not find activity to stop.")
-				showError(title: "Failed to stop activity", message: "Sorry for the inconvenience.")
+				showError(title: "Failed to stop activity")
 			}
 		} else {
 			var activity: Activity? = nil
@@ -150,7 +150,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 					try? retryOnFail({ try DependencyInjector.db.delete(activity) }, maxRetries: 2)
 				}
 				log.error("Failed to start activity: %@", errorInfo(error))
-				showError(title: "Could not start activity", message: "Sorry for the inconvenience.")
+				showError(title: "Failed to start activity", error: error)
 			}
 		}
 		tableView.deselectRow(at: indexPath, animated: false)
@@ -220,7 +220,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 					self.tableView.reloadData()
 				} catch {
 					self.log.error("Failed to delete activity: %@", errorInfo(error))
-					self.showError(title: "Failed to delete activity instance", message: "Sorry for the inconvenience.")
+					self.showError(title: "Failed to delete activity instance", error: error)
 				}
 			})
 			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
@@ -262,7 +262,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 					self.loadActivitiyDefinitions()
 				} catch {
 					self.log.error("Failed to delete activity definition: %@", errorInfo(error))
-					self.showError(title: "Failed to delete activity", message: "Sorry for the inconvenience.")
+					self.showError(title: "Failed to delete activity", error: error)
 				}
 			})
 			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
@@ -296,7 +296,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 				log.error("Failed to save activity definition: %@", errorInfo(error))
 				showError(
 					title: "Failed to save activity",
-					message: "Sorry for the inconvenience.",
+					error: error,
 					tryAgain: { self.activityDefinitionCreated(notification: notification) })
 			}
 		}
@@ -358,11 +358,12 @@ public final class RecordActivityTableViewController: UITableViewController {
 			try fetchedResultsController.performFetch()
 			signpost.end(name: "resetting fetched results controller")
 		} catch {
-			self.showError(
-				title: "Could not retrieve activities",
-				message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.",
-				tryAgain: loadActivitiyDefinitions)
 			log.error("Failed to fetch medications: %@", errorInfo(error))
+			showError(
+				title: "Failed to retrieve activities",
+				message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.",
+				error: error,
+				tryAgain: loadActivitiyDefinitions)
 		}
 	}
 
@@ -384,7 +385,10 @@ public final class RecordActivityTableViewController: UITableViewController {
 				loadActivitiyDefinitions()
 			} catch {
 				log.error("Failed to quick create / start activity: %@", errorInfo(error))
-				showError(title: "Failed to create and start", message: "Something went wrong while trying to save this activity. Sorry for the inconvenience.")
+				showError(
+					title: "Failed to create and start",
+					message: "Something went wrong while trying to save this activity. Sorry for the inconvenience.",
+					error: error)
 			}
 		}
 	}
@@ -448,7 +452,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 				return activities[0]
 			}
 		} catch {
-			log.error("Failed to fetch activities: %@", errorInfo(error))
+			log.error("Failed to fetch activities while retrieving most recent: %@", errorInfo(error))
 		}
 		return nil
 	}

@@ -76,7 +76,11 @@ public final class RecordMedicationTableViewController: UITableViewController {
 					self.tableView.reloadData()
 				}
 			} catch {
-				self.errorMessage = "Something went wrong while trying to retrieve the list of your medications."
+				var message = "Something went wrong while trying to retrieve the list of your medications."
+				if let error = error as? DisplayableError {
+					message = error.displayableTitle + ". \(error.displayableDescription ?? "")"
+				}
+				self.errorMessage = message
 				self.log.error("Failed to fetch medications: %@", errorInfo(error))
 			}
 		}
@@ -162,9 +166,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 								tableView.reloadData()
 							}
 						} catch {
-							self.showError(
-								title: "Failed to delete medication",
-								message: "Sorry for the inconvenience.")
+							self.showError(title: "Failed to delete medication", error: error)
 						}
 					}
 				}

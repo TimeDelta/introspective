@@ -57,7 +57,7 @@ final class MoodSettingsViewController: UIViewController {
 			return
 		}
 		guard minRating <= maxRating else {
-			showError(title: "Maximum mood must be greater than minimum mood.")
+			showError(title: "Maximum mood must be greater than minimum mood.", message: nil)
 			return
 		}
 
@@ -83,10 +83,7 @@ final class MoodSettingsViewController: UIViewController {
 			self.navigationController?.popViewController(animated: false)
 		} catch {
 			log.error("Failed to save mood settings: %@", errorInfo(error))
-			showError(
-				title: "Failed to save settings",
-				message: "Sorry for the inconvenience.",
-				tryAgain: saveAndGoBackToSettings)
+			showError(title: "Failed to save settings", error: error, tryAgain: saveAndGoBackToSettings)
 		}
 	}
 
@@ -109,8 +106,7 @@ final class MoodSettingsViewController: UIViewController {
 					try DependencyInjector.util.mood.scaleMoods()
 				} catch {
 					self.log.error("Failed to scale existing moods: %@", errorInfo(error))
-					let banner = StatusBarNotificationBanner(title: "Failed to scale existing moods", style: .danger)
-					banner.show()
+					StatusBarNotificationBanner(title: "Failed to scale existing moods", style: .danger).show()
 				}
 			}
 			self.saveAndGoBackToSettings()

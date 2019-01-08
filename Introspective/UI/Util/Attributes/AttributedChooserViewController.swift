@@ -111,7 +111,7 @@ final class AttributedChooserViewController: UIViewController {
 					currentValue.attributedName,
 					String(describing: attributeValue),
 					errorInfo(error))
-				showError(title: "Failed to set \(attribute.name)")
+				showError(title: "Failed to set \(attribute.name)", error: error)
 			}
 		}
 		NotificationCenter.default.post(

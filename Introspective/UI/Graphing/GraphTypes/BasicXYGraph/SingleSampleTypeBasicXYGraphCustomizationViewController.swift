@@ -165,7 +165,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			realNavigationController?.pushViewController(chartController, animated: false)
 		} catch {
 			log.error("Failed to get %@ query: %@", sampleType.name, errorInfo(error))
-			showError(title: "You found a bug", message: "Sorry for the inconvenience.")
+			showError(title: "You found a bug", error: error)
 		}
 	}
 
@@ -255,7 +255,14 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 					try self.updateChartData(samples)
 				} catch {
 					self.log.error("Failed to update chart data: %@", errorInfo(error))
-					self.chartController.errorMessage = "Something went wrong while gathering the required data"
+					var message = "Something went wrong while gathering the required data"
+					if let error = error as? DisplayableError {
+						message = error.displayableTitle
+						if let description = error.displayableDescription {
+							message += ". \(description)"
+						}
+					}
+					self.chartController.errorMessage = message
 				}
 			} else {
 				self.log.error("Query run did not return an error or any results")

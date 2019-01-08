@@ -54,18 +54,15 @@ public final class MedicationDoseEditorViewController: UIViewController {
 			}
 			medicationDose!.dosage = dosage
 			medicationDose!.timestamp = datePicker.date
-			DispatchQueue.main.async {
-				NotificationCenter.default.post(
-					name: self.notificationToSendOnAccept,
-					object: self,
-					userInfo: self.info([
-						.dose: self.medicationDose as Any,
-					]))
-			}
+			post(
+				notificationToSendOnAccept,
+				userInfo: self.info([
+					.dose: self.medicationDose as Any,
+				]))
 			dismiss(animated: false, completion: nil)
 		} catch {
 			log.error("Failed to create medication dose: %@", errorInfo(error))
-			showError(title: "Failed to save", message: "Sorry for the inconvenience")
+			showError(title: "Failed to save dose", error: error, tryAgain: { self.saveButtonPressed(sender) })
 		}
 	}
 

@@ -99,13 +99,21 @@ final class RecordMoodTableViewCell: UITableViewCell {
 
 			reset()
 		} catch {
+			var title = "Failed to save mood rating"
+			var message = "Sorry for the inconvenience"
+			if let error = error as? DisplayableError {
+				title = error.displayableTitle
+				if let description = error.displayableDescription {
+					message = description
+				}
+			}
 			log.error("Failed to create or save mood: %@", errorInfo(error))
 			NotificationCenter.default.post(
 				name: RecordDataTableViewController.showErrorMessage,
 				object: self,
 				userInfo: info([
-					.title: "Failed to save mood rating",
-					.message: "Sorry for the inconvenience",
+					.title: title,
+					.message: message,
 				]))
 		}
 	}

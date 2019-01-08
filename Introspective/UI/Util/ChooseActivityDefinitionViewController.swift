@@ -37,7 +37,7 @@ public final class ChooseActivityDefinitionViewController: UIViewController {
 				availableDefinitions = try DependencyInjector.db.query(fetchRequest)
 			} catch {
 				log.error("Failed to load activities: %@", errorInfo(error))
-				parent?.showError(title: "Failed to load activities", message: "Sorry for the inconvenience")
+				parent?.showError(title: "Failed to load activities", error: error)
 				dismiss(animated: false, completion: nil)
 			}
 		} else if availableDefinitions.count == 0 {

@@ -73,7 +73,7 @@ public final class UnifiedDayViewController: DayViewController {
 			display(valueDescription, value, nil, startDate, endDate)
 		} catch {
 			log.error("Failed to calculate %@ for mood: %@", operation.description, errorInfo(error))
-			showError(title: "Could not calculate \(valueDescription)", message: "Sorry for the inconvenience")
+			showError(title: "Could not calculate \(valueDescription)", error: error)
 		}
 	}
 
@@ -93,7 +93,7 @@ public final class UnifiedDayViewController: DayViewController {
 			} else {
 				log.error("Failed to calculate %@ but no error was returned", description)
 			}
-			self.showError(title: "Could not calculate \(description)", message: "Sorry for the inconvenience")
+			self.showError(title: "Could not calculate \(description)")
 			return
 		}
 		let startDateText = DependencyInjector.util.calendar.string(for: startDate, dateStyle: .none, timeStyle: .short)
@@ -131,7 +131,7 @@ public final class UnifiedDayViewController: DayViewController {
 			return try DependencyInjector.db.query(fetchRequest)
 		} catch {
 			log.error("Failed to query for activities on %@: %@", String(describing: date), errorInfo(error))
-			showError(title: "Something went wrong while loading your activity data", message: "Sorry for the inconvenience.")
+			showError(title: "Something went wrong while loading your activity data", error: error)
 			return []
 		}
 	}

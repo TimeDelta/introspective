@@ -55,11 +55,20 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 			}
 		} catch {
 			log.error("Failed to mark medication (%@) as taken: %@", medication.name, errorInfo(error))
+			var title = "Failed to mark \(medication.name) as taken."
+			var message = "Sorry for the inconvenience"
+			if let error = error as? DisplayableError {
+				title = error.displayableTitle
+				if let description = error.displayableDescription {
+					message = description
+				}
+			}
 			NotificationCenter.default.post(
 				name: Me.errorOccurred,
 				object: self,
 				userInfo: info([
-					.title: "Failed to mark \(medication.name) as taken.",
+					.title: title,
+					.message: message,
 				]))
 		}
 	}

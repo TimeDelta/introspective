@@ -213,7 +213,10 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			DependencyInjector.db.clearUnsavedChanges()
 
 			log.error("Failed to create, edit or save ActivityDefinition: %@", errorInfo(error))
-			showError(title: "Could not save", message: "Something went wrong while trying to save this activity. Sorry for the inconvenience.")
+			showError(
+				title: "Failed to save activity",
+				message: "Something went wrong while trying to save this activity. Sorry for the inconvenience.",
+				error: error)
 		}
 	}
 

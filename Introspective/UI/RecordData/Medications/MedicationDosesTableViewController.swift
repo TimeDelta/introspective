@@ -103,7 +103,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 					tableView.reloadData()
 				} catch {
 					self.log.error("Failed to delete medication dose: %@", errorInfo(error))
-					self.showError(title: "Failed to dleete dose", message: "Sorry for the inconvenience.")
+					self.showError(title: "Failed to delete dose", error: error)
 				}
 			})
 			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
@@ -141,12 +141,20 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		resetDateRangeButtonTitle()
 	}
 
-	@objc private final func medicationDoseEdited(notification: Notification) throws {
+	@objc private final func medicationDoseEdited(notification: Notification) {
 		if let dose: MedicationDose = value(for: .dose, from: notification) {
 			medication.replaceDoses(at: lastClickedIndex, with: dose)
-			try DependencyInjector.db.save()
-			resetFilteredDoses()
-			tableView.reloadData()
+			do {
+				try DependencyInjector.db.save()
+				resetFilteredDoses()
+				tableView.reloadData()
+			} catch {
+				log.error("Failed to save medication and dose edit: %@", errorInfo(error))
+				showError(
+					title: "Failed to save dose of \(medication.name)",
+					error: error,
+					tryAgain: { self.medicationDoseEdited(notification: notification) })
+			}
 		}
 	}
 

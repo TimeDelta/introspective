@@ -112,10 +112,7 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 			self.navigationController?.popViewController(animated: false)
 		} catch {
 			log.error("Failed to save activity settings: %@", errorInfo(error))
-			showError(
-				title: "Failed to save settins",
-				message: "Sorry for the inconvenience.",
-				tryAgain: saveAndGoBackToSettings)
+			showError(title: "Failed to save settins", error: error, tryAgain: saveAndGoBackToSettings)
 		}
 	}
 }

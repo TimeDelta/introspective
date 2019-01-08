@@ -173,7 +173,7 @@ public final class EditMoodTableViewController: UITableViewController {
 			navigationController?.popViewController(animated: false)
 		} catch {
 			log.error("Failed to save create or save mood: %@", errorInfo(error))
-			showError(title: "Failed to save mood", message: "Sorry for the inconvenience")
+			showError(title: "Failed to save mood", error: error)
 		}
 	}
 }

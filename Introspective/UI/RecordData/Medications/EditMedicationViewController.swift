@@ -202,10 +202,7 @@ public final class EditMedicationViewController: UIViewController {
 			if deleteMedicationOnFail {
 				try? DependencyInjector.db.delete(medication)
 			}
-			showError(
-				title: "Could not save medication",
-				message: "Sorry for the inconvenience",
-				tryAgain: { self.saveButtonPressed(sender) })
+			showError(title: "Could not save medication", error: error, tryAgain: { self.saveButtonPressed(sender) })
 		}
 	}
 

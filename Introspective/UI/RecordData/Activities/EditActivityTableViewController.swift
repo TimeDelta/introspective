@@ -239,7 +239,7 @@ public final class EditActivityTableViewController: UITableViewController {
 			if deleteActivityOnFail {
 				try? DependencyInjector.db.delete(activity)
 			}
-			showError(title: "Failed to save activity instance", message: "Sorry for the inconvenience")
+			showError(title: "Failed to save activity instance", error: error)
 		}
 	}
 

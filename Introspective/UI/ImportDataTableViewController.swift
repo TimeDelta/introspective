@@ -58,7 +58,7 @@ final class ImportDataTableViewController: UITableViewController {
 					try self.importer.resetLastImportDate()
 				} catch {
 					self.log.error("Failed to reset last import date: %@", errorInfo(error))
-					self.showError(title: "Failed to reset last import date", message: "Sorry for the inconvenience.")
+					self.showError(title: "Failed to reset last import date", error: error)
 				}
 			})
 			actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel){ _ in
@@ -127,15 +127,7 @@ extension ImportDataTableViewController: UIDocumentPickerDelegate {
 				}
 			} catch {
 				self.log.error("Failed to import data: %@", errorInfo(error))
-				var title = "Failed to import data"
-				var message: String? = nil
-				if let displayableError = error as? DisplayableError {
-					title = displayableError.displayableTitle
-					message = displayableError.displayableDescription
-				}
-				let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-				alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-				self.present(alert, animated: false)
+				self.showError(title: "Failed to import data", error: error)
 			}
 		}
 		importer = nil // do this in order to make sure no importer type initialization from tableView(didSelectRowAt:) was forgotten

@@ -252,7 +252,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			realNavigationController!.pushViewController(chartController, animated: false)
 		} catch {
 			log.error("Failed to get query: %@", errorInfo(error))
-			showError(title: "You found a bug", message: "Sorry for the inconvenience.")
+			showError(title: "You found a bug", error: error)
 		}
 	}
 
@@ -329,7 +329,14 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 					self.xAxisSampleGroups = (try grouper.group(samples: samples, by: firstDateAttribute) as! [(Date, [Sample])])
 				} catch {
 					self.log.error("Failed to group x-axis samples: %@", errorInfo(error))
-					self.chartController.errorMessage = "Something went wrong while trying to group the x-axis samples. Sorry for the inconvenience."
+					var message = "Something went wrong while trying to group the x-axis samples. Sorry for the inconvenience."
+					if let error = error as? DisplayableError {
+						message = error.displayableTitle
+						if let description = error.displayableDescription {
+							message += ". \(description)"
+						}
+					}
+					self.chartController.errorMessage = message
 				}
 				self.signpost.end(name: "Grouping x-axis samples", "Grouped %d samples into %d groups", samples.count, self.xAxisSampleGroups.count)
 			} else {
@@ -353,7 +360,14 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 					self.yAxisSampleGroups = (try grouper.group(samples: samples, by: firstDateAttribute) as! [(Date, [Sample])])
 				} catch {
 					self.log.error("Failed to group y-axis samples: %@", errorInfo(error))
-					self.chartController.errorMessage = "Something went wrong while trying to group the y-axis samples. Sorry for the inconvenience."
+					var message = "Something went wrong while trying to group the y-axis samples. Sorry for the inconvenience."
+					if let error = error as? DisplayableError {
+						message = error.displayableTitle
+						if let description = error.displayableDescription {
+							message += ". \(description)"
+						}
+					}
+					self.chartController.errorMessage = message
 				}
 				self.signpost.end(name: "Grouping y-axis samples", "Grouped %d samples into %d groups", samples.count, self.yAxisSampleGroups.count)
 			} else {
@@ -375,7 +389,14 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			try updateChartData()
 		} catch {
 			log.error("Failed to update chart data: %@", errorInfo(error))
-			chartController.errorMessage = "Something went wrong while gathering the required data"
+			var message = "Something went wrong while gathering the required data"
+			if let error = error as? DisplayableError {
+				message = error.displayableTitle
+				if let description = error.displayableDescription {
+					message += ". \(description)"
+				}
+			}
+			chartController.errorMessage = message
 		}
 	}
 
