@@ -41,8 +41,8 @@ Date,Time,Rating,Note
 \(date1Text),\(rating1),\(note1)
 \(date2Text),\(rating2),\(note2)
 \(date3Text),\(rating3),\(note3)
-\(date4Text),\(rating4),\(note4)
 \(date5Text),\(rating5),
+\(date4Text),\(rating4),\(note4)
 """
 
 	// MARK: - Instance Variables

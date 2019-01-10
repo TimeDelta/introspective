@@ -29,7 +29,9 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 		var latestDate: Date! = lastImport // use temp var to avoid bug where initial import doesn't import anything
 		for line in contents.components(separatedBy: "\n")[1...] {
 			if string(line, matches: Me.dateRegex) { // new mood record
-				currentMood?.note = currentNote
+				if !currentNote.isEmpty {
+					currentMood?.note = currentNote
+				}
 				let parts = line.components(separatedBy: ",")
 				let date = DependencyInjector.util.calendar.date(from: parts[0...1].joined(), format: "M/d/yy HH:mm")!
 				if latestDate == nil { latestDate = date }
@@ -56,6 +58,9 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 				}
 				currentNote += line
 			}
+		}
+		if !currentNote.isEmpty {
+			currentMood?.note = currentNote // make sure to save the final note
 		}
 		lastImport = latestDate
 		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
