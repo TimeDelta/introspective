@@ -14,7 +14,7 @@ public protocol DisplayableError: Error {
 	var displayableDescription: String? { get }
 }
 
-public final class GenericDisplayableError: DisplayableError {
+public class GenericDisplayableError: DisplayableError {
 
 	public final let displayableTitle: String
 	public final let displayableDescription: String?

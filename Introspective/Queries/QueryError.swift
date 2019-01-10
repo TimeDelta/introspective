@@ -20,6 +20,13 @@ public class NoSamplesFoundQueryError: QueryError {
 	public final let sampleType: Sample.Type
 	public final let displayableTitle: String
 	public var displayableDescription: String? { return nil }
+	public final var localizedDescription: String {
+		var text = displayableTitle
+		if let description = displayableDescription {
+			text += ": \(description)"
+		}
+		return text
+	}
 
 	public required init(sampleType: Sample.Type) {
 		self.sampleType = sampleType

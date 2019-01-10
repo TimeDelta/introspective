@@ -17,6 +17,14 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 
 	// MARK: - Static Variables
 
+	private typealias Me = ATrackerActivityImporterImpl
+	private static let nameColumn = "Task name"
+	private static let descriptionColumn = " Task description"
+	private static let startDateColumn = " Start time"
+	private static let endDateColumn = " End time"
+	private static let noteColumn = " Note"
+	private static let categoryColumn = " Category"
+
 	public static let entityName = "ATrackerActivityImporter"
 
 	// MARK: - Instance Variables
@@ -89,7 +97,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	}
 
 	private final func getStartDate(from csv: CSVReader) throws -> Date {
-		if let startDateText = csv[" Start time"] {
+		if let startDateText = csv[Me.startDateColumn] {
 			if let startDate = DependencyInjector.util.calendar.date(from: startDateText, format: "YYYY-MM-dd HH:mm") {
 				return startDate
 			} else {
@@ -101,7 +109,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	}
 
 	private final func getEndDate(from csv: CSVReader) throws -> Date?  {
-		if let endDateText = csv[" End time"] {
+		if let endDateText = csv[Me.endDateColumn] {
 			if !endDateText.isEmpty {
 				if let endDate = DependencyInjector.util.calendar.date(from: endDateText, format: "YYYY-MM-dd HH:mm") {
 					return endDate
@@ -114,11 +122,11 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 
 	private final func update(_ activity: Activity, from csv: CSVReader) throws {
 		activity.endDate = try getEndDate(from: csv)
-		activity.note = csv[" Note"]
+		activity.note = csv[Me.noteColumn]
 	}
 
 	private final func retrieveExistingDefinition(from csv: CSVReader) throws -> ActivityDefinition? {
-		guard let name = csv["Task name"] else { throw InvalidFileFormatError("No name given for activity on line \(lineNumber)")}
+		guard let name = csv[Me.nameColumn] else { throw InvalidFileFormatError("No name given for activity on line \(lineNumber)")}
 		let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		let matchingActivities = try DependencyInjector.db.query(fetchRequest)
@@ -129,9 +137,9 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	}
 
 	private final func createDefinition(from csv: CSVReader) throws -> ActivityDefinition {
-		guard let name = csv["Task name"] else { throw InvalidFileFormatError("No name given for activity on line \(lineNumber)")}
-		let description = csv[" Task description"]
-		let category = csv[" Category"]
+		guard let name = csv[Me.nameColumn] else { throw InvalidFileFormatError("No name given for activity on line \(lineNumber)")}
+		let description = csv[Me.descriptionColumn]
+		let category = csv[Me.categoryColumn]
 
 		let definition = try DependencyInjector.db.new(ActivityDefinition.self)
 		definition.name = name
@@ -152,7 +160,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		activity.definition = try DependencyInjector.db.pull(savedObject: definition, fromSameContextAs: activity)
 		activity.startDate = start
 		activity.endDate = try getEndDate(from: csv)
-		activity.note = csv[" Note"]
+		activity.note = csv[Me.noteColumn]
 		activity.setSource(.aTracker)
 		activity.partOfCurrentImport = true
 	}

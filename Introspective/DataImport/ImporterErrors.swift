@@ -8,22 +8,16 @@
 
 import Foundation
 
-public final class InvalidFileFormatError: DisplayableError {
-
-	public final let displayableTitle: String = "Invalid file format"
-	public final let displayableDescription: String?
+public final class InvalidFileFormatError: GenericDisplayableError {
 
 	public init(_ specificError: String? = nil) {
-		displayableDescription = specificError
+		super.init(title: "Invalid file format", description: specificError)
 	}
 }
 
-public final class AmbiguousUpdateToExistingDataError: DisplayableError {
-
-	public final let displayableTitle: String = "Ambiguous update requested"
-	public final let displayableDescription: String?
+public final class AmbiguousUpdateToExistingDataError: GenericDisplayableError {
 
 	public init(_ specificError: String?) {
-		displayableDescription = specificError
+		super.init(title: "Ambiguous update requested", description: specificError)
 	}
 }

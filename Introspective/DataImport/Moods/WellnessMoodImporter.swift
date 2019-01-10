@@ -27,13 +27,16 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 		var currentMood: Mood? = nil
 		var currentNote = ""
 		var latestDate: Date! = lastImport // use temp var to avoid bug where initial import doesn't import anything
+		var lineNumber = 2
 		for line in contents.components(separatedBy: "\n")[1...] {
 			if string(line, matches: Me.dateRegex) { // new mood record
 				if !currentNote.isEmpty {
 					currentMood?.note = currentNote
 				}
 				let parts = line.components(separatedBy: ",")
-				let date = DependencyInjector.util.calendar.date(from: parts[0...1].joined(), format: "M/d/yy HH:mm")!
+				guard let date = DependencyInjector.util.calendar.date(from: parts[0...1].joined(), format: "M/d/yy HH:mm") else {
+					throw InvalidFileFormatError("Unexpected date / time on line \(lineNumber): \(parts[0...1].joined())")
+				}
 				if latestDate == nil { latestDate = date }
 				if date.isAfterDate(latestDate, granularity: .nanosecond) {
 					latestDate = date
@@ -52,12 +55,15 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 				} else {
 					currentMood = nil
 				}
+			} else if lineNumber == 2 { // first non-header row
+				throw InvalidFileFormatError("Invalid or missing date / time for mood on line 2")
 			} else {
 				if !currentNote.isEmpty {
 					currentNote += "\n"
 				}
 				currentNote += line
 			}
+			lineNumber += 1
 		}
 		if !currentNote.isEmpty {
 			currentMood?.note = currentNote // make sure to save the final note

@@ -36,8 +36,9 @@ final class WellnessMoodImporterFunctionalTests: ImporterTest {
 	private static let note2 = "Just got a great massage from Nicole for my pinched neck. It feels a lot better"
 	private static let note3 = "Longing for a closer fit to my dream job\nDisheartened about current job because it doesn’t seem to be what I was hoping for"
 	private static let note4 = "Feeling a little better after talking to Nicole and crying"
+	private static let headerRow = "Date,Time,Rating,Note"
 	private static let validImportFileText = """
-Date,Time,Rating,Note
+\(headerRow)
 \(date1Text),\(rating1),\(note1)
 \(date2Text),\(rating2),\(note2)
 \(date3Text),\(rating3),\(note3)
@@ -135,6 +136,90 @@ Date,Time,Rating,Note
 		XCTAssert(mood4WasImported(), "Mood 4 was not imported correctly")
 		XCTAssert(mood5WasImported(), "Mood 5 was not imported correctly")
 		XCTAssertEqual(importer.lastImport, Me.date5)
+	}
+
+	func testGivenWrongNumberOfColumnsInHeaderRow_importData_stillCorrectlyImports() throws {
+		// given
+		scaleMoods = false
+		useInput("""
+wrong number of columns
+\(Me.date1Text),\(Me.rating1),\(Me.note1)
+\(Me.date2Text),\(Me.rating2),\(Me.note2)
+\(Me.date3Text),\(Me.rating3),\(Me.note3)
+\(Me.date5Text),\(Me.rating5),
+\(Me.date4Text),\(Me.rating4),\(Me.note4)
+""")
+
+		// when
+		try importer.importData(from: url)
+
+		// then
+		XCTAssert(mood1WasImported(), "Mood 1 was not imported correctly")
+		XCTAssert(mood2WasImported(), "Mood 2 was not imported correctly")
+		XCTAssert(mood3WasImported(), "Mood 3 was not imported correctly")
+		XCTAssert(mood4WasImported(), "Mood 4 was not imported correctly")
+		XCTAssert(mood5WasImported(), "Mood 5 was not imported correctly")
+		XCTAssertEqual(importer.lastImport, Me.date5)
+	}
+
+	func testGivenTooFewColumnsInFirstDataRow_importData_throwsInvalidFileFormatError() throws {
+		// given
+		scaleMoods = false
+		useInput("""
+\(Me.headerRow)
+\(Me.note1)
+""")
+
+		// when
+		XCTAssertThrowsError(try importer.importData(from: url)) { error in
+			// then
+			XCTAssert(error is InvalidFileFormatError)
+		}
+	}
+
+	func testGivenInvalidDateFormatOnLine2_importData_throwsInvalidFileFormatError() throws {
+		// given
+		scaleMoods = false
+		useInput("""
+Date,Time,Rating,Note
+2018/09/21,14:21,4.0,note
+""")
+
+		// when
+		XCTAssertThrowsError(try importer.importData(from: url)) { error in
+			// then
+			XCTAssert(error is InvalidFileFormatError)
+		}
+	}
+
+	func testGivenInvalidDate_importData_throwsInvalidFileFormatError() throws {
+		// given
+		scaleMoods = false
+		useInput("""
+\(Me.headerRow)
+99/99/99,14:21,4.0,note
+""")
+
+		// when
+		XCTAssertThrowsError(try importer.importData(from: url)) { error in
+			// then
+			XCTAssert(error is InvalidFileFormatError)
+		}
+	}
+
+	func testGivenInvalidTime_importData_throwsInvalidFileFormatError() throws {
+		// given
+		scaleMoods = false
+		useInput("""
+\(Me.headerRow)
+9/19/12,99:99,4.0,note
+""")
+
+		// when
+		XCTAssertThrowsError(try importer.importData(from: url)) { error in
+			// then
+			XCTAssert(error is InvalidFileFormatError)
+		}
 	}
 
 	// MARK: - resetLastImportDate()
