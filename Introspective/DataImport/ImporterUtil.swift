@@ -14,7 +14,7 @@ import os
 public protocol ImporterUtil {
 
 	func deleteImportedEntities<Type: NSManagedObject>(fetchRequest: NSFetchRequest<Type>) throws
-	func cleanUpImportedData<Type: NSManagedObject & CoreDataObject & Importable>(forType type: Type.Type) throws
+	func cleanUpImportedData<Type: Importable & CoreDataObject>(forType type: Type.Type) throws
 }
 
 public final class ImporterUtilImpl: ImporterUtil {
@@ -31,7 +31,7 @@ public final class ImporterUtilImpl: ImporterUtil {
 		}
 	}
 
-	public final func cleanUpImportedData<Type: NSManagedObject & CoreDataObject & Importable>(forType type: Type.Type) throws {
+	public final func cleanUpImportedData<Type: Importable & CoreDataObject>(forType type: Type.Type) throws {
 		// the in-memory datastore type that is used for functional tests does not support batch updates
 		if !testing {
 			// IMPORTANT: must do manual testing of this if updated

@@ -4565,7 +4565,7 @@ class ImporterUtilMock: ImporterUtil, Mock {
 		}
     }
 
-    func cleanUpImportedData<Type: NSManagedObject & CoreDataObject & Importable>(forType type: Type.Type) throws {
+    func cleanUpImportedData<Type: Importable & CoreDataObject>(forType type: Type.Type) throws {
         addInvocation(.m_cleanUpImportedData__forType_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_cleanUpImportedData__forType_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric())) as? (Type.Type) -> Void
 		perform?(`type`)
@@ -4622,10 +4622,10 @@ class ImporterUtilMock: ImporterUtil, Mock {
 			willProduce(stubber)
 			return given
         }
-        static func cleanUpImportedData<Type: NSManagedObject & CoreDataObject & Importable>(forType type: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+        static func cleanUpImportedData<Type: Importable & CoreDataObject>(forType type: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_cleanUpImportedData__forType_type(`type`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
-        static func cleanUpImportedData<Type: NSManagedObject & CoreDataObject & Importable>(forType type: Parameter<Type.Type>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        static func cleanUpImportedData<Type: Importable & CoreDataObject>(forType type: Parameter<Type.Type>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_cleanUpImportedData__forType_type(`type`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)

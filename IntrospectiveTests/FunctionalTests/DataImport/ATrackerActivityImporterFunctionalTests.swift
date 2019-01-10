@@ -60,7 +60,7 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 		importer = try! DependencyInjector.db.new(ATrackerActivityImporterImpl.self)
 	}
 
-	// MARK: - Valid Data
+	// MARK: - importData() - Valid Data
 
 	func testGivenValidDataWithImportNewDataOnlyEqualToFalse_importData_correctlyImportsData() throws {
 		// given
@@ -172,7 +172,7 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 		XCTAssertFalse(try activityExists(name: Me.activityName1, from: Me.startDate1, to: nil, description: Me.description1, note: nil, tag: Me.category1))
 	}
 
-	// MARK: - Invalid Data
+	// MARK: - importData() - Invalid Data
 
 	func testGivenInvalidStartDateFormat_importData_throwsInvalidFileFormatError() throws {
 		// given
@@ -211,6 +211,23 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 			XCTAssert(error is InvalidFileFormatError)
 			XCTAssert(try! noActivitiesExist())
 			XCTAssert(try! noDefinitionsExist())
+		}
+	}
+
+	func testGivenErrorThrownAfterActivitiesAndDefinitionsCreated_importData_deletesActivitiesAndDefinitionsFromCurrentImport() throws {
+		// given
+		importer.lastImport = nil
+		importer.importOnlyNewData = false
+		useInput("""
+\(Me.headerRow)
+\(Me.activityRow2)
+not enough columns
+""")
+
+		// when
+		XCTAssertThrowsError(try importer.importData(from: url)) { error in
+			// then
+			XCTAssert(try! !activity2WasImported())
 		}
 	}
 

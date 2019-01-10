@@ -10,7 +10,7 @@
 import Foundation
 import CoreData
 
-public class ActivityDefinition: NSManagedObject, CoreDataObject, Importable {
+public class ActivityDefinition: Importable, CoreDataObject {
 
 	private typealias Me = ActivityDefinition
 

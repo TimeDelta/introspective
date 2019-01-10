@@ -57,12 +57,12 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 			try DependencyInjector.util.importer.cleanUpImportedData(forType: Activity.self)
 			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 		} catch {
-			log.error("Deleting created activities due to error: %@", errorInfo(error))
+			log.error("Failed to import activities from ATracker: %@", errorInfo(error))
 			do {
 				try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: ActivityDefinition.fetchRequest())
 				try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: Activity.fetchRequest())
 			} catch {
-				log.error("Failed to delete created activities: %@", errorInfo(error))
+				log.error("Failed to delete activities / definitions from current import: %@", errorInfo(error))
 			}
 
 			throw error

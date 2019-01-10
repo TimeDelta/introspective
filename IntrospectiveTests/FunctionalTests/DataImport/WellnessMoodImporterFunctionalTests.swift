@@ -76,7 +76,7 @@ final class WellnessMoodImporterFunctionalTests: ImporterTest {
 		try! DependencyInjector.settings.save()
 	}
 
-	// MARK: - Valid Data
+	// MARK: - importData() - Valid Data
 
 	func testGivenValidDataWithImportNewDataOnlyEqualToFalse_importData_correctlyImportsData() throws {
 		// given
@@ -138,6 +138,8 @@ final class WellnessMoodImporterFunctionalTests: ImporterTest {
 		XCTAssertEqual(importer.lastImport, Me.date5)
 	}
 
+	// MARK: - importData() - Invalid Data
+
 	func testGivenWrongNumberOfColumnsInHeaderRow_importData_stillCorrectlyImports() throws {
 		// given
 		scaleMoods = false
@@ -182,7 +184,7 @@ wrong number of columns
 		scaleMoods = false
 		useInput("""
 Date,Time,Rating,Note
-2018/09/21,14:21,4.0,note
+2018/09/21, 14:21,4.0,note
 """)
 
 		// when
@@ -197,7 +199,7 @@ Date,Time,Rating,Note
 		scaleMoods = false
 		useInput("""
 \(Me.headerRow)
-99/99/99,14:21,4.0,note
+99/99/99, 14:21,4.0,note
 """)
 
 		// when
@@ -212,13 +214,61 @@ Date,Time,Rating,Note
 		scaleMoods = false
 		useInput("""
 \(Me.headerRow)
-9/19/12,99:99,4.0,note
+10/19/12, 99:99,4.0,note
 """)
 
 		// when
 		XCTAssertThrowsError(try importer.importData(from: url)) { error in
 			// then
 			XCTAssert(error is InvalidFileFormatError)
+		}
+	}
+
+	func testGivenInvalidRating_importData_throwsInvalidFileFormatError() throws {
+		// given
+		scaleMoods = false
+		useInput("""
+\(Me.headerRow)
+10/19/12, 12:12,invalid rating,note
+""")
+
+		// when
+		XCTAssertThrowsError(try importer.importData(from: url)) { error in
+			// then
+			XCTAssert(error is InvalidFileFormatError)
+		}
+	}
+
+	func testGivenErrorThrownAfterValidMoodsCreated_importData_deletesMoodsFromCurrentImport() throws {
+		// given
+		scaleMoods = false
+		useInput("""
+\(Me.headerRow)
+\(Me.date1Text),\(Me.rating1),\(Me.note1)
+10/19/12, 12:12,invalid rating,note
+""")
+
+		// when
+		XCTAssertThrowsError(try importer.importData(from: url)) { error in
+			// then
+			XCTAssert(!mood1WasImported(), "Mood 1 was not deleted after error thrown")
+		}
+	}
+
+	func testGivenInvalidData_importData_doesNotDeleteMoodsNotPartOfImport() throws {
+		// given
+		scaleMoods = false
+		MoodDataTestUtil.createMood(note: Me.note2, rating: Me.rating2, timestamp: Me.date2, min: 1, max: 7)
+		try DependencyInjector.db.save()
+		useInput("""
+\(Me.headerRow)
+10/19/12, 12:12,invalid rating,note
+""")
+
+		// when
+		XCTAssertThrowsError(try importer.importData(from: url)) { error in
+			// then
+			XCTAssert(mood2WasImported(), "Mood 2 was deleted")
 		}
 	}
 

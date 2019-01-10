@@ -22,54 +22,41 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 	public final let sourceName: String = "Wellness"
 	public final var importOnlyNewData: Bool = true
 
+	private final var currentMood: Mood? = nil
+	private final var lineNumber: Int = -1
+	private final var currentNote = ""
+	private final let log = Log()
+
 	public final func importData(from url: URL) throws {
 		let contents = try DependencyInjector.util.io.contentsOf(url)
-		var currentMood: Mood? = nil
-		var currentNote = ""
+		currentMood = nil
+		lineNumber = 2
+		currentNote = ""
 		var latestDate: Date! = lastImport // use temp var to avoid bug where initial import doesn't import anything
-		var lineNumber = 2
-		for line in contents.components(separatedBy: "\n")[1...] {
-			if string(line, matches: Me.dateRegex) { // new mood record
-				if !currentNote.isEmpty {
-					currentMood?.note = currentNote
-				}
-				let parts = line.components(separatedBy: ",")
-				guard let date = DependencyInjector.util.calendar.date(from: parts[0...1].joined(), format: "M/d/yy HH:mm") else {
-					throw InvalidFileFormatError("Unexpected date / time on line \(lineNumber): \(parts[0...1].joined())")
-				}
-				if latestDate == nil { latestDate = date }
-				if date.isAfterDate(latestDate, granularity: .nanosecond) {
-					latestDate = date
-				}
-				if shouldImport(date) {
-					currentMood = try DependencyInjector.sample.mood()
-					currentMood!.timestamp = date
-					currentMood!.minRating = 1
-					currentMood!.maxRating = 7
-					currentMood!.rating = Double(parts[2])!
-					currentMood!.setSource(.wellness)
-					if DependencyInjector.settings.scaleMoodsOnImport {
-						DependencyInjector.util.mood.scaleMood(currentMood!)
-					}
-					currentNote = parts[3...].joined()
-				} else {
-					currentMood = nil
-				}
-			} else if lineNumber == 2 { // first non-header row
-				throw InvalidFileFormatError("Invalid or missing date / time for mood on line 2")
-			} else {
-				if !currentNote.isEmpty {
-					currentNote += "\n"
-				}
-				currentNote += line
+		do {
+			for line in contents.components(separatedBy: "\n")[1...] {
+				try processLine(line, latestDate: &latestDate)
+				lineNumber += 1
 			}
-			lineNumber += 1
+			if !currentNote.isEmpty {
+				currentMood?.note = currentNote // make sure to save the final note
+			}
+			lastImport = latestDate
+			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+
+			log.info("Cleaning up mood import")
+			try DependencyInjector.util.importer.cleanUpImportedData(forType: MoodImpl.self)
+			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+		} catch {
+			log.error("Failed to import moods from Wellness: %@", errorInfo(error))
+			do {
+				try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: MoodImpl.fetchRequest())
+			} catch {
+				log.error("Failed to delete moods from current import: %@", errorInfo(error))
+			}
+
+			throw error
 		}
-		if !currentNote.isEmpty {
-			currentMood?.note = currentNote // make sure to save the final note
-		}
-		lastImport = latestDate
-		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 	}
 
 	public final func resetLastImportDate() throws {
@@ -78,6 +65,51 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 	}
 
 	// MARK: - Helper Functions
+
+	private final func processLine(_ line: String, latestDate: inout Date!) throws {
+		if string(line, matches: Me.dateRegex) { // new mood record
+			if !currentNote.isEmpty {
+				currentMood?.note = currentNote
+			}
+			let parts = line.components(separatedBy: ",")
+			guard let date = DependencyInjector.util.calendar.date(from: parts[0...1].joined(), format: "M/d/yy HH:mm") else {
+				throw InvalidFileFormatError("Unexpected date / time on line \(lineNumber): \(parts[0...1].joined())")
+			}
+			if latestDate == nil { latestDate = date }
+			if date.isAfterDate(latestDate, granularity: .nanosecond) {
+				latestDate = date
+			}
+			if shouldImport(date) {
+				guard let rating = Double(parts[2]) else {
+					throw InvalidFileFormatError("Invalid rating on line \(lineNumber): \(parts[2])")
+				}
+				try createAndScaleMood(withDate: date, andRating: rating)
+				currentNote = parts[3...].joined()
+			} else {
+				currentMood = nil
+			}
+		} else if lineNumber == 2 { // first non-header row
+			throw InvalidFileFormatError("Invalid or missing date / time for mood on line 2")
+		} else {
+			if !currentNote.isEmpty {
+				currentNote += "\n"
+			}
+			currentNote += line
+		}
+	}
+
+	private final func createAndScaleMood(withDate date: Date, andRating rating: Double) throws {
+		currentMood = try DependencyInjector.sample.mood()
+		currentMood!.timestamp = date
+		currentMood!.minRating = 1
+		currentMood!.maxRating = 7
+		currentMood!.rating = rating
+		currentMood!.setSource(.wellness)
+		currentMood!.partOfCurrentImport = true
+		if DependencyInjector.settings.scaleMoodsOnImport {
+			DependencyInjector.util.mood.scaleMood(currentMood!)
+		}
+	}
 
 	private final func string(_ str: String, matches regex: String) -> Bool {
 		return str.range(of: regex, options: .regularExpression, range: nil, locale: nil) != nil
