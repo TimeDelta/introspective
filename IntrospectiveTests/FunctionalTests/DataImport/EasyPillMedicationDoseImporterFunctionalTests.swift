@@ -30,8 +30,10 @@ final class EasyPillMedicationDoseImporterFunctionalTests: ImporterTest {
 	private static let time3 = "12:53"
 	private static let date3 = CalendarUtilImpl().date(from: date3Text + " " + time3, format: "M/d/yy HH:mm")!
 
+	private static let headerRow = "Pill name,Taken on,Time"
+
 	private static let validImportFileText = """
-Pill name,Taken on,Time
+\(headerRow)
 \(medicationName1),\(date1Text),\(time1)
 \(medicationName2),\(date2Text),\(time2)
 \(medicationName3),\(date3Text),\(time3)
@@ -43,6 +45,8 @@ Pill name,Taken on,Time
 		super.setUp()
 		importer = try! DependencyInjector.db.new(EasyPillMedicationDoseImporterImpl.self)
 	}
+
+	// MARK: - importData() - Valid Data
 
 	func testGivenValidDataWithImportNewDataOnlyEqualToFalse_importData_correctlyImportsData() throws {
 		// given
@@ -95,6 +99,22 @@ Pill name,Taken on,Time
 		XCTAssertEqual(importer.lastImport, Me.date1)
 	}
 
+	func testGivenValidData_importData_cleansUpCurrentImportMetaData() throws {
+		// given
+		createAllMedications()
+		useInput(Me.validImportFileText)
+
+		// when
+		try importer.importData(from: url)
+
+		// then
+		XCTAssertFalse((try dose(named: Me.medicationName1, at: Me.date1))?.partOfCurrentImport ?? true)
+		XCTAssertFalse((try dose(named: Me.medicationName2, at: Me.date2))?.partOfCurrentImport ?? true)
+		XCTAssertFalse((try dose(named: Me.medicationName3, at: Me.date3))?.partOfCurrentImport ?? true)
+	}
+
+	// MARK: - importData() - Invalid Data
+
 	func testGivenMedicationNameDoesNotExist_importData_throwsDisplayableError() throws {
 		// given
 		useInput(Me.validImportFileText)
@@ -118,6 +138,37 @@ Pill name,Taken on,Time
 		}
 	}
 
+	func testGivenErrorThrownAfterValidDosesCreated_importData_deletesDosesFromCurrentImport() throws {
+		// given
+		useInput("""
+\(Me.headerRow)
+\(Me.medicationName1),\(Me.date1Text),\(Me.time1)
+abc,,
+""")
+
+		// when
+		XCTAssertThrowsError(try importer.importData(from: url)) { error in
+			// then
+			XCTAssertFalse(try! doseWasImported(for: Me.medicationName1, at: Me.date1))
+		}
+	}
+
+	func testGivenInvalidData_importData_doesNotDeleteDosesNotPartOfImport() throws {
+		// given
+		useInput("fdhj\n\n")
+		let existingMedicationName = "fdsjho"
+		let existingDoseDate = Date()
+		MedicationDataTestUtil.createDose(medication: MedicationDataTestUtil.createMedication(name: existingMedicationName), timestamp: existingDoseDate)
+
+		// when
+		XCTAssertThrowsError(try importer.importData(from: url)) { error in
+			// then
+			XCTAssert(try! doseWasImported(for: existingMedicationName, at: existingDoseDate))
+		}
+	}
+
+	// MARK: - resetLastImportDate()
+
 	func testGivenNonNilLastImportDate_resetLastImportDate_setsLastImportToNil() throws {
 		// given
 		importer.lastImport = Date()
@@ -137,13 +188,17 @@ Pill name,Taken on,Time
 	}
 
 	private final func doseWasImported(for medicationName: String, at date: Date) throws -> Bool {
+		return try dose(named: medicationName, at: date) != nil
+	}
+
+	private final func dose(named medicationName: String, at date: Date) throws -> MedicationDose? {
 		let doses = try getDosesForMedicationNamed(medicationName)
 		for dose in doses {
 			if dose.timestamp == date {
-				return true
+				return dose
 			}
 		}
-		return false
+		return nil
 	}
 
 	private final func getDosesForMedicationNamed(_ name: String) throws -> [MedicationDose] {

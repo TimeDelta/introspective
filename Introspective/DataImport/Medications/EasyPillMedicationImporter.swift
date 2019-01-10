@@ -24,56 +24,24 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 	public final let sourceName: String = "EasyPill"
 	public final var importOnlyNewData: Bool = true
 
+	private final var lineNumber = -1
 	private final let log = Log()
 
 	// MARK: - Functions
 
 	public final func importData(from url: URL) throws {
 		let contents = try DependencyInjector.util.io.contentsOf(url)
-		var lineNumber = 2
-		for line in contents.components(separatedBy: "\n")[1...] {
-			let parts = line.components(separatedBy: ",")
-			var medicationName = try getColumn(0, from: parts, errorMessage: "Line \(lineNumber) is empty.")
-			var currentIndex = 1
-			if medicationName.isEmpty {
-				let nextColumnText = try getColumn(currentIndex, from: parts, errorMessage: "No name found on line \(lineNumber).")
-				medicationName += "," + nextColumnText
-				currentIndex += 1
+		lineNumber = 2
+		do {
+			for line in contents.components(separatedBy: "\n")[1...] {
+				try processLine(line)
+				lineNumber += 1
 			}
-			let originalNotesIndex = currentIndex
-			var notes = try getColumn(currentIndex, from: parts, errorMessage: "Line \(lineNumber) does not have the right number of columns.")
-			currentIndex += 1
-			var dosageText = try getColumn(currentIndex, from: parts, errorMessage: "Line \(lineNumber) does not have the right number of columns.")
-			let originalFrequencyIndex = currentIndex + 1
-			var frequencyText = try getColumn(originalFrequencyIndex, from: parts, errorMessage: "Line \(lineNumber) does not have the right number of columns.")
-			var additionalColumns = 0
-			while !frequencyTextIsValid(frequencyText) && parts.count > currentIndex + additionalColumns + 1 {
-				additionalColumns += 1
-				if frequencyText.starts(with: "every") && isNumber(String(frequencyText.suffix(1))) {
-					frequencyText += "." + parts[originalFrequencyIndex + additionalColumns]
-				} else {
-					frequencyText = parts[originalFrequencyIndex + additionalColumns]
-				}
-			}
-			if parts.count <= currentIndex + additionalColumns + 1 {
-				throw InvalidFileFormatError("Unable to align columns on line \(lineNumber).")
-			}
-			if additionalColumns > 0 {
-				var numberOfFrequencyColumns = 1
-				if frequencyText.starts(with: "every") {
-					numberOfFrequencyColumns = 2
-				}
-				dosageText = parts[originalFrequencyIndex + additionalColumns - numberOfFrequencyColumns]
-				let newNotesMaxIndex = originalFrequencyIndex + additionalColumns - numberOfFrequencyColumns - 1
-				notes = parts[originalNotesIndex...newNotesMaxIndex].joined(separator: ",")
-			}
-			currentIndex = originalFrequencyIndex + additionalColumns + 3
-			let startedOnText = try getColumn(currentIndex, from: parts, errorMessage: "Could not get started on date from line \(lineNumber).")
-			let startedOn = DependencyInjector.util.calendar.date(from: startedOnText, format: "M/d/yy")!
-
-			try storeMedication(named: medicationName, startedOn: startedOn, dosage: Dosage(dosageText), notes: notes, frequencyText: frequencyText)
-
-			lineNumber += 1
+			lastImport = Date()
+			try DependencyInjector.db.save()
+		} catch {
+			log.error("Failed to import medications from EasyPill: %@", errorInfo(error))
+			throw error
 		}
 	}
 
@@ -83,6 +51,49 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 	}
 
 	// MARK: - Helper Functions
+
+	private final func processLine(_ line: String) throws {
+		let parts = line.components(separatedBy: ",")
+		var medicationName = try getColumn(0, from: parts, errorMessage: "Line \(lineNumber) is empty.")
+		var currentIndex = 1
+		if medicationName.isEmpty {
+			let nextColumnText = try getColumn(currentIndex, from: parts, errorMessage: "No name found on line \(lineNumber).")
+			medicationName += "," + nextColumnText
+			currentIndex += 1
+		}
+		let originalNotesIndex = currentIndex
+		var notes = try getColumn(currentIndex, from: parts, errorMessage: "Line \(lineNumber) does not have the right number of columns.")
+		currentIndex += 1
+		var dosageText = try getColumn(currentIndex, from: parts, errorMessage: "Line \(lineNumber) does not have the right number of columns.")
+		let originalFrequencyIndex = currentIndex + 1
+		var frequencyText = try getColumn(originalFrequencyIndex, from: parts, errorMessage: "Line \(lineNumber) does not have the right number of columns.")
+		var additionalColumns = 0
+		while !frequencyTextIsValid(frequencyText) && parts.count > currentIndex + additionalColumns + 1 {
+			additionalColumns += 1
+			if frequencyText.starts(with: "every") && isNumber(String(frequencyText.suffix(1))) {
+				frequencyText += "." + parts[originalFrequencyIndex + additionalColumns]
+			} else {
+				frequencyText = parts[originalFrequencyIndex + additionalColumns]
+			}
+		}
+		if parts.count <= currentIndex + additionalColumns + 1 {
+			throw InvalidFileFormatError("Unable to align columns on line \(lineNumber).")
+		}
+		if additionalColumns > 0 {
+			var numberOfFrequencyColumns = 1
+			if frequencyText.starts(with: "every") {
+				numberOfFrequencyColumns = 2
+			}
+			dosageText = parts[originalFrequencyIndex + additionalColumns - numberOfFrequencyColumns]
+			let newNotesMaxIndex = originalFrequencyIndex + additionalColumns - numberOfFrequencyColumns - 1
+			notes = parts[originalNotesIndex...newNotesMaxIndex].joined(separator: ",")
+		}
+		currentIndex = originalFrequencyIndex + additionalColumns + 3
+		let startedOnText = try getColumn(currentIndex, from: parts, errorMessage: "Could not get started on date from line \(lineNumber).")
+		let startedOn = DependencyInjector.util.calendar.date(from: startedOnText, format: "M/d/yy")!
+
+		try storeMedication(named: medicationName, startedOn: startedOn, dosage: Dosage(dosageText), notes: notes, frequencyText: frequencyText)
+	}
 
 	private final func getColumn(_ index: Int, from parts: [String], errorMessage: String? = nil) throws -> String {
 		guard parts.count > index else { throw InvalidFileFormatError(errorMessage) }

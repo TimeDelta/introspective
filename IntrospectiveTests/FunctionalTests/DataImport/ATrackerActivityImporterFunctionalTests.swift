@@ -172,6 +172,22 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 		XCTAssertFalse(try activityExists(name: Me.activityName1, from: Me.startDate1, to: nil, description: Me.description1, note: nil, tag: Me.category1))
 	}
 
+	func testGivenValidData_importData_cleansUpCurrentImportMetaData() throws {
+		// given
+		useInput(Me.validInput)
+
+		// when
+		try importer.importData(from: url)
+
+		// then
+		let activity1 = try activity(named: Me.activityName1, from: Me.startDate1, to: Me.endDate1, description: Me.description1, note: Me.note1, tag: Me.category1)
+		let activity2 = try activity(named: Me.activityName2, from: Me.startDate2, to: Me.endDate2, description: Me.description2, note: Me.note2, tag: Me.category2)
+		let activity3 = try activity(named: Me.activityName3, from: Me.startDate3, to: Me.endDate3, description: Me.description3, note: Me.note3, tag: Me.category3)
+		XCTAssertFalse(activity1?.partOfCurrentImport ?? true)
+		XCTAssertFalse(activity2?.partOfCurrentImport ?? true)
+		XCTAssertFalse(activity3?.partOfCurrentImport ?? true)
+	}
+
 	// MARK: - importData() - Invalid Data
 
 	func testGivenInvalidStartDateFormat_importData_throwsInvalidFileFormatError() throws {
@@ -297,7 +313,13 @@ not enough columns
 		return try DependencyInjector.db.query(ActivityDefinition.fetchRequest()).count == 0
 	}
 
-	private final func activityExists(name: String, from startDate: Date, to endDate: Date?, description: String?, note: String?, tag: String?) throws -> Bool {
+	private final func activityExists(name: String, from startDate: Date, to endDate: Date?, description: String?, note: String?, tag: String?)
+	throws -> Bool {
+		return try activity(named: name, from: startDate, to: endDate, description: description, note: note, tag: tag) != nil
+	}
+
+	private final func activity(named name: String, from startDate: Date, to endDate: Date?, description: String?, note: String?, tag: String?)
+	throws -> Activity? {
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
 		var predicates = [NSPredicate]()
 		predicates.append(NSPredicate(format: "definition.name ==[cd] %@ AND startDate == %@", name, startDate as NSDate))
@@ -317,7 +339,10 @@ not enough columns
 		}
 		fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
 		let activities = try DependencyInjector.db.query(fetchRequest)
-		return activities.count > 0
+		if activities.count > 0 {
+			return activities[0]
+		}
+		return nil
 	}
 
 	private final func objectExists(_ object: NSManagedObject) throws -> Bool {

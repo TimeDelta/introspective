@@ -24,33 +24,33 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 	public final let sourceName: String = "EasyPill"
 	public final var importOnlyNewData: Bool = true
 
+	private final var lineNumber: Int = -1
 	private final let log = Log()
 
 	// MARK: - Functions
 
 	public final func importData(from url: URL) throws {
 		let contents = try DependencyInjector.util.io.contentsOf(url)
-		var lineNumber = 2
+		lineNumber = 2
 		var latestDate: Date! = lastImport // use temp var to avoid bug where initial import doesn't import anything
-		for line in contents.components(separatedBy: "\n")[1...] {
-			let parts = line.components(separatedBy: ",")
-			var medicationName = try getColumn(0, from: parts, errorMessage: "Line \(lineNumber) is empty.")
-			var currentIndex = 1
-
-			let date = try parseDate(from: parts, startingAt: &currentIndex, lineNumber: lineNumber, medicationName: &medicationName)
-
-			if latestDate == nil { latestDate = date }
-			if date.isAfterDate(latestDate, granularity: .nanosecond) {
-				latestDate = date
+		do {
+			for line in contents.components(separatedBy: "\n")[1...] {
+				try processLine(line, latestDate: &latestDate)
+				lineNumber += 1
 			}
-			if shouldImport(date) {
-				try storeDose(for: medicationName, withDate: date)
+			try DependencyInjector.util.importer.cleanUpImportedData(forType: MedicationDose.self)
+			lastImport = latestDate
+			try DependencyInjector.db.save()
+		} catch {
+			log.error("Failed to import medication doses from EasyPill: %@", errorInfo(error))
+			do {
+				try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: MedicationDose.fetchRequest())
+			} catch {
+				log.error("Failed to delete medication doses from current import: %@", errorInfo(error))
 			}
 
-			lineNumber += 1
+			throw error
 		}
-		lastImport = latestDate
-		try DependencyInjector.db.save()
 	}
 
 	public final func resetLastImportDate() throws {
@@ -59,6 +59,22 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 	}
 
 	// MARK: - Helper Functions
+
+	private final func processLine(_ line: String, latestDate: inout Date!) throws {
+		let parts = line.components(separatedBy: ",")
+		var medicationName = try getColumn(0, from: parts, errorMessage: "Line \(lineNumber) is empty.")
+		var currentIndex = 1
+
+		let date = try parseDate(from: parts, startingAt: &currentIndex, lineNumber: lineNumber, medicationName: &medicationName)
+
+		if latestDate == nil { latestDate = date }
+		if date.isAfterDate(latestDate, granularity: .nanosecond) {
+			latestDate = date
+		}
+		if shouldImport(date) {
+			try storeDose(for: medicationName, withDate: date)
+		}
+	}
 
 	private final func getColumn(_ index: Int, from parts: [String], errorMessage: String? = nil) throws -> String {
 		guard parts.count > index else { throw InvalidFileFormatError(errorMessage) }
@@ -84,44 +100,42 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 	}
 
 	private final func storeDose(for medicationName: String, withDate date: Date) throws {
-		let medicationsWithNameFetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
-		medicationsWithNameFetchRequest.predicate = NSPredicate(format: "%K ==[cd] %@", "name", medicationName)
-		let medicationsWithName: [Medication]
-		do {
-			medicationsWithName = try DependencyInjector.db.query(medicationsWithNameFetchRequest)
-		} catch {
-			log.error("Failed to check for existing medications named '%@': %@", medicationName, errorInfo(error))
-			throw GenericDisplayableError(
-				title: "Data Access Error",
-				description: "Unable to check for medication named \(medicationName).")
-		}
-
+		let medicationsWithName = try medicationsNamed(medicationName)
 		if medicationsWithName.count == 0 {
 			throw GenericDisplayableError(
 				title: "Medication does not exist",
 				description: "No medications named '\(medicationName)' exist.")
 		}
 
-		var doseCreated = false
 		var dose: MedicationDose!
 		do {
 			dose = try DependencyInjector.sample.medicationDose()
-			doseCreated = true
 			let medication = try DependencyInjector.db.pull(savedObject: medicationsWithName[0], fromSameContextAs: dose)
 			dose.medication = medication
 			dose.timestamp = date
 			dose.setSource(.easyPill)
+			dose.partOfCurrentImport = true
 			medication.addToDoses(dose)
 			try DependencyInjector.db.save()
 		} catch {
 			log.error("Failed to create and modify medication dose: %@", errorInfo(error))
-			if doseCreated {
-				try? DependencyInjector.db.delete(dose)
-			}
 			let dateText = DependencyInjector.util.calendar.string(for: date, dateStyle: .medium, timeStyle: .short)
 			throw GenericDisplayableError(
 				title: "Could not save dose",
 				description: "Dose of \(medicationName) taken on \(dateText)")
+		}
+	}
+
+	private final func medicationsNamed(_ medicationName: String) throws -> [Medication] {
+		let medicationsWithNameFetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
+		medicationsWithNameFetchRequest.predicate = NSPredicate(format: "%K ==[cd] %@", "name", medicationName)
+		do {
+			return try DependencyInjector.db.query(medicationsWithNameFetchRequest)
+		} catch {
+			log.error("Failed to check for existing medications named '%@': %@", medicationName, errorInfo(error))
+			throw GenericDisplayableError(
+				title: "Data Access Error",
+				description: "Unable to check for medication named \(medicationName).")
 		}
 	}
 

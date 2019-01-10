@@ -47,7 +47,7 @@ public final class ImporterUtilImpl: ImporterUtil {
 			let fetchRequest = NSFetchRequest<Type>(entityName: type.entityName)
 			fetchRequest.predicate = NSPredicate(format: "partOfCurrentImport == true")
 			let importedEntities = try DependencyInjector.db.query(fetchRequest)
-			for var entity in importedEntities {
+			for entity in importedEntities {
 				entity.partOfCurrentImport = false
 			}
 			try DependencyInjector.db.save()

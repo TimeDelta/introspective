@@ -11,6 +11,7 @@ import Foundation
 
 public class MedicationDataTestUtil {
 
+	@discardableResult
 	public static func createMedication(
 		name: String = "",
 		frequency: Frequency? = nil,
@@ -30,6 +31,7 @@ public class MedicationDataTestUtil {
 		return medication
 	}
 
+	@discardableResult
 	public static func createDose(medication: Medication = createMedication(), dosage: Dosage? = nil, timestamp: Date = Date()) -> MedicationDose {
 		let dose = try! DependencyInjector.sample.medicationDose()
 		let sameContextMedication = try! DependencyInjector.db.pull(savedObject: medication, fromSameContextAs: dose)

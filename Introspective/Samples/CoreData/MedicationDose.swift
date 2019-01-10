@@ -10,7 +10,7 @@
 import Foundation
 import CoreData
 
-public final class MedicationDose: NSManagedObject, CoreDataSample {
+public final class MedicationDose: Importable, CoreDataSample {
 
 	private typealias Me = MedicationDose
 

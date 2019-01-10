@@ -138,6 +138,22 @@ final class WellnessMoodImporterFunctionalTests: ImporterTest {
 		XCTAssertEqual(importer.lastImport, Me.date5)
 	}
 
+	func testGivenValidData_importData_cleansUpCurrentImportMetaData() throws {
+		// given
+		scaleMoods = false
+		useInput(Me.validImportFileText)
+
+		// when
+		try importer.importData(from: url)
+
+		// then
+		XCTAssertFalse(mood(at: Me.date1, withRating: Me.rating1, andNote: Me.note1)?.partOfCurrentImport ?? true)
+		XCTAssertFalse(mood(at: Me.date2, withRating: Me.rating2, andNote: Me.note2)?.partOfCurrentImport ?? true)
+		XCTAssertFalse(mood(at: Me.date3, withRating: Me.rating3, andNote: Me.note3)?.partOfCurrentImport ?? true)
+		XCTAssertFalse(mood(at: Me.date4, withRating: Me.rating4, andNote: Me.note4)?.partOfCurrentImport ?? true)
+		XCTAssertFalse(mood(at: Me.date5, withRating: Me.rating5, andNote: nil)?.partOfCurrentImport ?? true)
+	}
+
 	// MARK: - importData() - Invalid Data
 
 	func testGivenWrongNumberOfColumnsInHeaderRow_importData_stillCorrectlyImports() throws {
@@ -251,7 +267,7 @@ Date,Time,Rating,Note
 		// when
 		XCTAssertThrowsError(try importer.importData(from: url)) { error in
 			// then
-			XCTAssert(!mood1WasImported(), "Mood 1 was not deleted after error thrown")
+			XCTAssertFalse(mood1WasImported(), "Mood 1 was not deleted after error thrown")
 		}
 	}
 
@@ -308,6 +324,10 @@ Date,Time,Rating,Note
 	}
 
 	private final func moodWasImported(at timestamp: Date, withRating rating: Double, andNote note: String?) -> Bool {
+		return mood(at: timestamp, withRating: rating, andNote: note) != nil
+	}
+
+	private final func mood(at timestamp: Date, withRating rating: Double, andNote note: String?) -> MoodImpl? {
 		let scaledRating = scaleMoods ? scale(rating) : rating
 		let moodsFetchRequest: NSFetchRequest<MoodImpl> = MoodImpl.fetchRequest()
 		moodsFetchRequest.predicate = NSPredicate(
@@ -323,7 +343,11 @@ Date,Time,Rating,Note
 			notePredicate = NSPredicate(format: "%K == nil", "note")
 		}
 		moodsFetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [moodsFetchRequest.predicate!, notePredicate])
-		return try! DependencyInjector.db.query(moodsFetchRequest).count > 0
+		let moods = try! DependencyInjector.db.query(moodsFetchRequest)
+		if moods.count > 0 {
+			return moods[0]
+		}
+		return nil
 	}
 
 	private final func scale(_ rating: Double) -> Double {
