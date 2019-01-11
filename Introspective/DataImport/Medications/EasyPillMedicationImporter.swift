@@ -26,6 +26,9 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 
 	private final var lineNumber = -1
 	private final let log = Log()
+	private final var cancelled = false
+
+	private final let uuid = UUID()
 
 	// MARK: - Functions
 
@@ -34,20 +37,42 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 		lineNumber = 2
 		do {
 			for line in contents.components(separatedBy: "\n")[1...] {
+				if cancelled { return }
 				try processLine(line)
 				lineNumber += 1
 			}
+			try DependencyInjector.util.importer.cleanUpImportedData(forType: Medication.self)
 			lastImport = Date()
-			try DependencyInjector.db.save()
+			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 		} catch {
 			log.error("Failed to import medications from EasyPill: %@", errorInfo(error))
+			do {
+				try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: Medication.fetchRequest())
+			} catch {
+				log.error("Failed to delete medications from current import: %@", errorInfo(error))
+			}
 			throw error
+		}
+	}
+
+	public final func cancel() {
+		// because there could me multiple imports from the same source happening simultaneously and we want to cancel all of them
+		cancelled = true
+		do {
+			try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: Medication.fetchRequest())
+		} catch {
+			log.error("Failed to delete medications from current import on cancel: %@", errorInfo(error))
 		}
 	}
 
 	public final func resetLastImportDate() throws {
 		lastImport = nil
 		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+	}
+
+	public final func equalTo(_ otherImporter: Importer) -> Bool {
+		guard let other = otherImporter as? EasyPillMedicationImporterImpl else { return false }
+		return uuid == other.uuid
 	}
 
 	// MARK: - Helper Functions
@@ -115,10 +140,12 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 
 		if medicationsWithCurrentName.count == 0 {
 			do {
+				if cancelled { return }
 				let medication = try DependencyInjector.db.new(Medication.self)
 				let allMedications = try DependencyInjector.db.query(Medication.fetchRequest())
 				medication.recordScreenIndex = Int16(allMedications.count)
 				medication.setSource(.easyPill)
+				medication.partOfCurrentImport = true
 				try setMedication(medication, name: name, startedOn: startedOn, dosage: dosage, notes: notes, frequencyText: frequencyText)
 			} catch {
 				throw GenericDisplayableError(
@@ -147,6 +174,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 			medication.notes = notes
 		}
 		medication.startedOn = startedOn
+		if cancelled { return }
 		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 	}
 

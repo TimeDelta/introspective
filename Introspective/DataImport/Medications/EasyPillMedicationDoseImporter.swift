@@ -26,6 +26,9 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 
 	private final var lineNumber: Int = -1
 	private final let log = Log()
+	private final var cancelled = false
+
+	private final let uuid = UUID()
 
 	// MARK: - Functions
 
@@ -35,12 +38,13 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 		var latestDate: Date! = lastImport // use temp var to avoid bug where initial import doesn't import anything
 		do {
 			for line in contents.components(separatedBy: "\n")[1...] {
+				if cancelled { return }
 				try processLine(line, latestDate: &latestDate)
 				lineNumber += 1
 			}
 			try DependencyInjector.util.importer.cleanUpImportedData(forType: MedicationDose.self)
 			lastImport = latestDate
-			try DependencyInjector.db.save()
+			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 		} catch {
 			log.error("Failed to import medication doses from EasyPill: %@", errorInfo(error))
 			do {
@@ -53,9 +57,23 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 		}
 	}
 
+	public final func cancel() {
+		cancelled = true
+		do {
+			try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: MedicationDose.fetchRequest())
+		} catch {
+			log.error("Failed to delete medication doses from current import on cancel: %@", errorInfo(error))
+		}
+	}
+
 	public final func resetLastImportDate() throws {
 		lastImport = nil
-		try DependencyInjector.db.save()
+		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+	}
+
+	public final func equalTo(_ otherImporter: Importer) -> Bool {
+		guard let other = otherImporter as? EasyPillMedicationDoseImporterImpl else { return false }
+		return uuid == other.uuid
 	}
 
 	// MARK: - Helper Functions

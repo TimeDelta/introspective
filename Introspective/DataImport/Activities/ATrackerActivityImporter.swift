@@ -35,6 +35,9 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 
 	private final var lineNumber: Int = -1
 	private final let log = Log()
+	private final var cancelled = false
+
+	private final let uuid = UUID()
 
 	// MARK: - Functions
 
@@ -44,6 +47,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		var latestDate: Date! = lastImport // use temp var to avoid bug where initial import doesn't import anything
 		do {
 			while csv.next() != nil {
+				if cancelled { return }
 				try importActivity(from: csv, latestDate: &latestDate)
 				lineNumber += 1
 				let _ = csv.dropFirst()
@@ -69,9 +73,26 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		}
 	}
 
+	public final func cancel() {
+		cancelled = true
+		do {
+			try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: Activity.fetchRequest())
+			// make sure to only attempt to delete imported definitions if imported activities successfully deleted
+			// otherwise will lead to invalid state in data persistence layer
+			try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: ActivityDefinition.fetchRequest())
+		} catch {
+			log.error("Failed to delete activities / definitions from current import on cancel: %@", errorInfo(error))
+		}
+	}
+
 	public func resetLastImportDate() throws {
 		lastImport = nil
 		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+	}
+
+	public final func equalTo(_ otherImporter: Importer) -> Bool {
+		guard let other = otherImporter as? ATrackerActivityImporterImpl else { return false }
+		return uuid == other.uuid
 	}
 
 	// MARK: - Helper Functions
@@ -80,6 +101,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	private final func importActivity(from csv: CSVReader, latestDate: inout Date!) throws {
 		var definition: ActivityDefinition! = try retrieveExistingDefinition(from: csv)
 		if definition == nil {
+			if cancelled { return }
 			definition = try createDefinition(from: csv)
 		}
 
@@ -92,6 +114,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		if let activity = try unfinishedActivity(at: startDate, for: definition) {
 			try update(activity, from: csv)
 		} else if shouldImport(startDate) {
+			if cancelled { return }
 			try createActivity(for: definition, startingAt: startDate, from: csv)
 		}
 	}

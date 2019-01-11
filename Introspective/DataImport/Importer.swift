@@ -17,4 +17,9 @@ public protocol Importer {
 
 	func importData(from url: URL) throws
 	func resetLastImportDate() throws
+	/// - Note: This function is idempotent
+	func cancel()
+
+	/// - Returns: True if and only if the passed importer has the same internal unique id as this importer.
+	func equalTo(_ otherImporter: Importer) -> Bool
 }

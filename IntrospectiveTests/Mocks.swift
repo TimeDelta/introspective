@@ -134,10 +134,32 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
 		}
     }
 
+    func cancel() {
+        addInvocation(.m_cancel)
+		let perform = methodPerformValue(.m_cancel) as? () -> Void
+		perform?()
+    }
+
+    func equalTo(_ otherImporter: Importer) -> Bool {
+        addInvocation(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`)))
+		let perform = methodPerformValue(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`))) as? (Importer) -> Void
+		perform?(`otherImporter`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for equalTo(_ otherImporter: Importer). Use given")
+			Failure("Stub return value not specified for equalTo(_ otherImporter: Importer). Use given")
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_importData__from_url(Parameter<URL>)
         case m_resetLastImportDate
+        case m_cancel
+        case m_equalTo__otherImporter(Parameter<Importer>)
         case p_dataTypePluralName_get
         case p_sourceName_get
         case p_lastImport_get
@@ -150,6 +172,11 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
                 guard Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher) else { return false } 
                 return true 
             case (.m_resetLastImportDate, .m_resetLastImportDate):
+                return true 
+            case (.m_cancel, .m_cancel):
+                return true 
+            case (.m_equalTo__otherImporter(let lhsOtherimporter), .m_equalTo__otherImporter(let rhsOtherimporter)):
+                guard Parameter.compare(lhs: lhsOtherimporter, rhs: rhsOtherimporter, with: matcher) else { return false } 
                 return true 
             case (.p_dataTypePluralName_get,.p_dataTypePluralName_get): return true
             case (.p_sourceName_get,.p_sourceName_get): return true
@@ -164,6 +191,8 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
             switch self {
             case let .m_importData__from_url(p0): return p0.intValue
             case .m_resetLastImportDate: return 0
+            case .m_cancel: return 0
+            case let .m_equalTo__otherImporter(p0): return p0.intValue
             case .p_dataTypePluralName_get: return 0
             case .p_sourceName_get: return 0
             case .p_lastImport_get: return 0
@@ -194,6 +223,20 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
             return Given(method: .p_importOnlyNewData_get, products: defaultValue.map({ Product.return($0) }))
         }
 
+        static func equalTo(_ otherImporter: Parameter<Importer>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
+		static func equalTo(otherImporter: Parameter<Importer>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) }))
+        }
+        static func equalTo(_ otherImporter: Parameter<Importer>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
         static func importData(from url: Parameter<URL>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) }))
         }
@@ -221,6 +264,10 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
 
         static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
         static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
+        static func cancel() -> Verify { return Verify(method: .m_cancel)}
+        static func equalTo(_ otherImporter: Parameter<Importer>) -> Verify { return Verify(method: .m_equalTo__otherImporter(`otherImporter`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
+		static func equalTo(otherImporter: Parameter<Importer>) -> Verify { return Verify(method: .m_equalTo__otherImporter(`otherImporter`))}
         static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
         static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
         static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
@@ -237,6 +284,16 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
         }
         static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_resetLastImportDate, performs: perform)
+        }
+        static func cancel(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_cancel, performs: perform)
+        }
+        static func equalTo(_ otherImporter: Parameter<Importer>, perform: @escaping (Importer) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__otherImporter(`otherImporter`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
+		static func equalTo(otherImporter: Parameter<Importer>, perform: @escaping (Importer) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__otherImporter(`otherImporter`), performs: perform)
         }
     }
 
@@ -3374,10 +3431,32 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
 		}
     }
 
+    func cancel() {
+        addInvocation(.m_cancel)
+		let perform = methodPerformValue(.m_cancel) as? () -> Void
+		perform?()
+    }
+
+    func equalTo(_ otherImporter: Importer) -> Bool {
+        addInvocation(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`)))
+		let perform = methodPerformValue(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`))) as? (Importer) -> Void
+		perform?(`otherImporter`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for equalTo(_ otherImporter: Importer). Use given")
+			Failure("Stub return value not specified for equalTo(_ otherImporter: Importer). Use given")
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_importData__from_url(Parameter<URL>)
         case m_resetLastImportDate
+        case m_cancel
+        case m_equalTo__otherImporter(Parameter<Importer>)
         case p_dataTypePluralName_get
         case p_sourceName_get
         case p_lastImport_get
@@ -3390,6 +3469,11 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
                 guard Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher) else { return false } 
                 return true 
             case (.m_resetLastImportDate, .m_resetLastImportDate):
+                return true 
+            case (.m_cancel, .m_cancel):
+                return true 
+            case (.m_equalTo__otherImporter(let lhsOtherimporter), .m_equalTo__otherImporter(let rhsOtherimporter)):
+                guard Parameter.compare(lhs: lhsOtherimporter, rhs: rhsOtherimporter, with: matcher) else { return false } 
                 return true 
             case (.p_dataTypePluralName_get,.p_dataTypePluralName_get): return true
             case (.p_sourceName_get,.p_sourceName_get): return true
@@ -3404,6 +3488,8 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
             switch self {
             case let .m_importData__from_url(p0): return p0.intValue
             case .m_resetLastImportDate: return 0
+            case .m_cancel: return 0
+            case let .m_equalTo__otherImporter(p0): return p0.intValue
             case .p_dataTypePluralName_get: return 0
             case .p_sourceName_get: return 0
             case .p_lastImport_get: return 0
@@ -3434,6 +3520,20 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
             return Given(method: .p_importOnlyNewData_get, products: defaultValue.map({ Product.return($0) }))
         }
 
+        static func equalTo(_ otherImporter: Parameter<Importer>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
+		static func equalTo(otherImporter: Parameter<Importer>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) }))
+        }
+        static func equalTo(_ otherImporter: Parameter<Importer>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
         static func importData(from url: Parameter<URL>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) }))
         }
@@ -3461,6 +3561,10 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
 
         static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
         static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
+        static func cancel() -> Verify { return Verify(method: .m_cancel)}
+        static func equalTo(_ otherImporter: Parameter<Importer>) -> Verify { return Verify(method: .m_equalTo__otherImporter(`otherImporter`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
+		static func equalTo(otherImporter: Parameter<Importer>) -> Verify { return Verify(method: .m_equalTo__otherImporter(`otherImporter`))}
         static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
         static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
         static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
@@ -3477,6 +3581,16 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
         }
         static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_resetLastImportDate, performs: perform)
+        }
+        static func cancel(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_cancel, performs: perform)
+        }
+        static func equalTo(_ otherImporter: Parameter<Importer>, perform: @escaping (Importer) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__otherImporter(`otherImporter`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
+		static func equalTo(otherImporter: Parameter<Importer>, perform: @escaping (Importer) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__otherImporter(`otherImporter`), performs: perform)
         }
     }
 
@@ -3621,10 +3735,32 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
 		}
     }
 
+    func cancel() {
+        addInvocation(.m_cancel)
+		let perform = methodPerformValue(.m_cancel) as? () -> Void
+		perform?()
+    }
+
+    func equalTo(_ otherImporter: Importer) -> Bool {
+        addInvocation(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`)))
+		let perform = methodPerformValue(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`))) as? (Importer) -> Void
+		perform?(`otherImporter`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for equalTo(_ otherImporter: Importer). Use given")
+			Failure("Stub return value not specified for equalTo(_ otherImporter: Importer). Use given")
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_importData__from_url(Parameter<URL>)
         case m_resetLastImportDate
+        case m_cancel
+        case m_equalTo__otherImporter(Parameter<Importer>)
         case p_dataTypePluralName_get
         case p_sourceName_get
         case p_lastImport_get
@@ -3637,6 +3773,11 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
                 guard Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher) else { return false } 
                 return true 
             case (.m_resetLastImportDate, .m_resetLastImportDate):
+                return true 
+            case (.m_cancel, .m_cancel):
+                return true 
+            case (.m_equalTo__otherImporter(let lhsOtherimporter), .m_equalTo__otherImporter(let rhsOtherimporter)):
+                guard Parameter.compare(lhs: lhsOtherimporter, rhs: rhsOtherimporter, with: matcher) else { return false } 
                 return true 
             case (.p_dataTypePluralName_get,.p_dataTypePluralName_get): return true
             case (.p_sourceName_get,.p_sourceName_get): return true
@@ -3651,6 +3792,8 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
             switch self {
             case let .m_importData__from_url(p0): return p0.intValue
             case .m_resetLastImportDate: return 0
+            case .m_cancel: return 0
+            case let .m_equalTo__otherImporter(p0): return p0.intValue
             case .p_dataTypePluralName_get: return 0
             case .p_sourceName_get: return 0
             case .p_lastImport_get: return 0
@@ -3681,6 +3824,20 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
             return Given(method: .p_importOnlyNewData_get, products: defaultValue.map({ Product.return($0) }))
         }
 
+        static func equalTo(_ otherImporter: Parameter<Importer>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
+		static func equalTo(otherImporter: Parameter<Importer>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) }))
+        }
+        static func equalTo(_ otherImporter: Parameter<Importer>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
         static func importData(from url: Parameter<URL>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) }))
         }
@@ -3708,6 +3865,10 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
 
         static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
         static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
+        static func cancel() -> Verify { return Verify(method: .m_cancel)}
+        static func equalTo(_ otherImporter: Parameter<Importer>) -> Verify { return Verify(method: .m_equalTo__otherImporter(`otherImporter`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
+		static func equalTo(otherImporter: Parameter<Importer>) -> Verify { return Verify(method: .m_equalTo__otherImporter(`otherImporter`))}
         static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
         static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
         static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
@@ -3724,6 +3885,16 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
         }
         static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_resetLastImportDate, performs: perform)
+        }
+        static func cancel(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_cancel, performs: perform)
+        }
+        static func equalTo(_ otherImporter: Parameter<Importer>, perform: @escaping (Importer) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__otherImporter(`otherImporter`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
+		static func equalTo(otherImporter: Parameter<Importer>, perform: @escaping (Importer) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__otherImporter(`otherImporter`), performs: perform)
         }
     }
 
@@ -11570,10 +11741,32 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
 		}
     }
 
+    func cancel() {
+        addInvocation(.m_cancel)
+		let perform = methodPerformValue(.m_cancel) as? () -> Void
+		perform?()
+    }
+
+    func equalTo(_ otherImporter: Importer) -> Bool {
+        addInvocation(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`)))
+		let perform = methodPerformValue(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`))) as? (Importer) -> Void
+		perform?(`otherImporter`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for equalTo(_ otherImporter: Importer). Use given")
+			Failure("Stub return value not specified for equalTo(_ otherImporter: Importer). Use given")
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_importData__from_url(Parameter<URL>)
         case m_resetLastImportDate
+        case m_cancel
+        case m_equalTo__otherImporter(Parameter<Importer>)
         case p_dataTypePluralName_get
         case p_sourceName_get
         case p_lastImport_get
@@ -11586,6 +11779,11 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
                 guard Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher) else { return false } 
                 return true 
             case (.m_resetLastImportDate, .m_resetLastImportDate):
+                return true 
+            case (.m_cancel, .m_cancel):
+                return true 
+            case (.m_equalTo__otherImporter(let lhsOtherimporter), .m_equalTo__otherImporter(let rhsOtherimporter)):
+                guard Parameter.compare(lhs: lhsOtherimporter, rhs: rhsOtherimporter, with: matcher) else { return false } 
                 return true 
             case (.p_dataTypePluralName_get,.p_dataTypePluralName_get): return true
             case (.p_sourceName_get,.p_sourceName_get): return true
@@ -11600,6 +11798,8 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
             switch self {
             case let .m_importData__from_url(p0): return p0.intValue
             case .m_resetLastImportDate: return 0
+            case .m_cancel: return 0
+            case let .m_equalTo__otherImporter(p0): return p0.intValue
             case .p_dataTypePluralName_get: return 0
             case .p_sourceName_get: return 0
             case .p_lastImport_get: return 0
@@ -11630,6 +11830,20 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
             return Given(method: .p_importOnlyNewData_get, products: defaultValue.map({ Product.return($0) }))
         }
 
+        static func equalTo(_ otherImporter: Parameter<Importer>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
+		static func equalTo(otherImporter: Parameter<Importer>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) }))
+        }
+        static func equalTo(_ otherImporter: Parameter<Importer>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
         static func importData(from url: Parameter<URL>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) }))
         }
@@ -11657,6 +11871,10 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
 
         static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
         static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
+        static func cancel() -> Verify { return Verify(method: .m_cancel)}
+        static func equalTo(_ otherImporter: Parameter<Importer>) -> Verify { return Verify(method: .m_equalTo__otherImporter(`otherImporter`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
+		static func equalTo(otherImporter: Parameter<Importer>) -> Verify { return Verify(method: .m_equalTo__otherImporter(`otherImporter`))}
         static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
         static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
         static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
@@ -11673,6 +11891,16 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
         }
         static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_resetLastImportDate, performs: perform)
+        }
+        static func cancel(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_cancel, performs: perform)
+        }
+        static func equalTo(_ otherImporter: Parameter<Importer>, perform: @escaping (Importer) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__otherImporter(`otherImporter`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
+		static func equalTo(otherImporter: Parameter<Importer>, perform: @escaping (Importer) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__otherImporter(`otherImporter`), performs: perform)
         }
     }
 

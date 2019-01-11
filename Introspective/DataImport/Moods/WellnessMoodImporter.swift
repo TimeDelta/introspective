@@ -17,6 +17,7 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 	private typealias Me = WellnessMoodImporterImpl
 	public static let entityName = "WellnessMoodImporter"
 	private static let dateRegex = "^\\d\\d?/\\d\\d?/\\d\\d, \\d\\d:\\d\\d"
+	private static let cancelImports = Notification.Name("cancelWellnessMoodImporter")
 
 	public final let dataTypePluralName: String = "moods"
 	public final let sourceName: String = "Wellness"
@@ -25,7 +26,13 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 	private final var currentMood: Mood? = nil
 	private final var lineNumber: Int = -1
 	private final var currentNote = ""
+
 	private final let log = Log()
+
+	private final var cancelled = false
+	private final var processingLine = false
+
+	private final let uuid = UUID()
 
 	public final func importData(from url: URL) throws {
 		let contents = try DependencyInjector.util.io.contentsOf(url)
@@ -35,6 +42,7 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 		var latestDate: Date! = lastImport // use temp var to avoid bug where initial import doesn't import anything
 		do {
 			for line in contents.components(separatedBy: "\n")[1...] {
+				if cancelled { return }
 				try processLine(line, latestDate: &latestDate)
 				lineNumber += 1
 			}
@@ -59,9 +67,23 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 		}
 	}
 
+	public final func cancel() {
+		cancelled = true
+		do {
+			try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: MoodImpl.fetchRequest())
+		} catch {
+			log.error("Failed to delete moods from current import on cancel: %@", errorInfo(error))
+		}
+	}
+
 	public final func resetLastImportDate() throws {
 		lastImport = nil
 		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+	}
+
+	public final func equalTo(_ otherImporter: Importer) -> Bool {
+		guard let other = otherImporter as? WellnessMoodImporterImpl else { return false }
+		return uuid == other.uuid
 	}
 
 	// MARK: - Helper Functions
@@ -83,6 +105,7 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 				guard let rating = Double(parts[2]) else {
 					throw InvalidFileFormatError("Invalid rating on line \(lineNumber): \(parts[2])")
 				}
+				if cancelled { return }
 				try createAndScaleMood(withDate: date, andRating: rating)
 				currentNote = parts[3...].joined()
 			} else {

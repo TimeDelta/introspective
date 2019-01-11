@@ -11,10 +11,6 @@ import CoreData
 import NotificationBannerSwift
 import os
 
-public enum DatabaseError: Error {
-	case failedToInstantiateObject
-}
-
 //sourcery: AutoMockable
 public protocol Database {
 
@@ -94,7 +90,7 @@ public class DatabaseImpl: Database {
 		guard let newObject = NSManagedObject(entity: entity, insertInto: backgroundContext) as? Type else {
 			log.error("Could not cast new object as %@", objectType.entityName)
 			signpost.end(name: "New", idObject: objectType)
-			throw DatabaseError.failedToInstantiateObject
+			throw FailedToInstantiateObject(objectTypeName: objectType.entityName)
 		}
 		signpost.end(name: "New", idObject: objectType)
 		return newObject
@@ -132,11 +128,13 @@ public class DatabaseImpl: Database {
 	/// This will happen if one object has already been saved and the other hasn't been saved yet.
 	public final func pull<Type: NSManagedObject>(savedObject: Type, fromSameContextAs otherObject: NSManagedObject) throws -> Type {
 		signpost.begin(name: "Pull", idObject: savedObject)
-		let savedObjectInSameContext = otherObject.managedObjectContext!.object(with: savedObject.objectID)
 		do {
-			let castedObject = try getObject(savedObjectInSameContext, as: Type.self)
+			guard let context = otherObject.managedObjectContext else {
+				throw UnknownManagedObjectContext()
+			}
+			let object = try pull(savedObject: savedObject, fromContext: context)
 			signpost.end(name: "Pull", idObject: savedObject)
-			return castedObject
+			return object
 		} catch {
 			signpost.end(name: "Pull", idObject: savedObject)
 			throw error
@@ -144,7 +142,10 @@ public class DatabaseImpl: Database {
 	}
 
 	public final func getUpdated<Type: NSManagedObject>(object: Type) throws -> Type {
-		return try getObject(object.managedObjectContext!.object(with: object.objectID), as: Type.self)
+		guard let context = object.managedObjectContext else {
+			throw UnknownManagedObjectContext()
+		}
+		return try getObject(context.object(with: object.objectID), as: Type.self)
 	}
 
 	// MARK: - Updating
@@ -172,13 +173,18 @@ public class DatabaseImpl: Database {
 
 	public final func delete(_ object: NSManagedObject) throws {
 		signpost.begin(name: "Delete", idObject: object)
-		if context(persistentContainer.viewContext, contains: object) {
-			persistentContainer.viewContext.delete(object)
-			try saveContext(persistentContainer.viewContext)
-		}
+		// delete from background context first in case deletion from main one fails
+		// because it will be confusing to user if they see an error that something
+		// wasn't deleted but it doesn't show up anymore
 		if context(backgroundContext, contains: object) {
-			backgroundContext.delete(object)
+			let objectToDelete = try pull(savedObject: object, fromContext: backgroundContext)
+			backgroundContext.delete(objectToDelete)
 			try saveContext(backgroundContext)
+		}
+		if context(persistentContainer.viewContext, contains: object) {
+			let objectToDelete = try pull(savedObject: object, fromContext: persistentContainer.viewContext)
+			persistentContainer.viewContext.delete(objectToDelete)
+			try saveContext(persistentContainer.viewContext)
 		}
 		signpost.end(name: "Delete", idObject: object)
 	}
@@ -207,6 +213,11 @@ public class DatabaseImpl: Database {
 	}
 
 	// MARK: - Helper Functions
+
+	private final func pull<Type: NSManagedObject>(savedObject: Type, fromContext context: NSManagedObjectContext) throws -> Type {
+		let savedObjectInSameContext = context.object(with: savedObject.objectID)
+		return try getObject(savedObjectInSameContext, as: Type.self)
+	}
 
 	private final func context(_ context: NSManagedObjectContext, contains object: NSManagedObject) -> Bool {
 		signpost.begin(name: "Context contains object", idObject: object)
@@ -256,8 +267,9 @@ public class DatabaseImpl: Database {
 				wasFault += "not "
 			}
 			wasFault += "a fault"
-			log.error("Could not cast managed object as %@: %@", type.entity().name!)
-			throw DatabaseError.failedToInstantiateObject
+			let objectTypeName = type.entity().name ?? type.debugDescription()
+			log.error("Could not cast managed object as %@: %@", objectTypeName)
+			throw FailedToInstantiateObject(objectTypeName: objectTypeName)
 		}
 		return castedObject
 	}

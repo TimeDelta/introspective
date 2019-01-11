@@ -22,5 +22,8 @@ public final class DeleteCoreDataTableViewCell: UITableViewCell {
 		try! DependencyInjector.db.deleteAll(MedicationDose.self)
 		try! DependencyInjector.db.deleteAll(Tag.self)
 		try! DependencyInjector.db.deleteAll(WellnessMoodImporterImpl.self)
+		try! DependencyInjector.db.deleteAll(EasyPillMedicationImporterImpl.self)
+		try! DependencyInjector.db.deleteAll(EasyPillMedicationDoseImporterImpl.self)
+		try! DependencyInjector.db.deleteAll(ATrackerActivityImporterImpl.self)
 	}
 }
