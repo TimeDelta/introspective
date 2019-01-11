@@ -132,7 +132,14 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
-		guard let castedValue = sampleValue as? ValueType? else {
+		if sampleValue == nil {
+			if !restrictedAttribute.optional {
+				log.error("Value of non-optional attribute named '%@' in %@ sample is nil", restrictedAttribute.name, sample.attributedName)
+			}
+			return value == nil || (value is String && (value as! String).isEmpty)
+		}
+		// sampleValue cannot be nil here
+		guard let castedValue = sampleValue as? ValueType else {
 			throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: sampleValue))
 		}
 		return try areEqual(castedValue, value)
