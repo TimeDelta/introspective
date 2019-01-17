@@ -171,25 +171,27 @@ public final class EditMedicationViewController: UIViewController {
 	}
 
 	@IBAction final func saveButtonPressed(_ sender: Any) {
-		var medication: Medication! = self.medication
-		var deleteMedicationOnFail = false
 		do {
-			if medication == nil {
-				medication = try DependencyInjector.db.new(Medication.self)
-				medication!.setSource(.introspective)
+			let transaction = DependencyInjector.db.transaction()
+			var medication: Medication
+			if let localMedication = self.medication {
+				medication = try transaction.pull(savedObject: localMedication)
+			} else {
+				medication = try transaction.new(Medication.self)
+				medication.setSource(.introspective)
 				medication.recordScreenIndex = Int16(try DependencyInjector.db.query(Medication.fetchRequest()).count)
-				deleteMedicationOnFail = true
 			}
-			medication!.name = nameTextField.text!
-			medication!.frequency = frequency
-			medication!.startedOn = startedOnDate
+			medication.name = nameTextField.text!
+			medication.frequency = frequency
+			medication.startedOn = startedOnDate
 			if let dosageText = dosageTextField.text {
-				medication!.dosage = Dosage(dosageText)
+				medication.dosage = Dosage(dosageText)
 			}
 			if !notesTextView.text.isEmpty {
-				medication!.notes = notesTextView.text
+				medication.notes = notesTextView.text
 			}
-			try DependencyInjector.db.save()
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+			medication = try DependencyInjector.db.pull(savedObject: medication)
 
 			post(
 				notificationToSendOnAccept,
@@ -199,9 +201,6 @@ public final class EditMedicationViewController: UIViewController {
 			navigationController?.popViewController(animated: false)
 		} catch {
 			log.error("Failed to save medication: %@", errorInfo(error))
-			if deleteMedicationOnFail {
-				try? DependencyInjector.db.delete(medication)
-			}
 			showError(title: "Could not save medication", error: error, tryAgain: { self.saveButtonPressed(sender) })
 		}
 	}

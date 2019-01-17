@@ -47,10 +47,12 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 	@objc private final func doseCreated(notification: Notification) {
 		do {
 			if let dose: MedicationDose = value(for: .dose, from: notification) {
-				medication = try DependencyInjector.db.pull(savedObject: medication, fromSameContextAs: dose)
-				dose.medication = medication
-				medication.addToDoses(dose)
-				try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+				let transaction = DependencyInjector.db.transaction()
+				let doseFromTransaction = try transaction.pull(savedObject: dose)
+				medication = try transaction.pull(savedObject: medication)
+				medication.addToDoses(doseFromTransaction)
+				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+				medication = try DependencyInjector.db.pull(savedObject: medication)
 				updateLastTakenButton()
 			}
 		} catch {

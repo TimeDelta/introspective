@@ -43,7 +43,7 @@ Pill name,Notes,Dosage,Frequency,How many times per day,How many days,Starting,E
 
 	final override func setUp() {
 		super.setUp()
-		importer = try! DependencyInjector.db.new(EasyPillMedicationImporterImpl.self)
+		importer = try! DependencyInjector.importer.easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
 	}
 
 	// MARK: - Valid Data
@@ -114,6 +114,7 @@ a,,,as needed
 		try importer.resetLastImportDate()
 
 		// then
+		importer = try DependencyInjector.db.pull(savedObject: importer)
 		XCTAssertNil(importer.lastImport)
 	}
 

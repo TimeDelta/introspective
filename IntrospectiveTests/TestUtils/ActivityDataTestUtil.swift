@@ -11,18 +11,21 @@ import Foundation
 
 public final class ActivityDataTestUtil {
 
+	@discardableResult
 	public static func createActivityDefinition(name: String = "", description: String? = nil, tags: [Tag] = []) -> ActivityDefinition {
-		let definition = try! DependencyInjector.db.new(ActivityDefinition.self)
+		let transaction = DependencyInjector.db.transaction()
+		let definition = try! transaction.new(ActivityDefinition.self)
 		definition.name = name
 		definition.activityDescription = description
 		for tag in tags {
-			definition.addToTags(try! DependencyInjector.db.pull(savedObject: tag, fromSameContextAs: definition))
+			definition.addToTags(try! transaction.pull(savedObject: tag))
 		}
 		definition.recordScreenIndex = 0
-		try! DependencyInjector.db.save()
-		return definition
+		try! transaction.commit()
+		return try! DependencyInjector.db.pull(savedObject: definition)
 	}
 
+	@discardableResult
 	public static func createActivity(
 		definition: ActivityDefinition = createActivityDefinition(),
 		startDate: Date = Date(),
@@ -30,18 +33,20 @@ public final class ActivityDataTestUtil {
 		note: String? = nil,
 		tags: [Tag] = [])
 	-> Activity {
-		let activity = try! DependencyInjector.db.new(Activity.self)
-		activity.definition = try! DependencyInjector.db.pull(savedObject: definition, fromSameContextAs: activity)
+		let transaction = DependencyInjector.db.transaction()
+		let activity = try! transaction.new(Activity.self)
+		activity.definition = try! transaction.pull(savedObject: definition)
 		activity.startDate = startDate
 		activity.endDate = endDate
 		activity.note = note
 		for tag in tags {
-			activity.addToTags(try! DependencyInjector.db.pull(savedObject: tag, fromSameContextAs: activity))
+			activity.addToTags(try! transaction.pull(savedObject: tag))
 		}
-		try! DependencyInjector.db.save()
-		return activity
+		try! transaction.commit()
+		return try! DependencyInjector.db.pull(savedObject: activity)
 	}
 
+	@discardableResult
 	public static func createActivity(
 		name: String,
 		startDate: Date = Date(),

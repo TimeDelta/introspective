@@ -88,14 +88,15 @@ final class RecordMoodTableViewCell: UITableViewCell {
 
 	@IBAction final func doneButtonPressed(_ sender: Any) {
 		do {
-			let mood = try DependencyInjector.sample.mood()
+			let transaction = DependencyInjector.db.transaction()
+			let mood = try DependencyInjector.sample.mood(using: transaction)
 			mood.timestamp = Date()
 			mood.rating = rating
 			mood.note = note
 			mood.minRating = DependencyInjector.settings.minMood
 			mood.maxRating = DependencyInjector.settings.maxMood
 			mood.setSource(.introspective)
-			try DependencyInjector.db.save()
+			try transaction.commit()
 
 			reset()
 		} catch {

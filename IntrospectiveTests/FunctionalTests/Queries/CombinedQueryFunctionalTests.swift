@@ -65,7 +65,6 @@ final class CombinedQueryFunctionalTests: QueryFunctionalTest {
 		let _ = createMood(timestamp: latestTargetMoodDate)
 		let _ = createMood(note: targetSubstring, rating: minMood - 0.1)
 		let _ = createMood(rating: minMood + 1)
-		try DependencyInjector.db.save()
 
 		query.subQuery = (matcher: matcher, query: subQuery)
 
@@ -105,7 +104,6 @@ final class CombinedQueryFunctionalTests: QueryFunctionalTest {
 		let _ = createMood(rating: maxMood + 1, timestamp: startOfTargetDay - 1.hours)
 		let _ = createMood(rating: maxMood + 2, timestamp: startOfTargetDay + 1.days)
 		let _ = createMood(rating: maxMood + 2, timestamp: startOfTargetDay + 5.days) // on same wrong day as an expected weight
-		try DependencyInjector.db.save()
 
 		let weightSubQuery = WeightQueryImpl()
 		let minWeight = 170.0

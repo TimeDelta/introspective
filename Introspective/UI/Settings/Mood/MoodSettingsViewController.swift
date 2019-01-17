@@ -79,7 +79,7 @@ final class MoodSettingsViewController: UIViewController {
 
 	@objc private final func saveAndGoBackToSettings() {
 		do {
-			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+			try retryOnFail({ try DependencyInjector.settings.save() }, maxRetries: 2)
 			self.navigationController?.popViewController(animated: false)
 		} catch {
 			log.error("Failed to save mood settings: %@", errorInfo(error))

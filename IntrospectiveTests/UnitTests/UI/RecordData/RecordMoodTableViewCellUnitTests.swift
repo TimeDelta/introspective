@@ -23,12 +23,16 @@ final class RecordMoodTableViewCellUnitTests: UnitTest {
 
 	private var cell: RecordMoodTableViewCell!
 	private var mockMood: MoodMock!
+	private var mockTransaction: TransactionMock!
 
 	override func setUp() {
 		super.setUp()
 
+		mockTransaction = TransactionMock()
+		Given(mockDatabase, .transaction(willReturn: mockTransaction))
+
 		mockMood = MoodMock()
-		Given(mockSampleFactory, .mood(willReturn: mockMood))
+		Given(mockSampleFactory, .mood(using: .any, willReturn: mockMood))
 
 		Given(mockSettings, .minMood(getter: 0.0))
 		Given(mockSettings, .maxMood(getter: 7.0))
@@ -64,12 +68,12 @@ final class RecordMoodTableViewCellUnitTests: UnitTest {
 		XCTAssert(mockMood.note == expectedNote)
 	}
 
-	func testDatabaseSaveIsCalledOnSave() {
+	func testTransactionIsCommitedOnSave() {
 		// when
 		cell.doneButtonPressed(self)
 
 		// then
-		Verify(mockDatabase, .save())
+		Verify(mockTransaction, .commit())
 	}
 
 	func testAddNoteButtonTitleSetToAddNoteOnSave() {

@@ -57,7 +57,7 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 
 	final override func setUp() {
 		super.setUp()
-		importer = try! DependencyInjector.db.new(ATrackerActivityImporterImpl.self)
+		importer = try! DependencyInjector.importer.aTrackerActivityImporter() as! ATrackerActivityImporterImpl
 	}
 
 	// MARK: - importData() - Valid Data
@@ -172,22 +172,6 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 		XCTAssertFalse(try activityExists(name: Me.activityName1, from: Me.startDate1, to: nil, description: Me.description1, note: nil, tag: Me.category1))
 	}
 
-	func testGivenValidData_importData_cleansUpCurrentImportMetaData() throws {
-		// given
-		useInput(Me.validInput)
-
-		// when
-		try importer.importData(from: url)
-
-		// then
-		let activity1 = try activity(named: Me.activityName1, from: Me.startDate1, to: Me.endDate1, description: Me.description1, note: Me.note1, tag: Me.category1)
-		let activity2 = try activity(named: Me.activityName2, from: Me.startDate2, to: Me.endDate2, description: Me.description2, note: Me.note2, tag: Me.category2)
-		let activity3 = try activity(named: Me.activityName3, from: Me.startDate3, to: Me.endDate3, description: Me.description3, note: Me.note3, tag: Me.category3)
-		XCTAssertFalse(activity1?.partOfCurrentImport ?? true)
-		XCTAssertFalse(activity2?.partOfCurrentImport ?? true)
-		XCTAssertFalse(activity3?.partOfCurrentImport ?? true)
-	}
-
 	// MARK: - importData() - Invalid Data
 
 	func testGivenInvalidStartDateFormat_importData_throwsInvalidFileFormatError() throws {
@@ -260,6 +244,12 @@ not enough columns
 
 		let definition = ActivityDataTestUtil.createActivityDefinition(name: "fdsjkl")
 		let activity = ActivityDataTestUtil.createActivity(definition: definition)
+		// for some reason the test fails without the following lines.
+		// my best guess is that the main context delays merging the object until the context actually
+		// has to fetch one of the properties because the only difference with this commit is that the
+		// objects are now created on child contexts
+		let _ = definition.name
+		let _ = activity.startDate
 
 		// when
 		XCTAssertThrowsError(try importer.importData(from: url)) { error in
@@ -279,6 +269,7 @@ not enough columns
 		try importer.resetLastImportDate()
 
 		// then
+		importer = try DependencyInjector.db.pull(savedObject: importer)
 		XCTAssertNil(importer.lastImport)
 	}
 
@@ -339,13 +330,15 @@ not enough columns
 		}
 		fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
 		let activities = try DependencyInjector.db.query(fetchRequest)
-		if activities.count > 0 {
+		if activities.count == 1 {
 			return activities[0]
+		} else if activities.count > 1 {
+			XCTFail("More than one activity matched given criteria")
 		}
 		return nil
 	}
 
 	private final func objectExists(_ object: NSManagedObject) throws -> Bool {
-		return !(try DependencyInjector.db.getUpdated(object: object).isFault)
+		return !(try DependencyInjector.db.pull(savedObject: object).isFault)
 	}
 }

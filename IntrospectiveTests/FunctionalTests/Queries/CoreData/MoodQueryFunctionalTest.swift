@@ -12,7 +12,7 @@ import SwiftDate
 
 class MoodQueryFunctionalTest: QueryFunctionalTest {
 
-	private var query: MoodQuery!
+	private var query: MoodQueryImpl!
 
 	final override func setUp() {
 		super.setUp()
@@ -34,7 +34,6 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 	func testGivenOneMoodInDatabaseAndQueryContainsNoRestrictions_runQuery_returnsThatMood() throws {
 		// given
 		let expectedSamples = [createMood(note: "this is a test note")]
-		try DependencyInjector.db.save()
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -52,7 +51,6 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		let note = "this is a test note"
 		let expectedSamples = [createMood(note: note)]
 		let _ = createMood(note: "something that doesn't contain the target note text")
-		try DependencyInjector.db.save()
 
 		let noteRestriction = ContainsStringAttributeRestriction(restrictedAttribute: MoodImpl.note, substring: note)
 		query.attributeRestrictions.append(noteRestriction)
@@ -76,7 +74,6 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 			createMood(note: note, rating: 2.0)
 		]
 		let _ = createMood()
-		try DependencyInjector.db.save()
 
 		let noteRestriction = ContainsStringAttributeRestriction(restrictedAttribute: MoodImpl.note, substring: note)
 		query.attributeRestrictions.append(noteRestriction)
@@ -100,7 +97,6 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		let _ = createMood(note: note, rating: 2.0)
 		let _ = createMood(rating: 1.0)
 		let _ = createMood()
-		try DependencyInjector.db.save()
 
 		let noteRestriction = ContainsStringAttributeRestriction(restrictedAttribute: MoodImpl.note, substring: note)
 		let timestampRestriction = AfterDateAndTimeAttributeRestriction(restrictedAttribute: CommonSampleAttributes.timestamp, date: Date() - 1.days)

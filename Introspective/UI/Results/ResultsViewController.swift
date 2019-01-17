@@ -242,7 +242,8 @@ final class ResultsViewController: UITableViewController {
 				alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 					let goBackAfterDelete = self.samples.count == 1
 					do {
-						try retryOnFail({ try DependencyInjector.db.delete(managedSample) }, maxRetries: 2)
+						let transaction = DependencyInjector.db.transaction()
+						try retryOnFail({ try transaction.delete(managedSample) }, maxRetries: 2)
 						if goBackAfterDelete {
 							self.navigationController?.popViewController(animated: false)
 						} else {
@@ -392,8 +393,9 @@ final class ResultsViewController: UITableViewController {
 		alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 			DispatchQueue.global(qos: .userInitiated).async {
 				do {
-					try DependencyInjector.db.deleteAll(self.samples as! [NSManagedObject])
-					try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+					let transaction = DependencyInjector.db.transaction()
+					try transaction.deleteAll(self.samples as! [NSManagedObject])
+					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 				} catch {
 					self.log.error("Failed to delete all %@: %@", sampleType, errorInfo(error))
 					DispatchQueue.main.async {

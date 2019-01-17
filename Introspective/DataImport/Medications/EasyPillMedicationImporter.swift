@@ -26,9 +26,6 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 
 	private final var lineNumber = -1
 	private final let log = Log()
-	private final var cancelled = false
-
-	private final let uuid = UUID()
 
 	// MARK: - Functions
 
@@ -36,48 +33,28 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 		let contents = try DependencyInjector.util.io.contentsOf(url)
 		lineNumber = 2
 		do {
+			let transaction = DependencyInjector.db.transaction()
 			for line in contents.components(separatedBy: "\n")[1...] {
-				if cancelled { return }
-				try processLine(line)
+				try processLine(line, transaction)
 				lineNumber += 1
 			}
-			try DependencyInjector.util.importer.cleanUpImportedData(forType: Medication.self)
 			lastImport = Date()
-			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		} catch {
 			log.error("Failed to import medications from EasyPill: %@", errorInfo(error))
-			do {
-				try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: Medication.fetchRequest())
-			} catch {
-				log.error("Failed to delete medications from current import: %@", errorInfo(error))
-			}
 			throw error
 		}
 	}
 
-	public final func cancel() {
-		// because there could me multiple imports from the same source happening simultaneously and we want to cancel all of them
-		cancelled = true
-		do {
-			try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: Medication.fetchRequest())
-		} catch {
-			log.error("Failed to delete medications from current import on cancel: %@", errorInfo(error))
-		}
-	}
-
 	public final func resetLastImportDate() throws {
+		let transaction = DependencyInjector.db.transaction()
 		lastImport = nil
-		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
-	}
-
-	public final func equalTo(_ otherImporter: Importer) -> Bool {
-		guard let other = otherImporter as? EasyPillMedicationImporterImpl else { return false }
-		return uuid == other.uuid
+		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 	}
 
 	// MARK: - Helper Functions
 
-	private final func processLine(_ line: String) throws {
+	private final func processLine(_ line: String, _ transaction: Transaction) throws {
 		let parts = line.components(separatedBy: ",")
 		var medicationName = try getColumn(0, from: parts, errorMessage: "Line \(lineNumber) is empty.")
 		var currentIndex = 1
@@ -117,7 +94,13 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 		let startedOnText = try getColumn(currentIndex, from: parts, errorMessage: "Could not get started on date from line \(lineNumber).")
 		let startedOn = DependencyInjector.util.calendar.date(from: startedOnText, format: "M/d/yy")!
 
-		try storeMedication(named: medicationName, startedOn: startedOn, dosage: Dosage(dosageText), notes: notes, frequencyText: frequencyText)
+		try storeMedication(
+			named: medicationName,
+			startedOn: startedOn,
+			dosage: Dosage(dosageText),
+			notes: notes,
+			frequencyText: frequencyText,
+			using: transaction)
 	}
 
 	private final func getColumn(_ index: Int, from parts: [String], errorMessage: String? = nil) throws -> String {
@@ -125,7 +108,15 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 		return parts[index]
 	}
 
-	private final func storeMedication(named name: String, startedOn: Date, dosage: Dosage?, notes: String, frequencyText: String) throws {
+	private final func storeMedication(
+		named name: String,
+		startedOn: Date,
+		dosage: Dosage?,
+		notes: String,
+		frequencyText: String,
+		using transaction: Transaction)
+	throws {
+		let childTransaction = transaction.childTransaction()
 		let medicationsWithCurrentNameFetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 		medicationsWithCurrentNameFetchRequest.predicate = NSPredicate(format: "%K ==[cd] %@", "name", name)
 		let medicationsWithCurrentName: [Medication]
@@ -140,13 +131,18 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 
 		if medicationsWithCurrentName.count == 0 {
 			do {
-				if cancelled { return }
-				let medication = try DependencyInjector.db.new(Medication.self)
+				let medication = try childTransaction.new(Medication.self)
 				let allMedications = try DependencyInjector.db.query(Medication.fetchRequest())
 				medication.recordScreenIndex = Int16(allMedications.count)
 				medication.setSource(.easyPill)
-				medication.partOfCurrentImport = true
-				try setMedication(medication, name: name, startedOn: startedOn, dosage: dosage, notes: notes, frequencyText: frequencyText)
+				try setMedication(
+					medication,
+					name: name,
+					startedOn: startedOn,
+					dosage: dosage,
+					notes: notes,
+					frequencyText: frequencyText,
+					using: childTransaction)
 			} catch {
 				throw GenericDisplayableError(
 					title: "Data Write Error",
@@ -154,14 +150,31 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 			}
 		} else if medicationsWithCurrentName.count == 1 && !importOnlyNewData {
 			let medication = medicationsWithCurrentName[0]
-			try setMedication(medication, name: name, startedOn: startedOn, dosage: dosage, notes: notes, frequencyText: frequencyText)
+			try setMedication(
+				medication,
+				name: name,
+				startedOn: startedOn,
+				dosage: dosage,
+				notes: notes,
+				frequencyText: frequencyText,
+				using: childTransaction)
 		} else if !importOnlyNewData {
 			throw AmbiguousUpdateToExistingDataError(
 				"Update requested for '\(name)' but found \(medicationsWithCurrentName.count) medications with that name.")
 		}
+		try retryOnFail({ try childTransaction.commit() }, maxRetries: 2)
 	}
 
-	private final func setMedication(_ medication: Medication, name: String, startedOn: Date, dosage: Dosage?, notes: String, frequencyText: String) throws {
+	private final func setMedication(
+		_ medication: Medication,
+		name: String,
+		startedOn: Date,
+		dosage: Dosage?,
+		notes: String,
+		frequencyText: String,
+		using transaction: Transaction)
+	throws {
+		let medication = try transaction.pull(savedObject: medication)
 		medication.name = name
 		medication.dosage = dosage
 		if !frequencyText.isEmpty {
@@ -174,8 +187,6 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 			medication.notes = notes
 		}
 		medication.startedOn = startedOn
-		if cancelled { return }
-		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
 	}
 
 	private final func getFrequency(_ frequencyText: String) -> Frequency? {

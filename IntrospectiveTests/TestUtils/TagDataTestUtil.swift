@@ -12,9 +12,10 @@ import Foundation
 public final class TagDataTestUtil {
 
 	public static func createTag(name: String = "") -> Tag {
-		let tag = try! DependencyInjector.db.new(Tag.self)
+		let transaction = DependencyInjector.db.transaction()
+		let tag = try! transaction.new(Tag.self)
 		tag.name = name
-		try! DependencyInjector.db.save()
-		return tag
+		try! transaction.commit()
+		return try! DependencyInjector.db.pull(savedObject: tag)
 	}
 }

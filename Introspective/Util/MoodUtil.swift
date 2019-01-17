@@ -22,11 +22,12 @@ public final class MoodUtilImpl: MoodUtil {
 	public final func scaleMoods() throws {
 		MoodQueryImpl.updatingMoodsInBackground = true
 		do {
-			let moods = try DependencyInjector.db.query(MoodImpl.fetchRequest())
+			let transaction = DependencyInjector.db.transaction()
+			let moods = try transaction.query(MoodImpl.fetchRequest())
 			for mood in moods {
 				scaleMood(mood)
 			}
-			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			MoodQueryImpl.updatingMoodsInBackground = false
 		} catch {
 			log.error("Failed to scale old moods: %@", errorInfo(error))

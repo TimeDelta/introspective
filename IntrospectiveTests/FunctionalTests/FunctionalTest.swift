@@ -23,6 +23,7 @@ class FunctionalTest: XCTestCase {
 	final var subQueryMatcherFactory: SubQueryMatcherFactoryImpl!
 	final var extraInformationFactory: ExtraInformationFactoryImpl!
 	final var sampleGrouperFactory: SampleGrouperFactoryImpl!
+	final var importerFactory: ImporterFactoryImpl!
 
 	final var ioUtil: IOUtilMock!
 
@@ -36,7 +37,12 @@ class FunctionalTest: XCTestCase {
 		database = FunctionalTestDatabase()
 		Given(injectionProvider, .database(willReturn: database))
 
-		settings = try! database.new(SettingsImpl.self)
+		let transaction = DependencyInjector.db.transaction()
+		settings = try! transaction.new(SettingsImpl.self)
+		try! transaction.commit()
+		// must pull from main database context or context will go out of scope and get deleted,
+		// causing CoreData to be unable to fulfill a fault
+		settings = try! DependencyInjector.db.pull(savedObject: settings)
 		Given(injectionProvider, .settings(willReturn: settings))
 
 		queryFactory = QueryFactoryImpl()
@@ -45,6 +51,7 @@ class FunctionalTest: XCTestCase {
 		subQueryMatcherFactory = SubQueryMatcherFactoryImpl()
 		extraInformationFactory = ExtraInformationFactoryImpl()
 		sampleGrouperFactory = SampleGrouperFactoryImpl()
+		importerFactory = ImporterFactoryImpl()
 
 		Given(injectionProvider, .queryFactory(willReturn: queryFactory))
 		Given(injectionProvider, .sampleFactory(willReturn: sampleFactory))
@@ -52,6 +59,7 @@ class FunctionalTest: XCTestCase {
 		Given(injectionProvider, .subQueryMatcherFactory(willReturn: subQueryMatcherFactory))
 		Given(injectionProvider, .extraInformationFactory(willReturn: extraInformationFactory))
 		Given(injectionProvider, .sampleGrouperFactory(willReturn: sampleGrouperFactory))
+		Given(injectionProvider, .importerFactory(willReturn: importerFactory))
 
 		ioUtil = IOUtilMock()
 		utilFactory.io = ioUtil

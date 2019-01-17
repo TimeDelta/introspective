@@ -29,12 +29,22 @@ public final class ProductionInjectionProvider: InjectionProvider {
 	public final func codableStorage() -> CodableStorage { return Me.realCodableStorage }
 	public final func settings() -> Settings {
 		if Me.realSettings == nil {
-			let fetchRequest = NSFetchRequest<SettingsImpl>(entityName: SettingsImpl.entityName)
-			let existingSettings = try! Me.realDatabase.query(fetchRequest)
-			if existingSettings.count == 0 {
-				Me.realSettings = try! Me.realDatabase.new(SettingsImpl.self)
-			} else {
-				Me.realSettings = existingSettings[0]
+			do {
+				let existingSettings = try Me.realDatabase.query(SettingsImpl.fetchRequest())
+				if existingSettings.count == 0 {
+					do {
+						let transaction = DependencyInjector.db.transaction()
+						let settings = try retryOnFail({ try transaction.new(SettingsImpl.self) }, maxRetries: 2)
+						try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+						Me.realSettings = try DependencyInjector.db.pull(savedObject: settings)
+					} catch {
+						fatalError(String(format: "Failed to create or save default settings: %@", errorInfo(error)))
+					}
+				} else {
+					Me.realSettings = existingSettings[0]
+				}
+			} catch {
+				fatalError(String(format: "Failed to load settings: %@", errorInfo(error)))
 			}
 		}
 		return Me.realSettings

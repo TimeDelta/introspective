@@ -10,7 +10,7 @@
 import Foundation
 import CoreData
 
-public class Activity: Importable, CoreDataSample {
+public class Activity: NSManagedObject, CoreDataSample {
 
 	private typealias Me = Activity
 
@@ -113,8 +113,14 @@ public class Activity: Importable, CoreDataSample {
 			guard let castedValue = value as? String else {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
-			definition.name = castedValue
-			try DependencyInjector.db.save()
+
+			let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
+			fetchRequest.predicate = NSPredicate(format: "name == %@", castedValue)
+			let matchingDefinitions = try DependencyInjector.db.query(fetchRequest)
+			if matchingDefinitions.count == 0 {
+				throw UnsupportedValueError(attribute: attribute, of: self, is: value)
+			}
+			definition = matchingDefinitions[0]
 			return
 		}
 		if attribute.equalTo(CommonSampleAttributes.startDate) {
@@ -122,7 +128,6 @@ public class Activity: Importable, CoreDataSample {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
 			startDate = castedValue
-			try DependencyInjector.db.save()
 			return
 		}
 		if attribute.equalTo(Me.endDateAttribute) {
@@ -130,7 +135,6 @@ public class Activity: Importable, CoreDataSample {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
 			endDate = (value as! Date?)
-			try DependencyInjector.db.save()
 			return
 		}
 		if attribute.equalTo(Me.noteAttribute) {
@@ -138,7 +142,6 @@ public class Activity: Importable, CoreDataSample {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
 			note = (value as! String?)
-			try DependencyInjector.db.save()
 			return
 		}
 		if attribute.equalTo(Me.tagsAttribute) {
@@ -175,7 +178,6 @@ public class Activity: Importable, CoreDataSample {
 				addToTags(tag)
 			}
 		}
-		try DependencyInjector.db.save()
 	}
 
 	// MARK: - Equatable

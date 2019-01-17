@@ -21,7 +21,6 @@ public final class UtilFactory {
 	private static let realStringUtil = StringUtilImpl()
 	private static let realIOUtil = IOUtilImpl()
 	private static let realUiUtil = UiUtilImpl()
-	private static let realImporterUtil = ImporterUtilImpl()
 	private static let realMoodUtil = MoodUtilImpl()
 
 	public final var calendar: CalendarUtil = Me.realCalendarUtil
@@ -33,6 +32,5 @@ public final class UtilFactory {
 	public final var string: StringUtil = Me.realStringUtil
 	public final var io: IOUtil = Me.realIOUtil
 	public final var ui: UiUtil = Me.realUiUtil
-	public final var importer: ImporterUtil = Me.realImporterUtil
 	public final var mood: MoodUtil = Me.realMoodUtil
 }

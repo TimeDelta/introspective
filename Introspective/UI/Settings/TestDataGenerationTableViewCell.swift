@@ -64,17 +64,16 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 				var sleepRecords = [Sleep]()
 				var weights = [Weight]()
 
-				let activityDefinitions = self.createRandomActivityDefinitions(5)
-				try! DependencyInjector.db.save()
+				let transaction = DependencyInjector.db.transaction()
 
-				let medications = self.createRandomMedications(5)
-				try! DependencyInjector.db.save()
+				let activityDefinitions = self.createRandomActivityDefinitions(5, using: transaction)
+				let medications = self.createRandomMedications(5, using: transaction)
 
 				for daysAgo in 0 ... 60 {
 					sleepRecords.append(self.randomSleepSample(daysAgo))
 					for hoursAgo in 0 ... 23 {
 						if hoursAgo % 5 == 0 {
-							self.createRandomActivity(Date() - daysAgo.days - hoursAgo.hours, activityDefinitions)
+							self.createRandomActivity(Date() - daysAgo.days - hoursAgo.hours, activityDefinitions, using: transaction)
 						}
 						for sampleNum in 0 ... Me.samplesPerHour {
 							let minutesAgo: Int = 60 * sampleNum / Me.samplesPerHour
@@ -84,8 +83,8 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 							bmis.append(BodyMassIndex(self.randomDouble(Me.bmiRange), date))
 							heartRates.append(HeartRate(self.randomDouble(Me.heartRateRange), date))
 							leanBodyMasses.append(LeanBodyMass(self.randomDouble(Me.leanBodyMassRange), date))
-							self.createRandomMedicationDose(date, medications)
-							self.createRandomMood(date)
+							self.createRandomMedicationDose(date, medications, using: transaction)
+							self.createRandomMood(date, using: transaction)
 							restingHeartRates.append(RestingHeartRate(self.randomDouble(Me.heartRateRange), date))
 							sexualActivities.append(self.randomSexualActivity(date))
 							weights.append(Weight(self.randomDouble(Me.weightRange), date))
@@ -93,7 +92,7 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 					}
 				}
 
-				try! DependencyInjector.db.save()
+				try! transaction.commit()
 				HealthKitDataTestUtil.save(bloodPressures)
 				HealthKitDataTestUtil.save(bmis)
 				HealthKitDataTestUtil.save(heartRates)
@@ -113,8 +112,8 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 		}
 	}
 
-	private final func createRandomActivity(_ date: Date, _ activityDefinitions: [ActivityDefinition]) {
-		let activity = try! DependencyInjector.db.new(Activity.self)
+	private final func createRandomActivity(_ date: Date, _ activityDefinitions: [ActivityDefinition], using transaction: Transaction) {
+		let activity = try! transaction.new(Activity.self)
 		activity.definition = randomEntry(activityDefinitions)
 		activity.startDate = date
 		if randomInt((min: 0, max: 1)) == 0 {
@@ -122,10 +121,10 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 		}
 	}
 
-	private final func createRandomActivityDefinitions(_ numberToCreate: Int) -> [ActivityDefinition] {
+	private final func createRandomActivityDefinitions(_ numberToCreate: Int, using transaction: Transaction) -> [ActivityDefinition] {
 		var activityDefinitions = try! DependencyInjector.db.query(ActivityDefinition.fetchRequest())
 		for i in 0 ..< numberToCreate {
-			let definition = try! DependencyInjector.db.new(ActivityDefinition.self)
+			let definition = try! transaction.new(ActivityDefinition.self)
 			definition.name = Me.medicationNames[i]
 			definition.recordScreenIndex = Int16(activityDefinitions.count)
 			activityDefinitions.append(definition)
@@ -140,10 +139,10 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 			date)
 	}
 
-	private final func createRandomMedications(_ numberToCreate: Int) -> [Medication] {
-		var medications = try! DependencyInjector.db.query(Medication.fetchRequest())
+	private final func createRandomMedications(_ numberToCreate: Int, using transaction: Transaction) -> [Medication] {
+		var medications = try! transaction.query(Medication.fetchRequest())
 		for i in 0 ..< numberToCreate {
-			let medication = try! DependencyInjector.db.new(Medication.self)
+			let medication = try! transaction.new(Medication.self)
 			medication.name = Me.medicationNames[i]
 			medication.recordScreenIndex = Int16(medications.count)
 			medications.append(medication)
@@ -151,16 +150,16 @@ final class TestDataGenerationTableViewCell: UITableViewCell {
 		return medications
 	}
 
-	private final func createRandomMedicationDose(_ date: Date, _ medications: [Medication]) {
-		let medicationDose = try! DependencyInjector.sample.medicationDose()
+	private final func createRandomMedicationDose(_ date: Date, _ medications: [Medication], using transaction: Transaction) {
+		let medicationDose = try! transaction.new(MedicationDose.self)
 		medicationDose.timestamp = date
 		medicationDose.dosage = Dosage(randomDouble(Me.medicationDoseAmountRange), "mg")
 		medicationDose.medication = try! DependencyInjector.db.pull(savedObject: randomEntry(medications), fromSameContextAs: medicationDose)
 		medicationDose.medication.addToDoses(medicationDose)
 	}
 
-	private final func createRandomMood(_ date: Date) {
-		let mood = try! DependencyInjector.sample.mood()
+	private final func createRandomMood(_ date: Date, using transaction: Transaction) {
+		let mood = try! transaction.new(MoodImpl.self)
 		mood.timestamp = date
 		mood.maxRating = DependencyInjector.settings.maxMood
 		mood.rating = randomDouble(Me.moodRatingRange)

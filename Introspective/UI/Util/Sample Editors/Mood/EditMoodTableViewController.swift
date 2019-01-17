@@ -154,20 +154,33 @@ public final class EditMoodTableViewController: UITableViewController {
 
 	@objc private final func saveButtonPressed(_ sender: Any) {
 		do {
-			if mood == nil {
-				mood = try DependencyInjector.sample.mood()
-				mood?.setSource(.introspective)
+			let transaction = DependencyInjector.db.transaction()
+			var mood: Mood! = self.mood
+			if let localMood = mood {
+				if let localMood = localMood as? MoodImpl {
+					mood = try transaction.pull(savedObject: localMood)
+				} else {// otherwise mood is a Mock and we're testing
+					log.debug("Mood not pulled from transaction")
+				}
+			} else {
+				mood = try transaction.new(MoodImpl.self)
+				mood.setSource(.introspective)
 			}
-			mood?.timestamp = timestamp
-			mood?.rating = rating
-			mood?.note = note
-			try DependencyInjector.db.save()
+			mood.timestamp = timestamp
+			mood.rating = rating
+			mood.note = note
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+			if let localMood = mood as? MoodImpl {
+				mood = try DependencyInjector.db.pull(savedObject: localMood)
+			} else { // otherwise mood is a Mock and we're testing
+				log.debug("Mood not pulled from database")
+			}
 			DispatchQueue.main.async {
 				NotificationCenter.default.post(
 					name: self.notificationToSendOnAccept,
 					object: self,
 					userInfo: self.info([
-						self.userInfoKey: self.mood as Any,
+						self.userInfoKey: mood as Any,
 					]))
 			}
 			navigationController?.popViewController(animated: false)

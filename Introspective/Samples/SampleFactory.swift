@@ -15,12 +15,12 @@ public protocol SampleFactory {
 	func allTypes() -> [Sample.Type]
 	func healthKitTypes() -> [HealthKitSample.Type]
 
-	func activity() throws -> Activity
+	func activity(using transaction: Transaction) throws -> Activity
 	func heartRate(_ value: Double, _ date: Date) -> HeartRate
 	func heartRate(value: Double) -> HeartRate
 	func heartRate(_ sample: HKQuantitySample) -> HeartRate
-	func medicationDose() throws -> MedicationDose
-	func mood() throws -> Mood
+	func medicationDose(using transaction: Transaction) throws -> MedicationDose
+	func mood(using transaction: Transaction) throws -> Mood
 }
 
 public final class SampleFactoryImpl: SampleFactory {
@@ -58,8 +58,8 @@ public final class SampleFactoryImpl: SampleFactory {
 		return Me.healthKitTypes
 	}
 
-	public final func activity() throws -> Activity {
-		return try DependencyInjector.db.new(Activity.self)
+	public final func activity(using transaction: Transaction) throws -> Activity {
+		return try transaction.new(Activity.self)
 	}
 
 	public final func heartRate(_ value: Double, _ date: Date) -> HeartRate {
@@ -74,11 +74,11 @@ public final class SampleFactoryImpl: SampleFactory {
 		return HeartRate(sample)
 	}
 
-	public final func medicationDose() throws -> MedicationDose {
-		return try DependencyInjector.db.new(MedicationDose.self)
+	public final func medicationDose(using transaction: Transaction) throws -> MedicationDose {
+		return try transaction.new(MedicationDose.self)
 	}
 
-	public final func mood() throws -> Mood {
-		return try DependencyInjector.db.new(MoodImpl.self)
+	public final func mood(using transaction: Transaction) throws -> Mood {
+		return try transaction.new(MoodImpl.self)
 	}
 }

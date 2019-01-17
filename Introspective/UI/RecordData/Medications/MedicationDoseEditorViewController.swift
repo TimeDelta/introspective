@@ -20,8 +20,8 @@ public final class MedicationDoseEditorViewController: UIViewController {
 	// MARK: - Instance Variables
 
 	public final var medicationDose: MedicationDose?
-	/// This is only used if `medicationDose` is not set
-	public final var medication: Medication?
+	/// If `medicationDose` is not set, will use default dosage and is only required if not editing an existing dose
+	public final var medication: Medication!
 	public final var notificationToSendOnAccept: Notification.Name!
 
 	private final let log = Log()
@@ -30,7 +30,7 @@ public final class MedicationDoseEditorViewController: UIViewController {
 
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
-		dosageTextField.text = medicationDose?.dosage?.description ?? medication?.dosage?.description
+		dosageTextField.text = medicationDose?.dosage?.description ?? medication.dosage?.description
 		if let date = medicationDose?.timestamp {
 			datePicker.date = date
 		}
@@ -48,12 +48,18 @@ public final class MedicationDoseEditorViewController: UIViewController {
 			dosage = Dosage(dosageText)
 		}
 		do {
-			if medicationDose == nil {
-				medicationDose = try DependencyInjector.sample.medicationDose()
-				medicationDose!.setSource(.introspective)
+			let transaction = DependencyInjector.db.transaction()
+			if let dose = medicationDose {
+				medicationDose = try transaction.pull(savedObject: dose)
+			} else {
+				medicationDose = try transaction.new(MedicationDose.self)
+				medicationDose?.setSource(.introspective)
+				medicationDose?.medication = try transaction.pull(savedObject: medication)
 			}
-			medicationDose!.dosage = dosage
-			medicationDose!.timestamp = datePicker.date
+			medicationDose?.dosage = dosage
+			medicationDose?.timestamp = datePicker.date
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+			medicationDose = try DependencyInjector.db.pull(savedObject: medicationDose!)
 			post(
 				notificationToSendOnAccept,
 				userInfo: self.info([

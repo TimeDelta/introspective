@@ -108,6 +108,7 @@ final class ActivityFunctionalTests: FunctionalTest {
 	func testGivenNameAttribute_set_correctlySetsName() throws {
 		// given
 		let expectedName = "this is a name"
+		ActivityDataTestUtil.createActivityDefinition(name: expectedName)
 		let activity = ActivityDataTestUtil.createActivity()
 
 		// when
@@ -115,6 +116,18 @@ final class ActivityFunctionalTests: FunctionalTest {
 
 		// then
 		XCTAssertEqual(expectedName, activity.definition.name)
+	}
+
+	func testGivenNameAttributeWithNameOfNonExistentDefinition_set_throwsUnsupportedValueError() throws {
+		// given
+		let nonExistentName = "this doesn't exist"
+		let activity = ActivityDataTestUtil.createActivity()
+
+		// when
+		XCTAssertThrowsError(try activity.set(attribute: Activity.nameAttribute, to: nonExistentName)) { error in
+			// then
+			XCTAssert(error is UnsupportedValueError)
+		}
 	}
 
 	func testGivenDurationAttribute_set_throwsUnknownAttributeException() throws {

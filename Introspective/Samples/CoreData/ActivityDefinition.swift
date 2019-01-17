@@ -10,7 +10,7 @@
 import Foundation
 import CoreData
 
-public class ActivityDefinition: Importable, CoreDataObject {
+public class ActivityDefinition: NSManagedObject, CoreDataObject {
 
 	private typealias Me = ActivityDefinition
 
@@ -38,7 +38,6 @@ public class ActivityDefinition: Importable, CoreDataObject {
 				addToTags(tag)
 			}
 		}
-		try DependencyInjector.db.save()
 	}
 
 	// MARK: - Equatable

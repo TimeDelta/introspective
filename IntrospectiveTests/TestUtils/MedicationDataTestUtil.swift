@@ -20,26 +20,28 @@ public class MedicationDataTestUtil {
 		note: String? = nil,
 		recordScreenIndex: Int16 = 0)
 	-> Medication {
-		let medication = try! DependencyInjector.db.new(Medication.self)
+		let transaction = DependencyInjector.db.transaction()
+		let medication = try! transaction.new(Medication.self)
 		medication.name = name
 		medication.frequency = frequency
 		medication.dosage = dosage
 		medication.startedOn = startedOn
 		medication.notes = note
 		medication.recordScreenIndex = recordScreenIndex
-		try! DependencyInjector.db.save()
-		return medication
+		try! transaction.commit()
+		return try! DependencyInjector.db.pull(savedObject: medication)
 	}
 
 	@discardableResult
 	public static func createDose(medication: Medication = createMedication(), dosage: Dosage? = nil, timestamp: Date = Date()) -> MedicationDose {
-		let dose = try! DependencyInjector.sample.medicationDose()
-		let sameContextMedication = try! DependencyInjector.db.pull(savedObject: medication, fromSameContextAs: dose)
+		let transaction = DependencyInjector.db.transaction()
+		let dose = try! transaction.new(MedicationDose.self)
+		let sameContextMedication = try! transaction.pull(savedObject: medication)
 		dose.medication = sameContextMedication
 		dose.timestamp = timestamp
 		dose.dosage = dosage
 		sameContextMedication.addToDoses(dose)
-		try! DependencyInjector.db.save()
-		return dose
+		try! transaction.commit()
+		return try! DependencyInjector.db.pull(savedObject: dose)
 	}
 }

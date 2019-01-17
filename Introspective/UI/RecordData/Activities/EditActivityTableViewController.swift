@@ -211,20 +211,25 @@ public final class EditActivityTableViewController: UITableViewController {
 	// MARK: - Actions
 
 	@objc final func saveButtonPressed(_ sender: Any) {
-		var activity: Activity! = self.activity
-		var deleteActivityOnFail = false
 		do {
-			if activity == nil {
-				activity = try DependencyInjector.sample.activity()
+			let transaction = DependencyInjector.db.transaction()
+
+			// have to use local variable here otherwise description will be
+			// overwritten when self.activityDefinition is set
+			var activity: Activity! = self.activity
+			if let localActivity = activity {
+				activity = try transaction.pull(savedObject: localActivity)
+			} else {
+				activity = try transaction.new(Activity.self)
 				activity.setSource(.introspective)
-				deleteActivityOnFail = true
 			}
-			activity.definition = try DependencyInjector.db.pull(savedObject: definition!, fromSameContextAs: activity)
+			activity.definition = try transaction.pull(savedObject: definition!)
 			activity.startDate = startDate
 			activity.endDate = endDate
 			activity.note = note
-			try updateTagsForActivity(activity)
-			try DependencyInjector.db.save()
+			try updateTagsForActivity(activity, using: transaction)
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+			activity = try DependencyInjector.db.pull(savedObject: activity)
 			DispatchQueue.main.async {
 				NotificationCenter.default.post(
 					name: self.notificationToSendOnAccept,
@@ -236,41 +241,31 @@ public final class EditActivityTableViewController: UITableViewController {
 			navigationController?.popViewController(animated: false)
 		} catch {
 			log.error("Failed to create, edit or save activity: %@", errorInfo(error))
-			if deleteActivityOnFail {
-				try? DependencyInjector.db.delete(activity)
-			}
 			showError(title: "Failed to save activity instance", error: error)
 		}
 	}
 
 	// MARK: - Helper Functions
 
-	private final func updateTagsForActivity(_ activity: Activity) throws {
+	private final func updateTagsForActivity(_ activity: Activity, using transaction: Transaction) throws {
 		var tagsCreated = [Tag]()
 		var allTags = [Tag]()
-		do {
-			for tagName in tagNames {
-				var tag: Tag! = try findTagWithName(tagName)
-				if tag == nil {
-					tag = try DependencyInjector.db.new(Tag.self)
-					tag.name = tagName
-					tagsCreated.append(tag)
-				}
-				allTags.append(tag)
+		for tagName in tagNames {
+			var tag: Tag! = try findTagWithName(tagName, using: transaction)
+			if tag == nil {
+				tag = try transaction.new(Tag.self)
+				tag.name = tagName
+				tagsCreated.append(tag)
 			}
-			try activity.setTags(allTags)
-		} catch {
-			for tag in tagsCreated {
-				try? DependencyInjector.db.delete(tag)
-			}
-			throw error
+			allTags.append(tag)
 		}
+		try activity.setTags(allTags)
 	}
 
-	private final func findTagWithName(_ name: String) throws -> Tag? {
+	private final func findTagWithName(_ name: String, using transaction: Transaction) throws -> Tag? {
 		let fetchRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
-		let tags = try DependencyInjector.db.query(fetchRequest)
+		let tags = try transaction.query(fetchRequest)
 		if tags.count > 0 {
 			return tags[0]
 		}

@@ -95,9 +95,11 @@ public final class MedicationDosesTableViewController: UITableViewController {
 				preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 				let indexToDelete = self.medication.doses.index(of: dose)
-				self.medication.removeFromDoses(at: indexToDelete)
+				let transaction = DependencyInjector.db.transaction()
 				do {
-					try retryOnFail({ try DependencyInjector.db.delete(dose) }, maxRetries: 2)
+					try retryOnFail({ try transaction.delete(dose) }, maxRetries: 2)
+					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+					self.medication.removeFromDoses(at: indexToDelete)
 					self.resetFilteredDoses()
 					tableView.deleteRows(at: [indexPath], with: .fade)
 					tableView.reloadData()
@@ -143,9 +145,13 @@ public final class MedicationDosesTableViewController: UITableViewController {
 
 	@objc private final func medicationDoseEdited(notification: Notification) {
 		if let dose: MedicationDose = value(for: .dose, from: notification) {
-			medication.replaceDoses(at: lastClickedIndex, with: dose)
+			let transaction = DependencyInjector.db.transaction()
 			do {
-				try DependencyInjector.db.save()
+				let doseFromTransaction = try transaction.pull(savedObject: dose)
+				medication = try transaction.pull(savedObject: medication)
+				medication.replaceDoses(at: lastClickedIndex, with: doseFromTransaction)
+				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+				medication = try DependencyInjector.db.pull(savedObject: medication)
 				resetFilteredDoses()
 				tableView.reloadData()
 			} catch {

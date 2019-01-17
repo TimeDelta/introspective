@@ -34,7 +34,6 @@ final class MedicationDoseQueryFunctionalTest: QueryFunctionalTest {
 	func testGivenOneDoseInDatabaseAndQueryContainsNoRestrictions_runQuery_returnsThatDose() throws {
 		// given
 		let expectedSamples: [Sample] = [createDose()]
-		try DependencyInjector.db.save()
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -55,7 +54,6 @@ final class MedicationDoseQueryFunctionalTest: QueryFunctionalTest {
 		var expectedSamples = [Sample]()
 		expectedSamples.append(createDose(medication: createMedication(name: medicationName), dosage: dosage, timestamp: timestamp))
 		let _ = createDose(dosage: dosage, timestamp: timestamp)
-		try DependencyInjector.db.save()
 
 		let medicationNameRestriction = ContainsStringAttributeRestriction(restrictedAttribute: MedicationDose.nameAttribute, substring: medicationName)
 		query.attributeRestrictions.append(medicationNameRestriction)
@@ -83,7 +81,6 @@ final class MedicationDoseQueryFunctionalTest: QueryFunctionalTest {
 		expectedSamples.append(createDose(dosage: Dosage(1, "dg")))
 		let _ = createDose()
 		let _ = createDose(dosage: Dosage(2, "µg"))
-		try DependencyInjector.db.save()
 
 		let noteRestriction = GreaterThanDosageAttributeRestriction(restrictedAttribute: MedicationDose.dosage, value: targetDosage)
 		query.attributeRestrictions.append(noteRestriction)
@@ -107,8 +104,6 @@ final class MedicationDoseQueryFunctionalTest: QueryFunctionalTest {
 		expectedSamples.append(createDose(medication: targetMedication, dosage: targetDosage, timestamp: Date()))
 		expectedSamples.append(createDose(medication: targetMedication, dosage: Dosage(100, "mcg"), timestamp: Date() + 1.days))
 		let _ = createDose()
-
-		try DependencyInjector.db.save()
 
 		let medicationNameRestriction = ContainsStringAttributeRestriction(restrictedAttribute: MedicationDose.nameAttribute, substring: targetMedication.name)
 		query.attributeRestrictions.append(medicationNameRestriction)

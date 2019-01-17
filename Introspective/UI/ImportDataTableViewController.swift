@@ -116,12 +116,10 @@ final class ImportDataTableViewController: UITableViewController {
 extension ImportDataTableViewController: UIDocumentPickerDelegate {
 
 	public final func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
-		activeImports.append(importer)
 		let localImporter = self.importer!
-		DispatchQueue.global(qos: .background).async {
+		DispatchQueue.global(qos: .utility).async {
 			do {
 				try localImporter.importData(from: url)
-				activeImports.removeAll(where: { $0.equalTo(localImporter) })
 				let messageText = "Sucessfully imported " + localImporter.dataTypePluralName.localizedLowercase + " from " + localImporter.sourceName
 				DispatchQueue.main.async {
 					StatusBarNotificationBanner(title: messageText, style: .success).show()

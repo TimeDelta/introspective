@@ -239,9 +239,21 @@ final class RecordMedicationsUITests: UITest {
 		app.tables.staticTexts[dose3Description].swipeLeft()
 		app.tables.buttons["🗑️"].tap()
 		app.buttons["Yes"].tap()
+		XCTAssertEqual(app.alerts.allElementsBoundByIndex.count, 0, "Failed to delete dose")
 		filterDoseDates()
 
 		// then
+		XCTAssert(app.tables.staticTexts[doseDescription(date: dose1Date)].exists)
+		XCTAssert(app.tables.staticTexts[doseDescription(date: dose2Date)].exists)
+		XCTAssert(!app.tables.staticTexts[dose3Description].exists)
+		XCTAssert(app.tables.staticTexts[doseDescription(date: dose4Date)].exists)
+		// Go back then open up the doses view again and recheck assertions in order
+		// to make sure that changes actually persisted. Do this before AND after to
+		// make sure that the user is shown that the dose is deleted immediately also.
+		// This specifically guards against a bug that was found where the dose was
+		// deleted but the UI wasn't updated because an error was thrown.
+		app.navigationBars.buttons["Medications"].tap()
+		app.buttons["last \(medicationName) dose button"].tap()
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose1Date)].exists)
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose2Date)].exists)
 		XCTAssert(!app.tables.staticTexts[dose3Description].exists)
@@ -267,6 +279,17 @@ final class RecordMedicationsUITests: UITest {
 		app.buttons["Yes"].tap()
 
 		// then
+		XCTAssertEqual(app.alerts.allElementsBoundByIndex.count, 0, "Failed to delete dose")
+		XCTAssert(app.tables.staticTexts[doseDescription(date: dose1Date)].exists)
+		XCTAssert(!app.tables.staticTexts[dose2Description].exists)
+		XCTAssert(app.tables.staticTexts[doseDescription(date: dose3Date)].exists)
+		// Go back then open up the doses view again and recheck assertions in order
+		// to make sure that changes actually persisted. Do this before AND after to
+		// make sure that the user is shown that the dose is deleted immediately also.
+		// This specifically guards against a bug that was found where the dose was
+		// deleted but the UI wasn't updated because an error was thrown.
+		app.navigationBars.buttons["Medications"].tap()
+		app.buttons["last \(medicationName) dose button"].tap()
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose1Date)].exists)
 		XCTAssert(!app.tables.staticTexts[dose2Description].exists)
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose3Date)].exists)

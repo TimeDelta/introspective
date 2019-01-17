@@ -43,7 +43,7 @@ final class EasyPillMedicationDoseImporterFunctionalTests: ImporterTest {
 
 	final override func setUp() {
 		super.setUp()
-		importer = try! DependencyInjector.db.new(EasyPillMedicationDoseImporterImpl.self)
+		importer = try! DependencyInjector.importer.easyPillMedicationDoseImporter() as! EasyPillMedicationDoseImporterImpl
 	}
 
 	// MARK: - importData() - Valid Data
@@ -97,20 +97,6 @@ final class EasyPillMedicationDoseImporterFunctionalTests: ImporterTest {
 		XCTAssert(try doseWasImported(for: Me.medicationName2, at: Me.date2))
 		XCTAssert(try doseWasImported(for: Me.medicationName3, at: Me.date3))
 		XCTAssertEqual(importer.lastImport, Me.date1)
-	}
-
-	func testGivenValidData_importData_cleansUpCurrentImportMetaData() throws {
-		// given
-		createAllMedications()
-		useInput(Me.validImportFileText)
-
-		// when
-		try importer.importData(from: url)
-
-		// then
-		XCTAssertFalse((try dose(named: Me.medicationName1, at: Me.date1))?.partOfCurrentImport ?? true)
-		XCTAssertFalse((try dose(named: Me.medicationName2, at: Me.date2))?.partOfCurrentImport ?? true)
-		XCTAssertFalse((try dose(named: Me.medicationName3, at: Me.date3))?.partOfCurrentImport ?? true)
 	}
 
 	// MARK: - importData() - Invalid Data
@@ -177,6 +163,7 @@ abc,,
 		try importer.resetLastImportDate()
 
 		// then
+		importer = try DependencyInjector.db.pull(savedObject: importer)
 		XCTAssertNil(importer.lastImport)
 	}
 

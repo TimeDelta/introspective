@@ -72,7 +72,7 @@ final class WellnessMoodImporterFunctionalTests: ImporterTest {
 
 	final override func setUp() {
 		super.setUp()
-		importer = try! DependencyInjector.db.new(WellnessMoodImporterImpl.self)
+		importer = try! DependencyInjector.importer.wellnessMoodImporter() as! WellnessMoodImporterImpl
 		try! DependencyInjector.settings.save()
 	}
 
@@ -136,22 +136,6 @@ final class WellnessMoodImporterFunctionalTests: ImporterTest {
 		XCTAssert(mood4WasImported(), "Mood 4 was not imported correctly")
 		XCTAssert(mood5WasImported(), "Mood 5 was not imported correctly")
 		XCTAssertEqual(importer.lastImport, Me.date5)
-	}
-
-	func testGivenValidData_importData_cleansUpCurrentImportMetaData() throws {
-		// given
-		scaleMoods = false
-		useInput(Me.validImportFileText)
-
-		// when
-		try importer.importData(from: url)
-
-		// then
-		XCTAssertFalse(mood(at: Me.date1, withRating: Me.rating1, andNote: Me.note1)?.partOfCurrentImport ?? true)
-		XCTAssertFalse(mood(at: Me.date2, withRating: Me.rating2, andNote: Me.note2)?.partOfCurrentImport ?? true)
-		XCTAssertFalse(mood(at: Me.date3, withRating: Me.rating3, andNote: Me.note3)?.partOfCurrentImport ?? true)
-		XCTAssertFalse(mood(at: Me.date4, withRating: Me.rating4, andNote: Me.note4)?.partOfCurrentImport ?? true)
-		XCTAssertFalse(mood(at: Me.date5, withRating: Me.rating5, andNote: nil)?.partOfCurrentImport ?? true)
 	}
 
 	// MARK: - importData() - Invalid Data
@@ -275,7 +259,6 @@ Date,Time,Rating,Note
 		// given
 		scaleMoods = false
 		MoodDataTestUtil.createMood(note: Me.note2, rating: Me.rating2, timestamp: Me.date2, min: 1, max: 7)
-		try DependencyInjector.db.save()
 		useInput("""
 \(Me.headerRow)
 10/19/12, 12:12,invalid rating,note
@@ -298,6 +281,7 @@ Date,Time,Rating,Note
 		try importer.resetLastImportDate()
 
 		// then
+		importer = try DependencyInjector.db.pull(savedObject: importer)
 		XCTAssertNil(importer.lastImport)
 	}
 

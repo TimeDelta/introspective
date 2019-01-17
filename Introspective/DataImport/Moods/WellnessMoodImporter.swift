@@ -41,54 +41,32 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 		currentNote = ""
 		var latestDate: Date! = lastImport // use temp var to avoid bug where initial import doesn't import anything
 		do {
+			let transaction = DependencyInjector.db.transaction()
 			for line in contents.components(separatedBy: "\n")[1...] {
 				if cancelled { return }
-				try processLine(line, latestDate: &latestDate)
+				try processLine(line, latestDate: &latestDate, using: transaction)
 				lineNumber += 1
 			}
 			if !currentNote.isEmpty {
 				currentMood?.note = currentNote // make sure to save the final note
 			}
 			lastImport = latestDate
-			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
-
-			log.info("Cleaning up mood import")
-			try DependencyInjector.util.importer.cleanUpImportedData(forType: MoodImpl.self)
-			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		} catch {
 			log.error("Failed to import moods from Wellness: %@", errorInfo(error))
-			do {
-				try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: MoodImpl.fetchRequest())
-			} catch {
-				log.error("Failed to delete moods from current import: %@", errorInfo(error))
-			}
-
 			throw error
 		}
 	}
 
-	public final func cancel() {
-		cancelled = true
-		do {
-			try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: MoodImpl.fetchRequest())
-		} catch {
-			log.error("Failed to delete moods from current import on cancel: %@", errorInfo(error))
-		}
-	}
-
 	public final func resetLastImportDate() throws {
+		let transaction = DependencyInjector.db.transaction()
 		lastImport = nil
-		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
-	}
-
-	public final func equalTo(_ otherImporter: Importer) -> Bool {
-		guard let other = otherImporter as? WellnessMoodImporterImpl else { return false }
-		return uuid == other.uuid
+		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 	}
 
 	// MARK: - Helper Functions
 
-	private final func processLine(_ line: String, latestDate: inout Date!) throws {
+	private final func processLine(_ line: String, latestDate: inout Date!, using transaction: Transaction) throws {
 		if string(line, matches: Me.dateRegex) { // new mood record
 			if !currentNote.isEmpty {
 				currentMood?.note = currentNote
@@ -106,7 +84,7 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 					throw InvalidFileFormatError("Invalid rating on line \(lineNumber): \(parts[2])")
 				}
 				if cancelled { return }
-				try createAndScaleMood(withDate: date, andRating: rating)
+				try createAndScaleMood(withDate: date, andRating: rating, using: transaction)
 				currentNote = parts[3...].joined()
 			} else {
 				currentMood = nil
@@ -121,14 +99,13 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 		}
 	}
 
-	private final func createAndScaleMood(withDate date: Date, andRating rating: Double) throws {
-		currentMood = try DependencyInjector.sample.mood()
+	private final func createAndScaleMood(withDate date: Date, andRating rating: Double, using transaction: Transaction) throws {
+		currentMood = try transaction.new(MoodImpl.self)
 		currentMood!.timestamp = date
 		currentMood!.minRating = 1
 		currentMood!.maxRating = 7
 		currentMood!.rating = rating
 		currentMood!.setSource(.wellness)
-		currentMood!.partOfCurrentImport = true
 		if DependencyInjector.settings.scaleMoodsOnImport {
 			DependencyInjector.util.mood.scaleMood(currentMood!)
 		}

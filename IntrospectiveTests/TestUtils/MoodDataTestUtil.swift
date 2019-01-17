@@ -19,12 +19,14 @@ public class MoodDataTestUtil {
 		min: Double = 1,
 		max: Double = 7)
 	-> MoodImpl {
-		let mood = try! DependencyInjector.sample.mood() as! MoodImpl
+		let transaction = DependencyInjector.db.transaction()
+		let mood = try! transaction.new(MoodImpl.self)
 		mood.rating = rating
 		mood.timestamp = timestamp
 		mood.note = note
 		mood.minRating = min
 		mood.maxRating = max
-		return mood
+		try! transaction.commit()
+		return try! DependencyInjector.db.pull(savedObject: mood)
 	}
 }

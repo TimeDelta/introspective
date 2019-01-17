@@ -35,9 +35,6 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 
 	private final var lineNumber: Int = -1
 	private final let log = Log()
-	private final var cancelled = false
-
-	private final let uuid = UUID()
 
 	// MARK: - Functions
 
@@ -46,63 +43,34 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		lineNumber = 2
 		var latestDate: Date! = lastImport // use temp var to avoid bug where initial import doesn't import anything
 		do {
+			let transaction = DependencyInjector.db.transaction()
 			while csv.next() != nil {
-				if cancelled { return }
-				try importActivity(from: csv, latestDate: &latestDate)
+				try importActivity(from: csv, latestDate: &latestDate, using: transaction)
 				lineNumber += 1
 				let _ = csv.dropFirst()
 			}
 
 			lastImport = latestDate
-			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
-
-			log.info("Cleaning up Activity import")
-			try DependencyInjector.util.importer.cleanUpImportedData(forType: ActivityDefinition.self)
-			try DependencyInjector.util.importer.cleanUpImportedData(forType: Activity.self)
-			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		} catch {
 			log.error("Failed to import activities from ATracker: %@", errorInfo(error))
-			do {
-				try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: ActivityDefinition.fetchRequest())
-				try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: Activity.fetchRequest())
-			} catch {
-				log.error("Failed to delete activities / definitions from current import: %@", errorInfo(error))
-			}
-
 			throw error
 		}
 	}
 
-	public final func cancel() {
-		cancelled = true
-		do {
-			try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: Activity.fetchRequest())
-			// make sure to only attempt to delete imported definitions if imported activities successfully deleted
-			// otherwise will lead to invalid state in data persistence layer
-			try DependencyInjector.util.importer.deleteImportedEntities(fetchRequest: ActivityDefinition.fetchRequest())
-		} catch {
-			log.error("Failed to delete activities / definitions from current import on cancel: %@", errorInfo(error))
-		}
-	}
-
-	public func resetLastImportDate() throws {
+	public final func resetLastImportDate() throws {
+		let transaction = DependencyInjector.db.transaction()
 		lastImport = nil
-		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
-	}
-
-	public final func equalTo(_ otherImporter: Importer) -> Bool {
-		guard let other = otherImporter as? ATrackerActivityImporterImpl else { return false }
-		return uuid == other.uuid
+		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 	}
 
 	// MARK: - Helper Functions
 
 	/// - Returns: `nil` if no new Activity object was created, otherwise the newly created activityObject
-	private final func importActivity(from csv: CSVReader, latestDate: inout Date!) throws {
-		var definition: ActivityDefinition! = try retrieveExistingDefinition(from: csv)
+	private final func importActivity(from csv: CSVReader, latestDate: inout Date!, using transaction: Transaction) throws {
+		var definition: ActivityDefinition! = try retrieveExistingDefinition(from: csv, using: transaction)
 		if definition == nil {
-			if cancelled { return }
-			definition = try createDefinition(from: csv)
+			definition = try createDefinition(from: csv, using: transaction)
 		}
 
 		let startDate: Date = try getStartDate(from: csv)
@@ -114,8 +82,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		if let activity = try unfinishedActivity(at: startDate, for: definition) {
 			try update(activity, from: csv)
 		} else if shouldImport(startDate) {
-			if cancelled { return }
-			try createActivity(for: definition, startingAt: startDate, from: csv)
+			try createActivity(for: definition, startingAt: startDate, from: csv, using: transaction)
 		}
 	}
 
@@ -148,58 +115,69 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		activity.note = csv[Me.noteColumn]
 	}
 
-	private final func retrieveExistingDefinition(from csv: CSVReader) throws -> ActivityDefinition? {
+	private final func retrieveExistingDefinition(from csv: CSVReader, using transaction: Transaction) throws -> ActivityDefinition? {
 		guard let name = csv[Me.nameColumn] else { throw InvalidFileFormatError("No name given for activity on line \(lineNumber)")}
 		let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
-		let matchingActivities = try DependencyInjector.db.query(fetchRequest)
+		let matchingActivities = try transaction.query(fetchRequest) // query from the transaction to include definitions created in this import
 		if matchingActivities.count > 0 {
 			return matchingActivities[0]
 		}
 		return nil
 	}
 
-	private final func createDefinition(from csv: CSVReader) throws -> ActivityDefinition {
+	private final func createDefinition(from csv: CSVReader, using transaction: Transaction) throws -> ActivityDefinition {
 		guard let name = csv[Me.nameColumn] else { throw InvalidFileFormatError("No name given for activity on line \(lineNumber)")}
 		let description = csv[Me.descriptionColumn]
 		let category = csv[Me.categoryColumn]
 
-		let definition = try DependencyInjector.db.new(ActivityDefinition.self)
+		let childTransaction = transaction.childTransaction()
+
+		let definition = try childTransaction.new(ActivityDefinition.self)
 		definition.name = name
 		definition.activityDescription = description
 		if let tagName = category {
-			let tag = try createOrRetrieveTag(named: tagName, for: definition)
+			let tag = try createOrRetrieveTag(named: tagName, for: definition, using: childTransaction)
 			definition.addToTags(tag)
 		}
-		let allDefinitions = try DependencyInjector.db.query(ActivityDefinition.fetchRequest())
+		let allDefinitions = try transaction.query(ActivityDefinition.fetchRequest())
 		definition.recordScreenIndex = Int16(allDefinitions.count)
 		definition.setSource(.aTracker)
-		definition.partOfCurrentImport = true
-		return definition
+
+		try retryOnFail({ try childTransaction.commit() }, maxRetries: 2)
+		return try transaction.pull(savedObject: definition)
 	}
 
-	private final func createActivity(for definition: ActivityDefinition, startingAt start: Date, from csv: CSVReader) throws {
-		let activity = try DependencyInjector.db.new(Activity.self)
-		activity.definition = try DependencyInjector.db.pull(savedObject: definition, fromSameContextAs: activity)
+	private final func createActivity(
+		for definition: ActivityDefinition,
+		startingAt start: Date,
+		from csv: CSVReader,
+		using transaction: Transaction)
+	throws {
+		let childTransaction = transaction.childTransaction()
+		let activity = try childTransaction.new(Activity.self)
+		activity.definition = try childTransaction.pull(savedObject: definition)
 		activity.startDate = start
 		activity.endDate = try getEndDate(from: csv)
 		activity.note = csv[Me.noteColumn]
 		activity.setSource(.aTracker)
-		activity.partOfCurrentImport = true
+		try retryOnFail({ try childTransaction.commit() }, maxRetries: 2)
 	}
 
-	private final func createOrRetrieveTag(named tagName: String, for definition: ActivityDefinition) throws -> Tag {
+	private final func createOrRetrieveTag(named tagName: String, for definition: ActivityDefinition, using transaction: Transaction) throws -> Tag {
 		let tagRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
 		tagRequest.predicate = NSPredicate(format: "name ==[cd] %@", tagName)
-		let matchingTags = try DependencyInjector.db.query(tagRequest)
+		let matchingTags = try transaction.query(tagRequest)
 		let tag: Tag
 		if matchingTags.count > 0 {
 			tag = try DependencyInjector.db.pull(savedObject: matchingTags[0], fromSameContextAs: definition)
 		} else {
-			tag = try DependencyInjector.db.new(Tag.self)
+			let childTransaction = transaction.childTransaction()
+			tag = try childTransaction.new(Tag.self)
 			tag.name = tagName
+			try retryOnFail({ try childTransaction.commit() }, maxRetries: 2)
 		}
-		return tag
+		return try transaction.pull(savedObject: tag)
 	}
 
 	private final func unfinishedActivity(at startDate: Date, for definition: ActivityDefinition) throws -> Activity? {

@@ -20,12 +20,11 @@ public protocol Mood: CoreDataSample {
 	var rating: Double { get set }
 	var note: String? { get set }
 	var timestamp: Date { get set }
-	var partOfCurrentImport: Bool { get set }
 
 	func setSource(_ source: Sources.MoodSourceNum)
 }
 
-public final class MoodImpl: Importable, Mood {
+public final class MoodImpl: NSManagedObject, Mood {
 
 	private typealias Me = MoodImpl
 

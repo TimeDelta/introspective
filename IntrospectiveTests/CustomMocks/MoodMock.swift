@@ -89,13 +89,6 @@ class MoodMock: Mood, Mock {
 	private var __p_timestamp: (Date)?
 
 
-    var partOfCurrentImport: Bool {
-		get {	invocations.append(.p_partOfCurrentImport_get); return __p_partOfCurrentImport ?? givenGetterValue(.p_partOfCurrentImport_get, "MoodMock - stub value for partOfCurrentImport was not defined") }
-		set {	invocations.append(.p_partOfCurrentImport_set(.value(newValue))); __p_partOfCurrentImport = newValue }
-	}
-	private var __p_partOfCurrentImport: (Bool)?
-
-
     var attributedName: String {
 		get {	invocations.append(.p_attributedName_get); return __p_attributedName ?? givenGetterValue(.p_attributedName_get, "MoodMock - stub value for attributedName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
@@ -405,8 +398,6 @@ class MoodMock: Mood, Mock {
 		case p_note_set(Parameter<String?>)
         case p_timestamp_get
 		case p_timestamp_set(Parameter<Date>)
-        case p_partOfCurrentImport_get
-		case p_partOfCurrentImport_set(Parameter<Bool>)
         case p_attributedName_get
         case p_attributes_get
         case p_debugDescription_get
@@ -449,8 +440,6 @@ class MoodMock: Mood, Mock {
 			case (.p_note_set(let left),.p_note_set(let right)): return Parameter<String?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_timestamp_get,.p_timestamp_get): return true
 			case (.p_timestamp_set(let left),.p_timestamp_set(let right)): return Parameter<Date>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_partOfCurrentImport_get,.p_partOfCurrentImport_get): return true
-			case (.p_partOfCurrentImport_set(let left),.p_partOfCurrentImport_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_attributedName_get,.p_attributedName_get): return true
             case (.p_attributes_get,.p_attributes_get): return true
             case (.p_debugDescription_get,.p_debugDescription_get): return true
@@ -478,8 +467,6 @@ class MoodMock: Mood, Mock {
 			case .p_note_set(let newValue): return newValue.intValue
             case .p_timestamp_get: return 0
 			case .p_timestamp_set(let newValue): return newValue.intValue
-            case .p_partOfCurrentImport_get: return 0
-			case .p_partOfCurrentImport_set(let newValue): return newValue.intValue
             case .p_attributedName_get: return 0
             case .p_attributes_get: return 0
             case .p_debugDescription_get: return 0
@@ -509,9 +496,6 @@ class MoodMock: Mood, Mock {
         }
         static func timestamp(getter defaultValue: Date...) -> PropertyStub {
             return Given(method: .p_timestamp_get, products: defaultValue.map({ Product.return($0) }))
-        }
-        static func partOfCurrentImport(getter defaultValue: Bool...) -> PropertyStub {
-            return Given(method: .p_partOfCurrentImport_get, products: defaultValue.map({ Product.return($0) }))
         }
         static func attributedName(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_attributedName_get, products: defaultValue.map({ Product.return($0) }))
@@ -642,8 +626,6 @@ class MoodMock: Mood, Mock {
 		static func note(set newValue: Parameter<String?>) -> Verify { return Verify(method: .p_note_set(newValue)) }
         static var timestamp: Verify { return Verify(method: .p_timestamp_get) }
 		static func timestamp(set newValue: Parameter<Date>) -> Verify { return Verify(method: .p_timestamp_set(newValue)) }
-        static var partOfCurrentImport: Verify { return Verify(method: .p_partOfCurrentImport_get) }
-		static func partOfCurrentImport(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_partOfCurrentImport_set(newValue)) }
         static var attributedName: Verify { return Verify(method: .p_attributedName_get) }
         static var attributes: Verify { return Verify(method: .p_attributes_get) }
         static var debugDescription: Verify { return Verify(method: .p_debugDescription_get) }

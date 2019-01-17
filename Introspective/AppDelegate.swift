@@ -10,14 +10,11 @@ import UIKit
 import CoreData
 
 public var testing = false
-var activeImports = [Importer]()
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	final var window: UIWindow?
-
-	private final let log = Log()
 
 	final func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 		testing = CommandLine.arguments.contains("--testing")
@@ -44,14 +41,5 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	final func applicationWillTerminate(_ application: UIApplication) {
 		// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-		cancelActiveImports()
-	}
-
-	// MARK: - Helper Functions
-
-	private final func cancelActiveImports() {
-		for importer in activeImports {
-			importer.cancel()
-		}
 	}
 }

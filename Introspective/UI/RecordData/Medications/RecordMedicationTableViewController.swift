@@ -157,9 +157,11 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			let alert = UIAlertController(title: "Are you sure you want to delete \(medication.name)?", message: nil, preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 				if let index = self.medications.firstIndex(of: medication) {
-					DispatchQueue.global(qos: .background).async {
+					DispatchQueue.global(qos: .userInitiated).async {
 						do {
-							try DependencyInjector.db.delete(medication)
+							let transaction = DependencyInjector.db.transaction()
+							try transaction.delete(medication)
+							try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 							DispatchQueue.main.async {
 								self.medications.remove(at: index)
 								tableView.deleteRows(at: [indexPath], with: .fade)
@@ -181,24 +183,25 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	public final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		let medicationsFromIndex = Int(filteredMedications[fromIndexPath.row].recordScreenIndex)
 		let medicationsToIndex = Int(filteredMedications[to.row].recordScreenIndex)
-		if medicationsFromIndex < medicationsToIndex {
-			for i in medicationsFromIndex + 1 ... medicationsToIndex {
-				medications[i].recordScreenIndex -= 1
-			}
-		} else {
-			for i in medicationsToIndex ..< medicationsFromIndex {
-				medications[i].recordScreenIndex += 1
-			}
-		}
-		medications[medicationsFromIndex].recordScreenIndex = Int16(medicationsToIndex)
-		let medication = medications.remove(at: medicationsFromIndex)
-		medications.insert(medication, at: Int(medication.recordScreenIndex))
+		let transaction = DependencyInjector.db.transaction()
 		do {
-			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+			if medicationsFromIndex < medicationsToIndex {
+				for i in medicationsFromIndex + 1 ... medicationsToIndex {
+					try transaction.pull(savedObject: medications[i]).recordScreenIndex -= 1
+				}
+			} else {
+				for i in medicationsToIndex ..< medicationsFromIndex {
+					try transaction.pull(savedObject: medications[i]).recordScreenIndex += 1
+				}
+			}
+			try transaction.pull(savedObject: medications[medicationsFromIndex]).recordScreenIndex = Int16(medicationsToIndex)
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+			let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
+			fetchRequest.sortDescriptors = [NSSortDescriptor(key: "recordScreenIndex", ascending: true)]
+			medications = try DependencyInjector.db.query(fetchRequest)
 		} catch {
 			log.error("Failed to reorder medications: %@", errorInfo(error))
 		}
-		resetFilteredMedications()
 		tableView.reloadData()
 	}
 

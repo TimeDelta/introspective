@@ -105,53 +105,13 @@ public final class RecordActivityTableViewController: UITableViewController {
 		}
 		if cell.running {
 			if let activity = getMostRecentlyStartedIncompleteActivity(for: activityDefinition) {
-				let now = Date()
-				if DependencyInjector.settings.autoIgnoreEnabled {
-					let minSeconds = DependencyInjector.settings.autoIgnoreSeconds
-					if Duration(start: activity.startDate, end: now).inUnit(.second) < Double(minSeconds) {
-						do {
-							// can't really explain this to the user
-							try retryOnFail({ try DependencyInjector.db.delete(activity) }, maxRetries: 3)
-							cell.updateUiElements()
-							return
-						} catch {
-							log.error("Failed to delete activity that should be auto-ignored: %@", errorInfo(error))
-						}
-					}
-				}
-				do {
-					activity.endDate = now
-					try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 3)
-					cell.updateUiElements()
-					if activityDefinition.autoNote {
-						showEditScreenForActivity(activity, autoFocusNote: true)
-					}
-				} catch {
-					showError(title: "Failed to stop activity", error: error)
-				}
+				stopActivity(activity, associatedCell: cell)
 			} else {
 				log.error("Could not find activity to stop.")
 				showError(title: "Failed to stop activity")
 			}
 		} else {
-			var activity: Activity? = nil
-			do {
-				activity = try DependencyInjector.db.new(Activity.self)
-				activity!.setSource(.introspective)
-				let definition = try DependencyInjector.db.pull(savedObject: activityDefinition, fromSameContextAs: activity!)
-				activity!.definition = definition
-				activity!.startDate = Date()
-				definition.addToActivities(activity!)
-				try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 3)
-				// just calling updateUiElements here doesn't display the progress indicator for some reason
-				cell.activityDefinition = definition
-			} catch {
-				if let activity = activity {
-					try? retryOnFail({ try DependencyInjector.db.delete(activity) }, maxRetries: 2)
-				}
-				log.error("Failed to start activity: %@", errorInfo(error))
-				showError(title: "Failed to start activity", error: error)
-			}
+			startActivity(for: activityDefinition, cell: cell)
 		}
 		tableView.deselectRow(at: indexPath, animated: false)
 	}
@@ -164,18 +124,25 @@ public final class RecordActivityTableViewController: UITableViewController {
 		let searchText = getSearchText()
 		searchController.searchBar.text = ""
 		resetFetchedResultsController()
-		if definitionsFromIndex < definitionsToIndex {
-			for i in definitionsFromIndex + 1 ... definitionsToIndex {
-				fetchedResultsController.fetchedObjects?[i].recordScreenIndex -= 1
-			}
-		} else {
-			for i in definitionsToIndex ..< definitionsFromIndex {
-				fetchedResultsController.fetchedObjects?[i].recordScreenIndex += 1
-			}
-		}
-		fetchedResultsController.fetchedObjects?[definitionsFromIndex].recordScreenIndex = Int16(definitionsToIndex)
 		do {
-			try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+			let transaction = DependencyInjector.db.transaction()
+			if definitionsFromIndex < definitionsToIndex {
+				for i in definitionsFromIndex + 1 ... definitionsToIndex {
+					if let definition = fetchedResultsController.fetchedObjects?[i] {
+						try transaction.pull(savedObject: definition).recordScreenIndex -= 1
+					}
+				}
+			} else {
+				for i in definitionsToIndex ..< definitionsFromIndex {
+					if let definition = fetchedResultsController.fetchedObjects?[i] {
+						try transaction.pull(savedObject: definition).recordScreenIndex += 1
+					}
+				}
+			}
+			if let definition = fetchedResultsController.fetchedObjects?[definitionsFromIndex] {
+				try transaction.pull(savedObject: definition).recordScreenIndex = Int16(definitionsToIndex)
+			}
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		} catch {
 			log.error("Failed to reorder activities: %@", errorInfo(error))
 		}
@@ -216,7 +183,9 @@ public final class RecordActivityTableViewController: UITableViewController {
 				preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 				do {
-					try retryOnFail({ try DependencyInjector.db.delete(activity) }, maxRetries: 2)
+					let transaction = DependencyInjector.db.transaction()
+					try transaction.delete(activity)
+					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 					self.tableView.reloadData()
 				} catch {
 					self.log.error("Failed to delete activity: %@", errorInfo(error))
@@ -258,7 +227,9 @@ public final class RecordActivityTableViewController: UITableViewController {
 				preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 				do {
-					try retryOnFail({ try DependencyInjector.db.delete(activityDefinition) }, maxRetries: 2)
+					let transaction = DependencyInjector.db.transaction()
+					try transaction.delete(activityDefinition)
+					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 					self.loadActivitiyDefinitions()
 				} catch {
 					self.log.error("Failed to delete activity definition: %@", errorInfo(error))
@@ -289,8 +260,12 @@ public final class RecordActivityTableViewController: UITableViewController {
 	@objc private final func activityDefinitionCreated(notification: Notification) {
 		if let activityDefinition: ActivityDefinition? = value(for: .activityDefinition, from: notification) {
 			do {
-				activityDefinition?.recordScreenIndex = Int16(fetchedResultsController.fetchedObjects?.count ?? 0)
-				try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+				let transaction = DependencyInjector.db.transaction()
+				if let activityDefinition = activityDefinition {
+					let newIndex = Int16(fetchedResultsController.fetchedObjects?.count ?? 0)
+					try transaction.pull(savedObject: activityDefinition).recordScreenIndex = newIndex
+					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+				}
 				loadActivitiyDefinitions()
 			} catch {
 				log.error("Failed to save activity definition: %@", errorInfo(error))
@@ -375,12 +350,14 @@ public final class RecordActivityTableViewController: UITableViewController {
 					showError(title: "Activity named '\(searchText)' already exists.")
 					return
 				}
-				let activityDefinition = try DependencyInjector.db.new(ActivityDefinition.self)
+				let transaction = DependencyInjector.db.transaction()
+
+				let activityDefinition = try transaction.new(ActivityDefinition.self)
 				activityDefinition.name = searchText
-				let activity = try DependencyInjector.db.new(Activity.self)
+				let activity = try transaction.new(Activity.self)
 				activity.definition = activityDefinition
 				activity.startDate = Date()
-				try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 				searchController.searchBar.text = ""
 				loadActivitiyDefinitions()
 			} catch {
@@ -390,6 +367,54 @@ public final class RecordActivityTableViewController: UITableViewController {
 					message: "Something went wrong while trying to save this activity. Sorry for the inconvenience.",
 					error: error)
 			}
+		}
+	}
+
+	private final func startActivity(for activityDefinition: ActivityDefinition, cell: RecordActivityDefinitionTableViewCell) {
+		do {
+			let transaction = DependencyInjector.db.transaction()
+			let activity = try transaction.new(Activity.self)
+			activity.setSource(.introspective)
+			let definition = try DependencyInjector.db.pull(savedObject: activityDefinition, fromSameContextAs: activity)
+			activity.definition = definition
+			activity.startDate = Date()
+			definition.addToActivities(activity)
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+			// just calling updateUiElements here doesn't display the progress indicator for some reason
+			cell.activityDefinition = try DependencyInjector.db.pull(savedObject: definition)
+		} catch {
+			log.error("Failed to start activity: %@", errorInfo(error))
+			showError(title: "Failed to start activity", error: error)
+		}
+	}
+
+	private final func stopActivity(_ activity: Activity, associatedCell: RecordActivityDefinitionTableViewCell) {
+		let now = Date()
+		if DependencyInjector.settings.autoIgnoreEnabled {
+			let minSeconds = DependencyInjector.settings.autoIgnoreSeconds
+			if Duration(start: activity.startDate, end: now).inUnit(.second) < Double(minSeconds) {
+				do {
+					let transaction = DependencyInjector.db.transaction()
+					// can't really explain this to the user
+					try retryOnFail({ try transaction.delete(activity) }, maxRetries: 2)
+					try transaction.commit()
+					associatedCell.updateUiElements()
+					return
+				} catch {
+					log.error("Failed to delete activity that should be auto-ignored: %@", errorInfo(error))
+				}
+			}
+		}
+		do {
+			let transaction = DependencyInjector.db.transaction()
+			activity.endDate = now
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+			associatedCell.updateUiElements()
+			if activity.definition.autoNote {
+				showEditScreenForActivity(activity, autoFocusNote: true)
+			}
+		} catch {
+			showError(title: "Failed to stop activity", error: error)
 		}
 	}
 

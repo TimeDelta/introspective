@@ -10,7 +10,7 @@
 import Foundation
 import CoreData
 
-public final class MedicationDose: Importable, CoreDataSample {
+public final class MedicationDose: NSManagedObject, CoreDataSample {
 
 	private typealias Me = MedicationDose
 
@@ -73,34 +73,46 @@ public final class MedicationDose: Importable, CoreDataSample {
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
+		let transaction = DependencyInjector.db.transaction()
+
 		if attribute.equalTo(Me.nameAttribute) {
 			guard let castedValue = value as? String else {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
+
 			let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 			fetchRequest.predicate = NSPredicate(format: "%K == %@", Medication.nameAttribute.variableName!, castedValue)
-			let matchingMedications = try DependencyInjector.db.query(fetchRequest)
+			let matchingMedications = try transaction.query(fetchRequest)
 			if matchingMedications.count == 0 {
 				throw UnsupportedValueError(attribute: attribute, of: self, is: value)
 			}
-			medication = matchingMedications[0]
-			try DependencyInjector.db.save()
+
+			let dose = try transaction.pull(savedObject: self)
+			dose.medication = matchingMedications[0]
+			medication = try DependencyInjector.db.pull(savedObject: dose.medication, fromSameContextAs: self)
+			try transaction.commit()
 			return
 		}
 		if attribute.equalTo(Me.dosage) {
 			guard let castedValue = value as? Dosage? else {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
+
 			dosage = castedValue
-			try DependencyInjector.db.save()
+			let dose = try transaction.pull(savedObject: self)
+			dose.dosage = dosage
+			try transaction.commit()
 			return
 		}
 		if attribute.equalTo(CommonSampleAttributes.timestamp) {
 			guard let castedValue = value as? Date else {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
+
 			timestamp = castedValue
-			try DependencyInjector.db.save()
+			let dose = try transaction.pull(savedObject: self)
+			dose.timestamp = timestamp
+			try transaction.commit()
 			return
 		}
 		throw UnknownAttributeError(attribute: attribute, for: self)

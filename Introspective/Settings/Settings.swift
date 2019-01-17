@@ -131,12 +131,13 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	}
 
 	public final func save() throws {
+		let transaction = DependencyInjector.db.transaction()
 		storedMinMood = minMood
 		storedMaxMood = maxMood
 		storedScaleMoodsOnImport = scaleMoodsOnImport
 		storedAutoIgnoreEnabled = autoIgnoreEnabled
 		storedAutoIgnoreSeconds = autoIgnoreSeconds
-		try retryOnFail({ try DependencyInjector.db.save() }, maxRetries: 2)
+		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		reset()
 	}
 }

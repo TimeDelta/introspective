@@ -185,20 +185,25 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 
 	@objc private final func saveButtonPressed(_ sender: Any) {
 		do {
+			let transaction = DependencyInjector.db.transaction()
+
 			// have to use local variable here otherwise description will be
 			// overwritten when self.activityDefinition is set
 			var activityDefinition: ActivityDefinition! = self.activityDefinition
-			if activityDefinition == nil {
-				activityDefinition = try DependencyInjector.db.new(ActivityDefinition.self)
+			if let localActivityDefinition = activityDefinition {
+				activityDefinition = try transaction.pull(savedObject: localActivityDefinition)
+			} else {
+				activityDefinition = try transaction.new(ActivityDefinition.self)
 				activityDefinition.setSource(.introspective)
 			}
 
 			activityDefinition.name = name
 			activityDefinition.activityDescription = activityDescription
 			activityDefinition.autoNote = autoNote
-			try updateTagsForActivityDefinition(&activityDefinition)
+			try updateTagsForActivityDefinition(&activityDefinition, using: transaction)
 
-			try DependencyInjector.db.save()
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+			activityDefinition = try DependencyInjector.db.pull(savedObject: activityDefinition)
 
 			DispatchQueue.main.async {
 				NotificationCenter.default.post(
@@ -210,8 +215,6 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			}
 			navigationController?.popViewController(animated: false)
 		} catch {
-			DependencyInjector.db.clearUnsavedChanges()
-
 			log.error("Failed to create, edit or save ActivityDefinition: %@", errorInfo(error))
 			showError(
 				title: "Failed to save activity",
@@ -222,33 +225,25 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 
 	// MARK: - Helper Functions
 
-	/// - Returns: Only the tags that did not already exist before calling this method.
-	private final func updateTagsForActivityDefinition(_ activityDefinition: inout ActivityDefinition) throws {
+	private final func updateTagsForActivityDefinition(_ activityDefinition: inout ActivityDefinition, using transaction: Transaction) throws {
 		var tagsCreated = [Tag]()
 		var allTags = [Tag]()
-		do {
-			for tagName in tagNames {
-				var tag: Tag! = try findTagWithName(tagName)
-				if tag == nil {
-					tag = try DependencyInjector.db.new(Tag.self)
-					tag.name = tagName
-					tagsCreated.append(tag)
-				}
-				allTags.append(tag)
+		for tagName in tagNames {
+			var tag: Tag! = try findTagWithName(tagName, using: transaction)
+			if tag == nil {
+				tag = try transaction.new(Tag.self)
+				tag.name = tagName
+				tagsCreated.append(tag)
 			}
-			try activityDefinition.setTags(allTags)
-		} catch {
-			for tag in tagsCreated {
-				try? DependencyInjector.db.delete(tag)
-			}
-			throw error
+			allTags.append(tag)
 		}
+		try activityDefinition.setTags(allTags)
 	}
 
-	private final func findTagWithName(_ name: String) throws -> Tag? {
+	private final func findTagWithName(_ name: String, using transaction: Transaction) throws -> Tag? {
 		let fetchRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
-		let tags = try DependencyInjector.db.query(fetchRequest)
+		let tags = try transaction.query(fetchRequest)
 		if tags.count > 0 {
 			return tags[0]
 		}

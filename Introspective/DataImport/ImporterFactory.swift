@@ -24,7 +24,13 @@ public final class ImporterFactoryImpl: ImporterFactory {
 		if importers.count > 0 {
 			return importers[0]
 		}
-		return try DependencyInjector.db.new(WellnessMoodImporterImpl.self)
+
+		let transaction = DependencyInjector.db.transaction()
+		let importer: WellnessMoodImporterImpl = try transaction.new(WellnessMoodImporterImpl.self)
+		try transaction.commit()
+		// must pull from main database context or context will go out of scope and get deleted,
+		// causing CoreData to be unable to fulfill a fault
+		return try DependencyInjector.db.pull(savedObject: importer)
 	}
 
 	public final func easyPillMedicationImporter() throws -> EasyPillMedicationImporter {
@@ -32,7 +38,13 @@ public final class ImporterFactoryImpl: ImporterFactory {
 		if importers.count > 0 {
 			return importers[0]
 		}
-		return try DependencyInjector.db.new(EasyPillMedicationImporterImpl.self)
+
+		let transaction = DependencyInjector.db.transaction()
+		let importer: EasyPillMedicationImporterImpl = try transaction.new(EasyPillMedicationImporterImpl.self)
+		try transaction.commit()
+		// must pull from main database context or context will go out of scope and get deleted,
+		// causing CoreData to be unable to fulfill a fault
+		return try DependencyInjector.db.pull(savedObject: importer)
 	}
 
 	public final func easyPillMedicationDoseImporter() throws -> EasyPillMedicationDoseImporter {
@@ -40,7 +52,13 @@ public final class ImporterFactoryImpl: ImporterFactory {
 		if importers.count > 0 {
 			return importers[0]
 		}
-		return try DependencyInjector.db.new(EasyPillMedicationDoseImporterImpl.self)
+
+		let transaction = DependencyInjector.db.transaction()
+		let importer: EasyPillMedicationDoseImporterImpl = try transaction.new(EasyPillMedicationDoseImporterImpl.self)
+		try transaction.commit()
+		// must pull from main database context or context will go out of scope and get deleted,
+		// causing CoreData to be unable to fulfill a fault
+		return try DependencyInjector.db.pull(savedObject: importer)
 	}
 
 	public final func aTrackerActivityImporter() throws -> ATrackerActivityImporter {
@@ -48,6 +66,12 @@ public final class ImporterFactoryImpl: ImporterFactory {
 		if importers.count > 0 {
 			return importers[0]
 		}
-		return try DependencyInjector.db.new(ATrackerActivityImporterImpl.self)
+
+		let transaction = DependencyInjector.db.transaction()
+		let importer: ATrackerActivityImporterImpl = try transaction.new(ATrackerActivityImporterImpl.self)
+		try transaction.commit()
+		// must pull from main database context or context will go out of scope and get deleted,
+		// causing CoreData to be unable to fulfill a fault
+		return try DependencyInjector.db.pull(savedObject: importer)
 	}
 }

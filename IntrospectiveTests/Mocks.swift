@@ -134,32 +134,10 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
 		}
     }
 
-    func cancel() {
-        addInvocation(.m_cancel)
-		let perform = methodPerformValue(.m_cancel) as? () -> Void
-		perform?()
-    }
-
-    func equalTo(_ otherImporter: Importer) -> Bool {
-        addInvocation(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`)))
-		let perform = methodPerformValue(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`))) as? (Importer) -> Void
-		perform?(`otherImporter`)
-		var __value: Bool
-		do {
-		    __value = try methodReturnValue(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`))).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for equalTo(_ otherImporter: Importer). Use given")
-			Failure("Stub return value not specified for equalTo(_ otherImporter: Importer). Use given")
-		}
-		return __value
-    }
-
 
     fileprivate enum MethodType {
         case m_importData__from_url(Parameter<URL>)
         case m_resetLastImportDate
-        case m_cancel
-        case m_equalTo__otherImporter(Parameter<Importer>)
         case p_dataTypePluralName_get
         case p_sourceName_get
         case p_lastImport_get
@@ -172,11 +150,6 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
                 guard Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher) else { return false } 
                 return true 
             case (.m_resetLastImportDate, .m_resetLastImportDate):
-                return true 
-            case (.m_cancel, .m_cancel):
-                return true 
-            case (.m_equalTo__otherImporter(let lhsOtherimporter), .m_equalTo__otherImporter(let rhsOtherimporter)):
-                guard Parameter.compare(lhs: lhsOtherimporter, rhs: rhsOtherimporter, with: matcher) else { return false } 
                 return true 
             case (.p_dataTypePluralName_get,.p_dataTypePluralName_get): return true
             case (.p_sourceName_get,.p_sourceName_get): return true
@@ -191,8 +164,6 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
             switch self {
             case let .m_importData__from_url(p0): return p0.intValue
             case .m_resetLastImportDate: return 0
-            case .m_cancel: return 0
-            case let .m_equalTo__otherImporter(p0): return p0.intValue
             case .p_dataTypePluralName_get: return 0
             case .p_sourceName_get: return 0
             case .p_lastImport_get: return 0
@@ -223,20 +194,6 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
             return Given(method: .p_importOnlyNewData_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherImporter: Parameter<Importer>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
-		static func equalTo(otherImporter: Parameter<Importer>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) }))
-        }
-        static func equalTo(_ otherImporter: Parameter<Importer>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
-            let willReturn: [Bool] = []
-			let given: Given = { return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: (Bool).self)
-			willProduce(stubber)
-			return given
-        }
         static func importData(from url: Parameter<URL>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) }))
         }
@@ -264,10 +221,6 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
 
         static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
         static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
-        static func cancel() -> Verify { return Verify(method: .m_cancel)}
-        static func equalTo(_ otherImporter: Parameter<Importer>) -> Verify { return Verify(method: .m_equalTo__otherImporter(`otherImporter`))}
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
-		static func equalTo(otherImporter: Parameter<Importer>) -> Verify { return Verify(method: .m_equalTo__otherImporter(`otherImporter`))}
         static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
         static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
         static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
@@ -284,16 +237,6 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
         }
         static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_resetLastImportDate, performs: perform)
-        }
-        static func cancel(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_cancel, performs: perform)
-        }
-        static func equalTo(_ otherImporter: Parameter<Importer>, perform: @escaping (Importer) -> Void) -> Perform {
-            return Perform(method: .m_equalTo__otherImporter(`otherImporter`), performs: perform)
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
-		static func equalTo(otherImporter: Parameter<Importer>, perform: @escaping (Importer) -> Void) -> Perform {
-            return Perform(method: .m_equalTo__otherImporter(`otherImporter`), performs: perform)
         }
     }
 
@@ -2739,18 +2682,16 @@ class DatabaseMock: Database, Mock {
 
 
 
-    func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type) throws -> Type {
-        addInvocation(.m_new__objectType(Parameter<Type.Type>.value(`objectType`).wrapAsGeneric()))
-		let perform = methodPerformValue(.m_new__objectType(Parameter<Type.Type>.value(`objectType`).wrapAsGeneric())) as? (Type.Type) -> Void
-		perform?(`objectType`)
-		var __value: Type
+    func transaction() -> Transaction {
+        addInvocation(.m_transaction)
+		let perform = methodPerformValue(.m_transaction) as? () -> Void
+		perform?()
+		var __value: Transaction
 		do {
-		    __value = try methodReturnValue(.m_new__objectType(Parameter<Type.Type>.value(`objectType`).wrapAsGeneric())).casted()
-		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type). Use given")
-			Failure("Stub return value not specified for new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type). Use given")
+		    __value = try methodReturnValue(.m_transaction).casted()
 		} catch {
-		    throw error
+			onFatalFailure("Stub return value not specified for transaction(). Use given")
+			Failure("Stub return value not specified for transaction(). Use given")
 		}
 		return __value
     }
@@ -2785,6 +2726,22 @@ class DatabaseMock: Database, Mock {
 		return __value
     }
 
+    func pull<Type: NSManagedObject>(savedObject: Type) throws -> Type {
+        addInvocation(.m_pull__savedObject_savedObject(Parameter<Type>.value(`savedObject`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_pull__savedObject_savedObject(Parameter<Type>.value(`savedObject`).wrapAsGeneric())) as? (Type) -> Void
+		perform?(`savedObject`)
+		var __value: Type
+		do {
+		    __value = try methodReturnValue(.m_pull__savedObject_savedObject(Parameter<Type>.value(`savedObject`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for pull<Type: NSManagedObject>(savedObject: Type). Use given")
+			Failure("Stub return value not specified for pull<Type: NSManagedObject>(savedObject: Type). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     func pull<Type: NSManagedObject>(savedObject: Type, fromSameContextAs otherObject: NSManagedObject) throws -> Type {
         addInvocation(.m_pull__savedObject_savedObjectfromSameContextAs_otherObject(Parameter<Type>.value(`savedObject`).wrapAsGeneric(), Parameter<NSManagedObject>.value(`otherObject`)))
 		let perform = methodPerformValue(.m_pull__savedObject_savedObjectfromSameContextAs_otherObject(Parameter<Type>.value(`savedObject`).wrapAsGeneric(), Parameter<NSManagedObject>.value(`otherObject`))) as? (Type, NSManagedObject) -> Void
@@ -2801,116 +2758,28 @@ class DatabaseMock: Database, Mock {
 		return __value
     }
 
-    func getUpdated<Type: NSManagedObject>(object: Type) throws -> Type {
-        addInvocation(.m_getUpdated__object_object(Parameter<Type>.value(`object`).wrapAsGeneric()))
-		let perform = methodPerformValue(.m_getUpdated__object_object(Parameter<Type>.value(`object`).wrapAsGeneric())) as? (Type) -> Void
-		perform?(`object`)
+    func pull<Type: NSManagedObject>(savedObject: Type, fromContext context: NSManagedObjectContext) throws -> Type {
+        addInvocation(.m_pull__savedObject_savedObjectfromContext_context(Parameter<Type>.value(`savedObject`).wrapAsGeneric(), Parameter<NSManagedObjectContext>.value(`context`)))
+		let perform = methodPerformValue(.m_pull__savedObject_savedObjectfromContext_context(Parameter<Type>.value(`savedObject`).wrapAsGeneric(), Parameter<NSManagedObjectContext>.value(`context`))) as? (Type, NSManagedObjectContext) -> Void
+		perform?(`savedObject`, `context`)
 		var __value: Type
 		do {
-		    __value = try methodReturnValue(.m_getUpdated__object_object(Parameter<Type>.value(`object`).wrapAsGeneric())).casted()
+		    __value = try methodReturnValue(.m_pull__savedObject_savedObjectfromContext_context(Parameter<Type>.value(`savedObject`).wrapAsGeneric(), Parameter<NSManagedObjectContext>.value(`context`))).casted()
 		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for getUpdated<Type: NSManagedObject>(object: Type). Use given")
-			Failure("Stub return value not specified for getUpdated<Type: NSManagedObject>(object: Type). Use given")
+			onFatalFailure("Stub return value not specified for pull<Type: NSManagedObject>(savedObject: Type, fromContext context: NSManagedObjectContext). Use given")
+			Failure("Stub return value not specified for pull<Type: NSManagedObject>(savedObject: Type, fromContext context: NSManagedObjectContext). Use given")
 		} catch {
 		    throw error
 		}
 		return __value
     }
 
-    func save() throws {
-        addInvocation(.m_save)
-		let perform = methodPerformValue(.m_save) as? () -> Void
+    func deleteEverything() throws {
+        addInvocation(.m_deleteEverything)
+		let perform = methodPerformValue(.m_deleteEverything) as? () -> Void
 		perform?()
 		do {
-		    _ = try methodReturnValue(.m_save).casted() as Void
-		} catch MockError.notStubed {
-			// do nothing
-		} catch {
-		    throw error
-		}
-    }
-
-    func clearUnsavedChanges() {
-        addInvocation(.m_clearUnsavedChanges)
-		let perform = methodPerformValue(.m_clearUnsavedChanges) as? () -> Void
-		perform?()
-    }
-
-    func batchUpdateRequest<Type: CoreDataObject>(for type: Type.Type) -> NSBatchUpdateRequest {
-        addInvocation(.m_batchUpdateRequest__for_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric()))
-		let perform = methodPerformValue(.m_batchUpdateRequest__for_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric())) as? (Type.Type) -> Void
-		perform?(`type`)
-		var __value: NSBatchUpdateRequest
-		do {
-		    __value = try methodReturnValue(.m_batchUpdateRequest__for_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric())).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for batchUpdateRequest<Type: CoreDataObject>(for type: Type.Type). Use given")
-			Failure("Stub return value not specified for batchUpdateRequest<Type: CoreDataObject>(for type: Type.Type). Use given")
-		}
-		return __value
-    }
-
-    func batchUpdate(_ request: NSBatchUpdateRequest) throws -> NSBatchUpdateResult {
-        addInvocation(.m_batchUpdate__request(Parameter<NSBatchUpdateRequest>.value(`request`)))
-		let perform = methodPerformValue(.m_batchUpdate__request(Parameter<NSBatchUpdateRequest>.value(`request`))) as? (NSBatchUpdateRequest) -> Void
-		perform?(`request`)
-		var __value: NSBatchUpdateResult
-		do {
-		    __value = try methodReturnValue(.m_batchUpdate__request(Parameter<NSBatchUpdateRequest>.value(`request`))).casted()
-		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for batchUpdate(_ request: NSBatchUpdateRequest). Use given")
-			Failure("Stub return value not specified for batchUpdate(_ request: NSBatchUpdateRequest). Use given")
-		} catch {
-		    throw error
-		}
-		return __value
-    }
-
-    func delete(_ object: NSManagedObject) throws {
-        addInvocation(.m_delete__object(Parameter<NSManagedObject>.value(`object`)))
-		let perform = methodPerformValue(.m_delete__object(Parameter<NSManagedObject>.value(`object`))) as? (NSManagedObject) -> Void
-		perform?(`object`)
-		do {
-		    _ = try methodReturnValue(.m_delete__object(Parameter<NSManagedObject>.value(`object`))).casted() as Void
-		} catch MockError.notStubed {
-			// do nothing
-		} catch {
-		    throw error
-		}
-    }
-
-    func deleteAll(_ objects: [NSManagedObject]) throws {
-        addInvocation(.m_deleteAll__objects(Parameter<[NSManagedObject]>.value(`objects`)))
-		let perform = methodPerformValue(.m_deleteAll__objects(Parameter<[NSManagedObject]>.value(`objects`))) as? ([NSManagedObject]) -> Void
-		perform?(`objects`)
-		do {
-		    _ = try methodReturnValue(.m_deleteAll__objects(Parameter<[NSManagedObject]>.value(`objects`))).casted() as Void
-		} catch MockError.notStubed {
-			// do nothing
-		} catch {
-		    throw error
-		}
-    }
-
-    func deleteAll(_ objectType: NSManagedObject.Type) throws {
-        addInvocation(.m_deleteAll__objectType(Parameter<NSManagedObject.Type>.value(`objectType`)))
-		let perform = methodPerformValue(.m_deleteAll__objectType(Parameter<NSManagedObject.Type>.value(`objectType`))) as? (NSManagedObject.Type) -> Void
-		perform?(`objectType`)
-		do {
-		    _ = try methodReturnValue(.m_deleteAll__objectType(Parameter<NSManagedObject.Type>.value(`objectType`))).casted() as Void
-		} catch MockError.notStubed {
-			// do nothing
-		} catch {
-		    throw error
-		}
-    }
-
-    func deleteAll(_ entityName: String) throws {
-        addInvocation(.m_deleteAll__entityName(Parameter<String>.value(`entityName`)))
-		let perform = methodPerformValue(.m_deleteAll__entityName(Parameter<String>.value(`entityName`))) as? (String) -> Void
-		perform?(`entityName`)
-		do {
-		    _ = try methodReturnValue(.m_deleteAll__entityName(Parameter<String>.value(`entityName`))).casted() as Void
+		    _ = try methodReturnValue(.m_deleteEverything).casted() as Void
 		} catch MockError.notStubed {
 			// do nothing
 		} catch {
@@ -2920,24 +2789,17 @@ class DatabaseMock: Database, Mock {
 
 
     fileprivate enum MethodType {
-        case m_new__objectType(Parameter<GenericAttribute>)
+        case m_transaction
         case m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(Parameter<GenericAttribute>, Parameter<[NSSortDescriptor]>, Parameter<String?>)
         case m_query__fetchRequest(Parameter<GenericAttribute>)
+        case m_pull__savedObject_savedObject(Parameter<GenericAttribute>)
         case m_pull__savedObject_savedObjectfromSameContextAs_otherObject(Parameter<GenericAttribute>, Parameter<NSManagedObject>)
-        case m_getUpdated__object_object(Parameter<GenericAttribute>)
-        case m_save
-        case m_clearUnsavedChanges
-        case m_batchUpdateRequest__for_type(Parameter<GenericAttribute>)
-        case m_batchUpdate__request(Parameter<NSBatchUpdateRequest>)
-        case m_delete__object(Parameter<NSManagedObject>)
-        case m_deleteAll__objects(Parameter<[NSManagedObject]>)
-        case m_deleteAll__objectType(Parameter<NSManagedObject.Type>)
-        case m_deleteAll__entityName(Parameter<String>)
+        case m_pull__savedObject_savedObjectfromContext_context(Parameter<GenericAttribute>, Parameter<NSManagedObjectContext>)
+        case m_deleteEverything
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
-            case (.m_new__objectType(let lhsObjecttype), .m_new__objectType(let rhsObjecttype)):
-                guard Parameter.compare(lhs: lhsObjecttype, rhs: rhsObjecttype, with: matcher) else { return false } 
+            case (.m_transaction, .m_transaction):
                 return true 
             case (.m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(let lhsType, let lhsSortdescriptors, let lhsCachename), .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(let rhsType, let rhsSortdescriptors, let rhsCachename)):
                 guard Parameter.compare(lhs: lhsType, rhs: rhsType, with: matcher) else { return false } 
@@ -2947,34 +2809,18 @@ class DatabaseMock: Database, Mock {
             case (.m_query__fetchRequest(let lhsFetchrequest), .m_query__fetchRequest(let rhsFetchrequest)):
                 guard Parameter.compare(lhs: lhsFetchrequest, rhs: rhsFetchrequest, with: matcher) else { return false } 
                 return true 
+            case (.m_pull__savedObject_savedObject(let lhsSavedobject), .m_pull__savedObject_savedObject(let rhsSavedobject)):
+                guard Parameter.compare(lhs: lhsSavedobject, rhs: rhsSavedobject, with: matcher) else { return false } 
+                return true 
             case (.m_pull__savedObject_savedObjectfromSameContextAs_otherObject(let lhsSavedobject, let lhsOtherobject), .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(let rhsSavedobject, let rhsOtherobject)):
                 guard Parameter.compare(lhs: lhsSavedobject, rhs: rhsSavedobject, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsOtherobject, rhs: rhsOtherobject, with: matcher) else { return false } 
                 return true 
-            case (.m_getUpdated__object_object(let lhsObject), .m_getUpdated__object_object(let rhsObject)):
-                guard Parameter.compare(lhs: lhsObject, rhs: rhsObject, with: matcher) else { return false } 
+            case (.m_pull__savedObject_savedObjectfromContext_context(let lhsSavedobject, let lhsContext), .m_pull__savedObject_savedObjectfromContext_context(let rhsSavedobject, let rhsContext)):
+                guard Parameter.compare(lhs: lhsSavedobject, rhs: rhsSavedobject, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsContext, rhs: rhsContext, with: matcher) else { return false } 
                 return true 
-            case (.m_save, .m_save):
-                return true 
-            case (.m_clearUnsavedChanges, .m_clearUnsavedChanges):
-                return true 
-            case (.m_batchUpdateRequest__for_type(let lhsType), .m_batchUpdateRequest__for_type(let rhsType)):
-                guard Parameter.compare(lhs: lhsType, rhs: rhsType, with: matcher) else { return false } 
-                return true 
-            case (.m_batchUpdate__request(let lhsRequest), .m_batchUpdate__request(let rhsRequest)):
-                guard Parameter.compare(lhs: lhsRequest, rhs: rhsRequest, with: matcher) else { return false } 
-                return true 
-            case (.m_delete__object(let lhsObject), .m_delete__object(let rhsObject)):
-                guard Parameter.compare(lhs: lhsObject, rhs: rhsObject, with: matcher) else { return false } 
-                return true 
-            case (.m_deleteAll__objects(let lhsObjects), .m_deleteAll__objects(let rhsObjects)):
-                guard Parameter.compare(lhs: lhsObjects, rhs: rhsObjects, with: matcher) else { return false } 
-                return true 
-            case (.m_deleteAll__objectType(let lhsObjecttype), .m_deleteAll__objectType(let rhsObjecttype)):
-                guard Parameter.compare(lhs: lhsObjecttype, rhs: rhsObjecttype, with: matcher) else { return false } 
-                return true 
-            case (.m_deleteAll__entityName(let lhsEntityname), .m_deleteAll__entityName(let rhsEntityname)):
-                guard Parameter.compare(lhs: lhsEntityname, rhs: rhsEntityname, with: matcher) else { return false } 
+            case (.m_deleteEverything, .m_deleteEverything):
                 return true 
             default: return false
             }
@@ -2982,19 +2828,13 @@ class DatabaseMock: Database, Mock {
 
         func intValue() -> Int {
             switch self {
-            case let .m_new__objectType(p0): return p0.intValue
+            case .m_transaction: return 0
             case let .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_query__fetchRequest(p0): return p0.intValue
+            case let .m_pull__savedObject_savedObject(p0): return p0.intValue
             case let .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(p0, p1): return p0.intValue + p1.intValue
-            case let .m_getUpdated__object_object(p0): return p0.intValue
-            case .m_save: return 0
-            case .m_clearUnsavedChanges: return 0
-            case let .m_batchUpdateRequest__for_type(p0): return p0.intValue
-            case let .m_batchUpdate__request(p0): return p0.intValue
-            case let .m_delete__object(p0): return p0.intValue
-            case let .m_deleteAll__objects(p0): return p0.intValue
-            case let .m_deleteAll__objectType(p0): return p0.intValue
-            case let .m_deleteAll__entityName(p0): return p0.intValue
+            case let .m_pull__savedObject_savedObjectfromContext_context(p0, p1): return p0.intValue + p1.intValue
+            case .m_deleteEverything: return 0
             }
         }
     }
@@ -3008,12 +2848,8 @@ class DatabaseMock: Database, Mock {
         }
 
 
-        static func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
-            return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
-		static func new<Type: NSManagedObject & CoreDataObject>(objectType: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
-            return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
+        static func transaction(willReturn: Transaction...) -> MethodStub {
+            return Given(method: .m_transaction, products: willReturn.map({ Product.return($0) }))
         }
         static func fetchedResultsController<Type: NSManagedObject>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>, willReturn: NSFetchedResultsController<Type>...) -> MethodStub {
             return Given(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`), products: willReturn.map({ Product.return($0) }))
@@ -3025,47 +2861,26 @@ class DatabaseMock: Database, Mock {
 		static func query<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: [Type]...) -> MethodStub {
             return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
+        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willReturn: Type...) -> MethodStub {
+            return Given(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
+        }
         static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, fromSameContextAs otherObject: Parameter<NSManagedObject>, willReturn: Type...) -> MethodStub {
             return Given(method: .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(`savedObject`.wrapAsGeneric(), `otherObject`), products: willReturn.map({ Product.return($0) }))
         }
-        static func getUpdated<Type: NSManagedObject>(object: Parameter<Type>, willReturn: Type...) -> MethodStub {
-            return Given(method: .m_getUpdated__object_object(`object`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
+        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, fromContext context: Parameter<NSManagedObjectContext>, willReturn: Type...) -> MethodStub {
+            return Given(method: .m_pull__savedObject_savedObjectfromContext_context(`savedObject`.wrapAsGeneric(), `context`), products: willReturn.map({ Product.return($0) }))
         }
-        static func batchUpdateRequest<Type: CoreDataObject>(for type: Parameter<Type.Type>, willReturn: NSBatchUpdateRequest...) -> MethodStub {
-            return Given(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
-        }
-        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, willReturn: NSBatchUpdateResult...) -> MethodStub {
-            return Given(method: .m_batchUpdate__request(`request`), products: willReturn.map({ Product.return($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `request` label")
-		static func batchUpdate(request: Parameter<NSBatchUpdateRequest>, willReturn: NSBatchUpdateResult...) -> MethodStub {
-            return Given(method: .m_batchUpdate__request(`request`), products: willReturn.map({ Product.return($0) }))
+        static func transaction(willProduce: (Stubber<Transaction>) -> Void) -> MethodStub {
+            let willReturn: [Transaction] = []
+			let given: Given = { return Given(method: .m_transaction, products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (Transaction).self)
+			willProduce(stubber)
+			return given
         }
         static func fetchedResultsController<Type: NSManagedObject>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>, willProduce: (Stubber<NSFetchedResultsController<Type>>) -> Void) -> MethodStub {
             let willReturn: [NSFetchedResultsController<Type>] = []
 			let given: Given = { return Given(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (NSFetchedResultsController<Type>).self)
-			willProduce(stubber)
-			return given
-        }
-        static func batchUpdateRequest<Type: CoreDataObject>(for type: Parameter<Type.Type>, willProduce: (Stubber<NSBatchUpdateRequest>) -> Void) -> MethodStub {
-            let willReturn: [NSBatchUpdateRequest] = []
-			let given: Given = { return Given(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: (NSBatchUpdateRequest).self)
-			willProduce(stubber)
-			return given
-        }
-        static func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
-		static func new<Type: NSManagedObject & CoreDataObject>(objectType: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
-        }
-        static func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Parameter<Type.Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
-            let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
-			let stubber = given.stubThrows(for: (Type).self)
 			willProduce(stubber)
 			return given
         }
@@ -3083,6 +2898,16 @@ class DatabaseMock: Database, Mock {
 			willProduce(stubber)
 			return given
         }
+        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Type).self)
+			willProduce(stubber)
+			return given
+        }
         static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, fromSameContextAs otherObject: Parameter<NSManagedObject>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(`savedObject`.wrapAsGeneric(), `otherObject`), products: willThrow.map({ Product.throw($0) }))
         }
@@ -3093,92 +2918,22 @@ class DatabaseMock: Database, Mock {
 			willProduce(stubber)
 			return given
         }
-        static func getUpdated<Type: NSManagedObject>(object: Parameter<Type>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_getUpdated__object_object(`object`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
+        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, fromContext context: Parameter<NSManagedObjectContext>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_pull__savedObject_savedObjectfromContext_context(`savedObject`.wrapAsGeneric(), `context`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func getUpdated<Type: NSManagedObject>(object: Parameter<Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
+        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, fromContext context: Parameter<NSManagedObjectContext>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_getUpdated__object_object(`object`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
+			let given: Given = { return Given(method: .m_pull__savedObject_savedObjectfromContext_context(`savedObject`.wrapAsGeneric(), `context`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Type).self)
 			willProduce(stubber)
 			return given
         }
-        static func save(willThrow: Error...) -> MethodStub {
-            return Given(method: .m_save, products: willThrow.map({ Product.throw($0) }))
+        static func deleteEverything(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_deleteEverything, products: willThrow.map({ Product.throw($0) }))
         }
-        static func save(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        static func deleteEverything(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_save, products: willThrow.map({ Product.throw($0) })) }()
-			let stubber = given.stubThrows(for: (Void).self)
-			willProduce(stubber)
-			return given
-        }
-        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_batchUpdate__request(`request`), products: willThrow.map({ Product.throw($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `request` label")
-		static func batchUpdate(request: Parameter<NSBatchUpdateRequest>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_batchUpdate__request(`request`), products: willThrow.map({ Product.throw($0) }))
-        }
-        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, willProduce: (StubberThrows<NSBatchUpdateResult>) -> Void) -> MethodStub {
-            let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_batchUpdate__request(`request`), products: willThrow.map({ Product.throw($0) })) }()
-			let stubber = given.stubThrows(for: (NSBatchUpdateResult).self)
-			willProduce(stubber)
-			return given
-        }
-        static func delete(_ object: Parameter<NSManagedObject>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_delete__object(`object`), products: willThrow.map({ Product.throw($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `object` label")
-		static func delete(object: Parameter<NSManagedObject>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_delete__object(`object`), products: willThrow.map({ Product.throw($0) }))
-        }
-        static func delete(_ object: Parameter<NSManagedObject>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
-            let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_delete__object(`object`), products: willThrow.map({ Product.throw($0) })) }()
-			let stubber = given.stubThrows(for: (Void).self)
-			willProduce(stubber)
-			return given
-        }
-        static func deleteAll(_ objects: Parameter<[NSManagedObject]>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_deleteAll__objects(`objects`), products: willThrow.map({ Product.throw($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objects` label")
-		static func deleteAll(objects: Parameter<[NSManagedObject]>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_deleteAll__objects(`objects`), products: willThrow.map({ Product.throw($0) }))
-        }
-        static func deleteAll(_ objects: Parameter<[NSManagedObject]>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
-            let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_deleteAll__objects(`objects`), products: willThrow.map({ Product.throw($0) })) }()
-			let stubber = given.stubThrows(for: (Void).self)
-			willProduce(stubber)
-			return given
-        }
-        static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_deleteAll__objectType(`objectType`), products: willThrow.map({ Product.throw($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
-		static func deleteAll(objectType: Parameter<NSManagedObject.Type>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_deleteAll__objectType(`objectType`), products: willThrow.map({ Product.throw($0) }))
-        }
-        static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
-            let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_deleteAll__objectType(`objectType`), products: willThrow.map({ Product.throw($0) })) }()
-			let stubber = given.stubThrows(for: (Void).self)
-			willProduce(stubber)
-			return given
-        }
-        static func deleteAll(_ entityName: Parameter<String>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_deleteAll__entityName(`entityName`), products: willThrow.map({ Product.throw($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `entityName` label")
-		static func deleteAll(entityName: Parameter<String>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_deleteAll__entityName(`entityName`), products: willThrow.map({ Product.throw($0) }))
-        }
-        static func deleteAll(_ entityName: Parameter<String>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
-            let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_deleteAll__entityName(`entityName`), products: willThrow.map({ Product.throw($0) })) }()
+			let given: Given = { return Given(method: .m_deleteEverything, products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
@@ -3188,45 +2943,23 @@ class DatabaseMock: Database, Mock {
     struct Verify {
         fileprivate var method: MethodType
 
-        static func new<Type>(_ objectType: Parameter<Type.Type>) -> Verify { return Verify(method: .m_new__objectType(`objectType`.wrapAsGeneric()))}
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
-		static func new<Type>(objectType: Parameter<Type.Type>) -> Verify { return Verify(method: .m_new__objectType(`objectType`.wrapAsGeneric()))}
+        static func transaction() -> Verify { return Verify(method: .m_transaction)}
         static func fetchedResultsController<Type>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>) -> Verify { return Verify(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`))}
         static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fetchRequest` label")
 		static func query<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
+        static func pull<Type>(savedObject: Parameter<Type>) -> Verify { return Verify(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()))}
         static func pull<Type>(savedObject: Parameter<Type>, fromSameContextAs otherObject: Parameter<NSManagedObject>) -> Verify { return Verify(method: .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(`savedObject`.wrapAsGeneric(), `otherObject`))}
-        static func getUpdated<Type>(object: Parameter<Type>) -> Verify { return Verify(method: .m_getUpdated__object_object(`object`.wrapAsGeneric()))}
-        static func save() -> Verify { return Verify(method: .m_save)}
-        static func clearUnsavedChanges() -> Verify { return Verify(method: .m_clearUnsavedChanges)}
-        static func batchUpdateRequest<Type>(for type: Parameter<Type.Type>) -> Verify { return Verify(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()))}
-        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>) -> Verify { return Verify(method: .m_batchUpdate__request(`request`))}
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `request` label")
-		static func batchUpdate(request: Parameter<NSBatchUpdateRequest>) -> Verify { return Verify(method: .m_batchUpdate__request(`request`))}
-        static func delete(_ object: Parameter<NSManagedObject>) -> Verify { return Verify(method: .m_delete__object(`object`))}
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `object` label")
-		static func delete(object: Parameter<NSManagedObject>) -> Verify { return Verify(method: .m_delete__object(`object`))}
-        static func deleteAll(_ objects: Parameter<[NSManagedObject]>) -> Verify { return Verify(method: .m_deleteAll__objects(`objects`))}
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objects` label")
-		static func deleteAll(objects: Parameter<[NSManagedObject]>) -> Verify { return Verify(method: .m_deleteAll__objects(`objects`))}
-        static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>) -> Verify { return Verify(method: .m_deleteAll__objectType(`objectType`))}
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
-		static func deleteAll(objectType: Parameter<NSManagedObject.Type>) -> Verify { return Verify(method: .m_deleteAll__objectType(`objectType`))}
-        static func deleteAll(_ entityName: Parameter<String>) -> Verify { return Verify(method: .m_deleteAll__entityName(`entityName`))}
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `entityName` label")
-		static func deleteAll(entityName: Parameter<String>) -> Verify { return Verify(method: .m_deleteAll__entityName(`entityName`))}
+        static func pull<Type>(savedObject: Parameter<Type>, fromContext context: Parameter<NSManagedObjectContext>) -> Verify { return Verify(method: .m_pull__savedObject_savedObjectfromContext_context(`savedObject`.wrapAsGeneric(), `context`))}
+        static func deleteEverything() -> Verify { return Verify(method: .m_deleteEverything)}
     }
 
     struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func new<Type>(_ objectType: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform {
-            return Perform(method: .m_new__objectType(`objectType`.wrapAsGeneric()), performs: perform)
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
-		static func new<Type>(objectType: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform {
-            return Perform(method: .m_new__objectType(`objectType`.wrapAsGeneric()), performs: perform)
+        static func transaction(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_transaction, performs: perform)
         }
         static func fetchedResultsController<Type>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>, perform: @escaping (Type.Type, [NSSortDescriptor], String?) -> Void) -> Perform {
             return Perform(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`), performs: perform)
@@ -3238,55 +2971,17 @@ class DatabaseMock: Database, Mock {
 		static func query<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform {
             return Perform(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), performs: perform)
         }
+        static func pull<Type>(savedObject: Parameter<Type>, perform: @escaping (Type) -> Void) -> Perform {
+            return Perform(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), performs: perform)
+        }
         static func pull<Type>(savedObject: Parameter<Type>, fromSameContextAs otherObject: Parameter<NSManagedObject>, perform: @escaping (Type, NSManagedObject) -> Void) -> Perform {
             return Perform(method: .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(`savedObject`.wrapAsGeneric(), `otherObject`), performs: perform)
         }
-        static func getUpdated<Type>(object: Parameter<Type>, perform: @escaping (Type) -> Void) -> Perform {
-            return Perform(method: .m_getUpdated__object_object(`object`.wrapAsGeneric()), performs: perform)
+        static func pull<Type>(savedObject: Parameter<Type>, fromContext context: Parameter<NSManagedObjectContext>, perform: @escaping (Type, NSManagedObjectContext) -> Void) -> Perform {
+            return Perform(method: .m_pull__savedObject_savedObjectfromContext_context(`savedObject`.wrapAsGeneric(), `context`), performs: perform)
         }
-        static func save(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_save, performs: perform)
-        }
-        static func clearUnsavedChanges(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_clearUnsavedChanges, performs: perform)
-        }
-        static func batchUpdateRequest<Type>(for type: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform {
-            return Perform(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()), performs: perform)
-        }
-        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, perform: @escaping (NSBatchUpdateRequest) -> Void) -> Perform {
-            return Perform(method: .m_batchUpdate__request(`request`), performs: perform)
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `request` label")
-		static func batchUpdate(request: Parameter<NSBatchUpdateRequest>, perform: @escaping (NSBatchUpdateRequest) -> Void) -> Perform {
-            return Perform(method: .m_batchUpdate__request(`request`), performs: perform)
-        }
-        static func delete(_ object: Parameter<NSManagedObject>, perform: @escaping (NSManagedObject) -> Void) -> Perform {
-            return Perform(method: .m_delete__object(`object`), performs: perform)
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `object` label")
-		static func delete(object: Parameter<NSManagedObject>, perform: @escaping (NSManagedObject) -> Void) -> Perform {
-            return Perform(method: .m_delete__object(`object`), performs: perform)
-        }
-        static func deleteAll(_ objects: Parameter<[NSManagedObject]>, perform: @escaping ([NSManagedObject]) -> Void) -> Perform {
-            return Perform(method: .m_deleteAll__objects(`objects`), performs: perform)
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objects` label")
-		static func deleteAll(objects: Parameter<[NSManagedObject]>, perform: @escaping ([NSManagedObject]) -> Void) -> Perform {
-            return Perform(method: .m_deleteAll__objects(`objects`), performs: perform)
-        }
-        static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>, perform: @escaping (NSManagedObject.Type) -> Void) -> Perform {
-            return Perform(method: .m_deleteAll__objectType(`objectType`), performs: perform)
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
-		static func deleteAll(objectType: Parameter<NSManagedObject.Type>, perform: @escaping (NSManagedObject.Type) -> Void) -> Perform {
-            return Perform(method: .m_deleteAll__objectType(`objectType`), performs: perform)
-        }
-        static func deleteAll(_ entityName: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
-            return Perform(method: .m_deleteAll__entityName(`entityName`), performs: perform)
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `entityName` label")
-		static func deleteAll(entityName: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
-            return Perform(method: .m_deleteAll__entityName(`entityName`), performs: perform)
+        static func deleteEverything(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_deleteEverything, performs: perform)
         }
     }
 
@@ -3431,32 +3126,10 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
 		}
     }
 
-    func cancel() {
-        addInvocation(.m_cancel)
-		let perform = methodPerformValue(.m_cancel) as? () -> Void
-		perform?()
-    }
-
-    func equalTo(_ otherImporter: Importer) -> Bool {
-        addInvocation(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`)))
-		let perform = methodPerformValue(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`))) as? (Importer) -> Void
-		perform?(`otherImporter`)
-		var __value: Bool
-		do {
-		    __value = try methodReturnValue(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`))).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for equalTo(_ otherImporter: Importer). Use given")
-			Failure("Stub return value not specified for equalTo(_ otherImporter: Importer). Use given")
-		}
-		return __value
-    }
-
 
     fileprivate enum MethodType {
         case m_importData__from_url(Parameter<URL>)
         case m_resetLastImportDate
-        case m_cancel
-        case m_equalTo__otherImporter(Parameter<Importer>)
         case p_dataTypePluralName_get
         case p_sourceName_get
         case p_lastImport_get
@@ -3469,11 +3142,6 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
                 guard Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher) else { return false } 
                 return true 
             case (.m_resetLastImportDate, .m_resetLastImportDate):
-                return true 
-            case (.m_cancel, .m_cancel):
-                return true 
-            case (.m_equalTo__otherImporter(let lhsOtherimporter), .m_equalTo__otherImporter(let rhsOtherimporter)):
-                guard Parameter.compare(lhs: lhsOtherimporter, rhs: rhsOtherimporter, with: matcher) else { return false } 
                 return true 
             case (.p_dataTypePluralName_get,.p_dataTypePluralName_get): return true
             case (.p_sourceName_get,.p_sourceName_get): return true
@@ -3488,8 +3156,6 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
             switch self {
             case let .m_importData__from_url(p0): return p0.intValue
             case .m_resetLastImportDate: return 0
-            case .m_cancel: return 0
-            case let .m_equalTo__otherImporter(p0): return p0.intValue
             case .p_dataTypePluralName_get: return 0
             case .p_sourceName_get: return 0
             case .p_lastImport_get: return 0
@@ -3520,20 +3186,6 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
             return Given(method: .p_importOnlyNewData_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherImporter: Parameter<Importer>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
-		static func equalTo(otherImporter: Parameter<Importer>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) }))
-        }
-        static func equalTo(_ otherImporter: Parameter<Importer>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
-            let willReturn: [Bool] = []
-			let given: Given = { return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: (Bool).self)
-			willProduce(stubber)
-			return given
-        }
         static func importData(from url: Parameter<URL>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) }))
         }
@@ -3561,10 +3213,6 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
 
         static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
         static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
-        static func cancel() -> Verify { return Verify(method: .m_cancel)}
-        static func equalTo(_ otherImporter: Parameter<Importer>) -> Verify { return Verify(method: .m_equalTo__otherImporter(`otherImporter`))}
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
-		static func equalTo(otherImporter: Parameter<Importer>) -> Verify { return Verify(method: .m_equalTo__otherImporter(`otherImporter`))}
         static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
         static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
         static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
@@ -3581,16 +3229,6 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
         }
         static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_resetLastImportDate, performs: perform)
-        }
-        static func cancel(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_cancel, performs: perform)
-        }
-        static func equalTo(_ otherImporter: Parameter<Importer>, perform: @escaping (Importer) -> Void) -> Perform {
-            return Perform(method: .m_equalTo__otherImporter(`otherImporter`), performs: perform)
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
-		static func equalTo(otherImporter: Parameter<Importer>, perform: @escaping (Importer) -> Void) -> Perform {
-            return Perform(method: .m_equalTo__otherImporter(`otherImporter`), performs: perform)
         }
     }
 
@@ -3735,32 +3373,10 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
 		}
     }
 
-    func cancel() {
-        addInvocation(.m_cancel)
-		let perform = methodPerformValue(.m_cancel) as? () -> Void
-		perform?()
-    }
-
-    func equalTo(_ otherImporter: Importer) -> Bool {
-        addInvocation(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`)))
-		let perform = methodPerformValue(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`))) as? (Importer) -> Void
-		perform?(`otherImporter`)
-		var __value: Bool
-		do {
-		    __value = try methodReturnValue(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`))).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for equalTo(_ otherImporter: Importer). Use given")
-			Failure("Stub return value not specified for equalTo(_ otherImporter: Importer). Use given")
-		}
-		return __value
-    }
-
 
     fileprivate enum MethodType {
         case m_importData__from_url(Parameter<URL>)
         case m_resetLastImportDate
-        case m_cancel
-        case m_equalTo__otherImporter(Parameter<Importer>)
         case p_dataTypePluralName_get
         case p_sourceName_get
         case p_lastImport_get
@@ -3773,11 +3389,6 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
                 guard Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher) else { return false } 
                 return true 
             case (.m_resetLastImportDate, .m_resetLastImportDate):
-                return true 
-            case (.m_cancel, .m_cancel):
-                return true 
-            case (.m_equalTo__otherImporter(let lhsOtherimporter), .m_equalTo__otherImporter(let rhsOtherimporter)):
-                guard Parameter.compare(lhs: lhsOtherimporter, rhs: rhsOtherimporter, with: matcher) else { return false } 
                 return true 
             case (.p_dataTypePluralName_get,.p_dataTypePluralName_get): return true
             case (.p_sourceName_get,.p_sourceName_get): return true
@@ -3792,8 +3403,6 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
             switch self {
             case let .m_importData__from_url(p0): return p0.intValue
             case .m_resetLastImportDate: return 0
-            case .m_cancel: return 0
-            case let .m_equalTo__otherImporter(p0): return p0.intValue
             case .p_dataTypePluralName_get: return 0
             case .p_sourceName_get: return 0
             case .p_lastImport_get: return 0
@@ -3824,20 +3433,6 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
             return Given(method: .p_importOnlyNewData_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherImporter: Parameter<Importer>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
-		static func equalTo(otherImporter: Parameter<Importer>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) }))
-        }
-        static func equalTo(_ otherImporter: Parameter<Importer>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
-            let willReturn: [Bool] = []
-			let given: Given = { return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: (Bool).self)
-			willProduce(stubber)
-			return given
-        }
         static func importData(from url: Parameter<URL>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) }))
         }
@@ -3865,10 +3460,6 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
 
         static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
         static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
-        static func cancel() -> Verify { return Verify(method: .m_cancel)}
-        static func equalTo(_ otherImporter: Parameter<Importer>) -> Verify { return Verify(method: .m_equalTo__otherImporter(`otherImporter`))}
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
-		static func equalTo(otherImporter: Parameter<Importer>) -> Verify { return Verify(method: .m_equalTo__otherImporter(`otherImporter`))}
         static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
         static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
         static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
@@ -3885,16 +3476,6 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
         }
         static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_resetLastImportDate, performs: perform)
-        }
-        static func cancel(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_cancel, performs: perform)
-        }
-        static func equalTo(_ otherImporter: Parameter<Importer>, perform: @escaping (Importer) -> Void) -> Perform {
-            return Perform(method: .m_equalTo__otherImporter(`otherImporter`), performs: perform)
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
-		static func equalTo(otherImporter: Parameter<Importer>, perform: @escaping (Importer) -> Void) -> Perform {
-            return Perform(method: .m_equalTo__otherImporter(`otherImporter`), performs: perform)
         }
     }
 
@@ -4632,195 +4213,6 @@ class ImporterFactoryMock: ImporterFactory, Mock {
         }
         static func aTrackerActivityImporter(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_aTrackerActivityImporter, performs: perform)
-        }
-    }
-
-    public func given(_ method: Given) {
-        methodReturnValues.append(method)
-    }
-
-    public func perform(_ method: Perform) {
-        methodPerformValues.append(method)
-        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
-    }
-
-    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
-    }
-
-    private func addInvocation(_ call: MethodType) {
-        invocations.append(call)
-    }
-    private func methodReturnValue(_ method: MethodType) throws -> Product {
-        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
-        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
-        return product
-    }
-    private func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
-        return matched?.performs
-    }
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
-    }
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
-    }
-    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            onFatalFailure(message)
-            Failure(message)
-        }
-    }
-    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            return nil
-        }
-    }
-    private func onFatalFailure(_ message: String) {
-        #if Mocky
-        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
-        #endif
-    }
-}
-
-// MARK: - ImporterUtil
-class ImporterUtilMock: ImporterUtil, Mock {
-    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
-        self.sequencingPolicy = sequencingPolicy
-        self.stubbingPolicy = stubbingPolicy
-        self.file = file
-        self.line = line
-    }
-
-    var matcher: Matcher = Matcher.default
-    var stubbingPolicy: StubbingPolicy = .wrap
-    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
-    private var invocations: [MethodType] = []
-    private var methodReturnValues: [Given] = []
-    private var methodPerformValues: [Perform] = []
-    private var file: StaticString?
-    private var line: UInt?
-
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
-
-    /// Convenience method - call setupMock() to extend debug information when failure occurs
-    public func setupMock(file: StaticString = #file, line: UInt = #line) {
-        self.file = file
-        self.line = line
-    }
-
-
-
-
-
-    func deleteImportedEntities<Type: NSManagedObject>(fetchRequest: NSFetchRequest<Type>) throws {
-        addInvocation(.m_deleteImportedEntities__fetchRequest_fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric()))
-		let perform = methodPerformValue(.m_deleteImportedEntities__fetchRequest_fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric())) as? (NSFetchRequest<Type>) -> Void
-		perform?(`fetchRequest`)
-		do {
-		    _ = try methodReturnValue(.m_deleteImportedEntities__fetchRequest_fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric())).casted() as Void
-		} catch MockError.notStubed {
-			// do nothing
-		} catch {
-		    throw error
-		}
-    }
-
-    func cleanUpImportedData<Type: Importable & CoreDataObject>(forType type: Type.Type) throws {
-        addInvocation(.m_cleanUpImportedData__forType_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric()))
-		let perform = methodPerformValue(.m_cleanUpImportedData__forType_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric())) as? (Type.Type) -> Void
-		perform?(`type`)
-		do {
-		    _ = try methodReturnValue(.m_cleanUpImportedData__forType_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric())).casted() as Void
-		} catch MockError.notStubed {
-			// do nothing
-		} catch {
-		    throw error
-		}
-    }
-
-
-    fileprivate enum MethodType {
-        case m_deleteImportedEntities__fetchRequest_fetchRequest(Parameter<GenericAttribute>)
-        case m_cleanUpImportedData__forType_type(Parameter<GenericAttribute>)
-
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
-            switch (lhs, rhs) {
-            case (.m_deleteImportedEntities__fetchRequest_fetchRequest(let lhsFetchrequest), .m_deleteImportedEntities__fetchRequest_fetchRequest(let rhsFetchrequest)):
-                guard Parameter.compare(lhs: lhsFetchrequest, rhs: rhsFetchrequest, with: matcher) else { return false } 
-                return true 
-            case (.m_cleanUpImportedData__forType_type(let lhsType), .m_cleanUpImportedData__forType_type(let rhsType)):
-                guard Parameter.compare(lhs: lhsType, rhs: rhsType, with: matcher) else { return false } 
-                return true 
-            default: return false
-            }
-        }
-
-        func intValue() -> Int {
-            switch self {
-            case let .m_deleteImportedEntities__fetchRequest_fetchRequest(p0): return p0.intValue
-            case let .m_cleanUpImportedData__forType_type(p0): return p0.intValue
-            }
-        }
-    }
-
-    class Given: StubbedMethod {
-        fileprivate var method: MethodType
-
-        private init(method: MethodType, products: [Product]) {
-            self.method = method
-            super.init(products)
-        }
-
-
-        static func deleteImportedEntities<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_deleteImportedEntities__fetchRequest_fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
-        }
-        static func deleteImportedEntities<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
-            let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_deleteImportedEntities__fetchRequest_fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
-			let stubber = given.stubThrows(for: (Void).self)
-			willProduce(stubber)
-			return given
-        }
-        static func cleanUpImportedData<Type: Importable & CoreDataObject>(forType type: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_cleanUpImportedData__forType_type(`type`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
-        }
-        static func cleanUpImportedData<Type: Importable & CoreDataObject>(forType type: Parameter<Type.Type>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
-            let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_cleanUpImportedData__forType_type(`type`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
-			let stubber = given.stubThrows(for: (Void).self)
-			willProduce(stubber)
-			return given
-        }
-    }
-
-    struct Verify {
-        fileprivate var method: MethodType
-
-        static func deleteImportedEntities<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify { return Verify(method: .m_deleteImportedEntities__fetchRequest_fetchRequest(`fetchRequest`.wrapAsGeneric()))}
-        static func cleanUpImportedData<Type>(forType type: Parameter<Type.Type>) -> Verify { return Verify(method: .m_cleanUpImportedData__forType_type(`type`.wrapAsGeneric()))}
-    }
-
-    struct Perform {
-        fileprivate var method: MethodType
-        var performs: Any
-
-        static func deleteImportedEntities<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform {
-            return Perform(method: .m_deleteImportedEntities__fetchRequest_fetchRequest(`fetchRequest`.wrapAsGeneric()), performs: perform)
-        }
-        static func cleanUpImportedData<Type>(forType type: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform {
-            return Perform(method: .m_cleanUpImportedData__forType_type(`type`.wrapAsGeneric()), performs: perform)
         }
     }
 
@@ -7963,16 +7355,16 @@ class SampleFactoryMock: SampleFactory, Mock {
 		return __value
     }
 
-    func activity() throws -> Activity {
-        addInvocation(.m_activity)
-		let perform = methodPerformValue(.m_activity) as? () -> Void
-		perform?()
+    func activity(using transaction: Transaction) throws -> Activity {
+        addInvocation(.m_activity__using_transaction(Parameter<Transaction>.value(`transaction`)))
+		let perform = methodPerformValue(.m_activity__using_transaction(Parameter<Transaction>.value(`transaction`))) as? (Transaction) -> Void
+		perform?(`transaction`)
 		var __value: Activity
 		do {
-		    __value = try methodReturnValue(.m_activity).casted()
+		    __value = try methodReturnValue(.m_activity__using_transaction(Parameter<Transaction>.value(`transaction`))).casted()
 		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for activity(). Use given")
-			Failure("Stub return value not specified for activity(). Use given")
+			onFatalFailure("Stub return value not specified for activity(using transaction: Transaction). Use given")
+			Failure("Stub return value not specified for activity(using transaction: Transaction). Use given")
 		} catch {
 		    throw error
 		}
@@ -8021,32 +7413,32 @@ class SampleFactoryMock: SampleFactory, Mock {
 		return __value
     }
 
-    func medicationDose() throws -> MedicationDose {
-        addInvocation(.m_medicationDose)
-		let perform = methodPerformValue(.m_medicationDose) as? () -> Void
-		perform?()
+    func medicationDose(using transaction: Transaction) throws -> MedicationDose {
+        addInvocation(.m_medicationDose__using_transaction(Parameter<Transaction>.value(`transaction`)))
+		let perform = methodPerformValue(.m_medicationDose__using_transaction(Parameter<Transaction>.value(`transaction`))) as? (Transaction) -> Void
+		perform?(`transaction`)
 		var __value: MedicationDose
 		do {
-		    __value = try methodReturnValue(.m_medicationDose).casted()
+		    __value = try methodReturnValue(.m_medicationDose__using_transaction(Parameter<Transaction>.value(`transaction`))).casted()
 		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for medicationDose(). Use given")
-			Failure("Stub return value not specified for medicationDose(). Use given")
+			onFatalFailure("Stub return value not specified for medicationDose(using transaction: Transaction). Use given")
+			Failure("Stub return value not specified for medicationDose(using transaction: Transaction). Use given")
 		} catch {
 		    throw error
 		}
 		return __value
     }
 
-    func mood() throws -> Mood {
-        addInvocation(.m_mood)
-		let perform = methodPerformValue(.m_mood) as? () -> Void
-		perform?()
+    func mood(using transaction: Transaction) throws -> Mood {
+        addInvocation(.m_mood__using_transaction(Parameter<Transaction>.value(`transaction`)))
+		let perform = methodPerformValue(.m_mood__using_transaction(Parameter<Transaction>.value(`transaction`))) as? (Transaction) -> Void
+		perform?(`transaction`)
 		var __value: Mood
 		do {
-		    __value = try methodReturnValue(.m_mood).casted()
+		    __value = try methodReturnValue(.m_mood__using_transaction(Parameter<Transaction>.value(`transaction`))).casted()
 		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for mood(). Use given")
-			Failure("Stub return value not specified for mood(). Use given")
+			onFatalFailure("Stub return value not specified for mood(using transaction: Transaction). Use given")
+			Failure("Stub return value not specified for mood(using transaction: Transaction). Use given")
 		} catch {
 		    throw error
 		}
@@ -8057,12 +7449,12 @@ class SampleFactoryMock: SampleFactory, Mock {
     fileprivate enum MethodType {
         case m_allTypes
         case m_healthKitTypes
-        case m_activity
+        case m_activity__using_transaction(Parameter<Transaction>)
         case m_heartRate__value_date(Parameter<Double>, Parameter<Date>)
         case m_heartRate__value_value(Parameter<Double>)
         case m_heartRate__sample(Parameter<HKQuantitySample>)
-        case m_medicationDose
-        case m_mood
+        case m_medicationDose__using_transaction(Parameter<Transaction>)
+        case m_mood__using_transaction(Parameter<Transaction>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -8070,7 +7462,8 @@ class SampleFactoryMock: SampleFactory, Mock {
                 return true 
             case (.m_healthKitTypes, .m_healthKitTypes):
                 return true 
-            case (.m_activity, .m_activity):
+            case (.m_activity__using_transaction(let lhsTransaction), .m_activity__using_transaction(let rhsTransaction)):
+                guard Parameter.compare(lhs: lhsTransaction, rhs: rhsTransaction, with: matcher) else { return false } 
                 return true 
             case (.m_heartRate__value_date(let lhsValue, let lhsDate), .m_heartRate__value_date(let rhsValue, let rhsDate)):
                 guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
@@ -8082,9 +7475,11 @@ class SampleFactoryMock: SampleFactory, Mock {
             case (.m_heartRate__sample(let lhsSample), .m_heartRate__sample(let rhsSample)):
                 guard Parameter.compare(lhs: lhsSample, rhs: rhsSample, with: matcher) else { return false } 
                 return true 
-            case (.m_medicationDose, .m_medicationDose):
+            case (.m_medicationDose__using_transaction(let lhsTransaction), .m_medicationDose__using_transaction(let rhsTransaction)):
+                guard Parameter.compare(lhs: lhsTransaction, rhs: rhsTransaction, with: matcher) else { return false } 
                 return true 
-            case (.m_mood, .m_mood):
+            case (.m_mood__using_transaction(let lhsTransaction), .m_mood__using_transaction(let rhsTransaction)):
+                guard Parameter.compare(lhs: lhsTransaction, rhs: rhsTransaction, with: matcher) else { return false } 
                 return true 
             default: return false
             }
@@ -8094,12 +7489,12 @@ class SampleFactoryMock: SampleFactory, Mock {
             switch self {
             case .m_allTypes: return 0
             case .m_healthKitTypes: return 0
-            case .m_activity: return 0
+            case let .m_activity__using_transaction(p0): return p0.intValue
             case let .m_heartRate__value_date(p0, p1): return p0.intValue + p1.intValue
             case let .m_heartRate__value_value(p0): return p0.intValue
             case let .m_heartRate__sample(p0): return p0.intValue
-            case .m_medicationDose: return 0
-            case .m_mood: return 0
+            case let .m_medicationDose__using_transaction(p0): return p0.intValue
+            case let .m_mood__using_transaction(p0): return p0.intValue
             }
         }
     }
@@ -8119,8 +7514,8 @@ class SampleFactoryMock: SampleFactory, Mock {
         static func healthKitTypes(willReturn: [HealthKitSample.Type]...) -> MethodStub {
             return Given(method: .m_healthKitTypes, products: willReturn.map({ Product.return($0) }))
         }
-        static func activity(willReturn: Activity...) -> MethodStub {
-            return Given(method: .m_activity, products: willReturn.map({ Product.return($0) }))
+        static func activity(using transaction: Parameter<Transaction>, willReturn: Activity...) -> MethodStub {
+            return Given(method: .m_activity__using_transaction(`transaction`), products: willReturn.map({ Product.return($0) }))
         }
         static func heartRate(_ value: Parameter<Double>, _ date: Parameter<Date>, willReturn: HeartRate...) -> MethodStub {
             return Given(method: .m_heartRate__value_date(`value`, `date`), products: willReturn.map({ Product.return($0) }))
@@ -8139,11 +7534,11 @@ class SampleFactoryMock: SampleFactory, Mock {
 		static func heartRate(sample: Parameter<HKQuantitySample>, willReturn: HeartRate...) -> MethodStub {
             return Given(method: .m_heartRate__sample(`sample`), products: willReturn.map({ Product.return($0) }))
         }
-        static func medicationDose(willReturn: MedicationDose...) -> MethodStub {
-            return Given(method: .m_medicationDose, products: willReturn.map({ Product.return($0) }))
+        static func medicationDose(using transaction: Parameter<Transaction>, willReturn: MedicationDose...) -> MethodStub {
+            return Given(method: .m_medicationDose__using_transaction(`transaction`), products: willReturn.map({ Product.return($0) }))
         }
-        static func mood(willReturn: Mood...) -> MethodStub {
-            return Given(method: .m_mood, products: willReturn.map({ Product.return($0) }))
+        static func mood(using transaction: Parameter<Transaction>, willReturn: Mood...) -> MethodStub {
+            return Given(method: .m_mood__using_transaction(`transaction`), products: willReturn.map({ Product.return($0) }))
         }
         static func allTypes(willProduce: (Stubber<[Sample.Type]>) -> Void) -> MethodStub {
             let willReturn: [[Sample.Type]] = []
@@ -8180,32 +7575,32 @@ class SampleFactoryMock: SampleFactory, Mock {
 			willProduce(stubber)
 			return given
         }
-        static func activity(willThrow: Error...) -> MethodStub {
-            return Given(method: .m_activity, products: willThrow.map({ Product.throw($0) }))
+        static func activity(using transaction: Parameter<Transaction>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_activity__using_transaction(`transaction`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func activity(willProduce: (StubberThrows<Activity>) -> Void) -> MethodStub {
+        static func activity(using transaction: Parameter<Transaction>, willProduce: (StubberThrows<Activity>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_activity, products: willThrow.map({ Product.throw($0) })) }()
+			let given: Given = { return Given(method: .m_activity__using_transaction(`transaction`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Activity).self)
 			willProduce(stubber)
 			return given
         }
-        static func medicationDose(willThrow: Error...) -> MethodStub {
-            return Given(method: .m_medicationDose, products: willThrow.map({ Product.throw($0) }))
+        static func medicationDose(using transaction: Parameter<Transaction>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_medicationDose__using_transaction(`transaction`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func medicationDose(willProduce: (StubberThrows<MedicationDose>) -> Void) -> MethodStub {
+        static func medicationDose(using transaction: Parameter<Transaction>, willProduce: (StubberThrows<MedicationDose>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_medicationDose, products: willThrow.map({ Product.throw($0) })) }()
+			let given: Given = { return Given(method: .m_medicationDose__using_transaction(`transaction`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (MedicationDose).self)
 			willProduce(stubber)
 			return given
         }
-        static func mood(willThrow: Error...) -> MethodStub {
-            return Given(method: .m_mood, products: willThrow.map({ Product.throw($0) }))
+        static func mood(using transaction: Parameter<Transaction>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_mood__using_transaction(`transaction`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func mood(willProduce: (StubberThrows<Mood>) -> Void) -> MethodStub {
+        static func mood(using transaction: Parameter<Transaction>, willProduce: (StubberThrows<Mood>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_mood, products: willThrow.map({ Product.throw($0) })) }()
+			let given: Given = { return Given(method: .m_mood__using_transaction(`transaction`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Mood).self)
 			willProduce(stubber)
 			return given
@@ -8217,7 +7612,7 @@ class SampleFactoryMock: SampleFactory, Mock {
 
         static func allTypes() -> Verify { return Verify(method: .m_allTypes)}
         static func healthKitTypes() -> Verify { return Verify(method: .m_healthKitTypes)}
-        static func activity() -> Verify { return Verify(method: .m_activity)}
+        static func activity(using transaction: Parameter<Transaction>) -> Verify { return Verify(method: .m_activity__using_transaction(`transaction`))}
         static func heartRate(_ value: Parameter<Double>, _ date: Parameter<Date>) -> Verify { return Verify(method: .m_heartRate__value_date(`value`, `date`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label, remove `date` label")
 		static func heartRate(value: Parameter<Double>, date: Parameter<Date>) -> Verify { return Verify(method: .m_heartRate__value_date(`value`, `date`))}
@@ -8225,8 +7620,8 @@ class SampleFactoryMock: SampleFactory, Mock {
         static func heartRate(_ sample: Parameter<HKQuantitySample>) -> Verify { return Verify(method: .m_heartRate__sample(`sample`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `sample` label")
 		static func heartRate(sample: Parameter<HKQuantitySample>) -> Verify { return Verify(method: .m_heartRate__sample(`sample`))}
-        static func medicationDose() -> Verify { return Verify(method: .m_medicationDose)}
-        static func mood() -> Verify { return Verify(method: .m_mood)}
+        static func medicationDose(using transaction: Parameter<Transaction>) -> Verify { return Verify(method: .m_medicationDose__using_transaction(`transaction`))}
+        static func mood(using transaction: Parameter<Transaction>) -> Verify { return Verify(method: .m_mood__using_transaction(`transaction`))}
     }
 
     struct Perform {
@@ -8239,8 +7634,8 @@ class SampleFactoryMock: SampleFactory, Mock {
         static func healthKitTypes(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_healthKitTypes, performs: perform)
         }
-        static func activity(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_activity, performs: perform)
+        static func activity(using transaction: Parameter<Transaction>, perform: @escaping (Transaction) -> Void) -> Perform {
+            return Perform(method: .m_activity__using_transaction(`transaction`), performs: perform)
         }
         static func heartRate(_ value: Parameter<Double>, _ date: Parameter<Date>, perform: @escaping (Double, Date) -> Void) -> Perform {
             return Perform(method: .m_heartRate__value_date(`value`, `date`), performs: perform)
@@ -8259,11 +7654,11 @@ class SampleFactoryMock: SampleFactory, Mock {
 		static func heartRate(sample: Parameter<HKQuantitySample>, perform: @escaping (HKQuantitySample) -> Void) -> Perform {
             return Perform(method: .m_heartRate__sample(`sample`), performs: perform)
         }
-        static func medicationDose(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_medicationDose, performs: perform)
+        static func medicationDose(using transaction: Parameter<Transaction>, perform: @escaping (Transaction) -> Void) -> Perform {
+            return Perform(method: .m_medicationDose__using_transaction(`transaction`), performs: perform)
         }
-        static func mood(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_mood, performs: perform)
+        static func mood(using transaction: Parameter<Transaction>, perform: @escaping (Transaction) -> Void) -> Perform {
+            return Perform(method: .m_mood__using_transaction(`transaction`), performs: perform)
         }
     }
 
@@ -10996,6 +10391,603 @@ class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
     }
 }
 
+// MARK: - Transaction
+class TransactionMock: Transaction, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    typealias PropertyStub = Given
+    typealias MethodStub = Given
+    typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    func childTransaction() -> Transaction {
+        addInvocation(.m_childTransaction)
+		let perform = methodPerformValue(.m_childTransaction) as? () -> Void
+		perform?()
+		var __value: Transaction
+		do {
+		    __value = try methodReturnValue(.m_childTransaction).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for childTransaction(). Use given")
+			Failure("Stub return value not specified for childTransaction(). Use given")
+		}
+		return __value
+    }
+
+    func commit() throws {
+        addInvocation(.m_commit)
+		let perform = methodPerformValue(.m_commit) as? () -> Void
+		perform?()
+		do {
+		    _ = try methodReturnValue(.m_commit).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    func reset() {
+        addInvocation(.m_reset)
+		let perform = methodPerformValue(.m_reset) as? () -> Void
+		perform?()
+    }
+
+    func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type] {
+        addInvocation(.m_query__fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_query__fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric())) as? (NSFetchRequest<Type>) -> Void
+		perform?(`fetchRequest`)
+		var __value: [Type]
+		do {
+		    __value = try methodReturnValue(.m_query__fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>). Use given")
+			Failure("Stub return value not specified for query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type) throws -> Type {
+        addInvocation(.m_new__objectType(Parameter<Type.Type>.value(`objectType`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_new__objectType(Parameter<Type.Type>.value(`objectType`).wrapAsGeneric())) as? (Type.Type) -> Void
+		perform?(`objectType`)
+		var __value: Type
+		do {
+		    __value = try methodReturnValue(.m_new__objectType(Parameter<Type.Type>.value(`objectType`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type). Use given")
+			Failure("Stub return value not specified for new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    func batchUpdateRequest<Type: CoreDataObject>(for type: Type.Type) -> NSBatchUpdateRequest {
+        addInvocation(.m_batchUpdateRequest__for_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_batchUpdateRequest__for_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric())) as? (Type.Type) -> Void
+		perform?(`type`)
+		var __value: NSBatchUpdateRequest
+		do {
+		    __value = try methodReturnValue(.m_batchUpdateRequest__for_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric())).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for batchUpdateRequest<Type: CoreDataObject>(for type: Type.Type). Use given")
+			Failure("Stub return value not specified for batchUpdateRequest<Type: CoreDataObject>(for type: Type.Type). Use given")
+		}
+		return __value
+    }
+
+    func batchUpdate(_ request: NSBatchUpdateRequest) throws -> NSBatchUpdateResult {
+        addInvocation(.m_batchUpdate__request(Parameter<NSBatchUpdateRequest>.value(`request`)))
+		let perform = methodPerformValue(.m_batchUpdate__request(Parameter<NSBatchUpdateRequest>.value(`request`))) as? (NSBatchUpdateRequest) -> Void
+		perform?(`request`)
+		var __value: NSBatchUpdateResult
+		do {
+		    __value = try methodReturnValue(.m_batchUpdate__request(Parameter<NSBatchUpdateRequest>.value(`request`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for batchUpdate(_ request: NSBatchUpdateRequest). Use given")
+			Failure("Stub return value not specified for batchUpdate(_ request: NSBatchUpdateRequest). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    func pull<Type: NSManagedObject>(savedObject: Type) throws -> Type {
+        addInvocation(.m_pull__savedObject_savedObject(Parameter<Type>.value(`savedObject`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_pull__savedObject_savedObject(Parameter<Type>.value(`savedObject`).wrapAsGeneric())) as? (Type) -> Void
+		perform?(`savedObject`)
+		var __value: Type
+		do {
+		    __value = try methodReturnValue(.m_pull__savedObject_savedObject(Parameter<Type>.value(`savedObject`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for pull<Type: NSManagedObject>(savedObject: Type). Use given")
+			Failure("Stub return value not specified for pull<Type: NSManagedObject>(savedObject: Type). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    func delete(_ object: NSManagedObject) throws {
+        addInvocation(.m_delete__object(Parameter<NSManagedObject>.value(`object`)))
+		let perform = methodPerformValue(.m_delete__object(Parameter<NSManagedObject>.value(`object`))) as? (NSManagedObject) -> Void
+		perform?(`object`)
+		do {
+		    _ = try methodReturnValue(.m_delete__object(Parameter<NSManagedObject>.value(`object`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    func deleteAll(_ objects: [NSManagedObject]) throws {
+        addInvocation(.m_deleteAll__objects(Parameter<[NSManagedObject]>.value(`objects`)))
+		let perform = methodPerformValue(.m_deleteAll__objects(Parameter<[NSManagedObject]>.value(`objects`))) as? ([NSManagedObject]) -> Void
+		perform?(`objects`)
+		do {
+		    _ = try methodReturnValue(.m_deleteAll__objects(Parameter<[NSManagedObject]>.value(`objects`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    func deleteAll(_ objectType: NSManagedObject.Type) throws {
+        addInvocation(.m_deleteAll__objectType(Parameter<NSManagedObject.Type>.value(`objectType`)))
+		let perform = methodPerformValue(.m_deleteAll__objectType(Parameter<NSManagedObject.Type>.value(`objectType`))) as? (NSManagedObject.Type) -> Void
+		perform?(`objectType`)
+		do {
+		    _ = try methodReturnValue(.m_deleteAll__objectType(Parameter<NSManagedObject.Type>.value(`objectType`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    func deleteAll(_ entityName: String) throws {
+        addInvocation(.m_deleteAll__entityName(Parameter<String>.value(`entityName`)))
+		let perform = methodPerformValue(.m_deleteAll__entityName(Parameter<String>.value(`entityName`))) as? (String) -> Void
+		perform?(`entityName`)
+		do {
+		    _ = try methodReturnValue(.m_deleteAll__entityName(Parameter<String>.value(`entityName`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+
+    fileprivate enum MethodType {
+        case m_childTransaction
+        case m_commit
+        case m_reset
+        case m_query__fetchRequest(Parameter<GenericAttribute>)
+        case m_new__objectType(Parameter<GenericAttribute>)
+        case m_batchUpdateRequest__for_type(Parameter<GenericAttribute>)
+        case m_batchUpdate__request(Parameter<NSBatchUpdateRequest>)
+        case m_pull__savedObject_savedObject(Parameter<GenericAttribute>)
+        case m_delete__object(Parameter<NSManagedObject>)
+        case m_deleteAll__objects(Parameter<[NSManagedObject]>)
+        case m_deleteAll__objectType(Parameter<NSManagedObject.Type>)
+        case m_deleteAll__entityName(Parameter<String>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_childTransaction, .m_childTransaction):
+                return true 
+            case (.m_commit, .m_commit):
+                return true 
+            case (.m_reset, .m_reset):
+                return true 
+            case (.m_query__fetchRequest(let lhsFetchrequest), .m_query__fetchRequest(let rhsFetchrequest)):
+                guard Parameter.compare(lhs: lhsFetchrequest, rhs: rhsFetchrequest, with: matcher) else { return false } 
+                return true 
+            case (.m_new__objectType(let lhsObjecttype), .m_new__objectType(let rhsObjecttype)):
+                guard Parameter.compare(lhs: lhsObjecttype, rhs: rhsObjecttype, with: matcher) else { return false } 
+                return true 
+            case (.m_batchUpdateRequest__for_type(let lhsType), .m_batchUpdateRequest__for_type(let rhsType)):
+                guard Parameter.compare(lhs: lhsType, rhs: rhsType, with: matcher) else { return false } 
+                return true 
+            case (.m_batchUpdate__request(let lhsRequest), .m_batchUpdate__request(let rhsRequest)):
+                guard Parameter.compare(lhs: lhsRequest, rhs: rhsRequest, with: matcher) else { return false } 
+                return true 
+            case (.m_pull__savedObject_savedObject(let lhsSavedobject), .m_pull__savedObject_savedObject(let rhsSavedobject)):
+                guard Parameter.compare(lhs: lhsSavedobject, rhs: rhsSavedobject, with: matcher) else { return false } 
+                return true 
+            case (.m_delete__object(let lhsObject), .m_delete__object(let rhsObject)):
+                guard Parameter.compare(lhs: lhsObject, rhs: rhsObject, with: matcher) else { return false } 
+                return true 
+            case (.m_deleteAll__objects(let lhsObjects), .m_deleteAll__objects(let rhsObjects)):
+                guard Parameter.compare(lhs: lhsObjects, rhs: rhsObjects, with: matcher) else { return false } 
+                return true 
+            case (.m_deleteAll__objectType(let lhsObjecttype), .m_deleteAll__objectType(let rhsObjecttype)):
+                guard Parameter.compare(lhs: lhsObjecttype, rhs: rhsObjecttype, with: matcher) else { return false } 
+                return true 
+            case (.m_deleteAll__entityName(let lhsEntityname), .m_deleteAll__entityName(let rhsEntityname)):
+                guard Parameter.compare(lhs: lhsEntityname, rhs: rhsEntityname, with: matcher) else { return false } 
+                return true 
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .m_childTransaction: return 0
+            case .m_commit: return 0
+            case .m_reset: return 0
+            case let .m_query__fetchRequest(p0): return p0.intValue
+            case let .m_new__objectType(p0): return p0.intValue
+            case let .m_batchUpdateRequest__for_type(p0): return p0.intValue
+            case let .m_batchUpdate__request(p0): return p0.intValue
+            case let .m_pull__savedObject_savedObject(p0): return p0.intValue
+            case let .m_delete__object(p0): return p0.intValue
+            case let .m_deleteAll__objects(p0): return p0.intValue
+            case let .m_deleteAll__objectType(p0): return p0.intValue
+            case let .m_deleteAll__entityName(p0): return p0.intValue
+            }
+        }
+    }
+
+    class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [Product]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        static func childTransaction(willReturn: Transaction...) -> MethodStub {
+            return Given(method: .m_childTransaction, products: willReturn.map({ Product.return($0) }))
+        }
+        static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: [Type]...) -> MethodStub {
+            return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fetchRequest` label")
+		static func query<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: [Type]...) -> MethodStub {
+            return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
+        }
+        static func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
+            return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
+		static func new<Type: NSManagedObject & CoreDataObject>(objectType: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
+            return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
+        }
+        static func batchUpdateRequest<Type: CoreDataObject>(for type: Parameter<Type.Type>, willReturn: NSBatchUpdateRequest...) -> MethodStub {
+            return Given(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
+        }
+        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, willReturn: NSBatchUpdateResult...) -> MethodStub {
+            return Given(method: .m_batchUpdate__request(`request`), products: willReturn.map({ Product.return($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `request` label")
+		static func batchUpdate(request: Parameter<NSBatchUpdateRequest>, willReturn: NSBatchUpdateResult...) -> MethodStub {
+            return Given(method: .m_batchUpdate__request(`request`), products: willReturn.map({ Product.return($0) }))
+        }
+        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willReturn: Type...) -> MethodStub {
+            return Given(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
+        }
+        static func childTransaction(willProduce: (Stubber<Transaction>) -> Void) -> MethodStub {
+            let willReturn: [Transaction] = []
+			let given: Given = { return Given(method: .m_childTransaction, products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (Transaction).self)
+			willProduce(stubber)
+			return given
+        }
+        static func batchUpdateRequest<Type: CoreDataObject>(for type: Parameter<Type.Type>, willProduce: (Stubber<NSBatchUpdateRequest>) -> Void) -> MethodStub {
+            let willReturn: [NSBatchUpdateRequest] = []
+			let given: Given = { return Given(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (NSBatchUpdateRequest).self)
+			willProduce(stubber)
+			return given
+        }
+        static func commit(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_commit, products: willThrow.map({ Product.throw($0) }))
+        }
+        static func commit(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_commit, products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fetchRequest` label")
+		static func query<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willProduce: (StubberThrows<[Type]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([Type]).self)
+			willProduce(stubber)
+			return given
+        }
+        static func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
+		static func new<Type: NSManagedObject & CoreDataObject>(objectType: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Parameter<Type.Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Type).self)
+			willProduce(stubber)
+			return given
+        }
+        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_batchUpdate__request(`request`), products: willThrow.map({ Product.throw($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `request` label")
+		static func batchUpdate(request: Parameter<NSBatchUpdateRequest>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_batchUpdate__request(`request`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, willProduce: (StubberThrows<NSBatchUpdateResult>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_batchUpdate__request(`request`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (NSBatchUpdateResult).self)
+			willProduce(stubber)
+			return given
+        }
+        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Type).self)
+			willProduce(stubber)
+			return given
+        }
+        static func delete(_ object: Parameter<NSManagedObject>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_delete__object(`object`), products: willThrow.map({ Product.throw($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `object` label")
+		static func delete(object: Parameter<NSManagedObject>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_delete__object(`object`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func delete(_ object: Parameter<NSManagedObject>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_delete__object(`object`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        static func deleteAll(_ objects: Parameter<[NSManagedObject]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_deleteAll__objects(`objects`), products: willThrow.map({ Product.throw($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objects` label")
+		static func deleteAll(objects: Parameter<[NSManagedObject]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_deleteAll__objects(`objects`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func deleteAll(_ objects: Parameter<[NSManagedObject]>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_deleteAll__objects(`objects`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_deleteAll__objectType(`objectType`), products: willThrow.map({ Product.throw($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
+		static func deleteAll(objectType: Parameter<NSManagedObject.Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_deleteAll__objectType(`objectType`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_deleteAll__objectType(`objectType`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        static func deleteAll(_ entityName: Parameter<String>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_deleteAll__entityName(`entityName`), products: willThrow.map({ Product.throw($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `entityName` label")
+		static func deleteAll(entityName: Parameter<String>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_deleteAll__entityName(`entityName`), products: willThrow.map({ Product.throw($0) }))
+        }
+        static func deleteAll(_ entityName: Parameter<String>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_deleteAll__entityName(`entityName`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    struct Verify {
+        fileprivate var method: MethodType
+
+        static func childTransaction() -> Verify { return Verify(method: .m_childTransaction)}
+        static func commit() -> Verify { return Verify(method: .m_commit)}
+        static func reset() -> Verify { return Verify(method: .m_reset)}
+        static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fetchRequest` label")
+		static func query<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
+        static func new<Type>(_ objectType: Parameter<Type.Type>) -> Verify { return Verify(method: .m_new__objectType(`objectType`.wrapAsGeneric()))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
+		static func new<Type>(objectType: Parameter<Type.Type>) -> Verify { return Verify(method: .m_new__objectType(`objectType`.wrapAsGeneric()))}
+        static func batchUpdateRequest<Type>(for type: Parameter<Type.Type>) -> Verify { return Verify(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()))}
+        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>) -> Verify { return Verify(method: .m_batchUpdate__request(`request`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `request` label")
+		static func batchUpdate(request: Parameter<NSBatchUpdateRequest>) -> Verify { return Verify(method: .m_batchUpdate__request(`request`))}
+        static func pull<Type>(savedObject: Parameter<Type>) -> Verify { return Verify(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()))}
+        static func delete(_ object: Parameter<NSManagedObject>) -> Verify { return Verify(method: .m_delete__object(`object`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `object` label")
+		static func delete(object: Parameter<NSManagedObject>) -> Verify { return Verify(method: .m_delete__object(`object`))}
+        static func deleteAll(_ objects: Parameter<[NSManagedObject]>) -> Verify { return Verify(method: .m_deleteAll__objects(`objects`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objects` label")
+		static func deleteAll(objects: Parameter<[NSManagedObject]>) -> Verify { return Verify(method: .m_deleteAll__objects(`objects`))}
+        static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>) -> Verify { return Verify(method: .m_deleteAll__objectType(`objectType`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
+		static func deleteAll(objectType: Parameter<NSManagedObject.Type>) -> Verify { return Verify(method: .m_deleteAll__objectType(`objectType`))}
+        static func deleteAll(_ entityName: Parameter<String>) -> Verify { return Verify(method: .m_deleteAll__entityName(`entityName`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `entityName` label")
+		static func deleteAll(entityName: Parameter<String>) -> Verify { return Verify(method: .m_deleteAll__entityName(`entityName`))}
+    }
+
+    struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        static func childTransaction(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_childTransaction, performs: perform)
+        }
+        static func commit(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_commit, performs: perform)
+        }
+        static func reset(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_reset, performs: perform)
+        }
+        static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform {
+            return Perform(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fetchRequest` label")
+		static func query<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform {
+            return Perform(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), performs: perform)
+        }
+        static func new<Type>(_ objectType: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform {
+            return Perform(method: .m_new__objectType(`objectType`.wrapAsGeneric()), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
+		static func new<Type>(objectType: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform {
+            return Perform(method: .m_new__objectType(`objectType`.wrapAsGeneric()), performs: perform)
+        }
+        static func batchUpdateRequest<Type>(for type: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform {
+            return Perform(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()), performs: perform)
+        }
+        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, perform: @escaping (NSBatchUpdateRequest) -> Void) -> Perform {
+            return Perform(method: .m_batchUpdate__request(`request`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `request` label")
+		static func batchUpdate(request: Parameter<NSBatchUpdateRequest>, perform: @escaping (NSBatchUpdateRequest) -> Void) -> Perform {
+            return Perform(method: .m_batchUpdate__request(`request`), performs: perform)
+        }
+        static func pull<Type>(savedObject: Parameter<Type>, perform: @escaping (Type) -> Void) -> Perform {
+            return Perform(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), performs: perform)
+        }
+        static func delete(_ object: Parameter<NSManagedObject>, perform: @escaping (NSManagedObject) -> Void) -> Perform {
+            return Perform(method: .m_delete__object(`object`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `object` label")
+		static func delete(object: Parameter<NSManagedObject>, perform: @escaping (NSManagedObject) -> Void) -> Perform {
+            return Perform(method: .m_delete__object(`object`), performs: perform)
+        }
+        static func deleteAll(_ objects: Parameter<[NSManagedObject]>, perform: @escaping ([NSManagedObject]) -> Void) -> Perform {
+            return Perform(method: .m_deleteAll__objects(`objects`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objects` label")
+		static func deleteAll(objects: Parameter<[NSManagedObject]>, perform: @escaping ([NSManagedObject]) -> Void) -> Perform {
+            return Perform(method: .m_deleteAll__objects(`objects`), performs: perform)
+        }
+        static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>, perform: @escaping (NSManagedObject.Type) -> Void) -> Perform {
+            return Perform(method: .m_deleteAll__objectType(`objectType`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
+		static func deleteAll(objectType: Parameter<NSManagedObject.Type>, perform: @escaping (NSManagedObject.Type) -> Void) -> Perform {
+            return Perform(method: .m_deleteAll__objectType(`objectType`), performs: perform)
+        }
+        static func deleteAll(_ entityName: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_deleteAll__entityName(`entityName`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `entityName` label")
+		static func deleteAll(entityName: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_deleteAll__entityName(`entityName`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> Product {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
 // MARK: - UiUtil
 class UiUtilMock: UiUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
@@ -11741,32 +11733,10 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
 		}
     }
 
-    func cancel() {
-        addInvocation(.m_cancel)
-		let perform = methodPerformValue(.m_cancel) as? () -> Void
-		perform?()
-    }
-
-    func equalTo(_ otherImporter: Importer) -> Bool {
-        addInvocation(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`)))
-		let perform = methodPerformValue(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`))) as? (Importer) -> Void
-		perform?(`otherImporter`)
-		var __value: Bool
-		do {
-		    __value = try methodReturnValue(.m_equalTo__otherImporter(Parameter<Importer>.value(`otherImporter`))).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for equalTo(_ otherImporter: Importer). Use given")
-			Failure("Stub return value not specified for equalTo(_ otherImporter: Importer). Use given")
-		}
-		return __value
-    }
-
 
     fileprivate enum MethodType {
         case m_importData__from_url(Parameter<URL>)
         case m_resetLastImportDate
-        case m_cancel
-        case m_equalTo__otherImporter(Parameter<Importer>)
         case p_dataTypePluralName_get
         case p_sourceName_get
         case p_lastImport_get
@@ -11779,11 +11749,6 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
                 guard Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher) else { return false } 
                 return true 
             case (.m_resetLastImportDate, .m_resetLastImportDate):
-                return true 
-            case (.m_cancel, .m_cancel):
-                return true 
-            case (.m_equalTo__otherImporter(let lhsOtherimporter), .m_equalTo__otherImporter(let rhsOtherimporter)):
-                guard Parameter.compare(lhs: lhsOtherimporter, rhs: rhsOtherimporter, with: matcher) else { return false } 
                 return true 
             case (.p_dataTypePluralName_get,.p_dataTypePluralName_get): return true
             case (.p_sourceName_get,.p_sourceName_get): return true
@@ -11798,8 +11763,6 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
             switch self {
             case let .m_importData__from_url(p0): return p0.intValue
             case .m_resetLastImportDate: return 0
-            case .m_cancel: return 0
-            case let .m_equalTo__otherImporter(p0): return p0.intValue
             case .p_dataTypePluralName_get: return 0
             case .p_sourceName_get: return 0
             case .p_lastImport_get: return 0
@@ -11830,20 +11793,6 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
             return Given(method: .p_importOnlyNewData_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherImporter: Parameter<Importer>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
-		static func equalTo(otherImporter: Parameter<Importer>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) }))
-        }
-        static func equalTo(_ otherImporter: Parameter<Importer>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
-            let willReturn: [Bool] = []
-			let given: Given = { return Given(method: .m_equalTo__otherImporter(`otherImporter`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: (Bool).self)
-			willProduce(stubber)
-			return given
-        }
         static func importData(from url: Parameter<URL>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) }))
         }
@@ -11871,10 +11820,6 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
 
         static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
         static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
-        static func cancel() -> Verify { return Verify(method: .m_cancel)}
-        static func equalTo(_ otherImporter: Parameter<Importer>) -> Verify { return Verify(method: .m_equalTo__otherImporter(`otherImporter`))}
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
-		static func equalTo(otherImporter: Parameter<Importer>) -> Verify { return Verify(method: .m_equalTo__otherImporter(`otherImporter`))}
         static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
         static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
         static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
@@ -11891,16 +11836,6 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
         }
         static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_resetLastImportDate, performs: perform)
-        }
-        static func cancel(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_cancel, performs: perform)
-        }
-        static func equalTo(_ otherImporter: Parameter<Importer>, perform: @escaping (Importer) -> Void) -> Perform {
-            return Perform(method: .m_equalTo__otherImporter(`otherImporter`), performs: perform)
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherImporter` label")
-		static func equalTo(otherImporter: Parameter<Importer>, perform: @escaping (Importer) -> Void) -> Perform {
-            return Perform(method: .m_equalTo__otherImporter(`otherImporter`), performs: perform)
         }
     }
 
