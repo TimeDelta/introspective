@@ -909,8 +909,6 @@ class NumericSampleUtilUnitTests: UnitTest {
 		}
 	}
 
-	// TODO - write unit tests for sortSamplesByAggregation
-
 	// MARK: - Helper Functions
 
 	private func generateAggregationSortReturnValue(for samples: [Sample]) -> [(date: Date, samples: [Sample])] {

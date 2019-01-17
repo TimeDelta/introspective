@@ -56,7 +56,6 @@ public final class DateRangeViewController: UIViewController {
 		fromDatePicker.maximumDate = maxFromDate
 		toDatePicker.minimumDate = minToDate
 		toDatePicker.maximumDate = maxToDate
-		#warning("add validation to ensure that to date is after from date")
 	}
 
 	// MARK: - Actions

@@ -44,7 +44,6 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 	// MARK: - Grouper Functions
 
 	public final func group(samples: [Sample], by attribute: Attribute) throws -> [(Any, [Sample])] {
-		// TODO - support grouping by day of week, hour of day, etc.
 		signpost.begin(name: "Aggregation", "Aggregating %d samples", samples.count)
 		let samplesByTimeUnit = try DependencyInjector.util.sample.aggregate(samples: samples, by: timeUnit, for: attribute)
 		signpost.end(name: "Aggregation", "Aggregated %d samples into %d groups", samples.count, samplesByTimeUnit.count)

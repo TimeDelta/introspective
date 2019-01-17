@@ -31,7 +31,7 @@ public final class CalendarComponentAttribute: TypedSelectOneAttribute<Calendar.
 		pluralName: String? = "Time units",
 		description: String? = nil,
 		variableName: String? = nil,
-		possibleValues: [Calendar.Component] = Me.supportedComponents)
+		possibleValues: [Calendar.Component] = CalendarComponentAttribute.supportedComponents)
 	{
 		super.init(
 			name: name,

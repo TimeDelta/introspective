@@ -189,7 +189,6 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 
 	@IBAction final func chooseXAxisQueryButtonPressed(_ sender: Any) {
 		let controller: QueryViewController = viewController(named: "queryView", fromStoryboard: "Query")
-		// TODO - support passing in existing query
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = xAxisSampleType
 		controller.finishedButtonNotification = Me.xAxisQueryChanged
@@ -218,7 +217,6 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 
 	@IBAction final func chooseYAxisQueryButtonPressed(_ sender: Any) {
 		let controller: QueryViewController = viewController(named: "queryView", fromStoryboard: "Query")
-		// TODO - support passing in existing query
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = yAxisSampleType
 		controller.finishedButtonNotification = Me.yAxisQueryChanged

@@ -163,7 +163,6 @@ class QueryViewController: UITableViewController {
 	}
 
 	final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-		// TODO - handle case where moving a sample type down adds invalid attribute restrictions to preceeding sample type
 		parts.swapAt(fromIndexPath.row, to.row)
 		if let attributeRestriction = parts[to.row].attributeRestriction {
 			let sampleType = bottomMostSampleTypeAbove(index: to.row)

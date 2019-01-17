@@ -50,7 +50,6 @@ public final class ActivityDefinitionAutoNoteTableViewCell: UITableViewCell {
 	// MARK: - Helper Functions
 
 	private final func updateUI() {
-		#warning("does not show initial value correctly")
 		guard let toggleSwitch = toggleSwitch else { return }
 		guard let autoNote = autoNote else { return }
 		toggleSwitch.isOn = autoNote
