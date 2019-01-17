@@ -8,7 +8,7 @@
 
 import Foundation
 
-func isOptional(_ instance: Any?) -> Bool {
+func isOptional<Type>(_ instance: Type) -> Bool {
 	let mirror = Mirror(reflecting: instance as Any)
 	let style = mirror.displayStyle
 	return style == .optional
@@ -16,7 +16,7 @@ func isOptional(_ instance: Any?) -> Bool {
 
 func retryOnFail<Type>(_ code: () throws -> Type, maxRetries: Int? = nil, _ firstError: Error? = nil) throws -> Type {
 	if let retries = maxRetries {
-		guard retries > 0 else {
+		guard retries >= 0 else {
 			guard let error = firstError else {
 				throw GenericError("Unable to determine error to throw in retryOnFail()")
 			}
@@ -27,15 +27,15 @@ func retryOnFail<Type>(_ code: () throws -> Type, maxRetries: Int? = nil, _ firs
 		return try code()
 	} catch {
 		if let retries = maxRetries {
-			return try retryOnFail(code, maxRetries: retries - 1, error)
+			return try retryOnFail(code, maxRetries: retries - 1, firstError ?? error)
 		}
-		return try retryOnFail(code, error)
+		return try retryOnFail(code, firstError ?? error)
 	}
 }
 
 func retryOnFail(_ code: () throws -> Void, maxRetries: Int? = nil, _ firstError: Error? = nil) throws {
 	if let retries = maxRetries {
-		guard retries > 0 else {
+		guard retries >= 0 else {
 			guard let error = firstError else { return }
 			throw error
 		}
@@ -44,9 +44,9 @@ func retryOnFail(_ code: () throws -> Void, maxRetries: Int? = nil, _ firstError
 		try code()
 	} catch {
 		if let retries = maxRetries {
-			try retryOnFail(code, maxRetries: retries - 1, error)
+			try retryOnFail(code, maxRetries: retries - 1, firstError ?? error)
 		}
-		try retryOnFail(code, error)
+		try retryOnFail(code, firstError ?? error)
 	}
 }
 
