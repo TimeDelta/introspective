@@ -43,8 +43,8 @@ final class SortResultsViewController: UIViewController {
 	// MARK: - Received Notifications
 
 	@objc private final func userPressedAccept(notification: Notification) {
-		guard let attribute: Attribute = value(for: .attribute, from: notification) else { return }
-		sortAttribute = attribute
+		guard let attribute: Attribute? = value(for: .attribute, from: notification) else { return }
+		sortAttribute = attribute!
 		sortOrder = sortAscendingSwitch.isOn ? .orderedAscending : .orderedDescending
 		NotificationCenter.default.post(
 			name: notificationToSendOnAccept,

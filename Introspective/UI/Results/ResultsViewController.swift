@@ -301,18 +301,16 @@ final class ResultsViewController: UITableViewController {
 		guard let order: ComparisonResult? = value(for: .comparisonResult, from: notification) else { return }
 		self.sortOrder = order
 		self.sortAttribute = attribute
-		self.sortTask = DispatchWorkItem {
-			DispatchQueue.main.sync{
-				self.tableView.reloadData()
-				self.sortActionSheet = UIAlertController(title: "Sorting by \(self.sortAttribute!.name)", message: nil, preferredStyle: .actionSheet)
-				self.sortActionSheet?.addAction(UIAlertAction(title: "Cancel", style: .cancel){ _ in
-					self.sortTask?.cancel()
-					self.sortTask = nil
-					self.tableView.reloadData()
-				})
-				self.present(self.sortActionSheet!, animated: false, completion: nil)
-			}
 
+		self.sortActionSheet = UIAlertController(title: "Sorting by \(self.sortAttribute!.name)", message: nil, preferredStyle: .actionSheet)
+		self.sortActionSheet?.addAction(UIAlertAction(title: "Cancel", style: .cancel){ _ in
+			self.sortTask?.cancel()
+			self.sortTask = nil
+			self.tableView.reloadData()
+		})
+		self.present(self.sortActionSheet!, animated: false, completion: nil)
+
+		self.sortTask = DispatchWorkItem {
 			switch (self.sortAttribute) {
 				case is DoubleAttribute: self.sort(by: Double.self); break
 				case is IntegerAttribute: self.sort(by: Int.self); break
