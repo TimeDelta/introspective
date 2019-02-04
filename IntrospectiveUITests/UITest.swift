@@ -50,9 +50,19 @@ class UITest: XCTestCase {
 			value = value.localizedCapitalized
 		}
 		if let pickerQueryText = pickerQueryText {
-			pickers[pickerQueryText].pickerWheels.allElementsBoundByIndex[0].adjust(toPickerWheelValue: value)
+			let pickerWheels = pickers[pickerQueryText].pickerWheels.allElementsBoundByIndex
+			if pickerWheels.count < 1 {
+				XCTFail("No pickers matching given query text found")
+			} else {
+				pickerWheels[0].adjust(toPickerWheelValue: value)
+			}
 		} else {
-			pickers.pickerWheels.allElementsBoundByIndex[0].adjust(toPickerWheelValue: value)
+			let pickerWheels = pickers.pickerWheels.allElementsBoundByIndex
+			if pickerWheels.count < 1 {
+				XCTFail("No pickers detected")
+			} else {
+				pickerWheels[0].adjust(toPickerWheelValue: value)
+			}
 		}
 	}
 
@@ -209,6 +219,24 @@ class UITest: XCTestCase {
 			}
 
 			app.tables.buttons["save mood button"].tap()
+		}
+	}
+
+	// MARK: - Query Screen Helpers
+
+	final func addAttributeRestrictionToQuery() {
+		app.tables.buttons["Add"].tap()
+		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
+	}
+
+	final func addDataTypeToQuery(_ type: String? = nil) {
+		let indexToEdit = app.tables.cells.allElementsBoundByIndex.count
+		app.tables.buttons["Add"].tap()
+		app.sheets["What would you like to add?"].buttons["Data Type"].tap()
+		if let type = type {
+			app.tables.cells.element(boundBy: indexToEdit).tap()
+			setPicker("data type", to: type, changeCase: false)
+			app.buttons["save attributed button"].tap()
 		}
 	}
 }

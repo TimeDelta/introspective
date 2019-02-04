@@ -147,6 +147,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		let controller: QueryViewController = viewController(named: "queryView", fromStoryboard: "Query")
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = sampleType
+		controller.initialQuery = query
 		controller.finishedButtonNotification = Me.queryChanged
 		realNavigationController?.pushViewController(controller, animated: false)
 	}

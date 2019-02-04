@@ -330,6 +330,25 @@ final class GraphSetupScreenUITests: UITest {
 		XCTAssertEqual(app.buttons["choose y-axis query button"].value as? String, "Choose query (optional)")
 	}
 
+	func testEditingAlreadyChosenXAxisQuery_correctlyPopulatesEditQueryScreen() {
+		// given
+		goToMultipleDataTypesGraphSetupScreen()
+		setXAxisDataType()
+		app.buttons["choose x-axis query button"].tap()
+		populateQueryScreen()
+		let parts = getStaticTextsFromQueryParts()
+		app.buttons["Use Query"].tap()
+
+		// when
+		app.buttons["choose x-axis query button"].tap()
+
+		// then
+		for i in 0 ..< parts.count {
+			let cell = app.tables.cells.element(boundBy: i)
+			XCTAssertEqual(cell.value as? String, parts[i])
+		}
+	}
+
 	// MARK: - Helper Functions
 
 	private final func goToSingleDataTypeGraphSetupScreen() {
@@ -410,5 +429,27 @@ final class GraphSetupScreenUITests: UITest {
 
 	private final func getYAxisInformationCommaSeparatedList(_ axis: [(attribute: String, information: String)]) -> String {
 		return getCommaSeparatedList(axis.map{ $0.information + " " + $0.attribute })
+	}
+
+	private final func populateQueryScreen() {
+		addAttributeRestrictionToQuery()
+		addAttributeRestrictionToQuery()
+		app.tables.cells.element(boundBy: 1).tap()
+		setPicker("restricted attribute", to: "Name")
+		app.buttons["set value button"].tap()
+		setTextFor(field: app.textViews.element(boundBy: 0), to: "fhjewio")
+		app.buttons["save button"].tap()
+		app.buttons["save attributed button"].tap()
+		addDataTypeToQuery("Blood Pressure")
+		addDataTypeToQuery("Body Mass Index")
+		addAttributeRestrictionToQuery()
+	}
+
+	private final func getStaticTextsFromQueryParts() -> [String?] {
+		var parts = [String?]()
+		for cell in app.tables.cells.allElementsBoundByIndex {
+			parts.append(cell.value as? String)
+		}
+		return parts
 	}
 }

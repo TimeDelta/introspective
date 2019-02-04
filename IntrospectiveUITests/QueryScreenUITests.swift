@@ -17,6 +17,8 @@ final class QueryScreenUITests: UITest {
 		app.collectionViews.staticTexts["Query"].tap()
 	}
 
+	// MARK: - Changing Parts
+
 	func testChangingMainSampleType_changesDisplayedTextToNewSampleTypeName() {
 		// given
 		app.tables.cells.allElementsBoundByIndex[0].tap()
@@ -31,8 +33,7 @@ final class QueryScreenUITests: UITest {
 
 	func testChangingSubQuerySampleType_changesDisplayedTextToNewSampleTypeName() {
 		// given
-		app.tables.buttons["Add"].tap()
-		app.sheets["What would you like to add?"].buttons["Data Type"].tap()
+		addDataTypeToQuery()
 
 		// when
 		app.tables.cells.allElementsBoundByIndex[1].tap()
@@ -45,8 +46,7 @@ final class QueryScreenUITests: UITest {
 
 	func testChangingSubQueryMatcher_changesDisplayedTextInTableViewCell() {
 		// given
-		app.tables.buttons["Add"].tap()
-		app.sheets["What would you like to add?"].buttons["Data Type"].tap()
+		addDataTypeToQuery()
 
 		// when
 		app.tables.cells.allElementsBoundByIndex[1].tap()
@@ -87,6 +87,8 @@ final class QueryScreenUITests: UITest {
 		// then
 		XCTAssert(app.tables.staticTexts["After June 18, 2012"].exists)
 	}
+
+	// MARK: - Edit Attribute Restrictions Screen
 
 	func testChangingRestrictedAttributeToAttributeOfSameType_doesNotChangeAttributeRestrictionValues() {
 		// given
@@ -149,15 +151,12 @@ final class QueryScreenUITests: UITest {
 		XCTAssertEqual(app.buttons["set date button"].value as? String, dateText)
 	}
 
+	// MARK: - Reordering
+
 	func testMovingSampleTypeAboveAttributeRestriction_correctlyChangesAttributeRestriction() {
 		// given
-		app.tables.buttons["Add"].tap()
-		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
-		app.tables.buttons["Add"].tap()
-		app.sheets["What would you like to add?"].buttons["Data Type"].tap()
-		app.tables.cells.allElementsBoundByIndex[2].tap()
-		app.pickerWheels["Activity"].adjust(toPickerWheelValue: "Body Mass Index")
-		app.scrollViews.otherElements.buttons["save attributed button"].tap()
+		addAttributeRestrictionToQuery()
+		addDataTypeToQuery("Body Mass Index")
 
 		// when
 		app.tables.buttons["Edit"].tap()
@@ -171,23 +170,12 @@ final class QueryScreenUITests: UITest {
 		XCTAssert(app.tables.staticTexts["BMI < 0.0"].exists)
 	}
 
-	func testPressingEditButton_changesTitleOfEditButtonToDone() {
-		// when
-		app.tables.buttons["Edit"].tap()
-
-		// then
-		XCTAssert(app.tables.buttons["Done"].exists)
-	}
+	// MARK: - Deleting Parts
 
 	func testDeletingDataTypeWithAttributeRestrictionsUnderneath_correctlyReassignsAttributeRestrictionsUnderneath() {
 		// given
-		app.tables.buttons["Add"].tap()
-		app.sheets["What would you like to add?"].buttons["Data Type"].tap()
-		app.tables.cells.allElementsBoundByIndex[1].tap()
-		app.pickerWheels["Activity"].adjust(toPickerWheelValue: "Body Mass Index")
-		app.scrollViews.otherElements.buttons["save attributed button"].tap()
-		app.tables.buttons["Add"].tap()
-		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
+		addDataTypeToQuery("Body Mass Index")
+		addAttributeRestrictionToQuery()
 
 		// when
 		app.tables.cells.allElementsBoundByIndex[1].swipeLeft()
@@ -195,5 +183,15 @@ final class QueryScreenUITests: UITest {
 
 		// then
 		XCTAssert(app.tables.staticTexts["Duration ≤ 0:00:00"].exists)
+	}
+
+	// MARK: - Other
+
+	func testPressingEditButton_changesTitleOfEditButtonToDone() {
+		// when
+		app.tables.buttons["Edit"].tap()
+
+		// then
+		XCTAssert(app.tables.buttons["Done"].exists)
 	}
 }

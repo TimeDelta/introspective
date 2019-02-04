@@ -80,7 +80,9 @@ class QueryViewController: UITableViewController {
 	public final var finishedButtonTitle: String! = "Run"
 	/// Corresponding notification object will contain the built query as the object
 	public final var finishedButtonNotification: Notification.Name! = Me.runQueryNotification
+	/// This will prevent the topmost sample type from being changed by the user
 	public final var topmostSampleType: Sample.Type?
+	public final var initialQuery: Query?
 
 	final var parts: [Part]!
 	private final var editedIndex: Int!
@@ -97,13 +99,17 @@ class QueryViewController: UITableViewController {
 
 		finishedButton.title = finishedButtonTitle
 
-		if topmostSampleType != nil {
+		if let query = initialQuery {
+			parts = [Part]()
+			populateQuery(query)
+		} else if topmostSampleType != nil {
 			parts = [Part(SampleTypeInfo(topmostSampleType!))]
+			partWasAdded()
 		} else {
 			parts = [Part(SampleTypeInfo())]
+			partWasAdded()
 		}
 
-		partWasAdded()
 
 		observe(selector: #selector(saveEditedAttributeRestriction), name: Me.acceptedAttributeRestrictionEdit)
 		observe(selector: #selector(saveEditedSubQuerySampleType), name: Me.acceptedSubSampleTypeEdit)
@@ -130,6 +136,7 @@ class QueryViewController: UITableViewController {
 		if index == 0 {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "Data Type", for: indexPath)
 			cell.textLabel?.text = part.sampleTypeInfo!.sampleType.name
+			cell.textLabel?.accessibilityValue = part.sampleTypeInfo!.sampleType.name
 			if topmostSampleType != nil {
 				cell.isUserInteractionEnabled = false
 			}
@@ -211,7 +218,10 @@ class QueryViewController: UITableViewController {
 	// MARK: - Button Actions
 
 	@IBAction final func finishedButtonPressed(_ sender: Any) {
-		let query = buildQuery()
+		guard let query = buildQuery()?.query else {
+			log.error("buildQuery() returned nil")
+			return
+		}
 		if finishedButtonNotification != Me.runQueryNotification {
 			NotificationCenter.default.post(
 				name: finishedButtonNotification,
@@ -298,7 +308,110 @@ class QueryViewController: UITableViewController {
 		tableView.reloadData()
 	}
 
-	// Mark: - Helper Functions
+	// Mark: - Populating the UI from a query
+
+	private final func populateQuery(_ query: Query, _ matcher: SubQueryMatcher? = nil) {
+		switch (query) {
+			case is ActivityQuery: addQuerySampleType(Activity.self, matcher); break
+			case is BloodPressureQuery: addQuerySampleType(BloodPressure.self, matcher); break
+			case is BodyMassIndexQuery: addQuerySampleType(BodyMassIndex.self, matcher); break
+			case is HeartRateQuery: addQuerySampleType(HeartRate.self, matcher); break
+			case is LeanBodyMassQuery: addQuerySampleType(LeanBodyMass.self, matcher); break
+			case is MedicationDoseQuery: addQuerySampleType(MedicationDose.self, matcher); break
+			case is MoodQuery: addQuerySampleType(MoodImpl.self, matcher); break
+			case is RestingHeartRateQuery: addQuerySampleType(RestingHeartRate.self, matcher); break
+			case is SexualActivityQuery: addQuerySampleType(SexualActivity.self, matcher); break
+			case is SleepQuery: addQuerySampleType(Sleep.self, matcher); break
+			case is WeightQuery: addQuerySampleType(Weight.self, matcher); break
+			default: log.error("Forgot query type: %@", String(describing: type(of: query)))
+		}
+		populateAttributeRestrictions(query)
+		if let subQuery = query.subQuery {
+			populateQuery(subQuery.query, subQuery.matcher)
+		}
+	}
+
+	private final func populateAttributeRestrictions(_ query: Query) {
+		for attributeRestriction in query.attributeRestrictions {
+			parts.append(Part(attributeRestriction))
+			partWasAdded()
+		}
+	}
+
+	private final func addQuerySampleType(_ type: Sample.Type, _ matcher: SubQueryMatcher?) {
+		if let matcher = matcher {
+			parts.append(Part(SampleTypeInfo(type, matcher)))
+		} else {
+			parts.append(Part(SampleTypeInfo(type)))
+		}
+		partWasAdded()
+	}
+
+	// MARK: - Building the query from the UI
+
+	private final func buildQuery(_ partsSplit: [[Part]]? = nil) -> (query: Query, matcher: SubQueryMatcher?)? {
+		let partsSplitByQuery = partsSplit ?? splitPartsByQuery()
+		guard partsSplitByQuery.count > 0 else { return nil }
+
+		var query: Query
+		let sampleTypeInfo = partsSplitByQuery[0][0].sampleTypeInfo!
+		switch (sampleTypeInfo.sampleType) {
+			case is Activity.Type: query = DependencyInjector.query.activityQuery(); break
+			case is BloodPressure.Type: query = DependencyInjector.query.bloodPressureQuery(); break
+			case is BodyMassIndex.Type: query = DependencyInjector.query.bmiQuery(); break
+			case is HeartRate.Type: query = DependencyInjector.query.heartRateQuery(); break
+			case is LeanBodyMass.Type: query = DependencyInjector.query.leanBodyMassQuery(); break
+			case is MedicationDose.Type: query = DependencyInjector.query.medicationDoseQuery(); break
+			case is MoodImpl.Type: query = DependencyInjector.query.moodQuery(); break
+			case is RestingHeartRate.Type: query = DependencyInjector.query.restingHeartRateQuery(); break
+			case is SexualActivity.Type: query = DependencyInjector.query.sexualActivityQuery(); break
+			case is Sleep.Type: query = DependencyInjector.query.sleepQuery(); break
+			case is Weight.Type: query = DependencyInjector.query.weightQuery(); break
+			default:
+				log.error("Forgot a type of Sample")
+				return nil
+		}
+
+		addAttributeRestrictions(to: &query, from: partsSplitByQuery[0])
+
+		if partsSplitByQuery.count > 1 {
+			let remainingParts = partsSplitByQuery[1...]
+			if let subQuery = buildQuery(Array<Array<Part>>(remainingParts)) {
+				if let matcher = subQuery.matcher {
+					query.subQuery = (query: subQuery.query, matcher: matcher)
+				}
+			}
+		}
+		return (query: query, matcher: sampleTypeInfo.matcher)
+	}
+
+	private final func addAttributeRestrictions(to query: inout Query, from parts: [Part]) {
+		for part in parts {
+			if let attributeRestriction = part.attributeRestriction {
+				query.attributeRestrictions.append(attributeRestriction)
+			} else if part.sampleTypeInfo == nil {
+				log.error("Forgot a type of query part: %@", String(describing: part))
+			}
+		}
+	}
+
+	private final func splitPartsByQuery() -> [[Part]] {
+		var partsSplitByQuery = [[Part]]()
+		var currentParts = [Part]()
+		for part in parts {
+			if part.sampleTypeInfo != nil && !currentParts.isEmpty {
+				partsSplitByQuery.append(currentParts)
+				currentParts = [Part]()
+			}
+			currentParts.append(part)
+		}
+		if !currentParts.isEmpty {
+			partsSplitByQuery.append(currentParts)
+		}
+		return partsSplitByQuery
+	}
+
+	// MARK: - Helper Functions
 
 	private final func updateAttributesForSampleType(at sampleTypeIndex: Int) {
 		for i in sampleTypeIndex+1 ..< parts.count {
@@ -352,75 +465,5 @@ class QueryViewController: UITableViewController {
 		let attribute = sampleType.defaultDependentAttribute
 		let restrictionType = DependencyInjector.restriction.typesFor(attribute)[0]
 		return DependencyInjector.restriction.initialize(type: restrictionType, forAttribute: attribute)
-	}
-
-	private final func buildQuery() -> Query {
-		let partsSplitByQuery = splitPartsByQuery()
-		var currentTopmostQuery: Query? = nil
-		for parts in partsSplitByQuery {
-			var currentQuery: Query
-
-			let sampleTypeInfo = parts[0].sampleTypeInfo!
-			switch (sampleTypeInfo.sampleType) {
-				case is Activity.Type:
-					currentQuery = DependencyInjector.query.activityQuery(); break
-				case is BloodPressure.Type:
-					currentQuery = DependencyInjector.query.bloodPressureQuery(); break
-				case is BodyMassIndex.Type:
-					currentQuery = DependencyInjector.query.bmiQuery(); break
-				case is HeartRate.Type:
-					currentQuery = DependencyInjector.query.heartRateQuery(); break
-				case is LeanBodyMass.Type:
-					currentQuery = DependencyInjector.query.leanBodyMassQuery(); break
-				case is MedicationDose.Type:
-					currentQuery = DependencyInjector.query.medicationDoseQuery(); break
-				case is MoodImpl.Type:
-					currentQuery = DependencyInjector.query.moodQuery(); break
-				case is RestingHeartRate.Type:
-					currentQuery = DependencyInjector.query.restingHeartRateQuery(); break
-				case is SexualActivity.Type:
-					currentQuery = DependencyInjector.query.sexualActivityQuery(); break
-				case is Sleep.Type:
-					currentQuery = DependencyInjector.query.sleepQuery(); break
-				case is Weight.Type:
-					currentQuery = DependencyInjector.query.weightQuery(); break
-				default: fatalError("Forgot a type of Sample")
-			}
-
-			buildQuery(&currentQuery, from: parts)
-
-			if currentTopmostQuery != nil {
-				currentTopmostQuery?.subQuery = (matcher: sampleTypeInfo.matcher!, query: currentQuery)
-			} else {
-				currentTopmostQuery = currentQuery
-			}
-		}
-		return currentTopmostQuery!
-	}
-
-	private final func buildQuery(_ query: inout Query, from parts: [Part]) {
-		for part in parts.reversed() {
-			if let attributeRestriction = part.attributeRestriction {
-				query.attributeRestrictions.append(attributeRestriction)
-			} else if part.sampleTypeInfo == nil {
-				log.error("Forgot a type of query part: %@", String(describing: part))
-			}
-		}
-	}
-
-	private final func splitPartsByQuery() -> [[Part]] {
-		var partsSplitByQuery = [[Part]]()
-		var currentParts = [Part]()
-		for part in parts {
-			if part.sampleTypeInfo != nil && !currentParts.isEmpty {
-				partsSplitByQuery.append(currentParts)
-				currentParts = [Part]()
-			}
-			currentParts.append(part)
-		}
-		if !currentParts.isEmpty {
-			partsSplitByQuery.append(currentParts)
-		}
-		return partsSplitByQuery
 	}
 }

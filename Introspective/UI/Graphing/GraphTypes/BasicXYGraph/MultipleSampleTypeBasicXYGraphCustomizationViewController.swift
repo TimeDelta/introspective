@@ -191,6 +191,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		let controller: QueryViewController = viewController(named: "queryView", fromStoryboard: "Query")
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = xAxisSampleType
+		controller.initialQuery = xAxisQuery
 		controller.finishedButtonNotification = Me.xAxisQueryChanged
 		realNavigationController!.pushViewController(controller, animated: false)
 	}
@@ -219,6 +220,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		let controller: QueryViewController = viewController(named: "queryView", fromStoryboard: "Query")
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = yAxisSampleType
+		controller.initialQuery = yAxisQuery
 		controller.finishedButtonNotification = Me.yAxisQueryChanged
 		realNavigationController?.pushViewController(controller, animated: false)
 	}
