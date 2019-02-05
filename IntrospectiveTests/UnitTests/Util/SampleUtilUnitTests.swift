@@ -21,6 +21,8 @@ final class SampleUtilUnitTests: UnitTest {
 		util = SampleUtilImpl()
 	}
 
+	// MARK: - sampleOccursOnOneOf
+
 	func testGivenEmptyDayOfWeekSet_sampleOccursOnOneOf_returnsTrue() throws {
 		// given
 		let sample = SampleCreatorTestUtil.createSample()
@@ -31,6 +33,8 @@ final class SampleUtilUnitTests: UnitTest {
 		// then
 		XCTAssert(onOneOf)
 	}
+
+	// MARK: - dateIsOnOneOf
 
 	func testGivenEveryDayOfWeekExceptOneForDate_dateIsOnOneOf_returnsFalse() throws {
 		// given
@@ -108,6 +112,8 @@ final class SampleUtilUnitTests: UnitTest {
 		// then
 		XCTAssertFalse(onOneOf)
 	}
+
+	// MARK: - convertOneDateSamplesToTwoDateSamples
 
 	func testGivenEmptySamplesArray_convertOneDateSamplesToTwoDateSamples_returnsEmptyArray() throws {
 		// given
@@ -238,6 +244,8 @@ final class SampleUtilUnitTests: UnitTest {
 		}
 	}
 
+	// MARK: - genericConvertOneDateSamplesToTwoDateSamples
+
 	func testGivenEmptySamplesArray_genericConvertOneDateSamplesToTwoDateSamples_returnsEmptyArray() throws {
 		// given
 		let samples = [AnySample]()
@@ -367,6 +375,8 @@ final class SampleUtilUnitTests: UnitTest {
 		}
 	}
 
+	// MARK: - distance
+
 	func testGivenSameExactSampleTwice_distance_returnsZero() throws {
 		// given
 		let sample = SampleCreatorTestUtil.createSample(startDate: Date(), endDate: Date())
@@ -430,6 +440,8 @@ final class SampleUtilUnitTests: UnitTest {
 		XCTAssert(distance == 0, "Distance: \(distance)")
 	}
 
+	// MARK: - distance(in:)
+
 	func testGivenSamplesHaveStartDatesThatAreOneDayApartAndEndDatesThatAreTwoDaysApart_distanceInDays_returnsOne() throws {
 		// given
 		let startDate = Date()
@@ -472,6 +484,8 @@ final class SampleUtilUnitTests: UnitTest {
 		XCTAssert(distance == 1, "Distance: \(distance)")
 	}
 
+	// MARK: - aggregate
+
 	func testGivenEmptySampleArray_aggregate_returnsEmptyAggregation() throws {
 		// given
 		let samples = [Sample]()
@@ -487,10 +501,10 @@ final class SampleUtilUnitTests: UnitTest {
 	func testGivenOneSampleAndAggregationUnitOfHour_aggregate_returnsThatSampleAtBeginningOfHour() throws {
 		// given
 		let date = Date()
-		let beginningOfHour = date.dateAtStartOf(.hour)
-		let samples = SampleCreatorTestUtil.createSamples(withDates: [date])
 		let unit = Calendar.Component.hour
-		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date), willReturn: beginningOfHour))
+		let beginningOfUnit = date.dateAtStartOf(unit)
+		let samples = SampleCreatorTestUtil.createSamples(withDates: [date])
+		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date), willReturn: beginningOfUnit))
 
 		// when
 		let aggregatedSamples = try util.aggregate(samples: samples, by: unit, for: CommonSampleAttributes.startDate)
@@ -498,7 +512,7 @@ final class SampleUtilUnitTests: UnitTest {
 		// then
 		XCTAssert(aggregatedSamples.count == 1, "Found \(aggregatedSamples.count) aggregations")
 		if aggregatedSamples.count > 0 {
-			let samplesForHour = aggregatedSamples[beginningOfHour]
+			let samplesForHour = aggregatedSamples[beginningOfUnit]
 			XCTAssert(samplesForHour != nil, "Wrong aggregation date")
 			if samplesForHour != nil {
 				XCTAssert(samplesForHour!.elementsEqual(samples, by: { $0.equalTo($1) }), "Wrong samples found")
@@ -510,11 +524,11 @@ final class SampleUtilUnitTests: UnitTest {
 		// given
 		let date1 = Date()
 		let date2 = Date()
-		let beginningOfDay = date1.dateAtStartOf(.day)
-		let samples = SampleCreatorTestUtil.createSamples(withDates: [date1, date2])
 		let unit = Calendar.Component.day
-		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date1), willReturn: beginningOfDay))
-		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date2), willReturn: beginningOfDay))
+		let beginningOfUnit = date1.dateAtStartOf(unit)
+		let samples = SampleCreatorTestUtil.createSamples(withDates: [date1, date2])
+		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date1), willReturn: beginningOfUnit))
+		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date2), willReturn: beginningOfUnit))
 
 		// when
 		let aggregatedSamples = try util.aggregate(samples: samples, by: unit, for: CommonSampleAttributes.startDate)
@@ -522,7 +536,7 @@ final class SampleUtilUnitTests: UnitTest {
 		// then
 		XCTAssert(aggregatedSamples.count == 1, "Found \(aggregatedSamples.count) aggregations")
 		if aggregatedSamples.count > 0 {
-			let samplesForDay = aggregatedSamples[beginningOfDay]
+			let samplesForDay = aggregatedSamples[beginningOfUnit]
 			XCTAssert(samplesForDay != nil, "Wrong aggregation date")
 			if samplesForDay != nil {
 				XCTAssert(samplesForDay!.elementsEqual(samples, by: { $0.equalTo($1) }), "Wrong samples found")
@@ -534,12 +548,12 @@ final class SampleUtilUnitTests: UnitTest {
 		// given
 		let date1 = Date()
 		let date2 = Date() + 1.days
-		let beginningOfDay1 = date1.dateAtStartOf(.day)
-		let beginningOfDay2 = date2.dateAtStartOf(.day)
-		let samples = SampleCreatorTestUtil.createSamples(withDates: [date1, date2])
 		let unit = Calendar.Component.day
-		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date1), willReturn: beginningOfDay1))
-		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date2), willReturn: beginningOfDay2))
+		let beginningOfUnit1 = date1.dateAtStartOf(unit)
+		let beginningOfUnit2 = date2.dateAtStartOf(unit)
+		let samples = SampleCreatorTestUtil.createSamples(withDates: [date1, date2])
+		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date1), willReturn: beginningOfUnit1))
+		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date2), willReturn: beginningOfUnit2))
 
 		// when
 		let aggregatedSamples = try util.aggregate(samples: samples, by: unit, for: CommonSampleAttributes.startDate)
@@ -547,20 +561,150 @@ final class SampleUtilUnitTests: UnitTest {
 		// then
 		XCTAssert(aggregatedSamples.count == 2, "Found \(aggregatedSamples.count) aggregations")
 		if aggregatedSamples.count > 0 {
-			let samplesForDay = aggregatedSamples[beginningOfDay1]
-			XCTAssert(samplesForDay != nil, "Wrong aggregation date")
-			if samplesForDay != nil {
-				XCTAssert(samplesForDay!.elementsEqual([samples[0]], by: { $0.equalTo($1) }), "Wrong samples found")
+			let samplesForDay = aggregatedSamples[beginningOfUnit1]
+			XCTAssertNotNil(samplesForDay, "Wrong aggregation date")
+			if let samplesForDay = samplesForDay {
+				assertOnlyExpectedSamples(expected: [samples[0]], actual: samplesForDay)
 			}
 		}
 		if aggregatedSamples.count > 1 {
-			let samplesForDay = aggregatedSamples[beginningOfDay2]
-			XCTAssert(samplesForDay != nil, "Wrong aggregation date")
-			if samplesForDay != nil {
-				XCTAssert(samplesForDay!.elementsEqual([samples[1]], by: { $0.equalTo($1) }), "Wrong samples found")
+			let samplesForDay = aggregatedSamples[beginningOfUnit2]
+			XCTAssertNotNil(samplesForDay, "Wrong aggregation date")
+			if let samplesForDay = samplesForDay {
+				assertOnlyExpectedSamples(expected: [samples[1]], actual: samplesForDay)
 			}
 		}
 	}
+
+	// MARK: - sortByAggregation
+
+	func testGivenSamplesNotInSameHourAndAggregationUnitOfHour_sortByAggregation_correctlySortsAggregations() throws {
+		// given
+		let date1 = Date()
+		let date2 = date1 + 1.hours
+		let unit = Calendar.Component.hour
+		let beginningOfUnit1 = date1.dateAtStartOf(unit)
+		let beginningOfUnit2 = date2.dateAtStartOf(unit)
+		let samples: [Sample] = SampleCreatorTestUtil.createSamples(withDates: [date2, date1])
+		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date1), willReturn: beginningOfUnit1))
+		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date2), willReturn: beginningOfUnit2))
+
+		// when
+		let sortedAggregations = try util.sort(samples: samples, by: unit)
+
+		// then
+		XCTAssert(sortedAggregations.count == 2, "Found \(sortedAggregations.count) aggregations")
+		if sortedAggregations.count > 0 {
+			let aggregation = sortedAggregations[0]
+			XCTAssertEqual(aggregation.date, beginningOfUnit1)
+			assertOnlyExpectedSamples(expected: [samples[1]], actual: aggregation.samples)
+		}
+		if sortedAggregations.count > 1 {
+			let aggregation = sortedAggregations[1]
+			XCTAssertEqual(aggregation.date, beginningOfUnit2)
+			assertOnlyExpectedSamples(expected: [samples[0]], actual: aggregation.samples)
+		}
+	}
+
+	func testGivenSomeSamplesInSameHourAndAggregationUnitOfHour_sortByAggregation_correctlySortsAggregations() throws {
+		// given
+		let date1 = Date()
+		let date2 = date1
+		let date3 = date1 + 1.hours
+		let unit = Calendar.Component.hour
+		let beginningOfUnit1 = date1.dateAtStartOf(unit)
+		let beginningOfUnit2 = date2.dateAtStartOf(unit)
+		let beginningOfUnit3 = date3.dateAtStartOf(unit)
+		let samples: [Sample] = SampleCreatorTestUtil.createSamples(withDates: [date2, date3, date1])
+		let sample1 = samples[2]
+		let sample2 = samples[0]
+		let sample3 = samples[1]
+		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date1), willReturn: beginningOfUnit1))
+		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date2), willReturn: beginningOfUnit2))
+		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date3), willReturn: beginningOfUnit3))
+
+		// when
+		let sortedAggregations = try util.sort(samples: samples, by: unit)
+
+		// then
+		XCTAssert(sortedAggregations.count == 2, "Found \(sortedAggregations.count) aggregations")
+		if sortedAggregations.count > 0 {
+			let aggregation = sortedAggregations[0]
+			XCTAssertEqual(aggregation.date, beginningOfUnit1)
+			assertOnlyExpectedSamples(expected: [sample1, sample2], actual: aggregation.samples)
+		}
+		if sortedAggregations.count > 1 {
+			let aggregation = sortedAggregations[1]
+			XCTAssertEqual(aggregation.date, beginningOfUnit3)
+			assertOnlyExpectedSamples(expected: [sample3], actual: aggregation.samples)
+		}
+	}
+
+	// MARK: - genericSortByAggregation
+
+	func testGivenSamplesNotInSameHourAndAggregationUnitOfHour_genericSortByAggregation_correctlySortsAggregations() throws {
+		// given
+		let date1 = Date()
+		let date2 = date1 + 1.hours
+		let unit = Calendar.Component.hour
+		let beginningOfUnit1 = date1.dateAtStartOf(unit)
+		let beginningOfUnit2 = date2.dateAtStartOf(unit)
+		let samples = SampleCreatorTestUtil.createSamples(withDates: [date2, date1])
+		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date1), willReturn: beginningOfUnit1))
+		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date2), willReturn: beginningOfUnit2))
+
+		// when
+		let sortedAggregations = try util.sort(samples: samples, by: unit)
+
+		// then
+		XCTAssert(sortedAggregations.count == 2, "Found \(sortedAggregations.count) aggregations")
+		if sortedAggregations.count > 0 {
+			let aggregation = sortedAggregations[0]
+			XCTAssertEqual(aggregation.date, beginningOfUnit1)
+			assertOnlyExpectedSamples(expected: [samples[1]], actual: aggregation.samples)
+		}
+		if sortedAggregations.count > 1 {
+			let aggregation = sortedAggregations[1]
+			XCTAssertEqual(aggregation.date, beginningOfUnit2)
+			assertOnlyExpectedSamples(expected: [samples[0]], actual: aggregation.samples)
+		}
+	}
+
+	func testGivenSomeSamplesInSameHourAndAggregationUnitOfHour_genericSortByAggregation_correctlySortsAggregations() throws {
+		// given
+		let date1 = Date()
+		let date2 = date1
+		let date3 = date1 + 1.hours
+		let unit = Calendar.Component.hour
+		let beginningOfUnit1 = date1.dateAtStartOf(unit)
+		let beginningOfUnit2 = date2.dateAtStartOf(unit)
+		let beginningOfUnit3 = date3.dateAtStartOf(unit)
+		let samples = SampleCreatorTestUtil.createSamples(withDates: [date2, date3, date1])
+		let sample1 = samples[2]
+		let sample2 = samples[0]
+		let sample3 = samples[1]
+		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date1), willReturn: beginningOfUnit1))
+		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date2), willReturn: beginningOfUnit2))
+		Given(mockCalendarUtil, .start(of: .value(unit), in: .value(date3), willReturn: beginningOfUnit3))
+
+		// when
+		let sortedAggregations = try util.sort(samples: samples, by: unit)
+
+		// then
+		XCTAssert(sortedAggregations.count == 2, "Found \(sortedAggregations.count) aggregations")
+		if sortedAggregations.count > 0 {
+			let aggregation = sortedAggregations[0]
+			XCTAssertEqual(aggregation.date, beginningOfUnit1)
+			assertOnlyExpectedSamples(expected: [sample1, sample2], actual: aggregation.samples)
+		}
+		if sortedAggregations.count > 1 {
+			let aggregation = sortedAggregations[1]
+			XCTAssertEqual(aggregation.date, beginningOfUnit3)
+			assertOnlyExpectedSamples(expected: [sample3], actual: aggregation.samples)
+		}
+	}
+
+	// MARK: - getOnly
 
 	func testGivenEmptySampleArray_getOnlySamplesFromTo_returnsEmptyArray() throws {
 		// given
@@ -766,5 +910,18 @@ final class SampleUtilUnitTests: UnitTest {
 			XCTAssert(returnedSamples.contains(where: { $0.equalTo(samples[0]) }))
 			XCTAssert(returnedSamples.contains(where: { $0.equalTo(samples[2]) }))
 		}
+	}
+
+	// MARK: - Helper Functions
+
+	func assertOnlyExpectedSamples(expected: [Sample], actual: [Sample]) {
+		let unexpectedSamples = actual.filter({ sample in
+			return !expected.contains(where: { sample.equalTo($0) })
+		})
+		XCTAssert(unexpectedSamples.count == 0, "Found \(unexpectedSamples.count) unexpected samples: \(unexpectedSamples.debugDescription)")
+		let missingSamples = expected.filter({ sample in
+			return !actual.contains(where: { sample.equalTo($0) })
+		})
+		XCTAssert(missingSamples.count == 0, "Missing \(missingSamples.count) expected samples: \(missingSamples.debugDescription)")
 	}
 }
