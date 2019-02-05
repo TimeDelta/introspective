@@ -170,6 +170,23 @@ final class QueryScreenUITests: UITest {
 		XCTAssert(app.tables.staticTexts["BMI < 0.0"].exists)
 	}
 
+	func testMovingSubSampleTypeBelowChildAttributeRestriction_correctlyChangesAttributeRestriction() {
+		// given
+		addDataTypeToQuery("Body Mass Index")
+		addAttributeRestrictionToQuery()
+
+		// when
+		app.tables.buttons["Edit"].tap()
+		let attributeRestrictionReorderButton = app.buttons.containing(
+			NSPredicate(format: "%K BEGINSWITH[cd] %@", "label", "reorder less than")
+		).allElementsBoundByIndex[0]
+		app.tables.buttons["Reorder Data Type"].press(forDuration: 0.5, thenDragTo: attributeRestrictionReorderButton)
+		app.tables.buttons["Done"].tap()
+
+		// then
+		XCTAssert(app.tables.staticTexts["Duration ≤ 0:00:00"].exists)
+	}
+
 	// MARK: - Deleting Parts
 
 	func testDeletingDataTypeWithAttributeRestrictionsUnderneath_correctlyReassignsAttributeRestrictionsUnderneath() {
