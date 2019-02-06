@@ -72,8 +72,8 @@ public final class SampleUtilImpl: SampleUtil {
 				return true
 			}
 			let endDate = sample.dates()[.end]
-			if endDate != nil && DependencyInjector.util.calendar.date(endDate!, isOnOneOf: daysOfWeek) {
-				return true
+			if let endDate = endDate {
+				return DependencyInjector.util.calendar.date(endDate, isOnOneOf: daysOfWeek)
 			}
 			return false
 		}
@@ -220,16 +220,16 @@ public final class SampleUtilImpl: SampleUtil {
 		let end2 = sample2.dates()[.end]
 
 		var closestDistance: Int = distance(start1, start2, unit)
-		if end1 != nil {
-			let end1ToStart2 = distance(end1!, start2, unit)
+		if let end1 = end1 {
+			let end1ToStart2 = distance(end1, start2, unit)
 			closestDistance = min(closestDistance, end1ToStart2)
 		}
-		if end2 != nil {
-			let start1ToEnd2 = distance(start1, end2!, unit)
+		if let end2 = end2 {
+			let start1ToEnd2 = distance(start1, end2, unit)
 			closestDistance = min(closestDistance, start1ToEnd2)
 		}
-		if end1 != nil && end2 != nil {
-			let end1ToEnd2 = distance(end1!, end2!, unit)
+		if let end1 = end1, let end2 = end2 {
+			let end1ToEnd2 = distance(end1, end2, unit)
 			closestDistance = min(closestDistance, end1ToEnd2)
 		}
 		return closestDistance
@@ -237,18 +237,18 @@ public final class SampleUtilImpl: SampleUtil {
 
 	private final func getOnly(_ samples: [Sample], _ startDate: Date?, _ endDate: Date?) -> [Sample] {
 		var filteredSamples = samples
-		if startDate != nil {
+		if let startDate = startDate {
 			filteredSamples = filteredSamples.filter { (sample: Sample) -> Bool in
-				return sample.dates()[.start]!.isAfterDate(startDate!, granularity: .nanosecond)
+				return sample.dates()[.start]!.isAfterDate(startDate, granularity: .nanosecond)
 			}
 		}
-		if endDate != nil {
+		if let endDate = endDate {
 			filteredSamples = filteredSamples.filter { (sample: Sample) -> Bool in
 				var date = sample.dates()[.start]!
-				if sample.dates()[.end] != nil {
-					date = sample.dates()[.end]!
+				if let end = sample.dates()[.end] {
+					date = end
 				}
-				return date.isBeforeDate(endDate!, granularity: .nanosecond)
+				return date.isBeforeDate(endDate, granularity: .nanosecond)
 			}
 		}
 		return filteredSamples
