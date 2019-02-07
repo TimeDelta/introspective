@@ -126,6 +126,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		let controller: MedicationDoseEditorViewController = viewController(named: "medicationDoseEditor")
 		controller.medicationDose = medication.doses.object(at: indexPath.row) as? MedicationDose
 		controller.notificationToSendOnAccept = Me.medicationDoseEdited
+		controller.medication = medication
 		lastClickedIndex = indexPath.row
 		customPresentViewController(Me.medicationDosePresenter, viewController: controller, animated: false)
 	}
