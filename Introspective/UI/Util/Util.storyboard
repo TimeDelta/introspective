@@ -283,6 +283,7 @@
                         <outlet property="enableFromDateSwitch" destination="uCm-jn-DJM" id="lKd-YI-HiI"/>
                         <outlet property="enableToDateSwitch" destination="QWc-he-pur" id="uiK-vO-lB3"/>
                         <outlet property="fromDatePicker" destination="mmE-3q-VO6" id="3bW-mX-SJk"/>
+                        <outlet property="saveButton" destination="sco-id-gGv" id="fdN-zg-UYE"/>
                         <outlet property="toDatePicker" destination="d4V-cc-kkr" id="Lvp-Dj-1em"/>
                     </connections>
                 </viewController>

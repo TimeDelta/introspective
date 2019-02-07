@@ -16,6 +16,7 @@ public final class DateRangeViewController: UIViewController {
 	@IBOutlet weak final var fromDatePicker: UIDatePicker!
 	@IBOutlet weak final var enableToDateSwitch: UISwitch!
 	@IBOutlet weak final var toDatePicker: UIDatePicker!
+	@IBOutlet weak final var saveButton: UIButton!
 
 	// MARK: - Instance Variables
 
@@ -56,25 +57,16 @@ public final class DateRangeViewController: UIViewController {
 		fromDatePicker.maximumDate = maxFromDate
 		toDatePicker.minimumDate = minToDate
 		toDatePicker.maximumDate = maxToDate
+
+		fromDatePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
+		toDatePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
 	}
 
 	// MARK: - Actions
 
 	@IBAction final func saveButtonPressed(_ sender: Any) {
-		var fromDate: Date? = nil
-		if enableFromDateSwitch.isOn {
-			fromDate = fromDatePicker.date
-			if datePickerMode == .date {
-				fromDate = DependencyInjector.util.calendar.start(of: .day, in: fromDatePicker.date)
-			}
-		}
-		var toDate: Date? = nil
-		if enableToDateSwitch.isOn {
-			toDate = toDatePicker.date
-			if datePickerMode == .date {
-				toDate = DependencyInjector.util.calendar.start(of: .day, in: toDatePicker.date)
-			}
-		}
+		let fromDate: Date? = getFromDate()
+		let toDate: Date? = getToDate()
 		DispatchQueue.main.async {
 			NotificationCenter.default.post(
 				name: self.notificationToSendOnAccept,
@@ -89,13 +81,25 @@ public final class DateRangeViewController: UIViewController {
 
 	@IBAction final func fromDateSwitchToggled(_ sender: Any) {
 		updateFromDatePickerState()
+		dateChanged()
 	}
 
 	@IBAction final func toDateSwitchToggled(_ sender: Any) {
 		updateToDatePickerState()
+		dateChanged()
 	}
 
 	// MARK: - Helper Functions
+
+	@objc private final func dateChanged() {
+		if let fromDate = getFromDate(), let toDate = getToDate() {
+			DependencyInjector.util.ui.setButton(saveButton, enabled: fromDate <= toDate, hidden: false)
+			saveButton.backgroundColor = saveButton.isEnabled ? .black : .gray
+		} else {
+			DependencyInjector.util.ui.setButton(saveButton, enabled: true, hidden: false)
+			saveButton.backgroundColor = .black
+		}
+	}
 
 	private final func updateFromDatePickerState() {
 		fromDatePicker.isEnabled = enableFromDateSwitch.isOn
@@ -105,5 +109,45 @@ public final class DateRangeViewController: UIViewController {
 	private final func updateToDatePickerState() {
 		toDatePicker.isEnabled = enableToDateSwitch.isOn
 		toDatePicker.isUserInteractionEnabled = enableToDateSwitch.isOn
+	}
+
+	private final func getFromDate() -> Date? {
+		var fromDate: Date? = nil
+		if enableFromDateSwitch.isOn {
+			fromDate = fromDatePicker.date
+			if datePickerMode == .date {
+				fromDate = DependencyInjector.util.calendar.start(of: .day, in: fromDatePicker.date)
+			}
+//			fromDate = constrainDate(fromDate, from: minFromDate, to: maxFromDate)
+		}
+		return fromDate
+	}
+
+	private final func getToDate() -> Date? {
+		var toDate: Date? = nil
+		if enableToDateSwitch.isOn {
+			toDate = toDatePicker.date
+			if datePickerMode == .date {
+				toDate = DependencyInjector.util.calendar.start(of: .day, in: toDatePicker.date)
+			}
+//			toDate = constrainDate(toDate, from: minToDate, to: maxToDate)
+		}
+		return toDate
+	}
+
+	private final func constrainDate(_ date: Date?, from minDate: Date?, to maxDate: Date?) -> Date? {
+		if let date = date {
+			if let maxDate = maxDate {
+				if date > maxDate {
+					return maxDate
+				}
+			}
+			if let minDate = minDate {
+				if date < minDate {
+					return minDate
+				}
+			}
+		}
+		return date
 	}
 }

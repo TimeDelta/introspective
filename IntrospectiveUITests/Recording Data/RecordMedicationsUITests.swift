@@ -380,6 +380,49 @@ final class RecordMedicationsUITests: UITest {
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose1Date)].exists)
 	}
 
+	func testSettingFromDateAfterToDate_doesNotAllowSavingFilter() {
+		// given
+		let medicationName = "ghrui"
+		createMedication(name: medicationName)
+		takeDoseOf(medicationName, at: Date())
+		app.buttons["last \(medicationName) dose button"].tap()
+		app.tables.buttons["filter dates button"].tap()
+
+		// when
+		setFromOrToDate("from", Date())
+		setFromOrToDate("to", Date() - 1.days)
+
+		// then
+		XCTAssertFalse(app.buttons["save button"].isEnabled)
+
+		// clean up
+		setFromOrToDate("to", nil)
+		app.buttons["save button"].tap()
+	}
+
+	func testSettingFromDateAfterToDateThenDisablingToDate_allowsSavingFilter() {
+		// given
+		let medicationName = "ghrui"
+		createMedication(name: medicationName)
+		takeDoseOf(medicationName, at: Date())
+		app.buttons["last \(medicationName) dose button"].tap()
+		app.tables.buttons["filter dates button"].tap()
+
+		// when
+		setFromOrToDate("from", Date())
+		setFromOrToDate("to", Date() - 1.days)
+		setFromOrToDate("to", nil)
+
+		// then
+		XCTAssert(app.buttons["save button"].isEnabled)
+
+		// clean up
+		if !app.buttons["save button"].isEnabled {
+			setFromOrToDate("from", nil)
+		}
+		app.buttons["save button"].tap()
+	}
+
 	// MARK: - Helper Functions
 
 	private final func createMedication(
