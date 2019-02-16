@@ -18,6 +18,7 @@ final class ChooseCalendarComponentViewController: UIViewController {
 
 	public final var selectedComponent: Calendar.Component?
 	public final var notificationToSendOnAccept: Notification.Name!
+	public final var applicableComponents: [Calendar.Component]! = CalendarComponentAttribute.supportedComponents
 
 	private final let log = Log()
 
@@ -27,8 +28,8 @@ final class ChooseCalendarComponentViewController: UIViewController {
 		super.viewDidLoad()
 		calendarComponentPicker.dataSource = self
 		calendarComponentPicker.delegate = self
-		if selectedComponent != nil {
-			if let selectedIndex = CalendarComponentAttribute.supportedComponents.index(of: selectedComponent!) {
+		if let selectedComponent = selectedComponent {
+			if let selectedIndex = applicableComponents.index(of: selectedComponent) {
 				calendarComponentPicker.selectRow(selectedIndex, inComponent: 0, animated: false)
 			} else {
 				log.error("Could not find index for specified component")
@@ -58,7 +59,7 @@ extension ChooseCalendarComponentViewController: UIPickerViewDataSource {
 	}
 
 	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return CalendarComponentAttribute.supportedComponents.count
+		return applicableComponents.count
 	}
 }
 
@@ -67,10 +68,10 @@ extension ChooseCalendarComponentViewController: UIPickerViewDataSource {
 extension ChooseCalendarComponentViewController: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return CalendarComponentAttribute.supportedComponents[row].description.localizedCapitalized
+		return applicableComponents[row].description.localizedCapitalized
 	}
 
 	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-		selectedComponent = CalendarComponentAttribute.supportedComponents[row]
+		selectedComponent = applicableComponents[row]
 	}
 }

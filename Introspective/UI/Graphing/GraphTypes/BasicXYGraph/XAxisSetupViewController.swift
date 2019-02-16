@@ -91,6 +91,7 @@ final class XAxisSetupViewController: UIViewController {
 
 	@IBAction final func chooseGroupingButtonPressed(_ sender: Any) {
 		let controller: ChooseCalendarComponentViewController = viewController(named: "chooseCalendarComponent", fromStoryboard: "Util")
+		controller.applicableComponents = [ .year, .quarter, .month, .weekOfMonth, .weekOfYear, .day, .hour, .minute, .second, .nanosecond]
 		controller.selectedComponent = grouping
 		controller.notificationToSendOnAccept = Me.groupingChanged
 		customPresentViewController(Me.presenter, viewController: controller, animated: false)
