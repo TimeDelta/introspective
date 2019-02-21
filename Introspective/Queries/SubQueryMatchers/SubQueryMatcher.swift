@@ -30,5 +30,5 @@ extension SubQueryMatcher {
 
 public class CommonSubQueryMatcherAttributes {
 
-	public static let mostRecentOnly = BooleanAttribute(name: "Most recent only", description: "Use only the most recent enty that matches the given restrictions.")
+	public static let mostRecentOnly = BooleanAttribute(name: "Most recent only", description: "Use only the most recent entry that matches the given restrictions.")
 }
