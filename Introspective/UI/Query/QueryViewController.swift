@@ -8,8 +8,9 @@
 
 import UIKit
 import Presentr
+import Instructions
 
-class QueryViewController: UITableViewController {
+public final class QueryViewController: UITableViewController {
 
 	// MARK: - Enums / Structs
 
@@ -74,6 +75,7 @@ class QueryViewController: UITableViewController {
 	@IBOutlet weak final var addPartButton: UIBarButtonItem!
 	@IBOutlet weak final var finishedButton: UIBarButtonItem!
 	@IBOutlet weak final var editButton: UIBarButtonItem!
+	@IBOutlet weak final var toolbar: UIToolbar!
 
 	// MARK: - Instance Variables
 
@@ -89,9 +91,41 @@ class QueryViewController: UITableViewController {
 
 	private final let log = Log()
 
+	private final let coachMarksController = CoachMarksController()
+	private final var coachMarksDataSourceAndDelegate: DefaultCoachMarksDataSourceAndDelegate!
+	private final lazy var coachMarksInfo: [CoachMarkInfo] = [
+		CoachMarkInfo(
+			hint: "This is the main data type. It determines what type of data will be returned by this query. Tap it to change the main data type.",
+			useArrow: true,
+			view: { return self.tableView.visibleCells[0] }),
+		CoachMarkInfo(
+			hint: "Press the + button to add more parts to the query.",
+			useArrow: false,
+			view: { return self.toolbar }),
+		CoachMarkInfo(
+			hint: "This is an attribute restriction. It allows you to restrict which samples are returned based on their attributes. Tap it to edit.",
+			useArrow: false,
+			view: { return self.tableView.visibleCells[1] },
+			setup: {
+				self.addAttributeRestriction()
+			}),
+		CoachMarkInfo(
+			hint: "This is the start of a subquery. It allows you to restrict what samples are returned based on other types of data. Tap it to edit.",
+			useArrow: false,
+			view: { return self.tableView.visibleCells[2] },
+			setup: {
+				self.parts.append(Part(SampleTypeInfo(DependencyInjector.sample.allTypes()[1])))
+				self.partWasAdded()
+			}),
+		CoachMarkInfo(
+			hint: "Swipe left on any part of the query to reveal a button that will remove that part of the query.",
+			useArrow: true,
+			view: { return self.tableView.visibleCells[2] })
+	]
+
 	// MARK: - UIViewController Overloads
 
-	override func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		editButton.target = self
@@ -117,6 +151,26 @@ class QueryViewController: UITableViewController {
 
 		addPartButton?.target = self
 		addPartButton?.action = #selector(addPartButtonWasPressed)
+
+		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
+			coachMarksInfo,
+			instructionsShownKey: UserDefaultKeys.queryViewInstructionsShown,
+			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints())
+		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
+		coachMarksController.delegate = coachMarksDataSourceAndDelegate
+		coachMarksController.skipView = defaultSkipInstructionsView()
+	}
+
+	public final override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		if !UserDefaults().bool(forKey: UserDefaultKeys.queryViewInstructionsShown) {
+			coachMarksController.start(in: .window(over: self))
+		}
+	}
+
+	public final override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		coachMarksController.stop(immediately: true)
 	}
 
 	deinit {
@@ -125,11 +179,11 @@ class QueryViewController: UITableViewController {
 
 	// MARK: - Table View Data Source
 
-	final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return parts.count
 	}
 
-	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let index = indexPath.row
 		let part = parts[index]
 
@@ -161,15 +215,15 @@ class QueryViewController: UITableViewController {
 
 	// MARK: - Table View Delegate
 
-	final override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+	public final override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 		return indexPath.row != 0
 	}
 
-	final override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+	public final override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
 		return indexPath.row != 0
 	}
 
-	final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	public final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		parts.swapAt(fromIndexPath.row, to.row)
 		if let attributeRestriction = parts[to.row].attributeRestriction {
 			let sampleType = bottomMostSampleTypeAbove(index: to.row)
@@ -190,7 +244,7 @@ class QueryViewController: UITableViewController {
 		tableView.reloadData()
 	}
 
-	final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+	public final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let delete = UITableViewRowAction(style: .destructive, title: "🗑️") { (_, indexPath) in
 			let sampleType = self.parts[indexPath.row].sampleTypeInfo
 			self.parts.remove(at: indexPath.row)
@@ -204,7 +258,7 @@ class QueryViewController: UITableViewController {
 		return [delete]
 	}
 
-	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.section == 0 && indexPath.row == 0 {
 			let controller: ChooseSampleTypeViewController = viewController(named: "chooseSampleType", fromStoryboard: "Util")
 			editedIndex = 0
@@ -216,6 +270,10 @@ class QueryViewController: UITableViewController {
 	}
 
 	// MARK: - Button Actions
+
+	@IBAction final func infoButtonPressed(_ sender: Any) {
+		coachMarksController.start(in: .window(over: self))
+	}
 
 	@IBAction final func finishedButtonPressed(_ sender: Any) {
 		guard let query = buildQuery()?.query else {
@@ -247,13 +305,10 @@ class QueryViewController: UITableViewController {
 	@objc private final func addPartButtonWasPressed() {
 		let actionSheet = UIAlertController(title: "What would you like to add?", message: nil, preferredStyle: .actionSheet)
 		actionSheet.addAction(UIAlertAction(title: "Data Type", style: .default) { _ in
-			self.parts.append(Part(SampleTypeInfo()))
-			self.partWasAdded()
+			self.addSampleType()
 		})
 		actionSheet.addAction(UIAlertAction(title: "Attribute Restriction", style: .default) { _ in
-			let attributeRestriction = self.defaultAttributeRestriction(for: self.bottomMostSampleType())
-			self.parts.append(Part(attributeRestriction))
-			self.partWasAdded()
+			self.addAttributeRestriction()
 		})
 		actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(actionSheet, animated: false, completion: nil)
@@ -266,7 +321,7 @@ class QueryViewController: UITableViewController {
 
 	// MARK: - Navigation
 
-	final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	public final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.destination is EditAttributeRestrictionViewController {
 			let controller = (segue.destination as! EditAttributeRestrictionViewController)
 			let source = (sender as! UITableViewCell)
@@ -412,6 +467,17 @@ class QueryViewController: UITableViewController {
 	}
 
 	// MARK: - Helper Functions
+
+	private final func addSampleType() {
+		self.parts.append(Part(SampleTypeInfo()))
+		self.partWasAdded()
+	}
+
+	private final func addAttributeRestriction() {
+		let attributeRestriction = self.defaultAttributeRestriction(for: self.bottomMostSampleType())
+		self.parts.append(Part(attributeRestriction))
+		self.partWasAdded()
+	}
 
 	private final func updateAttributesForSampleType(at sampleTypeIndex: Int) {
 		for i in sampleTypeIndex+1 ..< parts.count {

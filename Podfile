@@ -14,6 +14,7 @@ target 'Introspective' do
   pod "WSTagsField"
   pod "SearchTextField"
   pod 'CSV.swift', '~> 2.3.1'
+  pod 'Instructions', '~> 1.2.2'
 
   target 'IntrospectiveTests' do
     inherit! :search_paths

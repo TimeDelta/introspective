@@ -8,6 +8,7 @@
 
 import UIKit
 import Presentr
+import Instructions
 
 extension UIViewController {
 
@@ -63,5 +64,22 @@ extension UIViewController {
 
 	final func present(_ viewController: UIViewController, using presenter: Presentr, animated: Bool = false) {
 		customPresentViewController(presenter, viewController: viewController, animated: animated)
+	}
+
+	final func defaultSkipInstructionsView() -> CoachMarkSkipView {
+		let skipView = CoachMarkSkipDefaultView()
+		skipView.setTitle("Skip instructions", for: .normal)
+		skipView.frame = CGRect(x: 0.0, y: 0.0, width: skipView.frame.width, height: skipView.frame.height)
+		return skipView
+	}
+
+	final func defaultCoachMarkSkipViewConstraints() -> [CoachMarkSkipViewConstraint] {
+		return [
+			HorizontallyCenteredCoachMarkSkipViewConstraint(),
+			GenericCoachMarkSkipViewConstraint(
+				skipViewAttribute: .bottom,
+				relatedBy: .equal,
+				parentViewAttribute: .bottomMargin),
+		]
 	}
 }

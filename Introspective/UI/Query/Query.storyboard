@@ -116,11 +116,25 @@
                             <outlet property="delegate" destination="WJ9-gy-FSd" id="SUZ-PG-SLk"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="uW4-4U-hFU"/>
+                    <navigationItem key="navigationItem" id="uW4-4U-hFU">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="dRp-3Q-svk">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="lDj-8x-ExV">
+                                <rect key="frame" x="337" y="11" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="infoButtonPressed:" destination="WJ9-gy-FSd" eventType="touchUpInside" id="tKL-oq-YaF"/>
+                                </connections>
+                            </button>
+                            <connections>
+                                <action selector="infoButtonPressed:" destination="WJ9-gy-FSd" id="P7g-Ox-aQf"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="addPartButton" destination="z9J-Hy-7FO" id="8nM-t4-y8L"/>
                         <outlet property="editButton" destination="LVd-yT-HTy" id="H3F-dP-8ki"/>
                         <outlet property="finishedButton" destination="3Kp-MA-kPR" id="K29-Q2-BVa"/>
+                        <outlet property="toolbar" destination="a8Y-9T-RMg" id="b2N-V4-s3L"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oNl-5P-b6T" userLabel="First Responder" sceneMemberID="firstResponder"/>

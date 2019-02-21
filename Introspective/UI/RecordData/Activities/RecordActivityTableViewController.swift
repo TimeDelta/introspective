@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Instructions
 import CoreData
 import os
 
@@ -18,6 +19,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	private static let activityDefinitionCreated = Notification.Name("activityDefinitionCreated")
 	private static let activityEditedOrCreated = Notification.Name("activityEdited")
 	private static let activityDefinitionEdited = Notification.Name("activityDefinitionEdited")
+	private static let exampleActivityName = "Example activity"
 
 	// MARK: - Instance Variables
 
@@ -30,6 +32,64 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 	private final var definitionEditIndex: IndexPath?
 	private final var fetchedResultsController: NSFetchedResultsController<ActivityDefinition>!
+
+	private final let coachMarksController = CoachMarksController()
+	private final var coachMarksDataSourceAndDelegate: DefaultCoachMarksDataSourceAndDelegate!
+	private final lazy var coachMarksInfo: [CoachMarkInfo] = [
+		CoachMarkInfo(
+			hint: "Tap the + button to create new activities. You can also type the name of a new activity in the searchh bar and long press the + button to quickly create and start it.",
+			useArrow: true,
+			view: { return self.navigationController!.navigationBar }),
+		CoachMarkInfo(
+			hint: "This is the name of the activity.",
+			useArrow: true,
+			view: {
+				let exampleActivityCell = self.tableView.visibleCells[0] as! RecordActivityDefinitionTableViewCell
+				return exampleActivityCell.nameLabel
+			},
+			setup: {
+				if self.tableView.visibleCells.count == 0 {
+					self.searchController.searchBar.text = Me.exampleActivityName
+					self.quickCreateAndStart()
+				}
+			}),
+		CoachMarkInfo(
+			hint: "If an activity is currently active, meaning it was started and has not yet been stopped, it will have a progress indicator here.",
+			useArrow: true,
+			view: {
+				let exampleActivityCell = self.tableView.visibleCells[0] as! RecordActivityDefinitionTableViewCell
+				return exampleActivityCell.progressIndicator
+			}),
+		CoachMarkInfo(
+			hint: "To start or stop an activity, simply tap it.",
+			useArrow: true,
+			view: { return self.tableView.visibleCells[0] }),
+		CoachMarkInfo(
+			hint: "This is the total amount of time spent on this activity today.",
+			useArrow: true,
+			view: {
+				let exampleActivityCell = self.tableView.visibleCells[0] as! RecordActivityDefinitionTableViewCell
+				return exampleActivityCell.totalDurationTodayLabel
+			}),
+		CoachMarkInfo(
+			hint: "This is the duration of the most recent time this activity was done.",
+			useArrow: true,
+			view: {
+				let exampleActivityCell = self.tableView.visibleCells[0] as! RecordActivityDefinitionTableViewCell
+				return exampleActivityCell.currentInstanceDurationLabel
+			}),
+		CoachMarkInfo(
+			hint: "This is the start and end timestamps for the most recent instance of this activity.",
+			useArrow: true,
+			view: {
+				let exampleActivityCell = self.tableView.visibleCells[0] as! RecordActivityDefinitionTableViewCell
+				return exampleActivityCell.mostRecentTimeLabel
+			}),
+		CoachMarkInfo(
+			hint: "Long press on an activity to reorder it.",
+			useArrow: true,
+			view: { return self.tableView.visibleCells[0]}),
+	]
 
 	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Activity Display"))
 	private final let log = Log()
@@ -59,6 +119,27 @@ public final class RecordActivityTableViewController: UITableViewController {
 		observe(selector: #selector(activityDefinitionEdited), name: Me.activityDefinitionEdited, object: nil)
 
 		reorderOnLongPress()
+
+		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
+			coachMarksInfo,
+			instructionsShownKey: UserDefaultKeys.recordActivitiesInstructionsShown,
+			cleanup: deleteExampleActivity,
+			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints())
+		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
+		coachMarksController.delegate = coachMarksDataSourceAndDelegate
+		coachMarksController.skipView = defaultSkipInstructionsView()
+	}
+
+	public final override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		if !UserDefaults().bool(forKey: UserDefaultKeys.recordActivitiesInstructionsShown) {
+			coachMarksController.start(in: .window(over: self))
+		}
+	}
+
+	public final override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		coachMarksController.stop(immediately: true)
 	}
 
 	deinit {
@@ -308,10 +389,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func loadActivitiyDefinitions() {
 		self.resetFetchedResultsController()
-		DispatchQueue.main.async {
-			self.finishedLoading = true
-			self.tableView.reloadData()
-		}
+		self.finishedLoading = true
+		self.tableView.reloadData()
 	}
 
 	private final func resetFetchedResultsController() {
@@ -491,6 +570,22 @@ public final class RecordActivityTableViewController: UITableViewController {
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		let results = try DependencyInjector.db.query(fetchRequest)
 		return results.count > 0
+	}
+
+	private final func deleteExampleActivity() {
+		let definitionFetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
+		definitionFetchRequest.predicate = NSPredicate(format: "name == %@", Me.exampleActivityName)
+		do {
+			let definitions = try DependencyInjector.db.query(definitionFetchRequest)
+			for definition in definitions {
+				let transaction = DependencyInjector.db.transaction()
+				try transaction.delete(definition)
+				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+				self.loadActivitiyDefinitions()
+			}
+		} catch {
+			log.error("Failed to fetch activities while retrieving most recent: %@", errorInfo(error))
+		}
 	}
 }
 
