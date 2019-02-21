@@ -12,10 +12,11 @@ public final class SettingsTableViewController: UITableViewController {
 
 	private typealias Me = SettingsTableViewController
 
+	private static let resetInstructionPromptsCellIdentifier = "resetInstructionPrompts"
 	private static let identifiers = [
 		"activitySettings",
 		"moodSettings",
-		"resetInstructionPrompts",
+		resetInstructionPromptsCellIdentifier,
 	]
 
 	// MARK: - Table view data source
@@ -47,10 +48,22 @@ public final class SettingsTableViewController: UITableViewController {
 
 	// MARK: - Table view delegate
 
-	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		if indexPath.row == 2 {
+	public final override func tableView(_ tableView: UITableView, didSelectRowAt _indexPath: IndexPath) {
+		if indexPath(_indexPath, isNonTestOnlySectionRowNamed: Me.resetInstructionPromptsCellIdentifier) {
 			UserDefaults().set(false, forKey: UserDefaultKeys.queryViewInstructionsShown)
 			UserDefaults().set(false, forKey: UserDefaultKeys.recordActivitiesInstructionsShown)
+			UserDefaults().set(false, forKey: UserDefaultKeys.recordMedicationsInstructionsShown)
+			tableView.deselectRow(at: _indexPath, animated: false)
 		}
+	}
+
+	// MARK: - Helper Functions
+
+	private final func indexPath(_ indexPath: IndexPath, isNonTestOnlySectionRowNamed rowIdentifier: String) -> Bool {
+		return indexPathIsNonTestOnlySection(indexPath) && Me.identifiers[indexPath.row] == rowIdentifier
+	}
+
+	private final func indexPathIsNonTestOnlySection(_ indexPath: IndexPath) -> Bool {
+		return !testing || indexPath.section != 0
 	}
 }

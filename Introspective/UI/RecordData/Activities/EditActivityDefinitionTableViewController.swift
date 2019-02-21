@@ -195,6 +195,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			} else {
 				activityDefinition = try transaction.new(ActivityDefinition.self)
 				activityDefinition.setSource(.introspective)
+				activityDefinition.recordScreenIndex = Int16(try DependencyInjector.db.query(ActivityDefinition.fetchRequest()).count)
 			}
 
 			activityDefinition.name = name

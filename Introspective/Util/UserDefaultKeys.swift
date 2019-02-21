@@ -12,4 +12,5 @@ public final class UserDefaultKeys {
 
 	public static let queryViewInstructionsShown = "queryViewInstructionsShown"
 	public static let recordActivitiesInstructionsShown = "recordActivitiesInstructionsShown"
+	public static let recordMedicationsInstructionsShown = "recordMedicationsInstructionsShown"
 }

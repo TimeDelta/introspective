@@ -86,9 +86,13 @@ public final class RecordActivityTableViewController: UITableViewController {
 				return exampleActivityCell.mostRecentTimeLabel
 			}),
 		CoachMarkInfo(
+			hint: "Swipe left for actions related to individual instances of this activity. Swipe right for actions related to the common definition of this activity.",
+			useArrow: true,
+			view: { return self.tableView.visibleCells[0] }),
+		CoachMarkInfo(
 			hint: "Long press on an activity to reorder it.",
 			useArrow: true,
-			view: { return self.tableView.visibleCells[0]}),
+			view: { return self.tableView.visibleCells[0] }),
 	]
 
 	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Activity Display"))
@@ -176,6 +180,9 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	public final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		if !finishedLoading {
+			return 44
+		}
 		return 57
 	}
 
@@ -412,7 +419,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 			try fetchedResultsController.performFetch()
 			signpost.end(name: "resetting fetched results controller")
 		} catch {
-			log.error("Failed to fetch medications: %@", errorInfo(error))
+			log.error("Failed to fetch activities: %@", errorInfo(error))
 			showError(
 				title: "Failed to retrieve activities",
 				message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.",
@@ -433,6 +440,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 				let activityDefinition = try transaction.new(ActivityDefinition.self)
 				activityDefinition.name = searchText
+				activityDefinition.setSource(.introspective)
+				activityDefinition.recordScreenIndex = Int16(try DependencyInjector.db.query(ActivityDefinition.fetchRequest()).count)
 				let activity = try transaction.new(Activity.self)
 				activity.definition = activityDefinition
 				activity.startDate = Date()
@@ -581,7 +590,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 				let transaction = DependencyInjector.db.transaction()
 				try transaction.delete(definition)
 				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-				self.loadActivitiyDefinitions()
+				loadActivitiyDefinitions()
 			}
 		} catch {
 			log.error("Failed to fetch activities while retrieving most recent: %@", errorInfo(error))

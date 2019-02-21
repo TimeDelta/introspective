@@ -7,8 +7,11 @@
 //
 
 import UIKit
-import CoreData
 import Presentr
+import Instructions
+
+import CoreData
+import os
 
 public final class RecordMedicationTableViewController: UITableViewController {
 
@@ -33,27 +36,61 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		customPresenter.roundCorners = true
 		return customPresenter
 	}()
+	private static let exampleMedicationName = "Example Medication"
 
 	// MARK: - Instance Variables
 
 	private final let searchController = UISearchController(searchResultsController: nil)
-	private final var medications = [Medication]() {
-		didSet { resetFilteredMedications() }
-	}
-	private final var filteredMedications = [Medication]()
-	private final var errorMessage: String? {
-		didSet {
-			if errorMessage != nil { tableView.reloadData() }
-		}
-	}
 	private final var finishedLoading = false {
 		didSet {
 			searchController.searchBar.isUserInteractionEnabled = finishedLoading
 			tableView.reloadData()
 		}
 	}
+	private final var fetchedResultsController: NSFetchedResultsController<Medication>!
+
+	private final let coachMarksController = CoachMarksController()
+	private final var coachMarksDataSourceAndDelegate: DefaultCoachMarksDataSourceAndDelegate!
+	private final lazy var coachMarksInfo: [CoachMarkInfo] = [
+		CoachMarkInfo(
+			hint: "Tap the + button to create new medications. You can also type the name of a new medication in the searchh bar and long press the + button to quickly create and mark it as taken.",
+			useArrow: true,
+			view: { return self.navigationController!.navigationBar }),
+		CoachMarkInfo(
+			hint: "This is the name of the medication. Tap it to edit the medication.",
+			useArrow: true,
+			view: {
+				let exampleMedicationCell = self.tableView.visibleCells[0] as! RecordMedicationTableViewCell
+				return exampleMedicationCell.medicationNameLabel
+			},
+			setup: {
+				if self.tableView.visibleCells.count == 0 {
+					self.searchController.searchBar.text = Me.exampleMedicationName
+					self.quickCreateAndTake()
+				}
+			}),
+		CoachMarkInfo(
+			hint: "Press this button to mark this medication as taken. You will be able to set the dosage and date / time taken.",
+			useArrow: true,
+			view: {
+				let exampleMedicationCell = self.tableView.visibleCells[0] as! RecordMedicationTableViewCell
+				return exampleMedicationCell.takeButton
+			}),
+		CoachMarkInfo(
+			hint: "This displays the most recent date and time that this medication was taken. Tap to display the full history for this medication.",
+			useArrow: true,
+			view: {
+				let exampleMedicationCell = self.tableView.visibleCells[0] as! RecordMedicationTableViewCell
+				return exampleMedicationCell.lastTakenOnDateButton
+			}),
+		CoachMarkInfo(
+			hint: "Long press on an activity to reorder it.",
+			useArrow: true,
+			view: { return self.tableView.visibleCells[0]}),
+	]
 
 	private final let log = Log()
+	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "Medication Display"))
 
 	// MARK: - UIViewController Overrides
 
@@ -65,26 +102,6 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			target: self,
 			action: #selector(addButtonPressed))
 
-		DispatchQueue.global(qos: .userInteractive).async {
-			do {
-				let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
-				fetchRequest.sortDescriptors = [NSSortDescriptor(key: "recordScreenIndex", ascending: true)]
-				let medications = try DependencyInjector.db.query(fetchRequest)
-				DispatchQueue.main.async {
-					self.medications = medications
-					self.finishedLoading = true
-					self.tableView.reloadData()
-				}
-			} catch {
-				var message = "Something went wrong while trying to retrieve the list of your medications."
-				if let error = error as? DisplayableError {
-					message = error.displayableTitle + ". \(error.displayableDescription ?? "")"
-				}
-				self.errorMessage = message
-				self.log.error("Failed to fetch medications: %@", errorInfo(error))
-			}
-		}
-
 		searchController.searchResultsUpdater = self
 		searchController.obscuresBackgroundDuringPresentation = false
 		searchController.searchBar.placeholder = "Search Medications"
@@ -93,13 +110,36 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		navigationItem.hidesSearchBarWhenScrolling = false
 		definesPresentationContext = true
 
+		loadMedications()
+
 		observe(selector: #selector(medicationCreated), name: Me.medicationCreated)
 		observe(selector: #selector(presentSetDoseView), name: RecordMedicationTableViewCell.shouldPresentMedicationDoseView)
 		observe(selector: #selector(errorOccurred), name: RecordMedicationTableViewCell.errorOccurred)
 		observe(selector: #selector(presentMedicationDosesTableView), name: RecordMedicationTableViewCell.shouldPresentDosesView)
 		observe(selector: #selector(medicationEdited), name: Me.medicationEdited)
 
-		super.reorderOnLongPress()
+		reorderOnLongPress()
+
+		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
+			coachMarksInfo,
+			instructionsShownKey: UserDefaultKeys.recordMedicationsInstructionsShown,
+			cleanup: deleteExampleMedication,
+			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints())
+		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
+		coachMarksController.delegate = coachMarksDataSourceAndDelegate
+		coachMarksController.skipView = defaultSkipInstructionsView()
+	}
+
+	public final override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		if !UserDefaults().bool(forKey: UserDefaultKeys.recordMedicationsInstructionsShown) {
+			coachMarksController.start(in: .window(over: self))
+		}
+	}
+
+	public final override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		coachMarksController.stop(immediately: true)
 	}
 
 	deinit {
@@ -113,28 +153,27 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	}
 
 	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		if !finishedLoading || errorMessage != nil {
+		if !finishedLoading {
 			return 1
 		}
-		return filteredMedications.count
+		if let fetchedObjects = fetchedResultsController.fetchedObjects {
+			return fetchedObjects.count
+		}
+		log.error("Unable to determine number of expected rows because fetched objects was nil")
+		return 0
 	}
 
 	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		if errorMessage != nil {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "errorMessage", for: indexPath)
-			cell.textLabel!.text = errorMessage
-			return cell
-		}
 		if !finishedLoading {
 			return tableView.dequeueReusableCell(withIdentifier: "waiting", for: indexPath)
 		}
 		let cell = tableView.dequeueReusableCell(withIdentifier: "recordMedication", for: indexPath) as! RecordMedicationTableViewCell
-		cell.medication = filteredMedications[indexPath.row]
+		cell.medication = fetchedResultsController.object(at: indexPath)
 		return cell
 	}
 
 	public final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		if errorMessage == nil && !finishedLoading {
+		if !finishedLoading {
 			return 44
 		}
 		return 81
@@ -145,7 +184,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let controller: EditMedicationViewController = viewController(named: "editMedication")
 		controller.notificationToSendOnAccept = Me.medicationEdited
-		controller.medication = filteredMedications[indexPath.row]
+		controller.medication = fetchedResultsController.object(at: indexPath)
 		navigationController?.pushViewController(controller, animated: false)
 	}
 
@@ -153,24 +192,20 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	public final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let delete = UITableViewRowAction(style: .destructive, title: "🗑️") { (_, indexPath) in
-			let medication = self.filteredMedications[indexPath.row]
-			let alert = UIAlertController(title: "Are you sure you want to delete \(medication.name)?", message: nil, preferredStyle: .alert)
+			let medication = self.fetchedResultsController.object(at: indexPath)
+			let alert = UIAlertController(
+				title: "Are you sure you want to delete \(medication.name)?",
+				message: "This will delete all history for this activity.",
+				preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
-				if let index = self.medications.firstIndex(of: medication) {
-					DispatchQueue.global(qos: .userInitiated).async {
-						do {
-							let transaction = DependencyInjector.db.transaction()
-							try transaction.delete(medication)
-							try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-							DispatchQueue.main.async {
-								self.medications.remove(at: index)
-								tableView.deleteRows(at: [indexPath], with: .fade)
-								tableView.reloadData()
-							}
-						} catch {
-							self.showError(title: "Failed to delete medication", error: error)
-						}
-					}
+				do {
+					let transaction = DependencyInjector.db.transaction()
+					try transaction.delete(medication)
+					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+					self.loadMedications()
+				} catch {
+					self.log.error("Failed to delete medication: %@", errorInfo(error))
+					self.showError(title: "Failed to delete medication", error: error)
 				}
 			})
 			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
@@ -181,46 +216,45 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	}
 
 	public final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-		let medicationsFromIndex = Int(filteredMedications[fromIndexPath.row].recordScreenIndex)
-		let medicationsToIndex = Int(filteredMedications[to.row].recordScreenIndex)
-		let transaction = DependencyInjector.db.transaction()
+		let medicationsFromIndex = Int(fetchedResultsController.object(at: fromIndexPath).recordScreenIndex)
+		let medicationsToIndex = Int(fetchedResultsController.object(at: to).recordScreenIndex)
+		let searchText = getSearchText()
+		searchController.searchBar.text = ""
+		resetFetchedResultsController()
 		do {
+			let transaction = DependencyInjector.db.transaction()
 			if medicationsFromIndex < medicationsToIndex {
 				for i in medicationsFromIndex + 1 ... medicationsToIndex {
-					try transaction.pull(savedObject: medications[i]).recordScreenIndex -= 1
+					if let medications = fetchedResultsController.fetchedObjects?[i] {
+						try transaction.pull(savedObject: medications).recordScreenIndex -= 1
+					}
 				}
 			} else {
 				for i in medicationsToIndex ..< medicationsFromIndex {
-					try transaction.pull(savedObject: medications[i]).recordScreenIndex += 1
+					if let medications = fetchedResultsController.fetchedObjects?[i] {
+						try transaction.pull(savedObject: medications).recordScreenIndex += 1
+					}
 				}
 			}
-			try transaction.pull(savedObject: medications[medicationsFromIndex]).recordScreenIndex = Int16(medicationsToIndex)
+			if let medication = fetchedResultsController.fetchedObjects?[medicationsFromIndex] {
+				try transaction.pull(savedObject: medication).recordScreenIndex = Int16(medicationsToIndex)
+			}
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-			let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
-			fetchRequest.sortDescriptors = [NSSortDescriptor(key: "recordScreenIndex", ascending: true)]
-			medications = try DependencyInjector.db.query(fetchRequest)
 		} catch {
 			log.error("Failed to reorder medications: %@", errorInfo(error))
 		}
-		tableView.reloadData()
+		searchController.searchBar.text = searchText
+		loadMedications()
 	}
 
 	// MARK: - Received Notifications
 
 	@objc private final func medicationCreated(notification: Notification) {
-		if let medication: Medication = value(for: .medication, from: notification) {
-			medications.append(medication)
-			resetFilteredMedications()
-			tableView.reloadData()
-		}
+		loadMedications()
 	}
 
 	@objc private final func medicationEdited(notification: Notification) {
-		if let medication: Medication = value(for: .medication, from: notification) {
-			medications[Int(medication.recordScreenIndex)] = medication
-			resetFilteredMedications()
-			tableView.reloadData()
-		}
+		loadMedications()
 	}
 
 	@objc private final func presentSetDoseView(notification: Notification) {
@@ -252,31 +286,116 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	// MARK: - Button Actions
 
-	@IBAction final func addButtonPressed(_ sender: Any) {
+	@IBAction private final func addButtonPressed(_ sender: Any, forEvent event: UIEvent) {
+		if let touch = event.allTouches?.first {
+			if touch.tapCount == 1 { // tap
+				showMedicationCreationScreen()
+			} else if touch.tapCount == 0 { // long press
+				quickCreateAndTake()
+			}
+		} else {
+			showMedicationCreationScreen()
+		}
+	}
+
+	// MARK: - Helper Functions
+
+	private final func loadMedications() {
+		self.resetFetchedResultsController()
+		self.finishedLoading = true
+		self.tableView.reloadData()
+	}
+
+	private final func resetFetchedResultsController() {
+		do {
+			signpost.begin(name: "resetting fetched results controller")
+			fetchedResultsController = DependencyInjector.db.fetchedResultsController(
+				type: Medication.self,
+				sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
+				cacheName: "medications")
+			let fetchRequest = fetchedResultsController.fetchRequest
+			let searchText: String = self.getSearchText()
+			if !searchText.isEmpty {
+				fetchRequest.predicate = NSPredicate(
+					format: "name CONTAINS[cd] %@ OR (notes != nil AND notes CONTAINS[cd] %@)",
+					searchText,
+					searchText)
+			}
+			try fetchedResultsController.performFetch()
+			signpost.end(name: "resetting fetched results controller")
+		} catch {
+			log.error("Failed to fetch medications: %@", errorInfo(error))
+			showError(
+				title: "Failed to retrieve activities",
+				message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.",
+				error: error,
+				tryAgain: loadMedications)
+		}
+	}
+
+	private final func quickCreateAndTake() {
+		let searchText = getSearchText()
+		if !searchText.isEmpty {
+			do {
+				guard try !medicationWithNameExists(searchText) else {
+					showError(title: "Activity named '\(searchText)' already exists.")
+					return
+				}
+				let transaction = DependencyInjector.db.transaction()
+
+				let medication = try transaction.new(Medication.self)
+				medication.name = searchText
+				medication.setSource(.introspective)
+				medication.recordScreenIndex = Int16(try DependencyInjector.db.query(Medication.fetchRequest()).count)
+				let dose = try transaction.new(MedicationDose.self)
+				dose.medication = medication
+				dose.timestamp = Date()
+				dose.dosage = medication.dosage
+				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+				searchController.searchBar.text = ""
+				loadMedications()
+			} catch {
+				log.error("Failed to quick create / start medication: %@", errorInfo(error))
+				showError(
+					title: "Failed to create and start",
+					message: "Something went wrong while trying to save this medication. Sorry for the inconvenience.",
+					error: error)
+			}
+		}
+	}
+
+	private final func medicationWithNameExists(_ name: String) throws -> Bool {
+		let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
+		let results = try DependencyInjector.db.query(fetchRequest)
+		return results.count > 0
+	}
+
+	private final func getSearchText() -> String {
+		return searchController.searchBar.text!
+	}
+
+	private final func showMedicationCreationScreen() {
 		let controller: EditMedicationViewController = viewController(named: "editMedication")
 		controller.notificationToSendOnAccept = Me.medicationCreated
 		controller.initialName = getSearchText()
 		navigationController?.pushViewController(controller, animated: false)
 	}
 
-	// MARK: - Helper Functions
-
-	private final func resetFilteredMedications() {
-		let searchText = getSearchText().localizedLowercase
-		filteredMedications = medications
-		if !searchText.isEmpty {
-			filteredMedications = filteredMedications.filter({ medication in
-				var notesMatch = false
-				if let notes = medication.notes?.localizedLowercase {
-					notesMatch = notes.contains(searchText)
-				}
-				return medication.name.localizedLowercase.contains(searchText) || notesMatch
-			})
+	private final func deleteExampleMedication() {
+		let medicationFetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
+		medicationFetchRequest.predicate = NSPredicate(format: "name == %@", Me.exampleMedicationName)
+		do {
+			let medications = try DependencyInjector.db.query(medicationFetchRequest)
+			for medication in medications {
+				let transaction = DependencyInjector.db.transaction()
+				try transaction.delete(medication)
+				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+				loadMedications()
+			}
+		} catch {
+			log.error("Failed to fetch activities while retrieving most recent: %@", errorInfo(error))
 		}
-	}
-
-	private final func getSearchText() -> String {
-		return searchController.searchBar.text!
 	}
 }
 
@@ -285,7 +404,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 extension RecordMedicationTableViewController: UISearchResultsUpdating {
 
 	public func updateSearchResults(for searchController: UISearchController) {
-		resetFilteredMedications()
+		resetFetchedResultsController()
 		tableView.reloadData()
 	}
 }
