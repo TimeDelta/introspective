@@ -98,16 +98,4 @@ final class RecordMoodsUITests: UITest {
 	private final func moodSlider() -> XCUIElement {
 		return app.tables.cells.sliders["mood slider"]
 	}
-
-	private final func moodNoteButton() -> XCUIElement {
-		return app.tables.cells.buttons["set mood note button"]
-	}
-
-	private final func moodRatingButton() -> XCUIElement {
-		return app.tables.cells.buttons["set mood button"]
-	}
-
-	private final func moodRatingTextField() -> XCUIElement {
-		return app.textFields["mood rating"]
-	}
 }

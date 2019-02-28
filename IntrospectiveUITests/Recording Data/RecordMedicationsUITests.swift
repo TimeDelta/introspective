@@ -21,6 +21,7 @@ final class RecordMedicationsUITests: UITest {
 	final override func setUp() {
 		super.setUp()
 		app.tables.cells.staticTexts["Medications"].tap()
+		skipInstructionsIfPresent()
 	}
 
 	final override func tearDown() {

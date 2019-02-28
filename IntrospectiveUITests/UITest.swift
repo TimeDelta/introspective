@@ -27,6 +27,16 @@ class UITest: XCTestCase {
 		super.tearDown()
 	}
 
+	// MARK: - Instructions Helpers
+
+	final func skipInstructionsIfPresent() {
+		sleep(1) // give the skip instructions button a chance to appear before checking if it's there
+		let skipInstructionsButton = app.buttons["AccessibilityIdentifiers.skipButton"]
+		if skipInstructionsButton.exists {
+			skipInstructionsButton.tap()
+		}
+	}
+
 	// MARK: - Generic UI Helpers
 
 	final func tapCoordinate(x: Double, y: Double) {
@@ -179,16 +189,28 @@ class UITest: XCTestCase {
 
 	// MARK: - Element Functions
 
-	private final func moodNoteButton() -> XCUIElement {
+	final func moodNoteButton() -> XCUIElement {
 		return app.tables.cells.buttons["set mood note button"]
 	}
 
-	private final func moodRatingButton() -> XCUIElement {
+	final func moodRatingButton() -> XCUIElement {
 		return app.tables.cells.buttons["set mood button"]
 	}
 
-	private final func moodRatingTextField() -> XCUIElement {
+	final func moodRatingTextField() -> XCUIElement {
 		return app.textFields["mood rating"]
+	}
+
+	final func activityDefinitionNameField() -> XCUIElement {
+		return app.tables.cells.textFields["activity name"]
+	}
+
+	final func activityDefinitionAutoNoteField() -> XCUIElement {
+		return app.tables.cells.switches["auto note"]
+	}
+
+	final func activityDefinitionTagsField() -> XCUIElement {
+		return app.tables.children(matching: .cell).element(boundBy: 3).children(matching: .textField).element
 	}
 
 	// MARK: - Sample Creators
@@ -220,6 +242,47 @@ class UITest: XCTestCase {
 
 			app.tables.buttons["save mood button"].tap()
 		}
+	}
+
+	struct ActivityDefinition {
+		var name: String
+		var autoNote: Bool?
+		var description: String?
+		var tags: [String]?
+
+		init(name: String, autoNote: Bool? = nil, description: String? = nil, tags: [String]? = nil) {
+			self.name = name
+			self.autoNote = autoNote
+			self.description = description
+			self.tags = tags
+		}
+	}
+
+	final func createActivityDefinitions(_ definitions: [ActivityDefinition]) {
+		app.tabBars.buttons["Record"].tap()
+		app.tables.cells.staticTexts["Activities"].tap()
+		skipInstructionsIfPresent()
+		for definition in definitions {
+			createActivityDefinition(definition, goToRecordActivitiesScreen: false)
+		}
+	}
+
+	final func createActivityDefinition(_ definition: ActivityDefinition, goToRecordActivitiesScreen: Bool = true) {
+		if goToRecordActivitiesScreen {
+			app.tabBars.buttons["Record"].tap()
+			app.tables.cells.staticTexts["Activities"].tap()
+		}
+		app.buttons["Add"].tap()
+		setTextFor(field: app.tables.textFields["activity name"], to: definition.name)
+		if let autoNote = definition.autoNote {
+			let currentlyEnabled = activityDefinitionAutoNoteField().value as? String == "1"
+			if currentlyEnabled != autoNote {
+				activityDefinitionAutoNoteField().tap()
+			}
+		}
+		setTextFor(field: app.tables.cells.textViews["activity description"], to: definition.description)
+		setTags(for: activityDefinitionTagsField(), to: definition.tags)
+		app.buttons["Save"].tap()
 	}
 
 	// MARK: - Query Screen Helpers

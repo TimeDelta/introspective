@@ -545,11 +545,11 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func getMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) -> Activity? {
 		let endDateVariableName = CommonSampleAttributes.endDate.variableName!
-		let filteredActivities = activityDefinition.activities.filtered(using: NSPredicate(format: "%K == nil", endDateVariableName)) as! Set<Activity>
+		let incompleteActivities = activityDefinition.activities.filtered(using: NSPredicate(format: "%K == nil", endDateVariableName)) as! Set<Activity>
 
-		if filteredActivities.count > 0 {
-			let sortedFilteredActivities = filteredActivities.sorted(by: { $0.startDate > $1.startDate })
-			return sortedFilteredActivities[0]
+		if incompleteActivities.count > 0 {
+			let sortedIncompleteActivities = incompleteActivities.sorted(by: { $0.startDate > $1.startDate })
+			return sortedIncompleteActivities[0]
 		}
 		return nil
 	}

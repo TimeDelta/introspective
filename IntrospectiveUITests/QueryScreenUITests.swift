@@ -15,6 +15,7 @@ final class QueryScreenUITests: UITest {
 		super.setUp()
 		app.tabBars.buttons["Explore"].tap()
 		app.collectionViews.staticTexts["Query"].tap()
+		skipInstructionsIfPresent()
 	}
 
 	// MARK: - Changing Parts
