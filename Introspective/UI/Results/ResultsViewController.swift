@@ -75,7 +75,7 @@ final class ResultsViewController: UITableViewController {
 		observe(selector: #selector(sortSamplesBy), name: Me.sortSamples)
 		observe(selector: #selector(editedSample), name: Me.editedSample)
 
-		self.navigationItem.setRightBarButton(actionsButton, animated: false)
+		navigationItem.setRightBarButton(actionsButton, animated: false)
 
 		DependencyInjector.util.ui.setBackButton(for: self, title: "Query", action: #selector(done))
 
@@ -205,6 +205,7 @@ final class ResultsViewController: UITableViewController {
 	}
 
 	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		guard finishedLoading else { return }
 		if indexPath.section == 0 {
 			showEditInformationView(indexPath)
 		} else if samples[indexPath.row] is Activity {
