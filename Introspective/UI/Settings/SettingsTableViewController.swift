@@ -12,12 +12,29 @@ public final class SettingsTableViewController: UITableViewController {
 
 	private typealias Me = SettingsTableViewController
 
+	public static let disableGenerateTestData = Notification.Name("disableGenerateTestData")
+	public static let enableGenerateTestData = Notification.Name("enableGenerateTestData")
 	private static let resetInstructionPromptsCellIdentifier = "resetInstructionPrompts"
 	private static let identifiers = [
 		"activitySettings",
 		"moodSettings",
 		resetInstructionPromptsCellIdentifier,
 	]
+
+	// MARK: - Member Variables
+
+	private final var disableGenerateTestDataCell = false
+
+	// MARK: - UIViewController Overrides
+
+	public final override func viewDidLoad() {
+		observe(selector: #selector(enableGenerateTestData), name: Me.enableGenerateTestData)
+		observe(selector: #selector(disableGenerateTestData), name: Me.disableGenerateTestData)
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
+	}
 
 	// MARK: - Table view data source
 
@@ -35,13 +52,23 @@ public final class SettingsTableViewController: UITableViewController {
 		return Me.identifiers.count
 	}
 
+	public final override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		guard testing else { return nil }
+		if section == 0 {
+			return "Testing Only"
+		}
+		return "Normal Settings"
+	}
+
 	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		if testing && indexPath.section == 0 {
 			if indexPath.row == 0 {
+				if disableGenerateTestDataCell {
+					return tableView.dequeueReusableCell(withIdentifier: "progress", for: indexPath)
+				}
 				return tableView.dequeueReusableCell(withIdentifier: "generateTestData", for: indexPath)
-			} else {
-				return tableView.dequeueReusableCell(withIdentifier: "deleteCoreData", for: indexPath)
 			}
+			return tableView.dequeueReusableCell(withIdentifier: "deleteCoreData", for: indexPath)
 		}
 		return tableView.dequeueReusableCell(withIdentifier: Me.identifiers[indexPath.row], for: indexPath)
 	}
@@ -54,7 +81,21 @@ public final class SettingsTableViewController: UITableViewController {
 			UserDefaults().set(false, forKey: UserDefaultKeys.recordActivitiesInstructionsShown)
 			UserDefaults().set(false, forKey: UserDefaultKeys.recordMedicationsInstructionsShown)
 			tableView.deselectRow(at: _indexPath, animated: false)
+		} else if testing && disableGenerateTestDataCell && _indexPath.section == 0 && _indexPath.row == 0 {
+			tableView.deselectRow(at: _indexPath, animated: false)
 		}
+	}
+
+	// MARK: - Received Notifications
+
+	@objc private final func disableGenerateTestData(notification: Notification) {
+		disableGenerateTestDataCell = true
+		tableView.reloadData()
+	}
+
+	@objc private final func enableGenerateTestData(notification: Notification) {
+		disableGenerateTestDataCell = false
+		tableView.reloadData()
 	}
 
 	// MARK: - Helper Functions

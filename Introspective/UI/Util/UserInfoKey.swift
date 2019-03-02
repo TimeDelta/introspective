@@ -39,6 +39,7 @@ public enum UserInfoKey: Hashable, CustomStringConvertible {
 	case query
 	case sample
 	case sampleType
+	case shouldGenerate
 	case subQueryMatcher
 	case tagNames
 	case text
@@ -76,6 +77,7 @@ public enum UserInfoKey: Hashable, CustomStringConvertible {
 			case .query: return "query"
 			case .sample: return "sample"
 			case .sampleType: return "sampleType"
+			case .shouldGenerate: return "shouldGenerate"
 			case .subQueryMatcher: return "subQueryMatcher"
 			case .tagNames: return "tagNames"
 			case .text: return "text"

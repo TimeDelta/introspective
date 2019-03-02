@@ -30,4 +30,10 @@ extension UITableViewCell {
 	final func viewController<Type: UIViewController>(named controllerName: String, fromStoryboard storyboardName: String) -> Type {
 		return DependencyInjector.util.ui.controller(named: controllerName, from: storyboardName)
 	}
+
+	final func post(_ name: Notification.Name, object: Any? = self, userInfo: [AnyHashable: Any]? = nil) {
+		DispatchQueue.main.async {
+			NotificationCenter.default.post(name: name, object: object, userInfo: userInfo)
+		}
+	}
 }
