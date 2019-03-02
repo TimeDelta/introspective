@@ -16,6 +16,10 @@ public final class WeightQueryImpl: HealthKitQuery<Weight>, WeightQuery {
 
 	final override func initFromHKSample(_ hkSample: HKSample) -> Weight {
 		precondition(hkSample is HKQuantitySample, "Wrong type of health kit sample for weight")
-		return Weight(hkSample as! HKQuantitySample)
+		var weight: Weight = Weight()
+		DispatchQueue.global(qos: .userInitiated).sync {
+			weight = Weight(hkSample as! HKQuantitySample)
+		}
+		return weight
 	}
 }

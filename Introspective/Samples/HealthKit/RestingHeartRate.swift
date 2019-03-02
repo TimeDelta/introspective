@@ -19,8 +19,12 @@ public class RestingHeartRate: HealthKitQuantitySample {
 	public static let sampleType: HKSampleType = quantityType
 	public static let readPermissions: Set<HKObjectType> = Set([sampleType])
 	public static let writePermissions: Set<HKSampleType> = Set([sampleType])
-	public static let unit: HKUnit = HKUnit(from: "count/min")
-	public final let unitString: String = "bpm"
+	public static var unit: HKUnit {
+		return DependencyInjector.util.healthKit.preferredUnitFor(.restingHeartRate) ?? HKUnit(from: "count/min")
+	}
+	public final var unitString: String {
+		return Me.unit.unitString
+	}
 
 	// MARK: - Display Information
 

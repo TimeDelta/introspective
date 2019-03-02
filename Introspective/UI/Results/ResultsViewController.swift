@@ -217,7 +217,7 @@ final class ResultsViewController: UITableViewController {
 	}
 
 	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		guard finishedLoading else { return }
+		guard finishedLoading && !waiting() else { return }
 		if indexPath.section == 0 {
 			showEditInformationView(indexPath)
 		} else if samples[indexPath.row] is Activity {

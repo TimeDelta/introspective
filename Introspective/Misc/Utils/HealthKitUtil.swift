@@ -16,7 +16,7 @@ public protocol HealthKitUtil {
 	/// This will convert the given date from the time zone in the given `HKSample` to the current time zone
 	/// if the time zone was recorded and the user has convert time zones enabled.
 	func setTimeZoneIfApplicable(for date: inout Date, from sample: HKSample)
-	func calculate(_ calculation: HKStatisticsOptions, _ type: HealthKitQuantitySample.Type, from startDate: Date, to endDate: Date, callback: @escaping (Double?, Error?) -> ())
+	func calculate(_ calculation: HKStatisticsOptions, _ type: HealthKitQuantitySample.Type, from startDate: Date, to endDate: Date, callback: @escaping (Double?, Error?) -> Void)
 	/// - Returns: A method that can be called to stop the query
 	func getSamples(for type: HealthKitSample.Type, from startDate: Date?, to endDate: Date?, predicate: NSPredicate?, callback: @escaping (Array<HKSample>?, Error?) -> Void) -> (() -> Void)
 	func preferredUnitFor(_ typeId: HKQuantityTypeIdentifier) -> HKUnit?
@@ -68,7 +68,13 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 		}
 	}
 
-	public func calculate(_ calculation: HKStatisticsOptions, _ type: HealthKitQuantitySample.Type, from startDate: Date, to endDate: Date, callback:@escaping (Double?, Error?) -> ()) {
+	public func calculate(
+		_ calculation: HKStatisticsOptions,
+		_ type: HealthKitQuantitySample.Type,
+		from startDate: Date,
+		to endDate: Date,
+		callback: @escaping (Double?, Error?) -> Void)
+	{
 		let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
 		let query = HKStatisticsQuery(quantityType: type.quantityType, quantitySamplePredicate: predicate, options: calculation) { _, result, error in
 			var value: Double?
@@ -100,7 +106,12 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 		callback: @escaping (Array<HKSample>?, Error?) -> Void)
 	-> (() -> Void) {
 		let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
-		let query = HKSampleQuery(sampleType: type.sampleType, predicate: predicate, limit: Int(HKObjectQueryNoLimit), sortDescriptors: nil) { callback($1, $2) }
+		let query = HKSampleQuery(
+			sampleType: type.sampleType,
+			predicate: predicate,
+			limit: Int(HKObjectQueryNoLimit),
+			sortDescriptors: nil,
+			resultsHandler: { callback($1, $2) })
 		healthStore.execute(query)
 		return { self.healthStore.stop(query) }
 	}
@@ -108,14 +119,25 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 	public func preferredUnitFor(_ typeId: HKQuantityTypeIdentifier) -> HKUnit? {
 		let group = DispatchGroup()
 		group.enter()
-		let quantityType = HKQuantityType.quantityType(forIdentifier: typeId)!
 		var unit: HKUnit? = nil
-		healthStore.preferredUnits(for: Set([quantityType])) { (units, error) in
+		// according to Apple documentation, if authorization has not been determined, calling preferredUnits() will throw an error
+		getAuthorization() { error in
 			if let error = error {
-				self.log.error("Failed to determine preferred unit for %@: %@", String(describing: typeId), errorInfo(error))
+				self.log.error("Failed to check for authorization while getting preferred units: %@", errorInfo(error))
+				group.leave()
+				return
 			}
-			unit = units[quantityType]
-			group.leave()
+			guard let quantityType = HKQuantityType.quantityType(forIdentifier: typeId) else {
+				self.log.error("Unable to determine quantity type for type id: %s", typeId.rawValue)
+				return
+			}
+			self.healthStore.preferredUnits(for: Set([quantityType])) { (units, error) in
+				if let error = error {
+					self.log.error("Failed to determine preferred unit for %@: %@", String(describing: typeId), errorInfo(error))
+				}
+				unit = units[quantityType]
+				group.leave()
+			}
 		}
 		group.wait()
 		return unit
