@@ -144,7 +144,6 @@ public final class QueryViewController: UITableViewController {
 			partWasAdded()
 		}
 
-
 		observe(selector: #selector(saveEditedAttributeRestriction), name: Me.acceptedAttributeRestrictionEdit)
 		observe(selector: #selector(saveEditedSubQuerySampleType), name: Me.acceptedSubSampleTypeEdit)
 		observe(selector: #selector(saveEditedSampleType), name: Me.acceptedSampleTypeEdit)
