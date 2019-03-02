@@ -182,6 +182,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	// MARK: - UITableViewDelegate
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		guard finishedLoading else { return }
 		let controller: EditMedicationViewController = viewController(named: "editMedication")
 		controller.notificationToSendOnAccept = Me.medicationEdited
 		controller.medication = fetchedResultsController.object(at: indexPath)

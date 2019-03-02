@@ -187,6 +187,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		guard finishedLoading else { return }
 		let activityDefinition = fetchedResultsController.object(at: indexPath)
 		guard let cell = tableView.visibleCells[indexPath.row] as? RecordActivityDefinitionTableViewCell else {
 			return
