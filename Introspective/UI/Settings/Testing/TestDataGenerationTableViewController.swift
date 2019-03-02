@@ -151,7 +151,7 @@ final class TestDataGenerationTableViewController: UITableViewController {
 		generateTestDataButton.isEnabled = false
 		post(SettingsTableViewController.disableGenerateTestData)
 
-		HealthManager.getAuthorization() { error in
+		DependencyInjector.util.healthKit.getAuthorization() { error in
 			if error != nil {
 				fatalError("HealthKit authorization failed: " + error!.localizedDescription)
 			}

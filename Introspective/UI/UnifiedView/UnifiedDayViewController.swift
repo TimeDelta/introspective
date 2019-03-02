@@ -17,6 +17,7 @@ public final class UnifiedDayViewController: DayViewController {
 	private final var stopQueryFunctions = [()->()]()
 
 	private final let log = Log()
+	private final let healthKitUtil = DependencyInjector.util.healthKit
 
 	// MARK: - DayViewController Overrides
 
@@ -79,7 +80,7 @@ public final class UnifiedDayViewController: DayViewController {
 
 	private final func calculateAndDisplay(_ operation: HKStatisticsOptions, for type: HealthKitQuantitySample.Type, during eventView: EventView) {
 		let (startDate, endDate) = getStartAndEndDatesFrom(eventView)
-		HealthManager.calculate(operation, type, from: startDate, to: endDate) { value, error in
+		DependencyInjector.util.healthKit.calculate(operation, type, from: startDate, to: endDate) { value, error in
 			let operationName: String = self.getOperationName(for: operation)
 			let stringValue: String? = value == nil ? nil : String(value!)
 			self.display("\(operationName) \(type.name.localizedLowercase)", stringValue, error, startDate, endDate)
@@ -176,12 +177,12 @@ public final class UnifiedDayViewController: DayViewController {
 		}
 		if toDate == nil {
 			group.enter()
-			stopQueryFunctions.append(HealthManager.getSamples(for: Type.self, startDate: fromDate, callback: callback))
+			stopQueryFunctions.append(healthKitUtil.getSamples(for: Type.self, from: fromDate, callback: callback))
 			group.enter()
-			stopQueryFunctions.append(HealthManager.getSamples(for: Type.self, endDate: fromDate, callback: callback))
+			stopQueryFunctions.append(healthKitUtil.getSamples(for: Type.self, to: fromDate, callback: callback))
 		} else {
 			group.enter()
-			stopQueryFunctions.append(HealthManager.getSamples(for: Type.self, startDate: fromDate, endDate: toDate, callback: callback))
+			stopQueryFunctions.append(healthKitUtil.getSamples(for: Type.self, from: fromDate, to: toDate, callback: callback))
 		}
 		group.wait()
 		if let errorMessage = errorMessage {

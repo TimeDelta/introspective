@@ -22,6 +22,7 @@ public final class UtilFactory {
 	private static let realIOUtil = IOUtilImpl()
 	private static let realUiUtil = UiUtilImpl()
 	private static let realMoodUtil = MoodUtilImpl()
+	private static let realHealthKitUtil = HealthKitUtilImpl()
 
 	public final var calendar: CalendarUtil = Me.realCalendarUtil
 	public final var numericSample: NumericSampleUtil = Me.realHKQuantitySampleUtil
@@ -33,4 +34,5 @@ public final class UtilFactory {
 	public final var io: IOUtil = Me.realIOUtil
 	public final var ui: UiUtil = Me.realUiUtil
 	public final var mood: MoodUtil = Me.realMoodUtil
+	public final var healthKit: HealthKitUtil = Me.realHealthKitUtil
 }

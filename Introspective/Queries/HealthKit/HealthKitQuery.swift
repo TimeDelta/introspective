@@ -22,7 +22,7 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 	final override func run() {
 		let dateConstraints = DependencyInjector.util.attributeRestriction.getMostRestrictiveStartAndEndDates(from: attributeRestrictions)
 
-		HealthManager.getAuthorization() {
+		DependencyInjector.util.healthKit.getAuthorization() {
 			(error: Error?) in
 
 			if error != nil {
@@ -30,32 +30,11 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 				return
 			}
 
-			self.stopFunction = HealthManager.getSamples(for: SampleType.self, startDate: dateConstraints.start, endDate: dateConstraints.end) {
-				(originalSamples: Array<HKSample>?, error: Error?) in
-
-				if error != nil {
-					self.queryDone(nil, error)
-					return
-				}
-				if originalSamples == nil || originalSamples!.count == 0 {
-					self.queryDone(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
-					return
-				}
-
-				let mappedSamples = originalSamples!.map({ self.initFromHKSample($0)})
-				let filteredSamples = mappedSamples.filter(self.samplePassesFilters)
-
-				if !self.stopped {
-					if filteredSamples.count == 0 {
-						self.queryDone(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
-						return
-					}
-
-					let result = SampleQueryResult<SampleType>(filteredSamples)
-					self.finishedQuery = true
-					self.queryDone(result, nil)
-				}
-			}
+			self.stopFunction = DependencyInjector.util.healthKit.getSamples(
+				for: SampleType.self,
+				from: dateConstraints.start,
+				to: dateConstraints.end,
+				callback: self.processQueryResults)
 		}
 	}
 
@@ -79,5 +58,30 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 			}
 		}
 		return true
+	}
+
+	private final func processQueryResults(originalSamples: Array<HKSample>?, error: Error?) {
+		if error != nil {
+			self.queryDone(nil, error)
+			return
+		}
+		if originalSamples == nil || originalSamples!.count == 0 {
+			self.queryDone(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
+			return
+		}
+
+		let mappedSamples = originalSamples!.map({ self.initFromHKSample($0)})
+		let filteredSamples = mappedSamples.filter(self.samplePassesFilters)
+
+		if !self.stopped {
+			if filteredSamples.count == 0 {
+				self.queryDone(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
+				return
+			}
+
+			let result = SampleQueryResult<SampleType>(filteredSamples)
+			self.finishedQuery = true
+			self.queryDone(result, nil)
+		}
 	}
 }
