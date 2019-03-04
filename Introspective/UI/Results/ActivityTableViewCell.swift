@@ -23,8 +23,8 @@ public final class ActivityTableViewCell: UITableViewCell {
 		didSet {
 			nameLabel.text = activity.definition.name
 
-			timestampsLabel.text = DependencyInjector.util.calendar.string(for: activity.startDate, dateStyle: .short, timeStyle: .medium) + " - "
-			if let endDate = activity.endDate {
+			timestampsLabel.text = DependencyInjector.util.calendar.string(for: activity.start, dateStyle: .short, timeStyle: .medium) + " - "
+			if let endDate = activity.end {
 				timestampsLabel.text! += DependencyInjector.util.calendar.string(for: endDate, dateStyle: .short, timeStyle: .medium)
 			}
 

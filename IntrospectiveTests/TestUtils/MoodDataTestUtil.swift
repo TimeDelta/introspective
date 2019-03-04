@@ -22,7 +22,7 @@ public class MoodDataTestUtil {
 		let transaction = DependencyInjector.db.transaction()
 		let mood = try! transaction.new(MoodImpl.self)
 		mood.rating = rating
-		mood.timestamp = timestamp
+		mood.date = timestamp
 		mood.note = note
 		mood.minRating = min
 		mood.maxRating = max

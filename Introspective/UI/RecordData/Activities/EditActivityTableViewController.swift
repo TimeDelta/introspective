@@ -41,8 +41,8 @@ public final class EditActivityTableViewController: UITableViewController {
 		didSet {
 			guard let activity = activity else { return }
 			definition = activity.definition
-			startDate = activity.startDate
-			endDate = activity.endDate
+			startDate = activity.start
+			endDate = activity.end
 			note = activity.note
 			tagNames = Set(activity.tagsArray().map{ $0.name })
 		}
@@ -224,8 +224,8 @@ public final class EditActivityTableViewController: UITableViewController {
 				activity.setSource(.introspective)
 			}
 			activity.definition = try transaction.pull(savedObject: definition!)
-			activity.startDate = startDate
-			activity.endDate = endDate
+			activity.start = startDate
+			activity.end = endDate
 			activity.note = note
 			try updateTagsForActivity(activity, using: transaction)
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
@@ -287,7 +287,7 @@ public final class EditActivityTableViewController: UITableViewController {
 		do {
 			let activities = try DependencyInjector.db.query(fetchRequest)
 			if activities.count > 0 {
-				return activities[0].endDate
+				return activities[0].end
 			}
 		} catch {
 			log.error("Failed to fetch most recent activity: %@", errorInfo(error))

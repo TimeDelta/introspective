@@ -249,7 +249,7 @@ not enough columns
 		// has to fetch one of the properties because the only difference with this commit is that the
 		// objects are now created on child contexts
 		let _ = definition.name
-		let _ = activity.startDate
+		let _ = activity.start
 
 		// when
 		XCTAssertThrowsError(try importer.importData(from: url)) { error in

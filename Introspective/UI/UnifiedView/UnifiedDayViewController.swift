@@ -108,8 +108,8 @@ public final class UnifiedDayViewController: DayViewController {
 	private final func getActivityEventDescriptorsForDate(_ date: Date) -> [EventDescriptor] {
 		return getActivitiesForDate(date).map { activity in
 			let event = Event()
-			event.startDate = activity.startDate
-			event.endDate = activity.endDate ?? Date()
+			event.startDate = activity.start
+			event.endDate = activity.end ?? Date()
 			let timeText = getTimeTextFor(event)
 			event.text = "Activity\n\(timeText)"
 			return event

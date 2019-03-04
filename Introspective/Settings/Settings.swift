@@ -16,6 +16,7 @@ public enum Setting {
 	case scaleMoodsOnImport
 	case autoIgnoreEnabled
 	case autoIgnoreSeconds
+	case convertTimeZones
 }
 
 //sourcery: AutoMockable
@@ -36,6 +37,9 @@ public protocol Settings: CoreDataObject {
 
 	var autoIgnoreSeconds: Int { get }
 	func setAutoIgnoreSeconds(_ value: Int)
+
+	var convertTimeZones: Bool { get }
+	func setConvertTimeZones(_ value: Bool)
 
 	func changed(_ setting: Setting) -> Bool
 
@@ -110,6 +114,17 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		}
 	}
 
+	// MARK: - Convert Time Zones
+	private final var newConvertTimeZones: Bool? = nil
+	public final var convertTimeZones: Bool {
+		return newConvertTimeZones ?? storedConvertTimeZones
+	}
+	public final func setConvertTimeZones(_ value: Bool) {
+		if value != storedConvertTimeZones {
+			newConvertTimeZones = value
+		}
+	}
+
 	// MARK: - Other Functions
 
 	public final func changed(_ setting: Setting) -> Bool {
@@ -119,6 +134,7 @@ public final class SettingsImpl: NSManagedObject, Settings {
 			case .scaleMoodsOnImport: return newScaleMoodsOnImport != nil
 			case .autoIgnoreEnabled: return newAutoIgnoreEnabled != nil
 			case .autoIgnoreSeconds: return newAutoIgnoreSeconds != nil
+			case .convertTimeZones: return newConvertTimeZones != nil
 		}
 	}
 
@@ -155,4 +171,5 @@ extension SettingsImpl {
 	@NSManaged fileprivate var storedScaleMoodsOnImport: Bool
 	@NSManaged fileprivate var storedAutoIgnoreEnabled: Bool
 	@NSManaged fileprivate var storedAutoIgnoreSeconds: Int
+	@NSManaged fileprivate var storedConvertTimeZones: Bool
 }

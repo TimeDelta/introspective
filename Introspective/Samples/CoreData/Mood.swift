@@ -19,7 +19,7 @@ public protocol Mood: CoreDataSample {
 	var maxRating: Double { get set }
 	var rating: Double { get set }
 	var note: String? { get set }
-	var timestamp: Date { get set }
+	var date: Date { get set }
 
 	func setSource(_ source: Sources.MoodSourceNum)
 }
@@ -66,11 +66,22 @@ public final class MoodImpl: NSManagedObject, Mood {
 
 	public final let attributedName: String = "Mood"
 	public final override var description: String { return Me.description }
+	public final var date: Date {
+		get {
+			return DependencyInjector.util.coreDataSample.convertTimeZoneIfApplicable(for: timestamp, timeZoneId: timestampTimeZoneId)
+		}
+		set {
+			timestamp = newValue
+			if source == Sources.MoodSourceNum.introspective.rawValue && timestampTimeZoneId == nil {
+				timestampTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+			}
+		}
+	}
 
 	// MARK: - Sample Functions
 
 	public final func dates() -> [DateType: Date] {
-		return [.start: timestamp]
+		return [.start: date]
 	}
 
 	// MARK: - Attributed Functions
@@ -83,7 +94,7 @@ public final class MoodImpl: NSManagedObject, Mood {
 			return rating
 		}
 		if attribute.equalTo(CommonSampleAttributes.timestamp) {
-			return timestamp
+			return date
 		}
 		if attribute.equalTo(Me.note) {
 			return note
@@ -114,6 +125,9 @@ public final class MoodImpl: NSManagedObject, Mood {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
 			timestamp = castedValue
+			if source == Sources.MoodSourceNum.introspective.rawValue && timestampTimeZoneId == nil {
+				timestampTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+			}
 			return
 		}
 		if attribute.equalTo(Me.note) {
@@ -131,6 +145,9 @@ public final class MoodImpl: NSManagedObject, Mood {
 
 	public final func setSource(_ source: Sources.MoodSourceNum) {
 		self.source = source.rawValue
+		if source == Sources.MoodSourceNum.introspective && timestampTimeZoneId == nil {
+			timestampTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+		}
 	}
 
 	// MARK: - Equatable
@@ -152,7 +169,7 @@ public final class MoodImpl: NSManagedObject, Mood {
 	}
 
 	public final func equalTo(_ other: Mood) -> Bool {
-		return rating == other.rating && note == other.note && timestamp == other.timestamp
+		return rating == other.rating && note == other.note && date == other.date
 	}
 
 	// MARK: - Debug
@@ -160,4 +177,21 @@ public final class MoodImpl: NSManagedObject, Mood {
 	public final override var debugDescription: String {
 		return "Mood with rating = \(rating), timestamp = \(timestamp), and note = \(note ?? "nil")"
 	}
+}
+
+// MARK: - CoreData
+
+extension MoodImpl {
+
+	@nonobjc public class func fetchRequest() -> NSFetchRequest<MoodImpl> {
+		return NSFetchRequest<MoodImpl>(entityName: "Mood")
+	}
+
+	@NSManaged public var note: String?
+	@NSManaged public var rating: Double
+	@NSManaged fileprivate var timestamp: Date
+	@NSManaged fileprivate var timestampTimeZoneId: String?
+	@NSManaged public var minRating: Double
+	@NSManaged public var maxRating: Double
+	@NSManaged public var source: Int16
 }

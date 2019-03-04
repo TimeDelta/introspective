@@ -29,9 +29,9 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -40,14 +40,14 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
     }
 
 
-    var mostRecentOnly: Bool {
+    public var mostRecentOnly: Bool {
 		get {	invocations.append(.p_mostRecentOnly_get); return __p_mostRecentOnly ?? givenGetterValue(.p_mostRecentOnly_get, "SubQueryMatcherMock - stub value for mostRecentOnly was not defined") }
 		set {	invocations.append(.p_mostRecentOnly_set(.value(newValue))); __p_mostRecentOnly = newValue }
 	}
 	private var __p_mostRecentOnly: (Bool)?
 
 
-    var attributedName: String {
+    public var attributedName: String {
 		get {	invocations.append(.p_attributedName_get); return __p_attributedName ?? givenGetterValue(.p_attributedName_get, "SubQueryMatcherMock - stub value for attributedName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_attributedName = newValue }
@@ -55,7 +55,7 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
 	private var __p_attributedName: (String)?
 
 
-    var attributes: [Attribute] {
+    public var attributes: [Attribute] {
 		get {	invocations.append(.p_attributes_get); return __p_attributes ?? givenGetterValue(.p_attributes_get, "SubQueryMatcherMock - stub value for attributes was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_attributes = newValue }
@@ -63,7 +63,7 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
 	private var __p_attributes: ([Attribute])?
 
 
-    var debugDescription: String {
+    public var debugDescription: String {
 		get {	invocations.append(.p_debugDescription_get); return __p_debugDescription ?? givenGetterValue(.p_debugDescription_get, "SubQueryMatcherMock - stub value for debugDescription was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_debugDescription = newValue }
@@ -75,9 +75,9 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
 
 
 
-    required init() { }
+    public required init() { }
 
-    func getSamples<QuerySampleType: Sample>(from querySamples: [QuerySampleType], matching subQuerySamples: [Sample]) throws -> [QuerySampleType] {
+    open func getSamples<QuerySampleType: Sample>(from querySamples: [QuerySampleType], matching subQuerySamples: [Sample]) throws -> [QuerySampleType] {
         addInvocation(.m_getSamples__from_querySamplesmatching_subQuerySamples(Parameter<[QuerySampleType]>.value(`querySamples`).wrapAsGeneric(), Parameter<[Sample]>.value(`subQuerySamples`)))
 		let perform = methodPerformValue(.m_getSamples__from_querySamplesmatching_subQuerySamples(Parameter<[QuerySampleType]>.value(`querySamples`).wrapAsGeneric(), Parameter<[Sample]>.value(`subQuerySamples`))) as? ([QuerySampleType], [Sample]) -> Void
 		perform?(`querySamples`, `subQuerySamples`)
@@ -93,7 +93,7 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
 		return __value
     }
 
-    func equalTo(_ otherMatcher: SubQueryMatcher) -> Bool {
+    open func equalTo(_ otherMatcher: SubQueryMatcher) -> Bool {
         addInvocation(.m_equalTo__otherMatcher(Parameter<SubQueryMatcher>.value(`otherMatcher`)))
 		let perform = methodPerformValue(.m_equalTo__otherMatcher(Parameter<SubQueryMatcher>.value(`otherMatcher`))) as? (SubQueryMatcher) -> Void
 		perform?(`otherMatcher`)
@@ -107,7 +107,7 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
 		return __value
     }
 
-    func value(of attribute: Attribute) throws -> Any? {
+    open func value(of attribute: Attribute) throws -> Any? {
         addInvocation(.m_value__of_attribute(Parameter<Attribute>.value(`attribute`)))
 		let perform = methodPerformValue(.m_value__of_attribute(Parameter<Attribute>.value(`attribute`))) as? (Attribute) -> Void
 		perform?(`attribute`)
@@ -122,7 +122,7 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
 		return __value
     }
 
-    func set(attribute: Attribute, to value: Any?) throws {
+    open func set(attribute: Attribute, to value: Any?) throws {
         addInvocation(.m_set__attribute_attributeto_value(Parameter<Attribute>.value(`attribute`), Parameter<Any?>.value(`value`)))
 		let perform = methodPerformValue(.m_set__attribute_attributeto_value(Parameter<Attribute>.value(`attribute`), Parameter<Any?>.value(`value`))) as? (Attribute, Any?) -> Void
 		perform?(`attribute`, `value`)
@@ -135,7 +135,7 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
 		}
     }
 
-    func equalTo(_ otherAttributed: Attributed) -> Bool {
+    open func equalTo(_ otherAttributed: Attributed) -> Bool {
         addInvocation(.m_equalTo__otherAttributed(Parameter<Attributed>.value(`otherAttributed`)))
 		let perform = methodPerformValue(.m_equalTo__otherAttributed(Parameter<Attributed>.value(`otherAttributed`))) as? (Attributed) -> Void
 		perform?(`otherAttributed`)
@@ -206,7 +206,7 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -214,77 +214,77 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
             super.init(products)
         }
 
-        static func mostRecentOnly(getter defaultValue: Bool...) -> PropertyStub {
+        public static func mostRecentOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentOnly_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func attributedName(getter defaultValue: String...) -> PropertyStub {
+        public static func attributedName(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_attributedName_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func attributes(getter defaultValue: [Attribute]...) -> PropertyStub {
+        public static func attributes(getter defaultValue: [Attribute]...) -> PropertyStub {
             return Given(method: .p_attributes_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func debugDescription(getter defaultValue: String...) -> PropertyStub {
+        public static func debugDescription(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_debugDescription_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func getSamples<QuerySampleType: Sample>(from querySamples: Parameter<[QuerySampleType]>, matching subQuerySamples: Parameter<[Sample]>, willReturn: [QuerySampleType]...) -> MethodStub {
+        public static func getSamples<QuerySampleType: Sample>(from querySamples: Parameter<[QuerySampleType]>, matching subQuerySamples: Parameter<[Sample]>, willReturn: [QuerySampleType]...) -> MethodStub {
             return Given(method: .m_getSamples__from_querySamplesmatching_subQuerySamples(`querySamples`.wrapAsGeneric(), `subQuerySamples`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherMatcher: Parameter<SubQueryMatcher>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherMatcher: Parameter<SubQueryMatcher>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherMatcher(`otherMatcher`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherMatcher` label")
-		static func equalTo(otherMatcher: Parameter<SubQueryMatcher>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherMatcher: Parameter<SubQueryMatcher>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherMatcher(`otherMatcher`), products: willReturn.map({ Product.return($0) }))
         }
-        static func value(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
+        public static func value(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
             return Given(method: .m_value__of_attribute(`attribute`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
-		static func equalTo(otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherMatcher: Parameter<SubQueryMatcher>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherMatcher: Parameter<SubQueryMatcher>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherMatcher(`otherMatcher`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
-        static func equalTo(_ otherAttributed: Parameter<Attributed>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherAttributed: Parameter<Attributed>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
-        static func getSamples<QuerySampleType: Sample>(from querySamples: Parameter<[QuerySampleType]>, matching subQuerySamples: Parameter<[Sample]>, willThrow: Error...) -> MethodStub {
+        public static func getSamples<QuerySampleType: Sample>(from querySamples: Parameter<[QuerySampleType]>, matching subQuerySamples: Parameter<[Sample]>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_getSamples__from_querySamplesmatching_subQuerySamples(`querySamples`.wrapAsGeneric(), `subQuerySamples`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func getSamples<QuerySampleType: Sample>(from querySamples: Parameter<[QuerySampleType]>, matching subQuerySamples: Parameter<[Sample]>, willProduce: (StubberThrows<[QuerySampleType]>) -> Void) -> MethodStub {
+        public static func getSamples<QuerySampleType: Sample>(from querySamples: Parameter<[QuerySampleType]>, matching subQuerySamples: Parameter<[Sample]>, willProduce: (StubberThrows<[QuerySampleType]>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_getSamples__from_querySamplesmatching_subQuerySamples(`querySamples`.wrapAsGeneric(), `subQuerySamples`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: ([QuerySampleType]).self)
 			willProduce(stubber)
 			return given
         }
-        static func value(of attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
+        public static func value(of attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func value(of attribute: Parameter<Attribute>, willProduce: (StubberThrows<Any?>) -> Void) -> MethodStub {
+        public static func value(of attribute: Parameter<Attribute>, willProduce: (StubberThrows<Any?>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Any?).self)
 			willProduce(stubber)
 			return given
         }
-        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, willThrow: Error...) -> MethodStub {
+        public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
@@ -293,50 +293,50 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func getSamples<QuerySampleType>(from querySamples: Parameter<[QuerySampleType]>, matching subQuerySamples: Parameter<[Sample]>) -> Verify { return Verify(method: .m_getSamples__from_querySamplesmatching_subQuerySamples(`querySamples`.wrapAsGeneric(), `subQuerySamples`))}
-        static func equalTo(_ otherMatcher: Parameter<SubQueryMatcher>) -> Verify { return Verify(method: .m_equalTo__otherMatcher(`otherMatcher`))}
+        public static func getSamples<QuerySampleType>(from querySamples: Parameter<[QuerySampleType]>, matching subQuerySamples: Parameter<[Sample]>) -> Verify where QuerySampleType:Sample { return Verify(method: .m_getSamples__from_querySamplesmatching_subQuerySamples(`querySamples`.wrapAsGeneric(), `subQuerySamples`))}
+        public static func equalTo(_ otherMatcher: Parameter<SubQueryMatcher>) -> Verify { return Verify(method: .m_equalTo__otherMatcher(`otherMatcher`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherMatcher` label")
-		static func equalTo(otherMatcher: Parameter<SubQueryMatcher>) -> Verify { return Verify(method: .m_equalTo__otherMatcher(`otherMatcher`))}
-        static func value(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_value__of_attribute(`attribute`))}
-        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>) -> Verify { return Verify(method: .m_set__attribute_attributeto_value(`attribute`, `value`))}
-        static func equalTo(_ otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
+		public static func equalTo(otherMatcher: Parameter<SubQueryMatcher>) -> Verify { return Verify(method: .m_equalTo__otherMatcher(`otherMatcher`))}
+        public static func value(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_value__of_attribute(`attribute`))}
+        public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>) -> Verify { return Verify(method: .m_set__attribute_attributeto_value(`attribute`, `value`))}
+        public static func equalTo(_ otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
-		static func equalTo(otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
-        static var mostRecentOnly: Verify { return Verify(method: .p_mostRecentOnly_get) }
-		static func mostRecentOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentOnly_set(newValue)) }
-        static var attributedName: Verify { return Verify(method: .p_attributedName_get) }
-        static var attributes: Verify { return Verify(method: .p_attributes_get) }
-        static var debugDescription: Verify { return Verify(method: .p_debugDescription_get) }
+		public static func equalTo(otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
+        public static var mostRecentOnly: Verify { return Verify(method: .p_mostRecentOnly_get) }
+		public static func mostRecentOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentOnly_set(newValue)) }
+        public static var attributedName: Verify { return Verify(method: .p_attributedName_get) }
+        public static var attributes: Verify { return Verify(method: .p_attributes_get) }
+        public static var debugDescription: Verify { return Verify(method: .p_debugDescription_get) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func getSamples<QuerySampleType>(from querySamples: Parameter<[QuerySampleType]>, matching subQuerySamples: Parameter<[Sample]>, perform: @escaping ([QuerySampleType], [Sample]) -> Void) -> Perform {
+        public static func getSamples<QuerySampleType>(from querySamples: Parameter<[QuerySampleType]>, matching subQuerySamples: Parameter<[Sample]>, perform: @escaping ([QuerySampleType], [Sample]) -> Void) -> Perform where QuerySampleType:Sample {
             return Perform(method: .m_getSamples__from_querySamplesmatching_subQuerySamples(`querySamples`.wrapAsGeneric(), `subQuerySamples`), performs: perform)
         }
-        static func equalTo(_ otherMatcher: Parameter<SubQueryMatcher>, perform: @escaping (SubQueryMatcher) -> Void) -> Perform {
+        public static func equalTo(_ otherMatcher: Parameter<SubQueryMatcher>, perform: @escaping (SubQueryMatcher) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherMatcher(`otherMatcher`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherMatcher` label")
-		static func equalTo(otherMatcher: Parameter<SubQueryMatcher>, perform: @escaping (SubQueryMatcher) -> Void) -> Perform {
+		public static func equalTo(otherMatcher: Parameter<SubQueryMatcher>, perform: @escaping (SubQueryMatcher) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherMatcher(`otherMatcher`), performs: perform)
         }
-        static func value(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
+        public static func value(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
             return Perform(method: .m_value__of_attribute(`attribute`), performs: perform)
         }
-        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, perform: @escaping (Attribute, Any?) -> Void) -> Perform {
+        public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, perform: @escaping (Attribute, Any?) -> Void) -> Perform {
             return Perform(method: .m_set__attribute_attributeto_value(`attribute`, `value`), performs: perform)
         }
-        static func equalTo(_ otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
+        public static func equalTo(_ otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherAttributed(`otherAttributed`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
-		static func equalTo(otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
+		public static func equalTo(otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherAttributed(`otherAttributed`), performs: perform)
         }
     }
@@ -352,7 +352,7 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {

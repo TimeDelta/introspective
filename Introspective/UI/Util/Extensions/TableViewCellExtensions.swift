@@ -28,7 +28,7 @@ extension UITableViewCell {
 	}
 
 	final func viewController<Type: UIViewController>(named controllerName: String, fromStoryboard storyboardName: String) -> Type {
-		return DependencyInjector.util.ui.controller(named: controllerName, from: storyboardName)
+		return DependencyInjector.util.ui.controller(named: controllerName, from: storyboardName, as: Type.self)
 	}
 
 	final func post(_ name: Notification.Name, object: Any? = self, userInfo: [AnyHashable: Any]? = nil) {

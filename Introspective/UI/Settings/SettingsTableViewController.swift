@@ -16,6 +16,7 @@ public final class SettingsTableViewController: UITableViewController {
 	public static let enableGenerateTestData = Notification.Name("enableGenerateTestData")
 	private static let resetInstructionPromptsCellIdentifier = "resetInstructionPrompts"
 	private static let identifiers = [
+		"general",
 		"activitySettings",
 		"moodSettings",
 		resetInstructionPromptsCellIdentifier,

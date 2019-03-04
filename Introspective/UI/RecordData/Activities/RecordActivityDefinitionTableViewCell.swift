@@ -69,7 +69,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 
 	private final func updateMostRecentTimeLabel() {
 		if let mostRecentlyCompletedActivity = getMostRecentlyStartedActivity() {
-			let startDate = mostRecentlyCompletedActivity.startDate
+			let startDate = mostRecentlyCompletedActivity.start
 			let startText: String
 			if startDate.isToday() {
 				startText = TimeOfDay(startDate).toString(.medium)
@@ -77,7 +77,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 				startText = DependencyInjector.util.calendar.string(for: startDate, dateStyle: .short, timeStyle: .short)
 			}
 			mostRecentTimeLabel.text = startText + " -"
-			if let endDate = mostRecentlyCompletedActivity.endDate {
+			if let endDate = mostRecentlyCompletedActivity.end {
 				if startDate.isToday() {
 					mostRecentTimeLabel.text! += " " + TimeOfDay(endDate).toString(.medium)
 				} else if endDate.isToday() {
@@ -101,8 +101,8 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 		var totalDuration: Duration = Duration(0.hours.timeInterval)
 		for activity in getAllActivitiesForToday() {
 			var duration = activity.duration
-			if !activity.startDate.isToday() {
-				if let endDate = activity.endDate {
+			if !activity.start.isToday() {
+				if let endDate = activity.end {
 					duration = Duration(start: Date().start(of: .day), end: endDate)
 				} else {
 					duration = Duration(start: Date().start(of: .day), end: Date())

@@ -101,7 +101,7 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 
 	private final func createAndScaleMood(withDate date: Date, andRating rating: Double, using transaction: Transaction) throws {
 		currentMood = try transaction.new(MoodImpl.self)
-		currentMood!.timestamp = date
+		currentMood!.date = date
 		currentMood!.minRating = 1
 		currentMood!.maxRating = 7
 		currentMood!.rating = rating

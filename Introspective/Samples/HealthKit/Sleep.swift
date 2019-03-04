@@ -103,13 +103,20 @@ public final class Sleep: HealthKitCategorySample {
 				break
 		}
 		startDate = sample.startDate
+		DependencyInjector.util.healthKit.setTimeZoneIfApplicable(for: &startDate, from: sample)
 		endDate = sample.endDate
+		DependencyInjector.util.healthKit.setTimeZoneIfApplicable(for: &endDate, from: sample)
 	}
 
 	// MARK: - HealthKitSample Functions
 
 	public func hkSample() -> HKSample {
-		return HKCategorySample(type: Me.categoryType, value: state.rawValue, start: startDate, end: endDate, metadata: nil)
+		return HKCategorySample(
+			type: Me.categoryType,
+			value: state.rawValue,
+			start: startDate,
+			end: endDate,
+			metadata: [HKMetadataKeyTimeZone : TimeZone.autoupdatingCurrent.identifier])
 	}
 
 	// MARK: - Sample Functions

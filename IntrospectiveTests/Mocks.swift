@@ -14,6 +14,7 @@ import HealthKit
 import CoreData
 import Presentr
 import CSV
+import SwiftDate
 @testable import Introspective
 
     public final class MockyAssertion {
@@ -35,6 +36,7 @@ import HealthKit
 import CoreData
 import Presentr
 import CSV
+import SwiftDate
 @testable import Introspective
 
     func MockyAssert(_ expression: @autoclosure () -> Bool, _ message: @autoclosure () -> String = "Verification failed", file: StaticString = #file, line: UInt = #line) {
@@ -50,7 +52,7 @@ import SourceryRuntime
 
 
 // MARK: - ATrackerActivityImporter
-class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
+open class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -67,9 +69,9 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -77,28 +79,28 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
         self.line = line
     }
 
-    var dataTypePluralName: String {
+    public var dataTypePluralName: String {
 		get {	invocations.append(.p_dataTypePluralName_get); return __p_dataTypePluralName ?? givenGetterValue(.p_dataTypePluralName_get, "ATrackerActivityImporterMock - stub value for dataTypePluralName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_dataTypePluralName = newValue }
 	}
 	private var __p_dataTypePluralName: (String)?
 
-    var sourceName: String {
+    public var sourceName: String {
 		get {	invocations.append(.p_sourceName_get); return __p_sourceName ?? givenGetterValue(.p_sourceName_get, "ATrackerActivityImporterMock - stub value for sourceName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_sourceName = newValue }
 	}
 	private var __p_sourceName: (String)?
 
-    var lastImport: Date? {
+    public var lastImport: Date? {
 		get {	invocations.append(.p_lastImport_get); return __p_lastImport ?? optionalGivenGetterValue(.p_lastImport_get, "ATrackerActivityImporterMock - stub value for lastImport was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_lastImport = newValue }
 	}
 	private var __p_lastImport: (Date)?
 
-    var importOnlyNewData: Bool {
+    public var importOnlyNewData: Bool {
 		get {	invocations.append(.p_importOnlyNewData_get); return __p_importOnlyNewData ?? givenGetterValue(.p_importOnlyNewData_get, "ATrackerActivityImporterMock - stub value for importOnlyNewData was not defined") }
 		set {	invocations.append(.p_importOnlyNewData_set(.value(newValue))); __p_importOnlyNewData = newValue }
 	}
@@ -108,7 +110,7 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
 
 
 
-    func importData(from url: URL) throws {
+    open func importData(from url: URL) throws {
         addInvocation(.m_importData__from_url(Parameter<URL>.value(`url`)))
 		let perform = methodPerformValue(.m_importData__from_url(Parameter<URL>.value(`url`))) as? (URL) -> Void
 		perform?(`url`)
@@ -121,7 +123,7 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
 		}
     }
 
-    func resetLastImportDate() throws {
+    open func resetLastImportDate() throws {
         addInvocation(.m_resetLastImportDate)
 		let perform = methodPerformValue(.m_resetLastImportDate) as? () -> Void
 		perform?()
@@ -173,7 +175,7 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -181,33 +183,33 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
             super.init(products)
         }
 
-        static func dataTypePluralName(getter defaultValue: String...) -> PropertyStub {
+        public static func dataTypePluralName(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_dataTypePluralName_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func sourceName(getter defaultValue: String...) -> PropertyStub {
+        public static func sourceName(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_sourceName_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func lastImport(getter defaultValue: Date?...) -> PropertyStub {
+        public static func lastImport(getter defaultValue: Date?...) -> PropertyStub {
             return Given(method: .p_lastImport_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func importOnlyNewData(getter defaultValue: Bool...) -> PropertyStub {
+        public static func importOnlyNewData(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_importOnlyNewData_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func importData(from url: Parameter<URL>, willThrow: Error...) -> MethodStub {
+        public static func importData(from url: Parameter<URL>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func importData(from url: Parameter<URL>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func importData(from url: Parameter<URL>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
         }
-        static func resetLastImportDate(willThrow: Error...) -> MethodStub {
+        public static func resetLastImportDate(willThrow: Error...) -> MethodStub {
             return Given(method: .m_resetLastImportDate, products: willThrow.map({ Product.throw($0) }))
         }
-        static func resetLastImportDate(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func resetLastImportDate(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_resetLastImportDate, products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
@@ -216,26 +218,26 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
-        static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
-        static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
-        static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
-        static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
-        static var importOnlyNewData: Verify { return Verify(method: .p_importOnlyNewData_get) }
-		static func importOnlyNewData(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_importOnlyNewData_set(newValue)) }
+        public static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
+        public static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
+        public static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
+        public static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
+        public static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
+        public static var importOnlyNewData: Verify { return Verify(method: .p_importOnlyNewData_get) }
+		public static func importOnlyNewData(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_importOnlyNewData_set(newValue)) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func importData(from url: Parameter<URL>, perform: @escaping (URL) -> Void) -> Perform {
+        public static func importData(from url: Parameter<URL>, perform: @escaping (URL) -> Void) -> Perform {
             return Perform(method: .m_importData__from_url(`url`), performs: perform)
         }
-        static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
+        public static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_resetLastImportDate, performs: perform)
         }
     }
@@ -251,7 +253,7 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -297,7 +299,7 @@ class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
 }
 
 // MARK: - ActivityQuery
-class ActivityQueryMock: ActivityQuery, Mock {
+open class ActivityQueryMock: ActivityQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -314,9 +316,9 @@ class ActivityQueryMock: ActivityQuery, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -324,19 +326,19 @@ class ActivityQueryMock: ActivityQuery, Mock {
         self.line = line
     }
 
-    var attributeRestrictions: [AttributeRestriction] {
+    public var attributeRestrictions: [AttributeRestriction] {
 		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "ActivityQueryMock - stub value for attributeRestrictions was not defined") }
 		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
 	}
 	private var __p_attributeRestrictions: ([AttributeRestriction])?
 
-    var mostRecentEntryOnly: Bool {
+    public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "ActivityQueryMock - stub value for mostRecentEntryOnly was not defined") }
 		set {	invocations.append(.p_mostRecentEntryOnly_set(.value(newValue))); __p_mostRecentEntryOnly = newValue }
 	}
 	private var __p_mostRecentEntryOnly: (Bool)?
 
-    var subQuery: (matcher: SubQueryMatcher, query: Query)? {
+    public var subQuery: (matcher: SubQueryMatcher, query: Query)? {
 		get {	invocations.append(.p_subQuery_get); return __p_subQuery ?? optionalGivenGetterValue(.p_subQuery_get, "ActivityQueryMock - stub value for subQuery was not defined") }
 		set {	invocations.append(.p_subQuery_set(.value(newValue))); __p_subQuery = newValue }
 	}
@@ -346,19 +348,19 @@ class ActivityQueryMock: ActivityQuery, Mock {
 
 
 
-    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
 		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
 		perform?(`callback`)
     }
 
-    func stop() {
+    open func stop() {
         addInvocation(.m_stop)
 		let perform = methodPerformValue(.m_stop) as? () -> Void
 		perform?()
     }
 
-    func equalTo(_ otherQuery: Query) -> Bool {
+    open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
 		perform?(`otherQuery`)
@@ -419,7 +421,7 @@ class ActivityQueryMock: ActivityQuery, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -427,24 +429,24 @@ class ActivityQueryMock: ActivityQuery, Mock {
             super.init(products)
         }
 
-        static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
+        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
             return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
+        public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
+        public static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
             return Given(method: .p_subQuery_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
@@ -453,37 +455,37 @@ class ActivityQueryMock: ActivityQuery, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
-        static func stop() -> Verify { return Verify(method: .m_stop)}
-        static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
-        static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
-		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
-        static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
-		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
+		public static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
+		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
+		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
+        public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
+		public static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
-        static func stop(perform: @escaping () -> Void) -> Perform {
+        public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+        public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+		public static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
     }
@@ -499,7 +501,7 @@ class ActivityQueryMock: ActivityQuery, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -545,7 +547,7 @@ class ActivityQueryMock: ActivityQuery, Mock {
 }
 
 // MARK: - Attribute
-class AttributeMock: Attribute, Mock {
+open class AttributeMock: Attribute, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -562,9 +564,9 @@ class AttributeMock: Attribute, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -572,35 +574,35 @@ class AttributeMock: Attribute, Mock {
         self.line = line
     }
 
-    var name: String {
+    public var name: String {
 		get {	invocations.append(.p_name_get); return __p_name ?? givenGetterValue(.p_name_get, "AttributeMock - stub value for name was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_name = newValue }
 	}
 	private var __p_name: (String)?
 
-    var pluralName: String {
+    public var pluralName: String {
 		get {	invocations.append(.p_pluralName_get); return __p_pluralName ?? givenGetterValue(.p_pluralName_get, "AttributeMock - stub value for pluralName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_pluralName = newValue }
 	}
 	private var __p_pluralName: (String)?
 
-    var variableName: String? {
+    public var variableName: String? {
 		get {	invocations.append(.p_variableName_get); return __p_variableName ?? optionalGivenGetterValue(.p_variableName_get, "AttributeMock - stub value for variableName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_variableName = newValue }
 	}
 	private var __p_variableName: (String)?
 
-    var extendedDescription: String? {
+    public var extendedDescription: String? {
 		get {	invocations.append(.p_extendedDescription_get); return __p_extendedDescription ?? optionalGivenGetterValue(.p_extendedDescription_get, "AttributeMock - stub value for extendedDescription was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_extendedDescription = newValue }
 	}
 	private var __p_extendedDescription: (String)?
 
-    var optional: Bool {
+    public var optional: Bool {
 		get {	invocations.append(.p_optional_get); return __p_optional ?? givenGetterValue(.p_optional_get, "AttributeMock - stub value for optional was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_optional = newValue }
@@ -611,7 +613,7 @@ class AttributeMock: Attribute, Mock {
 
 
 
-    func equalTo(_ otherAttribute: Attribute) -> Bool {
+    open func equalTo(_ otherAttribute: Attribute) -> Bool {
         addInvocation(.m_equalTo__otherAttribute(Parameter<Attribute>.value(`otherAttribute`)))
 		let perform = methodPerformValue(.m_equalTo__otherAttribute(Parameter<Attribute>.value(`otherAttribute`))) as? (Attribute) -> Void
 		perform?(`otherAttribute`)
@@ -625,7 +627,7 @@ class AttributeMock: Attribute, Mock {
 		return __value
     }
 
-    func convertToDisplayableString(from value: Any?) throws -> String {
+    open func convertToDisplayableString(from value: Any?) throws -> String {
         addInvocation(.m_convertToDisplayableString__from_value(Parameter<Any?>.value(`value`)))
 		let perform = methodPerformValue(.m_convertToDisplayableString__from_value(Parameter<Any?>.value(`value`))) as? (Any?) -> Void
 		perform?(`value`)
@@ -681,7 +683,7 @@ class AttributeMock: Attribute, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -689,43 +691,43 @@ class AttributeMock: Attribute, Mock {
             super.init(products)
         }
 
-        static func name(getter defaultValue: String...) -> PropertyStub {
+        public static func name(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_name_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func pluralName(getter defaultValue: String...) -> PropertyStub {
+        public static func pluralName(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_pluralName_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func variableName(getter defaultValue: String?...) -> PropertyStub {
+        public static func variableName(getter defaultValue: String?...) -> PropertyStub {
             return Given(method: .p_variableName_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func extendedDescription(getter defaultValue: String?...) -> PropertyStub {
+        public static func extendedDescription(getter defaultValue: String?...) -> PropertyStub {
             return Given(method: .p_extendedDescription_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func optional(getter defaultValue: Bool...) -> PropertyStub {
+        public static func optional(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_optional_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherAttribute: Parameter<Attribute>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherAttribute: Parameter<Attribute>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherAttribute(`otherAttribute`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttribute` label")
-		static func equalTo(otherAttribute: Parameter<Attribute>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherAttribute: Parameter<Attribute>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherAttribute(`otherAttribute`), products: willReturn.map({ Product.return($0) }))
         }
-        static func convertToDisplayableString(from value: Parameter<Any?>, willReturn: String...) -> MethodStub {
+        public static func convertToDisplayableString(from value: Parameter<Any?>, willReturn: String...) -> MethodStub {
             return Given(method: .m_convertToDisplayableString__from_value(`value`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherAttribute: Parameter<Attribute>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherAttribute: Parameter<Attribute>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherAttribute(`otherAttribute`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
-        static func convertToDisplayableString(from value: Parameter<Any?>, willThrow: Error...) -> MethodStub {
+        public static func convertToDisplayableString(from value: Parameter<Any?>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_convertToDisplayableString__from_value(`value`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func convertToDisplayableString(from value: Parameter<Any?>, willProduce: (StubberThrows<String>) -> Void) -> MethodStub {
+        public static func convertToDisplayableString(from value: Parameter<Any?>, willProduce: (StubberThrows<String>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_convertToDisplayableString__from_value(`value`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (String).self)
@@ -734,32 +736,32 @@ class AttributeMock: Attribute, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func equalTo(_ otherAttribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_equalTo__otherAttribute(`otherAttribute`))}
+        public static func equalTo(_ otherAttribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_equalTo__otherAttribute(`otherAttribute`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttribute` label")
-		static func equalTo(otherAttribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_equalTo__otherAttribute(`otherAttribute`))}
-        static func convertToDisplayableString(from value: Parameter<Any?>) -> Verify { return Verify(method: .m_convertToDisplayableString__from_value(`value`))}
-        static var name: Verify { return Verify(method: .p_name_get) }
-        static var pluralName: Verify { return Verify(method: .p_pluralName_get) }
-        static var variableName: Verify { return Verify(method: .p_variableName_get) }
-        static var extendedDescription: Verify { return Verify(method: .p_extendedDescription_get) }
-        static var optional: Verify { return Verify(method: .p_optional_get) }
+		public static func equalTo(otherAttribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_equalTo__otherAttribute(`otherAttribute`))}
+        public static func convertToDisplayableString(from value: Parameter<Any?>) -> Verify { return Verify(method: .m_convertToDisplayableString__from_value(`value`))}
+        public static var name: Verify { return Verify(method: .p_name_get) }
+        public static var pluralName: Verify { return Verify(method: .p_pluralName_get) }
+        public static var variableName: Verify { return Verify(method: .p_variableName_get) }
+        public static var extendedDescription: Verify { return Verify(method: .p_extendedDescription_get) }
+        public static var optional: Verify { return Verify(method: .p_optional_get) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func equalTo(_ otherAttribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
+        public static func equalTo(_ otherAttribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherAttribute(`otherAttribute`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttribute` label")
-		static func equalTo(otherAttribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
+		public static func equalTo(otherAttribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherAttribute(`otherAttribute`), performs: perform)
         }
-        static func convertToDisplayableString(from value: Parameter<Any?>, perform: @escaping (Any?) -> Void) -> Perform {
+        public static func convertToDisplayableString(from value: Parameter<Any?>, perform: @escaping (Any?) -> Void) -> Perform {
             return Perform(method: .m_convertToDisplayableString__from_value(`value`), performs: perform)
         }
     }
@@ -775,7 +777,7 @@ class AttributeMock: Attribute, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -821,7 +823,7 @@ class AttributeMock: Attribute, Mock {
 }
 
 // MARK: - AttributeFactory
-class AttributeFactoryMock: AttributeFactory, Mock {
+open class AttributeFactoryMock: AttributeFactory, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -838,9 +840,9 @@ class AttributeFactoryMock: AttributeFactory, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -858,7 +860,7 @@ class AttributeFactoryMock: AttributeFactory, Mock {
         func intValue() -> Int { return 0 }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -869,12 +871,12 @@ class AttributeFactoryMock: AttributeFactory, Mock {
 
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
@@ -891,7 +893,7 @@ class AttributeFactoryMock: AttributeFactory, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -937,7 +939,7 @@ class AttributeFactoryMock: AttributeFactory, Mock {
 }
 
 // MARK: - AttributeRestrictionFactory
-class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
+open class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -954,9 +956,9 @@ class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -968,7 +970,7 @@ class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
 
 
 
-    func typesFor(_ attribute: Attribute) -> [AttributeRestriction.Type] {
+    open func typesFor(_ attribute: Attribute) -> [AttributeRestriction.Type] {
         addInvocation(.m_typesFor__attribute(Parameter<Attribute>.value(`attribute`)))
 		let perform = methodPerformValue(.m_typesFor__attribute(Parameter<Attribute>.value(`attribute`))) as? (Attribute) -> Void
 		perform?(`attribute`)
@@ -982,7 +984,7 @@ class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
 		return __value
     }
 
-    func initialize(type: AttributeRestriction.Type, forAttribute attribute: Attribute) -> AttributeRestriction {
+    open func initialize(type: AttributeRestriction.Type, forAttribute attribute: Attribute) -> AttributeRestriction {
         addInvocation(.m_initialize__type_typeforAttribute_attribute(Parameter<AttributeRestriction.Type>.value(`type`), Parameter<Attribute>.value(`attribute`)))
 		let perform = methodPerformValue(.m_initialize__type_typeforAttribute_attribute(Parameter<AttributeRestriction.Type>.value(`type`), Parameter<Attribute>.value(`attribute`))) as? (AttributeRestriction.Type, Attribute) -> Void
 		perform?(`type`, `attribute`)
@@ -1022,7 +1024,7 @@ class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -1031,24 +1033,24 @@ class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
         }
 
 
-        static func typesFor(_ attribute: Parameter<Attribute>, willReturn: [AttributeRestriction.Type]...) -> MethodStub {
+        public static func typesFor(_ attribute: Parameter<Attribute>, willReturn: [AttributeRestriction.Type]...) -> MethodStub {
             return Given(method: .m_typesFor__attribute(`attribute`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `attribute` label")
-		static func typesFor(attribute: Parameter<Attribute>, willReturn: [AttributeRestriction.Type]...) -> MethodStub {
+		public static func typesFor(attribute: Parameter<Attribute>, willReturn: [AttributeRestriction.Type]...) -> MethodStub {
             return Given(method: .m_typesFor__attribute(`attribute`), products: willReturn.map({ Product.return($0) }))
         }
-        static func initialize(type: Parameter<AttributeRestriction.Type>, forAttribute attribute: Parameter<Attribute>, willReturn: AttributeRestriction...) -> MethodStub {
+        public static func initialize(type: Parameter<AttributeRestriction.Type>, forAttribute attribute: Parameter<Attribute>, willReturn: AttributeRestriction...) -> MethodStub {
             return Given(method: .m_initialize__type_typeforAttribute_attribute(`type`, `attribute`), products: willReturn.map({ Product.return($0) }))
         }
-        static func typesFor(_ attribute: Parameter<Attribute>, willProduce: (Stubber<[AttributeRestriction.Type]>) -> Void) -> MethodStub {
+        public static func typesFor(_ attribute: Parameter<Attribute>, willProduce: (Stubber<[AttributeRestriction.Type]>) -> Void) -> MethodStub {
             let willReturn: [[AttributeRestriction.Type]] = []
 			let given: Given = { return Given(method: .m_typesFor__attribute(`attribute`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: ([AttributeRestriction.Type]).self)
 			willProduce(stubber)
 			return given
         }
-        static func initialize(type: Parameter<AttributeRestriction.Type>, forAttribute attribute: Parameter<Attribute>, willProduce: (Stubber<AttributeRestriction>) -> Void) -> MethodStub {
+        public static func initialize(type: Parameter<AttributeRestriction.Type>, forAttribute attribute: Parameter<Attribute>, willProduce: (Stubber<AttributeRestriction>) -> Void) -> MethodStub {
             let willReturn: [AttributeRestriction] = []
 			let given: Given = { return Given(method: .m_initialize__type_typeforAttribute_attribute(`type`, `attribute`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (AttributeRestriction).self)
@@ -1057,27 +1059,27 @@ class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func typesFor(_ attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_typesFor__attribute(`attribute`))}
+        public static func typesFor(_ attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_typesFor__attribute(`attribute`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `attribute` label")
-		static func typesFor(attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_typesFor__attribute(`attribute`))}
-        static func initialize(type: Parameter<AttributeRestriction.Type>, forAttribute attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_initialize__type_typeforAttribute_attribute(`type`, `attribute`))}
+		public static func typesFor(attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_typesFor__attribute(`attribute`))}
+        public static func initialize(type: Parameter<AttributeRestriction.Type>, forAttribute attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_initialize__type_typeforAttribute_attribute(`type`, `attribute`))}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func typesFor(_ attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
+        public static func typesFor(_ attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
             return Perform(method: .m_typesFor__attribute(`attribute`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `attribute` label")
-		static func typesFor(attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
+		public static func typesFor(attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
             return Perform(method: .m_typesFor__attribute(`attribute`), performs: perform)
         }
-        static func initialize(type: Parameter<AttributeRestriction.Type>, forAttribute attribute: Parameter<Attribute>, perform: @escaping (AttributeRestriction.Type, Attribute) -> Void) -> Perform {
+        public static func initialize(type: Parameter<AttributeRestriction.Type>, forAttribute attribute: Parameter<Attribute>, perform: @escaping (AttributeRestriction.Type, Attribute) -> Void) -> Perform {
             return Perform(method: .m_initialize__type_typeforAttribute_attribute(`type`, `attribute`), performs: perform)
         }
     }
@@ -1093,7 +1095,7 @@ class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -1139,7 +1141,7 @@ class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
 }
 
 // MARK: - AttributeRestrictionUtil
-class AttributeRestrictionUtilMock: AttributeRestrictionUtil, Mock {
+open class AttributeRestrictionUtilMock: AttributeRestrictionUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -1156,9 +1158,9 @@ class AttributeRestrictionUtilMock: AttributeRestrictionUtil, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -1170,7 +1172,7 @@ class AttributeRestrictionUtilMock: AttributeRestrictionUtil, Mock {
 
 
 
-    func getMostRestrictiveStartAndEndDates(from attributeRestrictions: [AttributeRestriction]) -> (start: Date?, end: Date?) {
+    open func getMostRestrictiveStartAndEndDates(from attributeRestrictions: [AttributeRestriction]) -> (start: Date?, end: Date?) {
         addInvocation(.m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(Parameter<[AttributeRestriction]>.value(`attributeRestrictions`)))
 		let perform = methodPerformValue(.m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(Parameter<[AttributeRestriction]>.value(`attributeRestrictions`))) as? ([AttributeRestriction]) -> Void
 		perform?(`attributeRestrictions`)
@@ -1203,7 +1205,7 @@ class AttributeRestrictionUtilMock: AttributeRestrictionUtil, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -1212,10 +1214,10 @@ class AttributeRestrictionUtilMock: AttributeRestrictionUtil, Mock {
         }
 
 
-        static func getMostRestrictiveStartAndEndDates(from attributeRestrictions: Parameter<[AttributeRestriction]>, willReturn: (start: Date?, end: Date?)...) -> MethodStub {
+        public static func getMostRestrictiveStartAndEndDates(from attributeRestrictions: Parameter<[AttributeRestriction]>, willReturn: (start: Date?, end: Date?)...) -> MethodStub {
             return Given(method: .m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(`attributeRestrictions`), products: willReturn.map({ Product.return($0) }))
         }
-        static func getMostRestrictiveStartAndEndDates(from attributeRestrictions: Parameter<[AttributeRestriction]>, willProduce: (Stubber<(start: Date?, end: Date?)>) -> Void) -> MethodStub {
+        public static func getMostRestrictiveStartAndEndDates(from attributeRestrictions: Parameter<[AttributeRestriction]>, willProduce: (Stubber<(start: Date?, end: Date?)>) -> Void) -> MethodStub {
             let willReturn: [(start: Date?, end: Date?)] = []
 			let given: Given = { return Given(method: .m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(`attributeRestrictions`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: ((start: Date?, end: Date?)).self)
@@ -1224,17 +1226,17 @@ class AttributeRestrictionUtilMock: AttributeRestrictionUtil, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func getMostRestrictiveStartAndEndDates(from attributeRestrictions: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(`attributeRestrictions`))}
+        public static func getMostRestrictiveStartAndEndDates(from attributeRestrictions: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(`attributeRestrictions`))}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func getMostRestrictiveStartAndEndDates(from attributeRestrictions: Parameter<[AttributeRestriction]>, perform: @escaping ([AttributeRestriction]) -> Void) -> Perform {
+        public static func getMostRestrictiveStartAndEndDates(from attributeRestrictions: Parameter<[AttributeRestriction]>, perform: @escaping ([AttributeRestriction]) -> Void) -> Perform {
             return Perform(method: .m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(`attributeRestrictions`), performs: perform)
         }
     }
@@ -1250,7 +1252,7 @@ class AttributeRestrictionUtilMock: AttributeRestrictionUtil, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -1296,7 +1298,7 @@ class AttributeRestrictionUtilMock: AttributeRestrictionUtil, Mock {
 }
 
 // MARK: - BloodPressureQuery
-class BloodPressureQueryMock: BloodPressureQuery, Mock {
+open class BloodPressureQueryMock: BloodPressureQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -1313,9 +1315,9 @@ class BloodPressureQueryMock: BloodPressureQuery, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -1323,19 +1325,19 @@ class BloodPressureQueryMock: BloodPressureQuery, Mock {
         self.line = line
     }
 
-    var attributeRestrictions: [AttributeRestriction] {
+    public var attributeRestrictions: [AttributeRestriction] {
 		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "BloodPressureQueryMock - stub value for attributeRestrictions was not defined") }
 		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
 	}
 	private var __p_attributeRestrictions: ([AttributeRestriction])?
 
-    var mostRecentEntryOnly: Bool {
+    public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "BloodPressureQueryMock - stub value for mostRecentEntryOnly was not defined") }
 		set {	invocations.append(.p_mostRecentEntryOnly_set(.value(newValue))); __p_mostRecentEntryOnly = newValue }
 	}
 	private var __p_mostRecentEntryOnly: (Bool)?
 
-    var subQuery: (matcher: SubQueryMatcher, query: Query)? {
+    public var subQuery: (matcher: SubQueryMatcher, query: Query)? {
 		get {	invocations.append(.p_subQuery_get); return __p_subQuery ?? optionalGivenGetterValue(.p_subQuery_get, "BloodPressureQueryMock - stub value for subQuery was not defined") }
 		set {	invocations.append(.p_subQuery_set(.value(newValue))); __p_subQuery = newValue }
 	}
@@ -1345,19 +1347,19 @@ class BloodPressureQueryMock: BloodPressureQuery, Mock {
 
 
 
-    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
 		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
 		perform?(`callback`)
     }
 
-    func stop() {
+    open func stop() {
         addInvocation(.m_stop)
 		let perform = methodPerformValue(.m_stop) as? () -> Void
 		perform?()
     }
 
-    func equalTo(_ otherQuery: Query) -> Bool {
+    open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
 		perform?(`otherQuery`)
@@ -1418,7 +1420,7 @@ class BloodPressureQueryMock: BloodPressureQuery, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -1426,24 +1428,24 @@ class BloodPressureQueryMock: BloodPressureQuery, Mock {
             super.init(products)
         }
 
-        static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
+        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
             return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
+        public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
+        public static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
             return Given(method: .p_subQuery_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
@@ -1452,37 +1454,37 @@ class BloodPressureQueryMock: BloodPressureQuery, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
-        static func stop() -> Verify { return Verify(method: .m_stop)}
-        static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
-        static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
-		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
-        static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
-		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
+		public static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
+		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
+		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
+        public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
+		public static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
-        static func stop(perform: @escaping () -> Void) -> Perform {
+        public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+        public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+		public static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
     }
@@ -1498,7 +1500,7 @@ class BloodPressureQueryMock: BloodPressureQuery, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -1544,7 +1546,7 @@ class BloodPressureQueryMock: BloodPressureQuery, Mock {
 }
 
 // MARK: - BodyMassIndexQuery
-class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
+open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -1561,9 +1563,9 @@ class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -1571,19 +1573,19 @@ class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
         self.line = line
     }
 
-    var attributeRestrictions: [AttributeRestriction] {
+    public var attributeRestrictions: [AttributeRestriction] {
 		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "BodyMassIndexQueryMock - stub value for attributeRestrictions was not defined") }
 		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
 	}
 	private var __p_attributeRestrictions: ([AttributeRestriction])?
 
-    var mostRecentEntryOnly: Bool {
+    public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "BodyMassIndexQueryMock - stub value for mostRecentEntryOnly was not defined") }
 		set {	invocations.append(.p_mostRecentEntryOnly_set(.value(newValue))); __p_mostRecentEntryOnly = newValue }
 	}
 	private var __p_mostRecentEntryOnly: (Bool)?
 
-    var subQuery: (matcher: SubQueryMatcher, query: Query)? {
+    public var subQuery: (matcher: SubQueryMatcher, query: Query)? {
 		get {	invocations.append(.p_subQuery_get); return __p_subQuery ?? optionalGivenGetterValue(.p_subQuery_get, "BodyMassIndexQueryMock - stub value for subQuery was not defined") }
 		set {	invocations.append(.p_subQuery_set(.value(newValue))); __p_subQuery = newValue }
 	}
@@ -1593,19 +1595,19 @@ class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
 
 
 
-    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
 		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
 		perform?(`callback`)
     }
 
-    func stop() {
+    open func stop() {
         addInvocation(.m_stop)
 		let perform = methodPerformValue(.m_stop) as? () -> Void
 		perform?()
     }
 
-    func equalTo(_ otherQuery: Query) -> Bool {
+    open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
 		perform?(`otherQuery`)
@@ -1666,7 +1668,7 @@ class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -1674,24 +1676,24 @@ class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
             super.init(products)
         }
 
-        static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
+        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
             return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
+        public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
+        public static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
             return Given(method: .p_subQuery_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
@@ -1700,37 +1702,37 @@ class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
-        static func stop() -> Verify { return Verify(method: .m_stop)}
-        static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
-        static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
-		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
-        static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
-		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
+		public static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
+		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
+		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
+        public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
+		public static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
-        static func stop(perform: @escaping () -> Void) -> Perform {
+        public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+        public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+		public static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
     }
@@ -1746,7 +1748,7 @@ class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -1792,7 +1794,7 @@ class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
 }
 
 // MARK: - CalendarUtil
-class CalendarUtilMock: CalendarUtil, Mock {
+open class CalendarUtilMock: CalendarUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -1809,9 +1811,9 @@ class CalendarUtilMock: CalendarUtil, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -1823,7 +1825,21 @@ class CalendarUtilMock: CalendarUtil, Mock {
 
 
 
-    func start(of component: Calendar.Component, in date: Date) -> Date {
+    open func convert(_ date: Date, from fromTimeZone: TimeZone, to toTimeZone: TimeZone) -> Date {
+        addInvocation(.m_convert__datefrom_fromTimeZoneto_toTimeZone(Parameter<Date>.value(`date`), Parameter<TimeZone>.value(`fromTimeZone`), Parameter<TimeZone>.value(`toTimeZone`)))
+		let perform = methodPerformValue(.m_convert__datefrom_fromTimeZoneto_toTimeZone(Parameter<Date>.value(`date`), Parameter<TimeZone>.value(`fromTimeZone`), Parameter<TimeZone>.value(`toTimeZone`))) as? (Date, TimeZone, TimeZone) -> Void
+		perform?(`date`, `fromTimeZone`, `toTimeZone`)
+		var __value: Date
+		do {
+		    __value = try methodReturnValue(.m_convert__datefrom_fromTimeZoneto_toTimeZone(Parameter<Date>.value(`date`), Parameter<TimeZone>.value(`fromTimeZone`), Parameter<TimeZone>.value(`toTimeZone`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for convert(_ date: Date, from fromTimeZone: TimeZone, to toTimeZone: TimeZone). Use given")
+			Failure("Stub return value not specified for convert(_ date: Date, from fromTimeZone: TimeZone, to toTimeZone: TimeZone). Use given")
+		}
+		return __value
+    }
+
+    open func start(of component: Calendar.Component, in date: Date) -> Date {
         addInvocation(.m_start__of_componentin_date(Parameter<Calendar.Component>.value(`component`), Parameter<Date>.value(`date`)))
 		let perform = methodPerformValue(.m_start__of_componentin_date(Parameter<Calendar.Component>.value(`component`), Parameter<Date>.value(`date`))) as? (Calendar.Component, Date) -> Void
 		perform?(`component`, `date`)
@@ -1837,7 +1853,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 		return __value
     }
 
-    func end(of component: Calendar.Component, in date: Date) -> Date {
+    open func end(of component: Calendar.Component, in date: Date) -> Date {
         addInvocation(.m_end__of_componentin_date(Parameter<Calendar.Component>.value(`component`), Parameter<Date>.value(`date`)))
 		let perform = methodPerformValue(.m_end__of_componentin_date(Parameter<Calendar.Component>.value(`component`), Parameter<Date>.value(`date`))) as? (Calendar.Component, Date) -> Void
 		perform?(`component`, `date`)
@@ -1851,7 +1867,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 		return __value
     }
 
-    func string(for date: Date, inFormat format: String) -> String {
+    open func string(for date: Date, inFormat format: String) -> String {
         addInvocation(.m_string__for_dateinFormat_format(Parameter<Date>.value(`date`), Parameter<String>.value(`format`)))
 		let perform = methodPerformValue(.m_string__for_dateinFormat_format(Parameter<Date>.value(`date`), Parameter<String>.value(`format`))) as? (Date, String) -> Void
 		perform?(`date`, `format`)
@@ -1865,7 +1881,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 		return __value
     }
 
-    func string(for date: Date, dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> String {
+    open func string(for date: Date, dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> String {
         addInvocation(.m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(Parameter<Date>.value(`date`), Parameter<DateFormatter.Style>.value(`dateStyle`), Parameter<DateFormatter.Style>.value(`timeStyle`)))
 		let perform = methodPerformValue(.m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(Parameter<Date>.value(`date`), Parameter<DateFormatter.Style>.value(`dateStyle`), Parameter<DateFormatter.Style>.value(`timeStyle`))) as? (Date, DateFormatter.Style, DateFormatter.Style) -> Void
 		perform?(`date`, `dateStyle`, `timeStyle`)
@@ -1879,7 +1895,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 		return __value
     }
 
-    func date(_ date1: Date, occursOnSame component: Calendar.Component, as date2: Date) -> Bool {
+    open func date(_ date1: Date, occursOnSame component: Calendar.Component, as date2: Date) -> Bool {
         addInvocation(.m_date__date1occursOnSame_componentas_date2(Parameter<Date>.value(`date1`), Parameter<Calendar.Component>.value(`component`), Parameter<Date>.value(`date2`)))
 		let perform = methodPerformValue(.m_date__date1occursOnSame_componentas_date2(Parameter<Date>.value(`date1`), Parameter<Calendar.Component>.value(`component`), Parameter<Date>.value(`date2`))) as? (Date, Calendar.Component, Date) -> Void
 		perform?(`date1`, `component`, `date2`)
@@ -1893,7 +1909,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 		return __value
     }
 
-    func compare(_ date1: Date?, _ date2: Date?) -> ComparisonResult {
+    open func compare(_ date1: Date?, _ date2: Date?) -> ComparisonResult {
         addInvocation(.m_compare__date1_date2(Parameter<Date?>.value(`date1`), Parameter<Date?>.value(`date2`)))
 		let perform = methodPerformValue(.m_compare__date1_date2(Parameter<Date?>.value(`date1`), Parameter<Date?>.value(`date2`))) as? (Date?, Date?) -> Void
 		perform?(`date1`, `date2`)
@@ -1907,7 +1923,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 		return __value
     }
 
-    func date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek {
+    open func date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek {
         addInvocation(.m_date__dateisOnOneOf_daysOfWeek(Parameter<Date>.value(`date`), Parameter<CollectionType>.value(`daysOfWeek`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_date__dateisOnOneOf_daysOfWeek(Parameter<Date>.value(`date`), Parameter<CollectionType>.value(`daysOfWeek`).wrapAsGeneric())) as? (Date, CollectionType) -> Void
 		perform?(`date`, `daysOfWeek`)
@@ -1921,7 +1937,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 		return __value
     }
 
-    func date(_ date: Date, isOnA dayOfWeek: DayOfWeek) -> Bool {
+    open func date(_ date: Date, isOnA dayOfWeek: DayOfWeek) -> Bool {
         addInvocation(.m_date__dateisOnA_dayOfWeek(Parameter<Date>.value(`date`), Parameter<DayOfWeek>.value(`dayOfWeek`)))
 		let perform = methodPerformValue(.m_date__dateisOnA_dayOfWeek(Parameter<Date>.value(`date`), Parameter<DayOfWeek>.value(`dayOfWeek`))) as? (Date, DayOfWeek) -> Void
 		perform?(`date`, `dayOfWeek`)
@@ -1935,7 +1951,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 		return __value
     }
 
-    func date(from dateStr: String, format: String?) -> Date? {
+    open func date(from dateStr: String, format: String?) -> Date? {
         addInvocation(.m_date__from_dateStrformat_format(Parameter<String>.value(`dateStr`), Parameter<String?>.value(`format`)))
 		let perform = methodPerformValue(.m_date__from_dateStrformat_format(Parameter<String>.value(`dateStr`), Parameter<String?>.value(`format`))) as? (String, String?) -> Void
 		perform?(`dateStr`, `format`)
@@ -1948,7 +1964,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 		return __value
     }
 
-    func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) -> Int {
+    open func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) -> Int {
         addInvocation(.m_distance__from_date1to_date2in_unit(Parameter<Date>.value(`date1`), Parameter<Date>.value(`date2`), Parameter<Calendar.Component>.value(`unit`)))
 		let perform = methodPerformValue(.m_distance__from_date1to_date2in_unit(Parameter<Date>.value(`date1`), Parameter<Date>.value(`date2`), Parameter<Calendar.Component>.value(`unit`))) as? (Date, Date, Calendar.Component) -> Void
 		perform?(`date1`, `date2`, `unit`)
@@ -1964,6 +1980,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 
 
     fileprivate enum MethodType {
+        case m_convert__datefrom_fromTimeZoneto_toTimeZone(Parameter<Date>, Parameter<TimeZone>, Parameter<TimeZone>)
         case m_start__of_componentin_date(Parameter<Calendar.Component>, Parameter<Date>)
         case m_end__of_componentin_date(Parameter<Calendar.Component>, Parameter<Date>)
         case m_string__for_dateinFormat_format(Parameter<Date>, Parameter<String>)
@@ -1977,6 +1994,11 @@ class CalendarUtilMock: CalendarUtil, Mock {
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
+            case (.m_convert__datefrom_fromTimeZoneto_toTimeZone(let lhsDate, let lhsFromtimezone, let lhsTotimezone), .m_convert__datefrom_fromTimeZoneto_toTimeZone(let rhsDate, let rhsFromtimezone, let rhsTotimezone)):
+                guard Parameter.compare(lhs: lhsDate, rhs: rhsDate, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsFromtimezone, rhs: rhsFromtimezone, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsTotimezone, rhs: rhsTotimezone, with: matcher) else { return false } 
+                return true 
             case (.m_start__of_componentin_date(let lhsComponent, let lhsDate), .m_start__of_componentin_date(let rhsComponent, let rhsDate)):
                 guard Parameter.compare(lhs: lhsComponent, rhs: rhsComponent, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsDate, rhs: rhsDate, with: matcher) else { return false } 
@@ -2026,6 +2048,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 
         func intValue() -> Int {
             switch self {
+            case let .m_convert__datefrom_fromTimeZoneto_toTimeZone(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_start__of_componentin_date(p0, p1): return p0.intValue + p1.intValue
             case let .m_end__of_componentin_date(p0, p1): return p0.intValue + p1.intValue
             case let .m_string__for_dateinFormat_format(p0, p1): return p0.intValue + p1.intValue
@@ -2040,7 +2063,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -2049,116 +2072,130 @@ class CalendarUtilMock: CalendarUtil, Mock {
         }
 
 
-        static func start(of component: Parameter<Calendar.Component>, in date: Parameter<Date>, willReturn: Date...) -> MethodStub {
+        public static func convert(_ date: Parameter<Date>, from fromTimeZone: Parameter<TimeZone>, to toTimeZone: Parameter<TimeZone>, willReturn: Date...) -> MethodStub {
+            return Given(method: .m_convert__datefrom_fromTimeZoneto_toTimeZone(`date`, `fromTimeZone`, `toTimeZone`), products: willReturn.map({ Product.return($0) }))
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date` label")
+		public static func convert(date: Parameter<Date>, from fromTimeZone: Parameter<TimeZone>, to toTimeZone: Parameter<TimeZone>, willReturn: Date...) -> MethodStub {
+            return Given(method: .m_convert__datefrom_fromTimeZoneto_toTimeZone(`date`, `fromTimeZone`, `toTimeZone`), products: willReturn.map({ Product.return($0) }))
+        }
+        public static func start(of component: Parameter<Calendar.Component>, in date: Parameter<Date>, willReturn: Date...) -> MethodStub {
             return Given(method: .m_start__of_componentin_date(`component`, `date`), products: willReturn.map({ Product.return($0) }))
         }
-        static func end(of component: Parameter<Calendar.Component>, in date: Parameter<Date>, willReturn: Date...) -> MethodStub {
+        public static func end(of component: Parameter<Calendar.Component>, in date: Parameter<Date>, willReturn: Date...) -> MethodStub {
             return Given(method: .m_end__of_componentin_date(`component`, `date`), products: willReturn.map({ Product.return($0) }))
         }
-        static func string(for date: Parameter<Date>, inFormat format: Parameter<String>, willReturn: String...) -> MethodStub {
+        public static func string(for date: Parameter<Date>, inFormat format: Parameter<String>, willReturn: String...) -> MethodStub {
             return Given(method: .m_string__for_dateinFormat_format(`date`, `format`), products: willReturn.map({ Product.return($0) }))
         }
-        static func string(for date: Parameter<Date>, dateStyle: Parameter<DateFormatter.Style>, timeStyle: Parameter<DateFormatter.Style>, willReturn: String...) -> MethodStub {
+        public static func string(for date: Parameter<Date>, dateStyle: Parameter<DateFormatter.Style>, timeStyle: Parameter<DateFormatter.Style>, willReturn: String...) -> MethodStub {
             return Given(method: .m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(`date`, `dateStyle`, `timeStyle`), products: willReturn.map({ Product.return($0) }))
         }
-        static func date(_ date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>, willReturn: Bool...) -> MethodStub {
+        public static func date(_ date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_date__date1occursOnSame_componentas_date2(`date1`, `component`, `date2`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date1` label")
-		static func date(date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>, willReturn: Bool...) -> MethodStub {
+		public static func date(date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_date__date1occursOnSame_componentas_date2(`date1`, `component`, `date2`), products: willReturn.map({ Product.return($0) }))
         }
-        static func compare(_ date1: Parameter<Date?>, _ date2: Parameter<Date?>, willReturn: ComparisonResult...) -> MethodStub {
+        public static func compare(_ date1: Parameter<Date?>, _ date2: Parameter<Date?>, willReturn: ComparisonResult...) -> MethodStub {
             return Given(method: .m_compare__date1_date2(`date1`, `date2`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date1` label, remove `date2` label")
-		static func compare(date1: Parameter<Date?>, date2: Parameter<Date?>, willReturn: ComparisonResult...) -> MethodStub {
+		public static func compare(date1: Parameter<Date?>, date2: Parameter<Date?>, willReturn: ComparisonResult...) -> MethodStub {
             return Given(method: .m_compare__date1_date2(`date1`, `date2`), products: willReturn.map({ Product.return($0) }))
         }
-        static func date<CollectionType: Collection>(_ date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>, willReturn: Bool...) -> MethodStub {
+        public static func date<CollectionType: Collection>(_ date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_date__dateisOnOneOf_daysOfWeek(`date`, `daysOfWeek`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date` label")
-		static func date<CollectionType: Collection>(date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>, willReturn: Bool...) -> MethodStub {
+		public static func date<CollectionType: Collection>(date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_date__dateisOnOneOf_daysOfWeek(`date`, `daysOfWeek`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func date(_ date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>, willReturn: Bool...) -> MethodStub {
+        public static func date(_ date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_date__dateisOnA_dayOfWeek(`date`, `dayOfWeek`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date` label")
-		static func date(date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>, willReturn: Bool...) -> MethodStub {
+		public static func date(date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_date__dateisOnA_dayOfWeek(`date`, `dayOfWeek`), products: willReturn.map({ Product.return($0) }))
         }
-        static func date(from dateStr: Parameter<String>, format: Parameter<String?>, willReturn: Date?...) -> MethodStub {
+        public static func date(from dateStr: Parameter<String>, format: Parameter<String?>, willReturn: Date?...) -> MethodStub {
             return Given(method: .m_date__from_dateStrformat_format(`dateStr`, `format`), products: willReturn.map({ Product.return($0) }))
         }
-        static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, willReturn: Int...) -> MethodStub {
+        public static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, willReturn: Int...) -> MethodStub {
             return Given(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`), products: willReturn.map({ Product.return($0) }))
         }
-        static func start(of component: Parameter<Calendar.Component>, in date: Parameter<Date>, willProduce: (Stubber<Date>) -> Void) -> MethodStub {
+        public static func convert(_ date: Parameter<Date>, from fromTimeZone: Parameter<TimeZone>, to toTimeZone: Parameter<TimeZone>, willProduce: (Stubber<Date>) -> Void) -> MethodStub {
+            let willReturn: [Date] = []
+			let given: Given = { return Given(method: .m_convert__datefrom_fromTimeZoneto_toTimeZone(`date`, `fromTimeZone`, `toTimeZone`), products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (Date).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func start(of component: Parameter<Calendar.Component>, in date: Parameter<Date>, willProduce: (Stubber<Date>) -> Void) -> MethodStub {
             let willReturn: [Date] = []
 			let given: Given = { return Given(method: .m_start__of_componentin_date(`component`, `date`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Date).self)
 			willProduce(stubber)
 			return given
         }
-        static func end(of component: Parameter<Calendar.Component>, in date: Parameter<Date>, willProduce: (Stubber<Date>) -> Void) -> MethodStub {
+        public static func end(of component: Parameter<Calendar.Component>, in date: Parameter<Date>, willProduce: (Stubber<Date>) -> Void) -> MethodStub {
             let willReturn: [Date] = []
 			let given: Given = { return Given(method: .m_end__of_componentin_date(`component`, `date`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Date).self)
 			willProduce(stubber)
 			return given
         }
-        static func string(for date: Parameter<Date>, inFormat format: Parameter<String>, willProduce: (Stubber<String>) -> Void) -> MethodStub {
+        public static func string(for date: Parameter<Date>, inFormat format: Parameter<String>, willProduce: (Stubber<String>) -> Void) -> MethodStub {
             let willReturn: [String] = []
 			let given: Given = { return Given(method: .m_string__for_dateinFormat_format(`date`, `format`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (String).self)
 			willProduce(stubber)
 			return given
         }
-        static func string(for date: Parameter<Date>, dateStyle: Parameter<DateFormatter.Style>, timeStyle: Parameter<DateFormatter.Style>, willProduce: (Stubber<String>) -> Void) -> MethodStub {
+        public static func string(for date: Parameter<Date>, dateStyle: Parameter<DateFormatter.Style>, timeStyle: Parameter<DateFormatter.Style>, willProduce: (Stubber<String>) -> Void) -> MethodStub {
             let willReturn: [String] = []
 			let given: Given = { return Given(method: .m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(`date`, `dateStyle`, `timeStyle`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (String).self)
 			willProduce(stubber)
 			return given
         }
-        static func date(_ date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func date(_ date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_date__date1occursOnSame_componentas_date2(`date1`, `component`, `date2`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
-        static func compare(_ date1: Parameter<Date?>, _ date2: Parameter<Date?>, willProduce: (Stubber<ComparisonResult>) -> Void) -> MethodStub {
+        public static func compare(_ date1: Parameter<Date?>, _ date2: Parameter<Date?>, willProduce: (Stubber<ComparisonResult>) -> Void) -> MethodStub {
             let willReturn: [ComparisonResult] = []
 			let given: Given = { return Given(method: .m_compare__date1_date2(`date1`, `date2`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (ComparisonResult).self)
 			willProduce(stubber)
 			return given
         }
-        static func date<CollectionType: Collection>(_ date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func date<CollectionType: Collection>(_ date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_date__dateisOnOneOf_daysOfWeek(`date`, `daysOfWeek`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
-        static func date(_ date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func date(_ date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_date__dateisOnA_dayOfWeek(`date`, `dayOfWeek`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
-        static func date(from dateStr: Parameter<String>, format: Parameter<String?>, willProduce: (Stubber<Date?>) -> Void) -> MethodStub {
+        public static func date(from dateStr: Parameter<String>, format: Parameter<String?>, willProduce: (Stubber<Date?>) -> Void) -> MethodStub {
             let willReturn: [Date?] = []
 			let given: Given = { return Given(method: .m_date__from_dateStrformat_format(`dateStr`, `format`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Date?).self)
 			willProduce(stubber)
 			return given
         }
-        static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, willProduce: (Stubber<Int>) -> Void) -> MethodStub {
+        public static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, willProduce: (Stubber<Int>) -> Void) -> MethodStub {
             let willReturn: [Int] = []
 			let given: Given = { return Given(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Int).self)
@@ -2167,77 +2204,87 @@ class CalendarUtilMock: CalendarUtil, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func start(of component: Parameter<Calendar.Component>, in date: Parameter<Date>) -> Verify { return Verify(method: .m_start__of_componentin_date(`component`, `date`))}
-        static func end(of component: Parameter<Calendar.Component>, in date: Parameter<Date>) -> Verify { return Verify(method: .m_end__of_componentin_date(`component`, `date`))}
-        static func string(for date: Parameter<Date>, inFormat format: Parameter<String>) -> Verify { return Verify(method: .m_string__for_dateinFormat_format(`date`, `format`))}
-        static func string(for date: Parameter<Date>, dateStyle: Parameter<DateFormatter.Style>, timeStyle: Parameter<DateFormatter.Style>) -> Verify { return Verify(method: .m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(`date`, `dateStyle`, `timeStyle`))}
-        static func date(_ date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>) -> Verify { return Verify(method: .m_date__date1occursOnSame_componentas_date2(`date1`, `component`, `date2`))}
+        public static func convert(_ date: Parameter<Date>, from fromTimeZone: Parameter<TimeZone>, to toTimeZone: Parameter<TimeZone>) -> Verify { return Verify(method: .m_convert__datefrom_fromTimeZoneto_toTimeZone(`date`, `fromTimeZone`, `toTimeZone`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date` label")
+		public static func convert(date: Parameter<Date>, from fromTimeZone: Parameter<TimeZone>, to toTimeZone: Parameter<TimeZone>) -> Verify { return Verify(method: .m_convert__datefrom_fromTimeZoneto_toTimeZone(`date`, `fromTimeZone`, `toTimeZone`))}
+        public static func start(of component: Parameter<Calendar.Component>, in date: Parameter<Date>) -> Verify { return Verify(method: .m_start__of_componentin_date(`component`, `date`))}
+        public static func end(of component: Parameter<Calendar.Component>, in date: Parameter<Date>) -> Verify { return Verify(method: .m_end__of_componentin_date(`component`, `date`))}
+        public static func string(for date: Parameter<Date>, inFormat format: Parameter<String>) -> Verify { return Verify(method: .m_string__for_dateinFormat_format(`date`, `format`))}
+        public static func string(for date: Parameter<Date>, dateStyle: Parameter<DateFormatter.Style>, timeStyle: Parameter<DateFormatter.Style>) -> Verify { return Verify(method: .m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(`date`, `dateStyle`, `timeStyle`))}
+        public static func date(_ date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>) -> Verify { return Verify(method: .m_date__date1occursOnSame_componentas_date2(`date1`, `component`, `date2`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date1` label")
-		static func date(date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>) -> Verify { return Verify(method: .m_date__date1occursOnSame_componentas_date2(`date1`, `component`, `date2`))}
-        static func compare(_ date1: Parameter<Date?>, _ date2: Parameter<Date?>) -> Verify { return Verify(method: .m_compare__date1_date2(`date1`, `date2`))}
+		public static func date(date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>) -> Verify { return Verify(method: .m_date__date1occursOnSame_componentas_date2(`date1`, `component`, `date2`))}
+        public static func compare(_ date1: Parameter<Date?>, _ date2: Parameter<Date?>) -> Verify { return Verify(method: .m_compare__date1_date2(`date1`, `date2`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date1` label, remove `date2` label")
-		static func compare(date1: Parameter<Date?>, date2: Parameter<Date?>) -> Verify { return Verify(method: .m_compare__date1_date2(`date1`, `date2`))}
-        static func date<CollectionType>(_ date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>) -> Verify { return Verify(method: .m_date__dateisOnOneOf_daysOfWeek(`date`, `daysOfWeek`.wrapAsGeneric()))}
+		public static func compare(date1: Parameter<Date?>, date2: Parameter<Date?>) -> Verify { return Verify(method: .m_compare__date1_date2(`date1`, `date2`))}
+        public static func date<CollectionType>(_ date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>) -> Verify where CollectionType:Collection { return Verify(method: .m_date__dateisOnOneOf_daysOfWeek(`date`, `daysOfWeek`.wrapAsGeneric()))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date` label")
-		static func date<CollectionType>(date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>) -> Verify { return Verify(method: .m_date__dateisOnOneOf_daysOfWeek(`date`, `daysOfWeek`.wrapAsGeneric()))}
-        static func date(_ date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>) -> Verify { return Verify(method: .m_date__dateisOnA_dayOfWeek(`date`, `dayOfWeek`))}
+		public static func date<CollectionType>(date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>) -> Verify where CollectionType:Collection { return Verify(method: .m_date__dateisOnOneOf_daysOfWeek(`date`, `daysOfWeek`.wrapAsGeneric()))}
+        public static func date(_ date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>) -> Verify { return Verify(method: .m_date__dateisOnA_dayOfWeek(`date`, `dayOfWeek`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date` label")
-		static func date(date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>) -> Verify { return Verify(method: .m_date__dateisOnA_dayOfWeek(`date`, `dayOfWeek`))}
-        static func date(from dateStr: Parameter<String>, format: Parameter<String?>) -> Verify { return Verify(method: .m_date__from_dateStrformat_format(`dateStr`, `format`))}
-        static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>) -> Verify { return Verify(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`))}
+		public static func date(date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>) -> Verify { return Verify(method: .m_date__dateisOnA_dayOfWeek(`date`, `dayOfWeek`))}
+        public static func date(from dateStr: Parameter<String>, format: Parameter<String?>) -> Verify { return Verify(method: .m_date__from_dateStrformat_format(`dateStr`, `format`))}
+        public static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>) -> Verify { return Verify(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`))}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func start(of component: Parameter<Calendar.Component>, in date: Parameter<Date>, perform: @escaping (Calendar.Component, Date) -> Void) -> Perform {
+        public static func convert(_ date: Parameter<Date>, from fromTimeZone: Parameter<TimeZone>, to toTimeZone: Parameter<TimeZone>, perform: @escaping (Date, TimeZone, TimeZone) -> Void) -> Perform {
+            return Perform(method: .m_convert__datefrom_fromTimeZoneto_toTimeZone(`date`, `fromTimeZone`, `toTimeZone`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date` label")
+		public static func convert(date: Parameter<Date>, from fromTimeZone: Parameter<TimeZone>, to toTimeZone: Parameter<TimeZone>, perform: @escaping (Date, TimeZone, TimeZone) -> Void) -> Perform {
+            return Perform(method: .m_convert__datefrom_fromTimeZoneto_toTimeZone(`date`, `fromTimeZone`, `toTimeZone`), performs: perform)
+        }
+        public static func start(of component: Parameter<Calendar.Component>, in date: Parameter<Date>, perform: @escaping (Calendar.Component, Date) -> Void) -> Perform {
             return Perform(method: .m_start__of_componentin_date(`component`, `date`), performs: perform)
         }
-        static func end(of component: Parameter<Calendar.Component>, in date: Parameter<Date>, perform: @escaping (Calendar.Component, Date) -> Void) -> Perform {
+        public static func end(of component: Parameter<Calendar.Component>, in date: Parameter<Date>, perform: @escaping (Calendar.Component, Date) -> Void) -> Perform {
             return Perform(method: .m_end__of_componentin_date(`component`, `date`), performs: perform)
         }
-        static func string(for date: Parameter<Date>, inFormat format: Parameter<String>, perform: @escaping (Date, String) -> Void) -> Perform {
+        public static func string(for date: Parameter<Date>, inFormat format: Parameter<String>, perform: @escaping (Date, String) -> Void) -> Perform {
             return Perform(method: .m_string__for_dateinFormat_format(`date`, `format`), performs: perform)
         }
-        static func string(for date: Parameter<Date>, dateStyle: Parameter<DateFormatter.Style>, timeStyle: Parameter<DateFormatter.Style>, perform: @escaping (Date, DateFormatter.Style, DateFormatter.Style) -> Void) -> Perform {
+        public static func string(for date: Parameter<Date>, dateStyle: Parameter<DateFormatter.Style>, timeStyle: Parameter<DateFormatter.Style>, perform: @escaping (Date, DateFormatter.Style, DateFormatter.Style) -> Void) -> Perform {
             return Perform(method: .m_string__for_datedateStyle_dateStyletimeStyle_timeStyle(`date`, `dateStyle`, `timeStyle`), performs: perform)
         }
-        static func date(_ date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>, perform: @escaping (Date, Calendar.Component, Date) -> Void) -> Perform {
+        public static func date(_ date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>, perform: @escaping (Date, Calendar.Component, Date) -> Void) -> Perform {
             return Perform(method: .m_date__date1occursOnSame_componentas_date2(`date1`, `component`, `date2`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date1` label")
-		static func date(date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>, perform: @escaping (Date, Calendar.Component, Date) -> Void) -> Perform {
+		public static func date(date1: Parameter<Date>, occursOnSame component: Parameter<Calendar.Component>, as date2: Parameter<Date>, perform: @escaping (Date, Calendar.Component, Date) -> Void) -> Perform {
             return Perform(method: .m_date__date1occursOnSame_componentas_date2(`date1`, `component`, `date2`), performs: perform)
         }
-        static func compare(_ date1: Parameter<Date?>, _ date2: Parameter<Date?>, perform: @escaping (Date?, Date?) -> Void) -> Perform {
+        public static func compare(_ date1: Parameter<Date?>, _ date2: Parameter<Date?>, perform: @escaping (Date?, Date?) -> Void) -> Perform {
             return Perform(method: .m_compare__date1_date2(`date1`, `date2`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date1` label, remove `date2` label")
-		static func compare(date1: Parameter<Date?>, date2: Parameter<Date?>, perform: @escaping (Date?, Date?) -> Void) -> Perform {
+		public static func compare(date1: Parameter<Date?>, date2: Parameter<Date?>, perform: @escaping (Date?, Date?) -> Void) -> Perform {
             return Perform(method: .m_compare__date1_date2(`date1`, `date2`), performs: perform)
         }
-        static func date<CollectionType>(_ date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>, perform: @escaping (Date, CollectionType) -> Void) -> Perform {
+        public static func date<CollectionType>(_ date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>, perform: @escaping (Date, CollectionType) -> Void) -> Perform where CollectionType:Collection {
             return Perform(method: .m_date__dateisOnOneOf_daysOfWeek(`date`, `daysOfWeek`.wrapAsGeneric()), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date` label")
-		static func date<CollectionType>(date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>, perform: @escaping (Date, CollectionType) -> Void) -> Perform {
+		public static func date<CollectionType>(date: Parameter<Date>, isOnOneOf daysOfWeek: Parameter<CollectionType>, perform: @escaping (Date, CollectionType) -> Void) -> Perform where CollectionType:Collection {
             return Perform(method: .m_date__dateisOnOneOf_daysOfWeek(`date`, `daysOfWeek`.wrapAsGeneric()), performs: perform)
         }
-        static func date(_ date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>, perform: @escaping (Date, DayOfWeek) -> Void) -> Perform {
+        public static func date(_ date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>, perform: @escaping (Date, DayOfWeek) -> Void) -> Perform {
             return Perform(method: .m_date__dateisOnA_dayOfWeek(`date`, `dayOfWeek`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `date` label")
-		static func date(date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>, perform: @escaping (Date, DayOfWeek) -> Void) -> Perform {
+		public static func date(date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>, perform: @escaping (Date, DayOfWeek) -> Void) -> Perform {
             return Perform(method: .m_date__dateisOnA_dayOfWeek(`date`, `dayOfWeek`), performs: perform)
         }
-        static func date(from dateStr: Parameter<String>, format: Parameter<String?>, perform: @escaping (String, String?) -> Void) -> Perform {
+        public static func date(from dateStr: Parameter<String>, format: Parameter<String?>, perform: @escaping (String, String?) -> Void) -> Perform {
             return Perform(method: .m_date__from_dateStrformat_format(`dateStr`, `format`), performs: perform)
         }
-        static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, perform: @escaping (Date, Date, Calendar.Component) -> Void) -> Perform {
+        public static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, perform: @escaping (Date, Date, Calendar.Component) -> Void) -> Perform {
             return Perform(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`), performs: perform)
         }
     }
@@ -2253,7 +2300,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -2299,7 +2346,7 @@ class CalendarUtilMock: CalendarUtil, Mock {
 }
 
 // MARK: - CodableStorage
-class CodableStorageMock: CodableStorage, Mock {
+open class CodableStorageMock: CodableStorage, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -2316,9 +2363,9 @@ class CodableStorageMock: CodableStorage, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -2330,7 +2377,7 @@ class CodableStorageMock: CodableStorage, Mock {
 
 
 
-    func store<T: Encodable>(_ object: T, to directory: StorageDirectory, as fileName: String) throws {
+    open func store<T: Encodable>(_ object: T, to directory: StorageDirectory, as fileName: String) throws {
         addInvocation(.m_store__objectto_directoryas_fileName(Parameter<T>.value(`object`).wrapAsGeneric(), Parameter<StorageDirectory>.value(`directory`), Parameter<String>.value(`fileName`)))
 		let perform = methodPerformValue(.m_store__objectto_directoryas_fileName(Parameter<T>.value(`object`).wrapAsGeneric(), Parameter<StorageDirectory>.value(`directory`), Parameter<String>.value(`fileName`))) as? (T, StorageDirectory, String) -> Void
 		perform?(`object`, `directory`, `fileName`)
@@ -2343,7 +2390,7 @@ class CodableStorageMock: CodableStorage, Mock {
 		}
     }
 
-    func retrieve<T: Decodable>(_ fileName: String, from directory: StorageDirectory, as type: T.Type) throws -> T {
+    open func retrieve<T: Decodable>(_ fileName: String, from directory: StorageDirectory, as type: T.Type) throws -> T {
         addInvocation(.m_retrieve__fileNamefrom_directoryas_type(Parameter<String>.value(`fileName`), Parameter<StorageDirectory>.value(`directory`), Parameter<T.Type>.value(`type`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_retrieve__fileNamefrom_directoryas_type(Parameter<String>.value(`fileName`), Parameter<StorageDirectory>.value(`directory`), Parameter<T.Type>.value(`type`).wrapAsGeneric())) as? (String, StorageDirectory, T.Type) -> Void
 		perform?(`fileName`, `directory`, `type`)
@@ -2359,7 +2406,7 @@ class CodableStorageMock: CodableStorage, Mock {
 		return __value
     }
 
-    func clear(_ directory: StorageDirectory) throws {
+    open func clear(_ directory: StorageDirectory) throws {
         addInvocation(.m_clear__directory(Parameter<StorageDirectory>.value(`directory`)))
 		let perform = methodPerformValue(.m_clear__directory(Parameter<StorageDirectory>.value(`directory`))) as? (StorageDirectory) -> Void
 		perform?(`directory`)
@@ -2372,7 +2419,7 @@ class CodableStorageMock: CodableStorage, Mock {
 		}
     }
 
-    func remove(_ fileName: String, from directory: StorageDirectory) throws {
+    open func remove(_ fileName: String, from directory: StorageDirectory) throws {
         addInvocation(.m_remove__fileNamefrom_directory(Parameter<String>.value(`fileName`), Parameter<StorageDirectory>.value(`directory`)))
 		let perform = methodPerformValue(.m_remove__fileNamefrom_directory(Parameter<String>.value(`fileName`), Parameter<StorageDirectory>.value(`directory`))) as? (String, StorageDirectory) -> Void
 		perform?(`fileName`, `directory`)
@@ -2385,7 +2432,7 @@ class CodableStorageMock: CodableStorage, Mock {
 		}
     }
 
-    func fileExists(_ fileName: String, in directory: StorageDirectory) -> Bool {
+    open func fileExists(_ fileName: String, in directory: StorageDirectory) -> Bool {
         addInvocation(.m_fileExists__fileNamein_directory(Parameter<String>.value(`fileName`), Parameter<StorageDirectory>.value(`directory`)))
 		let perform = methodPerformValue(.m_fileExists__fileNamein_directory(Parameter<String>.value(`fileName`), Parameter<StorageDirectory>.value(`directory`))) as? (String, StorageDirectory) -> Void
 		perform?(`fileName`, `directory`)
@@ -2445,7 +2492,7 @@ class CodableStorageMock: CodableStorage, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -2454,77 +2501,77 @@ class CodableStorageMock: CodableStorage, Mock {
         }
 
 
-        static func retrieve<T: Decodable>(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>, willReturn: T...) -> MethodStub {
+        public static func retrieve<T: Decodable>(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>, willReturn: T...) -> MethodStub {
             return Given(method: .m_retrieve__fileNamefrom_directoryas_type(`fileName`, `directory`, `type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fileName` label")
-		static func retrieve<T: Decodable>(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>, willReturn: T...) -> MethodStub {
+		public static func retrieve<T: Decodable>(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>, willReturn: T...) -> MethodStub {
             return Given(method: .m_retrieve__fileNamefrom_directoryas_type(`fileName`, `directory`, `type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func fileExists(_ fileName: Parameter<String>, in directory: Parameter<StorageDirectory>, willReturn: Bool...) -> MethodStub {
+        public static func fileExists(_ fileName: Parameter<String>, in directory: Parameter<StorageDirectory>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_fileExists__fileNamein_directory(`fileName`, `directory`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fileName` label")
-		static func fileExists(fileName: Parameter<String>, in directory: Parameter<StorageDirectory>, willReturn: Bool...) -> MethodStub {
+		public static func fileExists(fileName: Parameter<String>, in directory: Parameter<StorageDirectory>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_fileExists__fileNamein_directory(`fileName`, `directory`), products: willReturn.map({ Product.return($0) }))
         }
-        static func fileExists(_ fileName: Parameter<String>, in directory: Parameter<StorageDirectory>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func fileExists(_ fileName: Parameter<String>, in directory: Parameter<StorageDirectory>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_fileExists__fileNamein_directory(`fileName`, `directory`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
-        static func store<T: Encodable>(_ object: Parameter<T>, to directory: Parameter<StorageDirectory>, as fileName: Parameter<String>, willThrow: Error...) -> MethodStub {
+        public static func store<T: Encodable>(_ object: Parameter<T>, to directory: Parameter<StorageDirectory>, as fileName: Parameter<String>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_store__objectto_directoryas_fileName(`object`.wrapAsGeneric(), `directory`, `fileName`), products: willThrow.map({ Product.throw($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `object` label")
-		static func store<T: Encodable>(object: Parameter<T>, to directory: Parameter<StorageDirectory>, as fileName: Parameter<String>, willThrow: Error...) -> MethodStub {
+		public static func store<T: Encodable>(object: Parameter<T>, to directory: Parameter<StorageDirectory>, as fileName: Parameter<String>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_store__objectto_directoryas_fileName(`object`.wrapAsGeneric(), `directory`, `fileName`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func store<T: Encodable>(_ object: Parameter<T>, to directory: Parameter<StorageDirectory>, as fileName: Parameter<String>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func store<T: Encodable>(_ object: Parameter<T>, to directory: Parameter<StorageDirectory>, as fileName: Parameter<String>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_store__objectto_directoryas_fileName(`object`.wrapAsGeneric(), `directory`, `fileName`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
         }
-        static func retrieve<T: Decodable>(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>, willThrow: Error...) -> MethodStub {
+        public static func retrieve<T: Decodable>(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_retrieve__fileNamefrom_directoryas_type(`fileName`, `directory`, `type`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fileName` label")
-		static func retrieve<T: Decodable>(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>, willThrow: Error...) -> MethodStub {
+		public static func retrieve<T: Decodable>(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_retrieve__fileNamefrom_directoryas_type(`fileName`, `directory`, `type`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
-        static func retrieve<T: Decodable>(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>, willProduce: (StubberThrows<T>) -> Void) -> MethodStub {
+        public static func retrieve<T: Decodable>(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>, willProduce: (StubberThrows<T>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_retrieve__fileNamefrom_directoryas_type(`fileName`, `directory`, `type`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (T).self)
 			willProduce(stubber)
 			return given
         }
-        static func clear(_ directory: Parameter<StorageDirectory>, willThrow: Error...) -> MethodStub {
+        public static func clear(_ directory: Parameter<StorageDirectory>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_clear__directory(`directory`), products: willThrow.map({ Product.throw($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `directory` label")
-		static func clear(directory: Parameter<StorageDirectory>, willThrow: Error...) -> MethodStub {
+		public static func clear(directory: Parameter<StorageDirectory>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_clear__directory(`directory`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func clear(_ directory: Parameter<StorageDirectory>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func clear(_ directory: Parameter<StorageDirectory>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_clear__directory(`directory`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
         }
-        static func remove(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, willThrow: Error...) -> MethodStub {
+        public static func remove(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_remove__fileNamefrom_directory(`fileName`, `directory`), products: willThrow.map({ Product.throw($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fileName` label")
-		static func remove(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, willThrow: Error...) -> MethodStub {
+		public static func remove(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_remove__fileNamefrom_directory(`fileName`, `directory`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func remove(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func remove(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_remove__fileNamefrom_directory(`fileName`, `directory`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
@@ -2533,63 +2580,63 @@ class CodableStorageMock: CodableStorage, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func store<T>(_ object: Parameter<T>, to directory: Parameter<StorageDirectory>, as fileName: Parameter<String>) -> Verify { return Verify(method: .m_store__objectto_directoryas_fileName(`object`.wrapAsGeneric(), `directory`, `fileName`))}
+        public static func store<T>(_ object: Parameter<T>, to directory: Parameter<StorageDirectory>, as fileName: Parameter<String>) -> Verify where T:Encodable { return Verify(method: .m_store__objectto_directoryas_fileName(`object`.wrapAsGeneric(), `directory`, `fileName`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `object` label")
-		static func store<T>(object: Parameter<T>, to directory: Parameter<StorageDirectory>, as fileName: Parameter<String>) -> Verify { return Verify(method: .m_store__objectto_directoryas_fileName(`object`.wrapAsGeneric(), `directory`, `fileName`))}
-        static func retrieve<T>(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>) -> Verify { return Verify(method: .m_retrieve__fileNamefrom_directoryas_type(`fileName`, `directory`, `type`.wrapAsGeneric()))}
+		public static func store<T>(object: Parameter<T>, to directory: Parameter<StorageDirectory>, as fileName: Parameter<String>) -> Verify where T:Encodable { return Verify(method: .m_store__objectto_directoryas_fileName(`object`.wrapAsGeneric(), `directory`, `fileName`))}
+        public static func retrieve<T>(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>) -> Verify where T:Decodable { return Verify(method: .m_retrieve__fileNamefrom_directoryas_type(`fileName`, `directory`, `type`.wrapAsGeneric()))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fileName` label")
-		static func retrieve<T>(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>) -> Verify { return Verify(method: .m_retrieve__fileNamefrom_directoryas_type(`fileName`, `directory`, `type`.wrapAsGeneric()))}
-        static func clear(_ directory: Parameter<StorageDirectory>) -> Verify { return Verify(method: .m_clear__directory(`directory`))}
+		public static func retrieve<T>(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>) -> Verify where T:Decodable { return Verify(method: .m_retrieve__fileNamefrom_directoryas_type(`fileName`, `directory`, `type`.wrapAsGeneric()))}
+        public static func clear(_ directory: Parameter<StorageDirectory>) -> Verify { return Verify(method: .m_clear__directory(`directory`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `directory` label")
-		static func clear(directory: Parameter<StorageDirectory>) -> Verify { return Verify(method: .m_clear__directory(`directory`))}
-        static func remove(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>) -> Verify { return Verify(method: .m_remove__fileNamefrom_directory(`fileName`, `directory`))}
+		public static func clear(directory: Parameter<StorageDirectory>) -> Verify { return Verify(method: .m_clear__directory(`directory`))}
+        public static func remove(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>) -> Verify { return Verify(method: .m_remove__fileNamefrom_directory(`fileName`, `directory`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fileName` label")
-		static func remove(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>) -> Verify { return Verify(method: .m_remove__fileNamefrom_directory(`fileName`, `directory`))}
-        static func fileExists(_ fileName: Parameter<String>, in directory: Parameter<StorageDirectory>) -> Verify { return Verify(method: .m_fileExists__fileNamein_directory(`fileName`, `directory`))}
+		public static func remove(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>) -> Verify { return Verify(method: .m_remove__fileNamefrom_directory(`fileName`, `directory`))}
+        public static func fileExists(_ fileName: Parameter<String>, in directory: Parameter<StorageDirectory>) -> Verify { return Verify(method: .m_fileExists__fileNamein_directory(`fileName`, `directory`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fileName` label")
-		static func fileExists(fileName: Parameter<String>, in directory: Parameter<StorageDirectory>) -> Verify { return Verify(method: .m_fileExists__fileNamein_directory(`fileName`, `directory`))}
+		public static func fileExists(fileName: Parameter<String>, in directory: Parameter<StorageDirectory>) -> Verify { return Verify(method: .m_fileExists__fileNamein_directory(`fileName`, `directory`))}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func store<T>(_ object: Parameter<T>, to directory: Parameter<StorageDirectory>, as fileName: Parameter<String>, perform: @escaping (T, StorageDirectory, String) -> Void) -> Perform {
+        public static func store<T>(_ object: Parameter<T>, to directory: Parameter<StorageDirectory>, as fileName: Parameter<String>, perform: @escaping (T, StorageDirectory, String) -> Void) -> Perform where T:Encodable {
             return Perform(method: .m_store__objectto_directoryas_fileName(`object`.wrapAsGeneric(), `directory`, `fileName`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `object` label")
-		static func store<T>(object: Parameter<T>, to directory: Parameter<StorageDirectory>, as fileName: Parameter<String>, perform: @escaping (T, StorageDirectory, String) -> Void) -> Perform {
+		public static func store<T>(object: Parameter<T>, to directory: Parameter<StorageDirectory>, as fileName: Parameter<String>, perform: @escaping (T, StorageDirectory, String) -> Void) -> Perform where T:Encodable {
             return Perform(method: .m_store__objectto_directoryas_fileName(`object`.wrapAsGeneric(), `directory`, `fileName`), performs: perform)
         }
-        static func retrieve<T>(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>, perform: @escaping (String, StorageDirectory, T.Type) -> Void) -> Perform {
+        public static func retrieve<T>(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>, perform: @escaping (String, StorageDirectory, T.Type) -> Void) -> Perform where T:Decodable {
             return Perform(method: .m_retrieve__fileNamefrom_directoryas_type(`fileName`, `directory`, `type`.wrapAsGeneric()), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fileName` label")
-		static func retrieve<T>(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>, perform: @escaping (String, StorageDirectory, T.Type) -> Void) -> Perform {
+		public static func retrieve<T>(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, as type: Parameter<T.Type>, perform: @escaping (String, StorageDirectory, T.Type) -> Void) -> Perform where T:Decodable {
             return Perform(method: .m_retrieve__fileNamefrom_directoryas_type(`fileName`, `directory`, `type`.wrapAsGeneric()), performs: perform)
         }
-        static func clear(_ directory: Parameter<StorageDirectory>, perform: @escaping (StorageDirectory) -> Void) -> Perform {
+        public static func clear(_ directory: Parameter<StorageDirectory>, perform: @escaping (StorageDirectory) -> Void) -> Perform {
             return Perform(method: .m_clear__directory(`directory`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `directory` label")
-		static func clear(directory: Parameter<StorageDirectory>, perform: @escaping (StorageDirectory) -> Void) -> Perform {
+		public static func clear(directory: Parameter<StorageDirectory>, perform: @escaping (StorageDirectory) -> Void) -> Perform {
             return Perform(method: .m_clear__directory(`directory`), performs: perform)
         }
-        static func remove(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, perform: @escaping (String, StorageDirectory) -> Void) -> Perform {
+        public static func remove(_ fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, perform: @escaping (String, StorageDirectory) -> Void) -> Perform {
             return Perform(method: .m_remove__fileNamefrom_directory(`fileName`, `directory`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fileName` label")
-		static func remove(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, perform: @escaping (String, StorageDirectory) -> Void) -> Perform {
+		public static func remove(fileName: Parameter<String>, from directory: Parameter<StorageDirectory>, perform: @escaping (String, StorageDirectory) -> Void) -> Perform {
             return Perform(method: .m_remove__fileNamefrom_directory(`fileName`, `directory`), performs: perform)
         }
-        static func fileExists(_ fileName: Parameter<String>, in directory: Parameter<StorageDirectory>, perform: @escaping (String, StorageDirectory) -> Void) -> Perform {
+        public static func fileExists(_ fileName: Parameter<String>, in directory: Parameter<StorageDirectory>, perform: @escaping (String, StorageDirectory) -> Void) -> Perform {
             return Perform(method: .m_fileExists__fileNamein_directory(`fileName`, `directory`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fileName` label")
-		static func fileExists(fileName: Parameter<String>, in directory: Parameter<StorageDirectory>, perform: @escaping (String, StorageDirectory) -> Void) -> Perform {
+		public static func fileExists(fileName: Parameter<String>, in directory: Parameter<StorageDirectory>, perform: @escaping (String, StorageDirectory) -> Void) -> Perform {
             return Perform(method: .m_fileExists__fileNamein_directory(`fileName`, `directory`), performs: perform)
         }
     }
@@ -2605,7 +2652,7 @@ class CodableStorageMock: CodableStorage, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -2651,7 +2698,7 @@ class CodableStorageMock: CodableStorage, Mock {
 }
 
 // MARK: - Database
-class DatabaseMock: Database, Mock {
+open class DatabaseMock: Database, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -2668,9 +2715,9 @@ class DatabaseMock: Database, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -2682,7 +2729,7 @@ class DatabaseMock: Database, Mock {
 
 
 
-    func transaction() -> Transaction {
+    open func transaction() -> Transaction {
         addInvocation(.m_transaction)
 		let perform = methodPerformValue(.m_transaction) as? () -> Void
 		perform?()
@@ -2696,7 +2743,7 @@ class DatabaseMock: Database, Mock {
 		return __value
     }
 
-    func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, sortDescriptors: [NSSortDescriptor], cacheName: String?) -> NSFetchedResultsController<Type> {
+    open func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, sortDescriptors: [NSSortDescriptor], cacheName: String?) -> NSFetchedResultsController<Type> {
         addInvocation(.m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(Parameter<Type.Type>.value(`type`).wrapAsGeneric(), Parameter<[NSSortDescriptor]>.value(`sortDescriptors`), Parameter<String?>.value(`cacheName`)))
 		let perform = methodPerformValue(.m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(Parameter<Type.Type>.value(`type`).wrapAsGeneric(), Parameter<[NSSortDescriptor]>.value(`sortDescriptors`), Parameter<String?>.value(`cacheName`))) as? (Type.Type, [NSSortDescriptor], String?) -> Void
 		perform?(`type`, `sortDescriptors`, `cacheName`)
@@ -2710,7 +2757,7 @@ class DatabaseMock: Database, Mock {
 		return __value
     }
 
-    func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type] {
+    open func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type] {
         addInvocation(.m_query__fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_query__fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric())) as? (NSFetchRequest<Type>) -> Void
 		perform?(`fetchRequest`)
@@ -2726,7 +2773,7 @@ class DatabaseMock: Database, Mock {
 		return __value
     }
 
-    func pull<Type: NSManagedObject>(savedObject: Type) throws -> Type {
+    open func pull<Type: NSManagedObject>(savedObject: Type) throws -> Type {
         addInvocation(.m_pull__savedObject_savedObject(Parameter<Type>.value(`savedObject`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_pull__savedObject_savedObject(Parameter<Type>.value(`savedObject`).wrapAsGeneric())) as? (Type) -> Void
 		perform?(`savedObject`)
@@ -2742,7 +2789,7 @@ class DatabaseMock: Database, Mock {
 		return __value
     }
 
-    func pull<Type: NSManagedObject>(savedObject: Type, fromSameContextAs otherObject: NSManagedObject) throws -> Type {
+    open func pull<Type: NSManagedObject>(savedObject: Type, fromSameContextAs otherObject: NSManagedObject) throws -> Type {
         addInvocation(.m_pull__savedObject_savedObjectfromSameContextAs_otherObject(Parameter<Type>.value(`savedObject`).wrapAsGeneric(), Parameter<NSManagedObject>.value(`otherObject`)))
 		let perform = methodPerformValue(.m_pull__savedObject_savedObjectfromSameContextAs_otherObject(Parameter<Type>.value(`savedObject`).wrapAsGeneric(), Parameter<NSManagedObject>.value(`otherObject`))) as? (Type, NSManagedObject) -> Void
 		perform?(`savedObject`, `otherObject`)
@@ -2758,7 +2805,7 @@ class DatabaseMock: Database, Mock {
 		return __value
     }
 
-    func pull<Type: NSManagedObject>(savedObject: Type, fromContext context: NSManagedObjectContext) throws -> Type {
+    open func pull<Type: NSManagedObject>(savedObject: Type, fromContext context: NSManagedObjectContext) throws -> Type {
         addInvocation(.m_pull__savedObject_savedObjectfromContext_context(Parameter<Type>.value(`savedObject`).wrapAsGeneric(), Parameter<NSManagedObjectContext>.value(`context`)))
 		let perform = methodPerformValue(.m_pull__savedObject_savedObjectfromContext_context(Parameter<Type>.value(`savedObject`).wrapAsGeneric(), Parameter<NSManagedObjectContext>.value(`context`))) as? (Type, NSManagedObjectContext) -> Void
 		perform?(`savedObject`, `context`)
@@ -2774,7 +2821,7 @@ class DatabaseMock: Database, Mock {
 		return __value
     }
 
-    func deleteEverything() throws {
+    open func deleteEverything() throws {
         addInvocation(.m_deleteEverything)
 		let perform = methodPerformValue(.m_deleteEverything) as? () -> Void
 		perform?()
@@ -2839,7 +2886,7 @@ class DatabaseMock: Database, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -2848,90 +2895,90 @@ class DatabaseMock: Database, Mock {
         }
 
 
-        static func transaction(willReturn: Transaction...) -> MethodStub {
+        public static func transaction(willReturn: Transaction...) -> MethodStub {
             return Given(method: .m_transaction, products: willReturn.map({ Product.return($0) }))
         }
-        static func fetchedResultsController<Type: NSManagedObject>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>, willReturn: NSFetchedResultsController<Type>...) -> MethodStub {
+        public static func fetchedResultsController<Type: NSManagedObject>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>, willReturn: NSFetchedResultsController<Type>...) -> MethodStub {
             return Given(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`), products: willReturn.map({ Product.return($0) }))
         }
-        static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: [Type]...) -> MethodStub {
+        public static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: [Type]...) -> MethodStub {
             return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fetchRequest` label")
-		static func query<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: [Type]...) -> MethodStub {
+		public static func query<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: [Type]...) -> MethodStub {
             return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willReturn: Type...) -> MethodStub {
+        public static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willReturn: Type...) -> MethodStub {
             return Given(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, fromSameContextAs otherObject: Parameter<NSManagedObject>, willReturn: Type...) -> MethodStub {
+        public static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, fromSameContextAs otherObject: Parameter<NSManagedObject>, willReturn: Type...) -> MethodStub {
             return Given(method: .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(`savedObject`.wrapAsGeneric(), `otherObject`), products: willReturn.map({ Product.return($0) }))
         }
-        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, fromContext context: Parameter<NSManagedObjectContext>, willReturn: Type...) -> MethodStub {
+        public static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, fromContext context: Parameter<NSManagedObjectContext>, willReturn: Type...) -> MethodStub {
             return Given(method: .m_pull__savedObject_savedObjectfromContext_context(`savedObject`.wrapAsGeneric(), `context`), products: willReturn.map({ Product.return($0) }))
         }
-        static func transaction(willProduce: (Stubber<Transaction>) -> Void) -> MethodStub {
+        public static func transaction(willProduce: (Stubber<Transaction>) -> Void) -> MethodStub {
             let willReturn: [Transaction] = []
 			let given: Given = { return Given(method: .m_transaction, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Transaction).self)
 			willProduce(stubber)
 			return given
         }
-        static func fetchedResultsController<Type: NSManagedObject>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>, willProduce: (Stubber<NSFetchedResultsController<Type>>) -> Void) -> MethodStub {
+        public static func fetchedResultsController<Type: NSManagedObject>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>, willProduce: (Stubber<NSFetchedResultsController<Type>>) -> Void) -> MethodStub {
             let willReturn: [NSFetchedResultsController<Type>] = []
 			let given: Given = { return Given(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (NSFetchedResultsController<Type>).self)
 			willProduce(stubber)
 			return given
         }
-        static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willThrow: Error...) -> MethodStub {
+        public static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fetchRequest` label")
-		static func query<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willThrow: Error...) -> MethodStub {
+		public static func query<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
-        static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willProduce: (StubberThrows<[Type]>) -> Void) -> MethodStub {
+        public static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willProduce: (StubberThrows<[Type]>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: ([Type]).self)
 			willProduce(stubber)
 			return given
         }
-        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willThrow: Error...) -> MethodStub {
+        public static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
-        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
+        public static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Type).self)
 			willProduce(stubber)
 			return given
         }
-        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, fromSameContextAs otherObject: Parameter<NSManagedObject>, willThrow: Error...) -> MethodStub {
+        public static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, fromSameContextAs otherObject: Parameter<NSManagedObject>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(`savedObject`.wrapAsGeneric(), `otherObject`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, fromSameContextAs otherObject: Parameter<NSManagedObject>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
+        public static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, fromSameContextAs otherObject: Parameter<NSManagedObject>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(`savedObject`.wrapAsGeneric(), `otherObject`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Type).self)
 			willProduce(stubber)
 			return given
         }
-        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, fromContext context: Parameter<NSManagedObjectContext>, willThrow: Error...) -> MethodStub {
+        public static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, fromContext context: Parameter<NSManagedObjectContext>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_pull__savedObject_savedObjectfromContext_context(`savedObject`.wrapAsGeneric(), `context`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, fromContext context: Parameter<NSManagedObjectContext>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
+        public static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, fromContext context: Parameter<NSManagedObjectContext>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_pull__savedObject_savedObjectfromContext_context(`savedObject`.wrapAsGeneric(), `context`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Type).self)
 			willProduce(stubber)
 			return given
         }
-        static func deleteEverything(willThrow: Error...) -> MethodStub {
+        public static func deleteEverything(willThrow: Error...) -> MethodStub {
             return Given(method: .m_deleteEverything, products: willThrow.map({ Product.throw($0) }))
         }
-        static func deleteEverything(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func deleteEverything(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_deleteEverything, products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
@@ -2940,47 +2987,47 @@ class DatabaseMock: Database, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func transaction() -> Verify { return Verify(method: .m_transaction)}
-        static func fetchedResultsController<Type>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>) -> Verify { return Verify(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`))}
-        static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
+        public static func transaction() -> Verify { return Verify(method: .m_transaction)}
+        public static func fetchedResultsController<Type>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>) -> Verify where Type:NSManagedObject { return Verify(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`))}
+        public static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify where Type:NSManagedObject { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fetchRequest` label")
-		static func query<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
-        static func pull<Type>(savedObject: Parameter<Type>) -> Verify { return Verify(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()))}
-        static func pull<Type>(savedObject: Parameter<Type>, fromSameContextAs otherObject: Parameter<NSManagedObject>) -> Verify { return Verify(method: .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(`savedObject`.wrapAsGeneric(), `otherObject`))}
-        static func pull<Type>(savedObject: Parameter<Type>, fromContext context: Parameter<NSManagedObjectContext>) -> Verify { return Verify(method: .m_pull__savedObject_savedObjectfromContext_context(`savedObject`.wrapAsGeneric(), `context`))}
-        static func deleteEverything() -> Verify { return Verify(method: .m_deleteEverything)}
+		public static func query<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify where Type:NSManagedObject { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
+        public static func pull<Type>(savedObject: Parameter<Type>) -> Verify where Type:NSManagedObject { return Verify(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()))}
+        public static func pull<Type>(savedObject: Parameter<Type>, fromSameContextAs otherObject: Parameter<NSManagedObject>) -> Verify where Type:NSManagedObject { return Verify(method: .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(`savedObject`.wrapAsGeneric(), `otherObject`))}
+        public static func pull<Type>(savedObject: Parameter<Type>, fromContext context: Parameter<NSManagedObjectContext>) -> Verify where Type:NSManagedObject { return Verify(method: .m_pull__savedObject_savedObjectfromContext_context(`savedObject`.wrapAsGeneric(), `context`))}
+        public static func deleteEverything() -> Verify { return Verify(method: .m_deleteEverything)}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func transaction(perform: @escaping () -> Void) -> Perform {
+        public static func transaction(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_transaction, performs: perform)
         }
-        static func fetchedResultsController<Type>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>, perform: @escaping (Type.Type, [NSSortDescriptor], String?) -> Void) -> Perform {
+        public static func fetchedResultsController<Type>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>, perform: @escaping (Type.Type, [NSSortDescriptor], String?) -> Void) -> Perform where Type:NSManagedObject {
             return Perform(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`), performs: perform)
         }
-        static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform {
+        public static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform where Type:NSManagedObject {
             return Perform(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fetchRequest` label")
-		static func query<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform {
+		public static func query<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform where Type:NSManagedObject {
             return Perform(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), performs: perform)
         }
-        static func pull<Type>(savedObject: Parameter<Type>, perform: @escaping (Type) -> Void) -> Perform {
+        public static func pull<Type>(savedObject: Parameter<Type>, perform: @escaping (Type) -> Void) -> Perform where Type:NSManagedObject {
             return Perform(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), performs: perform)
         }
-        static func pull<Type>(savedObject: Parameter<Type>, fromSameContextAs otherObject: Parameter<NSManagedObject>, perform: @escaping (Type, NSManagedObject) -> Void) -> Perform {
+        public static func pull<Type>(savedObject: Parameter<Type>, fromSameContextAs otherObject: Parameter<NSManagedObject>, perform: @escaping (Type, NSManagedObject) -> Void) -> Perform where Type:NSManagedObject {
             return Perform(method: .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(`savedObject`.wrapAsGeneric(), `otherObject`), performs: perform)
         }
-        static func pull<Type>(savedObject: Parameter<Type>, fromContext context: Parameter<NSManagedObjectContext>, perform: @escaping (Type, NSManagedObjectContext) -> Void) -> Perform {
+        public static func pull<Type>(savedObject: Parameter<Type>, fromContext context: Parameter<NSManagedObjectContext>, perform: @escaping (Type, NSManagedObjectContext) -> Void) -> Perform where Type:NSManagedObject {
             return Perform(method: .m_pull__savedObject_savedObjectfromContext_context(`savedObject`.wrapAsGeneric(), `context`), performs: perform)
         }
-        static func deleteEverything(perform: @escaping () -> Void) -> Perform {
+        public static func deleteEverything(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_deleteEverything, performs: perform)
         }
     }
@@ -2996,7 +3043,7 @@ class DatabaseMock: Database, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -3042,7 +3089,7 @@ class DatabaseMock: Database, Mock {
 }
 
 // MARK: - EasyPillMedicationDoseImporter
-class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
+open class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -3059,9 +3106,9 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -3069,28 +3116,28 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
         self.line = line
     }
 
-    var dataTypePluralName: String {
+    public var dataTypePluralName: String {
 		get {	invocations.append(.p_dataTypePluralName_get); return __p_dataTypePluralName ?? givenGetterValue(.p_dataTypePluralName_get, "EasyPillMedicationDoseImporterMock - stub value for dataTypePluralName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_dataTypePluralName = newValue }
 	}
 	private var __p_dataTypePluralName: (String)?
 
-    var sourceName: String {
+    public var sourceName: String {
 		get {	invocations.append(.p_sourceName_get); return __p_sourceName ?? givenGetterValue(.p_sourceName_get, "EasyPillMedicationDoseImporterMock - stub value for sourceName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_sourceName = newValue }
 	}
 	private var __p_sourceName: (String)?
 
-    var lastImport: Date? {
+    public var lastImport: Date? {
 		get {	invocations.append(.p_lastImport_get); return __p_lastImport ?? optionalGivenGetterValue(.p_lastImport_get, "EasyPillMedicationDoseImporterMock - stub value for lastImport was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_lastImport = newValue }
 	}
 	private var __p_lastImport: (Date)?
 
-    var importOnlyNewData: Bool {
+    public var importOnlyNewData: Bool {
 		get {	invocations.append(.p_importOnlyNewData_get); return __p_importOnlyNewData ?? givenGetterValue(.p_importOnlyNewData_get, "EasyPillMedicationDoseImporterMock - stub value for importOnlyNewData was not defined") }
 		set {	invocations.append(.p_importOnlyNewData_set(.value(newValue))); __p_importOnlyNewData = newValue }
 	}
@@ -3100,7 +3147,7 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
 
 
 
-    func importData(from url: URL) throws {
+    open func importData(from url: URL) throws {
         addInvocation(.m_importData__from_url(Parameter<URL>.value(`url`)))
 		let perform = methodPerformValue(.m_importData__from_url(Parameter<URL>.value(`url`))) as? (URL) -> Void
 		perform?(`url`)
@@ -3113,7 +3160,7 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
 		}
     }
 
-    func resetLastImportDate() throws {
+    open func resetLastImportDate() throws {
         addInvocation(.m_resetLastImportDate)
 		let perform = methodPerformValue(.m_resetLastImportDate) as? () -> Void
 		perform?()
@@ -3165,7 +3212,7 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -3173,33 +3220,33 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
             super.init(products)
         }
 
-        static func dataTypePluralName(getter defaultValue: String...) -> PropertyStub {
+        public static func dataTypePluralName(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_dataTypePluralName_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func sourceName(getter defaultValue: String...) -> PropertyStub {
+        public static func sourceName(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_sourceName_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func lastImport(getter defaultValue: Date?...) -> PropertyStub {
+        public static func lastImport(getter defaultValue: Date?...) -> PropertyStub {
             return Given(method: .p_lastImport_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func importOnlyNewData(getter defaultValue: Bool...) -> PropertyStub {
+        public static func importOnlyNewData(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_importOnlyNewData_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func importData(from url: Parameter<URL>, willThrow: Error...) -> MethodStub {
+        public static func importData(from url: Parameter<URL>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func importData(from url: Parameter<URL>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func importData(from url: Parameter<URL>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
         }
-        static func resetLastImportDate(willThrow: Error...) -> MethodStub {
+        public static func resetLastImportDate(willThrow: Error...) -> MethodStub {
             return Given(method: .m_resetLastImportDate, products: willThrow.map({ Product.throw($0) }))
         }
-        static func resetLastImportDate(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func resetLastImportDate(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_resetLastImportDate, products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
@@ -3208,26 +3255,26 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
-        static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
-        static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
-        static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
-        static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
-        static var importOnlyNewData: Verify { return Verify(method: .p_importOnlyNewData_get) }
-		static func importOnlyNewData(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_importOnlyNewData_set(newValue)) }
+        public static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
+        public static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
+        public static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
+        public static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
+        public static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
+        public static var importOnlyNewData: Verify { return Verify(method: .p_importOnlyNewData_get) }
+		public static func importOnlyNewData(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_importOnlyNewData_set(newValue)) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func importData(from url: Parameter<URL>, perform: @escaping (URL) -> Void) -> Perform {
+        public static func importData(from url: Parameter<URL>, perform: @escaping (URL) -> Void) -> Perform {
             return Perform(method: .m_importData__from_url(`url`), performs: perform)
         }
-        static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
+        public static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_resetLastImportDate, performs: perform)
         }
     }
@@ -3243,7 +3290,7 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -3289,7 +3336,7 @@ class EasyPillMedicationDoseImporterMock: EasyPillMedicationDoseImporter, Mock {
 }
 
 // MARK: - EasyPillMedicationImporter
-class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
+open class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -3306,9 +3353,9 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -3316,28 +3363,28 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
         self.line = line
     }
 
-    var dataTypePluralName: String {
+    public var dataTypePluralName: String {
 		get {	invocations.append(.p_dataTypePluralName_get); return __p_dataTypePluralName ?? givenGetterValue(.p_dataTypePluralName_get, "EasyPillMedicationImporterMock - stub value for dataTypePluralName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_dataTypePluralName = newValue }
 	}
 	private var __p_dataTypePluralName: (String)?
 
-    var sourceName: String {
+    public var sourceName: String {
 		get {	invocations.append(.p_sourceName_get); return __p_sourceName ?? givenGetterValue(.p_sourceName_get, "EasyPillMedicationImporterMock - stub value for sourceName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_sourceName = newValue }
 	}
 	private var __p_sourceName: (String)?
 
-    var lastImport: Date? {
+    public var lastImport: Date? {
 		get {	invocations.append(.p_lastImport_get); return __p_lastImport ?? optionalGivenGetterValue(.p_lastImport_get, "EasyPillMedicationImporterMock - stub value for lastImport was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_lastImport = newValue }
 	}
 	private var __p_lastImport: (Date)?
 
-    var importOnlyNewData: Bool {
+    public var importOnlyNewData: Bool {
 		get {	invocations.append(.p_importOnlyNewData_get); return __p_importOnlyNewData ?? givenGetterValue(.p_importOnlyNewData_get, "EasyPillMedicationImporterMock - stub value for importOnlyNewData was not defined") }
 		set {	invocations.append(.p_importOnlyNewData_set(.value(newValue))); __p_importOnlyNewData = newValue }
 	}
@@ -3347,7 +3394,7 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
 
 
 
-    func importData(from url: URL) throws {
+    open func importData(from url: URL) throws {
         addInvocation(.m_importData__from_url(Parameter<URL>.value(`url`)))
 		let perform = methodPerformValue(.m_importData__from_url(Parameter<URL>.value(`url`))) as? (URL) -> Void
 		perform?(`url`)
@@ -3360,7 +3407,7 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
 		}
     }
 
-    func resetLastImportDate() throws {
+    open func resetLastImportDate() throws {
         addInvocation(.m_resetLastImportDate)
 		let perform = methodPerformValue(.m_resetLastImportDate) as? () -> Void
 		perform?()
@@ -3412,7 +3459,7 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -3420,33 +3467,33 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
             super.init(products)
         }
 
-        static func dataTypePluralName(getter defaultValue: String...) -> PropertyStub {
+        public static func dataTypePluralName(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_dataTypePluralName_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func sourceName(getter defaultValue: String...) -> PropertyStub {
+        public static func sourceName(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_sourceName_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func lastImport(getter defaultValue: Date?...) -> PropertyStub {
+        public static func lastImport(getter defaultValue: Date?...) -> PropertyStub {
             return Given(method: .p_lastImport_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func importOnlyNewData(getter defaultValue: Bool...) -> PropertyStub {
+        public static func importOnlyNewData(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_importOnlyNewData_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func importData(from url: Parameter<URL>, willThrow: Error...) -> MethodStub {
+        public static func importData(from url: Parameter<URL>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func importData(from url: Parameter<URL>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func importData(from url: Parameter<URL>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
         }
-        static func resetLastImportDate(willThrow: Error...) -> MethodStub {
+        public static func resetLastImportDate(willThrow: Error...) -> MethodStub {
             return Given(method: .m_resetLastImportDate, products: willThrow.map({ Product.throw($0) }))
         }
-        static func resetLastImportDate(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func resetLastImportDate(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_resetLastImportDate, products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
@@ -3455,26 +3502,26 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
-        static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
-        static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
-        static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
-        static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
-        static var importOnlyNewData: Verify { return Verify(method: .p_importOnlyNewData_get) }
-		static func importOnlyNewData(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_importOnlyNewData_set(newValue)) }
+        public static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
+        public static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
+        public static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
+        public static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
+        public static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
+        public static var importOnlyNewData: Verify { return Verify(method: .p_importOnlyNewData_get) }
+		public static func importOnlyNewData(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_importOnlyNewData_set(newValue)) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func importData(from url: Parameter<URL>, perform: @escaping (URL) -> Void) -> Perform {
+        public static func importData(from url: Parameter<URL>, perform: @escaping (URL) -> Void) -> Perform {
             return Perform(method: .m_importData__from_url(`url`), performs: perform)
         }
-        static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
+        public static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_resetLastImportDate, performs: perform)
         }
     }
@@ -3490,7 +3537,7 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -3536,7 +3583,7 @@ class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
 }
 
 // MARK: - HealthKitUtil
-class HealthKitUtilMock: HealthKitUtil, Mock {
+open class HealthKitUtilMock: HealthKitUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -3553,9 +3600,9 @@ class HealthKitUtilMock: HealthKitUtil, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -3567,13 +3614,19 @@ class HealthKitUtilMock: HealthKitUtil, Mock {
 
 
 
-    func calculate(_ calculation: HKStatisticsOptions, _ type: HealthKitQuantitySample.Type, from startDate: Date, to endDate: Date, callback: @escaping (Double?, Error?) -> ()) {
+    open func setTimeZoneIfApplicable(for date: inout Date, from sample: HKSample) {
+        addInvocation(.m_setTimeZoneIfApplicable__for_datefrom_sample(Parameter<Date>.value(`date`), Parameter<HKSample>.value(`sample`)))
+		let perform = methodPerformValue(.m_setTimeZoneIfApplicable__for_datefrom_sample(Parameter<Date>.value(`date`), Parameter<HKSample>.value(`sample`))) as? (inout Date, HKSample) -> Void
+		perform?(&`date`, `sample`)
+    }
+
+    open func calculate(_ calculation: HKStatisticsOptions, _ type: HealthKitQuantitySample.Type, from startDate: Date, to endDate: Date, callback: @escaping (Double?, Error?) -> ()) {
         addInvocation(.m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(Parameter<HKStatisticsOptions>.value(`calculation`), Parameter<HealthKitQuantitySample.Type>.value(`type`), Parameter<Date>.value(`startDate`), Parameter<Date>.value(`endDate`), Parameter<(Double?, Error?) -> ()>.value(`callback`)))
 		let perform = methodPerformValue(.m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(Parameter<HKStatisticsOptions>.value(`calculation`), Parameter<HealthKitQuantitySample.Type>.value(`type`), Parameter<Date>.value(`startDate`), Parameter<Date>.value(`endDate`), Parameter<(Double?, Error?) -> ()>.value(`callback`))) as? (HKStatisticsOptions, HealthKitQuantitySample.Type, Date, Date, @escaping (Double?, Error?) -> ()) -> Void
 		perform?(`calculation`, `type`, `startDate`, `endDate`, `callback`)
     }
 
-    func getSamples(for type: HealthKitSample.Type, from startDate: Date?, to endDate: Date?, predicate: NSPredicate?, callback: @escaping (Array<HKSample>?, Error?) -> Void) -> (() -> Void) {
+    open func getSamples(for type: HealthKitSample.Type, from startDate: Date?, to endDate: Date?, predicate: NSPredicate?, callback: @escaping (Array<HKSample>?, Error?) -> Void) -> (() -> Void) {
         addInvocation(.m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(Parameter<HealthKitSample.Type>.value(`type`), Parameter<Date?>.value(`startDate`), Parameter<Date?>.value(`endDate`), Parameter<NSPredicate?>.value(`predicate`), Parameter<(Array<HKSample>?, Error?) -> Void>.value(`callback`)))
 		let perform = methodPerformValue(.m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(Parameter<HealthKitSample.Type>.value(`type`), Parameter<Date?>.value(`startDate`), Parameter<Date?>.value(`endDate`), Parameter<NSPredicate?>.value(`predicate`), Parameter<(Array<HKSample>?, Error?) -> Void>.value(`callback`))) as? (HealthKitSample.Type, Date?, Date?, NSPredicate?, @escaping (Array<HKSample>?, Error?) -> Void) -> Void
 		perform?(`type`, `startDate`, `endDate`, `predicate`, `callback`)
@@ -3587,7 +3640,7 @@ class HealthKitUtilMock: HealthKitUtil, Mock {
 		return __value
     }
 
-    func preferredUnitFor(_ typeId: HKQuantityTypeIdentifier) -> HKUnit? {
+    open func preferredUnitFor(_ typeId: HKQuantityTypeIdentifier) -> HKUnit? {
         addInvocation(.m_preferredUnitFor__typeId(Parameter<HKQuantityTypeIdentifier>.value(`typeId`)))
 		let perform = methodPerformValue(.m_preferredUnitFor__typeId(Parameter<HKQuantityTypeIdentifier>.value(`typeId`))) as? (HKQuantityTypeIdentifier) -> Void
 		perform?(`typeId`)
@@ -3600,7 +3653,7 @@ class HealthKitUtilMock: HealthKitUtil, Mock {
 		return __value
     }
 
-    func getAuthorization(callback: @escaping (Error?) -> Void) {
+    open func getAuthorization(callback: @escaping (Error?) -> Void) {
         addInvocation(.m_getAuthorization__callback_callback(Parameter<(Error?) -> Void>.value(`callback`)))
 		let perform = methodPerformValue(.m_getAuthorization__callback_callback(Parameter<(Error?) -> Void>.value(`callback`))) as? (@escaping (Error?) -> Void) -> Void
 		perform?(`callback`)
@@ -3608,6 +3661,7 @@ class HealthKitUtilMock: HealthKitUtil, Mock {
 
 
     fileprivate enum MethodType {
+        case m_setTimeZoneIfApplicable__for_datefrom_sample(Parameter<Date>, Parameter<HKSample>)
         case m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(Parameter<HKStatisticsOptions>, Parameter<HealthKitQuantitySample.Type>, Parameter<Date>, Parameter<Date>, Parameter<(Double?, Error?) -> ()>)
         case m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(Parameter<HealthKitSample.Type>, Parameter<Date?>, Parameter<Date?>, Parameter<NSPredicate?>, Parameter<(Array<HKSample>?, Error?) -> Void>)
         case m_preferredUnitFor__typeId(Parameter<HKQuantityTypeIdentifier>)
@@ -3615,6 +3669,10 @@ class HealthKitUtilMock: HealthKitUtil, Mock {
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
+            case (.m_setTimeZoneIfApplicable__for_datefrom_sample(let lhsDate, let lhsSample), .m_setTimeZoneIfApplicable__for_datefrom_sample(let rhsDate, let rhsSample)):
+                guard Parameter.compare(lhs: lhsDate, rhs: rhsDate, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsSample, rhs: rhsSample, with: matcher) else { return false } 
+                return true 
             case (.m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(let lhsCalculation, let lhsType, let lhsStartdate, let lhsEnddate, let lhsCallback), .m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(let rhsCalculation, let rhsType, let rhsStartdate, let rhsEnddate, let rhsCallback)):
                 guard Parameter.compare(lhs: lhsCalculation, rhs: rhsCalculation, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsType, rhs: rhsType, with: matcher) else { return false } 
@@ -3641,6 +3699,7 @@ class HealthKitUtilMock: HealthKitUtil, Mock {
 
         func intValue() -> Int {
             switch self {
+            case let .m_setTimeZoneIfApplicable__for_datefrom_sample(p0, p1): return p0.intValue + p1.intValue
             case let .m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(p0, p1, p2, p3, p4): return p0.intValue + p1.intValue + p2.intValue + p3.intValue + p4.intValue
             case let .m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(p0, p1, p2, p3, p4): return p0.intValue + p1.intValue + p2.intValue + p3.intValue + p4.intValue
             case let .m_preferredUnitFor__typeId(p0): return p0.intValue
@@ -3649,7 +3708,7 @@ class HealthKitUtilMock: HealthKitUtil, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -3658,24 +3717,24 @@ class HealthKitUtilMock: HealthKitUtil, Mock {
         }
 
 
-        static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<(Array<HKSample>?, Error?) -> Void>, willReturn: () -> Void...) -> MethodStub {
+        public static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<(Array<HKSample>?, Error?) -> Void>, willReturn: () -> Void...) -> MethodStub {
             return Given(method: .m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(`type`, `startDate`, `endDate`, `predicate`, `callback`), products: willReturn.map({ Product.return($0) }))
         }
-        static func preferredUnitFor(_ typeId: Parameter<HKQuantityTypeIdentifier>, willReturn: HKUnit?...) -> MethodStub {
+        public static func preferredUnitFor(_ typeId: Parameter<HKQuantityTypeIdentifier>, willReturn: HKUnit?...) -> MethodStub {
             return Given(method: .m_preferredUnitFor__typeId(`typeId`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `typeId` label")
-		static func preferredUnitFor(typeId: Parameter<HKQuantityTypeIdentifier>, willReturn: HKUnit?...) -> MethodStub {
+		public static func preferredUnitFor(typeId: Parameter<HKQuantityTypeIdentifier>, willReturn: HKUnit?...) -> MethodStub {
             return Given(method: .m_preferredUnitFor__typeId(`typeId`), products: willReturn.map({ Product.return($0) }))
         }
-        static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<(Array<HKSample>?, Error?) -> Void>, willProduce: (Stubber<() -> Void>) -> Void) -> MethodStub {
+        public static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<(Array<HKSample>?, Error?) -> Void>, willProduce: (Stubber<() -> Void>) -> Void) -> MethodStub {
             let willReturn: [() -> Void] = []
 			let given: Given = { return Given(method: .m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(`type`, `startDate`, `endDate`, `predicate`, `callback`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (() -> Void).self)
 			willProduce(stubber)
 			return given
         }
-        static func preferredUnitFor(_ typeId: Parameter<HKQuantityTypeIdentifier>, willProduce: (Stubber<HKUnit?>) -> Void) -> MethodStub {
+        public static func preferredUnitFor(_ typeId: Parameter<HKQuantityTypeIdentifier>, willProduce: (Stubber<HKUnit?>) -> Void) -> MethodStub {
             let willReturn: [HKUnit?] = []
 			let given: Given = { return Given(method: .m_preferredUnitFor__typeId(`typeId`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (HKUnit?).self)
@@ -3684,41 +3743,45 @@ class HealthKitUtilMock: HealthKitUtil, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func calculate(_ calculation: Parameter<HKStatisticsOptions>, _ type: Parameter<HealthKitQuantitySample.Type>, from startDate: Parameter<Date>, to endDate: Parameter<Date>, callback: Parameter<(Double?, Error?) -> ()>) -> Verify { return Verify(method: .m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(`calculation`, `type`, `startDate`, `endDate`, `callback`))}
+        public static func setTimeZoneIfApplicable(for date: Parameter<Date>, from sample: Parameter<HKSample>) -> Verify { return Verify(method: .m_setTimeZoneIfApplicable__for_datefrom_sample(`date`, `sample`))}
+        public static func calculate(_ calculation: Parameter<HKStatisticsOptions>, _ type: Parameter<HealthKitQuantitySample.Type>, from startDate: Parameter<Date>, to endDate: Parameter<Date>, callback: Parameter<(Double?, Error?) -> ()>) -> Verify { return Verify(method: .m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(`calculation`, `type`, `startDate`, `endDate`, `callback`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `calculation` label, remove `type` label")
-		static func calculate(calculation: Parameter<HKStatisticsOptions>, type: Parameter<HealthKitQuantitySample.Type>, from startDate: Parameter<Date>, to endDate: Parameter<Date>, callback: Parameter<(Double?, Error?) -> ()>) -> Verify { return Verify(method: .m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(`calculation`, `type`, `startDate`, `endDate`, `callback`))}
-        static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<(Array<HKSample>?, Error?) -> Void>) -> Verify { return Verify(method: .m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(`type`, `startDate`, `endDate`, `predicate`, `callback`))}
-        static func preferredUnitFor(_ typeId: Parameter<HKQuantityTypeIdentifier>) -> Verify { return Verify(method: .m_preferredUnitFor__typeId(`typeId`))}
+		public static func calculate(calculation: Parameter<HKStatisticsOptions>, type: Parameter<HealthKitQuantitySample.Type>, from startDate: Parameter<Date>, to endDate: Parameter<Date>, callback: Parameter<(Double?, Error?) -> ()>) -> Verify { return Verify(method: .m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(`calculation`, `type`, `startDate`, `endDate`, `callback`))}
+        public static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<(Array<HKSample>?, Error?) -> Void>) -> Verify { return Verify(method: .m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(`type`, `startDate`, `endDate`, `predicate`, `callback`))}
+        public static func preferredUnitFor(_ typeId: Parameter<HKQuantityTypeIdentifier>) -> Verify { return Verify(method: .m_preferredUnitFor__typeId(`typeId`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `typeId` label")
-		static func preferredUnitFor(typeId: Parameter<HKQuantityTypeIdentifier>) -> Verify { return Verify(method: .m_preferredUnitFor__typeId(`typeId`))}
-        static func getAuthorization(callback: Parameter<(Error?) -> Void>) -> Verify { return Verify(method: .m_getAuthorization__callback_callback(`callback`))}
+		public static func preferredUnitFor(typeId: Parameter<HKQuantityTypeIdentifier>) -> Verify { return Verify(method: .m_preferredUnitFor__typeId(`typeId`))}
+        public static func getAuthorization(callback: Parameter<(Error?) -> Void>) -> Verify { return Verify(method: .m_getAuthorization__callback_callback(`callback`))}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func calculate(_ calculation: Parameter<HKStatisticsOptions>, _ type: Parameter<HealthKitQuantitySample.Type>, from startDate: Parameter<Date>, to endDate: Parameter<Date>, callback: Parameter<(Double?, Error?) -> ()>, perform: @escaping (HKStatisticsOptions, HealthKitQuantitySample.Type, Date, Date, @escaping (Double?, Error?) -> ()) -> Void) -> Perform {
+        public static func setTimeZoneIfApplicable(for date: Parameter<Date>, from sample: Parameter<HKSample>, perform: @escaping (inout Date, HKSample) -> Void) -> Perform {
+            return Perform(method: .m_setTimeZoneIfApplicable__for_datefrom_sample(`date`, `sample`), performs: perform)
+        }
+        public static func calculate(_ calculation: Parameter<HKStatisticsOptions>, _ type: Parameter<HealthKitQuantitySample.Type>, from startDate: Parameter<Date>, to endDate: Parameter<Date>, callback: Parameter<(Double?, Error?) -> ()>, perform: @escaping (HKStatisticsOptions, HealthKitQuantitySample.Type, Date, Date, @escaping (Double?, Error?) -> ()) -> Void) -> Perform {
             return Perform(method: .m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(`calculation`, `type`, `startDate`, `endDate`, `callback`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `calculation` label, remove `type` label")
-		static func calculate(calculation: Parameter<HKStatisticsOptions>, type: Parameter<HealthKitQuantitySample.Type>, from startDate: Parameter<Date>, to endDate: Parameter<Date>, callback: Parameter<(Double?, Error?) -> ()>, perform: @escaping (HKStatisticsOptions, HealthKitQuantitySample.Type, Date, Date, @escaping (Double?, Error?) -> ()) -> Void) -> Perform {
+		public static func calculate(calculation: Parameter<HKStatisticsOptions>, type: Parameter<HealthKitQuantitySample.Type>, from startDate: Parameter<Date>, to endDate: Parameter<Date>, callback: Parameter<(Double?, Error?) -> ()>, perform: @escaping (HKStatisticsOptions, HealthKitQuantitySample.Type, Date, Date, @escaping (Double?, Error?) -> ()) -> Void) -> Perform {
             return Perform(method: .m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(`calculation`, `type`, `startDate`, `endDate`, `callback`), performs: perform)
         }
-        static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<(Array<HKSample>?, Error?) -> Void>, perform: @escaping (HealthKitSample.Type, Date?, Date?, NSPredicate?, @escaping (Array<HKSample>?, Error?) -> Void) -> Void) -> Perform {
+        public static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<(Array<HKSample>?, Error?) -> Void>, perform: @escaping (HealthKitSample.Type, Date?, Date?, NSPredicate?, @escaping (Array<HKSample>?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(`type`, `startDate`, `endDate`, `predicate`, `callback`), performs: perform)
         }
-        static func preferredUnitFor(_ typeId: Parameter<HKQuantityTypeIdentifier>, perform: @escaping (HKQuantityTypeIdentifier) -> Void) -> Perform {
+        public static func preferredUnitFor(_ typeId: Parameter<HKQuantityTypeIdentifier>, perform: @escaping (HKQuantityTypeIdentifier) -> Void) -> Perform {
             return Perform(method: .m_preferredUnitFor__typeId(`typeId`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `typeId` label")
-		static func preferredUnitFor(typeId: Parameter<HKQuantityTypeIdentifier>, perform: @escaping (HKQuantityTypeIdentifier) -> Void) -> Perform {
+		public static func preferredUnitFor(typeId: Parameter<HKQuantityTypeIdentifier>, perform: @escaping (HKQuantityTypeIdentifier) -> Void) -> Perform {
             return Perform(method: .m_preferredUnitFor__typeId(`typeId`), performs: perform)
         }
-        static func getAuthorization(callback: Parameter<(Error?) -> Void>, perform: @escaping (@escaping (Error?) -> Void) -> Void) -> Perform {
+        public static func getAuthorization(callback: Parameter<(Error?) -> Void>, perform: @escaping (@escaping (Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_getAuthorization__callback_callback(`callback`), performs: perform)
         }
     }
@@ -3734,7 +3797,7 @@ class HealthKitUtilMock: HealthKitUtil, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -3780,7 +3843,7 @@ class HealthKitUtilMock: HealthKitUtil, Mock {
 }
 
 // MARK: - HeartRateQuery
-class HeartRateQueryMock: HeartRateQuery, Mock {
+open class HeartRateQueryMock: HeartRateQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -3797,9 +3860,9 @@ class HeartRateQueryMock: HeartRateQuery, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -3807,19 +3870,19 @@ class HeartRateQueryMock: HeartRateQuery, Mock {
         self.line = line
     }
 
-    var attributeRestrictions: [AttributeRestriction] {
+    public var attributeRestrictions: [AttributeRestriction] {
 		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "HeartRateQueryMock - stub value for attributeRestrictions was not defined") }
 		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
 	}
 	private var __p_attributeRestrictions: ([AttributeRestriction])?
 
-    var mostRecentEntryOnly: Bool {
+    public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "HeartRateQueryMock - stub value for mostRecentEntryOnly was not defined") }
 		set {	invocations.append(.p_mostRecentEntryOnly_set(.value(newValue))); __p_mostRecentEntryOnly = newValue }
 	}
 	private var __p_mostRecentEntryOnly: (Bool)?
 
-    var subQuery: (matcher: SubQueryMatcher, query: Query)? {
+    public var subQuery: (matcher: SubQueryMatcher, query: Query)? {
 		get {	invocations.append(.p_subQuery_get); return __p_subQuery ?? optionalGivenGetterValue(.p_subQuery_get, "HeartRateQueryMock - stub value for subQuery was not defined") }
 		set {	invocations.append(.p_subQuery_set(.value(newValue))); __p_subQuery = newValue }
 	}
@@ -3829,19 +3892,19 @@ class HeartRateQueryMock: HeartRateQuery, Mock {
 
 
 
-    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
 		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
 		perform?(`callback`)
     }
 
-    func stop() {
+    open func stop() {
         addInvocation(.m_stop)
 		let perform = methodPerformValue(.m_stop) as? () -> Void
 		perform?()
     }
 
-    func equalTo(_ otherQuery: Query) -> Bool {
+    open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
 		perform?(`otherQuery`)
@@ -3902,7 +3965,7 @@ class HeartRateQueryMock: HeartRateQuery, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -3910,24 +3973,24 @@ class HeartRateQueryMock: HeartRateQuery, Mock {
             super.init(products)
         }
 
-        static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
+        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
             return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
+        public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
+        public static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
             return Given(method: .p_subQuery_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
@@ -3936,37 +3999,37 @@ class HeartRateQueryMock: HeartRateQuery, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
-        static func stop() -> Verify { return Verify(method: .m_stop)}
-        static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
-        static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
-		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
-        static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
-		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
+		public static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
+		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
+		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
+        public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
+		public static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
-        static func stop(perform: @escaping () -> Void) -> Perform {
+        public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+        public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+		public static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
     }
@@ -3982,7 +4045,7 @@ class HeartRateQueryMock: HeartRateQuery, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -4028,7 +4091,7 @@ class HeartRateQueryMock: HeartRateQuery, Mock {
 }
 
 // MARK: - IOUtil
-class IOUtilMock: IOUtil, Mock {
+open class IOUtilMock: IOUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -4045,9 +4108,9 @@ class IOUtilMock: IOUtil, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -4059,7 +4122,7 @@ class IOUtilMock: IOUtil, Mock {
 
 
 
-    func contentsOf(_ url: URL) throws -> String {
+    open func contentsOf(_ url: URL) throws -> String {
         addInvocation(.m_contentsOf__url(Parameter<URL>.value(`url`)))
 		let perform = methodPerformValue(.m_contentsOf__url(Parameter<URL>.value(`url`))) as? (URL) -> Void
 		perform?(`url`)
@@ -4075,7 +4138,7 @@ class IOUtilMock: IOUtil, Mock {
 		return __value
     }
 
-    func csvReader(url: URL, hasHeaderRow: Bool) throws -> CSVReader {
+    open func csvReader(url: URL, hasHeaderRow: Bool) throws -> CSVReader {
         addInvocation(.m_csvReader__url_urlhasHeaderRow_hasHeaderRow(Parameter<URL>.value(`url`), Parameter<Bool>.value(`hasHeaderRow`)))
 		let perform = methodPerformValue(.m_csvReader__url_urlhasHeaderRow_hasHeaderRow(Parameter<URL>.value(`url`), Parameter<Bool>.value(`hasHeaderRow`))) as? (URL, Bool) -> Void
 		perform?(`url`, `hasHeaderRow`)
@@ -4117,7 +4180,7 @@ class IOUtilMock: IOUtil, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -4126,34 +4189,34 @@ class IOUtilMock: IOUtil, Mock {
         }
 
 
-        static func contentsOf(_ url: Parameter<URL>, willReturn: String...) -> MethodStub {
+        public static func contentsOf(_ url: Parameter<URL>, willReturn: String...) -> MethodStub {
             return Given(method: .m_contentsOf__url(`url`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `url` label")
-		static func contentsOf(url: Parameter<URL>, willReturn: String...) -> MethodStub {
+		public static func contentsOf(url: Parameter<URL>, willReturn: String...) -> MethodStub {
             return Given(method: .m_contentsOf__url(`url`), products: willReturn.map({ Product.return($0) }))
         }
-        static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>, willReturn: CSVReader...) -> MethodStub {
+        public static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>, willReturn: CSVReader...) -> MethodStub {
             return Given(method: .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(`url`, `hasHeaderRow`), products: willReturn.map({ Product.return($0) }))
         }
-        static func contentsOf(_ url: Parameter<URL>, willThrow: Error...) -> MethodStub {
+        public static func contentsOf(_ url: Parameter<URL>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_contentsOf__url(`url`), products: willThrow.map({ Product.throw($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `url` label")
-		static func contentsOf(url: Parameter<URL>, willThrow: Error...) -> MethodStub {
+		public static func contentsOf(url: Parameter<URL>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_contentsOf__url(`url`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func contentsOf(_ url: Parameter<URL>, willProduce: (StubberThrows<String>) -> Void) -> MethodStub {
+        public static func contentsOf(_ url: Parameter<URL>, willProduce: (StubberThrows<String>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_contentsOf__url(`url`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (String).self)
 			willProduce(stubber)
 			return given
         }
-        static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>, willThrow: Error...) -> MethodStub {
+        public static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(`url`, `hasHeaderRow`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>, willProduce: (StubberThrows<CSVReader>) -> Void) -> MethodStub {
+        public static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>, willProduce: (StubberThrows<CSVReader>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(`url`, `hasHeaderRow`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (CSVReader).self)
@@ -4162,27 +4225,27 @@ class IOUtilMock: IOUtil, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func contentsOf(_ url: Parameter<URL>) -> Verify { return Verify(method: .m_contentsOf__url(`url`))}
+        public static func contentsOf(_ url: Parameter<URL>) -> Verify { return Verify(method: .m_contentsOf__url(`url`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `url` label")
-		static func contentsOf(url: Parameter<URL>) -> Verify { return Verify(method: .m_contentsOf__url(`url`))}
-        static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>) -> Verify { return Verify(method: .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(`url`, `hasHeaderRow`))}
+		public static func contentsOf(url: Parameter<URL>) -> Verify { return Verify(method: .m_contentsOf__url(`url`))}
+        public static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>) -> Verify { return Verify(method: .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(`url`, `hasHeaderRow`))}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func contentsOf(_ url: Parameter<URL>, perform: @escaping (URL) -> Void) -> Perform {
+        public static func contentsOf(_ url: Parameter<URL>, perform: @escaping (URL) -> Void) -> Perform {
             return Perform(method: .m_contentsOf__url(`url`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `url` label")
-		static func contentsOf(url: Parameter<URL>, perform: @escaping (URL) -> Void) -> Perform {
+		public static func contentsOf(url: Parameter<URL>, perform: @escaping (URL) -> Void) -> Perform {
             return Perform(method: .m_contentsOf__url(`url`), performs: perform)
         }
-        static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>, perform: @escaping (URL, Bool) -> Void) -> Perform {
+        public static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>, perform: @escaping (URL, Bool) -> Void) -> Perform {
             return Perform(method: .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(`url`, `hasHeaderRow`), performs: perform)
         }
     }
@@ -4198,7 +4261,7 @@ class IOUtilMock: IOUtil, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -4244,7 +4307,7 @@ class IOUtilMock: IOUtil, Mock {
 }
 
 // MARK: - ImporterFactory
-class ImporterFactoryMock: ImporterFactory, Mock {
+open class ImporterFactoryMock: ImporterFactory, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -4261,9 +4324,9 @@ class ImporterFactoryMock: ImporterFactory, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -4275,7 +4338,7 @@ class ImporterFactoryMock: ImporterFactory, Mock {
 
 
 
-    func wellnessMoodImporter() throws -> WellnessMoodImporter {
+    open func wellnessMoodImporter() throws -> WellnessMoodImporter {
         addInvocation(.m_wellnessMoodImporter)
 		let perform = methodPerformValue(.m_wellnessMoodImporter) as? () -> Void
 		perform?()
@@ -4291,7 +4354,7 @@ class ImporterFactoryMock: ImporterFactory, Mock {
 		return __value
     }
 
-    func easyPillMedicationImporter() throws -> EasyPillMedicationImporter {
+    open func easyPillMedicationImporter() throws -> EasyPillMedicationImporter {
         addInvocation(.m_easyPillMedicationImporter)
 		let perform = methodPerformValue(.m_easyPillMedicationImporter) as? () -> Void
 		perform?()
@@ -4307,7 +4370,7 @@ class ImporterFactoryMock: ImporterFactory, Mock {
 		return __value
     }
 
-    func easyPillMedicationDoseImporter() throws -> EasyPillMedicationDoseImporter {
+    open func easyPillMedicationDoseImporter() throws -> EasyPillMedicationDoseImporter {
         addInvocation(.m_easyPillMedicationDoseImporter)
 		let perform = methodPerformValue(.m_easyPillMedicationDoseImporter) as? () -> Void
 		perform?()
@@ -4323,7 +4386,7 @@ class ImporterFactoryMock: ImporterFactory, Mock {
 		return __value
     }
 
-    func aTrackerActivityImporter() throws -> ATrackerActivityImporter {
+    open func aTrackerActivityImporter() throws -> ATrackerActivityImporter {
         addInvocation(.m_aTrackerActivityImporter)
 		let perform = methodPerformValue(.m_aTrackerActivityImporter) as? () -> Void
 		perform?()
@@ -4370,7 +4433,7 @@ class ImporterFactoryMock: ImporterFactory, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -4379,52 +4442,52 @@ class ImporterFactoryMock: ImporterFactory, Mock {
         }
 
 
-        static func wellnessMoodImporter(willReturn: WellnessMoodImporter...) -> MethodStub {
+        public static func wellnessMoodImporter(willReturn: WellnessMoodImporter...) -> MethodStub {
             return Given(method: .m_wellnessMoodImporter, products: willReturn.map({ Product.return($0) }))
         }
-        static func easyPillMedicationImporter(willReturn: EasyPillMedicationImporter...) -> MethodStub {
+        public static func easyPillMedicationImporter(willReturn: EasyPillMedicationImporter...) -> MethodStub {
             return Given(method: .m_easyPillMedicationImporter, products: willReturn.map({ Product.return($0) }))
         }
-        static func easyPillMedicationDoseImporter(willReturn: EasyPillMedicationDoseImporter...) -> MethodStub {
+        public static func easyPillMedicationDoseImporter(willReturn: EasyPillMedicationDoseImporter...) -> MethodStub {
             return Given(method: .m_easyPillMedicationDoseImporter, products: willReturn.map({ Product.return($0) }))
         }
-        static func aTrackerActivityImporter(willReturn: ATrackerActivityImporter...) -> MethodStub {
+        public static func aTrackerActivityImporter(willReturn: ATrackerActivityImporter...) -> MethodStub {
             return Given(method: .m_aTrackerActivityImporter, products: willReturn.map({ Product.return($0) }))
         }
-        static func wellnessMoodImporter(willThrow: Error...) -> MethodStub {
+        public static func wellnessMoodImporter(willThrow: Error...) -> MethodStub {
             return Given(method: .m_wellnessMoodImporter, products: willThrow.map({ Product.throw($0) }))
         }
-        static func wellnessMoodImporter(willProduce: (StubberThrows<WellnessMoodImporter>) -> Void) -> MethodStub {
+        public static func wellnessMoodImporter(willProduce: (StubberThrows<WellnessMoodImporter>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_wellnessMoodImporter, products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (WellnessMoodImporter).self)
 			willProduce(stubber)
 			return given
         }
-        static func easyPillMedicationImporter(willThrow: Error...) -> MethodStub {
+        public static func easyPillMedicationImporter(willThrow: Error...) -> MethodStub {
             return Given(method: .m_easyPillMedicationImporter, products: willThrow.map({ Product.throw($0) }))
         }
-        static func easyPillMedicationImporter(willProduce: (StubberThrows<EasyPillMedicationImporter>) -> Void) -> MethodStub {
+        public static func easyPillMedicationImporter(willProduce: (StubberThrows<EasyPillMedicationImporter>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_easyPillMedicationImporter, products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (EasyPillMedicationImporter).self)
 			willProduce(stubber)
 			return given
         }
-        static func easyPillMedicationDoseImporter(willThrow: Error...) -> MethodStub {
+        public static func easyPillMedicationDoseImporter(willThrow: Error...) -> MethodStub {
             return Given(method: .m_easyPillMedicationDoseImporter, products: willThrow.map({ Product.throw($0) }))
         }
-        static func easyPillMedicationDoseImporter(willProduce: (StubberThrows<EasyPillMedicationDoseImporter>) -> Void) -> MethodStub {
+        public static func easyPillMedicationDoseImporter(willProduce: (StubberThrows<EasyPillMedicationDoseImporter>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_easyPillMedicationDoseImporter, products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (EasyPillMedicationDoseImporter).self)
 			willProduce(stubber)
 			return given
         }
-        static func aTrackerActivityImporter(willThrow: Error...) -> MethodStub {
+        public static func aTrackerActivityImporter(willThrow: Error...) -> MethodStub {
             return Given(method: .m_aTrackerActivityImporter, products: willThrow.map({ Product.throw($0) }))
         }
-        static func aTrackerActivityImporter(willProduce: (StubberThrows<ATrackerActivityImporter>) -> Void) -> MethodStub {
+        public static func aTrackerActivityImporter(willProduce: (StubberThrows<ATrackerActivityImporter>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_aTrackerActivityImporter, products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (ATrackerActivityImporter).self)
@@ -4433,29 +4496,29 @@ class ImporterFactoryMock: ImporterFactory, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func wellnessMoodImporter() -> Verify { return Verify(method: .m_wellnessMoodImporter)}
-        static func easyPillMedicationImporter() -> Verify { return Verify(method: .m_easyPillMedicationImporter)}
-        static func easyPillMedicationDoseImporter() -> Verify { return Verify(method: .m_easyPillMedicationDoseImporter)}
-        static func aTrackerActivityImporter() -> Verify { return Verify(method: .m_aTrackerActivityImporter)}
+        public static func wellnessMoodImporter() -> Verify { return Verify(method: .m_wellnessMoodImporter)}
+        public static func easyPillMedicationImporter() -> Verify { return Verify(method: .m_easyPillMedicationImporter)}
+        public static func easyPillMedicationDoseImporter() -> Verify { return Verify(method: .m_easyPillMedicationDoseImporter)}
+        public static func aTrackerActivityImporter() -> Verify { return Verify(method: .m_aTrackerActivityImporter)}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func wellnessMoodImporter(perform: @escaping () -> Void) -> Perform {
+        public static func wellnessMoodImporter(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_wellnessMoodImporter, performs: perform)
         }
-        static func easyPillMedicationImporter(perform: @escaping () -> Void) -> Perform {
+        public static func easyPillMedicationImporter(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_easyPillMedicationImporter, performs: perform)
         }
-        static func easyPillMedicationDoseImporter(perform: @escaping () -> Void) -> Perform {
+        public static func easyPillMedicationDoseImporter(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_easyPillMedicationDoseImporter, performs: perform)
         }
-        static func aTrackerActivityImporter(perform: @escaping () -> Void) -> Perform {
+        public static func aTrackerActivityImporter(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_aTrackerActivityImporter, performs: perform)
         }
     }
@@ -4471,7 +4534,7 @@ class ImporterFactoryMock: ImporterFactory, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -4517,7 +4580,7 @@ class ImporterFactoryMock: ImporterFactory, Mock {
 }
 
 // MARK: - InjectionProvider
-class InjectionProviderMock: InjectionProvider, Mock {
+open class InjectionProviderMock: InjectionProvider, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -4534,9 +4597,9 @@ class InjectionProviderMock: InjectionProvider, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -4548,7 +4611,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
 
 
 
-    func database() -> Database {
+    open func database() -> Database {
         addInvocation(.m_database)
 		let perform = methodPerformValue(.m_database) as? () -> Void
 		perform?()
@@ -4562,7 +4625,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
 		return __value
     }
 
-    func codableStorage() -> CodableStorage {
+    open func codableStorage() -> CodableStorage {
         addInvocation(.m_codableStorage)
 		let perform = methodPerformValue(.m_codableStorage) as? () -> Void
 		perform?()
@@ -4576,7 +4639,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
 		return __value
     }
 
-    func settings() -> Settings {
+    open func settings() -> Settings {
         addInvocation(.m_settings)
 		let perform = methodPerformValue(.m_settings) as? () -> Void
 		perform?()
@@ -4590,7 +4653,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
 		return __value
     }
 
-    func queryFactory() -> QueryFactory {
+    open func queryFactory() -> QueryFactory {
         addInvocation(.m_queryFactory)
 		let perform = methodPerformValue(.m_queryFactory) as? () -> Void
 		perform?()
@@ -4604,7 +4667,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
 		return __value
     }
 
-    func attributeRestrictionFactory() -> AttributeRestrictionFactory {
+    open func attributeRestrictionFactory() -> AttributeRestrictionFactory {
         addInvocation(.m_attributeRestrictionFactory)
 		let perform = methodPerformValue(.m_attributeRestrictionFactory) as? () -> Void
 		perform?()
@@ -4618,7 +4681,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
 		return __value
     }
 
-    func sampleFactory() -> SampleFactory {
+    open func sampleFactory() -> SampleFactory {
         addInvocation(.m_sampleFactory)
 		let perform = methodPerformValue(.m_sampleFactory) as? () -> Void
 		perform?()
@@ -4632,7 +4695,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
 		return __value
     }
 
-    func utilFactory() -> UtilFactory {
+    open func utilFactory() -> UtilFactory {
         addInvocation(.m_utilFactory)
 		let perform = methodPerformValue(.m_utilFactory) as? () -> Void
 		perform?()
@@ -4646,7 +4709,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
 		return __value
     }
 
-    func subQueryMatcherFactory() -> SubQueryMatcherFactory {
+    open func subQueryMatcherFactory() -> SubQueryMatcherFactory {
         addInvocation(.m_subQueryMatcherFactory)
 		let perform = methodPerformValue(.m_subQueryMatcherFactory) as? () -> Void
 		perform?()
@@ -4660,7 +4723,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
 		return __value
     }
 
-    func extraInformationFactory() -> ExtraInformationFactory {
+    open func extraInformationFactory() -> ExtraInformationFactory {
         addInvocation(.m_extraInformationFactory)
 		let perform = methodPerformValue(.m_extraInformationFactory) as? () -> Void
 		perform?()
@@ -4674,7 +4737,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
 		return __value
     }
 
-    func sampleGrouperFactory() -> SampleGrouperFactory {
+    open func sampleGrouperFactory() -> SampleGrouperFactory {
         addInvocation(.m_sampleGrouperFactory)
 		let perform = methodPerformValue(.m_sampleGrouperFactory) as? () -> Void
 		perform?()
@@ -4688,7 +4751,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
 		return __value
     }
 
-    func importerFactory() -> ImporterFactory {
+    open func importerFactory() -> ImporterFactory {
         addInvocation(.m_importerFactory)
 		let perform = methodPerformValue(.m_importerFactory) as? () -> Void
 		perform?()
@@ -4761,7 +4824,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -4770,110 +4833,110 @@ class InjectionProviderMock: InjectionProvider, Mock {
         }
 
 
-        static func database(willReturn: Database...) -> MethodStub {
+        public static func database(willReturn: Database...) -> MethodStub {
             return Given(method: .m_database, products: willReturn.map({ Product.return($0) }))
         }
-        static func codableStorage(willReturn: CodableStorage...) -> MethodStub {
+        public static func codableStorage(willReturn: CodableStorage...) -> MethodStub {
             return Given(method: .m_codableStorage, products: willReturn.map({ Product.return($0) }))
         }
-        static func settings(willReturn: Settings...) -> MethodStub {
+        public static func settings(willReturn: Settings...) -> MethodStub {
             return Given(method: .m_settings, products: willReturn.map({ Product.return($0) }))
         }
-        static func queryFactory(willReturn: QueryFactory...) -> MethodStub {
+        public static func queryFactory(willReturn: QueryFactory...) -> MethodStub {
             return Given(method: .m_queryFactory, products: willReturn.map({ Product.return($0) }))
         }
-        static func attributeRestrictionFactory(willReturn: AttributeRestrictionFactory...) -> MethodStub {
+        public static func attributeRestrictionFactory(willReturn: AttributeRestrictionFactory...) -> MethodStub {
             return Given(method: .m_attributeRestrictionFactory, products: willReturn.map({ Product.return($0) }))
         }
-        static func sampleFactory(willReturn: SampleFactory...) -> MethodStub {
+        public static func sampleFactory(willReturn: SampleFactory...) -> MethodStub {
             return Given(method: .m_sampleFactory, products: willReturn.map({ Product.return($0) }))
         }
-        static func utilFactory(willReturn: UtilFactory...) -> MethodStub {
+        public static func utilFactory(willReturn: UtilFactory...) -> MethodStub {
             return Given(method: .m_utilFactory, products: willReturn.map({ Product.return($0) }))
         }
-        static func subQueryMatcherFactory(willReturn: SubQueryMatcherFactory...) -> MethodStub {
+        public static func subQueryMatcherFactory(willReturn: SubQueryMatcherFactory...) -> MethodStub {
             return Given(method: .m_subQueryMatcherFactory, products: willReturn.map({ Product.return($0) }))
         }
-        static func extraInformationFactory(willReturn: ExtraInformationFactory...) -> MethodStub {
+        public static func extraInformationFactory(willReturn: ExtraInformationFactory...) -> MethodStub {
             return Given(method: .m_extraInformationFactory, products: willReturn.map({ Product.return($0) }))
         }
-        static func sampleGrouperFactory(willReturn: SampleGrouperFactory...) -> MethodStub {
+        public static func sampleGrouperFactory(willReturn: SampleGrouperFactory...) -> MethodStub {
             return Given(method: .m_sampleGrouperFactory, products: willReturn.map({ Product.return($0) }))
         }
-        static func importerFactory(willReturn: ImporterFactory...) -> MethodStub {
+        public static func importerFactory(willReturn: ImporterFactory...) -> MethodStub {
             return Given(method: .m_importerFactory, products: willReturn.map({ Product.return($0) }))
         }
-        static func database(willProduce: (Stubber<Database>) -> Void) -> MethodStub {
+        public static func database(willProduce: (Stubber<Database>) -> Void) -> MethodStub {
             let willReturn: [Database] = []
 			let given: Given = { return Given(method: .m_database, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Database).self)
 			willProduce(stubber)
 			return given
         }
-        static func codableStorage(willProduce: (Stubber<CodableStorage>) -> Void) -> MethodStub {
+        public static func codableStorage(willProduce: (Stubber<CodableStorage>) -> Void) -> MethodStub {
             let willReturn: [CodableStorage] = []
 			let given: Given = { return Given(method: .m_codableStorage, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (CodableStorage).self)
 			willProduce(stubber)
 			return given
         }
-        static func settings(willProduce: (Stubber<Settings>) -> Void) -> MethodStub {
+        public static func settings(willProduce: (Stubber<Settings>) -> Void) -> MethodStub {
             let willReturn: [Settings] = []
 			let given: Given = { return Given(method: .m_settings, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Settings).self)
 			willProduce(stubber)
 			return given
         }
-        static func queryFactory(willProduce: (Stubber<QueryFactory>) -> Void) -> MethodStub {
+        public static func queryFactory(willProduce: (Stubber<QueryFactory>) -> Void) -> MethodStub {
             let willReturn: [QueryFactory] = []
 			let given: Given = { return Given(method: .m_queryFactory, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (QueryFactory).self)
 			willProduce(stubber)
 			return given
         }
-        static func attributeRestrictionFactory(willProduce: (Stubber<AttributeRestrictionFactory>) -> Void) -> MethodStub {
+        public static func attributeRestrictionFactory(willProduce: (Stubber<AttributeRestrictionFactory>) -> Void) -> MethodStub {
             let willReturn: [AttributeRestrictionFactory] = []
 			let given: Given = { return Given(method: .m_attributeRestrictionFactory, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (AttributeRestrictionFactory).self)
 			willProduce(stubber)
 			return given
         }
-        static func sampleFactory(willProduce: (Stubber<SampleFactory>) -> Void) -> MethodStub {
+        public static func sampleFactory(willProduce: (Stubber<SampleFactory>) -> Void) -> MethodStub {
             let willReturn: [SampleFactory] = []
 			let given: Given = { return Given(method: .m_sampleFactory, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (SampleFactory).self)
 			willProduce(stubber)
 			return given
         }
-        static func utilFactory(willProduce: (Stubber<UtilFactory>) -> Void) -> MethodStub {
+        public static func utilFactory(willProduce: (Stubber<UtilFactory>) -> Void) -> MethodStub {
             let willReturn: [UtilFactory] = []
 			let given: Given = { return Given(method: .m_utilFactory, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (UtilFactory).self)
 			willProduce(stubber)
 			return given
         }
-        static func subQueryMatcherFactory(willProduce: (Stubber<SubQueryMatcherFactory>) -> Void) -> MethodStub {
+        public static func subQueryMatcherFactory(willProduce: (Stubber<SubQueryMatcherFactory>) -> Void) -> MethodStub {
             let willReturn: [SubQueryMatcherFactory] = []
 			let given: Given = { return Given(method: .m_subQueryMatcherFactory, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (SubQueryMatcherFactory).self)
 			willProduce(stubber)
 			return given
         }
-        static func extraInformationFactory(willProduce: (Stubber<ExtraInformationFactory>) -> Void) -> MethodStub {
+        public static func extraInformationFactory(willProduce: (Stubber<ExtraInformationFactory>) -> Void) -> MethodStub {
             let willReturn: [ExtraInformationFactory] = []
 			let given: Given = { return Given(method: .m_extraInformationFactory, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (ExtraInformationFactory).self)
 			willProduce(stubber)
 			return given
         }
-        static func sampleGrouperFactory(willProduce: (Stubber<SampleGrouperFactory>) -> Void) -> MethodStub {
+        public static func sampleGrouperFactory(willProduce: (Stubber<SampleGrouperFactory>) -> Void) -> MethodStub {
             let willReturn: [SampleGrouperFactory] = []
 			let given: Given = { return Given(method: .m_sampleGrouperFactory, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (SampleGrouperFactory).self)
 			willProduce(stubber)
 			return given
         }
-        static func importerFactory(willProduce: (Stubber<ImporterFactory>) -> Void) -> MethodStub {
+        public static func importerFactory(willProduce: (Stubber<ImporterFactory>) -> Void) -> MethodStub {
             let willReturn: [ImporterFactory] = []
 			let given: Given = { return Given(method: .m_importerFactory, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (ImporterFactory).self)
@@ -4882,57 +4945,57 @@ class InjectionProviderMock: InjectionProvider, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func database() -> Verify { return Verify(method: .m_database)}
-        static func codableStorage() -> Verify { return Verify(method: .m_codableStorage)}
-        static func settings() -> Verify { return Verify(method: .m_settings)}
-        static func queryFactory() -> Verify { return Verify(method: .m_queryFactory)}
-        static func attributeRestrictionFactory() -> Verify { return Verify(method: .m_attributeRestrictionFactory)}
-        static func sampleFactory() -> Verify { return Verify(method: .m_sampleFactory)}
-        static func utilFactory() -> Verify { return Verify(method: .m_utilFactory)}
-        static func subQueryMatcherFactory() -> Verify { return Verify(method: .m_subQueryMatcherFactory)}
-        static func extraInformationFactory() -> Verify { return Verify(method: .m_extraInformationFactory)}
-        static func sampleGrouperFactory() -> Verify { return Verify(method: .m_sampleGrouperFactory)}
-        static func importerFactory() -> Verify { return Verify(method: .m_importerFactory)}
+        public static func database() -> Verify { return Verify(method: .m_database)}
+        public static func codableStorage() -> Verify { return Verify(method: .m_codableStorage)}
+        public static func settings() -> Verify { return Verify(method: .m_settings)}
+        public static func queryFactory() -> Verify { return Verify(method: .m_queryFactory)}
+        public static func attributeRestrictionFactory() -> Verify { return Verify(method: .m_attributeRestrictionFactory)}
+        public static func sampleFactory() -> Verify { return Verify(method: .m_sampleFactory)}
+        public static func utilFactory() -> Verify { return Verify(method: .m_utilFactory)}
+        public static func subQueryMatcherFactory() -> Verify { return Verify(method: .m_subQueryMatcherFactory)}
+        public static func extraInformationFactory() -> Verify { return Verify(method: .m_extraInformationFactory)}
+        public static func sampleGrouperFactory() -> Verify { return Verify(method: .m_sampleGrouperFactory)}
+        public static func importerFactory() -> Verify { return Verify(method: .m_importerFactory)}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func database(perform: @escaping () -> Void) -> Perform {
+        public static func database(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_database, performs: perform)
         }
-        static func codableStorage(perform: @escaping () -> Void) -> Perform {
+        public static func codableStorage(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_codableStorage, performs: perform)
         }
-        static func settings(perform: @escaping () -> Void) -> Perform {
+        public static func settings(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_settings, performs: perform)
         }
-        static func queryFactory(perform: @escaping () -> Void) -> Perform {
+        public static func queryFactory(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_queryFactory, performs: perform)
         }
-        static func attributeRestrictionFactory(perform: @escaping () -> Void) -> Perform {
+        public static func attributeRestrictionFactory(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_attributeRestrictionFactory, performs: perform)
         }
-        static func sampleFactory(perform: @escaping () -> Void) -> Perform {
+        public static func sampleFactory(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_sampleFactory, performs: perform)
         }
-        static func utilFactory(perform: @escaping () -> Void) -> Perform {
+        public static func utilFactory(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_utilFactory, performs: perform)
         }
-        static func subQueryMatcherFactory(perform: @escaping () -> Void) -> Perform {
+        public static func subQueryMatcherFactory(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_subQueryMatcherFactory, performs: perform)
         }
-        static func extraInformationFactory(perform: @escaping () -> Void) -> Perform {
+        public static func extraInformationFactory(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_extraInformationFactory, performs: perform)
         }
-        static func sampleGrouperFactory(perform: @escaping () -> Void) -> Perform {
+        public static func sampleGrouperFactory(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_sampleGrouperFactory, performs: perform)
         }
-        static func importerFactory(perform: @escaping () -> Void) -> Perform {
+        public static func importerFactory(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_importerFactory, performs: perform)
         }
     }
@@ -4948,7 +5011,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -4994,7 +5057,7 @@ class InjectionProviderMock: InjectionProvider, Mock {
 }
 
 // MARK: - LeanBodyMassQuery
-class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
+open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -5011,9 +5074,9 @@ class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -5021,19 +5084,19 @@ class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
         self.line = line
     }
 
-    var attributeRestrictions: [AttributeRestriction] {
+    public var attributeRestrictions: [AttributeRestriction] {
 		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "LeanBodyMassQueryMock - stub value for attributeRestrictions was not defined") }
 		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
 	}
 	private var __p_attributeRestrictions: ([AttributeRestriction])?
 
-    var mostRecentEntryOnly: Bool {
+    public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "LeanBodyMassQueryMock - stub value for mostRecentEntryOnly was not defined") }
 		set {	invocations.append(.p_mostRecentEntryOnly_set(.value(newValue))); __p_mostRecentEntryOnly = newValue }
 	}
 	private var __p_mostRecentEntryOnly: (Bool)?
 
-    var subQuery: (matcher: SubQueryMatcher, query: Query)? {
+    public var subQuery: (matcher: SubQueryMatcher, query: Query)? {
 		get {	invocations.append(.p_subQuery_get); return __p_subQuery ?? optionalGivenGetterValue(.p_subQuery_get, "LeanBodyMassQueryMock - stub value for subQuery was not defined") }
 		set {	invocations.append(.p_subQuery_set(.value(newValue))); __p_subQuery = newValue }
 	}
@@ -5043,19 +5106,19 @@ class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
 
 
 
-    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
 		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
 		perform?(`callback`)
     }
 
-    func stop() {
+    open func stop() {
         addInvocation(.m_stop)
 		let perform = methodPerformValue(.m_stop) as? () -> Void
 		perform?()
     }
 
-    func equalTo(_ otherQuery: Query) -> Bool {
+    open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
 		perform?(`otherQuery`)
@@ -5116,7 +5179,7 @@ class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -5124,24 +5187,24 @@ class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
             super.init(products)
         }
 
-        static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
+        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
             return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
+        public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
+        public static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
             return Given(method: .p_subQuery_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
@@ -5150,37 +5213,37 @@ class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
-        static func stop() -> Verify { return Verify(method: .m_stop)}
-        static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
-        static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
-		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
-        static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
-		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
+		public static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
+		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
+		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
+        public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
+		public static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
-        static func stop(perform: @escaping () -> Void) -> Perform {
+        public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+        public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+		public static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
     }
@@ -5196,7 +5259,7 @@ class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -5242,7 +5305,7 @@ class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
 }
 
 // MARK: - MedicationDoseQuery
-class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
+open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -5259,9 +5322,9 @@ class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -5269,19 +5332,19 @@ class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
         self.line = line
     }
 
-    var attributeRestrictions: [AttributeRestriction] {
+    public var attributeRestrictions: [AttributeRestriction] {
 		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "MedicationDoseQueryMock - stub value for attributeRestrictions was not defined") }
 		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
 	}
 	private var __p_attributeRestrictions: ([AttributeRestriction])?
 
-    var mostRecentEntryOnly: Bool {
+    public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "MedicationDoseQueryMock - stub value for mostRecentEntryOnly was not defined") }
 		set {	invocations.append(.p_mostRecentEntryOnly_set(.value(newValue))); __p_mostRecentEntryOnly = newValue }
 	}
 	private var __p_mostRecentEntryOnly: (Bool)?
 
-    var subQuery: (matcher: SubQueryMatcher, query: Query)? {
+    public var subQuery: (matcher: SubQueryMatcher, query: Query)? {
 		get {	invocations.append(.p_subQuery_get); return __p_subQuery ?? optionalGivenGetterValue(.p_subQuery_get, "MedicationDoseQueryMock - stub value for subQuery was not defined") }
 		set {	invocations.append(.p_subQuery_set(.value(newValue))); __p_subQuery = newValue }
 	}
@@ -5291,19 +5354,19 @@ class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
 
 
 
-    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
 		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
 		perform?(`callback`)
     }
 
-    func stop() {
+    open func stop() {
         addInvocation(.m_stop)
 		let perform = methodPerformValue(.m_stop) as? () -> Void
 		perform?()
     }
 
-    func equalTo(_ otherQuery: Query) -> Bool {
+    open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
 		perform?(`otherQuery`)
@@ -5364,7 +5427,7 @@ class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -5372,24 +5435,24 @@ class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
             super.init(products)
         }
 
-        static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
+        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
             return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
+        public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
+        public static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
             return Given(method: .p_subQuery_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
@@ -5398,37 +5461,37 @@ class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
-        static func stop() -> Verify { return Verify(method: .m_stop)}
-        static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
-        static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
-		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
-        static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
-		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
+		public static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
+		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
+		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
+        public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
+		public static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
-        static func stop(perform: @escaping () -> Void) -> Perform {
+        public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+        public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+		public static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
     }
@@ -5444,7 +5507,7 @@ class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -5490,7 +5553,7 @@ class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
 }
 
 // MARK: - MoodQuery
-class MoodQueryMock: MoodQuery, Mock, StaticMock {
+open class MoodQueryMock: MoodQuery, Mock, StaticMock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -5507,9 +5570,9 @@ class MoodQueryMock: MoodQuery, Mock, StaticMock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -5522,34 +5585,34 @@ class MoodQueryMock: MoodQuery, Mock, StaticMock {
     static private var invocations: [StaticMethodType] = []
     static private var methodReturnValues: [StaticGiven] = []
     static private var methodPerformValues: [StaticPerform] = []
-    typealias StaticPropertyStub = StaticGiven
-    typealias StaticMethodStub = StaticGiven
-    static func clear() {
+    public typealias StaticPropertyStub = StaticGiven
+    public typealias StaticMethodStub = StaticGiven
+    public static func clear() {
         invocations = []
         methodReturnValues = []
         methodPerformValues = []
     }
 
-    var attributeRestrictions: [AttributeRestriction] {
+    public var attributeRestrictions: [AttributeRestriction] {
 		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "MoodQueryMock - stub value for attributeRestrictions was not defined") }
 		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
 	}
 	private var __p_attributeRestrictions: ([AttributeRestriction])?
 
-    var mostRecentEntryOnly: Bool {
+    public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "MoodQueryMock - stub value for mostRecentEntryOnly was not defined") }
 		set {	invocations.append(.p_mostRecentEntryOnly_set(.value(newValue))); __p_mostRecentEntryOnly = newValue }
 	}
 	private var __p_mostRecentEntryOnly: (Bool)?
 
-    var subQuery: (matcher: SubQueryMatcher, query: Query)? {
+    public var subQuery: (matcher: SubQueryMatcher, query: Query)? {
 		get {	invocations.append(.p_subQuery_get); return __p_subQuery ?? optionalGivenGetterValue(.p_subQuery_get, "MoodQueryMock - stub value for subQuery was not defined") }
 		set {	invocations.append(.p_subQuery_set(.value(newValue))); __p_subQuery = newValue }
 	}
 	private var __p_subQuery: ((matcher: SubQueryMatcher, query: Query))?
 
 
-    static var updatingMoodsInBackground: Bool {
+    public static var updatingMoodsInBackground: Bool {
 		get {	MoodQueryMock.invocations.append(.p_updatingMoodsInBackground_get); return MoodQueryMock.__p_updatingMoodsInBackground ?? givenGetterValue(.p_updatingMoodsInBackground_get, "MoodQueryMock - stub value for updatingMoodsInBackground was not defined") }
 		set {	MoodQueryMock.invocations.append(.p_updatingMoodsInBackground_set(.value(newValue))); MoodQueryMock.__p_updatingMoodsInBackground = newValue }
 	}
@@ -5558,19 +5621,19 @@ class MoodQueryMock: MoodQuery, Mock, StaticMock {
 
 
 
-    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
 		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
 		perform?(`callback`)
     }
 
-    func stop() {
+    open func stop() {
         addInvocation(.m_stop)
 		let perform = methodPerformValue(.m_stop) as? () -> Void
 		perform?()
     }
 
-    func equalTo(_ otherQuery: Query) -> Bool {
+    open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
 		perform?(`otherQuery`)
@@ -5604,7 +5667,7 @@ class MoodQueryMock: MoodQuery, Mock, StaticMock {
         }
     }
 
-    class StaticGiven: StubbedMethod {
+    open class StaticGiven: StubbedMethod {
         fileprivate var method: StaticMethodType
 
         private init(method: StaticMethodType, products: [Product]) {
@@ -5612,20 +5675,20 @@ class MoodQueryMock: MoodQuery, Mock, StaticMock {
             super.init(products)
         }
 
-        static func updatingMoodsInBackground(getter defaultValue: Bool...) -> StaticPropertyStub {
+        public static func updatingMoodsInBackground(getter defaultValue: Bool...) -> StaticPropertyStub {
             return StaticGiven(method: .p_updatingMoodsInBackground_get, products: defaultValue.map({ Product.return($0) }))
         }
 
     }
 
-    struct StaticVerify {
+    public struct StaticVerify {
         fileprivate var method: StaticMethodType
 
-        static var updatingMoodsInBackground: StaticVerify { return StaticVerify(method: .p_updatingMoodsInBackground_get) }
-		static func updatingMoodsInBackground(set newValue: Parameter<Bool>) -> StaticVerify { return StaticVerify(method: .p_updatingMoodsInBackground_set(newValue)) }
+        public static var updatingMoodsInBackground: StaticVerify { return StaticVerify(method: .p_updatingMoodsInBackground_get) }
+		public static func updatingMoodsInBackground(set newValue: Parameter<Bool>) -> StaticVerify { return StaticVerify(method: .p_updatingMoodsInBackground_set(newValue)) }
     }
 
-    struct StaticPerform {
+    public struct StaticPerform {
         fileprivate var method: StaticMethodType
         var performs: Any
 
@@ -5678,7 +5741,7 @@ class MoodQueryMock: MoodQuery, Mock, StaticMock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -5686,24 +5749,24 @@ class MoodQueryMock: MoodQuery, Mock, StaticMock {
             super.init(products)
         }
 
-        static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
+        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
             return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
+        public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
+        public static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
             return Given(method: .p_subQuery_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
@@ -5712,37 +5775,37 @@ class MoodQueryMock: MoodQuery, Mock, StaticMock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
-        static func stop() -> Verify { return Verify(method: .m_stop)}
-        static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
-        static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
-		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
-        static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
-		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
+		public static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
+		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
+		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
+        public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
+		public static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
-        static func stop(perform: @escaping () -> Void) -> Perform {
+        public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+        public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+		public static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
     }
@@ -5758,7 +5821,7 @@ class MoodQueryMock: MoodQuery, Mock, StaticMock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -5813,7 +5876,7 @@ class MoodQueryMock: MoodQuery, Mock, StaticMock {
 
     static public func verify(_ method: StaticVerify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     static private func addInvocation(_ call: StaticMethodType) {
@@ -5852,7 +5915,7 @@ class MoodQueryMock: MoodQuery, Mock, StaticMock {
 }
 
 // MARK: - MoodUtil
-class MoodUtilMock: MoodUtil, Mock {
+open class MoodUtilMock: MoodUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -5869,9 +5932,9 @@ class MoodUtilMock: MoodUtil, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -5883,7 +5946,7 @@ class MoodUtilMock: MoodUtil, Mock {
 
 
 
-    func scaleMoods() throws {
+    open func scaleMoods() throws {
         addInvocation(.m_scaleMoods)
 		let perform = methodPerformValue(.m_scaleMoods) as? () -> Void
 		perform?()
@@ -5896,7 +5959,7 @@ class MoodUtilMock: MoodUtil, Mock {
 		}
     }
 
-    func scaleMood(_ mood: Mood) {
+    open func scaleMood(_ mood: Mood) {
         addInvocation(.m_scaleMood__mood(Parameter<Mood>.value(`mood`)))
 		let perform = methodPerformValue(.m_scaleMood__mood(Parameter<Mood>.value(`mood`))) as? (Mood) -> Void
 		perform?(`mood`)
@@ -5926,7 +5989,7 @@ class MoodUtilMock: MoodUtil, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -5935,10 +5998,10 @@ class MoodUtilMock: MoodUtil, Mock {
         }
 
 
-        static func scaleMoods(willThrow: Error...) -> MethodStub {
+        public static func scaleMoods(willThrow: Error...) -> MethodStub {
             return Given(method: .m_scaleMoods, products: willThrow.map({ Product.throw($0) }))
         }
-        static func scaleMoods(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func scaleMoods(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_scaleMoods, products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
@@ -5947,27 +6010,27 @@ class MoodUtilMock: MoodUtil, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func scaleMoods() -> Verify { return Verify(method: .m_scaleMoods)}
-        static func scaleMood(_ mood: Parameter<Mood>) -> Verify { return Verify(method: .m_scaleMood__mood(`mood`))}
+        public static func scaleMoods() -> Verify { return Verify(method: .m_scaleMoods)}
+        public static func scaleMood(_ mood: Parameter<Mood>) -> Verify { return Verify(method: .m_scaleMood__mood(`mood`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `mood` label")
-		static func scaleMood(mood: Parameter<Mood>) -> Verify { return Verify(method: .m_scaleMood__mood(`mood`))}
+		public static func scaleMood(mood: Parameter<Mood>) -> Verify { return Verify(method: .m_scaleMood__mood(`mood`))}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func scaleMoods(perform: @escaping () -> Void) -> Perform {
+        public static func scaleMoods(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_scaleMoods, performs: perform)
         }
-        static func scaleMood(_ mood: Parameter<Mood>, perform: @escaping (Mood) -> Void) -> Perform {
+        public static func scaleMood(_ mood: Parameter<Mood>, perform: @escaping (Mood) -> Void) -> Perform {
             return Perform(method: .m_scaleMood__mood(`mood`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `mood` label")
-		static func scaleMood(mood: Parameter<Mood>, perform: @escaping (Mood) -> Void) -> Perform {
+		public static func scaleMood(mood: Parameter<Mood>, perform: @escaping (Mood) -> Void) -> Perform {
             return Perform(method: .m_scaleMood__mood(`mood`), performs: perform)
         }
     }
@@ -5983,7 +6046,7 @@ class MoodUtilMock: MoodUtil, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -6029,7 +6092,7 @@ class MoodUtilMock: MoodUtil, Mock {
 }
 
 // MARK: - NumericSampleUtil
-class NumericSampleUtilMock: NumericSampleUtil, Mock {
+open class NumericSampleUtilMock: NumericSampleUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -6046,9 +6109,9 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -6060,7 +6123,7 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
 
 
 
-    func average(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) throws -> [(date: Date?, value: Double)] {
+    open func average(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?) throws -> [(date: Date?, value: Double)] {
         addInvocation(.m_average__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`)))
 		let perform = methodPerformValue(.m_average__for_attributeover_samplesper_aggregationUnit(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`))) as? (Attribute, [Sample], Calendar.Component?) -> Void
 		perform?(`attribute`, `samples`, `aggregationUnit`)
@@ -6076,7 +6139,7 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
 		return __value
     }
 
-    func average(for attribute: Attribute, over samples: [Sample]) throws -> Double {
+    open func average(for attribute: Attribute, over samples: [Sample]) throws -> Double {
         addInvocation(.m_average__for_attributeover_samples(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`)))
 		let perform = methodPerformValue(.m_average__for_attributeover_samples(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`))) as? (Attribute, [Sample]) -> Void
 		perform?(`attribute`, `samples`)
@@ -6092,7 +6155,7 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
 		return __value
     }
 
-    func count(over samples: [Sample], per aggregationUnit: Calendar.Component?) throws -> [(date: Date?, value: Int)] {
+    open func count(over samples: [Sample], per aggregationUnit: Calendar.Component?) throws -> [(date: Date?, value: Int)] {
         addInvocation(.m_count__over_samplesper_aggregationUnit(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`)))
 		let perform = methodPerformValue(.m_count__over_samplesper_aggregationUnit(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`))) as? ([Sample], Calendar.Component?) -> Void
 		perform?(`samples`, `aggregationUnit`)
@@ -6108,7 +6171,7 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
 		return __value
     }
 
-    func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type) throws -> [(date: Date?, value: Type)] {
+    open func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type) throws -> [(date: Date?, value: Type)] {
         addInvocation(.m_max__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_max__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void
 		perform?(`attribute`, `samples`, `aggregationUnit`, `as`)
@@ -6124,7 +6187,7 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
 		return __value
     }
 
-    func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], as: Type.Type) throws -> Type {
+    open func max<Type: Comparable>(for attribute: Attribute, over samples: [Sample], as: Type.Type) throws -> Type {
         addInvocation(.m_max__for_attributeover_samplesas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_max__for_attributeover_samplesas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (Attribute, [Sample], Type.Type) -> Void
 		perform?(`attribute`, `samples`, `as`)
@@ -6140,7 +6203,7 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
 		return __value
     }
 
-    func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type) throws -> [(date: Date?, value: Type)] {
+    open func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type) throws -> [(date: Date?, value: Type)] {
         addInvocation(.m_min__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_min__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void
 		perform?(`attribute`, `samples`, `aggregationUnit`, `as`)
@@ -6156,7 +6219,7 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
 		return __value
     }
 
-    func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], as: Type.Type) throws -> Type {
+    open func min<Type: Comparable>(for attribute: Attribute, over samples: [Sample], as: Type.Type) throws -> Type {
         addInvocation(.m_min__for_attributeover_samplesas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_min__for_attributeover_samplesas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (Attribute, [Sample], Type.Type) -> Void
 		perform?(`attribute`, `samples`, `as`)
@@ -6172,7 +6235,7 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
 		return __value
     }
 
-    func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type) throws -> [(date: Date?, value: Type)] {
+    open func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], per aggregationUnit: Calendar.Component?, as: Type.Type) throws -> [(date: Date?, value: Type)] {
         addInvocation(.m_sum__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_sum__for_attributeover_samplesper_aggregationUnitas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component?>.value(`aggregationUnit`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void
 		perform?(`attribute`, `samples`, `aggregationUnit`, `as`)
@@ -6188,7 +6251,7 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
 		return __value
     }
 
-    func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], as: Type.Type) throws -> Type {
+    open func sum<Type: Numeric>(for attribute: Attribute, over samples: [Sample], as: Type.Type) throws -> Type {
         addInvocation(.m_sum__for_attributeover_samplesas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_sum__for_attributeover_samplesas_as(Parameter<Attribute>.value(`attribute`), Parameter<[Sample]>.value(`samples`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (Attribute, [Sample], Type.Type) -> Void
 		perform?(`attribute`, `samples`, `as`)
@@ -6283,7 +6346,7 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -6292,117 +6355,117 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
         }
 
 
-        static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willReturn: [(date: Date?, value: Double)]...) -> MethodStub {
+        public static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willReturn: [(date: Date?, value: Double)]...) -> MethodStub {
             return Given(method: .m_average__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`), products: willReturn.map({ Product.return($0) }))
         }
-        static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, willReturn: Double...) -> MethodStub {
+        public static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, willReturn: Double...) -> MethodStub {
             return Given(method: .m_average__for_attributeover_samples(`attribute`, `samples`), products: willReturn.map({ Product.return($0) }))
         }
-        static func count(over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willReturn: [(date: Date?, value: Int)]...) -> MethodStub {
+        public static func count(over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willReturn: [(date: Date?, value: Int)]...) -> MethodStub {
             return Given(method: .m_count__over_samplesper_aggregationUnit(`samples`, `aggregationUnit`), products: willReturn.map({ Product.return($0) }))
         }
-        static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willReturn: [(date: Date?, value: Type)]...) -> MethodStub {
+        public static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willReturn: [(date: Date?, value: Type)]...) -> MethodStub {
             return Given(method: .m_max__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
+        public static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
             return Given(method: .m_max__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willReturn: [(date: Date?, value: Type)]...) -> MethodStub {
+        public static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willReturn: [(date: Date?, value: Type)]...) -> MethodStub {
             return Given(method: .m_min__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
+        public static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
             return Given(method: .m_min__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willReturn: [(date: Date?, value: Type)]...) -> MethodStub {
+        public static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willReturn: [(date: Date?, value: Type)]...) -> MethodStub {
             return Given(method: .m_sum__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
+        public static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
             return Given(method: .m_sum__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willThrow: Error...) -> MethodStub {
+        public static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_average__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willProduce: (StubberThrows<[(date: Date?, value: Double)]>) -> Void) -> MethodStub {
+        public static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willProduce: (StubberThrows<[(date: Date?, value: Double)]>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_average__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: ([(date: Date?, value: Double)]).self)
 			willProduce(stubber)
 			return given
         }
-        static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, willThrow: Error...) -> MethodStub {
+        public static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_average__for_attributeover_samples(`attribute`, `samples`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, willProduce: (StubberThrows<Double>) -> Void) -> MethodStub {
+        public static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, willProduce: (StubberThrows<Double>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_average__for_attributeover_samples(`attribute`, `samples`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Double).self)
 			willProduce(stubber)
 			return given
         }
-        static func count(over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willThrow: Error...) -> MethodStub {
+        public static func count(over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_count__over_samplesper_aggregationUnit(`samples`, `aggregationUnit`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func count(over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willProduce: (StubberThrows<[(date: Date?, value: Int)]>) -> Void) -> MethodStub {
+        public static func count(over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, willProduce: (StubberThrows<[(date: Date?, value: Int)]>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_count__over_samplesper_aggregationUnit(`samples`, `aggregationUnit`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: ([(date: Date?, value: Int)]).self)
 			willProduce(stubber)
 			return given
         }
-        static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+        public static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_max__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
-        static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willProduce: (StubberThrows<[(date: Date?, value: Type)]>) -> Void) -> MethodStub {
+        public static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willProduce: (StubberThrows<[(date: Date?, value: Type)]>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_max__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: ([(date: Date?, value: Type)]).self)
 			willProduce(stubber)
 			return given
         }
-        static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+        public static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_max__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
-        static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
+        public static func max<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_max__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Type).self)
 			willProduce(stubber)
 			return given
         }
-        static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+        public static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_min__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
-        static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willProduce: (StubberThrows<[(date: Date?, value: Type)]>) -> Void) -> MethodStub {
+        public static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willProduce: (StubberThrows<[(date: Date?, value: Type)]>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_min__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: ([(date: Date?, value: Type)]).self)
 			willProduce(stubber)
 			return given
         }
-        static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+        public static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_min__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
-        static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
+        public static func min<Type: Comparable>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_min__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Type).self)
 			willProduce(stubber)
 			return given
         }
-        static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+        public static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_sum__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
-        static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willProduce: (StubberThrows<[(date: Date?, value: Type)]>) -> Void) -> MethodStub {
+        public static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, willProduce: (StubberThrows<[(date: Date?, value: Type)]>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_sum__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: ([(date: Date?, value: Type)]).self)
 			willProduce(stubber)
 			return given
         }
-        static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+        public static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_sum__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
-        static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
+        public static func sum<Type: Numeric>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_sum__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Type).self)
@@ -6411,49 +6474,49 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>) -> Verify { return Verify(method: .m_average__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`))}
-        static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>) -> Verify { return Verify(method: .m_average__for_attributeover_samples(`attribute`, `samples`))}
-        static func count(over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>) -> Verify { return Verify(method: .m_count__over_samplesper_aggregationUnit(`samples`, `aggregationUnit`))}
-        static func max<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>) -> Verify { return Verify(method: .m_max__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()))}
-        static func max<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>) -> Verify { return Verify(method: .m_max__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()))}
-        static func min<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>) -> Verify { return Verify(method: .m_min__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()))}
-        static func min<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>) -> Verify { return Verify(method: .m_min__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()))}
-        static func sum<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>) -> Verify { return Verify(method: .m_sum__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()))}
-        static func sum<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>) -> Verify { return Verify(method: .m_sum__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()))}
+        public static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>) -> Verify { return Verify(method: .m_average__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`))}
+        public static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>) -> Verify { return Verify(method: .m_average__for_attributeover_samples(`attribute`, `samples`))}
+        public static func count(over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>) -> Verify { return Verify(method: .m_count__over_samplesper_aggregationUnit(`samples`, `aggregationUnit`))}
+        public static func max<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>) -> Verify where Type:Comparable { return Verify(method: .m_max__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()))}
+        public static func max<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>) -> Verify where Type:Comparable { return Verify(method: .m_max__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()))}
+        public static func min<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>) -> Verify where Type:Comparable { return Verify(method: .m_min__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()))}
+        public static func min<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>) -> Verify where Type:Comparable { return Verify(method: .m_min__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()))}
+        public static func sum<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>) -> Verify where Type:Numeric { return Verify(method: .m_sum__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()))}
+        public static func sum<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>) -> Verify where Type:Numeric { return Verify(method: .m_sum__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()))}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, perform: @escaping (Attribute, [Sample], Calendar.Component?) -> Void) -> Perform {
+        public static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, perform: @escaping (Attribute, [Sample], Calendar.Component?) -> Void) -> Perform {
             return Perform(method: .m_average__for_attributeover_samplesper_aggregationUnit(`attribute`, `samples`, `aggregationUnit`), performs: perform)
         }
-        static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, perform: @escaping (Attribute, [Sample]) -> Void) -> Perform {
+        public static func average(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, perform: @escaping (Attribute, [Sample]) -> Void) -> Perform {
             return Perform(method: .m_average__for_attributeover_samples(`attribute`, `samples`), performs: perform)
         }
-        static func count(over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, perform: @escaping ([Sample], Calendar.Component?) -> Void) -> Perform {
+        public static func count(over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, perform: @escaping ([Sample], Calendar.Component?) -> Void) -> Perform {
             return Perform(method: .m_count__over_samplesper_aggregationUnit(`samples`, `aggregationUnit`), performs: perform)
         }
-        static func max<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void) -> Perform {
+        public static func max<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void) -> Perform where Type:Comparable {
             return Perform(method: .m_max__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), performs: perform)
         }
-        static func max<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Type.Type) -> Void) -> Perform {
+        public static func max<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Type.Type) -> Void) -> Perform where Type:Comparable {
             return Perform(method: .m_max__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), performs: perform)
         }
-        static func min<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void) -> Perform {
+        public static func min<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void) -> Perform where Type:Comparable {
             return Perform(method: .m_min__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), performs: perform)
         }
-        static func min<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Type.Type) -> Void) -> Perform {
+        public static func min<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Type.Type) -> Void) -> Perform where Type:Comparable {
             return Perform(method: .m_min__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), performs: perform)
         }
-        static func sum<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void) -> Perform {
+        public static func sum<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, per aggregationUnit: Parameter<Calendar.Component?>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Calendar.Component?, Type.Type) -> Void) -> Perform where Type:Numeric {
             return Perform(method: .m_sum__for_attributeover_samplesper_aggregationUnitas_as(`attribute`, `samples`, `aggregationUnit`, `as`.wrapAsGeneric()), performs: perform)
         }
-        static func sum<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Type.Type) -> Void) -> Perform {
+        public static func sum<Type>(for attribute: Parameter<Attribute>, over samples: Parameter<[Sample]>, as: Parameter<Type.Type>, perform: @escaping (Attribute, [Sample], Type.Type) -> Void) -> Perform where Type:Numeric {
             return Perform(method: .m_sum__for_attributeover_samplesas_as(`attribute`, `samples`, `as`.wrapAsGeneric()), performs: perform)
         }
     }
@@ -6469,7 +6532,7 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -6515,7 +6578,7 @@ class NumericSampleUtilMock: NumericSampleUtil, Mock {
 }
 
 // MARK: - Query
-class QueryMock: Query, Mock {
+open class QueryMock: Query, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -6532,9 +6595,9 @@ class QueryMock: Query, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -6542,19 +6605,19 @@ class QueryMock: Query, Mock {
         self.line = line
     }
 
-    var attributeRestrictions: [AttributeRestriction] {
+    public var attributeRestrictions: [AttributeRestriction] {
 		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "QueryMock - stub value for attributeRestrictions was not defined") }
 		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
 	}
 	private var __p_attributeRestrictions: ([AttributeRestriction])?
 
-    var mostRecentEntryOnly: Bool {
+    public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "QueryMock - stub value for mostRecentEntryOnly was not defined") }
 		set {	invocations.append(.p_mostRecentEntryOnly_set(.value(newValue))); __p_mostRecentEntryOnly = newValue }
 	}
 	private var __p_mostRecentEntryOnly: (Bool)?
 
-    var subQuery: (matcher: SubQueryMatcher, query: Query)? {
+    public var subQuery: (matcher: SubQueryMatcher, query: Query)? {
 		get {	invocations.append(.p_subQuery_get); return __p_subQuery ?? optionalGivenGetterValue(.p_subQuery_get, "QueryMock - stub value for subQuery was not defined") }
 		set {	invocations.append(.p_subQuery_set(.value(newValue))); __p_subQuery = newValue }
 	}
@@ -6564,19 +6627,19 @@ class QueryMock: Query, Mock {
 
 
 
-    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
 		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
 		perform?(`callback`)
     }
 
-    func stop() {
+    open func stop() {
         addInvocation(.m_stop)
 		let perform = methodPerformValue(.m_stop) as? () -> Void
 		perform?()
     }
 
-    func equalTo(_ otherQuery: Query) -> Bool {
+    open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
 		perform?(`otherQuery`)
@@ -6637,7 +6700,7 @@ class QueryMock: Query, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -6645,24 +6708,24 @@ class QueryMock: Query, Mock {
             super.init(products)
         }
 
-        static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
+        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
             return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
+        public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
+        public static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
             return Given(method: .p_subQuery_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
@@ -6671,37 +6734,37 @@ class QueryMock: Query, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
-        static func stop() -> Verify { return Verify(method: .m_stop)}
-        static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
-        static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
-		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
-        static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
-		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
+		public static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
+		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
+		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
+        public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
+		public static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
-        static func stop(perform: @escaping () -> Void) -> Perform {
+        public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+        public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+		public static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
     }
@@ -6717,7 +6780,7 @@ class QueryMock: Query, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -6763,7 +6826,7 @@ class QueryMock: Query, Mock {
 }
 
 // MARK: - QueryFactory
-class QueryFactoryMock: QueryFactory, Mock {
+open class QueryFactoryMock: QueryFactory, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -6780,9 +6843,9 @@ class QueryFactoryMock: QueryFactory, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -6794,7 +6857,7 @@ class QueryFactoryMock: QueryFactory, Mock {
 
 
 
-    func activityQuery() -> ActivityQuery {
+    open func activityQuery() -> ActivityQuery {
         addInvocation(.m_activityQuery)
 		let perform = methodPerformValue(.m_activityQuery) as? () -> Void
 		perform?()
@@ -6808,7 +6871,7 @@ class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
-    func bloodPressureQuery() -> BloodPressureQuery {
+    open func bloodPressureQuery() -> BloodPressureQuery {
         addInvocation(.m_bloodPressureQuery)
 		let perform = methodPerformValue(.m_bloodPressureQuery) as? () -> Void
 		perform?()
@@ -6822,7 +6885,7 @@ class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
-    func bmiQuery() -> BodyMassIndexQuery {
+    open func bmiQuery() -> BodyMassIndexQuery {
         addInvocation(.m_bmiQuery)
 		let perform = methodPerformValue(.m_bmiQuery) as? () -> Void
 		perform?()
@@ -6836,7 +6899,7 @@ class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
-    func heartRateQuery() -> HeartRateQuery {
+    open func heartRateQuery() -> HeartRateQuery {
         addInvocation(.m_heartRateQuery)
 		let perform = methodPerformValue(.m_heartRateQuery) as? () -> Void
 		perform?()
@@ -6850,7 +6913,7 @@ class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
-    func leanBodyMassQuery() -> LeanBodyMassQuery {
+    open func leanBodyMassQuery() -> LeanBodyMassQuery {
         addInvocation(.m_leanBodyMassQuery)
 		let perform = methodPerformValue(.m_leanBodyMassQuery) as? () -> Void
 		perform?()
@@ -6864,7 +6927,7 @@ class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
-    func medicationDoseQuery() -> MedicationDoseQuery {
+    open func medicationDoseQuery() -> MedicationDoseQuery {
         addInvocation(.m_medicationDoseQuery)
 		let perform = methodPerformValue(.m_medicationDoseQuery) as? () -> Void
 		perform?()
@@ -6878,7 +6941,7 @@ class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
-    func moodQuery() -> MoodQuery {
+    open func moodQuery() -> MoodQuery {
         addInvocation(.m_moodQuery)
 		let perform = methodPerformValue(.m_moodQuery) as? () -> Void
 		perform?()
@@ -6892,7 +6955,7 @@ class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
-    func restingHeartRateQuery() -> RestingHeartRateQuery {
+    open func restingHeartRateQuery() -> RestingHeartRateQuery {
         addInvocation(.m_restingHeartRateQuery)
 		let perform = methodPerformValue(.m_restingHeartRateQuery) as? () -> Void
 		perform?()
@@ -6906,7 +6969,7 @@ class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
-    func sexualActivityQuery() -> SexualActivityQuery {
+    open func sexualActivityQuery() -> SexualActivityQuery {
         addInvocation(.m_sexualActivityQuery)
 		let perform = methodPerformValue(.m_sexualActivityQuery) as? () -> Void
 		perform?()
@@ -6920,7 +6983,7 @@ class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
-    func sleepQuery() -> SleepQuery {
+    open func sleepQuery() -> SleepQuery {
         addInvocation(.m_sleepQuery)
 		let perform = methodPerformValue(.m_sleepQuery) as? () -> Void
 		perform?()
@@ -6934,7 +6997,7 @@ class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
-    func weightQuery() -> WeightQuery {
+    open func weightQuery() -> WeightQuery {
         addInvocation(.m_weightQuery)
 		let perform = methodPerformValue(.m_weightQuery) as? () -> Void
 		perform?()
@@ -6948,7 +7011,7 @@ class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
-    func queryFor(_ sampleType: Sample.Type) throws -> Query {
+    open func queryFor(_ sampleType: Sample.Type) throws -> Query {
         addInvocation(.m_queryFor__sampleType(Parameter<Sample.Type>.value(`sampleType`)))
 		let perform = methodPerformValue(.m_queryFor__sampleType(Parameter<Sample.Type>.value(`sampleType`))) as? (Sample.Type) -> Void
 		perform?(`sampleType`)
@@ -7028,7 +7091,7 @@ class QueryFactoryMock: QueryFactory, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -7037,131 +7100,131 @@ class QueryFactoryMock: QueryFactory, Mock {
         }
 
 
-        static func activityQuery(willReturn: ActivityQuery...) -> MethodStub {
+        public static func activityQuery(willReturn: ActivityQuery...) -> MethodStub {
             return Given(method: .m_activityQuery, products: willReturn.map({ Product.return($0) }))
         }
-        static func bloodPressureQuery(willReturn: BloodPressureQuery...) -> MethodStub {
+        public static func bloodPressureQuery(willReturn: BloodPressureQuery...) -> MethodStub {
             return Given(method: .m_bloodPressureQuery, products: willReturn.map({ Product.return($0) }))
         }
-        static func bmiQuery(willReturn: BodyMassIndexQuery...) -> MethodStub {
+        public static func bmiQuery(willReturn: BodyMassIndexQuery...) -> MethodStub {
             return Given(method: .m_bmiQuery, products: willReturn.map({ Product.return($0) }))
         }
-        static func heartRateQuery(willReturn: HeartRateQuery...) -> MethodStub {
+        public static func heartRateQuery(willReturn: HeartRateQuery...) -> MethodStub {
             return Given(method: .m_heartRateQuery, products: willReturn.map({ Product.return($0) }))
         }
-        static func leanBodyMassQuery(willReturn: LeanBodyMassQuery...) -> MethodStub {
+        public static func leanBodyMassQuery(willReturn: LeanBodyMassQuery...) -> MethodStub {
             return Given(method: .m_leanBodyMassQuery, products: willReturn.map({ Product.return($0) }))
         }
-        static func medicationDoseQuery(willReturn: MedicationDoseQuery...) -> MethodStub {
+        public static func medicationDoseQuery(willReturn: MedicationDoseQuery...) -> MethodStub {
             return Given(method: .m_medicationDoseQuery, products: willReturn.map({ Product.return($0) }))
         }
-        static func moodQuery(willReturn: MoodQuery...) -> MethodStub {
+        public static func moodQuery(willReturn: MoodQuery...) -> MethodStub {
             return Given(method: .m_moodQuery, products: willReturn.map({ Product.return($0) }))
         }
-        static func restingHeartRateQuery(willReturn: RestingHeartRateQuery...) -> MethodStub {
+        public static func restingHeartRateQuery(willReturn: RestingHeartRateQuery...) -> MethodStub {
             return Given(method: .m_restingHeartRateQuery, products: willReturn.map({ Product.return($0) }))
         }
-        static func sexualActivityQuery(willReturn: SexualActivityQuery...) -> MethodStub {
+        public static func sexualActivityQuery(willReturn: SexualActivityQuery...) -> MethodStub {
             return Given(method: .m_sexualActivityQuery, products: willReturn.map({ Product.return($0) }))
         }
-        static func sleepQuery(willReturn: SleepQuery...) -> MethodStub {
+        public static func sleepQuery(willReturn: SleepQuery...) -> MethodStub {
             return Given(method: .m_sleepQuery, products: willReturn.map({ Product.return($0) }))
         }
-        static func weightQuery(willReturn: WeightQuery...) -> MethodStub {
+        public static func weightQuery(willReturn: WeightQuery...) -> MethodStub {
             return Given(method: .m_weightQuery, products: willReturn.map({ Product.return($0) }))
         }
-        static func queryFor(_ sampleType: Parameter<Sample.Type>, willReturn: Query...) -> MethodStub {
+        public static func queryFor(_ sampleType: Parameter<Sample.Type>, willReturn: Query...) -> MethodStub {
             return Given(method: .m_queryFor__sampleType(`sampleType`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `sampleType` label")
-		static func queryFor(sampleType: Parameter<Sample.Type>, willReturn: Query...) -> MethodStub {
+		public static func queryFor(sampleType: Parameter<Sample.Type>, willReturn: Query...) -> MethodStub {
             return Given(method: .m_queryFor__sampleType(`sampleType`), products: willReturn.map({ Product.return($0) }))
         }
-        static func activityQuery(willProduce: (Stubber<ActivityQuery>) -> Void) -> MethodStub {
+        public static func activityQuery(willProduce: (Stubber<ActivityQuery>) -> Void) -> MethodStub {
             let willReturn: [ActivityQuery] = []
 			let given: Given = { return Given(method: .m_activityQuery, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (ActivityQuery).self)
 			willProduce(stubber)
 			return given
         }
-        static func bloodPressureQuery(willProduce: (Stubber<BloodPressureQuery>) -> Void) -> MethodStub {
+        public static func bloodPressureQuery(willProduce: (Stubber<BloodPressureQuery>) -> Void) -> MethodStub {
             let willReturn: [BloodPressureQuery] = []
 			let given: Given = { return Given(method: .m_bloodPressureQuery, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (BloodPressureQuery).self)
 			willProduce(stubber)
 			return given
         }
-        static func bmiQuery(willProduce: (Stubber<BodyMassIndexQuery>) -> Void) -> MethodStub {
+        public static func bmiQuery(willProduce: (Stubber<BodyMassIndexQuery>) -> Void) -> MethodStub {
             let willReturn: [BodyMassIndexQuery] = []
 			let given: Given = { return Given(method: .m_bmiQuery, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (BodyMassIndexQuery).self)
 			willProduce(stubber)
 			return given
         }
-        static func heartRateQuery(willProduce: (Stubber<HeartRateQuery>) -> Void) -> MethodStub {
+        public static func heartRateQuery(willProduce: (Stubber<HeartRateQuery>) -> Void) -> MethodStub {
             let willReturn: [HeartRateQuery] = []
 			let given: Given = { return Given(method: .m_heartRateQuery, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (HeartRateQuery).self)
 			willProduce(stubber)
 			return given
         }
-        static func leanBodyMassQuery(willProduce: (Stubber<LeanBodyMassQuery>) -> Void) -> MethodStub {
+        public static func leanBodyMassQuery(willProduce: (Stubber<LeanBodyMassQuery>) -> Void) -> MethodStub {
             let willReturn: [LeanBodyMassQuery] = []
 			let given: Given = { return Given(method: .m_leanBodyMassQuery, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (LeanBodyMassQuery).self)
 			willProduce(stubber)
 			return given
         }
-        static func medicationDoseQuery(willProduce: (Stubber<MedicationDoseQuery>) -> Void) -> MethodStub {
+        public static func medicationDoseQuery(willProduce: (Stubber<MedicationDoseQuery>) -> Void) -> MethodStub {
             let willReturn: [MedicationDoseQuery] = []
 			let given: Given = { return Given(method: .m_medicationDoseQuery, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (MedicationDoseQuery).self)
 			willProduce(stubber)
 			return given
         }
-        static func moodQuery(willProduce: (Stubber<MoodQuery>) -> Void) -> MethodStub {
+        public static func moodQuery(willProduce: (Stubber<MoodQuery>) -> Void) -> MethodStub {
             let willReturn: [MoodQuery] = []
 			let given: Given = { return Given(method: .m_moodQuery, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (MoodQuery).self)
 			willProduce(stubber)
 			return given
         }
-        static func restingHeartRateQuery(willProduce: (Stubber<RestingHeartRateQuery>) -> Void) -> MethodStub {
+        public static func restingHeartRateQuery(willProduce: (Stubber<RestingHeartRateQuery>) -> Void) -> MethodStub {
             let willReturn: [RestingHeartRateQuery] = []
 			let given: Given = { return Given(method: .m_restingHeartRateQuery, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (RestingHeartRateQuery).self)
 			willProduce(stubber)
 			return given
         }
-        static func sexualActivityQuery(willProduce: (Stubber<SexualActivityQuery>) -> Void) -> MethodStub {
+        public static func sexualActivityQuery(willProduce: (Stubber<SexualActivityQuery>) -> Void) -> MethodStub {
             let willReturn: [SexualActivityQuery] = []
 			let given: Given = { return Given(method: .m_sexualActivityQuery, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (SexualActivityQuery).self)
 			willProduce(stubber)
 			return given
         }
-        static func sleepQuery(willProduce: (Stubber<SleepQuery>) -> Void) -> MethodStub {
+        public static func sleepQuery(willProduce: (Stubber<SleepQuery>) -> Void) -> MethodStub {
             let willReturn: [SleepQuery] = []
 			let given: Given = { return Given(method: .m_sleepQuery, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (SleepQuery).self)
 			willProduce(stubber)
 			return given
         }
-        static func weightQuery(willProduce: (Stubber<WeightQuery>) -> Void) -> MethodStub {
+        public static func weightQuery(willProduce: (Stubber<WeightQuery>) -> Void) -> MethodStub {
             let willReturn: [WeightQuery] = []
 			let given: Given = { return Given(method: .m_weightQuery, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (WeightQuery).self)
 			willProduce(stubber)
 			return given
         }
-        static func queryFor(_ sampleType: Parameter<Sample.Type>, willThrow: Error...) -> MethodStub {
+        public static func queryFor(_ sampleType: Parameter<Sample.Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_queryFor__sampleType(`sampleType`), products: willThrow.map({ Product.throw($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `sampleType` label")
-		static func queryFor(sampleType: Parameter<Sample.Type>, willThrow: Error...) -> MethodStub {
+		public static func queryFor(sampleType: Parameter<Sample.Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_queryFor__sampleType(`sampleType`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func queryFor(_ sampleType: Parameter<Sample.Type>, willProduce: (StubberThrows<Query>) -> Void) -> MethodStub {
+        public static func queryFor(_ sampleType: Parameter<Sample.Type>, willProduce: (StubberThrows<Query>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_queryFor__sampleType(`sampleType`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Query).self)
@@ -7170,67 +7233,67 @@ class QueryFactoryMock: QueryFactory, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func activityQuery() -> Verify { return Verify(method: .m_activityQuery)}
-        static func bloodPressureQuery() -> Verify { return Verify(method: .m_bloodPressureQuery)}
-        static func bmiQuery() -> Verify { return Verify(method: .m_bmiQuery)}
-        static func heartRateQuery() -> Verify { return Verify(method: .m_heartRateQuery)}
-        static func leanBodyMassQuery() -> Verify { return Verify(method: .m_leanBodyMassQuery)}
-        static func medicationDoseQuery() -> Verify { return Verify(method: .m_medicationDoseQuery)}
-        static func moodQuery() -> Verify { return Verify(method: .m_moodQuery)}
-        static func restingHeartRateQuery() -> Verify { return Verify(method: .m_restingHeartRateQuery)}
-        static func sexualActivityQuery() -> Verify { return Verify(method: .m_sexualActivityQuery)}
-        static func sleepQuery() -> Verify { return Verify(method: .m_sleepQuery)}
-        static func weightQuery() -> Verify { return Verify(method: .m_weightQuery)}
-        static func queryFor(_ sampleType: Parameter<Sample.Type>) -> Verify { return Verify(method: .m_queryFor__sampleType(`sampleType`))}
+        public static func activityQuery() -> Verify { return Verify(method: .m_activityQuery)}
+        public static func bloodPressureQuery() -> Verify { return Verify(method: .m_bloodPressureQuery)}
+        public static func bmiQuery() -> Verify { return Verify(method: .m_bmiQuery)}
+        public static func heartRateQuery() -> Verify { return Verify(method: .m_heartRateQuery)}
+        public static func leanBodyMassQuery() -> Verify { return Verify(method: .m_leanBodyMassQuery)}
+        public static func medicationDoseQuery() -> Verify { return Verify(method: .m_medicationDoseQuery)}
+        public static func moodQuery() -> Verify { return Verify(method: .m_moodQuery)}
+        public static func restingHeartRateQuery() -> Verify { return Verify(method: .m_restingHeartRateQuery)}
+        public static func sexualActivityQuery() -> Verify { return Verify(method: .m_sexualActivityQuery)}
+        public static func sleepQuery() -> Verify { return Verify(method: .m_sleepQuery)}
+        public static func weightQuery() -> Verify { return Verify(method: .m_weightQuery)}
+        public static func queryFor(_ sampleType: Parameter<Sample.Type>) -> Verify { return Verify(method: .m_queryFor__sampleType(`sampleType`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `sampleType` label")
-		static func queryFor(sampleType: Parameter<Sample.Type>) -> Verify { return Verify(method: .m_queryFor__sampleType(`sampleType`))}
+		public static func queryFor(sampleType: Parameter<Sample.Type>) -> Verify { return Verify(method: .m_queryFor__sampleType(`sampleType`))}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func activityQuery(perform: @escaping () -> Void) -> Perform {
+        public static func activityQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_activityQuery, performs: perform)
         }
-        static func bloodPressureQuery(perform: @escaping () -> Void) -> Perform {
+        public static func bloodPressureQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_bloodPressureQuery, performs: perform)
         }
-        static func bmiQuery(perform: @escaping () -> Void) -> Perform {
+        public static func bmiQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_bmiQuery, performs: perform)
         }
-        static func heartRateQuery(perform: @escaping () -> Void) -> Perform {
+        public static func heartRateQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_heartRateQuery, performs: perform)
         }
-        static func leanBodyMassQuery(perform: @escaping () -> Void) -> Perform {
+        public static func leanBodyMassQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_leanBodyMassQuery, performs: perform)
         }
-        static func medicationDoseQuery(perform: @escaping () -> Void) -> Perform {
+        public static func medicationDoseQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_medicationDoseQuery, performs: perform)
         }
-        static func moodQuery(perform: @escaping () -> Void) -> Perform {
+        public static func moodQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_moodQuery, performs: perform)
         }
-        static func restingHeartRateQuery(perform: @escaping () -> Void) -> Perform {
+        public static func restingHeartRateQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_restingHeartRateQuery, performs: perform)
         }
-        static func sexualActivityQuery(perform: @escaping () -> Void) -> Perform {
+        public static func sexualActivityQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_sexualActivityQuery, performs: perform)
         }
-        static func sleepQuery(perform: @escaping () -> Void) -> Perform {
+        public static func sleepQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_sleepQuery, performs: perform)
         }
-        static func weightQuery(perform: @escaping () -> Void) -> Perform {
+        public static func weightQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_weightQuery, performs: perform)
         }
-        static func queryFor(_ sampleType: Parameter<Sample.Type>, perform: @escaping (Sample.Type) -> Void) -> Perform {
+        public static func queryFor(_ sampleType: Parameter<Sample.Type>, perform: @escaping (Sample.Type) -> Void) -> Perform {
             return Perform(method: .m_queryFor__sampleType(`sampleType`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `sampleType` label")
-		static func queryFor(sampleType: Parameter<Sample.Type>, perform: @escaping (Sample.Type) -> Void) -> Perform {
+		public static func queryFor(sampleType: Parameter<Sample.Type>, perform: @escaping (Sample.Type) -> Void) -> Perform {
             return Perform(method: .m_queryFor__sampleType(`sampleType`), performs: perform)
         }
     }
@@ -7246,7 +7309,7 @@ class QueryFactoryMock: QueryFactory, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -7292,7 +7355,7 @@ class QueryFactoryMock: QueryFactory, Mock {
 }
 
 // MARK: - RestingHeartRateQuery
-class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
+open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -7309,9 +7372,9 @@ class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -7319,19 +7382,19 @@ class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
         self.line = line
     }
 
-    var attributeRestrictions: [AttributeRestriction] {
+    public var attributeRestrictions: [AttributeRestriction] {
 		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "RestingHeartRateQueryMock - stub value for attributeRestrictions was not defined") }
 		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
 	}
 	private var __p_attributeRestrictions: ([AttributeRestriction])?
 
-    var mostRecentEntryOnly: Bool {
+    public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "RestingHeartRateQueryMock - stub value for mostRecentEntryOnly was not defined") }
 		set {	invocations.append(.p_mostRecentEntryOnly_set(.value(newValue))); __p_mostRecentEntryOnly = newValue }
 	}
 	private var __p_mostRecentEntryOnly: (Bool)?
 
-    var subQuery: (matcher: SubQueryMatcher, query: Query)? {
+    public var subQuery: (matcher: SubQueryMatcher, query: Query)? {
 		get {	invocations.append(.p_subQuery_get); return __p_subQuery ?? optionalGivenGetterValue(.p_subQuery_get, "RestingHeartRateQueryMock - stub value for subQuery was not defined") }
 		set {	invocations.append(.p_subQuery_set(.value(newValue))); __p_subQuery = newValue }
 	}
@@ -7341,19 +7404,19 @@ class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
 
 
 
-    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
 		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
 		perform?(`callback`)
     }
 
-    func stop() {
+    open func stop() {
         addInvocation(.m_stop)
 		let perform = methodPerformValue(.m_stop) as? () -> Void
 		perform?()
     }
 
-    func equalTo(_ otherQuery: Query) -> Bool {
+    open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
 		perform?(`otherQuery`)
@@ -7414,7 +7477,7 @@ class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -7422,24 +7485,24 @@ class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
             super.init(products)
         }
 
-        static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
+        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
             return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
+        public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
+        public static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
             return Given(method: .p_subQuery_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
@@ -7448,37 +7511,37 @@ class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
-        static func stop() -> Verify { return Verify(method: .m_stop)}
-        static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
-        static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
-		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
-        static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
-		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
+		public static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
+		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
+		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
+        public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
+		public static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
-        static func stop(perform: @escaping () -> Void) -> Perform {
+        public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+        public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+		public static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
     }
@@ -7494,7 +7557,7 @@ class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -7540,7 +7603,7 @@ class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
 }
 
 // MARK: - SampleFactory
-class SampleFactoryMock: SampleFactory, Mock {
+open class SampleFactoryMock: SampleFactory, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -7557,9 +7620,9 @@ class SampleFactoryMock: SampleFactory, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -7571,7 +7634,7 @@ class SampleFactoryMock: SampleFactory, Mock {
 
 
 
-    func allTypes() -> [Sample.Type] {
+    open func allTypes() -> [Sample.Type] {
         addInvocation(.m_allTypes)
 		let perform = methodPerformValue(.m_allTypes) as? () -> Void
 		perform?()
@@ -7585,7 +7648,7 @@ class SampleFactoryMock: SampleFactory, Mock {
 		return __value
     }
 
-    func healthKitTypes() -> [HealthKitSample.Type] {
+    open func healthKitTypes() -> [HealthKitSample.Type] {
         addInvocation(.m_healthKitTypes)
 		let perform = methodPerformValue(.m_healthKitTypes) as? () -> Void
 		perform?()
@@ -7599,7 +7662,7 @@ class SampleFactoryMock: SampleFactory, Mock {
 		return __value
     }
 
-    func activity(using transaction: Transaction) throws -> Activity {
+    open func activity(using transaction: Transaction) throws -> Activity {
         addInvocation(.m_activity__using_transaction(Parameter<Transaction>.value(`transaction`)))
 		let perform = methodPerformValue(.m_activity__using_transaction(Parameter<Transaction>.value(`transaction`))) as? (Transaction) -> Void
 		perform?(`transaction`)
@@ -7615,7 +7678,7 @@ class SampleFactoryMock: SampleFactory, Mock {
 		return __value
     }
 
-    func heartRate(_ value: Double, _ date: Date) -> HeartRate {
+    open func heartRate(_ value: Double, _ date: Date) -> HeartRate {
         addInvocation(.m_heartRate__value_date(Parameter<Double>.value(`value`), Parameter<Date>.value(`date`)))
 		let perform = methodPerformValue(.m_heartRate__value_date(Parameter<Double>.value(`value`), Parameter<Date>.value(`date`))) as? (Double, Date) -> Void
 		perform?(`value`, `date`)
@@ -7629,7 +7692,7 @@ class SampleFactoryMock: SampleFactory, Mock {
 		return __value
     }
 
-    func heartRate(value: Double) -> HeartRate {
+    open func heartRate(value: Double) -> HeartRate {
         addInvocation(.m_heartRate__value_value(Parameter<Double>.value(`value`)))
 		let perform = methodPerformValue(.m_heartRate__value_value(Parameter<Double>.value(`value`))) as? (Double) -> Void
 		perform?(`value`)
@@ -7643,7 +7706,7 @@ class SampleFactoryMock: SampleFactory, Mock {
 		return __value
     }
 
-    func heartRate(_ sample: HKQuantitySample) -> HeartRate {
+    open func heartRate(_ sample: HKQuantitySample) -> HeartRate {
         addInvocation(.m_heartRate__sample(Parameter<HKQuantitySample>.value(`sample`)))
 		let perform = methodPerformValue(.m_heartRate__sample(Parameter<HKQuantitySample>.value(`sample`))) as? (HKQuantitySample) -> Void
 		perform?(`sample`)
@@ -7657,7 +7720,7 @@ class SampleFactoryMock: SampleFactory, Mock {
 		return __value
     }
 
-    func medicationDose(using transaction: Transaction) throws -> MedicationDose {
+    open func medicationDose(using transaction: Transaction) throws -> MedicationDose {
         addInvocation(.m_medicationDose__using_transaction(Parameter<Transaction>.value(`transaction`)))
 		let perform = methodPerformValue(.m_medicationDose__using_transaction(Parameter<Transaction>.value(`transaction`))) as? (Transaction) -> Void
 		perform?(`transaction`)
@@ -7673,7 +7736,7 @@ class SampleFactoryMock: SampleFactory, Mock {
 		return __value
     }
 
-    func mood(using transaction: Transaction) throws -> Mood {
+    open func mood(using transaction: Transaction) throws -> Mood {
         addInvocation(.m_mood__using_transaction(Parameter<Transaction>.value(`transaction`)))
 		let perform = methodPerformValue(.m_mood__using_transaction(Parameter<Transaction>.value(`transaction`))) as? (Transaction) -> Void
 		perform?(`transaction`)
@@ -7743,7 +7806,7 @@ class SampleFactoryMock: SampleFactory, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -7752,97 +7815,97 @@ class SampleFactoryMock: SampleFactory, Mock {
         }
 
 
-        static func allTypes(willReturn: [Sample.Type]...) -> MethodStub {
+        public static func allTypes(willReturn: [Sample.Type]...) -> MethodStub {
             return Given(method: .m_allTypes, products: willReturn.map({ Product.return($0) }))
         }
-        static func healthKitTypes(willReturn: [HealthKitSample.Type]...) -> MethodStub {
+        public static func healthKitTypes(willReturn: [HealthKitSample.Type]...) -> MethodStub {
             return Given(method: .m_healthKitTypes, products: willReturn.map({ Product.return($0) }))
         }
-        static func activity(using transaction: Parameter<Transaction>, willReturn: Activity...) -> MethodStub {
+        public static func activity(using transaction: Parameter<Transaction>, willReturn: Activity...) -> MethodStub {
             return Given(method: .m_activity__using_transaction(`transaction`), products: willReturn.map({ Product.return($0) }))
         }
-        static func heartRate(_ value: Parameter<Double>, _ date: Parameter<Date>, willReturn: HeartRate...) -> MethodStub {
+        public static func heartRate(_ value: Parameter<Double>, _ date: Parameter<Date>, willReturn: HeartRate...) -> MethodStub {
             return Given(method: .m_heartRate__value_date(`value`, `date`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label, remove `date` label")
-		static func heartRate(value: Parameter<Double>, date: Parameter<Date>, willReturn: HeartRate...) -> MethodStub {
+		public static func heartRate(value: Parameter<Double>, date: Parameter<Date>, willReturn: HeartRate...) -> MethodStub {
             return Given(method: .m_heartRate__value_date(`value`, `date`), products: willReturn.map({ Product.return($0) }))
         }
-        static func heartRate(value: Parameter<Double>, willReturn: HeartRate...) -> MethodStub {
+        public static func heartRate(value: Parameter<Double>, willReturn: HeartRate...) -> MethodStub {
             return Given(method: .m_heartRate__value_value(`value`), products: willReturn.map({ Product.return($0) }))
         }
-        static func heartRate(_ sample: Parameter<HKQuantitySample>, willReturn: HeartRate...) -> MethodStub {
+        public static func heartRate(_ sample: Parameter<HKQuantitySample>, willReturn: HeartRate...) -> MethodStub {
             return Given(method: .m_heartRate__sample(`sample`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `sample` label")
-		static func heartRate(sample: Parameter<HKQuantitySample>, willReturn: HeartRate...) -> MethodStub {
+		public static func heartRate(sample: Parameter<HKQuantitySample>, willReturn: HeartRate...) -> MethodStub {
             return Given(method: .m_heartRate__sample(`sample`), products: willReturn.map({ Product.return($0) }))
         }
-        static func medicationDose(using transaction: Parameter<Transaction>, willReturn: MedicationDose...) -> MethodStub {
+        public static func medicationDose(using transaction: Parameter<Transaction>, willReturn: MedicationDose...) -> MethodStub {
             return Given(method: .m_medicationDose__using_transaction(`transaction`), products: willReturn.map({ Product.return($0) }))
         }
-        static func mood(using transaction: Parameter<Transaction>, willReturn: Mood...) -> MethodStub {
+        public static func mood(using transaction: Parameter<Transaction>, willReturn: Mood...) -> MethodStub {
             return Given(method: .m_mood__using_transaction(`transaction`), products: willReturn.map({ Product.return($0) }))
         }
-        static func allTypes(willProduce: (Stubber<[Sample.Type]>) -> Void) -> MethodStub {
+        public static func allTypes(willProduce: (Stubber<[Sample.Type]>) -> Void) -> MethodStub {
             let willReturn: [[Sample.Type]] = []
 			let given: Given = { return Given(method: .m_allTypes, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: ([Sample.Type]).self)
 			willProduce(stubber)
 			return given
         }
-        static func healthKitTypes(willProduce: (Stubber<[HealthKitSample.Type]>) -> Void) -> MethodStub {
+        public static func healthKitTypes(willProduce: (Stubber<[HealthKitSample.Type]>) -> Void) -> MethodStub {
             let willReturn: [[HealthKitSample.Type]] = []
 			let given: Given = { return Given(method: .m_healthKitTypes, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: ([HealthKitSample.Type]).self)
 			willProduce(stubber)
 			return given
         }
-        static func heartRate(_ value: Parameter<Double>, _ date: Parameter<Date>, willProduce: (Stubber<HeartRate>) -> Void) -> MethodStub {
+        public static func heartRate(_ value: Parameter<Double>, _ date: Parameter<Date>, willProduce: (Stubber<HeartRate>) -> Void) -> MethodStub {
             let willReturn: [HeartRate] = []
 			let given: Given = { return Given(method: .m_heartRate__value_date(`value`, `date`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (HeartRate).self)
 			willProduce(stubber)
 			return given
         }
-        static func heartRate(value: Parameter<Double>, willProduce: (Stubber<HeartRate>) -> Void) -> MethodStub {
+        public static func heartRate(value: Parameter<Double>, willProduce: (Stubber<HeartRate>) -> Void) -> MethodStub {
             let willReturn: [HeartRate] = []
 			let given: Given = { return Given(method: .m_heartRate__value_value(`value`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (HeartRate).self)
 			willProduce(stubber)
 			return given
         }
-        static func heartRate(_ sample: Parameter<HKQuantitySample>, willProduce: (Stubber<HeartRate>) -> Void) -> MethodStub {
+        public static func heartRate(_ sample: Parameter<HKQuantitySample>, willProduce: (Stubber<HeartRate>) -> Void) -> MethodStub {
             let willReturn: [HeartRate] = []
 			let given: Given = { return Given(method: .m_heartRate__sample(`sample`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (HeartRate).self)
 			willProduce(stubber)
 			return given
         }
-        static func activity(using transaction: Parameter<Transaction>, willThrow: Error...) -> MethodStub {
+        public static func activity(using transaction: Parameter<Transaction>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_activity__using_transaction(`transaction`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func activity(using transaction: Parameter<Transaction>, willProduce: (StubberThrows<Activity>) -> Void) -> MethodStub {
+        public static func activity(using transaction: Parameter<Transaction>, willProduce: (StubberThrows<Activity>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_activity__using_transaction(`transaction`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Activity).self)
 			willProduce(stubber)
 			return given
         }
-        static func medicationDose(using transaction: Parameter<Transaction>, willThrow: Error...) -> MethodStub {
+        public static func medicationDose(using transaction: Parameter<Transaction>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_medicationDose__using_transaction(`transaction`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func medicationDose(using transaction: Parameter<Transaction>, willProduce: (StubberThrows<MedicationDose>) -> Void) -> MethodStub {
+        public static func medicationDose(using transaction: Parameter<Transaction>, willProduce: (StubberThrows<MedicationDose>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_medicationDose__using_transaction(`transaction`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (MedicationDose).self)
 			willProduce(stubber)
 			return given
         }
-        static func mood(using transaction: Parameter<Transaction>, willThrow: Error...) -> MethodStub {
+        public static func mood(using transaction: Parameter<Transaction>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_mood__using_transaction(`transaction`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func mood(using transaction: Parameter<Transaction>, willProduce: (StubberThrows<Mood>) -> Void) -> MethodStub {
+        public static func mood(using transaction: Parameter<Transaction>, willProduce: (StubberThrows<Mood>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_mood__using_transaction(`transaction`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Mood).self)
@@ -7851,57 +7914,57 @@ class SampleFactoryMock: SampleFactory, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func allTypes() -> Verify { return Verify(method: .m_allTypes)}
-        static func healthKitTypes() -> Verify { return Verify(method: .m_healthKitTypes)}
-        static func activity(using transaction: Parameter<Transaction>) -> Verify { return Verify(method: .m_activity__using_transaction(`transaction`))}
-        static func heartRate(_ value: Parameter<Double>, _ date: Parameter<Date>) -> Verify { return Verify(method: .m_heartRate__value_date(`value`, `date`))}
+        public static func allTypes() -> Verify { return Verify(method: .m_allTypes)}
+        public static func healthKitTypes() -> Verify { return Verify(method: .m_healthKitTypes)}
+        public static func activity(using transaction: Parameter<Transaction>) -> Verify { return Verify(method: .m_activity__using_transaction(`transaction`))}
+        public static func heartRate(_ value: Parameter<Double>, _ date: Parameter<Date>) -> Verify { return Verify(method: .m_heartRate__value_date(`value`, `date`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label, remove `date` label")
-		static func heartRate(value: Parameter<Double>, date: Parameter<Date>) -> Verify { return Verify(method: .m_heartRate__value_date(`value`, `date`))}
-        static func heartRate(value: Parameter<Double>) -> Verify { return Verify(method: .m_heartRate__value_value(`value`))}
-        static func heartRate(_ sample: Parameter<HKQuantitySample>) -> Verify { return Verify(method: .m_heartRate__sample(`sample`))}
+		public static func heartRate(value: Parameter<Double>, date: Parameter<Date>) -> Verify { return Verify(method: .m_heartRate__value_date(`value`, `date`))}
+        public static func heartRate(value: Parameter<Double>) -> Verify { return Verify(method: .m_heartRate__value_value(`value`))}
+        public static func heartRate(_ sample: Parameter<HKQuantitySample>) -> Verify { return Verify(method: .m_heartRate__sample(`sample`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `sample` label")
-		static func heartRate(sample: Parameter<HKQuantitySample>) -> Verify { return Verify(method: .m_heartRate__sample(`sample`))}
-        static func medicationDose(using transaction: Parameter<Transaction>) -> Verify { return Verify(method: .m_medicationDose__using_transaction(`transaction`))}
-        static func mood(using transaction: Parameter<Transaction>) -> Verify { return Verify(method: .m_mood__using_transaction(`transaction`))}
+		public static func heartRate(sample: Parameter<HKQuantitySample>) -> Verify { return Verify(method: .m_heartRate__sample(`sample`))}
+        public static func medicationDose(using transaction: Parameter<Transaction>) -> Verify { return Verify(method: .m_medicationDose__using_transaction(`transaction`))}
+        public static func mood(using transaction: Parameter<Transaction>) -> Verify { return Verify(method: .m_mood__using_transaction(`transaction`))}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func allTypes(perform: @escaping () -> Void) -> Perform {
+        public static func allTypes(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_allTypes, performs: perform)
         }
-        static func healthKitTypes(perform: @escaping () -> Void) -> Perform {
+        public static func healthKitTypes(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_healthKitTypes, performs: perform)
         }
-        static func activity(using transaction: Parameter<Transaction>, perform: @escaping (Transaction) -> Void) -> Perform {
+        public static func activity(using transaction: Parameter<Transaction>, perform: @escaping (Transaction) -> Void) -> Perform {
             return Perform(method: .m_activity__using_transaction(`transaction`), performs: perform)
         }
-        static func heartRate(_ value: Parameter<Double>, _ date: Parameter<Date>, perform: @escaping (Double, Date) -> Void) -> Perform {
+        public static func heartRate(_ value: Parameter<Double>, _ date: Parameter<Date>, perform: @escaping (Double, Date) -> Void) -> Perform {
             return Perform(method: .m_heartRate__value_date(`value`, `date`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label, remove `date` label")
-		static func heartRate(value: Parameter<Double>, date: Parameter<Date>, perform: @escaping (Double, Date) -> Void) -> Perform {
+		public static func heartRate(value: Parameter<Double>, date: Parameter<Date>, perform: @escaping (Double, Date) -> Void) -> Perform {
             return Perform(method: .m_heartRate__value_date(`value`, `date`), performs: perform)
         }
-        static func heartRate(value: Parameter<Double>, perform: @escaping (Double) -> Void) -> Perform {
+        public static func heartRate(value: Parameter<Double>, perform: @escaping (Double) -> Void) -> Perform {
             return Perform(method: .m_heartRate__value_value(`value`), performs: perform)
         }
-        static func heartRate(_ sample: Parameter<HKQuantitySample>, perform: @escaping (HKQuantitySample) -> Void) -> Perform {
+        public static func heartRate(_ sample: Parameter<HKQuantitySample>, perform: @escaping (HKQuantitySample) -> Void) -> Perform {
             return Perform(method: .m_heartRate__sample(`sample`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `sample` label")
-		static func heartRate(sample: Parameter<HKQuantitySample>, perform: @escaping (HKQuantitySample) -> Void) -> Perform {
+		public static func heartRate(sample: Parameter<HKQuantitySample>, perform: @escaping (HKQuantitySample) -> Void) -> Perform {
             return Perform(method: .m_heartRate__sample(`sample`), performs: perform)
         }
-        static func medicationDose(using transaction: Parameter<Transaction>, perform: @escaping (Transaction) -> Void) -> Perform {
+        public static func medicationDose(using transaction: Parameter<Transaction>, perform: @escaping (Transaction) -> Void) -> Perform {
             return Perform(method: .m_medicationDose__using_transaction(`transaction`), performs: perform)
         }
-        static func mood(using transaction: Parameter<Transaction>, perform: @escaping (Transaction) -> Void) -> Perform {
+        public static func mood(using transaction: Parameter<Transaction>, perform: @escaping (Transaction) -> Void) -> Perform {
             return Perform(method: .m_mood__using_transaction(`transaction`), performs: perform)
         }
     }
@@ -7917,7 +7980,7 @@ class SampleFactoryMock: SampleFactory, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -7963,7 +8026,7 @@ class SampleFactoryMock: SampleFactory, Mock {
 }
 
 // MARK: - SampleUtil
-class SampleUtilMock: SampleUtil, Mock {
+open class SampleUtilMock: SampleUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -7980,9 +8043,9 @@ class SampleUtilMock: SampleUtil, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -7994,7 +8057,7 @@ class SampleUtilMock: SampleUtil, Mock {
 
 
 
-    func getOnly(samples: [Sample], from startDate: Date?, to endDate: Date?) -> [Sample] {
+    open func getOnly(samples: [Sample], from startDate: Date?, to endDate: Date?) -> [Sample] {
         addInvocation(.m_getOnly__samples_samplesfrom_startDateto_endDate_1(Parameter<[Sample]>.value(`samples`), Parameter<Date?>.value(`startDate`), Parameter<Date?>.value(`endDate`)))
 		let perform = methodPerformValue(.m_getOnly__samples_samplesfrom_startDateto_endDate_1(Parameter<[Sample]>.value(`samples`), Parameter<Date?>.value(`startDate`), Parameter<Date?>.value(`endDate`))) as? ([Sample], Date?, Date?) -> Void
 		perform?(`samples`, `startDate`, `endDate`)
@@ -8008,7 +8071,7 @@ class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    func getOnly<SampleType: Sample>(samples: [SampleType], from startDate: Date?, to endDate: Date?) -> [SampleType] {
+    open func getOnly<SampleType: Sample>(samples: [SampleType], from startDate: Date?, to endDate: Date?) -> [SampleType] {
         addInvocation(.m_getOnly__samples_samplesfrom_startDateto_endDate_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Date?>.value(`startDate`), Parameter<Date?>.value(`endDate`)))
 		let perform = methodPerformValue(.m_getOnly__samples_samplesfrom_startDateto_endDate_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Date?>.value(`startDate`), Parameter<Date?>.value(`endDate`))) as? ([SampleType], Date?, Date?) -> Void
 		perform?(`samples`, `startDate`, `endDate`)
@@ -8022,7 +8085,7 @@ class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    func sample(_ sample: Sample, occursOnOneOf daysOfWeek: Set<DayOfWeek>) -> Bool {
+    open func sample(_ sample: Sample, occursOnOneOf daysOfWeek: Set<DayOfWeek>) -> Bool {
         addInvocation(.m_sample__sampleoccursOnOneOf_daysOfWeek(Parameter<Sample>.value(`sample`), Parameter<Set<DayOfWeek>>.value(`daysOfWeek`)))
 		let perform = methodPerformValue(.m_sample__sampleoccursOnOneOf_daysOfWeek(Parameter<Sample>.value(`sample`), Parameter<Set<DayOfWeek>>.value(`daysOfWeek`))) as? (Sample, Set<DayOfWeek>) -> Void
 		perform?(`sample`, `daysOfWeek`)
@@ -8036,7 +8099,7 @@ class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    func aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, for attribute: Attribute) throws -> [Date: [Sample]] {
+    open func aggregate(samples: [Sample], by aggregationUnit: Calendar.Component, for attribute: Attribute) throws -> [Date: [Sample]] {
         addInvocation(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`)))
 		let perform = methodPerformValue(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`))) as? ([Sample], Calendar.Component, Attribute) -> Void
 		perform?(`samples`, `aggregationUnit`, `attribute`)
@@ -8052,7 +8115,7 @@ class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    func aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, for attribute: Attribute) throws -> [Date: [SampleType]] {
+    open func aggregate<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component, for attribute: Attribute) throws -> [Date: [SampleType]] {
         addInvocation(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`)))
 		let perform = methodPerformValue(.m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`), Parameter<Attribute>.value(`attribute`))) as? ([SampleType], Calendar.Component, Attribute) -> Void
 		perform?(`samples`, `aggregationUnit`, `attribute`)
@@ -8068,7 +8131,7 @@ class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    func sort(samples: [Sample], by aggregationUnit: Calendar.Component) throws -> [(date: Date, samples: [Sample])] {
+    open func sort(samples: [Sample], by aggregationUnit: Calendar.Component) throws -> [(date: Date, samples: [Sample])] {
         addInvocation(.m_sort__samples_samplesby_aggregationUnit_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`)))
 		let perform = methodPerformValue(.m_sort__samples_samplesby_aggregationUnit_1(Parameter<[Sample]>.value(`samples`), Parameter<Calendar.Component>.value(`aggregationUnit`))) as? ([Sample], Calendar.Component) -> Void
 		perform?(`samples`, `aggregationUnit`)
@@ -8084,7 +8147,7 @@ class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    func sort<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component) throws -> [(date: Date, samples: [SampleType])] {
+    open func sort<SampleType: Sample>(samples: [SampleType], by aggregationUnit: Calendar.Component) throws -> [(date: Date, samples: [SampleType])] {
         addInvocation(.m_sort__samples_samplesby_aggregationUnit_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`)))
 		let perform = methodPerformValue(.m_sort__samples_samplesby_aggregationUnit_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<Calendar.Component>.value(`aggregationUnit`))) as? ([SampleType], Calendar.Component) -> Void
 		perform?(`samples`, `aggregationUnit`)
@@ -8100,7 +8163,7 @@ class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    func sort(samples: [Sample], by dateType: DateType, in order: ComparisonResult) -> [Sample] {
+    open func sort(samples: [Sample], by dateType: DateType, in order: ComparisonResult) -> [Sample] {
         addInvocation(.m_sort__samples_samplesby_dateTypein_order_1(Parameter<[Sample]>.value(`samples`), Parameter<DateType>.value(`dateType`), Parameter<ComparisonResult>.value(`order`)))
 		let perform = methodPerformValue(.m_sort__samples_samplesby_dateTypein_order_1(Parameter<[Sample]>.value(`samples`), Parameter<DateType>.value(`dateType`), Parameter<ComparisonResult>.value(`order`))) as? ([Sample], DateType, ComparisonResult) -> Void
 		perform?(`samples`, `dateType`, `order`)
@@ -8114,7 +8177,7 @@ class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    func sort<SampleType: Sample>(samples: [SampleType], by dateType: DateType, in order: ComparisonResult) -> [SampleType] {
+    open func sort<SampleType: Sample>(samples: [SampleType], by dateType: DateType, in order: ComparisonResult) -> [SampleType] {
         addInvocation(.m_sort__samples_samplesby_dateTypein_order_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<DateType>.value(`dateType`), Parameter<ComparisonResult>.value(`order`)))
 		let perform = methodPerformValue(.m_sort__samples_samplesby_dateTypein_order_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<DateType>.value(`dateType`), Parameter<ComparisonResult>.value(`order`))) as? ([SampleType], DateType, ComparisonResult) -> Void
 		perform?(`samples`, `dateType`, `order`)
@@ -8128,7 +8191,7 @@ class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    func convertOneDateSamplesToTwoDateSamples(_ samples: [Sample], samplesShouldNotBeJoined: (Sample, Sample) -> Bool, joinSamples: ([Sample], Date, Date) -> Sample) -> [Sample] {
+    open func convertOneDateSamplesToTwoDateSamples(_ samples: [Sample], samplesShouldNotBeJoined: (Sample, Sample) -> Bool, joinSamples: ([Sample], Date, Date) -> Sample) -> [Sample] {
         addInvocation(.m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_1(Parameter<[Sample]>.value(`samples`), Parameter<(Sample, Sample) -> Bool>.any, Parameter<([Sample], Date, Date) -> Sample>.any))
 		let perform = methodPerformValue(.m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_1(Parameter<[Sample]>.value(`samples`), Parameter<(Sample, Sample) -> Bool>.any, Parameter<([Sample], Date, Date) -> Sample>.any)) as? ([Sample], (Sample, Sample) -> Bool, ([Sample], Date, Date) -> Sample) -> Void
 		perform?(`samples`, `samplesShouldNotBeJoined`, `joinSamples`)
@@ -8142,7 +8205,7 @@ class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(_ samples: [SampleType], samplesShouldNotBeJoined: (SampleType, SampleType) -> Bool, joinSamples: ([SampleType], Date, Date) -> SampleType) -> [SampleType] {
+    open func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(_ samples: [SampleType], samplesShouldNotBeJoined: (SampleType, SampleType) -> Bool, joinSamples: ([SampleType], Date, Date) -> SampleType) -> [SampleType] {
         addInvocation(.m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<(SampleType, SampleType) -> Bool>.any.wrapAsGeneric(), Parameter<([SampleType], Date, Date) -> SampleType>.any.wrapAsGeneric()))
 		let perform = methodPerformValue(.m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(Parameter<[SampleType]>.value(`samples`).wrapAsGeneric(), Parameter<(SampleType, SampleType) -> Bool>.any.wrapAsGeneric(), Parameter<([SampleType], Date, Date) -> SampleType>.any.wrapAsGeneric())) as? ([SampleType], (SampleType, SampleType) -> Bool, ([SampleType], Date, Date) -> SampleType) -> Void
 		perform?(`samples`, `samplesShouldNotBeJoined`, `joinSamples`)
@@ -8156,7 +8219,7 @@ class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2]) -> SampleType2 {
+    open func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: SampleType1, in samples: [SampleType2]) -> SampleType2 {
         addInvocation(.m_closestInTimeTo__sample_samplein_samples_1(Parameter<SampleType1>.value(`sample`).wrapAsGeneric(), Parameter<[SampleType2]>.value(`samples`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_closestInTimeTo__sample_samplein_samples_1(Parameter<SampleType1>.value(`sample`).wrapAsGeneric(), Parameter<[SampleType2]>.value(`samples`).wrapAsGeneric())) as? (SampleType1, [SampleType2]) -> Void
 		perform?(`sample`, `samples`)
@@ -8170,7 +8233,7 @@ class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    func closestInTimeTo(sample: Sample, in samples: [Sample]) -> Sample {
+    open func closestInTimeTo(sample: Sample, in samples: [Sample]) -> Sample {
         addInvocation(.m_closestInTimeTo__sample_samplein_samples_2(Parameter<Sample>.value(`sample`), Parameter<[Sample]>.value(`samples`)))
 		let perform = methodPerformValue(.m_closestInTimeTo__sample_samplein_samples_2(Parameter<Sample>.value(`sample`), Parameter<[Sample]>.value(`samples`))) as? (Sample, [Sample]) -> Void
 		perform?(`sample`, `samples`)
@@ -8184,7 +8247,7 @@ class SampleUtilMock: SampleUtil, Mock {
 		return __value
     }
 
-    func distance(between sample1: Sample, and sample2: Sample, in unit: Calendar.Component) -> Int {
+    open func distance(between sample1: Sample, and sample2: Sample, in unit: Calendar.Component) -> Int {
         addInvocation(.m_distance__between_sample1and_sample2in_unit(Parameter<Sample>.value(`sample1`), Parameter<Sample>.value(`sample2`), Parameter<Calendar.Component>.value(`unit`)))
 		let perform = methodPerformValue(.m_distance__between_sample1and_sample2in_unit(Parameter<Sample>.value(`sample1`), Parameter<Sample>.value(`sample2`), Parameter<Calendar.Component>.value(`unit`))) as? (Sample, Sample, Calendar.Component) -> Void
 		perform?(`sample1`, `sample2`, `unit`)
@@ -8306,7 +8369,7 @@ class SampleUtilMock: SampleUtil, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -8315,164 +8378,164 @@ class SampleUtilMock: SampleUtil, Mock {
         }
 
 
-        static func getOnly(samples: Parameter<[Sample]>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, willReturn: [Sample]...) -> MethodStub {
+        public static func getOnly(samples: Parameter<[Sample]>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, willReturn: [Sample]...) -> MethodStub {
             return Given(method: .m_getOnly__samples_samplesfrom_startDateto_endDate_1(`samples`, `startDate`, `endDate`), products: willReturn.map({ Product.return($0) }))
         }
-        static func getOnly<SampleType: Sample>(samples: Parameter<[SampleType]>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, willReturn: [SampleType]...) -> MethodStub {
+        public static func getOnly<SampleType: Sample>(samples: Parameter<[SampleType]>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, willReturn: [SampleType]...) -> MethodStub {
             return Given(method: .m_getOnly__samples_samplesfrom_startDateto_endDate_2(`samples`.wrapAsGeneric(), `startDate`, `endDate`), products: willReturn.map({ Product.return($0) }))
         }
-        static func sample(_ sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>, willReturn: Bool...) -> MethodStub {
+        public static func sample(_ sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_sample__sampleoccursOnOneOf_daysOfWeek(`sample`, `daysOfWeek`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `sample` label")
-		static func sample(sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>, willReturn: Bool...) -> MethodStub {
+		public static func sample(sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_sample__sampleoccursOnOneOf_daysOfWeek(`sample`, `daysOfWeek`), products: willReturn.map({ Product.return($0) }))
         }
-        static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willReturn: [Date: [Sample]]...) -> MethodStub {
+        public static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willReturn: [Date: [Sample]]...) -> MethodStub {
             return Given(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(`samples`, `aggregationUnit`, `attribute`), products: willReturn.map({ Product.return($0) }))
         }
-        static func aggregate<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willReturn: [Date: [SampleType]]...) -> MethodStub {
+        public static func aggregate<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willReturn: [Date: [SampleType]]...) -> MethodStub {
             return Given(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(`samples`.wrapAsGeneric(), `aggregationUnit`, `attribute`), products: willReturn.map({ Product.return($0) }))
         }
-        static func sort(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, willReturn: [(date: Date, samples: [Sample])]...) -> MethodStub {
+        public static func sort(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, willReturn: [(date: Date, samples: [Sample])]...) -> MethodStub {
             return Given(method: .m_sort__samples_samplesby_aggregationUnit_1(`samples`, `aggregationUnit`), products: willReturn.map({ Product.return($0) }))
         }
-        static func sort<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, willReturn: [(date: Date, samples: [SampleType])]...) -> MethodStub {
+        public static func sort<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, willReturn: [(date: Date, samples: [SampleType])]...) -> MethodStub {
             return Given(method: .m_sort__samples_samplesby_aggregationUnit_2(`samples`.wrapAsGeneric(), `aggregationUnit`), products: willReturn.map({ Product.return($0) }))
         }
-        static func sort(samples: Parameter<[Sample]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>, willReturn: [Sample]...) -> MethodStub {
+        public static func sort(samples: Parameter<[Sample]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>, willReturn: [Sample]...) -> MethodStub {
             return Given(method: .m_sort__samples_samplesby_dateTypein_order_1(`samples`, `dateType`, `order`), products: willReturn.map({ Product.return($0) }))
         }
-        static func sort<SampleType: Sample>(samples: Parameter<[SampleType]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>, willReturn: [SampleType]...) -> MethodStub {
+        public static func sort<SampleType: Sample>(samples: Parameter<[SampleType]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>, willReturn: [SampleType]...) -> MethodStub {
             return Given(method: .m_sort__samples_samplesby_dateTypein_order_2(`samples`.wrapAsGeneric(), `dateType`, `order`), products: willReturn.map({ Product.return($0) }))
         }
-        static func convertOneDateSamplesToTwoDateSamples(_ samples: Parameter<[Sample]>, samplesShouldNotBeJoined: Parameter<(Sample, Sample) -> Bool>, joinSamples: Parameter<([Sample], Date, Date) -> Sample>, willReturn: [Sample]...) -> MethodStub {
+        public static func convertOneDateSamplesToTwoDateSamples(_ samples: Parameter<[Sample]>, samplesShouldNotBeJoined: Parameter<(Sample, Sample) -> Bool>, joinSamples: Parameter<([Sample], Date, Date) -> Sample>, willReturn: [Sample]...) -> MethodStub {
             return Given(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_1(`samples`, `samplesShouldNotBeJoined`, `joinSamples`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `samples` label")
-		static func convertOneDateSamplesToTwoDateSamples(samples: Parameter<[Sample]>, samplesShouldNotBeJoined: Parameter<(Sample, Sample) -> Bool>, joinSamples: Parameter<([Sample], Date, Date) -> Sample>, willReturn: [Sample]...) -> MethodStub {
+		public static func convertOneDateSamplesToTwoDateSamples(samples: Parameter<[Sample]>, samplesShouldNotBeJoined: Parameter<(Sample, Sample) -> Bool>, joinSamples: Parameter<([Sample], Date, Date) -> Sample>, willReturn: [Sample]...) -> MethodStub {
             return Given(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_1(`samples`, `samplesShouldNotBeJoined`, `joinSamples`), products: willReturn.map({ Product.return($0) }))
         }
-        static func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(_ samples: Parameter<[SampleType]>, samplesShouldNotBeJoined: Parameter<(SampleType, SampleType) -> Bool>, joinSamples: Parameter<([SampleType], Date, Date) -> SampleType>, willReturn: [SampleType]...) -> MethodStub {
+        public static func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(_ samples: Parameter<[SampleType]>, samplesShouldNotBeJoined: Parameter<(SampleType, SampleType) -> Bool>, joinSamples: Parameter<([SampleType], Date, Date) -> SampleType>, willReturn: [SampleType]...) -> MethodStub {
             return Given(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(`samples`.wrapAsGeneric(), `samplesShouldNotBeJoined`.wrapAsGeneric(), `joinSamples`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `samples` label")
-		static func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(samples: Parameter<[SampleType]>, samplesShouldNotBeJoined: Parameter<(SampleType, SampleType) -> Bool>, joinSamples: Parameter<([SampleType], Date, Date) -> SampleType>, willReturn: [SampleType]...) -> MethodStub {
+		public static func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(samples: Parameter<[SampleType]>, samplesShouldNotBeJoined: Parameter<(SampleType, SampleType) -> Bool>, joinSamples: Parameter<([SampleType], Date, Date) -> SampleType>, willReturn: [SampleType]...) -> MethodStub {
             return Given(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(`samples`.wrapAsGeneric(), `samplesShouldNotBeJoined`.wrapAsGeneric(), `joinSamples`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: Parameter<SampleType1>, in samples: Parameter<[SampleType2]>, willReturn: SampleType2...) -> MethodStub {
+        public static func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: Parameter<SampleType1>, in samples: Parameter<[SampleType2]>, willReturn: SampleType2...) -> MethodStub {
             return Given(method: .m_closestInTimeTo__sample_samplein_samples_1(`sample`.wrapAsGeneric(), `samples`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func closestInTimeTo(sample: Parameter<Sample>, in samples: Parameter<[Sample]>, willReturn: Sample...) -> MethodStub {
+        public static func closestInTimeTo(sample: Parameter<Sample>, in samples: Parameter<[Sample]>, willReturn: Sample...) -> MethodStub {
             return Given(method: .m_closestInTimeTo__sample_samplein_samples_2(`sample`, `samples`), products: willReturn.map({ Product.return($0) }))
         }
-        static func distance(between sample1: Parameter<Sample>, and sample2: Parameter<Sample>, in unit: Parameter<Calendar.Component>, willReturn: Int...) -> MethodStub {
+        public static func distance(between sample1: Parameter<Sample>, and sample2: Parameter<Sample>, in unit: Parameter<Calendar.Component>, willReturn: Int...) -> MethodStub {
             return Given(method: .m_distance__between_sample1and_sample2in_unit(`sample1`, `sample2`, `unit`), products: willReturn.map({ Product.return($0) }))
         }
-        static func getOnly(samples: Parameter<[Sample]>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, willProduce: (Stubber<[Sample]>) -> Void) -> MethodStub {
+        public static func getOnly(samples: Parameter<[Sample]>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, willProduce: (Stubber<[Sample]>) -> Void) -> MethodStub {
             let willReturn: [[Sample]] = []
 			let given: Given = { return Given(method: .m_getOnly__samples_samplesfrom_startDateto_endDate_1(`samples`, `startDate`, `endDate`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: ([Sample]).self)
 			willProduce(stubber)
 			return given
         }
-        static func getOnly<SampleType: Sample>(samples: Parameter<[SampleType]>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, willProduce: (Stubber<[SampleType]>) -> Void) -> MethodStub {
+        public static func getOnly<SampleType: Sample>(samples: Parameter<[SampleType]>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, willProduce: (Stubber<[SampleType]>) -> Void) -> MethodStub {
             let willReturn: [[SampleType]] = []
 			let given: Given = { return Given(method: .m_getOnly__samples_samplesfrom_startDateto_endDate_2(`samples`.wrapAsGeneric(), `startDate`, `endDate`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: ([SampleType]).self)
 			willProduce(stubber)
 			return given
         }
-        static func sample(_ sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func sample(_ sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_sample__sampleoccursOnOneOf_daysOfWeek(`sample`, `daysOfWeek`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
-        static func sort(samples: Parameter<[Sample]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>, willProduce: (Stubber<[Sample]>) -> Void) -> MethodStub {
+        public static func sort(samples: Parameter<[Sample]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>, willProduce: (Stubber<[Sample]>) -> Void) -> MethodStub {
             let willReturn: [[Sample]] = []
 			let given: Given = { return Given(method: .m_sort__samples_samplesby_dateTypein_order_1(`samples`, `dateType`, `order`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: ([Sample]).self)
 			willProduce(stubber)
 			return given
         }
-        static func sort<SampleType: Sample>(samples: Parameter<[SampleType]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>, willProduce: (Stubber<[SampleType]>) -> Void) -> MethodStub {
+        public static func sort<SampleType: Sample>(samples: Parameter<[SampleType]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>, willProduce: (Stubber<[SampleType]>) -> Void) -> MethodStub {
             let willReturn: [[SampleType]] = []
 			let given: Given = { return Given(method: .m_sort__samples_samplesby_dateTypein_order_2(`samples`.wrapAsGeneric(), `dateType`, `order`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: ([SampleType]).self)
 			willProduce(stubber)
 			return given
         }
-        static func convertOneDateSamplesToTwoDateSamples(_ samples: Parameter<[Sample]>, samplesShouldNotBeJoined: Parameter<(Sample, Sample) -> Bool>, joinSamples: Parameter<([Sample], Date, Date) -> Sample>, willProduce: (Stubber<[Sample]>) -> Void) -> MethodStub {
+        public static func convertOneDateSamplesToTwoDateSamples(_ samples: Parameter<[Sample]>, samplesShouldNotBeJoined: Parameter<(Sample, Sample) -> Bool>, joinSamples: Parameter<([Sample], Date, Date) -> Sample>, willProduce: (Stubber<[Sample]>) -> Void) -> MethodStub {
             let willReturn: [[Sample]] = []
 			let given: Given = { return Given(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_1(`samples`, `samplesShouldNotBeJoined`, `joinSamples`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: ([Sample]).self)
 			willProduce(stubber)
 			return given
         }
-        static func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(_ samples: Parameter<[SampleType]>, samplesShouldNotBeJoined: Parameter<(SampleType, SampleType) -> Bool>, joinSamples: Parameter<([SampleType], Date, Date) -> SampleType>, willProduce: (Stubber<[SampleType]>) -> Void) -> MethodStub {
+        public static func convertOneDateSamplesToTwoDateSamples<SampleType: Sample>(_ samples: Parameter<[SampleType]>, samplesShouldNotBeJoined: Parameter<(SampleType, SampleType) -> Bool>, joinSamples: Parameter<([SampleType], Date, Date) -> SampleType>, willProduce: (Stubber<[SampleType]>) -> Void) -> MethodStub {
             let willReturn: [[SampleType]] = []
 			let given: Given = { return Given(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(`samples`.wrapAsGeneric(), `samplesShouldNotBeJoined`.wrapAsGeneric(), `joinSamples`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: ([SampleType]).self)
 			willProduce(stubber)
 			return given
         }
-        static func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: Parameter<SampleType1>, in samples: Parameter<[SampleType2]>, willProduce: (Stubber<SampleType2>) -> Void) -> MethodStub {
+        public static func closestInTimeTo<SampleType1: Sample, SampleType2: Sample>(sample: Parameter<SampleType1>, in samples: Parameter<[SampleType2]>, willProduce: (Stubber<SampleType2>) -> Void) -> MethodStub {
             let willReturn: [SampleType2] = []
 			let given: Given = { return Given(method: .m_closestInTimeTo__sample_samplein_samples_1(`sample`.wrapAsGeneric(), `samples`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (SampleType2).self)
 			willProduce(stubber)
 			return given
         }
-        static func closestInTimeTo(sample: Parameter<Sample>, in samples: Parameter<[Sample]>, willProduce: (Stubber<Sample>) -> Void) -> MethodStub {
+        public static func closestInTimeTo(sample: Parameter<Sample>, in samples: Parameter<[Sample]>, willProduce: (Stubber<Sample>) -> Void) -> MethodStub {
             let willReturn: [Sample] = []
 			let given: Given = { return Given(method: .m_closestInTimeTo__sample_samplein_samples_2(`sample`, `samples`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Sample).self)
 			willProduce(stubber)
 			return given
         }
-        static func distance(between sample1: Parameter<Sample>, and sample2: Parameter<Sample>, in unit: Parameter<Calendar.Component>, willProduce: (Stubber<Int>) -> Void) -> MethodStub {
+        public static func distance(between sample1: Parameter<Sample>, and sample2: Parameter<Sample>, in unit: Parameter<Calendar.Component>, willProduce: (Stubber<Int>) -> Void) -> MethodStub {
             let willReturn: [Int] = []
 			let given: Given = { return Given(method: .m_distance__between_sample1and_sample2in_unit(`sample1`, `sample2`, `unit`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Int).self)
 			willProduce(stubber)
 			return given
         }
-        static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
+        public static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(`samples`, `aggregationUnit`, `attribute`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willProduce: (StubberThrows<[Date: [Sample]]>) -> Void) -> MethodStub {
+        public static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willProduce: (StubberThrows<[Date: [Sample]]>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(`samples`, `aggregationUnit`, `attribute`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: ([Date: [Sample]]).self)
 			willProduce(stubber)
 			return given
         }
-        static func aggregate<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
+        public static func aggregate<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(`samples`.wrapAsGeneric(), `aggregationUnit`, `attribute`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func aggregate<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willProduce: (StubberThrows<[Date: [SampleType]]>) -> Void) -> MethodStub {
+        public static func aggregate<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, willProduce: (StubberThrows<[Date: [SampleType]]>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(`samples`.wrapAsGeneric(), `aggregationUnit`, `attribute`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: ([Date: [SampleType]]).self)
 			willProduce(stubber)
 			return given
         }
-        static func sort(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, willThrow: Error...) -> MethodStub {
+        public static func sort(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_sort__samples_samplesby_aggregationUnit_1(`samples`, `aggregationUnit`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func sort(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, willProduce: (StubberThrows<[(date: Date, samples: [Sample])]>) -> Void) -> MethodStub {
+        public static func sort(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, willProduce: (StubberThrows<[(date: Date, samples: [Sample])]>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_sort__samples_samplesby_aggregationUnit_1(`samples`, `aggregationUnit`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: ([(date: Date, samples: [Sample])]).self)
 			willProduce(stubber)
 			return given
         }
-        static func sort<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, willThrow: Error...) -> MethodStub {
+        public static func sort<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_sort__samples_samplesby_aggregationUnit_2(`samples`.wrapAsGeneric(), `aggregationUnit`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func sort<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, willProduce: (StubberThrows<[(date: Date, samples: [SampleType])]>) -> Void) -> MethodStub {
+        public static func sort<SampleType: Sample>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, willProduce: (StubberThrows<[(date: Date, samples: [SampleType])]>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_sort__samples_samplesby_aggregationUnit_2(`samples`.wrapAsGeneric(), `aggregationUnit`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: ([(date: Date, samples: [SampleType])]).self)
@@ -8481,87 +8544,87 @@ class SampleUtilMock: SampleUtil, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func getOnly(samples: Parameter<[Sample]>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>) -> Verify { return Verify(method: .m_getOnly__samples_samplesfrom_startDateto_endDate_1(`samples`, `startDate`, `endDate`))}
-        static func getOnly<SampleType>(samples: Parameter<[SampleType]>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>) -> Verify { return Verify(method: .m_getOnly__samples_samplesfrom_startDateto_endDate_2(`samples`.wrapAsGeneric(), `startDate`, `endDate`))}
-        static func sample(_ sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>) -> Verify { return Verify(method: .m_sample__sampleoccursOnOneOf_daysOfWeek(`sample`, `daysOfWeek`))}
+        public static func getOnly(samples: Parameter<[Sample]>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>) -> Verify { return Verify(method: .m_getOnly__samples_samplesfrom_startDateto_endDate_1(`samples`, `startDate`, `endDate`))}
+        public static func getOnly<SampleType>(samples: Parameter<[SampleType]>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>) -> Verify where SampleType:Sample { return Verify(method: .m_getOnly__samples_samplesfrom_startDateto_endDate_2(`samples`.wrapAsGeneric(), `startDate`, `endDate`))}
+        public static func sample(_ sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>) -> Verify { return Verify(method: .m_sample__sampleoccursOnOneOf_daysOfWeek(`sample`, `daysOfWeek`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `sample` label")
-		static func sample(sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>) -> Verify { return Verify(method: .m_sample__sampleoccursOnOneOf_daysOfWeek(`sample`, `daysOfWeek`))}
-        static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(`samples`, `aggregationUnit`, `attribute`))}
-        static func aggregate<SampleType>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(`samples`.wrapAsGeneric(), `aggregationUnit`, `attribute`))}
-        static func sort(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>) -> Verify { return Verify(method: .m_sort__samples_samplesby_aggregationUnit_1(`samples`, `aggregationUnit`))}
-        static func sort<SampleType>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>) -> Verify { return Verify(method: .m_sort__samples_samplesby_aggregationUnit_2(`samples`.wrapAsGeneric(), `aggregationUnit`))}
-        static func sort(samples: Parameter<[Sample]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>) -> Verify { return Verify(method: .m_sort__samples_samplesby_dateTypein_order_1(`samples`, `dateType`, `order`))}
-        static func sort<SampleType>(samples: Parameter<[SampleType]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>) -> Verify { return Verify(method: .m_sort__samples_samplesby_dateTypein_order_2(`samples`.wrapAsGeneric(), `dateType`, `order`))}
-        static func convertOneDateSamplesToTwoDateSamples(_ samples: Parameter<[Sample]>, samplesShouldNotBeJoined: Parameter<(Sample, Sample) -> Bool>, joinSamples: Parameter<([Sample], Date, Date) -> Sample>) -> Verify { return Verify(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_1(`samples`, `samplesShouldNotBeJoined`, `joinSamples`))}
+		public static func sample(sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>) -> Verify { return Verify(method: .m_sample__sampleoccursOnOneOf_daysOfWeek(`sample`, `daysOfWeek`))}
+        public static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(`samples`, `aggregationUnit`, `attribute`))}
+        public static func aggregate<SampleType>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>) -> Verify where SampleType:Sample { return Verify(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(`samples`.wrapAsGeneric(), `aggregationUnit`, `attribute`))}
+        public static func sort(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>) -> Verify { return Verify(method: .m_sort__samples_samplesby_aggregationUnit_1(`samples`, `aggregationUnit`))}
+        public static func sort<SampleType>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>) -> Verify where SampleType:Sample { return Verify(method: .m_sort__samples_samplesby_aggregationUnit_2(`samples`.wrapAsGeneric(), `aggregationUnit`))}
+        public static func sort(samples: Parameter<[Sample]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>) -> Verify { return Verify(method: .m_sort__samples_samplesby_dateTypein_order_1(`samples`, `dateType`, `order`))}
+        public static func sort<SampleType>(samples: Parameter<[SampleType]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>) -> Verify where SampleType:Sample { return Verify(method: .m_sort__samples_samplesby_dateTypein_order_2(`samples`.wrapAsGeneric(), `dateType`, `order`))}
+        public static func convertOneDateSamplesToTwoDateSamples(_ samples: Parameter<[Sample]>, samplesShouldNotBeJoined: Parameter<(Sample, Sample) -> Bool>, joinSamples: Parameter<([Sample], Date, Date) -> Sample>) -> Verify { return Verify(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_1(`samples`, `samplesShouldNotBeJoined`, `joinSamples`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `samples` label")
-		static func convertOneDateSamplesToTwoDateSamples(samples: Parameter<[Sample]>, samplesShouldNotBeJoined: Parameter<(Sample, Sample) -> Bool>, joinSamples: Parameter<([Sample], Date, Date) -> Sample>) -> Verify { return Verify(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_1(`samples`, `samplesShouldNotBeJoined`, `joinSamples`))}
-        static func convertOneDateSamplesToTwoDateSamples<SampleType>(_ samples: Parameter<[SampleType]>, samplesShouldNotBeJoined: Parameter<(SampleType, SampleType) -> Bool>, joinSamples: Parameter<([SampleType], Date, Date) -> SampleType>) -> Verify { return Verify(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(`samples`.wrapAsGeneric(), `samplesShouldNotBeJoined`.wrapAsGeneric(), `joinSamples`.wrapAsGeneric()))}
+		public static func convertOneDateSamplesToTwoDateSamples(samples: Parameter<[Sample]>, samplesShouldNotBeJoined: Parameter<(Sample, Sample) -> Bool>, joinSamples: Parameter<([Sample], Date, Date) -> Sample>) -> Verify { return Verify(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_1(`samples`, `samplesShouldNotBeJoined`, `joinSamples`))}
+        public static func convertOneDateSamplesToTwoDateSamples<SampleType>(_ samples: Parameter<[SampleType]>, samplesShouldNotBeJoined: Parameter<(SampleType, SampleType) -> Bool>, joinSamples: Parameter<([SampleType], Date, Date) -> SampleType>) -> Verify where SampleType:Sample { return Verify(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(`samples`.wrapAsGeneric(), `samplesShouldNotBeJoined`.wrapAsGeneric(), `joinSamples`.wrapAsGeneric()))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `samples` label")
-		static func convertOneDateSamplesToTwoDateSamples<SampleType>(samples: Parameter<[SampleType]>, samplesShouldNotBeJoined: Parameter<(SampleType, SampleType) -> Bool>, joinSamples: Parameter<([SampleType], Date, Date) -> SampleType>) -> Verify { return Verify(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(`samples`.wrapAsGeneric(), `samplesShouldNotBeJoined`.wrapAsGeneric(), `joinSamples`.wrapAsGeneric()))}
-        static func closestInTimeTo<SampleType1,SampleType2>(sample: Parameter<SampleType1>, in samples: Parameter<[SampleType2]>) -> Verify { return Verify(method: .m_closestInTimeTo__sample_samplein_samples_1(`sample`.wrapAsGeneric(), `samples`.wrapAsGeneric()))}
-        static func closestInTimeTo(sample: Parameter<Sample>, in samples: Parameter<[Sample]>) -> Verify { return Verify(method: .m_closestInTimeTo__sample_samplein_samples_2(`sample`, `samples`))}
-        static func distance(between sample1: Parameter<Sample>, and sample2: Parameter<Sample>, in unit: Parameter<Calendar.Component>) -> Verify { return Verify(method: .m_distance__between_sample1and_sample2in_unit(`sample1`, `sample2`, `unit`))}
+		public static func convertOneDateSamplesToTwoDateSamples<SampleType>(samples: Parameter<[SampleType]>, samplesShouldNotBeJoined: Parameter<(SampleType, SampleType) -> Bool>, joinSamples: Parameter<([SampleType], Date, Date) -> SampleType>) -> Verify where SampleType:Sample { return Verify(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(`samples`.wrapAsGeneric(), `samplesShouldNotBeJoined`.wrapAsGeneric(), `joinSamples`.wrapAsGeneric()))}
+        public static func closestInTimeTo<SampleType1,SampleType2>(sample: Parameter<SampleType1>, in samples: Parameter<[SampleType2]>) -> Verify where SampleType1:Sample, SampleType2:Sample { return Verify(method: .m_closestInTimeTo__sample_samplein_samples_1(`sample`.wrapAsGeneric(), `samples`.wrapAsGeneric()))}
+        public static func closestInTimeTo(sample: Parameter<Sample>, in samples: Parameter<[Sample]>) -> Verify { return Verify(method: .m_closestInTimeTo__sample_samplein_samples_2(`sample`, `samples`))}
+        public static func distance(between sample1: Parameter<Sample>, and sample2: Parameter<Sample>, in unit: Parameter<Calendar.Component>) -> Verify { return Verify(method: .m_distance__between_sample1and_sample2in_unit(`sample1`, `sample2`, `unit`))}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func getOnly(samples: Parameter<[Sample]>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, perform: @escaping ([Sample], Date?, Date?) -> Void) -> Perform {
+        public static func getOnly(samples: Parameter<[Sample]>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, perform: @escaping ([Sample], Date?, Date?) -> Void) -> Perform {
             return Perform(method: .m_getOnly__samples_samplesfrom_startDateto_endDate_1(`samples`, `startDate`, `endDate`), performs: perform)
         }
-        static func getOnly<SampleType>(samples: Parameter<[SampleType]>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, perform: @escaping ([SampleType], Date?, Date?) -> Void) -> Perform {
+        public static func getOnly<SampleType>(samples: Parameter<[SampleType]>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, perform: @escaping ([SampleType], Date?, Date?) -> Void) -> Perform where SampleType:Sample {
             return Perform(method: .m_getOnly__samples_samplesfrom_startDateto_endDate_2(`samples`.wrapAsGeneric(), `startDate`, `endDate`), performs: perform)
         }
-        static func sample(_ sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>, perform: @escaping (Sample, Set<DayOfWeek>) -> Void) -> Perform {
+        public static func sample(_ sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>, perform: @escaping (Sample, Set<DayOfWeek>) -> Void) -> Perform {
             return Perform(method: .m_sample__sampleoccursOnOneOf_daysOfWeek(`sample`, `daysOfWeek`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `sample` label")
-		static func sample(sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>, perform: @escaping (Sample, Set<DayOfWeek>) -> Void) -> Perform {
+		public static func sample(sample: Parameter<Sample>, occursOnOneOf daysOfWeek: Parameter<Set<DayOfWeek>>, perform: @escaping (Sample, Set<DayOfWeek>) -> Void) -> Perform {
             return Perform(method: .m_sample__sampleoccursOnOneOf_daysOfWeek(`sample`, `daysOfWeek`), performs: perform)
         }
-        static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, perform: @escaping ([Sample], Calendar.Component, Attribute) -> Void) -> Perform {
+        public static func aggregate(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, perform: @escaping ([Sample], Calendar.Component, Attribute) -> Void) -> Perform {
             return Perform(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_1(`samples`, `aggregationUnit`, `attribute`), performs: perform)
         }
-        static func aggregate<SampleType>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, perform: @escaping ([SampleType], Calendar.Component, Attribute) -> Void) -> Perform {
+        public static func aggregate<SampleType>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, for attribute: Parameter<Attribute>, perform: @escaping ([SampleType], Calendar.Component, Attribute) -> Void) -> Perform where SampleType:Sample {
             return Perform(method: .m_aggregate__samples_samplesby_aggregationUnitfor_attribute_2(`samples`.wrapAsGeneric(), `aggregationUnit`, `attribute`), performs: perform)
         }
-        static func sort(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, perform: @escaping ([Sample], Calendar.Component) -> Void) -> Perform {
+        public static func sort(samples: Parameter<[Sample]>, by aggregationUnit: Parameter<Calendar.Component>, perform: @escaping ([Sample], Calendar.Component) -> Void) -> Perform {
             return Perform(method: .m_sort__samples_samplesby_aggregationUnit_1(`samples`, `aggregationUnit`), performs: perform)
         }
-        static func sort<SampleType>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, perform: @escaping ([SampleType], Calendar.Component) -> Void) -> Perform {
+        public static func sort<SampleType>(samples: Parameter<[SampleType]>, by aggregationUnit: Parameter<Calendar.Component>, perform: @escaping ([SampleType], Calendar.Component) -> Void) -> Perform where SampleType:Sample {
             return Perform(method: .m_sort__samples_samplesby_aggregationUnit_2(`samples`.wrapAsGeneric(), `aggregationUnit`), performs: perform)
         }
-        static func sort(samples: Parameter<[Sample]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>, perform: @escaping ([Sample], DateType, ComparisonResult) -> Void) -> Perform {
+        public static func sort(samples: Parameter<[Sample]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>, perform: @escaping ([Sample], DateType, ComparisonResult) -> Void) -> Perform {
             return Perform(method: .m_sort__samples_samplesby_dateTypein_order_1(`samples`, `dateType`, `order`), performs: perform)
         }
-        static func sort<SampleType>(samples: Parameter<[SampleType]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>, perform: @escaping ([SampleType], DateType, ComparisonResult) -> Void) -> Perform {
+        public static func sort<SampleType>(samples: Parameter<[SampleType]>, by dateType: Parameter<DateType>, in order: Parameter<ComparisonResult>, perform: @escaping ([SampleType], DateType, ComparisonResult) -> Void) -> Perform where SampleType:Sample {
             return Perform(method: .m_sort__samples_samplesby_dateTypein_order_2(`samples`.wrapAsGeneric(), `dateType`, `order`), performs: perform)
         }
-        static func convertOneDateSamplesToTwoDateSamples(_ samples: Parameter<[Sample]>, samplesShouldNotBeJoined: Parameter<(Sample, Sample) -> Bool>, joinSamples: Parameter<([Sample], Date, Date) -> Sample>, perform: @escaping ([Sample], (Sample, Sample) -> Bool, ([Sample], Date, Date) -> Sample) -> Void) -> Perform {
+        public static func convertOneDateSamplesToTwoDateSamples(_ samples: Parameter<[Sample]>, samplesShouldNotBeJoined: Parameter<(Sample, Sample) -> Bool>, joinSamples: Parameter<([Sample], Date, Date) -> Sample>, perform: @escaping ([Sample], (Sample, Sample) -> Bool, ([Sample], Date, Date) -> Sample) -> Void) -> Perform {
             return Perform(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_1(`samples`, `samplesShouldNotBeJoined`, `joinSamples`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `samples` label")
-		static func convertOneDateSamplesToTwoDateSamples(samples: Parameter<[Sample]>, samplesShouldNotBeJoined: Parameter<(Sample, Sample) -> Bool>, joinSamples: Parameter<([Sample], Date, Date) -> Sample>, perform: @escaping ([Sample], (Sample, Sample) -> Bool, ([Sample], Date, Date) -> Sample) -> Void) -> Perform {
+		public static func convertOneDateSamplesToTwoDateSamples(samples: Parameter<[Sample]>, samplesShouldNotBeJoined: Parameter<(Sample, Sample) -> Bool>, joinSamples: Parameter<([Sample], Date, Date) -> Sample>, perform: @escaping ([Sample], (Sample, Sample) -> Bool, ([Sample], Date, Date) -> Sample) -> Void) -> Perform {
             return Perform(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_1(`samples`, `samplesShouldNotBeJoined`, `joinSamples`), performs: perform)
         }
-        static func convertOneDateSamplesToTwoDateSamples<SampleType>(_ samples: Parameter<[SampleType]>, samplesShouldNotBeJoined: Parameter<(SampleType, SampleType) -> Bool>, joinSamples: Parameter<([SampleType], Date, Date) -> SampleType>, perform: @escaping ([SampleType], (SampleType, SampleType) -> Bool, ([SampleType], Date, Date) -> SampleType) -> Void) -> Perform {
+        public static func convertOneDateSamplesToTwoDateSamples<SampleType>(_ samples: Parameter<[SampleType]>, samplesShouldNotBeJoined: Parameter<(SampleType, SampleType) -> Bool>, joinSamples: Parameter<([SampleType], Date, Date) -> SampleType>, perform: @escaping ([SampleType], (SampleType, SampleType) -> Bool, ([SampleType], Date, Date) -> SampleType) -> Void) -> Perform where SampleType:Sample {
             return Perform(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(`samples`.wrapAsGeneric(), `samplesShouldNotBeJoined`.wrapAsGeneric(), `joinSamples`.wrapAsGeneric()), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `samples` label")
-		static func convertOneDateSamplesToTwoDateSamples<SampleType>(samples: Parameter<[SampleType]>, samplesShouldNotBeJoined: Parameter<(SampleType, SampleType) -> Bool>, joinSamples: Parameter<([SampleType], Date, Date) -> SampleType>, perform: @escaping ([SampleType], (SampleType, SampleType) -> Bool, ([SampleType], Date, Date) -> SampleType) -> Void) -> Perform {
+		public static func convertOneDateSamplesToTwoDateSamples<SampleType>(samples: Parameter<[SampleType]>, samplesShouldNotBeJoined: Parameter<(SampleType, SampleType) -> Bool>, joinSamples: Parameter<([SampleType], Date, Date) -> SampleType>, perform: @escaping ([SampleType], (SampleType, SampleType) -> Bool, ([SampleType], Date, Date) -> SampleType) -> Void) -> Perform where SampleType:Sample {
             return Perform(method: .m_convertOneDateSamplesToTwoDateSamples__samplessamplesShouldNotBeJoined_samplesShouldNotBeJoinedjoinSamples_joinSamples_2(`samples`.wrapAsGeneric(), `samplesShouldNotBeJoined`.wrapAsGeneric(), `joinSamples`.wrapAsGeneric()), performs: perform)
         }
-        static func closestInTimeTo<SampleType1,SampleType2>(sample: Parameter<SampleType1>, in samples: Parameter<[SampleType2]>, perform: @escaping (SampleType1, [SampleType2]) -> Void) -> Perform {
+        public static func closestInTimeTo<SampleType1,SampleType2>(sample: Parameter<SampleType1>, in samples: Parameter<[SampleType2]>, perform: @escaping (SampleType1, [SampleType2]) -> Void) -> Perform where SampleType1:Sample, SampleType2:Sample {
             return Perform(method: .m_closestInTimeTo__sample_samplein_samples_1(`sample`.wrapAsGeneric(), `samples`.wrapAsGeneric()), performs: perform)
         }
-        static func closestInTimeTo(sample: Parameter<Sample>, in samples: Parameter<[Sample]>, perform: @escaping (Sample, [Sample]) -> Void) -> Perform {
+        public static func closestInTimeTo(sample: Parameter<Sample>, in samples: Parameter<[Sample]>, perform: @escaping (Sample, [Sample]) -> Void) -> Perform {
             return Perform(method: .m_closestInTimeTo__sample_samplein_samples_2(`sample`, `samples`), performs: perform)
         }
-        static func distance(between sample1: Parameter<Sample>, and sample2: Parameter<Sample>, in unit: Parameter<Calendar.Component>, perform: @escaping (Sample, Sample, Calendar.Component) -> Void) -> Perform {
+        public static func distance(between sample1: Parameter<Sample>, and sample2: Parameter<Sample>, in unit: Parameter<Calendar.Component>, perform: @escaping (Sample, Sample, Calendar.Component) -> Void) -> Perform {
             return Perform(method: .m_distance__between_sample1and_sample2in_unit(`sample1`, `sample2`, `unit`), performs: perform)
         }
     }
@@ -8577,7 +8640,7 @@ class SampleUtilMock: SampleUtil, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -8623,7 +8686,7 @@ class SampleUtilMock: SampleUtil, Mock {
 }
 
 // MARK: - SearchUtil
-class SearchUtilMock: SearchUtil, Mock {
+open class SearchUtilMock: SearchUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -8640,9 +8703,9 @@ class SearchUtilMock: SearchUtil, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -8654,7 +8717,7 @@ class SearchUtilMock: SearchUtil, Mock {
 
 
 
-    func binarySearch<T:Comparable>(for targetItem: T, in items: Array<T>) -> Int? {
+    open func binarySearch<T:Comparable>(for targetItem: T, in items: Array<T>) -> Int? {
         addInvocation(.m_binarySearch__for_targetItemin_items(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<Array<T>>.value(`items`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_binarySearch__for_targetItemin_items(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<Array<T>>.value(`items`).wrapAsGeneric())) as? (T, Array<T>) -> Void
 		perform?(`targetItem`, `items`)
@@ -8667,7 +8730,7 @@ class SearchUtilMock: SearchUtil, Mock {
 		return __value
     }
 
-    func binarySearch<T>(for targetItem: T, in items: Array<T>, compare: (T, T) -> ComparisonResult) -> Int? {
+    open func binarySearch<T>(for targetItem: T, in items: Array<T>, compare: (T, T) -> ComparisonResult) -> Int? {
         addInvocation(.m_binarySearch__for_targetItemin_itemscompare_compare(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<Array<T>>.value(`items`).wrapAsGeneric(), Parameter<(T, T) -> ComparisonResult>.any.wrapAsGeneric()))
 		let perform = methodPerformValue(.m_binarySearch__for_targetItemin_itemscompare_compare(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<Array<T>>.value(`items`).wrapAsGeneric(), Parameter<(T, T) -> ComparisonResult>.any.wrapAsGeneric())) as? (T, Array<T>, (T, T) -> ComparisonResult) -> Void
 		perform?(`targetItem`, `items`, `compare`)
@@ -8680,7 +8743,7 @@ class SearchUtilMock: SearchUtil, Mock {
 		return __value
     }
 
-    func closestItem<T>(to targetItem: T, in items: Array<T>, distance: (T, T) -> Int) -> T {
+    open func closestItem<T>(to targetItem: T, in items: Array<T>, distance: (T, T) -> Int) -> T {
         addInvocation(.m_closestItem__to_targetItemin_itemsdistance_distance(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<Array<T>>.value(`items`).wrapAsGeneric(), Parameter<(T, T) -> Int>.any.wrapAsGeneric()))
 		let perform = methodPerformValue(.m_closestItem__to_targetItemin_itemsdistance_distance(Parameter<T>.value(`targetItem`).wrapAsGeneric(), Parameter<Array<T>>.value(`items`).wrapAsGeneric(), Parameter<(T, T) -> Int>.any.wrapAsGeneric())) as? (T, Array<T>, (T, T) -> Int) -> Void
 		perform?(`targetItem`, `items`, `distance`)
@@ -8729,7 +8792,7 @@ class SearchUtilMock: SearchUtil, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -8738,30 +8801,30 @@ class SearchUtilMock: SearchUtil, Mock {
         }
 
 
-        static func binarySearch<T:Comparable>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, willReturn: Int?...) -> MethodStub {
+        public static func binarySearch<T:Comparable>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, willReturn: Int?...) -> MethodStub {
             return Given(method: .m_binarySearch__for_targetItemin_items(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, compare: Parameter<(T, T) -> ComparisonResult>, willReturn: Int?...) -> MethodStub {
+        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, compare: Parameter<(T, T) -> ComparisonResult>, willReturn: Int?...) -> MethodStub {
             return Given(method: .m_binarySearch__for_targetItemin_itemscompare_compare(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `compare`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func closestItem<T>(to targetItem: Parameter<T>, in items: Parameter<Array<T>>, distance: Parameter<(T, T) -> Int>, willReturn: T...) -> MethodStub {
+        public static func closestItem<T>(to targetItem: Parameter<T>, in items: Parameter<Array<T>>, distance: Parameter<(T, T) -> Int>, willReturn: T...) -> MethodStub {
             return Given(method: .m_closestItem__to_targetItemin_itemsdistance_distance(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `distance`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func binarySearch<T:Comparable>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, willProduce: (Stubber<Int?>) -> Void) -> MethodStub {
+        public static func binarySearch<T:Comparable>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, willProduce: (Stubber<Int?>) -> Void) -> MethodStub {
             let willReturn: [Int?] = []
 			let given: Given = { return Given(method: .m_binarySearch__for_targetItemin_items(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Int?).self)
 			willProduce(stubber)
 			return given
         }
-        static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, compare: Parameter<(T, T) -> ComparisonResult>, willProduce: (Stubber<Int?>) -> Void) -> MethodStub {
+        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, compare: Parameter<(T, T) -> ComparisonResult>, willProduce: (Stubber<Int?>) -> Void) -> MethodStub {
             let willReturn: [Int?] = []
 			let given: Given = { return Given(method: .m_binarySearch__for_targetItemin_itemscompare_compare(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `compare`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Int?).self)
 			willProduce(stubber)
 			return given
         }
-        static func closestItem<T>(to targetItem: Parameter<T>, in items: Parameter<Array<T>>, distance: Parameter<(T, T) -> Int>, willProduce: (Stubber<T>) -> Void) -> MethodStub {
+        public static func closestItem<T>(to targetItem: Parameter<T>, in items: Parameter<Array<T>>, distance: Parameter<(T, T) -> Int>, willProduce: (Stubber<T>) -> Void) -> MethodStub {
             let willReturn: [T] = []
 			let given: Given = { return Given(method: .m_closestItem__to_targetItemin_itemsdistance_distance(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `distance`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (T).self)
@@ -8770,25 +8833,25 @@ class SearchUtilMock: SearchUtil, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>) -> Verify { return Verify(method: .m_binarySearch__for_targetItemin_items(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric()))}
-        static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, compare: Parameter<(T, T) -> ComparisonResult>) -> Verify { return Verify(method: .m_binarySearch__for_targetItemin_itemscompare_compare(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `compare`.wrapAsGeneric()))}
-        static func closestItem<T>(to targetItem: Parameter<T>, in items: Parameter<Array<T>>, distance: Parameter<(T, T) -> Int>) -> Verify { return Verify(method: .m_closestItem__to_targetItemin_itemsdistance_distance(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `distance`.wrapAsGeneric()))}
+        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>) -> Verify where T:Comparable { return Verify(method: .m_binarySearch__for_targetItemin_items(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric()))}
+        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, compare: Parameter<(T, T) -> ComparisonResult>) -> Verify { return Verify(method: .m_binarySearch__for_targetItemin_itemscompare_compare(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `compare`.wrapAsGeneric()))}
+        public static func closestItem<T>(to targetItem: Parameter<T>, in items: Parameter<Array<T>>, distance: Parameter<(T, T) -> Int>) -> Verify { return Verify(method: .m_closestItem__to_targetItemin_itemsdistance_distance(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `distance`.wrapAsGeneric()))}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, perform: @escaping (T, Array<T>) -> Void) -> Perform {
+        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, perform: @escaping (T, Array<T>) -> Void) -> Perform where T:Comparable {
             return Perform(method: .m_binarySearch__for_targetItemin_items(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric()), performs: perform)
         }
-        static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, compare: Parameter<(T, T) -> ComparisonResult>, perform: @escaping (T, Array<T>, (T, T) -> ComparisonResult) -> Void) -> Perform {
+        public static func binarySearch<T>(for targetItem: Parameter<T>, in items: Parameter<Array<T>>, compare: Parameter<(T, T) -> ComparisonResult>, perform: @escaping (T, Array<T>, (T, T) -> ComparisonResult) -> Void) -> Perform {
             return Perform(method: .m_binarySearch__for_targetItemin_itemscompare_compare(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `compare`.wrapAsGeneric()), performs: perform)
         }
-        static func closestItem<T>(to targetItem: Parameter<T>, in items: Parameter<Array<T>>, distance: Parameter<(T, T) -> Int>, perform: @escaping (T, Array<T>, (T, T) -> Int) -> Void) -> Perform {
+        public static func closestItem<T>(to targetItem: Parameter<T>, in items: Parameter<Array<T>>, distance: Parameter<(T, T) -> Int>, perform: @escaping (T, Array<T>, (T, T) -> Int) -> Void) -> Perform {
             return Perform(method: .m_closestItem__to_targetItemin_itemsdistance_distance(`targetItem`.wrapAsGeneric(), `items`.wrapAsGeneric(), `distance`.wrapAsGeneric()), performs: perform)
         }
     }
@@ -8804,7 +8867,7 @@ class SearchUtilMock: SearchUtil, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -8850,7 +8913,7 @@ class SearchUtilMock: SearchUtil, Mock {
 }
 
 // MARK: - Settings
-class SettingsMock: Settings, Mock, StaticMock {
+open class SettingsMock: Settings, Mock, StaticMock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -8867,9 +8930,9 @@ class SettingsMock: Settings, Mock, StaticMock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -8882,51 +8945,58 @@ class SettingsMock: Settings, Mock, StaticMock {
     static private var invocations: [StaticMethodType] = []
     static private var methodReturnValues: [StaticGiven] = []
     static private var methodPerformValues: [StaticPerform] = []
-    typealias StaticPropertyStub = StaticGiven
-    typealias StaticMethodStub = StaticGiven
-    static func clear() {
+    public typealias StaticPropertyStub = StaticGiven
+    public typealias StaticMethodStub = StaticGiven
+    public static func clear() {
         invocations = []
         methodReturnValues = []
         methodPerformValues = []
     }
 
-    var minMood: Double {
+    public var minMood: Double {
 		get {	invocations.append(.p_minMood_get); return __p_minMood ?? givenGetterValue(.p_minMood_get, "SettingsMock - stub value for minMood was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_minMood = newValue }
 	}
 	private var __p_minMood: (Double)?
 
-    var maxMood: Double {
+    public var maxMood: Double {
 		get {	invocations.append(.p_maxMood_get); return __p_maxMood ?? givenGetterValue(.p_maxMood_get, "SettingsMock - stub value for maxMood was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_maxMood = newValue }
 	}
 	private var __p_maxMood: (Double)?
 
-    var scaleMoodsOnImport: Bool {
+    public var scaleMoodsOnImport: Bool {
 		get {	invocations.append(.p_scaleMoodsOnImport_get); return __p_scaleMoodsOnImport ?? givenGetterValue(.p_scaleMoodsOnImport_get, "SettingsMock - stub value for scaleMoodsOnImport was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_scaleMoodsOnImport = newValue }
 	}
 	private var __p_scaleMoodsOnImport: (Bool)?
 
-    var autoIgnoreEnabled: Bool {
+    public var autoIgnoreEnabled: Bool {
 		get {	invocations.append(.p_autoIgnoreEnabled_get); return __p_autoIgnoreEnabled ?? givenGetterValue(.p_autoIgnoreEnabled_get, "SettingsMock - stub value for autoIgnoreEnabled was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_autoIgnoreEnabled = newValue }
 	}
 	private var __p_autoIgnoreEnabled: (Bool)?
 
-    var autoIgnoreSeconds: Int {
+    public var autoIgnoreSeconds: Int {
 		get {	invocations.append(.p_autoIgnoreSeconds_get); return __p_autoIgnoreSeconds ?? givenGetterValue(.p_autoIgnoreSeconds_get, "SettingsMock - stub value for autoIgnoreSeconds was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_autoIgnoreSeconds = newValue }
 	}
 	private var __p_autoIgnoreSeconds: (Int)?
 
+    public var convertTimeZones: Bool {
+		get {	invocations.append(.p_convertTimeZones_get); return __p_convertTimeZones ?? givenGetterValue(.p_convertTimeZones_get, "SettingsMock - stub value for convertTimeZones was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_convertTimeZones = newValue }
+	}
+	private var __p_convertTimeZones: (Bool)?
 
-    static var entityName: String {
+
+    public static var entityName: String {
 		get {	SettingsMock.invocations.append(.p_entityName_get); return SettingsMock.__p_entityName ?? givenGetterValue(.p_entityName_get, "SettingsMock - stub value for entityName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	SettingsMock.__p_entityName = newValue }
@@ -8936,37 +9006,43 @@ class SettingsMock: Settings, Mock, StaticMock {
 
 
 
-    func setMinMood(_ value: Double) {
+    open func setMinMood(_ value: Double) {
         addInvocation(.m_setMinMood__value(Parameter<Double>.value(`value`)))
 		let perform = methodPerformValue(.m_setMinMood__value(Parameter<Double>.value(`value`))) as? (Double) -> Void
 		perform?(`value`)
     }
 
-    func setMaxMood(_ value: Double) {
+    open func setMaxMood(_ value: Double) {
         addInvocation(.m_setMaxMood__value(Parameter<Double>.value(`value`)))
 		let perform = methodPerformValue(.m_setMaxMood__value(Parameter<Double>.value(`value`))) as? (Double) -> Void
 		perform?(`value`)
     }
 
-    func setScaleMoodsOnImport(_ value: Bool) {
+    open func setScaleMoodsOnImport(_ value: Bool) {
         addInvocation(.m_setScaleMoodsOnImport__value(Parameter<Bool>.value(`value`)))
 		let perform = methodPerformValue(.m_setScaleMoodsOnImport__value(Parameter<Bool>.value(`value`))) as? (Bool) -> Void
 		perform?(`value`)
     }
 
-    func setAutoIgnoreEnabled(_ value: Bool) {
+    open func setAutoIgnoreEnabled(_ value: Bool) {
         addInvocation(.m_setAutoIgnoreEnabled__value(Parameter<Bool>.value(`value`)))
 		let perform = methodPerformValue(.m_setAutoIgnoreEnabled__value(Parameter<Bool>.value(`value`))) as? (Bool) -> Void
 		perform?(`value`)
     }
 
-    func setAutoIgnoreSeconds(_ value: Int) {
+    open func setAutoIgnoreSeconds(_ value: Int) {
         addInvocation(.m_setAutoIgnoreSeconds__value(Parameter<Int>.value(`value`)))
 		let perform = methodPerformValue(.m_setAutoIgnoreSeconds__value(Parameter<Int>.value(`value`))) as? (Int) -> Void
 		perform?(`value`)
     }
 
-    func changed(_ setting: Setting) -> Bool {
+    open func setConvertTimeZones(_ value: Bool) {
+        addInvocation(.m_setConvertTimeZones__value(Parameter<Bool>.value(`value`)))
+		let perform = methodPerformValue(.m_setConvertTimeZones__value(Parameter<Bool>.value(`value`))) as? (Bool) -> Void
+		perform?(`value`)
+    }
+
+    open func changed(_ setting: Setting) -> Bool {
         addInvocation(.m_changed__setting(Parameter<Setting>.value(`setting`)))
 		let perform = methodPerformValue(.m_changed__setting(Parameter<Setting>.value(`setting`))) as? (Setting) -> Void
 		perform?(`setting`)
@@ -8980,13 +9056,13 @@ class SettingsMock: Settings, Mock, StaticMock {
 		return __value
     }
 
-    func reset() {
+    open func reset() {
         addInvocation(.m_reset)
 		let perform = methodPerformValue(.m_reset) as? () -> Void
 		perform?()
     }
 
-    func save() throws {
+    open func save() throws {
         addInvocation(.m_save)
 		let perform = methodPerformValue(.m_save) as? () -> Void
 		perform?()
@@ -9015,7 +9091,7 @@ class SettingsMock: Settings, Mock, StaticMock {
         }
     }
 
-    class StaticGiven: StubbedMethod {
+    open class StaticGiven: StubbedMethod {
         fileprivate var method: StaticMethodType
 
         private init(method: StaticMethodType, products: [Product]) {
@@ -9023,19 +9099,19 @@ class SettingsMock: Settings, Mock, StaticMock {
             super.init(products)
         }
 
-        static func entityName(getter defaultValue: String...) -> StaticPropertyStub {
+        public static func entityName(getter defaultValue: String...) -> StaticPropertyStub {
             return StaticGiven(method: .p_entityName_get, products: defaultValue.map({ Product.return($0) }))
         }
 
     }
 
-    struct StaticVerify {
+    public struct StaticVerify {
         fileprivate var method: StaticMethodType
 
-        static var entityName: StaticVerify { return StaticVerify(method: .p_entityName_get) }
+        public static var entityName: StaticVerify { return StaticVerify(method: .p_entityName_get) }
     }
 
-    struct StaticPerform {
+    public struct StaticPerform {
         fileprivate var method: StaticMethodType
         var performs: Any
 
@@ -9048,6 +9124,7 @@ class SettingsMock: Settings, Mock, StaticMock {
         case m_setScaleMoodsOnImport__value(Parameter<Bool>)
         case m_setAutoIgnoreEnabled__value(Parameter<Bool>)
         case m_setAutoIgnoreSeconds__value(Parameter<Int>)
+        case m_setConvertTimeZones__value(Parameter<Bool>)
         case m_changed__setting(Parameter<Setting>)
         case m_reset
         case m_save
@@ -9056,6 +9133,7 @@ class SettingsMock: Settings, Mock, StaticMock {
         case p_scaleMoodsOnImport_get
         case p_autoIgnoreEnabled_get
         case p_autoIgnoreSeconds_get
+        case p_convertTimeZones_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -9074,6 +9152,9 @@ class SettingsMock: Settings, Mock, StaticMock {
             case (.m_setAutoIgnoreSeconds__value(let lhsValue), .m_setAutoIgnoreSeconds__value(let rhsValue)):
                 guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
                 return true 
+            case (.m_setConvertTimeZones__value(let lhsValue), .m_setConvertTimeZones__value(let rhsValue)):
+                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                return true 
             case (.m_changed__setting(let lhsSetting), .m_changed__setting(let rhsSetting)):
                 guard Parameter.compare(lhs: lhsSetting, rhs: rhsSetting, with: matcher) else { return false } 
                 return true 
@@ -9086,6 +9167,7 @@ class SettingsMock: Settings, Mock, StaticMock {
             case (.p_scaleMoodsOnImport_get,.p_scaleMoodsOnImport_get): return true
             case (.p_autoIgnoreEnabled_get,.p_autoIgnoreEnabled_get): return true
             case (.p_autoIgnoreSeconds_get,.p_autoIgnoreSeconds_get): return true
+            case (.p_convertTimeZones_get,.p_convertTimeZones_get): return true
             default: return false
             }
         }
@@ -9097,6 +9179,7 @@ class SettingsMock: Settings, Mock, StaticMock {
             case let .m_setScaleMoodsOnImport__value(p0): return p0.intValue
             case let .m_setAutoIgnoreEnabled__value(p0): return p0.intValue
             case let .m_setAutoIgnoreSeconds__value(p0): return p0.intValue
+            case let .m_setConvertTimeZones__value(p0): return p0.intValue
             case let .m_changed__setting(p0): return p0.intValue
             case .m_reset: return 0
             case .m_save: return 0
@@ -9105,11 +9188,12 @@ class SettingsMock: Settings, Mock, StaticMock {
             case .p_scaleMoodsOnImport_get: return 0
             case .p_autoIgnoreEnabled_get: return 0
             case .p_autoIgnoreSeconds_get: return 0
+            case .p_convertTimeZones_get: return 0
             }
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -9117,40 +9201,43 @@ class SettingsMock: Settings, Mock, StaticMock {
             super.init(products)
         }
 
-        static func minMood(getter defaultValue: Double...) -> PropertyStub {
+        public static func minMood(getter defaultValue: Double...) -> PropertyStub {
             return Given(method: .p_minMood_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func maxMood(getter defaultValue: Double...) -> PropertyStub {
+        public static func maxMood(getter defaultValue: Double...) -> PropertyStub {
             return Given(method: .p_maxMood_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func scaleMoodsOnImport(getter defaultValue: Bool...) -> PropertyStub {
+        public static func scaleMoodsOnImport(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_scaleMoodsOnImport_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func autoIgnoreEnabled(getter defaultValue: Bool...) -> PropertyStub {
+        public static func autoIgnoreEnabled(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_autoIgnoreEnabled_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func autoIgnoreSeconds(getter defaultValue: Int...) -> PropertyStub {
+        public static func autoIgnoreSeconds(getter defaultValue: Int...) -> PropertyStub {
             return Given(method: .p_autoIgnoreSeconds_get, products: defaultValue.map({ Product.return($0) }))
         }
+        public static func convertTimeZones(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_convertTimeZones_get, products: defaultValue.map({ Product.return($0) }))
+        }
 
-        static func changed(_ setting: Parameter<Setting>, willReturn: Bool...) -> MethodStub {
+        public static func changed(_ setting: Parameter<Setting>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_changed__setting(`setting`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `setting` label")
-		static func changed(setting: Parameter<Setting>, willReturn: Bool...) -> MethodStub {
+		public static func changed(setting: Parameter<Setting>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_changed__setting(`setting`), products: willReturn.map({ Product.return($0) }))
         }
-        static func changed(_ setting: Parameter<Setting>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func changed(_ setting: Parameter<Setting>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_changed__setting(`setting`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
-        static func save(willThrow: Error...) -> MethodStub {
+        public static func save(willThrow: Error...) -> MethodStub {
             return Given(method: .m_save, products: willThrow.map({ Product.throw($0) }))
         }
-        static func save(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func save(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_save, products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
@@ -9159,86 +9246,97 @@ class SettingsMock: Settings, Mock, StaticMock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func setMinMood(_ value: Parameter<Double>) -> Verify { return Verify(method: .m_setMinMood__value(`value`))}
+        public static func setMinMood(_ value: Parameter<Double>) -> Verify { return Verify(method: .m_setMinMood__value(`value`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
-		static func setMinMood(value: Parameter<Double>) -> Verify { return Verify(method: .m_setMinMood__value(`value`))}
-        static func setMaxMood(_ value: Parameter<Double>) -> Verify { return Verify(method: .m_setMaxMood__value(`value`))}
+		public static func setMinMood(value: Parameter<Double>) -> Verify { return Verify(method: .m_setMinMood__value(`value`))}
+        public static func setMaxMood(_ value: Parameter<Double>) -> Verify { return Verify(method: .m_setMaxMood__value(`value`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
-		static func setMaxMood(value: Parameter<Double>) -> Verify { return Verify(method: .m_setMaxMood__value(`value`))}
-        static func setScaleMoodsOnImport(_ value: Parameter<Bool>) -> Verify { return Verify(method: .m_setScaleMoodsOnImport__value(`value`))}
+		public static func setMaxMood(value: Parameter<Double>) -> Verify { return Verify(method: .m_setMaxMood__value(`value`))}
+        public static func setScaleMoodsOnImport(_ value: Parameter<Bool>) -> Verify { return Verify(method: .m_setScaleMoodsOnImport__value(`value`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
-		static func setScaleMoodsOnImport(value: Parameter<Bool>) -> Verify { return Verify(method: .m_setScaleMoodsOnImport__value(`value`))}
-        static func setAutoIgnoreEnabled(_ value: Parameter<Bool>) -> Verify { return Verify(method: .m_setAutoIgnoreEnabled__value(`value`))}
+		public static func setScaleMoodsOnImport(value: Parameter<Bool>) -> Verify { return Verify(method: .m_setScaleMoodsOnImport__value(`value`))}
+        public static func setAutoIgnoreEnabled(_ value: Parameter<Bool>) -> Verify { return Verify(method: .m_setAutoIgnoreEnabled__value(`value`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
-		static func setAutoIgnoreEnabled(value: Parameter<Bool>) -> Verify { return Verify(method: .m_setAutoIgnoreEnabled__value(`value`))}
-        static func setAutoIgnoreSeconds(_ value: Parameter<Int>) -> Verify { return Verify(method: .m_setAutoIgnoreSeconds__value(`value`))}
+		public static func setAutoIgnoreEnabled(value: Parameter<Bool>) -> Verify { return Verify(method: .m_setAutoIgnoreEnabled__value(`value`))}
+        public static func setAutoIgnoreSeconds(_ value: Parameter<Int>) -> Verify { return Verify(method: .m_setAutoIgnoreSeconds__value(`value`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
-		static func setAutoIgnoreSeconds(value: Parameter<Int>) -> Verify { return Verify(method: .m_setAutoIgnoreSeconds__value(`value`))}
-        static func changed(_ setting: Parameter<Setting>) -> Verify { return Verify(method: .m_changed__setting(`setting`))}
+		public static func setAutoIgnoreSeconds(value: Parameter<Int>) -> Verify { return Verify(method: .m_setAutoIgnoreSeconds__value(`value`))}
+        public static func setConvertTimeZones(_ value: Parameter<Bool>) -> Verify { return Verify(method: .m_setConvertTimeZones__value(`value`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
+		public static func setConvertTimeZones(value: Parameter<Bool>) -> Verify { return Verify(method: .m_setConvertTimeZones__value(`value`))}
+        public static func changed(_ setting: Parameter<Setting>) -> Verify { return Verify(method: .m_changed__setting(`setting`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `setting` label")
-		static func changed(setting: Parameter<Setting>) -> Verify { return Verify(method: .m_changed__setting(`setting`))}
-        static func reset() -> Verify { return Verify(method: .m_reset)}
-        static func save() -> Verify { return Verify(method: .m_save)}
-        static var minMood: Verify { return Verify(method: .p_minMood_get) }
-        static var maxMood: Verify { return Verify(method: .p_maxMood_get) }
-        static var scaleMoodsOnImport: Verify { return Verify(method: .p_scaleMoodsOnImport_get) }
-        static var autoIgnoreEnabled: Verify { return Verify(method: .p_autoIgnoreEnabled_get) }
-        static var autoIgnoreSeconds: Verify { return Verify(method: .p_autoIgnoreSeconds_get) }
+		public static func changed(setting: Parameter<Setting>) -> Verify { return Verify(method: .m_changed__setting(`setting`))}
+        public static func reset() -> Verify { return Verify(method: .m_reset)}
+        public static func save() -> Verify { return Verify(method: .m_save)}
+        public static var minMood: Verify { return Verify(method: .p_minMood_get) }
+        public static var maxMood: Verify { return Verify(method: .p_maxMood_get) }
+        public static var scaleMoodsOnImport: Verify { return Verify(method: .p_scaleMoodsOnImport_get) }
+        public static var autoIgnoreEnabled: Verify { return Verify(method: .p_autoIgnoreEnabled_get) }
+        public static var autoIgnoreSeconds: Verify { return Verify(method: .p_autoIgnoreSeconds_get) }
+        public static var convertTimeZones: Verify { return Verify(method: .p_convertTimeZones_get) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func setMinMood(_ value: Parameter<Double>, perform: @escaping (Double) -> Void) -> Perform {
+        public static func setMinMood(_ value: Parameter<Double>, perform: @escaping (Double) -> Void) -> Perform {
             return Perform(method: .m_setMinMood__value(`value`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
-		static func setMinMood(value: Parameter<Double>, perform: @escaping (Double) -> Void) -> Perform {
+		public static func setMinMood(value: Parameter<Double>, perform: @escaping (Double) -> Void) -> Perform {
             return Perform(method: .m_setMinMood__value(`value`), performs: perform)
         }
-        static func setMaxMood(_ value: Parameter<Double>, perform: @escaping (Double) -> Void) -> Perform {
+        public static func setMaxMood(_ value: Parameter<Double>, perform: @escaping (Double) -> Void) -> Perform {
             return Perform(method: .m_setMaxMood__value(`value`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
-		static func setMaxMood(value: Parameter<Double>, perform: @escaping (Double) -> Void) -> Perform {
+		public static func setMaxMood(value: Parameter<Double>, perform: @escaping (Double) -> Void) -> Perform {
             return Perform(method: .m_setMaxMood__value(`value`), performs: perform)
         }
-        static func setScaleMoodsOnImport(_ value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
+        public static func setScaleMoodsOnImport(_ value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
             return Perform(method: .m_setScaleMoodsOnImport__value(`value`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
-		static func setScaleMoodsOnImport(value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
+		public static func setScaleMoodsOnImport(value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
             return Perform(method: .m_setScaleMoodsOnImport__value(`value`), performs: perform)
         }
-        static func setAutoIgnoreEnabled(_ value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
+        public static func setAutoIgnoreEnabled(_ value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
             return Perform(method: .m_setAutoIgnoreEnabled__value(`value`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
-		static func setAutoIgnoreEnabled(value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
+		public static func setAutoIgnoreEnabled(value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
             return Perform(method: .m_setAutoIgnoreEnabled__value(`value`), performs: perform)
         }
-        static func setAutoIgnoreSeconds(_ value: Parameter<Int>, perform: @escaping (Int) -> Void) -> Perform {
+        public static func setAutoIgnoreSeconds(_ value: Parameter<Int>, perform: @escaping (Int) -> Void) -> Perform {
             return Perform(method: .m_setAutoIgnoreSeconds__value(`value`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
-		static func setAutoIgnoreSeconds(value: Parameter<Int>, perform: @escaping (Int) -> Void) -> Perform {
+		public static func setAutoIgnoreSeconds(value: Parameter<Int>, perform: @escaping (Int) -> Void) -> Perform {
             return Perform(method: .m_setAutoIgnoreSeconds__value(`value`), performs: perform)
         }
-        static func changed(_ setting: Parameter<Setting>, perform: @escaping (Setting) -> Void) -> Perform {
+        public static func setConvertTimeZones(_ value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
+            return Perform(method: .m_setConvertTimeZones__value(`value`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
+		public static func setConvertTimeZones(value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
+            return Perform(method: .m_setConvertTimeZones__value(`value`), performs: perform)
+        }
+        public static func changed(_ setting: Parameter<Setting>, perform: @escaping (Setting) -> Void) -> Perform {
             return Perform(method: .m_changed__setting(`setting`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `setting` label")
-		static func changed(setting: Parameter<Setting>, perform: @escaping (Setting) -> Void) -> Perform {
+		public static func changed(setting: Parameter<Setting>, perform: @escaping (Setting) -> Void) -> Perform {
             return Perform(method: .m_changed__setting(`setting`), performs: perform)
         }
-        static func reset(perform: @escaping () -> Void) -> Perform {
+        public static func reset(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_reset, performs: perform)
         }
-        static func save(perform: @escaping () -> Void) -> Perform {
+        public static func save(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_save, performs: perform)
         }
     }
@@ -9254,7 +9352,7 @@ class SettingsMock: Settings, Mock, StaticMock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -9309,7 +9407,7 @@ class SettingsMock: Settings, Mock, StaticMock {
 
     static public func verify(_ method: StaticVerify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     static private func addInvocation(_ call: StaticMethodType) {
@@ -9348,7 +9446,7 @@ class SettingsMock: Settings, Mock, StaticMock {
 }
 
 // MARK: - SexualActivityQuery
-class SexualActivityQueryMock: SexualActivityQuery, Mock {
+open class SexualActivityQueryMock: SexualActivityQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -9365,9 +9463,9 @@ class SexualActivityQueryMock: SexualActivityQuery, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -9375,19 +9473,19 @@ class SexualActivityQueryMock: SexualActivityQuery, Mock {
         self.line = line
     }
 
-    var attributeRestrictions: [AttributeRestriction] {
+    public var attributeRestrictions: [AttributeRestriction] {
 		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "SexualActivityQueryMock - stub value for attributeRestrictions was not defined") }
 		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
 	}
 	private var __p_attributeRestrictions: ([AttributeRestriction])?
 
-    var mostRecentEntryOnly: Bool {
+    public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "SexualActivityQueryMock - stub value for mostRecentEntryOnly was not defined") }
 		set {	invocations.append(.p_mostRecentEntryOnly_set(.value(newValue))); __p_mostRecentEntryOnly = newValue }
 	}
 	private var __p_mostRecentEntryOnly: (Bool)?
 
-    var subQuery: (matcher: SubQueryMatcher, query: Query)? {
+    public var subQuery: (matcher: SubQueryMatcher, query: Query)? {
 		get {	invocations.append(.p_subQuery_get); return __p_subQuery ?? optionalGivenGetterValue(.p_subQuery_get, "SexualActivityQueryMock - stub value for subQuery was not defined") }
 		set {	invocations.append(.p_subQuery_set(.value(newValue))); __p_subQuery = newValue }
 	}
@@ -9397,19 +9495,19 @@ class SexualActivityQueryMock: SexualActivityQuery, Mock {
 
 
 
-    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
 		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
 		perform?(`callback`)
     }
 
-    func stop() {
+    open func stop() {
         addInvocation(.m_stop)
 		let perform = methodPerformValue(.m_stop) as? () -> Void
 		perform?()
     }
 
-    func equalTo(_ otherQuery: Query) -> Bool {
+    open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
 		perform?(`otherQuery`)
@@ -9470,7 +9568,7 @@ class SexualActivityQueryMock: SexualActivityQuery, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -9478,24 +9576,24 @@ class SexualActivityQueryMock: SexualActivityQuery, Mock {
             super.init(products)
         }
 
-        static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
+        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
             return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
+        public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
+        public static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
             return Given(method: .p_subQuery_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
@@ -9504,37 +9602,37 @@ class SexualActivityQueryMock: SexualActivityQuery, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
-        static func stop() -> Verify { return Verify(method: .m_stop)}
-        static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
-        static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
-		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
-        static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
-		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
+		public static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
+		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
+		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
+        public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
+		public static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
-        static func stop(perform: @escaping () -> Void) -> Perform {
+        public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+        public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+		public static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
     }
@@ -9550,7 +9648,7 @@ class SexualActivityQueryMock: SexualActivityQuery, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -9596,7 +9694,7 @@ class SexualActivityQueryMock: SexualActivityQuery, Mock {
 }
 
 // MARK: - SleepQuery
-class SleepQueryMock: SleepQuery, Mock {
+open class SleepQueryMock: SleepQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -9613,9 +9711,9 @@ class SleepQueryMock: SleepQuery, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -9623,19 +9721,19 @@ class SleepQueryMock: SleepQuery, Mock {
         self.line = line
     }
 
-    var attributeRestrictions: [AttributeRestriction] {
+    public var attributeRestrictions: [AttributeRestriction] {
 		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "SleepQueryMock - stub value for attributeRestrictions was not defined") }
 		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
 	}
 	private var __p_attributeRestrictions: ([AttributeRestriction])?
 
-    var mostRecentEntryOnly: Bool {
+    public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "SleepQueryMock - stub value for mostRecentEntryOnly was not defined") }
 		set {	invocations.append(.p_mostRecentEntryOnly_set(.value(newValue))); __p_mostRecentEntryOnly = newValue }
 	}
 	private var __p_mostRecentEntryOnly: (Bool)?
 
-    var subQuery: (matcher: SubQueryMatcher, query: Query)? {
+    public var subQuery: (matcher: SubQueryMatcher, query: Query)? {
 		get {	invocations.append(.p_subQuery_get); return __p_subQuery ?? optionalGivenGetterValue(.p_subQuery_get, "SleepQueryMock - stub value for subQuery was not defined") }
 		set {	invocations.append(.p_subQuery_set(.value(newValue))); __p_subQuery = newValue }
 	}
@@ -9645,19 +9743,19 @@ class SleepQueryMock: SleepQuery, Mock {
 
 
 
-    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
 		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
 		perform?(`callback`)
     }
 
-    func stop() {
+    open func stop() {
         addInvocation(.m_stop)
 		let perform = methodPerformValue(.m_stop) as? () -> Void
 		perform?()
     }
 
-    func equalTo(_ otherQuery: Query) -> Bool {
+    open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
 		perform?(`otherQuery`)
@@ -9718,7 +9816,7 @@ class SleepQueryMock: SleepQuery, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -9726,24 +9824,24 @@ class SleepQueryMock: SleepQuery, Mock {
             super.init(products)
         }
 
-        static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
+        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
             return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
+        public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
+        public static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
             return Given(method: .p_subQuery_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
@@ -9752,37 +9850,37 @@ class SleepQueryMock: SleepQuery, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
-        static func stop() -> Verify { return Verify(method: .m_stop)}
-        static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
-        static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
-		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
-        static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
-		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
+		public static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
+		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
+		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
+        public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
+		public static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
-        static func stop(perform: @escaping () -> Void) -> Perform {
+        public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+        public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+		public static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
     }
@@ -9798,7 +9896,7 @@ class SleepQueryMock: SleepQuery, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -9844,7 +9942,7 @@ class SleepQueryMock: SleepQuery, Mock {
 }
 
 // MARK: - StringUtil
-class StringUtilMock: StringUtil, Mock {
+open class StringUtilMock: StringUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -9861,9 +9959,9 @@ class StringUtilMock: StringUtil, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -9875,7 +9973,7 @@ class StringUtilMock: StringUtil, Mock {
 
 
 
-    func isNumber(_ str: String) -> Bool {
+    open func isNumber(_ str: String) -> Bool {
         addInvocation(.m_isNumber__str(Parameter<String>.value(`str`)))
 		let perform = methodPerformValue(.m_isNumber__str(Parameter<String>.value(`str`))) as? (String) -> Void
 		perform?(`str`)
@@ -9889,7 +9987,7 @@ class StringUtilMock: StringUtil, Mock {
 		return __value
     }
 
-    func isInteger(_ str: String) -> Bool {
+    open func isInteger(_ str: String) -> Bool {
         addInvocation(.m_isInteger__str(Parameter<String>.value(`str`)))
 		let perform = methodPerformValue(.m_isInteger__str(Parameter<String>.value(`str`))) as? (String) -> Void
 		perform?(`str`)
@@ -9903,7 +10001,7 @@ class StringUtilMock: StringUtil, Mock {
 		return __value
     }
 
-    func rangeOfNumberIn(_ str: String) -> Range<String.Index>? {
+    open func rangeOfNumberIn(_ str: String) -> Range<String.Index>? {
         addInvocation(.m_rangeOfNumberIn__str(Parameter<String>.value(`str`)))
 		let perform = methodPerformValue(.m_rangeOfNumberIn__str(Parameter<String>.value(`str`))) as? (String) -> Void
 		perform?(`str`)
@@ -9946,7 +10044,7 @@ class StringUtilMock: StringUtil, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -9955,42 +10053,42 @@ class StringUtilMock: StringUtil, Mock {
         }
 
 
-        static func isNumber(_ str: Parameter<String>, willReturn: Bool...) -> MethodStub {
+        public static func isNumber(_ str: Parameter<String>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_isNumber__str(`str`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `str` label")
-		static func isNumber(str: Parameter<String>, willReturn: Bool...) -> MethodStub {
+		public static func isNumber(str: Parameter<String>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_isNumber__str(`str`), products: willReturn.map({ Product.return($0) }))
         }
-        static func isInteger(_ str: Parameter<String>, willReturn: Bool...) -> MethodStub {
+        public static func isInteger(_ str: Parameter<String>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_isInteger__str(`str`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `str` label")
-		static func isInteger(str: Parameter<String>, willReturn: Bool...) -> MethodStub {
+		public static func isInteger(str: Parameter<String>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_isInteger__str(`str`), products: willReturn.map({ Product.return($0) }))
         }
-        static func rangeOfNumberIn(_ str: Parameter<String>, willReturn: Range<String.Index>?...) -> MethodStub {
+        public static func rangeOfNumberIn(_ str: Parameter<String>, willReturn: Range<String.Index>?...) -> MethodStub {
             return Given(method: .m_rangeOfNumberIn__str(`str`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `str` label")
-		static func rangeOfNumberIn(str: Parameter<String>, willReturn: Range<String.Index>?...) -> MethodStub {
+		public static func rangeOfNumberIn(str: Parameter<String>, willReturn: Range<String.Index>?...) -> MethodStub {
             return Given(method: .m_rangeOfNumberIn__str(`str`), products: willReturn.map({ Product.return($0) }))
         }
-        static func isNumber(_ str: Parameter<String>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func isNumber(_ str: Parameter<String>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_isNumber__str(`str`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
-        static func isInteger(_ str: Parameter<String>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func isInteger(_ str: Parameter<String>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_isInteger__str(`str`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
-        static func rangeOfNumberIn(_ str: Parameter<String>, willProduce: (Stubber<Range<String.Index>?>) -> Void) -> MethodStub {
+        public static func rangeOfNumberIn(_ str: Parameter<String>, willProduce: (Stubber<Range<String.Index>?>) -> Void) -> MethodStub {
             let willReturn: [Range<String.Index>?] = []
 			let given: Given = { return Given(method: .m_rangeOfNumberIn__str(`str`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Range<String.Index>?).self)
@@ -9999,43 +10097,43 @@ class StringUtilMock: StringUtil, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func isNumber(_ str: Parameter<String>) -> Verify { return Verify(method: .m_isNumber__str(`str`))}
+        public static func isNumber(_ str: Parameter<String>) -> Verify { return Verify(method: .m_isNumber__str(`str`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `str` label")
-		static func isNumber(str: Parameter<String>) -> Verify { return Verify(method: .m_isNumber__str(`str`))}
-        static func isInteger(_ str: Parameter<String>) -> Verify { return Verify(method: .m_isInteger__str(`str`))}
+		public static func isNumber(str: Parameter<String>) -> Verify { return Verify(method: .m_isNumber__str(`str`))}
+        public static func isInteger(_ str: Parameter<String>) -> Verify { return Verify(method: .m_isInteger__str(`str`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `str` label")
-		static func isInteger(str: Parameter<String>) -> Verify { return Verify(method: .m_isInteger__str(`str`))}
-        static func rangeOfNumberIn(_ str: Parameter<String>) -> Verify { return Verify(method: .m_rangeOfNumberIn__str(`str`))}
+		public static func isInteger(str: Parameter<String>) -> Verify { return Verify(method: .m_isInteger__str(`str`))}
+        public static func rangeOfNumberIn(_ str: Parameter<String>) -> Verify { return Verify(method: .m_rangeOfNumberIn__str(`str`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `str` label")
-		static func rangeOfNumberIn(str: Parameter<String>) -> Verify { return Verify(method: .m_rangeOfNumberIn__str(`str`))}
+		public static func rangeOfNumberIn(str: Parameter<String>) -> Verify { return Verify(method: .m_rangeOfNumberIn__str(`str`))}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func isNumber(_ str: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+        public static func isNumber(_ str: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_isNumber__str(`str`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `str` label")
-		static func isNumber(str: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+		public static func isNumber(str: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_isNumber__str(`str`), performs: perform)
         }
-        static func isInteger(_ str: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+        public static func isInteger(_ str: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_isInteger__str(`str`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `str` label")
-		static func isInteger(str: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+		public static func isInteger(str: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_isInteger__str(`str`), performs: perform)
         }
-        static func rangeOfNumberIn(_ str: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+        public static func rangeOfNumberIn(_ str: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_rangeOfNumberIn__str(`str`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `str` label")
-		static func rangeOfNumberIn(str: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+		public static func rangeOfNumberIn(str: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_rangeOfNumberIn__str(`str`), performs: perform)
         }
     }
@@ -10051,7 +10149,7 @@ class StringUtilMock: StringUtil, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -10097,7 +10195,7 @@ class StringUtilMock: StringUtil, Mock {
 }
 
 // MARK: - SubQueryMatcherFactory
-class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
+open class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -10114,9 +10212,9 @@ class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -10128,7 +10226,7 @@ class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
 
 
 
-    func withinXCalendarUnitsSubQueryMatcher() -> WithinXCalendarUnitsSubQueryMatcher {
+    open func withinXCalendarUnitsSubQueryMatcher() -> WithinXCalendarUnitsSubQueryMatcher {
         addInvocation(.m_withinXCalendarUnitsSubQueryMatcher)
 		let perform = methodPerformValue(.m_withinXCalendarUnitsSubQueryMatcher) as? () -> Void
 		perform?()
@@ -10142,7 +10240,7 @@ class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
 		return __value
     }
 
-    func inSameCalendarUnitSubQueryMatcher() -> InSameCalendarUnitSubQueryMatcher {
+    open func inSameCalendarUnitSubQueryMatcher() -> InSameCalendarUnitSubQueryMatcher {
         addInvocation(.m_inSameCalendarUnitSubQueryMatcher)
 		let perform = methodPerformValue(.m_inSameCalendarUnitSubQueryMatcher) as? () -> Void
 		perform?()
@@ -10156,7 +10254,7 @@ class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
 		return __value
     }
 
-    func sameDatesSubQueryMatcher() -> SameDatesSubQueryMatcher {
+    open func sameDatesSubQueryMatcher() -> SameDatesSubQueryMatcher {
         addInvocation(.m_sameDatesSubQueryMatcher)
 		let perform = methodPerformValue(.m_sameDatesSubQueryMatcher) as? () -> Void
 		perform?()
@@ -10170,7 +10268,7 @@ class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
 		return __value
     }
 
-    func sameStartDatesSubQueryMatcher() -> SameStartDatesSubQueryMatcher {
+    open func sameStartDatesSubQueryMatcher() -> SameStartDatesSubQueryMatcher {
         addInvocation(.m_sameStartDatesSubQueryMatcher)
 		let perform = methodPerformValue(.m_sameStartDatesSubQueryMatcher) as? () -> Void
 		perform?()
@@ -10184,7 +10282,7 @@ class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
 		return __value
     }
 
-    func sameEndDatesSubQueryMatcher() -> SameEndDatesSubQueryMatcher {
+    open func sameEndDatesSubQueryMatcher() -> SameEndDatesSubQueryMatcher {
         addInvocation(.m_sameEndDatesSubQueryMatcher)
 		let perform = methodPerformValue(.m_sameEndDatesSubQueryMatcher) as? () -> Void
 		perform?()
@@ -10233,7 +10331,7 @@ class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -10242,50 +10340,50 @@ class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
         }
 
 
-        static func withinXCalendarUnitsSubQueryMatcher(willReturn: WithinXCalendarUnitsSubQueryMatcher...) -> MethodStub {
+        public static func withinXCalendarUnitsSubQueryMatcher(willReturn: WithinXCalendarUnitsSubQueryMatcher...) -> MethodStub {
             return Given(method: .m_withinXCalendarUnitsSubQueryMatcher, products: willReturn.map({ Product.return($0) }))
         }
-        static func inSameCalendarUnitSubQueryMatcher(willReturn: InSameCalendarUnitSubQueryMatcher...) -> MethodStub {
+        public static func inSameCalendarUnitSubQueryMatcher(willReturn: InSameCalendarUnitSubQueryMatcher...) -> MethodStub {
             return Given(method: .m_inSameCalendarUnitSubQueryMatcher, products: willReturn.map({ Product.return($0) }))
         }
-        static func sameDatesSubQueryMatcher(willReturn: SameDatesSubQueryMatcher...) -> MethodStub {
+        public static func sameDatesSubQueryMatcher(willReturn: SameDatesSubQueryMatcher...) -> MethodStub {
             return Given(method: .m_sameDatesSubQueryMatcher, products: willReturn.map({ Product.return($0) }))
         }
-        static func sameStartDatesSubQueryMatcher(willReturn: SameStartDatesSubQueryMatcher...) -> MethodStub {
+        public static func sameStartDatesSubQueryMatcher(willReturn: SameStartDatesSubQueryMatcher...) -> MethodStub {
             return Given(method: .m_sameStartDatesSubQueryMatcher, products: willReturn.map({ Product.return($0) }))
         }
-        static func sameEndDatesSubQueryMatcher(willReturn: SameEndDatesSubQueryMatcher...) -> MethodStub {
+        public static func sameEndDatesSubQueryMatcher(willReturn: SameEndDatesSubQueryMatcher...) -> MethodStub {
             return Given(method: .m_sameEndDatesSubQueryMatcher, products: willReturn.map({ Product.return($0) }))
         }
-        static func withinXCalendarUnitsSubQueryMatcher(willProduce: (Stubber<WithinXCalendarUnitsSubQueryMatcher>) -> Void) -> MethodStub {
+        public static func withinXCalendarUnitsSubQueryMatcher(willProduce: (Stubber<WithinXCalendarUnitsSubQueryMatcher>) -> Void) -> MethodStub {
             let willReturn: [WithinXCalendarUnitsSubQueryMatcher] = []
 			let given: Given = { return Given(method: .m_withinXCalendarUnitsSubQueryMatcher, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (WithinXCalendarUnitsSubQueryMatcher).self)
 			willProduce(stubber)
 			return given
         }
-        static func inSameCalendarUnitSubQueryMatcher(willProduce: (Stubber<InSameCalendarUnitSubQueryMatcher>) -> Void) -> MethodStub {
+        public static func inSameCalendarUnitSubQueryMatcher(willProduce: (Stubber<InSameCalendarUnitSubQueryMatcher>) -> Void) -> MethodStub {
             let willReturn: [InSameCalendarUnitSubQueryMatcher] = []
 			let given: Given = { return Given(method: .m_inSameCalendarUnitSubQueryMatcher, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (InSameCalendarUnitSubQueryMatcher).self)
 			willProduce(stubber)
 			return given
         }
-        static func sameDatesSubQueryMatcher(willProduce: (Stubber<SameDatesSubQueryMatcher>) -> Void) -> MethodStub {
+        public static func sameDatesSubQueryMatcher(willProduce: (Stubber<SameDatesSubQueryMatcher>) -> Void) -> MethodStub {
             let willReturn: [SameDatesSubQueryMatcher] = []
 			let given: Given = { return Given(method: .m_sameDatesSubQueryMatcher, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (SameDatesSubQueryMatcher).self)
 			willProduce(stubber)
 			return given
         }
-        static func sameStartDatesSubQueryMatcher(willProduce: (Stubber<SameStartDatesSubQueryMatcher>) -> Void) -> MethodStub {
+        public static func sameStartDatesSubQueryMatcher(willProduce: (Stubber<SameStartDatesSubQueryMatcher>) -> Void) -> MethodStub {
             let willReturn: [SameStartDatesSubQueryMatcher] = []
 			let given: Given = { return Given(method: .m_sameStartDatesSubQueryMatcher, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (SameStartDatesSubQueryMatcher).self)
 			willProduce(stubber)
 			return given
         }
-        static func sameEndDatesSubQueryMatcher(willProduce: (Stubber<SameEndDatesSubQueryMatcher>) -> Void) -> MethodStub {
+        public static func sameEndDatesSubQueryMatcher(willProduce: (Stubber<SameEndDatesSubQueryMatcher>) -> Void) -> MethodStub {
             let willReturn: [SameEndDatesSubQueryMatcher] = []
 			let given: Given = { return Given(method: .m_sameEndDatesSubQueryMatcher, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (SameEndDatesSubQueryMatcher).self)
@@ -10294,33 +10392,33 @@ class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func withinXCalendarUnitsSubQueryMatcher() -> Verify { return Verify(method: .m_withinXCalendarUnitsSubQueryMatcher)}
-        static func inSameCalendarUnitSubQueryMatcher() -> Verify { return Verify(method: .m_inSameCalendarUnitSubQueryMatcher)}
-        static func sameDatesSubQueryMatcher() -> Verify { return Verify(method: .m_sameDatesSubQueryMatcher)}
-        static func sameStartDatesSubQueryMatcher() -> Verify { return Verify(method: .m_sameStartDatesSubQueryMatcher)}
-        static func sameEndDatesSubQueryMatcher() -> Verify { return Verify(method: .m_sameEndDatesSubQueryMatcher)}
+        public static func withinXCalendarUnitsSubQueryMatcher() -> Verify { return Verify(method: .m_withinXCalendarUnitsSubQueryMatcher)}
+        public static func inSameCalendarUnitSubQueryMatcher() -> Verify { return Verify(method: .m_inSameCalendarUnitSubQueryMatcher)}
+        public static func sameDatesSubQueryMatcher() -> Verify { return Verify(method: .m_sameDatesSubQueryMatcher)}
+        public static func sameStartDatesSubQueryMatcher() -> Verify { return Verify(method: .m_sameStartDatesSubQueryMatcher)}
+        public static func sameEndDatesSubQueryMatcher() -> Verify { return Verify(method: .m_sameEndDatesSubQueryMatcher)}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func withinXCalendarUnitsSubQueryMatcher(perform: @escaping () -> Void) -> Perform {
+        public static func withinXCalendarUnitsSubQueryMatcher(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_withinXCalendarUnitsSubQueryMatcher, performs: perform)
         }
-        static func inSameCalendarUnitSubQueryMatcher(perform: @escaping () -> Void) -> Perform {
+        public static func inSameCalendarUnitSubQueryMatcher(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_inSameCalendarUnitSubQueryMatcher, performs: perform)
         }
-        static func sameDatesSubQueryMatcher(perform: @escaping () -> Void) -> Perform {
+        public static func sameDatesSubQueryMatcher(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_sameDatesSubQueryMatcher, performs: perform)
         }
-        static func sameStartDatesSubQueryMatcher(perform: @escaping () -> Void) -> Perform {
+        public static func sameStartDatesSubQueryMatcher(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_sameStartDatesSubQueryMatcher, performs: perform)
         }
-        static func sameEndDatesSubQueryMatcher(perform: @escaping () -> Void) -> Perform {
+        public static func sameEndDatesSubQueryMatcher(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_sameEndDatesSubQueryMatcher, performs: perform)
         }
     }
@@ -10336,7 +10434,7 @@ class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -10382,7 +10480,7 @@ class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
 }
 
 // MARK: - TextNormalizationUtil
-class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
+open class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -10399,9 +10497,9 @@ class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -10413,7 +10511,7 @@ class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
 
 
 
-    func expandContractions(_ text: String) -> String {
+    open func expandContractions(_ text: String) -> String {
         addInvocation(.m_expandContractions__text(Parameter<String>.value(`text`)))
 		let perform = methodPerformValue(.m_expandContractions__text(Parameter<String>.value(`text`))) as? (String) -> Void
 		perform?(`text`)
@@ -10427,7 +10525,7 @@ class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
 		return __value
     }
 
-    func normalizeNumbers(_ text: String) -> String {
+    open func normalizeNumbers(_ text: String) -> String {
         addInvocation(.m_normalizeNumbers__text(Parameter<String>.value(`text`)))
 		let perform = methodPerformValue(.m_normalizeNumbers__text(Parameter<String>.value(`text`))) as? (String) -> Void
 		perform?(`text`)
@@ -10441,7 +10539,7 @@ class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
 		return __value
     }
 
-    func removePunctuation(_ text: String) -> String {
+    open func removePunctuation(_ text: String) -> String {
         addInvocation(.m_removePunctuation__text(Parameter<String>.value(`text`)))
 		let perform = methodPerformValue(.m_removePunctuation__text(Parameter<String>.value(`text`))) as? (String) -> Void
 		perform?(`text`)
@@ -10485,7 +10583,7 @@ class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -10494,42 +10592,42 @@ class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
         }
 
 
-        static func expandContractions(_ text: Parameter<String>, willReturn: String...) -> MethodStub {
+        public static func expandContractions(_ text: Parameter<String>, willReturn: String...) -> MethodStub {
             return Given(method: .m_expandContractions__text(`text`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `text` label")
-		static func expandContractions(text: Parameter<String>, willReturn: String...) -> MethodStub {
+		public static func expandContractions(text: Parameter<String>, willReturn: String...) -> MethodStub {
             return Given(method: .m_expandContractions__text(`text`), products: willReturn.map({ Product.return($0) }))
         }
-        static func normalizeNumbers(_ text: Parameter<String>, willReturn: String...) -> MethodStub {
+        public static func normalizeNumbers(_ text: Parameter<String>, willReturn: String...) -> MethodStub {
             return Given(method: .m_normalizeNumbers__text(`text`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `text` label")
-		static func normalizeNumbers(text: Parameter<String>, willReturn: String...) -> MethodStub {
+		public static func normalizeNumbers(text: Parameter<String>, willReturn: String...) -> MethodStub {
             return Given(method: .m_normalizeNumbers__text(`text`), products: willReturn.map({ Product.return($0) }))
         }
-        static func removePunctuation(_ text: Parameter<String>, willReturn: String...) -> MethodStub {
+        public static func removePunctuation(_ text: Parameter<String>, willReturn: String...) -> MethodStub {
             return Given(method: .m_removePunctuation__text(`text`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `text` label")
-		static func removePunctuation(text: Parameter<String>, willReturn: String...) -> MethodStub {
+		public static func removePunctuation(text: Parameter<String>, willReturn: String...) -> MethodStub {
             return Given(method: .m_removePunctuation__text(`text`), products: willReturn.map({ Product.return($0) }))
         }
-        static func expandContractions(_ text: Parameter<String>, willProduce: (Stubber<String>) -> Void) -> MethodStub {
+        public static func expandContractions(_ text: Parameter<String>, willProduce: (Stubber<String>) -> Void) -> MethodStub {
             let willReturn: [String] = []
 			let given: Given = { return Given(method: .m_expandContractions__text(`text`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (String).self)
 			willProduce(stubber)
 			return given
         }
-        static func normalizeNumbers(_ text: Parameter<String>, willProduce: (Stubber<String>) -> Void) -> MethodStub {
+        public static func normalizeNumbers(_ text: Parameter<String>, willProduce: (Stubber<String>) -> Void) -> MethodStub {
             let willReturn: [String] = []
 			let given: Given = { return Given(method: .m_normalizeNumbers__text(`text`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (String).self)
 			willProduce(stubber)
 			return given
         }
-        static func removePunctuation(_ text: Parameter<String>, willProduce: (Stubber<String>) -> Void) -> MethodStub {
+        public static func removePunctuation(_ text: Parameter<String>, willProduce: (Stubber<String>) -> Void) -> MethodStub {
             let willReturn: [String] = []
 			let given: Given = { return Given(method: .m_removePunctuation__text(`text`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (String).self)
@@ -10538,43 +10636,43 @@ class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func expandContractions(_ text: Parameter<String>) -> Verify { return Verify(method: .m_expandContractions__text(`text`))}
+        public static func expandContractions(_ text: Parameter<String>) -> Verify { return Verify(method: .m_expandContractions__text(`text`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `text` label")
-		static func expandContractions(text: Parameter<String>) -> Verify { return Verify(method: .m_expandContractions__text(`text`))}
-        static func normalizeNumbers(_ text: Parameter<String>) -> Verify { return Verify(method: .m_normalizeNumbers__text(`text`))}
+		public static func expandContractions(text: Parameter<String>) -> Verify { return Verify(method: .m_expandContractions__text(`text`))}
+        public static func normalizeNumbers(_ text: Parameter<String>) -> Verify { return Verify(method: .m_normalizeNumbers__text(`text`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `text` label")
-		static func normalizeNumbers(text: Parameter<String>) -> Verify { return Verify(method: .m_normalizeNumbers__text(`text`))}
-        static func removePunctuation(_ text: Parameter<String>) -> Verify { return Verify(method: .m_removePunctuation__text(`text`))}
+		public static func normalizeNumbers(text: Parameter<String>) -> Verify { return Verify(method: .m_normalizeNumbers__text(`text`))}
+        public static func removePunctuation(_ text: Parameter<String>) -> Verify { return Verify(method: .m_removePunctuation__text(`text`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `text` label")
-		static func removePunctuation(text: Parameter<String>) -> Verify { return Verify(method: .m_removePunctuation__text(`text`))}
+		public static func removePunctuation(text: Parameter<String>) -> Verify { return Verify(method: .m_removePunctuation__text(`text`))}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func expandContractions(_ text: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+        public static func expandContractions(_ text: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_expandContractions__text(`text`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `text` label")
-		static func expandContractions(text: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+		public static func expandContractions(text: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_expandContractions__text(`text`), performs: perform)
         }
-        static func normalizeNumbers(_ text: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+        public static func normalizeNumbers(_ text: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_normalizeNumbers__text(`text`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `text` label")
-		static func normalizeNumbers(text: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+		public static func normalizeNumbers(text: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_normalizeNumbers__text(`text`), performs: perform)
         }
-        static func removePunctuation(_ text: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+        public static func removePunctuation(_ text: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_removePunctuation__text(`text`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `text` label")
-		static func removePunctuation(text: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+		public static func removePunctuation(text: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_removePunctuation__text(`text`), performs: perform)
         }
     }
@@ -10590,7 +10688,7 @@ class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -10636,7 +10734,7 @@ class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
 }
 
 // MARK: - Transaction
-class TransactionMock: Transaction, Mock {
+open class TransactionMock: Transaction, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -10653,9 +10751,9 @@ class TransactionMock: Transaction, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -10667,7 +10765,7 @@ class TransactionMock: Transaction, Mock {
 
 
 
-    func childTransaction() -> Transaction {
+    open func childTransaction() -> Transaction {
         addInvocation(.m_childTransaction)
 		let perform = methodPerformValue(.m_childTransaction) as? () -> Void
 		perform?()
@@ -10681,7 +10779,7 @@ class TransactionMock: Transaction, Mock {
 		return __value
     }
 
-    func commit() throws {
+    open func commit() throws {
         addInvocation(.m_commit)
 		let perform = methodPerformValue(.m_commit) as? () -> Void
 		perform?()
@@ -10694,13 +10792,13 @@ class TransactionMock: Transaction, Mock {
 		}
     }
 
-    func reset() {
+    open func reset() {
         addInvocation(.m_reset)
 		let perform = methodPerformValue(.m_reset) as? () -> Void
 		perform?()
     }
 
-    func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type] {
+    open func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type] {
         addInvocation(.m_query__fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_query__fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric())) as? (NSFetchRequest<Type>) -> Void
 		perform?(`fetchRequest`)
@@ -10716,7 +10814,7 @@ class TransactionMock: Transaction, Mock {
 		return __value
     }
 
-    func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type) throws -> Type {
+    open func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type) throws -> Type {
         addInvocation(.m_new__objectType(Parameter<Type.Type>.value(`objectType`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_new__objectType(Parameter<Type.Type>.value(`objectType`).wrapAsGeneric())) as? (Type.Type) -> Void
 		perform?(`objectType`)
@@ -10732,7 +10830,7 @@ class TransactionMock: Transaction, Mock {
 		return __value
     }
 
-    func batchUpdateRequest<Type: CoreDataObject>(for type: Type.Type) -> NSBatchUpdateRequest {
+    open func batchUpdateRequest<Type: CoreDataObject>(for type: Type.Type) -> NSBatchUpdateRequest {
         addInvocation(.m_batchUpdateRequest__for_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_batchUpdateRequest__for_type(Parameter<Type.Type>.value(`type`).wrapAsGeneric())) as? (Type.Type) -> Void
 		perform?(`type`)
@@ -10746,7 +10844,7 @@ class TransactionMock: Transaction, Mock {
 		return __value
     }
 
-    func batchUpdate(_ request: NSBatchUpdateRequest) throws -> NSBatchUpdateResult {
+    open func batchUpdate(_ request: NSBatchUpdateRequest) throws -> NSBatchUpdateResult {
         addInvocation(.m_batchUpdate__request(Parameter<NSBatchUpdateRequest>.value(`request`)))
 		let perform = methodPerformValue(.m_batchUpdate__request(Parameter<NSBatchUpdateRequest>.value(`request`))) as? (NSBatchUpdateRequest) -> Void
 		perform?(`request`)
@@ -10762,7 +10860,7 @@ class TransactionMock: Transaction, Mock {
 		return __value
     }
 
-    func pull<Type: NSManagedObject>(savedObject: Type) throws -> Type {
+    open func pull<Type: NSManagedObject>(savedObject: Type) throws -> Type {
         addInvocation(.m_pull__savedObject_savedObject(Parameter<Type>.value(`savedObject`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_pull__savedObject_savedObject(Parameter<Type>.value(`savedObject`).wrapAsGeneric())) as? (Type) -> Void
 		perform?(`savedObject`)
@@ -10778,7 +10876,7 @@ class TransactionMock: Transaction, Mock {
 		return __value
     }
 
-    func delete(_ object: NSManagedObject) throws {
+    open func delete(_ object: NSManagedObject) throws {
         addInvocation(.m_delete__object(Parameter<NSManagedObject>.value(`object`)))
 		let perform = methodPerformValue(.m_delete__object(Parameter<NSManagedObject>.value(`object`))) as? (NSManagedObject) -> Void
 		perform?(`object`)
@@ -10791,7 +10889,7 @@ class TransactionMock: Transaction, Mock {
 		}
     }
 
-    func deleteAll(_ objects: [NSManagedObject]) throws {
+    open func deleteAll(_ objects: [NSManagedObject]) throws {
         addInvocation(.m_deleteAll__objects(Parameter<[NSManagedObject]>.value(`objects`)))
 		let perform = methodPerformValue(.m_deleteAll__objects(Parameter<[NSManagedObject]>.value(`objects`))) as? ([NSManagedObject]) -> Void
 		perform?(`objects`)
@@ -10804,7 +10902,7 @@ class TransactionMock: Transaction, Mock {
 		}
     }
 
-    func deleteAll(_ objectType: NSManagedObject.Type) throws {
+    open func deleteAll(_ objectType: NSManagedObject.Type) throws {
         addInvocation(.m_deleteAll__objectType(Parameter<NSManagedObject.Type>.value(`objectType`)))
 		let perform = methodPerformValue(.m_deleteAll__objectType(Parameter<NSManagedObject.Type>.value(`objectType`))) as? (NSManagedObject.Type) -> Void
 		perform?(`objectType`)
@@ -10817,7 +10915,7 @@ class TransactionMock: Transaction, Mock {
 		}
     }
 
-    func deleteAll(_ entityName: String) throws {
+    open func deleteAll(_ entityName: String) throws {
         addInvocation(.m_deleteAll__entityName(Parameter<String>.value(`entityName`)))
 		let perform = methodPerformValue(.m_deleteAll__entityName(Parameter<String>.value(`entityName`))) as? (String) -> Void
 		perform?(`entityName`)
@@ -10902,7 +11000,7 @@ class TransactionMock: Transaction, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -10911,162 +11009,162 @@ class TransactionMock: Transaction, Mock {
         }
 
 
-        static func childTransaction(willReturn: Transaction...) -> MethodStub {
+        public static func childTransaction(willReturn: Transaction...) -> MethodStub {
             return Given(method: .m_childTransaction, products: willReturn.map({ Product.return($0) }))
         }
-        static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: [Type]...) -> MethodStub {
+        public static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: [Type]...) -> MethodStub {
             return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fetchRequest` label")
-		static func query<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: [Type]...) -> MethodStub {
+		public static func query<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: [Type]...) -> MethodStub {
             return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
+        public static func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
             return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
-		static func new<Type: NSManagedObject & CoreDataObject>(objectType: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
+		public static func new<Type: NSManagedObject & CoreDataObject>(objectType: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
             return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func batchUpdateRequest<Type: CoreDataObject>(for type: Parameter<Type.Type>, willReturn: NSBatchUpdateRequest...) -> MethodStub {
+        public static func batchUpdateRequest<Type: CoreDataObject>(for type: Parameter<Type.Type>, willReturn: NSBatchUpdateRequest...) -> MethodStub {
             return Given(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, willReturn: NSBatchUpdateResult...) -> MethodStub {
+        public static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, willReturn: NSBatchUpdateResult...) -> MethodStub {
             return Given(method: .m_batchUpdate__request(`request`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `request` label")
-		static func batchUpdate(request: Parameter<NSBatchUpdateRequest>, willReturn: NSBatchUpdateResult...) -> MethodStub {
+		public static func batchUpdate(request: Parameter<NSBatchUpdateRequest>, willReturn: NSBatchUpdateResult...) -> MethodStub {
             return Given(method: .m_batchUpdate__request(`request`), products: willReturn.map({ Product.return($0) }))
         }
-        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willReturn: Type...) -> MethodStub {
+        public static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willReturn: Type...) -> MethodStub {
             return Given(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func childTransaction(willProduce: (Stubber<Transaction>) -> Void) -> MethodStub {
+        public static func childTransaction(willProduce: (Stubber<Transaction>) -> Void) -> MethodStub {
             let willReturn: [Transaction] = []
 			let given: Given = { return Given(method: .m_childTransaction, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Transaction).self)
 			willProduce(stubber)
 			return given
         }
-        static func batchUpdateRequest<Type: CoreDataObject>(for type: Parameter<Type.Type>, willProduce: (Stubber<NSBatchUpdateRequest>) -> Void) -> MethodStub {
+        public static func batchUpdateRequest<Type: CoreDataObject>(for type: Parameter<Type.Type>, willProduce: (Stubber<NSBatchUpdateRequest>) -> Void) -> MethodStub {
             let willReturn: [NSBatchUpdateRequest] = []
 			let given: Given = { return Given(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (NSBatchUpdateRequest).self)
 			willProduce(stubber)
 			return given
         }
-        static func commit(willThrow: Error...) -> MethodStub {
+        public static func commit(willThrow: Error...) -> MethodStub {
             return Given(method: .m_commit, products: willThrow.map({ Product.throw($0) }))
         }
-        static func commit(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func commit(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_commit, products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
         }
-        static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willThrow: Error...) -> MethodStub {
+        public static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fetchRequest` label")
-		static func query<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willThrow: Error...) -> MethodStub {
+		public static func query<Type: NSManagedObject>(fetchRequest: Parameter<NSFetchRequest<Type>>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
-        static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willProduce: (StubberThrows<[Type]>) -> Void) -> MethodStub {
+        public static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willProduce: (StubberThrows<[Type]>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: ([Type]).self)
 			willProduce(stubber)
 			return given
         }
-        static func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+        public static func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
-		static func new<Type: NSManagedObject & CoreDataObject>(objectType: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+		public static func new<Type: NSManagedObject & CoreDataObject>(objectType: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
-        static func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Parameter<Type.Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
+        public static func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Parameter<Type.Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Type).self)
 			willProduce(stubber)
 			return given
         }
-        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, willThrow: Error...) -> MethodStub {
+        public static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_batchUpdate__request(`request`), products: willThrow.map({ Product.throw($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `request` label")
-		static func batchUpdate(request: Parameter<NSBatchUpdateRequest>, willThrow: Error...) -> MethodStub {
+		public static func batchUpdate(request: Parameter<NSBatchUpdateRequest>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_batchUpdate__request(`request`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, willProduce: (StubberThrows<NSBatchUpdateResult>) -> Void) -> MethodStub {
+        public static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, willProduce: (StubberThrows<NSBatchUpdateResult>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_batchUpdate__request(`request`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (NSBatchUpdateResult).self)
 			willProduce(stubber)
 			return given
         }
-        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willThrow: Error...) -> MethodStub {
+        public static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) }))
         }
-        static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
+        public static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Type).self)
 			willProduce(stubber)
 			return given
         }
-        static func delete(_ object: Parameter<NSManagedObject>, willThrow: Error...) -> MethodStub {
+        public static func delete(_ object: Parameter<NSManagedObject>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_delete__object(`object`), products: willThrow.map({ Product.throw($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `object` label")
-		static func delete(object: Parameter<NSManagedObject>, willThrow: Error...) -> MethodStub {
+		public static func delete(object: Parameter<NSManagedObject>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_delete__object(`object`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func delete(_ object: Parameter<NSManagedObject>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func delete(_ object: Parameter<NSManagedObject>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_delete__object(`object`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
         }
-        static func deleteAll(_ objects: Parameter<[NSManagedObject]>, willThrow: Error...) -> MethodStub {
+        public static func deleteAll(_ objects: Parameter<[NSManagedObject]>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_deleteAll__objects(`objects`), products: willThrow.map({ Product.throw($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objects` label")
-		static func deleteAll(objects: Parameter<[NSManagedObject]>, willThrow: Error...) -> MethodStub {
+		public static func deleteAll(objects: Parameter<[NSManagedObject]>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_deleteAll__objects(`objects`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func deleteAll(_ objects: Parameter<[NSManagedObject]>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func deleteAll(_ objects: Parameter<[NSManagedObject]>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_deleteAll__objects(`objects`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
         }
-        static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>, willThrow: Error...) -> MethodStub {
+        public static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_deleteAll__objectType(`objectType`), products: willThrow.map({ Product.throw($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
-		static func deleteAll(objectType: Parameter<NSManagedObject.Type>, willThrow: Error...) -> MethodStub {
+		public static func deleteAll(objectType: Parameter<NSManagedObject.Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_deleteAll__objectType(`objectType`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_deleteAll__objectType(`objectType`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
         }
-        static func deleteAll(_ entityName: Parameter<String>, willThrow: Error...) -> MethodStub {
+        public static func deleteAll(_ entityName: Parameter<String>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_deleteAll__entityName(`entityName`), products: willThrow.map({ Product.throw($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `entityName` label")
-		static func deleteAll(entityName: Parameter<String>, willThrow: Error...) -> MethodStub {
+		public static func deleteAll(entityName: Parameter<String>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_deleteAll__entityName(`entityName`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func deleteAll(_ entityName: Parameter<String>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func deleteAll(_ entityName: Parameter<String>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_deleteAll__entityName(`entityName`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
@@ -11075,103 +11173,103 @@ class TransactionMock: Transaction, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func childTransaction() -> Verify { return Verify(method: .m_childTransaction)}
-        static func commit() -> Verify { return Verify(method: .m_commit)}
-        static func reset() -> Verify { return Verify(method: .m_reset)}
-        static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
+        public static func childTransaction() -> Verify { return Verify(method: .m_childTransaction)}
+        public static func commit() -> Verify { return Verify(method: .m_commit)}
+        public static func reset() -> Verify { return Verify(method: .m_reset)}
+        public static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify where Type:NSManagedObject { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fetchRequest` label")
-		static func query<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
-        static func new<Type>(_ objectType: Parameter<Type.Type>) -> Verify { return Verify(method: .m_new__objectType(`objectType`.wrapAsGeneric()))}
+		public static func query<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify where Type:NSManagedObject { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
+        public static func new<Type>(_ objectType: Parameter<Type.Type>) -> Verify where Type:NSManagedObject&CoreDataObject { return Verify(method: .m_new__objectType(`objectType`.wrapAsGeneric()))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
-		static func new<Type>(objectType: Parameter<Type.Type>) -> Verify { return Verify(method: .m_new__objectType(`objectType`.wrapAsGeneric()))}
-        static func batchUpdateRequest<Type>(for type: Parameter<Type.Type>) -> Verify { return Verify(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()))}
-        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>) -> Verify { return Verify(method: .m_batchUpdate__request(`request`))}
+		public static func new<Type>(objectType: Parameter<Type.Type>) -> Verify where Type:NSManagedObject&CoreDataObject { return Verify(method: .m_new__objectType(`objectType`.wrapAsGeneric()))}
+        public static func batchUpdateRequest<Type>(for type: Parameter<Type.Type>) -> Verify where Type:CoreDataObject { return Verify(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()))}
+        public static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>) -> Verify { return Verify(method: .m_batchUpdate__request(`request`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `request` label")
-		static func batchUpdate(request: Parameter<NSBatchUpdateRequest>) -> Verify { return Verify(method: .m_batchUpdate__request(`request`))}
-        static func pull<Type>(savedObject: Parameter<Type>) -> Verify { return Verify(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()))}
-        static func delete(_ object: Parameter<NSManagedObject>) -> Verify { return Verify(method: .m_delete__object(`object`))}
+		public static func batchUpdate(request: Parameter<NSBatchUpdateRequest>) -> Verify { return Verify(method: .m_batchUpdate__request(`request`))}
+        public static func pull<Type>(savedObject: Parameter<Type>) -> Verify where Type:NSManagedObject { return Verify(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()))}
+        public static func delete(_ object: Parameter<NSManagedObject>) -> Verify { return Verify(method: .m_delete__object(`object`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `object` label")
-		static func delete(object: Parameter<NSManagedObject>) -> Verify { return Verify(method: .m_delete__object(`object`))}
-        static func deleteAll(_ objects: Parameter<[NSManagedObject]>) -> Verify { return Verify(method: .m_deleteAll__objects(`objects`))}
+		public static func delete(object: Parameter<NSManagedObject>) -> Verify { return Verify(method: .m_delete__object(`object`))}
+        public static func deleteAll(_ objects: Parameter<[NSManagedObject]>) -> Verify { return Verify(method: .m_deleteAll__objects(`objects`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objects` label")
-		static func deleteAll(objects: Parameter<[NSManagedObject]>) -> Verify { return Verify(method: .m_deleteAll__objects(`objects`))}
-        static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>) -> Verify { return Verify(method: .m_deleteAll__objectType(`objectType`))}
+		public static func deleteAll(objects: Parameter<[NSManagedObject]>) -> Verify { return Verify(method: .m_deleteAll__objects(`objects`))}
+        public static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>) -> Verify { return Verify(method: .m_deleteAll__objectType(`objectType`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
-		static func deleteAll(objectType: Parameter<NSManagedObject.Type>) -> Verify { return Verify(method: .m_deleteAll__objectType(`objectType`))}
-        static func deleteAll(_ entityName: Parameter<String>) -> Verify { return Verify(method: .m_deleteAll__entityName(`entityName`))}
+		public static func deleteAll(objectType: Parameter<NSManagedObject.Type>) -> Verify { return Verify(method: .m_deleteAll__objectType(`objectType`))}
+        public static func deleteAll(_ entityName: Parameter<String>) -> Verify { return Verify(method: .m_deleteAll__entityName(`entityName`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `entityName` label")
-		static func deleteAll(entityName: Parameter<String>) -> Verify { return Verify(method: .m_deleteAll__entityName(`entityName`))}
+		public static func deleteAll(entityName: Parameter<String>) -> Verify { return Verify(method: .m_deleteAll__entityName(`entityName`))}
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func childTransaction(perform: @escaping () -> Void) -> Perform {
+        public static func childTransaction(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_childTransaction, performs: perform)
         }
-        static func commit(perform: @escaping () -> Void) -> Perform {
+        public static func commit(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_commit, performs: perform)
         }
-        static func reset(perform: @escaping () -> Void) -> Perform {
+        public static func reset(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_reset, performs: perform)
         }
-        static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform {
+        public static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform where Type:NSManagedObject {
             return Perform(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `fetchRequest` label")
-		static func query<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform {
+		public static func query<Type>(fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform where Type:NSManagedObject {
             return Perform(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), performs: perform)
         }
-        static func new<Type>(_ objectType: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform {
+        public static func new<Type>(_ objectType: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform where Type:NSManagedObject&CoreDataObject {
             return Perform(method: .m_new__objectType(`objectType`.wrapAsGeneric()), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
-		static func new<Type>(objectType: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform {
+		public static func new<Type>(objectType: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform where Type:NSManagedObject&CoreDataObject {
             return Perform(method: .m_new__objectType(`objectType`.wrapAsGeneric()), performs: perform)
         }
-        static func batchUpdateRequest<Type>(for type: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform {
+        public static func batchUpdateRequest<Type>(for type: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform where Type:CoreDataObject {
             return Perform(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()), performs: perform)
         }
-        static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, perform: @escaping (NSBatchUpdateRequest) -> Void) -> Perform {
+        public static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>, perform: @escaping (NSBatchUpdateRequest) -> Void) -> Perform {
             return Perform(method: .m_batchUpdate__request(`request`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `request` label")
-		static func batchUpdate(request: Parameter<NSBatchUpdateRequest>, perform: @escaping (NSBatchUpdateRequest) -> Void) -> Perform {
+		public static func batchUpdate(request: Parameter<NSBatchUpdateRequest>, perform: @escaping (NSBatchUpdateRequest) -> Void) -> Perform {
             return Perform(method: .m_batchUpdate__request(`request`), performs: perform)
         }
-        static func pull<Type>(savedObject: Parameter<Type>, perform: @escaping (Type) -> Void) -> Perform {
+        public static func pull<Type>(savedObject: Parameter<Type>, perform: @escaping (Type) -> Void) -> Perform where Type:NSManagedObject {
             return Perform(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), performs: perform)
         }
-        static func delete(_ object: Parameter<NSManagedObject>, perform: @escaping (NSManagedObject) -> Void) -> Perform {
+        public static func delete(_ object: Parameter<NSManagedObject>, perform: @escaping (NSManagedObject) -> Void) -> Perform {
             return Perform(method: .m_delete__object(`object`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `object` label")
-		static func delete(object: Parameter<NSManagedObject>, perform: @escaping (NSManagedObject) -> Void) -> Perform {
+		public static func delete(object: Parameter<NSManagedObject>, perform: @escaping (NSManagedObject) -> Void) -> Perform {
             return Perform(method: .m_delete__object(`object`), performs: perform)
         }
-        static func deleteAll(_ objects: Parameter<[NSManagedObject]>, perform: @escaping ([NSManagedObject]) -> Void) -> Perform {
+        public static func deleteAll(_ objects: Parameter<[NSManagedObject]>, perform: @escaping ([NSManagedObject]) -> Void) -> Perform {
             return Perform(method: .m_deleteAll__objects(`objects`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objects` label")
-		static func deleteAll(objects: Parameter<[NSManagedObject]>, perform: @escaping ([NSManagedObject]) -> Void) -> Perform {
+		public static func deleteAll(objects: Parameter<[NSManagedObject]>, perform: @escaping ([NSManagedObject]) -> Void) -> Perform {
             return Perform(method: .m_deleteAll__objects(`objects`), performs: perform)
         }
-        static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>, perform: @escaping (NSManagedObject.Type) -> Void) -> Perform {
+        public static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>, perform: @escaping (NSManagedObject.Type) -> Void) -> Perform {
             return Perform(method: .m_deleteAll__objectType(`objectType`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `objectType` label")
-		static func deleteAll(objectType: Parameter<NSManagedObject.Type>, perform: @escaping (NSManagedObject.Type) -> Void) -> Perform {
+		public static func deleteAll(objectType: Parameter<NSManagedObject.Type>, perform: @escaping (NSManagedObject.Type) -> Void) -> Perform {
             return Perform(method: .m_deleteAll__objectType(`objectType`), performs: perform)
         }
-        static func deleteAll(_ entityName: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+        public static func deleteAll(_ entityName: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_deleteAll__entityName(`entityName`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `entityName` label")
-		static func deleteAll(entityName: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+		public static func deleteAll(entityName: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_deleteAll__entityName(`entityName`), performs: perform)
         }
     }
@@ -11187,7 +11285,7 @@ class TransactionMock: Transaction, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -11233,7 +11331,7 @@ class TransactionMock: Transaction, Mock {
 }
 
 // MARK: - UiUtil
-class UiUtilMock: UiUtil, Mock {
+open class UiUtilMock: UiUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -11250,9 +11348,9 @@ class UiUtilMock: UiUtil, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -11260,7 +11358,7 @@ class UiUtilMock: UiUtil, Mock {
         self.line = line
     }
 
-    var defaultPresenter: Presentr {
+    public var defaultPresenter: Presentr {
 		get {	invocations.append(.p_defaultPresenter_get); return __p_defaultPresenter ?? givenGetterValue(.p_defaultPresenter_get, "UiUtilMock - stub value for defaultPresenter was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_defaultPresenter = newValue }
@@ -11271,7 +11369,7 @@ class UiUtilMock: UiUtil, Mock {
 
 
 
-    func customPresenter(width: ModalSize, height: ModalSize, center: ModalCenterPosition) -> Presentr {
+    open func customPresenter(width: ModalSize, height: ModalSize, center: ModalCenterPosition) -> Presentr {
         addInvocation(.m_customPresenter__width_widthheight_heightcenter_center(Parameter<ModalSize>.value(`width`), Parameter<ModalSize>.value(`height`), Parameter<ModalCenterPosition>.value(`center`)))
 		let perform = methodPerformValue(.m_customPresenter__width_widthheight_heightcenter_center(Parameter<ModalSize>.value(`width`), Parameter<ModalSize>.value(`height`), Parameter<ModalCenterPosition>.value(`center`))) as? (ModalSize, ModalSize, ModalCenterPosition) -> Void
 		perform?(`width`, `height`, `center`)
@@ -11285,19 +11383,19 @@ class UiUtilMock: UiUtil, Mock {
 		return __value
     }
 
-    func setView(_ view: UIView, enabled: Bool?, hidden: Bool?) {
+    open func setView(_ view: UIView, enabled: Bool?, hidden: Bool?) {
         addInvocation(.m_setView__viewenabled_enabledhidden_hidden(Parameter<UIView>.value(`view`), Parameter<Bool?>.value(`enabled`), Parameter<Bool?>.value(`hidden`)))
 		let perform = methodPerformValue(.m_setView__viewenabled_enabledhidden_hidden(Parameter<UIView>.value(`view`), Parameter<Bool?>.value(`enabled`), Parameter<Bool?>.value(`hidden`))) as? (UIView, Bool?, Bool?) -> Void
 		perform?(`view`, `enabled`, `hidden`)
     }
 
-    func setButton(_ button: UIButton, enabled: Bool?, hidden: Bool?) {
+    open func setButton(_ button: UIButton, enabled: Bool?, hidden: Bool?) {
         addInvocation(.m_setButton__buttonenabled_enabledhidden_hidden(Parameter<UIButton>.value(`button`), Parameter<Bool?>.value(`enabled`), Parameter<Bool?>.value(`hidden`)))
 		let perform = methodPerformValue(.m_setButton__buttonenabled_enabledhidden_hidden(Parameter<UIButton>.value(`button`), Parameter<Bool?>.value(`enabled`), Parameter<Bool?>.value(`hidden`))) as? (UIButton, Bool?, Bool?) -> Void
 		perform?(`button`, `enabled`, `hidden`)
     }
 
-    func setBackButton(for viewController: UIViewController, title: String, action selector: Selector) -> UIBarButtonItem {
+    open func setBackButton(for viewController: UIViewController, title: String, action selector: Selector) -> UIBarButtonItem {
         addInvocation(.m_setBackButton__for_viewControllertitle_titleaction_selector(Parameter<UIViewController>.value(`viewController`), Parameter<String>.value(`title`), Parameter<Selector>.value(`selector`)))
 		let perform = methodPerformValue(.m_setBackButton__for_viewControllertitle_titleaction_selector(Parameter<UIViewController>.value(`viewController`), Parameter<String>.value(`title`), Parameter<Selector>.value(`selector`))) as? (UIViewController, String, Selector) -> Void
 		perform?(`viewController`, `title`, `selector`)
@@ -11311,19 +11409,19 @@ class UiUtilMock: UiUtil, Mock {
 		return __value
     }
 
-    func addSaveButtonToKeyboardFor(_ textView: UITextView, target: Any?, action: Selector?) {
+    open func addSaveButtonToKeyboardFor(_ textView: UITextView, target: Any?, action: Selector?) {
         addInvocation(.m_addSaveButtonToKeyboardFor__textViewtarget_targetaction_action(Parameter<UITextView>.value(`textView`), Parameter<Any?>.value(`target`), Parameter<Selector?>.value(`action`)))
 		let perform = methodPerformValue(.m_addSaveButtonToKeyboardFor__textViewtarget_targetaction_action(Parameter<UITextView>.value(`textView`), Parameter<Any?>.value(`target`), Parameter<Selector?>.value(`action`))) as? (UITextView, Any?, Selector?) -> Void
 		perform?(`textView`, `target`, `action`)
     }
 
-    func addSaveButtonToKeyboardFor(_ textField: UITextField, target: Any?, action: Selector?) {
+    open func addSaveButtonToKeyboardFor(_ textField: UITextField, target: Any?, action: Selector?) {
         addInvocation(.m_addSaveButtonToKeyboardFor__textFieldtarget_targetaction_action(Parameter<UITextField>.value(`textField`), Parameter<Any?>.value(`target`), Parameter<Selector?>.value(`action`)))
 		let perform = methodPerformValue(.m_addSaveButtonToKeyboardFor__textFieldtarget_targetaction_action(Parameter<UITextField>.value(`textField`), Parameter<Any?>.value(`target`), Parameter<Selector?>.value(`action`))) as? (UITextField, Any?, Selector?) -> Void
 		perform?(`textField`, `target`, `action`)
     }
 
-    func value<Type>(for key: UserInfoKey, from notification: Notification, keyIsOptional: Bool) -> Type? {
+    open func value<Type>(for key: UserInfoKey, from notification: Notification, keyIsOptional: Bool) -> Type? {
         addInvocation(.m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(Parameter<UserInfoKey>.value(`key`), Parameter<Notification>.value(`notification`), Parameter<Bool>.value(`keyIsOptional`)))
 		let perform = methodPerformValue(.m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(Parameter<UserInfoKey>.value(`key`), Parameter<Notification>.value(`notification`), Parameter<Bool>.value(`keyIsOptional`))) as? (UserInfoKey, Notification, Bool) -> Void
 		perform?(`key`, `notification`, `keyIsOptional`)
@@ -11336,7 +11434,7 @@ class UiUtilMock: UiUtil, Mock {
 		return __value
     }
 
-    func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any] {
+    open func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any] {
         addInvocation(.m_info__info(Parameter<[UserInfoKey: Any]>.value(`info`)))
 		let perform = methodPerformValue(.m_info__info(Parameter<[UserInfoKey: Any]>.value(`info`))) as? ([UserInfoKey: Any]) -> Void
 		perform?(`info`)
@@ -11350,16 +11448,16 @@ class UiUtilMock: UiUtil, Mock {
 		return __value
     }
 
-    func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String) -> Type {
-        addInvocation(.m_controller__named_controllerNamefrom_storyboardName(Parameter<String>.value(`controllerName`), Parameter<String>.value(`storyboardName`)))
-		let perform = methodPerformValue(.m_controller__named_controllerNamefrom_storyboardName(Parameter<String>.value(`controllerName`), Parameter<String>.value(`storyboardName`))) as? (String, String) -> Void
-		perform?(`controllerName`, `storyboardName`)
+    open func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String, as: Type.Type) -> Type {
+        addInvocation(.m_controller__named_controllerNamefrom_storyboardNameas_as(Parameter<String>.value(`controllerName`), Parameter<String>.value(`storyboardName`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_controller__named_controllerNamefrom_storyboardNameas_as(Parameter<String>.value(`controllerName`), Parameter<String>.value(`storyboardName`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (String, String, Type.Type) -> Void
+		perform?(`controllerName`, `storyboardName`, `as`)
 		var __value: Type
 		do {
-		    __value = try methodReturnValue(.m_controller__named_controllerNamefrom_storyboardName(Parameter<String>.value(`controllerName`), Parameter<String>.value(`storyboardName`))).casted()
+		    __value = try methodReturnValue(.m_controller__named_controllerNamefrom_storyboardNameas_as(Parameter<String>.value(`controllerName`), Parameter<String>.value(`storyboardName`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())).casted()
 		} catch {
-			onFatalFailure("Stub return value not specified for controller<Type: UIViewController>(named controllerName: String, from storyboardName: String). Use given")
-			Failure("Stub return value not specified for controller<Type: UIViewController>(named controllerName: String, from storyboardName: String). Use given")
+			onFatalFailure("Stub return value not specified for controller<Type: UIViewController>(named controllerName: String, from storyboardName: String, as: Type.Type). Use given")
+			Failure("Stub return value not specified for controller<Type: UIViewController>(named controllerName: String, from storyboardName: String, as: Type.Type). Use given")
 		}
 		return __value
     }
@@ -11374,7 +11472,7 @@ class UiUtilMock: UiUtil, Mock {
         case m_addSaveButtonToKeyboardFor__textFieldtarget_targetaction_action(Parameter<UITextField>, Parameter<Any?>, Parameter<Selector?>)
         case m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(Parameter<UserInfoKey>, Parameter<Notification>, Parameter<Bool>)
         case m_info__info(Parameter<[UserInfoKey: Any]>)
-        case m_controller__named_controllerNamefrom_storyboardName(Parameter<String>, Parameter<String>)
+        case m_controller__named_controllerNamefrom_storyboardNameas_as(Parameter<String>, Parameter<String>, Parameter<GenericAttribute>)
         case p_defaultPresenter_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
@@ -11417,9 +11515,10 @@ class UiUtilMock: UiUtil, Mock {
             case (.m_info__info(let lhsInfo), .m_info__info(let rhsInfo)):
                 guard Parameter.compare(lhs: lhsInfo, rhs: rhsInfo, with: matcher) else { return false } 
                 return true 
-            case (.m_controller__named_controllerNamefrom_storyboardName(let lhsControllername, let lhsStoryboardname), .m_controller__named_controllerNamefrom_storyboardName(let rhsControllername, let rhsStoryboardname)):
+            case (.m_controller__named_controllerNamefrom_storyboardNameas_as(let lhsControllername, let lhsStoryboardname, let lhsAs), .m_controller__named_controllerNamefrom_storyboardNameas_as(let rhsControllername, let rhsStoryboardname, let rhsAs)):
                 guard Parameter.compare(lhs: lhsControllername, rhs: rhsControllername, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsStoryboardname, rhs: rhsStoryboardname, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAs, rhs: rhsAs, with: matcher) else { return false } 
                 return true 
             case (.p_defaultPresenter_get,.p_defaultPresenter_get): return true
             default: return false
@@ -11436,13 +11535,13 @@ class UiUtilMock: UiUtil, Mock {
             case let .m_addSaveButtonToKeyboardFor__textFieldtarget_targetaction_action(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_info__info(p0): return p0.intValue
-            case let .m_controller__named_controllerNamefrom_storyboardName(p0, p1): return p0.intValue + p1.intValue
+            case let .m_controller__named_controllerNamefrom_storyboardNameas_as(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case .p_defaultPresenter_get: return 0
             }
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -11450,141 +11549,141 @@ class UiUtilMock: UiUtil, Mock {
             super.init(products)
         }
 
-        static func defaultPresenter(getter defaultValue: Presentr...) -> PropertyStub {
+        public static func defaultPresenter(getter defaultValue: Presentr...) -> PropertyStub {
             return Given(method: .p_defaultPresenter_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>, willReturn: Presentr...) -> MethodStub {
+        public static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>, willReturn: Presentr...) -> MethodStub {
             return Given(method: .m_customPresenter__width_widthheight_heightcenter_center(`width`, `height`, `center`), products: willReturn.map({ Product.return($0) }))
         }
-        static func setBackButton(for viewController: Parameter<UIViewController>, title: Parameter<String>, action selector: Parameter<Selector>, willReturn: UIBarButtonItem...) -> MethodStub {
+        public static func setBackButton(for viewController: Parameter<UIViewController>, title: Parameter<String>, action selector: Parameter<Selector>, willReturn: UIBarButtonItem...) -> MethodStub {
             return Given(method: .m_setBackButton__for_viewControllertitle_titleaction_selector(`viewController`, `title`, `selector`), products: willReturn.map({ Product.return($0) }))
         }
-        static func value<Type>(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, keyIsOptional: Parameter<Bool>, willReturn: Type?...) -> MethodStub {
+        public static func value<Type>(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, keyIsOptional: Parameter<Bool>, willReturn: Type?...) -> MethodStub {
             return Given(method: .m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(`key`, `notification`, `keyIsOptional`), products: willReturn.map({ Product.return($0) }))
         }
-        static func info(_ info: Parameter<[UserInfoKey: Any]>, willReturn: [AnyHashable: Any]...) -> MethodStub {
+        public static func info(_ info: Parameter<[UserInfoKey: Any]>, willReturn: [AnyHashable: Any]...) -> MethodStub {
             return Given(method: .m_info__info(`info`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `info` label")
-		static func info(info: Parameter<[UserInfoKey: Any]>, willReturn: [AnyHashable: Any]...) -> MethodStub {
+		public static func info(info: Parameter<[UserInfoKey: Any]>, willReturn: [AnyHashable: Any]...) -> MethodStub {
             return Given(method: .m_info__info(`info`), products: willReturn.map({ Product.return($0) }))
         }
-        static func controller<Type: UIViewController>(named controllerName: Parameter<String>, from storyboardName: Parameter<String>, willReturn: Type...) -> MethodStub {
-            return Given(method: .m_controller__named_controllerNamefrom_storyboardName(`controllerName`, `storyboardName`), products: willReturn.map({ Product.return($0) }))
+        public static func controller<Type: UIViewController>(named controllerName: Parameter<String>, from storyboardName: Parameter<String>, as: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
+            return Given(method: .m_controller__named_controllerNamefrom_storyboardNameas_as(`controllerName`, `storyboardName`, `as`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>, willProduce: (Stubber<Presentr>) -> Void) -> MethodStub {
+        public static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>, willProduce: (Stubber<Presentr>) -> Void) -> MethodStub {
             let willReturn: [Presentr] = []
 			let given: Given = { return Given(method: .m_customPresenter__width_widthheight_heightcenter_center(`width`, `height`, `center`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Presentr).self)
 			willProduce(stubber)
 			return given
         }
-        static func setBackButton(for viewController: Parameter<UIViewController>, title: Parameter<String>, action selector: Parameter<Selector>, willProduce: (Stubber<UIBarButtonItem>) -> Void) -> MethodStub {
+        public static func setBackButton(for viewController: Parameter<UIViewController>, title: Parameter<String>, action selector: Parameter<Selector>, willProduce: (Stubber<UIBarButtonItem>) -> Void) -> MethodStub {
             let willReturn: [UIBarButtonItem] = []
 			let given: Given = { return Given(method: .m_setBackButton__for_viewControllertitle_titleaction_selector(`viewController`, `title`, `selector`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (UIBarButtonItem).self)
 			willProduce(stubber)
 			return given
         }
-        static func value<Type>(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, keyIsOptional: Parameter<Bool>, willProduce: (Stubber<Type?>) -> Void) -> MethodStub {
+        public static func value<Type>(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, keyIsOptional: Parameter<Bool>, willProduce: (Stubber<Type?>) -> Void) -> MethodStub {
             let willReturn: [Type?] = []
 			let given: Given = { return Given(method: .m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(`key`, `notification`, `keyIsOptional`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Type?).self)
 			willProduce(stubber)
 			return given
         }
-        static func info(_ info: Parameter<[UserInfoKey: Any]>, willProduce: (Stubber<[AnyHashable: Any]>) -> Void) -> MethodStub {
+        public static func info(_ info: Parameter<[UserInfoKey: Any]>, willProduce: (Stubber<[AnyHashable: Any]>) -> Void) -> MethodStub {
             let willReturn: [[AnyHashable: Any]] = []
 			let given: Given = { return Given(method: .m_info__info(`info`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: ([AnyHashable: Any]).self)
 			willProduce(stubber)
 			return given
         }
-        static func controller<Type: UIViewController>(named controllerName: Parameter<String>, from storyboardName: Parameter<String>, willProduce: (Stubber<Type>) -> Void) -> MethodStub {
+        public static func controller<Type: UIViewController>(named controllerName: Parameter<String>, from storyboardName: Parameter<String>, as: Parameter<Type.Type>, willProduce: (Stubber<Type>) -> Void) -> MethodStub {
             let willReturn: [Type] = []
-			let given: Given = { return Given(method: .m_controller__named_controllerNamefrom_storyboardName(`controllerName`, `storyboardName`), products: willReturn.map({ Product.return($0) })) }()
+			let given: Given = { return Given(method: .m_controller__named_controllerNamefrom_storyboardNameas_as(`controllerName`, `storyboardName`, `as`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Type).self)
 			willProduce(stubber)
 			return given
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>) -> Verify { return Verify(method: .m_customPresenter__width_widthheight_heightcenter_center(`width`, `height`, `center`))}
-        static func setView(_ view: Parameter<UIView>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>) -> Verify { return Verify(method: .m_setView__viewenabled_enabledhidden_hidden(`view`, `enabled`, `hidden`))}
+        public static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>) -> Verify { return Verify(method: .m_customPresenter__width_widthheight_heightcenter_center(`width`, `height`, `center`))}
+        public static func setView(_ view: Parameter<UIView>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>) -> Verify { return Verify(method: .m_setView__viewenabled_enabledhidden_hidden(`view`, `enabled`, `hidden`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `view` label")
-		static func setView(view: Parameter<UIView>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>) -> Verify { return Verify(method: .m_setView__viewenabled_enabledhidden_hidden(`view`, `enabled`, `hidden`))}
-        static func setButton(_ button: Parameter<UIButton>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>) -> Verify { return Verify(method: .m_setButton__buttonenabled_enabledhidden_hidden(`button`, `enabled`, `hidden`))}
+		public static func setView(view: Parameter<UIView>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>) -> Verify { return Verify(method: .m_setView__viewenabled_enabledhidden_hidden(`view`, `enabled`, `hidden`))}
+        public static func setButton(_ button: Parameter<UIButton>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>) -> Verify { return Verify(method: .m_setButton__buttonenabled_enabledhidden_hidden(`button`, `enabled`, `hidden`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `button` label")
-		static func setButton(button: Parameter<UIButton>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>) -> Verify { return Verify(method: .m_setButton__buttonenabled_enabledhidden_hidden(`button`, `enabled`, `hidden`))}
-        static func setBackButton(for viewController: Parameter<UIViewController>, title: Parameter<String>, action selector: Parameter<Selector>) -> Verify { return Verify(method: .m_setBackButton__for_viewControllertitle_titleaction_selector(`viewController`, `title`, `selector`))}
-        static func addSaveButtonToKeyboardFor(_ textView: Parameter<UITextView>, target: Parameter<Any?>, action: Parameter<Selector?>) -> Verify { return Verify(method: .m_addSaveButtonToKeyboardFor__textViewtarget_targetaction_action(`textView`, `target`, `action`))}
+		public static func setButton(button: Parameter<UIButton>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>) -> Verify { return Verify(method: .m_setButton__buttonenabled_enabledhidden_hidden(`button`, `enabled`, `hidden`))}
+        public static func setBackButton(for viewController: Parameter<UIViewController>, title: Parameter<String>, action selector: Parameter<Selector>) -> Verify { return Verify(method: .m_setBackButton__for_viewControllertitle_titleaction_selector(`viewController`, `title`, `selector`))}
+        public static func addSaveButtonToKeyboardFor(_ textView: Parameter<UITextView>, target: Parameter<Any?>, action: Parameter<Selector?>) -> Verify { return Verify(method: .m_addSaveButtonToKeyboardFor__textViewtarget_targetaction_action(`textView`, `target`, `action`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `textView` label")
-		static func addSaveButtonToKeyboardFor(textView: Parameter<UITextView>, target: Parameter<Any?>, action: Parameter<Selector?>) -> Verify { return Verify(method: .m_addSaveButtonToKeyboardFor__textViewtarget_targetaction_action(`textView`, `target`, `action`))}
-        static func addSaveButtonToKeyboardFor(_ textField: Parameter<UITextField>, target: Parameter<Any?>, action: Parameter<Selector?>) -> Verify { return Verify(method: .m_addSaveButtonToKeyboardFor__textFieldtarget_targetaction_action(`textField`, `target`, `action`))}
+		public static func addSaveButtonToKeyboardFor(textView: Parameter<UITextView>, target: Parameter<Any?>, action: Parameter<Selector?>) -> Verify { return Verify(method: .m_addSaveButtonToKeyboardFor__textViewtarget_targetaction_action(`textView`, `target`, `action`))}
+        public static func addSaveButtonToKeyboardFor(_ textField: Parameter<UITextField>, target: Parameter<Any?>, action: Parameter<Selector?>) -> Verify { return Verify(method: .m_addSaveButtonToKeyboardFor__textFieldtarget_targetaction_action(`textField`, `target`, `action`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `textField` label")
-		static func addSaveButtonToKeyboardFor(textField: Parameter<UITextField>, target: Parameter<Any?>, action: Parameter<Selector?>) -> Verify { return Verify(method: .m_addSaveButtonToKeyboardFor__textFieldtarget_targetaction_action(`textField`, `target`, `action`))}
-        static func value(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, keyIsOptional: Parameter<Bool>) -> Verify { return Verify(method: .m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(`key`, `notification`, `keyIsOptional`))}
-        static func info(_ info: Parameter<[UserInfoKey: Any]>) -> Verify { return Verify(method: .m_info__info(`info`))}
+		public static func addSaveButtonToKeyboardFor(textField: Parameter<UITextField>, target: Parameter<Any?>, action: Parameter<Selector?>) -> Verify { return Verify(method: .m_addSaveButtonToKeyboardFor__textFieldtarget_targetaction_action(`textField`, `target`, `action`))}
+        public static func value(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, keyIsOptional: Parameter<Bool>) -> Verify { return Verify(method: .m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(`key`, `notification`, `keyIsOptional`))}
+        public static func info(_ info: Parameter<[UserInfoKey: Any]>) -> Verify { return Verify(method: .m_info__info(`info`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `info` label")
-		static func info(info: Parameter<[UserInfoKey: Any]>) -> Verify { return Verify(method: .m_info__info(`info`))}
-        static func controller(named controllerName: Parameter<String>, from storyboardName: Parameter<String>) -> Verify { return Verify(method: .m_controller__named_controllerNamefrom_storyboardName(`controllerName`, `storyboardName`))}
-        static var defaultPresenter: Verify { return Verify(method: .p_defaultPresenter_get) }
+		public static func info(info: Parameter<[UserInfoKey: Any]>) -> Verify { return Verify(method: .m_info__info(`info`))}
+        public static func controller<Type>(named controllerName: Parameter<String>, from storyboardName: Parameter<String>, as: Parameter<Type.Type>) -> Verify where Type:UIViewController { return Verify(method: .m_controller__named_controllerNamefrom_storyboardNameas_as(`controllerName`, `storyboardName`, `as`.wrapAsGeneric()))}
+        public static var defaultPresenter: Verify { return Verify(method: .p_defaultPresenter_get) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>, perform: @escaping (ModalSize, ModalSize, ModalCenterPosition) -> Void) -> Perform {
+        public static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>, perform: @escaping (ModalSize, ModalSize, ModalCenterPosition) -> Void) -> Perform {
             return Perform(method: .m_customPresenter__width_widthheight_heightcenter_center(`width`, `height`, `center`), performs: perform)
         }
-        static func setView(_ view: Parameter<UIView>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>, perform: @escaping (UIView, Bool?, Bool?) -> Void) -> Perform {
+        public static func setView(_ view: Parameter<UIView>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>, perform: @escaping (UIView, Bool?, Bool?) -> Void) -> Perform {
             return Perform(method: .m_setView__viewenabled_enabledhidden_hidden(`view`, `enabled`, `hidden`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `view` label")
-		static func setView(view: Parameter<UIView>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>, perform: @escaping (UIView, Bool?, Bool?) -> Void) -> Perform {
+		public static func setView(view: Parameter<UIView>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>, perform: @escaping (UIView, Bool?, Bool?) -> Void) -> Perform {
             return Perform(method: .m_setView__viewenabled_enabledhidden_hidden(`view`, `enabled`, `hidden`), performs: perform)
         }
-        static func setButton(_ button: Parameter<UIButton>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>, perform: @escaping (UIButton, Bool?, Bool?) -> Void) -> Perform {
+        public static func setButton(_ button: Parameter<UIButton>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>, perform: @escaping (UIButton, Bool?, Bool?) -> Void) -> Perform {
             return Perform(method: .m_setButton__buttonenabled_enabledhidden_hidden(`button`, `enabled`, `hidden`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `button` label")
-		static func setButton(button: Parameter<UIButton>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>, perform: @escaping (UIButton, Bool?, Bool?) -> Void) -> Perform {
+		public static func setButton(button: Parameter<UIButton>, enabled: Parameter<Bool?>, hidden: Parameter<Bool?>, perform: @escaping (UIButton, Bool?, Bool?) -> Void) -> Perform {
             return Perform(method: .m_setButton__buttonenabled_enabledhidden_hidden(`button`, `enabled`, `hidden`), performs: perform)
         }
-        static func setBackButton(for viewController: Parameter<UIViewController>, title: Parameter<String>, action selector: Parameter<Selector>, perform: @escaping (UIViewController, String, Selector) -> Void) -> Perform {
+        public static func setBackButton(for viewController: Parameter<UIViewController>, title: Parameter<String>, action selector: Parameter<Selector>, perform: @escaping (UIViewController, String, Selector) -> Void) -> Perform {
             return Perform(method: .m_setBackButton__for_viewControllertitle_titleaction_selector(`viewController`, `title`, `selector`), performs: perform)
         }
-        static func addSaveButtonToKeyboardFor(_ textView: Parameter<UITextView>, target: Parameter<Any?>, action: Parameter<Selector?>, perform: @escaping (UITextView, Any?, Selector?) -> Void) -> Perform {
+        public static func addSaveButtonToKeyboardFor(_ textView: Parameter<UITextView>, target: Parameter<Any?>, action: Parameter<Selector?>, perform: @escaping (UITextView, Any?, Selector?) -> Void) -> Perform {
             return Perform(method: .m_addSaveButtonToKeyboardFor__textViewtarget_targetaction_action(`textView`, `target`, `action`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `textView` label")
-		static func addSaveButtonToKeyboardFor(textView: Parameter<UITextView>, target: Parameter<Any?>, action: Parameter<Selector?>, perform: @escaping (UITextView, Any?, Selector?) -> Void) -> Perform {
+		public static func addSaveButtonToKeyboardFor(textView: Parameter<UITextView>, target: Parameter<Any?>, action: Parameter<Selector?>, perform: @escaping (UITextView, Any?, Selector?) -> Void) -> Perform {
             return Perform(method: .m_addSaveButtonToKeyboardFor__textViewtarget_targetaction_action(`textView`, `target`, `action`), performs: perform)
         }
-        static func addSaveButtonToKeyboardFor(_ textField: Parameter<UITextField>, target: Parameter<Any?>, action: Parameter<Selector?>, perform: @escaping (UITextField, Any?, Selector?) -> Void) -> Perform {
+        public static func addSaveButtonToKeyboardFor(_ textField: Parameter<UITextField>, target: Parameter<Any?>, action: Parameter<Selector?>, perform: @escaping (UITextField, Any?, Selector?) -> Void) -> Perform {
             return Perform(method: .m_addSaveButtonToKeyboardFor__textFieldtarget_targetaction_action(`textField`, `target`, `action`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `textField` label")
-		static func addSaveButtonToKeyboardFor(textField: Parameter<UITextField>, target: Parameter<Any?>, action: Parameter<Selector?>, perform: @escaping (UITextField, Any?, Selector?) -> Void) -> Perform {
+		public static func addSaveButtonToKeyboardFor(textField: Parameter<UITextField>, target: Parameter<Any?>, action: Parameter<Selector?>, perform: @escaping (UITextField, Any?, Selector?) -> Void) -> Perform {
             return Perform(method: .m_addSaveButtonToKeyboardFor__textFieldtarget_targetaction_action(`textField`, `target`, `action`), performs: perform)
         }
-        static func value(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, keyIsOptional: Parameter<Bool>, perform: @escaping (UserInfoKey, Notification, Bool) -> Void) -> Perform {
+        public static func value(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, keyIsOptional: Parameter<Bool>, perform: @escaping (UserInfoKey, Notification, Bool) -> Void) -> Perform {
             return Perform(method: .m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(`key`, `notification`, `keyIsOptional`), performs: perform)
         }
-        static func info(_ info: Parameter<[UserInfoKey: Any]>, perform: @escaping ([UserInfoKey: Any]) -> Void) -> Perform {
+        public static func info(_ info: Parameter<[UserInfoKey: Any]>, perform: @escaping ([UserInfoKey: Any]) -> Void) -> Perform {
             return Perform(method: .m_info__info(`info`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `info` label")
-		static func info(info: Parameter<[UserInfoKey: Any]>, perform: @escaping ([UserInfoKey: Any]) -> Void) -> Perform {
+		public static func info(info: Parameter<[UserInfoKey: Any]>, perform: @escaping ([UserInfoKey: Any]) -> Void) -> Perform {
             return Perform(method: .m_info__info(`info`), performs: perform)
         }
-        static func controller(named controllerName: Parameter<String>, from storyboardName: Parameter<String>, perform: @escaping (String, String) -> Void) -> Perform {
-            return Perform(method: .m_controller__named_controllerNamefrom_storyboardName(`controllerName`, `storyboardName`), performs: perform)
+        public static func controller<Type>(named controllerName: Parameter<String>, from storyboardName: Parameter<String>, as: Parameter<Type.Type>, perform: @escaping (String, String, Type.Type) -> Void) -> Perform where Type:UIViewController {
+            return Perform(method: .m_controller__named_controllerNamefrom_storyboardNameas_as(`controllerName`, `storyboardName`, `as`.wrapAsGeneric()), performs: perform)
         }
     }
 
@@ -11599,7 +11698,7 @@ class UiUtilMock: UiUtil, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -11645,7 +11744,7 @@ class UiUtilMock: UiUtil, Mock {
 }
 
 // MARK: - WeightQuery
-class WeightQueryMock: WeightQuery, Mock {
+open class WeightQueryMock: WeightQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -11662,9 +11761,9 @@ class WeightQueryMock: WeightQuery, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -11672,19 +11771,19 @@ class WeightQueryMock: WeightQuery, Mock {
         self.line = line
     }
 
-    var attributeRestrictions: [AttributeRestriction] {
+    public var attributeRestrictions: [AttributeRestriction] {
 		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "WeightQueryMock - stub value for attributeRestrictions was not defined") }
 		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
 	}
 	private var __p_attributeRestrictions: ([AttributeRestriction])?
 
-    var mostRecentEntryOnly: Bool {
+    public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "WeightQueryMock - stub value for mostRecentEntryOnly was not defined") }
 		set {	invocations.append(.p_mostRecentEntryOnly_set(.value(newValue))); __p_mostRecentEntryOnly = newValue }
 	}
 	private var __p_mostRecentEntryOnly: (Bool)?
 
-    var subQuery: (matcher: SubQueryMatcher, query: Query)? {
+    public var subQuery: (matcher: SubQueryMatcher, query: Query)? {
 		get {	invocations.append(.p_subQuery_get); return __p_subQuery ?? optionalGivenGetterValue(.p_subQuery_get, "WeightQueryMock - stub value for subQuery was not defined") }
 		set {	invocations.append(.p_subQuery_set(.value(newValue))); __p_subQuery = newValue }
 	}
@@ -11694,19 +11793,19 @@ class WeightQueryMock: WeightQuery, Mock {
 
 
 
-    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
 		let perform = methodPerformValue(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
 		perform?(`callback`)
     }
 
-    func stop() {
+    open func stop() {
         addInvocation(.m_stop)
 		let perform = methodPerformValue(.m_stop) as? () -> Void
 		perform?()
     }
 
-    func equalTo(_ otherQuery: Query) -> Bool {
+    open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
 		perform?(`otherQuery`)
@@ -11767,7 +11866,7 @@ class WeightQueryMock: WeightQuery, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -11775,24 +11874,24 @@ class WeightQueryMock: WeightQuery, Mock {
             super.init(products)
         }
 
-        static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
+        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
             return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
+        public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
+        public static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
             return Given(method: .p_subQuery_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
@@ -11801,37 +11900,37 @@ class WeightQueryMock: WeightQuery, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
-        static func stop() -> Verify { return Verify(method: .m_stop)}
-        static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
+        public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
-        static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
-		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
-        static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
-		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
+		public static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
+		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
+		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
+        public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
+		public static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback(`callback`), performs: perform)
         }
-        static func stop(perform: @escaping () -> Void) -> Perform {
+        public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+        public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+		public static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
     }
@@ -11847,7 +11946,7 @@ class WeightQueryMock: WeightQuery, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -11893,7 +11992,7 @@ class WeightQueryMock: WeightQuery, Mock {
 }
 
 // MARK: - WellnessMoodImporter
-class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
+open class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -11910,9 +12009,9 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -11920,28 +12019,28 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
         self.line = line
     }
 
-    var dataTypePluralName: String {
+    public var dataTypePluralName: String {
 		get {	invocations.append(.p_dataTypePluralName_get); return __p_dataTypePluralName ?? givenGetterValue(.p_dataTypePluralName_get, "WellnessMoodImporterMock - stub value for dataTypePluralName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_dataTypePluralName = newValue }
 	}
 	private var __p_dataTypePluralName: (String)?
 
-    var sourceName: String {
+    public var sourceName: String {
 		get {	invocations.append(.p_sourceName_get); return __p_sourceName ?? givenGetterValue(.p_sourceName_get, "WellnessMoodImporterMock - stub value for sourceName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_sourceName = newValue }
 	}
 	private var __p_sourceName: (String)?
 
-    var lastImport: Date? {
+    public var lastImport: Date? {
 		get {	invocations.append(.p_lastImport_get); return __p_lastImport ?? optionalGivenGetterValue(.p_lastImport_get, "WellnessMoodImporterMock - stub value for lastImport was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_lastImport = newValue }
 	}
 	private var __p_lastImport: (Date)?
 
-    var importOnlyNewData: Bool {
+    public var importOnlyNewData: Bool {
 		get {	invocations.append(.p_importOnlyNewData_get); return __p_importOnlyNewData ?? givenGetterValue(.p_importOnlyNewData_get, "WellnessMoodImporterMock - stub value for importOnlyNewData was not defined") }
 		set {	invocations.append(.p_importOnlyNewData_set(.value(newValue))); __p_importOnlyNewData = newValue }
 	}
@@ -11951,7 +12050,7 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
 
 
 
-    func importData(from url: URL) throws {
+    open func importData(from url: URL) throws {
         addInvocation(.m_importData__from_url(Parameter<URL>.value(`url`)))
 		let perform = methodPerformValue(.m_importData__from_url(Parameter<URL>.value(`url`))) as? (URL) -> Void
 		perform?(`url`)
@@ -11964,7 +12063,7 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
 		}
     }
 
-    func resetLastImportDate() throws {
+    open func resetLastImportDate() throws {
         addInvocation(.m_resetLastImportDate)
 		let perform = methodPerformValue(.m_resetLastImportDate) as? () -> Void
 		perform?()
@@ -12016,7 +12115,7 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -12024,33 +12123,33 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
             super.init(products)
         }
 
-        static func dataTypePluralName(getter defaultValue: String...) -> PropertyStub {
+        public static func dataTypePluralName(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_dataTypePluralName_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func sourceName(getter defaultValue: String...) -> PropertyStub {
+        public static func sourceName(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_sourceName_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func lastImport(getter defaultValue: Date?...) -> PropertyStub {
+        public static func lastImport(getter defaultValue: Date?...) -> PropertyStub {
             return Given(method: .p_lastImport_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func importOnlyNewData(getter defaultValue: Bool...) -> PropertyStub {
+        public static func importOnlyNewData(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_importOnlyNewData_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func importData(from url: Parameter<URL>, willThrow: Error...) -> MethodStub {
+        public static func importData(from url: Parameter<URL>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func importData(from url: Parameter<URL>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func importData(from url: Parameter<URL>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_importData__from_url(`url`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
         }
-        static func resetLastImportDate(willThrow: Error...) -> MethodStub {
+        public static func resetLastImportDate(willThrow: Error...) -> MethodStub {
             return Given(method: .m_resetLastImportDate, products: willThrow.map({ Product.throw($0) }))
         }
-        static func resetLastImportDate(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func resetLastImportDate(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_resetLastImportDate, products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
@@ -12059,26 +12158,26 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
-        static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
-        static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
-        static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
-        static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
-        static var importOnlyNewData: Verify { return Verify(method: .p_importOnlyNewData_get) }
-		static func importOnlyNewData(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_importOnlyNewData_set(newValue)) }
+        public static func importData(from url: Parameter<URL>) -> Verify { return Verify(method: .m_importData__from_url(`url`))}
+        public static func resetLastImportDate() -> Verify { return Verify(method: .m_resetLastImportDate)}
+        public static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
+        public static var sourceName: Verify { return Verify(method: .p_sourceName_get) }
+        public static var lastImport: Verify { return Verify(method: .p_lastImport_get) }
+        public static var importOnlyNewData: Verify { return Verify(method: .p_importOnlyNewData_get) }
+		public static func importOnlyNewData(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_importOnlyNewData_set(newValue)) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func importData(from url: Parameter<URL>, perform: @escaping (URL) -> Void) -> Perform {
+        public static func importData(from url: Parameter<URL>, perform: @escaping (URL) -> Void) -> Perform {
             return Perform(method: .m_importData__from_url(`url`), performs: perform)
         }
-        static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
+        public static func resetLastImportDate(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_resetLastImportDate, performs: perform)
         }
     }
@@ -12094,7 +12193,7 @@ class WellnessMoodImporterMock: WellnessMoodImporter, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {

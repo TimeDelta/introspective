@@ -8,11 +8,16 @@
 
 import Foundation
 import HealthKit
+import SwiftDate
 
 //sourcery: AutoMockable
 public protocol HealthKitUtil {
 
+	/// This will convert the given date from the time zone in the given `HKSample` to the current time zone
+	/// if the time zone was recorded and the user has convert time zones enabled.
+	func setTimeZoneIfApplicable(for date: inout Date, from sample: HKSample)
 	func calculate(_ calculation: HKStatisticsOptions, _ type: HealthKitQuantitySample.Type, from startDate: Date, to endDate: Date, callback: @escaping (Double?, Error?) -> ())
+	/// - Returns: A method that can be called to stop the query
 	func getSamples(for type: HealthKitSample.Type, from startDate: Date?, to endDate: Date?, predicate: NSPredicate?, callback: @escaping (Array<HKSample>?, Error?) -> Void) -> (() -> Void)
 	func preferredUnitFor(_ typeId: HKQuantityTypeIdentifier) -> HKUnit?
 	func getAuthorization(callback: @escaping (Error?) -> Void)
@@ -51,6 +56,17 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 
 	private let log = Log()
 	private let healthStore = HKHealthStore()
+
+	/// This will convert the given date from the time zone in the given `HKSample` to the current time zone
+	/// if the time zone was recorded and the user has convert time zones enabled.
+	public func setTimeZoneIfApplicable(for date: inout Date, from sample: HKSample) {
+		guard DependencyInjector.settings.convertTimeZones else { return }
+		if let timeZoneId = sample.metadata?[HKMetadataKeyTimeZone] as? String {
+			if let timeZone = TimeZone(identifier: timeZoneId) {
+				date = DependencyInjector.util.calendar.convert(date, from: timeZone, to: TimeZone.autoupdatingCurrent)
+			}
+		}
+	}
 
 	public func calculate(_ calculation: HKStatisticsOptions, _ type: HealthKitQuantitySample.Type, from startDate: Date, to endDate: Date, callback:@escaping (Double?, Error?) -> ()) {
 		let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])

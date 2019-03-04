@@ -150,7 +150,7 @@ final class ActivityFunctionalTests: FunctionalTest {
 		try activity.set(attribute: CommonSampleAttributes.startDate, to: expectedStartDate)
 
 		// then
-		XCTAssertEqual(activity.startDate, expectedStartDate)
+		XCTAssertEqual(activity.start, expectedStartDate)
 	}
 
 	func testGivenEndDateAttribute_set_correctlySetsEndDate() throws {
@@ -162,7 +162,7 @@ final class ActivityFunctionalTests: FunctionalTest {
 		try activity.set(attribute: Activity.endDateAttribute, to: expectedEndDate)
 
 		// then
-		XCTAssertEqual(activity.endDate, expectedEndDate)
+		XCTAssertEqual(activity.end, expectedEndDate)
 	}
 
 	func testGivenNotesAttribute_set_correctlySetsNotes() throws {

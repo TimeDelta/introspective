@@ -90,7 +90,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 		do {
 			let transaction = DependencyInjector.db.transaction()
 			let mood = try DependencyInjector.sample.mood(using: transaction)
-			mood.timestamp = Date()
+			mood.date = Date()
 			mood.rating = rating
 			mood.note = note
 			mood.minRating = DependencyInjector.settings.minMood

@@ -38,7 +38,7 @@ public class MedicationDataTestUtil {
 		let dose = try! transaction.new(MedicationDose.self)
 		let sameContextMedication = try! transaction.pull(savedObject: medication)
 		dose.medication = sameContextMedication
-		dose.timestamp = timestamp
+		dose.date = timestamp
 		dose.dosage = dosage
 		sameContextMedication.addToDoses(dose)
 		try! transaction.commit()

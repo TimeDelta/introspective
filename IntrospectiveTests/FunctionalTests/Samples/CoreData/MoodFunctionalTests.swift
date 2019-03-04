@@ -32,7 +32,7 @@ final class MoodFunctionalTests: FunctionalTest {
 		let otherMood = MoodDataTestUtil.createMood(
 			note: mood.note,
 			rating: mood.rating,
-			timestamp: mood.timestamp,
+			timestamp: mood.date,
 			min: mood.minRating,
 			max: mood.maxRating)
 

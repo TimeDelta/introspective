@@ -77,7 +77,9 @@ final class MoodSettingsViewController: UIViewController {
 		saveAndGoBackToSettings()
 	}
 
-	@objc private final func saveAndGoBackToSettings() {
+	// MARK: - Helper Functions
+
+	private final func saveAndGoBackToSettings() {
 		do {
 			try retryOnFail({ try DependencyInjector.settings.save() }, maxRetries: 2)
 			self.navigationController?.popViewController(animated: false)
@@ -86,8 +88,6 @@ final class MoodSettingsViewController: UIViewController {
 			showError(title: "Failed to save settings", error: error, tryAgain: saveAndGoBackToSettings)
 		}
 	}
-
-	// MARK: - Helper Functions
 
 	private final func updateUI() {
 		minMoodField.text = MoodUiUtil.valueToString(DependencyInjector.settings.minMood)

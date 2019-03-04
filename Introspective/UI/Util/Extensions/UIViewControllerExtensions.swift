@@ -51,7 +51,7 @@ extension UIViewController {
 
 	final func viewController<Type: UIViewController>(named controllerName: String, fromStoryboard storyboardName: String? = nil) -> Type {
 		if let storyboardName = storyboardName {
-			return DependencyInjector.util.ui.controller(named: controllerName, from: storyboardName)
+			return DependencyInjector.util.ui.controller(named: controllerName, from: storyboardName, as: Type.self)
 		}
 		return storyboard!.instantiateViewController(withIdentifier: controllerName) as! Type
 	}

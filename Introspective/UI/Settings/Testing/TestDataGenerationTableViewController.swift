@@ -65,6 +65,8 @@ final class TestDataGenerationTableViewController: UITableViewController {
 	// MARK: - UIViewController Overrides
 
 	public final override func viewDidLoad() {
+		super.viewDidLoad()
+
 		generateTestDataButton = UIBarButtonItem(
 			title: "Generate",
 			style: .done,
@@ -263,9 +265,9 @@ final class TestDataGenerationTableViewController: UITableViewController {
 	private final func createRandomActivity(_ date: Date, _ activityDefinitions: [ActivityDefinition], using transaction: Transaction) {
 		let activity = try! transaction.new(Activity.self)
 		activity.definition = try! transaction.pull(savedObject: randomEntry(activityDefinitions))
-		activity.startDate = date
+		activity.start = date
 		if randomInt((min: 0, max: 1)) == 0 {
-			activity.endDate = date + randomInt(Me.activityDurationHoursRange).hours + randomInt(Me.activityDurationMinutesRange).minutes
+			activity.end = date + randomInt(Me.activityDurationHoursRange).hours + randomInt(Me.activityDurationMinutesRange).minutes
 		}
 	}
 
@@ -302,7 +304,7 @@ final class TestDataGenerationTableViewController: UITableViewController {
 
 	private final func createRandomMedicationDose(_ date: Date, _ medications: [Medication], using transaction: Transaction) {
 		let medicationDose = try! transaction.new(MedicationDose.self)
-		medicationDose.timestamp = date
+		medicationDose.date = date
 		medicationDose.dosage = Dosage(randomDouble(Me.medicationDoseAmountRange), "mg")
 		medicationDose.medication = try! transaction.pull(savedObject: randomEntry(medications))
 		medicationDose.medication.addToDoses(medicationDose)
@@ -310,7 +312,7 @@ final class TestDataGenerationTableViewController: UITableViewController {
 
 	private final func createRandomMood(_ date: Date, using transaction: Transaction) {
 		let mood = try! transaction.new(MoodImpl.self)
-		mood.timestamp = date
+		mood.date = date
 		mood.maxRating = DependencyInjector.settings.maxMood
 		mood.rating = randomDouble(Me.moodRatingRange)
 		mood.note = randomEntry(Me.moodNotes)

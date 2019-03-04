@@ -31,7 +31,7 @@ public final class MedicationDoseEditorViewController: UIViewController {
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
 		dosageTextField.text = medicationDose?.dosage?.description ?? medication.dosage?.description
-		if let date = medicationDose?.timestamp {
+		if let date = medicationDose?.date {
 			datePicker.date = date
 		}
 		datePicker.maximumDate = Date()
@@ -57,7 +57,7 @@ public final class MedicationDoseEditorViewController: UIViewController {
 				medicationDose?.medication = try transaction.pull(savedObject: medication)
 			}
 			medicationDose?.dosage = dosage
-			medicationDose?.timestamp = datePicker.date
+			medicationDose?.date = datePicker.date
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			medicationDose = try DependencyInjector.db.pull(savedObject: medicationDose!)
 			post(

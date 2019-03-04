@@ -35,7 +35,7 @@ public final class EditMoodTableViewController: UITableViewController {
 	public final var mood: Mood? {
 		didSet {
 			guard let mood = mood else { return }
-			timestamp = mood.timestamp
+			timestamp = mood.date
 			rating = mood.rating
 			minRating = mood.minRating
 			maxRating = mood.maxRating
@@ -166,7 +166,7 @@ public final class EditMoodTableViewController: UITableViewController {
 				mood = try transaction.new(MoodImpl.self)
 				mood.setSource(.introspective)
 			}
-			mood.timestamp = timestamp
+			mood.date = timestamp
 			mood.rating = rating
 			mood.note = note
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)

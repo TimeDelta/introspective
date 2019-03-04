@@ -22,9 +22,9 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -33,21 +33,21 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
     }
 
 
-    var attributeRestrictions: [AttributeRestriction] {
+    public var attributeRestrictions: [AttributeRestriction] {
 		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "SampleQueryMock - stub value for attributeRestrictions was not defined") }
 		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
 	}
 	private var __p_attributeRestrictions: ([AttributeRestriction])?
 
 
-    var mostRecentEntryOnly: Bool {
+    public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "SampleQueryMock - stub value for mostRecentEntryOnly was not defined") }
 		set {	invocations.append(.p_mostRecentEntryOnly_set(.value(newValue))); __p_mostRecentEntryOnly = newValue }
 	}
 	private var __p_mostRecentEntryOnly: (Bool)?
 
 
-    var subQuery: (matcher: SubQueryMatcher, query: Query)? {
+    public var subQuery: (matcher: SubQueryMatcher, query: Query)? {
 		get {	invocations.append(.p_subQuery_get); return __p_subQuery ?? optionalGivenGetterValue(.p_subQuery_get, "SampleQueryMock - stub value for subQuery was not defined") }
 		set {	invocations.append(.p_subQuery_set(.value(newValue))); __p_subQuery = newValue }
 	}
@@ -58,25 +58,25 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
 
 
 
-    func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> ()) {
+    open func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback_1(Parameter<(SampleQueryResult<SampleType>?, Error?) -> ()>.value(`callback`)))
 		let perform = methodPerformValue(.m_runQuery__callback_callback_1(Parameter<(SampleQueryResult<SampleType>?, Error?) -> ()>.value(`callback`))) as? (@escaping (SampleQueryResult<SampleType>?, Error?) -> ()) -> Void
 		perform?(`callback`)
     }
 
-    func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
+    open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback_2(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
 		let perform = methodPerformValue(.m_runQuery__callback_callback_2(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`))) as? (@escaping (QueryResult?, Error?) -> ()) -> Void
 		perform?(`callback`)
     }
 
-    func stop() {
+    open func stop() {
         addInvocation(.m_stop)
 		let perform = methodPerformValue(.m_stop) as? () -> Void
 		perform?()
     }
 
-    func equalTo(_ otherQuery: Query) -> Bool {
+    open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
 		perform?(`otherQuery`)
@@ -142,7 +142,7 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -150,24 +150,24 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
             super.init(products)
         }
 
-        static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
+        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
             return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
+        public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
+        public static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
             return Given(method: .p_subQuery_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
@@ -176,41 +176,41 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func runQuery(callback: Parameter<(SampleQueryResult<SampleType>?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback_1(`callback`))}
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback_2(`callback`))}
-        static func stop() -> Verify { return Verify(method: .m_stop)}
-        static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static func runQuery(callback: Parameter<(SampleQueryResult<SampleType>?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback_1(`callback`))}
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback_2(`callback`))}
+        public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
-        static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
-		static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
-        static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
-		static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
+		public static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
+        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
+		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
+		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
+        public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
+		public static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func runQuery(callback: Parameter<(SampleQueryResult<SampleType>?, Error?) -> ()>, perform: @escaping (@escaping (SampleQueryResult<SampleType>?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(SampleQueryResult<SampleType>?, Error?) -> ()>, perform: @escaping (@escaping (SampleQueryResult<SampleType>?, Error?) -> ()) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback_1(`callback`), performs: perform)
         }
-        static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
+        public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>, perform: @escaping (@escaping (QueryResult?, Error?) -> ()) -> Void) -> Perform {
             return Perform(method: .m_runQuery__callback_callback_2(`callback`), performs: perform)
         }
-        static func stop(perform: @escaping () -> Void) -> Perform {
+        public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
         }
-        static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+        public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
+		public static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
     }
@@ -226,7 +226,7 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {

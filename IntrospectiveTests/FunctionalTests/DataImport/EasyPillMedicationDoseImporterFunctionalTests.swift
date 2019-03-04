@@ -181,7 +181,7 @@ abc,,
 	private final func dose(named medicationName: String, at date: Date) throws -> MedicationDose? {
 		let doses = try getDosesForMedicationNamed(medicationName)
 		for dose in doses {
-			if dose.timestamp == date {
+			if dose.date == date {
 				return dose
 			}
 		}

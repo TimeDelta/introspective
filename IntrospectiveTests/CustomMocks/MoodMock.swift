@@ -30,9 +30,9 @@ class MoodMock: Mood, Mock {
     private var file: StaticString?
     private var line: UInt?
 
-    typealias PropertyStub = Given
-    typealias MethodStub = Given
-    typealias SubscriptStub = Given
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
 
     /// Convenience method - call setupMock() to extend debug information when failure occurs
     public func setupMock(file: StaticString = #file, line: UInt = #line) {
@@ -45,51 +45,51 @@ class MoodMock: Mood, Mock {
     static private var invocations: [StaticMethodType] = []
     static private var methodReturnValues: [StaticGiven] = []
     static private var methodPerformValues: [StaticPerform] = []
-    typealias StaticPropertyStub = StaticGiven
-    typealias StaticMethodStub = StaticGiven
-    static func clear() {
+    public typealias StaticPropertyStub = StaticGiven
+    public typealias StaticMethodStub = StaticGiven
+    public static func clear() {
         invocations = []
         methodReturnValues = []
         methodPerformValues = []
     }
 
 
-    var minRating: Double {
+    public var minRating: Double {
 		get {	invocations.append(.p_minRating_get); return __p_minRating ?? givenGetterValue(.p_minRating_get, "MoodMock - stub value for minRating was not defined") }
 		set {	invocations.append(.p_minRating_set(.value(newValue))); __p_minRating = newValue }
 	}
 	private var __p_minRating: (Double)?
 
 
-    var maxRating: Double {
+    public var maxRating: Double {
 		get {	invocations.append(.p_maxRating_get); return __p_maxRating ?? givenGetterValue(.p_maxRating_get, "MoodMock - stub value for maxRating was not defined") }
 		set {	invocations.append(.p_maxRating_set(.value(newValue))); __p_maxRating = newValue }
 	}
 	private var __p_maxRating: (Double)?
 
 
-    var rating: Double {
+    public var rating: Double {
 		get {	invocations.append(.p_rating_get); return __p_rating ?? givenGetterValue(.p_rating_get, "MoodMock - stub value for rating was not defined") }
 		set {	invocations.append(.p_rating_set(.value(newValue))); __p_rating = newValue }
 	}
 	private var __p_rating: (Double)?
 
 
-    var note: String? {
+    public var note: String? {
 		get {	invocations.append(.p_note_get); return __p_note ?? optionalGivenGetterValue(.p_note_get, "MoodMock - stub value for note was not defined") }
 		set {	invocations.append(.p_note_set(.value(newValue))); __p_note = newValue }
 	}
 	private var __p_note: (String)?
 
 
-    var timestamp: Date {
-		get {	invocations.append(.p_timestamp_get); return __p_timestamp ?? givenGetterValue(.p_timestamp_get, "MoodMock - stub value for timestamp was not defined") }
-		set {	invocations.append(.p_timestamp_set(.value(newValue))); __p_timestamp = newValue }
+    public var date: Date {
+		get {	invocations.append(.p_date_get); return __p_date ?? givenGetterValue(.p_date_get, "MoodMock - stub value for date was not defined") }
+		set {	invocations.append(.p_date_set(.value(newValue))); __p_date = newValue }
 	}
-	private var __p_timestamp: (Date)?
+	private var __p_date: (Date)?
 
 
-    var attributedName: String {
+    public var attributedName: String {
 		get {	invocations.append(.p_attributedName_get); return __p_attributedName ?? givenGetterValue(.p_attributedName_get, "MoodMock - stub value for attributedName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_attributedName = newValue }
@@ -97,7 +97,7 @@ class MoodMock: Mood, Mock {
 	private var __p_attributedName: (String)?
 
 
-    var attributes: [Attribute] {
+    public var attributes: [Attribute] {
 		get {	invocations.append(.p_attributes_get); return __p_attributes ?? givenGetterValue(.p_attributes_get, "MoodMock - stub value for attributes was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_attributes = newValue }
@@ -105,7 +105,7 @@ class MoodMock: Mood, Mock {
 	private var __p_attributes: ([Attribute])?
 
 
-    var debugDescription: String {
+    public var debugDescription: String {
 		get {	invocations.append(.p_debugDescription_get); return __p_debugDescription ?? givenGetterValue(.p_debugDescription_get, "MoodMock - stub value for debugDescription was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_debugDescription = newValue }
@@ -114,7 +114,7 @@ class MoodMock: Mood, Mock {
 
 
 
-    static var rating: DoubleAttribute {
+    public static var rating: DoubleAttribute {
 		get {	MoodMock.invocations.append(.p_rating_get); return MoodMock.__p_rating ?? givenGetterValue(.p_rating_get, "MoodMock - stub value for rating was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	MoodMock.__p_rating = newValue }
@@ -122,7 +122,7 @@ class MoodMock: Mood, Mock {
 	private static var __p_rating: (DoubleAttribute)?
 
 
-    static var maxRating: DoubleAttribute {
+    public static var maxRating: DoubleAttribute {
 		get {	MoodMock.invocations.append(.p_maxRating_get); return MoodMock.__p_maxRating ?? givenGetterValue(.p_maxRating_get, "MoodMock - stub value for maxRating was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	MoodMock.__p_maxRating = newValue }
@@ -130,7 +130,7 @@ class MoodMock: Mood, Mock {
 	private static var __p_maxRating: (DoubleAttribute)?
 
 
-    static var note: TextAttribute {
+    public static var note: TextAttribute {
 		get {	MoodMock.invocations.append(.p_note_get); return MoodMock.__p_note ?? givenGetterValue(.p_note_get, "MoodMock - stub value for note was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	MoodMock.__p_note = newValue }
@@ -138,7 +138,7 @@ class MoodMock: Mood, Mock {
 	private static var __p_note: (TextAttribute)?
 
 
-    static var entityName: String {
+    public static var entityName: String {
 		get {	MoodMock.invocations.append(.p_entityName_get); return MoodMock.__p_entityName ?? givenGetterValue(.p_entityName_get, "MoodMock - stub value for entityName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	MoodMock.__p_entityName = newValue }
@@ -146,7 +146,7 @@ class MoodMock: Mood, Mock {
 	private static var __p_entityName: (String)?
 
 
-    static var name: String {
+    public static var name: String {
 		get {	MoodMock.invocations.append(.p_name_get); return MoodMock.__p_name ?? givenGetterValue(.p_name_get, "MoodMock - stub value for name was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	MoodMock.__p_name = newValue }
@@ -154,7 +154,7 @@ class MoodMock: Mood, Mock {
 	private static var __p_name: (String)?
 
 
-    static var attributes: [Attribute] {
+    public static var attributes: [Attribute] {
 		get {	MoodMock.invocations.append(.p_attributes_get); return MoodMock.__p_attributes ?? givenGetterValue(.p_attributes_get, "MoodMock - stub value for attributes was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	MoodMock.__p_attributes = newValue }
@@ -162,7 +162,7 @@ class MoodMock: Mood, Mock {
 	private static var __p_attributes: ([Attribute])?
 
 
-    static var defaultDependentAttribute: Attribute {
+    public static var defaultDependentAttribute: Attribute {
 		get {	MoodMock.invocations.append(.p_defaultDependentAttribute_get); return MoodMock.__p_defaultDependentAttribute ?? givenGetterValue(.p_defaultDependentAttribute_get, "MoodMock - stub value for defaultDependentAttribute was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	MoodMock.__p_defaultDependentAttribute = newValue }
@@ -170,7 +170,7 @@ class MoodMock: Mood, Mock {
 	private static var __p_defaultDependentAttribute: (Attribute)?
 
 
-    static var defaultIndependentAttribute: Attribute {
+    public static var defaultIndependentAttribute: Attribute {
 		get {	MoodMock.invocations.append(.p_defaultIndependentAttribute_get); return MoodMock.__p_defaultIndependentAttribute ?? givenGetterValue(.p_defaultIndependentAttribute_get, "MoodMock - stub value for defaultIndependentAttribute was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	MoodMock.__p_defaultIndependentAttribute = newValue }
@@ -181,13 +181,13 @@ class MoodMock: Mood, Mock {
 
 
 
-    func setSource(_ source: Sources.MoodSourceNum) {
+    open func setSource(_ source: Sources.MoodSourceNum) {
         addInvocation(.m_setSource__source(Parameter<Sources.MoodSourceNum>.value(`source`)))
 		let perform = methodPerformValue(.m_setSource__source(Parameter<Sources.MoodSourceNum>.value(`source`))) as? (Sources.MoodSourceNum) -> Void
 		perform?(`source`)
     }
 
-    func value(of attribute: Attribute) throws -> Any? {
+    open func value(of attribute: Attribute) throws -> Any? {
         addInvocation(.m_value__of_attribute(Parameter<Attribute>.value(`attribute`)))
 		let perform = methodPerformValue(.m_value__of_attribute(Parameter<Attribute>.value(`attribute`))) as? (Attribute) -> Void
 		perform?(`attribute`)
@@ -202,7 +202,7 @@ class MoodMock: Mood, Mock {
 		return __value
     }
 
-    func set(attribute: Attribute, to value: Any?) throws {
+    open func set(attribute: Attribute, to value: Any?) throws {
         addInvocation(.m_set__attribute_attributeto_value(Parameter<Attribute>.value(`attribute`), Parameter<Any?>.value(`value`)))
 		let perform = methodPerformValue(.m_set__attribute_attributeto_value(Parameter<Attribute>.value(`attribute`), Parameter<Any?>.value(`value`))) as? (Attribute, Any?) -> Void
 		perform?(`attribute`, `value`)
@@ -215,7 +215,7 @@ class MoodMock: Mood, Mock {
 		}
     }
 
-    func equalTo(_ otherAttributed: Attributed) -> Bool {
+    open func equalTo(_ otherAttributed: Attributed) -> Bool {
         addInvocation(.m_equalTo__otherAttributed(Parameter<Attributed>.value(`otherAttributed`)))
 		let perform = methodPerformValue(.m_equalTo__otherAttributed(Parameter<Attributed>.value(`otherAttributed`))) as? (Attributed) -> Void
 		perform?(`otherAttributed`)
@@ -229,7 +229,7 @@ class MoodMock: Mood, Mock {
 		return __value
     }
 
-    func graphableValue(of attribute: Attribute) throws -> Any? {
+    open func graphableValue(of attribute: Attribute) throws -> Any? {
         addInvocation(.m_graphableValue__of_attribute(Parameter<Attribute>.value(`attribute`)))
 		let perform = methodPerformValue(.m_graphableValue__of_attribute(Parameter<Attribute>.value(`attribute`))) as? (Attribute) -> Void
 		perform?(`attribute`)
@@ -244,7 +244,7 @@ class MoodMock: Mood, Mock {
 		return __value
     }
 
-    func dates() -> [DateType: Date] {
+    open func dates() -> [DateType: Date] {
         addInvocation(.m_dates)
 		let perform = methodPerformValue(.m_dates) as? () -> Void
 		perform?()
@@ -258,7 +258,7 @@ class MoodMock: Mood, Mock {
 		return __value
     }
 
-    func equalTo(_ otherSample: Sample) -> Bool {
+    open func equalTo(_ otherSample: Sample) -> Bool {
         addInvocation(.m_equalTo__otherSample(Parameter<Sample>.value(`otherSample`)))
 		let perform = methodPerformValue(.m_equalTo__otherSample(Parameter<Sample>.value(`otherSample`))) as? (Sample) -> Void
 		perform?(`otherSample`)
@@ -272,7 +272,7 @@ class MoodMock: Mood, Mock {
 		return __value
     }
 
-    func safeEqualityCheck<Type: Equatable>(_ attribute: Attribute, _ otherSample: Sample, as type: Type.Type) -> Bool {
+    open func safeEqualityCheck<Type: Equatable>(_ attribute: Attribute, _ otherSample: Sample, as type: Type.Type) -> Bool {
         addInvocation(.m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>.value(`attribute`), Parameter<Sample>.value(`otherSample`), Parameter<Type.Type>.value(`type`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>.value(`attribute`), Parameter<Sample>.value(`otherSample`), Parameter<Type.Type>.value(`type`).wrapAsGeneric())) as? (Attribute, Sample, Type.Type) -> Void
 		perform?(`attribute`, `otherSample`, `type`)
@@ -324,7 +324,7 @@ class MoodMock: Mood, Mock {
         }
     }
 
-    class StaticGiven: StubbedMethod {
+    open class StaticGiven: StubbedMethod {
         fileprivate var method: StaticMethodType
 
         private init(method: StaticMethodType, products: [Product]) {
@@ -332,47 +332,47 @@ class MoodMock: Mood, Mock {
             super.init(products)
         }
 
-        static func rating(getter defaultValue: DoubleAttribute...) -> StaticPropertyStub {
+        public static func rating(getter defaultValue: DoubleAttribute...) -> StaticPropertyStub {
             return StaticGiven(method: .p_rating_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func maxRating(getter defaultValue: DoubleAttribute...) -> StaticPropertyStub {
+        public static func maxRating(getter defaultValue: DoubleAttribute...) -> StaticPropertyStub {
             return StaticGiven(method: .p_maxRating_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func note(getter defaultValue: TextAttribute...) -> StaticPropertyStub {
+        public static func note(getter defaultValue: TextAttribute...) -> StaticPropertyStub {
             return StaticGiven(method: .p_note_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func entityName(getter defaultValue: String...) -> StaticPropertyStub {
+        public static func entityName(getter defaultValue: String...) -> StaticPropertyStub {
             return StaticGiven(method: .p_entityName_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func name(getter defaultValue: String...) -> StaticPropertyStub {
+        public static func name(getter defaultValue: String...) -> StaticPropertyStub {
             return StaticGiven(method: .p_name_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func attributes(getter defaultValue: [Attribute]...) -> StaticPropertyStub {
+        public static func attributes(getter defaultValue: [Attribute]...) -> StaticPropertyStub {
             return StaticGiven(method: .p_attributes_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func defaultDependentAttribute(getter defaultValue: Attribute...) -> StaticPropertyStub {
+        public static func defaultDependentAttribute(getter defaultValue: Attribute...) -> StaticPropertyStub {
             return StaticGiven(method: .p_defaultDependentAttribute_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func defaultIndependentAttribute(getter defaultValue: Attribute...) -> StaticPropertyStub {
+        public static func defaultIndependentAttribute(getter defaultValue: Attribute...) -> StaticPropertyStub {
             return StaticGiven(method: .p_defaultIndependentAttribute_get, products: defaultValue.map({ Product.return($0) }))
         }
 
     }
 
-    struct StaticVerify {
+    public struct StaticVerify {
         fileprivate var method: StaticMethodType
 
-        static var rating: StaticVerify { return StaticVerify(method: .p_rating_get) }
-        static var maxRating: StaticVerify { return StaticVerify(method: .p_maxRating_get) }
-        static var note: StaticVerify { return StaticVerify(method: .p_note_get) }
-        static var entityName: StaticVerify { return StaticVerify(method: .p_entityName_get) }
-        static var name: StaticVerify { return StaticVerify(method: .p_name_get) }
-        static var attributes: StaticVerify { return StaticVerify(method: .p_attributes_get) }
-        static var defaultDependentAttribute: StaticVerify { return StaticVerify(method: .p_defaultDependentAttribute_get) }
-        static var defaultIndependentAttribute: StaticVerify { return StaticVerify(method: .p_defaultIndependentAttribute_get) }
+        public static var rating: StaticVerify { return StaticVerify(method: .p_rating_get) }
+        public static var maxRating: StaticVerify { return StaticVerify(method: .p_maxRating_get) }
+        public static var note: StaticVerify { return StaticVerify(method: .p_note_get) }
+        public static var entityName: StaticVerify { return StaticVerify(method: .p_entityName_get) }
+        public static var name: StaticVerify { return StaticVerify(method: .p_name_get) }
+        public static var attributes: StaticVerify { return StaticVerify(method: .p_attributes_get) }
+        public static var defaultDependentAttribute: StaticVerify { return StaticVerify(method: .p_defaultDependentAttribute_get) }
+        public static var defaultIndependentAttribute: StaticVerify { return StaticVerify(method: .p_defaultIndependentAttribute_get) }
     }
 
-    struct StaticPerform {
+    public struct StaticPerform {
         fileprivate var method: StaticMethodType
         var performs: Any
 
@@ -396,8 +396,8 @@ class MoodMock: Mood, Mock {
 		case p_rating_set(Parameter<Double>)
         case p_note_get
 		case p_note_set(Parameter<String?>)
-        case p_timestamp_get
-		case p_timestamp_set(Parameter<Date>)
+        case p_date_get
+		case p_date_set(Parameter<Date>)
         case p_attributedName_get
         case p_attributes_get
         case p_debugDescription_get
@@ -438,8 +438,8 @@ class MoodMock: Mood, Mock {
 			case (.p_rating_set(let left),.p_rating_set(let right)): return Parameter<Double>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_note_get,.p_note_get): return true
 			case (.p_note_set(let left),.p_note_set(let right)): return Parameter<String?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_timestamp_get,.p_timestamp_get): return true
-			case (.p_timestamp_set(let left),.p_timestamp_set(let right)): return Parameter<Date>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_date_get,.p_date_get): return true
+			case (.p_date_set(let left),.p_date_set(let right)): return Parameter<Date>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_attributedName_get,.p_attributedName_get): return true
             case (.p_attributes_get,.p_attributes_get): return true
             case (.p_debugDescription_get,.p_debugDescription_get): return true
@@ -465,8 +465,8 @@ class MoodMock: Mood, Mock {
 			case .p_rating_set(let newValue): return newValue.intValue
             case .p_note_get: return 0
 			case .p_note_set(let newValue): return newValue.intValue
-            case .p_timestamp_get: return 0
-			case .p_timestamp_set(let newValue): return newValue.intValue
+            case .p_date_get: return 0
+			case .p_date_set(let newValue): return newValue.intValue
             case .p_attributedName_get: return 0
             case .p_attributes_get: return 0
             case .p_debugDescription_get: return 0
@@ -474,7 +474,7 @@ class MoodMock: Mood, Mock {
         }
     }
 
-    class Given: StubbedMethod {
+    open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
         private init(method: MethodType, products: [Product]) {
@@ -482,113 +482,113 @@ class MoodMock: Mood, Mock {
             super.init(products)
         }
 
-        static func minRating(getter defaultValue: Double...) -> PropertyStub {
+        public static func minRating(getter defaultValue: Double...) -> PropertyStub {
             return Given(method: .p_minRating_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func maxRating(getter defaultValue: Double...) -> PropertyStub {
+        public static func maxRating(getter defaultValue: Double...) -> PropertyStub {
             return Given(method: .p_maxRating_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func rating(getter defaultValue: Double...) -> PropertyStub {
+        public static func rating(getter defaultValue: Double...) -> PropertyStub {
             return Given(method: .p_rating_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func note(getter defaultValue: String?...) -> PropertyStub {
+        public static func note(getter defaultValue: String?...) -> PropertyStub {
             return Given(method: .p_note_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func timestamp(getter defaultValue: Date...) -> PropertyStub {
-            return Given(method: .p_timestamp_get, products: defaultValue.map({ Product.return($0) }))
+        public static func date(getter defaultValue: Date...) -> PropertyStub {
+            return Given(method: .p_date_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func attributedName(getter defaultValue: String...) -> PropertyStub {
+        public static func attributedName(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_attributedName_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func attributes(getter defaultValue: [Attribute]...) -> PropertyStub {
+        public static func attributes(getter defaultValue: [Attribute]...) -> PropertyStub {
             return Given(method: .p_attributes_get, products: defaultValue.map({ Product.return($0) }))
         }
-        static func debugDescription(getter defaultValue: String...) -> PropertyStub {
+        public static func debugDescription(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_debugDescription_get, products: defaultValue.map({ Product.return($0) }))
         }
 
-        static func value(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
+        public static func value(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
             return Given(method: .m_value__of_attribute(`attribute`), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
-		static func equalTo(otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) }))
         }
-        static func graphableValue(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
+        public static func graphableValue(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
             return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willReturn.map({ Product.return($0) }))
         }
-        static func dates(willReturn: [DateType: Date]...) -> MethodStub {
+        public static func dates(willReturn: [DateType: Date]...) -> MethodStub {
             return Given(method: .m_dates, products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherSample: Parameter<Sample>, willReturn: Bool...) -> MethodStub {
+        public static func equalTo(_ otherSample: Parameter<Sample>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherSample(`otherSample`), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherSample` label")
-		static func equalTo(otherSample: Parameter<Sample>, willReturn: Bool...) -> MethodStub {
+		public static func equalTo(otherSample: Parameter<Sample>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherSample(`otherSample`), products: willReturn.map({ Product.return($0) }))
         }
-        static func safeEqualityCheck<Type: Equatable>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, willReturn: Bool...) -> MethodStub {
+        public static func safeEqualityCheck<Type: Equatable>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `attribute` label, remove `otherSample` label")
-		static func safeEqualityCheck<Type: Equatable>(attribute: Parameter<Attribute>, otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, willReturn: Bool...) -> MethodStub {
+		public static func safeEqualityCheck<Type: Equatable>(attribute: Parameter<Attribute>, otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
         }
-        static func equalTo(_ otherAttributed: Parameter<Attributed>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherAttributed: Parameter<Attributed>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
-        static func dates(willProduce: (Stubber<[DateType: Date]>) -> Void) -> MethodStub {
+        public static func dates(willProduce: (Stubber<[DateType: Date]>) -> Void) -> MethodStub {
             let willReturn: [[DateType: Date]] = []
 			let given: Given = { return Given(method: .m_dates, products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: ([DateType: Date]).self)
 			willProduce(stubber)
 			return given
         }
-        static func equalTo(_ otherSample: Parameter<Sample>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func equalTo(_ otherSample: Parameter<Sample>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherSample(`otherSample`), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
-        static func safeEqualityCheck<Type: Equatable>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func safeEqualityCheck<Type: Equatable>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
-        static func value(of attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
+        public static func value(of attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func value(of attribute: Parameter<Attribute>, willProduce: (StubberThrows<Any?>) -> Void) -> MethodStub {
+        public static func value(of attribute: Parameter<Attribute>, willProduce: (StubberThrows<Any?>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Any?).self)
 			willProduce(stubber)
 			return given
         }
-        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, willThrow: Error...) -> MethodStub {
+        public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
         }
-        static func graphableValue(of attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
+        public static func graphableValue(of attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) }))
         }
-        static func graphableValue(of attribute: Parameter<Attribute>, willProduce: (StubberThrows<Any?>) -> Void) -> MethodStub {
+        public static func graphableValue(of attribute: Parameter<Attribute>, willProduce: (StubberThrows<Any?>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Any?).self)
@@ -597,82 +597,82 @@ class MoodMock: Mood, Mock {
         }
     }
 
-    struct Verify {
+    public struct Verify {
         fileprivate var method: MethodType
 
-        static func setSource(_ source: Parameter<Sources.MoodSourceNum>) -> Verify { return Verify(method: .m_setSource__source(`source`))}
+        public static func setSource(_ source: Parameter<Sources.MoodSourceNum>) -> Verify { return Verify(method: .m_setSource__source(`source`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `source` label")
-		static func setSource(source: Parameter<Sources.MoodSourceNum>) -> Verify { return Verify(method: .m_setSource__source(`source`))}
-        static func value(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_value__of_attribute(`attribute`))}
-        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>) -> Verify { return Verify(method: .m_set__attribute_attributeto_value(`attribute`, `value`))}
-        static func equalTo(_ otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
+		public static func setSource(source: Parameter<Sources.MoodSourceNum>) -> Verify { return Verify(method: .m_setSource__source(`source`))}
+        public static func value(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_value__of_attribute(`attribute`))}
+        public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>) -> Verify { return Verify(method: .m_set__attribute_attributeto_value(`attribute`, `value`))}
+        public static func equalTo(_ otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
-		static func equalTo(otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
-        static func graphableValue(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_graphableValue__of_attribute(`attribute`))}
-        static func dates() -> Verify { return Verify(method: .m_dates)}
-        static func equalTo(_ otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
+		public static func equalTo(otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
+        public static func graphableValue(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_graphableValue__of_attribute(`attribute`))}
+        public static func dates() -> Verify { return Verify(method: .m_dates)}
+        public static func equalTo(_ otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherSample` label")
-		static func equalTo(otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
-        static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>) -> Verify { return Verify(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()))}
+		public static func equalTo(otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
+        public static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>) -> Verify where Type:Equatable { return Verify(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `attribute` label, remove `otherSample` label")
-		static func safeEqualityCheck<Type>(attribute: Parameter<Attribute>, otherSample: Parameter<Sample>, as type: Parameter<Type.Type>) -> Verify { return Verify(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()))}
-        static var minRating: Verify { return Verify(method: .p_minRating_get) }
-		static func minRating(set newValue: Parameter<Double>) -> Verify { return Verify(method: .p_minRating_set(newValue)) }
-        static var maxRating: Verify { return Verify(method: .p_maxRating_get) }
-		static func maxRating(set newValue: Parameter<Double>) -> Verify { return Verify(method: .p_maxRating_set(newValue)) }
-        static var rating: Verify { return Verify(method: .p_rating_get) }
-		static func rating(set newValue: Parameter<Double>) -> Verify { return Verify(method: .p_rating_set(newValue)) }
-        static var note: Verify { return Verify(method: .p_note_get) }
-		static func note(set newValue: Parameter<String?>) -> Verify { return Verify(method: .p_note_set(newValue)) }
-        static var timestamp: Verify { return Verify(method: .p_timestamp_get) }
-		static func timestamp(set newValue: Parameter<Date>) -> Verify { return Verify(method: .p_timestamp_set(newValue)) }
-        static var attributedName: Verify { return Verify(method: .p_attributedName_get) }
-        static var attributes: Verify { return Verify(method: .p_attributes_get) }
-        static var debugDescription: Verify { return Verify(method: .p_debugDescription_get) }
+		public static func safeEqualityCheck<Type>(attribute: Parameter<Attribute>, otherSample: Parameter<Sample>, as type: Parameter<Type.Type>) -> Verify where Type:Equatable { return Verify(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()))}
+        public static var minRating: Verify { return Verify(method: .p_minRating_get) }
+		public static func minRating(set newValue: Parameter<Double>) -> Verify { return Verify(method: .p_minRating_set(newValue)) }
+        public static var maxRating: Verify { return Verify(method: .p_maxRating_get) }
+		public static func maxRating(set newValue: Parameter<Double>) -> Verify { return Verify(method: .p_maxRating_set(newValue)) }
+        public static var rating: Verify { return Verify(method: .p_rating_get) }
+		public static func rating(set newValue: Parameter<Double>) -> Verify { return Verify(method: .p_rating_set(newValue)) }
+        public static var note: Verify { return Verify(method: .p_note_get) }
+		public static func note(set newValue: Parameter<String?>) -> Verify { return Verify(method: .p_note_set(newValue)) }
+        public static var date: Verify { return Verify(method: .p_date_get) }
+		public static func date(set newValue: Parameter<Date>) -> Verify { return Verify(method: .p_date_set(newValue)) }
+        public static var attributedName: Verify { return Verify(method: .p_attributedName_get) }
+        public static var attributes: Verify { return Verify(method: .p_attributes_get) }
+        public static var debugDescription: Verify { return Verify(method: .p_debugDescription_get) }
     }
 
-    struct Perform {
+    public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        static func setSource(_ source: Parameter<Sources.MoodSourceNum>, perform: @escaping (Sources.MoodSourceNum) -> Void) -> Perform {
+        public static func setSource(_ source: Parameter<Sources.MoodSourceNum>, perform: @escaping (Sources.MoodSourceNum) -> Void) -> Perform {
             return Perform(method: .m_setSource__source(`source`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `source` label")
-		static func setSource(source: Parameter<Sources.MoodSourceNum>, perform: @escaping (Sources.MoodSourceNum) -> Void) -> Perform {
+		public static func setSource(source: Parameter<Sources.MoodSourceNum>, perform: @escaping (Sources.MoodSourceNum) -> Void) -> Perform {
             return Perform(method: .m_setSource__source(`source`), performs: perform)
         }
-        static func value(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
+        public static func value(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
             return Perform(method: .m_value__of_attribute(`attribute`), performs: perform)
         }
-        static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, perform: @escaping (Attribute, Any?) -> Void) -> Perform {
+        public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, perform: @escaping (Attribute, Any?) -> Void) -> Perform {
             return Perform(method: .m_set__attribute_attributeto_value(`attribute`, `value`), performs: perform)
         }
-        static func equalTo(_ otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
+        public static func equalTo(_ otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherAttributed(`otherAttributed`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
-		static func equalTo(otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
+		public static func equalTo(otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherAttributed(`otherAttributed`), performs: perform)
         }
-        static func graphableValue(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
+        public static func graphableValue(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
             return Perform(method: .m_graphableValue__of_attribute(`attribute`), performs: perform)
         }
-        static func dates(perform: @escaping () -> Void) -> Perform {
+        public static func dates(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_dates, performs: perform)
         }
-        static func equalTo(_ otherSample: Parameter<Sample>, perform: @escaping (Sample) -> Void) -> Perform {
+        public static func equalTo(_ otherSample: Parameter<Sample>, perform: @escaping (Sample) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherSample(`otherSample`), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherSample` label")
-		static func equalTo(otherSample: Parameter<Sample>, perform: @escaping (Sample) -> Void) -> Perform {
+		public static func equalTo(otherSample: Parameter<Sample>, perform: @escaping (Sample) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherSample(`otherSample`), performs: perform)
         }
-        static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, perform: @escaping (Attribute, Sample, Type.Type) -> Void) -> Perform {
+        public static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, perform: @escaping (Attribute, Sample, Type.Type) -> Void) -> Perform where Type:Equatable {
             return Perform(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), performs: perform)
         }
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `attribute` label, remove `otherSample` label")
-		static func safeEqualityCheck<Type>(attribute: Parameter<Attribute>, otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, perform: @escaping (Attribute, Sample, Type.Type) -> Void) -> Perform {
+		public static func safeEqualityCheck<Type>(attribute: Parameter<Attribute>, otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, perform: @escaping (Attribute, Sample, Type.Type) -> Void) -> Perform where Type:Equatable {
             return Perform(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), performs: perform)
         }
     }
@@ -688,7 +688,7 @@ class MoodMock: Mood, Mock {
 
     public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     private func addInvocation(_ call: MethodType) {
@@ -743,7 +743,7 @@ class MoodMock: Mood, Mock {
 
     static public func verify(_ method: StaticVerify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expeced: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
     static private func addInvocation(_ call: StaticMethodType) {

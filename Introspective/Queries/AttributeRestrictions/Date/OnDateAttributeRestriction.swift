@@ -9,7 +9,7 @@
 import Foundation
 import SwiftDate
 
-public final class OnDateAttributeRestriction: DateAttributeRestriction, PredicateAttributeRestriction, Equatable {
+public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatable {
 
 	// MARK: - Static Variables
 
@@ -83,11 +83,6 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Predica
 			throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: sampleValue))
 		}
 		return DependencyInjector.util.calendar.date(sampleDate, occursOnSame: .day, as: date)
-	}
-
-	public final func toPredicate() -> NSPredicate {
-		let nextDay = Calendar.autoupdatingCurrent.date(byAdding: .day, value: 1, to: date)!
-		return NSPredicate(format: "%K >= %@ AND %K < %@", restrictedAttribute.variableName!, date as NSDate, restrictedAttribute.variableName!, nextDay as NSDate)
 	}
 
 	// MARK: - Equality

@@ -36,8 +36,8 @@ public final class ActivityDataTestUtil {
 		let transaction = DependencyInjector.db.transaction()
 		let activity = try! transaction.new(Activity.self)
 		activity.definition = try! transaction.pull(savedObject: definition)
-		activity.startDate = startDate
-		activity.endDate = endDate
+		activity.start = startDate
+		activity.end = endDate
 		activity.note = note
 		for tag in tags {
 			activity.addToTags(try! transaction.pull(savedObject: tag))

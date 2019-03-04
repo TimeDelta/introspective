@@ -67,8 +67,10 @@ public final class BloodPressure: HealthKitCorrelationSample {
 		let diastolicStart = diastolicSample.startDate
 		if diastolicStart < systolicStart {
 			timestamp = diastolicStart
+			DependencyInjector.util.healthKit.setTimeZoneIfApplicable(for: &timestamp, from: diastolicSample)
 		} else {
 			timestamp = systolicStart
+			DependencyInjector.util.healthKit.setTimeZoneIfApplicable(for: &timestamp, from: systolicSample)
 		}
 	}
 
@@ -76,9 +78,19 @@ public final class BloodPressure: HealthKitCorrelationSample {
 
 	public func hkSample() -> HKSample {
 		let systolicPressure = HKQuantity(unit: Me.systolicUnit, doubleValue: systolic)
-		let systolicSample = HKQuantitySample(type: Me.systolicQuantityType, quantity: systolicPressure, start: timestamp, end: timestamp)
+		let systolicSample = HKQuantitySample(
+			type: Me.systolicQuantityType,
+			quantity: systolicPressure,
+			start: timestamp,
+			end: timestamp,
+			metadata: [HKMetadataKeyTimeZone : TimeZone.autoupdatingCurrent.identifier])
 		let diastolicPressure = HKQuantity(unit: Me.diastolicUnit, doubleValue: diastolic)
-		let diastolicSample = HKQuantitySample(type: Me.diastolicQuantityType, quantity: diastolicPressure, start: timestamp, end: timestamp)
+		let diastolicSample = HKQuantitySample(
+			type: Me.diastolicQuantityType,
+			quantity: diastolicPressure,
+			start: timestamp,
+			end: timestamp,
+			metadata: [HKMetadataKeyTimeZone : TimeZone.autoupdatingCurrent.identifier])
 		return HKCorrelation(type: Me.correlationType, start: timestamp, end: timestamp, objects: Set([systolicSample, diastolicSample]))
 	}
 

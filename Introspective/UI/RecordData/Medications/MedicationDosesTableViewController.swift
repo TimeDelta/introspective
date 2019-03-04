@@ -112,7 +112,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 			self.present(alert, animated: false, completion: nil)
 		}
 		delete.accessibilityLabel = "delete dose button"
-		let dateText = DependencyInjector.util.calendar.string(for: dose.timestamp, dateStyle: .long, timeStyle: .short)
+		let dateText = DependencyInjector.util.calendar.string(for: dose.date, dateStyle: .long, timeStyle: .short)
 		var dosageText = dose.dosage?.description ?? ""
 		if !dosageText.isEmpty {
 			dosageText += " "
@@ -222,7 +222,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		if let dosage = dose.dosage {
 			doseText += dosage.description + " on "
 		}
-		doseText += DependencyInjector.util.calendar.string(for: dose.timestamp, dateStyle: .medium, timeStyle: .short)
+		doseText += DependencyInjector.util.calendar.string(for: dose.date, dateStyle: .medium, timeStyle: .short)
 		return doseText
 	}
 

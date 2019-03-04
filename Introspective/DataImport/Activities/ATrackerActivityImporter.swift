@@ -111,7 +111,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	}
 
 	private final func update(_ activity: Activity, from csv: CSVReader) throws {
-		activity.endDate = try getEndDate(from: csv)
+		activity.end = try getEndDate(from: csv)
 		activity.note = csv[Me.noteColumn]
 	}
 
@@ -157,8 +157,8 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		let childTransaction = transaction.childTransaction()
 		let activity = try childTransaction.new(Activity.self)
 		activity.definition = try childTransaction.pull(savedObject: definition)
-		activity.startDate = start
-		activity.endDate = try getEndDate(from: csv)
+		activity.start = start
+		activity.end = try getEndDate(from: csv)
 		activity.note = csv[Me.noteColumn]
 		activity.setSource(.aTracker)
 		try retryOnFail({ try childTransaction.commit() }, maxRetries: 2)

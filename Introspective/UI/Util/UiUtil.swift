@@ -28,7 +28,7 @@ public protocol UiUtil {
 	/// This is just a pass-through method that will return the input. It is solely for syntactic
 	/// sugar so that you don't have to type out "UserInfoKey." everywhere.
 	func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any]
-	func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String) -> Type
+	func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String, as: Type.Type) -> Type
 }
 
 extension UiUtil {
@@ -139,7 +139,7 @@ public final class UiUtilImpl: UiUtil {
 		return info
 	}
 
-	public func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String) -> Type {
+	public func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String, as: Type.Type) -> Type {
 		return UIStoryboard(name: storyboardName, bundle: nil).instantiateViewController(withIdentifier: controllerName) as! Type
 	}
 

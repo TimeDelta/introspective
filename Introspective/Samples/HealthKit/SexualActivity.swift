@@ -75,16 +75,15 @@ public final class SexualActivity: HealthKitCategorySample {
 			protectionUsed = .unspecified
 		}
 		timestamp = sample.startDate
+		DependencyInjector.util.healthKit.setTimeZoneIfApplicable(for: &timestamp, from: sample)
 	}
 
 	// MARK: - HealthKitSample Functions
 
 	public func hkSample() -> HKSample {
-		let metadata: [String: Any]?
+		var metadata: [String: Any] = [String: Any]()
 		switch (protectionUsed) {
-			case .unspecified:
-				metadata = nil
-				break
+			case .unspecified: break
 			case .used:
 				metadata = [HKMetadataKeySexualActivityProtectionUsed: true]
 				break
@@ -92,7 +91,13 @@ public final class SexualActivity: HealthKitCategorySample {
 				metadata = [HKMetadataKeySexualActivityProtectionUsed: false]
 				break
 		}
-		return HKCategorySample(type: Me.categoryType, value: HKCategoryValue.notApplicable.rawValue, start: timestamp, end: timestamp, metadata: metadata)
+		metadata[HKMetadataKeyTimeZone] = TimeZone.autoupdatingCurrent.identifier
+		return HKCategorySample(
+			type: Me.categoryType,
+			value: HKCategoryValue.notApplicable.rawValue,
+			start: timestamp,
+			end: timestamp,
+			metadata: metadata)
 	}
 
 	// MARK: - Sample Functions

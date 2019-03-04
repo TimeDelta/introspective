@@ -57,17 +57,42 @@ public class Activity: NSManagedObject, CoreDataSample {
 		return "What you are doing at a specific point in time."
 	}
 
+	public final var start: Date {
+		get {
+			return DependencyInjector.util.coreDataSample.convertTimeZoneIfApplicable(for: startDate, timeZoneId: startDateTimeZoneId)
+		}
+		set {
+			startDate = newValue
+			if source == Sources.ActivitySourceNum.introspective.rawValue && startDateTimeZoneId == nil {
+				startDateTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+			}
+		}
+	}
+	public final var end: Date? {
+		get {
+			if let endDate = endDate {
+				return DependencyInjector.util.coreDataSample.convertTimeZoneIfApplicable(for: endDate, timeZoneId: endDateTimeZoneId)
+			}
+			return nil
+		}
+		set {
+			endDate = newValue
+			if source == Sources.ActivitySourceNum.introspective.rawValue && endDateTimeZoneId == nil {
+				endDateTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+			}
+		}
+	}
 	public final var duration: Duration {
-		return Duration(start: startDate, end: endDate)
+		return Duration(start: start, end: end)
 	}
 
 	// MARK: - Sample Functions
 
 	public func dates() -> [DateType : Date] {
 		var dates = [DateType : Date]()
-		dates[.start] = startDate
-		if let endDate = endDate {
-			dates[.end] = endDate
+		dates[.start] = start
+		if let end = end {
+			dates[.end] = end
 		}
 		return dates
 	}
@@ -89,10 +114,10 @@ public class Activity: NSManagedObject, CoreDataSample {
 			return duration
 		}
 		if attribute.equalTo(CommonSampleAttributes.startDate) {
-			return startDate
+			return start
 		}
 		if attribute.equalTo(Me.endDateAttribute) {
-			return endDate
+			return end
 		}
 		if attribute.equalTo(Me.tagsAttribute) {
 			var tags = tagsArray()
@@ -128,6 +153,9 @@ public class Activity: NSManagedObject, CoreDataSample {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
 			startDate = castedValue
+			if source == Sources.ActivitySourceNum.introspective.rawValue && startDateTimeZoneId == nil {
+				startDateTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+			}
 			return
 		}
 		if attribute.equalTo(Me.endDateAttribute) {
@@ -135,6 +163,9 @@ public class Activity: NSManagedObject, CoreDataSample {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
 			endDate = (value as! Date?)
+			if source == Sources.ActivitySourceNum.introspective.rawValue && endDateTimeZoneId == nil {
+				endDateTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+			}
 			return
 		}
 		if attribute.equalTo(Me.noteAttribute) {
@@ -158,6 +189,12 @@ public class Activity: NSManagedObject, CoreDataSample {
 
 	public final func setSource(_ source: Sources.ActivitySourceNum) {
 		self.source = source.rawValue
+		if source == Sources.ActivitySourceNum.introspective && startDateTimeZoneId == nil {
+			startDateTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+		}
+		if source == Sources.ActivitySourceNum.introspective && endDateTimeZoneId == nil {
+			endDateTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+		}
 	}
 
 	/// - Returns: Only tags directly associated with this `Activity`.
@@ -234,4 +271,34 @@ public class Activity: NSManagedObject, CoreDataSample {
 			removeFromTags(tag)
 		}
 	}
+}
+
+// MARK: - CoreData
+
+extension Activity {
+
+	@nonobjc public class func fetchRequest() -> NSFetchRequest<Activity> {
+		return NSFetchRequest<Activity>(entityName: "Activity")
+	}
+
+	@NSManaged fileprivate var startDate: Date
+	@NSManaged fileprivate var startDateTimeZoneId: String?
+	@NSManaged fileprivate var endDate: Date?
+	@NSManaged fileprivate var endDateTimeZoneId: String?
+	@NSManaged public var note: String?
+	@NSManaged public var definition: ActivityDefinition
+	@NSManaged public var tags: NSSet
+	@NSManaged public var source: Int16
+
+	@objc(addTagsObject:)
+	@NSManaged public func addToTags(_ value: Tag)
+
+	@objc(removeTagsObject:)
+	@NSManaged public func removeFromTags(_ value: Tag)
+
+	@objc(addTags:)
+	@NSManaged public func addToTags(_ values: NSSet)
+
+	@objc(removeTags:)
+	@NSManaged public func removeFromTags(_ values: NSSet)
 }

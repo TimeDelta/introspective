@@ -2,9 +2,11 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="18D109" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Activity" representedClassName=".Activity" syncable="YES">
         <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="endDateTimeZoneId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="note" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="startDate" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="startDateTimeZoneId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="definition" maxCount="1" deletionRule="Nullify" destinationEntity="ActivityDefinition" inverseName="activities" inverseEntity="ActivityDefinition" syncable="YES"/>
         <relationship name="tags" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" syncable="YES"/>
         <fetchIndex name="byDefinition">
@@ -58,6 +60,7 @@
         <attribute name="dosage" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="timestampTimeZoneId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="medication" maxCount="1" deletionRule="Nullify" destinationEntity="Medication" inverseName="doses" inverseEntity="Medication" syncable="YES"/>
     </entity>
     <entity name="Mood" representedClassName=".MoodImpl" syncable="YES">
@@ -67,10 +70,12 @@
         <attribute name="rating" attributeType="Double" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="timestampTimeZoneId" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Settings" representedClassName=".SettingsImpl" syncable="YES">
         <attribute name="storedAutoIgnoreEnabled" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="storedAutoIgnoreSeconds" attributeType="Integer 64" defaultValueString="15" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="storedConvertTimeZones" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="storedMaxMood" attributeType="Double" defaultValueString="10" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="storedMinMood" attributeType="Double" defaultValueString="1" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="storedScaleMoodsOnImport" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES" syncable="YES"/>
@@ -83,15 +88,15 @@
     </entity>
     <fetchRequest name="allActivityDefinitions" entity="ActivityDefinition" predicateString="TRUEPREDICATE"/>
     <elements>
-        <element name="Activity" positionX="-36" positionY="63" width="128" height="135"/>
+        <element name="Activity" positionX="-36" positionY="63" width="128" height="165"/>
         <element name="ActivityDefinition" positionX="-45" positionY="54" width="128" height="150"/>
         <element name="ATrackerActivityImporter" positionX="-36" positionY="72" width="128" height="60"/>
         <element name="EasyPillMedicationDoseImporter" positionX="-36" positionY="63" width="128" height="60"/>
         <element name="EasyPillMedicationImporter" positionX="-45" positionY="54" width="128" height="60"/>
         <element name="Medication" positionX="-54" positionY="9" width="128" height="165"/>
-        <element name="MedicationDose" positionX="-45" positionY="45" width="128" height="105"/>
-        <element name="Mood" positionX="-63" positionY="-18" width="128" height="135"/>
-        <element name="Settings" positionX="-63" positionY="9" width="128" height="120"/>
+        <element name="MedicationDose" positionX="-45" positionY="45" width="128" height="120"/>
+        <element name="Mood" positionX="-63" positionY="-18" width="128" height="150"/>
+        <element name="Settings" positionX="-63" positionY="9" width="128" height="135"/>
         <element name="Tag" positionX="-18" positionY="81" width="128" height="60"/>
         <element name="WellnessMoodImporter" positionX="-54" positionY="18" width="128" height="60"/>
     </elements>

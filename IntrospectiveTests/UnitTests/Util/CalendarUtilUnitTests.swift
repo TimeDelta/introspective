@@ -10,14 +10,44 @@ import XCTest
 import SwiftDate
 @testable import Introspective
 
-class CalendarUtilUnitTests: UnitTest {
+final class CalendarUtilUnitTests: UnitTest {
 
-	fileprivate var util: CalendarUtilImpl!
+	private var util: CalendarUtilImpl!
 
 	override func setUp() {
 		super.setUp()
 		util = CalendarUtilImpl()
 	}
+
+	// MARK: - convertDateFromTimeZoneToTimeZone
+
+	func testGivenConvertDateFromEstToCst_convertTimeZone_correctlyConvertsDate() {
+		// given
+		let estTimeZone = TimeZone(abbreviation: "EST")!
+		let cstTimeZone = TimeZone(abbreviation: "CST")!
+		let originalDate = Date()
+
+		// when
+		let convertedDate = util.convert(originalDate.date, from: estTimeZone, to: cstTimeZone)
+
+		// then
+		XCTAssertEqual(convertedDate, originalDate.date - 1.hours)
+	}
+
+	func testGivenConvertDateFromPstToEst_convertTimeZone_correctleConvertsDate() {
+		// given
+		let pstTimeZone = TimeZone(abbreviation: "PST")!
+		let estTimeZone = TimeZone(abbreviation: "EST")!
+		let originalDate = Date()
+
+		// when
+		let convertedDate = util.convert(originalDate, from: pstTimeZone, to: estTimeZone)
+
+		// then
+		XCTAssertEqual(convertedDate, originalDate.date + 3.hours)
+	}
+
+	// MARK: - startOf
 
 	func testGivenYear_startOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
 		// given
@@ -229,6 +259,8 @@ class CalendarUtilUnitTests: UnitTest {
 		XCTAssertEqual(zeroedDate, date)
 	}
 
+	// MARK: - endOf
+
 	func testGivenYear_endOf_setsAllLesserComponentsToMinimumValueButDoesNotTouchGreaterComponents() {
 		// given
 		let calendar = Calendar.autoupdatingCurrent
@@ -431,6 +463,8 @@ class CalendarUtilUnitTests: UnitTest {
 		XCTAssertEqual(zeroedDate, date)
 	}
 
+	// MARK: - stringForDateInFormat
+
 	func test_stringForDateInFormat_returnsCorrectlyFormattedDateString() {
 		// given
 		let date = Date(year: 2018, month: 1, day: 2, hour: 3, minute: 4, second: 5, nanosecond: 6, region: defaultRegion())
@@ -442,6 +476,8 @@ class CalendarUtilUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(dateString, "2 of January, 2018 at 3:04:05")
 	}
+
+	// MARK: - dateOccursOnSameAs
 
 	func testGivenYearComponentAndTwoDatesInSameYear_dateOccursOnSameAs_returnsTrue() {
 		// given
@@ -599,6 +635,8 @@ class CalendarUtilUnitTests: UnitTest {
 		XCTAssertFalse(result)
 	}
 
+	// MARK: - compare
+
 	func testGivenTwoNilDates_compare_returnsOrderedSame() {
 		// given
 		let firstDate: Date? = nil
@@ -671,6 +709,8 @@ class CalendarUtilUnitTests: UnitTest {
 		XCTAssertEqual(comparison, .orderedDescending)
 	}
 
+	// MARK: - dateIsOnOneOf
+
 	func testGivenEveryDayOfWeekExceptOneForDate_dateIsOnOneOf_returnsFalse() {
 		// given
 		let date = DateInRegion().dateAt(.nextWeekday(.saturday))
@@ -714,6 +754,8 @@ class CalendarUtilUnitTests: UnitTest {
 		XCTAssert(onOneOf)
 	}
 
+	// MARK: - dateIsOnA
+
 	func testGivenDayOfWeekOnWhichDateOccurs_dateIsOnA_returnsTrue() {
 		// given
 		let dateDayOfWeek = DayOfWeek.Saturday
@@ -738,6 +780,8 @@ class CalendarUtilUnitTests: UnitTest {
 		XCTAssertFalse(onA)
 	}
 
+	// MARK: - dateFromStringInFormat
+
 	func testGivenValidDateStringAndFormat_dateFromStringInFormat_returnsCorrectDate() {
 		// given
 		let year = 2018
@@ -757,7 +801,7 @@ class CalendarUtilUnitTests: UnitTest {
 		XCTAssertEqual(actualDate, expectedDate)
 	}
 
-	fileprivate func defaultRegion() -> Region {
+	private func defaultRegion() -> Region {
 		let calendar = Calendar.autoupdatingCurrent
 		return Region(calendar: calendar, zone: calendar.timeZone)
 	}

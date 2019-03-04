@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestriction, PredicateAttributeRestriction, Equatable {
+public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestriction, Equatable {
 
 	// MARK: - Static Variables
 
@@ -78,10 +78,6 @@ public final class AfterDateAndTimeAttributeRestriction: DateAttributeRestrictio
 			throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: sampleValue))
 		}
 		return sampleDate.isAfterDate(date, granularity: .nanosecond)
-	}
-
-	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K > %@", restrictedAttribute.variableName!, date as NSDate)
 	}
 
 	// MARK: - Equality

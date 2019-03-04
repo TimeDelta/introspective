@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class AfterDateAttributeRestriction: DateAttributeRestriction, PredicateAttributeRestriction, Equatable {
+public final class AfterDateAttributeRestriction: DateAttributeRestriction, Equatable {
 
 	private typealias Me = AfterDateAttributeRestriction
 
@@ -83,10 +83,6 @@ public final class AfterDateAttributeRestriction: DateAttributeRestriction, Pred
 			throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: sampleValue))
 		}
 		return sampleDate.isAfterDate(date, granularity: .second)
-	}
-
-	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K > %@", restrictedAttribute.variableName!, date as NSDate)
 	}
 
 	// MARK: - Equality

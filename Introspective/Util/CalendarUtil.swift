@@ -13,6 +13,7 @@ public let defaultDateFormat = "MMMM d yyyy 'at' H:mm:ss"
 
 //sourcery: AutoMockable
 public protocol CalendarUtil {
+	func convert(_ date: Date, from fromTimeZone: TimeZone, to toTimeZone: TimeZone) -> Date
 	/// Set all components of the specified date less than the specified component to the minimum value for that component.
 	/// - Parameter component: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`
 	func start(of component: Calendar.Component, in date: Date) -> Date
@@ -45,6 +46,11 @@ extension CalendarUtil {
 }
 
 public final class CalendarUtilImpl: CalendarUtil {
+
+	public final func convert(_ date: Date, from fromTimeZone: TimeZone, to toTimeZone: TimeZone) -> Date {
+		let delta = TimeInterval(toTimeZone.secondsFromGMT() - fromTimeZone.secondsFromGMT())
+		return date.addingTimeInterval(delta)
+	}
 
 	/// Set all components of the specified date less than the specified component to the minimum value for that component.
 	/// - Parameter component: Must be one of the following values: `.year`, `.month`, `.weekOfYear`, `.day`, `.hour`, `.minute`, `.second`, `.nanosecond`

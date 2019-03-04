@@ -41,17 +41,31 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 
 	public final let attributedName: String = Me.name
 	public final override var description: String { return Me.description }
+	public final var date: Date {
+		get {
+			return DependencyInjector.util.coreDataSample.convertTimeZoneIfApplicable(for: timestamp, timeZoneId: timestampTimeZoneId)
+		}
+		set {
+			timestamp = newValue
+			if source == Sources.MedicationSourceNum.introspective.rawValue && timestampTimeZoneId == nil {
+				timestampTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+			}
+		}
+	}
 
 	// MARK: - Sample Functions
 
 	public final func dates() -> [DateType: Date] {
-		return [.start: timestamp]
+		return [.start: date]
 	}
 
 	// MARK: - Other
 
 	public final func setSource(_ source: Sources.MedicationSourceNum) {
 		self.source = source.rawValue
+		if source == Sources.MedicationSourceNum.introspective && timestampTimeZoneId == nil {
+			timestampTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+		}
 	}
 
 	// MARK: - Attributed Functions
@@ -110,6 +124,9 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 			}
 
 			timestamp = castedValue
+			if source == Sources.MedicationSourceNum.introspective.rawValue && timestampTimeZoneId == nil {
+				timestampTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+			}
 			let dose = try transaction.pull(savedObject: self)
 			dose.timestamp = timestamp
 			try transaction.commit()
@@ -137,7 +154,7 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 	}
 
 	public final func equalTo(_ other: MedicationDose) -> Bool {
-		return medication == other.medication && dosage == other.dosage && timestamp == other.timestamp
+		return medication == other.medication && dosage == other.dosage && date == other.date
 	}
 
 	// MARK: - Debug
@@ -147,4 +164,19 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 		let timestampText = try! CommonSampleAttributes.timestamp.convertToDisplayableString(from: timestamp)
 		return "Dose of '\(medication.name)' (\(dosageText)) taken on \(timestampText)"
 	}
+}
+
+// MARK: - CoreData
+
+extension MedicationDose {
+
+	@nonobjc public class func fetchRequest() -> NSFetchRequest<MedicationDose> {
+		return NSFetchRequest<MedicationDose>(entityName: "MedicationDose")
+	}
+
+	@NSManaged fileprivate var timestamp: Date
+	@NSManaged fileprivate var timestampTimeZoneId: String?
+	@NSManaged public var dosage: Dosage?
+	@NSManaged public var medication: Medication
+	@NSManaged public var source: Int16
 }

@@ -52,13 +52,19 @@ public final class LeanBodyMass: HealthKitQuantitySample {
 	public required init(_ sample: HKQuantitySample) {
 		leanBodyMass = sample.quantity.doubleValue(for: Me.unit)
 		timestamp = sample.startDate
+		DependencyInjector.util.healthKit.setTimeZoneIfApplicable(for: &timestamp, from: sample)
 	}
 
 	// MARK: - HealthKitSample Functions
 
 	public func hkSample() -> HKSample {
 		let quantity = HKQuantity(unit: Me.unit, doubleValue: quantityValue())
-		return HKQuantitySample(type: Me.quantityType, quantity: quantity, start: timestamp, end: timestamp)
+		return HKQuantitySample(
+			type: Me.quantityType,
+			quantity: quantity,
+			start: timestamp,
+			end: timestamp,
+			metadata: [HKMetadataKeyTimeZone : TimeZone.autoupdatingCurrent.identifier])
 	}
 
 	// MARK: - HealthKitQuantitySample Functions

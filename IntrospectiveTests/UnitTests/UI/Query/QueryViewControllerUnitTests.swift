@@ -36,7 +36,7 @@ class QueryViewControllerUnitTests: UnitTest {
 		controller.viewDidLoad()
 		controller.parts[0] = QueryViewController.Part(QueryViewController.SampleTypeInfo(HeartRate.self))
 
-		Given(mockUiUtil, .controller(named: "results", from: "Results", willReturn: ResultsViewController()))
+		mockResultsViewController()
 
 		// when
 		controller.finishedButtonPressed(Me.finishedButton)
@@ -58,7 +58,7 @@ class QueryViewControllerUnitTests: UnitTest {
 		let attributeRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
 		controller.parts.append(QueryViewController.Part(attributeRestriction))
 
-		Given(mockUiUtil, .controller(named: "results", from: "Results", willReturn: ResultsViewController()))
+		mockResultsViewController()
 
 		// when
 		controller.finishedButtonPressed(Me.finishedButton)
@@ -83,7 +83,7 @@ class QueryViewControllerUnitTests: UnitTest {
 		controller.parts.append(QueryViewController.Part(attributeRestriction1))
 		controller.parts.append(QueryViewController.Part(attributeRestriction2))
 
-		Given(mockUiUtil, .controller(named: "results", from: "Results", willReturn: ResultsViewController()))
+		mockResultsViewController()
 
 		// when
 		controller.finishedButtonPressed(Me.finishedButton)
@@ -111,7 +111,7 @@ class QueryViewControllerUnitTests: UnitTest {
 		dataTypeInfo.matcher!.mostRecentOnly = false
 		controller.parts.append(QueryViewController.Part(dataTypeInfo))
 
-		Given(mockUiUtil, .controller(named: "results", from: "Results", willReturn: ResultsViewController()))
+		mockResultsViewController()
 
 		// when
 		controller.finishedButtonPressed(Me.finishedButton)
@@ -147,7 +147,7 @@ class QueryViewControllerUnitTests: UnitTest {
 		controller.parts.append(QueryViewController.Part(attributeRestriction1))
 		controller.parts.append(QueryViewController.Part(attributeRestriction2))
 
-		Given(mockUiUtil, .controller(named: "results", from: "Results", willReturn: ResultsViewController()))
+		mockResultsViewController()
 
 		// when
 		controller.finishedButtonPressed(Me.finishedButton)
@@ -191,7 +191,7 @@ class QueryViewControllerUnitTests: UnitTest {
 		controller.parts.append(QueryViewController.Part(moodAttributeRestriction1))
 		controller.parts.append(QueryViewController.Part(moodAttributeRestriction2))
 
-		Given(mockUiUtil, .controller(named: "results", from: "Results", willReturn: ResultsViewController()))
+		mockResultsViewController()
 
 		// when
 		controller.finishedButtonPressed(Me.finishedButton)
@@ -207,5 +207,15 @@ class QueryViewControllerUnitTests: UnitTest {
 		XCTAssert(subQuery.attributeRestrictions.contains(where: { r in return r.equalTo(moodAttributeRestriction1) }))
 		XCTAssert(subQuery.attributeRestrictions.contains(where: { r in return r.equalTo(moodAttributeRestriction2) }))
 		Verify(sampleQuery, .runQuery(callback: .any(((QueryResult?, Error?) -> ()).self)))
+	}
+
+	// MARK: - Helper Functions
+
+	private final func mockResultsViewController() {
+		Given(mockUiUtil, .controller(
+			named: .value("results"),
+			from: .value("Results"),
+			as: .value(ResultsViewController.self),
+			willReturn: ResultsViewController()))
 	}
 }

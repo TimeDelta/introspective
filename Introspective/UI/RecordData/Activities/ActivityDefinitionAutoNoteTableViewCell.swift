@@ -36,7 +36,7 @@ public final class ActivityDefinitionAutoNoteTableViewCell: UITableViewCell {
 	}
 
 	@IBAction final func showDescription(_ sender: Any) {
-		let controller = DependencyInjector.util.ui.controller(named: "description", from: "Util") as! DescriptionViewController
+		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
 		controller.descriptionText = "Automatically display the edit screen for this activity with the note ready to be filled in on completion."
 		NotificationCenter.default.post(
 			name: notificationToSendForPopup,

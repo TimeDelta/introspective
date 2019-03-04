@@ -350,7 +350,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 				medication.recordScreenIndex = Int16(try DependencyInjector.db.query(Medication.fetchRequest()).count)
 				let dose = try transaction.new(MedicationDose.self)
 				dose.medication = medication
-				dose.timestamp = Date()
+				dose.date = Date()
 				dose.dosage = medication.dosage
 				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 				searchController.searchBar.text = ""

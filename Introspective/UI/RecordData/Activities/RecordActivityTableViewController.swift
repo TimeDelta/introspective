@@ -445,7 +445,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 				activityDefinition.recordScreenIndex = Int16(try DependencyInjector.db.query(ActivityDefinition.fetchRequest()).count)
 				let activity = try transaction.new(Activity.self)
 				activity.definition = activityDefinition
-				activity.startDate = Date()
+				activity.start = Date()
 				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 				searchController.searchBar.text = ""
 				loadActivitiyDefinitions()
@@ -466,7 +466,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 			activity.setSource(.introspective)
 			let definition = try DependencyInjector.db.pull(savedObject: activityDefinition, fromSameContextAs: activity)
 			activity.definition = definition
-			activity.startDate = Date()
+			activity.start = Date()
 			definition.addToActivities(activity)
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			// just calling updateUiElements here doesn't display the progress indicator for some reason
@@ -481,7 +481,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		let now = Date()
 		if DependencyInjector.settings.autoIgnoreEnabled {
 			let minSeconds = DependencyInjector.settings.autoIgnoreSeconds
-			if Duration(start: activity.startDate, end: now).inUnit(.second) < Double(minSeconds) {
+			if Duration(start: activity.start, end: now).inUnit(.second) < Double(minSeconds) {
 				do {
 					let transaction = DependencyInjector.db.transaction()
 					// can't really explain this to the user
@@ -496,7 +496,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		}
 		do {
 			let transaction = DependencyInjector.db.transaction()
-			activity.endDate = now
+			activity.end = now
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			associatedCell.updateUiElements()
 			if activity.definition.autoNote {
@@ -509,13 +509,13 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func getTimeTextFor(_ activity: Activity) -> String {
 		var timeText: String
-		let startsToday = activity.startDate.isToday()
+		let startsToday = activity.start.isToday()
 		if startsToday {
-			timeText = TimeOfDay(activity.startDate).toString()
+			timeText = TimeOfDay(activity.start).toString()
 		} else {
-			timeText = DependencyInjector.util.calendar.string(for: activity.startDate, dateStyle: .short, timeStyle: .short)
+			timeText = DependencyInjector.util.calendar.string(for: activity.start, dateStyle: .short, timeStyle: .short)
 		}
-		if let endDate = activity.endDate {
+		if let endDate = activity.end {
 			let endDateText: String
 			if startsToday {
 				endDateText = TimeOfDay(endDate).toString()
@@ -549,7 +549,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		let incompleteActivities = activityDefinition.activities.filtered(using: NSPredicate(format: "%K == nil", endDateVariableName)) as! Set<Activity>
 
 		if incompleteActivities.count > 0 {
-			let sortedIncompleteActivities = incompleteActivities.sorted(by: { $0.startDate > $1.startDate })
+			let sortedIncompleteActivities = incompleteActivities.sorted(by: { $0.start > $1.start })
 			return sortedIncompleteActivities[0]
 		}
 		return nil

@@ -59,6 +59,7 @@ class UnitTest: XCTestCase {
 		Matcher.default.register(DayOfWeek.self)
 		Matcher.default.register(HeartRate.Type.self) { _,_ in return true }
 		Matcher.default.register(Sample.self) { lhs,rhs in return lhs.equalTo(rhs) }
+		Matcher.default.register(ResultsViewController.Type.self)
 	}
 
 	private func resetMocks() {

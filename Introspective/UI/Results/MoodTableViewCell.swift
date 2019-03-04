@@ -21,7 +21,7 @@ final class MoodTableViewCell: UITableViewCell {
 			let minText = MoodUiUtil.valueToString(mood.minRating)
 			let maxText = MoodUiUtil.valueToString(mood.maxRating)
 			moodRatingLabel.text = ratingText + " (\(minText)-\(maxText))"
-			timestampLabel.text = DependencyInjector.util.calendar.string(for: mood.timestamp, dateStyle: .medium, timeStyle: .short)
+			timestampLabel.text = DependencyInjector.util.calendar.string(for: mood.date, dateStyle: .medium, timeStyle: .short)
 			noteLabel.text = mood.note
 			moodRatingLabel.accessibilityValue = moodRatingLabel.text
 			timestampLabel.accessibilityValue = timestampLabel.text
