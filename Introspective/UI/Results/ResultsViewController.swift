@@ -67,7 +67,6 @@ final class ResultsViewController: UITableViewController {
 	// MARK: - UIViewController Overloads
 
 	public final override func viewDidLoad() {
-		disableActionsButton()
 		actionsButton.target = self
 		actionsButton.action = #selector(presentActions)
 
@@ -457,7 +456,6 @@ final class ResultsViewController: UITableViewController {
 	// MARK: - Helper functions
 
 	private final func viewIsReady() {
-		while !finishedLoading {} // this ensures that the actions button does not get disabled after everything loads
 		DispatchQueue.main.async {
 			self.enableActionsButton()
 			self.recomputeExtraInformation()
