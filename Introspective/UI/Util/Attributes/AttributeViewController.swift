@@ -45,6 +45,10 @@ final class AttributeViewController: UIViewController {
 	final override func viewDidLoad() {
 		super.viewDidLoad()
 
+		view.translatesAutoresizingMaskIntoConstraints = false
+
+		setUpAttributeValueButtonConstraints()
+
 		attributeNameLabel.text = attribute.name + ":"
 
 		if attribute.extendedDescription == nil {
@@ -193,6 +197,12 @@ final class AttributeViewController: UIViewController {
 			}
 		}
 
+		let size = attributeValueButton.systemLayoutSizeFitting(
+			UIView.layoutFittingCompressedSize,
+			withHorizontalFittingPriority: .defaultHigh,
+			verticalFittingPriority: .init(1))
+		attributeValueButton.frame.size = size
+
 		setAccessibility()
 	}
 
@@ -218,5 +228,15 @@ final class AttributeViewController: UIViewController {
 		attributeValueButton.isEnabled = false
 		attributeValueButton.isUserInteractionEnabled = false
 		attributeValueButton.isHidden = true
+	}
+
+	private final func setUpAttributeValueButtonConstraints() {
+		attributeValueButton.translatesAutoresizingMaskIntoConstraints = false
+		attributeValueButton.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor).isActive = true
+		let heightConstraint = attributeValueButton.heightAnchor.constraint(equalToConstant: CGFloat(30))
+		heightConstraint.priority = .required
+		heightConstraint.isActive = true
+		attributeValueButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+		attributeValueButton.topAnchor.constraint(equalTo: attributeNameLabel.bottomAnchor).isActive = true
 	}
 }

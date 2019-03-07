@@ -49,6 +49,7 @@ extension UIViewController {
 		return DependencyInjector.util.ui.info(info)
 	}
 
+	/// - Parameter storyboardName: If not provided, will attempt to pull the controller from same storyboard as this controller.
 	final func viewController<Type: UIViewController>(named controllerName: String, fromStoryboard storyboardName: String? = nil) -> Type {
 		if let storyboardName = storyboardName {
 			return DependencyInjector.util.ui.controller(named: controllerName, from: storyboardName, as: Type.self)

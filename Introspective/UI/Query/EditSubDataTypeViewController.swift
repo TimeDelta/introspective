@@ -40,6 +40,7 @@ final class EditSubSampleTypeViewController: UIViewController {
 		if index != nil {
 			dataTypePicker.selectRow(index!, inComponent: 0, animated: false)
 		}
+		setPickerHeightConstraint()
 
 		createAndInstallAttributedChooserViewController()
 
@@ -71,6 +72,13 @@ final class EditSubSampleTypeViewController: UIViewController {
 		updateAttributedChooserViewValues()
 		attributedChooserViewController.notificationToSendWhenAccepted = Me.doneEditing
 		attributedChooserSubView.addSubview(attributedChooserViewController.view)
+		attributedChooserViewController.didMove(toParent: self)
+		NSLayoutConstraint.activate([
+			attributedChooserViewController.view.topAnchor.constraint(equalTo: attributedChooserSubView.topAnchor),
+			attributedChooserViewController.view.bottomAnchor.constraint(equalTo: attributedChooserSubView.bottomAnchor),
+			attributedChooserViewController.view.leftAnchor.constraint(equalTo: attributedChooserSubView.leftAnchor),
+			attributedChooserViewController.view.rightAnchor.constraint(equalTo: attributedChooserSubView.rightAnchor),
+		])
 	}
 
 	private final func updateAttributedChooserViewValues() {
@@ -82,6 +90,14 @@ final class EditSubSampleTypeViewController: UIViewController {
 		if attributedChooserSubView.subviews.count > 0 {
 			attributedChooserViewController.reloadInputViews()
 		}
+	}
+
+	// MARK: Constraint Helper Functions
+
+	private final func setPickerHeightConstraint() {
+		let contentViewWidthConstraint = dataTypePicker.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: CGFloat(0.27))
+		contentViewWidthConstraint.priority = .required
+		contentViewWidthConstraint.isActive = true
 	}
 }
 

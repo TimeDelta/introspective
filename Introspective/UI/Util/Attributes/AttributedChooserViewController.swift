@@ -18,7 +18,8 @@ final class AttributedChooserViewController: UIViewController {
 			valuePicker.accessibilityIdentifier = pickerAccessibilityIdentifier
 		}
 	}
-	@IBOutlet weak final var attributeScrollView: UIScrollView!
+	@IBOutlet weak final var scrollView: UIScrollView!
+	@IBOutlet weak final var scrollContentView: UIView!
 
 	// MARK: - Instance Variables
 
@@ -50,22 +51,13 @@ final class AttributedChooserViewController: UIViewController {
 	final override func viewDidLoad() {
 		super.viewDidLoad()
 
+		view.translatesAutoresizingMaskIntoConstraints = false
+		setScrollContentViewWidthConstraint()
+
 		valuePicker.delegate = self
 		valuePicker.dataSource = self
 
-		if currentValue == nil {
-			currentValue = possibleValues[0]
-			valuePicker.selectRow(0, inComponent: 0, animated: false)
-		} else {
-			var index = 0
-			for value in possibleValues {
-				if value.attributedName == currentValue.attributedName {
-					valuePicker.selectRow(index, inComponent: 0, animated: false)
-					break
-				}
-				index += 1
-			}
-		}
+		setPickerToCurrentValue()
 
 		attributeViewControllers = [AttributeViewController]()
 		populateScrollView()
@@ -82,10 +74,19 @@ final class AttributedChooserViewController: UIViewController {
 		populateScrollView()
 	}
 
+	public final override func didMove(toParent newParent: UIViewController?) {
+		let viewForConstraint: UIView! = newParent?.view ?? view
+		let contentViewWidthConstraint = valuePicker.heightAnchor.constraint(equalTo: viewForConstraint.heightAnchor, multiplier: CGFloat(0.27))
+		contentViewWidthConstraint.priority = .required
+		contentViewWidthConstraint.isActive = true
+	}
+
 	// MARK: - Received Notifications
 
 	@objc private final func valueChanged(notification: Notification) {
-		if let controllerIndex = attributeViewControllers.firstIndex(where: { $0.notificationToSendOnValueChange == notification.name }) {
+		if let controllerIndex = attributeViewControllers.firstIndex(where: {
+			$0.notificationToSendOnValueChange == notification.name
+		}) {
 			do {
 				let attribute = attributeViewControllers[controllerIndex].attribute!
 				try currentValue.set(attribute: attribute, to: value(for: .attributeValue, from: notification))
@@ -124,6 +125,22 @@ final class AttributedChooserViewController: UIViewController {
 
 	// MARK: - Helper Functions
 
+	private final func setPickerToCurrentValue() {
+		if currentValue == nil {
+			currentValue = possibleValues[0]
+			valuePicker.selectRow(0, inComponent: 0, animated: false)
+		} else {
+			var index = 0
+			for value in possibleValues {
+				if value.attributedName == currentValue.attributedName {
+					valuePicker.selectRow(index, inComponent: 0, animated: false)
+					break
+				}
+				index += 1
+			}
+		}
+	}
+
 	private final func sendValueChangeNotification() {
 		if let valueChangedNotification = notificationToSendOnValueChange {
 			DispatchQueue.main.async {
@@ -139,60 +156,94 @@ final class AttributedChooserViewController: UIViewController {
 
 	private final func resetScrollView() {
 		attributeViewControllers = [AttributeViewController]()
-		for view in attributeScrollView.subviews {
-			attributeScrollView.willRemoveSubview(view)
+		for view in scrollContentView.subviews {
+			scrollContentView.willRemoveSubview(view)
 			view.removeFromSuperview()
 		}
 	}
 
 	private final func populateScrollView() {
-		populateAttributes()
-		createAndAddAcceptButton()
-	}
-
-	private final func populateAttributes() {
-		var yPos = CGFloat(0)
-		let height = CGFloat(70)
+		var isFirstView = true
+		var previousView: UIView!
 		for attribute in currentValue.attributes {
-			let controller: AttributeViewController = viewController(named: "attributeView", fromStoryboard: "AttributeList")
-			controller.attribute = attribute
-			do {
-				controller.attributeValue = try currentValue.value(of: attribute)
-			} catch {
-				log.error("Failed to retrieve %@ of %@: %@", attribute.name, currentValue.attributedName, errorInfo(error))
-				// let the user continue
-			}
-			let valueChangedNotification = Notification.Name("attributeValueChanged_" + attribute.name)
-			observe(selector: #selector(valueChanged), name: valueChangedNotification)
-			controller.notificationToSendOnValueChange = valueChangedNotification
-			let x = attributeScrollView.frame.minX
-			controller.view.frame = CGRect(x: x, y: yPos, width: subViewWidth(), height: height)
+			let controller = prepareControllerForAttribute(attribute)
 			attributeViewControllers.append(controller)
-			attributeScrollView.addSubview(controller.view)
+			scrollContentView.addSubview(controller.view)
 			controller.didMove(toParent: self)
-			yPos += height + verticalSpacing
+
+			NSLayoutConstraint.activate([
+				heightConstraintFor(controller.view, height: CGFloat(70)),
+				controller.view.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor),
+				controller.view.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor),
+				getVerticalConstraintForAttributeControllerView(
+					controller.view,
+					lastView: previousView,
+					isFirstView: &isFirstView),
+			])
+			previousView = controller.view
+		}
+		createAndAddAcceptButton(lastView: previousView)
+	}
+
+	private final func prepareControllerForAttribute(_ attribute: Attribute) -> AttributeViewController {
+		let controller: AttributeViewController = viewController(named: "attributeView", fromStoryboard: "AttributeList")
+		controller.attribute = attribute
+		do {
+			controller.attributeValue = try currentValue.value(of: attribute)
+		} catch {
+			log.error("Failed to retrieve %@ of %@: %@", attribute.name, currentValue.attributedName, errorInfo(error))
+			// let the user continue
+		}
+		let valueChangedNotification = Notification.Name("attributeValueChanged_" + attribute.name)
+		observe(selector: #selector(valueChanged), name: valueChangedNotification)
+		controller.notificationToSendOnValueChange = valueChangedNotification
+		return controller
+	}
+
+	private final func createAndAddAcceptButton(lastView: UIView!) {
+		let acceptButton = UIButton(type: .custom)
+		acceptButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
+		acceptButton.backgroundColor = .black
+		acceptButton.setTitleColor(.white, for: .normal)
+		acceptButton.setTitle("Save", for: .normal)
+		acceptButton.translatesAutoresizingMaskIntoConstraints = false
+		scrollContentView.addSubview(acceptButton)
+		NSLayoutConstraint.activate([
+			heightConstraintFor(acceptButton, height: CGFloat(30)),
+			acceptButton.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor),
+			acceptButton.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor),
+			acceptButton.topAnchor.constraint(equalTo: lastView.bottomAnchor, constant: verticalSpacing),
+			// this constraint is required for the scroll view to scroll
+			scrollContentView.bottomAnchor.constraint(equalTo: acceptButton.bottomAnchor),
+		])
+	}
+
+	// MARK: Constraint Helper Functions
+
+	private final func getVerticalConstraintForAttributeControllerView(_ view: UIView, lastView: UIView!, isFirstView: inout Bool)
+	-> NSLayoutConstraint {
+		if isFirstView {
+			isFirstView = false
+			return view.topAnchor.constraint(
+				equalTo: scrollContentView.topAnchor,
+				constant: verticalSpacing)
+		} else {
+			return view.topAnchor.constraint(
+				equalTo: lastView.bottomAnchor,
+				constant: verticalSpacing)
 		}
 	}
 
-	private final func createAndAddAcceptButton() {
-		let controller: AttributeListAcceptButtonViewController = viewController(named: "acceptButton", fromStoryboard: "AttributeList")
-		let x = attributeScrollView.frame.minX
-		controller.view.frame = CGRect(x: x, y: getNextYPosForScrollView(), width: subViewWidth(), height: 30)
-		controller.acceptButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
-		attributeScrollView.addSubview(controller.view)
-		controller.didMove(toParent: self)
+	private final func heightConstraintFor(_ view: UIView, height: CGFloat) -> NSLayoutConstraint {
+		let heightConstraint = view.heightAnchor.constraint(equalToConstant: height)
+		heightConstraint.priority = .required
+		return heightConstraint
 	}
 
-	private final func getNextYPosForScrollView() -> CGFloat {
-		var yPos = CGFloat(0)
-		for view in attributeScrollView.subviews {
-			yPos += view.frame.height + verticalSpacing
-		}
-		return yPos
-	}
-
-	private func subViewWidth() -> CGFloat {
-		return attributeScrollView.frame.maxX - attributeScrollView.frame.minX - attributeScrollView.adjustedContentInset.right - attributeScrollView.adjustedContentInset.left
+	private final func setScrollContentViewWidthConstraint() {
+		let contentViewWidthConstraint = scrollContentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+		contentViewWidthConstraint.priority = .required
+		contentViewWidthConstraint.isActive = true
 	}
 }
 
