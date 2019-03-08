@@ -60,6 +60,11 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 		extendedLayoutIncludesOpaqueBars = true
 
 		name = activityDefinition?.name ?? initialName ?? ""
+		if let activityDefinition = activityDefinition {
+			navigationItem.title = "Edit \(activityDefinition.name)"
+		} else {
+			navigationItem.title = "Create New Activity"
+		}
 
 		saveButton = UIBarButtonItem(
 			title: "Save",
