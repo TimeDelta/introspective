@@ -57,6 +57,8 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 
+		extendedLayoutIncludesOpaqueBars = true
+
 		name = activityDefinition?.name ?? initialName ?? ""
 
 		saveButton = UIBarButtonItem(

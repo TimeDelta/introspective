@@ -62,6 +62,8 @@ public final class EditMedicationViewController: UIViewController {
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
+		extendedLayoutIncludesOpaqueBars = true
+
 		frequency = medication?.frequency
 		nameTextField.text = medication?.name ?? initialName
 		startedOnDate = medication?.startedOn

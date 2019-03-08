@@ -65,6 +65,8 @@ public final class EditActivityTableViewController: UITableViewController {
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
+		extendedLayoutIncludesOpaqueBars = true
+
 		saveButton = UIBarButtonItem(
 			title: "Save",
 			style: .done,
