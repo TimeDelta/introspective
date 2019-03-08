@@ -63,6 +63,11 @@ public final class EditMedicationViewController: UIViewController {
 		super.viewDidLoad()
 
 		extendedLayoutIncludesOpaqueBars = true
+		if let medication = medication {
+			navigationItem.title = "Edit \(medication.name)"
+		} else {
+			navigationItem.title = "Create New Medication"
+		}
 
 		frequency = medication?.frequency
 		nameTextField.text = medication?.name ?? initialName
