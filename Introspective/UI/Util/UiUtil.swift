@@ -13,6 +13,7 @@ import Presentr
 public protocol UiUtil {
 
 	var defaultPresenter: Presentr { get }
+	var hasTopNotch: Bool { get }
 
 	func customPresenter(width: ModalSize, height: ModalSize, center: ModalCenterPosition) -> Presentr
 	func setView(_ view: UIView, enabled: Bool?, hidden: Bool?)
@@ -64,6 +65,13 @@ public final class UiUtilImpl: UiUtil {
 		customPresenter.roundCorners = true
 		return customPresenter
 	}()
+
+	public final var hasTopNotch: Bool {
+		if #available(iOS 11.0,  *) {
+			return UIApplication.shared.delegate?.window??.safeAreaInsets.top ?? 0 > 20
+		}
+		return false
+	}
 
 	public func customPresenter(width: ModalSize, height: ModalSize, center: ModalCenterPosition) -> Presentr {
 		let customType = PresentationType.custom(width: width, height: height, center: center)

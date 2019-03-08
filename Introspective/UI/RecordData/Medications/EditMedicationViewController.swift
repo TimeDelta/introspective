@@ -43,6 +43,7 @@ public final class EditMedicationViewController: UIViewController {
 	@IBOutlet weak final var notesTextView: UITextView!
 
 	@IBOutlet weak final var scrollView: UIScrollView!
+	@IBOutlet weak final var scrollContentView: UIView!
 
 	// MARK: - Instance Variables
 
@@ -63,6 +64,7 @@ public final class EditMedicationViewController: UIViewController {
 		super.viewDidLoad()
 
 		extendedLayoutIncludesOpaqueBars = true
+
 		if let medication = medication {
 			navigationItem.title = "Edit \(medication.name)"
 		} else {
@@ -94,7 +96,7 @@ public final class EditMedicationViewController: UIViewController {
 		}
 
 		notesTextView.delegate = self
-		scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height * 2)
+		scrollView.contentSize = scrollContentView.frame.size
 
 		observe(selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification)
 		observe(selector: #selector(setFrequency), name: Me.frequencyChanged)
@@ -127,7 +129,7 @@ public final class EditMedicationViewController: UIViewController {
 	}
 
 	@objc private final func keyboardWillHide(notification: Notification) {
-		scrollView.scrollTo(direction: .top, animated: false)
+		scrollView.contentSize = scrollContentView.frame.size
 	}
 
 	// MARK: - Button Actions
@@ -282,6 +284,7 @@ public final class EditMedicationViewController: UIViewController {
 extension EditMedicationViewController: UITextViewDelegate {
 
 	public func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+		scrollView.contentSize = CGSize(width: view.frame.width, height: view.frame.height * 2)
 		scrollView.scrollToView(view: notesLabel, animated: false)
 		return true
 	}

@@ -16,7 +16,7 @@ extension UIScrollView {
 		case bottom
 		case left
 
-		func contentOffsetWith(_ scrollView: UIScrollView) -> CGPoint {
+		func contentOffsetWith(_ scrollView: UIScrollView, startOfVisibleAreaY: CGFloat? = nil) -> CGPoint {
 			var contentOffset = CGPoint.zero
 			switch self {
 				case .top:
@@ -28,21 +28,36 @@ extension UIScrollView {
 				case .left:
 					contentOffset = CGPoint(x: -scrollView.contentInset.left, y: 0)
 			}
+			if let startOfVisibleAreaY = startOfVisibleAreaY {
+				return CGPoint(x: contentOffset.x, y: contentOffset.y - startOfVisibleAreaY)
+			}
 			return contentOffset
 		}
 	}
 
-	func scrollTo(direction: ScrollDirection, animated: Bool = true) {
-		self.setContentOffset(direction.contentOffsetWith(self), animated: animated)
+	func scrollTo(direction: ScrollDirection, startOfVisibleAreaY: CGFloat? = nil, animated: Bool = true) {
+		self.setContentOffset(
+			direction.contentOffsetWith(self, startOfVisibleAreaY: startOfVisibleAreaY),
+			animated: animated)
 	}
 
 	/// Scroll to a specific view so that it's top is at the top of the scrollview
-	func scrollToView(view:UIView, animated: Bool) {
+	func scrollToView(view: UIView, startOfVisibleAreaY: CGFloat? = nil, animated: Bool) {
 		if let origin = view.superview {
 			// Get the Y position of your child view
 			let childStartPoint = origin.convert(view.frame.origin, to: self)
+			var y = childStartPoint.y
+			if let startOfVisibleAreaY = startOfVisibleAreaY {
+				y -= startOfVisibleAreaY
+			}
 			// Scroll to a rectangle starting at the Y of your subview, with a height of the scrollview
-			self.scrollRectToVisible(CGRect(x:0, y:childStartPoint.y,width: 1,height: self.frame.height), animated: animated)
+			self.scrollRectToVisible(
+				CGRect(
+					x: 0,
+					y: y,
+					width: 1,
+					height: self.frame.height),
+				animated: animated)
 		}
 	}
 }

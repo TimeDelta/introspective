@@ -649,147 +649,168 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="nNY-pw-7FE">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="nNY-pw-7FE">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="afc-CQ-sBv">
-                                        <rect key="frame" x="78" y="20" width="274" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <accessibility key="accessibilityConfiguration" hint="The value in this field will be used as the name of this medication. This is a required field." identifier="medication name" label="medication name"/>
-                                        <nil key="textColor"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                        <connections>
-                                            <action selector="nameOrDosageValueChanged:" destination="OjQ-bK-Yuz" eventType="editingChanged" id="6fT-Sn-33z"/>
-                                        </connections>
-                                    </textField>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eEb-rM-2K1">
-                                        <rect key="frame" x="20" y="24" width="50" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <accessibility key="accessibilityConfiguration">
-                                            <bool key="isElement" value="NO"/>
-                                        </accessibility>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="1" green="0.058155415100000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Frequency:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dfi-kp-TQh">
-                                        <rect key="frame" x="50" y="76" width="86" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eFa-Yw-kgA">
-                                        <rect key="frame" x="143" y="110" width="177" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <accessibility key="accessibilityConfiguration" hint="Brings up a dialog to set the date that you started taking this medication. This is an optional field." identifier="set started on button" label="set started on button"/>
-                                        <state key="normal" title="Not set"/>
-                                        <connections>
-                                            <action selector="startedOnButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="sh8-hn-ALC"/>
-                                        </connections>
-                                    </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Started on:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IiB-nW-pwP">
-                                        <rect key="frame" x="50" y="114" width="86" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Dosage:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ePG-q0-M09">
-                                        <rect key="frame" x="50" y="152" width="64" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pVr-Hp-bpn">
-                                        <rect key="frame" x="20" y="152" width="22" height="22"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <accessibility key="accessibilityConfiguration" hint="Shows a description of the dosage attribute." identifier="dosage information button" label="dosage information button"/>
-                                        <connections>
-                                            <action selector="dosageDescriptionButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="xxH-l7-FRU"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Jj-o7-Xvn">
-                                        <rect key="frame" x="20" y="114" width="22" height="22"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <accessibility key="accessibilityConfiguration" hint="Shows a description of the started on attribute." identifier="started on information button" label="started on information button"/>
-                                        <connections>
-                                            <action selector="startedOnDescriptionButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="a6X-AZ-GcG"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="56Q-J6-nvO">
-                                        <rect key="frame" x="20" y="76" width="22" height="22"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <accessibility key="accessibilityConfiguration" hint="Shows a description of the frequency attribute." identifier="frequency information button" label="frequency information button"/>
-                                        <connections>
-                                            <action selector="frequencyDescriptionButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="IQC-oM-ZkW"/>
-                                        </connections>
-                                    </button>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" keyboardDismissMode="interactive" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="qvW-vV-GoN">
-                                        <rect key="frame" x="20" y="215" width="332" height="196"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        <color key="backgroundColor" red="0.92814949394783297" green="0.91913833381241705" blue="0.93716065408324878" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        <accessibility key="accessibilityConfiguration" hint="Records any notes about this medication." identifier="notes" label="notes"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                    </textView>
-                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="ig9-dJ-XOD">
-                                        <rect key="frame" x="122" y="148" width="230" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <accessibility key="accessibilityConfiguration" identifier="medication dosage" label="medication dosage">
-                                            <string key="hint">The value in this text field will be used as the default dosage when marking this medication as taken. This is an optional field.</string>
-                                        </accessibility>
-                                        <nil key="textColor"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                        <connections>
-                                            <action selector="nameOrDosageValueChanged:" destination="OjQ-bK-Yuz" eventType="editingChanged" id="jGi-by-qJ8"/>
-                                        </connections>
-                                    </textField>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Notes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AUu-bs-NEw">
-                                        <rect key="frame" x="163" y="186" width="46" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <accessibility key="accessibilityConfiguration">
-                                            <bool key="isElement" value="NO"/>
-                                        </accessibility>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kNQ-ay-6w9">
-                                        <rect key="frame" x="143" y="72" width="177" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <accessibility key="accessibilityConfiguration" hint="Brings up a dialog to set how frequently this medication is supposed to be taken." identifier="set frequency button" label="set frequency button"/>
-                                        <state key="normal" title="As needed"/>
-                                        <connections>
-                                            <action selector="frequencyButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="2Hh-4T-SKT"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JzX-Nh-mVB">
-                                        <rect key="frame" x="328" y="72" width="27" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                        <accessibility key="accessibilityConfiguration" hint="This will remove the frequency  from this medication." identifier="clear frequency button" label="clear frequency button"/>
-                                        <state key="normal" title="x"/>
-                                        <connections>
-                                            <action selector="resetFrequencyButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="B5c-AZ-9CL"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nmk-3N-DdM">
-                                        <rect key="frame" x="328" y="110" width="27" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                        <accessibility key="accessibilityConfiguration" hint="This will remove the started on date from this medication." identifier="clear started on date button" label="clear started on date button"/>
-                                        <state key="normal" title="x"/>
-                                        <connections>
-                                            <action selector="resetStartedOnButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="yW3-l0-Dgi"/>
-                                        </connections>
-                                    </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xjH-8t-HK9">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="431"/>
+                                        <subviews>
+                                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="afc-CQ-sBv">
+                                                <rect key="frame" x="78" y="20" width="274" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                <accessibility key="accessibilityConfiguration" hint="The value in this field will be used as the name of this medication. This is a required field." identifier="medication name" label="medication name"/>
+                                                <nil key="textColor"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                                <connections>
+                                                    <action selector="nameOrDosageValueChanged:" destination="OjQ-bK-Yuz" eventType="editingChanged" id="6fT-Sn-33z"/>
+                                                </connections>
+                                            </textField>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eEb-rM-2K1">
+                                                <rect key="frame" x="20" y="24" width="50" height="21"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <bool key="isElement" value="NO"/>
+                                                </accessibility>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="1" green="0.058155415100000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Frequency:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dfi-kp-TQh">
+                                                <rect key="frame" x="50" y="76" width="86" height="21"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eFa-Yw-kgA">
+                                                <rect key="frame" x="143" y="110" width="177" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                <accessibility key="accessibilityConfiguration" hint="Brings up a dialog to set the date that you started taking this medication. This is an optional field." identifier="set started on button" label="set started on button"/>
+                                                <state key="normal" title="Not set"/>
+                                                <connections>
+                                                    <action selector="startedOnButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="sh8-hn-ALC"/>
+                                                </connections>
+                                            </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Started on:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IiB-nW-pwP">
+                                                <rect key="frame" x="50" y="114" width="86" height="21"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Dosage:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ePG-q0-M09">
+                                                <rect key="frame" x="50" y="152" width="64" height="21"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pVr-Hp-bpn">
+                                                <rect key="frame" x="20" y="152" width="22" height="22"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <accessibility key="accessibilityConfiguration" hint="Shows a description of the dosage attribute." identifier="dosage information button" label="dosage information button"/>
+                                                <connections>
+                                                    <action selector="dosageDescriptionButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="xxH-l7-FRU"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Jj-o7-Xvn">
+                                                <rect key="frame" x="20" y="114" width="22" height="22"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <accessibility key="accessibilityConfiguration" hint="Shows a description of the started on attribute." identifier="started on information button" label="started on information button"/>
+                                                <connections>
+                                                    <action selector="startedOnDescriptionButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="a6X-AZ-GcG"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="56Q-J6-nvO">
+                                                <rect key="frame" x="20" y="76" width="22" height="22"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <accessibility key="accessibilityConfiguration" hint="Shows a description of the frequency attribute." identifier="frequency information button" label="frequency information button"/>
+                                                <connections>
+                                                    <action selector="frequencyDescriptionButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="IQC-oM-ZkW"/>
+                                                </connections>
+                                            </button>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" keyboardDismissMode="interactive" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="qvW-vV-GoN">
+                                                <rect key="frame" x="20" y="215" width="332" height="196"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                <color key="backgroundColor" red="0.92814949394783297" green="0.91913833381241705" blue="0.93716065408324878" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <accessibility key="accessibilityConfiguration" hint="Records any notes about this medication." identifier="notes" label="notes"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            </textView>
+                                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="ig9-dJ-XOD">
+                                                <rect key="frame" x="122" y="148" width="230" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                <accessibility key="accessibilityConfiguration" identifier="medication dosage" label="medication dosage">
+                                                    <string key="hint">The value in this text field will be used as the default dosage when marking this medication as taken. This is an optional field.</string>
+                                                </accessibility>
+                                                <nil key="textColor"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                                <connections>
+                                                    <action selector="nameOrDosageValueChanged:" destination="OjQ-bK-Yuz" eventType="editingChanged" id="jGi-by-qJ8"/>
+                                                </connections>
+                                            </textField>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Notes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AUu-bs-NEw">
+                                                <rect key="frame" x="163" y="186" width="46" height="21"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <bool key="isElement" value="NO"/>
+                                                </accessibility>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kNQ-ay-6w9">
+                                                <rect key="frame" x="143" y="72" width="177" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                <accessibility key="accessibilityConfiguration" hint="Brings up a dialog to set how frequently this medication is supposed to be taken." identifier="set frequency button" label="set frequency button"/>
+                                                <state key="normal" title="As needed"/>
+                                                <connections>
+                                                    <action selector="frequencyButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="2Hh-4T-SKT"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JzX-Nh-mVB">
+                                                <rect key="frame" x="328" y="72" width="27" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                                <accessibility key="accessibilityConfiguration" hint="This will remove the frequency  from this medication." identifier="clear frequency button" label="clear frequency button"/>
+                                                <state key="normal" title="x"/>
+                                                <connections>
+                                                    <action selector="resetFrequencyButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="B5c-AZ-9CL"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nmk-3N-DdM">
+                                                <rect key="frame" x="328" y="110" width="27" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                                <accessibility key="accessibilityConfiguration" hint="This will remove the started on date from this medication." identifier="clear started on date button" label="clear started on date button"/>
+                                                <state key="normal" title="x"/>
+                                                <connections>
+                                                    <action selector="resetStartedOnButtonPressed:" destination="OjQ-bK-Yuz" eventType="touchUpInside" id="yW3-l0-Dgi"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="431" id="y50-qF-7eH"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstItem="xjH-8t-HK9" firstAttribute="leading" secondItem="nNY-pw-7FE" secondAttribute="leading" id="LLv-mu-08j"/>
+                                    <constraint firstAttribute="trailing" secondItem="xjH-8t-HK9" secondAttribute="trailing" id="NYD-Fv-DPR"/>
+                                    <constraint firstAttribute="bottom" secondItem="xjH-8t-HK9" secondAttribute="bottom" constant="123" placeholder="YES" id="RGv-mp-8ZM"/>
+                                    <constraint firstItem="xjH-8t-HK9" firstAttribute="top" secondItem="nNY-pw-7FE" secondAttribute="top" id="dpP-MB-xbT"/>
+                                    <constraint firstItem="xjH-8t-HK9" firstAttribute="centerX" secondItem="nNY-pw-7FE" secondAttribute="centerX" id="xey-q3-GOh"/>
+                                </constraints>
                             </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="nNY-pw-7FE" firstAttribute="leading" secondItem="ipq-WG-8fJ" secondAttribute="leading" id="DSX-ME-iRo"/>
+                            <constraint firstItem="nNY-pw-7FE" firstAttribute="top" secondItem="xPl-5R-iJJ" secondAttribute="top" id="Pgm-iF-onY"/>
+                            <constraint firstAttribute="trailing" secondItem="nNY-pw-7FE" secondAttribute="trailing" id="ggw-JD-x4z"/>
+                            <constraint firstItem="nNY-pw-7FE" firstAttribute="bottom" secondItem="xPl-5R-iJJ" secondAttribute="bottom" id="tnc-JW-AR4"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="xPl-5R-iJJ"/>
                     </view>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
@@ -804,6 +825,7 @@
                         <outlet property="notesTextView" destination="qvW-vV-GoN" id="OpO-Ph-ehq"/>
                         <outlet property="resetFrequencyButton" destination="JzX-Nh-mVB" id="aje-SE-rv0"/>
                         <outlet property="resetStartedOnButton" destination="Nmk-3N-DdM" id="jCm-vk-2er"/>
+                        <outlet property="scrollContentView" destination="xjH-8t-HK9" id="D81-xe-QIt"/>
                         <outlet property="scrollView" destination="nNY-pw-7FE" id="hA0-F5-DnR"/>
                         <outlet property="startedOnButton" destination="eFa-Yw-kgA" id="TdF-6b-DEd"/>
                     </connections>
@@ -842,7 +864,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <toolbar key="tableHeaderView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" misplaced="YES" id="PVx-Hz-nHg">
-                            <rect key="frame" x="0.0" y="-49" width="375" height="44"/>
+                            <rect key="frame" x="0.0" y="-113" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             <items>
                                 <barButtonItem style="plain" systemItem="flexibleSpace" id="bhO-xk-zoo"/>
