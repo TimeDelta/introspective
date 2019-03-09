@@ -35,12 +35,9 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 		attributePicker.delegate = self
 		attributePicker.dataSource = self
 
-		if attributeRestriction != nil {
-			let attribute = attributeRestriction!.restrictedAttribute
-			if let index = sampleType.attributes.firstIndex(where: { $0.equalTo(attribute) }) {
-				attributePicker.selectRow(index, inComponent: 0, animated: false)
-			}
-		}
+		selectInitialAttributeRestriction()
+		setPickerHeightConstraint()
+
 		createAndInstallAttributedChooserViewController()
 
 		observe(selector: #selector(doneEditing), name: Me.doneEditing)
@@ -78,7 +75,15 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 		attributedChooserViewController.notificationToSendOnValueChange = Me.valueChanged
 		attributedChooserViewController.currentValue = attributeRestriction
 		attributedChooserViewController.pickerAccessibilityIdentifier = "attribute restriction"
+
 		attributedChooserSubView.addSubview(attributedChooserViewController.view)
+		attributedChooserViewController.didMove(toParent: self)
+		NSLayoutConstraint.activate([
+			attributedChooserViewController.view.topAnchor.constraint(equalTo: attributedChooserSubView.topAnchor),
+			attributedChooserViewController.view.bottomAnchor.constraint(equalTo: attributedChooserSubView.bottomAnchor),
+			attributedChooserViewController.view.leftAnchor.constraint(equalTo: attributedChooserSubView.leftAnchor),
+			attributedChooserViewController.view.rightAnchor.constraint(equalTo: attributedChooserSubView.rightAnchor),
+		])
 	}
 
 	private final func updateAttributedChooserViewValues() {
@@ -105,7 +110,29 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 	}
 
 	private final func attributeRestrictionMatchesAttribute() -> Bool {
-		return attributeRestriction != nil && DependencyInjector.restriction.typesFor(currentlySelectedAttribute()).contains(where: { $0 == type(of: attributeRestriction!) })
+		return attributeRestriction != nil &&
+			DependencyInjector.restriction.typesFor(currentlySelectedAttribute()).contains(where: {
+				$0 == type(of: attributeRestriction!)
+			})
+	}
+
+	private final func selectInitialAttributeRestriction() {
+		if attributeRestriction != nil {
+			let attribute = attributeRestriction!.restrictedAttribute
+			if let index = sampleType.attributes.firstIndex(where: { $0.equalTo(attribute) }) {
+				attributePicker.selectRow(index, inComponent: 0, animated: false)
+			}
+		}
+	}
+
+	// MARK: Constraint Helper Functions
+
+	private final func setPickerHeightConstraint() {
+		let heightConstraint = attributePicker.heightAnchor.constraint(
+			equalTo: view.heightAnchor,
+			multiplier: CGFloat(0.27))
+		heightConstraint.priority = .required
+		heightConstraint.isActive = true
 	}
 }
 

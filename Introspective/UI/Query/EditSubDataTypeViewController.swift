@@ -95,9 +95,11 @@ final class EditSubSampleTypeViewController: UIViewController {
 	// MARK: Constraint Helper Functions
 
 	private final func setPickerHeightConstraint() {
-		let contentViewWidthConstraint = dataTypePicker.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: CGFloat(0.27))
-		contentViewWidthConstraint.priority = .required
-		contentViewWidthConstraint.isActive = true
+		let heightConstraint = dataTypePicker.heightAnchor.constraint(
+			equalTo: view.heightAnchor,
+			multiplier: CGFloat(0.27))
+		heightConstraint.priority = .required
+		heightConstraint.isActive = true
 	}
 }
 

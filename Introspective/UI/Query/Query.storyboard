@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" misplaced="YES" id="a8Y-9T-RMg">
-                            <rect key="frame" x="0.0" y="160" width="375" height="44"/>
+                            <rect key="frame" x="0.0" y="47" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             <items>
                                 <barButtonItem systemItem="add" id="z9J-Hy-7FO">
@@ -164,10 +164,8 @@
                         <constraints>
                             <constraint firstItem="mbg-CO-KsO" firstAttribute="leading" secondItem="3mF-KX-9KV" secondAttribute="leading" id="69D-Gg-UDf"/>
                             <constraint firstItem="3yu-Wc-bpb" firstAttribute="leading" secondItem="3mF-KX-9KV" secondAttribute="leading" id="7Us-GK-Py2"/>
-                            <constraint firstItem="3yu-Wc-bpb" firstAttribute="leading" secondItem="GPo-Ep-6jC" secondAttribute="leading" id="Al3-EO-apG"/>
                             <constraint firstItem="mbg-CO-KsO" firstAttribute="trailing" secondItem="3mF-KX-9KV" secondAttribute="trailing" id="CqS-mD-kvw"/>
                             <constraint firstItem="3yu-Wc-bpb" firstAttribute="trailing" secondItem="3mF-KX-9KV" secondAttribute="trailing" id="U44-g1-qpO"/>
-                            <constraint firstAttribute="trailing" secondItem="3yu-Wc-bpb" secondAttribute="trailing" id="VGR-JA-m5o"/>
                             <constraint firstItem="mbg-CO-KsO" firstAttribute="bottom" secondItem="3mF-KX-9KV" secondAttribute="bottom" id="nXp-ob-YlH"/>
                             <constraint firstItem="mbg-CO-KsO" firstAttribute="top" secondItem="3yu-Wc-bpb" secondAttribute="bottom" constant="8" symbolic="YES" id="qsl-SD-001"/>
                             <constraint firstItem="3yu-Wc-bpb" firstAttribute="top" secondItem="3mF-KX-9KV" secondAttribute="top" id="tdl-0H-g1u"/>
@@ -193,20 +191,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ik2-6N-gHU">
-                                <rect key="frame" x="0.0" y="148" width="375" height="406"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ik2-6N-gHU">
+                                <rect key="frame" x="0.0" y="224" width="375" height="330"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ND4-V8-b6U">
-                                <rect key="frame" x="0.0" y="20" width="375" height="120"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ND4-V8-b6U">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="216"/>
                                 <accessibility key="accessibilityConfiguration" identifier="restricted attribute" label="restricted attribute">
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
                             </pickerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="ik2-6N-gHU" firstAttribute="top" secondItem="ND4-V8-b6U" secondAttribute="bottom" constant="8" symbolic="YES" id="2Hy-kn-Krq"/>
+                            <constraint firstItem="ND4-V8-b6U" firstAttribute="leading" secondItem="Ids-Km-t5A" secondAttribute="leading" id="Rge-I2-qPi"/>
+                            <constraint firstItem="ND4-V8-b6U" firstAttribute="trailing" secondItem="Ids-Km-t5A" secondAttribute="trailing" id="U98-jk-31f"/>
+                            <constraint firstItem="ik2-6N-gHU" firstAttribute="bottom" secondItem="Ids-Km-t5A" secondAttribute="bottom" id="hTS-k8-SGb"/>
+                            <constraint firstItem="ik2-6N-gHU" firstAttribute="trailing" secondItem="Ids-Km-t5A" secondAttribute="trailing" id="mfQ-Qy-3Xv"/>
+                            <constraint firstItem="ik2-6N-gHU" firstAttribute="leading" secondItem="Ids-Km-t5A" secondAttribute="leading" id="sQk-An-2cH"/>
+                            <constraint firstItem="ND4-V8-b6U" firstAttribute="top" secondItem="Ids-Km-t5A" secondAttribute="top" id="wni-ko-YEj"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="Ids-Km-t5A"/>
                     </view>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
