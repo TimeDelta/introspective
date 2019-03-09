@@ -51,6 +51,14 @@ class UITest: XCTestCase {
 		}
 	}
 
+	// MARK: - Go To Screen Helpers
+
+	final func goToQueryScreen() {
+		app.tabBars.buttons["Explore"].tap()
+		app.collectionViews.staticTexts["Query"].tap()
+		skipInstructionsIfPresent()
+	}
+
 	// MARK: - Picker Helpers
 
 	final func setPicker(_ pickerQueryText: String? = nil, to value: String, changeCase: Bool = true) {

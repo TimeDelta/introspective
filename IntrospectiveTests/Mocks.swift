@@ -11365,6 +11365,13 @@ open class UiUtilMock: UiUtil, Mock {
 	}
 	private var __p_defaultPresenter: (Presentr)?
 
+    public var hasTopNotch: Bool {
+		get {	invocations.append(.p_hasTopNotch_get); return __p_hasTopNotch ?? givenGetterValue(.p_hasTopNotch_get, "UiUtilMock - stub value for hasTopNotch was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_hasTopNotch = newValue }
+	}
+	private var __p_hasTopNotch: (Bool)?
+
 
 
 
@@ -11474,6 +11481,7 @@ open class UiUtilMock: UiUtil, Mock {
         case m_info__info(Parameter<[UserInfoKey: Any]>)
         case m_controller__named_controllerNamefrom_storyboardNameas_as(Parameter<String>, Parameter<String>, Parameter<GenericAttribute>)
         case p_defaultPresenter_get
+        case p_hasTopNotch_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -11521,6 +11529,7 @@ open class UiUtilMock: UiUtil, Mock {
                 guard Parameter.compare(lhs: lhsAs, rhs: rhsAs, with: matcher) else { return false } 
                 return true 
             case (.p_defaultPresenter_get,.p_defaultPresenter_get): return true
+            case (.p_hasTopNotch_get,.p_hasTopNotch_get): return true
             default: return false
             }
         }
@@ -11537,6 +11546,7 @@ open class UiUtilMock: UiUtil, Mock {
             case let .m_info__info(p0): return p0.intValue
             case let .m_controller__named_controllerNamefrom_storyboardNameas_as(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case .p_defaultPresenter_get: return 0
+            case .p_hasTopNotch_get: return 0
             }
         }
     }
@@ -11551,6 +11561,9 @@ open class UiUtilMock: UiUtil, Mock {
 
         public static func defaultPresenter(getter defaultValue: Presentr...) -> PropertyStub {
             return Given(method: .p_defaultPresenter_get, products: defaultValue.map({ Product.return($0) }))
+        }
+        public static func hasTopNotch(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_hasTopNotch_get, products: defaultValue.map({ Product.return($0) }))
         }
 
         public static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>, willReturn: Presentr...) -> MethodStub {
@@ -11632,6 +11645,7 @@ open class UiUtilMock: UiUtil, Mock {
 		public static func info(info: Parameter<[UserInfoKey: Any]>) -> Verify { return Verify(method: .m_info__info(`info`))}
         public static func controller<Type>(named controllerName: Parameter<String>, from storyboardName: Parameter<String>, as: Parameter<Type.Type>) -> Verify where Type:UIViewController { return Verify(method: .m_controller__named_controllerNamefrom_storyboardNameas_as(`controllerName`, `storyboardName`, `as`.wrapAsGeneric()))}
         public static var defaultPresenter: Verify { return Verify(method: .p_defaultPresenter_get) }
+        public static var hasTopNotch: Verify { return Verify(method: .p_hasTopNotch_get) }
     }
 
     public struct Perform {

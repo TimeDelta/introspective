@@ -16,7 +16,14 @@ extension UIViewController {
 		NotificationCenter.default.addObserver(self, selector: selector, name: name, object: object)
 	}
 
-	final func showError(title: String, message: String? = "Sorry for the inconvenience.", error: Error? = nil, tryAgain: (() -> Void)? = nil) {
+	@objc public func showError(
+		title: String,
+		message: String? = "Sorry for the inconvenience.",
+		error: Error? = nil,
+		tryAgain: (() -> Void)? = nil,
+		onDismiss: ((UIAlertAction) -> Void)? = nil,
+		onDonePresenting: (() -> Void)? = nil)
+	{
 		var realTitle = title
 		var realMessage = message
 		if let error = error as? DisplayableError {
@@ -27,13 +34,13 @@ extension UIViewController {
 		}
 
 		let alert = UIAlertController(title: realTitle, message: realMessage, preferredStyle: .alert)
-		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: onDismiss))
 		if let tryAgain = tryAgain {
 			alert.addAction(UIAlertAction(title: "Try Again", style: .default){ _ in
 				tryAgain()
 			})
 		}
-		present(alert, animated: false, completion: nil)
+		present(alert, animated: false, completion: onDonePresenting)
 	}
 
 	/// Retrieve the value for the specified `UserInfoKey` from the given notification.

@@ -19,7 +19,7 @@ public class NoSamplesFoundQueryError: QueryError {
 
 	public final let sampleType: Sample.Type
 	public final let displayableTitle: String
-	public var displayableDescription: String? { return nil }
+	public var displayableDescription: String? { return "" }
 	public final var localizedDescription: String {
 		var text = displayableTitle
 		if let description = displayableDescription {

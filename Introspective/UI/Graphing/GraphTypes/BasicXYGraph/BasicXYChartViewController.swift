@@ -10,12 +10,11 @@ import UIKit
 import AAInfographics
 import SwiftDate
 
-class BasicXYChartViewController: UIViewController {
+public final class BasicXYChartViewController: UIViewController {
 
 	// MARK: - IBOutlets
 
 	@IBOutlet weak final var activityIndicator: UIActivityIndicatorView!
-	@IBOutlet weak final var errorMessageLabel: UILabel!
 	@IBOutlet weak final var chartViewOutline: UIView!
 
 	// MARK: - Instance Variables
@@ -25,15 +24,6 @@ class BasicXYChartViewController: UIViewController {
 		didSet {
 			dataSeries = dataSeries ?? [Dictionary<String, Any>]()
 			updateChartData()
-		}
-	}
-	public final var errorMessage: String? {
-		didSet {
-			if errorMessage != nil {
-				errorMessageLabel.text = errorMessage
-				errorMessageLabel.isHidden = false
-				doneWaiting()
-			}
 		}
 	}
 	public final var displayXAxisValueLabels: Bool = true
@@ -48,7 +38,7 @@ class BasicXYChartViewController: UIViewController {
 
 	// MARK: - UIViewController Overrides
 
-	final override func viewDidLoad() {
+	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
 		chartModel = chartModel.chartType(chartType)
@@ -62,6 +52,30 @@ class BasicXYChartViewController: UIViewController {
 		DependencyInjector.util.ui.setBackButton(for: self, title: "Graph Setup", action: #selector(back))
 
 		finishedSetup = true
+	}
+
+	public final override func showError(
+		title: String,
+		message: String? = "Sorry for the inconvenience.",
+		error: Error? = nil,
+		tryAgain: (() -> Void)? = nil,
+		onDismiss originalOnDismiss: ((UIAlertAction) -> Void)? = nil,
+		onDonePresenting: (() -> Void)? = nil)
+	{
+		doneWaiting()
+		let onDismiss: ((UIAlertAction) -> Void) = { action in
+			if let originalOnDismiss = originalOnDismiss {
+				originalOnDismiss(action)
+			}
+			self.navigationController?.popViewController(animated: false)
+		}
+		super.showError(
+			title: title,
+			message: message,
+			error: error,
+			tryAgain: tryAgain,
+			onDismiss: onDismiss,
+			onDonePresenting: onDonePresenting)
 	}
 
 	// MARK: - Button Actions

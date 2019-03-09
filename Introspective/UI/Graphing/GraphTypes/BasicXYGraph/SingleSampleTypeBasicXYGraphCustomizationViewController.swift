@@ -243,11 +243,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			if let error = error {
 				self.log.error("Query run failed: %@", errorInfo(error))
 				DispatchQueue.main.async {
-					if let displayableError = error as? DisplayableError {
-						self.chartController.errorMessage = displayableError.displayableDescription
-					} else {
-						self.chartController.errorMessage = "Something went wrong while running the query. Sorry for the inconvenience this has caused you."
-					}
+					self.chartController.showError(title: "Failed to run the query", error: error)
 				}
 				return
 			}
@@ -256,14 +252,9 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 					try self.updateChartData(samples)
 				} catch {
 					self.log.error("Failed to update chart data: %@", errorInfo(error))
-					var message = "Something went wrong while gathering the required data"
-					if let error = error as? DisplayableError {
-						message = error.displayableTitle
-						if let description = error.displayableDescription {
-							message += ". \(description)"
-						}
+					DispatchQueue.main.async {
+						self.chartController.showError(title: "Failed to gather the required data", error: error)
 					}
-					self.chartController.errorMessage = message
 				}
 			} else {
 				self.log.error("Query run did not return an error or any results")

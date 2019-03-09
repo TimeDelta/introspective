@@ -13,9 +13,7 @@ final class QueryScreenUITests: UITest {
 
 	final override func setUp() {
 		super.setUp()
-		app.tabBars.buttons["Explore"].tap()
-		app.collectionViews.staticTexts["Query"].tap()
-		skipInstructionsIfPresent()
+		goToQueryScreen()
 	}
 
 	// MARK: - Changing Parts

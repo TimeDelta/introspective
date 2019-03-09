@@ -317,7 +317,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			if let error = error {
 				self.log.error("X-axis query run failed: %@", errorInfo(error))
 				DispatchQueue.main.async {
-					self.chartController.errorMessage = "Something went wrong while running the query. Sorry for the inconvenience this has caused you."
+					self.chartController.showError(title: "Failed to run the x-axis query", error: error)
 				}
 				return
 			}
@@ -329,14 +329,9 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 					self.xAxisSampleGroups = (try grouper.group(samples: samples, by: firstDateAttribute) as! [(Date, [Sample])])
 				} catch {
 					self.log.error("Failed to group x-axis samples: %@", errorInfo(error))
-					var message = "Something went wrong while trying to group the x-axis samples. Sorry for the inconvenience."
-					if let error = error as? DisplayableError {
-						message = error.displayableTitle
-						if let description = error.displayableDescription {
-							message += ". \(description)"
-						}
+					DispatchQueue.main.async {
+						self.chartController.showError(title: "Failed to group the x-axis samples", error: error)
 					}
-					self.chartController.errorMessage = message
 				}
 				self.signpost.end(name: "Grouping x-axis samples", "Grouped %d samples into %d groups", samples.count, self.xAxisSampleGroups.count)
 			} else {
@@ -348,7 +343,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			if let error = error {
 				self.log.error("Y-axis query run failed: %@", errorInfo(error))
 				DispatchQueue.main.async {
-					self.chartController.errorMessage = "Something went wrong while running the query. Sorry for the inconvenience this has caused you."
+					self.chartController.showError(title: "Failed to run the y-axis query", error: error)
 				}
 				return
 			}
@@ -360,14 +355,9 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 					self.yAxisSampleGroups = (try grouper.group(samples: samples, by: firstDateAttribute) as! [(Date, [Sample])])
 				} catch {
 					self.log.error("Failed to group y-axis samples: %@", errorInfo(error))
-					var message = "Something went wrong while trying to group the y-axis samples. Sorry for the inconvenience."
-					if let error = error as? DisplayableError {
-						message = error.displayableTitle
-						if let description = error.displayableDescription {
-							message += ". \(description)"
-						}
+					DispatchQueue.main.async {
+						self.chartController.showError(title: "Failed to group the y-axis samples", error: error)
 					}
-					self.chartController.errorMessage = message
 				}
 				self.signpost.end(name: "Grouping y-axis samples", "Grouped %d samples into %d groups", samples.count, self.yAxisSampleGroups.count)
 			} else {
@@ -389,25 +379,24 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			try updateChartData()
 		} catch {
 			log.error("Failed to update chart data: %@", errorInfo(error))
-			var message = "Something went wrong while gathering the required data"
-			if let error = error as? DisplayableError {
-				message = error.displayableTitle
-				if let description = error.displayableDescription {
-					message += ". \(description)"
-				}
+			DispatchQueue.main.async {
+				self.chartController.showError(title: "Failed to gather the required data", error: error)
 			}
-			chartController.errorMessage = message
 		}
 	}
 
 	private final func updateChartData() throws {
 		if xAxisSampleGroups == nil || yAxisSampleGroups == nil { return }
 		if xAxisSampleGroups.count == 0 {
-			DispatchQueue.main.async { self.chartController.errorMessage = "No data returned for x-axis query" }
+			DispatchQueue.main.async {
+				self.chartController.showError(title: "No data returned for x-axis query")
+			}
 			return
 		}
 		if yAxisSampleGroups.count == 0 {
-			DispatchQueue.main.async { self.chartController.errorMessage = "No data returned for y-axis query" }
+			DispatchQueue.main.async {
+				self.chartController.showError(title: "No data returned for y-axis query")
+			}
 			return
 		}
 

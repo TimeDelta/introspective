@@ -36,14 +36,9 @@ final class ResultsViewController: UITableViewController {
 	public final var query: Query!
 	public final var samples: [Sample]! {
 		didSet {
-			if error == nil && samples != nil  {
+			if !failed && samples != nil  {
 				DispatchQueue.global(qos: .userInteractive).async { self.viewIsReady() }
 			}
-		}
-	}
-	public final var error: Error? {
-		didSet {
-			DispatchQueue.main.async { self.tableView.reloadData() }
 		}
 	}
 
@@ -61,6 +56,8 @@ final class ResultsViewController: UITableViewController {
 	private final var sortTask: DispatchWorkItem?
 	private final var sortActionSheet: UIAlertController?
 	private final var sortController: SortResultsViewController?
+
+	private final var failed = false
 
 	private final let log = Log()
 
@@ -89,6 +86,33 @@ final class ResultsViewController: UITableViewController {
 		NotificationCenter.default.removeObserver(self)
 	}
 
+	public final override func showError(
+		title: String,
+		message: String? = "Sorry for the inconvenience.",
+		error: Error? = nil,
+		tryAgain: (() -> Void)? = nil,
+		onDismiss originalOnDismiss: ((UIAlertAction) -> Void)? = nil,
+		onDonePresenting: (() -> Void)? = nil)
+	{
+		var onDismiss: ((UIAlertAction) -> Void)? = originalOnDismiss
+		if samples == nil {
+			failed = true
+			onDismiss = { action in
+				if let originalOnDismiss = originalOnDismiss {
+					originalOnDismiss(action)
+				}
+				self.navigationController?.popViewController(animated: false)
+			}
+		}
+		super.showError(
+			title: title,
+			message: message,
+			error: error,
+			tryAgain: tryAgain,
+			onDismiss: onDismiss,
+			onDonePresenting: onDonePresenting)
+	}
+
 	// MARK: - Table View Data Source
 
 	final override func numberOfSections(in tableView: UITableView) -> Int {
@@ -110,10 +134,7 @@ final class ResultsViewController: UITableViewController {
 	}
 
 	final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		if error != nil {
-			if section == 1 {
-				return 1
-			}
+		if failed {
 			return 0
 		}
 
@@ -138,19 +159,6 @@ final class ResultsViewController: UITableViewController {
 	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let row = indexPath.row
 		let section = indexPath.section
-
-		if error != nil {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "errorCell", for: indexPath)
-			var errorText = error!.localizedDescription
-			if let error = error as? DisplayableError {
-				errorText = error.displayableTitle
-				if let description = error.displayableDescription {
-					errorText += ": " + description
-				}
-			}
-			cell.textLabel!.text = errorText
-			return cell
-		}
 
 		if waiting() || sortTask != nil {
 			return tableView.dequeueReusableCell(withIdentifier: "waitingCell", for: indexPath)

@@ -139,14 +139,9 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 				try self.updateChartData()
 			} catch {
 				self.log.error("Failed to update chart data: %@", errorInfo(error))
-				var message = "Something went wrong while gathering the required data"
-				if let error = error as? DisplayableError {
-					message = error.displayableTitle
-					if let description = error.displayableDescription {
-						message += ". \(description)"
-					}
+				DispatchQueue.main.async {
+					self.chartController.showError(title: "Failed to gather required data", error: error)
 				}
-				self.chartController.errorMessage = message
 			}
 		}
 		realNavigationController?.pushViewController(chartController, animated: false)
