@@ -80,6 +80,8 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 		observe(selector: #selector(invalid), name: Me.invalid)
 		observe(selector: #selector(autoNoteChanged), name: Me.autoNoteChanged)
 		observe(selector: #selector(showPopup), name: Me.showPopup)
+
+		hideKeyboardOnTapNonTextInput()
 	}
 
 	deinit {

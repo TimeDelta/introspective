@@ -43,6 +43,24 @@ extension UIViewController {
 		present(alert, animated: false, completion: onDonePresenting)
 	}
 
+	final func hideKeyboardOnTapNonTextInput() {
+		let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+		tapRecognizer.cancelsTouchesInView = false
+		view.addGestureRecognizer(tapRecognizer)
+	}
+
+	@objc final func dismissKeyboard(_ tapRecognizer: UITapGestureRecognizer) {
+		let view = tapRecognizer.view
+		let loc = tapRecognizer.location(in: view)
+		if let tappedView = view?.hitTest(loc, with: nil) {
+			if !(tappedView is UITextInputTraits) {
+				self.view.endEditing(true)
+			}
+		} else {
+			self.view.endEditing(true)
+		}
+	}
+
 	/// Retrieve the value for the specified `UserInfoKey` from the given notification.
 	/// - Parameter keyIsOptional: If true, no error will be logged if the specified key does not exist in the user info.
 	/// - Note: Automatically logs when key is missing, wrong type or the notification does not have any user info.

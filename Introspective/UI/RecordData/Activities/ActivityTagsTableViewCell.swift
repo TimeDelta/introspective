@@ -24,6 +24,7 @@ public final class ActivityTagsTableViewCell: UITableViewCell {
 			tagsField.onDidAddTag = addedTag
 			tagsField.onDidRemoveTag = removedTag
 			tagsField.textField.accessibilityLabel = "activity tags"
+			tagsField.textDelegate = self
 			tagsField.maxHeight = 109
 
 			do {
@@ -80,5 +81,12 @@ public final class ActivityTagsTableViewCell: UITableViewCell {
 					.tagNames: self.tagNames,
 				]))
 		}
+	}
+}
+
+extension ActivityTagsTableViewCell: UITextFieldDelegate {
+
+	public func textFieldDidEndEditing(_ textField: UITextField) {
+		tagsField.acceptCurrentTextAsTag()
 	}
 }
