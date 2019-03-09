@@ -24,6 +24,7 @@ public final class ActivityTagsTableViewCell: UITableViewCell {
 			tagsField.onDidAddTag = addedTag
 			tagsField.onDidRemoveTag = removedTag
 			tagsField.textField.accessibilityLabel = "activity tags"
+			tagsField.maxHeight = 109
 
 			do {
 				let tags = try DependencyInjector.db.query(Tag.fetchRequest() as NSFetchRequest<Tag>)
