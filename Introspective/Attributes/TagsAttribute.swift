@@ -100,7 +100,7 @@ public final class TagsAttribute: AttributeBase, MultiSelectAttribute {
 			if index > 0 && index < tags.count - 1 {
 				text += ", "
 			}
-			if index == tags.count - 1 {
+			if index == tags.count - 1 && tags.count > 1{
 				text += " or "
 			}
 			text += tags[index].name

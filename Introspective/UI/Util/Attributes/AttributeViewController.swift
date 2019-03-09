@@ -197,6 +197,7 @@ final class AttributeViewController: UIViewController {
 			}
 		}
 
+		// this allows the value button to dynamiclly set its width based on its content
 		let size = attributeValueButton.systemLayoutSizeFitting(
 			UIView.layoutFittingCompressedSize,
 			withHorizontalFittingPriority: .defaultHigh,
