@@ -8,6 +8,8 @@
 
 import Foundation
 
+// MARK: - MultiSelectAttribute
+
 public protocol MultiSelectAttribute: SelectAttribute {
 
 	func valueAsArray(_ value: Any) throws -> [Any]
@@ -15,12 +17,31 @@ public protocol MultiSelectAttribute: SelectAttribute {
 	func convertPossibleValueToDisplayableString(_ value: Any) throws -> String
 }
 
+// MARK: - TypedMultiSelectAttribute
+
 public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSelectAttribute {
 
+	// MARK: Instance Variables
+
+	private final let _typedPossibleValues: [Type]?
+	private final let possibleValuesFunction: (() -> [Type])?
 	public final var possibleValues: [Any] { return typedPossibleValues }
-	public final let typedPossibleValues: [Type]
+	public final var typedPossibleValues: [Type] {
+		if let _typedPossibleValues = _typedPossibleValues {
+			return _typedPossibleValues
+		}
+		if let possibleValuesFunction = possibleValuesFunction {
+			return possibleValuesFunction()
+		}
+		log.error("Unable to determine possible values for multiselect attribute")
+		return []
+	}
 
 	fileprivate final let possibleValueToString: (Type) -> String
+
+	private final let log = Log()
+
+	// MARK: Initializers
 
 	public init(
 		name: String,
@@ -31,14 +52,37 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 		possibleValues: [Type] = [Type](),
 		possibleValueToString: @escaping (Type) -> String)
 	{
-		self.typedPossibleValues = possibleValues
+		_typedPossibleValues = possibleValues
+		possibleValuesFunction = nil
 		self.possibleValueToString = possibleValueToString
 		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional)
 	}
 
+	public init(
+		name: String,
+		pluralName: String? = nil,
+		description: String? = nil,
+		variableName: String? = nil,
+		optional: Bool = false,
+		possibleValues: @escaping () -> [Type],
+		possibleValueToString: @escaping (Type) -> String)
+	{
+		_typedPossibleValues = nil
+		possibleValuesFunction = possibleValues
+		self.possibleValueToString = possibleValueToString
+		super.init(
+			name: name,
+			pluralName: pluralName,
+			description: description,
+			variableName: variableName,
+			optional: optional)
+	}
+
+	// MARK: MultiSelectAttribute Functions
+
 	public final func valueAsArray(_ value: Any) throws -> [Any] {
 		if let castedValue = value as? Set<Type> {
-			return castedValue.map { v in return v }
+			return castedValue.map{ $0 }
 		}
 		if let castedValue = value as? [Type] {
 			return castedValue
@@ -52,6 +96,8 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 		}
 		return Set<Type>(castedValue)
 	}
+
+	// MARK: SelectAttribute Functions
 
 	public final func indexOf(possibleValue: Any, in values: [Any]? = nil) -> Int? {
 		guard let castedValue = possibleValue as? Type else {
@@ -67,6 +113,8 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 		}
 		return possibleValueToString(castedValue)
 	}
+
+	// MARK: Attribute Functions
 
 	public override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
@@ -98,6 +146,8 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 		return text
 	}
 }
+
+// MARK: - ComparableTypedMultiSelectAttribute
 
 public class ComparableTypedMultiSelectAttribute<Type: Hashable & Comparable>: TypedMultiSelectAttribute<Type> {
 

@@ -21,14 +21,11 @@ public final class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestrict
 
 	public override var attributedName: String { return "Not tagged with one of" }
 	public override var description: String {
-		var tagText = "'"
-		for tag in tags {
-			tagText += tag.name + "', '"
+		if tags.count == 0 {
+			return "Not tagged with one of:"
 		}
-		tagText.removeLast()
-		tagText.removeLast()
-		tagText.removeLast()
-		return "Not tagged with one of: \(tagText)"
+		let tagsText = try! Me.tagsAttribute.convertToDisplayableString(from: tags)
+		return "Not tagged with one of: \(tagsText)"
 	}
 
 	// MARK: - Instance Variables
@@ -112,4 +109,3 @@ public final class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestrict
 		return tags == otherRestriction.tags
 	}
 }
-
