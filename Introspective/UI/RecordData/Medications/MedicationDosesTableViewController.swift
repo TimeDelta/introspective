@@ -57,9 +57,14 @@ public final class MedicationDosesTableViewController: UITableViewController {
 
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
+
+		extendedLayoutIncludesOpaqueBars = true
+
 		dateRangeButton.accessibilityLabel = "filter dates button"
+
 		navigationItem.rightBarButtonItem = self.editButtonItem
 		navigationItem.title = medication.name
+
 		observe(selector: #selector(dateRangeSet), name: Me.dateRangeSet)
 		observe(selector: #selector(medicationDoseEdited), name: Me.medicationDoseEdited)
 	}
