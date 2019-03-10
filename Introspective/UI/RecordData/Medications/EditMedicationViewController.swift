@@ -101,6 +101,8 @@ public final class EditMedicationViewController: UIViewController {
 		observe(selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification)
 		observe(selector: #selector(setFrequency), name: Me.frequencyChanged)
 		observe(selector: #selector(setStartedOnDate), name: Me.startedOnChanged)
+
+		hideKeyboardOnTapNonTextInput()
 	}
 
 	deinit {
