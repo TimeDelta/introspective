@@ -58,7 +58,7 @@ final class QueryScreenUITests: UITest {
 		app.textFields.containing(.button, identifier:"Clear text").element.tap()
 		app.textFields.allElementsBoundByIndex[0].typeText("7")
 		app.buttons["save button"].tap()
-		app.scrollViews.otherElements.buttons["save attribute restriction button"].tap()
+		app.scrollViews.otherElements.buttons["save data type button"].tap()
 
 		// then
 		XCTAssert(app.tables.staticTexts["Within 57 hours of most recent"].exists)
@@ -76,12 +76,12 @@ final class QueryScreenUITests: UITest {
 		app.tables.staticTexts["Diastolic blood pressure < 0.0"].tap()
 		app.pickerWheels["Diastolic blood pressure"].adjust(toPickerWheelValue: "Timestamp")
 		app.pickerWheels["Before date"].adjust(toPickerWheelValue: "After date")
-		app.buttons.allElementsBoundByIndex[5].tap()
+		app.buttons["set date button"].tap()
 		app.datePickers.pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "June")
 		app.datePickers.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "18")
 		app.datePickers.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "2012")
 		app.buttons["save button"].tap()
-		app.scrollViews.otherElements.buttons["save attribute restriction button"].tap()
+		app.buttons["save attribute restriction button"].tap()
 
 		// then
 		XCTAssert(app.tables.staticTexts["After June 18, 2012"].exists)
@@ -100,7 +100,7 @@ final class QueryScreenUITests: UITest {
 		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
 		app.tables.cells.allElementsBoundByIndex[1].tap()
 		setPicker("restricted attribute", to: "Start Date")
-		app.buttons.allElementsBoundByIndex[5].tap()
+		app.buttons["set date button"].tap()
 		setDatePicker(to: date)
 		app.buttons["save button"].tap()
 
@@ -139,7 +139,7 @@ final class QueryScreenUITests: UITest {
 		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
 		app.tables.cells.allElementsBoundByIndex[1].tap()
 		setPicker("restricted attribute", to: "Start Date")
-		app.buttons.allElementsBoundByIndex[5].tap()
+		app.buttons["set date button"].tap()
 		setDatePicker(to: date)
 		app.buttons["save button"].tap()
 

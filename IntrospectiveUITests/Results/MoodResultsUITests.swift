@@ -22,7 +22,7 @@ final class MoodResultsUITests: UITest {
 		runAllMoodsQuery()
 
 		// then
-		XCTAssert(app.tables.cells.staticTexts["No mood entries found."].exists)
+		XCTAssert(app.alerts.staticTexts["No mood entries found."].exists)
 	}
 
 	func testGivenMood_correctlyDisplaysMoodData() {
