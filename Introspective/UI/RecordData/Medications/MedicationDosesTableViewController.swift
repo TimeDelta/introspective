@@ -134,6 +134,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		controller.medication = medication
 		lastClickedIndex = indexPath.row
 		customPresentViewController(Me.medicationDosePresenter, viewController: controller, animated: false)
+		tableView.deselectRow(at: indexPath, animated: false)
 	}
 
 	// MARK: - Received Notificaitons
