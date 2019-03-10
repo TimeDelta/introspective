@@ -39,6 +39,7 @@ final class AttributedChooserViewController: UIViewController {
 			valuePicker.accessibilityIdentifier = pickerAccessibilityIdentifier
 		}
 	}
+	public final var saveButtonAccessibilityIdentifier: String?
 
 	private final var attributeViewControllers: [AttributeViewController]!
 	private final let verticalSpacing = CGFloat(5)
@@ -207,6 +208,8 @@ final class AttributedChooserViewController: UIViewController {
 		acceptButton.setTitleColor(.white, for: .normal)
 		acceptButton.setTitle("Save", for: .normal)
 		acceptButton.translatesAutoresizingMaskIntoConstraints = false
+		acceptButton.accessibilityIdentifier = saveButtonAccessibilityIdentifier
+		acceptButton.accessibilityLabel = saveButtonAccessibilityIdentifier
 		scrollContentView.addSubview(acceptButton)
 		NSLayoutConstraint.activate([
 			heightConstraintFor(acceptButton, height: CGFloat(30)),

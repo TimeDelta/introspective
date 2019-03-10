@@ -75,6 +75,7 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 		attributedChooserViewController.notificationToSendOnValueChange = Me.valueChanged
 		attributedChooserViewController.currentValue = attributeRestriction
 		attributedChooserViewController.pickerAccessibilityIdentifier = "attribute restriction"
+		attributedChooserViewController.saveButtonAccessibilityIdentifier = "save attribute restriction button"
 
 		attributedChooserSubView.addSubview(attributedChooserViewController.view)
 		attributedChooserViewController.didMove(toParent: self)

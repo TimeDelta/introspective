@@ -37,7 +37,7 @@ final class QueryScreenUITests: UITest {
 		// when
 		app.tables.cells.allElementsBoundByIndex[1].tap()
 		app.pickerWheels["Activity"].adjust(toPickerWheelValue: "Body Mass Index")
-		app.scrollViews.otherElements.buttons["save attributed button"].tap()
+		app.scrollViews.otherElements.buttons["save data type button"].tap()
 
 		// then
 		XCTAssert(app.tables.staticTexts["Body Mass Index"].exists)
@@ -58,7 +58,7 @@ final class QueryScreenUITests: UITest {
 		app.textFields.containing(.button, identifier:"Clear text").element.tap()
 		app.textFields.allElementsBoundByIndex[0].typeText("7")
 		app.buttons["save button"].tap()
-		app.scrollViews.otherElements.buttons["save attributed button"].tap()
+		app.scrollViews.otherElements.buttons["save attribute restriction button"].tap()
 
 		// then
 		XCTAssert(app.tables.staticTexts["Within 57 hours of most recent"].exists)
@@ -81,7 +81,7 @@ final class QueryScreenUITests: UITest {
 		app.datePickers.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "18")
 		app.datePickers.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "2012")
 		app.buttons["save button"].tap()
-		app.scrollViews.otherElements.buttons["save attributed button"].tap()
+		app.scrollViews.otherElements.buttons["save attribute restriction button"].tap()
 
 		// then
 		XCTAssert(app.tables.staticTexts["After June 18, 2012"].exists)
@@ -117,12 +117,12 @@ final class QueryScreenUITests: UITest {
 		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
 		app.tables.cells.allElementsBoundByIndex[1].tap()
 		setPicker("restricted attribute", to: "Note")
-		app.buttons["save attributed button"].tap()
+		app.buttons["save attribute restriction button"].tap()
 
 		// when
 		app.tables.cells.allElementsBoundByIndex[1].tap()
 		setPicker("restricted attribute", to: "Name")
-		app.buttons["save attributed button"].tap()
+		app.buttons["save attribute restriction button"].tap()
 
 		// then
 		XCTAssert(app.tables.cells.staticTexts["Name contains ''"].exists)

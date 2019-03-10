@@ -71,6 +71,7 @@ final class EditSubSampleTypeViewController: UIViewController {
 		attributedChooserViewController = viewController(named: "attributedChooserViewController", fromStoryboard: "AttributeList")
 		updateAttributedChooserViewValues()
 		attributedChooserViewController.notificationToSendWhenAccepted = Me.doneEditing
+		attributedChooserViewController.saveButtonAccessibilityIdentifier = "save data type button"
 		attributedChooserSubView.addSubview(attributedChooserViewController.view)
 		attributedChooserViewController.didMove(toParent: self)
 		NSLayoutConstraint.activate([

@@ -307,7 +307,7 @@ class UITest: XCTestCase {
 		if let type = type {
 			app.tables.cells.element(boundBy: indexToEdit).tap()
 			setPicker("data type", to: type, changeCase: false)
-			app.buttons["save attributed button"].tap()
+			app.buttons["save data type button"].tap()
 		}
 	}
 }

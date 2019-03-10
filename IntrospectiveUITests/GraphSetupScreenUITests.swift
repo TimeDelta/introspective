@@ -439,7 +439,7 @@ final class GraphSetupScreenUITests: UITest {
 		app.buttons["set value button"].tap()
 		setTextFor(field: app.textViews.element(boundBy: 0), to: "fhjewio")
 		app.buttons["save button"].tap()
-		app.buttons["save attributed button"].tap()
+		app.buttons["save attribute restriction button"].tap()
 		addDataTypeToQuery("Blood Pressure")
 		addDataTypeToQuery("Body Mass Index")
 		addAttributeRestrictionToQuery()
