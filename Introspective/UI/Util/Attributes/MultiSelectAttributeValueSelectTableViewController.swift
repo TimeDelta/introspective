@@ -30,6 +30,7 @@ public final class MultiSelectAttributeValueSelectTableViewController: UITableVi
 		if let initialValue = initialValue {
 			do {
 				let initiallySelectedValues = try multiSelectAttribute.valueAsArray(initialValue)
+				selectedValues = initiallySelectedValues
 				selectRowsForValues(initiallySelectedValues)
 			} catch {
 				log.error("Failed to set initial multi-select value: %@", errorInfo(error))
@@ -60,13 +61,12 @@ public final class MultiSelectAttributeValueSelectTableViewController: UITableVi
 		do {
 			displayValue = try multiSelectAttribute.convertPossibleValueToDisplayableString(value)
 		} catch {
-			log.error("Failed to convert '$@' displayable value: %@", String(describing: value), errorInfo(error))
+			log.error("Failed to convert '$@' to displayable value: %@", String(describing: value), errorInfo(error))
 			displayValue = String(describing: value)
 		}
 		cell.textLabel!.text = displayValue
 		return cell
 	}
-
 
 	// MARK: - TableViewDelegate
 
@@ -107,7 +107,7 @@ extension MultiSelectAttributeValueSelectTableViewController: UISearchResultsUpd
 					let stringValue = try self.multiSelectAttribute.convertPossibleValueToDisplayableString(value)
 					return stringValue.localizedLowercase.contains(searchText)
 				} catch {
-					log.error("Failed to convert '$@' displayable value: %@", String(describing: value), errorInfo(error))
+					log.error("Failed to convert '$@' to displayable value: %@", String(describing: value), errorInfo(error))
 					return false
 				}
 			})

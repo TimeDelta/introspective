@@ -50,5 +50,6 @@ public final class MultiSelectAttributeValueViewController: UIViewController {
 		subViewController.initialValue = initialValue
 		subViewController.multiSelectAttribute = multiSelectAttribute
 		subView.addSubview(subViewController.view)
+		subViewController.didMove(toParent: self)
 	}
 }
