@@ -25,6 +25,11 @@ final class ExploreCollectionViewController: UICollectionViewController {
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
+		observe(selector: #selector(showResultsScreen), name: NotificationNames.showResultsScreen)
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	// MARK: - UICollectionViewDataSource
@@ -62,5 +67,33 @@ final class ExploreCollectionViewController: UICollectionViewController {
 
 	final override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
 
+	}
+
+	// MARK: - Received Notifications
+
+	@objc private final func showResultsScreen(notification: Notification) {
+		if let query: Query = value(for: .query, from: notification) {
+			let resultsController = DependencyInjector.util.ui.controller(
+				named: "results",
+				from: "Results",
+				as: ResultsViewController.self)
+			query.runQuery { (result: QueryResult?, error: Error?) in
+				if let error = error {
+					DispatchQueue.main.async {
+						resultsController.showError(title: "Failed to run query", error: error)
+					}
+					self.log.error("Query returned error: %@", errorInfo(error))
+					return
+				}
+				resultsController.samples = result?.samples
+			}
+			resultsController.query = query
+			if let navigationController = navigationController {
+				resultsController.backButtonTitle = navigationController.topViewController?.navigationItem.title
+				navigationController.pushViewController(resultsController, animated: false)
+			} else {
+				log.error("no navigation controller found")
+			}
+		}
 	}
 }

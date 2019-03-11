@@ -27,12 +27,16 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		(id: "activity", height: 52),
 	]
 
+	private final let log = Log()
+
 	// MARK: - UIViewController Overrides
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
 		observe(selector: #selector(showViewController), name: Me.showViewController)
 		observe(selector: #selector(showErrorMessage), name: Me.showErrorMessage)
+		observe(selector: #selector(showRecordActivitiesScreen), name: NotificationNames.showRecordActivitiesScreen)
+		observe(selector: #selector(showRecordMedicationsScreen), name: NotificationNames.showRecordMedicationsScreen)
 	}
 
 	deinit {
@@ -84,6 +88,24 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		if let title: String = value(for: .title, from: notification) {
 			let message: String? = value(for: .message, from: notification) ?? "Sorry for the inconvenience."
 			showError(title: title, message: message)
+		}
+	}
+
+	@objc private final func showRecordActivitiesScreen(notification: Notification) {
+		let controller: RecordActivityTableViewController = viewController(named: "activitiesTable")
+		if let navigationController = navigationController {
+			navigationController.pushViewController(controller, animated: false)
+		} else {
+			log.error("no navigation controller")
+		}
+	}
+
+	@objc private final func showRecordMedicationsScreen(notification: Notification) {
+		let controller: RecordMedicationTableViewController = viewController(named: "medicationsTable")
+		if let navigationController = navigationController {
+			navigationController.pushViewController(controller, animated: false)
+		} else {
+			log.error("no navigation controller")
 		}
 	}
 }

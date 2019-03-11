@@ -37,10 +37,12 @@ final class ResultsViewController: UITableViewController {
 	public final var samples: [Sample]! {
 		didSet {
 			if !failed && samples != nil  {
-				DispatchQueue.global(qos: .userInteractive).async { self.viewIsReady() }
+				self.viewIsReady()
 			}
 		}
 	}
+
+	public final var backButtonTitle: String?
 
 	private final var extraInformation = [ExtraInformation]()
 	private final var extraInformationValues: [String]!
@@ -73,7 +75,7 @@ final class ResultsViewController: UITableViewController {
 
 		navigationItem.setRightBarButton(actionsButton, animated: false)
 
-		DependencyInjector.util.ui.setBackButton(for: self, title: "Query", action: #selector(done))
+		DependencyInjector.util.ui.setBackButton(for: self, title: backButtonTitle ?? "Query", action: #selector(done))
 
 		tableView.flashScrollIndicators()
 		finishedLoading = true
@@ -402,6 +404,7 @@ final class ResultsViewController: UITableViewController {
 					let transaction = DependencyInjector.db.transaction()
 					try transaction.deleteAll(self.samples as! [NSManagedObject])
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+					self.navigationController?.popViewController(animated: false)
 				} catch {
 					self.log.error("Failed to delete all %@: %@", sampleType, errorInfo(error))
 					DispatchQueue.main.async {
@@ -409,7 +412,6 @@ final class ResultsViewController: UITableViewController {
 					}
 				}
 			}
-			self.navigationController!.popViewController(animated: false)
 		})
 		alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
 		self.present(alert, animated: false, completion: nil)

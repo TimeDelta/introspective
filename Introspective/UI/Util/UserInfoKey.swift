@@ -20,6 +20,7 @@ public enum UserInfoKey: Hashable, CustomStringConvertible {
 	case attributeValue
 	case autoIgnoreEnabled
 	case autoIgnoreSeconds
+	case backgroundTaskId
 	case calendarComponent
 	case comparisonResult
 	case controller
@@ -58,6 +59,7 @@ public enum UserInfoKey: Hashable, CustomStringConvertible {
 			case .attributeValue: return "attributeValue"
 			case .autoIgnoreEnabled: return "autoIgnoreEnabled"
 			case .autoIgnoreSeconds: return "autoIgnoreSeconds"
+			case .backgroundTaskId: return "backgroundTaskId"
 			case .calendarComponent: return "calendarComponent"
 			case .comparisonResult: return "comparisonResult"
 			case .controller: return "controller"

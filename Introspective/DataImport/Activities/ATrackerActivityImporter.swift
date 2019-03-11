@@ -11,7 +11,7 @@ import CoreData
 import CSV
 
 //sourcery: AutoMockable
-public protocol ATrackerActivityImporter: Importer {}
+public protocol ATrackerActivityImporter: ActivityImporter {}
 
 public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivityImporter, CoreDataObject {
 
@@ -29,33 +29,26 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 
 	// MARK: - Instance Variables
 
-	public final let dataTypePluralName: String = "activity"
+	public final let dataTypePluralName: String = "activities"
 	public final let sourceName: String = "ATracker"
+	public final let customImportMessage: String? = nil
+
 	public final var importOnlyNewData: Bool = true
+	public final var isPaused: Bool = false
 
 	private final var lineNumber: Int = -1
+	private final let mainTransaction = DependencyInjector.db.transaction()
+	private final var csv: CSVReader!
+	private final var latestDate: Date!
 	private final let log = Log()
 
 	// MARK: - Functions
 
 	public final func importData(from url: URL) throws {
-		let csv = try DependencyInjector.util.io.csvReader(url: url, hasHeaderRow: true)
+		csv = try DependencyInjector.util.io.csvReader(url: url, hasHeaderRow: true)
 		lineNumber = 2
-		var latestDate: Date! = lastImport // use temp var to avoid bug where initial import doesn't import anything
-		do {
-			let transaction = DependencyInjector.db.transaction()
-			while csv.next() != nil {
-				try importActivity(from: csv, latestDate: &latestDate, using: transaction)
-				lineNumber += 1
-				let _ = csv.dropFirst()
-			}
-
-			lastImport = latestDate
-			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-		} catch {
-			log.error("Failed to import activities from ATracker: %@", errorInfo(error))
-			throw error
-		}
+		latestDate = lastImport // use temp var to avoid bug where initial import doesn't import anything
+		try resume()
 	}
 
 	public final func resetLastImportDate() throws {
@@ -64,9 +57,30 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 	}
 
+	public final func pause() {
+		isPaused = true
+	}
+
+	public final func resume() throws {
+		isPaused = false
+		do {
+			while csv.next() != nil {
+				guard !isPaused else { return }
+				try importActivity(from: csv, latestDate: &latestDate, using: mainTransaction)
+				lineNumber += 1
+				let _ = csv.dropFirst()
+			}
+
+			lastImport = latestDate
+			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
+		} catch {
+			log.error("Failed to import activities from ATracker: %@", errorInfo(error))
+			throw error
+		}
+	}
+
 	// MARK: - Helper Functions
 
-	/// - Returns: `nil` if no new Activity object was created, otherwise the newly created activityObject
 	private final func importActivity(from csv: CSVReader, latestDate: inout Date!, using transaction: Transaction) throws {
 		var definition: ActivityDefinition! = try retrieveExistingDefinition(from: csv, using: transaction)
 		if definition == nil {
@@ -119,7 +133,8 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		guard let name = csv[Me.nameColumn] else { throw InvalidFileFormatError("No name given for activity on line \(lineNumber)")}
 		let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
-		let matchingActivities = try transaction.query(fetchRequest) // query from the transaction to include definitions created in this import
+		// query from the transaction to include definitions created in this import
+		let matchingActivities = try transaction.query(fetchRequest)
 		if matchingActivities.count > 0 {
 			return matchingActivities[0]
 		}
@@ -164,7 +179,11 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		try retryOnFail({ try childTransaction.commit() }, maxRetries: 2)
 	}
 
-	private final func createOrRetrieveTag(named tagName: String, for definition: ActivityDefinition, using transaction: Transaction) throws -> Tag {
+	private final func createOrRetrieveTag(
+		named tagName: String,
+		for definition: ActivityDefinition,
+		using transaction: Transaction)
+	throws -> Tag {
 		let tagRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
 		tagRequest.predicate = NSPredicate(format: "name ==[cd] %@", tagName)
 		let matchingTags = try transaction.query(tagRequest)

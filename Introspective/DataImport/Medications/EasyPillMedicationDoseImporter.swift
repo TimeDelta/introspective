@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 //sourcery: AutoMockable
-public protocol EasyPillMedicationDoseImporter: Importer {}
+public protocol EasyPillMedicationDoseImporter: MedicationImporter {}
 
 public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPillMedicationDoseImporter, CoreDataObject {
 
@@ -22,35 +22,54 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 
 	public final let dataTypePluralName: String = "medication doses"
 	public final let sourceName: String = "EasyPill"
+	public final let customImportMessage: String? = nil
+
 	public final var importOnlyNewData: Bool = true
+	public final var isPaused: Bool = false
 
 	private final var lineNumber: Int = -1
+	private final let mainTransaction = DependencyInjector.db.transaction()
+	private final var latestDate: Date!
+	private final var lines = [String]()
 	private final let log = Log()
 
 	// MARK: - Functions
 
 	public final func importData(from url: URL) throws {
 		let contents = try DependencyInjector.util.io.contentsOf(url)
+		lines = contents.components(separatedBy: "\n")
+		lines.removeFirst()
 		lineNumber = 2
-		var latestDate: Date! = lastImport // use temp var to avoid bug where initial import doesn't import anything
-		do {
-			let transaction = DependencyInjector.db.transaction()
-			for line in contents.components(separatedBy: "\n")[1...] {
-				try processLine(line, latestDate: &latestDate, using: transaction)
-				lineNumber += 1
-			}
-			lastImport = latestDate
-			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-		} catch {
-			log.error("Failed to import medication doses from EasyPill: %@", errorInfo(error))
-			throw error
-		}
+		latestDate = lastImport // use temp var to avoid bug where initial import doesn't import anything
+		try resume()
 	}
 
 	public final func resetLastImportDate() throws {
 		let transaction = DependencyInjector.db.transaction()
 		lastImport = nil
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+	}
+
+	public final func pause() {
+		isPaused = true
+	}
+
+	public final func resume() throws {
+		isPaused = false
+		do {
+			while lines.count > 0 {
+				let line = lines.removeFirst()
+				guard !isPaused else { return }
+				try processLine(line, latestDate: &latestDate, using: mainTransaction)
+				lineNumber += 1
+			}
+
+			lastImport = latestDate
+			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
+		} catch {
+			log.error("Failed to import medication doses from EasyPill: %@", errorInfo(error))
+			throw error
+		}
 	}
 
 	// MARK: - Helper Functions

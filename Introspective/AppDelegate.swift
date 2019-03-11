@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import CoreData
+import UserNotifications
 
 public var testing = false
 
@@ -16,8 +16,33 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	final var window: UIWindow?
 
+	private final var userNotificationDelegate: UserNotificationDelegate!
+
+	private final let log = Log()
+
+	final func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+		userNotificationDelegate = UserNotificationDelegate(window)
+
+		let center = UNUserNotificationCenter.current()
+		center.setNotificationCategories(UserNotificationDelegate.categories)
+		center.delegate = userNotificationDelegate
+
+		return true
+	}
+
 	final func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 		testing = CommandLine.arguments.contains("--testing")
+
+		let options: UNAuthorizationOptions = [.alert, .sound, .badge]
+		UNUserNotificationCenter.current().requestAuthorization(options: options) { granted, error in
+			if let error = error {
+				self.log.error("Failed to request authorization for notifications: %@", errorInfo(error))
+			}
+			if !granted {
+				self.log.info("Notifications not authorized")
+			}
+		}
+
 		return true
 	}
 

@@ -10,58 +10,68 @@ import Foundation
 import CoreData
 
 //sourcery: AutoMockable
-public protocol WellnessMoodImporter: Importer {}
+public protocol WellnessMoodImporter: MoodImporter {}
 
 public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImporter, CoreDataObject {
 
 	private typealias Me = WellnessMoodImporterImpl
 	public static let entityName = "WellnessMoodImporter"
 	private static let dateRegex = "^\\d\\d?/\\d\\d?/\\d\\d, \\d\\d:\\d\\d"
-	private static let cancelImports = Notification.Name("cancelWellnessMoodImporter")
 
 	public final let dataTypePluralName: String = "moods"
 	public final let sourceName: String = "Wellness"
+	public final let customImportMessage: String? = nil
+
 	public final var importOnlyNewData: Bool = true
+	public final var isPaused: Bool = false
 
 	private final var currentMood: Mood? = nil
 	private final var lineNumber: Int = -1
+	private final let mainTransaction = DependencyInjector.db.transaction()
+	private final var lines = [String]()
+	private final var latestDate: Date!
 	private final var currentNote = ""
 
 	private final let log = Log()
 
-	private final var cancelled = false
-	private final var processingLine = false
-
-	private final let uuid = UUID()
-
 	public final func importData(from url: URL) throws {
 		let contents = try DependencyInjector.util.io.contentsOf(url)
+		lines = contents.components(separatedBy: "\n")
+		lines.removeFirst()
 		currentMood = nil
 		lineNumber = 2
 		currentNote = ""
-		var latestDate: Date! = lastImport // use temp var to avoid bug where initial import doesn't import anything
-		do {
-			let transaction = DependencyInjector.db.transaction()
-			for line in contents.components(separatedBy: "\n")[1...] {
-				if cancelled { return }
-				try processLine(line, latestDate: &latestDate, using: transaction)
-				lineNumber += 1
-			}
-			if !currentNote.isEmpty {
-				currentMood?.note = currentNote // make sure to save the final note
-			}
-			lastImport = latestDate
-			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-		} catch {
-			log.error("Failed to import moods from Wellness: %@", errorInfo(error))
-			throw error
-		}
+		latestDate = lastImport // use temp var to avoid bug where initial import doesn't import anything
+		try resume()
 	}
 
 	public final func resetLastImportDate() throws {
 		let transaction = DependencyInjector.db.transaction()
 		lastImport = nil
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+	}
+
+	public final func pause() {
+		isPaused = true
+	}
+
+	public final func resume() throws {
+		isPaused = false
+		do {
+			while lines.count > 0 {
+				let line = lines.removeFirst()
+				try processLine(line, latestDate: &latestDate, using: mainTransaction)
+				lineNumber += 1
+			}
+			if !currentNote.isEmpty {
+				currentMood?.note = currentNote // make sure to save the final note
+			}
+			lastImport = latestDate
+			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
+		} catch {
+			log.error("Failed to import moods from Wellness: %@", errorInfo(error))
+			throw error
+		}
 	}
 
 	// MARK: - Helper Functions
@@ -83,7 +93,6 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 				guard let rating = Double(parts[2]) else {
 					throw InvalidFileFormatError("Invalid rating on line \(lineNumber): \(parts[2])")
 				}
-				if cancelled { return }
 				try createAndScaleMood(withDate: date, andRating: rating, using: transaction)
 				currentNote = parts[3...].joined()
 			} else {

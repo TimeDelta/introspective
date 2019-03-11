@@ -177,6 +177,7 @@ final class ActivityFunctionalTests: FunctionalTest {
 		XCTAssertEqual(expectedNote, activity.note)
 	}
 
+	// TODO - This test is flaky
 	func testGivenTagsAttribute_set_correctlySetsTags() throws {
 		// given
 		let expectedTags = [TagDataTestUtil.createTag(name: "expected tag 1"), TagDataTestUtil.createTag(name: "expected tag 2")]
