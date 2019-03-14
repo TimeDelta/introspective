@@ -12,23 +12,27 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 
 	private typealias Me = StartsWithStringAttributeRestriction
 
-	public static func ==(lhs: StartsWithStringAttributeRestriction, rhs: StartsWithStringAttributeRestriction) -> Bool {
-		return lhs.equalTo(rhs)
-	}
+	// MARK: - Attributes
 
 	public static let prefixAttribute = TextAttribute(name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [
 		prefixAttribute,
 	]
 
+	// MARK: - Display Information
+
 	public final override var attributedName: String { return "Starts with" }
 	public final override var description: String {
 		return restrictedAttribute.name.localizedCapitalized + " starts with '" + prefix + "'"
 	}
 
+	// MARK: - Instance Variables
+
 	public final var prefix: String {
 		didSet { prefix = prefix.localizedLowercase }
 	}
+
+	// MARK: - Initializers
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, prefix: "")
@@ -38,6 +42,8 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 		self.prefix = prefix
 		super.init(restrictedAttribute: restrictedAttribute, attributes: Me.attributes)
 	}
+
+	// MARK: - Attributed Functions
 
 	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.prefixAttribute) { return prefix }
@@ -54,6 +60,8 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 		prefix = castedValue
 	}
 
+	// MARK: - Attribute Restriction Functions
+
 	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return prefix.isEmpty }
@@ -65,6 +73,12 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 
 	public final func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K BEGINSWITH[cd] %@", restrictedAttribute.variableName!, prefix)
+	}
+
+	// MARK: - Equality
+
+	public static func ==(lhs: StartsWithStringAttributeRestriction, rhs: StartsWithStringAttributeRestriction) -> Bool {
+		return lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {

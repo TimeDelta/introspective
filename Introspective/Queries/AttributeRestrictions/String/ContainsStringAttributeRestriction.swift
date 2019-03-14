@@ -12,21 +12,25 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 
 	private typealias Me = ContainsStringAttributeRestriction
 
-	public static func ==(lhs: ContainsStringAttributeRestriction, rhs: ContainsStringAttributeRestriction) -> Bool {
-		return lhs.equalTo(rhs)
-	}
+	// MARK: - Attributes
 
 	public static let substringAttribute = TextAttribute(name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [
 		substringAttribute,
 	]
 
+	// MARK: - Display Information
+
 	public final override var attributedName: String { return "Contains" }
 	public final override var description: String {
 		return restrictedAttribute.name.localizedCapitalized + " contains '" + substring + "'"
 	}
 
+	// MARK: - Instance Variables
+
 	public final var substring: String
+
+	// MARK: - Initializers
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, substring: "")
@@ -36,6 +40,8 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 		self.substring = substring
 		super.init(restrictedAttribute: restrictedAttribute, attributes: Me.attributes)
 	}
+
+	// MARK: - Attributed Functions
 
 	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.substringAttribute) { return substring }
@@ -52,6 +58,8 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 		substring = castedValue
 	}
 
+	// MARK: - Attribute Restriction Functions
+
 	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return substring.isEmpty }
@@ -63,6 +71,12 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 
 	public final func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K CONTAINS[cd] %@", restrictedAttribute.variableName!, substring)
+	}
+
+	// MARK: - Equality
+
+	public static func ==(lhs: ContainsStringAttributeRestriction, rhs: ContainsStringAttributeRestriction) -> Bool {
+		return lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {

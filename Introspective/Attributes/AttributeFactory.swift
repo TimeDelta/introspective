@@ -10,7 +10,6 @@ import Foundation
 
 //sourcery: AutoMockable
 public protocol AttributeFactory {
-
 }
 
 public final class AttributeFactoryImpl: AttributeFactory {

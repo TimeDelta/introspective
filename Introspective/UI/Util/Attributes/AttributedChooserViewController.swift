@@ -201,7 +201,7 @@ final class AttributedChooserViewController: UIViewController {
 		return controller
 	}
 
-	private final func createAndAddAcceptButton(lastView: UIView!) {
+	private final func createAndAddAcceptButton(lastView: UIView?) {
 		let acceptButton = UIButton(type: .custom)
 		acceptButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
 		acceptButton.backgroundColor = .black
@@ -211,11 +211,17 @@ final class AttributedChooserViewController: UIViewController {
 		acceptButton.accessibilityIdentifier = saveButtonAccessibilityIdentifier
 		acceptButton.accessibilityLabel = saveButtonAccessibilityIdentifier
 		scrollContentView.addSubview(acceptButton)
+		let topConstraint: NSLayoutConstraint
+		if let lastView = lastView {
+			topConstraint = acceptButton.topAnchor.constraint(equalTo: lastView.bottomAnchor, constant: verticalSpacing)
+		} else {
+			topConstraint = acceptButton.topAnchor.constraint(equalTo: scrollContentView.topAnchor, constant: verticalSpacing)
+		}
 		NSLayoutConstraint.activate([
 			heightConstraintFor(acceptButton, height: CGFloat(30)),
 			acceptButton.leadingAnchor.constraint(equalTo: scrollContentView.leadingAnchor),
 			acceptButton.trailingAnchor.constraint(equalTo: scrollContentView.trailingAnchor),
-			acceptButton.topAnchor.constraint(equalTo: lastView.bottomAnchor, constant: verticalSpacing),
+			topConstraint,
 			// this constraint is required for the scroll view to scroll
 			scrollContentView.bottomAnchor.constraint(equalTo: acceptButton.bottomAnchor),
 		])

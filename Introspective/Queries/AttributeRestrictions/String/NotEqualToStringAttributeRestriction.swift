@@ -11,7 +11,12 @@ import Foundation
 public final class NotEqualToStringAttributeRestriction: TypedNotEqualToAttributeRestrictionBase<String>, PredicateAttributeRestriction {
 
 	private typealias Me = NotEqualToStringAttributeRestriction
+
+	// MARK: - Attributes
+
 	public static let valueAttribute = TextAttribute(name: "Value", pluralName: "Values")
+
+	// MARK: - Initializers
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, value: "")
@@ -25,6 +30,8 @@ public final class NotEqualToStringAttributeRestriction: TypedNotEqualToAttribut
 			return $0?.localizedLowercase == $1?.localizedLowercase
 		}
 	}
+
+	// MARK: - Attribute Restriction Functions
 
 	public final func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K !=[cd] %@", restrictedAttribute.variableName!, value as! String)

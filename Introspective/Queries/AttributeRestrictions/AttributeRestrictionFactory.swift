@@ -24,6 +24,8 @@ public final class AttributeRestrictionFactoryImpl: AttributeRestrictionFactory 
 		EndsWithStringAttributeRestriction.self,
 		EqualToStringAttributeRestriction.self,
 		NotEqualToStringAttributeRestriction.self,
+		EmptyStringAttributeRestriction.self,
+		NotEmptyStringAttributeRestriction.self,
 	]
 
 	private static let doubleTypes: [AttributeRestriction.Type] = [

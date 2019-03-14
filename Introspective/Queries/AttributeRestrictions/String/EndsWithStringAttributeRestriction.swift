@@ -12,23 +12,27 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 
 	private typealias Me = EndsWithStringAttributeRestriction
 
-	public static func ==(lhs: EndsWithStringAttributeRestriction, rhs: EndsWithStringAttributeRestriction) -> Bool {
-		return lhs.equalTo(rhs)
-	}
+	// MARK: - Attributes
 
 	public static let suffixAttribute = TextAttribute(name: "Value", pluralName: "Values")
 	public static let attributes: [Attribute] = [
 		suffixAttribute,
 	]
 
+	// MARK: - Display Information
+
 	public final override var attributedName: String { return "Ends with" }
 	public final override var description: String {
 		return restrictedAttribute.name.localizedCapitalized + " ends with '" + suffix + "'"
 	}
 
+	// MARK: - Instance Variables
+
 	public final var suffix: String {
 		didSet { suffix = suffix.localizedLowercase }
 	}
+
+	// MARK: - Initializers
 
 	public required convenience init(restrictedAttribute: Attribute) {
 		self.init(restrictedAttribute: restrictedAttribute, suffix: "")
@@ -38,6 +42,8 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 		self.suffix = suffix
 		super.init(restrictedAttribute: restrictedAttribute, attributes: Me.attributes)
 	}
+
+	// MARK: - Attributed Functions
 
 	public final override func value(of attribute: Attribute) throws -> Any? {
 		if attribute.equalTo(Me.suffixAttribute) { return suffix }
@@ -54,6 +60,8 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 		suffix = castedValue
 	}
 
+	// MARK: - Attribute Restriction Functions
+
 	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
 		if sampleValue == nil { return suffix.isEmpty }
@@ -65,6 +73,12 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 
 	public final func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K ENDSWITH[cd] %@", restrictedAttribute.variableName!, suffix)
+	}
+
+	// MARK: - Equality
+
+	public static func ==(lhs: EndsWithStringAttributeRestriction, rhs: EndsWithStringAttributeRestriction) -> Bool {
+		return lhs.equalTo(rhs)
 	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
