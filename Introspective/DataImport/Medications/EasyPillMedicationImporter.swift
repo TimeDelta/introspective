@@ -62,6 +62,16 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 				try processLine(line, mainTransaction)
 				lineNumber += 1
 			}
+
+			let medications = try getAllMedications(using: mainTransaction).sorted(by: {
+				$1.recordScreenIndex > $0.recordScreenIndex
+			})
+			var index = 0;
+			for medication in medications {
+				medication.recordScreenIndex = Int16(index)
+				index += 1
+			}
+
 			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
 		} catch {
 			log.error("Failed to import medications from EasyPill: %@", errorInfo(error))
@@ -149,7 +159,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 		if medicationsWithCurrentName.count == 0 {
 			do {
 				let medication = try childTransaction.new(Medication.self)
-				let allMedications = try DependencyInjector.db.query(Medication.fetchRequest())
+				let allMedications = try getAllMedications(using: childTransaction)
 				medication.recordScreenIndex = Int16(allMedications.count)
 				medication.setSource(.easyPill)
 				try setMedication(
@@ -254,5 +264,11 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 
 	private final func isNumber(_ str: String) -> Bool {
 		return DependencyInjector.util.string.isNumber(str)
+	}
+
+	private final func getAllMedications(using transaction: Transaction) throws -> Set<Medication> {
+		let medicationsInTransaction = Set(try transaction.query(Medication.fetchRequest()))
+		let medicationsInMainContext = Set(try DependencyInjector.db.query(Medication.fetchRequest()))
+		return medicationsInTransaction.union(medicationsInMainContext)
 	}
 }

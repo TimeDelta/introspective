@@ -71,6 +71,15 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 				let _ = csv.dropFirst()
 			}
 
+			let definitions = try getAllActivityDefinitions(using: mainTransaction).sorted(by: {
+				$1.recordScreenIndex > $0.recordScreenIndex
+			})
+			var index = 0;
+			for definition in definitions {
+				definition.recordScreenIndex = Int16(index)
+				index += 1
+			}
+
 			lastImport = latestDate
 			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
 		} catch {
@@ -155,7 +164,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 			let tag = try createOrRetrieveTag(named: tagName, for: definition, using: childTransaction)
 			definition.addToTags(tag)
 		}
-		let allDefinitions = try transaction.query(ActivityDefinition.fetchRequest())
+		let allDefinitions = try getAllActivityDefinitions(using: childTransaction)
 		definition.recordScreenIndex = Int16(allDefinitions.count)
 		definition.setSource(.aTracker)
 
@@ -219,5 +228,11 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 				lastImport != nil &&
 				date.isAfterDate(lastImport!, granularity: .nanosecond)
 			)
+	}
+
+	private final func getAllActivityDefinitions(using transaction: Transaction) throws -> Set<ActivityDefinition> {
+		let definitionsInTransaction = Set(try transaction.query(ActivityDefinition.fetchRequest()))
+		let definitionsInMainContext = Set(try DependencyInjector.db.query(ActivityDefinition.fetchRequest()))
+		return definitionsInTransaction.union(definitionsInMainContext)
 	}
 }
