@@ -68,6 +68,7 @@ final class ResultsViewController: UITableViewController {
 	public final override func viewDidLoad() {
 		actionsButton.target = self
 		actionsButton.action = #selector(presentActions)
+		actionsButton.accessibilityLabel = "actions button"
 
 		observe(selector: #selector(saveEditedExtraInformation), name: Me.editedExtraInformation)
 		observe(selector: #selector(sortSamplesBy), name: Me.sortSamples)
@@ -353,7 +354,12 @@ final class ResultsViewController: UITableViewController {
 		}
 		actionsController?.addAction(UIAlertAction(title: "Add Information", style: .default) { _ in DispatchQueue.main.async{ self.addInformation() } })
 		if samplesAreDeletable() {
-			actionsController?.addAction(UIAlertAction(title: "Delete All " + samples[0].attributedName + " Entries", style: .default) { _ in self.deleteAllSamples() })
+			actionsController?.addAction(UIAlertAction(
+				title: "Delete these " + samples[0].attributedName.localizedLowercase + " entries",
+				style: .default,
+				handler: { _ in
+					self.deleteAllSamples()
+				}))
 		}
 		actionsController?.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(actionsController!, animated: false, completion: nil)
@@ -401,10 +407,13 @@ final class ResultsViewController: UITableViewController {
 		alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 			DispatchQueue.global(qos: .userInitiated).async {
 				do {
+					#warning("write a ui test for this")
 					let transaction = DependencyInjector.db.transaction()
 					try transaction.deleteAll(self.samples as! [NSManagedObject])
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-					self.navigationController?.popViewController(animated: false)
+					DispatchQueue.main.async {
+						self.navigationController?.popViewController(animated: false)
+					}
 				} catch {
 					self.log.error("Failed to delete all %@: %@", sampleType, errorInfo(error))
 					DispatchQueue.main.async {

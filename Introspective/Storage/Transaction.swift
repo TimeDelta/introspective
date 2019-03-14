@@ -140,7 +140,12 @@ public final class TransactionImpl: Transaction {
 	}
 
 	public final func deleteAll(_ objects: [NSManagedObject]) throws {
-		try deleteAll(objects, from: myContext)
+		guard objects.count > 0 else { return }
+		if objects[0].entity.relationshipsByName.count > 0 {
+			try nonBatchDeleteAll(objects, from: myContext)
+		} else {
+			try batchDeleteAll(objects, from: myContext)
+		}
 	}
 
 	public final func deleteAll(_ objectType: NSManagedObject.Type) throws {
@@ -185,19 +190,26 @@ public final class TransactionImpl: Transaction {
 		}
 	}
 
-	private final func deleteAll(_ objects: [NSManagedObject], from context: NSManagedObjectContext) throws {
-		signpost.begin(name: "Delete all with objects", idObject: objects as AnyObject)
+	private final func nonBatchDeleteAll(_ objects: [NSManagedObject], from context: NSManagedObjectContext) throws {
+		signpost.begin(name: "Non-batch delete all with objects", idObject: objects as AnyObject)
+		try objects.map{ try pull(savedObject: $0) }.forEach{ context.delete($0) }
+		signpost.end(name: "Non-batch delete all with objects", idObject: objects as AnyObject)
+	}
+
+	/// - Note: This will throw an error if any of the objects have relationships
+	private final func batchDeleteAll(_ objects: [NSManagedObject], from context: NSManagedObjectContext) throws {
+		signpost.begin(name: "Batch delete all with objects", idObject: objects as AnyObject)
 		let ids = objects.map{ $0.objectID }
 		if ids.count > 0 {
 			let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: ids)
 			do {
 				try context.execute(batchDeleteRequest)
 			} catch {
-				signpost.end(name: "Delete all with objects", idObject: objects as AnyObject)
+				signpost.end(name: "Batch delete all with objects", idObject: objects as AnyObject)
 				throw error
 			}
 		}
-		signpost.end(name: "Delete all with objects", idObject: objects as AnyObject)
+		signpost.end(name: "Batch delete all with objects", idObject: objects as AnyObject)
 	}
 
 	private final func getObject<Type: NSManagedObject>(_ object: NSManagedObject, as type: Type.Type) throws -> Type {

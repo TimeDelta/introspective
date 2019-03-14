@@ -18,17 +18,35 @@ final class ActivityResultsUITests: UITest {
 
 	func testDeletingOnlyActivityInResults_goesBackToQueryScreen() {
 		// given
-		let activityName = "gerq"
-		createActivityDefinition(name: activityName)
-		addActivity(name: activityName)
+		let definition = ActivityDefinition(name: "fdshjkl")
+		createActivityDefinition(definition)
+		addActivity(name: definition.name)
 		runAllActivitiesQuery()
 
 		// when
-		app.tables.cells.staticTexts[activityName].swipeLeft()
+		app.tables.cells.staticTexts[definition.name].swipeLeft()
 		app.tables.cells.buttons["🗑️"].tap()
 		app.buttons["Yes"].tap()
 
 		// then
+		XCTAssert(app.navigationBars.buttons["Explore"].exists)
+	}
+
+	func testDeleteAllActivityResults_goesBackToQueryScreen() {
+		// given
+		let definition = ActivityDefinition(name: "fnsjka")
+		createActivityDefinition(definition)
+		addActivity(name: definition.name)
+		runAllActivitiesQuery()
+
+		// when
+		app.buttons["actions button"].tap()
+		app.buttons["Delete these activity entries"].tap()
+		app.buttons["Yes"].tap()
+
+		// then
+		// the navigation item is asynchronously popped so UI test doesn't know how to wait for it
+		sleep(1)
 		XCTAssert(app.navigationBars.buttons["Explore"].exists)
 	}
 
@@ -41,16 +59,6 @@ final class ActivityResultsUITests: UITest {
 		setPicker(to: "Activity")
 		app.buttons["save button"].tap()
 		app.buttons["Run"].tap()
-	}
-
-	private final func createActivityDefinition(name: String) {
-		app.tabBars.buttons["Record"].tap()
-		app.tables.cells.staticTexts["Activities"].tap()
-		skipInstructionsIfPresent()
-		app.buttons["Add"].tap()
-		app.tables.textFields["activity name"].tap()
-		app.tables.textFields["activity name"].typeText(name)
-		app.buttons["Save"].tap()
 	}
 
 	private final func addActivity(name: String) {
