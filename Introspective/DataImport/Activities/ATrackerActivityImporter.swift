@@ -161,8 +161,10 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		definition.name = name
 		definition.activityDescription = description
 		if let tagName = category {
-			let tag = try createOrRetrieveTag(named: tagName, for: definition, using: childTransaction)
-			definition.addToTags(tag)
+			if !tagName.isEmpty {
+				let tag = try createOrRetrieveTag(named: tagName, for: definition, using: childTransaction)
+				definition.addToTags(tag)
+			}
 		}
 		let allDefinitions = try getAllActivityDefinitions(using: childTransaction)
 		definition.recordScreenIndex = Int16(allDefinitions.count)
