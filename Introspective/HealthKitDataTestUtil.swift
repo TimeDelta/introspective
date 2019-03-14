@@ -30,6 +30,8 @@ public class HealthKitDataTestUtil {
 		return allPermissions
 	}()
 
+	private static let log = Log()
+
 	public static func ensureAuthorized() {
 		let group = DispatchGroup()
 		group.enter()
@@ -41,11 +43,17 @@ public class HealthKitDataTestUtil {
 	}
 
 	public static func save<SampleType: HealthKitSample>(_ samples: [SampleType]) {
+		guard samples.count > 0 else {
+			log.error("Tried to save empty array of %@", SampleType.name)
+			return
+		}
 		let allSamples = samples.map({ $0.hkSample() })
 		let group = DispatchGroup()
 		group.enter()
 		Me.healthStore.save(allSamples) { _, error in
-			if error != nil { fatalError("Failed to save samples: " + error!.localizedDescription) }
+			if let error = error {
+				fatalError("Failed to save samples: " + error.localizedDescription)
+			}
 			group.leave()
 		}
 		group.wait()

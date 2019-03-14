@@ -245,16 +245,16 @@ final class TestDataGenerationTableViewController: UITableViewController {
 		_ sampleType: SampleType.Type,
 		_ createSample: (inout [SampleType], Date) -> Void)
 	{
+		guard shouldGenerate(sampleType) else { return }
+
 		var samples = [SampleType]()
 
 		for daysAgo in 0 ... numberOfDays(for: sampleType) {
 			for hoursAgo in 0 ... 23 {
 				for sampleNum in 0 ... samplesPerHour(for: sampleType) {
-					if self.shouldGenerate(sampleType) {
-						let minutesAgo: Int = 60 * sampleNum / samplesPerHour(for: sampleType)
-						let date = Date() - daysAgo.days - hoursAgo.hours - minutesAgo.minutes
-						createSample(&samples, date)
-					}
+					let minutesAgo: Int = 60 * sampleNum / samplesPerHour(for: sampleType)
+					let date = Date() - daysAgo.days - hoursAgo.hours - minutesAgo.minutes
+					createSample(&samples, date)
 				}
 			}
 		}
