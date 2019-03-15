@@ -52,7 +52,7 @@ public final class MostRecentDateInformation: AnyInformation {
 		let filteredSamples = try filterSamples(samples, as: Date.self)
 		if filteredSamples.count == 0 {
 			if shouldThrowOnEmptyFilter {
-				throw GenericDisplayableError(title: "No samples match filter")
+				throw GenericDisplayableError(title: Me.noSamplesMessage)
 			}
 			return Me.noSamplesMessage
 		}

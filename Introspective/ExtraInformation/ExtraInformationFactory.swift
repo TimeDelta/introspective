@@ -38,25 +38,30 @@ public final class ExtraInformationFactoryImpl: ExtraInformationFactory {
 			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
 			applicableInformationTypes.append(MaximumInformation<Double>.self)
 			applicableInformationTypes.append(MinimumInformation<Double>.self)
+			applicableInformationTypes.append(MedianInformation<Double>.self)
 		} else if attribute is IntegerAttribute {
 			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
 			applicableInformationTypes.append(MaximumInformation<Int>.self)
 			applicableInformationTypes.append(MinimumInformation<Int>.self)
+			applicableInformationTypes.append(MedianInformation<Int>.self)
 		} else if attribute is DateAttribute {
 			applicableInformationTypes.append(contentsOf: Me.dateInformationTypes)
 		} else if attribute is DosageAttribute {
 			applicableInformationTypes.append(MaximumInformation<Dosage>.self)
 			applicableInformationTypes.append(MinimumInformation<Dosage>.self)
+			applicableInformationTypes.append(MedianInformation<Dosage>.self)
 			applicableInformationTypes.append(SumInformation.self)
 			applicableInformationTypes.append(AverageInformation.self)
 		} else if attribute is FrequencyAttribute {
 			applicableInformationTypes.append(MaximumInformation<Frequency>.self)
 			applicableInformationTypes.append(MinimumInformation<Frequency>.self)
+			applicableInformationTypes.append(MedianInformation<Frequency>.self)
 		} else if attribute is DurationAttribute {
 			applicableInformationTypes.append(SumInformation.self)
 			applicableInformationTypes.append(AverageInformation.self)
 			applicableInformationTypes.append(MaximumInformation<Duration>.self)
 			applicableInformationTypes.append(MinimumInformation<Duration>.self)
+			applicableInformationTypes.append(MedianInformation<Duration>.self)
 		}
 		// TODO - additional attribute types
 		applicableInformationTypes.append(contentsOf: Me.genericInformationTypes)
@@ -69,14 +74,17 @@ public final class ExtraInformationFactoryImpl: ExtraInformationFactory {
 			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
 			applicableInformationTypes.append(MaximumInformation<Double>.self)
 			applicableInformationTypes.append(MinimumInformation<Double>.self)
+			applicableInformationTypes.append(MedianInformation<Double>.self)
 		} else if attribute is IntegerAttribute {
 			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
 			applicableInformationTypes.append(MaximumInformation<Int>.self)
 			applicableInformationTypes.append(MinimumInformation<Int>.self)
+			applicableInformationTypes.append(MedianInformation<Int>.self)
 		} else if attribute is DurationAttribute {
 			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
 			applicableInformationTypes.append(MaximumInformation<Duration>.self)
 			applicableInformationTypes.append(MinimumInformation<Duration>.self)
+			applicableInformationTypes.append(MedianInformation<Duration>.self)
 		}
 		applicableInformationTypes.append(CountInformation.self)
 		return applicableInformationTypes

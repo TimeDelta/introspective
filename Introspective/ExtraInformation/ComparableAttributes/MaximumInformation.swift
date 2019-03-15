@@ -43,6 +43,6 @@ public final class MaximumInformation<AttributeType: Comparable>: AnyInformation
 	// MARK: - Equality
 
 	public final override func equalTo(_ other: ExtraInformation) -> Bool {
-		return other is MaximumInformation && attribute.equalTo(other.attribute)
+		return other is MaximumInformation<AttributeType> && attribute.equalTo(other.attribute)
 	}
 }
