@@ -60,6 +60,44 @@ class MedianInformationFunctionalTests: FunctionalTest {
 		XCTAssertEqual(value, String(medianValue))
 	}
 
+	func testGivenDurationAttribute_compute_returnsCorrectValue() throws {
+		// given
+		let medianValue = Duration([.hour: 1])
+		let attribute = DurationAttribute(name: "name")
+		let samples = SampleCreatorTestUtil.createSamples(
+			withValues: [
+				medianValue,
+				medianValue - Duration([.minute: 1]),
+				medianValue + Duration([.minute: 1])],
+			for: attribute)
+		let information = MedianInformation<Duration>(attribute)
+
+		// when
+		let value = try information.compute(forSamples: samples)
+
+		// then
+		XCTAssertEqual(value, medianValue.description)
+	}
+
+	func testGivenFrequencyAttribute_compute_returnsCorrectValue() throws {
+		// given
+		let medianValue = Frequency(1, .hour)!
+		let attribute = FrequencyAttribute(name: "name")
+		let samples = SampleCreatorTestUtil.createSamples(
+			withValues: [
+				medianValue,
+				medianValue - Frequency(1, .minute)!,
+				medianValue + Frequency(1, .minute)!],
+			for: attribute)
+		let information = MedianInformation<Frequency>(attribute)
+
+		// when
+		let value = try information.compute(forSamples: samples)
+
+		// then
+		XCTAssertEqual(value, medianValue.description)
+	}
+
 	// MARK: - computeGraphable()
 
 	func testGivenEmptySampleArray_computeGraphable_throwsDisplayableError() throws {
