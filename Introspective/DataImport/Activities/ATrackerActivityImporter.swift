@@ -71,14 +71,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 				let _ = csv.dropFirst()
 			}
 
-			let definitions = try getAllActivityDefinitions(using: mainTransaction).sorted(by: {
-				$1.recordScreenIndex > $0.recordScreenIndex
-			})
-			var index = 0;
-			for definition in definitions {
-				definition.recordScreenIndex = Int16(index)
-				index += 1
-			}
+			try correctRecordScreenIndices()
 
 			lastImport = latestDate
 			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
@@ -232,9 +225,24 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 			)
 	}
 
+	private final func correctRecordScreenIndices() throws {
+		let definitions = try getAllActivityDefinitions(using: mainTransaction).sorted(by: {
+			$1.recordScreenIndex > $0.recordScreenIndex
+		})
+		var index = 0
+		for var definition in definitions {
+			definition = try mainTransaction.pull(savedObject: definition)
+			definition.recordScreenIndex = Int16(index)
+			index += 1
+		}
+	}
+
 	private final func getAllActivityDefinitions(using transaction: Transaction) throws -> Set<ActivityDefinition> {
 		let definitionsInTransaction = Set(try transaction.query(ActivityDefinition.fetchRequest()))
-		let definitionsInMainContext = Set(try DependencyInjector.db.query(ActivityDefinition.fetchRequest()))
+		let definitionsInMainContext = Set(try DependencyInjector.db.query(ActivityDefinition.fetchRequest())).filter({
+			let id = $0.objectID
+			return !definitionsInTransaction.contains(where: { def in def.objectID == id})
+		})
 		return definitionsInTransaction.union(definitionsInMainContext)
 	}
 }

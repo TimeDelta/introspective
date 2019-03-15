@@ -63,14 +63,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 				lineNumber += 1
 			}
 
-			let medications = try getAllMedications(using: mainTransaction).sorted(by: {
-				$1.recordScreenIndex > $0.recordScreenIndex
-			})
-			var index = 0;
-			for medication in medications {
-				medication.recordScreenIndex = Int16(index)
-				index += 1
-			}
+			try correctRecordScreenIndices()
 
 			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
 		} catch {
@@ -262,9 +255,24 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 		return DependencyInjector.util.string.isNumber(str)
 	}
 
+	private final func correctRecordScreenIndices() throws {
+		let medications = try getAllMedications(using: mainTransaction).sorted(by: {
+			$1.recordScreenIndex > $0.recordScreenIndex
+		})
+		var index = 0
+		for var medication in medications {
+			medication = try mainTransaction.pull(savedObject: medication)
+			medication.recordScreenIndex = Int16(index)
+			index += 1
+		}
+	}
+
 	private final func getAllMedications(using transaction: Transaction) throws -> Set<Medication> {
 		let medicationsInTransaction = Set(try transaction.query(Medication.fetchRequest()))
-		let medicationsInMainContext = Set(try DependencyInjector.db.query(Medication.fetchRequest()))
+		let medicationsInMainContext = Set(try DependencyInjector.db.query(Medication.fetchRequest())).filter({
+			let id = $0.objectID
+			return !medicationsInTransaction.contains(where: { med in med.objectID == id})
+		})
 		return medicationsInTransaction.union(medicationsInMainContext)
 	}
 }

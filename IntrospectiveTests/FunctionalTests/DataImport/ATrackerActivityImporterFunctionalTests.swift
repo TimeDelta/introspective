@@ -279,11 +279,6 @@ not enough columns
 		Given(ioUtil, .csvReader(url: .value(url), hasHeaderRow: .value(true), willReturn: try! CSVReader(string: input, hasHeaderRow: true)))
 	}
 
-	private final func createAllDefinitions() {
-		let _ = ActivityDataTestUtil.createActivityDefinition(name: Me.activityName1)
-		let _ = ActivityDataTestUtil.createActivityDefinition(name: Me.activityName2)
-	}
-
 	private final func activity1WasImported() throws -> Bool {
 		return try activityExists(name: Me.activityName1, from: Me.startDate1, to: Me.endDate1, description: Me.description1, note: Me.note1, tag: Me.category1)
 	}
