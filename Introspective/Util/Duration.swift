@@ -38,6 +38,10 @@ public final class Duration: Equatable, Comparable {
 		self.interval = interval
 	}
 
+	public convenience init(_ dateComponents: DateComponents) {
+		self.init(dateComponents.timeInterval)
+	}
+
 	public init(_ units: [Calendar.Component: Int]) {
 		var tempInterval: TimeInterval = 0
 		for (unit, amount) in units {
@@ -63,7 +67,17 @@ public final class Duration: Equatable, Comparable {
 		return Double(interval) / Double(Me.unitMultipliers[unit]!)
 	}
 
-	// MARK: - Operators
+	// MARK: - Comparable
+
+	public static func ==(lhs: Duration, rhs: Duration) -> Bool {
+		return lhs.interval == rhs.interval
+	}
+
+	public static func <(lhs: Duration, rhs: Duration) -> Bool {
+		return lhs.interval < rhs.interval
+	}
+
+	// MARK: - Math Operators
 
 	public static func -(lhs: Duration, rhs: Duration) -> Duration {
 		return Duration(lhs.interval - rhs.interval)
@@ -75,6 +89,26 @@ public final class Duration: Equatable, Comparable {
 
 	public static func -(lhs: Duration, rhs: Int) -> Duration {
 		return Duration(lhs.interval - Double(rhs))
+	}
+
+	public static func -(lhs: Duration, rhs: DateComponents) -> Duration {
+		return Duration(lhs.interval - rhs.timeInterval)
+	}
+
+	public static func -=(lhs: inout Duration, rhs: Duration) {
+		lhs = lhs - rhs
+	}
+
+	public static func -=(lhs: inout Duration, rhs: Double) {
+		lhs = lhs - rhs
+	}
+
+	public static func -=(lhs: inout Duration, rhs: Int) {
+		lhs = lhs - rhs
+	}
+
+	public static func -=(lhs: inout Duration, rhs: DateComponents) {
+		lhs = lhs - rhs
 	}
 
 	public static func +(lhs: Duration, rhs: Duration) -> Duration {
@@ -89,16 +123,28 @@ public final class Duration: Equatable, Comparable {
 		return Duration(lhs.interval + Double(rhs))
 	}
 
+	public static func +(lhs: Duration, rhs: DateComponents) -> Duration {
+		return Duration(lhs.interval + rhs.timeInterval)
+	}
+
 	public static func +=(lhs: inout Duration, rhs: Duration) {
 		lhs = lhs + rhs
 	}
 
-	public static func ==(lhs: Duration, rhs: Duration) -> Bool {
-		return lhs.interval == rhs.interval
+	public static func +=(lhs: inout Duration, rhs: Double) {
+		lhs = lhs + rhs
 	}
 
-	public static func <(lhs: Duration, rhs: Duration) -> Bool {
-		return lhs.interval < rhs.interval
+	public static func +=(lhs: inout Duration, rhs: Int) {
+		lhs = lhs + rhs
+	}
+
+	public static func +=(lhs: inout Duration, rhs: DateComponents) {
+		lhs = lhs + rhs
+	}
+
+	public static func /(lhs: Duration, rhs: Duration) -> Duration {
+		return Duration(lhs.interval / rhs.interval)
 	}
 
 	public static func /(lhs: Duration, rhs: Int) -> Duration {
@@ -109,12 +155,56 @@ public final class Duration: Equatable, Comparable {
 		return Duration(lhs.interval / rhs)
 	}
 
+	public static func /(lhs: Duration, rhs: DateComponents) -> Duration {
+		return Duration(lhs.interval / rhs.timeInterval)
+	}
+
+	public static func /=(lhs: inout Duration, rhs: Duration) {
+		lhs = lhs / rhs
+	}
+
 	public static func /=(lhs: inout Duration, rhs: Int) {
 		lhs = lhs / rhs
 	}
 
 	public static func /=(lhs: inout Duration, rhs: Double) {
 		lhs = lhs / rhs
+	}
+
+	public static func /=(lhs: inout Duration, rhs: DateComponents) {
+		lhs = lhs / rhs
+	}
+
+	public static func *(lhs: Duration, rhs: Duration) -> Duration {
+		return Duration(lhs.interval * rhs.interval)
+	}
+
+	public static func *(lhs: Duration, rhs: Int) -> Duration {
+		return Duration(lhs.interval * Double(rhs))
+	}
+
+	public static func *(lhs: Duration, rhs: Double) -> Duration {
+		return Duration(lhs.interval * rhs)
+	}
+
+	public static func *(lhs: Duration, rhs: DateComponents) -> Duration {
+		return Duration(lhs.interval * rhs.timeInterval)
+	}
+
+	public static func *=(lhs: inout Duration, rhs: Duration) {
+		lhs = lhs * rhs
+	}
+
+	public static func *=(lhs: inout Duration, rhs: Int) {
+		lhs = lhs * rhs
+	}
+
+	public static func *=(lhs: inout Duration, rhs: Double) {
+		lhs = lhs * rhs
+	}
+
+	public static func *=(lhs: inout Duration, rhs: DateComponents) {
+		lhs = lhs * rhs
 	}
 }
 
