@@ -12,10 +12,10 @@ import SwiftDate
 
 class CountInformationFunctionalTests: FunctionalTest {
 
-	fileprivate typealias Me = CountInformationFunctionalTests
-	fileprivate static let attribute = AttributeBase(name: "attribute")
+	private typealias Me = CountInformationFunctionalTests
+	private static let attribute = AttributeBase(name: "attribute")
 
-	fileprivate var information: CountInformation!
+	private var information: CountInformation!
 
 	override func setUp() {
 		super.setUp()
