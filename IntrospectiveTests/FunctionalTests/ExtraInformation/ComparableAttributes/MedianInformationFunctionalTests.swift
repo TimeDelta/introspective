@@ -42,7 +42,7 @@ class MedianInformationFunctionalTests: FunctionalTest {
 		XCTAssertEqual(value, information.noSamplesMessage)
 	}
 
-	func testGivenNonEmptySampleArray_compute_returnsCorrectValue() throws {
+	func testGivenDoubleAttribute_compute_returnsCorrectValue() throws {
 		// given
 		let medianValue = 5.0
 		let samples = SampleCreatorTestUtil.createSamples(

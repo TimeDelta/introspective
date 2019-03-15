@@ -19,6 +19,7 @@ public final class ExtraInformationFactoryImpl: ExtraInformationFactory {
 	private typealias Me = ExtraInformationFactoryImpl
 
 	private static let genericInformationTypes: [ExtraInformation.Type] = [
+		ModeInformation.self,
 		CountInformation.self,
 	]
 

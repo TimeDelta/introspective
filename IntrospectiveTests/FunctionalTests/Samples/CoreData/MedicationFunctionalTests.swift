@@ -49,7 +49,7 @@ final class MedicationFunctionalTests: FunctionalTest {
 
 	func testGivenFrequencyAttribute_valueOf_returnsCorrectFrequency() throws {
 		// given
-		let expectedFrequency = Frequency(6.0, .day)
+		let expectedFrequency = Frequency(6.0, .day)!
 		let medication = MedicationDataTestUtil.createMedication(frequency: expectedFrequency)
 
 		// when
@@ -110,7 +110,7 @@ final class MedicationFunctionalTests: FunctionalTest {
 
 	func testGivenFrequencyAttribute_set_correctlySetsFrequency() throws {
 		// given
-		let expectedFrequency = Frequency(4, .weekOfYear)
+		let expectedFrequency = Frequency(4, .weekOfYear)!
 		let medication = MedicationDataTestUtil.createMedication()
 
 		// when
