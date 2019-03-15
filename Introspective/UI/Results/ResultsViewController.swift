@@ -45,7 +45,7 @@ final class ResultsViewController: UITableViewController {
 	public final var backButtonTitle: String?
 
 	private final var extraInformation = [ExtraInformation]()
-	private final var extraInformationValues: [String]!
+	private final var extraInformationValues: [String?]!
 	private final var lastSelectedRowIndex: Int!
 	private final var extraInformationEditIndex: Int!
 	private final var actionsPresenter: Presentr!
@@ -168,9 +168,12 @@ final class ResultsViewController: UITableViewController {
 		}
 
 		if section == 0 {
+			guard let value = extraInformationValues[row] else {
+				return tableView.dequeueReusableCell(withIdentifier: "waitingCell", for: indexPath)
+			}
 			let cell = (tableView.dequeueReusableCell(withIdentifier: "informationCell", for: indexPath) as! ExtraInformationTableViewCell)
 			cell.extraInformation = extraInformation[row]
-			cell.value = extraInformationValues[row]
+			cell.value = value
 			return cell
 		}
 
@@ -281,15 +284,24 @@ final class ResultsViewController: UITableViewController {
 
 	@objc private final func saveEditedExtraInformation(notification: Notification) {
 		if let selectedInformation: ExtraInformation? = value(for: .information, from: notification) {
-			// selectedInformation can no longer be nil
 			if let editIndex = extraInformationEditIndex {
+				// selectedInformation can no longer be nil even though it's type is Optional
 				extraInformation[editIndex] = selectedInformation!
-				do {
-					extraInformationValues[editIndex] = try extraInformation[editIndex].compute(forSamples: samples)
-					tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
-				} catch {
-					log.error("Failed to compute %@ information: %@", selectedInformation!.name, errorInfo(error))
-					showError(title: "Failed to compute \(selectedInformation!.name) information", error: error)
+				extraInformationValues[editIndex] = nil
+				tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+				DispatchQueue.global(qos: .userInteractive).async {
+					do {
+						self.extraInformationValues[editIndex] =
+							try self.extraInformation[editIndex].compute(forSamples: self.samples)
+						DispatchQueue.main.async {
+							self.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+						}
+					} catch {
+						self.log.error("Failed to compute %@ information: %@", selectedInformation!.name, errorInfo(error))
+						DispatchQueue.main.async {
+							self.showError(title: "Failed to compute \(selectedInformation!.name) information", error: error)
+						}
+					}
 				}
 			} else {
 				log.error("Extra Information edit index was nil")
@@ -437,8 +449,8 @@ final class ResultsViewController: UITableViewController {
 		controller.attributes = samples[0].attributes
 		controller.selectedAttribute = selectedInformation.attribute
 		controller.selectedInformation = selectedInformation
-		if navigationController != nil {
-			navigationController!.pushViewController(controller, animated: false)
+		if let navigationController = navigationController {
+			navigationController.pushViewController(controller, animated: false)
 		} else {
 			present(controller, animated: false, completion: nil)
 		}
