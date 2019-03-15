@@ -23,14 +23,14 @@ public final class Frequency: NSObject, NSCoding, Codable, Comparable {
 
 	// MARK: - Static Variables
 	private typealias Me = Frequency
-	private static let nanosecondsPerSecond: Double = 100000000
-	private static let secondsPerMinute: Double = 60
-	private static let secondsPerHour: Double = 3600
-	private static let secondsPerDay: Double = 86400
-	private static let secondsPerWeek: Double = 604800
-	private static let secondsPerMonth: Double = 2.628e+6
-	private static let secondsPerQuarter: Double = 31535965.4396976 / 4
-	private static let secondsPerYear: Double = 31535965.4396976
+	private static let nanosecondsPerMinute: Double = 6000000000
+	private static let minutesPerSecond: Double = 1 / 60
+	private static let minutesPerHour: Double = 60
+	private static let minutesPerDay: Double = minutesPerHour * 24
+	private static let minutesPerWeek: Double = minutesPerDay * 7
+	private static let minutesPerYear: Double = 525600
+	private static let minutesPerQuarter: Double = minutesPerYear / 4
+	private static let minutesPerMonth: Double = minutesPerYear / 12
 
 	public static let supportedTimeUnits: [Calendar.Component] = [
 		.nanosecond,
@@ -43,38 +43,6 @@ public final class Frequency: NSObject, NSCoding, Codable, Comparable {
 		.quarter,
 		.year,
 	]
-
-	// MARK: - Comparable
-
-	public static func ==(lhs: Frequency, rhs: Frequency) -> Bool {
-		do {
-			let left = try lhs.timesPerSecond()
-			do {
-				let right = try rhs.timesPerSecond()
-				return left == right
-			} catch {
-				Log().error("Could not convert frequency (%@) to times per second: %@", rhs.description, errorInfo(error))
-			}
-		} catch {
-			Log().error("Could not convert frequency (%@) to times per second: %@", lhs.description, errorInfo(error))
-		}
-		return lhs.timesPerTimeUnit == rhs.timesPerTimeUnit && lhs.timeUnit == rhs.timeUnit // best guess as last resort
-	}
-
-	public static func <(lhs: Frequency, rhs: Frequency) -> Bool {
-		do {
-			let left = try lhs.timesPerSecond()
-			do {
-				let right = try rhs.timesPerSecond()
-				return left < right
-			} catch {
-				Log().error("Could not convert frequency (%@) to times per second: %@", rhs.description, errorInfo(error))
-			}
-		} catch {
-			Log().error("Could not convert frequency (%@) to times per second: %@", lhs.description, errorInfo(error))
-		}
-		return lhs.timesPerTimeUnit < rhs.timesPerTimeUnit // best guess as last resort
-	}
 
 	// MARK: - Instance Variables
 
@@ -94,9 +62,15 @@ public final class Frequency: NSObject, NSCoding, Codable, Comparable {
 		return text
 	}
 
+	private final let log = Log()
+
 	// MARK: - Initializers
 
-	public init(_ timesPerTimeUnit: Double, _ timeUnit: Calendar.Component) {
+	public init?(_ timesPerTimeUnit: Double, _ timeUnit: Calendar.Component) {
+		guard Me.supportedTimeUnits.contains(timeUnit) else {
+			log.error("Tried to initialize frequency with invalid time unit: %@", timeUnit.description)
+			return nil
+		}
 		self.timesPerTimeUnit = timesPerTimeUnit
 		self.timeUnit = timeUnit
 	}
@@ -131,15 +105,15 @@ public final class Frequency: NSObject, NSCoding, Codable, Comparable {
 
 	public final func per(_ newTimeUnit: Calendar.Component) throws -> Double {
 		switch (newTimeUnit) {
-			case .nanosecond: return try timesPerSecond() * Me.nanosecondsPerSecond
-			case .second: return try timesPerSecond()
-			case .minute: return try timesPerSecond() / Me.secondsPerMinute
-			case .hour: return try timesPerSecond() / Me.secondsPerHour
-			case .day: return try timesPerSecond() / Me.secondsPerDay
-			case .weekOfYear: return try timesPerSecond() / Me.secondsPerWeek
-			case .month: return try timesPerSecond() / Me.secondsPerMonth
-			case .quarter: return try timesPerSecond() / Me.secondsPerQuarter
-			case .year: return try timesPerSecond() / Me.secondsPerYear
+			case .nanosecond: return timesPerMinute() / Me.nanosecondsPerMinute
+			case .second: return timesPerMinute() * Me.minutesPerSecond
+			case .minute: return timesPerMinute()
+			case .hour: return timesPerMinute() * Me.minutesPerHour
+			case .day: return timesPerMinute() * Me.minutesPerDay
+			case .weekOfYear: return timesPerMinute() * Me.minutesPerWeek
+			case .month: return timesPerMinute() * Me.minutesPerMonth
+			case .quarter: return timesPerMinute() * Me.minutesPerQuarter
+			case .year: return timesPerMinute() * Me.minutesPerYear
 			default: throw Errors.cannotConvertToTimesPerSecond
 		}
 	}
@@ -153,18 +127,122 @@ public final class Frequency: NSObject, NSCoding, Codable, Comparable {
 
 	// MARK: - Helper Functions
 
-	private final func timesPerSecond() throws -> Double {
+	private final func timesPerMinute() -> Double {
 		switch (timeUnit) {
-			case .nanosecond: return timesPerTimeUnit * Me.nanosecondsPerSecond
-			case .second: return timesPerTimeUnit
-			case .minute: return timesPerTimeUnit / Me.secondsPerMinute
-			case .hour: return timesPerTimeUnit / Me.secondsPerHour
-			case .day: return timesPerTimeUnit / Me.secondsPerDay
-			case .weekOfYear: return timesPerTimeUnit / Me.secondsPerWeek
-			case .month: return timesPerTimeUnit / Me.secondsPerMonth
-			case .quarter: return timesPerTimeUnit / Me.secondsPerQuarter
-			case .year: return timesPerTimeUnit / Me.secondsPerYear
-			default: throw Errors.cannotConvertToTimesPerSecond
+			case .nanosecond: return timesPerTimeUnit * Me.nanosecondsPerMinute
+			case .second: return timesPerTimeUnit / Me.minutesPerHour
+			case .minute: return timesPerTimeUnit
+			case .hour: return timesPerTimeUnit / Me.minutesPerHour
+			case .day: return timesPerTimeUnit / Me.minutesPerDay
+			case .weekOfYear: return timesPerTimeUnit / Me.minutesPerWeek
+			case .month: return timesPerTimeUnit / Me.minutesPerMonth
+			case .quarter: return timesPerTimeUnit / Me.minutesPerQuarter
+			case .year: return timesPerTimeUnit / Me.minutesPerYear
+			default: fatalError("Missing conversion for supported time unit: " + timeUnit.description)
+		}
+	}
+
+	// MARK: - Comparable
+
+	public static func ==(lhs: Frequency, rhs: Frequency) -> Bool {
+		let left = lhs.timesPerMinute()
+		let right = rhs.timesPerMinute()
+		return left == right
+	}
+
+	public static func <(lhs: Frequency, rhs: Frequency) -> Bool {
+		let left = lhs.timesPerMinute()
+		let right = rhs.timesPerMinute()
+		return left < right
+	}
+
+	// MARK: - Math Operators
+
+	public static func +(lhs: Frequency, rhs: Frequency) -> Frequency {
+		return math(lhs: lhs, rhs: rhs, operation: { $0 + $1 })
+	}
+
+	public static func +=(lhs: inout Frequency, rhs: Frequency) {
+		lhs = lhs + rhs
+	}
+
+	public static func -(lhs: Frequency, rhs: Frequency) -> Frequency {
+		return math(lhs: lhs, rhs: rhs, operation: { $0 - $1 })
+	}
+
+	public static func -=(lhs: inout Frequency, rhs: Frequency) {
+		lhs = lhs - rhs
+	}
+
+	public static func /(lhs: Frequency, rhs: Double) -> Frequency {
+		return math(lhs: lhs, rhs: rhs, operation: { $0 / $1 })
+	}
+
+	public static func /(lhs: Frequency, rhs: Int) -> Frequency {
+		return math(lhs: lhs, rhs: rhs, operation: { $0 / $1 })
+	}
+
+	public static func /=(lhs: inout Frequency, rhs: Double) {
+		lhs = lhs / rhs
+	}
+
+	public static func /=(lhs: inout Frequency, rhs: Int) {
+		lhs = lhs / rhs
+	}
+
+	public static func *(lhs: Double, rhs: Frequency) -> Frequency {
+		return rhs * lhs // commutative
+	}
+
+	public static func *(lhs: Int, rhs: Frequency) -> Frequency {
+		return rhs * lhs // commutative
+	}
+
+	public static func *(lhs: Frequency, rhs: Double) -> Frequency {
+		return math(lhs: lhs, rhs: rhs, operation: { $0 * $1 })
+	}
+
+	public static func *(lhs: Frequency, rhs: Int) -> Frequency {
+		return math(lhs: lhs, rhs: rhs, operation: { $0 * $1 })
+	}
+
+	public static func *=(lhs: inout Frequency, rhs: Double) {
+		lhs = lhs * rhs
+	}
+
+	public static func *=(lhs: inout Frequency, rhs: Int) {
+		lhs = lhs * rhs
+	}
+
+	private static func math(lhs: Frequency, rhs: Frequency, operation: (Double, Double) -> Double) -> Frequency {
+		return math(lhs.timeUnit, lhs.timesPerMinute(), rhs.timesPerMinute(), operation)
+	}
+
+	private static func math(lhs: Frequency, rhs: Double, operation: (Double, Double) -> Double) -> Frequency {
+		return math(lhs.timeUnit, lhs.timesPerMinute(), rhs, operation)
+	}
+
+	private static func math(lhs: Frequency, rhs: Int, operation: (Double, Double) -> Double) -> Frequency {
+		return math(lhs.timeUnit, lhs.timesPerMinute(), Double(rhs), operation)
+	}
+
+	/// - Parameter left: The number of times per minute for the left operand
+	/// - Parameter right: The number of times per minute for the right operand
+	private static func math(
+		_ unit: Calendar.Component,
+		_ left: Double,
+		_ right: Double,
+		_ operation: (Double, Double) -> Double)
+	-> Frequency {
+		let frequency = Frequency(operation(left, right), .minute)!
+		do {
+			guard let result = Frequency(try frequency.per(unit), unit) else {
+				// this cannot return nil because the time unit being passed in has already passed validation
+				fatalError("Unable to construct frequency with supported time unit: " + unit.description)
+			}
+			return result
+		} catch {
+			return frequency
 		}
 	}
 }

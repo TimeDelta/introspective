@@ -220,20 +220,16 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 		if frequencyText == "as needed" {
 			return nil
 		} else if frequencyText == "daily" {
-			return Frequency(1, .day)
+			return Frequency(1, .day)!
 		} else if frequencyText == "weekly" {
-			return Frequency(1, .weekOfYear)
+			return Frequency(1, .weekOfYear)!
 		} else if frequencyText == "every hour" {
-			return Frequency(1, .hour)
+			return Frequency(1, .hour)!
 		} else if frequencyText.starts(with: "every") {
-			let timeUnit = getTimeUnitFromFrequencyText(frequencyText)
-			if timeUnit == nil {
-				return nil
-			}
-
+			guard let timeUnit = getTimeUnitFromFrequencyText(frequencyText) else { return nil }
 			if let numberRange = DependencyInjector.util.string.rangeOfNumberIn(frequencyText) {
 				let number = 1.0 / Double(frequencyText[numberRange])!
-				return Frequency(number, timeUnit!)
+				return Frequency(number, timeUnit)!
 			}
 			return nil
 		}

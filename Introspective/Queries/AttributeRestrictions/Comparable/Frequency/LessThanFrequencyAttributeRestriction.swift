@@ -14,10 +14,10 @@ public final class LessThanFrequencyAttributeRestriction: TypedLessThanAttribute
 	public static let valueAttribute = FrequencyAttribute(name: "Target Frequency", pluralName: "Target Frequencys")
 
 	public required convenience init(restrictedAttribute: Attribute) {
-		self.init(restrictedAttribute: restrictedAttribute, value: Frequency(0, .day))
+		self.init(restrictedAttribute: restrictedAttribute, value: Frequency(0, .day)!)
 	}
 
-	public init(restrictedAttribute: Attribute, value: Frequency = Frequency(0, .day)) {
+	public init(restrictedAttribute: Attribute, value: Frequency = Frequency(0, .day)!) {
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 }

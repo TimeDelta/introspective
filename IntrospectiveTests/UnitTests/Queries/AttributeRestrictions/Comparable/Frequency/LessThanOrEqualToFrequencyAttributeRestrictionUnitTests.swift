@@ -33,7 +33,7 @@ final class LessThanOrEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenValueAttribute_valueOf_returnsCorrectFrequency() {
 		// given
-		let expectedValue = Frequency(15, .day)
+		let expectedValue = Frequency(15, .day)!
 		restriction.value = expectedValue
 
 		// when
@@ -45,7 +45,7 @@ final class LessThanOrEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
-		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: Frequency(15, .day))) { error in
+		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: Frequency(15, .day)!)) { error in
 			// then
 			XCTAssert(error is UnknownAttributeError)
 		}
@@ -61,7 +61,7 @@ final class LessThanOrEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenValueAttributeAndValidValue_setAttributeTo_setsCorrectValue() {
 		// given
-		let expectedValue = Frequency(15, .day)
+		let expectedValue = Frequency(15, .day)!
 
 		// when
 		try! restriction.set(attribute: Me.valueAttribute, to: expectedValue)
@@ -85,9 +85,12 @@ final class LessThanOrEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithValueLessThanRestrictionValue_samplePasses_returnsTrue() {
 		// given
 		let mockSample = SampleMock()
-		let restrictionValue = Frequency(15, .day)
+		let restrictionValue = Frequency(15, .day)!
 		restriction.value = restrictionValue
-		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: Frequency(restrictionValue.timesPerTimeUnit - 1, restrictionValue.timeUnit)))
+		Given(
+			mockSample,
+			.value(of: .value(Me.restrictedAttribute),
+			willReturn: Frequency(restrictionValue.timesPerTimeUnit - 1, restrictionValue.timeUnit)!))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)
@@ -99,7 +102,7 @@ final class LessThanOrEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithValueEqualToRestrictionValue_samplePasses_returnsTrue() {
 		// given
 		let mockSample = SampleMock()
-		let restrictionValue = Frequency(15, .day)
+		let restrictionValue = Frequency(15, .day)!
 		restriction.value = restrictionValue
 		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: restrictionValue))
 
@@ -113,9 +116,12 @@ final class LessThanOrEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSampleWithValueGreaterThanRestrictionValue_samplePasses_returnsFalse() {
 		// given
 		let mockSample = SampleMock()
-		let restrictionValue = Frequency(15, .day)
+		let restrictionValue = Frequency(15, .day)!
 		restriction.value = restrictionValue
-		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: Frequency(restrictionValue.timesPerTimeUnit + 1, restrictionValue.timeUnit)))
+		Given(
+			mockSample,
+			.value(of: .value(Me.restrictedAttribute),
+			willReturn: Frequency(restrictionValue.timesPerTimeUnit + 1, restrictionValue.timeUnit)!))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)
@@ -145,7 +151,8 @@ final class LessThanOrEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentRestrictedAttribute_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = LessThanOrEqualToFrequencyAttributeRestriction(restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
+		let otherAttributed: Attributed = LessThanOrEqualToFrequencyAttributeRestriction(
+			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -156,7 +163,9 @@ final class LessThanOrEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameRestrictedAttributeButDifferentValue_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = LessThanOrEqualToFrequencyAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: Frequency(restriction.value.timesPerTimeUnit + 1, .day))
+		let otherAttributed: Attributed = LessThanOrEqualToFrequencyAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: Frequency(restriction.value.timesPerTimeUnit + 1, .day)!)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -167,7 +176,9 @@ final class LessThanOrEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameTypeWithAllSameAttributes_equalToAttributed_returnsTrue() {
 		// given
-		let otherAttributed: Attributed = LessThanOrEqualToFrequencyAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value)
+		let otherAttributed: Attributed = LessThanOrEqualToFrequencyAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -197,7 +208,8 @@ final class LessThanOrEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = LessThanOrEqualToFrequencyAttributeRestriction(restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
+		let otherAttributed: AttributeRestriction = LessThanOrEqualToFrequencyAttributeRestriction(
+			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -208,7 +220,9 @@ final class LessThanOrEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameRestrictedAttributeButDifferentValues_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = LessThanOrEqualToFrequencyAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: Frequency(restriction.value.timesPerTimeUnit + 1, .day))
+		let otherAttributed: AttributeRestriction = LessThanOrEqualToFrequencyAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: Frequency(restriction.value.timesPerTimeUnit + 1, .day)!)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -219,7 +233,9 @@ final class LessThanOrEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let otherAttributed: AttributeRestriction = LessThanOrEqualToFrequencyAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value)
+		let otherAttributed: AttributeRestriction = LessThanOrEqualToFrequencyAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -238,7 +254,8 @@ final class LessThanOrEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = LessThanOrEqualToFrequencyAttributeRestriction(restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
+		let otherAttributed = LessThanOrEqualToFrequencyAttributeRestriction(
+			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -249,7 +266,9 @@ final class LessThanOrEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameRestrictedAttributeButDifferentValues_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = LessThanOrEqualToFrequencyAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: Frequency(restriction.value.timesPerTimeUnit + 1, .day))
+		let otherAttributed = LessThanOrEqualToFrequencyAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: Frequency(restriction.value.timesPerTimeUnit + 1, .day)!)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -260,7 +279,9 @@ final class LessThanOrEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let otherAttributed = LessThanOrEqualToFrequencyAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value)
+		let otherAttributed = LessThanOrEqualToFrequencyAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)

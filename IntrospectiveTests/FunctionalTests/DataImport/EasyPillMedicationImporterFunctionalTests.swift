@@ -20,7 +20,7 @@ final class EasyPillMedicationImporterFunctionalTests: ImporterTest {
 	private static let dosage1Text = "50mg"
 	private static let dosage1 = Dosage(50, "mg")
 	private static let frequency1Text = "daily"
-	private static let frequency1 = Frequency(1, .day)
+	private static let frequency1 = Frequency(1, .day)!
 	private static let startedOn1Text = "4/4/18"
 	private static let startedOn1 = CalendarUtilImpl().date(from: startedOn1Text, format: "M/d/yy")!
 
@@ -29,7 +29,7 @@ final class EasyPillMedicationImporterFunctionalTests: ImporterTest {
 	private static let dosage2Text = "@$3786(ifb"
 	private static let dosage2: Dosage? = nil
 	private static let frequency2Text = "every 2,5 hours"
-	private static let frequency2 = Frequency(1.0 / 2.5, .hour)
+	private static let frequency2 = Frequency(1.0 / 2.5, .hour)!
 	private static let startedOn2Text = "10/29/18"
 	private static let startedOn2 = CalendarUtilImpl().date(from: startedOn2Text, format: "M/d/yy")!
 
