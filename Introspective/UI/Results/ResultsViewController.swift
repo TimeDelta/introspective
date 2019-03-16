@@ -419,7 +419,6 @@ final class ResultsViewController: UITableViewController {
 		alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 			DispatchQueue.global(qos: .userInitiated).async {
 				do {
-					#warning("write a ui test for this")
 					let transaction = DependencyInjector.db.transaction()
 					try transaction.deleteAll(self.samples as! [NSManagedObject])
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
