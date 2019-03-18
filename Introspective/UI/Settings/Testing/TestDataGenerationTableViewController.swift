@@ -172,7 +172,7 @@ final class TestDataGenerationTableViewController: UITableViewController {
 				}
 
 				self.createSamples(Activity.self) { date, transaction in
-					let hoursAgo = DependencyInjector.util.calendar.distance(from: date, to: Date(), in: .hour)
+					let hoursAgo = try! abs(DependencyInjector.util.calendar.distance(from: date, to: Date(), in: .hour))
 					self.createRandomActivity(Date() - hoursAgo.hours, activityDefinitions, using: transaction)
 				}
 				self.createSamples(BloodPressure.self) { bloodPressures, date in
@@ -200,7 +200,7 @@ final class TestDataGenerationTableViewController: UITableViewController {
 					sexualActivities.append(self.randomSexualActivity(date))
 				}
 				self.createSamples(Sleep.self) { sleepRecords, date in
-					let daysAgo = DependencyInjector.util.calendar.distance(from: date, to: Date(), in: .day)
+					let daysAgo = try! abs(DependencyInjector.util.calendar.distance(from: date, to: Date(), in: .day))
 					sleepRecords.append(self.randomSleepSample(daysAgo))
 				}
 				self.createSamples(Weight.self) { weights, date in

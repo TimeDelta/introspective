@@ -2037,16 +2037,18 @@ open class CalendarUtilMock: CalendarUtil, Mock {
 		return __value
     }
 
-    open func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) -> Int {
+    open func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) throws -> Int {
         addInvocation(.m_distance__from_date1to_date2in_unit(Parameter<Date>.value(`date1`), Parameter<Date>.value(`date2`), Parameter<Calendar.Component>.value(`unit`)))
 		let perform = methodPerformValue(.m_distance__from_date1to_date2in_unit(Parameter<Date>.value(`date1`), Parameter<Date>.value(`date2`), Parameter<Calendar.Component>.value(`unit`))) as? (Date, Date, Calendar.Component) -> Void
 		perform?(`date1`, `date2`, `unit`)
 		var __value: Int
 		do {
 		    __value = try methodReturnValue(.m_distance__from_date1to_date2in_unit(Parameter<Date>.value(`date1`), Parameter<Date>.value(`date2`), Parameter<Calendar.Component>.value(`unit`))).casted()
-		} catch {
+		} catch MockError.notStubed {
 			onFatalFailure("Stub return value not specified for distance(from date1: Date, to date2: Date, in unit: Calendar.Component). Use given")
 			Failure("Stub return value not specified for distance(from date1: Date, to date2: Date, in unit: Calendar.Component). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
@@ -2268,10 +2270,13 @@ open class CalendarUtilMock: CalendarUtil, Mock {
 			willProduce(stubber)
 			return given
         }
-        public static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, willProduce: (Stubber<Int>) -> Void) -> MethodStub {
-            let willReturn: [Int] = []
-			let given: Given = { return Given(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`), products: willReturn.map({ Product.return($0) })) }()
-			let stubber = given.stub(for: (Int).self)
+        public static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`), products: willThrow.map({ Product.throw($0) }))
+        }
+        public static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, willProduce: (StubberThrows<Int>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`), products: willThrow.map({ Product.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Int).self)
 			willProduce(stubber)
 			return given
         }

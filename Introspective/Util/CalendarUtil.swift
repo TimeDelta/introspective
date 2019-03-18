@@ -30,7 +30,7 @@ public protocol CalendarUtil {
 	/// otherwise will only attempt using the given format.
 	/// - Returns: The date represented by the passed String if it can be converted, otherwise `nil`.
 	func date(from dateStr: String, format: String?) -> Date?
-	func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) -> Int
+	func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) throws -> Int
 }
 
 extension CalendarUtil {
@@ -46,6 +46,12 @@ extension CalendarUtil {
 }
 
 public final class CalendarUtilImpl: CalendarUtil {
+
+	private final let log = Log()
+
+	public enum Errors: String, Error {
+		case invalidCalendarComponent
+	}
 
 	public final func convert(_ date: Date, from fromTimeZone: TimeZone, to toTimeZone: TimeZone) -> Date {
 		let delta = TimeInterval(toTimeZone.secondsFromGMT() - fromTimeZone.secondsFromGMT())
@@ -131,8 +137,12 @@ public final class CalendarUtilImpl: CalendarUtil {
 		return nil
 	}
 
-	public final func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) -> Int {
-		return abs(Calendar.autoupdatingCurrent.dateComponents([unit], from: date1, to: date2).in(unit)!)
+	public final func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) throws -> Int {
+		guard let distance = Calendar.autoupdatingCurrent.dateComponents([unit], from: date1, to: date2).in(unit) else {
+			log.error("Unable to calculate date distance in %@", unit.description)
+			throw Errors.invalidCalendarComponent
+		}
+		return distance
 	}
 }
 
