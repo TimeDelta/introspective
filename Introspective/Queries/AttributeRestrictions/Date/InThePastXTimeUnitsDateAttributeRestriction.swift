@@ -15,7 +15,20 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 
 	private typealias Me = InThePastXTimeUnitsDateAttributeRestriction
 	public static let numberOfTimeUnitsAttribute = IntegerAttribute(name: "Number of time units")
-	public static let timeUnitAttribute = CalendarComponentAttribute(name: "Time unit", pluralName: "Time units")
+	public static let timeUnitAttribute = CalendarComponentAttribute(
+		name: "Time unit",
+		possibleValues: [
+			.year,
+			.quarter,
+			.month,
+			.weekOfMonth,
+			.weekOfYear,
+			.day,
+			.hour,
+			.minute,
+			.second,
+			.nanosecond,
+		])
 	public static var attributes: [Attribute] = [
 		numberOfTimeUnitsAttribute,
 		timeUnitAttribute,
@@ -23,7 +36,7 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 
 	// MARK: - Display Information
 
-	public final override var attributedName: String { return "In The Past <number> <time unit>s" }
+	public final override var attributedName: String { return "In the past <number> <time unit>s" }
 	public final override var description: String {
 		var text = restrictedAttribute.name + " is in the past \(numberOfTimeUnits) \(timeUnit.description)"
 		if numberOfTimeUnits != 1 {

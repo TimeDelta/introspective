@@ -47,7 +47,7 @@ public final class AttributeRestrictionFactoryImpl: AttributeRestrictionFactory 
 	]
 
 	private static let dateTypes: [DateAttributeRestriction.Type] = [
-		IsTodayDateAttributeRestriction.self,
+		InCurrentTimeUnitDateAttributeRestriction.self,
 		InThePastXTimeUnitsDateAttributeRestriction.self,
 		BeforeDateAttributeRestriction.self,
 		AfterDateAttributeRestriction.self,

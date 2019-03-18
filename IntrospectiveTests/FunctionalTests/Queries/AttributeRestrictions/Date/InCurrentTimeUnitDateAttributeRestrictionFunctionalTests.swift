@@ -10,26 +10,39 @@ import XCTest
 import SwiftDate
 @testable import Introspective
 
-class IsTodayDateAttributeRestrictionFunctionalTests: FunctionalTest {
+class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
-	private typealias Me = IsTodayDateAttributeRestrictionFunctionalTests
+	private typealias Me = InCurrentTimeUnitDateAttributeRestrictionFunctionalTests
 	private static let restrictedAttribute = DateTimeAttribute(name: "this is a date")
+	private static let timeUnitAttribute = InCurrentTimeUnitDateAttributeRestriction.timeUnitAttribute
 
-	private var restriction: IsTodayDateAttributeRestriction!
+	private var restriction: InCurrentTimeUnitDateAttributeRestriction!
 
 	override func setUp() {
 		super.setUp()
-		restriction = IsTodayDateAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
+		restriction = InCurrentTimeUnitDateAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
 	}
 
 	// MARK: - valueOf()
 
-	func test_valueOf_throwsUnknownAttributeError() {
+	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// when
 		XCTAssertThrowsError(try restriction.value(of: Me.restrictedAttribute)) { error in
 			// then
 			XCTAssert(error is UnknownAttributeError)
 		}
+	}
+
+	func testGivenTimeUnitAttribute_valueOf_returnsCorrectValue() {
+		// given
+		let expectedTimeUnit = Calendar.Component.hour
+		restriction.timeUnit = expectedTimeUnit
+
+		// when
+		let actualTimeUnit = try! restriction.value(of: Me.timeUnitAttribute) as! Calendar.Component
+
+		// then
+		XCTAssertEqual(actualTimeUnit, expectedTimeUnit)
 	}
 
 	// MARK: - setAttributeTo()
@@ -40,6 +53,25 @@ class IsTodayDateAttributeRestrictionFunctionalTests: FunctionalTest {
 			// then
 			XCTAssert(error is UnknownAttributeError)
 		}
+	}
+
+	func testGivenWrongValueTypeForTimeUnitAttribtue_setAttributeTo_throwsTypeMismatchError() {
+		// when
+		XCTAssertThrowsError(try restriction.set(attribute: Me.timeUnitAttribute, to: 1 as Any)) { error in
+			// then
+			XCTAssert(error is TypeMismatchError)
+		}
+	}
+
+	func testGivenValidValueForTimeUnitAttribute_setAttributeTo_correctlySetsTimeUnit() {
+		// given
+		let expectedTimeUnit = Calendar.Component.nanosecond
+
+		// when
+		try! restriction.set(attribute: Me.timeUnitAttribute, to: expectedTimeUnit)
+
+		// then
+		XCTAssertEqual(restriction.timeUnit, expectedTimeUnit)
 	}
 
 	// MARK: - samplePasses
@@ -55,10 +87,11 @@ class IsTodayDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		}
 	}
 
-	func testGivenSampleWithDateForGivenAttributeThatIsBeforeToday_samplePasses_returnsFalse() {
+	func testGivenSampleWithDateForGivenAttributeThatIsBeforeCurrentTimeUnit_samplePasses_returnsFalse() {
 		// given
-		let sampleDate = oldDate()
+		let sampleDate = Date() - 1.days
 		let sample = SampleCreatorTestUtil.createSample(withValue: sampleDate, for: Me.restrictedAttribute)
+		restriction.timeUnit = .day
 
 		// when
 		let samplePasses = try! restriction.samplePasses(sample)
@@ -67,10 +100,11 @@ class IsTodayDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		XCTAssertFalse(samplePasses)
 	}
 
-	func testGivenSampleWithDateForGivenAttributeThatIsAfterToday_samplePasses_returnsFalse() {
+	func testGivenSampleWithDateForGivenAttributeThatIsAfterCurrentTimeUnit_samplePasses_returnsFalse() {
 		// given
-		let sampleDate = Date() + 1.days
+		let sampleDate = Date() + 1.weeks
 		let sample = SampleCreatorTestUtil.createSample(withValue: sampleDate, for: Me.restrictedAttribute)
+		restriction.timeUnit = .weekOfYear
 
 		// when
 		let samplePasses = try! restriction.samplePasses(sample)
@@ -79,10 +113,11 @@ class IsTodayDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		XCTAssertFalse(samplePasses)
 	}
 
-	func testGivenSampleWithDateForGivenAttributeThatIsOnToday_samplePasses_returnsTrue() {
+	func testGivenSampleWithDateForGivenAttributeThatIsInCurrentTimeUnit_samplePasses_returnsTrue() {
 		// given
 		let sampleDate = Date()
 		let sample = SampleCreatorTestUtil.createSample(withValue: sampleDate, for: Me.restrictedAttribute)
+		restriction.timeUnit = .day
 
 		// when
 		let samplePasses = try! restriction.samplePasses(sample)
@@ -109,10 +144,21 @@ class IsTodayDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		XCTAssert(restriction == restriction)
 	}
 
-	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
+	func testGivenSameClassWithDifferentRestrictedAttributes_equalToOperator_returnsFalse() {
 		// given
-		let otherRestriction = IsTodayDateAttributeRestriction(
-			restrictedAttribute: DateTimeAttribute(name: "not the same attribute"))
+		let otherRestriction = InCurrentTimeUnitDateAttributeRestriction(
+			restrictedAttribute: DateTimeAttribute(name: "not the same attribute"),
+			restriction.timeUnit)
+
+		// when / then
+		XCTAssertFalse(restriction == otherRestriction)
+	}
+
+	func testGivenSameClassWithDifferentTimeUnits_equalToOperator_returnsFalse() {
+		// given
+		let otherRestriction = InCurrentTimeUnitDateAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			.nanosecond)
 
 		// when / then
 		XCTAssertFalse(restriction == otherRestriction)
@@ -120,7 +166,9 @@ class IsTodayDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenSameClassWithAllSameAttributes_equalToOperator_returnsTrue() {
 		// given
-		let otherRestriction = IsTodayDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		let otherRestriction = InCurrentTimeUnitDateAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			restriction.timeUnit)
 
 		// when / then
 		XCTAssert(restriction == otherRestriction)
@@ -147,9 +195,23 @@ class IsTodayDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		XCTAssert(equal)
 	}
 
-	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() {
+	func testGivenSameClassWithDifferentRestrictedAttributes_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = IsTodayDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+		let otherAttributed: Attributed = InCurrentTimeUnitDateAttributeRestriction(
+			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+
+		// when
+		let equal = restriction.equalTo(otherAttributed)
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameClassWithDifferentTimeUnits_equalToAttributed_returnsFalse() {
+		// given
+		let otherAttributed: Attributed = InCurrentTimeUnitDateAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			.nanosecond)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -160,7 +222,7 @@ class IsTodayDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenSameClassWithAllSameAttributes_equalToAttributed_returnsTrue() {
 		// given
-		let otherAttributed: Attributed = IsTodayDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		let otherAttributed: Attributed = InCurrentTimeUnitDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -192,7 +254,22 @@ class IsTodayDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenSameClassWithDifferentRestrictedAttributes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = IsTodayDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+		let otherAttributed: AttributeRestriction = InCurrentTimeUnitDateAttributeRestriction(
+			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"),
+			restriction.timeUnit)
+
+		// when
+		let equal = restriction.equalTo(otherAttributed)
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameClassWithDifferentTimeUnits_equalToRestriction_returnsFalse() {
+		// given
+		let otherAttributed: AttributeRestriction = InCurrentTimeUnitDateAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			.nanosecond)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -203,7 +280,7 @@ class IsTodayDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenSameClassWithSameRestrictedAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let otherAttributed: AttributeRestriction = IsTodayDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		let otherAttributed: AttributeRestriction = InCurrentTimeUnitDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -224,10 +301,23 @@ class IsTodayDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenSameClassWithDifferentRestrictedAttributes_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = IsTodayDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+		let other = InCurrentTimeUnitDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameClassWithDifferentTimeUnits_equalTo_returnsFalse() {
+		// given
+		let other = InCurrentTimeUnitDateAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			.nanosecond)
+
+		// when
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssertFalse(equal)
@@ -235,10 +325,12 @@ class IsTodayDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenSameMatcherTypeWithSameRestrictedAttributes_equalTo_returnsTrue() {
 		// given
-		let otherAttributed = IsTodayDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		let other = InCurrentTimeUnitDateAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			restriction.timeUnit)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssert(equal)
