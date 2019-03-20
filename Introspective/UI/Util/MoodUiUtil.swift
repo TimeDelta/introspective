@@ -35,15 +35,6 @@ public final class MoodUiUtil {
 			max: maxRating)
 	}
 
-	public static func inverseColorForMood(rating: Double, minRating: Double, maxRating: Double) -> UIColor {
-		return scaledColor(
-			minColor: Me.maxRatingColor,
-			maxColor: Me.minRatingColor,
-			rating: rating,
-			min: minRating,
-			max: maxRating)
-	}
-
 	// MARK: - Helper Functions
 
 	private static func scaledColor(minColor: UIColor, maxColor: UIColor, rating: Double, min: Double, max: Double) -> UIColor {
@@ -51,13 +42,13 @@ public final class MoodUiUtil {
 		var maxGreen: CGFloat = 0
 		var maxBlue: CGFloat = 0
 		var maxAlpha: CGFloat = 0
-		minColor.getRed(&maxRed, green: &maxGreen, blue: &maxBlue, alpha: &maxAlpha)
+		maxColor.getRed(&maxRed, green: &maxGreen, blue: &maxBlue, alpha: &maxAlpha)
 
 		var minRed: CGFloat = 0
 		var minGreen: CGFloat = 0
 		var minBlue: CGFloat = 0
 		var minAlpha: CGFloat = 0
-		maxColor.getRed(&minRed, green: &minGreen, blue: &minBlue, alpha: &minAlpha)
+		minColor.getRed(&minRed, green: &minGreen, blue: &minBlue, alpha: &minAlpha)
 
 		let valueRatio = CGFloat(rating / (max - min))
 
