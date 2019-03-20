@@ -62,7 +62,7 @@ public final class EditMoodTableViewController: UITableViewController {
 			action: #selector(saveButtonPressed))
 
 		observe(selector: #selector(timestampChanged), name: Me.timestampChanged)
-		observe(selector: #selector(ratingChanged), name: .moodRatingChanged)
+		observe(selector: #selector(ratingChanged), name: .moodRatingUpdated)
 		observe(selector: #selector(noteChanged), name: Me.noteChanged)
 		observe(selector: #selector(useDiscreteMoodChanged), name: MoodUiUtil.useDiscreteMoodChanged)
 	}

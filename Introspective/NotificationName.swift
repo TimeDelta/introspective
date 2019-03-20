@@ -25,13 +25,18 @@ public enum NotificationName {
 	case backgroundExportFinished
 	case shareExportFile
 
-	// MARK: - Mood Value Changes
-
-	case moodRatingChanged
-
 	// MARK: - General UI
 
 	case presentView
+
+	// MARK: - Mood Updates
+
+	case moodUpdated
+	case moodTimestampUpdated
+	case moodRatingUpdated
+	case moodMinRatingUpdated
+	case moodMaxRatingUpdated
+	case moodNoteUpdated
 
 	// MARK: - Functions
 
@@ -54,11 +59,16 @@ public enum NotificationName {
 			case .backgroundExportFinished: return "backgroundExportFinished"
 			case .shareExportFile: return "shareExportFile"
 
-			// mood value changes
-			case .moodRatingChanged: return "moodRatingChanged"
-
 			// general UI
 			case .presentView: return "presentView"
+
+			// mood updates
+			case .moodUpdated: return "moodUpdated"
+			case .moodTimestampUpdated: return "moodTimestampUpdated"
+			case .moodRatingUpdated: return "moodRatingUpdated"
+			case .moodMinRatingUpdated: return "moodMinRatingUpdated"
+			case .moodMaxRatingUpdated: return "moodMaxRatingUpdated"
+			case .moodNoteUpdated: return "moodNoteUpdated"
 		}
 	}
 }

@@ -62,6 +62,6 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 	}
 
 	private final func sendRatingChangedNotification() {
-		post(.moodRatingChanged, userInfo: [.number: self.rating])
+		post(.moodRatingUpdated, userInfo: [.number: self.rating])
 	}
 }

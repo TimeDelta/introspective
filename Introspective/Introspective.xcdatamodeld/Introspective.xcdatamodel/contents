@@ -65,11 +65,11 @@
         <relationship name="medication" maxCount="1" deletionRule="Nullify" destinationEntity="Medication" inverseName="doses" inverseEntity="Medication" syncable="YES"/>
     </entity>
     <entity name="Mood" representedClassName=".MoodImpl" syncable="YES">
-        <attribute name="maxRating" attributeType="Double" defaultValueString="7" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="minRating" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="note" optional="YES" attributeType="String" spotlightIndexingEnabled="YES" syncable="YES"/>
-        <attribute name="rating" attributeType="Double" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="storedMaxRating" attributeType="Double" defaultValueString="7" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="storedMinRating" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="storedNote" optional="YES" attributeType="String" spotlightIndexingEnabled="YES" syncable="YES"/>
+        <attribute name="storedRating" attributeType="Double" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="storedSource" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="timestampTimeZoneId" optional="YES" attributeType="String" syncable="YES"/>
     </entity>

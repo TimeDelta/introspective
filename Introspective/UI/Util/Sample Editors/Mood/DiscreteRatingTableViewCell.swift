@@ -46,7 +46,7 @@ public final class DiscreteRatingTableViewCell: UITableViewCell {
 
 				self.rating = rating
 
-				post(.moodRatingChanged, userInfo: [.number: Double(rating)])
+				post(.moodRatingUpdated, userInfo: [.number: Double(rating)])
 			} else {
 				log.error("Unable to get rating from button title")
 			}

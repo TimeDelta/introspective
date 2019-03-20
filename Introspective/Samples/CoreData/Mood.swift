@@ -63,19 +63,60 @@ public final class MoodImpl: NSManagedObject, Mood {
 	]
 	public final let attributes: [Attribute] = Me.attributes
 
-	// MARK: - Instance Variables
+	// MARK: - Display Information
 
 	public final let attributedName: String = "Mood"
 	public final override var description: String { return Me.description }
+
+	// MARK: - Instance Variables
+
+	public final var note: String? {
+		get { return storedNote }
+		set {
+			guard storedNote != newValue else { return }
+			storedNote = newValue
+			if let note = storedNote {
+				sendValueUpdateNotification(.moodNoteUpdated, [.text: note])
+			} else {
+				sendValueUpdateNotification(.moodNoteUpdated)
+			}
+		}
+	}
+	public final var rating: Double {
+		get { return storedRating }
+		set {
+			guard storedRating != newValue else { return }
+			storedRating = newValue
+			sendValueUpdateNotification(.moodRatingUpdated, [.number: storedRating])
+		}
+	}
+	public final var minRating: Double {
+		get { return storedMinRating }
+		set {
+			guard storedMinRating != newValue else { return }
+			storedMinRating = newValue
+			sendValueUpdateNotification(.moodMinRatingUpdated, [.number: storedMinRating])
+		}
+	}
+	public final var maxRating: Double {
+		get { return storedMaxRating }
+		set {
+			guard storedMaxRating != newValue else { return }
+			storedMaxRating = newValue
+			sendValueUpdateNotification(.moodMaxRatingUpdated, [.number: storedMaxRating])
+		}
+	}
 	public final var date: Date {
 		get {
 			return DependencyInjector.util.coreDataSample.convertTimeZoneIfApplicable(for: timestamp, timeZoneId: timestampTimeZoneId)
 		}
 		set {
+			guard timestamp != newValue else { return }
 			timestamp = newValue
-			if source == Sources.MoodSourceNum.introspective.rawValue && timestampTimeZoneId == nil {
+			if storedSource == Sources.MoodSourceNum.introspective.rawValue && timestampTimeZoneId == nil {
 				timestampTimeZoneId = TimeZone.autoupdatingCurrent.identifier
 			}
+			sendValueUpdateNotification(.moodTimestampUpdated, [.date: timestamp])
 		}
 	}
 
@@ -167,10 +208,7 @@ public final class MoodImpl: NSManagedObject, Mood {
 			guard let castedValue = value as? Date else {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
-			timestamp = castedValue
-			if source == Sources.MoodSourceNum.introspective.rawValue && timestampTimeZoneId == nil {
-				timestampTimeZoneId = TimeZone.autoupdatingCurrent.identifier
-			}
+			date = castedValue
 			return
 		}
 		if attribute.equalTo(Me.note) {
@@ -191,10 +229,17 @@ public final class MoodImpl: NSManagedObject, Mood {
 	}
 
 	public final func setSource(_ source: Sources.MoodSourceNum) {
-		self.source = source.rawValue
+		self.storedSource = source.rawValue
 		if source == Sources.MoodSourceNum.introspective && timestampTimeZoneId == nil {
 			timestampTimeZoneId = TimeZone.autoupdatingCurrent.identifier
 		}
+	}
+
+	// MARK: - Helper Functions
+
+	private final func sendValueUpdateNotification(_ name: NotificationName, _ info: [UserInfoKey: Any]? = nil) {
+		DependencyInjector.util.notification.post(.moodUpdated, object: self, qos: .userInteractive)
+		DependencyInjector.util.notification.post(name, object: self, userInfo: info, qos: .userInteractive)
 	}
 
 	// MARK: - Equatable
@@ -234,11 +279,11 @@ extension MoodImpl {
 		return NSFetchRequest<MoodImpl>(entityName: "Mood")
 	}
 
-	@NSManaged public var note: String?
-	@NSManaged public var rating: Double
+	@NSManaged fileprivate var storedNote: String?
+	@NSManaged fileprivate var storedRating: Double
 	@NSManaged fileprivate var timestamp: Date
 	@NSManaged fileprivate var timestampTimeZoneId: String?
-	@NSManaged public var minRating: Double
-	@NSManaged public var maxRating: Double
-	@NSManaged public var source: Int16
+	@NSManaged fileprivate var storedMinRating: Double
+	@NSManaged fileprivate var storedMaxRating: Double
+	@NSManaged fileprivate var storedSource: Int16
 }
