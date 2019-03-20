@@ -47,8 +47,8 @@ final class ImportDataTableViewController: UITableViewController {
 	// MARK: - UIViewController Overrides
 
 	public final override func viewDidLoad() {
-		observe(selector: #selector(extendTime), name: NotificationNames.extendBackgroundTaskTime)
-		observe(selector: #selector(cancelBackgroundImport), name: NotificationNames.cancelBackgroundTask)
+		observe(selector: #selector(extendTime), name: .extendBackgroundTaskTime)
+		observe(selector: #selector(cancelBackgroundImport), name: .cancelBackgroundTask)
 	}
 
 	deinit {

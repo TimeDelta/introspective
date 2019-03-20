@@ -45,8 +45,8 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		super.viewDidLoad()
 		observe(selector: #selector(showViewController), name: Me.showViewController)
 		observe(selector: #selector(showErrorMessage), name: Me.showErrorMessage)
-		observe(selector: #selector(showRecordActivitiesScreen), name: NotificationNames.showRecordActivitiesScreen)
-		observe(selector: #selector(showRecordMedicationsScreen), name: NotificationNames.showRecordMedicationsScreen)
+		observe(selector: #selector(showRecordActivitiesScreen), name: .showRecordActivitiesScreen)
+		observe(selector: #selector(showRecordMedicationsScreen), name: .showRecordMedicationsScreen)
 		observe(selector: #selector(useDiscreteMoodChanged), name: MoodUiUtil.useDiscreteMoodChanged)
 	}
 

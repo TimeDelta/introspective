@@ -98,11 +98,11 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 				break
 			case Me.extendTime.identifier:
 				let content = response.notification.request.content
-				sendNotificationForTimeExpiredAction(NotificationNames.extendBackgroundTaskTime, content)
+				sendNotificationForTimeExpiredAction(.extendBackgroundTaskTime, content)
 				break
 			case Me.cancelTask.identifier:
 				let content = response.notification.request.content
-				sendNotificationForTimeExpiredAction(NotificationNames.cancelBackgroundTask, content)
+				sendNotificationForTimeExpiredAction(.cancelBackgroundTask, content)
 				break
 			default:
 				log.error("Unknown response action identifier: %@", actionIdentifier)
@@ -117,7 +117,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		let category = content.categoryIdentifier
 		switch(category) {
 			case Me.timeExpired.identifier:
-				sendNotificationForTimeExpiredAction(NotificationNames.cancelBackgroundTask, content)
+				sendNotificationForTimeExpiredAction(.cancelBackgroundTask, content)
 				break
 			default:
 				log.debug("Unhandled dismiss action category: %@", category)
@@ -129,7 +129,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		let category = content.categoryIdentifier
 		switch(category) {
 			case Me.timeExpired.identifier:
-				sendNotificationForTimeExpiredAction(NotificationNames.extendBackgroundTaskTime, content)
+				sendNotificationForTimeExpiredAction(.extendBackgroundTaskTime, content)
 				break
 			default:
 				log.debug("Unhandled default action category: %@", category)
@@ -138,12 +138,12 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 
 	private final func showActivityHistory() {
 		showRecordDataScreen()
-		NotificationCenter.default.post(name: NotificationNames.showRecordActivitiesScreen, object: self)
+		DependencyInjector.util.notification.post(.showRecordActivitiesScreen, object: self)
 	}
 
 	private final func showMedicationHistory() {
 		showRecordDataScreen()
-		NotificationCenter.default.post(name: NotificationNames.showRecordMedicationsScreen, object: self)
+		DependencyInjector.util.notification.post(.showRecordMedicationsScreen, object: self)
 	}
 
 	private final func showMoodHistory() {
@@ -152,7 +152,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 
 	// MARK: - Helper Functions
 
-	private final func sendNotificationForTimeExpiredAction(_ notificationName: Notification.Name, _ content: UNNotificationContent) {
+	private final func sendNotificationForTimeExpiredAction(_ name: NotificationName, _ content: UNNotificationContent) {
 		guard let taskId = content.userInfo[UserInfoKey.backgroundTaskId.description] else {
 			log.error(
 				"Missing background task id on time expired user notification. Title: %@. Body: %@",
@@ -160,12 +160,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 				content.body)
 			return
 		}
-		NotificationCenter.default.post(
-			name: NotificationNames.extendBackgroundTaskTime,
-			object: self,
-			userInfo: DependencyInjector.util.ui.info([
-				.backgroundTaskId: taskId,
-			]))
+		DependencyInjector.util.notification.post(name, object: self, userInfo: [.backgroundTaskId: taskId])
 	}
 
 	private final func showRecordDataScreen() {
@@ -174,12 +169,7 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 
 	private final func showResultsScreenWith(forQuery query: Query) {
 		setTabBarIndex(1)
-		NotificationCenter.default.post(
-			name: NotificationNames.showResultsScreen,
-			object: self,
-			userInfo: DependencyInjector.util.ui.info([
-				.query: query,
-			]))
+		DependencyInjector.util.notification.post(.showResultsScreen, object: self, userInfo: [.query: query])
 	}
 
 	private final func setTabBarIndex(_ index: Int) {

@@ -10,6 +10,10 @@ import UIKit
 
 extension UITableViewCell {
 
+	final func observe(selector: Selector, name: NotificationName, object: Any? = nil) {
+		NotificationCenter.default.addObserver(self, selector: selector, name: name.toName(), object: object)
+	}
+
 	final func observe(selector: Selector, name: Notification.Name, object: Any? = nil) {
 		NotificationCenter.default.addObserver(self, selector: selector, name: name, object: object)
 	}

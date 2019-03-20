@@ -25,7 +25,7 @@ final class ExploreCollectionViewController: UICollectionViewController {
 
 	final override func viewDidLoad() {
 		super.viewDidLoad()
-		observe(selector: #selector(showResultsScreen), name: NotificationNames.showResultsScreen)
+		observe(selector: #selector(showResultsScreen), name: .showResultsScreen)
 	}
 
 	deinit {
