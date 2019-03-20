@@ -15,7 +15,10 @@ final class MoodTableViewCell: UITableViewCell {
 	public final var mood: Mood! {
 		didSet {
 			guard let mood = mood else { return }
-			moodRatingColorLabel.backgroundColor = MoodUiUtil.colorForMood(rating: mood.rating, maxRating: mood.maxRating)
+			moodRatingColorLabel.backgroundColor = MoodUiUtil.colorForMood(
+				rating: mood.rating,
+				minRating: mood.minRating,
+				maxRating: mood.maxRating)
 			moodRatingColorLabel.text = nil
 			let ratingText = MoodUiUtil.valueToString(mood.rating)
 			let minText = MoodUiUtil.valueToString(mood.minRating)

@@ -17,6 +17,7 @@ final class MoodSettingsViewController: UIViewController {
 	@IBOutlet weak final var minMoodField: UITextField!
 	@IBOutlet weak final var maxMoodField: UITextField!
 	@IBOutlet weak final var scaleMoodsOnImportSwitch: UISwitch!
+	@IBOutlet weak final var useDiscreteMoodsSwitch: UISwitch!
 
 	// MARK: - Instance Variables
 
@@ -37,6 +38,12 @@ final class MoodSettingsViewController: UIViewController {
 	@IBAction final func showAutoScaleMoodsOnImportDescription(_ sender: Any) {
 		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
 		controller.descriptionText = "Automatically scale any imported moods to match the minimum and maximum moods at the time of import."
+		present(controller, using: DependencyInjector.util.ui.defaultPresenter)
+	}
+
+	@IBAction final func showDiscreteMoodsDescription(_ sender: Any) {
+		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
+		controller.descriptionText = "Instead of letting you set whatever value you want (i.e. 4.367) for your mood, only allow integer values like 1, 2, or 3. This will not change any existing mood records."
 		present(controller, using: DependencyInjector.util.ui.defaultPresenter)
 	}
 
@@ -64,6 +71,11 @@ final class MoodSettingsViewController: UIViewController {
 		DependencyInjector.settings.setMinMood(minRating)
 		DependencyInjector.settings.setMaxMood(maxRating)
 		DependencyInjector.settings.setScaleMoodsOnImport(scaleMoodsOnImportSwitch.isOn)
+		DependencyInjector.settings.setDiscreteMoods(useDiscreteMoodsSwitch.isOn)
+
+		if DependencyInjector.settings.changed(.discreteMoods) {
+			post(MoodUiUtil.useDiscreteMoodChanged)
+		}
 
 		if DependencyInjector.settings.changed(.maxMood) || DependencyInjector.settings.changed(.minMood) {
 			if DependencyInjector.settings.changed(.minMood) {
@@ -93,6 +105,7 @@ final class MoodSettingsViewController: UIViewController {
 		minMoodField.text = MoodUiUtil.valueToString(DependencyInjector.settings.minMood)
 		maxMoodField.text = MoodUiUtil.valueToString(DependencyInjector.settings.maxMood)
 		scaleMoodsOnImportSwitch.isOn = DependencyInjector.settings.scaleMoodsOnImport
+		useDiscreteMoodsSwitch.isOn = DependencyInjector.settings.discreteMoods
 	}
 
 	private final func presentScaleMoodsAlert() {

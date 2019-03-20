@@ -27,6 +27,7 @@ public enum UserInfoKey: Hashable, CustomStringConvertible {
 	case date
 	case dosage
 	case dose
+	case error
 	case frequency
 	case fromDate
 	case graphType
@@ -66,6 +67,7 @@ public enum UserInfoKey: Hashable, CustomStringConvertible {
 			case .date: return "date"
 			case .dosage: return "dosage"
 			case .dose: return "dose"
+			case .error: return "error"
 			case .frequency: return "frequency"
 			case .fromDate: return "fromDate"
 			case .graphType: return "graphType"

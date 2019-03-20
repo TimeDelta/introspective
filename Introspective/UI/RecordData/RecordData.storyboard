@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" restorationIdentifier="mood" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="mood" rowHeight="145" id="fJm-WJ-Cyf" customClass="RecordMoodTableViewCell" customModule="Introspective" customModuleProvider="target">
+                            <tableViewCell contentMode="scaleToFill" restorationIdentifier="continuousMood" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="continuousMood" rowHeight="145" id="fJm-WJ-Cyf" customClass="RecordMoodTableViewCell" customModule="Introspective" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="145"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fJm-WJ-Cyf" id="WhK-EM-rdy">
@@ -28,7 +28,7 @@
                                     <subviews>
                                         <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="ho7-yT-Grz">
                                             <rect key="frame" x="16" y="86" width="343" height="48"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <accessibility key="accessibilityConfiguration" hint="Add a note about your mood" identifier="set mood note button" label="set mood note button"/>
                                             <state key="normal" title="Add Note"/>
                                             <connections>
@@ -80,8 +80,77 @@
                                     <outlet property="ratingSlider" destination="ymG-KL-FCQ" id="X88-2h-GKl"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" restorationIdentifier="discreteMood" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="discreteMood" rowHeight="145" id="VYs-Kk-cJw" customClass="RecordDiscreteMoodTableViewCell" customModule="Introspective" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="173" width="375" height="145"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VYs-Kk-cJw" id="9hk-z4-IxR">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="144.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="kTS-5Q-5j2">
+                                            <rect key="frame" x="16" y="90" width="343" height="44"/>
+                                            <accessibility key="accessibilityConfiguration" hint="Add a note about your mood" identifier="set mood note button" label="set mood note button"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="44" id="N3f-2o-wnL"/>
+                                            </constraints>
+                                            <state key="normal" title="Add Note"/>
+                                            <connections>
+                                                <action selector="presentMoodNoteController:" destination="VYs-Kk-cJw" eventType="touchUpInside" id="9oI-0e-biN"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kQs-XG-QPP">
+                                            <rect key="frame" x="5" y="0.0" width="365" height="34"/>
+                                            <accessibility key="accessibilityConfiguration" hint="Save this mood rating" identifier="save mood button" label="save mood button"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="34" id="lXq-iN-0D2"/>
+                                            </constraints>
+                                            <state key="normal" title="Save Mood"/>
+                                            <connections>
+                                                <action selector="doneButtonPressed:" destination="VYs-Kk-cJw" eventType="touchUpInside" id="fER-XS-kBb"/>
+                                            </connections>
+                                        </button>
+                                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gFO-JW-crE" customClass="RecordMoodScrollView" customModule="Introspective" customModuleProvider="target">
+                                            <rect key="frame" x="16" y="42" width="343" height="40"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="500" verticalCompressionResistancePriority="500" translatesAutoresizingMaskIntoConstraints="NO" id="AP7-3C-e06">
+                                                    <rect key="frame" x="0.0" y="0.0" width="343" height="40"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="40" placeholder="YES" id="uPQ-Kl-kUR"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="AP7-3C-e06" firstAttribute="centerY" secondItem="gFO-JW-crE" secondAttribute="centerY" id="6X9-CC-NNa"/>
+                                                <constraint firstAttribute="trailing" secondItem="AP7-3C-e06" secondAttribute="trailing" priority="999" id="8pK-qG-6oS"/>
+                                                <constraint firstItem="AP7-3C-e06" firstAttribute="centerX" secondItem="gFO-JW-crE" secondAttribute="centerX" placeholder="YES" id="I3Q-s5-sCP"/>
+                                                <constraint firstItem="AP7-3C-e06" firstAttribute="top" secondItem="gFO-JW-crE" secondAttribute="top" id="dpt-f9-3du"/>
+                                                <constraint firstItem="AP7-3C-e06" firstAttribute="leading" secondItem="gFO-JW-crE" secondAttribute="leading" priority="999" id="fPz-B3-Lp5"/>
+                                                <constraint firstItem="AP7-3C-e06" firstAttribute="bottom" secondItem="gFO-JW-crE" secondAttribute="bottom" id="oDT-Ie-Vq3"/>
+                                            </constraints>
+                                        </scrollView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="gFO-JW-crE" firstAttribute="top" secondItem="kQs-XG-QPP" secondAttribute="bottom" constant="8" symbolic="YES" id="99f-Wj-Yk9"/>
+                                        <constraint firstItem="kTS-5Q-5j2" firstAttribute="leading" secondItem="9hk-z4-IxR" secondAttribute="leadingMargin" id="G4s-Zp-f4a"/>
+                                        <constraint firstItem="kQs-XG-QPP" firstAttribute="top" secondItem="9hk-z4-IxR" secondAttribute="top" id="HCT-fL-SgZ"/>
+                                        <constraint firstItem="kQs-XG-QPP" firstAttribute="leading" secondItem="9hk-z4-IxR" secondAttribute="leading" constant="5" id="LeT-LU-bEF"/>
+                                        <constraint firstItem="kTS-5Q-5j2" firstAttribute="bottom" secondItem="9hk-z4-IxR" secondAttribute="bottomMargin" id="bGH-OO-mEV"/>
+                                        <constraint firstItem="gFO-JW-crE" firstAttribute="leading" secondItem="9hk-z4-IxR" secondAttribute="leadingMargin" id="cva-Hf-xMX"/>
+                                        <constraint firstItem="gFO-JW-crE" firstAttribute="trailing" secondItem="9hk-z4-IxR" secondAttribute="trailingMargin" id="hzb-DB-rVg"/>
+                                        <constraint firstAttribute="trailing" secondItem="kQs-XG-QPP" secondAttribute="trailing" constant="5" id="n5o-EW-Qbt"/>
+                                        <constraint firstItem="kTS-5Q-5j2" firstAttribute="trailing" secondItem="9hk-z4-IxR" secondAttribute="trailingMargin" id="zrH-Yb-yiA"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="addNoteButton" destination="kTS-5Q-5j2" id="2Uz-81-xpf"/>
+                                    <outlet property="doneButton" destination="kQs-XG-QPP" id="f1N-iO-NTq"/>
+                                    <outlet property="moodContentView" destination="AP7-3C-e06" id="djS-TK-z8s"/>
+                                    <outlet property="scrollView" destination="gFO-JW-crE" id="Jhh-xa-JSb"/>
+                                </connections>
+                            </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" restorationIdentifier="medication" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="medication" textLabel="oJ9-rO-oaB" rowHeight="52" style="IBUITableViewCellStyleDefault" id="Ywy-Tl-NSz">
-                                <rect key="frame" x="0.0" y="173" width="375" height="52"/>
+                                <rect key="frame" x="0.0" y="318" width="375" height="52"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ywy-Tl-NSz" id="hAu-TZ-T5A">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="51.5"/>
@@ -98,7 +167,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" restorationIdentifier="activity" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="activity" textLabel="gSR-ok-bB5" rowHeight="52" style="IBUITableViewCellStyleDefault" id="GBc-t4-D0b">
-                                <rect key="frame" x="0.0" y="225" width="375" height="52"/>
+                                <rect key="frame" x="0.0" y="370" width="375" height="52"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="GBc-t4-D0b" id="H7M-EF-ehu">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="51.5"/>

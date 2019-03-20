@@ -15,6 +15,7 @@ public final class MoodUiUtil {
 
 	public static let minRatingChanged = Notification.Name("minimumMoodRatingChanged")
 	public static let maxRatingChanged = Notification.Name("maximumMoodRatingChanged")
+	public static let useDiscreteMoodChanged = Notification.Name("useDiscreteMoodChanged")
 
 	public static let minRatingColor = UIColor.black
 	public static let maxRatingColor = UIColor.yellow
@@ -25,20 +26,40 @@ public final class MoodUiUtil {
 		return numFormatter.string(from: NSNumber(value: value))!
 	}
 
-	public static func colorForMood(rating: Double, maxRating: Double) -> UIColor {
+	public static func colorForMood(rating: Double, minRating: Double, maxRating: Double) -> UIColor {
+		return scaledColor(
+			minColor: Me.minRatingColor,
+			maxColor: Me.maxRatingColor,
+			rating: rating,
+			min: minRating,
+			max: maxRating)
+	}
+
+	public static func inverseColorForMood(rating: Double, minRating: Double, maxRating: Double) -> UIColor {
+		return scaledColor(
+			minColor: Me.maxRatingColor,
+			maxColor: Me.minRatingColor,
+			rating: rating,
+			min: minRating,
+			max: maxRating)
+	}
+
+	// MARK: - Helper Functions
+
+	private static func scaledColor(minColor: UIColor, maxColor: UIColor, rating: Double, min: Double, max: Double) -> UIColor {
 		var maxRed: CGFloat = 0
 		var maxGreen: CGFloat = 0
 		var maxBlue: CGFloat = 0
 		var maxAlpha: CGFloat = 0
-		Me.maxRatingColor.getRed(&maxRed, green: &maxGreen, blue: &maxBlue, alpha: &maxAlpha)
+		minColor.getRed(&maxRed, green: &maxGreen, blue: &maxBlue, alpha: &maxAlpha)
 
 		var minRed: CGFloat = 0
 		var minGreen: CGFloat = 0
 		var minBlue: CGFloat = 0
 		var minAlpha: CGFloat = 0
-		Me.minRatingColor.getRed(&minRed, green: &minGreen, blue: &minBlue, alpha: &minAlpha)
+		maxColor.getRed(&minRed, green: &minGreen, blue: &minBlue, alpha: &minAlpha)
 
-		let valueRatio = CGFloat(rating / maxRating)
+		let valueRatio = CGFloat(rating / (max - min))
 
 		return UIColor(
 			red: (maxRed - minRed) * valueRatio + minRed,

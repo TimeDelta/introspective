@@ -57,7 +57,7 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 
 	private final func updateUI() {
 		ratingSlider.setValue(Float(rating / maxRating), animated: false)
-		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: rating, maxRating: maxRating)
+		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: rating, minRating: minRating, maxRating: maxRating)
 		ratingTextField.text = MoodUiUtil.valueToString(rating)
 		ratingRangeLabel.text = "(\(MoodUiUtil.valueToString(minRating))-\(MoodUiUtil.valueToString(maxRating)))"
 	}

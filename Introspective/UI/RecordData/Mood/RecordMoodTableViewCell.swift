@@ -100,21 +100,13 @@ final class RecordMoodTableViewCell: UITableViewCell {
 
 			reset()
 		} catch {
-			var title = "Failed to save mood rating"
-			var message = "Sorry for the inconvenience"
-			if let error = error as? DisplayableError {
-				title = error.displayableTitle
-				if let description = error.displayableDescription {
-					message = description
-				}
-			}
 			log.error("Failed to create or save mood: %@", errorInfo(error))
 			NotificationCenter.default.post(
 				name: RecordDataTableViewController.showErrorMessage,
 				object: self,
 				userInfo: info([
-					.title: title,
-					.message: message,
+					.title: "Failed to save mood rating",
+					.error: error,
 				]))
 		}
 	}
@@ -148,7 +140,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 		let min = DependencyInjector.settings.minMood
 		let max = DependencyInjector.settings.maxMood
 		ratingSlider.setValue(Float((rating - min) / (max - min)), animated: false)
-		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: rating, maxRating: max)
+		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: rating, minRating: min, maxRating: max)
 		ratingButton.setTitle(MoodUiUtil.valueToString(rating), for: .normal)
 		ratingButton.accessibilityValue = MoodUiUtil.valueToString(rating)
 		ratingRangeLabel.text = "(\(MoodUiUtil.valueToString(min))-\(MoodUiUtil.valueToString(max)))"

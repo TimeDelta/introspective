@@ -420,6 +420,7 @@
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fXW-So-4Eb">
                                 <rect key="frame" x="16" y="107" width="22" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="scale moods on import help button" label="scale moods on import help button"/>
                                 <connections>
                                     <action selector="showAutoScaleMoodsOnImportDescription:" destination="Lio-fX-vKa" eventType="touchUpInside" id="bbv-Bh-SAy"/>
                                 </connections>
@@ -431,6 +432,26 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="atp-KZ-UuX">
+                                <rect key="frame" x="46" y="142" width="49" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="use integers only switch" label="use integers only switch"/>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Use integers only" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZrO-M8-Lfy">
+                                <rect key="frame" x="101" y="147" width="258" height="21"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gET-el-m0O">
+                                <rect key="frame" x="16" y="146" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="use integers only help button" label="use integers only help button"/>
+                                <connections>
+                                    <action selector="showDiscreteMoodsDescription:" destination="Lio-fX-vKa" eventType="touchUpInside" id="vA0-hG-TOZ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="L9a-f4-Xff"/>
@@ -441,6 +462,7 @@
                         <outlet property="maxMoodField" destination="hyo-y0-Vn8" id="evS-Lq-lHI"/>
                         <outlet property="minMoodField" destination="kIJ-qf-eKS" id="CyP-Fc-WCR"/>
                         <outlet property="scaleMoodsOnImportSwitch" destination="zSd-XP-PkO" id="RSh-gA-m9r"/>
+                        <outlet property="useDiscreteMoodsSwitch" destination="atp-KZ-UuX" id="FD9-37-LJV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="u4R-l0-zMB" userLabel="First Responder" sceneMemberID="firstResponder"/>

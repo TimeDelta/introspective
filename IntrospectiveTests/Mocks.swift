@@ -9191,6 +9191,13 @@ open class SettingsMock: Settings, Mock, StaticMock {
 	}
 	private var __p_maxMood: (Double)?
 
+    public var discreteMoods: Bool {
+		get {	invocations.append(.p_discreteMoods_get); return __p_discreteMoods ?? givenGetterValue(.p_discreteMoods_get, "SettingsMock - stub value for discreteMoods was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_discreteMoods = newValue }
+	}
+	private var __p_discreteMoods: (Bool)?
+
     public var scaleMoodsOnImport: Bool {
 		get {	invocations.append(.p_scaleMoodsOnImport_get); return __p_scaleMoodsOnImport ?? givenGetterValue(.p_scaleMoodsOnImport_get, "SettingsMock - stub value for scaleMoodsOnImport was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
@@ -9239,6 +9246,12 @@ open class SettingsMock: Settings, Mock, StaticMock {
     open func setMaxMood(_ value: Double) {
         addInvocation(.m_setMaxMood__value(Parameter<Double>.value(`value`)))
 		let perform = methodPerformValue(.m_setMaxMood__value(Parameter<Double>.value(`value`))) as? (Double) -> Void
+		perform?(`value`)
+    }
+
+    open func setDiscreteMoods(_ value: Bool) {
+        addInvocation(.m_setDiscreteMoods__value(Parameter<Bool>.value(`value`)))
+		let perform = methodPerformValue(.m_setDiscreteMoods__value(Parameter<Bool>.value(`value`))) as? (Bool) -> Void
 		perform?(`value`)
     }
 
@@ -9345,6 +9358,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
     fileprivate enum MethodType {
         case m_setMinMood__value(Parameter<Double>)
         case m_setMaxMood__value(Parameter<Double>)
+        case m_setDiscreteMoods__value(Parameter<Bool>)
         case m_setScaleMoodsOnImport__value(Parameter<Bool>)
         case m_setAutoIgnoreEnabled__value(Parameter<Bool>)
         case m_setAutoIgnoreSeconds__value(Parameter<Int>)
@@ -9354,6 +9368,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
         case m_save
         case p_minMood_get
         case p_maxMood_get
+        case p_discreteMoods_get
         case p_scaleMoodsOnImport_get
         case p_autoIgnoreEnabled_get
         case p_autoIgnoreSeconds_get
@@ -9367,6 +9382,9 @@ open class SettingsMock: Settings, Mock, StaticMock {
             case (.m_setMaxMood__value(let lhsValue), .m_setMaxMood__value(let rhsValue)):
                 guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
                 return true 
+            case (.m_setDiscreteMoods__value(let lhsValue), .m_setDiscreteMoods__value(let rhsValue)):
+                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false }
+                return true
             case (.m_setScaleMoodsOnImport__value(let lhsValue), .m_setScaleMoodsOnImport__value(let rhsValue)):
                 guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
                 return true 
@@ -9388,6 +9406,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
                 return true 
             case (.p_minMood_get,.p_minMood_get): return true
             case (.p_maxMood_get,.p_maxMood_get): return true
+            case (.p_discreteMoods_get,.p_discreteMoods_get): return true
             case (.p_scaleMoodsOnImport_get,.p_scaleMoodsOnImport_get): return true
             case (.p_autoIgnoreEnabled_get,.p_autoIgnoreEnabled_get): return true
             case (.p_autoIgnoreSeconds_get,.p_autoIgnoreSeconds_get): return true
@@ -9400,6 +9419,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
             switch self {
             case let .m_setMinMood__value(p0): return p0.intValue
             case let .m_setMaxMood__value(p0): return p0.intValue
+            case let .m_setDiscreteMoods__value(p0): return p0.intValue
             case let .m_setScaleMoodsOnImport__value(p0): return p0.intValue
             case let .m_setAutoIgnoreEnabled__value(p0): return p0.intValue
             case let .m_setAutoIgnoreSeconds__value(p0): return p0.intValue
@@ -9409,6 +9429,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
             case .m_save: return 0
             case .p_minMood_get: return 0
             case .p_maxMood_get: return 0
+            case .p_discreteMoods_get: return 0
             case .p_scaleMoodsOnImport_get: return 0
             case .p_autoIgnoreEnabled_get: return 0
             case .p_autoIgnoreSeconds_get: return 0
@@ -9430,6 +9451,9 @@ open class SettingsMock: Settings, Mock, StaticMock {
         }
         public static func maxMood(getter defaultValue: Double...) -> PropertyStub {
             return Given(method: .p_maxMood_get, products: defaultValue.map({ Product.return($0) }))
+        }
+        public static func discreteMoods(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_discreteMoods_get, products: defaultValue.map({ Product.return($0) }))
         }
         public static func scaleMoodsOnImport(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_scaleMoodsOnImport_get, products: defaultValue.map({ Product.return($0) }))
@@ -9479,6 +9503,9 @@ open class SettingsMock: Settings, Mock, StaticMock {
         public static func setMaxMood(_ value: Parameter<Double>) -> Verify { return Verify(method: .m_setMaxMood__value(`value`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
 		public static func setMaxMood(value: Parameter<Double>) -> Verify { return Verify(method: .m_setMaxMood__value(`value`))}
+        public static func setDiscreteMoods(_ value: Parameter<Bool>) -> Verify { return Verify(method: .m_setDiscreteMoods__value(`value`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
+		public static func setDiscreteMoods(value: Parameter<Bool>) -> Verify { return Verify(method: .m_setDiscreteMoods__value(`value`))}
         public static func setScaleMoodsOnImport(_ value: Parameter<Bool>) -> Verify { return Verify(method: .m_setScaleMoodsOnImport__value(`value`))}
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
 		public static func setScaleMoodsOnImport(value: Parameter<Bool>) -> Verify { return Verify(method: .m_setScaleMoodsOnImport__value(`value`))}
@@ -9498,6 +9525,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
         public static func save() -> Verify { return Verify(method: .m_save)}
         public static var minMood: Verify { return Verify(method: .p_minMood_get) }
         public static var maxMood: Verify { return Verify(method: .p_maxMood_get) }
+        public static var discreteMoods: Verify { return Verify(method: .p_discreteMoods_get) }
         public static var scaleMoodsOnImport: Verify { return Verify(method: .p_scaleMoodsOnImport_get) }
         public static var autoIgnoreEnabled: Verify { return Verify(method: .p_autoIgnoreEnabled_get) }
         public static var autoIgnoreSeconds: Verify { return Verify(method: .p_autoIgnoreSeconds_get) }
@@ -9521,6 +9549,13 @@ open class SettingsMock: Settings, Mock, StaticMock {
         @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
 		public static func setMaxMood(value: Parameter<Double>, perform: @escaping (Double) -> Void) -> Perform {
             return Perform(method: .m_setMaxMood__value(`value`), performs: perform)
+        }
+        public static func setDiscreteMoods(_ value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
+            return Perform(method: .m_setDiscreteMoods__value(`value`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `value` label")
+		public static func setDiscreteMoods(value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
+            return Perform(method: .m_setDiscreteMoods__value(`value`), performs: perform)
         }
         public static func setScaleMoodsOnImport(_ value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
             return Perform(method: .m_setScaleMoodsOnImport__value(`value`), performs: perform)

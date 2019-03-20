@@ -19,12 +19,22 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 	public static let showErrorMessage = Notification.Name("showErrorOnRecordDataScreen")
 	public static let showViewController = Notification.Name("showViewController")
 
+	private static let moodId = "mood"
+	private static let continuousMoodId = "continuousMood"
+	private static let discreteMoodId = "discreteMood"
+
 	// MARK: - Instance Variables
 
-	private final var viewParams: [(id: String, height: CGFloat)] = [
-		(id: "mood", height: 145),
-		(id: "medication", height: 52),
-		(id: "activity", height: 52),
+	private final var viewOrder = [
+		Me.moodId,
+		"medication",
+		"activity",
+	]
+	private final var viewHeights: [String: CGFloat] = [
+		Me.continuousMoodId: 145,
+		Me.discreteMoodId: 145,
+		"medication": 52,
+		"activity": 52,
 	]
 
 	private final let log = Log()
@@ -37,6 +47,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		observe(selector: #selector(showErrorMessage), name: Me.showErrorMessage)
 		observe(selector: #selector(showRecordActivitiesScreen), name: NotificationNames.showRecordActivitiesScreen)
 		observe(selector: #selector(showRecordMedicationsScreen), name: NotificationNames.showRecordMedicationsScreen)
+		observe(selector: #selector(useDiscreteMoodChanged), name: MoodUiUtil.useDiscreteMoodChanged)
 	}
 
 	deinit {
@@ -50,21 +61,28 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 	}
 
 	final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return viewParams.count
+		return viewOrder.count
 	}
 
 	// MARK: - Table view delegate
 
 	final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		return tableView.dequeueReusableCell(withIdentifier: viewParams[indexPath.row].id, for: indexPath)
+		let id = getIdFor(indexPath)
+		return tableView.dequeueReusableCell(withIdentifier: id, for: indexPath)
 	}
 
 	final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-		viewParams.swapAt(fromIndexPath.row, to.row)
+		viewOrder.swapAt(fromIndexPath.row, to.row)
 	}
 
 	final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return viewParams[indexPath.row].height
+		let id = getIdFor(indexPath)
+		if let height = viewHeights[id] {
+			return height
+		}
+		log.error("Failed to retrieve height for id: %@", id)
+		// return the largest possible size so that all content is shown
+		return viewHeights.map({ $0.value }).sorted()[0]
 	}
 
 	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -86,8 +104,18 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 	@objc private final func showErrorMessage(notification: Notification) {
 		if let title: String = value(for: .title, from: notification) {
-			let message: String? = value(for: .message, from: notification) ?? "Sorry for the inconvenience."
-			showError(title: title, message: message)
+			if let error: Error = value(for: .error, from: notification) {
+				if let message: String = value(for: .message, from: notification) {
+					showError(title: title, message: message, error: error)
+				} else {
+					showError(title: title, error: error)
+				}
+			}
+			if let message: String = value(for: .message, from: notification) {
+				showError(title: title, message: message)
+			} else {
+				showError(title: title)
+			}
 		}
 	}
 
@@ -107,5 +135,23 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		} else {
 			log.error("no navigation controller")
 		}
+	}
+
+	@objc private final func useDiscreteMoodChanged(notification: Notification) {
+		tableView.reloadData()
+	}
+
+	// MARK: - Helper Functions
+
+	private final func getIdFor(_ indexPath: IndexPath) -> String {
+		var id = viewOrder[indexPath.row]
+		if id == Me.moodId {
+			if DependencyInjector.settings.discreteMoods {
+				id = Me.discreteMoodId
+			} else {
+				id = Me.continuousMoodId
+			}
+		}
+		return id
 	}
 }
