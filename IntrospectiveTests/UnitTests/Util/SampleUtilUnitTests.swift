@@ -470,6 +470,7 @@ final class SampleUtilUnitTests: UnitTest {
 		XCTAssert(distance == 1, "Distance: \(distance)")
 	}
 
+	// TODO - flaky test
 	func testGivenSamplesHaveStartDatesThatAreOneHourApartAndEndDatesThatAreOneDayApart_distanceInHours_returnsOne() throws {
 		// given
 		let startDate = Date()

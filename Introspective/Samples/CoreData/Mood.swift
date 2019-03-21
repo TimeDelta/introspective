@@ -87,11 +87,14 @@ public final class MoodImpl: NSManagedObject, Mood {
 	// MARK: - Attributed Functions
 
 	public final func value(of attribute: Attribute) throws -> Any? {
-		if attribute.equalTo(Me.maxRating) {
-			return maxRating
-		}
 		if attribute.equalTo(Me.rating) {
 			return rating
+		}
+		if attribute.equalTo(Me.minRating) {
+			return minRating
+		}
+		if attribute.equalTo(Me.maxRating) {
+			return maxRating
 		}
 		if attribute.equalTo(CommonSampleAttributes.timestamp) {
 			return date
@@ -106,6 +109,13 @@ public final class MoodImpl: NSManagedObject, Mood {
 	}
 
 	public final func set(attribute: Attribute, to value: Any?) throws {
+		if attribute.equalTo(Me.minRating) {
+			guard let castedValue = value as? Double else {
+				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
+			}
+			minRating = castedValue
+			return
+		}
 		if attribute.equalTo(Me.maxRating) {
 			guard let castedValue = value as? Double else {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
@@ -152,10 +162,6 @@ public final class MoodImpl: NSManagedObject, Mood {
 
 	// MARK: - Equatable
 
-	public static func ==(lhs: MoodImpl, rhs: MoodImpl) -> Bool {
-		return lhs.equalTo(rhs)
-	}
-
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is Mood) { return false }
 		let other = otherAttributed as! Mood
@@ -169,7 +175,11 @@ public final class MoodImpl: NSManagedObject, Mood {
 	}
 
 	public final func equalTo(_ other: Mood) -> Bool {
-		return rating == other.rating && note == other.note && date == other.date
+		return rating == other.rating &&
+			minRating == other.minRating &&
+			maxRating == other.maxRating &&
+			note == other.note &&
+			date == other.date
 	}
 
 	// MARK: - Debug
