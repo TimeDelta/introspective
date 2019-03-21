@@ -111,8 +111,11 @@ final class CombinedQueryFunctionalTests: QueryFunctionalTest {
 			Weight(minWeight + 1, startOfTargetDay + 17.hours + 23.minutes + 34.seconds), // target
 			Weight(minWeight + 5, startOfTargetDay + 5.days), // expected on wrong day
 			Weight(minWeight - 1, startOfTargetDay - 1.hours),
+			Weight(minWeight - 1, startOfTargetDay + 1.hours), // wrong weight, right day
 			Weight(minWeight - 23, startOfTargetDay + 1.days),
 		])
+		let minWeightRestriction = GreaterThanDoubleAttributeRestriction(restrictedAttribute: Weight.weight, value: minWeight)
+		weightSubQuery.attributeRestrictions.append(minWeightRestriction)
 
 		let matcher = InSameCalendarUnitSubQueryMatcher(timeUnit: .day, mostRecentOnly: false)
 		moodSubQuery.subQuery = (matcher: matcher, query: weightSubQuery)

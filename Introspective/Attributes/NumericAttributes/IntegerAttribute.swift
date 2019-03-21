@@ -19,7 +19,7 @@ public final class IntegerAttribute: AttributeBase, NumericAttribute {
 	}
 
 	public final func convertToValue(from strValue: String) throws -> Any? {
-		if optional && strValue == "" { return "" }
+		if optional && strValue == "" { return nil }
 		guard isValid(value: strValue), let intValue = Int(strValue) else {
 			throw UnsupportedValueError(attribute: self, is: strValue)
 		}
@@ -28,7 +28,10 @@ public final class IntegerAttribute: AttributeBase, NumericAttribute {
 
 	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
-		guard let castedValue = value as? Int else {
+		guard let nonNilValue = value else {
+			throw UnsupportedValueError(attribute: self, is: nil)
+		}
+		guard let castedValue = nonNilValue as? Int else {
 			throw TypeMismatchError(attribute: self, wasA: type(of: value))
 		}
 		return String(castedValue)

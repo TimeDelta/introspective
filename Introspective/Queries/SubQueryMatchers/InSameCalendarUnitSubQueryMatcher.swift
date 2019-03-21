@@ -51,6 +51,8 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 	public final var timeUnit: Calendar.Component = .day
 	public final var mostRecentOnly: Bool = false
 
+	private final let log = Log()
+
 	// MARK: - Initializers
 
 	public required init() {}
@@ -76,10 +78,7 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 			applicableSubQuerySamples = [applicableSubQuerySamples[0]]
 		}
 
-		var startDateAttribute = CommonSampleAttributes.startDate
-		if !sample(applicableSubQuerySamples[0], has: startDateAttribute) {
-			startDateAttribute = CommonSampleAttributes.timestamp
-		}
+		let startDateAttribute = getStartDateAttribute(for: applicableSubQuerySamples[0])
 		let aggregatedSubQuerySamplesByStartDate = try DependencyInjector.util.sample.aggregate(
 			samples: applicableSubQuerySamples,
 			by: timeUnit,
@@ -90,12 +89,12 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 				matchingSamples.append(currentSample)
 			} else if
 				let endDate = currentSample.dates()[.end],
-				sample(applicableSubQuerySamples[0], has: CommonSampleAttributes.endDate)
+				let endDateAttribute = getEndDateAttribute(for: currentSample)
 			{
 				let aggregatedSubQuerySamplesByEndDate = try DependencyInjector.util.sample.aggregate(
 					samples: applicableSubQuerySamples,
 					by: timeUnit,
-					for: CommonSampleAttributes.endDate)
+					for: endDateAttribute)
 
 				let endAggregationDate = DependencyInjector.util.calendar.start(of: timeUnit, in: endDate)
 				if aggregatedSubQuerySamplesByEndDate[endAggregationDate] != nil {
@@ -160,5 +159,31 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 
 	private final func sample(_ sample: Sample, has attribute: Attribute) -> Bool {
 		return sample.attributes.filter{ $0.equalTo(attribute) }.count > 0
+	}
+
+	private final func getStartDateAttribute(for _sample: Sample) -> Attribute {
+		let startAttributes = [
+			CommonSampleAttributes.startDate,
+			CommonSampleAttributes.healthKitStartDate,
+			CommonSampleAttributes.timestamp,
+			CommonSampleAttributes.healthKitTimestamp,
+		]
+		for attribute in startAttributes {
+			if sample(_sample, has: attribute) {
+				return attribute
+			}
+		}
+		log.error("Unable to find start date attribute for sample type: %@", _sample.attributedName)
+		return CommonSampleAttributes.startDate
+	}
+
+	private final func getEndDateAttribute(for _sample: Sample) -> Attribute? {
+		if sample(_sample, has: CommonSampleAttributes.endDate) {
+			return CommonSampleAttributes.endDate
+		}
+		if sample(_sample, has: CommonSampleAttributes.healthKitEndDate) {
+			return CommonSampleAttributes.healthKitEndDate
+		}
+		return nil
 	}
 }

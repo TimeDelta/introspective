@@ -124,4 +124,37 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 			}
 		}
 	}
+
+	func testGivenAllWeightsGreaterThan170OnSpecificDate_runQuery_returnsCorrectWeights() {
+		// given
+		let startOfTargetDay = CalendarUtilImpl().start(of: .day, in: Date())
+
+		let query = WeightQueryImpl()
+		let minWeight = 170.0
+		let expectedSamples = [
+			Weight(minWeight + 1, startOfTargetDay + 17.hours + 23.minutes + 34.seconds),
+		]
+		HealthKitDataTestUtil.save(expectedSamples)
+		HealthKitDataTestUtil.save([
+			Weight(minWeight + 5, startOfTargetDay + 5.days), // expected on wrong day
+			Weight(minWeight - 1, startOfTargetDay - 1.hours),
+			Weight(minWeight - 1, startOfTargetDay + 1.hours), // wrong weight, right day
+			Weight(minWeight - 23, startOfTargetDay + 1.days),
+		])
+
+		let minWeightRestriction = GreaterThanDoubleAttributeRestriction(restrictedAttribute: Weight.weight, value: minWeight)
+		query.attributeRestrictions.append(minWeightRestriction)
+		let dateRestriction = OnDateAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitTimestamp, date: startOfTargetDay)
+		query.attributeRestrictions.append(dateRestriction)
+
+		// when
+		query.runQuery(callback: queryComplete)
+
+		// then
+		waitForExpectations(timeout: 0.1) { waitError in
+			if self.assertNoErrors(waitError) {
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
+			}
+		}
+	}
 }

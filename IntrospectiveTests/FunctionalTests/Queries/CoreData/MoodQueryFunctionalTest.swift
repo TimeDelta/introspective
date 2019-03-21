@@ -116,6 +116,35 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		}
 	}
 
+	func testGivenAllMoodsLessThan2OnSpecificDate_runQuery_returnsCorrectMoods() {
+		// given
+		let startOfTargetDay = CalendarUtilImpl().start(of: .day, in: Date())
+
+		let query = MoodQueryImpl()
+		let maxMood = 2.0
+		let ratingRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating, value: maxMood)
+		query.attributeRestrictions.append(ratingRestriction)
+		let dateRestriction = OnDateAttributeRestriction(restrictedAttribute: CommonSampleAttributes.timestamp, date: startOfTargetDay)
+		query.attributeRestrictions.append(dateRestriction)
+		let expectedSamples = [
+			createMood(rating: 0.0, timestamp: startOfTargetDay),
+			createMood(rating: maxMood - 0.1, timestamp: startOfTargetDay),
+		]
+		let _ = createMood(rating: maxMood + 1, timestamp: startOfTargetDay - 1.hours)
+		let _ = createMood(rating: maxMood + 2, timestamp: startOfTargetDay + 1.days)
+		let _ = createMood(rating: maxMood + 2, timestamp: startOfTargetDay + 5.days)
+
+		// when
+		query.runQuery(callback: queryComplete)
+
+		// then
+		waitForExpectations(timeout: 0.1) { waitError in
+			if self.assertNoErrors(waitError) {
+				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
+			}
+		}
+	}
+
 	private func createMood(note: String? = nil, rating: Double = 0.0, timestamp: Date = Date()) -> MoodImpl {
 		return MoodDataTestUtil.createMood(note: note, rating: rating, timestamp: timestamp)
 	}

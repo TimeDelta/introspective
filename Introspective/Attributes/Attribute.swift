@@ -28,9 +28,11 @@ public protocol Attribute {
 extension Attribute {
 
 	public func equalTo(_ otherAttribute: Attribute) -> Bool {
-		return name.lowercased() == otherAttribute.name.lowercased() &&
+		return type(of: self) == type(of: otherAttribute) &&
+			name.lowercased() == otherAttribute.name.lowercased() &&
 			extendedDescription == otherAttribute.extendedDescription &&
-			type(of: self) == type(of: otherAttribute)
+			variableName == otherAttribute.variableName &&
+			optional == otherAttribute.optional
 	}
 }
 
