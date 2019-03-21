@@ -6315,6 +6315,154 @@ open class MoodUtilMock: MoodUtil, Mock {
     }
 }
 
+// MARK: - NotificationUtil
+open class NotificationUtilMock: NotificationUtil, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    open func post(_ name: NotificationName, object: Any?, userInfo: [UserInfoKey: Any]?, qos: DispatchQoS.QoSClass?) {
+        addInvocation(.m_post__nameobject_objectuserInfo_userInfoqos_qos(Parameter<NotificationName>.value(`name`), Parameter<Any?>.value(`object`), Parameter<[UserInfoKey: Any]?>.value(`userInfo`), Parameter<DispatchQoS.QoSClass?>.value(`qos`)))
+		let perform = methodPerformValue(.m_post__nameobject_objectuserInfo_userInfoqos_qos(Parameter<NotificationName>.value(`name`), Parameter<Any?>.value(`object`), Parameter<[UserInfoKey: Any]?>.value(`userInfo`), Parameter<DispatchQoS.QoSClass?>.value(`qos`))) as? (NotificationName, Any?, [UserInfoKey: Any]?, DispatchQoS.QoSClass?) -> Void
+		perform?(`name`, `object`, `userInfo`, `qos`)
+    }
+
+
+    fileprivate enum MethodType {
+        case m_post__nameobject_objectuserInfo_userInfoqos_qos(Parameter<NotificationName>, Parameter<Any?>, Parameter<[UserInfoKey: Any]?>, Parameter<DispatchQoS.QoSClass?>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_post__nameobject_objectuserInfo_userInfoqos_qos(let lhsName, let lhsObject, let lhsUserinfo, let lhsQos), .m_post__nameobject_objectuserInfo_userInfoqos_qos(let rhsName, let rhsObject, let rhsUserinfo, let rhsQos)):
+                guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsObject, rhs: rhsObject, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsUserinfo, rhs: rhsUserinfo, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsQos, rhs: rhsQos, with: matcher) else { return false } 
+                return true 
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_post__nameobject_objectuserInfo_userInfoqos_qos(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [Product]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func post(_ name: Parameter<NotificationName>, object: Parameter<Any?>, userInfo: Parameter<[UserInfoKey: Any]?>, qos: Parameter<DispatchQoS.QoSClass?>) -> Verify { return Verify(method: .m_post__nameobject_objectuserInfo_userInfoqos_qos(`name`, `object`, `userInfo`, `qos`))}
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `name` label")
+		public static func post(name: Parameter<NotificationName>, object: Parameter<Any?>, userInfo: Parameter<[UserInfoKey: Any]?>, qos: Parameter<DispatchQoS.QoSClass?>) -> Verify { return Verify(method: .m_post__nameobject_objectuserInfo_userInfoqos_qos(`name`, `object`, `userInfo`, `qos`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func post(_ name: Parameter<NotificationName>, object: Parameter<Any?>, userInfo: Parameter<[UserInfoKey: Any]?>, qos: Parameter<DispatchQoS.QoSClass?>, perform: @escaping (NotificationName, Any?, [UserInfoKey: Any]?, DispatchQoS.QoSClass?) -> Void) -> Perform {
+            return Perform(method: .m_post__nameobject_objectuserInfo_userInfoqos_qos(`name`, `object`, `userInfo`, `qos`), performs: perform)
+        }
+        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `name` label")
+		public static func post(name: Parameter<NotificationName>, object: Parameter<Any?>, userInfo: Parameter<[UserInfoKey: Any]?>, qos: Parameter<DispatchQoS.QoSClass?>, perform: @escaping (NotificationName, Any?, [UserInfoKey: Any]?, DispatchQoS.QoSClass?) -> Void) -> Perform {
+            return Perform(method: .m_post__nameobject_objectuserInfo_userInfoqos_qos(`name`, `object`, `userInfo`, `qos`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> Product {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
 // MARK: - NumericSampleUtil
 open class NumericSampleUtilMock: NumericSampleUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
@@ -9383,8 +9531,8 @@ open class SettingsMock: Settings, Mock, StaticMock {
                 guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
                 return true 
             case (.m_setDiscreteMoods__value(let lhsValue), .m_setDiscreteMoods__value(let rhsValue)):
-                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false }
-                return true
+                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                return true 
             case (.m_setScaleMoodsOnImport__value(let lhsValue), .m_setScaleMoodsOnImport__value(let rhsValue)):
                 guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
                 return true 
