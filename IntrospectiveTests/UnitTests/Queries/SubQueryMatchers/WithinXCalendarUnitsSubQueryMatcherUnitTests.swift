@@ -13,12 +13,14 @@ import SwiftDate
 
 class WithinXCalendarUnitsSubQueryMatcherUnitTests: UnitTest {
 
-	fileprivate var matcher: WithinXCalendarUnitsSubQueryMatcher!
+	private var matcher: WithinXCalendarUnitsSubQueryMatcher!
 
 	override func setUp() {
 		super.setUp()
 		matcher = WithinXCalendarUnitsSubQueryMatcher()
 	}
+
+	// MARK: - getSamples()
 
 	func testGivenEmptyArrayOfQuerySamplesAndEmptyArrayOfSubQuerySamples_getSamples_returnsEmptyArray() {
 		// given
@@ -140,6 +142,8 @@ class WithinXCalendarUnitsSubQueryMatcherUnitTests: UnitTest {
 		XCTAssert(matchingSamples[0].equalTo(querySamples[1]))
 	}
 
+	// MARK: - set(attribute: to:)
+
 	func testGivenUnknownAttribute_set_throwsUnknownAttributeError() {
 		// given
 		let attribute = CommonSampleAttributes.endDate
@@ -224,6 +228,8 @@ class WithinXCalendarUnitsSubQueryMatcherUnitTests: UnitTest {
 		XCTAssert(matcher.mostRecentOnly == value)
 	}
 
+	// MARK: - value(of:)
+
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// given
 		let attribute = CommonSampleAttributes.endDate
@@ -273,6 +279,62 @@ class WithinXCalendarUnitsSubQueryMatcherUnitTests: UnitTest {
 		// then
 		XCTAssert(actualValue == expectedValue)
 	}
+
+	// MARK: - ==
+
+	func testGivenSameObjectTwice_equalToOperator_returnsTrue() {
+		// when
+		let equal = matcher == matcher
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenSameMatcherTypeWithDifferentNumberOfUnits_equalToOperator_returnsFalse() {
+		// given
+		let other = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: matcher.numberOfTimeUnits + 1)
+
+		// when
+		let equal = matcher == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithDifferentTimeUnits_equalToOperator_returnsFalse() {
+		// given
+		let other = WithinXCalendarUnitsSubQueryMatcher(timeUnit: Calendar.Component.hour)
+
+		// when
+		let equal = matcher == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithDifferentMostRecentOnly_equalToOperator_returnsFalse() {
+		// given
+		let other = WithinXCalendarUnitsSubQueryMatcher(mostRecentOnly: true)
+
+		// when
+		let equal = matcher == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalToOperator_returnsTrue() {
+		// given
+		let other = WithinXCalendarUnitsSubQueryMatcher()
+
+		// when
+		let equal = matcher == other
+
+		// then
+		XCTAssert(equal)
+	}
+
+	// MARK: - equalTo(attributed:)
 
 	func testGivenTwoMatchersOfDifferentTypes_equalToAttributed_returnsFalse() {
 		// given
@@ -337,6 +399,8 @@ class WithinXCalendarUnitsSubQueryMatcherUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
+	// MARK: - equalTo(matcher:)
+
 	func testGivenTwoMatchersOfDifferentTypes_equalToMatcher_returnsFalse() {
 		// given
 		let otherMatcher: SubQueryMatcher = SameDatesSubQueryMatcher()
@@ -399,6 +463,8 @@ class WithinXCalendarUnitsSubQueryMatcherUnitTests: UnitTest {
 		// then
 		XCTAssert(equal)
 	}
+
+	// MARK: - equalTo()
 
 	func testGivenSameObjectTwice_equalTo_returnsTrue() {
 		// when
