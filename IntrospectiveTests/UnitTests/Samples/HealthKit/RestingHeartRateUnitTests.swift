@@ -144,7 +144,7 @@ final class RestingHeartRateUnitTests: UnitTest {
 		XCTAssert(areEqual)
 	}
 
-	func testGivenTwoBloodPressuresWithSameValues_equalToOperator_returnsTrue() {
+	func testGivenTwoRestingHeartRatesWithSameValues_equalToOperator_returnsTrue() {
 		// given
 		let otherHeartRate = RestingHeartRate(heartRate.restingHeartRate, heartRate.timestamp)
 
@@ -215,7 +215,7 @@ final class RestingHeartRateUnitTests: UnitTest {
 
 	func testGivenWrongClass_equalToSample_returnsFalse() {
 		// given
-		let other = RestingHeartRate(12, Date())
+		let other = HeartRate(12, Date())
 
 		// when
 		let areEqual = heartRate.equalTo(other as Sample)
@@ -267,7 +267,7 @@ final class RestingHeartRateUnitTests: UnitTest {
 		XCTAssert(areEqual)
 	}
 
-	// MARK: - equalTo(HeartRate:)
+	// MARK: - equalTo(RestingHeartRate:)
 
 	func testGivenTimestampMismatch_equalTo_returnsFalse() {
 		// given

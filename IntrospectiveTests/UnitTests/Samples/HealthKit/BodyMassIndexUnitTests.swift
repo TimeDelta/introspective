@@ -144,7 +144,7 @@ final class BodyMassIndexUnitTests: UnitTest {
 		XCTAssert(areEqual)
 	}
 
-	func testGivenTwoBloodPressuresWithSameValues_equalToOperator_returnsTrue() {
+	func testGivenBodyMassIndexesWithSameValues_equalToOperator_returnsTrue() {
 		// given
 		let otherBmi = BodyMassIndex(bmi.bmi, bmi.timestamp)
 

@@ -144,7 +144,7 @@ final class LeanBodyMassUnitTests: UnitTest {
 		XCTAssert(areEqual)
 	}
 
-	func testGivenTwoBloodPressuresWithSameValues_equalToOperator_returnsTrue() {
+	func testGivenTwoLeanBodyMassesWithSameValues_equalToOperator_returnsTrue() {
 		// given
 		let otherLeanBodyMass = LeanBodyMass(leanBodyMass.leanBodyMass, leanBodyMass.timestamp)
 
@@ -200,7 +200,7 @@ final class LeanBodyMassUnitTests: UnitTest {
 		XCTAssert(areEqual)
 	}
 
-	func testGivenTwoLeanBodyMasssWithSameValues_equalToAttributed_returnsTrue() {
+	func testGivenTwoLeanBodyMassesWithSameValues_equalToAttributed_returnsTrue() {
 		// given
 		let otherLeanBodyMass = LeanBodyMass(leanBodyMass.leanBodyMass, leanBodyMass.timestamp)
 
@@ -215,7 +215,7 @@ final class LeanBodyMassUnitTests: UnitTest {
 
 	func testGivenWrongClass_equalToSample_returnsFalse() {
 		// given
-		let other = LeanBodyMass(12, Date())
+		let other = HeartRate(12, Date())
 
 		// when
 		let areEqual = leanBodyMass.equalTo(other as Sample)
@@ -256,7 +256,7 @@ final class LeanBodyMassUnitTests: UnitTest {
 		XCTAssert(areEqual)
 	}
 
-	func testGivenTwoLeanBodyMasssWithSameValues_equalToSample_returnsTrue() {
+	func testGivenTwoLeanBodyMassesWithSameValues_equalToSample_returnsTrue() {
 		// given
 		let otherLeanBodyMass = LeanBodyMass(leanBodyMass.leanBodyMass, leanBodyMass.timestamp)
 
@@ -267,7 +267,7 @@ final class LeanBodyMassUnitTests: UnitTest {
 		XCTAssert(areEqual)
 	}
 
-	// MARK: - equalTo(LeanBodyMass:)
+	// MARK: - equalTo(leanBodyMass:)
 
 	func testGivenTimestampMismatch_equalTo_returnsFalse() {
 		// given
@@ -301,7 +301,7 @@ final class LeanBodyMassUnitTests: UnitTest {
 		XCTAssert(areEqual)
 	}
 
-	func testGivenTwoLeanBodyMasssWithSameValues_equalTo_returnsTrue() {
+	func testGivenTwoLeanBodyMassesWithSameValues_equalTo_returnsTrue() {
 		// given
 		let otherLeanBodyMass = LeanBodyMass(leanBodyMass.leanBodyMass, leanBodyMass.timestamp)
 
