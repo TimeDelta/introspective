@@ -11,6 +11,8 @@ import XCTest
 
 final class MedicationFunctionalTests: FunctionalTest {
 
+	// MARK: - value(of:)
+
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// given
 		let unknownAttribute = DoubleAttribute(name: "this is not a real attribute")
@@ -83,6 +85,7 @@ final class MedicationFunctionalTests: FunctionalTest {
 		XCTAssertEqual(notes, expectedNotes)
 	}
 
+	// MARK: - set(attribute: to:)
 
 	func testGivenNameAttribute_set_correctlySetsName() throws {
 		// given
