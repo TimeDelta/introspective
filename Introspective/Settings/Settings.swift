@@ -61,7 +61,6 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	// MARK: - Moods
 
 	// MARK: Min Mood
-
 	private final var newMinMood: Double? = nil
 	public final var minMood: Double {
 		return newMinMood ?? storedMinMood
@@ -73,7 +72,6 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	}
 
 	// MARK: Max Mood
-
 	private final var newMaxMood: Double? = nil
 	public final var maxMood: Double {
 		return newMaxMood ?? storedMaxMood
@@ -85,7 +83,6 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	}
 
 	// MARK: Discrete Moods
-
 	private final var newDiscreteMoods: Bool? = nil
 	public final var discreteMoods: Bool {
 		return newDiscreteMoods ?? storedDiscreteMoods
@@ -97,7 +94,6 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	}
 
 	// MARK: Scale Moods On Import
-
 	private final var newScaleMoodsOnImport: Bool? = nil
 	public final var scaleMoodsOnImport: Bool {
 		return newScaleMoodsOnImport ?? storedScaleMoodsOnImport
@@ -111,7 +107,6 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	// MARK: - Activities
 
 	// MARK: Auto Ignore Enabled
-
 	private final var newAutoIgnoreEnabled: Bool? = nil
 	public final var autoIgnoreEnabled: Bool {
 		return newAutoIgnoreEnabled ?? storedAutoIgnoreEnabled
@@ -123,7 +118,6 @@ public final class SettingsImpl: NSManagedObject, Settings {
 	}
 
 	// MARK: Auto Ignore Seconds
-
 	private final var newAutoIgnoreSeconds: Int? = nil
 	public final var autoIgnoreSeconds: Int {
 		return newAutoIgnoreSeconds ?? storedAutoIgnoreSeconds
@@ -168,6 +162,7 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		newScaleMoodsOnImport = nil
 		newAutoIgnoreEnabled = nil
 		newAutoIgnoreSeconds = nil
+		newConvertTimeZones = nil
 	}
 
 	public final func save() throws {
@@ -178,6 +173,7 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		storedScaleMoodsOnImport = scaleMoodsOnImport
 		storedAutoIgnoreEnabled = autoIgnoreEnabled
 		storedAutoIgnoreSeconds = autoIgnoreSeconds
+		storedConvertTimeZones = convertTimeZones
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		reset()
 	}
