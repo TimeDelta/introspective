@@ -113,7 +113,19 @@ public final class HasOneOfTagAttributeRestriction: AnyAttributeRestriction, Equ
 	}
 
 	public final func equalTo(_ other: HasOneOfTagAttributeRestriction) -> Bool {
-		return restrictedAttribute.equalTo(other.restrictedAttribute) && tags == other.tags
+		return restrictedAttribute.equalTo(other.restrictedAttribute) && tagsAreEqual(other)
+	}
+
+	/// - Note: This is necessary because == operator cannot be overriden for any subclass
+	///         of NSManagedObject and just checks memory address.
+	private final func tagsAreEqual(_ other: HasOneOfTagAttributeRestriction) -> Bool {
+		guard tags.count == other.tags.count else { return false }
+		for tag in tags {
+			if !other.tags.contains(where: { $0.equalTo(tag) }) {
+				return false
+			}
+		}
+		return true
 	}
 }
 

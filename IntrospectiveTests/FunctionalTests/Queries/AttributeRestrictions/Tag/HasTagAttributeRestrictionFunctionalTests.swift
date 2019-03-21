@@ -15,13 +15,20 @@ final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
 	private static let tagAttribute = HasTagAttributeRestriction.tagAttribute
 
 	private final var restriction: HasTagAttributeRestriction!
+	private final var targetTag: Tag!
+
+	final override func setUp() {
+		super.setUp()
+		let _ = useTagAttribute()
+		targetTag = TagDataTestUtil.createTag(name: "target tag")
+		restriction.tag = targetTag
+	}
 
 	// MARK: - samplePasses()
 
 	func testGivenSampleTagIsTargetTag_samplePasses_returnsTrue() throws {
 		// given
 		let restrictedAttribute = useTagAttribute()
-		let targetTag = TagDataTestUtil.createTag(name: "target tag")
 		let sample = SampleCreatorTestUtil.createSample(withValue: targetTag, for: restrictedAttribute)
 		restriction.tag = targetTag
 
@@ -35,7 +42,6 @@ final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
 	func testGivenSampleTagIsNotTargetTag_samplePasses_returnsFalse() throws {
 		// given
 		let restrictedAttribute = useTagAttribute()
-		let targetTag = TagDataTestUtil.createTag(name: "target tag")
 		let notTargetTag = TagDataTestUtil.createTag(name: "not the target tag")
 		let sample = SampleCreatorTestUtil.createSample(withValue: notTargetTag, for: restrictedAttribute)
 		restriction.tag = targetTag
@@ -49,7 +55,6 @@ final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenSampleOptionalTagIsNil_samplePasses_returnsFalse() throws {
 		let restrictedAttribute = useTagAttribute(optional: true)
-		let targetTag = TagDataTestUtil.createTag(name: "target tag")
 		let sample = SampleCreatorTestUtil.createSample(withValue: nil as [Tag]?, for: restrictedAttribute)
 		restriction.tag = targetTag
 
@@ -75,7 +80,6 @@ final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
 	func testGivenSampleHasOnlyTargetTag_samplePasses_returnsTrue() throws {
 		// given
 		let restrictedAttribute = useTagsAttribute()
-		let targetTag = TagDataTestUtil.createTag(name: "target tag")
 		let sample = SampleCreatorTestUtil.createSample(withValue: [targetTag], for: restrictedAttribute)
 		restriction.tag = targetTag
 
@@ -88,7 +92,6 @@ final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	func testGivenSampleHasTargetTagAndOtherTags_samplePasses_returnsTrue() throws {
 		let restrictedAttribute = useTagsAttribute()
-		let targetTag = TagDataTestUtil.createTag(name: "target tag")
 		let otherTag = TagDataTestUtil.createTag(name: "other tag")
 		let sample = SampleCreatorTestUtil.createSample(withValue: [targetTag, otherTag], for: restrictedAttribute)
 		restriction.tag = targetTag
@@ -103,7 +106,6 @@ final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
 	func testGivenSampleDoesNotHaveAnyTags_samplePasses_returnsFalse() throws {
 		// given
 		let restrictedAttribute = useTagsAttribute()
-		let targetTag = TagDataTestUtil.createTag(name: "target tag")
 		let sample = SampleCreatorTestUtil.createSample(withValue: [], for: restrictedAttribute)
 		restriction.tag = targetTag
 
@@ -117,7 +119,6 @@ final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
 	func testGivenSampleHasTagsButDoesNotHaveTargetTag_samplePasses_returnsFalse() throws {
 		// given
 		let restrictedAttribute = useTagsAttribute()
-		let targetTag = TagDataTestUtil.createTag(name: "target tag")
 		let otherTag = TagDataTestUtil.createTag(name: "other tag")
 		let sample = SampleCreatorTestUtil.createSample(withValue: [otherTag], for: restrictedAttribute)
 		restriction.tag = targetTag
@@ -132,7 +133,6 @@ final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
 	func testGivenSampleOptionalTagsAttributeIsNil_samplePasses_returnsFalse() throws {
 		// given
 		let restrictedAttribute = useTagsAttribute(optional: true)
-		let targetTag = TagDataTestUtil.createTag(name: "target tag")
 		let sample = SampleCreatorTestUtil.createSample(withValue: nil as [Tag]?, for: restrictedAttribute)
 		restriction.tag = targetTag
 
@@ -222,6 +222,208 @@ final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
 			// then
 			XCTAssert(error is TypeMismatchError)
 		}
+	}
+
+	// MARK: - ==
+
+	func testGivenSameObjectTwice_equalToOperator_returnsTrue() {
+		// when
+		let areEqual = restriction == restriction
+
+		// then
+		XCTAssert(areEqual)
+	}
+
+	func testGivenRestrictedAttributeMismatch_equalToOperator_returnsFalse() {
+		// given
+		let other = HasTagAttributeRestriction(restrictedAttribute: TagAttribute(name: "note the same"))
+
+		// when
+		let areEqual = restriction == other
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenTagMismatch_equalToOperator_returnsFalse() {
+		// given
+		let other = HasTagAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		other.tag = TagDataTestUtil.createTag(name: "not in main restriction")
+
+		// when
+		let areEqual = restriction == other
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenSameValues_equalToOperator_returnsTrue() {
+		// given
+		let other = HasTagAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		other.tag = restriction.tag
+
+		// when
+		let areEqual = restriction == other
+
+		// then
+		XCTAssert(areEqual)
+	}
+
+	// MARK: - equalTo(attributed:)
+
+	func testGivenWrongClass_equalToAttributed_returnsFalse() {
+		// given
+		let other = HeartRate(1, Date())
+
+		// when
+		let areEqual = restriction.equalTo(other)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenSameObjectTwice_equalToAttributed_returnsTrue() {
+		// when
+		let areEqual = restriction.equalTo(restriction as Attributed)
+
+		// then
+		XCTAssert(areEqual)
+	}
+
+	func testGivenRestrictedAttributeMismatch_equalToAttributed_returnsFalse() {
+		// given
+		let other = HasTagAttributeRestriction(restrictedAttribute: TagAttribute(name: "note the same"))
+
+		// when
+		let areEqual = restriction.equalTo(other as Attributed)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenTagMismatch_equalToAttributed_returnsFalse() {
+		// given
+		let other = HasTagAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		other.tag = TagDataTestUtil.createTag(name: "not in main restriction")
+
+		// when
+		let areEqual = restriction.equalTo(other as Attributed)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenSameValues_equalToAttributed_returnsTrue() {
+		// given
+		let other = HasTagAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		other.tag = restriction.tag
+
+		// when
+		let areEqual = restriction.equalTo(other as Attributed)
+
+		// then
+		XCTAssert(areEqual)
+	}
+
+	// MARK: - equalTo(restriction:)
+
+	func testGivenWrongClass_equalToRestriction_returnsFalse() {
+		// given
+		let other = EqualToDoubleAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+
+		// when
+		let areEqual = restriction.equalTo(other as AttributeRestriction)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenSameObjectTwice_equalToRestriction_returnsTrue() {
+		// when
+		let areEqual = restriction.equalTo(restriction as AttributeRestriction)
+
+		// then
+		XCTAssert(areEqual)
+	}
+
+	func testGivenRestrictedAttributeMismatch_equalToRestriction_returnsFalse() {
+		// given
+		let other = HasTagAttributeRestriction(restrictedAttribute: TagAttribute(name: "note the same"))
+
+		// when
+		let areEqual = restriction.equalTo(other as AttributeRestriction)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenTagMismatch_equalToRestriction_returnsFalse() {
+		// given
+		let other = HasTagAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		other.tag = TagDataTestUtil.createTag(name: "not in main restriction")
+
+		// when
+		let areEqual = restriction.equalTo(other as AttributeRestriction)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenSameValues_equalToRestriction_returnsTrue() {
+		// given
+		let other = HasTagAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		other.tag = restriction.tag
+
+		// when
+		let areEqual = restriction.equalTo(other as AttributeRestriction)
+
+		// then
+		XCTAssert(areEqual)
+	}
+
+	// MARK: - equalTo()
+
+	func testGivenSameObjectTwice_equalTo_returnsTrue() {
+		// when
+		let areEqual = restriction.equalTo(restriction)
+
+		// then
+		XCTAssert(areEqual)
+	}
+
+	func testGivenRestrictedAttributeMismatch_equalTo_returnsFalse() {
+		// given
+		let other = HasTagAttributeRestriction(restrictedAttribute: TagAttribute(name: "note the same"))
+
+		// when
+		let areEqual = restriction.equalTo(other)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenTagMismatch_equalTo_returnsFalse() {
+		// given
+		let other = HasTagAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		other.tag = TagDataTestUtil.createTag(name: "not in main restriction")
+
+		// when
+		let areEqual = restriction.equalTo(other)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenSameValues_equalTo_returnsTrue() {
+		// given
+		let other = HasTagAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		other.tag = restriction.tag
+
+		// when
+		let areEqual = restriction.equalTo(other)
+
+		// then
+		XCTAssert(areEqual)
 	}
 
 	// MARK: - Helper Functions
