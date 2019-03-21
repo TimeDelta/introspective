@@ -11,12 +11,14 @@ import XCTest
 
 class SameDatesSubQueryMatcherUnitTests: UnitTest {
 
-	fileprivate var matcher: SameDatesSubQueryMatcher!
+	private var matcher: SameDatesSubQueryMatcher!
 
 	override func setUp() {
 		super.setUp()
 		matcher = SameDatesSubQueryMatcher()
 	}
+
+	// MARK: - set(attribute: to:)
 
 	func testGivenUnknownAttribute_set_throwsUnknownAttributeError() {
 		// given
@@ -54,6 +56,8 @@ class SameDatesSubQueryMatcherUnitTests: UnitTest {
 		XCTAssert(matcher.mostRecentOnly == value)
 	}
 
+	// MARK: - value(of:)
+
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// given
 		let attribute = CommonSampleAttributes.endDate
@@ -77,6 +81,40 @@ class SameDatesSubQueryMatcherUnitTests: UnitTest {
 		// then
 		XCTAssert(actualValue == expectedValue)
 	}
+
+	// MARK: - ==
+
+	func testGivenSameObjectTwice_equalToOperator_returnsTrue() {
+		// when
+		let equal = matcher == matcher
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenSameMatcherTypeWithDifferentMostRecentOnly_equalToOperator_returnsFalse() {
+		// given
+		let other = SameDatesSubQueryMatcher(mostRecentOnly: true)
+
+		// when
+		let equal = matcher == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalToOperator_returnsTrue() {
+		// given
+		let other = SameDatesSubQueryMatcher()
+
+		// when
+		let equal = matcher == other
+
+		// then
+		XCTAssert(equal)
+	}
+
+	// MARK: - equalTo(attributed:)
 
 	func testGivenTwoMatchersOfDifferentTypes_equalToAttributed_returnsFalse() {
 		// given
@@ -119,6 +157,8 @@ class SameDatesSubQueryMatcherUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
+	// MARK: - equalTo(matcher:)
+
 	func testGivenTwoMatchersOfDifferentTypes_equalToMatcher_returnsFalse() {
 		// given
 		let otherMatcher: SubQueryMatcher = WithinXCalendarUnitsSubQueryMatcher()
@@ -159,6 +199,8 @@ class SameDatesSubQueryMatcherUnitTests: UnitTest {
 		// then
 		XCTAssert(equal)
 	}
+
+	// MARK: - equalTo()
 
 	func testGivenSameObjectTwice_equalTo_returnsTrue() {
 		// when
