@@ -85,6 +85,13 @@ public final class DoesNotHaveTagAttributeRestriction: AnyAttributeRestriction, 
 		return lhs.equalTo(rhs)
 	}
 
+	public final func equalTo(_ attributed: Attributed) -> Bool {
+		guard let other = attributed as? AttributeRestriction else {
+			return false
+		}
+		return equalTo(other)
+	}
+
 	public final override func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		guard let other = otherRestriction as? DoesNotHaveTagAttributeRestriction else {
 			return false
@@ -92,7 +99,7 @@ public final class DoesNotHaveTagAttributeRestriction: AnyAttributeRestriction, 
 		return equalTo(other)
 	}
 
-	public final func equalTo(_ otherRestriction: DoesNotHaveTagAttributeRestriction) -> Bool {
-		return tag == otherRestriction.tag
+	public final func equalTo(_ other: DoesNotHaveTagAttributeRestriction) -> Bool {
+		return restrictedAttribute.equalTo(other.restrictedAttribute) && tag == other.tag
 	}
 }
