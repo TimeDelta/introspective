@@ -20,6 +20,8 @@ final class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		matcher = InSameCalendarUnitSubQueryMatcher()
 	}
 
+	// MARK: - getSamples()
+
 	func testGivenEmptyArrayOfQuerySamplesAndEmptyArrayOfSubQuerySamples_getSamples_returnsEmptyArray() throws {
 		// given
 		let querySamples = [AnySample]()
@@ -155,6 +157,8 @@ final class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		}
 	}
 
+	// MARK: - set(attribute: to:)
+
 	func testGivenUnknownAttribute_set_throwsUnknownAttributeError() throws {
 		// given
 		let attribute = CommonSampleAttributes.endDate
@@ -215,6 +219,8 @@ final class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssert(matcher.mostRecentOnly == value)
 	}
 
+	// MARK: - value(of:)
+
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() throws {
 		// given
 		let attribute = CommonSampleAttributes.endDate
@@ -251,6 +257,51 @@ final class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		// then
 		XCTAssert(actualValue == expectedValue)
 	}
+
+	// MARK: - ==
+
+	func testGivenSameObjectTwice_equalToOperator_returnsTrue() throws {
+		// when
+		let equal = matcher == matcher
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenSameMatcherTypeWithDifferentTimeUnits_equalToOperator_returnsFalse() throws {
+		// given
+		let other = InSameCalendarUnitSubQueryMatcher(timeUnit: Calendar.Component.hour)
+
+		// when
+		let equal = matcher == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithDifferentMostRecentOnly_equalToOperator_returnsFalse() throws {
+		// given
+		let other = InSameCalendarUnitSubQueryMatcher(mostRecentOnly: true)
+
+		// when
+		let equal = matcher == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalToOperator_returnsTrue() throws {
+		// given
+		let other = InSameCalendarUnitSubQueryMatcher()
+
+		// when
+		let equal = matcher == other
+
+		// then
+		XCTAssert(equal)
+	}
+
+	// MARK: - equalTo(attributed:)
 
 	func testGivenTwoMatchersOfDifferentTypes_equalToAttributed_returnsFalse() throws {
 		// given
@@ -304,6 +355,8 @@ final class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
+	// MARK: - equalTo(matcher:)
+
 	func testGivenTwoMatchersOfDifferentTypes_equalToMatcher_returnsFalse() throws {
 		// given
 		let otherMatcher: SubQueryMatcher = SameDatesSubQueryMatcher()
@@ -355,6 +408,8 @@ final class InSameCalendarUnitSubQueryMatcherUnitTests: UnitTest {
 		// then
 		XCTAssert(equal)
 	}
+
+	// MARK: - equalTo()
 
 	func testGivenSameObjectTwice_equalTo_returnsTrue() throws {
 		// when
