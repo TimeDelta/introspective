@@ -33,7 +33,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 	private final var rating: Int = Int(DependencyInjector.settings.maxMood)
 	private final var ratingButtons = [UIButton]()
 
-	private final let baseRatingButtonWidth: CGFloat = 30
+	private final let spacingBetweenRatingButtons: CGFloat = 5
 
 	private final let log = Log()
 
@@ -43,8 +43,13 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 		super.awakeFromNib()
 		reset()
 		observe(selector: #selector(noteSaved), name: MoodNoteViewController.noteSavedNotification)
-		observe(selector: #selector(updateUI), name: MoodUiUtil.minRatingChanged)
-		observe(selector: #selector(updateUI), name: MoodUiUtil.maxRatingChanged)
+		observe(selector: #selector(resetAndUpdateUI), name: MoodUiUtil.minRatingChanged)
+		observe(selector: #selector(resetAndUpdateUI), name: MoodUiUtil.maxRatingChanged)
+	}
+
+	public final override func layoutSubviews() {
+		super.layoutSubviews()
+		updateUI()
 	}
 
 	deinit {
@@ -76,6 +81,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 			try transaction.commit()
 
 			reset()
+			updateUI()
 		} catch {
 			log.error("Failed to create or save mood: %@", errorInfo(error))
 			NotificationCenter.default.post(
@@ -120,16 +126,20 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 
 	// MARK: - Helper Functions
 
+	@objc private final func resetAndUpdateUI() {
+		reset()
+		updateUI()
+	}
+
 	private final func reset() {
 		note = nil
 		addNoteButton.setTitle("Add Note", for: .normal)
 		let min = DependencyInjector.settings.minMood
 		let max = DependencyInjector.settings.maxMood
 		rating = Int((max - min) / 2 + min)
-		updateUI()
 	}
 
-	@objc private final func updateUI() {
+	private final func updateUI() {
 		removeExistingMoodButtons()
 
 		let min = DependencyInjector.settings.minMood
@@ -176,11 +186,11 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 		if let lastView = lastView {
 			ratingButton.leadingAnchor.constraint(
 				equalTo: lastView.trailingAnchor,
-				constant: 5).isActive = true
+				constant: spacingBetweenRatingButtons).isActive = true
 		} else {
 			ratingButton.leadingAnchor.constraint(equalTo: moodContentView.leadingAnchor).isActive = true
 		}
-		widthConstraint(for: ratingButton, width: baseRatingButtonWidth).isActive = true
+		widthConstraint(for: ratingButton, width: getBaseWidth()).isActive = true
 		ratingButton.topAnchor.constraint(equalTo: moodContentView.topAnchor, constant: 5).isActive = true
 		ratingButton.bottomAnchor.constraint(equalTo: moodContentView.bottomAnchor, constant: -5).isActive = true
 	}
@@ -192,14 +202,14 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 
 	private final func selectRatingButton(_ ratingButton: UIButton) {
 		removeTopBottomAndWidthConstraintsFor(ratingButton)
-		widthConstraint(for: ratingButton, width: baseRatingButtonWidth + 5).isActive = true
+		widthConstraint(for: ratingButton, width: getBaseWidth() + spacingBetweenRatingButtons).isActive = true
 		ratingButton.topAnchor.constraint(equalTo: moodContentView.topAnchor).isActive = true
 		ratingButton.bottomAnchor.constraint(equalTo: moodContentView.bottomAnchor).isActive = true
 	}
 
 	private final func deselectRatingButton(_ ratingButton: UIButton) {
 		removeTopBottomAndWidthConstraintsFor(ratingButton)
-		widthConstraint(for: ratingButton, width: baseRatingButtonWidth).isActive = true
+		widthConstraint(for: ratingButton, width: getBaseWidth()).isActive = true
 		ratingButton.topAnchor.constraint(equalTo: moodContentView.topAnchor, constant: 5).isActive = true
 		ratingButton.bottomAnchor.constraint(equalTo: moodContentView.bottomAnchor, constant: -5).isActive = true
 	}
@@ -227,5 +237,17 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 		let widthConstraint = view.widthAnchor.constraint(equalToConstant: width)
 		widthConstraint.priority = .required
 		return widthConstraint
+	}
+
+	private final func getBaseWidth() -> CGFloat {
+		let minWidth: CGFloat = 30
+		let numberOfMoods = CGFloat(DependencyInjector.settings.maxMood - DependencyInjector.settings.minMood + 1)
+		// not -1 because need to account for one mood always being selected, which adds 1 spacing
+		let totalSpacingRequired = spacingBetweenRatingButtons * numberOfMoods
+		let proportionalWidth = (scrollView.width - totalSpacingRequired) / numberOfMoods
+		if proportionalWidth > minWidth {
+			return proportionalWidth
+		}
+		return minWidth
 	}
 }
