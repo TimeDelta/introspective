@@ -297,7 +297,7 @@ final class ActivityFunctionalTests: FunctionalTest {
 
 	// MARK: - setTags()
 
-	func testGivenActivityAlreadyHasTags_set_replacesExistingTagsWithSpecifiedOnes() throws {
+	func testGivenActivityAlreadyHasTags_setTags_replacesExistingTagsWithSpecifiedOnes() throws {
 		// given
 		let originalTag1 = TagDataTestUtil.createTag(name: "original 1")
 		let originalTag2 = TagDataTestUtil.createTag(name: "original 2")

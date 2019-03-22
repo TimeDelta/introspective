@@ -32,31 +32,11 @@ public class ActivityDefinition: NSManagedObject, CoreDataObject {
 		removeAllTags()
 		for tag in newTags {
 			let tagToAdd = try DependencyInjector.db.pull(savedObject: tag, fromSameContextAs: self)
-			if !tagToAdd.isFault {
-				addToTags(tagToAdd)
-			} else if !tag.isFault {
-				addToTags(tag)
-			}
+			addToTags(tagToAdd)
 		}
 	}
 
 	// MARK: - Equatable
-
-	public static func ==(lhs: ActivityDefinition, rhs: ActivityDefinition) -> Bool {
-		return lhs.equalTo(rhs)
-	}
-
-	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
-		if !(otherAttributed is ActivityDefinition) { return false }
-		let other = otherAttributed as! ActivityDefinition
-		return equalTo(other)
-	}
-
-	public final func equalTo(_ otherSample: Sample) -> Bool {
-		if !(otherSample is ActivityDefinition) { return false }
-		let other = otherSample as! ActivityDefinition
-		return equalTo(other)
-	}
 
 	public final func equalTo(_ other: ActivityDefinition) -> Bool {
 		return name == other.name &&
