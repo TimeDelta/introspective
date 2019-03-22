@@ -118,19 +118,9 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed {
 
 	// MARK: - Equatable
 
-	public static func ==(lhs: Medication, rhs: Medication) -> Bool {
-		return lhs.equalTo(rhs)
-	}
-
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is Medication) { return false }
 		let other = otherAttributed as! Medication
-		return equalTo(other)
-	}
-
-	public final func equalTo(_ otherSample: Sample) -> Bool {
-		if !(otherSample is Medication) { return false }
-		let other = otherSample as! Medication
 		return equalTo(other)
 	}
 
