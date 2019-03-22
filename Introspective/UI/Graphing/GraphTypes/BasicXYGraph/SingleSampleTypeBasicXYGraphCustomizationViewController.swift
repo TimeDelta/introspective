@@ -191,7 +191,9 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			let controller: ChooseInformationToGraphTableViewController = viewController(named: "chooseInformation")
 			controller.attributes = sampleType.attributes
 			controller.limitToNumericInformation = true
-			controller.chosenInformation = yAxis?.map{ $0.information! }
+			if let yAxis = yAxis {
+				controller.chosenInformation = yAxis.map{ $0.information! }
+			}
 			controller.notificationToSendWhenFinished = Me.yAxisChanged
 			realNavigationController?.pushViewController(controller, animated: false)
 		}

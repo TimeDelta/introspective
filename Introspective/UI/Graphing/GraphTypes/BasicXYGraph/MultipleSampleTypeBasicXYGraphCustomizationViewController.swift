@@ -228,7 +228,9 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	@IBAction final func chooseYAxisInformationButtonPressed(_ sender: Any) {
 		let controller: ChooseInformationToGraphTableViewController = viewController(named: "chooseInformation")
 		controller.attributes = yAxisSampleType.attributes
-		controller.chosenInformation = yAxisInformation
+		if let yAxisInformation = yAxisInformation {
+			controller.chosenInformation = yAxisInformation
+		}
 		controller.notificationToSendWhenFinished = Me.yAxisInformationChanged
 		realNavigationController?.pushViewController(controller, animated: false)
 	}

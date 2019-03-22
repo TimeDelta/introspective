@@ -99,27 +99,42 @@ final class XAxisSetupViewController: UIViewController {
 
 	@IBAction final func acceptButtonPressed(_ sender: Any) {
 		if grouping == nil {
-			NotificationCenter.default.post(
-				name: notificationToSendWhenFinished,
-				object: self,
-				userInfo: info([
-					.calendarComponent: grouping as Any,
-					.attribute: selectedAttribute,
-				]))
+			sendUngroupedAcceptedNotification()
 		} else {
-			NotificationCenter.default.post(
-				name: notificationToSendWhenFinished,
-				object: self,
-				userInfo: info([
-					.calendarComponent: grouping as Any,
-					.information: selectedInformation,
-				]))
+			sendGroupedAcceptedNotification()
 		}
 		if let navigationController = navigationController {
 			navigationController.popViewController(animated: false)
 		} else {
 			dismiss(animated: false, completion: nil)
 		}
+	}
+
+	private final func sendUngroupedAcceptedNotification() {
+		guard let selectedAttribute = selectedAttribute else {
+			log.error("Selected attribute not set")
+			return
+		}
+		NotificationCenter.default.post(
+			name: notificationToSendWhenFinished,
+			object: self,
+			userInfo: info([
+				.attribute: selectedAttribute,
+			]))
+	}
+
+	private final func sendGroupedAcceptedNotification() {
+		guard let selectedInformation = selectedInformation else {
+			log.error("Selected information not set")
+			return
+		}
+		NotificationCenter.default.post(
+			name: notificationToSendWhenFinished,
+			object: self,
+			userInfo: info([
+				.calendarComponent: grouping as Any,
+				.information: selectedInformation,
+			]))
 	}
 
 	// MARK: - Received Notifications

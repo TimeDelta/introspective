@@ -21,9 +21,7 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 	public final var limitToNumericInformation: Bool = false
 	public final var notificationToSendWhenFinished: Notification.Name!
 	public final var attributes: [Attribute]!
-	public final var chosenInformation: [ExtraInformation]! {
-		didSet { chosenInformation = chosenInformation ?? [ExtraInformation]() }
-	}
+	public final var chosenInformation = [ExtraInformation]()
 
 	private final var informationEditIndex: Int!
 
