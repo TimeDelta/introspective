@@ -26,7 +26,6 @@ public class Activity: NSManagedObject, CoreDataSample {
 	// MARK: - Attributes
 
 	public static let nameAttribute = TextAttribute(name: "Name", pluralName: "Names", description: "The name of this activity", variableName: "definition.name")
-	public static let endDateAttribute = DateTimeAttribute(name: "End Date", pluralName: "End Dates", variableName: "endDate", optional: true)
 	public static let noteAttribute = TextAttribute(name: "Note", pluralName: "Notes", variableName: "note")
 	public static let tagsAttribute = TagsAttribute()
 	public static let durationAttribute = DurationAttribute()
@@ -43,7 +42,7 @@ public class Activity: NSManagedObject, CoreDataSample {
 		nameAttribute,
 		durationAttribute,
 		CommonSampleAttributes.startDate,
-		endDateAttribute,
+		CommonSampleAttributes.optionalEndDate,
 		noteAttribute,
 		tagsAttribute,
 		sourceAttribute,
@@ -64,7 +63,7 @@ public class Activity: NSManagedObject, CoreDataSample {
 		set {
 			startDate = newValue
 			if source == Sources.ActivitySourceNum.introspective.rawValue && startDateTimeZoneId == nil {
-				startDateTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+				startDateTimeZoneId = DependencyInjector.util.calendar.currentTimeZone().identifier
 			}
 		}
 	}
@@ -78,7 +77,7 @@ public class Activity: NSManagedObject, CoreDataSample {
 		set {
 			endDate = newValue
 			if source == Sources.ActivitySourceNum.introspective.rawValue && endDateTimeZoneId == nil {
-				endDateTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+				endDateTimeZoneId = DependencyInjector.util.calendar.currentTimeZone().identifier
 			}
 		}
 	}
@@ -116,7 +115,7 @@ public class Activity: NSManagedObject, CoreDataSample {
 		if attribute.equalTo(CommonSampleAttributes.startDate) {
 			return start
 		}
-		if attribute.equalTo(Me.endDateAttribute) {
+		if attribute.equalTo(CommonSampleAttributes.optionalEndDate) {
 			return end
 		}
 		if attribute.equalTo(Me.tagsAttribute) {
@@ -154,17 +153,17 @@ public class Activity: NSManagedObject, CoreDataSample {
 			}
 			startDate = castedValue
 			if source == Sources.ActivitySourceNum.introspective.rawValue && startDateTimeZoneId == nil {
-				startDateTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+				startDateTimeZoneId = DependencyInjector.util.calendar.currentTimeZone().identifier
 			}
 			return
 		}
-		if attribute.equalTo(Me.endDateAttribute) {
+		if attribute.equalTo(CommonSampleAttributes.optionalEndDate) {
 			if !(value is Date?) {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
 			endDate = (value as! Date?)
 			if source == Sources.ActivitySourceNum.introspective.rawValue && endDateTimeZoneId == nil {
-				endDateTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+				endDateTimeZoneId = DependencyInjector.util.calendar.currentTimeZone().identifier
 			}
 			return
 		}
@@ -190,10 +189,10 @@ public class Activity: NSManagedObject, CoreDataSample {
 	public final func setSource(_ source: Sources.ActivitySourceNum) {
 		self.source = source.rawValue
 		if source == Sources.ActivitySourceNum.introspective && startDateTimeZoneId == nil {
-			startDateTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+			startDateTimeZoneId = DependencyInjector.util.calendar.currentTimeZone().identifier
 		}
 		if source == Sources.ActivitySourceNum.introspective && endDateTimeZoneId == nil {
-			endDateTimeZoneId = TimeZone.autoupdatingCurrent.identifier
+			endDateTimeZoneId = DependencyInjector.util.calendar.currentTimeZone().identifier
 		}
 	}
 
@@ -209,19 +208,11 @@ public class Activity: NSManagedObject, CoreDataSample {
 		removeAllTags()
 		for tag in newTags {
 			let tagToAdd = try DependencyInjector.db.pull(savedObject: tag, fromSameContextAs: self)
-			if !tagToAdd.isFault {
-				addToTags(tagToAdd)
-			} else if !tag.isFault {
-				addToTags(tag)
-			}
+			addToTags(tagToAdd)
 		}
 	}
 
 	// MARK: - Equatable
-
-	public static func ==(lhs: Activity, rhs: Activity) -> Bool {
-		return lhs.equalTo(rhs)
-	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is Activity) { return false }

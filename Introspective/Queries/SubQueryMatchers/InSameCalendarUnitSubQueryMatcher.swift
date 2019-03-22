@@ -184,6 +184,9 @@ public final class InSameCalendarUnitSubQueryMatcher: SubQueryMatcher, Equatable
 		if sample(_sample, has: CommonSampleAttributes.healthKitEndDate) {
 			return CommonSampleAttributes.healthKitEndDate
 		}
+		if sample(_sample, has: CommonSampleAttributes.optionalEndDate) {
+			return CommonSampleAttributes.optionalEndDate
+		}
 		return nil
 	}
 }

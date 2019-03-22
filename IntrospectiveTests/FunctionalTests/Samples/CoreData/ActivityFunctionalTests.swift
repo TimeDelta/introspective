@@ -8,6 +8,7 @@
 
 import XCTest
 import SwiftDate
+import Hamcrest
 @testable import Introspective
 
 final class ActivityFunctionalTests: FunctionalTest {
@@ -70,7 +71,7 @@ final class ActivityFunctionalTests: FunctionalTest {
 		let activity = ActivityDataTestUtil.createActivity(endDate: expectedEndDate)
 
 		// when
-		let endDate = try activity.value(of: Activity.endDateAttribute) as? Date
+		let endDate = try activity.value(of: CommonSampleAttributes.optionalEndDate) as? Date
 
 		// then
 		XCTAssertEqual(endDate, expectedEndDate)
@@ -104,6 +105,18 @@ final class ActivityFunctionalTests: FunctionalTest {
 	}
 
 	// MARK: - set(attribute:to:)
+
+	func testGivenNameAttributeWithWrongValueType_set_throwsTypeMismatchError() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let value = 23
+
+		// when
+		XCTAssertThrowsError(try activity.set(attribute: Activity.nameAttribute, to: value)) { error in
+			// then
+			XCTAssert(error is TypeMismatchError)
+		}
+	}
 
 	func testGivenNameAttribute_set_correctlySetsName() throws {
 		// given
@@ -141,6 +154,18 @@ final class ActivityFunctionalTests: FunctionalTest {
 		}
 	}
 
+	func testGivenStartDateAttributeWithWrongValueType_set_throwsTypeMismatchError() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let value = 23
+
+		// when
+		XCTAssertThrowsError(try activity.set(attribute: CommonSampleAttributes.startDate, to: value)) { error in
+			// then
+			XCTAssert(error is TypeMismatchError)
+		}
+	}
+
 	func testGivenStartDateAttribute_set_correctlySetsStartDate() throws {
 		// given
 		let expectedStartDate = Date()
@@ -153,19 +178,87 @@ final class ActivityFunctionalTests: FunctionalTest {
 		XCTAssertEqual(activity.start, expectedStartDate)
 	}
 
+	func testGivenStartDateAttributeAndStartDateTimeZoneNotYetSet_set_setsStartDateTimeZone() throws {
+		// given
+		let timeZoneOnSet = TimeZone(abbreviation: "PST")!
+		let timeZoneOnAccess = TimeZone(abbreviation: "EST")!
+		let calendarUtil = CalendarUtilImpl()
+		utilFactory.calendar = calendarUtil
+		calendarUtil.setTimeZone(timeZoneOnSet)
+
+		DependencyInjector.settings.setConvertTimeZones(true)
+		let transaction = DependencyInjector.db.transaction()
+		let activity = try transaction.new(Activity.self)
+		let startDate = Date()
+
+		// when
+		try activity.set(attribute: CommonSampleAttributes.startDate, to: startDate)
+
+		// then
+		let expectedDate = DependencyInjector.util.calendar.convert(startDate, from: timeZoneOnSet, to: timeZoneOnAccess)
+		calendarUtil.setTimeZone(timeZoneOnAccess)
+		XCTAssertEqual(activity.start, expectedDate)
+	}
+
+	func testGivenEndDateAttributeWithWrongValueType_set_throwsTypeMismatchError() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let value = 23
+
+		// when
+		XCTAssertThrowsError(try activity.set(attribute: CommonSampleAttributes.optionalEndDate, to: value)) { error in
+			// then
+			XCTAssert(error is TypeMismatchError)
+		}
+	}
+
 	func testGivenEndDateAttribute_set_correctlySetsEndDate() throws {
 		// given
 		let expectedEndDate = Date()
 		let activity = ActivityDataTestUtil.createActivity()
 
 		// when
-		try activity.set(attribute: Activity.endDateAttribute, to: expectedEndDate)
+		try activity.set(attribute: CommonSampleAttributes.optionalEndDate, to: expectedEndDate)
 
 		// then
 		XCTAssertEqual(activity.end, expectedEndDate)
 	}
 
-	func testGivenNotesAttribute_set_correctlySetsNotes() throws {
+	func testGivenEndDateAttributeAndEndDateTimeZoneNotYetSet_set_setsEndDateTimeZone() throws {
+		// given
+		let timeZoneOnSet = TimeZone(abbreviation: "PST")!
+		let timeZoneOnAccess = TimeZone(abbreviation: "EST")!
+		let calendarUtil = CalendarUtilImpl()
+		utilFactory.calendar = calendarUtil
+		calendarUtil.setTimeZone(timeZoneOnSet)
+
+		DependencyInjector.settings.setConvertTimeZones(true)
+		let transaction = DependencyInjector.db.transaction()
+		let activity = try transaction.new(Activity.self)
+		let endDate = Date()
+
+		// when
+		try activity.set(attribute: CommonSampleAttributes.optionalEndDate, to: endDate)
+
+		// then
+		let expectedDate = DependencyInjector.util.calendar.convert(endDate, from: timeZoneOnSet, to: timeZoneOnAccess)
+		calendarUtil.setTimeZone(timeZoneOnAccess)
+		XCTAssertEqual(activity.end, expectedDate)
+	}
+
+	func testGivenNoteAttributeWithWrongValueType_set_throwsTypeMismatchError() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let value = 23
+
+		// when
+		XCTAssertThrowsError(try activity.set(attribute: Activity.noteAttribute, to: value)) { error in
+			// then
+			XCTAssert(error is TypeMismatchError)
+		}
+	}
+
+	func testGivenNoteAttribute_set_correctlySetsNotes() throws {
 		// given
 		let expectedNote = "this is a note about the activity"
 		let activity = ActivityDataTestUtil.createActivity()
@@ -177,16 +270,564 @@ final class ActivityFunctionalTests: FunctionalTest {
 		XCTAssertEqual(expectedNote, activity.note)
 	}
 
-	// TODO - This test is flaky
+	func testGivenTagsAttributeWithWrongValueType_set_throwsTypeMismatchError() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let value = 23
+
+		// when
+		XCTAssertThrowsError(try activity.set(attribute: Activity.tagsAttribute, to: value)) { error in
+			// then
+			XCTAssert(error is TypeMismatchError)
+		}
+	}
+
 	func testGivenTagsAttribute_set_correctlySetsTags() throws {
 		// given
-		let expectedTags = [TagDataTestUtil.createTag(name: "expected tag 1"), TagDataTestUtil.createTag(name: "expected tag 2")]
+		let expectedTag1 = TagDataTestUtil.createTag(name: "expected tag 1")
+		let expectedTag2 = TagDataTestUtil.createTag(name: "expected tag 2")
 		let activity = ActivityDataTestUtil.createActivity()
 
 		// when
-		try activity.set(attribute: Activity.tagsAttribute, to: expectedTags)
+		try activity.set(attribute: Activity.tagsAttribute, to: [expectedTag1, expectedTag2] as Any)
 
 		// then
-		XCTAssert(activity.tagsArray().elementsEqual(expectedTags, by: { $0.equalTo($1) }))
+		assertThat(activity.tagsArray(), containsInAnyOrder(expectedTag1, expectedTag2))
+	}
+
+	// MARK: - setTags()
+
+	func testGivenActivityAlreadyHasTags_set_replacesExistingTagsWithSpecifiedOnes() throws {
+		// given
+		let originalTag1 = TagDataTestUtil.createTag(name: "original 1")
+		let originalTag2 = TagDataTestUtil.createTag(name: "original 2")
+
+		let expectedTag1 = TagDataTestUtil.createTag(name: "expected 1")
+		let expectedTag2 = TagDataTestUtil.createTag(name: "expected 2")
+
+		let activity = ActivityDataTestUtil.createActivity(tags: [originalTag1, originalTag2])
+
+		// when
+		try activity.setTags([expectedTag1, expectedTag2])
+
+		// then
+		assertThat(activity.tagsArray(), containsInAnyOrder(expectedTag1, expectedTag2))
+		assertThat(activity.tagsArray(), not(containsInAnyOrder(originalTag1, originalTag2)))
+	}
+
+	// MARK: - setSource()
+
+	func testGivenIntrospectiveWithTimeZoneNotSet_setSource_setsStartDateTimeZone() throws {
+		// given
+		let timeZoneOnSet = TimeZone(abbreviation: "PST")!
+		let timeZoneOnAccess = TimeZone(abbreviation: "EST")!
+		let calendarUtil = CalendarUtilImpl()
+		utilFactory.calendar = calendarUtil
+		calendarUtil.setTimeZone(timeZoneOnSet)
+
+		DependencyInjector.settings.setConvertTimeZones(true)
+		let transaction = DependencyInjector.db.transaction()
+		let activity = try transaction.new(Activity.self)
+
+		// when
+		activity.setSource(.introspective)
+
+		// then
+		let startDate = Date()
+		activity.start = startDate
+		let expectedDate = DependencyInjector.util.calendar.convert(startDate, from: timeZoneOnSet, to: timeZoneOnAccess)
+		calendarUtil.setTimeZone(timeZoneOnAccess)
+		XCTAssertEqual(activity.start, expectedDate)
+	}
+
+	func testGivenIntrospectiveWithTimeZoneNotSet_setSource_setsEndDateTimeZone() throws {
+		// given
+		let timeZoneOnSet = TimeZone(abbreviation: "PST")!
+		let timeZoneOnAccess = TimeZone(abbreviation: "EST")!
+		let calendarUtil = CalendarUtilImpl()
+		utilFactory.calendar = calendarUtil
+		calendarUtil.setTimeZone(timeZoneOnSet)
+
+		DependencyInjector.settings.setConvertTimeZones(true)
+		let transaction = DependencyInjector.db.transaction()
+		let activity = try transaction.new(Activity.self)
+
+		// when
+		activity.setSource(.introspective)
+
+		// then
+		let endDate = Date()
+		activity.end = endDate
+		let expectedDate = DependencyInjector.util.calendar.convert(endDate, from: timeZoneOnSet, to: timeZoneOnAccess)
+		calendarUtil.setTimeZone(timeZoneOnAccess)
+		XCTAssertEqual(activity.end, expectedDate)
+	}
+
+	// MARK: - graphableValue(of:)
+
+	func testGivenDurationAttribute_graphableValueOf_returnsDurationInHoursAsDouble() throws {
+		// given
+		let startDate = Date()
+		let endDate = startDate + 4.hours + 15.minutes
+		let activity = ActivityDataTestUtil.createActivity(startDate: startDate, endDate: endDate)
+
+		// when
+		let graphableDuration = try activity.graphableValue(of: Activity.durationAttribute) as? Double
+
+		// then
+		XCTAssertEqual(graphableDuration, 4.25)
+	}
+
+	// MARK: - ==
+
+	func testGivenSameObjectTwice_equalToOperator_returnsTrue() {
+		// when
+		let activity = ActivityDataTestUtil.createActivity()
+		let areEqual = activity == activity
+
+		// then
+		XCTAssert(areEqual)
+	}
+
+	// https://stackoverflow.com/questions/42283715/overload-for-custom-class-is-not-always-called
+	// https://stackoverflow.com/questions/6883848/why-am-i-not-able-to-override-isequal-in-my-nsmanagedobject-subclass
+	func testGivenTwoActivitiesWithSameValuesButDifferentMemoryAddresses_equalToOperator_returnsFalse() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let otherActivity = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start,
+			endDate: activity.end,
+			note: activity.note,
+			tags: activity.tagsArray())
+
+		// when
+		let areEqual = activity == otherActivity
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	// MARK: - equalTo(attributed:)
+
+	func testGivenWrongClass_equalToAttributed_returnsFalse() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = EqualToDoubleAttributeRestriction(restrictedAttribute: DoubleAttribute(name: ""))
+
+		// when
+		let areEqual = activity.equalTo(other as Attributed)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenSameObjectTwice_equalToAttributed_returnsTrue() {
+		// when
+		let activity = ActivityDataTestUtil.createActivity()
+		let areEqual = activity.equalTo(activity as Attributed)
+
+		// then
+		XCTAssert(areEqual)
+	}
+
+	func testGivenStartDateMismatch_equalToAttributed_returnsFalse() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start + 1.days,
+			endDate: activity.end,
+			note: activity.note,
+			tags: activity.tagsArray())
+
+		// when
+		let areEqual = activity.equalTo(other as Attributed)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenEndDateMismatch_equalToAttributed_returnsFalse() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start,
+			endDate: (activity.end ?? Date()) + 1.days,
+			note: activity.note,
+			tags: activity.tagsArray())
+
+		// when
+		let areEqual = activity.equalTo(other as Attributed)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenDefinitionMismatch_equalToAttributed_returnsFalse() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			name: activity.definition.name + "other stuff",
+			startDate: activity.start,
+			endDate: activity.end,
+			note: activity.note,
+			tags: activity.tagsArray())
+
+		// when
+		let areEqual = activity.equalTo(other as Attributed)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenNoteMismatch_equalToAttributed_returnsFalse() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start,
+			endDate: activity.end,
+			note: (activity.note ?? "") + "other stuff",
+			tags: activity.tagsArray())
+
+		// when
+		let areEqual = activity.equalTo(other as Attributed)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenTagsMismatch_equalToAttributed_returnsFalse() {
+		// given
+		let tag = TagDataTestUtil.createTag(name: "tag")
+		let activity = ActivityDataTestUtil.createActivity(tags: [tag])
+		let otherTag = TagDataTestUtil.createTag(name: "other tag")
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start,
+			endDate: activity.end,
+			note: activity.note,
+			tags: [otherTag])
+
+		// when
+		let areEqual = activity.equalTo(other as Attributed)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenSourceMismatch_equalToAttributed_returnsTrue() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start,
+			endDate: activity.end,
+			note: activity.note,
+			tags: activity.tagsArray())
+		other.source = activity.source + 1
+
+		// when
+		let areEqual = activity.equalTo(other as Attributed)
+
+		// then
+		XCTAssert(areEqual)
+	}
+
+	func testGivenTwoActivitiesWithSameValues_equalToAttributed_returnsTrue() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start,
+			endDate: activity.end,
+			note: activity.note,
+			tags: activity.tagsArray())
+
+		// when
+		let areEqual = activity.equalTo(other as Attributed)
+
+		// then
+		XCTAssert(areEqual)
+	}
+
+	// MARK: - equalTo(sample:)
+
+	func testGivenWrongClass_equalToSample_returnsFalse() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = HeartRate(12, Date())
+
+		// when
+		let areEqual = activity.equalTo(other as Sample)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenSameObjectTwice_equalToSample_returnsTrue() {
+		// when
+		let activity = ActivityDataTestUtil.createActivity()
+		let areEqual = activity.equalTo(activity as Sample)
+
+		// then
+		XCTAssert(areEqual)
+	}
+
+	func testGivenStartDateMismatch_equalToSample_returnsFalse() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start + 1.days,
+			endDate: activity.end,
+			note: activity.note,
+			tags: activity.tagsArray())
+
+		// when
+		let areEqual = activity.equalTo(other as Sample)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenEndDateMismatch_equalToSample_returnsFalse() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start,
+			endDate: (activity.end ?? Date()) + 1.days,
+			note: activity.note,
+			tags: activity.tagsArray())
+
+		// when
+		let areEqual = activity.equalTo(other as Sample)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenDefinitionMismatch_equalToSample_returnsFalse() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			name: activity.definition.name + "other stuff",
+			startDate: activity.start,
+			endDate: activity.end,
+			note: activity.note,
+			tags: activity.tagsArray())
+
+		// when
+		let areEqual = activity.equalTo(other as Sample)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenNoteMismatch_equalToSample_returnsFalse() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start,
+			endDate: activity.end,
+			note: (activity.note ?? "") + "other stuff",
+			tags: activity.tagsArray())
+
+		// when
+		let areEqual = activity.equalTo(other as Sample)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenTagsMismatch_equalToSample_returnsFalse() {
+		// given
+		let tag = TagDataTestUtil.createTag(name: "tag")
+		let activity = ActivityDataTestUtil.createActivity(tags: [tag])
+		let otherTag = TagDataTestUtil.createTag(name: "other tag")
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start,
+			endDate: activity.end,
+			note: activity.note,
+			tags: [otherTag])
+
+		// when
+		let areEqual = activity.equalTo(other as Sample)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenSourceMismatch_equalToSample_returnsTrue() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start,
+			endDate: activity.end,
+			note: activity.note,
+			tags: activity.tagsArray())
+		other.source = activity.source + 1
+
+		// when
+		let areEqual = activity.equalTo(other as Sample)
+
+		// then
+		XCTAssert(areEqual)
+	}
+
+	func testGivenTwoActivitiesWithSameValues_equalToSample_returnsTrue() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start,
+			endDate: activity.end,
+			note: activity.note,
+			tags: activity.tagsArray())
+
+		// when
+		let areEqual = activity.equalTo(other as Sample)
+
+		// then
+		XCTAssert(areEqual)
+	}
+
+	// MARK: - equalTo(activity:)
+
+	func testGivenSameObjectTwice_equalTo_returnsTrue() {
+		// when
+		let activity = ActivityDataTestUtil.createActivity()
+		let areEqual = activity.equalTo(activity)
+
+		// then
+		XCTAssert(areEqual)
+	}
+
+	func testGivenStartDateMismatch_equalTo_returnsFalse() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start + 1.days,
+			endDate: activity.end,
+			note: activity.note,
+			tags: activity.tagsArray())
+
+		// when
+		let areEqual = activity.equalTo(other)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenEndDateMismatch_equalTo_returnsFalse() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start,
+			endDate: (activity.end ?? Date()) + 1.days,
+			note: activity.note,
+			tags: activity.tagsArray())
+
+		// when
+		let areEqual = activity.equalTo(other)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenDefinitionMismatch_equalTo_returnsFalse() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			name: activity.definition.name + "other stuff",
+			startDate: activity.start,
+			endDate: activity.end,
+			note: activity.note,
+			tags: activity.tagsArray())
+
+		// when
+		let areEqual = activity.equalTo(other)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenNoteMismatch_equalTo_returnsFalse() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start,
+			endDate: activity.end,
+			note: (activity.note ?? "") + "other stuff",
+			tags: activity.tagsArray())
+
+		// when
+		let areEqual = activity.equalTo(other)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenTagsMismatch_equalTo_returnsFalse() {
+		// given
+		let tag = TagDataTestUtil.createTag(name: "tag")
+		let activity = ActivityDataTestUtil.createActivity(tags: [tag])
+		let otherTag = TagDataTestUtil.createTag(name: "other tag")
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start,
+			endDate: activity.end,
+			note: activity.note,
+			tags: [otherTag])
+
+		// when
+		let areEqual = activity.equalTo(other)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenSourceMismatch_equalTo_returnsTrue() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start,
+			endDate: activity.end,
+			note: activity.note,
+			tags: activity.tagsArray())
+		other.source = activity.source + 1
+
+		// when
+		let areEqual = activity.equalTo(other)
+
+		// then
+		XCTAssert(areEqual)
+	}
+
+	func testGivenTwoActivitiesWithSameValues_equalTo_returnsTrue() {
+		// given
+		let activity = ActivityDataTestUtil.createActivity()
+		let other = ActivityDataTestUtil.createActivity(
+			definition: activity.definition,
+			startDate: activity.start,
+			endDate: activity.end,
+			note: activity.note,
+			tags: activity.tagsArray())
+
+		// when
+		let areEqual = activity.equalTo(other)
+
+		// then
+		XCTAssert(areEqual)
 	}
 }

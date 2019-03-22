@@ -31,6 +31,8 @@ public protocol CalendarUtil {
 	/// - Returns: The date represented by the passed String if it can be converted, otherwise `nil`.
 	func date(from dateStr: String, format: String?) -> Date?
 	func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) throws -> Int
+	// need to inject this dependency for testing
+	func currentTimeZone() -> TimeZone
 }
 
 extension CalendarUtil {
@@ -47,6 +49,8 @@ extension CalendarUtil {
 
 public final class CalendarUtilImpl: CalendarUtil {
 
+	/// This is only used for testing
+	private final var timeZone: TimeZone?
 	private final let log = Log()
 
 	public enum Errors: String, Error {
@@ -143,6 +147,16 @@ public final class CalendarUtilImpl: CalendarUtil {
 			throw Errors.invalidCalendarComponent
 		}
 		return distance
+	}
+
+	// need to inject this dependency for testing
+	public final func currentTimeZone() -> TimeZone {
+		return timeZone ?? TimeZone.autoupdatingCurrent
+	}
+
+	/// This is not
+	public final func setTimeZone(_ timeZone: TimeZone) {
+		self.timeZone = timeZone
 	}
 }
 

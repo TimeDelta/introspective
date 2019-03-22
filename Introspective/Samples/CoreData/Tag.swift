@@ -10,7 +10,6 @@
 import Foundation
 import CoreData
 
-
 public class Tag: NSManagedObject, CoreDataObject {
 
 	// MARK: CoreData stuff
@@ -25,5 +24,11 @@ public class Tag: NSManagedObject, CoreDataObject {
 
 	public final func equalTo(_ other: Tag) -> Bool {
 		return name.localizedLowercase == other.name.localizedLowercase
+	}
+
+	// MARK: - Other
+
+	public final override var description: String {
+		return "Tag named '\(name)'"
 	}
 }

@@ -112,7 +112,7 @@ class ActivityQueryFunctionalTests: QueryFunctionalTest {
 		let expectedSamples: [Sample] = [createActivity(name: "expected", endDate: targetDate - 1.hours)]
 		let _ = createActivity(name: "unexpected", endDate: targetDate + 10.days)
 
-		let endDateRestriction = BeforeDateAttributeRestriction(restrictedAttribute: Activity.endDateAttribute, date: targetDate)
+		let endDateRestriction = BeforeDateAttributeRestriction(restrictedAttribute: CommonSampleAttributes.optionalEndDate, date: targetDate)
 		query.attributeRestrictions.append(endDateRestriction)
 
 		// when

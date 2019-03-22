@@ -8,6 +8,7 @@
 
 import XCTest
 import SwiftyMocky
+import Hamcrest
 @testable import Introspective
 
 class FunctionalTest: XCTestCase {
@@ -63,6 +64,8 @@ class FunctionalTest: XCTestCase {
 
 		ioUtil = IOUtilMock()
 		utilFactory.io = ioUtil
+
+		HamcrestReportFunction = {message, file, line in XCTFail(message, file: file, line: line)}
 	}
 
 	override func tearDown() {

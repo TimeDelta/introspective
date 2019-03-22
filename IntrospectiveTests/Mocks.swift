@@ -2053,6 +2053,20 @@ open class CalendarUtilMock: CalendarUtil, Mock {
 		return __value
     }
 
+    open func currentTimeZone() -> TimeZone {
+        addInvocation(.m_currentTimeZone)
+		let perform = methodPerformValue(.m_currentTimeZone) as? () -> Void
+		perform?()
+		var __value: TimeZone
+		do {
+		    __value = try methodReturnValue(.m_currentTimeZone).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for currentTimeZone(). Use given")
+			Failure("Stub return value not specified for currentTimeZone(). Use given")
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_convert__datefrom_fromTimeZoneto_toTimeZone(Parameter<Date>, Parameter<TimeZone>, Parameter<TimeZone>)
@@ -2066,6 +2080,7 @@ open class CalendarUtilMock: CalendarUtil, Mock {
         case m_date__dateisOnA_dayOfWeek(Parameter<Date>, Parameter<DayOfWeek>)
         case m_date__from_dateStrformat_format(Parameter<String>, Parameter<String?>)
         case m_distance__from_date1to_date2in_unit(Parameter<Date>, Parameter<Date>, Parameter<Calendar.Component>)
+        case m_currentTimeZone
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -2117,6 +2132,8 @@ open class CalendarUtilMock: CalendarUtil, Mock {
                 guard Parameter.compare(lhs: lhsDate2, rhs: rhsDate2, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsUnit, rhs: rhsUnit, with: matcher) else { return false } 
                 return true 
+            case (.m_currentTimeZone, .m_currentTimeZone):
+                return true 
             default: return false
             }
         }
@@ -2134,6 +2151,7 @@ open class CalendarUtilMock: CalendarUtil, Mock {
             case let .m_date__dateisOnA_dayOfWeek(p0, p1): return p0.intValue + p1.intValue
             case let .m_date__from_dateStrformat_format(p0, p1): return p0.intValue + p1.intValue
             case let .m_distance__from_date1to_date2in_unit(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case .m_currentTimeZone: return 0
             }
         }
     }
@@ -2199,6 +2217,9 @@ open class CalendarUtilMock: CalendarUtil, Mock {
         }
         public static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, willReturn: Int...) -> MethodStub {
             return Given(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`), products: willReturn.map({ Product.return($0) }))
+        }
+        public static func currentTimeZone(willReturn: TimeZone...) -> MethodStub {
+            return Given(method: .m_currentTimeZone, products: willReturn.map({ Product.return($0) }))
         }
         public static func convert(_ date: Parameter<Date>, from fromTimeZone: Parameter<TimeZone>, to toTimeZone: Parameter<TimeZone>, willProduce: (Stubber<Date>) -> Void) -> MethodStub {
             let willReturn: [Date] = []
@@ -2270,6 +2291,13 @@ open class CalendarUtilMock: CalendarUtil, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func currentTimeZone(willProduce: (Stubber<TimeZone>) -> Void) -> MethodStub {
+            let willReturn: [TimeZone] = []
+			let given: Given = { return Given(method: .m_currentTimeZone, products: willReturn.map({ Product.return($0) })) }()
+			let stubber = given.stub(for: (TimeZone).self)
+			willProduce(stubber)
+			return given
+        }
         public static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`), products: willThrow.map({ Product.throw($0) }))
         }
@@ -2306,6 +2334,7 @@ open class CalendarUtilMock: CalendarUtil, Mock {
 		public static func date(date: Parameter<Date>, isOnA dayOfWeek: Parameter<DayOfWeek>) -> Verify { return Verify(method: .m_date__dateisOnA_dayOfWeek(`date`, `dayOfWeek`))}
         public static func date(from dateStr: Parameter<String>, format: Parameter<String?>) -> Verify { return Verify(method: .m_date__from_dateStrformat_format(`dateStr`, `format`))}
         public static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>) -> Verify { return Verify(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`))}
+        public static func currentTimeZone() -> Verify { return Verify(method: .m_currentTimeZone)}
     }
 
     public struct Perform {
@@ -2364,6 +2393,9 @@ open class CalendarUtilMock: CalendarUtil, Mock {
         }
         public static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, perform: @escaping (Date, Date, Calendar.Component) -> Void) -> Perform {
             return Perform(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`), performs: perform)
+        }
+        public static func currentTimeZone(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_currentTimeZone, performs: perform)
         }
     }
 

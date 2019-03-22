@@ -105,7 +105,8 @@ public class CommonSampleAttributes {
 
 	public static let timestamp = DateTimeAttribute(name: "Timestamp", pluralName: "Timestamps", variableName: "timestamp")
 	public static let startDate = DateTimeAttribute(name: "Start Date", pluralName: "Start dates", variableName: "startDate")
-	public static let endDate = DateTimeAttribute(name: "End Date", pluralName: "End dates", variableName: "endDate")
+	public static let endDate = DateTimeAttribute(name: "End Date", pluralName: "End dates", variableName: "endDate", optional: false)
+	public static let optionalEndDate = DateTimeAttribute(name: "End Date", pluralName: "End Dates", variableName: "endDate", optional: true)
 
 	public static let healthKitTimestamp = DateTimeAttribute(name: timestamp.name, pluralName: timestamp.pluralName, variableName: HKPredicateKeyPathStartDate)
 	public static let healthKitStartDate = DateTimeAttribute(name: startDate.name, pluralName: startDate.pluralName, variableName: HKPredicateKeyPathStartDate)
