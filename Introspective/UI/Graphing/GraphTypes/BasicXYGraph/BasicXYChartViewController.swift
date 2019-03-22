@@ -43,15 +43,17 @@ public final class BasicXYChartViewController: UIViewController {
 
 		chartModel = chartModel.chartType(chartType)
 
+		DependencyInjector.util.ui.setBackButton(for: self, title: "Graph Setup", action: #selector(back))
+
+		finishedSetup = true
+	}
+
+	public final override func viewDidLayoutSubviews() {
 		chartView = AAChartView()
 		chartView.frame = chartViewOutline.frame
 		chartView.contentHeight = chartViewOutline.frame.size.height
 		chartView.scrollEnabled = false
 		view.insertSubview(chartView, at: 0)
-
-		DependencyInjector.util.ui.setBackButton(for: self, title: "Graph Setup", action: #selector(back))
-
-		finishedSetup = true
 	}
 
 	public final override func showError(
