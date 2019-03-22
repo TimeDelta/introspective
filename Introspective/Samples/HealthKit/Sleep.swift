@@ -197,7 +197,9 @@ extension Sleep: Equatable {
 	}
 
 	public final func equalTo(_ other: Sleep) -> Bool {
-		return startDate == other.startDate && state == other.state
+		return startDate == other.startDate &&
+			endDate == other.endDate &&
+			state == other.state
 	}
 }
 
