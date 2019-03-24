@@ -144,7 +144,8 @@ public class Activity: NSManagedObject, CoreDataSample {
 			if matchingDefinitions.count == 0 {
 				throw UnsupportedValueError(attribute: attribute, of: self, is: value)
 			}
-			definition = matchingDefinitions[0]
+
+			definition = try DependencyInjector.db.pull(savedObject: matchingDefinitions[0], fromSameContextAs: self)
 			return
 		}
 		if attribute.equalTo(CommonSampleAttributes.startDate) {

@@ -74,8 +74,8 @@ final class QueryScreenUITests: UITest {
 
 		// when
 		app.tables.staticTexts["Diastolic blood pressure < 0.0"].tap()
-		app.pickerWheels["Diastolic blood pressure"].adjust(toPickerWheelValue: "Timestamp")
-		app.pickerWheels["Before date"].adjust(toPickerWheelValue: "After date")
+		setPicker("restricted attribute", to: "Timestamp", changeCase: false)
+		setPicker("attribute restriction", to: "After date", changeCase: false)
 		app.buttons["set date button"].tap()
 		app.datePickers.pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "June")
 		app.datePickers.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "18")
@@ -100,6 +100,7 @@ final class QueryScreenUITests: UITest {
 		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
 		app.tables.cells.allElementsBoundByIndex[1].tap()
 		setPicker("restricted attribute", to: "Start Date")
+		setPicker("attribute restriction", to: "Before date", changeCase: false)
 		app.buttons["set date button"].tap()
 		setDatePicker(to: date)
 		app.buttons["save button"].tap()
@@ -139,6 +140,7 @@ final class QueryScreenUITests: UITest {
 		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
 		app.tables.cells.allElementsBoundByIndex[1].tap()
 		setPicker("restricted attribute", to: "Start Date")
+		setPicker("attribute restriction", to: "After date", changeCase: false)
 		app.buttons["set date button"].tap()
 		setDatePicker(to: date)
 		app.buttons["save button"].tap()

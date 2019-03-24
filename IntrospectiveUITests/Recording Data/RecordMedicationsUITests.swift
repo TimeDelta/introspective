@@ -332,20 +332,25 @@ final class RecordMedicationsUITests: UITest {
 		let medicationName = "ghrui"
 		let dose1Date = Date()
 		let dose2Date = dose1Date - 2.weeks + 1.days
+		let filterRange = 8.days
+		let filterStart = dose1Date - 1.weeks
+		let filterEnd = filterStart + filterRange
 		createMedication(name: medicationName)
 		takeDoseOf(medicationName, at: dose1Date)
 		takeDoseOf(medicationName, at: dose2Date)
 		app.buttons["last \(medicationName) dose button"].tap()
-		filterDoseDates(from: dose1Date - 1.weeks, to: dose1Date + 1.days)
+		filterDoseDates(from: filterStart, to: filterEnd)
 
 		// when
 		app.tables.buttons["<"].tap()
 
 		// then
-		let expectedMinDate = (dose1Date - 1.weeks) - (dose1Date + 1.days - (dose1Date - 1.weeks))
-		let expectedMaxDate = (dose1Date + 1.days) - (dose1Date + 1.days - (dose1Date - 1.weeks))
+		let expectedMinDate = filterStart - filterRange
+		let expectedMaxDate = filterEnd - filterRange
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateStyle = .short
+		dateFormatter.timeStyle = .none
+		dateFormatter.timeZone = TimeZone.autoupdatingCurrent
 		let expectedMinDateString = dateFormatter.string(from: expectedMinDate)
 		let expectedMaxDateString = dateFormatter.string(from: expectedMaxDate)
 		let expectedDateFilterButtonTitle = "From " + expectedMinDateString + " to " + expectedMaxDateString
@@ -359,6 +364,9 @@ final class RecordMedicationsUITests: UITest {
 		let medicationName = "ghrui"
 		let dose1Date = Date()
 		let dose2Date = dose1Date - 2.weeks
+		let filterRange = 10.days
+		let filterStart = dose1Date - 1.weeks
+		let filterEnd = filterStart + filterRange
 		createMedication(name: medicationName)
 		takeDoseOf(medicationName, at: dose1Date)
 		takeDoseOf(medicationName, at: dose2Date)
@@ -369,8 +377,8 @@ final class RecordMedicationsUITests: UITest {
 		app.tables.buttons[">"].tap()
 
 		// then
-		let expectedMinDate = (dose2Date - 1.days) + (dose2Date + 1.weeks - (dose2Date - 1.days))
-		let expectedMaxDate = (dose2Date + 1.weeks) + (dose2Date + 1.weeks - (dose2Date - 1.days))
+		let expectedMinDate = filterStart + filterRange
+		let expectedMaxDate = filterEnd + filterRange
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateStyle = .short
 		let expectedMinDateString = dateFormatter.string(from: expectedMinDate)

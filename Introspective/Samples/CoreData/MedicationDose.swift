@@ -101,10 +101,7 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 				throw UnsupportedValueError(attribute: attribute, of: self, is: value)
 			}
 
-			let dose = try transaction.pull(savedObject: self)
-			dose.medication = matchingMedications[0]
-			medication = try DependencyInjector.db.pull(savedObject: dose.medication, fromSameContextAs: self)
-			try transaction.commit()
+			medication = try DependencyInjector.db.pull(savedObject: matchingMedications[0], fromSameContextAs: self)
 			return
 		}
 		if attribute.equalTo(Me.dosage) {
@@ -113,9 +110,6 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 			}
 
 			dosage = castedValue
-			let dose = try transaction.pull(savedObject: self)
-			dose.dosage = dosage
-			try transaction.commit()
 			return
 		}
 		if attribute.equalTo(CommonSampleAttributes.timestamp) {
@@ -127,19 +121,12 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 			if source == Sources.MedicationSourceNum.introspective.rawValue && timestampTimeZoneId == nil {
 				timestampTimeZoneId = TimeZone.autoupdatingCurrent.identifier
 			}
-			let dose = try transaction.pull(savedObject: self)
-			dose.timestamp = timestamp
-			try transaction.commit()
 			return
 		}
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
 	// MARK: - Equatable
-
-	public static func ==(lhs: MedicationDose, rhs: MedicationDose) -> Bool {
-		return lhs.equalTo(rhs)
-	}
 
 	public final func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if !(otherAttributed is MedicationDose) { return false }
@@ -154,7 +141,9 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 	}
 
 	public final func equalTo(_ other: MedicationDose) -> Bool {
-		return medication == other.medication && dosage == other.dosage && date == other.date
+		return medication.equalTo(other.medication) &&
+			dosage == other.dosage &&
+			date == other.date
 	}
 
 	// MARK: - Debug

@@ -92,6 +92,7 @@ public final class CalendarUtilImpl: CalendarUtil {
 		let formatter = DateFormatter()
 		formatter.dateStyle = dateStyle
 		formatter.timeStyle = timeStyle
+		formatter.timeZone = TimeZone.autoupdatingCurrent
 		return formatter.string(from: date)
 	}
 

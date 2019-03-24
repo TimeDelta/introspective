@@ -322,6 +322,7 @@
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
 		A1741703508EA4B538BF55AB8D4C19D4 /* InSameCalendarUnitSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D17C897038BC72D188BF5938E99B20 /* InSameCalendarUnitSubQueryMatcher.swift */; };
 		A1C71792CBA04C0532416EA5E539FD3A /* InCurrentTimeUnitDateAttributeRestrictionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313A90403CADA44EC55B31233C2EED73 /* InCurrentTimeUnitDateAttributeRestrictionFunctionalTests.swift */; };
+		5D9111AF67D78FB88A5DC0DEE852A6A1 /* MedicationDoseFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D7B96C629BC275FD91AFB33B62F02 /* MedicationDoseFunctionalTests.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A29CEA756966FF63181D103F30EE2E29 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C87A3B46E853FFC3382ED9BC4A609 /* Activity.swift */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -846,6 +847,7 @@
 		9FE4A9801230FDE867B7AD9397D33FA7 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		A1B6336EF7C8BA63691FB3CF1C00CFAD /* DateOnlyAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOnlyAttribute.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
+		C36D7B96C629BC275FD91AFB33B62F02 /* MedicationDoseFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDoseFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A342AF1968189AC86554DAEAED555EA4 /* HasTagAttributeRestrictionFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTagAttributeRestrictionFunctionalTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
@@ -1809,6 +1811,7 @@
 				7276FA554BC13D0D8259911C339B4F76 /* ActivityDefinitionFunctionalTests.swift */,
 				E933310159C2737C9C6DFE118B6100B8 /* ActivityFunctionalTests.swift */,
 				C1C4B550FFD974458EB56C21773B8359 /* MedicationFunctionalTests.swift */,
+				C36D7B96C629BC275FD91AFB33B62F02 /* MedicationDoseFunctionalTests.swift */,
 				6841FAFA88F2078514E3A7874B4F2BEC /* MoodFunctionalTests.swift */,
 			);
 			path = CoreData;
@@ -2958,6 +2961,7 @@
 				2827405EDF38A5924ACFBBB5EC256146 /* SameStartDatesSubQueryMatcherUnitTests.swift in Sources */,
 				3D6FB4F464F41A0C9A083D64F4E1BCD2 /* AverageInformationFunctionalTests.swift in Sources */,
 				2DBB5A3A016388450FCCAE31F7B1343F /* InThePastXTimeUnitsDateAttributeRestrictionUnitTests.swift in Sources */,
+				5D9111AF67D78FB88A5DC0DEE852A6A1 /* MedicationDoseFunctionalTests.swift in Sources */,
 				5253B6020BBCC6ABBA67CF987064B3D3 /* Introspective.xcdatamodeld in Sources */,
 				07B2FE80A000F4E1FCFAEB63FF1C7776 /* HasOneOfTagAttributeRestrictionFunctionalTests.swift in Sources */,
 				F17BB396F3E3FD1D65CA78E4485101D7 /* FrequencyUnitTests.swift in Sources */,
