@@ -10,6 +10,10 @@ import Foundation
 
 extension Calendar.Component {
 
+	public enum Errors: Error {
+		case unkownComponentName
+	}
+
 	public static func fromInt(_ i: Int) -> Calendar.Component {
 		switch (i) {
 			case 0: return .era
@@ -52,6 +56,49 @@ extension Calendar.Component {
 			case .nanosecond: return 13
 			case .calendar: return 14
 			case .timeZone: return 15
+		}
+	}
+
+	public var description: String {
+		switch (self) {
+			case .calendar: return "Calendar"
+			case .era: return "Era"
+			case .year: return "Year"
+			case .yearForWeekOfYear: return "Year for Week of Year"
+			case .quarter: return "Quarter"
+			case .month: return "Month"
+			case .weekOfMonth: return "Week of Month"
+			case .weekOfYear: return "Week"
+			case .weekday: return "Day of Week"
+			case .weekdayOrdinal: return "Weekday Ordinal"
+			case .timeZone: return "Time Zone"
+			case .day: return "Day"
+			case .hour: return "Hour"
+			case .minute: return "Minute"
+			case .second: return "Second"
+			case .nanosecond: return "Nanosecond"
+		}
+	}
+
+	public static func from(string: String) throws -> Calendar.Component {
+		switch (string.lowercased()) {
+			case "calendar": return .calendar
+			case "era": return .era
+			case "year": return .year
+			case "year for week of year": return .yearForWeekOfYear
+			case "quarter": return .quarter
+			case "month": return .month
+			case "week of month": return .weekOfMonth
+			case "week": return .weekOfYear
+			case "day of week": return .weekday
+			case "weekday ordinal": return .weekdayOrdinal
+			case "time zone": return .timeZone
+			case "day": return .day
+			case "hour": return .hour
+			case "minute": return .minute
+			case "second": return .second
+			case "nanosecond": return .nanosecond
+			default: throw Errors.unkownComponentName
 		}
 	}
 }

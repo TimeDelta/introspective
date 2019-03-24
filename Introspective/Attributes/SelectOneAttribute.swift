@@ -55,6 +55,7 @@ public class TypedSelectOneAttribute<Type>: AttributeBase, SelectOneAttribute {
 	}
 
 	public final func valuesAreEqual(_ first: Any?, _ second: Any?) -> Bool {
+		if first == nil && second == nil { return true }
 		guard let castedFirst = first as? Type else {
 			log.error("Failed to cast first value when testing equality: %@", String(describing: first))
 			return false
@@ -64,6 +65,12 @@ public class TypedSelectOneAttribute<Type>: AttributeBase, SelectOneAttribute {
 			return false
 		}
 		return areEqual(castedFirst, castedSecond)
+	}
+
+	public final func equalTo(_ otherAttribute: Attribute) -> Bool {
+		guard let other = otherAttribute as? TypedSelectOneAttribute<Type> else { return false }
+		return super.equalTo(otherAttribute) &&
+			possibleValues.elementsEqual(other.possibleValues, by: valuesAreEqual)
 	}
 }
 

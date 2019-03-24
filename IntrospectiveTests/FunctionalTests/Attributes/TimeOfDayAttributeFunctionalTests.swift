@@ -14,10 +14,6 @@ final class TimeOfDayAttributeFunctionalTests: FunctionalTest {
 
 	private final var attribute: TimeOfDayAttribute!
 
-	final override func setUp() {
-		super.setUp()
-	}
-
 	// MARK: - convertToDisplayableString()
 
 	func testGivenNonTimeOfDayValue_convertToDisplayableString_throwsTypeMismatchError() {
@@ -51,7 +47,7 @@ final class TimeOfDayAttributeFunctionalTests: FunctionalTest {
 		let displayableString = try attribute.convertToDisplayableString(from: nil)
 
 		// then
-		XCTAssertEqual(displayableString.count, 0)
+		XCTAssertEqual(displayableString, "")
 	}
 
 	func testGivenMorningTimeOfDay_convertToDisplayableString_returnsCorrectValue() throws {

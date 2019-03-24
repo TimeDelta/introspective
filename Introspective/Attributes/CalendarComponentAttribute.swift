@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class CalendarComponentAttribute: TypedSelectOneAttribute<Calendar.Component> {
+public final class CalendarComponentAttribute: TypedEquatableSelectOneAttribute<Calendar.Component> {
 
 	private typealias Me = CalendarComponentAttribute
 
@@ -31,6 +31,7 @@ public final class CalendarComponentAttribute: TypedSelectOneAttribute<Calendar.
 		pluralName: String? = "Time units",
 		description: String? = nil,
 		variableName: String? = nil,
+		optional: Bool = false,
 		possibleValues: [Calendar.Component] = CalendarComponentAttribute.supportedComponents)
 	{
 		super.init(
@@ -38,8 +39,8 @@ public final class CalendarComponentAttribute: TypedSelectOneAttribute<Calendar.
 			pluralName: pluralName,
 			description: description,
 			variableName: variableName,
+			optional: optional,
 			possibleValues: possibleValues,
-			possibleValueToString: { $0.description },
-			areEqual: { $0 == $1 })
+			possibleValueToString: { $0.description })
 	}
 }
