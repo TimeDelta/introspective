@@ -44,7 +44,7 @@ public struct TimeOfDay: Comparable {
 	}
 
 	public init?(_ str: String) {
-		let strStrippedOfAmPm = str.trimmingCharacters(in: CharacterSet(charactersIn: "apm "))
+		let strStrippedOfAmPm = str.lowercased().trimmingCharacters(in: CharacterSet(charactersIn: "apm "))
 		let parts = strStrippedOfAmPm.split(separator: ":")
 		// very minor sacrifice to speed to ensure readability here
 		// - nesting all parts inside each other is technically faster
