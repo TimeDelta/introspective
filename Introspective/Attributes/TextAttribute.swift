@@ -31,15 +31,18 @@ public final class TextAttribute: AttributeBase, ComparableAttribute {
 	}
 
 	public final func isValid(value: String?) -> Bool {
+		if value == nil { return optional }
 		return delegate?.isValid(value: value) ?? true
 	}
 
 	public final func errorMessageFor(invalidValue: String?) -> String {
+		if !optional && (invalidValue == nil || invalidValue == "") { return "Value is required" }
 		return delegate?.errorMessageFor(invalidValue: invalidValue) ?? ""
 	}
 
 	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
+		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }
 		guard let castedValue = value as? String else {
 			throw TypeMismatchError(attribute: self, wasA: type(of: value))
 		}

@@ -287,6 +287,7 @@
 		8A458341BD2DA5E8158261415BD0AE39 /* CoreDataSampleUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27112B4A08E21B354C0145B9BFF16959 /* CoreDataSampleUtil.swift */; };
 		8A5BC76AC5ED5D6F546F0C76FEC5D7BC /* UnifiedView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C8061B63660AC44DA4410D2D4E0C353D /* UnifiedView.storyboard */; };
 		8AA4E33898B31E7BDF36ACEE88665AE8 /* ExtraInformationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3ED5126C427DBAE6A9748837A669B6 /* ExtraInformationFactory.swift */; };
+		8AFE7F4E753D66B91EA3C7B855DC7107 /* DaysOfWeekAttributeUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F90FC6425F0C9320B7530C921783569 /* DaysOfWeekAttributeUnitTests.swift */; };
 		8BB1E550479EC2C415614A20BE4EDDBE /* AAJSFiles.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6A9C4768001305C9B2B52AFA9E8F4FB6 /* AAJSFiles.bundle */; };
 		8D56396B0D36CAA63B3D6C2642CCBB64 /* AfterDateAndTimeAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8103D5F9875FF0FF7974C27D2936BA76 /* AfterDateAndTimeAttributeRestrictionUnitTests.swift */; };
 		8D5B424A3C7812271F4504AE72FA6EF8 /* RecordMedicationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 192AEAC095591D2156D2C1C6D7B79989 /* RecordMedicationTableViewCell.swift */; };
@@ -325,7 +326,7 @@
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
 		A1741703508EA4B538BF55AB8D4C19D4 /* InSameCalendarUnitSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D17C897038BC72D188BF5938E99B20 /* InSameCalendarUnitSubQueryMatcher.swift */; };
 		A1C71792CBA04C0532416EA5E539FD3A /* InCurrentTimeUnitDateAttributeRestrictionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313A90403CADA44EC55B31233C2EED73 /* InCurrentTimeUnitDateAttributeRestrictionFunctionalTests.swift */; };
-		8AFE7F4E753D66B91EA3C7B855DC7107 /* DaysOfWeekAttributeUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F90FC6425F0C9320B7530C921783569 /* DaysOfWeekAttributeUnitTests.swift */; };
+		4FBC5AEBCF0D207FA4F2AD90F2C37F68 /* TextAttributeUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8F2708C611072AFF28428DBB7A7C7B /* TextAttributeUnitTests.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A29CEA756966FF63181D103F30EE2E29 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C87A3B46E853FFC3382ED9BC4A609 /* Activity.swift */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -626,6 +627,7 @@
 		2E6F5AA65EE65BA9039482230546948C /* Attributed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attributed.swift; sourceTree = "<group>"; };
 		2E7394F9035B680FA05E2D80131AA15D /* GraphSetupScreenUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphSetupScreenUITests.swift; sourceTree = "<group>"; };
 		2F4D1022C090AF57366EAF3AC8B2380B /* WeightQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightQueryFunctionalTests.swift; sourceTree = "<group>"; };
+		2F90FC6425F0C9320B7530C921783569 /* DaysOfWeekAttributeUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaysOfWeekAttributeUnitTests.swift; sourceTree = "<group>"; };
 		309E5D0D463F26860DCDBB12873716DB /* LeanBodyMassQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeanBodyMassQueryFunctionalTests.swift; sourceTree = "<group>"; };
 		30D75B1F3F9E51EEAA10F32547F2D642 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		313A90403CADA44EC55B31233C2EED73 /* InCurrentTimeUnitDateAttributeRestrictionFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InCurrentTimeUnitDateAttributeRestrictionFunctionalTests.swift; sourceTree = "<group>"; };
@@ -852,7 +854,7 @@
 		9FE4A9801230FDE867B7AD9397D33FA7 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		A1B6336EF7C8BA63691FB3CF1C00CFAD /* DateOnlyAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOnlyAttribute.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
-		2F90FC6425F0C9320B7530C921783569 /* DaysOfWeekAttributeUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaysOfWeekAttributeUnitTests.swift; sourceTree = "<group>"; };
+		BF8F2708C611072AFF28428DBB7A7C7B /* TextAttributeUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAttributeUnitTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A342AF1968189AC86554DAEAED555EA4 /* HasTagAttributeRestrictionFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTagAttributeRestrictionFunctionalTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
@@ -2297,6 +2299,7 @@
 				ED13DE7520008338A54AB159D6ACEFC7 /* CalendarComponentAttributeUnitTests.swift */,
 				C3439338891593EF14221EAF27ADF208 /* DayOfWeekAttributeUnitTests.swift */,
 				2F90FC6425F0C9320B7530C921783569 /* DaysOfWeekAttributeUnitTests.swift */,
+				BF8F2708C611072AFF28428DBB7A7C7B /* TextAttributeUnitTests.swift */,
 			);
 			path = Attributes;
 			sourceTree = "<group>";
@@ -2935,6 +2938,7 @@
 				0F5AF793A9CE3ECC77E0C2CA861D00BA /* AttributeRestrictionMock.swift in Sources */,
 				3E515B3DE980A3DB28DEFD959474D588 /* IntegerAttributeUnitTests.swift in Sources */,
 				80C881F1D18BD1B4D9E0922FCF6B9743 /* OnDayOfWeekAttributeRestrictionUnitTests.swift in Sources */,
+				4FBC5AEBCF0D207FA4F2AD90F2C37F68 /* TextAttributeUnitTests.swift in Sources */,
 				DCF3C8263ED54B0FC09CB8343DA3739D /* GreaterThanOrEqualToDoubleAttributeRestrictionUnitTests.swift in Sources */,
 				DF7737F68D6D69130CE650765FBDDA4C /* WeightQueryFunctionalTests.swift in Sources */,
 				7B49793E5FEC5D50E6FB05D3379BFC82 /* ImporterTest.swift in Sources */,
