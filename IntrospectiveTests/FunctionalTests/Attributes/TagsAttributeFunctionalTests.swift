@@ -221,7 +221,8 @@ final class TagsAttributeFunctionalTests: FunctionalTest {
 		let displayableString = try attribute.convertToDisplayableString(from: value)
 
 		// then
-		assertThat(displayableString, containsStringsInOrder(tag1.name, tag2.name))
+		assertThat(displayableString, containsString(tag1.name))
+		assertThat(displayableString, containsString(tag2.name))
 	}
 
 	func testGivenTagArray_convertToDisplayableString_includesAllTagsInArray() throws {
