@@ -18,6 +18,14 @@ public final class AttributeSelectAttribute: TypedSelectOneAttribute<Attribute> 
 		optional: Bool = false,
 		attributes: [Attribute])
 	{
-		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional, possibleValues: attributes, possibleValueToString: { $0.name }, areEqual: { $0.equalTo($1) })
+		super.init(
+			name: name,
+			pluralName: pluralName,
+			description: description,
+			variableName: variableName,
+			optional: optional,
+			possibleValues: attributes,
+			possibleValueToString: { $0.name },
+			areEqual: { $0.equalTo($1) })
 	}
 }

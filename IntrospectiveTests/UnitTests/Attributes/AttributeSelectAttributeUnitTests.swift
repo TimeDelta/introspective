@@ -1,8 +1,8 @@
 //
-//  DayOfWeekAttributeUnitTests.swift
+//  AttributeSelectAttributeUnitTests.swift
 //  IntrospectiveTests
 //
-//  Created by Bryan Nova on 3/24/19.
+//  Created by Bryan Nova on 3/25/19.
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
@@ -10,9 +10,16 @@ import XCTest
 import Hamcrest
 @testable import Introspective
 
-final class DayOfWeekAttributeUnitTests: UnitTest {
+final class AttributeSelectAttributeUnitTests: UnitTest {
 
-	private final var attribute: DayOfWeekAttribute!
+	private typealias Me = AttributeSelectAttributeUnitTests
+	private static let possibleValues = [
+		TextAttribute(name: "text"),
+		DoubleAttribute(name: "double"),
+		IntegerAttribute(name: "integer")
+	]
+
+	private final var attribute: AttributeSelectAttribute!
 
 	// MARK: - indexOf()
 
@@ -31,8 +38,8 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 	func testGivenSpecifiedValueInPossibleValues_indexOf_returnsCorrectIndex() {
 		// given
 		useRequiredAttribute()
-		let expectedIndex = 3
-		let value = DayOfWeek.allDays[expectedIndex]
+		let expectedIndex = Me.possibleValues.count - 1
+		let value = Me.possibleValues[expectedIndex]
 
 		// when
 		let index = attribute.indexOf(possibleValue: value)
@@ -44,7 +51,7 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 	func testGivenEmptyValuesArray_indexOf_returnsNil() {
 		// given
 		useRequiredAttribute()
-		let value = DayOfWeek.Monday
+		let value = TextAttribute(name: "not found")
 
 		// when
 		let index = attribute.indexOf(possibleValue: value, in: [])
@@ -57,7 +64,7 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let expectedIndex = 2
-		let searchValue = DayOfWeek.allDays[expectedIndex]
+		let searchValue = Me.possibleValues[expectedIndex]
 		let searchArray = ["1", "2"]
 
 		// when
@@ -69,7 +76,7 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 
 	// MARK: - convertToDisplayableString()
 
-	func testGivenNonDayOfWeekValue_convertToDisplayableString_throwsTypeMismatchError() {
+	func testGivenNonAttributeValue_convertToDisplayableString_throwsTypeMismatchError() {
 		// given
 		let value = "abc"
 		useOptionalAttribute()
@@ -103,26 +110,25 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 		XCTAssertEqual(displayableString, "")
 	}
 
-	func testGivenEachPossibleDayOfWeek_convertToDisplayableString_returnsCorrectValue() throws {
+	func testGivenAttribute_convertToDisplayableString_returnsCorrectValue() throws {
 		// given
 		useRequiredAttribute()
+		let value = Me.possibleValues[0]
 
-		for dayOfWeek in DayOfWeek.allDays {
-			// when
-			let displayableString = try attribute.convertToDisplayableString(from: dayOfWeek)
+		// when
+		let displayableString = try attribute.convertToDisplayableString(from: value)
 
-			// then
-			XCTAssertEqual(displayableString, dayOfWeek.abbreviation)
-		}
+		// then
+		XCTAssertEqual(displayableString, value.name)
 	}
 
 	// MARK: - valuesAreEqual()
 
-	func testGivenFirstValueNotDayOfWeek_valuesAreEqual_returnsFalse() {
+	func testGivenFirstValueNotAttribute_valuesAreEqual_returnsFalse() {
 		// given
 		useRequiredAttribute()
 		let firstValue = "abc"
-		let secondValue = DayOfWeek.Friday
+		let secondValue = Me.possibleValues[0]
 
 		// when
 		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
@@ -131,10 +137,10 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenSecondValueNotDayOfWeek_valuesAreEqual_returnsFalse() {
+	func testGivenSecondValueNotAttribute_valuesAreEqual_returnsFalse() {
 		// given
 		useRequiredAttribute()
-		let firstValue = DayOfWeek.Monday
+		let firstValue = Me.possibleValues[0]
 		let secondValue = "abc"
 
 		// when
@@ -144,7 +150,7 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenBothValuesAreNotDayOfWeek_valuesAreEqual_returnsFalse() {
+	func testGivenBothValuesAreNotAttributes_valuesAreEqual_returnsFalse() {
 		// given
 		useRequiredAttribute()
 		let firstValue = "abc"
@@ -157,10 +163,10 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenTwoEqualDaysOfWeek_valuesAreEqual_returnsTrue() {
+	func testGivenTwoEqualAttributes_valuesAreEqual_returnsTrue() {
 		// given
 		useRequiredAttribute()
-		let firstValue = DayOfWeek.Wednesday
+		let firstValue = Me.possibleValues[0]
 		let secondValue = firstValue
 
 		// when
@@ -170,11 +176,11 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 		XCTAssert(areEqual)
 	}
 
-	func testGivenTwoDifferentDaysOfWeek_valuesAreEqual_returnsFalse() {
+	func testGivenTwoDifferentAttributes_valuesAreEqual_returnsFalse() {
 		// given
 		useRequiredAttribute()
-		let firstValue = DayOfWeek.Thursday
-		let secondValue = DayOfWeek.Sunday
+		let firstValue = Me.possibleValues[0]
+		let secondValue = Me.possibleValues[1]
 
 		// when
 		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
@@ -200,7 +206,7 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 		// given
 		useRequiredAttribute()
 		let firstValue: Any? = nil
-		let secondValue = DayOfWeek.Saturday
+		let secondValue = Me.possibleValues[0]
 
 		// when
 		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
@@ -212,7 +218,7 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 	func testGivenRequiredAttributeAndOnlySecondValueIsNil_valuesAreEqual_returnsFalse() {
 		// given
 		useRequiredAttribute()
-		let firstValue = DayOfWeek.Tuesday
+		let firstValue = Me.possibleValues[0]
 		let secondValue: Any? = nil
 
 		// when
@@ -239,7 +245,7 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 		// given
 		useOptionalAttribute()
 		let firstValue: Any? = nil
-		let secondValue = DayOfWeek.Monday
+		let secondValue = Me.possibleValues[0]
 
 		// when
 		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
@@ -251,7 +257,7 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 	func testGivenOptionalAttributeAndOnlySecondValueIsNil_valuesAreEqual_returnsFalse() {
 		// given
 		useOptionalAttribute()
-		let firstValue = DayOfWeek.Thursday
+		let firstValue = Me.possibleValues[0]
 		let secondValue: Any? = nil
 
 		// when
@@ -289,12 +295,13 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 	func testGivenNameMismatch_equalTo_returnsFalse() {
 		// given
 		useRequiredAttribute()
-		let other = DayOfWeekAttribute(
+		let other = AttributeSelectAttribute(
 			name: attribute.name + "other stuff",
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
-			optional: attribute.optional)
+			optional: attribute.optional,
+			attributes: Me.possibleValues)
 
 		// when
 		let areEqual = attribute.equalTo(other)
@@ -306,12 +313,13 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 	func testGivenDescriptionMismatch_equalTo_returnsFalse() {
 		// given
 		useRequiredAttribute()
-		let other = DayOfWeekAttribute(
+		let other = AttributeSelectAttribute(
 			name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: (attribute.extendedDescription ?? "") + "other stuff",
 			variableName: attribute.variableName,
-			optional: attribute.optional)
+			optional: attribute.optional,
+			attributes: Me.possibleValues)
 
 		// when
 		let areEqual = attribute.equalTo(other)
@@ -323,12 +331,13 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 	func testGivenVariableNameMismatch_equalTo_returnsFalse() {
 		// given
 		useRequiredAttribute()
-		let other = DayOfWeekAttribute(
+		let other = AttributeSelectAttribute(
 			name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: (attribute.variableName ?? "") + "other stuff",
-			optional: attribute.optional)
+			optional: attribute.optional,
+			attributes: Me.possibleValues)
 
 		// when
 		let areEqual = attribute.equalTo(other)
@@ -340,12 +349,33 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 	func testGivenOptionalMismatch_equalTo_returnsFalse() {
 		// given
 		useRequiredAttribute()
-		let other = DayOfWeekAttribute(
+		let other = AttributeSelectAttribute(
 			name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
-			optional: !attribute.optional)
+			optional: !attribute.optional,
+			attributes: Me.possibleValues)
+
+		// when
+		let areEqual = attribute.equalTo(other)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenPossibleValuesMismatch_equalTo_returnsFalse() {
+		// given
+		useRequiredAttribute()
+		var otherPossibleValues = Me.possibleValues
+		otherPossibleValues.append(TextAttribute(name: "not in main attribute"))
+		let other = AttributeSelectAttribute(
+			name: attribute.name,
+			pluralName: attribute.pluralName,
+			description: attribute.extendedDescription,
+			variableName: attribute.variableName,
+			optional: !attribute.optional,
+			attributes: otherPossibleValues)
 
 		// when
 		let areEqual = attribute.equalTo(other)
@@ -357,12 +387,13 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 	func testGivenAttributeWithSameProperties_equalTo_returnsTrue() {
 		// given
 		useRequiredAttribute()
-		let other = DayOfWeekAttribute(
+		let other = AttributeSelectAttribute(
 			name: attribute.name,
 			pluralName: attribute.pluralName,
 			description: attribute.extendedDescription,
 			variableName: attribute.variableName,
-			optional: attribute.optional)
+			optional: attribute.optional,
+			attributes: Me.possibleValues)
 
 		// when
 		let areEqual = attribute.equalTo(other)
@@ -374,18 +405,20 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 	// MARK: - Helper Functions
 
 	private final func useOptionalAttribute() {
-		attribute = DayOfWeekAttribute(
+		attribute = AttributeSelectAttribute(
 			name: "name",
 			description: "description",
 			variableName: "variable name",
-			optional: true)
+			optional: true,
+			attributes: Me.possibleValues)
 	}
 
 	private final func useRequiredAttribute() {
-		attribute = DayOfWeekAttribute(
+		attribute = AttributeSelectAttribute(
 			name: "name",
 			description: "description",
 			variableName: "variable name",
-			optional: false)
+			optional: false,
+			attributes: Me.possibleValues)
 	}
 }
