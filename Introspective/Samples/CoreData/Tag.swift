@@ -18,10 +18,6 @@ public class Tag: NSManagedObject, CoreDataObject {
 
 	// MARK: - Equality
 
-	public static func ==(lhs: Tag, rhs: Tag) -> Bool {
-		return lhs.equalTo(rhs)
-	}
-
 	public final func equalTo(_ other: Tag) -> Bool {
 		return name.localizedLowercase == other.name.localizedLowercase
 	}
