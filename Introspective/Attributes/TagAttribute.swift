@@ -7,71 +7,36 @@
 //
 
 import Foundation
+import CoreData
 
-public final class TagAttribute: AttributeBase, SelectOneAttribute {
-
-	// MARK: - Instance Variables
-
-	public final var possibleValues: [Any] {
-		return fetchAllTags()
-	}
-
-	private final let log = Log()
+public final class TagAttribute: TypedSelectOneAttribute<Tag> {
 
 	// MARK: - Initializers
 
-	public override init(
-		name: String = "Tags",
+	public init(
+		name: String = "Tag",
 		pluralName: String? = "Tags",
 		description: String? = nil,
 		variableName: String? = nil,
 		optional: Bool = false)
 	{
-		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional)
-	}
-
-	// MARK: - Attribute Functions
-
-	public final override func convertToDisplayableString(from value: Any?) throws -> String {
-		if optional && value == nil { return "" }
-		guard let castedValue = value as? Tag else {
-			throw TypeMismatchError(attribute: self, wasA: type(of: value))
-		}
-		return castedValue.name
-	}
-
-	// MARK: - SelectAttribute Functions
-
-	public final func indexOf(possibleValue: Any, in values: [Any]? = nil) -> Int? {
-		guard let castedValue = possibleValue as? Tag else {
-			return nil
-		}
-		let values: [Tag] = (values as? [Tag]) ?? fetchAllTags()
-		return values.index(of: castedValue)
-	}
-
-	// MARK: - SelectOneAttribute Functions
-
-	public func valuesAreEqual(_ first: Any?, _ second: Any?) -> Bool {
-		guard let castedFirst = first as? Tag else {
-			log.error("Failed to cast first value when testing tag equality: %@", String(describing: first))
-			return false
-		}
-		guard let castedSecond = second as? Tag else {
-			log.error("Failed to cast second value when testing tag equality: %@", String(describing: first))
-			return false
-		}
-		return castedFirst == castedSecond
-	}
-
-	// MARK: - Helper Functions
-
-	private final func fetchAllTags() -> [Tag] {
-		do {
-			return try DependencyInjector.db.query(Tag.fetchRequest())
-		} catch {
-			log.error("Failed to fetch tags: %@", errorInfo(error))
-			return []
-		}
+		super.init(
+			name: name,
+			pluralName: pluralName,
+			description: description,
+			variableName: variableName,
+			optional: optional,
+			possibleValues: {
+				do {
+					let fetchRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
+					fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+					return try DependencyInjector.db.query(fetchRequest)
+				} catch {
+					Log().error("Failed to fetch tags: %@", errorInfo(error))
+					return []
+				}
+			},
+			possibleValueToString: { $0.name },
+			areEqual: { $0.equalTo($1) })
 	}
 }
