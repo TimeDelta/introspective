@@ -130,7 +130,7 @@ public final class Frequency: NSObject, NSCoding, Codable, Comparable {
 	private final func timesPerMinute() -> Double {
 		switch (timeUnit) {
 			case .nanosecond: return timesPerTimeUnit * Me.nanosecondsPerMinute
-			case .second: return timesPerTimeUnit / Me.minutesPerHour
+			case .second: return timesPerTimeUnit / Me.minutesPerSecond
 			case .minute: return timesPerTimeUnit
 			case .hour: return timesPerTimeUnit / Me.minutesPerHour
 			case .day: return timesPerTimeUnit / Me.minutesPerDay

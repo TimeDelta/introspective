@@ -11,7 +11,42 @@ import XCTest
 
 final class FrequencyUnitTests: UnitTest {
 
+	// MARK: - init
+
+	func testGivenUnsupportedTimeUnit_init_returnsNil() {
+		// given
+		let unsupportedTimeUnit = Calendar.Component.calendar
+
+		// when
+		let frequency = Frequency(12, unsupportedTimeUnit)
+
+		// then
+		XCTAssertNil(frequency)
+	}
+
+	func testGivenSupportedTimeUnit_init_doesNotReturnNil() {
+		// given
+		let supportedTimeUnit = Calendar.Component.hour
+
+		// when
+		let frequency = Frequency(12, supportedTimeUnit)
+
+		// then
+		XCTAssertNotNil(frequency)
+	}
+
 	// MARK: - per
+
+	func testGivenOncePerSecondToTimesPerNanoSecond_per_returnsOneHundredMillionth() throws {
+		// given
+		let oncePerSecond = Frequency(1, .second)!
+
+		// when
+		let converted = try oncePerSecond.per(.nanosecond)
+
+		// then
+		XCTAssertEqual(converted, 1.0/100000000.0)
+	}
 
 	func testGiven15PerMinuteToTimesPerSecond_per_returnsOneQuarter() throws {
 		// given
@@ -79,6 +114,17 @@ final class FrequencyUnitTests: UnitTest {
 		XCTAssertEqual(converted, 1)
 	}
 
+	func testGivenFourTimesPerYearToTimesPerQuarter_per_returns1() throws {
+		// given
+		let fourTimesPerYear = Frequency(4, .year)!
+
+		// when
+		let converted = try fourTimesPerYear.per(.quarter)
+
+		// then
+		XCTAssertEqual(converted, 1)
+	}
+
 	func testGivenThreeTimesPerMonthToTimesPerYear_per_returns36() throws {
 		// given
 		let threePerMonth = Frequency(3, .month)!
@@ -88,6 +134,18 @@ final class FrequencyUnitTests: UnitTest {
 
 		// then
 		XCTAssertEqual(converted, 36)
+	}
+
+	func testGivenUnsupportedTimeUnit_per_throwsCannotConvertToTimesPerSecondError() {
+		// given
+		let frequency = Frequency(1, .hour)!
+		let unsupportedTimeUnit = Calendar.Component.calendar
+
+		// when
+		XCTAssertThrowsError(try frequency.per(unsupportedTimeUnit)) { error in
+			// then
+			XCTAssertEqual(error as? Frequency.Errors, Frequency.Errors.cannotConvertToTimesPerSecond)
+		}
 	}
 
 	// MARK: - +
@@ -148,7 +206,7 @@ final class FrequencyUnitTests: UnitTest {
 
 	// MARK: - /
 
-	func testGivenOncePerDayDividedByOne_divide_returnsOnePerDay() {
+	func testGivenOncePerDayDividedByOneAsInt_divide_returnsOnePerDay() {
 		// given
 		let oncePerDay = Frequency(1, .day)!
 
@@ -159,7 +217,7 @@ final class FrequencyUnitTests: UnitTest {
 		XCTAssertEqual(frequency, Frequency(1, .day)!)
 	}
 
-	func testGivenOncePerDayDividedByTwo_divide_returnsHalfPerDay() {
+	func testGivenOncePerDayDividedByTwoAsInt_divide_returnsHalfPerDay() {
 		// given
 		let oncePerDay = Frequency(1, .day)!
 
@@ -170,9 +228,31 @@ final class FrequencyUnitTests: UnitTest {
 		XCTAssertEqual(frequency, Frequency(0.5, .day)!)
 	}
 
+	func testGivenOncePerDayDividedByOneAsDouble_divide_returnsOnePerDay() {
+		// given
+		let oncePerDay = Frequency(1, .day)!
+
+		// when
+		let frequency = oncePerDay / 1.0
+
+		// then
+		XCTAssertEqual(frequency, Frequency(1, .day)!)
+	}
+
+	func testGivenOncePerDayDividedByTwoAsDouble_divide_returnsHalfPerDay() {
+		// given
+		let oncePerDay = Frequency(1, .day)!
+
+		// when
+		let frequency = oncePerDay / 2.0
+
+		// then
+		XCTAssertEqual(frequency, Frequency(0.5, .day)!)
+	}
+
 	// MARK: - /=
 
-	func testGivenOncePerDayDividedByOne_divideAssign_assignsOnePerDay() {
+	func testGivenOncePerDayDividedByOneAsInt_divideAssign_assignsOnePerDay() {
 		// given
 		var frequency = Frequency(1, .day)!
 
@@ -183,7 +263,29 @@ final class FrequencyUnitTests: UnitTest {
 		XCTAssertEqual(frequency, Frequency(1, .day)!)
 	}
 
-	func testGivenOncePerDayDividedByTwo_divideAssign_assignsHalfPerDay() {
+	func testGivenOncePerDayDividedByTwoAsInt_divideAssign_assignsHalfPerDay() {
+		// given
+		var frequency = Frequency(1, .day)!
+
+		// when
+		frequency /= 2.0
+
+		// then
+		XCTAssertEqual(frequency, Frequency(0.5, .day)!)
+	}
+
+	func testGivenOncePerDayDividedByOneAsDouble_divideAssign_assignsOnePerDay() {
+		// given
+		var frequency = Frequency(1, .day)!
+
+		// when
+		frequency /= 1.0
+
+		// then
+		XCTAssertEqual(frequency, Frequency(1, .day)!)
+	}
+
+	func testGivenOncePerDayDividedByTwoAsDouble_divideAssign_assignsHalfPerDay() {
 		// given
 		var frequency = Frequency(1, .day)!
 
@@ -196,7 +298,7 @@ final class FrequencyUnitTests: UnitTest {
 
 	// MARK: - *
 
-	func testGivenOncePerDayMultipliedByOne_multiply_returnsOnePerDay() {
+	func testGivenOncePerDayMultipliedByOneAsInt_multiply_returnsOnePerDay() {
 		// given
 		let oncePerDay = Frequency(1, .day)!
 
@@ -207,7 +309,7 @@ final class FrequencyUnitTests: UnitTest {
 		XCTAssertEqual(frequency, Frequency(1, .day)!)
 	}
 
-	func testGivenOncePerDayMultipliedByTwo_multiply_returnsTwoPerDay() {
+	func testGivenOncePerDayMultipliedByTwoAsInt_multiply_returnsTwoPerDay() {
 		// given
 		let oncePerDay = Frequency(1, .day)!
 
@@ -218,13 +320,47 @@ final class FrequencyUnitTests: UnitTest {
 		XCTAssertEqual(frequency, Frequency(2, .day)!)
 	}
 
-	func testCommutativeProperty_multiply() {
+	func testCommutativeProperty_multiplyByInt() {
 		// given
 		let twicePerWeek = Frequency(2, .weekOfYear)!
 
 		// when
 		let order1 = twicePerWeek * 2
 		let order2 = 2 * twicePerWeek
+
+		// then
+		XCTAssertEqual(order1, order2)
+	}
+
+	func testGivenOncePerDayMultipliedByOneAsDouble_multiply_returnsOnePerDay() {
+		// given
+		let oncePerDay = Frequency(1, .day)!
+
+		// when
+		let frequency = oncePerDay * 1.0
+
+		// then
+		XCTAssertEqual(frequency, Frequency(1, .day)!)
+	}
+
+	func testGivenOncePerDayMultipliedByTwoAsDouble_multiply_returnsTwoPerDay() {
+		// given
+		let oncePerDay = Frequency(1, .day)!
+
+		// when
+		let frequency = oncePerDay * 2.0
+
+		// then
+		XCTAssertEqual(frequency, Frequency(2, .day)!)
+	}
+
+	func testCommutativeProperty_multiplyByDouble() {
+		// given
+		let twicePerWeek = Frequency(2, .weekOfYear)!
+
+		// when
+		let order1 = twicePerWeek * 2.0
+		let order2 = 2.0 * twicePerWeek
 
 		// then
 		XCTAssertEqual(order1, order2)
@@ -343,5 +479,28 @@ final class FrequencyUnitTests: UnitTest {
 
 		// when / then
 		XCTAssertEqual(first, second)
+	}
+
+	func testGivenOtherIsNotAFrequency_isEqual_returnsFalse() {
+		// given
+		let frequency = Frequency(12, .hour)!
+
+		// when
+		let equal = frequency.isEqual("string" as Any)
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenOtherIsNil_isEqual_returnsFalse() {
+		// given
+		let other: Any? = nil
+		let frequency = Frequency(12, .hour)!
+
+		// when
+		let equal = frequency.isEqual(other)
+
+		// then
+		XCTAssertFalse(equal)
 	}
 }
