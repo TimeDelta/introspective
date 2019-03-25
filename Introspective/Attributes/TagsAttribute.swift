@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 
 public final class TagsAttribute: TypedMultiSelectAttribute<Tag> {
 
@@ -27,7 +28,9 @@ public final class TagsAttribute: TypedMultiSelectAttribute<Tag> {
 			optional: optional,
 			possibleValues: {
 				do {
-					return try DependencyInjector.db.query(Tag.fetchRequest())
+					let fetchRequest: NSFetchRequest<Tag> = Tag.fetchRequest()
+					fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+					return try DependencyInjector.db.query(fetchRequest)
 				} catch {
 					Log().error("Failed to fetch tags: %@", errorInfo(error))
 					return []

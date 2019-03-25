@@ -11,6 +11,7 @@ import Foundation
 
 public final class TagDataTestUtil {
 
+	@discardableResult
 	public static func createTag(name: String = "") -> Tag {
 		let transaction = DependencyInjector.db.transaction()
 		let tag = try! transaction.new(Tag.self)
