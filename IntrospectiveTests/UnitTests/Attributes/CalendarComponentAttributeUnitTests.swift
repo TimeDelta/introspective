@@ -61,7 +61,7 @@ final class CalendarComponentAttributeUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try attribute.convertToDisplayableString(from: nil)) { error in
 			// then
-			assertThat(error, instanceOf(TypeMismatchError.self))
+			assertThat(error, instanceOf(UnsupportedValueError.self))
 		}
 	}
 
