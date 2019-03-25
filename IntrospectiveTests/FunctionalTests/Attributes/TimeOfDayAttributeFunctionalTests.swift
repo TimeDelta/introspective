@@ -78,6 +78,18 @@ final class TimeOfDayAttributeFunctionalTests: FunctionalTest {
 
 	// MARK: - equalTo()
 
+	func testGivenWrongClass_equalTo_returnsFalse() {
+		// given
+		useRequiredAttribute()
+		let other = DoubleAttribute(name: "name")
+
+		// when
+		let areEqual = attribute.equalTo(other)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
 	func testGivenSameObjectTwice_equalTo_returnsTrue() {
 		// given
 		useRequiredAttribute()

@@ -156,6 +156,18 @@ class DoubleAttributeUnitTests: UnitTest {
 
 	// MARK: - equalTo()
 
+	func testGivenWrongClass_equalTo_returnsFalse() {
+		// given
+		useRequiredAttribute()
+		let other = IntegerAttribute(name: "name")
+
+		// when
+		let areEqual = attribute.equalTo(other)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
 	func testGivenSameObjectTwice_equalTo_returnsTrue() {
 		// given
 		useRequiredAttribute()
