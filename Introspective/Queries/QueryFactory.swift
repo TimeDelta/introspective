@@ -87,7 +87,7 @@ public final class QueryFactoryImpl: QueryFactory {
 			case is Sleep.Type: return sleepQuery()
 			case is Weight.Type: return weightQuery()
 			default:
-				throw UnknownSampleType(sampleType)
+				throw UnknownSampleTypeError(sampleType)
 		}
 	}
 }

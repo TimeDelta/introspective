@@ -60,6 +60,6 @@ public class AttributeBase: Attribute {
 	}
 
 	public func convertToDisplayableString(from value: Any?) throws -> String {
-		throw NotOverridenError(functionName: "convertToDisplayableString")
+		throw NotOverriddenError(functionName: "convertToDisplayableString")
 	}
 }

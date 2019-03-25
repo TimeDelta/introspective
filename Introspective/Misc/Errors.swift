@@ -33,7 +33,7 @@ public class GenericDisplayableError: DisplayableError {
 	}
 }
 
-public final class NotOverridenError: Error {
+public final class NotOverriddenError: Error {
 
 	private final let functionName: String
 	public final var localizedDescription: String {
@@ -45,7 +45,7 @@ public final class NotOverridenError: Error {
 	}
 }
 
-public final class UnknownSampleType: Error {
+public final class UnknownSampleTypeError: Error {
 
 	private final let sampleType: Sample.Type
 	public final var localizedDescription: String {

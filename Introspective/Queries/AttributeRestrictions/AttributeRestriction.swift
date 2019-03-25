@@ -65,9 +65,9 @@ public class AnyAttributeRestriction: AttributeRestriction {
 
 	// MARK: - Functions
 
-	public func samplePasses(_ sample: Sample) throws -> Bool { throw NotOverridenError(functionName: "samplePasses") }
-	public func value(of attribute: Attribute) throws -> Any? { throw NotOverridenError(functionName: "value(of:)") }
-	public func set(attribute: Attribute, to value: Any?) throws { throw NotOverridenError(functionName: "set(attribute:to:)") }
+	public func samplePasses(_ sample: Sample) throws -> Bool { throw NotOverriddenError(functionName: "samplePasses") }
+	public func value(of attribute: Attribute) throws -> Any? { throw NotOverriddenError(functionName: "value(of:)") }
+	public func set(attribute: Attribute, to value: Any?) throws { throw NotOverriddenError(functionName: "set(attribute:to:)") }
 	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		log.error("Must override equalTo()")
 		return type(of: self) == type(of: otherRestriction)
