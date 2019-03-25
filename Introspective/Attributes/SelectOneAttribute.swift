@@ -48,6 +48,7 @@ public class TypedSelectOneAttribute<Type>: AttributeBase, SelectOneAttribute {
 
 	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
+		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }
 		guard let castedValue = value as? Type else {
 			throw TypeMismatchError(attribute: self, wasA: type(of: value))
 		}

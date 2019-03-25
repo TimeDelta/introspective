@@ -325,7 +325,7 @@
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
 		A1741703508EA4B538BF55AB8D4C19D4 /* InSameCalendarUnitSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D17C897038BC72D188BF5938E99B20 /* InSameCalendarUnitSubQueryMatcher.swift */; };
 		A1C71792CBA04C0532416EA5E539FD3A /* InCurrentTimeUnitDateAttributeRestrictionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313A90403CADA44EC55B31233C2EED73 /* InCurrentTimeUnitDateAttributeRestrictionFunctionalTests.swift */; };
-		EB964CA1E70CEF053EF79E80606CC116 /* DayOfWeekAttributeUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3439338891593EF14221EAF27ADF208 /* DayOfWeekAttributeUnitTests.swift */; };
+		8AFE7F4E753D66B91EA3C7B855DC7107 /* DaysOfWeekAttributeUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F90FC6425F0C9320B7530C921783569 /* DaysOfWeekAttributeUnitTests.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A29CEA756966FF63181D103F30EE2E29 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C87A3B46E853FFC3382ED9BC4A609 /* Activity.swift */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -459,6 +459,7 @@
 		EA25FE1BEAAB574BDBE431F9918AB1CF /* SleepQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B0DED60547B86BC4A095154FDEF4A7 /* SleepQueryFunctionalTests.swift */; };
 		EA335526D6C08DF9448278B1DD5E222D /* ActivityDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F2EF29542908DB82DE4FDCAE9BEDA0 /* ActivityDefinition.swift */; };
 		EB7487320A4CBF095E451D62433D138F /* TableViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E001147FED2051B6FB6B75AA8A8BDCDB /* TableViewControllerExtensions.swift */; };
+		EB964CA1E70CEF053EF79E80606CC116 /* DayOfWeekAttributeUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3439338891593EF14221EAF27ADF208 /* DayOfWeekAttributeUnitTests.swift */; };
 		EC981CD5CBB33DDD09B35FF794496622 /* HealthKitQuantitySample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2B99AAF73186829B771D412DC1EFBD /* HealthKitQuantitySample.swift */; };
 		ED26F649599AFFDF567B2F18769DDA17 /* ChooseInformationToGraphTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C623405165FC71014E9008AEA2DC8BC /* ChooseInformationToGraphTableViewController.swift */; };
 		ED53DC8AFB67D9E117E2005CA6A4FF7B /* DoesNotHaveTagAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F3E7692AC0B16A09616F7F06F6B6E35 /* DoesNotHaveTagAttributeRestriction.swift */; };
@@ -851,7 +852,7 @@
 		9FE4A9801230FDE867B7AD9397D33FA7 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		A1B6336EF7C8BA63691FB3CF1C00CFAD /* DateOnlyAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOnlyAttribute.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
-		C3439338891593EF14221EAF27ADF208 /* DayOfWeekAttributeUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeekAttributeUnitTests.swift; sourceTree = "<group>"; };
+		2F90FC6425F0C9320B7530C921783569 /* DaysOfWeekAttributeUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaysOfWeekAttributeUnitTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A342AF1968189AC86554DAEAED555EA4 /* HasTagAttributeRestrictionFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTagAttributeRestrictionFunctionalTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
@@ -910,6 +911,7 @@
 		C188CBF68AC429AFB5B7074A57902431 /* MinimumInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimumInformation.swift; sourceTree = "<group>"; };
 		C1C4B550FFD974458EB56C21773B8359 /* MedicationFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationFunctionalTests.swift; sourceTree = "<group>"; };
 		C202E12E8BC50D2BB819B9122AE7A60A /* WeightUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightUnitTests.swift; sourceTree = "<group>"; };
+		C3439338891593EF14221EAF27ADF208 /* DayOfWeekAttributeUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeekAttributeUnitTests.swift; sourceTree = "<group>"; };
 		C35A8F670EF0CCCC2E60B8FE50EDE920 /* Pods-IntrospectiveTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IntrospectiveTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-IntrospectiveTests/Pods-IntrospectiveTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C36D7B96C629BC275FD91AFB33B62F02 /* MedicationDoseFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDoseFunctionalTests.swift; sourceTree = "<group>"; };
 		C3877311BC9AD2DCEAC216849C509DD1 /* MostRecentDateInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MostRecentDateInformation.swift; sourceTree = "<group>"; };
@@ -2294,6 +2296,7 @@
 				198D585CB78FFD9CF3123278613A9306 /* NumericAttributes */,
 				ED13DE7520008338A54AB159D6ACEFC7 /* CalendarComponentAttributeUnitTests.swift */,
 				C3439338891593EF14221EAF27ADF208 /* DayOfWeekAttributeUnitTests.swift */,
+				2F90FC6425F0C9320B7530C921783569 /* DaysOfWeekAttributeUnitTests.swift */,
 			);
 			path = Attributes;
 			sourceTree = "<group>";
@@ -2943,6 +2946,7 @@
 				3FA02794F70BE7ECEA0553761DFB67CA /* AfterDateAttributeRestrictionUnitTests.swift in Sources */,
 				358C93D2833F31337F420FEC678A9CB1 /* SampleCreatorTestUtil.swift in Sources */,
 				73B1B56270BC009362520D10254C04A8 /* NotEqualToIntegerAttributeRestrictionUnitTests.swift in Sources */,
+				8AFE7F4E753D66B91EA3C7B855DC7107 /* DaysOfWeekAttributeUnitTests.swift in Sources */,
 				0B73CA2BE933E08E13E086B5915ED000 /* GlobalFunctionsTests.swift in Sources */,
 				C6F2BBA13A45D425C42BA556083F43C9 /* EasyPillMedicationImporterFunctionalTests.swift in Sources */,
 				430920C59B29C0AE2D20F76553F5DE92 /* HeartRateQueryFunctionalTests.swift in Sources */,

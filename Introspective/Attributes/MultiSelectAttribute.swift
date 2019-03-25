@@ -55,7 +55,12 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 		_typedPossibleValues = possibleValues
 		possibleValuesFunction = nil
 		self.possibleValueToString = possibleValueToString
-		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional)
+		super.init(
+			name: name,
+			pluralName: pluralName,
+			description: description,
+			variableName: variableName,
+			optional: optional)
 	}
 
 	public init(
@@ -118,6 +123,7 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 
 	public override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
+		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }
 		if let castedValue = value as? Set<Type> {
 			let arrayOfTypes = castedValue.map{ $0 }
 			return convertTypesIntoDisplayString(arrayOfTypes)
@@ -160,11 +166,19 @@ public class ComparableTypedMultiSelectAttribute<Type: Hashable & Comparable>: T
 		possibleValues: [Type] = [Type](),
 		possibleValueToString: @escaping (Type) -> String)
 	{
-		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional, possibleValues: possibleValues, possibleValueToString: possibleValueToString)
+		super.init(
+			name: name,
+			pluralName: pluralName,
+			description: description,
+			variableName: variableName,
+			optional: optional,
+			possibleValues: possibleValues,
+			possibleValueToString: possibleValueToString)
 	}
 
 	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
+		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }
 		if let castedValue = value as? Set<Type> {
 			let sortedTypes = castedValue.sorted(by: { $0 < $1 })
 			return convertTypesIntoDisplayString(sortedTypes)

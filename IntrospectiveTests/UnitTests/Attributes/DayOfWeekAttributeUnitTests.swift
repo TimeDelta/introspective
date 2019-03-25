@@ -41,6 +41,32 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 		XCTAssertEqual(index, expectedIndex)
 	}
 
+	func testGivenEmptyValuesArray_indexOf_returnsNil() {
+		// given
+		useRequiredAttribute()
+		let value = DayOfWeek.Monday
+
+		// when
+		let index = attribute.indexOf(possibleValue: value, in: [])
+
+		// then
+		XCTAssertNil(index)
+	}
+
+	func testGivenArrayOfWrongType_indexOf_returnsIndexOfValueInPossibleValues() {
+		// given
+		useRequiredAttribute()
+		let expectedIndex = 2
+		let searchValue = DayOfWeek.allDays[expectedIndex]
+		let searchArray = ["1", "2"]
+
+		// when
+		let index = attribute.indexOf(possibleValue: searchValue, in: searchArray)
+
+		// then
+		XCTAssertEqual(index, expectedIndex)
+	}
+
 	// MARK: - convertToDisplayableString()
 
 	func testGivenNonDayOfWeekValue_convertToDisplayableString_throwsTypeMismatchError() {
@@ -62,7 +88,7 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 		// when
 		XCTAssertThrowsError(try attribute.convertToDisplayableString(from: nil)) { error in
 			// then
-			assertThat(error, instanceOf(TypeMismatchError.self))
+			assertThat(error, instanceOf(UnsupportedValueError.self))
 		}
 	}
 
