@@ -14,12 +14,15 @@ public final class Duration: Equatable, Comparable {
 	// MARK: - Static Variables
 
 	private typealias Me = Duration
-	private static let unitMultipliers: [Calendar.Component: Int] = [
+	private static let unitMultipliers: [Calendar.Component: Double] = [
+		.nanosecond: 1/100000000,
 		.second: 1,
 		.minute: 60,
 		.hour: 3600,
 		.day: 86400,
 		.weekOfYear: 604800,
+		.month: 2628000,
+		.year: 31536000,
 	]
 
 	// MARK: - Instance Variables
@@ -46,7 +49,7 @@ public final class Duration: Equatable, Comparable {
 		var tempInterval: TimeInterval = 0
 		for (unit, amount) in units {
 			if let multiplier = Me.unitMultipliers[unit] {
-				tempInterval.addProduct(Double(multiplier), Double(amount))
+				tempInterval.addProduct(multiplier, Double(amount))
 			} else {
 				log.error("Missing multiplier for component type in Duration initializer: ", unit.description)
 			}
@@ -143,8 +146,8 @@ public final class Duration: Equatable, Comparable {
 		lhs = lhs + rhs
 	}
 
-	public static func /(lhs: Duration, rhs: Duration) -> Duration {
-		return Duration(lhs.interval / rhs.interval)
+	public static func /(lhs: Duration, rhs: Duration) -> Double {
+		return lhs.interval / rhs.interval
 	}
 
 	public static func /(lhs: Duration, rhs: Int) -> Duration {
@@ -155,12 +158,8 @@ public final class Duration: Equatable, Comparable {
 		return Duration(lhs.interval / rhs)
 	}
 
-	public static func /(lhs: Duration, rhs: DateComponents) -> Duration {
-		return Duration(lhs.interval / rhs.timeInterval)
-	}
-
-	public static func /=(lhs: inout Duration, rhs: Duration) {
-		lhs = lhs / rhs
+	public static func /(lhs: Duration, rhs: DateComponents) -> Double {
+		return lhs.interval / rhs.timeInterval
 	}
 
 	public static func /=(lhs: inout Duration, rhs: Int) {
@@ -171,14 +170,6 @@ public final class Duration: Equatable, Comparable {
 		lhs = lhs / rhs
 	}
 
-	public static func /=(lhs: inout Duration, rhs: DateComponents) {
-		lhs = lhs / rhs
-	}
-
-	public static func *(lhs: Duration, rhs: Duration) -> Duration {
-		return Duration(lhs.interval * rhs.interval)
-	}
-
 	public static func *(lhs: Duration, rhs: Int) -> Duration {
 		return Duration(lhs.interval * Double(rhs))
 	}
@@ -187,12 +178,12 @@ public final class Duration: Equatable, Comparable {
 		return Duration(lhs.interval * rhs)
 	}
 
-	public static func *(lhs: Duration, rhs: DateComponents) -> Duration {
-		return Duration(lhs.interval * rhs.timeInterval)
+	public static func *(lhs: Int, rhs: Duration) -> Duration {
+		return Duration(rhs.interval * Double(lhs))
 	}
 
-	public static func *=(lhs: inout Duration, rhs: Duration) {
-		lhs = lhs * rhs
+	public static func *(lhs: Double, rhs: Duration) -> Duration {
+		return Duration(rhs.interval * lhs)
 	}
 
 	public static func *=(lhs: inout Duration, rhs: Int) {
@@ -200,10 +191,6 @@ public final class Duration: Equatable, Comparable {
 	}
 
 	public static func *=(lhs: inout Duration, rhs: Double) {
-		lhs = lhs * rhs
-	}
-
-	public static func *=(lhs: inout Duration, rhs: DateComponents) {
 		lhs = lhs * rhs
 	}
 }
