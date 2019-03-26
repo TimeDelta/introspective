@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Hamcrest
 import SwiftDate
 @testable import Introspective
 
@@ -20,6 +21,17 @@ final class OldestDateInformationFunctionalTests: FunctionalTest {
 	final override func setUp() {
 		super.setUp()
 		information = OldestDateInformation(Me.attribute)
+	}
+
+	// MARK: - description
+
+	func test_description_containsRestrictedAttributeName() {
+		// when
+		let description = information.description
+
+		// then
+		let attributeName = Me.attribute.name.localizedLowercase
+		assertThat(description.localizedLowercase, containsString(attributeName))
 	}
 
 	// MARK: - compute()
@@ -376,6 +388,49 @@ final class OldestDateInformationFunctionalTests: FunctionalTest {
 
 		// then
 		XCTAssertEqual(value, toString(sampleStartDate1))
+	}
+
+	// MARK: - equalTo()
+
+	func testGivenSameObject_equalTo_returnsTrue() {
+		// when
+		let areEqual = information.equalTo(information)
+
+		// then
+		XCTAssert(areEqual)
+	}
+
+	func testGivenWrongClass_equalTo_returnsFalse() {
+		// given
+		let other = MinimumInformation<Int>(Me.attribute)
+
+		// when
+		let areEqual = information.equalTo(other)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenDifferentRestrictedAttribute_equalTo_returnsFalse() {
+		// given
+		let other = OldestDateInformation(TextAttribute(name: "different attribute"))
+
+		// when
+		let areEqual = information.equalTo(other)
+
+		// then
+		XCTAssertFalse(areEqual)
+	}
+
+	func testGivenSameRestrictedAttribute_equalTo_returnsTrue() {
+		// given
+		let other = OldestDateInformation(Me.attribute)
+
+		// when
+		let areEqual = information.equalTo(other)
+
+		// then
+		XCTAssert(areEqual)
 	}
 
 	// MARK: - Helper Functions
