@@ -1,5 +1,5 @@
 //
-//  EmptryStringAttributeRestriction.swift
+//  EmptyStringAttributeRestriction.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 3/13/19.
