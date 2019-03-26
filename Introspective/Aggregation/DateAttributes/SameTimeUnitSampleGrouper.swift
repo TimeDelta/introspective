@@ -35,7 +35,9 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 
 	// MARK: - Initializers
 
-	public required init() {}
+	public required convenience init() {
+		self.init(.hour)
+	}
 
 	public init(_ timeUnit: Calendar.Component) {
 		self.timeUnit = timeUnit
@@ -67,6 +69,7 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
 			timeUnit = castedValue
+			return
 		}
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}

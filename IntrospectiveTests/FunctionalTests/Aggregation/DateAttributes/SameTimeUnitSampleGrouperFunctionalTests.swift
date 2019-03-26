@@ -7,10 +7,13 @@
 //
 
 import XCTest
+import Hamcrest
 import SwiftDate
 @testable import Introspective
 
 final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
+
+	// MARK: - group
 
 	func testGivenGroupStartDateBySameDay_group_returnsCorrectlyGroupedSamples() throws {
 		// given
@@ -35,9 +38,9 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 		let groups = try grouper.group(samples: samples, by: CommonSampleAttributes.startDate)
 
 		// then
-		assertGroupExists(in: groups, withDate: expectedGroup1Date, andSamples: samples[0...1].map({ $0 }))
-		assertGroupExists(in: groups, withDate: expectedGroup2Date, andSamples: samples[2...4].map({ $0 }))
-		assertGroupExists(in: groups, withDate: expectedGroup3Date, andSamples: samples[5...6].map({ $0 }))
+		assertThat(groups, groupExists(withDate: expectedGroup1Date, andSamples: samples[0...1].map({ $0 })))
+		assertThat(groups, groupExists(withDate: expectedGroup2Date, andSamples: samples[2...4].map({ $0 })))
+		assertThat(groups, groupExists(withDate: expectedGroup3Date, andSamples: samples[5...6].map({ $0 })))
 	}
 
 	func testGivenGroupHealthKitStartDateBySameHour_group_returnsCorrectlyGroupedSamples() throws {
@@ -63,9 +66,9 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 		let groups = try grouper.group(samples: samples, by: CommonSampleAttributes.healthKitStartDate)
 
 		// then
-		assertGroupExists(in: groups, withDate: expectedGroup1Date, andSamples: samples[0...1].map({ $0 }))
-		assertGroupExists(in: groups, withDate: expectedGroup2Date, andSamples: samples[2...4].map({ $0 }))
-		assertGroupExists(in: groups, withDate: expectedGroup3Date, andSamples: samples[5...6].map({ $0 }))
+		assertThat(groups, groupExists(withDate: expectedGroup1Date, andSamples: samples[0...1].map({ $0 })))
+		assertThat(groups, groupExists(withDate: expectedGroup2Date, andSamples: samples[2...4].map({ $0 })))
+		assertThat(groups, groupExists(withDate: expectedGroup3Date, andSamples: samples[5...6].map({ $0 })))
 	}
 
 	func testGivenGroupHealthKitEndDateBySameMinute_group_returnsCorrectlyGroupedSamples() throws {
@@ -91,20 +94,72 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 		let groups = try grouper.group(samples: samples, by: CommonSampleAttributes.healthKitEndDate)
 
 		// then
-		assertGroupExists(in: groups, withDate: expectedGroup1Date, andSamples: samples[0...1].map({ $0 }))
-		assertGroupExists(in: groups, withDate: expectedGroup2Date, andSamples: samples[2...4].map({ $0 }))
-		assertGroupExists(in: groups, withDate: expectedGroup3Date, andSamples: samples[5...6].map({ $0 }))
+		assertThat(groups, groupExists(withDate: expectedGroup1Date, andSamples: samples[0...1].map({ $0 })))
+		assertThat(groups, groupExists(withDate: expectedGroup2Date, andSamples: samples[2...4].map({ $0 })))
+		assertThat(groups, groupExists(withDate: expectedGroup3Date, andSamples: samples[5...6].map({ $0 })))
 	}
 
-	private final func assertGroupExists(in groups: [(Any, [Sample])], withDate date: Date, andSamples samples: [Sample]) {
-		let group = groups.first(where: { group in return group.0 as? Date == date })
-		XCTAssertNotNil(group, "Missing group with date: \(date)")
-		if let group = group {
-			XCTAssertEqual(group.1.count, samples.count)
-			let unexpectecdSamples = group.1.filter({ sample in !samples.contains(where: { $0.equalTo(sample) }) })
-			XCTAssert(unexpectecdSamples.count == 0, "\(unexpectecdSamples.count) unexpected Samples: \(unexpectecdSamples.debugDescription)")
-			let missingSamples = samples[0...1].filter({ expectedSample in return !group.1.contains(where: { $0.equalTo(expectedSample) }) })
-			XCTAssert(missingSamples.count == 0, "Missing Samples for \(date.description): \(missingSamples.debugDescription)")
+	// MARK: - value(of:)
+
+	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
+		// given
+		let unknownAttribute = TextAttribute(name: "text")
+		let grouper = SameTimeUnitSampleGrouper(.minute)
+
+		// when
+		XCTAssertThrowsError(try grouper.value(of: unknownAttribute)) { error in
+			// then
+			assertThat(error, instanceOf(UnknownAttributeError.self))
 		}
+	}
+
+	func testGivenTimeUnitAttribute_valueOf_returnsCorrectValue() throws {
+		// given
+		let expectedValue = Calendar.Component.hour
+		let grouper = SameTimeUnitSampleGrouper(expectedValue)
+
+		// when
+		let actualValue = try grouper.value(of: SameTimeUnitSampleGrouper.timeUnitAttribute) as! Calendar.Component
+
+		// then
+		XCTAssertEqual(actualValue, expectedValue)
+	}
+
+	// MARK: - set(attribute: to:)
+
+	func testGivenUnknownAttribute_set_throwsUnknownAttributeError() {
+		// given
+		let unknownAttribute = TextAttribute(name: "text")
+		let grouper = SameTimeUnitSampleGrouper(.minute)
+
+		// when
+		XCTAssertThrowsError(try grouper.set(attribute: unknownAttribute, to: nil)) { error in
+			// then
+			assertThat(error, instanceOf(UnknownAttributeError.self))
+		}
+	}
+
+	func testGivenTimeUnitAttributeWithNonCalendarComponentValue_set_throwsTypeMismatchError() {
+		// given
+		let grouper = SameTimeUnitSampleGrouper(.minute)
+		let value = "not a calendar component"
+
+		// when
+		XCTAssertThrowsError(try grouper.set(attribute: SameTimeUnitSampleGrouper.timeUnitAttribute, to: value)) { error in
+			// then
+			assertThat(error, instanceOf(TypeMismatchError.self))
+		}
+	}
+
+	func testGivenTimeUnitAttributeWithCalendarComponentValue_set_correctlySetsValue() throws {
+		// given
+		let grouper = SameTimeUnitSampleGrouper(.minute)
+		let expectedValue = Calendar.Component.day
+
+		// when
+		try grouper.set(attribute: SameTimeUnitSampleGrouper.timeUnitAttribute, to: expectedValue)
+
+		// then
+		XCTAssertEqual(grouper.timeUnit, expectedValue)
 	}
 }
