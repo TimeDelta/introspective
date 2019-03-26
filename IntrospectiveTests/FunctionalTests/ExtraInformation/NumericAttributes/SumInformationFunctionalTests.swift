@@ -7,17 +7,74 @@
 //
 
 import XCTest
+import Hamcrest
 import SwiftDate
 @testable import Introspective
 
 final class SumInformationFunctionalTests: FunctionalTest {
 
+	private final var information: SumInformation!
+	private final var attribute: Attribute!
+
+	final override func setUp() {
+		super.setUp()
+		attribute = DoubleAttribute(name: "attribute name")
+		information = SumInformation(attribute)
+	}
+
+	// MARK: - description
+
+	func test_description_containsRestrictedAttributeName() {
+		// when
+		let description = information.description
+
+		// then
+		let attributeName = attribute.name.localizedLowercase
+		assertThat(description.localizedLowercase, containsString(attributeName))
+	}
+
 	// MARK: - compute()
 
-	func testGivenNoSamples_compute_returnsNoSamplesMessage() throws {
+	func testGivenNoSamplesForIntegerAttribute_compute_returnsNoSamplesMessage() throws {
 		// given
 		let samples = [Sample]()
 		let information = SumInformation(IntegerAttribute(name: "doesn't matter"))
+
+		// when
+		let sum = try information.compute(forSamples: samples)
+
+		// then
+		XCTAssertEqual(sum, "No samples match filter")
+	}
+
+	func testGivenNoSamplesForDoubleAttribute_compute_returnsNoSamplesMessage() throws {
+		// given
+		let samples = [Sample]()
+		let information = SumInformation(DoubleAttribute(name: "doesn't matter"))
+
+		// when
+		let sum = try information.compute(forSamples: samples)
+
+		// then
+		XCTAssertEqual(sum, "No samples match filter")
+	}
+
+	func testGivenNoSamplesForDurationAttribute_compute_returnsNoSamplesMessage() throws {
+		// given
+		let samples = [Sample]()
+		let information = SumInformation(DurationAttribute(name: "doesn't matter"))
+
+		// when
+		let sum = try information.compute(forSamples: samples)
+
+		// then
+		XCTAssertEqual(sum, "No samples match filter")
+	}
+
+	func testGivenNoSamplesForDosageAttribute_compute_returnsNoSamplesMessage() throws {
+		// given
+		let samples = [Sample]()
+		let information = SumInformation(DosageAttribute(name: "doesn't matter"))
 
 		// when
 		let sum = try information.compute(forSamples: samples)
@@ -211,10 +268,46 @@ final class SumInformationFunctionalTests: FunctionalTest {
 
 	// MARK: - computeGraphable()
 
-	func testGivenNoSamples_computeGraphable_throwsDisplayableError() throws {
+	func testGivenNoSamplesForIntegerAttribute_computeGraphable_throwsDisplayableError() throws {
 		// given
 		let samples = [Sample]()
 		let information = SumInformation(IntegerAttribute(name: "doesn't matter"))
+
+		// when
+		XCTAssertThrowsError(try information.computeGraphable(forSamples: samples)) { error in
+			// then
+			XCTAssert(error is DisplayableError)
+		}
+	}
+
+	func testGivenNoSamplesForDoubleAttribute_computeGraphable_throwsDisplayableError() throws {
+		// given
+		let samples = [Sample]()
+		let information = SumInformation(DoubleAttribute(name: "doesn't matter"))
+
+		// when
+		XCTAssertThrowsError(try information.computeGraphable(forSamples: samples)) { error in
+			// then
+			XCTAssert(error is DisplayableError)
+		}
+	}
+
+	func testGivenNoSamplesForDurationAttribute_computeGraphable_throwsDisplayableError() throws {
+		// given
+		let samples = [Sample]()
+		let information = SumInformation(DurationAttribute(name: "doesn't matter"))
+
+		// when
+		XCTAssertThrowsError(try information.computeGraphable(forSamples: samples)) { error in
+			// then
+			XCTAssert(error is DisplayableError)
+		}
+	}
+
+	func testGivenNoSamplesForDosageAttribute_computeGraphable_throwsDisplayableError() throws {
+		// given
+		let samples = [Sample]()
+		let information = SumInformation(DosageAttribute(name: "doesn't matter"))
 
 		// when
 		XCTAssertThrowsError(try information.computeGraphable(forSamples: samples)) { error in
@@ -407,6 +500,14 @@ final class SumInformationFunctionalTests: FunctionalTest {
 	}
 
 	// MARK: - equalTo()
+
+	func testGivenSameObject_equalTo_returnsTrue() {
+		// when
+		let areEqual = information.equalTo(information)
+
+		// then
+		XCTAssert(areEqual)
+	}
 
 	func testGivenTwoInformationObjectsOfDifferentTypesWithSameRestrictedAttribute_equalTo_returnsFalse() throws {
 		// given
