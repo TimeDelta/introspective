@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Hamcrest
 import SwiftDate
 @testable import Introspective
 
@@ -20,6 +21,17 @@ final class MinimumInformationFunctionalTests: FunctionalTest {
 	final override func setUp() {
 		super.setUp()
 		information = MinimumInformation<Int>(Me.restrictedAttribute)
+	}
+
+	// MARK: - description
+
+	func test_description_containsRestrictedAttributeName() {
+		// when
+		let description = information.description
+
+		// then
+		let attributeName = Me.restrictedAttribute.name.localizedLowercase
+		assertThat(description.localizedLowercase, containsString(attributeName))
 	}
 
 	// MARK: - compute()
@@ -94,6 +106,19 @@ final class MinimumInformationFunctionalTests: FunctionalTest {
 
 		// then
 		XCTAssertEqual(value, String(lowestValue))
+	}
+
+	func testGivenDurations_computeGraphable_returnsMaxDurationInHours() throws {
+		// given
+		let numHours = 23
+		let samples = SampleCreatorTestUtil.createSamples(withValues: [Duration(numHours.hours)], for: Me.restrictedAttribute)
+		let information = MinimumInformation<Duration>(Me.restrictedAttribute)
+
+		// when
+		let value = try information.computeGraphable(forSamples: samples)
+
+		// then
+		XCTAssertEqual(value, String(Double(numHours)))
 	}
 
 	// MARK: - equalTo()
