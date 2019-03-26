@@ -7,9 +7,10 @@
 //
 
 import XCTest
+import Hamcrest
 @testable import Introspective
 
-class NotEmptyStringAttributeRestrictionUnitTests: UnitTest {
+final class NotEmptyStringAttributeRestrictionUnitTests: UnitTest {
 
 	private final let attribute = TextAttribute(name: "attribute name")
 	private final var restriction: NotEmptyStringAttributeRestriction!
@@ -17,6 +18,8 @@ class NotEmptyStringAttributeRestrictionUnitTests: UnitTest {
 	override func setUp() {
 		restriction = NotEmptyStringAttributeRestriction(restrictedAttribute: attribute)
 	}
+
+	// MARK: - samplePasses
 
 	func testGivenNilSampleValue_samplePasses_returnsFalse() throws {
 		// given
@@ -52,5 +55,42 @@ class NotEmptyStringAttributeRestrictionUnitTests: UnitTest {
 
 		// then
 		XCTAssertTrue(samplePasses)
+	}
+
+	func testGivenNonStringValueForSpecifiedAttribute_samplePasses_throwsTypeMismatchError() {
+		// given
+		let sample = SampleCreatorTestUtil.createSample(withValue: 23, for: attribute)
+
+		// when
+		XCTAssertThrowsError(try restriction.samplePasses(sample)) { error in
+			// then
+			assertThat(error, instanceOf(TypeMismatchError.self))
+		}
+	}
+
+	// MARK: - value(of:)
+
+	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
+		// given
+		let unknownAttribute = TextAttribute(name: "unknown")
+
+		// when
+		XCTAssertThrowsError(try restriction.value(of: unknownAttribute)) { error in
+			// then
+			assertThat(error, instanceOf(UnknownAttributeError.self))
+		}
+	}
+
+	// MARK: - set(attribute: to:)
+
+	func testGivenUnknownAttribute_set_throwsUnknownAttributeError() {
+		// given
+		let unknownAttribute = TextAttribute(name: "unknown")
+
+		// when
+		XCTAssertThrowsError(try restriction.set(attribute: unknownAttribute, to: "" as Any)) { error in
+			// then
+			assertThat(error, instanceOf(UnknownAttributeError.self))
+		}
 	}
 }
