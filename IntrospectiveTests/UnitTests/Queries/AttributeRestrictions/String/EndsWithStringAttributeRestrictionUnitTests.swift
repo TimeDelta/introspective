@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Hamcrest
 import SwiftyMocky
 @testable import Introspective
 
@@ -22,6 +23,31 @@ final class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 		super.setUp()
 		restriction = EndsWithStringAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
 	}
+
+	// MARK: - description
+
+	func test_description_containsSuffix() {
+		// given
+		let suffix = "i should be in the description"
+		restriction.suffix = suffix
+
+		// when
+		let description = restriction.description
+
+		// then
+		assertThat(description, containsString(suffix))
+	}
+
+	func test_description_containsRestrictedAttributeName() {
+		// when
+		let description = restriction.description
+
+		// then
+		let attributeName = restriction.restrictedAttribute.name.localizedLowercase
+		assertThat(description.localizedLowercase, containsString(attributeName))
+	}
+
+	// MARK: - value(of:)
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// when
@@ -42,6 +68,8 @@ final class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(actualSuffix, expectedSuffix)
 	}
+
+	// MARK: - set(attribute: to:)
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
@@ -69,6 +97,8 @@ final class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(restriction.suffix, expectedSuffix)
 	}
+
+	// MARK: - samplePasses()
 
 	func testGivenSampleWithNonStringValueForGivenAttribute_samplePasses_throwsTypeMismatchError() {
 		// given
@@ -235,6 +265,51 @@ final class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(passes)
 	}
 
+	// MARK: - ==
+
+	func testGivenSameObjectTwice_equalToOperator_returnsTrue() {
+		// when
+		let equal = restriction == restriction
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
+		// given
+		let other = EndsWithStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToOperator_returnsFalse() {
+		// given
+		let other = EndsWithStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, suffix: restriction.suffix + "other stuff")
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalToOperator_returnsTrue() {
+		// given
+		let other = EndsWithStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssert(equal)
+	}
+
+	// MARK: - equalTo(attributed:)
+
 	func testGivenOtherOfDifferentTypes_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = SameDatesSubQueryMatcher()
@@ -287,12 +362,14 @@ final class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
+	// MARK: - equalTo(restriction:)
+
 	func testGivenOtherOfDifferentTypes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		let otherRestriction: AttributeRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -308,10 +385,10 @@ final class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = EndsWithStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
+		let otherRestriction: AttributeRestriction = EndsWithStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -319,10 +396,10 @@ final class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = EndsWithStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, suffix: restriction.suffix + "other stuff")
+		let otherRestriction: AttributeRestriction = EndsWithStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, suffix: restriction.suffix + "other stuff")
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -330,14 +407,16 @@ final class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let otherAttributed: AttributeRestriction = EndsWithStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		let otherRestriction: AttributeRestriction = EndsWithStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssert(equal)
 	}
+
+	// MARK: - equalTo()
 
 	func testGivenSameObjectTwice_equalTo_returnsTrue() {
 		// when
@@ -349,10 +428,10 @@ final class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = EndsWithStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
+		let other = EndsWithStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssertFalse(equal)
@@ -360,10 +439,10 @@ final class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = EndsWithStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, suffix: restriction.suffix + "other stuff")
+		let other = EndsWithStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, suffix: restriction.suffix + "other stuff")
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssertFalse(equal)
@@ -371,10 +450,10 @@ final class EndsWithStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let otherAttributed = EndsWithStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		let other = EndsWithStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssert(equal)
