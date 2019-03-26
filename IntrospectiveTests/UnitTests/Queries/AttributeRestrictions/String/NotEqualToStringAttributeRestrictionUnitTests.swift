@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Hamcrest
 import SwiftyMocky
 @testable import Introspective
 
@@ -22,6 +23,31 @@ final class NotEqualToStringAttributeRestrictionUnitTests: UnitTest {
 		super.setUp()
 		restriction = NotEqualToStringAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
 	}
+
+	// MARK: - description
+
+	func test_description_containsValueString() {
+		// given
+		let value = "i should be in the description"
+		restriction.value = value
+
+		// when
+		let description = restriction.description
+
+		// then
+		assertThat(description, containsString(value))
+	}
+
+	func test_description_containsRestrictedAttributeName() {
+		// when
+		let description = restriction.description
+
+		// then
+		let attributeName = restriction.restrictedAttribute.name.localizedLowercase
+		assertThat(description.localizedLowercase, containsString(attributeName))
+	}
+
+	// MARK: - value(of:)
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// when
@@ -42,6 +68,8 @@ final class NotEqualToStringAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(actualValue, expectedValue)
 	}
+
+	// MARK: - set(attribute: to:)
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
@@ -69,6 +97,8 @@ final class NotEqualToStringAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(restriction.value as! String, expectedValue)
 	}
+
+	// MARK: - samplePasses()
 
 	func testGivenSampleWithNonStringValueForGivenAttribute_samplePasses_throwsTypeMismatchError() {
 		// given
@@ -197,6 +227,77 @@ final class NotEqualToStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(passes)
 	}
 
+	func testGivenExpectedValueIsNilAndSampleValueIsNil_samplePasses_returnsFalse() throws {
+		// given
+		let sample = SampleCreatorTestUtil.createSample(withValue: nil as String?, for: Me.restrictedAttribute)
+		restriction.value = nil as Any?
+
+		// when
+		let passes = try restriction.samplePasses(sample)
+
+		// then
+		XCTAssertFalse(passes)
+	}
+
+	func testGivenExpectedValueIsNilAndSampleValueIsEmpty_samplePasses_returnsFalse() throws {
+		// given
+		let sample = SampleCreatorTestUtil.createSample(withValue: "", for: Me.restrictedAttribute)
+		restriction.value = nil as Any?
+
+		// when
+		let passes = try restriction.samplePasses(sample)
+
+		// then
+		XCTAssertFalse(passes)
+	}
+
+	// MARK: - ==
+
+	func testGivenSameObjectTwice_equalToOperator_returnsTrue() {
+		// when
+		let equal = restriction == restriction
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
+		// given
+		let other = NotEqualToStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameClassWithSameAttributeButDifferentValues_equalToOperator_returnsFalse() {
+		// given
+		let other = NotEqualToStringAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value as! String + "other stuff")
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalToOperator_returnsTrue() {
+		// given
+		let other = NotEqualToStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssert(equal)
+	}
+
+	// MARK: - equalTo(attributed:)
+
 	func testGivenOtherOfDifferentTypes_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = SameDatesSubQueryMatcher()
@@ -229,7 +330,9 @@ final class NotEqualToStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentValues_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = NotEqualToStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value as! String + "other stuff")
+		let otherAttributed: Attributed = NotEqualToStringAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value as! String + "other stuff")
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -249,12 +352,15 @@ final class NotEqualToStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
+	// MARK: - equalTo(restriction:)
+
 	func testGivenOtherOfDifferentTypes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		let otherRestriction: AttributeRestriction = LessThanDoubleAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -270,10 +376,11 @@ final class NotEqualToStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = NotEqualToStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
+		let otherRestriction: AttributeRestriction = NotEqualToStringAttributeRestriction(
+			restrictedAttribute: TextAttribute(name: "not the same attribute"))
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -281,10 +388,12 @@ final class NotEqualToStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentValues_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = NotEqualToStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value as! String + "other stuff")
+		let otherRestriction: AttributeRestriction = NotEqualToStringAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value as! String + "other stuff")
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -292,14 +401,17 @@ final class NotEqualToStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let otherAttributed: AttributeRestriction = NotEqualToStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		let otherRestriction: AttributeRestriction = NotEqualToStringAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssert(equal)
 	}
+
+	// MARK: - equalTo()
 
 	func testGivenSameObjectTwice_equalTo_returnsTrue() {
 		// when
@@ -311,10 +423,10 @@ final class NotEqualToStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = NotEqualToStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
+		let other = NotEqualToStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssertFalse(equal)
@@ -322,10 +434,12 @@ final class NotEqualToStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentValues_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = NotEqualToStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value as! String + "other stuff")
+		let other = NotEqualToStringAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value as! String + "other stuff")
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssertFalse(equal)
@@ -333,10 +447,10 @@ final class NotEqualToStringAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let otherAttributed = NotEqualToStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		let other = NotEqualToStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssert(equal)
