@@ -113,7 +113,12 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 		}
 	}
 
-	public init(restrictedAttribute: Attribute, value: ValueType, valueAttribute: Attribute, areEqual: @escaping (ValueType?, ValueType?) -> Bool) {
+	public init(
+		restrictedAttribute: Attribute,
+		value: ValueType,
+		valueAttribute: Attribute,
+		areEqual: @escaping (ValueType?, ValueType?) -> Bool)
+	{
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: valueAttribute) {
 			if !($0 is ValueType?) || !($1 is ValueType?) {
 				throw TypeMismatchError(attribute: restrictedAttribute, wasA: type(of: value))
@@ -161,7 +166,10 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 
 	// MARK: Equality
 
-	public static func ==(lhs: TypedEqualToAttributeRestrictionBase, rhs: TypedEqualToAttributeRestrictionBase) -> Bool {
+	public static func ==(
+		lhs: TypedEqualToAttributeRestrictionBase<ValueType>,
+		rhs: TypedEqualToAttributeRestrictionBase<ValueType>)
+	-> Bool {
 		return lhs.equalTo(rhs)
 	}
 
