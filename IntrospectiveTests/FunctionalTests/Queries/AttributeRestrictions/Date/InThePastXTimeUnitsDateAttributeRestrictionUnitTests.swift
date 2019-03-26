@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Hamcrest
 import SwiftDate
 @testable import Introspective
 
@@ -22,6 +23,32 @@ final class InThePastXTimeUnitsDateAttributeRestrictionUnitTests: FunctionalTest
 	final override func setUp() {
 		super.setUp()
 		restriction = InThePastXTimeUnitsDateAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
+	}
+
+	// MARK: - description
+
+	func test_description_containsNumberOfTimeUnits() {
+		// given
+		let numberOfTimeUnits = 4
+		restriction.numberOfTimeUnits = numberOfTimeUnits
+
+		// when
+		let description = restriction.description
+
+		// then
+		assertThat(description, containsString(String(numberOfTimeUnits)))
+	}
+
+	func test_description_containsTimeUnit() {
+		// given
+		let timeUnit = Calendar.Component.day
+		restriction.timeUnit = timeUnit
+
+		// when
+		let description = restriction.description
+
+		// then
+		assertThat(description, containsString(timeUnit.description))
 	}
 
 	// MARK: - value(of:)
@@ -70,7 +97,7 @@ final class InThePastXTimeUnitsDateAttributeRestrictionUnitTests: FunctionalTest
 
 	func testGivenWrongValueTypeForNumberOfTimeUnitAttributes_setAttributeTo_throwsTypeMismatchError() {
 		// when
-		XCTAssertThrowsError(try restriction.set(attribute: Me.timeUnitAttribute, to: "string" as Any)) { error in
+		XCTAssertThrowsError(try restriction.set(attribute: Me.numberOfTimeUnitsAttribute, to: "string" as Any)) { error in
 			// then
 			XCTAssert(error is TypeMismatchError)
 		}
