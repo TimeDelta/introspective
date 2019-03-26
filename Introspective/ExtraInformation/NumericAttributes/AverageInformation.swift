@@ -30,12 +30,12 @@ public final class AverageInformation: AnyInformation {
 	public final override func compute(forSamples samples: [Sample]) throws -> String {
 		if attribute is DoubleAttribute {
 			let filteredSamples = try filterSamples(samples, as: Double.self)
-			if filteredSamples.count == 0 { return "0" }
+			if filteredSamples.count == 0 { return "No samples matching filter" }
 			return String(try DependencyInjector.util.numericSample.average(for: attribute, over: filteredSamples))
 		}
 		if attribute is IntegerAttribute {
 			let filteredSamples = try filterSamples(samples, as: Int.self)
-			if filteredSamples.count == 0 { return "0" }
+			if filteredSamples.count == 0 { return "No samples matching filter" }
 			return String(try DependencyInjector.util.numericSample.average(for: attribute, over: filteredSamples))
 		}
 		if attribute is DosageAttribute {
@@ -56,12 +56,12 @@ public final class AverageInformation: AnyInformation {
 	public final override func computeGraphable(forSamples samples: [Sample]) throws -> String {
 		if attribute is DoubleAttribute {
 			let filteredSamples = try filterSamples(samples, as: Double.self)
-			if filteredSamples.count == 0 { return "0" }
+			if filteredSamples.count == 0 { throw GenericDisplayableError(title: "No samples matching filter") }
 			return String(try DependencyInjector.util.numericSample.average(for: attribute, over: filteredSamples))
 		}
 		if attribute is IntegerAttribute {
 			let filteredSamples = try filterSamples(samples, as: Int.self)
-			if filteredSamples.count == 0 { return "0" }
+			if filteredSamples.count == 0 { throw GenericDisplayableError(title: "No samples matching filter") }
 			return String(try DependencyInjector.util.numericSample.average(for: attribute, over: filteredSamples))
 		}
 		if attribute is DosageAttribute {
