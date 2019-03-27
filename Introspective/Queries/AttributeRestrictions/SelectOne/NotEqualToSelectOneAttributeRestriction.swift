@@ -1,5 +1,5 @@
 //
-//  NotEqualToSelectOneAttribute.swift
+//  NotEqualToSelectOneAttributeRestriction.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 9/21/18.
