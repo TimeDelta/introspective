@@ -155,7 +155,7 @@ final class NotEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenNilSampleValueAndValueIsNotNil_samplePasses_returnsTrue() throws {
 		// given
-		restriction.value = 2.3 as Any
+		restriction.value = 2 as Any
 		let sample = SampleCreatorTestUtil.createSample(withValue: nil as Any?, for: Me.restrictedAttribute)
 
 		// when
