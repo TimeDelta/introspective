@@ -7,22 +7,41 @@
 //
 
 import XCTest
+import Hamcrest
 import SwiftDate
 import SwiftyMocky
 @testable import Introspective
 
-class OnDateAttributeRestrictionUnitTests: UnitTest {
+final class OnDateAttributeRestrictionUnitTests: UnitTest {
 
-	fileprivate typealias Me = OnDateAttributeRestrictionUnitTests
-	fileprivate static let dateAttribute = OnDateAttributeRestriction.dateAttribute
-	fileprivate static let restrictedAttribute = DateOnlyAttribute(name: "unknown")
+	private typealias Me = OnDateAttributeRestrictionUnitTests
+	private static let dateAttribute = OnDateAttributeRestriction.dateAttribute
+	private static let restrictedAttribute = DateOnlyAttribute(name: "unknown")
 
-	fileprivate var restriction: OnDateAttributeRestriction!
+	private var restriction: OnDateAttributeRestriction!
 
-	override func setUp() {
+	final override func setUp() {
 		super.setUp()
 		restriction = OnDateAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
 	}
+
+	// MARK: - description
+
+	func test_description_containsDate() {
+		// given
+		let expectedDateString = "this should be in the description"
+		let date = Date()
+		restriction.date = date
+		Given(mockCalendarUtil, .string(for: .value(date), inFormat: .any(String.self), willReturn: expectedDateString))
+
+		// when
+		let description = restriction.description
+
+		// then
+		assertThat(description, containsString(expectedDateString))
+	}
+
+	// MARK: - value(of:)
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// when
@@ -44,6 +63,8 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(actualDate, expectedDate)
 	}
+
+	// MARK: - set(attribute: to:)
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
@@ -73,6 +94,8 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertEqual(restriction.date, expectedDate)
 	}
 
+	// MARK: - samplePasses()
+
 	func testGivenSampleWithNonDateValueForGivenAttribute_samplePasses_throwsTypeMismatchError() {
 		// given
 		let mockSample = SampleMock()
@@ -89,7 +112,6 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 		// given
 		let mockSample = SampleMock()
 		let restrictionDate = Date()
-		Given(mockCalendarUtil, .start(of: .value(.day), in: .value(restrictionDate), willReturn: restrictionDate))
 		restriction.date = restrictionDate
 		let sampleDate = oldDate()
 		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: sampleDate))
@@ -107,7 +129,6 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 		// given
 		let mockSample = SampleMock()
 		let restrictionDate = oldDate()
-		Given(mockCalendarUtil, .start(of: .value(.day), in: .value(restrictionDate), willReturn: restrictionDate))
 		restriction.date = restrictionDate
 		let sampleDate = Date()
 		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: sampleDate))
@@ -125,13 +146,11 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 		// given
 		let mockSample = SampleMock()
 		let restrictionDate = Date(year: 2018, month: 1, day: 1, hour: 3, minute: 2, second: 1)
-		let startOfRestrictionDate = Date(year: 2018, month: 1, day: 1, hour: 0, minute: 0, second: 0)
-		Given(mockCalendarUtil, .start(of: .value(.day), in: .value(restrictionDate), willReturn: startOfRestrictionDate))
 		restriction.date = restrictionDate
 		let sampleDate = Date(year: 2018, month: 1, day: 1, hour: 2, minute: 2, second: 1)
 		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: sampleDate))
-		Given(mockCalendarUtil, .date(.value(startOfRestrictionDate), occursOnSame: .value(.day), as: .value(sampleDate), willReturn: true))
-		Given(mockCalendarUtil, .date(.value(sampleDate), occursOnSame: .value(.day), as: .value(startOfRestrictionDate), willReturn: true))
+		Given(mockCalendarUtil, .date(.value(restrictionDate), occursOnSame: .value(.day), as: .value(sampleDate), willReturn: true))
+		Given(mockCalendarUtil, .date(.value(sampleDate), occursOnSame: .value(.day), as: .value(restrictionDate), willReturn: true))
 
 		// when
 		let samplePasses = try! restriction.samplePasses(mockSample)
@@ -139,6 +158,62 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssert(samplePasses)
 	}
+
+	func testGivenNilSampleValue_samplePasses_returnsFalse() throws {
+		// given
+		let sample = SampleCreatorTestUtil.createSample(withValue: nil as Any?, for: Me.restrictedAttribute)
+
+		// when
+		let samplePasses = try restriction.samplePasses(sample)
+
+		// then
+		XCTAssertFalse(samplePasses)
+	}
+
+	// MARK: - ==
+
+	func testGivenSameObjectTwice_equalToOperator_returnsTrue() {
+		// when
+		let equal = restriction == restriction
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
+		// given
+		let other = OnDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToOperator_returnsFalse() {
+		// given
+		let other = OnDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, date: restriction.date + 1.days)
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalToOperator_returnsTrue() {
+		// given
+		let other = OnDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, date: restriction.date)
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssert(equal)
+	}
+
+	// MARK: - equalTo(attributed:)
 
 	func testGivenOtherOfDifferentTypes_equalToAttributed_returnsFalse() {
 		// given
@@ -192,12 +267,14 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
+	// MARK: - equalTo(restriction:)
+
 	func testGivenOtherOfDifferentTypes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		let otherRestriction: AttributeRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -213,21 +290,21 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = OnDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+		let otherRestriction: AttributeRestriction = OnDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToRestriction_returnsFalse() {
+	func testGivenSameClassWithSameAttributeButDifferentDates_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = OnDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, date: restriction.date + 1.days)
+		let otherRestriction: AttributeRestriction = OnDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, date: restriction.date + 1.days)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -235,14 +312,16 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let otherAttributed: AttributeRestriction = OnDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, date: restriction.date)
+		let otherRestriction: AttributeRestriction = OnDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, date: restriction.date)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssert(equal)
 	}
+
+	// MARK: - equalTo()
 
 	func testGivenSameObjectTwice_equalTo_returnsTrue() {
 		// when
@@ -254,10 +333,10 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = OnDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+		let other = OnDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssertFalse(equal)
@@ -265,10 +344,10 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = OnDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, date: restriction.date + 1.days)
+		let other = OnDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, date: restriction.date + 1.days)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssertFalse(equal)
@@ -276,10 +355,10 @@ class OnDateAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let otherAttributed = OnDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, date: restriction.date)
+		let other = OnDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, date: restriction.date)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssert(equal)

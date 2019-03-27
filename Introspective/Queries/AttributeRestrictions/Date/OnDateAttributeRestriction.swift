@@ -37,11 +37,7 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 
 	// MARK: - Instance Variables
 
-	public final var date: Date {
-		didSet {
-			date = DependencyInjector.util.calendar.start(of: .day, in: date)
-		}
-	}
+	public final var date: Date
 	private final let log = Log()
 
 	// MARK: - Initializers
