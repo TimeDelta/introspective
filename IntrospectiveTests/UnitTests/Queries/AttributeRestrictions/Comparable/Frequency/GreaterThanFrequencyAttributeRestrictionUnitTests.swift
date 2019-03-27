@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Hamcrest
 import SwiftyMocky
 @testable import Introspective
 
@@ -22,6 +23,30 @@ final class GreaterThanFrequencyAttributeRestrictionUnitTests: UnitTest {
 		super.setUp()
 		restriction = GreaterThanFrequencyAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
 	}
+
+	// MARK: - description
+
+	func test_description_containsValue() {
+		// given
+		let value = Frequency(2, .hour)!
+		restriction.value = value
+
+		// when
+		let description = restriction.description
+
+		// then
+		assertThat(description, containsString(value.description))
+	}
+
+	func test_description_containsGreaterThan() {
+		// when
+		let description = restriction.description
+
+		// then
+		assertThat(description, containsString(">"))
+	}
+
+	// MARK: - value(of:)
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// when
@@ -42,6 +67,8 @@ final class GreaterThanFrequencyAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(actualValue, expectedValue)
 	}
+
+	// MARK: - set(attribute: to:)
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
@@ -69,6 +96,8 @@ final class GreaterThanFrequencyAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(restriction.value, expectedValue)
 	}
+
+	// MARK: - samplePasses()
 
 	func testGivenSampleWithIncorrectValueTypeForGivenAttribute_samplePasses_throwsTypeMismatchError() {
 		// given
@@ -130,6 +159,67 @@ final class GreaterThanFrequencyAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(samplePasses)
 	}
 
+	func testGivenNilSampleValue_samplePasses_returnsFalse() throws {
+		// given
+		let sample = SampleCreatorTestUtil.createSample(withValue: nil as Any?, for: Me.restrictedAttribute)
+
+		// when
+		let samplePasses = try restriction.samplePasses(sample)
+
+		// then
+		XCTAssertFalse(samplePasses)
+	}
+
+	// MARK: - ==
+
+	func testGivenSameObjectTwice_equalToOperator_returnsTrue() {
+		// when
+		let equal = restriction == restriction
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
+		// given
+		let other = GreaterThanFrequencyAttributeRestriction(
+			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameClassWithSameRestrictedAttributeButDifferentValues_equalToOperator_returnsFalse() {
+		// given
+		let other = GreaterThanFrequencyAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: Frequency(restriction.value.timesPerTimeUnit + 1, restriction.value.timeUnit)!)
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameTypeWithAllSameAttributes_equalToOperator_returnsTrue() {
+		// given
+		let other = GreaterThanFrequencyAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value)
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssert(equal)
+	}
+
+	// MARK: - equalTo(attributed:)
+
 	func testGivenOtherOfDifferentType_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = SameDatesSubQueryMatcher()
@@ -187,12 +277,14 @@ final class GreaterThanFrequencyAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
+	// MARK: - equalTo(restriction:)
+
 	func testGivenOtherOfDifferentType_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		let otherRestriction: AttributeRestriction = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -208,11 +300,11 @@ final class GreaterThanFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = GreaterThanFrequencyAttributeRestriction(
+		let otherRestriction: AttributeRestriction = GreaterThanFrequencyAttributeRestriction(
 			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -220,12 +312,12 @@ final class GreaterThanFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameRestrictedAttributeButDifferentValues_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = GreaterThanFrequencyAttributeRestriction(
+		let otherRestriction: AttributeRestriction = GreaterThanFrequencyAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			value: Frequency(restriction.value.timesPerTimeUnit + 1, restriction.value.timeUnit)!)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -233,16 +325,18 @@ final class GreaterThanFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let otherAttributed: AttributeRestriction = GreaterThanFrequencyAttributeRestriction(
+		let otherRestriction: AttributeRestriction = GreaterThanFrequencyAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			value: restriction.value)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssert(equal)
 	}
+
+	// MARK: - equalTo()
 
 	func testGivenSameObjectTwice_equalTo_returnsTrue() {
 		// when
@@ -254,11 +348,11 @@ final class GreaterThanFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = GreaterThanFrequencyAttributeRestriction(
+		let other = GreaterThanFrequencyAttributeRestriction(
 			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssertFalse(equal)
@@ -266,12 +360,12 @@ final class GreaterThanFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameRestrictedAttributeButDifferentValues_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = GreaterThanFrequencyAttributeRestriction(
+		let other = GreaterThanFrequencyAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			value: Frequency(restriction.value.timesPerTimeUnit + 1, restriction.value.timeUnit)!)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssertFalse(equal)
@@ -279,12 +373,12 @@ final class GreaterThanFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let otherAttributed = GreaterThanFrequencyAttributeRestriction(
+		let other = GreaterThanFrequencyAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			value: restriction.value)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssert(equal)
