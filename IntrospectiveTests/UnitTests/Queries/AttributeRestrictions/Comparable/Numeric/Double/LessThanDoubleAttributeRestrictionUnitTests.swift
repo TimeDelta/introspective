@@ -206,7 +206,7 @@ class LessThanDoubleAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameRestrictedAttributeButDifferentSubstrings_equalToRestriction_returnsFalse() {
+	func testGivenSameClassWithSameRestrictedAttributeButDifferentValues_equalToRestriction_returnsFalse() {
 		// given
 		let otherAttributed: AttributeRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value + 1)
 
@@ -247,7 +247,7 @@ class LessThanDoubleAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameRestrictedAttributeButDifferentSubstrings_equalTo_returnsFalse() {
+	func testGivenSameClassWithSameRestrictedAttributeButDifferentValues_equalTo_returnsFalse() {
 		// given
 		let otherAttributed = LessThanDoubleAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value + 1)
 

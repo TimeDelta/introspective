@@ -154,7 +154,7 @@ class EqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToAttributed_returnsFalse() {
+	func testGivenSameClassWithSameAttributeButDifferentValues_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = EqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value as! Int + 1)
 
@@ -206,7 +206,7 @@ class EqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToRestriction_returnsFalse() {
+	func testGivenSameClassWithSameAttributeButDifferentValues_equalToRestriction_returnsFalse() {
 		// given
 		let otherAttributed: AttributeRestriction = EqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value as! Int + 1)
 
@@ -247,7 +247,7 @@ class EqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalTo_returnsFalse() {
+	func testGivenSameClassWithSameAttributeButDifferentValues_equalTo_returnsFalse() {
 		// given
 		let otherAttributed = EqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value as! Int + 1)
 

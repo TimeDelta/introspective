@@ -208,7 +208,7 @@ final class AfterDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToOperator_returnsFalse() {
+	func testGivenSameClassWithSameAttributeButDifferentDates_equalToOperator_returnsFalse() {
 		// given
 		let otherAttributed = AfterDateAndTimeAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
@@ -267,7 +267,7 @@ final class AfterDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToAttributed_returnsFalse() {
+	func testGivenSameClassWithSameAttributeButDifferentDates_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = AfterDateAndTimeAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
@@ -327,7 +327,7 @@ final class AfterDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToRestriction_returnsFalse() {
+	func testGivenSameClassWithSameAttributeButDifferentDates_equalToRestriction_returnsFalse() {
 		// given
 		let otherRestriction: AttributeRestriction = AfterDateAndTimeAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
@@ -374,7 +374,7 @@ final class AfterDateAndTimeAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalTo_returnsFalse() {
+	func testGivenSameClassWithSameAttributeButDifferentDates_equalTo_returnsFalse() {
 		// given
 		let other = AfterDateAndTimeAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,

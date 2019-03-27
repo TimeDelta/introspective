@@ -187,7 +187,7 @@ final class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToOperator_returnsFalse() {
+	func testGivenSameClassWithSameAttributeButDifferentTimesOfDay_equalToOperator_returnsFalse() {
 		// given
 		var timeOfDay = restriction.timeOfDay
 		timeOfDay.hour += 1
@@ -246,7 +246,7 @@ final class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToAttributed_returnsFalse() {
+	func testGivenSameClassWithSameAttributeButDifferentTimesOfDay_equalToAttributed_returnsFalse() {
 		// given
 		var timeOfDay = restriction.timeOfDay
 		timeOfDay.hour += 1
@@ -357,7 +357,7 @@ final class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalTo_returnsFalse() {
+	func testGivenSameClassWithSameAttributeButDifferentTimesOfDay_equalTo_returnsFalse() {
 		// given
 		var timeOfDay = restriction.timeOfDay
 		timeOfDay.hour += 1
