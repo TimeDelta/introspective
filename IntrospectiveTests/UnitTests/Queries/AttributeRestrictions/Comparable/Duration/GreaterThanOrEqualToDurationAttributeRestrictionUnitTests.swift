@@ -7,7 +7,9 @@
 //
 
 import XCTest
+import Hamcrest
 import SwiftyMocky
+import SwiftDate
 @testable import Introspective
 
 final class GreaterThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest {
@@ -21,6 +23,28 @@ final class GreaterThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest 
 	final override func setUp() {
 		super.setUp()
 		restriction = GreaterThanOrEqualToDurationAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
+	}
+
+	// MARK: - description
+
+	func test_description_containsValue() {
+		// given
+		let value = Duration(2.days + 3.hours)
+		restriction.value = value
+
+		// when
+		let description = restriction.description
+
+		// then
+		assertThat(description, containsString(value.description))
+	}
+
+	func test_description_containsGreaterThanOrEqualTo() {
+		// when
+		let description = restriction.description
+
+		// then
+		assertThat(description, containsString("≥"))
 	}
 
 	// MARK: - value(of:)
@@ -130,6 +154,65 @@ final class GreaterThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest 
 		XCTAssert(samplePasses)
 	}
 
+	func testGivenNilSampleValue_samplePasses_returnsFalse() throws {
+		// given
+		let sample = SampleCreatorTestUtil.createSample(withValue: nil as Any?, for: Me.restrictedAttribute)
+
+		// when
+		let samplePasses = try restriction.samplePasses(sample)
+
+		// then
+		XCTAssertFalse(samplePasses)
+	}
+
+	// MARK: - ==
+
+	func testGivenSameObjectTwice_equalToOperator_returnsTrue() {
+		// when
+		let equal = restriction == restriction
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
+		// given
+		let otherAttributed = GreaterThanOrEqualToDurationAttributeRestriction(
+			restrictedAttribute: DurationAttribute(name: "not the same attribute"))
+
+		// when
+		let equal = restriction == otherAttributed
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameClassWithSameRestrictedAttributeButDifferentValues_equalToOperator_returnsFalse() {
+		// given
+		let otherAttributed = GreaterThanOrEqualToDurationAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value + 1)
+
+		// when
+		let equal = restriction == otherAttributed
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameTypeWithAllSameAttributes_equalToOperator_returnsTrue() {
+		// given
+		let otherAttributed = GreaterThanOrEqualToDurationAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value)
+
+		// when
+		let equal = restriction == otherAttributed
+
+		// then
+		XCTAssert(equal)
+	}
+
 	// MARK: - equalTo(attributed:)
 
 	func testGivenOtherOfDifferentType_equalToAttributed_returnsFalse() {
@@ -153,7 +236,8 @@ final class GreaterThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest 
 
 	func testGivenSameClassWithDifferentRestrictedAttribute_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = GreaterThanOrEqualToDurationAttributeRestriction(restrictedAttribute: DurationAttribute(name: "not the same attribute"))
+		let otherAttributed: Attributed = GreaterThanOrEqualToDurationAttributeRestriction(
+			restrictedAttribute: DurationAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -164,7 +248,9 @@ final class GreaterThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest 
 
 	func testGivenSameClassWithSameRestrictedAttributeButDifferentValue_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = GreaterThanOrEqualToDurationAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value + 1)
+		let otherAttributed: Attributed = GreaterThanOrEqualToDurationAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value + 1)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -175,7 +261,9 @@ final class GreaterThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest 
 
 	func testGivenSameTypeWithAllSameAttributes_equalToAttributed_returnsTrue() {
 		// given
-		let otherAttributed: Attributed = GreaterThanOrEqualToDurationAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value)
+		let otherAttributed: Attributed = GreaterThanOrEqualToDurationAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -188,7 +276,8 @@ final class GreaterThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest 
 
 	func testGivenOtherOfDifferentType_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		let otherAttributed: AttributeRestriction = ContainsStringAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -207,7 +296,8 @@ final class GreaterThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest 
 
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = GreaterThanOrEqualToDurationAttributeRestriction(restrictedAttribute: DurationAttribute(name: "not the same attribute"))
+		let otherAttributed: AttributeRestriction = GreaterThanOrEqualToDurationAttributeRestriction(
+			restrictedAttribute: DurationAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -218,7 +308,9 @@ final class GreaterThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest 
 
 	func testGivenSameClassWithSameRestrictedAttributeButDifferentValues_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = GreaterThanOrEqualToDurationAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value + 1)
+		let otherAttributed: AttributeRestriction = GreaterThanOrEqualToDurationAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value + 1)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -229,7 +321,9 @@ final class GreaterThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest 
 
 	func testGivenSameTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let otherAttributed: AttributeRestriction = GreaterThanOrEqualToDurationAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value)
+		let otherAttributed: AttributeRestriction = GreaterThanOrEqualToDurationAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -250,7 +344,8 @@ final class GreaterThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest 
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = GreaterThanOrEqualToDurationAttributeRestriction(restrictedAttribute: DurationAttribute(name: "not the same attribute"))
+		let otherAttributed = GreaterThanOrEqualToDurationAttributeRestriction(
+			restrictedAttribute: DurationAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -261,7 +356,9 @@ final class GreaterThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest 
 
 	func testGivenSameClassWithSameRestrictedAttributeButDifferentValues_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = GreaterThanOrEqualToDurationAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value + 1)
+		let otherAttributed = GreaterThanOrEqualToDurationAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value + 1)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -272,7 +369,9 @@ final class GreaterThanOrEqualToDurationAttributeRestrictionUnitTests: UnitTest 
 
 	func testGivenSameTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let otherAttributed = GreaterThanOrEqualToDurationAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value)
+		let otherAttributed = GreaterThanOrEqualToDurationAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
