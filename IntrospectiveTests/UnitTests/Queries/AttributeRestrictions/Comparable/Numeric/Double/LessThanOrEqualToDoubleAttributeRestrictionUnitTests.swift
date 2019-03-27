@@ -38,7 +38,7 @@ final class LessThanOrEqualToDoubleAttributeRestrictionUnitTests: UnitTest {
 		assertThat(description, containsString(String(value)))
 	}
 
-	func test_description_containsLessThan() {
+	func test_description_containsLessThanOrEqualTo() {
 		// when
 		let description = restriction.description
 
