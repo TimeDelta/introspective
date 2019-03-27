@@ -156,8 +156,9 @@ final class EqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(samplePasses)
 	}
 
-	func testGivenNilSampleValue_samplePasses_returnsFalse() throws {
+	func testGivenNilSampleValueAndValueIsNotNil_samplePasses_returnsFalse() throws {
 		// given
+		restriction.value = Frequency(2, .hour)! as Any
 		let sample = SampleCreatorTestUtil.createSample(withValue: nil as Any?, for: Me.restrictedAttribute)
 
 		// when
@@ -165,6 +166,18 @@ final class EqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 		// then
 		XCTAssertFalse(samplePasses)
+	}
+
+	func testGivenNilSampleValueAndValueIsNil_samplePasses_returnsTrue() throws {
+		// given
+		restriction.value = nil as Any?
+		let sample = SampleCreatorTestUtil.createSample(withValue: nil as Any?, for: Me.restrictedAttribute)
+
+		// when
+		let samplePasses = try restriction.samplePasses(sample)
+
+		// then
+		XCTAssert(samplePasses)
 	}
 
 	// MARK: - ==
