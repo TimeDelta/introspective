@@ -7,21 +7,46 @@
 //
 
 import XCTest
+import Hamcrest
 import SwiftyMocky
 @testable import Introspective
 
-class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
+final class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
-	fileprivate typealias Me = GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests
-	fileprivate static let valueAttribute = GreaterThanOrEqualToIntegerAttributeRestriction.valueAttribute
-	fileprivate static let restrictedAttribute = IntegerAttribute(name: "restricted")
+	private typealias Me = GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests
+	private static let valueAttribute = GreaterThanOrEqualToIntegerAttributeRestriction.valueAttribute
+	private static let restrictedAttribute = IntegerAttribute(name: "restricted")
 
-	fileprivate var restriction: GreaterThanOrEqualToIntegerAttributeRestriction!
+	private var restriction: GreaterThanOrEqualToIntegerAttributeRestriction!
 
-	override func setUp() {
+	final override func setUp() {
 		super.setUp()
 		restriction = GreaterThanOrEqualToIntegerAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
 	}
+
+	// MARK: - description
+
+	func test_description_containsValue() {
+		// given
+		let value = 2
+		restriction.value = value
+
+		// when
+		let description = restriction.description
+
+		// then
+		assertThat(description, containsString(String(value)))
+	}
+
+	func test_description_containsGreaterThanOrEqualTo() {
+		// when
+		let description = restriction.description
+
+		// then
+		assertThat(description, containsString("≥"))
+	}
+
+	// MARK: - value(of:)
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// when
@@ -42,6 +67,8 @@ class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(actualValue, expectedValue)
 	}
+
+	// MARK: - set(attribute: to:)
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
@@ -69,6 +96,8 @@ class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(restriction.value, expectedValue)
 	}
+
+	// MARK: - samplePasses()
 
 	func testGivenSampleWithNonDateValueForGivenAttribute_samplePasses_throwsTypeMismatchError() {
 		// given
@@ -124,6 +153,67 @@ class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(samplePasses)
 	}
 
+	func testGivenNilSampleValue_samplePasses_returnsFalse() throws {
+		// given
+		let sample = SampleCreatorTestUtil.createSample(withValue: nil as Any?, for: Me.restrictedAttribute)
+
+		// when
+		let samplePasses = try restriction.samplePasses(sample)
+
+		// then
+		XCTAssertFalse(samplePasses)
+	}
+
+	// MARK: - ==
+
+	func testGivenSameObjectTwice_equalToOperator_returnsTrue() {
+		// when
+		let equal = restriction == restriction
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
+		// given
+		let other = GreaterThanOrEqualToIntegerAttributeRestriction(
+			restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameClassWithSameAttributeButDifferentValues_equalToOperator_returnsFalse() {
+		// given
+		let other = GreaterThanOrEqualToIntegerAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value + 1)
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalToOperator_returnsTrue() {
+		// given
+		let other = GreaterThanOrEqualToIntegerAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value)
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssert(equal)
+	}
+
+	// MARK: - equalTo(attributed:)
+
 	func testGivenOtherOfDifferentTypes_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = SameDatesSubQueryMatcher()
@@ -145,7 +235,8 @@ class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = GreaterThanOrEqualToIntegerAttributeRestriction(restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+		let otherAttributed: Attributed = GreaterThanOrEqualToIntegerAttributeRestriction(
+			restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -156,7 +247,9 @@ class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentValues_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = GreaterThanOrEqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value + 1)
+		let otherAttributed: Attributed = GreaterThanOrEqualToIntegerAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value + 1)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -167,7 +260,9 @@ class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToAttributed_returnsTrue() {
 		// given
-		let otherAttributed: Attributed = GreaterThanOrEqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value)
+		let otherAttributed: Attributed = GreaterThanOrEqualToIntegerAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -176,12 +271,15 @@ class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
+	// MARK: - equalTo(restriction:)
+
 	func testGivenOtherOfDifferentTypes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		let otherRestriction: AttributeRestriction = ContainsStringAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -197,10 +295,11 @@ class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = GreaterThanOrEqualToIntegerAttributeRestriction(restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+		let otherRestriction: AttributeRestriction = GreaterThanOrEqualToIntegerAttributeRestriction(
+			restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -208,10 +307,12 @@ class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentValues_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = GreaterThanOrEqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value + 1)
+		let otherRestriction: AttributeRestriction = GreaterThanOrEqualToIntegerAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value + 1)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -219,14 +320,18 @@ class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let otherAttributed: AttributeRestriction = GreaterThanOrEqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value)
+		let otherRestriction: AttributeRestriction = GreaterThanOrEqualToIntegerAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssert(equal)
 	}
+
+	// MARK: - equalTo()
 
 	func testGivenSameObjectTwice_equalTo_returnsTrue() {
 		// when
@@ -238,10 +343,11 @@ class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = GreaterThanOrEqualToIntegerAttributeRestriction(restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+		let other = GreaterThanOrEqualToIntegerAttributeRestriction(
+			restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssertFalse(equal)
@@ -249,10 +355,12 @@ class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentValues_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = GreaterThanOrEqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value + 1)
+		let other = GreaterThanOrEqualToIntegerAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value + 1)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssertFalse(equal)
@@ -260,10 +368,12 @@ class GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let otherAttributed = GreaterThanOrEqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value)
+		let other = GreaterThanOrEqualToIntegerAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssert(equal)
