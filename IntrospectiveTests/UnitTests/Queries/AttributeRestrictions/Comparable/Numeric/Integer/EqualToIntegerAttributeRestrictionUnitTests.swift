@@ -153,8 +153,9 @@ final class EqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(samplePasses)
 	}
 
-	func testGivenNilSampleValue_samplePasses_returnsFalse() throws {
+	func testGivenNilSampleValueAndValueIsNotNil_samplePasses_returnsFalse() throws {
 		// given
+		restriction.value = 2.3 as Any
 		let sample = SampleCreatorTestUtil.createSample(withValue: nil as Any?, for: Me.restrictedAttribute)
 
 		// when
@@ -162,6 +163,18 @@ final class EqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 		// then
 		XCTAssertFalse(samplePasses)
+	}
+
+	func testGivenNilSampleValueAndValueIsNil_samplePasses_returnsTrue() throws {
+		// given
+		restriction.value = nil as Any?
+		let sample = SampleCreatorTestUtil.createSample(withValue: nil as Any?, for: Me.restrictedAttribute)
+
+		// when
+		let samplePasses = try restriction.samplePasses(sample)
+
+		// then
+		XCTAssert(samplePasses)
 	}
 
 	// MARK: - ==
