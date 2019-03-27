@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Hamcrest
 import SwiftyMocky
 @testable import Introspective
 
@@ -22,6 +23,30 @@ class NotEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 		super.setUp()
 		restriction = NotEqualToFrequencyAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
 	}
+
+	// MARK: - description
+
+	func test_description_containsValue() {
+		// given
+		let value = Frequency(2, .hour)!
+		restriction.value = value
+
+		// when
+		let description = restriction.description
+
+		// then
+		assertThat(description, containsString(value.description))
+	}
+
+	func test_description_containsNotEqualTo() {
+		// when
+		let description = restriction.description
+
+		// then
+		assertThat(description, containsString("≠"))
+	}
+
+	// MARK: - value(of:)
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// when
@@ -42,6 +67,8 @@ class NotEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(actualValue, expectedValue)
 	}
+
+	// MARK: - set(attribute: to:)
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
@@ -69,6 +96,8 @@ class NotEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(restriction.value as? Frequency, expectedValue)
 	}
+
+	// MARK: - samplePasses
 
 	func testGivenSampleWithIncorrectValueTypeForGivenAttribute_samplePasses_throwsTypeMismatchError() {
 		// given
@@ -130,6 +159,82 @@ class NotEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(samplePasses)
 	}
 
+	func testGivenNilSampleValueAndValueIsNotNil_samplePasses_returnsTrue() throws {
+		// given
+		restriction.value = Frequency(2, .hour)! as Any
+		let sample = SampleCreatorTestUtil.createSample(withValue: nil as Any?, for: Me.restrictedAttribute)
+
+		// when
+		let samplePasses = try restriction.samplePasses(sample)
+
+		// then
+		XCTAssert(samplePasses)
+	}
+
+	func testGivenNilSampleValueAndValueIsNil_samplePasses_returnsFalse() throws {
+		// given
+		restriction.value = nil as Any?
+		let sample = SampleCreatorTestUtil.createSample(withValue: nil as Any?, for: Me.restrictedAttribute)
+
+		// when
+		let samplePasses = try restriction.samplePasses(sample)
+
+		// then
+		XCTAssertFalse(samplePasses)
+	}
+
+	// MARK: - ==
+
+	func testGivenSameObjectTwice_equalToOperator_returnsTrue() {
+		// when
+		let equal = restriction == restriction
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
+		// given
+		let other = NotEqualToFrequencyAttributeRestriction(
+			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameClassWithSameRestrictedAttributeButDifferentValues_equalToOperator_returnsFalse() {
+		// given
+		let restrictionValue = restriction.value as! Frequency
+		let other = NotEqualToFrequencyAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: Frequency(restrictionValue.timesPerTimeUnit + 1, restrictionValue.timeUnit)!)
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameTypeWithAllSameAttributes_equalToOperator_returnsTrue() {
+		// given
+		let restrictionValue = restriction.value as! Frequency
+		let other = NotEqualToFrequencyAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restrictionValue)
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssert(equal)
+	}
+
+	// MARK: - equalTo(attributed:)
+
 	func testGivenOtherOfDifferentType_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = SameDatesSubQueryMatcher()
@@ -189,12 +294,14 @@ class NotEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
+	// MARK: - equalTo(restriction:)
+
 	func testGivenOtherOfDifferentType_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		let otherRestriction: AttributeRestriction = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -210,11 +317,11 @@ class NotEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = NotEqualToFrequencyAttributeRestriction(
+		let otherRestriction: AttributeRestriction = NotEqualToFrequencyAttributeRestriction(
 			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -223,12 +330,12 @@ class NotEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithSameRestrictedAttributeButDifferentValues_equalToRestriction_returnsFalse() {
 		// given
 		let restrictionValue = restriction.value as! Frequency
-		let otherAttributed: AttributeRestriction = NotEqualToFrequencyAttributeRestriction(
+		let otherRestriction: AttributeRestriction = NotEqualToFrequencyAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			value: Frequency(restrictionValue.timesPerTimeUnit + 1, restrictionValue.timeUnit)!)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -237,16 +344,18 @@ class NotEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
 		let restrictionValue = restriction.value as! Frequency
-		let otherAttributed: AttributeRestriction = NotEqualToFrequencyAttributeRestriction(
+		let otherRestriction: AttributeRestriction = NotEqualToFrequencyAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			value: restrictionValue)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssert(equal)
 	}
+
+	// MARK: - equalTo()
 
 	func testGivenSameObjectTwice_equalTo_returnsTrue() {
 		// when
@@ -258,11 +367,11 @@ class NotEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = NotEqualToFrequencyAttributeRestriction(
+		let other = NotEqualToFrequencyAttributeRestriction(
 			restrictedAttribute: FrequencyAttribute(name: "not the same attribute"))
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssertFalse(equal)
@@ -271,12 +380,12 @@ class NotEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameClassWithSameRestrictedAttributeButDifferentValues_equalTo_returnsFalse() {
 		// given
 		let restrictionValue = restriction.value as! Frequency
-		let otherAttributed = NotEqualToFrequencyAttributeRestriction(
+		let other = NotEqualToFrequencyAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			value: Frequency(restrictionValue.timesPerTimeUnit + 1, restrictionValue.timeUnit)!)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssertFalse(equal)
@@ -285,12 +394,12 @@ class NotEqualToFrequencyAttributeRestrictionUnitTests: UnitTest {
 	func testGivenSameTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
 		let restrictionValue = restriction.value as! Frequency
-		let otherAttributed = NotEqualToFrequencyAttributeRestriction(
+		let other = NotEqualToFrequencyAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
 			value: restrictionValue)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssert(equal)
