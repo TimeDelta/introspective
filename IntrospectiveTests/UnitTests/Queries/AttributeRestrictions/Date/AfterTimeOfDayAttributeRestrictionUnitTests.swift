@@ -7,21 +7,52 @@
 //
 
 import XCTest
+import Hamcrest
 import SwiftyMocky
 @testable import Introspective
 
-class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
+final class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 
-	fileprivate typealias Me = AfterTimeOfDayAttributeRestrictionUnitTests
-	fileprivate static let timeAttribute = AfterTimeOfDayAttributeRestriction.timeAttribute
-	fileprivate static let restrictedAttribute = DateTimeAttribute(name: "date")
+	private typealias Me = AfterTimeOfDayAttributeRestrictionUnitTests
+	private static let timeAttribute = AfterTimeOfDayAttributeRestriction.timeAttribute
+	private static let restrictedAttribute = DateTimeAttribute(name: "date")
 
-	fileprivate var restriction: AfterTimeOfDayAttributeRestriction!
+	private var restriction: AfterTimeOfDayAttributeRestriction!
 
-	override func setUp() {
+	final override func setUp() {
 		super.setUp()
 		restriction = AfterTimeOfDayAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
 	}
+
+	// MARK: - description
+
+	func test_description_containsAfter() {
+		// given
+		Given(mockCalendarUtil, .string(for: .any, dateStyle: .any, timeStyle: .any, willReturn: ""))
+
+		// when
+		let description = restriction.description
+
+		// then
+		assertThat(description, containsString("After"))
+	}
+
+	func test_description_containsTimeOfDay() {
+		// given
+		let timeOfDay = TimeOfDay(Date())
+		restriction.timeOfDay = timeOfDay
+
+		let expectedTimeString = "i should be in the description"
+		Given(mockCalendarUtil, .string(for: .any, dateStyle: .any, timeStyle: .any, willReturn: expectedTimeString))
+
+		// when
+		let description = restriction.description
+
+		// then
+		assertThat(description, containsString(expectedTimeString))
+	}
+
+	// MARK: - value(of:)
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// when
@@ -44,6 +75,8 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(actualTimeOfDay, expectedTimeOfDay)
 	}
+
+	// MARK: - set(attribute: to:)
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
@@ -73,6 +106,8 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(restriction.timeOfDay, timeOfDay)
 	}
+
+	// MARK: - samplePasses()
 
 	func testGivenSampleWithNonDateValueForGivenAttribute_samplePasses_throwsTypeMismatchError() {
 		// given
@@ -120,6 +155,66 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(samplePasses)
 	}
 
+	func testGivenNilSampleValue_samplePasses_returnsFalse() throws {
+		// given
+		let sample = SampleCreatorTestUtil.createSample(withValue: nil as Any?, for: Me.restrictedAttribute)
+
+		// when
+		let samplePasses = try restriction.samplePasses(sample)
+
+		// then
+		XCTAssertFalse(samplePasses)
+	}
+
+	// MARK: - ==
+
+	func testGivenSameObjectTwice_equalToOperator_returnsTrue() {
+		// when
+		let equal = restriction == restriction
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
+		// given
+		let other = AfterTimeOfDayAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToOperator_returnsFalse() {
+		// given
+		var timeOfDay = restriction.timeOfDay
+		timeOfDay.hour += 1
+		let other = AfterTimeOfDayAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, timeOfDay: timeOfDay)
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalToOperator_returnsTrue() {
+		// given
+		let other = AfterTimeOfDayAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			timeOfDay: restriction.timeOfDay)
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssert(equal)
+	}
+
+	// MARK: - equalTo(attributed:)
+
 	func testGivenOtherOfDifferentTypes_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = SameDatesSubQueryMatcher()
@@ -141,7 +236,8 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() {
 		// given
-		let otherAttributed: Attributed = AfterTimeOfDayAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+		let otherAttributed: Attributed = AfterTimeOfDayAttributeRestriction(
+			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -154,7 +250,9 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 		// given
 		var timeOfDay = restriction.timeOfDay
 		timeOfDay.hour += 1
-		let otherAttributed: Attributed = AfterTimeOfDayAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, timeOfDay: timeOfDay)
+		let otherAttributed: Attributed = AfterTimeOfDayAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			timeOfDay: timeOfDay)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -165,7 +263,9 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToAttributed_returnsTrue() {
 		// given
-		let otherAttributed: Attributed = AfterTimeOfDayAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, timeOfDay: restriction.timeOfDay)
+		let otherAttributed: Attributed = AfterTimeOfDayAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			timeOfDay: restriction.timeOfDay)
 
 		// when
 		let equal = restriction.equalTo(otherAttributed)
@@ -174,12 +274,15 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
+	// MARK: - equalTo(restriction:)
+
 	func testGivenOtherOfDifferentTypes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		let otherRestriction: AttributeRestriction = LessThanDoubleAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -195,23 +298,26 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = AfterTimeOfDayAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+		let otherRestriction: AttributeRestriction = AfterTimeOfDayAttributeRestriction(
+			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToRestriction_returnsFalse() {
+	func testGivenSameClassWithSameAttributeButDifferentTimesOfDay_equalToRestriction_returnsFalse() {
 		// given
 		var timeOfDay = restriction.timeOfDay
 		timeOfDay.hour += 1
-		let otherAttributed: AttributeRestriction = AfterTimeOfDayAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, timeOfDay: timeOfDay)
+		let otherRestriction: AttributeRestriction = AfterTimeOfDayAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			timeOfDay: timeOfDay)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -219,14 +325,18 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let otherAttributed: AttributeRestriction = AfterTimeOfDayAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, timeOfDay: restriction.timeOfDay)
+		let otherRestriction: AttributeRestriction = AfterTimeOfDayAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			timeOfDay: restriction.timeOfDay)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssert(equal)
 	}
+
+	// MARK: - equalTo()
 
 	func testGivenSameObjectTwice_equalTo_returnsTrue() {
 		// when
@@ -238,10 +348,10 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = AfterTimeOfDayAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
+		let other = AfterTimeOfDayAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssertFalse(equal)
@@ -251,10 +361,10 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 		// given
 		var timeOfDay = restriction.timeOfDay
 		timeOfDay.hour += 1
-		let otherAttributed = AfterTimeOfDayAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, timeOfDay: timeOfDay)
+		let other = AfterTimeOfDayAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, timeOfDay: timeOfDay)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssertFalse(equal)
@@ -262,10 +372,12 @@ class AfterTimeOfDayAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let otherAttributed = AfterTimeOfDayAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, timeOfDay: restriction.timeOfDay)
+		let other = AfterTimeOfDayAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			timeOfDay: restriction.timeOfDay)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssert(equal)
