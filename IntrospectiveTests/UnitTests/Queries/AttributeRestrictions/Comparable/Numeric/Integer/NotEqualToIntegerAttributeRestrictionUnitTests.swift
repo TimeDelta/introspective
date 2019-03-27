@@ -7,21 +7,46 @@
 //
 
 import XCTest
+import Hamcrest
 import SwiftyMocky
 @testable import Introspective
 
-class NotEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
+final class NotEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
-	fileprivate typealias Me = NotEqualToIntegerAttributeRestrictionUnitTests
-	fileprivate static let valueAttribute = NotEqualToIntegerAttributeRestriction.valueAttribute
-	fileprivate static var restrictedAttribute = IntegerAttribute(name: "restricted")
+	private typealias Me = NotEqualToIntegerAttributeRestrictionUnitTests
+	private static let valueAttribute = NotEqualToIntegerAttributeRestriction.valueAttribute
+	private static var restrictedAttribute = IntegerAttribute(name: "restricted")
 
-	fileprivate var restriction: NotEqualToIntegerAttributeRestriction!
+	private var restriction: NotEqualToIntegerAttributeRestriction!
 
 	override func setUp() {
 		super.setUp()
 		restriction = NotEqualToIntegerAttributeRestriction(restrictedAttribute: Me.restrictedAttribute)
 	}
+
+	// MARK: - description
+
+	func test_description_containsValue() {
+		// given
+		let value = 2
+		restriction.value = value
+
+		// when
+		let description = restriction.description
+
+		// then
+		assertThat(description, containsString(String(value)))
+	}
+
+	func test_description_containsNotEqualTo() {
+		// when
+		let description = restriction.description
+
+		// then
+		assertThat(description, containsString("≠"))
+	}
+
+	// MARK: - value(of:)
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// when
@@ -42,6 +67,8 @@ class NotEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(actualValue, expectedValue)
 	}
+
+	// MARK: - set(attribute: to:)
 
 	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
 		// when
@@ -69,6 +96,8 @@ class NotEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 		// then
 		XCTAssertEqual(restriction.value as? Int, expectedValue)
 	}
+
+	// MARK: - samplePasses()
 
 	func testGivenSampleWithNonDateValueForGivenAttribute_samplePasses_throwsTypeMismatchError() {
 		// given
@@ -124,6 +153,80 @@ class NotEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(samplePasses)
 	}
 
+	func testGivenNilSampleValueAndValueIsNotNil_samplePasses_returnsTrue() throws {
+		// given
+		restriction.value = 2.3 as Any
+		let sample = SampleCreatorTestUtil.createSample(withValue: nil as Any?, for: Me.restrictedAttribute)
+
+		// when
+		let samplePasses = try restriction.samplePasses(sample)
+
+		// then
+		XCTAssert(samplePasses)
+	}
+
+	func testGivenNilSampleValueAndValueIsNil_samplePasses_returnsFalse() throws {
+		// given
+		restriction.value = nil as Any?
+		let sample = SampleCreatorTestUtil.createSample(withValue: nil as Any?, for: Me.restrictedAttribute)
+
+		// when
+		let samplePasses = try restriction.samplePasses(sample)
+
+		// then
+		XCTAssertFalse(samplePasses)
+	}
+
+	// MARK: - ==
+
+	func testGivenSameObjectTwice_equalToOperator_returnsTrue() {
+		// when
+		let equal = restriction == restriction
+
+		// then
+		XCTAssert(equal)
+	}
+
+	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
+		// given
+		let other = NotEqualToIntegerAttributeRestriction(
+			restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameClassWithSameAttributeButDifferentValues_equalToOperator_returnsFalse() {
+		// given
+		let other = NotEqualToIntegerAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value as! Int + 1)
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssertFalse(equal)
+	}
+
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalToOperator_returnsTrue() {
+		// given
+		let other = NotEqualToIntegerAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value as! Int)
+
+		// when
+		let equal = restriction == other
+
+		// then
+		XCTAssert(equal)
+	}
+
+	// MARK: - equalTo(attributed:)
+
 	func testGivenOtherOfDifferentTypes_equalToAttributed_returnsFalse() {
 		// given
 		let otherAttributed: Attributed = SameDatesSubQueryMatcher()
@@ -176,12 +279,15 @@ class NotEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
+	// MARK: - equalTo(restriction:)
+
 	func testGivenOtherOfDifferentTypes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
+		let otherRestriction: AttributeRestriction = ContainsStringAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -197,10 +303,11 @@ class NotEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = NotEqualToIntegerAttributeRestriction(restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+		let otherRestriction: AttributeRestriction = NotEqualToIntegerAttributeRestriction(
+			restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -208,10 +315,12 @@ class NotEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentValues_equalToRestriction_returnsFalse() {
 		// given
-		let otherAttributed: AttributeRestriction = NotEqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value as! Int + 1)
+		let otherRestriction: AttributeRestriction = NotEqualToIntegerAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value as! Int + 1)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssertFalse(equal)
@@ -219,14 +328,18 @@ class NotEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
 		// given
-		let otherAttributed: AttributeRestriction = NotEqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value as! Int)
+		let otherRestriction: AttributeRestriction = NotEqualToIntegerAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value as! Int)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(otherRestriction)
 
 		// then
 		XCTAssert(equal)
 	}
+
+	// MARK: - equalTo()
 
 	func testGivenSameObjectTwice_equalTo_returnsTrue() {
 		// when
@@ -238,10 +351,11 @@ class NotEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = NotEqualToIntegerAttributeRestriction(restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
+		let other = NotEqualToIntegerAttributeRestriction(
+			restrictedAttribute: IntegerAttribute(name: "not the same attribute"))
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssertFalse(equal)
@@ -249,10 +363,12 @@ class NotEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameClassWithSameAttributeButDifferentValues_equalTo_returnsFalse() {
 		// given
-		let otherAttributed = NotEqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value as! Int + 1)
+		let other = NotEqualToIntegerAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value as! Int + 1)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssertFalse(equal)
@@ -260,10 +376,12 @@ class NotEqualToIntegerAttributeRestrictionUnitTests: UnitTest {
 
 	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() {
 		// given
-		let otherAttributed = NotEqualToIntegerAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, value: restriction.value as! Int)
+		let other = NotEqualToIntegerAttributeRestriction(
+			restrictedAttribute: restriction.restrictedAttribute,
+			value: restriction.value as! Int)
 
 		// when
-		let equal = restriction.equalTo(otherAttributed)
+		let equal = restriction.equalTo(other)
 
 		// then
 		XCTAssert(equal)
