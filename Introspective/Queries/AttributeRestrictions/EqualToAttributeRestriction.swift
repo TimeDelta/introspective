@@ -57,6 +57,7 @@ public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 		if !attribute.equalTo(valueAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
+		let _ = try valueAttribute.convertToDisplayableString(from: value)
 		self.value = value
 	}
 
