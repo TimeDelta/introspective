@@ -52,6 +52,7 @@ public class NotEqualToAttributeRestriction: AnyAttributeRestriction, Equatable 
 	}
 
 	public override func set(attribute: Attribute, to value: Any?) throws {
+		let _ = try valueAttribute.convertToDisplayableString(from: value)
 		if !attribute.equalTo(valueAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
@@ -60,7 +61,7 @@ public class NotEqualToAttributeRestriction: AnyAttributeRestriction, Equatable 
 
 	public override func samplePasses(_ sample: Sample) throws -> Bool {
 		let actualValue = try sample.value(of: restrictedAttribute)
-		return try !areEqual(actualValue as Any, value)
+		return try !areEqual(actualValue as Any?, value)
 	}
 
 	public func equalTo(_ otherAttributed: Attributed) -> Bool {

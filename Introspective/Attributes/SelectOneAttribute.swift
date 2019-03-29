@@ -95,7 +95,8 @@ public class TypedSelectOneAttribute<Type>: AttributeBase, SelectOneAttribute {
 	// MARK: - Select One Attribute Functions
 
 	public final func valuesAreEqual(_ first: Any?, _ second: Any?) -> Bool {
-		if first == nil && second == nil { return true }
+		guard let first = first else { return second == nil }
+		guard let second = second else { return false }
 		guard let castedFirst = first as? Type else {
 			log.error("Failed to cast first value when testing equality: %@", String(describing: first))
 			return false
