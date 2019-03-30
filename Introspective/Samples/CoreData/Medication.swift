@@ -40,6 +40,23 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed {
 		return "A substance used for medical treatment, especially a medicine or drug."
 	}
 
+	public final var startedOn: Date? {
+		get {
+			if let storedStartedOn = storedStartedOn {
+				return DependencyInjector.util.coreDataSample.convertTimeZoneIfApplicable(
+					for: storedStartedOn,
+					timeZoneId: startedOnTimeZoneId)
+			}
+			return nil
+		}
+		set {
+			storedStartedOn = newValue
+			if source == Sources.ActivitySourceNum.introspective.rawValue && startedOnTimeZoneId == nil {
+				startedOnTimeZoneId = DependencyInjector.util.calendar.currentTimeZone().identifier
+			}
+		}
+	}
+
 	// MARK: - Attributed Functions
 
 	public final func value(of attribute: Attribute) throws -> Any? {
@@ -57,9 +74,6 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed {
 		}
 		if attribute.equalTo(Me.notes) {
 			return notes
-		}
-		if attribute.equalTo(Me.sourceAttribute) {
-			return Sources.resolveMedicationSource(source)
 		}
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
@@ -92,7 +106,10 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
 			let castedValue = value as! Date?
-			startedOn = castedValue
+			storedStartedOn = castedValue
+			if source == Sources.MedicationSourceNum.introspective.rawValue && startedOnTimeZoneId == nil {
+				startedOnTimeZoneId = DependencyInjector.util.calendar.currentTimeZone().identifier
+			}
 			return
 		}
 		if attribute.equalTo(Me.notes) {
@@ -114,6 +131,9 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed {
 
 	public final func setSource(_ source: Sources.MedicationSourceNum) {
 		self.source = source.rawValue
+		if source == Sources.MedicationSourceNum.introspective && startedOnTimeZoneId == nil {
+			startedOnTimeZoneId = DependencyInjector.util.calendar.currentTimeZone().identifier
+		}
 	}
 
 	// MARK: - Equatable
@@ -141,4 +161,58 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed {
 		let notesText = notes ?? "nil"
 		return "Medication named '\(name)' with dosage of '\(dosageText)', taking '\(frequencyText)' starting on '\(startedOnText)' with notes '\(notesText)'"
 	}
+}
+
+// MARK: - CoreData stored properties
+
+extension Medication {
+
+	@nonobjc public class func fetchRequest() -> NSFetchRequest<Medication> {
+		return NSFetchRequest<Medication>(entityName: "Medication")
+	}
+
+	@NSManaged public var name: String
+	@NSManaged public var frequency: Frequency?
+	@NSManaged public var storedStartedOn: Date?
+	@NSManaged fileprivate var startedOnTimeZoneId: String?
+	@NSManaged public var notes: String?
+	@NSManaged public var dosage: Dosage?
+	@NSManaged public var recordScreenIndex: Int16
+	@NSManaged public var doses: NSOrderedSet
+	@NSManaged public var source: Int16
+}
+
+// MARK: - Generated accessors for doses
+
+extension Medication {
+
+	@objc(insertObject:inDosesAtIndex:)
+	@NSManaged public func insertIntoDoses(_ value: MedicationDose, at idx: Int)
+
+	@objc(removeObjectFromDosesAtIndex:)
+	@NSManaged public func removeFromDoses(at idx: Int)
+
+	@objc(insertDoses:atIndexes:)
+	@NSManaged public func insertIntoDoses(_ values: [MedicationDose], at indexes: NSIndexSet)
+
+	@objc(removeDosesAtIndexes:)
+	@NSManaged public func removeFromDoses(at indexes: NSIndexSet)
+
+	@objc(replaceObjectInDosesAtIndex:withObject:)
+	@NSManaged public func replaceDoses(at idx: Int, with value: MedicationDose)
+
+	@objc(replaceDosesAtIndexes:withDoses:)
+	@NSManaged public func replaceDoses(at indexes: NSIndexSet, with values: [MedicationDose])
+
+	@objc(addDosesObject:)
+	@NSManaged public func addToDoses(_ value: MedicationDose)
+
+	@objc(removeDosesObject:)
+	@NSManaged public func removeFromDoses(_ value: MedicationDose)
+
+	@objc(addDoses:)
+	@NSManaged public func addToDoses(_ values: NSOrderedSet)
+
+	@objc(removeDoses:)
+	@NSManaged public func removeFromDoses(_ values: NSOrderedSet)
 }

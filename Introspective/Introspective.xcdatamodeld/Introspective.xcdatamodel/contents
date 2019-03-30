@@ -53,7 +53,8 @@
         <attribute name="notes" optional="YES" attributeType="String" spotlightIndexingEnabled="YES" syncable="YES"/>
         <attribute name="recordScreenIndex" attributeType="Integer 16" minValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="startedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="startedOnTimeZoneId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="storedStartedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="doses" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="MedicationDose" inverseName="medication" inverseEntity="MedicationDose" syncable="YES"/>
     </entity>
     <entity name="MedicationDose" representedClassName=".MedicationDose" syncable="YES">
@@ -94,7 +95,7 @@
         <element name="ATrackerActivityImporter" positionX="-36" positionY="72" width="128" height="60"/>
         <element name="EasyPillMedicationDoseImporter" positionX="-36" positionY="63" width="128" height="60"/>
         <element name="EasyPillMedicationImporter" positionX="-45" positionY="54" width="128" height="60"/>
-        <element name="Medication" positionX="-54" positionY="9" width="128" height="165"/>
+        <element name="Medication" positionX="-54" positionY="9" width="128" height="180"/>
         <element name="MedicationDose" positionX="-45" positionY="45" width="128" height="120"/>
         <element name="Mood" positionX="-63" positionY="-18" width="128" height="150"/>
         <element name="Settings" positionX="-63" positionY="9" width="128" height="150"/>

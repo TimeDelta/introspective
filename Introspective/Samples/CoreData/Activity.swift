@@ -58,7 +58,9 @@ public class Activity: NSManagedObject, CoreDataSample {
 
 	public final var start: Date {
 		get {
-			return DependencyInjector.util.coreDataSample.convertTimeZoneIfApplicable(for: startDate, timeZoneId: startDateTimeZoneId)
+			return DependencyInjector.util.coreDataSample.convertTimeZoneIfApplicable(
+				for: startDate,
+				timeZoneId: startDateTimeZoneId)
 		}
 		set {
 			startDate = newValue
@@ -70,7 +72,9 @@ public class Activity: NSManagedObject, CoreDataSample {
 	public final var end: Date? {
 		get {
 			if let endDate = endDate {
-				return DependencyInjector.util.coreDataSample.convertTimeZoneIfApplicable(for: endDate, timeZoneId: endDateTimeZoneId)
+				return DependencyInjector.util.coreDataSample.convertTimeZoneIfApplicable(
+					for: endDate,
+					timeZoneId: endDateTimeZoneId)
 			}
 			return nil
 		}

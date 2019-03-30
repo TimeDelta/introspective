@@ -185,6 +185,28 @@ final class MedicationFunctionalTests: FunctionalTest {
 		XCTAssertEqual(expectedStartedOn, medication.startedOn)
 	}
 
+	func testGivenStartedOnDateAttributeAndStartedOnDateTimeZoneNotYetSet_set_setsStartedOnDateTimeZone() throws {
+		// given
+		let timeZoneOnSet = TimeZone(abbreviation: "PST")!
+		let timeZoneOnAccess = TimeZone(abbreviation: "EST")!
+		let calendarUtil = CalendarUtilImpl()
+		utilFactory.calendar = calendarUtil
+		calendarUtil.setTimeZone(timeZoneOnSet)
+
+		DependencyInjector.settings.setConvertTimeZones(true)
+		let transaction = DependencyInjector.db.transaction()
+		let medication = try transaction.new(Medication.self)
+		let startDate = Date()
+
+		// when
+		try medication.set(attribute: Medication.startedOn, to: startDate)
+
+		// then
+		let expectedDate = DependencyInjector.util.calendar.convert(startDate, from: timeZoneOnSet, to: timeZoneOnAccess)
+		calendarUtil.setTimeZone(timeZoneOnAccess)
+		XCTAssertEqual(medication.startedOn, expectedDate)
+	}
+
 	func testGivenNotesAttributeAndWrongValueType_set_throwsTypeMismatchError() {
 		// given
 		let medication = MedicationDataTestUtil.createMedication()
@@ -274,6 +296,29 @@ final class MedicationFunctionalTests: FunctionalTest {
 
 		// then
 		XCTAssertEqual(medication.source, newSource)
+	}
+
+	func testGivenIntrospectiveWithTimeZoneNotSet_setSource_setsStartedOnDateTimeZone() throws {
+		// given
+		let timeZoneOnSet = TimeZone(abbreviation: "PST")!
+		let timeZoneOnAccess = TimeZone(abbreviation: "EST")!
+		let calendarUtil = CalendarUtilImpl()
+		utilFactory.calendar = calendarUtil
+		calendarUtil.setTimeZone(timeZoneOnSet)
+
+		DependencyInjector.settings.setConvertTimeZones(true)
+		let transaction = DependencyInjector.db.transaction()
+		let medication = try transaction.new(Medication.self)
+
+		// when
+		medication.setSource(.introspective)
+
+		// then
+		let startedOnDate = Date()
+		medication.startedOn = startedOnDate
+		let expectedDate = DependencyInjector.util.calendar.convert(startedOnDate, from: timeZoneOnSet, to: timeZoneOnAccess)
+		calendarUtil.setTimeZone(timeZoneOnAccess)
+		XCTAssertEqual(medication.startedOn, expectedDate)
 	}
 
 	// MARK: - ==
