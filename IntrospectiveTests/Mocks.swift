@@ -676,6 +676,20 @@ open class AttributeMock: Attribute, Mock {
 
 
 
+    open func isValid(value: Any?) -> Bool {
+        addInvocation(.m_isValid__value_value(Parameter<Any?>.value(`value`)))
+		let perform = methodPerformValue(.m_isValid__value_value(Parameter<Any?>.value(`value`))) as? (Any?) -> Void
+		perform?(`value`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_isValid__value_value(Parameter<Any?>.value(`value`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for isValid(value: Any?). Use given")
+			Failure("Stub return value not specified for isValid(value: Any?). Use given")
+		}
+		return __value
+    }
+
     open func equalTo(_ otherAttribute: Attribute) -> Bool {
         addInvocation(.m_equalTo__otherAttribute(Parameter<Attribute>.value(`otherAttribute`)))
 		let perform = methodPerformValue(.m_equalTo__otherAttribute(Parameter<Attribute>.value(`otherAttribute`))) as? (Attribute) -> Void
@@ -708,6 +722,7 @@ open class AttributeMock: Attribute, Mock {
 
 
     fileprivate enum MethodType {
+        case m_isValid__value_value(Parameter<Any?>)
         case m_equalTo__otherAttribute(Parameter<Attribute>)
         case m_convertToDisplayableString__from_value(Parameter<Any?>)
         case p_name_get
@@ -718,6 +733,9 @@ open class AttributeMock: Attribute, Mock {
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
+            case (.m_isValid__value_value(let lhsValue), .m_isValid__value_value(let rhsValue)):
+                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                return true 
             case (.m_equalTo__otherAttribute(let lhsOtherattribute), .m_equalTo__otherAttribute(let rhsOtherattribute)):
                 guard Parameter.compare(lhs: lhsOtherattribute, rhs: rhsOtherattribute, with: matcher) else { return false } 
                 return true 
@@ -735,6 +753,7 @@ open class AttributeMock: Attribute, Mock {
 
         func intValue() -> Int {
             switch self {
+            case let .m_isValid__value_value(p0): return p0.intValue
             case let .m_equalTo__otherAttribute(p0): return p0.intValue
             case let .m_convertToDisplayableString__from_value(p0): return p0.intValue
             case .p_name_get: return 0
@@ -770,11 +789,21 @@ open class AttributeMock: Attribute, Mock {
             return Given(method: .p_optional_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
+        public static func isValid(value: Parameter<Any?>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_isValid__value_value(`value`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func equalTo(_ otherAttribute: Parameter<Attribute>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherAttribute(`otherAttribute`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func convertToDisplayableString(from value: Parameter<Any?>, willReturn: String...) -> MethodStub {
             return Given(method: .m_convertToDisplayableString__from_value(`value`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func isValid(value: Parameter<Any?>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_isValid__value_value(`value`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
         }
         public static func equalTo(_ otherAttribute: Parameter<Attribute>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
@@ -798,6 +827,7 @@ open class AttributeMock: Attribute, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
+        public static func isValid(value: Parameter<Any?>) -> Verify { return Verify(method: .m_isValid__value_value(`value`))}
         public static func equalTo(_ otherAttribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_equalTo__otherAttribute(`otherAttribute`))}
         public static func convertToDisplayableString(from value: Parameter<Any?>) -> Verify { return Verify(method: .m_convertToDisplayableString__from_value(`value`))}
         public static var name: Verify { return Verify(method: .p_name_get) }
@@ -811,6 +841,9 @@ open class AttributeMock: Attribute, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
+        public static func isValid(value: Parameter<Any?>, perform: @escaping (Any?) -> Void) -> Perform {
+            return Perform(method: .m_isValid__value_value(`value`), performs: perform)
+        }
         public static func equalTo(_ otherAttribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherAttribute(`otherAttribute`), performs: perform)
         }

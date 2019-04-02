@@ -19,7 +19,75 @@ final class TextAttributeUnitTests: UnitTest, TextAttributeDelegate {
 	private final var isValidDelegateCalled = false
 	private final var errorMessageDelegateCalled = false
 
-	// MARK: - isValid()
+	final override func setUp() {
+		super.setUp()
+		isValidDelegateCalled = false
+		errorMessageDelegateCalled = false
+	}
+
+	// MARK: - isValid(value: Any?)
+
+	func testGivenNilValueAndOptionalAttribute_isValid_returnsTrue() {
+		// given
+		useOptionalAttribute()
+
+		// when
+		let valid = attribute.isValid(value: nil as Any?)
+
+		// then
+		XCTAssert(valid)
+	}
+
+	func testGivenNilValueAndRequiredAttribute_isValid_returnsFalse() {
+		// given
+		useRequiredAttribute()
+
+		// when
+		let valid = attribute.isValid(value: nil as Any?)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
+	func testGivenWrongValueType_isValid_returnsFalse() {
+		// given
+		let value = GenericError("")
+		useOptionalAttribute()
+
+		// when
+		let valid = attribute.isValid(value: value)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
+	func testGivenCorrectValueTypeAndDelegateSaysValid_isValid_returnsTrue() {
+		// given
+		let value = ""
+		isValidReturnValue = true
+		useOptionalAttribute(withDelegate: self)
+
+		// when
+		let valid = attribute.isValid(value: value as Any?)
+
+		// then
+		XCTAssert(valid)
+	}
+
+	func testGivenCorrectValueTypeAndDelegateSaysInvalid_isValid_returnsFalse() {
+		// given
+		let value = ""
+		isValidReturnValue = false
+		useOptionalAttribute(withDelegate: self)
+
+		// when
+		let valid = attribute.isValid(value: value as Any?)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
+	// MARK: - isValid(value: String?)
 
 	func testGivenOptionalAttributeWithNoDelegateAndNonNilValue_isValid_returnsTrue() {
 		// given

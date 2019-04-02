@@ -107,6 +107,20 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
 		return __value
     }
 
+    open func attributeValuesAreValid() -> Bool {
+        addInvocation(.m_attributeValuesAreValid)
+		let perform = methodPerformValue(.m_attributeValuesAreValid) as? () -> Void
+		perform?()
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_attributeValuesAreValid).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for attributeValuesAreValid(). Use given")
+			Failure("Stub return value not specified for attributeValuesAreValid(). Use given")
+		}
+		return __value
+    }
+
     open func value(of attribute: Attribute) throws -> Any? {
         addInvocation(.m_value__of_attribute(Parameter<Attribute>.value(`attribute`)))
 		let perform = methodPerformValue(.m_value__of_attribute(Parameter<Attribute>.value(`attribute`))) as? (Attribute) -> Void
@@ -153,6 +167,7 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
     fileprivate enum MethodType {
         case m_getSamples__from_querySamplesmatching_subQuerySamples(Parameter<GenericAttribute>, Parameter<[Sample]>)
         case m_equalTo__otherMatcher(Parameter<SubQueryMatcher>)
+        case m_attributeValuesAreValid
         case m_value__of_attribute(Parameter<Attribute>)
         case m_set__attribute_attributeto_value(Parameter<Attribute>, Parameter<Any?>)
         case m_equalTo__otherAttributed(Parameter<Attributed>)
@@ -170,6 +185,8 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
                 return true 
             case (.m_equalTo__otherMatcher(let lhsOthermatcher), .m_equalTo__otherMatcher(let rhsOthermatcher)):
                 guard Parameter.compare(lhs: lhsOthermatcher, rhs: rhsOthermatcher, with: matcher) else { return false } 
+                return true 
+            case (.m_attributeValuesAreValid, .m_attributeValuesAreValid):
                 return true 
             case (.m_value__of_attribute(let lhsAttribute), .m_value__of_attribute(let rhsAttribute)):
                 guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
@@ -194,6 +211,7 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
             switch self {
             case let .m_getSamples__from_querySamplesmatching_subQuerySamples(p0, p1): return p0.intValue + p1.intValue
             case let .m_equalTo__otherMatcher(p0): return p0.intValue
+            case .m_attributeValuesAreValid: return 0
             case let .m_value__of_attribute(p0): return p0.intValue
             case let .m_set__attribute_attributeto_value(p0, p1): return p0.intValue + p1.intValue
             case let .m_equalTo__otherAttributed(p0): return p0.intValue
@@ -233,6 +251,9 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
         public static func equalTo(_ otherMatcher: Parameter<SubQueryMatcher>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherMatcher(`otherMatcher`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func attributeValuesAreValid(willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_attributeValuesAreValid, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func value(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
             return Given(method: .m_value__of_attribute(`attribute`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
@@ -242,6 +263,13 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
         public static func equalTo(_ otherMatcher: Parameter<SubQueryMatcher>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherMatcher(`otherMatcher`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func attributeValuesAreValid(willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_attributeValuesAreValid, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
@@ -290,6 +318,7 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
 
         public static func getSamples<QuerySampleType>(from querySamples: Parameter<[QuerySampleType]>, matching subQuerySamples: Parameter<[Sample]>) -> Verify where QuerySampleType:Sample { return Verify(method: .m_getSamples__from_querySamplesmatching_subQuerySamples(`querySamples`.wrapAsGeneric(), `subQuerySamples`))}
         public static func equalTo(_ otherMatcher: Parameter<SubQueryMatcher>) -> Verify { return Verify(method: .m_equalTo__otherMatcher(`otherMatcher`))}
+        public static func attributeValuesAreValid() -> Verify { return Verify(method: .m_attributeValuesAreValid)}
         public static func value(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_value__of_attribute(`attribute`))}
         public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>) -> Verify { return Verify(method: .m_set__attribute_attributeto_value(`attribute`, `value`))}
         public static func equalTo(_ otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
@@ -309,6 +338,9 @@ class SubQueryMatcherMock: SubQueryMatcher, Mock {
         }
         public static func equalTo(_ otherMatcher: Parameter<SubQueryMatcher>, perform: @escaping (SubQueryMatcher) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherMatcher(`otherMatcher`), performs: perform)
+        }
+        public static func attributeValuesAreValid(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_attributeValuesAreValid, performs: perform)
         }
         public static func value(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
             return Perform(method: .m_value__of_attribute(`attribute`), performs: perform)

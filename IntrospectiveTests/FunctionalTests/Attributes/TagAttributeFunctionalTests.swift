@@ -14,6 +14,68 @@ final class TagAttributeFunctionalTests: FunctionalTest {
 
 	private final var attribute: TagAttribute!
 
+	// MARK: - isValid(value:)
+
+	func testGivenNilValueAndOptionalAttribute_isValid_returnsTrue() {
+		// given
+		useOptionalAttribute()
+
+		// when
+		let valid = attribute.isValid(value: nil as Any?)
+
+		// then
+		XCTAssert(valid)
+	}
+
+	func testGivenNilValueAndRequiredAttribute_isValid_returnsFalse() {
+		// given
+		useRequiredAttribute()
+
+		// when
+		let valid = attribute.isValid(value: nil as Any?)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
+	func testGivenWrongValueType_isValid_returnsFalse() {
+		// given
+		let value = GenericError("")
+		useOptionalAttribute()
+
+		// when
+		let valid = attribute.isValid(value: value)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
+	func testGivenCorrectValueTypeAndValueIsPossibleValue_isValid_returnsTrue() {
+		// given
+		useOptionalAttribute()
+		let value = TagDataTestUtil.createTag(name: "tag1")
+
+		// when
+		let valid = attribute.isValid(value: value)
+
+		// then
+		XCTAssert(valid)
+	}
+
+	func testGivenCorrectValueTypeAndValueIsNotPossibleValue_isValid_returnsFalse() throws {
+		// given
+		useOptionalAttribute()
+		let transaction = DependencyInjector.db.transaction()
+		let value = try transaction.new(Tag.self)
+		value.name = "tag name"
+
+		// when
+		let valid = attribute.isValid(value: value)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
 	// MARK: - indexOf()
 
 	func testGivenWrongTypeOfPossibleValue_indexOf_returnsNil() {

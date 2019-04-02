@@ -13,6 +13,7 @@ public protocol Attributed: class, CustomStringConvertible, CustomDebugStringCon
 	var attributedName: String { get }
 	var attributes: [Attribute] { get }
 
+	func attributeValuesAreValid() -> Bool
 	func value(of attribute: Attribute) throws -> Any?
 	func set(attribute: Attribute, to value: Any?) throws
 
@@ -22,6 +23,23 @@ public protocol Attributed: class, CustomStringConvertible, CustomDebugStringCon
 extension Attributed {
 
 	public var debugDescription: String { return description }
+
+	public func attributeValuesAreValid() -> Bool {
+		for attribute in attributes {
+			do {
+				if !attribute.isValid(value: try value(of: attribute)) {
+					return false
+				}
+			} catch {
+				Log().error(
+					"Failed to get value of %@ from %@ while validating attribute values: %@",
+					attribute.name,
+					attributedName,
+					errorInfo(error))
+			}
+		}
+		return true
+	}
 
 	public func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if type(of: self) != type(of: otherAttributed) { return false }

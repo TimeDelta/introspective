@@ -30,6 +30,16 @@ public final class TextAttribute: AttributeBase, ComparableAttribute {
 		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional)
 	}
 
+	public final override func isValid(value: Any?) -> Bool {
+		if value == nil {
+			return optional
+		}
+		if let castedValue = value as? String {
+			return isValid(value: castedValue)
+		}
+		return false
+	}
+
 	public final func isValid(value: String?) -> Bool {
 		if value == nil { return optional }
 		return delegate?.isValid(value: value) ?? true

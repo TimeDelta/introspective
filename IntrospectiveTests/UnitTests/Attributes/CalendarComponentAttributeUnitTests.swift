@@ -14,12 +14,72 @@ final class CalendarComponentAttributeUnitTests: UnitTest {
 
 	private final var attribute: CalendarComponentAttribute!
 
+	// MARK: - isValid(value:)
+
+	func testGivenNilValueAndOptionalAttribute_isValid_returnsTrue() {
+		// given
+		useOptionalAttribute()
+
+		// when
+		let valid = attribute.isValid(value: nil as Any?)
+
+		// then
+		XCTAssert(valid)
+	}
+
+	func testGivenNilValueAndRequiredAttribute_isValid_returnsFalse() {
+		// given
+		useRequiredAttribute()
+
+		// when
+		let valid = attribute.isValid(value: nil as Any?)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
+	func testGivenWrongValueType_isValid_returnsFalse() {
+		// given
+		let value = GenericError("")
+		useOptionalAttribute()
+
+		// when
+		let valid = attribute.isValid(value: value)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
+	func testGivenCorrectValueTypeAndValueIsPossibleValue_isValid_returnsTrue() {
+		// given
+		useOptionalAttribute()
+		let value = attribute.possibleValues[0]
+
+		// when
+		let valid = attribute.isValid(value: value)
+
+		// then
+		XCTAssert(valid)
+	}
+
+	func testGivenCorrectValueTypeAndValueIsNotPossibleValue_isValid_returnsFalse() {
+		// given
+		useOptionalAttribute()
+		let value = getImpossibleValue()
+
+		// when
+		let valid = attribute.isValid(value: value)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
 	// MARK: - indexOf()
 
 	func testGivenSpecifiedValueNotInPossibleValues_indexOf_returnsNil() {
 		// given
 		useRequiredAttribute()
-		let value = Calendar.Component.day
+		let value = getImpossibleValue()
 
 		// when
 		let index = attribute.indexOf(possibleValue: value)
@@ -392,5 +452,10 @@ final class CalendarComponentAttributeUnitTests: UnitTest {
 			variableName: "variable name",
 			optional: false,
 			possibleValues: [.weekOfYear, .hour, .era])
+	}
+
+	private final func getImpossibleValue() -> Calendar.Component {
+		let possibleValues = attribute.possibleValues as! [Calendar.Component]
+		return Calendar.Component.allValues.filter{ value in !possibleValues.contains(where: { $0 == value }) }[0]
 	}
 }

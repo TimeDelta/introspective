@@ -14,6 +14,54 @@ final class FrequencyAttributeUnitTests: UnitTest {
 
 	private final var attribute: FrequencyAttribute!
 
+	// MARK: - isValid(value:)
+
+	func testGivenNilValueAndOptionalAttribute_isValid_returnsTrue() {
+		// given
+		useOptionalAttribute()
+
+		// when
+		let valid = attribute.isValid(value: nil as Any?)
+
+		// then
+		XCTAssert(valid)
+	}
+
+	func testGivenNilValueAndRequiredAttribute_isValid_returnsFalse() {
+		// given
+		useRequiredAttribute()
+
+		// when
+		let valid = attribute.isValid(value: nil as Any?)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
+	func testGivenWrongValueType_isValid_returnsFalse() {
+		// given
+		let value = GenericError("")
+		useOptionalAttribute()
+
+		// when
+		let valid = attribute.isValid(value: value)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
+	func testGivenCorrectValueType_isValid_returnsTrue() {
+		// given
+		let value = Frequency(3, .day)!
+		useOptionalAttribute()
+
+		// when
+		let valid = attribute.isValid(value: value)
+
+		// then
+		XCTAssert(valid)
+	}
+
 	// MARK: - convertToDisplayableString()
 
 	func testGivenNonFrequencyValue_convertToDisplayableString_throwsTypeMismatchError() {

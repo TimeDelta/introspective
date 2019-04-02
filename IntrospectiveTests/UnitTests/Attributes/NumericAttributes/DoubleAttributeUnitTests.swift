@@ -13,7 +13,55 @@ class DoubleAttributeUnitTests: UnitTest {
 
 	private final var attribute: DoubleAttribute!
 
-	// MARK: - isValid()
+	// MARK: - isValid(value: Any?)
+
+	func testGivenNilValueAndOptionalAttribute_isValid_returnsTrue() {
+		// given
+		useOptionalAttribute()
+
+		// when
+		let valid = attribute.isValid(value: nil as Any?)
+
+		// then
+		XCTAssert(valid)
+	}
+
+	func testGivenNilValueAndRequiredAttribute_isValid_returnsFalse() {
+		// given
+		useRequiredAttribute()
+
+		// when
+		let valid = attribute.isValid(value: nil as Any?)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
+	func testGivenWrongValueType_isValid_returnsFalse() {
+		// given
+		let value = GenericError("")
+		useOptionalAttribute()
+
+		// when
+		let valid = attribute.isValid(value: value)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
+	func testGivenCorrectValueType_isValid_returnsTrue() {
+		// given
+		let value = 4.0
+		useOptionalAttribute()
+
+		// when
+		let valid = attribute.isValid(value: value)
+
+		// then
+		XCTAssert(valid)
+	}
+
+	// MARK: - isValid(value: String)
 
 	func testGivenAttributeIsOptionalAndValueIsEmpty_isValid_returnsTrue() {
 		// given

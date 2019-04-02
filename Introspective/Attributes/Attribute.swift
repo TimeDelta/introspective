@@ -21,6 +21,7 @@ public protocol Attribute {
 	/// This represents whether or not this attribute is optional
 	var optional: Bool { get }
 
+	func isValid(value: Any?) -> Bool
 	func equalTo(_ otherAttribute: Attribute) -> Bool
 	func convertToDisplayableString(from value: Any?) throws -> String
 }
@@ -57,6 +58,10 @@ public class AttributeBase: Attribute {
 		self.extendedDescription = description
 		self.variableName = variableName
 		self.optional = optional
+	}
+
+	public func isValid(value: Any?) -> Bool {
+		return value != nil || optional
 	}
 
 	public func convertToDisplayableString(from value: Any?) throws -> String {

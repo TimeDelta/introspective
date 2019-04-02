@@ -21,6 +21,66 @@ final class AttributeSelectAttributeUnitTests: UnitTest {
 
 	private final var attribute: AttributeSelectAttribute!
 
+	// MARK: - isValid(value:)
+
+	func testGivenNilValueAndOptionalAttribute_isValid_returnsTrue() {
+		// given
+		useOptionalAttribute()
+
+		// when
+		let valid = attribute.isValid(value: nil as Any?)
+
+		// then
+		XCTAssert(valid)
+	}
+
+	func testGivenNilValueAndRequiredAttribute_isValid_returnsFalse() {
+		// given
+		useRequiredAttribute()
+
+		// when
+		let valid = attribute.isValid(value: nil as Any?)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
+	func testGivenWrongValueType_isValid_returnsFalse() {
+		// given
+		let value = GenericError("")
+		useOptionalAttribute()
+
+		// when
+		let valid = attribute.isValid(value: value)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
+	func testGivenCorrectValueTypeAndValueIsPossibleValue_isValid_returnsTrue() {
+		// given
+		useOptionalAttribute()
+		let value = attribute.possibleValues[0]
+
+		// when
+		let valid = attribute.isValid(value: value)
+
+		// then
+		XCTAssert(valid)
+	}
+
+	func testGivenCorrectValueTypeAndValueIsNotPossibleValue_isValid_returnsFalse() {
+		// given
+		useOptionalAttribute()
+		let value = TextAttribute(name: "This attribute is not a possible value")
+
+		// when
+		let valid = attribute.isValid(value: value)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
 	// MARK: - indexOf()
 
 	func testGivenSpecifiedValueNotInPossibleValues_indexOf_returnsNil() {

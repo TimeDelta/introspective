@@ -10,6 +10,10 @@ import Foundation
 
 public final class BooleanAttribute: AttributeBase {
 
+	public final override func isValid(value: Any?) -> Bool {
+		return (value == nil && optional) || value as? Bool != nil
+	}
+
 	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }

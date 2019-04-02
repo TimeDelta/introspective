@@ -18,6 +18,10 @@ public final class IntegerAttribute: AttributeBase, NumericAttribute {
 		return "\(invalidValue) is not an integer"
 	}
 
+	public final override func isValid(value: Any?) -> Bool {
+		return (value == nil && optional) || value as? Int != nil
+	}
+
 	public final func convertToValue(from strValue: String) throws -> Any? {
 		if optional && strValue == "" { return nil }
 		guard isValid(value: strValue), let intValue = Int(strValue) else {

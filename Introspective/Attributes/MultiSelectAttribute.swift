@@ -104,6 +104,30 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 
 	// MARK: SelectAttribute Functions
 
+	public final override func isValid(value: Any?) -> Bool {
+		if let nonNilValue = value {
+			if let castedValues = nonNilValue as? [Type] {
+				return allValuesArePossible(castedValues)
+			} else if let castedValues = value as? Set<Type> {
+				return allValuesArePossible(castedValues)
+			}
+			return false
+		}
+		return optional
+	}
+
+	private final func allValuesArePossible<C : Collection>(_ values: C) -> Bool where C.Element == Type {
+		if values.count == 0 {
+			return optional
+		}
+		for currentValue in values {
+			if indexOf(possibleValue: currentValue) == nil {
+				return false
+			}
+		}
+		return true
+	}
+
 	public final func indexOf(possibleValue: Any, in values: [Any]? = nil) -> Int? {
 		guard let castedValue = possibleValue as? Type else {
 			return nil

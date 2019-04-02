@@ -45,6 +45,8 @@ final class AttributedChooserViewController: UIViewController {
 	private final let verticalSpacing = CGFloat(5)
 	private final var initialSetDone = false
 
+	private final var acceptButton: UIButton!
+
 	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
@@ -91,6 +93,7 @@ final class AttributedChooserViewController: UIViewController {
 			do {
 				let attribute = attributeViewControllers[controllerIndex].attribute!
 				try currentValue.set(attribute: attribute, to: value(for: .attributeValue, from: notification))
+				updateAcceptButtonStatus()
 				sendValueChangeNotification()
 			} catch {
 				log.error("Failed to set attribute value: %@", errorInfo(error))
@@ -202,11 +205,12 @@ final class AttributedChooserViewController: UIViewController {
 	}
 
 	private final func createAndAddAcceptButton(lastView: UIView?) {
-		let acceptButton = UIButton(type: .custom)
+		acceptButton = UIButton(type: .custom)
 		acceptButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
-		acceptButton.backgroundColor = .black
 		acceptButton.setTitleColor(.white, for: .normal)
+		acceptButton.setTitleColor(.black, for: .disabled)
 		acceptButton.setTitle("Save", for: .normal)
+		updateAcceptButtonStatus()
 		acceptButton.translatesAutoresizingMaskIntoConstraints = false
 		acceptButton.accessibilityIdentifier = saveButtonAccessibilityIdentifier
 		acceptButton.accessibilityLabel = saveButtonAccessibilityIdentifier
@@ -225,6 +229,15 @@ final class AttributedChooserViewController: UIViewController {
 			// this constraint is required for the scroll view to scroll
 			scrollContentView.bottomAnchor.constraint(equalTo: acceptButton.bottomAnchor),
 		])
+	}
+
+	private final func updateAcceptButtonStatus() {
+		acceptButton.isEnabled = currentValue.attributeValuesAreValid()
+		if acceptButton.isEnabled {
+			acceptButton.backgroundColor = .black
+		} else {
+			acceptButton.backgroundColor = .gray
+		}
 	}
 
 	// MARK: Constraint Helper Functions

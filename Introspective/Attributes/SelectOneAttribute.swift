@@ -83,6 +83,13 @@ public class TypedSelectOneAttribute<Type>: AttributeBase, SelectOneAttribute {
 
 	// MARK: - Attribute Functions
 
+	public final override func isValid(value: Any?) -> Bool {
+		if let nonNilValue = value {
+			return indexOf(possibleValue: nonNilValue) != nil
+		}
+		return optional
+	}
+
 	public final override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }

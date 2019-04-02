@@ -14,6 +14,69 @@ final class TagsAttributeFunctionalTests: FunctionalTest {
 
 	private final var attribute: TagsAttribute!
 
+	// MARK: - isValid(value:)
+
+	func testGivenNilValueAndOptionalAttribute_isValid_returnsTrue() {
+		// given
+		useOptionalAttribute()
+
+		// when
+		let valid = attribute.isValid(value: nil as Any?)
+
+		// then
+		XCTAssert(valid)
+	}
+
+	func testGivenNilValueAndRequiredAttribute_isValid_returnsFalse() {
+		// given
+		useRequiredAttribute()
+
+		// when
+		let valid = attribute.isValid(value: nil as Any?)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
+	func testGivenWrongValueType_isValid_returnsFalse() {
+		// given
+		let value = GenericError("")
+		useOptionalAttribute()
+
+		// when
+		let valid = attribute.isValid(value: value)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
+	func testGivenCorrectValueTypeAndAllValuesArePossibleValues_isValid_returnsTrue() {
+		// given
+		useOptionalAttribute()
+		let value = [TagDataTestUtil.createTag(name: "tag1"), TagDataTestUtil.createTag(name: "tag2")]
+
+		// when
+		let valid = attribute.isValid(value: value)
+
+		// then
+		XCTAssert(valid)
+	}
+
+	func testGivenCorrectValueTypeAndOneValueIsNotPossibleValue_isValid_returnsFalse() throws {
+		// given
+		useOptionalAttribute()
+		let transaction = DependencyInjector.db.transaction()
+		let tag = try transaction.new(Tag.self)
+		tag.name = "tag name"
+		let value = [tag]
+
+		// when
+		let valid = attribute.isValid(value: value)
+
+		// then
+		XCTAssertFalse(valid)
+	}
+
 	// MARK: - valueAsArray()
 
 	func testGivenTagsSet_valueAsArray_returnsCorrespondingTagArray() throws {

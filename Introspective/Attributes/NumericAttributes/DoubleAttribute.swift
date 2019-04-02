@@ -18,6 +18,10 @@ public final class DoubleAttribute: AttributeBase, NumericAttribute {
 		return "\(invalidValue) is not a number"
 	}
 
+	public final override func isValid(value: Any?) -> Bool {
+		return (value == nil && optional) || value as? Double != nil
+	}
+
 	public final func convertToValue(from strValue: String) throws -> Any? {
 		if optional && strValue == "" { return nil }
 		guard isValid(value: strValue), let doubleValue = Double(strValue) else {

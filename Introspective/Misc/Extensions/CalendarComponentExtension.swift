@@ -14,6 +14,25 @@ extension Calendar.Component {
 		case unkownComponentName
 	}
 
+	public static var allValues = [
+		era,
+		year,
+		month,
+		day,
+		hour,
+		minute,
+		second,
+		weekday,
+		weekdayOrdinal,
+		quarter,
+		weekOfMonth,
+		weekOfYear,
+		yearForWeekOfYear,
+		nanosecond,
+		calendar,
+		timeZone,
+	]
+
 	public static func fromInt(_ i: Int) -> Calendar.Component {
 		switch (i) {
 			case 0: return .era
