@@ -135,9 +135,13 @@ public final class CalendarUtilImpl: CalendarUtil {
 			return date
 		}
 		if format == nil {
-			return (try? NSDataDetector(types: NSTextCheckingResult.CheckingType.date.rawValue)
-				.matches(in: dateStr, range: NSRange(location: 0, length: dateStr.count))
-				.compactMap{$0.date})?[0]
+			if let dateDetector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.date.rawValue) {
+				let matches = dateDetector.matches(in: dateStr, range: NSRange(location: 0, length: dateStr.count))
+				let possibleDates = matches.compactMap{$0.date}
+				if possibleDates.count > 0 {
+					return possibleDates[0]
+				}
+			}
 		}
 		return nil
 	}

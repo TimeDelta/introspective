@@ -76,16 +76,19 @@ public final class ExtraInformationFactoryImpl: ExtraInformationFactory {
 			applicableInformationTypes.append(MaximumInformation<Double>.self)
 			applicableInformationTypes.append(MinimumInformation<Double>.self)
 			applicableInformationTypes.append(MedianInformation<Double>.self)
+			applicableInformationTypes.append(ModeInformation.self)
 		} else if attribute is IntegerAttribute {
 			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
 			applicableInformationTypes.append(MaximumInformation<Int>.self)
 			applicableInformationTypes.append(MinimumInformation<Int>.self)
 			applicableInformationTypes.append(MedianInformation<Int>.self)
+			applicableInformationTypes.append(ModeInformation.self)
 		} else if attribute is DurationAttribute {
 			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
 			applicableInformationTypes.append(MaximumInformation<Duration>.self)
 			applicableInformationTypes.append(MinimumInformation<Duration>.self)
 			applicableInformationTypes.append(MedianInformation<Duration>.self)
+			applicableInformationTypes.append(ModeInformation.self)
 		}
 		applicableInformationTypes.append(CountInformation.self)
 		return applicableInformationTypes
