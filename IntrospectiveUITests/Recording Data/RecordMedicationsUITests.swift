@@ -20,14 +20,9 @@ final class RecordMedicationsUITests: UITest {
 
 	final override func setUp() {
 		super.setUp()
+		app.tabBars.buttons["Record"].tap()
 		app.tables.cells.staticTexts["Medications"].tap()
 		skipInstructionsIfPresent()
-	}
-
-	final override func tearDown() {
-		app.tabBars.buttons["Settings"].tap()
-		app.tables.buttons["delete core data button"].tap()
-		super.tearDown()
 	}
 
 	// MARK: - Creation
@@ -403,10 +398,6 @@ final class RecordMedicationsUITests: UITest {
 
 		// then
 		XCTAssertFalse(app.buttons["save button"].isEnabled)
-
-		// clean up
-		setFromOrToDate("to", nil)
-		app.buttons["save button"].tap()
 	}
 
 	func testSettingFromDateAfterToDateThenDisablingToDate_allowsSavingFilter() {
@@ -424,12 +415,6 @@ final class RecordMedicationsUITests: UITest {
 
 		// then
 		XCTAssert(app.buttons["save button"].isEnabled)
-
-		// clean up
-		if !app.buttons["save button"].isEnabled {
-			setFromOrToDate("from", nil)
-		}
-		app.buttons["save button"].tap()
 	}
 
 	// MARK: - Helper Functions

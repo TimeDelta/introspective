@@ -10,10 +10,9 @@ import XCTest
 
 final class RecordMoodsUITests: UITest {
 
-	final override func tearDown() {
-		app.tabBars.buttons["Settings"].tap()
-		app.tables.buttons["delete core data button"].tap()
-		super.tearDown()
+	final override func setUp() {
+		super.setUp()
+		app.tabBars.buttons["Record"].tap()
 	}
 
 	func testRecordMood_resetsNoteAndMoodRating() {
@@ -68,9 +67,6 @@ final class RecordMoodsUITests: UITest {
 
 		// then
 		XCTAssertEqual(moodRatingTextField().value as? String, "10")
-
-		// clean up
-		app.toolbars.buttons["Save"].tap()
 	}
 
 	func testChangingRatingToValueLessThanMinMood_setsRatingToMinMood() {
@@ -84,9 +80,6 @@ final class RecordMoodsUITests: UITest {
 
 		// then
 		XCTAssertEqual(moodRatingTextField().value as? String, "1")
-
-		// clean up
-		app.toolbars.buttons["Save"].tap()
 	}
 
 	// MARK: - Element Functions

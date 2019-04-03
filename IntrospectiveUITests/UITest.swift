@@ -19,12 +19,8 @@ class UITest: XCTestCase {
 		super.setUp()
 		continueAfterFailure = true
 		app = XCUIApplication()
-		app.launchArguments.append("--testing")
+		app.launchArguments.append("--ui-testing")
 		app.launch()
-	}
-
-	override func tearDown() {
-		super.tearDown()
 	}
 
 	// MARK: - Instructions Helpers

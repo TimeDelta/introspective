@@ -10,12 +10,6 @@ import XCTest
 
 final class ActivityResultsUITests: UITest {
 
-	final override func tearDown() {
-		app.tabBars.buttons["Settings"].tap()
-		app.tables.buttons["delete core data button"].tap()
-		super.tearDown()
-	}
-
 	func testDeletingOnlyActivityInResults_goesBackToQueryScreen() {
 		// given
 		let definition = ActivityDefinition(name: "fdshjkl")

@@ -13,7 +13,7 @@ public final class ProductionInjectionProvider: InjectionProvider {
 
 	private typealias Me = ProductionInjectionProvider
 
-	private static let realDatabase = DatabaseImpl()
+	private static var realDatabase: DatabaseImpl!
 	private static let realCodableStorage = CodableStorageImpl()
 	private static var realSettings: SettingsImpl!
 	private static let realQueryFactory = QueryFactoryImpl()
@@ -25,18 +25,27 @@ public final class ProductionInjectionProvider: InjectionProvider {
 	private static let realSampleGrouperFactory = SampleGrouperFactoryImpl()
 	private static let realImporterFactory = ImporterFactoryImpl()
 
-	public final func database() -> Database { return Me.realDatabase }
+	public final func database() -> Database {
+		if Me.realDatabase == nil {
+			Me.realDatabase = DatabaseImpl()
+			if uiTesting {
+				try! Me.realDatabase.deleteEverything()
+				Me.realDatabase = DatabaseImpl()
+			}
+		}
+		return Me.realDatabase
+	}
 	public final func codableStorage() -> CodableStorage { return Me.realCodableStorage }
 	public final func settings() -> Settings {
 		if Me.realSettings == nil {
 			do {
-				let existingSettings = try Me.realDatabase.query(SettingsImpl.fetchRequest())
+				let existingSettings = try database().query(SettingsImpl.fetchRequest())
 				if existingSettings.count == 0 {
 					do {
-						let transaction = DependencyInjector.db.transaction()
+						let transaction = database().transaction()
 						let settings = try retryOnFail({ try transaction.new(SettingsImpl.self) }, maxRetries: 2)
 						try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-						Me.realSettings = try DependencyInjector.db.pull(savedObject: settings)
+						Me.realSettings = try database().pull(savedObject: settings)
 					} catch {
 						fatalError(String(format: "Failed to create or save default settings: %@", errorInfo(error)))
 					}

@@ -16,12 +16,6 @@ final class ActivitySettingsUITests: UITest {
 		app.tables.cells.staticTexts["Activity"].tap()
 	}
 
-	final override func tearDown() {
-		app.tabBars.buttons["Settings"].press(forDuration: 1.0)
-		app.tables.buttons["delete core data button"].tap()
-		super.tearDown()
-	}
-
 	// MARK: - Auto-Ignore
 
 	func testSavingChangesToAutoIgnore_correctlyDisplaysWhenRevisitingActivitySettings() {

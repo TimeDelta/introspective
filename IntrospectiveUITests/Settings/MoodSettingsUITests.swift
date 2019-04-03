@@ -16,15 +16,6 @@ final class MoodSettingsUITests: UITest {
 		app.tables.staticTexts["Mood"].tap()
 	}
 
-	final override func tearDown() {
-		tapIfExists(app.alerts.buttons["OK"])
-		tapIfExists(app.alerts.buttons["No"])
-		tapIfExists(app.navigationBars.buttons["Reset"])
-		tapIfExists(app.navigationBars.buttons["Settings"])
-		app.tables.buttons["delete core data button"].tap()
-		super.tearDown()
-	}
-
 	func testGivenMaxMoodLessThanMinMood_cannotSaveSettings() {
 		// given
 		setTextFor(field: maxMoodField(), to: "-1")
@@ -90,9 +81,6 @@ final class MoodSettingsUITests: UITest {
 		let setToMinMoodButton = app.buttons["set mood to \(minMood) button"]
 		setToMinMoodButton.tap() // force it to wait for the button to exist
 		XCTAssert(setToMinMoodButton.exists)
-
-		// clean up
-		app.tabBars.buttons["Settings"].tap()
 	}
 
 	func testEnablingDiscreteMoods_updatesMoodResultsScreenToUseIntegerMoods() {
@@ -112,9 +100,6 @@ final class MoodSettingsUITests: UITest {
 		let setToMinMoodButton = app.buttons["set mood to \(minMood) button"]
 		setToMinMoodButton.tap() // force it to wait for the button to exist
 		XCTAssert(setToMinMoodButton.exists)
-
-		// clean up
-		app.tabBars.buttons["Settings"].tap()
 	}
 
 	func testPressingReset_resetsAllASettings() {

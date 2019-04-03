@@ -10,6 +10,7 @@ import UIKit
 import UserNotifications
 
 public var testing = false
+public var uiTesting = false
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -32,6 +33,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	final func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 		testing = CommandLine.arguments.contains("--testing")
+		uiTesting = CommandLine.arguments.contains("--ui-testing")
 
 		let options: UNAuthorizationOptions = [.alert, .sound, .badge]
 		UNUserNotificationCenter.current().requestAuthorization(options: options) { granted, error in

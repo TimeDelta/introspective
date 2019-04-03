@@ -13,14 +13,9 @@ final class RecordActivitiesUITests: UITest {
 
 	final override func setUp() {
 		super.setUp()
+		app.tabBars.buttons["Record"].tap()
 		app.tables.cells.staticTexts["Activities"].tap()
 		skipInstructionsIfPresent()
-	}
-
-	final override func tearDown() {
-		app.tabBars.buttons["Settings"].tap()
-		app.tables.buttons["delete core data button"].tap()
-		super.tearDown()
 	}
 
 	// MARK: - ActivityDefinition
@@ -422,9 +417,6 @@ final class RecordActivitiesUITests: UITest {
 
 		// then
 		XCTAssert(app.tables.cells.textViews["activity note"].exists)
-
-		// clean up
-		app.navigationBars.buttons["Activities"].tap() // keyboard is hiding tab bar
 	}
 
 	// MARK: - Quick Create / Start

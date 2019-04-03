@@ -11,12 +11,6 @@ import SwiftDate
 
 final class MoodResultsUITests: UITest {
 
-	final override func tearDown() {
-		app.tabBars.buttons["Settings"].tap()
-		app.tables.buttons["delete core data button"].tap()
-		super.tearDown()
-	}
-
 	func testGivenNoMoods_tellsUserNoMoodEntriesFound() {
 		// when
 		runAllMoodsQuery()
