@@ -236,10 +236,14 @@ class UITest: XCTestCase {
 	final func createMoods(_ moods: [Mood]) {
 		app.tabBars.buttons["Record"].tap()
 		for mood in moods {
-			moodRatingButton().tap()
-			moodRatingTextField().tap()
-			moodRatingTextField().tap()
-			moodRatingTextField().typeText(String(mood.rating))
+			if app.sliders["mood slider"].exists {
+				moodRatingButton().tap()
+				moodRatingTextField().tap()
+				moodRatingTextField().tap()
+				moodRatingTextField().typeText(String(mood.rating))
+			} else {
+				app.buttons["set mood to \(Int(mood.rating)) button"].tap()
+			}
 			app.toolbars.buttons["Save"].tap()
 			if let note = mood.note {
 				app.tables.buttons["set mood note button"].tap()

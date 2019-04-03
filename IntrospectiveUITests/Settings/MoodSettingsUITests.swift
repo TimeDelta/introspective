@@ -97,8 +97,10 @@ final class MoodSettingsUITests: UITest {
 
 	func testEnablingDiscreteMoods_updatesMoodResultsScreenToUseIntegerMoods() {
 		// given
+		createMoods([Mood(5)])
 		runQueryForAll("Mood")
-
+		app.tables.cells.element(boundBy: 0).tap()
+		app.tabBars.buttons["Settings"].tap()
 		let minMood = minMoodField().value as! String
 		app.switches["use integers only switch"].tap()
 
