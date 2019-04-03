@@ -145,31 +145,27 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
     open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
-        private init(method: MethodType, products: [Product]) {
+        private init(method: MethodType, products: [StubProduct]) {
             self.method = method
             super.init(products)
         }
 
         public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
-            return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ Product.return($0) }))
+            return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
-            return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ Product.return($0) }))
+            return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
-            return Given(method: .p_subQuery_get, products: defaultValue.map({ Product.return($0) }))
+            return Given(method: .p_subQuery_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
         public static func equalTo(_ otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		public static func equalTo(otherQuery: Parameter<Query>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) }))
+            return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func equalTo(_ otherQuery: Parameter<Query>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
-			let given: Given = { return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ Product.return($0) })) }()
+			let given: Given = { return Given(method: .m_equalTo__otherQuery(`otherQuery`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
@@ -183,8 +179,6 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
         public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback_2(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		public static func equalTo(otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
 		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
         public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
@@ -209,10 +203,6 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
         }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherQuery` label")
-		public static func equalTo(otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
-            return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
-        }
     }
 
     public func given(_ method: Given) {
@@ -232,7 +222,7 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
     private func addInvocation(_ call: MethodType) {
         invocations.append(call)
     }
-    private func methodReturnValue(_ method: MethodType) throws -> Product {
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
         let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
         let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
         guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }

@@ -242,22 +242,22 @@ class SampleMock: Sample, Mock {
     open class StaticGiven: StubbedMethod {
         fileprivate var method: StaticMethodType
 
-        private init(method: StaticMethodType, products: [Product]) {
+        private init(method: StaticMethodType, products: [StubProduct]) {
             self.method = method
             super.init(products)
         }
 
         public static func name(getter defaultValue: String...) -> StaticPropertyStub {
-            return StaticGiven(method: .p_name_get, products: defaultValue.map({ Product.return($0) }))
+            return StaticGiven(method: .p_name_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func attributes(getter defaultValue: [Attribute]...) -> StaticPropertyStub {
-            return StaticGiven(method: .p_attributes_get, products: defaultValue.map({ Product.return($0) }))
+            return StaticGiven(method: .p_attributes_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func defaultDependentAttribute(getter defaultValue: Attribute...) -> StaticPropertyStub {
-            return StaticGiven(method: .p_defaultDependentAttribute_get, products: defaultValue.map({ Product.return($0) }))
+            return StaticGiven(method: .p_defaultDependentAttribute_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func defaultIndependentAttribute(getter defaultValue: Attribute...) -> StaticPropertyStub {
-            return StaticGiven(method: .p_defaultIndependentAttribute_get, products: defaultValue.map({ Product.return($0) }))
+            return StaticGiven(method: .p_defaultIndependentAttribute_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
     }
@@ -341,105 +341,93 @@ class SampleMock: Sample, Mock {
     open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
-        private init(method: MethodType, products: [Product]) {
+        private init(method: MethodType, products: [StubProduct]) {
             self.method = method
             super.init(products)
         }
 
         public static func attributedName(getter defaultValue: String...) -> PropertyStub {
-            return Given(method: .p_attributedName_get, products: defaultValue.map({ Product.return($0) }))
+            return Given(method: .p_attributedName_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func attributes(getter defaultValue: [Attribute]...) -> PropertyStub {
-            return Given(method: .p_attributes_get, products: defaultValue.map({ Product.return($0) }))
+            return Given(method: .p_attributes_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func debugDescription(getter defaultValue: String...) -> PropertyStub {
-            return Given(method: .p_debugDescription_get, products: defaultValue.map({ Product.return($0) }))
+            return Given(method: .p_debugDescription_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
         public static func graphableValue(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
-            return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willReturn.map({ Product.return($0) }))
+            return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func dates(willReturn: [DateType: Date]...) -> MethodStub {
-            return Given(method: .m_dates, products: willReturn.map({ Product.return($0) }))
+            return Given(method: .m_dates, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func equalTo(_ otherSample: Parameter<Sample>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherSample(`otherSample`), products: willReturn.map({ Product.return($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherSample` label")
-		public static func equalTo(otherSample: Parameter<Sample>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherSample(`otherSample`), products: willReturn.map({ Product.return($0) }))
+            return Given(method: .m_equalTo__otherSample(`otherSample`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func safeEqualityCheck<Type: Equatable>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `attribute` label, remove `otherSample` label")
-		public static func safeEqualityCheck<Type: Equatable>(attribute: Parameter<Attribute>, otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) }))
+            return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func value(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
-            return Given(method: .m_value__of_attribute(`attribute`), products: willReturn.map({ Product.return($0) }))
+            return Given(method: .m_value__of_attribute(`attribute`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func equalTo(_ otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
-		public static func equalTo(otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) }))
+            return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func dates(willProduce: (Stubber<[DateType: Date]>) -> Void) -> MethodStub {
             let willReturn: [[DateType: Date]] = []
-			let given: Given = { return Given(method: .m_dates, products: willReturn.map({ Product.return($0) })) }()
+			let given: Given = { return Given(method: .m_dates, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: ([DateType: Date]).self)
 			willProduce(stubber)
 			return given
         }
         public static func equalTo(_ otherSample: Parameter<Sample>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
-			let given: Given = { return Given(method: .m_equalTo__otherSample(`otherSample`), products: willReturn.map({ Product.return($0) })) }()
+			let given: Given = { return Given(method: .m_equalTo__otherSample(`otherSample`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
         public static func safeEqualityCheck<Type: Equatable>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
-			let given: Given = { return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), products: willReturn.map({ Product.return($0) })) }()
+			let given: Given = { return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
         public static func equalTo(_ otherAttributed: Parameter<Attributed>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
-			let given: Given = { return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) })) }()
+			let given: Given = { return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
         public static func graphableValue(of attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) }))
+            return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willThrow.map({ StubProduct.throw($0) }))
         }
         public static func graphableValue(of attribute: Parameter<Attribute>, willProduce: (StubberThrows<Any?>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) })) }()
+			let given: Given = { return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Any?).self)
 			willProduce(stubber)
 			return given
         }
         public static func value(of attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) }))
+            return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ StubProduct.throw($0) }))
         }
         public static func value(of attribute: Parameter<Attribute>, willProduce: (StubberThrows<Any?>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) })) }()
+			let given: Given = { return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Any?).self)
 			willProduce(stubber)
 			return given
         }
         public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ Product.throw($0) }))
+            return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ StubProduct.throw($0) }))
         }
         public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ Product.throw($0) })) }()
+			let given: Given = { return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
@@ -452,16 +440,10 @@ class SampleMock: Sample, Mock {
         public static func graphableValue(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_graphableValue__of_attribute(`attribute`))}
         public static func dates() -> Verify { return Verify(method: .m_dates)}
         public static func equalTo(_ otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherSample` label")
-		public static func equalTo(otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
         public static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>) -> Verify where Type:Equatable { return Verify(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()))}
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `attribute` label, remove `otherSample` label")
-		public static func safeEqualityCheck<Type>(attribute: Parameter<Attribute>, otherSample: Parameter<Sample>, as type: Parameter<Type.Type>) -> Verify where Type:Equatable { return Verify(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()))}
         public static func value(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_value__of_attribute(`attribute`))}
         public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>) -> Verify { return Verify(method: .m_set__attribute_attributeto_value(`attribute`, `value`))}
         public static func equalTo(_ otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
-		public static func equalTo(otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
         public static var attributedName: Verify { return Verify(method: .p_attributedName_get) }
         public static var attributes: Verify { return Verify(method: .p_attributes_get) }
         public static var debugDescription: Verify { return Verify(method: .p_debugDescription_get) }
@@ -480,15 +462,7 @@ class SampleMock: Sample, Mock {
         public static func equalTo(_ otherSample: Parameter<Sample>, perform: @escaping (Sample) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherSample(`otherSample`), performs: perform)
         }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherSample` label")
-		public static func equalTo(otherSample: Parameter<Sample>, perform: @escaping (Sample) -> Void) -> Perform {
-            return Perform(method: .m_equalTo__otherSample(`otherSample`), performs: perform)
-        }
         public static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, perform: @escaping (Attribute, Sample, Type.Type) -> Void) -> Perform where Type:Equatable {
-            return Perform(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), performs: perform)
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `attribute` label, remove `otherSample` label")
-		public static func safeEqualityCheck<Type>(attribute: Parameter<Attribute>, otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, perform: @escaping (Attribute, Sample, Type.Type) -> Void) -> Perform where Type:Equatable {
             return Perform(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), performs: perform)
         }
         public static func value(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
@@ -498,10 +472,6 @@ class SampleMock: Sample, Mock {
             return Perform(method: .m_set__attribute_attributeto_value(`attribute`, `value`), performs: perform)
         }
         public static func equalTo(_ otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
-            return Perform(method: .m_equalTo__otherAttributed(`otherAttributed`), performs: perform)
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
-		public static func equalTo(otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherAttributed(`otherAttributed`), performs: perform)
         }
     }
@@ -523,7 +493,7 @@ class SampleMock: Sample, Mock {
     private func addInvocation(_ call: MethodType) {
         invocations.append(call)
     }
-    private func methodReturnValue(_ method: MethodType) throws -> Product {
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
         let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
         let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
         guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
@@ -578,7 +548,7 @@ class SampleMock: Sample, Mock {
     static private func addInvocation(_ call: StaticMethodType) {
         invocations.append(call)
     }
-    static private func methodReturnValue(_ method: StaticMethodType) throws -> Product {
+    static private func methodReturnValue(_ method: StaticMethodType) throws -> StubProduct {
         let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
         let matched = candidates.first(where: { $0.isValid && StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
         guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }

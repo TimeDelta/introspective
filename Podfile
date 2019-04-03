@@ -5,7 +5,7 @@ target 'Introspective' do
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
   use_frameworks!
 
-  pod "Sourcery", '0.15.0'
+  pod "Sourcery"
   pod "Presentr"
   pod "SwiftDate"
   pod 'AAInfographics'
@@ -18,7 +18,7 @@ target 'Introspective' do
 
   target 'IntrospectiveTests' do
     inherit! :search_paths
-    pod "SwiftyMocky"
+    pod "SwiftyMocky", '~> 3.2.0'
     pod 'SwiftHamcrest', '~> 2.1.1'
   end
 

@@ -208,92 +208,76 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
     open class Given: StubbedMethod {
         fileprivate var method: MethodType
 
-        private init(method: MethodType, products: [Product]) {
+        private init(method: MethodType, products: [StubProduct]) {
             self.method = method
             super.init(products)
         }
 
         public static func restrictedAttribute(getter defaultValue: Attribute...) -> PropertyStub {
-            return Given(method: .p_restrictedAttribute_get, products: defaultValue.map({ Product.return($0) }))
+            return Given(method: .p_restrictedAttribute_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func attributedName(getter defaultValue: String...) -> PropertyStub {
-            return Given(method: .p_attributedName_get, products: defaultValue.map({ Product.return($0) }))
+            return Given(method: .p_attributedName_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func attributes(getter defaultValue: [Attribute]...) -> PropertyStub {
-            return Given(method: .p_attributes_get, products: defaultValue.map({ Product.return($0) }))
+            return Given(method: .p_attributes_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func debugDescription(getter defaultValue: String...) -> PropertyStub {
-            return Given(method: .p_debugDescription_get, products: defaultValue.map({ Product.return($0) }))
+            return Given(method: .p_debugDescription_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
         public static func samplePasses(_ sample: Parameter<Sample>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_samplePasses__sample(`sample`), products: willReturn.map({ Product.return($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `sample` label")
-		public static func samplePasses(sample: Parameter<Sample>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_samplePasses__sample(`sample`), products: willReturn.map({ Product.return($0) }))
+            return Given(method: .m_samplePasses__sample(`sample`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func equalTo(_ otherRestriction: Parameter<AttributeRestriction>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherRestriction(`otherRestriction`), products: willReturn.map({ Product.return($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherRestriction` label")
-		public static func equalTo(otherRestriction: Parameter<AttributeRestriction>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherRestriction(`otherRestriction`), products: willReturn.map({ Product.return($0) }))
+            return Given(method: .m_equalTo__otherRestriction(`otherRestriction`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func value(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
-            return Given(method: .m_value__of_attribute(`attribute`), products: willReturn.map({ Product.return($0) }))
+            return Given(method: .m_value__of_attribute(`attribute`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func equalTo(_ otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
-		public static func equalTo(otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) }))
+            return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func equalTo(_ otherRestriction: Parameter<AttributeRestriction>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
-			let given: Given = { return Given(method: .m_equalTo__otherRestriction(`otherRestriction`), products: willReturn.map({ Product.return($0) })) }()
+			let given: Given = { return Given(method: .m_equalTo__otherRestriction(`otherRestriction`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
         public static func equalTo(_ otherAttributed: Parameter<Attributed>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
-			let given: Given = { return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ Product.return($0) })) }()
+			let given: Given = { return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
         public static func samplePasses(_ sample: Parameter<Sample>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_samplePasses__sample(`sample`), products: willThrow.map({ Product.throw($0) }))
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `sample` label")
-		public static func samplePasses(sample: Parameter<Sample>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_samplePasses__sample(`sample`), products: willThrow.map({ Product.throw($0) }))
+            return Given(method: .m_samplePasses__sample(`sample`), products: willThrow.map({ StubProduct.throw($0) }))
         }
         public static func samplePasses(_ sample: Parameter<Sample>, willProduce: (StubberThrows<Bool>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_samplePasses__sample(`sample`), products: willThrow.map({ Product.throw($0) })) }()
+			let given: Given = { return Given(method: .m_samplePasses__sample(`sample`), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Bool).self)
 			willProduce(stubber)
 			return given
         }
         public static func value(of attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) }))
+            return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ StubProduct.throw($0) }))
         }
         public static func value(of attribute: Parameter<Attribute>, willProduce: (StubberThrows<Any?>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ Product.throw($0) })) }()
+			let given: Given = { return Given(method: .m_value__of_attribute(`attribute`), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Any?).self)
 			willProduce(stubber)
 			return given
         }
         public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ Product.throw($0) }))
+            return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ StubProduct.throw($0) }))
         }
         public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ Product.throw($0) })) }()
+			let given: Given = { return Given(method: .m_set__attribute_attributeto_value(`attribute`, `value`), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
@@ -304,16 +288,10 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
         fileprivate var method: MethodType
 
         public static func samplePasses(_ sample: Parameter<Sample>) -> Verify { return Verify(method: .m_samplePasses__sample(`sample`))}
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `sample` label")
-		public static func samplePasses(sample: Parameter<Sample>) -> Verify { return Verify(method: .m_samplePasses__sample(`sample`))}
         public static func equalTo(_ otherRestriction: Parameter<AttributeRestriction>) -> Verify { return Verify(method: .m_equalTo__otherRestriction(`otherRestriction`))}
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherRestriction` label")
-		public static func equalTo(otherRestriction: Parameter<AttributeRestriction>) -> Verify { return Verify(method: .m_equalTo__otherRestriction(`otherRestriction`))}
         public static func value(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_value__of_attribute(`attribute`))}
         public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>) -> Verify { return Verify(method: .m_set__attribute_attributeto_value(`attribute`, `value`))}
         public static func equalTo(_ otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
-		public static func equalTo(otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
         public static var restrictedAttribute: Verify { return Verify(method: .p_restrictedAttribute_get) }
 		public static func restrictedAttribute(set newValue: Parameter<Attribute>) -> Verify { return Verify(method: .p_restrictedAttribute_set(newValue)) }
         public static var attributedName: Verify { return Verify(method: .p_attributedName_get) }
@@ -328,15 +306,7 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
         public static func samplePasses(_ sample: Parameter<Sample>, perform: @escaping (Sample) -> Void) -> Perform {
             return Perform(method: .m_samplePasses__sample(`sample`), performs: perform)
         }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `sample` label")
-		public static func samplePasses(sample: Parameter<Sample>, perform: @escaping (Sample) -> Void) -> Perform {
-            return Perform(method: .m_samplePasses__sample(`sample`), performs: perform)
-        }
         public static func equalTo(_ otherRestriction: Parameter<AttributeRestriction>, perform: @escaping (AttributeRestriction) -> Void) -> Perform {
-            return Perform(method: .m_equalTo__otherRestriction(`otherRestriction`), performs: perform)
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherRestriction` label")
-		public static func equalTo(otherRestriction: Parameter<AttributeRestriction>, perform: @escaping (AttributeRestriction) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherRestriction(`otherRestriction`), performs: perform)
         }
         public static func value(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
@@ -346,10 +316,6 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
             return Perform(method: .m_set__attribute_attributeto_value(`attribute`, `value`), performs: perform)
         }
         public static func equalTo(_ otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
-            return Perform(method: .m_equalTo__otherAttributed(`otherAttributed`), performs: perform)
-        }
-        @available(*, deprecated, message: "This constructor is deprecated, and will be removed in v3.1 Possible fix:  remove `otherAttributed` label")
-		public static func equalTo(otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherAttributed(`otherAttributed`), performs: perform)
         }
     }
@@ -371,7 +337,7 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
     private func addInvocation(_ call: MethodType) {
         invocations.append(call)
     }
-    private func methodReturnValue(_ method: MethodType) throws -> Product {
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
         let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
         let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
         guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
