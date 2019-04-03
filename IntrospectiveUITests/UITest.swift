@@ -295,9 +295,21 @@ class UITest: XCTestCase {
 
 	// MARK: - Query Screen Helpers
 
+	final func runQueryForAll(_ type: String) {
+		goToQueryScreen()
+		setMainDataTypeForQuery(type)
+		app.buttons["Run"].tap()
+	}
+
 	final func addAttributeRestrictionToQuery() {
 		app.tables.buttons["Add"].tap()
 		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
+	}
+
+	final func setMainDataTypeForQuery(_ type: String) {
+		app.tables.cells.allElementsBoundByIndex[0].tap()
+		setPicker(to: type)
+		app.buttons["save button"].tap()
 	}
 
 	final func addDataTypeToQuery(_ type: String? = nil) {

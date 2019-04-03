@@ -68,11 +68,6 @@ final class MoodResultsUITests: UITest {
 	// MARK: - Helper Functions
 
 	private final func runAllMoodsQuery() {
-		app.tabBars.buttons["Explore"].tap()
-		app.collectionViews.staticTexts["Query"].tap()
-		app.tables.cells.allElementsBoundByIndex[0].tap()
-		setPicker(to: "Mood")
-		app.buttons["save button"].tap()
-		app.buttons["Run"].tap()
+		runQueryForAll("Mood")
 	}
 }

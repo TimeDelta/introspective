@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -469,8 +469,49 @@
                                     <outlet property="ratingTextField" destination="baC-7h-5Uh" id="Ttf-S9-rzS"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="integerRating" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="integerRating" id="Wil-Vp-1jX" customClass="DiscreteRatingTableViewCell" customModule="Introspective" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="116" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Wil-Vp-1jX" id="1QG-f4-u2T">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1rN-ii-C7j" customClass="RecordMoodScrollView" customModule="Introspective" customModuleProvider="target">
+                                            <rect key="frame" x="16" y="0.0" width="343" height="44"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="500" verticalCompressionResistancePriority="500" translatesAutoresizingMaskIntoConstraints="NO" id="yWk-xN-Ovz">
+                                                    <rect key="frame" x="0.0" y="0.0" width="343" height="44"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="44" placeholder="YES" id="wBE-eR-5zZ"/>
+                                                    </constraints>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="yWk-xN-Ovz" firstAttribute="centerY" secondItem="1rN-ii-C7j" secondAttribute="centerY" id="3zS-eX-lB8"/>
+                                                <constraint firstItem="yWk-xN-Ovz" firstAttribute="centerX" secondItem="1rN-ii-C7j" secondAttribute="centerX" placeholder="YES" id="8GE-Ek-rg0"/>
+                                                <constraint firstItem="yWk-xN-Ovz" firstAttribute="leading" secondItem="1rN-ii-C7j" secondAttribute="leading" priority="999" id="G0K-QQ-tub"/>
+                                                <constraint firstItem="yWk-xN-Ovz" firstAttribute="bottom" secondItem="1rN-ii-C7j" secondAttribute="bottom" id="ZeB-WB-PdF"/>
+                                                <constraint firstItem="yWk-xN-Ovz" firstAttribute="top" secondItem="1rN-ii-C7j" secondAttribute="top" id="cCI-p2-JS0"/>
+                                                <constraint firstAttribute="height" constant="44" id="lgS-U5-L0i"/>
+                                                <constraint firstAttribute="trailing" secondItem="yWk-xN-Ovz" secondAttribute="trailing" priority="999" id="zmS-xI-mGX"/>
+                                            </constraints>
+                                        </scrollView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="1rN-ii-C7j" firstAttribute="trailing" secondItem="1QG-f4-u2T" secondAttribute="trailingMargin" id="5pW-oo-466"/>
+                                        <constraint firstItem="1rN-ii-C7j" firstAttribute="top" secondItem="1QG-f4-u2T" secondAttribute="top" id="B9T-YB-4k0"/>
+                                        <constraint firstItem="1rN-ii-C7j" firstAttribute="leading" secondItem="1QG-f4-u2T" secondAttribute="leadingMargin" id="QKA-LD-Ldy"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="1rN-ii-C7j" secondAttribute="bottom" id="Xf5-v5-Ueb"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="moodContentView" destination="yWk-xN-Ovz" id="8yi-8R-oMQ"/>
+                                    <outlet property="scrollView" destination="1rN-ii-C7j" id="CZT-tx-ce1"/>
+                                </connections>
+                            </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="note" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="note" rowHeight="131" id="heX-w2-O2c" customClass="MoodNoteTableViewCell" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="116" width="375" height="131"/>
+                                <rect key="frame" x="0.0" y="160" width="375" height="131"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="heX-w2-O2c" id="iQJ-Sc-hJz">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="130.5"/>

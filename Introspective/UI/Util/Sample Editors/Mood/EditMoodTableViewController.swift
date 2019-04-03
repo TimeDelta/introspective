@@ -16,7 +16,6 @@ public final class EditMoodTableViewController: UITableViewController {
 	private typealias Me = EditMoodTableViewController
 
 	private static let timestampChanged = Notification.Name("moodTimestampChanged")
-	private static let ratingChanged = Notification.Name("moodRatingChanged")
 	private static let noteChanged = Notification.Name("moodNoteChanged")
 
 	private static let timestampIndex = IndexPath(row: 0, section: 0)
@@ -63,8 +62,9 @@ public final class EditMoodTableViewController: UITableViewController {
 			action: #selector(saveButtonPressed))
 
 		observe(selector: #selector(timestampChanged), name: Me.timestampChanged)
-		observe(selector: #selector(ratingChanged), name: Me.ratingChanged)
+		observe(selector: #selector(ratingChanged), name: .moodRatingChanged)
 		observe(selector: #selector(noteChanged), name: Me.noteChanged)
+		observe(selector: #selector(useDiscreteMoodChanged), name: MoodUiUtil.useDiscreteMoodChanged)
 	}
 
 	deinit {
@@ -97,12 +97,7 @@ public final class EditMoodTableViewController: UITableViewController {
 			cell.detailTextLabel?.text = DependencyInjector.util.calendar.string(for: timestamp, dateStyle: .medium, timeStyle: .medium)
 			return cell
 		} else if indexPath == Me.ratingIndex {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "rating", for: indexPath) as! MoodRatingTableViewCell
-			cell.rating = rating
-			cell.minRating = minRating
-			cell.maxRating = maxRating
-			cell.notificationToSendOnChange = Me.ratingChanged
-			return cell
+			return getRatingCell(for: indexPath)
 		} else if indexPath == Me.noteIndex {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "note", for: indexPath) as! MoodNoteTableViewCell
 			cell.note = note
@@ -150,6 +145,10 @@ public final class EditMoodTableViewController: UITableViewController {
 		self.note = value(for: .text, from: notification)
 	}
 
+	@objc private final func useDiscreteMoodChanged(notification: Notification) {
+		tableView.reloadData()
+	}
+
 	// MARK: - Actions
 
 	@objc private final func saveButtonPressed(_ sender: Any) {
@@ -188,5 +187,22 @@ public final class EditMoodTableViewController: UITableViewController {
 			log.error("Failed to save create or save mood: %@", errorInfo(error))
 			showError(title: "Failed to save mood", error: error)
 		}
+	}
+
+	// MARK: - Helper Functions
+
+	private final func getRatingCell(for indexPath: IndexPath) -> UITableViewCell {
+		if DependencyInjector.settings.discreteMoods {
+			let cell = tableView.dequeueReusableCell(withIdentifier: "integerRating", for: indexPath) as! DiscreteRatingTableViewCell
+			cell.rating = Int(rating)
+			cell.minRating = Int(minRating)
+			cell.maxRating = Int(maxRating)
+			return cell
+		}
+		let cell = tableView.dequeueReusableCell(withIdentifier: "rating", for: indexPath) as! MoodRatingTableViewCell
+		cell.rating = rating
+		cell.minRating = minRating
+		cell.maxRating = maxRating
+		return cell
 	}
 }

@@ -21,6 +21,10 @@ public enum NotificationName {
 	case extendBackgroundTaskTime
 	case cancelBackgroundTask
 
+	// MARK: - Mood Value Changes
+
+	case moodRatingChanged
+
 	// MARK: - Functions
 
 	public func toName() -> Notification.Name {
@@ -29,12 +33,17 @@ public enum NotificationName {
 
 	private var nameText: String {
 		switch(self) {
+			// show screens
 			case .showRecordActivitiesScreen: return "showRecordActivitiesScreen"
 			case .showRecordMedicationsScreen: return "showRecordMedicationsScreen"
 			case .showResultsScreen: return "showResultsScreen"
 
+			// background tasks
 			case .extendBackgroundTaskTime: return "extendBackgroundTaskTime"
 			case .cancelBackgroundTask: return "cancelBackgroundTask"
+
+			// mood value changes
+			case .moodRatingChanged: return "moodRatingChanged"
 		}
 	}
 }

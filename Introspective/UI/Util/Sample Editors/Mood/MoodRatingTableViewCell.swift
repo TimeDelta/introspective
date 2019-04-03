@@ -18,7 +18,6 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 
 	// MARK: - Instance Variables
 
-	public final var notificationToSendOnChange: Notification.Name!
 	public final var rating: Double = 0 {
 		didSet { updateUI() }
 	}
@@ -63,13 +62,6 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 	}
 
 	private final func sendRatingChangedNotification() {
-		DispatchQueue.main.async {
-			NotificationCenter.default.post(
-				name: self.notificationToSendOnChange,
-				object: self,
-				userInfo: self.info([
-					.number: self.rating
-				]))
-		}
+		post(.moodRatingChanged, userInfo: [.number: self.rating])
 	}
 }

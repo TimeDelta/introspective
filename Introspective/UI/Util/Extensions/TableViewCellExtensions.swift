@@ -40,4 +40,8 @@ extension UITableViewCell {
 			NotificationCenter.default.post(name: name, object: object, userInfo: userInfo)
 		}
 	}
+
+	final func post(_ name: NotificationName, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
+		post(name.toName(), object: object, userInfo: userInfo)
+	}
 }

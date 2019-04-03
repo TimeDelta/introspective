@@ -95,6 +95,26 @@ final class MoodSettingsUITests: UITest {
 		app.tabBars.buttons["Settings"].tap()
 	}
 
+	func testEnablingDiscreteMoods_updatesMoodResultsScreenToUseIntegerMoods() {
+		// given
+		runQueryForAll("Mood")
+
+		let minMood = minMoodField().value as! String
+		app.switches["use integers only switch"].tap()
+
+		// when
+		app.navigationBars.buttons["Settings"].tap()
+
+		// then
+		app.tabBars.buttons["Explore"].tap()
+		let setToMinMoodButton = app.buttons["set mood to \(minMood) button"]
+		setToMinMoodButton.tap() // force it to wait for the button to exist
+		XCTAssert(setToMinMoodButton.exists)
+
+		// clean up
+		app.tabBars.buttons["Settings"].tap()
+	}
+
 	func testPressingReset_resetsAllASettings() {
 		// given
 		let originalMin = minMoodField().value as! String
