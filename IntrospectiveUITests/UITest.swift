@@ -55,6 +55,12 @@ class UITest: XCTestCase {
 		skipInstructionsIfPresent()
 	}
 
+	final func goToTabIfNotSelected(_ tabName: String) {
+		if !app.tabBars.buttons[tabName].isSelected {
+			app.tabBars.buttons[tabName].tap()
+		}
+	}
+
 	// MARK: - Picker Helpers
 
 	final func setPicker(_ pickerQueryText: String? = nil, to value: String, changeCase: Bool = true) {
@@ -291,6 +297,72 @@ class UITest: XCTestCase {
 		setTextFor(field: app.tables.cells.textViews["activity description"], to: definition.description)
 		setTags(for: activityDefinitionTagsField(), to: definition.tags)
 		app.buttons["Save"].tap()
+	}
+
+	struct Medication {
+		var name: String
+		var frequency: (times: String, unit: String)?
+		var startedOn: Date?
+		var dosage: String?
+		var note: String?
+
+		public init(
+			_ name: String,
+			frequency: (times: String, unit: String)? = nil,
+			startedOn: Date? = nil,
+			dosage: String? = nil,
+			note: String? = nil)
+		{
+			self.name = name
+			self.frequency = frequency
+			self.startedOn = startedOn
+			self.dosage = dosage
+			self.note = note
+		}
+	}
+
+	final func createMedication(_ medication: Medication, save: Bool = true) {
+		goToTabIfNotSelected("Record")
+		if !app.navigationBars["Medications"].exists {
+			app.tables.cells.staticTexts["Medications"].tap()
+		}
+		skipInstructionsIfPresent()
+
+		app.buttons["Add"].tap()
+
+		let nameField = app.textFields["medication name"]
+		nameField.tap()
+		nameField.typeText(medication.name)
+
+		if let frequency = medication.frequency {
+			app.buttons["set frequency button"].tap()
+			let numberOfTimesField = app.textFields["number of times"]
+			numberOfTimesField.tap()
+			numberOfTimesField.typeText(frequency.times)
+			app.pickerWheels["Day"].adjust(toPickerWheelValue: frequency.unit.capitalized)
+			app.buttons["save button"].tap()
+		}
+
+		if let startedOn = medication.startedOn {
+			app.buttons["set started on button"].tap()
+			setDatePicker(to: startedOn)
+			app.buttons["save button"].tap()
+		}
+
+		if let dosage = medication.dosage {
+			let dosageField = app.textFields["medication dosage"]
+			dosageField.tap()
+			dosageField.typeText(dosage)
+		}
+
+		if let note = medication.note {
+			app.textViews["notes"].tap()
+			app.textViews["notes"].typeText(note)
+		}
+
+		if save {
+			app.buttons["Save"].tap()
+		}
 	}
 
 	// MARK: - Query Screen Helpers

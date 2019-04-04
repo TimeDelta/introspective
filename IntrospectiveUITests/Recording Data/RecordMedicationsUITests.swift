@@ -41,20 +41,19 @@ final class RecordMedicationsUITests: UITest {
 
 	func testCreatingMedication_showsInListOfMedicationsAfterSave() {
 		// given
-		let medicationName = "Adderall"
+		let medication = Medication("Adderall")
 
 		// when
-		createMedication(name: medicationName)
+		createMedication(medication)
 
 		// then
-		XCTAssert(app.tables.cells.staticTexts[medicationName].exists)
+		XCTAssert(app.tables.cells.staticTexts[medication.name].exists)
 	}
 
 	func testClearingFrequencyOnNewMedicationScreen_updatesFrequencyButtonTitle() {
 		// given
-		let medicationName = "fdsag"
-		let frequency = (times: "12", unit: "day")
-		createMedication(name: medicationName, frequency: frequency, save: false)
+		let medication = Medication("fdsag", frequency: (times: "12", unit: "day"))
+		createMedication(medication, save: false)
 
 		// when
 		app.buttons["clear frequency button"].tap()
@@ -66,9 +65,8 @@ final class RecordMedicationsUITests: UITest {
 
 	func testClearingStartedOnDateOnNewMedicationScreen_updatesStartedOnButtonTitle() {
 		// given
-		let medicationName = "fdsag"
-		let startedOn = Date()
-		createMedication(name: medicationName, startedOn: startedOn, save: false)
+		let medication = Medication("fdsag", startedOn: Date())
+		createMedication(medication, save: false)
 
 		// when
 		app.buttons["clear started on date button"].tap()
@@ -80,11 +78,11 @@ final class RecordMedicationsUITests: UITest {
 
 	func testSettingNameToNameOfOtherMedicationOnNewMedicationScreen_disablesSaveButton() {
 		// given
-		let medicationName = "grenqjik"
-		createMedication(name: medicationName)
+		let medication = Medication("grenqjik")
+		createMedication(medication)
 
 		// when
-		createMedication(name: medicationName, save: false)
+		createMedication(medication, save: false)
 
 		// then
 		XCTAssert(!app.buttons["Save"].isEnabled)
@@ -95,51 +93,52 @@ final class RecordMedicationsUITests: UITest {
 
 	func testEditMedication_showsCorrectInformationWhenEditing() {
 		// given
-		let medicationName = "Adderall"
-		let frequency = (times: "12", unit: "Month")
-		let startedOn = Date()
-		let dosage = "12 mg"
-		let note = "Take every morning after eating breakfast otherwise it will give you an upset stomach."
-		createMedication(name: medicationName, frequency: frequency, startedOn: startedOn, dosage: dosage, note: note)
+		let medication = Medication(
+			"Adderall",
+			frequency: (times: "12", unit: "Month"),
+			startedOn: Date(),
+			dosage: "12 mg",
+			note: "Take every morning after eating breakfast otherwise it will give you an upset stomach.")
+		createMedication(medication)
 
 		// when
-		app.tables.staticTexts[medicationName].tap()
+		app.tables.staticTexts[medication.name].tap()
 
 		// then
-		let dateStrings = convertDateToStringComponents(startedOn)
-		XCTAssertEqual(app.textFields["medication name"].value as? String, medicationName)
+		let dateStrings = convertDateToStringComponents(medication.startedOn!)
+		XCTAssertEqual(app.textFields["medication name"].value as? String, medication.name)
 		XCTAssertEqual(app.buttons["set frequency button"].value as? String, "12 times per month")
 		XCTAssertEqual(app.buttons["set started on button"].value as? String, dateStrings[.month]! + " " + dateStrings[.day]! + ", " + dateStrings[.year]!)
-		XCTAssertEqual(app.textFields["medication dosage"].value as? String, dosage)
-		XCTAssertEqual(app.textViews["notes"].value as? String, note)
+		XCTAssertEqual(app.textFields["medication dosage"].value as? String, medication.dosage)
+		XCTAssertEqual(app.textViews["notes"].value as? String, medication.note)
 	}
 
 	func testEditingMedicationName_updatesTableViewCellInMedicationsList() {
 		// given
-		let medicationName = "fgqr"
+		let medication = Medication("fgqr")
 		let additionalCharacters = "greqg"
-		let editedMedicationName = medicationName + additionalCharacters
-		createMedication(name: medicationName)
+		let editedMedicationName = medication.name + additionalCharacters
+		createMedication(medication)
 
 		// when
-		app.tables.staticTexts[medicationName].tap()
+		app.tables.staticTexts[medication.name].tap()
 		app.textFields["medication name"].tap()
 		app.textFields["medication name"].typeText(additionalCharacters)
 		app.buttons["Save"].tap()
 
 		// then
-		XCTAssert(!app.tables.staticTexts[medicationName].exists)
+		XCTAssert(!app.tables.staticTexts[medication.name].exists)
 		XCTAssert(app.tables.staticTexts[editedMedicationName].exists)
 	}
 
 	func testSettingNameToOriginalNameOfMedicationWithDifferentCase_doesNotDisableSaveButton() {
 		// given
-		let medicationName = "gterq"
-		createMedication(name: medicationName)
+		let medication = Medication("gterq")
+		createMedication(medication)
 
 		// when
-		app.tables.staticTexts[medicationName].tap()
-		setTextFor(field: app.textFields["medication name"], to: medicationName.localizedUppercase)
+		app.tables.staticTexts[medication.name].tap()
+		setTextFor(field: app.textFields["medication name"], to: medication.name.localizedUppercase)
 
 		// then
 		XCTAssert(app.buttons["Save"].isEnabled)
@@ -148,14 +147,14 @@ final class RecordMedicationsUITests: UITest {
 
 	func testEditingDose_updatesDoseDescriptionInDoseList() {
 		// given
-		let medicationName = "fhiou"
+		let medication = Medication("fhiou")
 		let originalDosage = "12 mg"
 		let editedDosage = "342 cL"
 		let originalDoseDate = Date()
 		let editedDoseDate = originalDoseDate - 1.months
-		createMedication(name: medicationName)
-		takeDoseOf(medicationName, at: originalDoseDate, dosage: originalDosage)
-		app.buttons["last \(medicationName) dose button"].tap()
+		createMedication(medication)
+		takeDoseOf(medication, at: originalDoseDate, dosage: originalDosage)
+		app.buttons["last \(medication.name) dose button"].tap()
 
 		// when
 		let originalDoseDescription = doseDescription(dosage: originalDosage, date: originalDoseDate)
@@ -179,55 +178,54 @@ final class RecordMedicationsUITests: UITest {
 
 	func testDoseTaken_showsInMedicationDosesView() {
 		// given
-		let medicationName = "abjkdf"
-		let dosage = "123 mg"
+		let medication = Medication("abjkdf", dosage: "123 mg")
 		let doseTakenDate = Date()
-		createMedication(name: medicationName, dosage: dosage)
-		takeDoseOf(medicationName, at: doseTakenDate)
+		createMedication(medication)
+		takeDoseOf(medication, at: doseTakenDate)
 
 		// when
-		app.buttons["last \(medicationName) dose button"].tap()
+		app.buttons["last \(medication.name) dose button"].tap()
 
 		// then
-		XCTAssert(app.tables.staticTexts[doseDescription(dosage: dosage, date: doseTakenDate)].exists)
+		XCTAssert(app.tables.staticTexts[doseDescription(dosage: medication.dosage, date: doseTakenDate)].exists)
 	}
 
 	// MARK - Deletion
 
 	func testDeletingMedicationWhileFiltering_removesCorrectMedicationFromTableView() {
 		// given
-		let medicationName = "afjsdo"
-		let medicationName2 = "fjeowijhwioa"
-		createMedication(name: medicationName)
-		createMedication(name: medicationName2)
+		let medication1 = Medication("afjsdo")
+		let medication2 = Medication("fjeowijhwioa")
+		createMedication(medication1)
+		createMedication(medication2)
 
-		filterMedications(by: medicationName)
+		filterMedications(by: medication1.name)
 
 		// when
-		app.tables.staticTexts[medicationName].swipeLeft()
+		app.tables.staticTexts[medication1.name].swipeLeft()
 		app.buttons["🗑️"].tap()
 		app.buttons["Yes"].tap()
 		app.searchFields["Search Medications"].buttons["Clear text"].tap()
 
 		// then
 		app.buttons["Cancel"].tap()
-		XCTAssert(!app.tables.cells.staticTexts[medicationName].exists)
-		XCTAssert(app.tables.cells.staticTexts[medicationName2].exists)
+		XCTAssert(!app.tables.cells.staticTexts[medication1.name].exists)
+		XCTAssert(app.tables.cells.staticTexts[medication2.name].exists)
 	}
 
 	func testDeletingDoseWhileFiltering_removesCorrectDoseFromTableView() {
 		// given
-		let medicationName = "few"
-		createMedication(name: medicationName)
+		let medication = Medication("few")
+		createMedication(medication)
 		let dose1Date = Date() - 1.months
 		let dose2Date = Date()
 		let dose3Date = Date() - 1.minutes
 		let dose4Date = Date() - 2.minutes
-		takeDoseOf(medicationName, at: dose1Date)
-		takeDoseOf(medicationName, at: dose2Date)
-		takeDoseOf(medicationName, at: dose3Date)
-		takeDoseOf(medicationName, at: dose4Date)
-		app.buttons["last \(medicationName) dose button"].tap()
+		takeDoseOf(medication, at: dose1Date)
+		takeDoseOf(medication, at: dose2Date)
+		takeDoseOf(medication, at: dose3Date)
+		takeDoseOf(medication, at: dose4Date)
+		app.buttons["last \(medication.name) dose button"].tap()
 		filterDoseDates(from: dose2Date, to: dose4Date)
 		let dose3Description = doseDescription(date: dose3Date)
 
@@ -249,7 +247,7 @@ final class RecordMedicationsUITests: UITest {
 		// This specifically guards against a bug that was found where the dose was
 		// deleted but the UI wasn't updated because an error was thrown.
 		app.navigationBars.buttons["Medications"].tap()
-		app.buttons["last \(medicationName) dose button"].tap()
+		app.buttons["last \(medication.name) dose button"].tap()
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose1Date)].exists)
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose2Date)].exists)
 		XCTAssert(!app.tables.staticTexts[dose3Description].exists)
@@ -258,15 +256,15 @@ final class RecordMedicationsUITests: UITest {
 
 	func testDeletingDoseWhileNotFiltering_removesCorrectDoseFromTableView() {
 		// given
-		let medicationName = "few"
-		createMedication(name: medicationName)
+		let medication = Medication("few")
+		createMedication(medication)
 		let dose1Date = Date()
 		let dose2Date = Date() - 1.days
 		let dose3Date = Date() - 2.days
-		takeDoseOf(medicationName, at: dose1Date)
-		takeDoseOf(medicationName, at: dose2Date)
-		takeDoseOf(medicationName, at: dose3Date)
-		app.buttons["last \(medicationName) dose button"].tap()
+		takeDoseOf(medication, at: dose1Date)
+		takeDoseOf(medication, at: dose2Date)
+		takeDoseOf(medication, at: dose3Date)
+		app.buttons["last \(medication.name) dose button"].tap()
 		let dose2Description = doseDescription(date: dose2Date)
 
 		// when
@@ -285,7 +283,7 @@ final class RecordMedicationsUITests: UITest {
 		// This specifically guards against a bug that was found where the dose was
 		// deleted but the UI wasn't updated because an error was thrown.
 		app.navigationBars.buttons["Medications"].tap()
-		app.buttons["last \(medicationName) dose button"].tap()
+		app.buttons["last \(medication.name) dose button"].tap()
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose1Date)].exists)
 		XCTAssert(!app.tables.staticTexts[dose2Description].exists)
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose3Date)].exists)
@@ -296,44 +294,44 @@ final class RecordMedicationsUITests: UITest {
 	func testReorderWhileFiltering_correcltyReordersMedications() {
 		// given
 		let filterString = "filter string"
-		let medication1Name = filterString
-		let medication2Name = "fjor"
-		let medication3Name = "\(filterString)fdsjkl"
-		let medication4Name = "gteqrfwds\(filterString)"
-		createMedication(name: medication1Name)
-		createMedication(name: medication2Name)
-		createMedication(name: medication3Name)
-		createMedication(name: medication4Name)
+		let medication1 = Medication(filterString)
+		let medication2 = Medication("fjor")
+		let medication3 = Medication("\(filterString)fdsjkl")
+		let medication4 = Medication("gteqrfwds\(filterString)")
+		createMedication(medication1)
+		createMedication(medication2)
+		createMedication(medication3)
+		createMedication(medication4)
 		filterMedications(by: filterString)
 
 		// when
-		var medication1Cell = app.tables.cells.staticTexts[medication1Name]
-		var medication3Cell = app.tables.cells.staticTexts[medication3Name]
+		var medication1Cell = app.tables.cells.staticTexts[medication1.name]
+		var medication3Cell = app.tables.cells.staticTexts[medication3.name]
 		medication1Cell.press(forDuration: 0.5, thenDragTo: medication3Cell)
 		app.buttons["Cancel"].tap()
 
 		// then
-		medication1Cell = app.tables.cells.staticTexts[medication1Name]
-		medication3Cell = app.tables.cells.staticTexts[medication3Name]
-		XCTAssertLessThanOrEqual(app.tables.staticTexts[medication2Name].frame.maxY, app.tables.staticTexts[medication3Name].frame.minY)
-		XCTAssertLessThanOrEqual(app.tables.staticTexts[medication3Name].frame.maxY, app.tables.staticTexts[medication1Name].frame.minY)
-		XCTAssertLessThanOrEqual(app.tables.staticTexts[medication1Name].frame.maxY, app.tables.staticTexts[medication4Name].frame.minY)
+		medication1Cell = app.tables.cells.staticTexts[medication1.name]
+		medication3Cell = app.tables.cells.staticTexts[medication3.name]
+		XCTAssertLessThanOrEqual(app.tables.staticTexts[medication2.name].frame.maxY, app.tables.staticTexts[medication3.name].frame.minY)
+		XCTAssertLessThanOrEqual(app.tables.staticTexts[medication3.name].frame.maxY, app.tables.staticTexts[medication1.name].frame.minY)
+		XCTAssertLessThanOrEqual(app.tables.staticTexts[medication1.name].frame.maxY, app.tables.staticTexts[medication4.name].frame.minY)
 	}
 
 	// MARK: - Dose History
 
 	func testPressingPreviousDateRangeButtonOnDoseList_correctlyRefiltersDosesAndDisplaysCorrectDateRangeOnDateFilterButton() {
 		// given
-		let medicationName = "ghrui"
+		let medication = Medication("ghrui")
 		let dose1Date = Date()
 		let dose2Date = dose1Date - 2.weeks + 1.days
 		let filterRange = 8.days
 		let filterStart = dose1Date - 1.weeks
 		let filterEnd = filterStart + filterRange
-		createMedication(name: medicationName)
-		takeDoseOf(medicationName, at: dose1Date)
-		takeDoseOf(medicationName, at: dose2Date)
-		app.buttons["last \(medicationName) dose button"].tap()
+		createMedication(medication)
+		takeDoseOf(medication, at: dose1Date)
+		takeDoseOf(medication, at: dose2Date)
+		app.buttons["last \(medication.name) dose button"].tap()
 		filterDoseDates(from: filterStart, to: filterEnd)
 
 		// when
@@ -356,16 +354,16 @@ final class RecordMedicationsUITests: UITest {
 
 	func testPressingNextDateRangeButtonOnDoseList_correctlyRefiltersDosesAndDisplaysCorrectDateRangeOnDateFilterButton() {
 		// given
-		let medicationName = "ghrui"
+		let medication = Medication("ghrui")
 		let dose1Date = Date()
 		let dose2Date = dose1Date - 2.weeks
 		let filterRange = 10.days
 		let filterStart = dose1Date - 1.weeks
 		let filterEnd = filterStart + filterRange
-		createMedication(name: medicationName)
-		takeDoseOf(medicationName, at: dose1Date)
-		takeDoseOf(medicationName, at: dose2Date)
-		app.buttons["last \(medicationName) dose button"].tap()
+		createMedication(medication)
+		takeDoseOf(medication, at: dose1Date)
+		takeDoseOf(medication, at: dose2Date)
+		app.buttons["last \(medication.name) dose button"].tap()
 		filterDoseDates(from: dose2Date - 1.days, to: dose2Date + 1.weeks)
 
 		// when
@@ -386,10 +384,10 @@ final class RecordMedicationsUITests: UITest {
 
 	func testSettingFromDateAfterToDate_doesNotAllowSavingFilter() {
 		// given
-		let medicationName = "ghrui"
-		createMedication(name: medicationName)
-		takeDoseOf(medicationName, at: Date())
-		app.buttons["last \(medicationName) dose button"].tap()
+		let medication = Medication("ghrui")
+		createMedication(medication)
+		takeDoseOf(medication, at: Date())
+		app.buttons["last \(medication.name) dose button"].tap()
 		app.tables.buttons["filter dates button"].tap()
 
 		// when
@@ -402,10 +400,10 @@ final class RecordMedicationsUITests: UITest {
 
 	func testSettingFromDateAfterToDateThenDisablingToDate_allowsSavingFilter() {
 		// given
-		let medicationName = "ghrui"
-		createMedication(name: medicationName)
-		takeDoseOf(medicationName, at: Date())
-		app.buttons["last \(medicationName) dose button"].tap()
+		let medication = Medication("ghrui")
+		createMedication(medication)
+		takeDoseOf(medication, at: Date())
+		app.buttons["last \(medication.name) dose button"].tap()
 		app.tables.buttons["filter dates button"].tap()
 
 		// when
@@ -419,53 +417,8 @@ final class RecordMedicationsUITests: UITest {
 
 	// MARK: - Helper Functions
 
-	private final func createMedication(
-		name: String,
-		frequency: (times: String, unit: String)? = nil,
-		startedOn: Date? = nil,
-		dosage: String? = nil,
-		note: String? = nil,
-		save: Bool = true)
-	{
-		app.buttons["Add"].tap()
-
-		let nameField = app.textFields["medication name"]
-		nameField.tap()
-		nameField.typeText(name)
-
-		if let frequency = frequency {
-			app.buttons["set frequency button"].tap()
-			let numberOfTimesField = app.textFields["number of times"]
-			numberOfTimesField.tap()
-			numberOfTimesField.typeText(frequency.times)
-			app.pickerWheels["Day"].adjust(toPickerWheelValue: frequency.unit.capitalized)
-			app.buttons["save button"].tap()
-		}
-
-		if let startedOn = startedOn {
-			app.buttons["set started on button"].tap()
-			setDatePicker(to: startedOn)
-			app.buttons["save button"].tap()
-		}
-
-		if let dosage = dosage {
-			let dosageField = app.textFields["medication dosage"]
-			dosageField.tap()
-			dosageField.typeText(dosage)
-		}
-
-		if let note = note {
-			app.textViews["notes"].tap()
-			app.textViews["notes"].typeText(note)
-		}
-
-		if save {
-			app.buttons["Save"].tap()
-		}
-	}
-
-	private final func takeDoseOf(_ medicationName: String, at date: Date, dosage: String? = nil) {
-		app.buttons["take \(medicationName) button"].tap()
+	private final func takeDoseOf(_ medication: Medication, at date: Date, dosage: String? = nil) {
+		app.buttons["take \(medication.name) button"].tap()
 
 		setDatePicker(to: date)
 
