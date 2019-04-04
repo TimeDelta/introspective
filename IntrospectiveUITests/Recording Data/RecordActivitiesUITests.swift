@@ -62,7 +62,6 @@ final class RecordActivitiesUITests: UITest {
 		XCTAssertEqual(app.textViews["activity description"].value as? String, definition.description)
 		XCTAssertEqual(definitionTagsFieldAccessibilityValueAsSet(), Set(definition.tags!))
 		XCTAssertEqual(activityDefinitionAutoNoteField().value as? String, "1")
-		app.buttons["Save"].tap() // keyboard is in the way of the settings tab so tearDown fails without this
 	}
 
 	func testDeletingDescriptionAndTagsFromActivityDefinition_correctlySaves() {
@@ -83,7 +82,6 @@ final class RecordActivitiesUITests: UITest {
 		XCTAssertEqual(activityDefinitionNameField().value as? String, definition.name)
 		XCTAssertEqual(app.textViews["activity description"].value as? String, "")
 		XCTAssertEqual(activityDefinitionTagsField().value as? String, "Tags") // placeholder value is "Tags"
-		app.buttons["Save"].tap() // keyboard is in the way of the settings tab so tearDown fails without this
 	}
 
 	func testEditActivityDefinitionHasEmptyNameField_saveButtonIsDisabled() {
@@ -476,7 +474,6 @@ final class RecordActivitiesUITests: UITest {
 
 		// then
 		XCTAssertEqual(app.tables.cells.allElementsBoundByIndex.count, 1)
-		app.buttons["Cancel"].tap() // hide keyboard
 	}
 
 	func testFilteringForDescriptionWorks() {
@@ -492,7 +489,6 @@ final class RecordActivitiesUITests: UITest {
 
 		// then
 		XCTAssertEqual(app.tables.cells.allElementsBoundByIndex.count, 1)
-		app.buttons["Cancel"].tap() // hide keyboard
 	}
 
 	func testFilteringForTagsWorks() {
@@ -510,7 +506,6 @@ final class RecordActivitiesUITests: UITest {
 
 		// then
 		XCTAssertEqual(app.tables.cells.allElementsBoundByIndex.count, 1)
-		app.buttons["Cancel"].tap() // hide keyboard
 	}
 
 	func testClearingFilterText_correctlyUpdatesDisplayedActivities() {
@@ -527,7 +522,6 @@ final class RecordActivitiesUITests: UITest {
 
 		// then
 		XCTAssertEqual(app.tables.cells.allElementsBoundByIndex.count, 2)
-		app.buttons["Cancel"].tap() // hide keyboard
 	}
 
 	// MARK: - Deleting

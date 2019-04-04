@@ -60,7 +60,6 @@ final class RecordMedicationsUITests: UITest {
 
 		// then
 		XCTAssertEqual(app.buttons["set frequency button"].value as? String, "As needed")
-		app.buttons["Save"].tap() // keyboard is hiding the settings tab
 	}
 
 	func testClearingStartedOnDateOnNewMedicationScreen_updatesStartedOnButtonTitle() {
@@ -73,7 +72,6 @@ final class RecordMedicationsUITests: UITest {
 
 		// then
 		XCTAssertEqual(app.buttons["set started on button"].value as? String, "Not set")
-		app.buttons["Save"].tap() // keyboard is hiding the settings tab
 	}
 
 	func testSettingNameToNameOfOtherMedicationOnNewMedicationScreen_disablesSaveButton() {
@@ -86,7 +84,6 @@ final class RecordMedicationsUITests: UITest {
 
 		// then
 		XCTAssert(!app.buttons["Save"].isEnabled)
-		app.navigationBars.buttons["Medications"].tap() // keyboard is hiding the settings tab
 	}
 
 	// MARK: - Editing
@@ -142,7 +139,6 @@ final class RecordMedicationsUITests: UITest {
 
 		// then
 		XCTAssert(app.buttons["Save"].isEnabled)
-		app.buttons["Save"].tap() // keyboard is hiding the settings tab
 	}
 
 	func testEditingDose_updatesDoseDescriptionInDoseList() {
