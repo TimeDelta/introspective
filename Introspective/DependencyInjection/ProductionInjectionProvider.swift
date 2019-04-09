@@ -37,6 +37,7 @@ public final class ProductionInjectionProvider: InjectionProvider {
 	}
 	public final func codableStorage() -> CodableStorage { return Me.realCodableStorage }
 	public final func settings() -> Settings {
+		guard !functionalTesting else { return DummySettings() }
 		if Me.realSettings == nil {
 			do {
 				let existingSettings = try database().query(SettingsImpl.fetchRequest())

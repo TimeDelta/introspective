@@ -287,13 +287,13 @@ final class RecordMedicationsUITests: UITest {
 
 	// MARK: - Reordering
 
-	func testReorderWhileFiltering_correcltyReordersMedications() {
+	func testReorderToLowerSpotWhileFiltering_correcltyReordersMedications() {
 		// given
 		let filterString = "filter string"
 		let medication1 = Medication(filterString)
-		let medication2 = Medication("fjor")
-		let medication3 = Medication("\(filterString)fdsjkl")
-		let medication4 = Medication("gteqrfwds\(filterString)")
+		let medication2 = Medication("med 2")
+		let medication3 = Medication("\(filterString) med 3")
+		let medication4 = Medication("med 4 \(filterString)")
 		createMedication(medication1)
 		createMedication(medication2)
 		createMedication(medication3)
@@ -301,17 +301,86 @@ final class RecordMedicationsUITests: UITest {
 		filterMedications(by: filterString)
 
 		// when
-		var medication1Cell = app.tables.cells.staticTexts[medication1.name]
-		var medication3Cell = app.tables.cells.staticTexts[medication3.name]
-		medication1Cell.press(forDuration: 0.5, thenDragTo: medication3Cell)
+		medicationCell(medication1).press(forDuration: 0.5, thenDragTo: medicationCell(medication4))
 		app.buttons["Cancel"].tap()
 
 		// then
-		medication1Cell = app.tables.cells.staticTexts[medication1.name]
-		medication3Cell = app.tables.cells.staticTexts[medication3.name]
-		XCTAssertLessThanOrEqual(app.tables.staticTexts[medication2.name].frame.maxY, app.tables.staticTexts[medication3.name].frame.minY)
-		XCTAssertLessThanOrEqual(app.tables.staticTexts[medication3.name].frame.maxY, app.tables.staticTexts[medication1.name].frame.minY)
-		XCTAssertLessThanOrEqual(app.tables.staticTexts[medication1.name].frame.maxY, app.tables.staticTexts[medication4.name].frame.minY)
+		XCTAssertLessThanOrEqual(medicationCell(medication2).frame.maxY, medicationCell(medication3).frame.minY)
+		XCTAssertLessThanOrEqual(medicationCell(medication3).frame.maxY, medicationCell(medication4).frame.minY)
+		XCTAssertLessThanOrEqual(medicationCell(medication4).frame.maxY, medicationCell(medication1).frame.minY)
+	}
+
+	func testReorderToHigherSpotWhileFiltering_correcltyReordersMedications() {
+		// given
+		let filterString = "filter string"
+		let medication1 = Medication(filterString)
+		let medication2 = Medication("med 2")
+		let medication3 = Medication("\(filterString) med 3")
+		let medication4 = Medication("med 4 \(filterString)")
+		createMedication(medication1)
+		createMedication(medication2)
+		createMedication(medication3)
+		createMedication(medication4)
+		filterMedications(by: filterString)
+
+		// when
+		medicationCell(medication3).press(forDuration: 0.5, thenDragTo: medicationCell(medication1))
+		app.buttons["Cancel"].tap()
+
+		// then
+		XCTAssertLessThanOrEqual(medicationCell(medication3).frame.maxY, medicationCell(medication1).frame.minY)
+		XCTAssertLessThanOrEqual(medicationCell(medication1).frame.maxY, medicationCell(medication2).frame.minY)
+		XCTAssertLessThanOrEqual(medicationCell(medication2).frame.maxY, medicationCell(medication4).frame.minY)
+	}
+
+	func testReorderToLowerSpotWhileNotFiltering_persistsAfterGoingBackAndThenViewingRecordMedicationsScreenAgain() {
+		// given
+		let medication1 = Medication("med 1")
+		let medication2 = Medication("med 2")
+		let medication3 = Medication("med 3")
+		createMedication(medication1)
+		createMedication(medication2)
+		createMedication(medication3)
+
+		// when - re-order
+		medicationCell(medication1).press(forDuration: 0.5, thenDragTo: medicationCell(medication2))
+
+		// then - correct order before
+		XCTAssertLessThanOrEqual(medicationCell(medication2).frame.maxY, medicationCell(medication1).frame.minY)
+		XCTAssertLessThanOrEqual(medicationCell(medication1).frame.maxY, medicationCell(medication3).frame.minY)
+
+		// when - go back to record screen and then view medications again
+		app.navigationBars.buttons["Back"].tap()
+		app.tables.cells.staticTexts["Medications"].tap()
+
+		// then - correct order after
+		XCTAssertLessThanOrEqual(medicationCell(medication2).frame.maxY, medicationCell(medication1).frame.minY)
+		XCTAssertLessThanOrEqual(medicationCell(medication1).frame.maxY, medicationCell(medication3).frame.minY)
+	}
+
+	func testReorderToHigherSpotWhileNotFiltering_persistsAfterGoingBackAndThenViewingRecordMedicationsScreenAgain() {
+		// given
+		let medication1 = Medication("med 1")
+		let medication2 = Medication("med 2")
+		let medication3 = Medication("med 3")
+		createMedication(medication1)
+		createMedication(medication2)
+		createMedication(medication3)
+
+		// when - re-order
+		medicationCell(medication3).press(forDuration: 0.5, thenDragTo: medicationCell(medication2))
+
+		// then - correct order before
+		XCTAssertLessThanOrEqual(medicationCell(medication1).frame.maxY, medicationCell(medication3).frame.minY)
+		XCTAssertLessThanOrEqual(medicationCell(medication3).frame.maxY, medicationCell(medication2).frame.minY)
+
+		// when - go back to record screen and then view medications again
+		app.navigationBars.buttons["Back"].tap()
+		app.tables.cells.staticTexts["Medications"].tap()
+
+		// then - correct order after
+		XCTAssertLessThanOrEqual(medicationCell(medication1).frame.maxY, medicationCell(medication3).frame.minY)
+		XCTAssertLessThanOrEqual(medicationCell(medication3).frame.maxY, medicationCell(medication2).frame.minY)
 	}
 
 	// MARK: - Dose History
@@ -465,5 +534,9 @@ final class RecordMedicationsUITests: UITest {
 		dateFormatter.timeStyle = .short
 		dosageDescription += dateFormatter.string(from: date)
 		return dosageDescription
+	}
+
+	private final func medicationCell(_ medication: Medication) -> XCUIElement {
+		return app.tables.cells.staticTexts[medication.name]
 	}
 }

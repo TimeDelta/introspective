@@ -226,19 +226,25 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			let transaction = DependencyInjector.db.transaction()
 			if medicationsFromIndex < medicationsToIndex {
 				for i in medicationsFromIndex + 1 ... medicationsToIndex {
-					if let medications = fetchedResultsController.fetchedObjects?[i] {
-						try transaction.pull(savedObject: medications).recordScreenIndex -= 1
+					if let medication = fetchedResultsController.fetchedObjects?[i] {
+						try transaction.pull(savedObject: medication).recordScreenIndex -= 1
+					} else {
+						log.error("Failed to get medication for index %d", i)
 					}
 				}
 			} else {
 				for i in medicationsToIndex ..< medicationsFromIndex {
-					if let medications = fetchedResultsController.fetchedObjects?[i] {
-						try transaction.pull(savedObject: medications).recordScreenIndex += 1
+					if let medication = fetchedResultsController.fetchedObjects?[i] {
+						try transaction.pull(savedObject: medication).recordScreenIndex += 1
+					} else {
+						log.error("Failed to get medication for index %d", i)
 					}
 				}
 			}
 			if let medication = fetchedResultsController.fetchedObjects?[medicationsFromIndex] {
 				try transaction.pull(savedObject: medication).recordScreenIndex = Int16(medicationsToIndex)
+			} else {
+				log.error("Failed to get medication for index %d", medicationsFromIndex)
 			}
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		} catch {
@@ -302,9 +308,9 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	// MARK: - Helper Functions
 
 	private final func loadMedications() {
-		self.resetFetchedResultsController()
-		self.finishedLoading = true
-		self.tableView.reloadData()
+		resetFetchedResultsController()
+		finishedLoading = true
+		tableView.reloadData()
 	}
 
 	private final func resetFetchedResultsController() {
@@ -315,7 +321,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 				sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
 				cacheName: "medications")
 			let fetchRequest = fetchedResultsController.fetchRequest
-			let searchText: String = self.getSearchText()
+			let searchText: String = getSearchText()
 			if !searchText.isEmpty {
 				fetchRequest.predicate = NSPredicate(
 					format: "name CONTAINS[cd] %@ OR (notes != nil AND notes CONTAINS[cd] %@)",
@@ -403,6 +409,14 @@ public final class RecordMedicationTableViewController: UITableViewController {
 // MARK: - UISearchResultsUpdating
 
 extension RecordMedicationTableViewController: UISearchResultsUpdating {
+
+	/// This is used to provide a hook into setting the search text for testing. For some reason
+	/// passing searchController into resetFetchedResultsController() directly from
+	/// updateSearchResults() to use it instead results in localSearchController.searchBar being
+	/// nil in that function even though it is not nil when passed in.
+	public func setSearchText(_ text: String) {
+		searchController.searchBar.text = text
+	}
 
 	public func updateSearchResults(for searchController: UISearchController) {
 		resetFetchedResultsController()
