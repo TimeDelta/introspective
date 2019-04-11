@@ -97,7 +97,6 @@ Pill name,Notes,Dosage,Frequency,How many times per day,How many days,Starting,E
 			name: "med 2 created during import",
 			recordScreenIndex: 3)
 
-		importer.pauseOnLine = nil
 		try importer.resume()
 
 		// then

@@ -235,7 +235,6 @@ final class RecordMedicationTableViewControllerFunctionalTests: FunctionalTest {
 			name: "med 2 created during import",
 			recordScreenIndex: 3)
 
-		importer.pauseOnLine = nil
 		try importer.resume()
 
 		controller.viewDidLoad()
@@ -274,7 +273,6 @@ final class RecordMedicationTableViewControllerFunctionalTests: FunctionalTest {
 			name: "med 2 created during import",
 			recordScreenIndex: 3)
 
-		importer.pauseOnLine = nil
 		try importer.resume()
 
 		controller.viewDidLoad()

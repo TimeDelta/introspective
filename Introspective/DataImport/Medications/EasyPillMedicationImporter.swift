@@ -64,6 +64,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 			while lines.count > 0 {
 				if pauseOnLine == lineNumber {
 					pause()
+					pauseOnLine = nil
 					return
 				}
 				guard !isPaused else { return }

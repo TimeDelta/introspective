@@ -292,7 +292,6 @@ not enough columns
 			name: "definition 2 created during import",
 			recordScreenIndex: 3)
 
-		importer.pauseOnLine = nil
 		try importer.resume()
 
 		// then

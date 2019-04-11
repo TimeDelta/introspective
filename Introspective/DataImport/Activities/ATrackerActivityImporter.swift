@@ -73,6 +73,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 			while currentRow != nil {
 				guard pauseOnLine != lineNumber else {
 					pause()
+					pauseOnLine = nil
 					return
 				}
 				guard !isPaused else { return }
