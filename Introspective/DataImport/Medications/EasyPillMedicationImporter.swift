@@ -66,6 +66,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 					pause()
 					return
 				}
+				guard !isPaused else { return }
 				let line = lines.removeFirst()
 				try processLine(line, mainTransaction)
 				lineNumber += 1
