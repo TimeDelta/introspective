@@ -15,6 +15,7 @@ final class MoodUtilFunctionalTests: FunctionalTest {
 	private final var util: MoodUtilImpl!
 
 	final override func setUp() {
+		super.setUp()
 		util = MoodUtilImpl()
 	}
 

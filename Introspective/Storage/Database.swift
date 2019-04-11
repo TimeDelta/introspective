@@ -46,7 +46,7 @@ public class DatabaseImpl: Database {
 
 	public init(_ container: NSPersistentContainer? = nil) {
 		persistentContainer = container ?? {
-			let container = NSPersistentContainer(name: "Introspective")
+			let container = NSPersistentContainer(name: "Introspective", managedObjectModel: AppDelegate.objectModel)
 			container.loadPersistentStores(completionHandler: { (storeDescription, error) in
 				if let error = error {
 					/*

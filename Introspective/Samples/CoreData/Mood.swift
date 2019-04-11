@@ -44,7 +44,7 @@ public final class MoodImpl: NSManagedObject, Mood {
 	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
 		name: "Source",
 		pluralName: "Sources",
-		possibleValues: Sources.moodSources,
+		possibleValues: Sources.MoodSourceNum.values.map{ $0.description },
 		possibleValueToString: { $0 })
 	public static let minRating = DoubleAttribute(name: "Min Mood Rating", pluralName: "Min mood ratings", variableName: "minRating")
 	public static let maxRating = DoubleAttribute(name: "Max Mood Rating", pluralName: "Max mood ratings", variableName: "maxRating")
@@ -103,7 +103,7 @@ public final class MoodImpl: NSManagedObject, Mood {
 			return note
 		}
 		if attribute.equalTo(Me.sourceAttribute) {
-			return Sources.resolveMoodSource(source)
+			return Sources.resolveMoodSource(source).description
 		}
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}

@@ -8,6 +8,8 @@
 
 import UIKit
 import UserNotifications
+import CoreData
+
 
 public var testing = false
 public var functionalTesting = false
@@ -15,6 +17,10 @@ public var uiTesting = false
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
+
+	// avoid issues with loading the managed object model multiple times in a single app
+	// caused by tearing down and recreating the persistent container for each functional test
+	public static let objectModel: NSManagedObjectModel = NSManagedObjectModel.mergedModel(from: [Bundle(for: AppDelegate.self)])!
 
 	final var window: UIWindow?
 

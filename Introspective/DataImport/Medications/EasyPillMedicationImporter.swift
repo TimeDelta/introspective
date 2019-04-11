@@ -27,6 +27,9 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 	public final var importOnlyNewData: Bool = true
 	public final var isPaused: Bool = false
 
+	/// for testing purposes only
+	public final var pauseOnLine: Int?
+
 	private final var lineNumber = -1
 	private final let mainTransaction = DependencyInjector.db.transaction()
 	private final var latestDate: Date!
@@ -57,7 +60,12 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 	public final func resume() throws {
 		isPaused = false
 		do {
+			// note: EasyPill does not allow multi-line notes
 			while lines.count > 0 {
+				if pauseOnLine == lineNumber {
+					pause()
+					return
+				}
 				let line = lines.removeFirst()
 				try processLine(line, mainTransaction)
 				lineNumber += 1
@@ -257,7 +265,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 
 	private final func correctRecordScreenIndices() throws {
 		let medications = try getAllMedications(using: mainTransaction).sorted(by: {
-			$1.recordScreenIndex > $0.recordScreenIndex
+			$0.recordScreenIndex < $1.recordScreenIndex || ($0.getSource() == .introspective && $1.getSource() != .introspective)
 		})
 		var index = 0
 		for var medication in medications {

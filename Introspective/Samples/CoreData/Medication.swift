@@ -28,7 +28,7 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed {
 	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
 		name: "Source",
 		pluralName: "Sources",
-		possibleValues: Sources.medicationSources,
+		possibleValues: Sources.MedicationSourceNum.values.map{ $0.description },
 		possibleValueToString: { $0 })
 	public static let attributes: [Attribute] = [nameAttribute, dosage, frequency, startedOn, notes, sourceAttribute]
 	public final let attributes: [Attribute] = Me.attributes
@@ -127,6 +127,10 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed {
 
 	public final func sortedDoses(ascending: Bool) -> [MedicationDose] {
 		return doses.sortedArray(using: [NSSortDescriptor(key: "timestamp", ascending: ascending)]) as! [MedicationDose]
+	}
+
+	public final func getSource() -> Sources.MedicationSourceNum {
+		return Sources.resolveMedicationSource(source)
 	}
 
 	public final func setSource(_ source: Sources.MedicationSourceNum) {

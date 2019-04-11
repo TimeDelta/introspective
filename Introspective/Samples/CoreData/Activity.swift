@@ -32,7 +32,7 @@ public class Activity: NSManagedObject, CoreDataSample {
 	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
 		name: "Source",
 		pluralName: "Sources",
-		possibleValues: Sources.activitySources,
+		possibleValues: Sources.ActivitySourceNum.values.map{ $0.description },
 		possibleValueToString: { $0 })
 
 	public static let defaultDependentAttribute: Attribute = durationAttribute
@@ -131,7 +131,7 @@ public class Activity: NSManagedObject, CoreDataSample {
 			return note
 		}
 		if attribute.equalTo(Me.sourceAttribute) {
-			return Sources.resolveActivitySource(source)
+			return Sources.resolveActivitySource(source).description
 		}
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}

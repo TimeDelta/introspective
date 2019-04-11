@@ -18,7 +18,7 @@ final class MoodFunctionalTests: FunctionalTest {
 	private static let maxRating = 5.2
 	private static let note = "this is a note"
 	private static let timestamp = Date()
-	private static let source = Sources.resolveMoodSource(Sources.MoodSourceNum.introspective.rawValue)
+	private static let source = Sources.resolveMoodSource(Sources.MoodSourceNum.introspective.rawValue).description
 
 	private final var mood: MoodImpl!
 

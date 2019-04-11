@@ -30,7 +30,7 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
 		name: "Source",
 		pluralName: "Sources",
-		possibleValues: Sources.medicationSources,
+		possibleValues: Sources.MedicationSourceNum.values.map{ $0.description },
 		possibleValueToString: { $0 })
 	public static let attributes: [Attribute] = [CommonSampleAttributes.timestamp, nameAttribute, dosage, sourceAttribute]
 	public static let defaultDependentAttribute: Attribute = dosage
@@ -81,7 +81,7 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 			return timestamp
 		}
 		if attribute.equalTo(Me.sourceAttribute) {
-			return Sources.resolveMedicationSource(source)
+			return Sources.resolveMedicationSource(source).description
 		}
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}

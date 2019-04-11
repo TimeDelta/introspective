@@ -9,6 +9,7 @@
 import XCTest
 import SwiftyMocky
 import Hamcrest
+import CoreData
 @testable import Introspective
 
 class FunctionalTest: XCTestCase {

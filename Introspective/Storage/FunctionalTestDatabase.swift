@@ -11,21 +11,18 @@ import CoreData
 
 final class FunctionalTestDatabase: DatabaseImpl {
 
-	private typealias Me = FunctionalTestDatabase
-	// avoid issues with loading the managed object model multiple times in a single app
-	// caused by tearing down and recreating the persistent container for each functional test
-	private static let managedObjectModel: NSManagedObjectModel = NSManagedObjectModel.mergedModel(from: [Bundle(for: FunctionalTestDatabase.self)])!
-
 	private final let persistentContainer: NSPersistentContainer
 
-	public init() {
+	public init(_ managedObjectModel: NSManagedObjectModel? = nil) {
 		let description = NSPersistentStoreDescription()
 		description.type = NSInMemoryStoreType
 		description.shouldAddStoreAsynchronously = false // make it simpler for tests
 		description.shouldMigrateStoreAutomatically = true
 		description.shouldInferMappingModelAutomatically = true
 
-		persistentContainer = NSPersistentContainer(name: "Introspective", managedObjectModel: Me.managedObjectModel)
+		// Need to allow object model to be merged from external source because static
+		// context of this class and FunctionalTest seems to reset with each test class
+		persistentContainer = NSPersistentContainer(name: "Introspective", managedObjectModel: AppDelegate.objectModel)
 
 		persistentContainer.persistentStoreDescriptions = [description]
 		persistentContainer.loadPersistentStores { (description, error) in

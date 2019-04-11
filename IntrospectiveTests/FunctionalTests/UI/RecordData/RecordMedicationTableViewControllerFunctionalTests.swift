@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import SwiftyMocky
 import CoreData
 @testable import Introspective
 
@@ -104,6 +105,194 @@ final class RecordMedicationTableViewControllerFunctionalTests: FunctionalTest {
 		XCTAssertEqual(getMedication(atIndex: 3).name, medication4.name)
 	}
 
+	// MARK: Imported Medications
+
+	func testGivenMoveToLowerSpotWithImportedMedicationsWhileNotFiltering_tableViewMoveRowAtTo_correctlyReordersMedications() throws {
+		// given
+		let existingMedication1 = MedicationDataTestUtil.createMedication(name: "med 1", recordScreenIndex: 0)
+		let existingMedication2 = MedicationDataTestUtil.createMedication(name: "med 2", recordScreenIndex: 1)
+
+		let importer = try DependencyInjector.importer.easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
+		let importedName1 = "imported med 1"
+		let importedName2 = "imported med 2"
+		setUpMedicationImportFileContents([importedName1, importedName2])
+		try importer.importData(from: URL(fileURLWithPath: "/"))
+
+		controller.viewDidLoad()
+
+		// when
+		controller.tableView(controller.tableView, moveRowAt: cellIndex(0), to: cellIndex(2))
+
+		// then
+		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
+		//       and cannot use asynchronous asserts
+		XCTAssertEqual(getMedication(atIndex: 0).name, existingMedication2.name)
+		XCTAssertEqual(getMedication(atIndex: 1).name, importedName1)
+		XCTAssertEqual(getMedication(atIndex: 2).name, existingMedication1.name)
+		XCTAssertEqual(getMedication(atIndex: 3).name, importedName2)
+	}
+
+	func testGivenMoveToHigherSpotImportedMedicationsWhileNotFiltering_tableViewMoveRowAtTo_correctlyReordersMedications() throws {
+		// given
+		let existingMedication1 = MedicationDataTestUtil.createMedication(name: "med 1", recordScreenIndex: 0)
+		let existingMedication2 = MedicationDataTestUtil.createMedication(name: "med 2", recordScreenIndex: 1)
+
+		let importer = try DependencyInjector.importer.easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
+		let importedName1 = "imported med 1"
+		let importedName2 = "imported med 2"
+		setUpMedicationImportFileContents([importedName1, importedName2])
+		try importer.importData(from: URL(fileURLWithPath: "/"))
+
+		controller.viewDidLoad()
+
+		// when
+		controller.tableView(controller.tableView, moveRowAt: cellIndex(2), to: cellIndex(0))
+
+		// then
+		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
+		//       and cannot use asynchronous asserts
+		XCTAssertEqual(getMedication(atIndex: 0).name, importedName1)
+		XCTAssertEqual(getMedication(atIndex: 1).name, existingMedication1.name)
+		XCTAssertEqual(getMedication(atIndex: 2).name, existingMedication2.name)
+		XCTAssertEqual(getMedication(atIndex: 3).name, importedName2)
+	}
+
+	func testGivenMoveToLowerSpotWithImportedMedicationsWhileFiltering_tableViewMoveRowAtTo_correctlyReordersMedications() throws {
+		// given
+		let filterString = "filter string"
+
+		let existingMedication1 = MedicationDataTestUtil.createMedication(name: filterString, recordScreenIndex: 0)
+		let existingMedication2 = MedicationDataTestUtil.createMedication(name: "med 2", recordScreenIndex: 1)
+
+		let importer = try DependencyInjector.importer.easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
+		let importedName1 = "imported med 1 \(filterString)"
+		let importedName2 = "\(filterString) imported med 2"
+		setUpMedicationImportFileContents([importedName1, importedName2])
+		try importer.importData(from: URL(fileURLWithPath: "/"))
+
+		controller.viewDidLoad()
+		filterMedications(by: filterString)
+
+		// when
+		controller.tableView(controller.tableView, moveRowAt: cellIndex(0), to: cellIndex(2))
+
+		// then
+		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
+		//       and cannot use asynchronous asserts
+		filterMedications(by: "") // reset filter string in order to check that all medications are in correct spot
+		XCTAssertEqual(getMedication(atIndex: 0).name, existingMedication2.name)
+		XCTAssertEqual(getMedication(atIndex: 1).name, importedName1)
+		XCTAssertEqual(getMedication(atIndex: 2).name, importedName2)
+		XCTAssertEqual(getMedication(atIndex: 3).name, existingMedication1.name)
+	}
+
+	func testGivenMoveToHigherSpotWithImportedMedicationsWhileFiltering_tableViewMoveRowAtTo_correctlyReordersMedications() throws {
+		// given
+		let filterString = "filter string"
+
+		let existingMedication1 = MedicationDataTestUtil.createMedication(name: filterString, recordScreenIndex: 0)
+		let existingMedication2 = MedicationDataTestUtil.createMedication(name: "med 2", recordScreenIndex: 1)
+
+		let importer = try DependencyInjector.importer.easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
+		let importedName1 = "imported med 1 \(filterString)"
+		let importedName2 = "\(filterString) imported med 2"
+		setUpMedicationImportFileContents([importedName1, importedName2])
+		try importer.importData(from: URL(fileURLWithPath: "/"))
+
+		controller.viewDidLoad()
+		filterMedications(by: filterString)
+
+		// when
+		controller.tableView(controller.tableView, moveRowAt: cellIndex(2), to: cellIndex(0))
+
+		// then
+		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
+		//       and cannot use asynchronous asserts
+		filterMedications(by: "") // reset filter string in order to check that all medications are in correct spot
+		XCTAssertEqual(getMedication(atIndex: 0).name, importedName2)
+		XCTAssertEqual(getMedication(atIndex: 1).name, existingMedication1.name)
+		XCTAssertEqual(getMedication(atIndex: 2).name, existingMedication2.name)
+		XCTAssertEqual(getMedication(atIndex: 3).name, importedName1)
+	}
+
+	func testGivenMoveToLowerSpotWithNonImportedMedicationCreatedWhileImportingAndNotFiltering_tableViewMoveRowAtTo_correctlyReordersMedications() throws {
+		// given
+		let existingMedication1 = MedicationDataTestUtil.createMedication(name: "med 1", recordScreenIndex: 0)
+		let existingMedication2 = MedicationDataTestUtil.createMedication(name: "med 2", recordScreenIndex: 1)
+
+		let importer = try DependencyInjector.importer.easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
+		importer.pauseOnLine = 3
+
+		let importedName1 = "imported med 1"
+		let importedName2 = "imported med 2"
+		setUpMedicationImportFileContents([importedName1, importedName2])
+		try importer.importData(from: URL(fileURLWithPath: "/"))
+
+		let medicationCreatedDuringImport1 = MedicationDataTestUtil.createMedication(
+			name: "med 1 created during import",
+			recordScreenIndex: 2)
+		let medicationCreatedDuringImport2 = MedicationDataTestUtil.createMedication(
+			name: "med 2 created during import",
+			recordScreenIndex: 3)
+
+		importer.pauseOnLine = nil
+		try importer.resume()
+
+		controller.viewDidLoad()
+
+		// when
+		controller.tableView(controller.tableView, moveRowAt: cellIndex(2), to: cellIndex(4))
+
+		// then
+		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
+		//       and cannot use asynchronous asserts
+		XCTAssertEqual(getMedication(atIndex: 0).name, existingMedication1.name)
+		XCTAssertEqual(getMedication(atIndex: 1).name, existingMedication2.name)
+		XCTAssertEqual(getMedication(atIndex: 2).name, medicationCreatedDuringImport2.name)
+		XCTAssertEqual(getMedication(atIndex: 3).name, importedName1)
+		XCTAssertEqual(getMedication(atIndex: 4).name, medicationCreatedDuringImport1.name)
+		XCTAssertEqual(getMedication(atIndex: 5).name, importedName2)
+	}
+
+	func testGivenMoveToHigherSpotWithNonImportedMedicationCreatedWhileImportingAndNotFiltering_tableViewMoveRowAtTo_correctlyReordersMedications() throws {
+		// given
+		let existingMedication1 = MedicationDataTestUtil.createMedication(name: "med 1", recordScreenIndex: 0)
+		let existingMedication2 = MedicationDataTestUtil.createMedication(name: "med 2", recordScreenIndex: 1)
+
+		let importer = try DependencyInjector.importer.easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
+		importer.pauseOnLine = 3
+
+		let importedName1 = "imported med 1"
+		let importedName2 = "imported med 2"
+		setUpMedicationImportFileContents([importedName1, importedName2])
+		try importer.importData(from: URL(fileURLWithPath: "/"))
+
+		let medicationCreatedDuringImport1 = MedicationDataTestUtil.createMedication(
+			name: "med 1 created during import",
+			recordScreenIndex: 2)
+		let medicationCreatedDuringImport2 = MedicationDataTestUtil.createMedication(
+			name: "med 2 created during import",
+			recordScreenIndex: 3)
+
+		importer.pauseOnLine = nil
+		try importer.resume()
+
+		controller.viewDidLoad()
+
+		// when
+		controller.tableView(controller.tableView, moveRowAt: cellIndex(4), to: cellIndex(2))
+
+		// then
+		// note: recordScreenIndex appears to not be updated in the CoreData stack until Fafter the calling thread is done
+		//       and cannot use asynchronous asserts
+		XCTAssertEqual(getMedication(atIndex: 0).name, existingMedication1.name)
+		XCTAssertEqual(getMedication(atIndex: 1).name, existingMedication2.name)
+		XCTAssertEqual(getMedication(atIndex: 2).name, importedName1)
+		XCTAssertEqual(getMedication(atIndex: 3).name, medicationCreatedDuringImport1.name)
+		XCTAssertEqual(getMedication(atIndex: 4).name, medicationCreatedDuringImport2.name)
+		XCTAssertEqual(getMedication(atIndex: 5).name, importedName2)
+	}
+
 	// MARK: - Helper Functions
 
 	private final func getMedication(atIndex index: Int) -> Medication {
@@ -117,5 +306,13 @@ final class RecordMedicationTableViewControllerFunctionalTests: FunctionalTest {
 
 	private final func cellIndex(_ i: Int) -> IndexPath {
 		return IndexPath(row: i, section: 0)
+	}
+
+	private final func setUpMedicationImportFileContents(_ medicationNames: [String]) {
+		var input = "Pill name,Notes,Dosage,Frequency,How many times per day,How many days,Starting,Ending,Completed,Doses taken,Taking consistency,Quantity per"
+		for name in medicationNames {
+			input += "\n\(name),notes,1mg,as needed,1,ongoing,1/10/12,-,-,206,98%,,,,"
+		}
+		Given(ioUtil, .contentsOf(.any, willReturn: input))
 	}
 }
