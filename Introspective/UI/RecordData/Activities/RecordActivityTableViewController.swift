@@ -219,17 +219,23 @@ public final class RecordActivityTableViewController: UITableViewController {
 				for i in definitionsFromIndex + 1 ... definitionsToIndex {
 					if let definition = fetchedResultsController.fetchedObjects?[i] {
 						try transaction.pull(savedObject: definition).recordScreenIndex -= 1
+					} else {
+						log.error("Failed to get activity definition for index %d", i)
 					}
 				}
 			} else {
 				for i in definitionsToIndex ..< definitionsFromIndex {
 					if let definition = fetchedResultsController.fetchedObjects?[i] {
 						try transaction.pull(savedObject: definition).recordScreenIndex += 1
+					} else {
+						log.error("Failed to get activity definition for index %d", i)
 					}
 				}
 			}
 			if let definition = fetchedResultsController.fetchedObjects?[definitionsFromIndex] {
 				try transaction.pull(savedObject: definition).recordScreenIndex = Int16(definitionsToIndex)
+			} else {
+				log.error("Failed to get activity definition for index %d", definitionsFromIndex)
 			}
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		} catch {
@@ -602,6 +608,14 @@ public final class RecordActivityTableViewController: UITableViewController {
 // MARK: - UISearchResultsUpdating
 
 extension RecordActivityTableViewController: UISearchResultsUpdating {
+
+	/// This is used to provide a hook into setting the search text for testing. For some reason
+	/// passing searchController into resetFetchedResultsController() directly from
+	/// updateSearchResults() to use it instead results in localSearchController.searchBar being
+	/// nil in that function even though it is not nil when passed in.
+	public func setSearchText(_ text: String) {
+		searchController.searchBar.text = text
+	}
 
 	public func updateSearchResults(for searchController: UISearchController) {
 		loadActivitiyDefinitions()

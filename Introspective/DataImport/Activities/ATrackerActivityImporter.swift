@@ -36,6 +36,9 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	public final var importOnlyNewData: Bool = true
 	public final var isPaused: Bool = false
 
+	/// for testing purposes only
+	public final var pauseOnLine: Int?
+
 	private final var lineNumber: Int = -1
 	private final let mainTransaction = DependencyInjector.db.transaction()
 	private final var csv: CSVReader!
@@ -62,13 +65,20 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	}
 
 	public final func resume() throws {
+		// without this, pausing and returning skips a line
+		var currentRow: [String]? = []
+		if !isPaused { currentRow = csv.next() }
 		isPaused = false
 		do {
-			while csv.next() != nil {
+			while currentRow != nil {
+				guard pauseOnLine != lineNumber else {
+					pause()
+					return
+				}
 				guard !isPaused else { return }
 				try importActivity(from: csv, latestDate: &latestDate, using: mainTransaction)
 				lineNumber += 1
-				let _ = csv.dropFirst()
+				currentRow = csv.next()
 			}
 
 			try correctRecordScreenIndices()
@@ -227,7 +237,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 
 	private final func correctRecordScreenIndices() throws {
 		let definitions = try getAllActivityDefinitions(using: mainTransaction).sorted(by: {
-			$1.recordScreenIndex > $0.recordScreenIndex
+			$0.recordScreenIndex < $1.recordScreenIndex || ($0.getSource() == .introspective && $1.getSource() != .introspective)
 		})
 		var index = 0
 		for var definition in definitions {

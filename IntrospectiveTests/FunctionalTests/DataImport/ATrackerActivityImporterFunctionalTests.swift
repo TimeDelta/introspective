@@ -8,6 +8,7 @@
 
 import XCTest
 import SwiftyMocky
+import Hamcrest
 import CoreData
 import CSV
 @testable import Introspective
@@ -273,6 +274,51 @@ not enough columns
 		XCTAssertNil(importer.lastImport)
 	}
 
+	/// failure of this test can (but is not guaranteed to) cause weird re-ordering bug on record screen
+	func testGivenOtherDefinitionsCreatedOutsideOfImport_importData_correctlySetsRecordScreenIndexes() throws {
+		// given
+		var existingDefinition1 = ActivityDataTestUtil.createActivityDefinition(name: "definition 1", recordScreenIndex: 0)
+		var existingDefinition2 = ActivityDataTestUtil.createActivityDefinition(name: "definition 2", recordScreenIndex: 1)
+		useInput(Me.validInput)
+		importer.pauseOnLine = 3
+
+		// when
+		try importer.importData(from: url)
+
+		var definitionCreatedDuringImport1 = ActivityDataTestUtil.createActivityDefinition(
+			name: "definition 1 created during import",
+			recordScreenIndex: 2)
+		var definitionCreatedDuringImport2 = ActivityDataTestUtil.createActivityDefinition(
+			name: "definition 2 created during import",
+			recordScreenIndex: 3)
+
+		importer.pauseOnLine = nil
+		try importer.resume()
+
+		// then
+		existingDefinition1 = try database.pull(savedObject: existingDefinition1)
+		existingDefinition2 = try database.pull(savedObject: existingDefinition2)
+		definitionCreatedDuringImport1 = try database.pull(savedObject: definitionCreatedDuringImport1)
+		definitionCreatedDuringImport2 = try database.pull(savedObject: definitionCreatedDuringImport2)
+
+		let definitionsWithImported1Name = try getDefinitionsWith(name: Me.activityName1)
+		assertThat(definitionsWithImported1Name, hasCount(1))
+		let definitionsWithImported2Name = try getDefinitionsWith(name: Me.activityName2)
+		assertThat(definitionsWithImported2Name, hasCount(1))
+		// definition for activity 3 is same as definition for activity 1
+
+		XCTAssertEqual(existingDefinition1.recordScreenIndex, 0)
+		XCTAssertEqual(existingDefinition2.recordScreenIndex, 1)
+		XCTAssertEqual(definitionCreatedDuringImport1.recordScreenIndex, 2)
+		XCTAssertEqual(definitionCreatedDuringImport2.recordScreenIndex, 3)
+		if definitionsWithImported1Name.count == 1 {
+			XCTAssertEqual(definitionsWithImported1Name[0].recordScreenIndex, 4)
+		}
+		if definitionsWithImported2Name.count == 1 {
+			XCTAssertEqual(definitionsWithImported2Name[0].recordScreenIndex, 5)
+		}
+	}
+
 	// MARK: - Helper Functions
 
 	final override func useInput(_ input: String) {
@@ -331,6 +377,12 @@ not enough columns
 			XCTFail("More than one activity matched given criteria")
 		}
 		return nil
+	}
+
+	private final func getDefinitionsWith(name: String) throws -> [ActivityDefinition] {
+		let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
+		return try DependencyInjector.db.query(fetchRequest)
 	}
 
 	private final func objectExists(_ object: NSManagedObject) throws -> Bool {

@@ -101,14 +101,14 @@ Pill name,Notes,Dosage,Frequency,How many times per day,How many days,Starting,E
 		try importer.resume()
 
 		// then
-		existingMedication1 = try! database.pull(savedObject: existingMedication1)
-		existingMedication2 = try! database.pull(savedObject: existingMedication2)
-		medicationCreatedDuringImport1 = try! database.pull(savedObject: medicationCreatedDuringImport1)
-		medicationCreatedDuringImport2 = try! database.pull(savedObject: medicationCreatedDuringImport2)
+		existingMedication1 = try database.pull(savedObject: existingMedication1)
+		existingMedication2 = try database.pull(savedObject: existingMedication2)
+		medicationCreatedDuringImport1 = try database.pull(savedObject: medicationCreatedDuringImport1)
+		medicationCreatedDuringImport2 = try database.pull(savedObject: medicationCreatedDuringImport2)
 
-		let medsWithImported1Name = try! getMedicationsWith(name: Me.medInfo1.name)
+		let medsWithImported1Name = try getMedicationsWith(name: Me.medInfo1.name)
 		assertThat(medsWithImported1Name, hasCount(1))
-		let medsWithImported2Name = try! getMedicationsWith(name: Me.medInfo2.name)
+		let medsWithImported2Name = try getMedicationsWith(name: Me.medInfo2.name)
 		assertThat(medsWithImported2Name, hasCount(1))
 
 		XCTAssertEqual(existingMedication1.recordScreenIndex, 0)
@@ -195,18 +195,6 @@ a,,,as needed
 			}
 			return .match
 		}
-	}
-
-	private final func medicationWasNotImported(name: String, startedOn: Date?, frequency: Frequency?, dosage: Dosage?, notes: String?) throws -> Bool {
-		let medications = try getMedicationsWith(name: name)
-		if medications.count != 0 {
-			for medication in medications {
-				if medication.startedOn == startedOn && medication.frequency == frequency && medication.dosage == dosage && medication.notes == notes {
-					return false
-				}
-			}
-		}
-		return true
 	}
 
 	private final func getMedicationsWith(name: String) throws -> [Medication] {

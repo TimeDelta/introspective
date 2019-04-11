@@ -12,7 +12,12 @@ import Foundation
 public final class ActivityDataTestUtil {
 
 	@discardableResult
-	public static func createActivityDefinition(name: String = "", description: String? = nil, tags: [Tag] = []) -> ActivityDefinition {
+	public static func createActivityDefinition(
+		name: String = "",
+		description: String? = nil,
+		tags: [Tag] = [],
+		recordScreenIndex: Int16 = 0)
+	-> ActivityDefinition {
 		let transaction = DependencyInjector.db.transaction()
 		let definition = try! transaction.new(ActivityDefinition.self)
 		definition.name = name
@@ -20,7 +25,7 @@ public final class ActivityDataTestUtil {
 		for tag in tags {
 			definition.addToTags(try! transaction.pull(savedObject: tag))
 		}
-		definition.recordScreenIndex = 0
+		definition.recordScreenIndex = recordScreenIndex
 		try! transaction.commit()
 		return try! DependencyInjector.db.pull(savedObject: definition)
 	}

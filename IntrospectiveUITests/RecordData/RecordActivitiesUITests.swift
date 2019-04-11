@@ -595,44 +595,100 @@ final class RecordActivitiesUITests: UITest {
 
 	// MARK: - Reordering ActivityDefinitions
 
-	func testReorderActivityDefinitionToLowerSpot_persistsAfterGoingBackAndThenViewingRecordActivitiesScreenAgain() {
+	func testReorderToLowerSpotWhileFiltering_correcltyReordersDefinitions() {
 		// given
-		let definition1 = ActivityDefinition(name: "greq")
-		let definition2 = ActivityDefinition(name: "geq")
+		let filterString = "filter string"
+		let definition1 = ActivityDefinition(name: filterString)
+		let definition2 = ActivityDefinition(name: "definition 2")
+		let definition3 = ActivityDefinition(name: "\(filterString) definition 3")
+		let definition4 = ActivityDefinition(name: "definition 4 \(filterString)")
 		createActivityDefinition(definition1)
 		createActivityDefinition(definition2)
-		var activityCell1 = app.tables.cells.staticTexts[definition1.name]
-		var activityCell2 = app.tables.cells.staticTexts[definition2.name]
-		activityCell1.press(forDuration: 0.5, thenDragTo: activityCell2)
+		createActivityDefinition(definition3)
+		createActivityDefinition(definition4)
+		filterActivities(by: filterString)
 
 		// when
-		app.navigationBars.buttons["Back"].tap()
-		app.tables.cells.staticTexts["Activities"].tap()
+		definitionCell(definition1).press(forDuration: 0.5, thenDragTo: definitionCell(definition4))
+		app.buttons["Cancel"].tap()
 
 		// then
-		activityCell1 = app.tables.cells.staticTexts[definition1.name]
-		activityCell2 = app.tables.cells.staticTexts[definition2.name]
-		XCTAssertLessThanOrEqual(activityCell2.frame.maxY, activityCell1.frame.minY)
+		XCTAssertLessThanOrEqual(definitionCell(definition2).frame.maxY, definitionCell(definition3).frame.minY)
+		XCTAssertLessThanOrEqual(definitionCell(definition3).frame.maxY, definitionCell(definition4).frame.minY)
+		XCTAssertLessThanOrEqual(definitionCell(definition4).frame.maxY, definitionCell(definition1).frame.minY)
 	}
 
-	func testReorderActivityDefinitionToHigherSpot_persistsAfterGoingBackAndThenViewingRecordActivitiesScreenAgain() {
+	func testReorderToHigherSpotWhileFiltering_correcltyReordersDefinitions() {
 		// given
-		let definition1 = ActivityDefinition(name: "greq")
-		let definition2 = ActivityDefinition(name: "geq")
+		let filterString = "filter string"
+		let definition1 = ActivityDefinition(name: filterString)
+		let definition2 = ActivityDefinition(name: "definition 2")
+		let definition3 = ActivityDefinition(name: "\(filterString) definition 3")
+		let definition4 = ActivityDefinition(name: "definition 4 \(filterString)")
 		createActivityDefinition(definition1)
 		createActivityDefinition(definition2)
-		var activityCell1 = app.tables.cells.staticTexts[definition1.name]
-		var activityCell2 = app.tables.cells.staticTexts[definition2.name]
-		activityCell2.press(forDuration: 0.5, thenDragTo: activityCell1)
+		createActivityDefinition(definition3)
+		createActivityDefinition(definition4)
+		filterActivities(by: filterString)
 
 		// when
+		definitionCell(definition3).press(forDuration: 0.5, thenDragTo: definitionCell(definition1))
+		app.buttons["Cancel"].tap()
+
+		// then
+		XCTAssertLessThanOrEqual(definitionCell(definition3).frame.maxY, definitionCell(definition1).frame.minY)
+		XCTAssertLessThanOrEqual(definitionCell(definition1).frame.maxY, definitionCell(definition2).frame.minY)
+		XCTAssertLessThanOrEqual(definitionCell(definition2).frame.maxY, definitionCell(definition4).frame.minY)
+	}
+
+	func testReorderToLowerSpotWhileNotFiltering_persistsAfterGoingBackAndThenViewingRecordActivitiesScreenAgain() {
+		// given
+		let definition1 = ActivityDefinition(name: "definition 1")
+		let definition2 = ActivityDefinition(name: "definition 2")
+		let definition3 = ActivityDefinition(name: "definition 3")
+		createActivityDefinition(definition1)
+		createActivityDefinition(definition2)
+		createActivityDefinition(definition3)
+
+		// when - re-order
+		definitionCell(definition1).press(forDuration: 0.5, thenDragTo: definitionCell(definition2))
+
+		// then - correct order before
+		XCTAssertLessThanOrEqual(definitionCell(definition2).frame.maxY, definitionCell(definition1).frame.minY)
+		XCTAssertLessThanOrEqual(definitionCell(definition1).frame.maxY, definitionCell(definition3).frame.minY)
+
+		// when - go back to record screen and then view activities again
 		app.navigationBars.buttons["Back"].tap()
 		app.tables.cells.staticTexts["Activities"].tap()
 
-		// then
-		activityCell1 = app.tables.cells.staticTexts[definition1.name]
-		activityCell2 = app.tables.cells.staticTexts[definition2.name]
-		XCTAssertLessThanOrEqual(activityCell2.frame.maxY, activityCell1.frame.minY)
+		// then - correct order after
+		XCTAssertLessThanOrEqual(definitionCell(definition2).frame.maxY, definitionCell(definition1).frame.minY)
+		XCTAssertLessThanOrEqual(definitionCell(definition1).frame.maxY, definitionCell(definition3).frame.minY)
+	}
+
+	func testReorderToHigherSpotWhileNotFiltering_persistsAfterGoingBackAndThenViewingRecordActivitiesScreenAgain() {
+		// given
+		let definition1 = ActivityDefinition(name: "definition 1")
+		let definition2 = ActivityDefinition(name: "definition 2")
+		let definition3 = ActivityDefinition(name: "definition 3")
+		createActivityDefinition(definition1)
+		createActivityDefinition(definition2)
+		createActivityDefinition(definition3)
+
+		// when - re-order
+		definitionCell(definition3).press(forDuration: 0.5, thenDragTo: definitionCell(definition2))
+
+		// then - correct order before
+		XCTAssertLessThanOrEqual(definitionCell(definition1).frame.maxY, definitionCell(definition3).frame.minY)
+		XCTAssertLessThanOrEqual(definitionCell(definition3).frame.maxY, definitionCell(definition2).frame.minY)
+
+		// when - go back to record screen and then view activities again
+		app.navigationBars.buttons["Back"].tap()
+		app.tables.cells.staticTexts["Activities"].tap()
+
+		// then - correct order after
+		XCTAssertLessThanOrEqual(definitionCell(definition1).frame.maxY, definitionCell(definition3).frame.minY)
+		XCTAssertLessThanOrEqual(definitionCell(definition3).frame.maxY, definitionCell(definition2).frame.minY)
 	}
 
 	// MARK: - Helper Functions
@@ -741,5 +797,8 @@ final class RecordActivitiesUITests: UITest {
 
 	private final func autoIgnoreSecondsTextField() -> XCUIElement {
 		return app.tables.cells.textFields["auto-ignore seconds"]
+	}
+	private final func definitionCell(_ definition: ActivityDefinition) -> XCUIElement {
+		return app.tables.cells.staticTexts[definition.name]
 	}
 }

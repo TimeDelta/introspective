@@ -8,6 +8,7 @@
 
 import Foundation
 import Hamcrest
+import CoreData
 @testable import Introspective
 
 func groupExists(withDate date: Date, andSamples samples: [Sample]) -> Matcher<[(Any, [Sample])]> {
@@ -26,6 +27,24 @@ func groupExists(withDate date: Date, andSamples samples: [Sample]) -> Matcher<[
 		}
 		if !mismatchMessage.isEmpty {
 			return .mismatch(mismatchMessage)
+		}
+		return .match
+	}
+}
+
+func noneStoredInDatabase<Type: NSManagedObject & CoreDataObject>() -> Matcher<Type.Type> {
+	return Matcher("No \(Type.entityName) exists") { _ -> MatchResult in
+		let count = try! DependencyInjector.db.query(Type.fetchRequest() as! NSFetchRequest<Type>).count
+		if count == 0 { return .match }
+		return .mismatch("Found \(count) \(Type.entityName)")
+	}
+}
+
+func equivalentDoesNotExistInDatabase() -> Matcher<Activity> {
+	return Matcher("does not exist") { activity -> MatchResult in
+		let activities = try! DependencyInjector.db.query(Activity.fetchRequest())
+		if activities.contains(where: { $0.equalTo(activity) }) {
+			return .mismatch("\(activity.debugDescription) exists in database")
 		}
 		return .match
 	}

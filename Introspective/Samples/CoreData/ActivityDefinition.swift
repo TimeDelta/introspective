@@ -20,6 +20,10 @@ public class ActivityDefinition: NSManagedObject, CoreDataObject {
 
 	// MARK: - Other
 
+	public final func getSource() -> Sources.ActivitySourceNum {
+		return Sources.resolveActivitySource(source)
+	}
+
 	public final func setSource(_ source: Sources.ActivitySourceNum) {
 		self.source = source.rawValue
 	}
