@@ -16,6 +16,8 @@ final class MoodSettingsUITests: UITest {
 		app.tables.staticTexts["Mood"].tap()
 	}
 
+	// MARK: - min / max moods
+
 	func testGivenMaxMoodLessThanMinMood_cannotSaveSettings() {
 		// given
 		setTextFor(field: maxMoodField(), to: "-1")
@@ -68,6 +70,8 @@ final class MoodSettingsUITests: UITest {
 		XCTAssertEqual(maxMoodField().value as? String, expectedMax)
 	}
 
+	// MARK: - discrete moods
+
 	func testEnablingDiscreteMoods_updatesRecordScreenToUseIntegerMoods() {
 		// given
 		let minMood = minMoodField().value as! String
@@ -101,6 +105,42 @@ final class MoodSettingsUITests: UITest {
 		setToMinMoodButton.tap() // force it to wait for the button to exist
 		XCTAssert(setToMinMoodButton.exists)
 	}
+
+	func testDisablingDiscreteMoods_updatesRecordScreenToUseDecimalMoods() {
+		// given
+		app.switches["use integers only switch"].tap()
+		app.navigationBars.buttons["Settings"].tap()
+		app.staticTexts["Mood"].tap()
+		app.switches["use integers only switch"].tap()
+
+		// when
+		app.navigationBars.buttons["Settings"].tap()
+
+		// then
+		app.tabBars.buttons["Record"].tap()
+		XCTAssert(app.sliders["mood slider"].exists)
+	}
+
+	func testDisablingDiscreteMoods_updatesMoodResultsScreenToUseDecimalMoods() {
+		// given
+		app.switches["use integers only switch"].tap()
+		app.navigationBars.buttons["Settings"].tap()
+		createMoods([Mood(5)])
+		runQueryForAll("Mood")
+		app.tables.cells.element(boundBy: 0).tap()
+		app.tabBars.buttons["Settings"].tap()
+		app.staticTexts["Mood"].tap()
+		app.switches["use integers only switch"].tap()
+
+		// when
+		app.navigationBars.buttons["Settings"].tap()
+
+		// then
+		app.tabBars.buttons["Explore"].tap()
+		XCTAssert(app.sliders["rating slider"].exists)
+	}
+
+	// MARK: - reset
 
 	func testPressingReset_resetsAllASettings() {
 		// given

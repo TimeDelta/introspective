@@ -243,10 +243,10 @@ class UITest: XCTestCase {
 				moodRatingTextField().tap()
 				moodRatingTextField().tap()
 				moodRatingTextField().typeText(String(mood.rating))
+				app.toolbars.buttons["Save"].tap()
 			} else {
 				app.buttons["set mood to \(Int(mood.rating)) button"].tap()
 			}
-			app.toolbars.buttons["Save"].tap()
 			if let note = mood.note {
 				app.tables.buttons["set mood note button"].tap()
 				let noteField = app.textViews.allElementsBoundByIndex[0]
