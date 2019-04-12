@@ -226,7 +226,6 @@
 		68B4B55ED8815075BDE06B400081DA2A /* ResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A126FBE0CD5DFB9E6DFC53C5A15E0B6 /* ResultsViewController.swift */; };
 		68DCC933C935DA2F81F18B2F53BCA01E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3304AC4E4C3B7DBD5C7AC53D48561D59 /* Assets.xcassets */; };
 		68F31E482D3315361A6B7C56B7C62EF8 /* SelectOneAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A31631316565AA0556DE0C7186B39C /* SelectOneAttribute.swift */; };
-		69AC6D000AB4E2671ABA0F1896CFCD81 /* questionLabelsTrainingData.txt in Resources */ = {isa = PBXBuildFile; fileRef = 635C4A92895883F5681A8C2D3E8E2C2B /* questionLabelsTrainingData.txt */; };
 		69CF197BD406213CDBFB125B4AB48DF4 /* GreaterThanFrequencyAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7232B8CBDA59F9550101241579EE472 /* GreaterThanFrequencyAttributeRestrictionUnitTests.swift */; };
 		69EA6E223717DB166F5CB977A5DDCEFF /* BasicXYGraphSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B548BD54DFF6B47A609E95D7414C1BA5 /* BasicXYGraphSetupViewController.swift */; };
 		6BB11B8E0456DAB1E3A496FD56F47E13 /* HasTagAttributeRestrictionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A342AF1968189AC86554DAEAED555EA4 /* HasTagAttributeRestrictionFunctionalTests.swift */; };
@@ -2807,7 +2806,6 @@
 				FE878A0140993BB9C2958EC58FBC92CE /* Main.storyboard in Resources */,
 				57FCB353FCA28C4558625871AB672255 /* Results.storyboard in Resources */,
 				285D8151684BC370F1BE0A2E72F90651 /* Util.storyboard in Resources */,
-				69AC6D000AB4E2671ABA0F1896CFCD81 /* questionLabelsTrainingData.txt in Resources */,
 				C43A2229976D53A013FF8E722A72BDDE /* RecordData.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3632,6 +3630,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				MOMC_NO_INVERSE_RELATIONSHIP_WARNINGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -3762,6 +3761,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				MOMC_NO_INVERSE_RELATIONSHIP_WARNINGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;

@@ -10,7 +10,7 @@ import Foundation
 
 public extension Date {
 
-	public func isToday() -> Bool {
+	func isToday() -> Bool {
 		let now = Date()
 		let startOfDay = DependencyInjector.util.calendar.start(of: .day, in: now)
 		let endOfDay = DependencyInjector.util.calendar.end(of: .day, in: now)
@@ -18,11 +18,11 @@ public extension Date {
 			isBeforeDate(endOfDay, orEqual: true, granularity: .nanosecond)
 	}
 
-	public func next(_ dayOfWeek: DayOfWeek) -> Date {
+	func next(_ dayOfWeek: DayOfWeek) -> Date {
 		return get(.forward, dayOfWeek)
 	}
 
-	public func previous(_ dayOfWeek: DayOfWeek) -> Date {
+	func previous(_ dayOfWeek: DayOfWeek) -> Date {
 		return get(.backward, dayOfWeek)
 	}
 
