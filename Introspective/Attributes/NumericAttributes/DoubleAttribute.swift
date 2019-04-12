@@ -15,6 +15,9 @@ public final class DoubleAttribute: AttributeBase, NumericAttribute {
 	}
 
 	public final func errorMessageFor(invalidValue: String) -> String {
+		if !optional && invalidValue == "" {
+			return "\(name) is required"
+		}
 		return "\(invalidValue) is not a number"
 	}
 

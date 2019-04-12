@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Hamcrest
 @testable import Introspective
 
 class DoubleAttributeUnitTests: UnitTest {
@@ -116,6 +117,56 @@ class DoubleAttributeUnitTests: UnitTest {
 
 		// then
 		XCTAssert(valid)
+	}
+
+	// MARK: - errorMessageFor(invalidValue:)
+
+	func testGivenNonEmptyString_errorMessageForInvalidValue_includesInvalidValue() {
+		// given
+		useOptionalAttribute()
+		let invalidValue = "fr32"
+
+		// when
+		let errorMessage = attribute.errorMessageFor(invalidValue: invalidValue)
+
+		// then
+		assertThat(errorMessage, containsString(invalidValue))
+	}
+
+	func testGivenNonEmptyString_errorMessageForInvalidValue_includesTheWordNumber() {
+		// given
+		useOptionalAttribute()
+		let invalidValue = "fr32"
+
+		// when
+		let errorMessage = attribute.errorMessageFor(invalidValue: invalidValue)
+
+		// then
+		assertThat(errorMessage, containsString("number"))
+	}
+
+	func testGivenRequiredAttributeAndEmptyString_errorMessageForInvalidValue_includesAttributeName() {
+		// given
+		useRequiredAttribute()
+		let invalidValue = ""
+
+		// when
+		let errorMessage = attribute.errorMessageFor(invalidValue: invalidValue)
+
+		// then
+		assertThat(errorMessage, containsString(attribute.name))
+	}
+
+	func testGivenRequiredAttributeAndEmptyString_errorMessageForInvalidValue_includesTheWordRequired() {
+		// given
+		useRequiredAttribute()
+		let invalidValue = ""
+
+		// when
+		let errorMessage = attribute.errorMessageFor(invalidValue: invalidValue)
+
+		// then
+		assertThat(errorMessage, containsString("required"))
 	}
 
 	// MARK: - convertToValue()
