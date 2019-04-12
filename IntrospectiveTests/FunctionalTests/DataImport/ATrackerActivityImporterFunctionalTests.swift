@@ -18,41 +18,33 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 	private typealias Me = ATrackerActivityImporterFunctionalTests
 	private static let dateFormat = "YYYY-MM-dd HH:mm"
 
-	private static let activityName1 = ",f,new,ou"
-	private static let description1 = "this is a description and it contains a ',' comma"
 	private static let startDate1Text = "2017-11-27 20:21"
 	private static let endDate1Text = "2017-11-27 21:19"
-	private static let note1 = "this is a note that contains a ',' comma"
-	private static let category1 = "Hobbies"
-	private static let startDate1 = CalendarUtilImpl().date(from: startDate1Text, format: dateFormat)!
-	private static let endDate1 = CalendarUtilImpl().date(from: endDate1Text, format: dateFormat)!
+	private static let activityInfo1 = ActivityInfo(
+		name: ",f,new,ou",
+		description: "this is a description and it contains a ',' comma",
+		startDate: CalendarUtilImpl().date(from: startDate1Text, format: dateFormat)!,
+		endDate: CalendarUtilImpl().date(from: endDate1Text, format: dateFormat)!,
+		note: "this is a note that contains a ',' comma",
+		tags: ["Hobbies"])
 
-	private static let activityName2 = "jhfiu"
-	private static let description2: String? = nil
 	private static let startDate2Text = "2018-01-08 14:15"
 	private static let endDate2Text = "2018-01-08 17:15"
-	private static let note2: String? = nil
-	private static let category2: String? = nil
-	private static let startDate2 = CalendarUtilImpl().date(from: startDate2Text, format: dateFormat)!
-	private static let endDate2 = CalendarUtilImpl().date(from: endDate2Text, format: dateFormat)!
+	private static let activityInfo2 = ActivityInfo(
+		name: "jhfiu",
+		startDate: CalendarUtilImpl().date(from: startDate2Text, format: dateFormat)!,
+		endDate: CalendarUtilImpl().date(from: endDate2Text, format: dateFormat)!)
 
-	private static let activityName3 = activityName1
-	private static let description3: String? = nil
 	private static let startDate3Text = "2018-02-07 21:17"
 	private static let endDate3Text = ""
-	private static let note3 = "grnjaihfijopsa jkof dsjak\nfhjds ahuifp\newhui"
-	private static let category3: String? = nil
-	private static let startDate3 = CalendarUtilImpl().date(from: startDate3Text, format: dateFormat)!
-	private static let endDate3: Date? = nil
+	private static let activityInfo3 = ActivityInfo(
+		name: activityInfo1.name,
+		startDate: CalendarUtilImpl().date(from: startDate3Text, format: dateFormat)!,
+		note: "grnjaihfijopsa jkof dsjak\nfhjds ahuifp\newhui")
 
-	private static let headerRow = "Task name, Task description, Start time, End time, Duration,Duration in hours, Note, Category"
-	private static let activityRow2 = "\"\(activityName2)\",\"\(description2 ?? "")\",\"\(startDate2Text)\",\"\(endDate2Text)\",\"00:42:50\",0.6973508,\"\(note2 ?? "")\",\"\(category2 ?? "")\""
-	private static let validInput = """
-\(headerRow)
-"\(activityName1)","\(description1)","\(startDate1Text)","\(endDate1Text)","00:41:50",0.6973508,"\(note1)","\(category1)"
-\(activityRow2)
-"\(activityName3)","\(description3 ?? "")","\(startDate3Text)","\(endDate3Text)","00:43:50",0.6973508,"\(note3)","\(category3 ?? "")"
-"""
+	private static let headerRow = "Task name, Task description, Start time, End time, Duration,Duration in hours, Note, Tag"
+	private static let activityRow2 = "\"\(activityInfo2.name)\",\"\(activityInfo2.description ?? "")\",\"\(startDate2Text)\",\"\(endDate2Text)\",\"00:42:50\",0.6973508,\"\(activityInfo2.note ?? "")\",\"\(activityInfo2.tags?[0] ?? "")\""
+	private static let validInput = inputFor([activityInfo1, activityInfo2, activityInfo3])
 
 	private final var importer: ATrackerActivityImporterImpl!
 
@@ -65,7 +57,7 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 
 	func testGivenValidDataWithImportNewDataOnlyEqualToFalse_importData_correctlyImportsData() throws {
 		// given
-		importer.lastImport = Me.startDate3
+		importer.lastImport = Me.activityInfo3.startDate
 		importer.importOnlyNewData = false
 		useInput(Me.validInput)
 
@@ -75,13 +67,13 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 		// then
 		XCTAssert(try activity1WasImported())
 		XCTAssert(try activity2WasImported())
-		XCTAssert(try activity3WasImported())
-		XCTAssertEqual(importer.lastImport, Me.startDate3)
+		XCTAssert(try activity3WasImportedGivenActivity1ImportedFirst())
+		XCTAssertEqual(importer.lastImport, Me.activityInfo3.startDate)
 	}
 
 	func testGivenValidDataWithImportNewDataOnlyEqualToTrue_importData_correctlyImportsData() throws {
 		// given
-		importer.lastImport = Me.startDate2
+		importer.lastImport = Me.activityInfo2.startDate
 		importer.importOnlyNewData = true
 		useInput(Me.validInput)
 
@@ -91,8 +83,8 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 		// then
 		XCTAssertFalse(try activity1WasImported())
 		XCTAssertFalse(try activity2WasImported())
-		XCTAssert(try activity3WasImported())
-		XCTAssertEqual(importer.lastImport, Me.startDate3)
+		XCTAssert(try activity3WasImportedGivenActivity1ImportedFirst())
+		XCTAssertEqual(importer.lastImport, Me.activityInfo3.startDate)
 	}
 
 	func testGivenNeverImportedBeforeAndImportOnlyNewDataEqualsTrue_importData_correctlyImportsData() throws {
@@ -107,8 +99,8 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 		// then
 		XCTAssert(try activity1WasImported())
 		XCTAssert(try activity2WasImported())
-		XCTAssert(try activity3WasImported())
-		XCTAssertEqual(importer.lastImport, Me.startDate3)
+		XCTAssert(try activity3WasImportedGivenActivity1ImportedFirst())
+		XCTAssertEqual(importer.lastImport, Me.activityInfo3.startDate)
 	}
 
 	func testGivenNeverImportedBeforeAndImportOnlyNewDataEqualsFalse_importData_correctlyImportsData() throws {
@@ -123,8 +115,8 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 		// then
 		XCTAssert(try activity1WasImported())
 		XCTAssert(try activity2WasImported())
-		XCTAssert(try activity3WasImported())
-		XCTAssertEqual(importer.lastImport, Me.startDate3)
+		XCTAssert(try activity3WasImportedGivenActivity1ImportedFirst())
+		XCTAssertEqual(importer.lastImport, Me.activityInfo3.startDate)
 	}
 
 	func testGivenActivityDefinitionWithNameAlreadyExists_importData_usesExistingDefinition() throws {
@@ -132,7 +124,7 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 		let existingDescription = "this description is not the same as the description supplied for activity1 in the input data"
 		let existingTag = "this tag is not the same as the tag supplied for activity1 in the input data"
 		let tag = TagDataTestUtil.createTag(name: existingTag)
-		let _ = ActivityDataTestUtil.createActivityDefinition(name: Me.activityName1, description: existingDescription, tags: [tag])
+		ActivityDataTestUtil.createActivityDefinition(name: Me.activityInfo1.name, description: existingDescription, tags: [tag])
 
 		importer.lastImport = nil
 		importer.importOnlyNewData = false
@@ -143,23 +135,33 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 
 		// then
 		XCTAssertFalse(try activity1WasImported())
-		XCTAssert(try activityExists(
-			name: Me.activityName1,
-			from: Me.startDate1,
-			to: Me.endDate1,
-			description: existingDescription,
-			note: Me.note1,
-			tag: existingTag))
+
+		var expectedActivityInfo1 = Me.activityInfo1
+		expectedActivityInfo1.description = existingDescription
+		expectedActivityInfo1.tags = [existingTag]
+		XCTAssert(try activityExists(expectedActivityInfo1))
+
 		XCTAssert(try activity2WasImported())
-		XCTAssert(try activity3WasImported())
-		XCTAssertEqual(importer.lastImport, Me.startDate3)
+
+		var expectedActivityInfo3 = Me.activityInfo3
+		expectedActivityInfo3.description = existingDescription
+		expectedActivityInfo3.tags = [existingTag]
+		XCTAssert(try activityExists(expectedActivityInfo3))
+
+		XCTAssertEqual(importer.lastImport, Me.activityInfo3.startDate)
 	}
 
 	func testGivenUnfinishedActivityWithSameNameAndSameStartDate_importData_updatesExistingActivity() throws {
 		// given
-		let tag = TagDataTestUtil.createTag(name: Me.category1)
-		let definition = ActivityDataTestUtil.createActivityDefinition(name: Me.activityName1, description: Me.description1, tags: [tag])
-		let _ = ActivityDataTestUtil.createActivity(definition: definition, startDate: Me.startDate1, endDate: nil, note: nil)
+		let tag = TagDataTestUtil.createTag(name: Me.activityInfo1.tags![0])
+		let definition = ActivityDataTestUtil.createActivityDefinition(
+			name: Me.activityInfo1.name,
+			description: Me.activityInfo1.description,
+			tags: [tag])
+		ActivityDataTestUtil.createActivity(definition: definition, startDate: Me.activityInfo1.startDate, endDate: nil, note: nil)
+		var originalActivityInfo = Me.activityInfo1
+		originalActivityInfo.endDate = nil
+		originalActivityInfo.note = nil
 
 		importer.lastImport = nil
 		importer.importOnlyNewData = false
@@ -170,7 +172,20 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 
 		// then
 		XCTAssert(try activity1WasImported())
-		XCTAssertFalse(try activityExists(name: Me.activityName1, from: Me.startDate1, to: nil, description: Me.description1, note: nil, tag: Me.category1))
+		XCTAssertFalse(try activityExists(originalActivityInfo))
+	}
+
+	func testGivenActivityWithMultipleTags_importData_correctlyImportsThatActivity() throws {
+		// given
+		var activityInfo = Me.activityInfo1
+		activityInfo.tags = ["tag 1", "tag 2", "tag 3"]
+		useInput(Me.inputFor([activityInfo]))
+
+		// when
+		try importer.importData(from: url)
+
+		// then
+		XCTAssert(try activityExists(activityInfo))
 	}
 
 	// MARK: - importData() - Invalid Data
@@ -180,7 +195,7 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 		let invalidInput = """
 \(Me.headerRow)
 \(Me.activityRow2)
-"\(Me.activityName1)","","12-1-12 at 7:43 AM","\(Me.endDate1Text)","00:41:50",0.6973508,"",""
+"\(Me.activityInfo1.name)","","12-1-12 at 7:43 AM","\(Me.endDate1Text)","00:41:50",0.6973508,"",""
 """
 		useInput(invalidInput)
 		importer.lastImport = nil
@@ -200,7 +215,7 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 		let invalidInput = """
 \(Me.headerRow)
 \(Me.activityRow2)
-"\(Me.activityName1)","","\(Me.startDate1Text)","12-1-12 at 7:43 AM","00:41:50",0.6973508,"",""
+"\(Me.activityInfo1.name)","","\(Me.startDate1Text)","12-1-12 at 7:43 AM","00:41:50",0.6973508,"",""
 """
 		useInput(invalidInput)
 		importer.lastImport = nil
@@ -300,9 +315,9 @@ not enough columns
 		definitionCreatedDuringImport1 = try database.pull(savedObject: definitionCreatedDuringImport1)
 		definitionCreatedDuringImport2 = try database.pull(savedObject: definitionCreatedDuringImport2)
 
-		let definitionsWithImported1Name = try getDefinitionsWith(name: Me.activityName1)
+		let definitionsWithImported1Name = try getDefinitionsWith(name: Me.activityInfo1.name)
 		assertThat(definitionsWithImported1Name, hasCount(1))
-		let definitionsWithImported2Name = try getDefinitionsWith(name: Me.activityName2)
+		let definitionsWithImported2Name = try getDefinitionsWith(name: Me.activityInfo2.name)
 		assertThat(definitionsWithImported2Name, hasCount(1))
 		// definition for activity 3 is same as definition for activity 1
 
@@ -325,15 +340,22 @@ not enough columns
 	}
 
 	private final func activity1WasImported() throws -> Bool {
-		return try activityExists(name: Me.activityName1, from: Me.startDate1, to: Me.endDate1, description: Me.description1, note: Me.note1, tag: Me.category1)
+		return try activityExists(Me.activityInfo1)
 	}
 
 	private final func activity2WasImported() throws -> Bool {
-		return try activityExists(name: Me.activityName2, from: Me.startDate2, to: Me.endDate2, description: Me.description2, note: Me.note2, tag: Me.category2)
+		return try activityExists(Me.activityInfo2)
 	}
 
 	private final func activity3WasImported() throws -> Bool {
-		return try activityExists(name: Me.activityName3, from: Me.startDate3, to: Me.endDate3, description: Me.description3, note: Me.note3, tag: Me.category3)
+		return try activityExists(Me.activityInfo3)
+	}
+
+	private final func activity3WasImportedGivenActivity1ImportedFirst() throws -> Bool {
+		var expectedActivityInfo = Me.activityInfo3
+		expectedActivityInfo.description = Me.activityInfo1.description
+		expectedActivityInfo.tags = Me.activityInfo1.tags
+		return try activityExists(expectedActivityInfo)
 	}
 
 	private final func noActivitiesExist() throws -> Bool {
@@ -344,38 +366,52 @@ not enough columns
 		return try DependencyInjector.db.query(ActivityDefinition.fetchRequest()).count == 0
 	}
 
-	private final func activityExists(name: String, from startDate: Date, to endDate: Date?, description: String?, note: String?, tag: String?)
-	throws -> Bool {
-		return try activity(named: name, from: startDate, to: endDate, description: description, note: note, tag: tag) != nil
-	}
-
-	private final func activity(named name: String, from startDate: Date, to endDate: Date?, description: String?, note: String?, tag: String?)
-	throws -> Activity? {
+	private final func activityExists(_ activityInfo: ActivityInfo) throws -> Bool {
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
 		var predicates = [NSPredicate]()
-		predicates.append(NSPredicate(format: "definition.name ==[cd] %@ AND startDate == %@", name, startDate as NSDate))
-		if let endDate = endDate {
-			predicates.append(NSPredicate(format: "endDate == %@", endDate as NSDate))
-		} else {
-			predicates.append(NSPredicate(format: "endDate == nil"))
-		}
-		if let description = description {
-			predicates.append(NSPredicate(format: "definition.activityDescription == %@", description))
-		}
-		if let tag = tag {
-			predicates.append(NSPredicate(format: "SUBQUERY(definition.tags, $tag, $tag.name ==[cd] %@) .@count > 0", tag))
-		}
-		if let note = note {
-			predicates.append(NSPredicate(format: "note == %@", note))
-		}
+		predicates.append(NSPredicate(
+			format: "definition.name ==[cd] %@ AND startDate == %@",
+			activityInfo.name,
+			activityInfo.startDate as NSDate))
+		predicates.append(endDatePredicate(for: activityInfo.endDate))
+		predicates.append(descriptionPredicate(for: activityInfo.description))
+		predicates.append(tagsPredicate(for: activityInfo.tags))
+		predicates.append(notePredicate(for: activityInfo.note))
 		fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
 		let activities = try DependencyInjector.db.query(fetchRequest)
-		if activities.count == 1 {
-			return activities[0]
-		} else if activities.count > 1 {
-			XCTFail("More than one activity matched given criteria")
+		return activities.count == 1
+	}
+
+	private final func endDatePredicate(for endDate: Date?) -> NSPredicate {
+		if let endDate = endDate {
+			return NSPredicate(format: "endDate == %@", endDate as NSDate)
 		}
-		return nil
+		return NSPredicate(format: "endDate == nil")
+	}
+
+	private final func descriptionPredicate(for description: String?) -> NSPredicate {
+		if let description = description {
+			return NSPredicate(format: "definition.activityDescription == %@", description)
+		}
+		return NSPredicate(format: "definition.activityDescription == nil OR definition.activityDescription == %@", "")
+	}
+
+	private final func tagsPredicate(for tags: [String]?) -> NSPredicate {
+		if let tags = tags {
+			var predicates = [NSPredicate]()
+			for tag in tags {
+				predicates.append(NSPredicate(format: "SUBQUERY(definition.tags, $tag, $tag.name ==[cd] %@) .@count > 0", tag))
+			}
+			return NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+		}
+		return NSPredicate(format: "definition.tags .@count == 0 AND tags .@count == 0")
+	}
+
+	private final func notePredicate(for note: String?) -> NSPredicate {
+		if let note = note {
+			return NSPredicate(format: "note == %@", note)
+		}
+		return NSPredicate(format: "note == nil || note == %@", "")
 	}
 
 	private final func getDefinitionsWith(name: String) throws -> [ActivityDefinition] {
@@ -386,5 +422,54 @@ not enough columns
 
 	private final func objectExists(_ object: NSManagedObject) throws -> Bool {
 		return !(try DependencyInjector.db.pull(savedObject: object).isFault)
+	}
+
+	private static func inputFor(_ activities: [ActivityInfo]) -> String {
+		var input = Me.headerRow
+		for activityInfo in activities {
+			let startDateText = DependencyInjector.util.calendar.string(for: activityInfo.startDate, inFormat: Me.dateFormat)
+			let endDateText: String
+			if let endDate = activityInfo.endDate {
+				endDateText = DependencyInjector.util.calendar.string(for: endDate, inFormat: Me.dateFormat)
+			} else {
+				endDateText = ""
+			}
+			input += "\n\"\(activityInfo.name)\","
+			input += "\"\(activityInfo.description ?? "")\","
+			input += "\"\(startDateText)\","
+			input += "\"\(endDateText)\","
+			input += "\"00:42:50\",0.6973508,"
+			input += "\"\(activityInfo.note ?? "")\","
+			let tagsString = activityInfo.tags?.joined(separator: "|") ?? ""
+			input += "\"\(tagsString)\""
+		}
+		return input
+	}
+
+	// MARK: - structs
+
+	private struct ActivityInfo {
+		var name: String
+		var description: String?
+		var startDate: Date
+		var endDate: Date?
+		var note: String?
+		var tags: [String]?
+
+		public init(
+			name: String,
+			description: String? = nil,
+			startDate: Date,
+			endDate: Date? = nil,
+			note: String? = nil,
+			tags: [String]? = nil)
+		{
+			self.name = name
+			self.description = description
+			self.startDate = startDate
+			self.endDate = endDate
+			self.note = note
+			self.tags = tags
+		}
 	}
 }

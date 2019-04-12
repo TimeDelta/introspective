@@ -23,7 +23,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	private static let startDateColumn = " Start time"
 	private static let endDateColumn = " End time"
 	private static let noteColumn = " Note"
-	private static let categoryColumn = " Category"
+	private static let tagsColumn = " Tag"
 
 	public static let entityName = "ATrackerActivityImporter"
 
@@ -157,17 +157,20 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	private final func createDefinition(from csv: CSVReader, using transaction: Transaction) throws -> ActivityDefinition {
 		guard let name = csv[Me.nameColumn] else { throw InvalidFileFormatError("No name given for activity on line \(lineNumber)")}
 		let description = csv[Me.descriptionColumn]
-		let category = csv[Me.categoryColumn]
+		let tagNames = csv[Me.tagsColumn]?.split(separator: "|")
 
 		let childTransaction = transaction.childTransaction()
 
 		let definition = try childTransaction.new(ActivityDefinition.self)
 		definition.name = name
 		definition.activityDescription = description
-		if let tagName = category {
-			if !tagName.isEmpty {
-				let tag = try createOrRetrieveTag(named: tagName, for: definition, using: childTransaction)
-				definition.addToTags(tag)
+		if let tagNames = tagNames {
+			for tagName in tagNames {
+				let trimmedTagName = tagName.trimmingCharacters(in: .whitespacesAndNewlines)
+				if !tagName.isEmpty {
+					let tag = try createOrRetrieveTag(named: trimmedTagName, for: definition, using: childTransaction)
+					definition.addToTags(tag)
+				}
 			}
 		}
 		let allDefinitions = try getAllActivityDefinitions(using: childTransaction)
