@@ -35,6 +35,8 @@ final class WeightTableViewCellUnitTests: UnitTest {
 		weightSample = Weight(weight, timestamp)
 	}
 
+	// MARK: - weightDidSet
+
 	func testGivenNilWeight_weightDidSet_doesNotThrowError() {
 		// when
 		cell.weight = nil

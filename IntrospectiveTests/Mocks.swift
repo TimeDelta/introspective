@@ -3984,6 +3984,321 @@ open class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
     }
 }
 
+// MARK: - ExtraInformation
+open class ExtraInformationMock: ExtraInformation, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    public var name: String {
+		get {	invocations.append(.p_name_get); return __p_name ?? givenGetterValue(.p_name_get, "ExtraInformationMock - stub value for name was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_name = newValue }
+	}
+	private var __p_name: (String)?
+
+    public var startDate: Date? {
+		get {	invocations.append(.p_startDate_get); return __p_startDate ?? optionalGivenGetterValue(.p_startDate_get, "ExtraInformationMock - stub value for startDate was not defined") }
+		set {	invocations.append(.p_startDate_set(.value(newValue))); __p_startDate = newValue }
+	}
+	private var __p_startDate: (Date)?
+
+    public var endDate: Date? {
+		get {	invocations.append(.p_endDate_get); return __p_endDate ?? optionalGivenGetterValue(.p_endDate_get, "ExtraInformationMock - stub value for endDate was not defined") }
+		set {	invocations.append(.p_endDate_set(.value(newValue))); __p_endDate = newValue }
+	}
+	private var __p_endDate: (Date)?
+
+    public var attribute: Attribute {
+		get {	invocations.append(.p_attribute_get); return __p_attribute ?? givenGetterValue(.p_attribute_get, "ExtraInformationMock - stub value for attribute was not defined") }
+		set {	invocations.append(.p_attribute_set(.value(newValue))); __p_attribute = newValue }
+	}
+	private var __p_attribute: (Attribute)?
+
+    public var description: String {
+		get {	invocations.append(.p_description_get); return __p_description ?? givenGetterValue(.p_description_get, "ExtraInformationMock - stub value for description was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_description = newValue }
+	}
+	private var __p_description: (String)?
+
+
+
+
+
+    public required init(_ attribute: Attribute) { }
+
+    open func compute(forSamples samples: [Sample]) throws -> String {
+        addInvocation(.m_compute__forSamples_samples(Parameter<[Sample]>.value(`samples`)))
+		let perform = methodPerformValue(.m_compute__forSamples_samples(Parameter<[Sample]>.value(`samples`))) as? ([Sample]) -> Void
+		perform?(`samples`)
+		var __value: String
+		do {
+		    __value = try methodReturnValue(.m_compute__forSamples_samples(Parameter<[Sample]>.value(`samples`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for compute(forSamples samples: [Sample]). Use given")
+			Failure("Stub return value not specified for compute(forSamples samples: [Sample]). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func computeGraphable(forSamples samples: [Sample]) throws -> String {
+        addInvocation(.m_computeGraphable__forSamples_samples(Parameter<[Sample]>.value(`samples`)))
+		let perform = methodPerformValue(.m_computeGraphable__forSamples_samples(Parameter<[Sample]>.value(`samples`))) as? ([Sample]) -> Void
+		perform?(`samples`)
+		var __value: String
+		do {
+		    __value = try methodReturnValue(.m_computeGraphable__forSamples_samples(Parameter<[Sample]>.value(`samples`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for computeGraphable(forSamples samples: [Sample]). Use given")
+			Failure("Stub return value not specified for computeGraphable(forSamples samples: [Sample]). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func equalTo(_ other: ExtraInformation) -> Bool {
+        addInvocation(.m_equalTo__other(Parameter<ExtraInformation>.value(`other`)))
+		let perform = methodPerformValue(.m_equalTo__other(Parameter<ExtraInformation>.value(`other`))) as? (ExtraInformation) -> Void
+		perform?(`other`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_equalTo__other(Parameter<ExtraInformation>.value(`other`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for equalTo(_ other: ExtraInformation). Use given")
+			Failure("Stub return value not specified for equalTo(_ other: ExtraInformation). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_compute__forSamples_samples(Parameter<[Sample]>)
+        case m_computeGraphable__forSamples_samples(Parameter<[Sample]>)
+        case m_equalTo__other(Parameter<ExtraInformation>)
+        case p_name_get
+        case p_startDate_get
+		case p_startDate_set(Parameter<Date?>)
+        case p_endDate_get
+		case p_endDate_set(Parameter<Date?>)
+        case p_attribute_get
+		case p_attribute_set(Parameter<Attribute>)
+        case p_description_get
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_compute__forSamples_samples(let lhsSamples), .m_compute__forSamples_samples(let rhsSamples)):
+                guard Parameter.compare(lhs: lhsSamples, rhs: rhsSamples, with: matcher) else { return false } 
+                return true 
+            case (.m_computeGraphable__forSamples_samples(let lhsSamples), .m_computeGraphable__forSamples_samples(let rhsSamples)):
+                guard Parameter.compare(lhs: lhsSamples, rhs: rhsSamples, with: matcher) else { return false } 
+                return true 
+            case (.m_equalTo__other(let lhsOther), .m_equalTo__other(let rhsOther)):
+                guard Parameter.compare(lhs: lhsOther, rhs: rhsOther, with: matcher) else { return false } 
+                return true 
+            case (.p_name_get,.p_name_get): return true
+            case (.p_startDate_get,.p_startDate_get): return true
+			case (.p_startDate_set(let left),.p_startDate_set(let right)): return Parameter<Date?>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_endDate_get,.p_endDate_get): return true
+			case (.p_endDate_set(let left),.p_endDate_set(let right)): return Parameter<Date?>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_attribute_get,.p_attribute_get): return true
+			case (.p_attribute_set(let left),.p_attribute_set(let right)): return Parameter<Attribute>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_description_get,.p_description_get): return true
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_compute__forSamples_samples(p0): return p0.intValue
+            case let .m_computeGraphable__forSamples_samples(p0): return p0.intValue
+            case let .m_equalTo__other(p0): return p0.intValue
+            case .p_name_get: return 0
+            case .p_startDate_get: return 0
+			case .p_startDate_set(let newValue): return newValue.intValue
+            case .p_endDate_get: return 0
+			case .p_endDate_set(let newValue): return newValue.intValue
+            case .p_attribute_get: return 0
+			case .p_attribute_set(let newValue): return newValue.intValue
+            case .p_description_get: return 0
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+        public static func name(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_name_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func startDate(getter defaultValue: Date?...) -> PropertyStub {
+            return Given(method: .p_startDate_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func endDate(getter defaultValue: Date?...) -> PropertyStub {
+            return Given(method: .p_endDate_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func attribute(getter defaultValue: Attribute...) -> PropertyStub {
+            return Given(method: .p_attribute_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func description(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_description_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+
+        public static func compute(forSamples samples: Parameter<[Sample]>, willReturn: String...) -> MethodStub {
+            return Given(method: .m_compute__forSamples_samples(`samples`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func computeGraphable(forSamples samples: Parameter<[Sample]>, willReturn: String...) -> MethodStub {
+            return Given(method: .m_computeGraphable__forSamples_samples(`samples`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func equalTo(_ other: Parameter<ExtraInformation>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__other(`other`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func equalTo(_ other: Parameter<ExtraInformation>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_equalTo__other(`other`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func compute(forSamples samples: Parameter<[Sample]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_compute__forSamples_samples(`samples`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func compute(forSamples samples: Parameter<[Sample]>, willProduce: (StubberThrows<String>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_compute__forSamples_samples(`samples`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (String).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func computeGraphable(forSamples samples: Parameter<[Sample]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_computeGraphable__forSamples_samples(`samples`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func computeGraphable(forSamples samples: Parameter<[Sample]>, willProduce: (StubberThrows<String>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_computeGraphable__forSamples_samples(`samples`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (String).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func compute(forSamples samples: Parameter<[Sample]>) -> Verify { return Verify(method: .m_compute__forSamples_samples(`samples`))}
+        public static func computeGraphable(forSamples samples: Parameter<[Sample]>) -> Verify { return Verify(method: .m_computeGraphable__forSamples_samples(`samples`))}
+        public static func equalTo(_ other: Parameter<ExtraInformation>) -> Verify { return Verify(method: .m_equalTo__other(`other`))}
+        public static var name: Verify { return Verify(method: .p_name_get) }
+        public static var startDate: Verify { return Verify(method: .p_startDate_get) }
+		public static func startDate(set newValue: Parameter<Date?>) -> Verify { return Verify(method: .p_startDate_set(newValue)) }
+        public static var endDate: Verify { return Verify(method: .p_endDate_get) }
+		public static func endDate(set newValue: Parameter<Date?>) -> Verify { return Verify(method: .p_endDate_set(newValue)) }
+        public static var attribute: Verify { return Verify(method: .p_attribute_get) }
+		public static func attribute(set newValue: Parameter<Attribute>) -> Verify { return Verify(method: .p_attribute_set(newValue)) }
+        public static var description: Verify { return Verify(method: .p_description_get) }
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func compute(forSamples samples: Parameter<[Sample]>, perform: @escaping ([Sample]) -> Void) -> Perform {
+            return Perform(method: .m_compute__forSamples_samples(`samples`), performs: perform)
+        }
+        public static func computeGraphable(forSamples samples: Parameter<[Sample]>, perform: @escaping ([Sample]) -> Void) -> Perform {
+            return Perform(method: .m_computeGraphable__forSamples_samples(`samples`), performs: perform)
+        }
+        public static func equalTo(_ other: Parameter<ExtraInformation>, perform: @escaping (ExtraInformation) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__other(`other`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
 // MARK: - HealthKitUtil
 open class HealthKitUtilMock: HealthKitUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {

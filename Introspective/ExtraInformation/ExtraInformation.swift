@@ -8,12 +8,14 @@
 
 import Foundation
 
+//sourcery: AutoMockable
 public protocol ExtraInformation: CustomStringConvertible {
 
 	var name: String { get }
 	var startDate: Date? { get set }
 	var endDate: Date? { get set }
 	var attribute: Attribute { get set }
+	var description: String { get } // include this here so that SwiftyMocky properly mocks it
 
 	init(_ attribute: Attribute)
 
