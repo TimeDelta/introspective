@@ -26,8 +26,10 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 
 	public final var importOnlyNewData: Bool = true
 	public final var isPaused: Bool = false
+	public final var isCancelled: Bool = false
 
-	private final var lineNumber: Int = -1
+	private final var recordNumber: Int = -1
+	private final var totalLines: Int = -1
 	private final let mainTransaction = DependencyInjector.db.transaction()
 	private final var latestDate: Date!
 	private final var lines = [String]()
@@ -39,8 +41,14 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 		let contents = try DependencyInjector.util.io.contentsOf(url)
 		lines = contents.components(separatedBy: "\n")
 		lines.removeFirst()
-		lineNumber = 2
+		recordNumber = 1
+		totalLines = lines.count
+
+		isPaused = false
+		isCancelled = false
+
 		latestDate = lastImport // use temp var to avoid bug where initial import doesn't import anything
+
 		try resume()
 	}
 
@@ -50,18 +58,37 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 	}
 
+	public func percentComplete() -> Double {
+		if totalLines == 0 { return 1 } // avoid division by 0
+		if totalLines == -1 { return 0 }
+		// don't count the header row in percent complete calculation
+		// also, note that this is an underestimate because
+		// the number of lines is >= the number of records
+		return Double(recordNumber) / Double(totalLines - 1)
+	}
+
+	public final func cancel() {
+		isCancelled = true
+		lines = []
+		mainTransaction.reset()
+	}
+
 	public final func pause() {
 		isPaused = true
 	}
 
 	public final func resume() throws {
+		guard !isCancelled else {
+			log.error("Tried to resume a cancelled medicaiton dose import from EasyPill")
+			return
+		}
 		isPaused = false
 		do {
 			while lines.count > 0 {
 				let line = lines.removeFirst()
-				guard !isPaused else { return }
+				guard !isPaused && !isCancelled else { return }
 				try processLine(line, latestDate: &latestDate, using: mainTransaction)
-				lineNumber += 1
+				recordNumber += 1
 			}
 
 			lastImport = latestDate
@@ -76,10 +103,10 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 
 	private final func processLine(_ line: String, latestDate: inout Date!, using transaction: Transaction) throws {
 		let parts = line.components(separatedBy: ",")
-		var medicationName = try getColumn(0, from: parts, errorMessage: "Line \(lineNumber) is empty.")
+		var medicationName = try getColumn(0, from: parts, errorMessage: "Record \(recordNumber) is empty.")
 		var currentIndex = 1
 
-		let date = try parseDate(from: parts, startingAt: &currentIndex, lineNumber: lineNumber, medicationName: &medicationName)
+		let date = try parseDate(from: parts, startingAt: &currentIndex, recordNumber: recordNumber, medicationName: &medicationName)
 
 		if latestDate == nil { latestDate = date }
 		if date.isAfterDate(latestDate, granularity: .nanosecond) {
@@ -95,21 +122,23 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 		return parts[index]
 	}
 
-	private final func parseDate(from parts: [String], startingAt currentIndex: inout Int, lineNumber: Int, medicationName: inout String) throws -> Date {
+	private final func parseDate(from parts: [String], startingAt currentIndex: inout Int, recordNumber: Int, medicationName: inout String) throws -> Date {
 		var nextColumnText = ""
 		var date: Date? = nil
 		while date == nil {
-			nextColumnText = try getColumn(currentIndex, from: parts, errorMessage: "No date found on line \(lineNumber).")
+			nextColumnText = try getColumn(currentIndex, from: parts, errorMessage: "No date found for record \(recordNumber).")
 			date = DependencyInjector.util.calendar.date(from: nextColumnText, format: "M/d/yy")
 			if date == nil {
 				medicationName += "," + nextColumnText
 			}
 			currentIndex += 1
 		}
-		let timeText = try getColumn(currentIndex, from: parts, errorMessage: "No time found on line \(lineNumber).")
+		let timeText = try getColumn(currentIndex, from: parts, errorMessage: "No time found for record \(recordNumber).")
 		date = DependencyInjector.util.calendar.date(from: nextColumnText + " " + timeText, format: "M/d/yy HH:mm")
 
-		guard let timestamp = date else { throw InvalidFileFormatError("On line \(lineNumber), expected time but found '\(timeText)'") }
+		guard let timestamp = date else {
+			throw InvalidFileFormatError("For record \(recordNumber), expected time but found '\(timeText)'")
+		}
 		return timestamp
 	}
 

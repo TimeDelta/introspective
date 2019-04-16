@@ -24,9 +24,11 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 
 	public final var importOnlyNewData: Bool = true
 	public final var isPaused: Bool = false
+	public final var isCancelled: Bool = false
 
 	private final var currentMood: Mood? = nil
-	private final var lineNumber: Int = -1
+	private final var recordNumber: Int = -1
+	private final var totalLines: Int = -1
 	private final let mainTransaction = DependencyInjector.db.transaction()
 	private final var lines = [String]()
 	private final var latestDate: Date!
@@ -38,10 +40,17 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 		let contents = try DependencyInjector.util.io.contentsOf(url)
 		lines = contents.components(separatedBy: "\n")
 		lines.removeFirst()
+		recordNumber = 1
+		totalLines = lines.count
+
+		isPaused = false
+		isCancelled = false
+
 		currentMood = nil
-		lineNumber = 2
 		currentNote = ""
+
 		latestDate = lastImport // use temp var to avoid bug where initial import doesn't import anything
+
 		try resume()
 	}
 
@@ -51,17 +60,37 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 	}
 
+	public func percentComplete() -> Double {
+		if totalLines == 0 { return 1 } // avoid division by 0
+		if totalLines == -1 { return 0 }
+		// don't count the header row in percent complete calculation
+		// also, note that this is an underestimate because
+		// the number of lines is >= the number of records
+		return Double(recordNumber) / Double(totalLines - 1)
+	}
+
+	public final func cancel() {
+		isCancelled = true
+		mainTransaction.reset()
+	}
+
 	public final func pause() {
 		isPaused = true
 	}
 
 	public final func resume() throws {
+		guard !isCancelled else {
+			log.error("Tried to resume a cancelled mood import from Wellness")
+			return
+		}
+
 		isPaused = false
 		do {
 			while lines.count > 0 {
+				guard !isPaused && !isCancelled else { return }
 				let line = lines.removeFirst()
 				try processLine(line, latestDate: &latestDate, using: mainTransaction)
-				lineNumber += 1
+				recordNumber += 1
 			}
 			if !currentNote.isEmpty {
 				currentMood?.note = currentNote // make sure to save the final note
@@ -83,7 +112,7 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 			}
 			let parts = line.components(separatedBy: ",")
 			guard let date = DependencyInjector.util.calendar.date(from: parts[0...1].joined(), format: "M/d/yy HH:mm") else {
-				throw InvalidFileFormatError("Unexpected date / time on line \(lineNumber): \(parts[0...1].joined())")
+				throw InvalidFileFormatError("Unexpected date / time for record \(recordNumber): \(parts[0...1].joined())")
 			}
 			if latestDate == nil { latestDate = date }
 			if date.isAfterDate(latestDate, granularity: .nanosecond) {
@@ -91,15 +120,15 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 			}
 			if shouldImport(date) {
 				guard let rating = Double(parts[2]) else {
-					throw InvalidFileFormatError("Invalid rating on line \(lineNumber): \(parts[2])")
+					throw InvalidFileFormatError("Invalid rating for record \(recordNumber): \(parts[2])")
 				}
 				try createAndScaleMood(withDate: date, andRating: rating, using: transaction)
 				currentNote = parts[3...].joined()
 			} else {
 				currentMood = nil
 			}
-		} else if lineNumber == 2 { // first non-header row
-			throw InvalidFileFormatError("Invalid or missing date / time for mood on line 2")
+		} else if recordNumber == 1 { // first non-header row
+			throw InvalidFileFormatError("Invalid or missing date / time for mood for record 1")
 		} else {
 			if !currentNote.isEmpty {
 				currentNote += "\n"

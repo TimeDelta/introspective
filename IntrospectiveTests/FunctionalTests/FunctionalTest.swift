@@ -28,6 +28,7 @@ class FunctionalTest: XCTestCase {
 	final var importerFactory: ImporterFactoryImpl!
 
 	final var ioUtil: IOUtilMock!
+	final var uiUtil: UiUtilMock!
 
 	override func setUp() {
 		super.setUp()
@@ -65,6 +66,9 @@ class FunctionalTest: XCTestCase {
 
 		ioUtil = IOUtilMock()
 		utilFactory.io = ioUtil
+
+		uiUtil = UiUtilMock()
+		utilFactory.ui = uiUtil
 
 		HamcrestReportFunction = {message, file, line in XCTFail(message, file: file, line: line)}
 	}

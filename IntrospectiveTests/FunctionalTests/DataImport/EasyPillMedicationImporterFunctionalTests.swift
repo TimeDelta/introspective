@@ -85,7 +85,7 @@ Pill name,Notes,Dosage,Frequency,How many times per day,How many days,Starting,E
 		var existingMedication1 = MedicationDataTestUtil.createMedication(name: "med 1", recordScreenIndex: 0)
 		var existingMedication2 = MedicationDataTestUtil.createMedication(name: "med 2", recordScreenIndex: 1)
 		useInput(Me.validImportFileText)
-		importer.pauseOnLine = 3
+		importer.pauseOnRecord = 2
 
 		// when
 		try importer.importData(from: url)
@@ -120,6 +120,24 @@ Pill name,Notes,Dosage,Frequency,How many times per day,How many days,Starting,E
 		if medsWithImported2Name.count == 1 {
 			XCTAssertEqual(medsWithImported2Name[0].recordScreenIndex, 5)
 		}
+	}
+
+	func testGivenImportCancelled_importData_startsNewImport() throws {
+		// given
+		useInput(Me.validImportFileText)
+		DispatchQueue.global(qos: .background).async {
+			try! self.importer.importData(from: self.url)
+		}
+		while importer.percentComplete() == 0 {}
+		importer.cancel()
+		let originalPercentComplete = importer.percentComplete()
+
+		// when
+		try importer.importData(from: url)
+
+		// then
+		XCTAssertGreaterThan(importer.percentComplete(), originalPercentComplete)
+		XCTAssertFalse(importer.isCancelled)
 	}
 
 	// MARK: - Invalid Data
@@ -162,6 +180,51 @@ a,,,as needed
 		// then
 		importer = try DependencyInjector.db.pull(savedObject: importer)
 		XCTAssertNil(importer.lastImport)
+	}
+
+	// MARK: - cancel()
+
+	func testGivenNotImporting_cancel_setsIsCancelledToTrue() {
+		// when
+		importer.cancel()
+
+		// then
+		XCTAssert(importer.isCancelled)
+	}
+
+	func testGivenCurrentlyImporting_cancel_stopsImportAndSetsIsCancelledToTrue() {
+		// given
+		useInput(Me.validImportFileText)
+		DispatchQueue.global(qos: .background).async {
+			try! self.importer.importData(from: self.url)
+		}
+
+		// when
+		while importer.percentComplete() == 0 {}
+		importer.cancel()
+
+		// then
+		XCTAssertLessThanOrEqual(importer.percentComplete(), 1)
+		XCTAssert(importer.isCancelled)
+	}
+
+	// MARK: - resume()
+
+	func testGivenImportCancelled_resume_doesNotContinue() throws {
+		// given
+		useInput(Me.validImportFileText)
+		DispatchQueue.global(qos: .background).async {
+			try! self.importer.importData(from: self.url)
+		}
+		while importer.percentComplete() == 0 {}
+		importer.cancel()
+		let expectedPerentComplete = importer.percentComplete()
+
+		// when
+		try importer.resume()
+
+		// then
+		XCTAssertEqual(importer.percentComplete(), expectedPerentComplete)
 	}
 
 	// MARK: - Helper Functions

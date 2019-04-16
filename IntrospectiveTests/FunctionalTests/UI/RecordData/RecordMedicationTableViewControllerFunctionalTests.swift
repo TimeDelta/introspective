@@ -221,7 +221,7 @@ final class RecordMedicationTableViewControllerFunctionalTests: FunctionalTest {
 		let existingMedication2 = MedicationDataTestUtil.createMedication(name: "med 2", recordScreenIndex: 1)
 
 		let importer = try DependencyInjector.importer.easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
-		importer.pauseOnLine = 3
+		importer.pauseOnRecord = 2
 
 		let importedName1 = "imported med 1"
 		let importedName2 = "imported med 2"
@@ -259,7 +259,7 @@ final class RecordMedicationTableViewControllerFunctionalTests: FunctionalTest {
 		let existingMedication2 = MedicationDataTestUtil.createMedication(name: "med 2", recordScreenIndex: 1)
 
 		let importer = try DependencyInjector.importer.easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
-		importer.pauseOnLine = 3
+		importer.pauseOnRecord = 2
 
 		let importedName1 = "imported med 1"
 		let importedName2 = "imported med 2"

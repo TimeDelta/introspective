@@ -60,6 +60,8 @@ class UnitTest: XCTestCase {
 		Matcher.default.register(HeartRate.Type.self) { _,_ in return true }
 		Matcher.default.register(Sample.self) { lhs,rhs in return lhs.equalTo(rhs) }
 		Matcher.default.register(ResultsViewController.Type.self)
+		Matcher.default.register(Any.self) { return self.anyMatcher($0, $1) }
+		Matcher.default.register(Optional<Any>.self) { return self.anyMatcher($0, $1) }
 	}
 
 	private func resetMocks() {
@@ -97,5 +99,34 @@ class UnitTest: XCTestCase {
 		utilFactory.textNormalization = mockTextNormalizationUtil
 		mockUiUtil = UiUtilMock()
 		utilFactory.ui = mockUiUtil
+	}
+
+	// MARK: - Helper Functions
+
+	private final func anyMatcher(_ one: Any?, _ two: Any?) -> Bool {
+		if type(of: one) != type(of: two) && (isOptional(one) == isOptional(two)) {
+			return false
+		}
+		if let attribute1 = one as? Attribute, let attribute2 = two as? Attribute {
+			return attribute1.equalTo(attribute2)
+		}
+		if let _ = one as? ATrackerActivityImporterMock, let _ = two as? ATrackerActivityImporterMock {
+			// no way to mock equalTo function when other value is also a mock because the
+			// Given statement would recursively call this code:
+			// Given(importer, .equalTo(.value(other), willReturn: true))
+			//                          ^^^^^^^^^^^^^
+			// when this ran, it would go to check if the passed other value matches the
+			// one from the Given statement, which would call this code, ending in infinite
+			// recursion. Also, pointer comparison is not good enough because of copy
+			// constructor.
+			return true
+		}
+		if let importer1 = one as? Importer, let importer2 = two as? Importer {
+			return importer1.equalTo(importer2)
+		}
+		if let viewController1 = one as? UIViewController, let viewController2 = two as? UIViewController {
+			return viewController1 == viewController2
+		}
+		fatalError("Missing equality test for Any Matcher")
 	}
 }

@@ -9,6 +9,7 @@
 import UIKit
 import Presentr
 import Instructions
+import UserNotifications
 
 extension UIViewController {
 
@@ -96,6 +97,10 @@ extension UIViewController {
 		customPresentViewController(presenter, viewController: viewController, animated: animated)
 	}
 
+	final func presentView(_ viewController: UIViewController, animated: Bool = false, completion: (() -> Void)? = nil) {
+		DependencyInjector.util.ui.present(self, viewController, animated: animated, completion: completion)
+	}
+
 	final func defaultSkipInstructionsView() -> CoachMarkSkipView {
 		let skipView = CoachMarkSkipDefaultView()
 		skipView.setTitle("Skip instructions", for: .normal)
@@ -111,5 +116,14 @@ extension UIViewController {
 				relatedBy: .equal,
 				parentViewAttribute: .bottomMargin),
 		]
+	}
+
+	final func sendUserNotification(
+		withContent content: UNMutableNotificationContent,
+		id: String,
+		repeats: Bool = false,
+		interval: TimeInterval = 1)
+	{
+		DependencyInjector.util.ui.sendUserNotification(withContent: content, id: id, repeats: repeats, interval: interval)
 	}
 }

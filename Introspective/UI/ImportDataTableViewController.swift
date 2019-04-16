@@ -11,7 +11,7 @@ import SwiftDate
 import UserNotifications
 import NotificationBannerSwift
 
-final class ImportDataTableViewController: UITableViewController {
+public final class ImportDataTableViewController: UITableViewController {
 
 	// MARK: - Static Variables
 
@@ -19,6 +19,22 @@ final class ImportDataTableViewController: UITableViewController {
 	private enum Errors: Error {
 		case unknownIndexPath
 	}
+
+	public static let sectionRows = [
+		(section: "Activity",
+		rows: [
+			"ATracker",
+		]),
+		(section: "Medication",
+		rows: [
+			"EasyPill Medications",
+			"EasyPill Doses",
+		]),
+		(section: "Mood",
+		rows: [
+			"Wellness",
+		]),
+	]
 
 	// MARK: activities
 	private static let activitiesSection = 0
@@ -36,7 +52,19 @@ final class ImportDataTableViewController: UITableViewController {
 	// MARK: - Instance Variables
 
 	private final var importer: Importer!
-	private final var backgroundImports = [UIBackgroundTaskIdentifier: Importer]()
+	private final var backgroundImportOrder = [UIBackgroundTaskIdentifier]()
+	private final let backgroundImportsAccessQueue = DispatchQueue(
+		label: "backgroundImports access",
+		attributes: .concurrent)
+	private final var _backgroundImports = [UIBackgroundTaskIdentifier: Importer]()
+	public final func backgroundImports<Type>(_ code: ([UIBackgroundTaskIdentifier: Importer]) -> Type) -> Type {
+		var result: Type?
+		// for synchronization to provide thread safety
+		backgroundImportsAccessQueue.sync(flags: .barrier) {
+			result = code(_backgroundImports)
+		}
+		return result!
+	}
 	/// This is necessary because can't reference the local variable with
 	/// the returned id from its expiration handler otherwise compiler will
 	/// complain about referencing a variable in its definition.
@@ -55,9 +83,58 @@ final class ImportDataTableViewController: UITableViewController {
 		NotificationCenter.default.removeObserver(self)
 	}
 
+	// MARK: - Table View Data Source
+
+	public final override func numberOfSections(in tableView: UITableView) -> Int {
+		if backgroundImports({ $0.count }) > 0 {
+			return 4
+		}
+		return 3
+	}
+
+	public final override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		if section >= Me.sectionRows.count {
+			return "Active Imports"
+		}
+		return Me.sectionRows[section].section
+	}
+
+	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		if section >= Me.sectionRows.count {
+			return backgroundImports({ $0.count })
+		}
+		return Me.sectionRows[section].rows.count
+	}
+
+	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		if indexPath.section >= Me.sectionRows.count {
+			let cell = tableView.dequeueReusableCell(withIdentifier: "activeImport", for: indexPath) as! ActiveImportTableViewCell
+			cell.backgroundTaskId = backgroundImportOrder[indexPath.row]
+			cell.importer = backgroundImports({ $0[cell.backgroundTaskId] })
+			// need to do this or will double subscribe and receive event twice, causing app to crash
+			DependencyInjector.util.ui.stopObserving(self, name: .presentView, object: cell.importer)
+			observe(selector: #selector(presentViewFrom), name: .presentView, object: cell.importer)
+			return cell
+		}
+		let cell = tableView.dequeueReusableCell(withIdentifier: "dataSource", for: indexPath)
+		cell.textLabel?.text = Me.sectionRows[indexPath.section].rows[indexPath.row]
+		return cell
+	}
+
 	// MARK: - Table View Delegate
 
-	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+	public final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		if indexPath.section < Me.sectionRows.count {
+			return 44
+		}
+		return 75
+	}
+
+	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		guard indexPath.section < Me.sectionRows.count else {
+			tableView.deselectRow(at: indexPath, animated: false)
+			return
+		}
 		do {
 			importer = try getImporterFor(indexPath)
 			var lastImportedText: String
@@ -82,13 +159,13 @@ final class ImportDataTableViewController: UITableViewController {
 			actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel){ _ in
 				self.tableView.deselectRow(at: indexPath, animated: false)
 			})
-			present(actionSheet, animated: false, completion: nil)
+			presentView(actionSheet)
 		} catch {
 			log.error("Failed to create data importer while presenting menu: %@", errorInfo(error))
 		}
 	}
 
-	// MARK: - Received Notifiations
+	// MARK: - Received Notifications
 
 	@objc private final func extendTime(notification: Notification) {
 		if let taskId: String = value(for: .backgroundTaskId, from: notification) {
@@ -97,9 +174,12 @@ final class ImportDataTableViewController: UITableViewController {
 				return
 			}
 			let backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: taskIdRawValue)
-			if let importer = backgroundImports[backgroundTaskId] {
+			if let importer = backgroundImports({ $0[backgroundTaskId] }) {
 				runImportInBackground(importer)
-				backgroundImports[backgroundTaskId] = nil
+				backgroundImportsAccessQueue.sync(flags: .barrier) {
+					_backgroundImports[backgroundTaskId] = nil
+				}
+				backgroundImportOrder.removeAll(where: { $0 == backgroundTaskId })
 			} else {
 				log.error("Unable to retrieve importer for background task: %d", backgroundTaskId.rawValue)
 			}
@@ -113,10 +193,20 @@ final class ImportDataTableViewController: UITableViewController {
 				return
 			}
 			let backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: taskIdRawValue)
-			if let importer = backgroundImports[backgroundTaskId] {
-				importer.pause()
+			if let importer = backgroundImports({ $0[backgroundTaskId] }) {
+				importer.cancel()
 			}
-			backgroundImports[backgroundTaskId] = nil
+			backgroundImportsAccessQueue.sync(flags: .barrier) {
+				_backgroundImports[backgroundTaskId] = nil
+			}
+			backgroundImportOrder.removeAll(where: { $0 == backgroundTaskId })
+			tableView.reloadData()
+		}
+	}
+
+	@objc private final func presentViewFrom(notification: Notification) {
+		if let controller: UIViewController = value(for: .controller, from: notification) {
+			presentView(controller)
 		}
 	}
 
@@ -132,15 +222,15 @@ final class ImportDataTableViewController: UITableViewController {
 		prompt.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
 			self.importData(newDataOnly: true, indexPath: indexPath)
 		})
-		present(prompt, animated: false, completion: nil)
+		presentView(prompt)
 	}
 
 	private final func importData(newDataOnly: Bool, indexPath: IndexPath) {
-		let documentPickerController = UIDocumentPickerViewController(documentTypes: ["public.data"], in: .import)
+		let documentPickerController = DependencyInjector.util.ui.documentPicker(docTypes: ["public.data"], in: .import)
 		documentPickerController.allowsMultipleSelection = false
 		documentPickerController.delegate = self
 		importer.importOnlyNewData = newDataOnly
-		self.present(documentPickerController, animated: false, completion: nil)
+		presentView(documentPickerController)
 	}
 
 	private final func runImportInBackground(_ importer: Importer, _ url: URL? = nil) {
@@ -161,7 +251,13 @@ final class ImportDataTableViewController: UITableViewController {
 			}
 
 			do {
-				self.backgroundImports[backgroundTask] = importer
+				if !self.backgroundImportOrder.contains(backgroundTask) {
+					self.backgroundImportOrder.append(backgroundTask)
+					DispatchQueue.main.async { self.tableView.reloadData() }
+				}
+				self.backgroundImportsAccessQueue.sync(flags: .barrier) {
+					self._backgroundImports[backgroundTask] = importer
+				}
 				self.taskIds[uuid] = backgroundTask
 				if let url = url {
 					self.log.info("Starting background import for %@ from %@", dataType, source)
@@ -170,7 +266,7 @@ final class ImportDataTableViewController: UITableViewController {
 					self.log.info("Continuing background import for %@ from %@", dataType, source)
 					try importer.resume()
 				}
-				if !importer.isPaused {
+				if !importer.isPaused && !importer.isCancelled {
 					self.sendSuccessfulImportNotification(for: importer)
 				}
 			} catch {
@@ -179,8 +275,12 @@ final class ImportDataTableViewController: UITableViewController {
 			}
 			if !importer.isPaused {
 				self.log.info("Finished background import for %@ from %@", dataType, source)
-				self.backgroundImports[backgroundTask] = nil
+				self.backgroundImportsAccessQueue.sync(flags: .barrier) {
+					self._backgroundImports[backgroundTask] = nil
+				}
+				self.backgroundImportOrder.removeAll(where: { $0 == backgroundTask })
 				self.endBackgroundTask(id: backgroundTask)
+				DispatchQueue.main.async { self.tableView.reloadData() }
 			}
 		}
 	}
@@ -230,7 +330,7 @@ final class ImportDataTableViewController: UITableViewController {
 	}
 
 	private final func sendExtendTimeNotification(for backgroundTaskId: UIBackgroundTaskIdentifier) {
-		guard let importer = backgroundImports[backgroundTaskId] else {
+		guard let importer = backgroundImports({ $0[backgroundTaskId] }) else {
 			log.error("Missing importer for background task")
 			// just let it go because won't be able to resume the import anyways
 			return
@@ -274,30 +374,24 @@ final class ImportDataTableViewController: UITableViewController {
 		content.categoryIdentifier = UserNotificationDelegate.generalError.identifier
 		sendUserNotification(withContent: content, id: "ImportErrorOccurred")
 	}
-
-	private final func sendUserNotification(withContent content: UNMutableNotificationContent, id: String) {
-		let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-		let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
-		log.debug("Sending user notification: %@", content.title)
-		UNUserNotificationCenter.current().add(request) { (error : Error?) in
-			if let error = error {
-				self.log.error("Failed to send user notification (%@): %@", content.title, errorInfo(error))
-			}
-		}
-	}
 }
 
 // MARK: - UIDocumentPickerDelegate
 
 extension ImportDataTableViewController: UIDocumentPickerDelegate {
 
-	public final func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+	public final func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+		if urls.count != 1 {
+			log.error("Wrong number of urls for document picker: received %d", urls.count)
+			return
+		}
+		let url = urls[0]
 		runImportInBackground(importer, url)
 
 		let taskDescription = "Importing " + importer.dataTypePluralName + " from " + importer.sourceName
 		let alert = UIAlertController(title: taskDescription, message: "This may take a while. You can do something else and, if enabled, you will receive a notification when done.", preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-		present(alert, animated: false)
+		presentView(alert)
 
 		importer = nil // do this in order to make sure no importer type initialization from tableView(didSelectRowAt:) was forgotten
 	}

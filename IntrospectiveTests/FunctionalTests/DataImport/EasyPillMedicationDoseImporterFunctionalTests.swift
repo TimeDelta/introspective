@@ -99,6 +99,25 @@ final class EasyPillMedicationDoseImporterFunctionalTests: ImporterTest {
 		XCTAssertEqual(importer.lastImport, Me.date1)
 	}
 
+	func testGivenImportCancelled_importData_startsNewImport() throws {
+		// given
+		createAllMedications()
+		useInput(Me.validImportFileText)
+		DispatchQueue.global(qos: .background).async {
+			try! self.importer.importData(from: self.url)
+		}
+		while importer.percentComplete() == 0 {}
+		importer.cancel()
+		let originalPercentComplete = importer.percentComplete()
+
+		// when
+		try importer.importData(from: url)
+
+		// then
+		XCTAssertGreaterThan(importer.percentComplete(), originalPercentComplete)
+		XCTAssertFalse(importer.isCancelled)
+	}
+
 	// MARK: - importData() - Invalid Data
 
 	func testGivenMedicationNameDoesNotExist_importData_throwsDisplayableError() throws {
@@ -165,6 +184,51 @@ abc,,
 		// then
 		importer = try DependencyInjector.db.pull(savedObject: importer)
 		XCTAssertNil(importer.lastImport)
+	}
+
+	// MARK: - cancel()
+
+	func testGivenNotImporting_cancel_setsIsCancelledToTrue() {
+		// when
+		importer.cancel()
+
+		// then
+		XCTAssert(importer.isCancelled)
+	}
+
+	func testGivenCurrentlyImporting_cancel_stopsImportAndSetsIsCancelledToTrue() {
+		// given
+		useInput(Me.validImportFileText)
+		DispatchQueue.global(qos: .background).async {
+			try! self.importer.importData(from: self.url)
+		}
+
+		// when
+		while importer.percentComplete() == 0 {}
+		importer.cancel()
+
+		// then
+		XCTAssertLessThanOrEqual(importer.percentComplete(), 1)
+		XCTAssert(importer.isCancelled)
+	}
+
+	// MARK: - resume()
+
+	func testGivenImportCancelled_resume_doesNotContinue() throws {
+		// given
+		useInput(Me.validImportFileText)
+		DispatchQueue.global(qos: .background).async {
+			try! self.importer.importData(from: self.url)
+		}
+		while importer.percentComplete() == 0 {}
+		importer.cancel()
+		let expectedPerentComplete = importer.percentComplete()
+
+		// when
+		try importer.resume()
+
+		// then
+		XCTAssertEqual(importer.percentComplete(), expectedPerentComplete)
 	}
 
 	// MARK: - Helper Functions

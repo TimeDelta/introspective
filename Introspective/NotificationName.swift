@@ -25,6 +25,10 @@ public enum NotificationName {
 
 	case moodRatingChanged
 
+	// MARK: - General UI
+
+	case presentView
+
 	// MARK: - Functions
 
 	public func toName() -> Notification.Name {
@@ -44,6 +48,9 @@ public enum NotificationName {
 
 			// mood value changes
 			case .moodRatingChanged: return "moodRatingChanged"
+
+			// general UI
+			case .presentView: return "presentView"
 		}
 	}
 }

@@ -44,7 +44,7 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 
 	private static let headerRow = "Task name, Task description, Start time, End time, Duration,Duration in hours, Note, Tag"
 	private static let activityRow2 = "\"\(activityInfo2.name)\",\"\(activityInfo2.description ?? "")\",\"\(startDate2Text)\",\"\(endDate2Text)\",\"00:42:50\",0.6973508,\"\(activityInfo2.note ?? "")\",\"\(activityInfo2.tags?[0] ?? "")\""
-	private static let validInput = inputFor([activityInfo1, activityInfo2, activityInfo3])
+	public static let validInput = inputFor([activityInfo1, activityInfo2, activityInfo3])
 
 	private final var importer: ATrackerActivityImporterImpl!
 
@@ -188,6 +188,68 @@ final class ATrackerActivityImporterFunctionalTests: ImporterTest {
 		XCTAssert(try activityExists(activityInfo))
 	}
 
+	/// failure of this test can (but is not guaranteed to) cause weird re-ordering bug on record screen
+	func testGivenOtherDefinitionsCreatedOutsideOfImport_importData_correctlySetsRecordScreenIndexes() throws {
+		// given
+		var existingDefinition1 = ActivityDataTestUtil.createActivityDefinition(name: "definition 1", recordScreenIndex: 0)
+		var existingDefinition2 = ActivityDataTestUtil.createActivityDefinition(name: "definition 2", recordScreenIndex: 1)
+		useInput(Me.validInput)
+		importer.pauseOnRecord = 3
+
+		// when
+		try importer.importData(from: url)
+
+		var definitionCreatedDuringImport1 = ActivityDataTestUtil.createActivityDefinition(
+			name: "definition 1 created during import",
+			recordScreenIndex: 2)
+		var definitionCreatedDuringImport2 = ActivityDataTestUtil.createActivityDefinition(
+			name: "definition 2 created during import",
+			recordScreenIndex: 3)
+
+		try importer.resume()
+
+		// then
+		existingDefinition1 = try database.pull(savedObject: existingDefinition1)
+		existingDefinition2 = try database.pull(savedObject: existingDefinition2)
+		definitionCreatedDuringImport1 = try database.pull(savedObject: definitionCreatedDuringImport1)
+		definitionCreatedDuringImport2 = try database.pull(savedObject: definitionCreatedDuringImport2)
+
+		let definitionsWithImported1Name = try getDefinitionsWith(name: Me.activityInfo1.name)
+		assertThat(definitionsWithImported1Name, hasCount(1))
+		let definitionsWithImported2Name = try getDefinitionsWith(name: Me.activityInfo2.name)
+		assertThat(definitionsWithImported2Name, hasCount(1))
+		// definition for activity 3 is same as definition for activity 1
+
+		XCTAssertEqual(existingDefinition1.recordScreenIndex, 0)
+		XCTAssertEqual(existingDefinition2.recordScreenIndex, 1)
+		XCTAssertEqual(definitionCreatedDuringImport1.recordScreenIndex, 2)
+		XCTAssertEqual(definitionCreatedDuringImport2.recordScreenIndex, 3)
+		if definitionsWithImported1Name.count == 1 {
+			XCTAssertEqual(definitionsWithImported1Name[0].recordScreenIndex, 4)
+		}
+		if definitionsWithImported2Name.count == 1 {
+			XCTAssertEqual(definitionsWithImported2Name[0].recordScreenIndex, 5)
+		}
+	}
+
+	func testGivenImportCancelled_importData_startsNewImport() throws {
+		// given
+		useInput(Me.validInput)
+		DispatchQueue.global(qos: .background).async {
+			try! self.importer.importData(from: self.url)
+		}
+		while importer.percentComplete() == 0 {}
+		importer.cancel()
+		let originalPercentComplete = importer.percentComplete()
+
+		// when
+		try importer.importData(from: url)
+
+		// then
+		XCTAssertGreaterThan(importer.percentComplete(), originalPercentComplete)
+		XCTAssertFalse(importer.isCancelled)
+	}
+
 	// MARK: - importData() - Invalid Data
 
 	func testGivenInvalidStartDateFormat_importData_throwsInvalidFileFormatError() throws {
@@ -289,54 +351,56 @@ not enough columns
 		XCTAssertNil(importer.lastImport)
 	}
 
-	/// failure of this test can (but is not guaranteed to) cause weird re-ordering bug on record screen
-	func testGivenOtherDefinitionsCreatedOutsideOfImport_importData_correctlySetsRecordScreenIndexes() throws {
+	// MARK: - cancel()
+
+	func testGivenNotImporting_cancel_setsIsCancelledToTrue() {
+		// when
+		importer.cancel()
+
+		// then
+		XCTAssert(importer.isCancelled)
+	}
+
+	func testGivenCurrentlyImporting_cancel_stopsImportAndSetsIsCancelledToTrue() {
 		// given
-		var existingDefinition1 = ActivityDataTestUtil.createActivityDefinition(name: "definition 1", recordScreenIndex: 0)
-		var existingDefinition2 = ActivityDataTestUtil.createActivityDefinition(name: "definition 2", recordScreenIndex: 1)
 		useInput(Me.validInput)
-		importer.pauseOnLine = 3
+		DispatchQueue.global(qos: .background).async {
+			try! self.importer.importData(from: self.url)
+		}
 
 		// when
-		try importer.importData(from: url)
+		while importer.percentComplete() == 0 {}
+		importer.cancel()
 
-		var definitionCreatedDuringImport1 = ActivityDataTestUtil.createActivityDefinition(
-			name: "definition 1 created during import",
-			recordScreenIndex: 2)
-		var definitionCreatedDuringImport2 = ActivityDataTestUtil.createActivityDefinition(
-			name: "definition 2 created during import",
-			recordScreenIndex: 3)
+		// then
+		XCTAssertLessThanOrEqual(importer.percentComplete(), 1)
+		XCTAssert(importer.isCancelled)
+	}
 
+	// MARK: - resume()
+
+	func testGivenImportCancelled_resume_doesNotContinue() throws {
+		// given
+		useInput(Me.validInput)
+		DispatchQueue.global(qos: .background).async {
+			try! self.importer.importData(from: self.url)
+		}
+		while importer.percentComplete() == 0 {}
+		importer.cancel()
+		let expectedPerentComplete = importer.percentComplete()
+
+		// when
 		try importer.resume()
 
 		// then
-		existingDefinition1 = try database.pull(savedObject: existingDefinition1)
-		existingDefinition2 = try database.pull(savedObject: existingDefinition2)
-		definitionCreatedDuringImport1 = try database.pull(savedObject: definitionCreatedDuringImport1)
-		definitionCreatedDuringImport2 = try database.pull(savedObject: definitionCreatedDuringImport2)
-
-		let definitionsWithImported1Name = try getDefinitionsWith(name: Me.activityInfo1.name)
-		assertThat(definitionsWithImported1Name, hasCount(1))
-		let definitionsWithImported2Name = try getDefinitionsWith(name: Me.activityInfo2.name)
-		assertThat(definitionsWithImported2Name, hasCount(1))
-		// definition for activity 3 is same as definition for activity 1
-
-		XCTAssertEqual(existingDefinition1.recordScreenIndex, 0)
-		XCTAssertEqual(existingDefinition2.recordScreenIndex, 1)
-		XCTAssertEqual(definitionCreatedDuringImport1.recordScreenIndex, 2)
-		XCTAssertEqual(definitionCreatedDuringImport2.recordScreenIndex, 3)
-		if definitionsWithImported1Name.count == 1 {
-			XCTAssertEqual(definitionsWithImported1Name[0].recordScreenIndex, 4)
-		}
-		if definitionsWithImported2Name.count == 1 {
-			XCTAssertEqual(definitionsWithImported2Name[0].recordScreenIndex, 5)
-		}
+		XCTAssertEqual(importer.percentComplete(), expectedPerentComplete)
 	}
 
 	// MARK: - Helper Functions
 
 	final override func useInput(_ input: String) {
 		Given(ioUtil, .csvReader(url: .value(url), hasHeaderRow: .value(true), willReturn: try! CSVReader(string: input, hasHeaderRow: true)))
+		Given(ioUtil, .contentsOf(.value(url), willReturn: input))
 	}
 
 	private final func activity1WasImported() throws -> Bool {

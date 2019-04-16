@@ -222,7 +222,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		let existingDefinition2 = ActivityDataTestUtil.createActivityDefinition(name: "definition 2", recordScreenIndex: 1)
 
 		let importer = try DependencyInjector.importer.aTrackerActivityImporter() as! ATrackerActivityImporterImpl
-		importer.pauseOnLine = 3
+		importer.pauseOnRecord = 2
 
 		let importedName1 = "imported definition 1"
 		let importedName2 = "imported definition 2"
@@ -260,7 +260,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		let existingDefinition2 = ActivityDataTestUtil.createActivityDefinition(name: "definition 2", recordScreenIndex: 1)
 
 		let importer = try DependencyInjector.importer.aTrackerActivityImporter() as! ATrackerActivityImporterImpl
-		importer.pauseOnLine = 3
+		importer.pauseOnRecord = 2
 
 		let importedName1 = "imported definition 1"
 		let importedName2 = "imported definition 2"
@@ -316,5 +316,6 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 			url: .any,
 			hasHeaderRow: .value(true),
 			willReturn: try! CSVReader(string: input, hasHeaderRow: true)))
+		Given(ioUtil, .contentsOf(.any, willReturn: input))
 	}
 }

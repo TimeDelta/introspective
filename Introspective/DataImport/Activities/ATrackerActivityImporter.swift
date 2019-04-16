@@ -35,11 +35,13 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 
 	public final var importOnlyNewData: Bool = true
 	public final var isPaused: Bool = false
+	public final var isCancelled: Bool = false
 
 	/// for testing purposes only
-	public final var pauseOnLine: Int?
+	public final var pauseOnRecord: Int?
 
-	private final var lineNumber: Int = -1
+	private final var recordNumber: Int = -1
+	private final var totalLines: Int = -1
 	private final let mainTransaction = DependencyInjector.db.transaction()
 	private final var csv: CSVReader!
 	private final var latestDate: Date!
@@ -49,8 +51,14 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 
 	public final func importData(from url: URL) throws {
 		csv = try DependencyInjector.util.io.csvReader(url: url, hasHeaderRow: true)
-		lineNumber = 2
+		recordNumber = 1
+		totalLines = try DependencyInjector.util.io.contentsOf(url).split(separator: "\n").count
+
+		isPaused = false
+		isCancelled = false
+
 		latestDate = lastImport // use temp var to avoid bug where initial import doesn't import anything
+
 		try resume()
 	}
 
@@ -60,25 +68,44 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 	}
 
+	public func percentComplete() -> Double {
+		if totalLines == 0 { return 1 } // avoid division by 0
+		if totalLines == -1 { return 0 }
+		// don't count the header row in percent complete calculation
+		// also, note that this is an underestimate because
+		// the number of lines is >= the number of records
+		return Double(recordNumber) / Double(totalLines - 1)
+	}
+
+	public final func cancel() {
+		isCancelled = true
+		mainTransaction.reset()
+	}
+
 	public final func pause() {
 		isPaused = true
 	}
 
 	public final func resume() throws {
+		guard !isCancelled else {
+			log.error("Tried to resume a cancelled activity import from ATracker")
+			return
+		}
+
 		// without this, pausing and returning skips a line
 		var currentRow: [String]? = []
 		if !isPaused { currentRow = csv.next() }
 		isPaused = false
 		do {
 			while currentRow != nil {
-				guard pauseOnLine != lineNumber else {
+				guard pauseOnRecord != recordNumber else {
 					pause()
-					pauseOnLine = nil
+					pauseOnRecord = nil
 					return
 				}
-				guard !isPaused else { return }
+				guard !isPaused && !isCancelled else { return }
 				try importActivity(from: csv, latestDate: &latestDate, using: mainTransaction)
-				lineNumber += 1
+				recordNumber += 1
 				currentRow = csv.next()
 			}
 
@@ -118,10 +145,10 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 			if let startDate = DependencyInjector.util.calendar.date(from: startDateText, format: "YYYY-MM-dd HH:mm") {
 				return startDate
 			} else {
-				throw InvalidFileFormatError("Invalid format for start date / time on line \(lineNumber).")
+				throw InvalidFileFormatError("Invalid format for start date / time for record \(recordNumber).")
 			}
 		} else {
-			throw InvalidFileFormatError("Missing start date / time on line \(lineNumber).")
+			throw InvalidFileFormatError("Missing start date / time for record \(recordNumber).")
 		}
 	}
 
@@ -131,7 +158,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 				if let endDate = DependencyInjector.util.calendar.date(from: endDateText, format: "YYYY-MM-dd HH:mm") {
 					return endDate
 				}
-				throw InvalidFileFormatError("Invalid format for end date / time on line \(lineNumber).")
+				throw InvalidFileFormatError("Invalid format for end date / time for record \(recordNumber).")
 			}
 		}
 		return nil
@@ -143,7 +170,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	}
 
 	private final func retrieveExistingDefinition(from csv: CSVReader, using transaction: Transaction) throws -> ActivityDefinition? {
-		guard let name = csv[Me.nameColumn] else { throw InvalidFileFormatError("No name given for activity on line \(lineNumber)")}
+		guard let name = csv[Me.nameColumn] else { throw InvalidFileFormatError("No name given for activity for record \(recordNumber)")}
 		let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		// query from the transaction to include definitions created in this import
@@ -155,7 +182,7 @@ public final class ATrackerActivityImporterImpl: NSManagedObject, ATrackerActivi
 	}
 
 	private final func createDefinition(from csv: CSVReader, using transaction: Transaction) throws -> ActivityDefinition {
-		guard let name = csv[Me.nameColumn] else { throw InvalidFileFormatError("No name given for activity on line \(lineNumber)")}
+		guard let name = csv[Me.nameColumn] else { throw InvalidFileFormatError("No name given for activity for record \(recordNumber)")}
 		let description = csv[Me.descriptionColumn]
 		let tagNames = csv[Me.tagsColumn]?.split(separator: "|")
 

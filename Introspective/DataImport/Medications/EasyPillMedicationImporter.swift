@@ -26,11 +26,13 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 
 	public final var importOnlyNewData: Bool = true
 	public final var isPaused: Bool = false
+	public final var isCancelled: Bool = false
 
 	/// for testing purposes only
-	public final var pauseOnLine: Int?
+	public final var pauseOnRecord: Int?
 
-	private final var lineNumber = -1
+	private final var recordNumber = -1
+	private final var totalLines = -1
 	private final let mainTransaction = DependencyInjector.db.transaction()
 	private final var latestDate: Date!
 	private final var lines = [String]()
@@ -42,8 +44,14 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 		let contents = try DependencyInjector.util.io.contentsOf(url)
 		lines = contents.components(separatedBy: "\n")
 		lines.removeFirst()
-		lineNumber = 2
+		recordNumber = 1
+		totalLines = lines.count
+
+		isPaused = false
+		isCancelled = false
+
 		lastImport = Date()
+
 		try resume()
 	}
 
@@ -53,24 +61,44 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 	}
 
+	public func percentComplete() -> Double {
+		if totalLines == 0 { return 1 } // avoid division by 0
+		if totalLines == -1 { return 0 }
+		// don't count the header row in percent complete calculation
+		// also, note that this is an underestimate because
+		// the number of lines is >= the number of records
+		return Double(recordNumber) / Double(totalLines - 1)
+	}
+
+	public final func cancel() {
+		isCancelled = true
+		lines = []
+		mainTransaction.reset()
+	}
+
 	public final func pause() {
 		isPaused = true
 	}
 
 	public final func resume() throws {
+		guard !isCancelled else {
+			log.error("Tried to resume a cancelled medicaiton import from EasyPill")
+			return
+		}
+
 		isPaused = false
 		do {
 			// note: EasyPill does not allow multi-line notes
 			while lines.count > 0 {
-				if pauseOnLine == lineNumber {
+				if pauseOnRecord == recordNumber {
 					pause()
-					pauseOnLine = nil
+					pauseOnRecord = nil
 					return
 				}
-				guard !isPaused else { return }
+				guard !isPaused && !isCancelled else { return }
 				let line = lines.removeFirst()
 				try processLine(line, mainTransaction)
-				lineNumber += 1
+				recordNumber += 1
 			}
 
 			try correctRecordScreenIndices()
@@ -86,19 +114,19 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 
 	private final func processLine(_ line: String, _ transaction: Transaction) throws {
 		let parts = line.components(separatedBy: ",")
-		var medicationName = try getColumn(0, from: parts, errorMessage: "Line \(lineNumber) is empty.")
+		var medicationName = try getColumn(0, from: parts, errorMessage: "Record \(recordNumber) is empty.")
 		var currentIndex = 1
 		if medicationName.isEmpty {
-			let nextColumnText = try getColumn(currentIndex, from: parts, errorMessage: "No name found on line \(lineNumber).")
+			let nextColumnText = try getColumn(currentIndex, from: parts, errorMessage: "No name found for record \(recordNumber).")
 			medicationName += "," + nextColumnText
 			currentIndex += 1
 		}
 		let originalNotesIndex = currentIndex
-		var notes = try getColumn(currentIndex, from: parts, errorMessage: "Line \(lineNumber) does not have the right number of columns.")
+		var notes = try getColumn(currentIndex, from: parts, errorMessage: "Record \(recordNumber) does not have the right number of columns.")
 		currentIndex += 1
-		var dosageText = try getColumn(currentIndex, from: parts, errorMessage: "Line \(lineNumber) does not have the right number of columns.")
+		var dosageText = try getColumn(currentIndex, from: parts, errorMessage: "Record \(recordNumber) does not have the right number of columns.")
 		let originalFrequencyIndex = currentIndex + 1
-		var frequencyText = try getColumn(originalFrequencyIndex, from: parts, errorMessage: "Line \(lineNumber) does not have the right number of columns.")
+		var frequencyText = try getColumn(originalFrequencyIndex, from: parts, errorMessage: "Record \(recordNumber) does not have the right number of columns.")
 		var additionalColumns = 0
 		while !frequencyTextIsValid(frequencyText) && parts.count > currentIndex + additionalColumns + 1 {
 			additionalColumns += 1
@@ -109,7 +137,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 			}
 		}
 		if parts.count <= currentIndex + additionalColumns + 1 {
-			throw InvalidFileFormatError("Unable to align columns on line \(lineNumber).")
+			throw InvalidFileFormatError("Unable to align columns for record \(recordNumber).")
 		}
 		if additionalColumns > 0 {
 			var numberOfFrequencyColumns = 1
@@ -121,7 +149,7 @@ public final class EasyPillMedicationImporterImpl: NSManagedObject, EasyPillMedi
 			notes = parts[originalNotesIndex...newNotesMaxIndex].joined(separator: ",")
 		}
 		currentIndex = originalFrequencyIndex + additionalColumns + 3
-		let startedOnText = try getColumn(currentIndex, from: parts, errorMessage: "Could not get started on date from line \(lineNumber).")
+		let startedOnText = try getColumn(currentIndex, from: parts, errorMessage: "Could not get Started On date for record \(recordNumber).")
 		let startedOn = DependencyInjector.util.calendar.date(from: startedOnText, format: "M/d/yy")!
 
 		try storeMedication(

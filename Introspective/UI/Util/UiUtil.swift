@@ -8,6 +8,7 @@
 
 import UIKit
 import Presentr
+import UserNotifications
 
 //sourcery: AutoMockable
 public protocol UiUtil {
@@ -30,6 +31,24 @@ public protocol UiUtil {
 	/// sugar so that you don't have to type out "UserInfoKey." everywhere.
 	func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any]
 	func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String, as: Type.Type) -> Type
+	func documentPicker(docTypes: [String], in pickerMode: UIDocumentPickerMode) -> UIDocumentPickerViewController
+
+	/// - Note: This is mainly for testability
+	func stopObserving(_ observer: Any, name: NotificationName?, object: Any?)
+
+	/// Present `controllerBeingPresented` from `presentingController` then run `completion` if provided.
+	/// - Note: This is mainly for testability
+	func present(
+		_ presentingController: UIViewController,
+		_ controllerBeingPresented: UIViewController,
+		animated: Bool,
+		completion: (() -> Void)?)
+
+	func sendUserNotification(
+		withContent content: UNMutableNotificationContent,
+		id: String,
+		repeats: Bool,
+		interval: TimeInterval)
 }
 
 extension UiUtil {
@@ -51,6 +70,28 @@ extension UiUtil {
 	/// - Note: Automatically logs when key is missing, wrong type or the notification does not have any user info.
 	func value<Type>(for key: UserInfoKey, from notification: Notification, keyIsOptional: Bool = false) -> Type? {
 		return value(for: key, from: notification, keyIsOptional: keyIsOptional)
+	}
+
+	func stopObserving(_ observer: Any, name: NotificationName? = nil, object: Any? = nil) {
+		stopObserving(observer, name: name, object: object)
+	}
+
+	func present(
+		_ presentingController: UIViewController,
+		_ controllerBeingPresented: UIViewController,
+		animated: Bool = false,
+		completion: (() -> Void)? = nil)
+	{
+		present(presentingController, controllerBeingPresented, animated: animated, completion: completion)
+	}
+
+	func sendUserNotification(
+		withContent content: UNMutableNotificationContent,
+		id: String,
+		repeats: Bool = false,
+		interval: TimeInterval = 1)
+	{
+		sendUserNotification(withContent: content, id: id, repeats: repeats, interval: interval)
 	}
 }
 
@@ -149,6 +190,39 @@ public final class UiUtilImpl: UiUtil {
 
 	public func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String, as: Type.Type) -> Type {
 		return UIStoryboard(name: storyboardName, bundle: nil).instantiateViewController(withIdentifier: controllerName) as! Type
+	}
+
+	public func documentPicker(docTypes: [String], in pickerMode: UIDocumentPickerMode) -> UIDocumentPickerViewController {
+		return UIDocumentPickerViewController(documentTypes: docTypes, in: pickerMode)
+	}
+
+	public func stopObserving(_ observer: Any, name: NotificationName?, object: Any?) {
+		NotificationCenter.default.removeObserver(observer, name: name?.toName(), object: object)
+	}
+
+	public func present(
+		_ presentingController: UIViewController,
+		_ controllerBeingPresented: UIViewController,
+		animated: Bool,
+		completion: (() -> Void)?)
+	{
+		presentingController.present(controllerBeingPresented, animated: animated, completion: completion)
+	}
+
+	public func sendUserNotification(
+		withContent content: UNMutableNotificationContent,
+		id: String,
+		repeats: Bool,
+		interval: TimeInterval)
+	{
+		let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: repeats)
+		let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+		Log().debug("Sending user notification: %@", content.title)
+		UNUserNotificationCenter.current().add(request) { (error : Error?) in
+			if let error = error {
+				Log().error("Failed to send user notification (%@): %@", content.title, errorInfo(error))
+			}
+		}
 	}
 
 	// MARK: - Helper Functions
