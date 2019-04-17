@@ -32,13 +32,10 @@ class BloodPressureTableViewCell: UITableViewCell {
 
 			valueLabel.text = formatValue(sample.systolic) + "/" + formatValue(sample.diastolic)
 
-			let start = sample.dates()[.start]!
-			let end = sample.dates()[.end]
-			var dateString = DependencyInjector.util.calendar.string(for: start, dateStyle: .medium, timeStyle: .short)
-			if end != nil && start != end {
-				dateString += " to " + DependencyInjector.util.calendar.string(for: end!, dateStyle: .medium, timeStyle: .short)
-			}
-			timestampLabel.text = dateString
+			timestampLabel.text = DependencyInjector.util.calendar.string(
+				for: sample.timestamp,
+				dateStyle: .medium,
+				timeStyle: .short)
 
 			setConstraints()
 		}

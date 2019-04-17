@@ -16,7 +16,6 @@ import Hamcrest
 final class MedicationDoseTableViewCellFunctionalTests: FunctionalTest {
 
 	private final var cell: MedicationDoseTableTableViewCell!
-
 	private final var nameLabel: UILabel!
 	private final var doseAndTimestampLabel: UILabel!
 

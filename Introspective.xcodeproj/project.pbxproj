@@ -340,7 +340,7 @@
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
 		A1741703508EA4B538BF55AB8D4C19D4 /* InSameCalendarUnitSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D17C897038BC72D188BF5938E99B20 /* InSameCalendarUnitSubQueryMatcher.swift */; };
 		A1C71792CBA04C0532416EA5E539FD3A /* InCurrentTimeUnitDateAttributeRestrictionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313A90403CADA44EC55B31233C2EED73 /* InCurrentTimeUnitDateAttributeRestrictionFunctionalTests.swift */; };
-		B5301CC0118538B5ADAD785DC7A6C5C7 /* MedicationDoseTableViewCellFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAD0EC332DCE67EB23993FC2A33E884 /* MedicationDoseTableViewCellFunctionalTests.swift */; };
+		1DEC0C6A839C5863EF78024C25879765 /* BloodPressureTableViewCellUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F5CD5A4E64BA19B75C6C044E9506111 /* BloodPressureTableViewCellUnitTests.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A29CEA756966FF63181D103F30EE2E29 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C87A3B46E853FFC3382ED9BC4A609 /* Activity.swift */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -384,6 +384,7 @@
 		B3524F47C097361C4029CF5527727E77 /* GeneralResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDF01F769863A9123FEED8DBF775E9C /* GeneralResultsUITests.swift */; };
 		B42260E0F30E424B561CCC691965ACAD /* TypedGreaterThanOrEqualToAttributeRestrictionBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33FB3CD584EF6648DD2E1FC89DEFEBAB /* TypedGreaterThanOrEqualToAttributeRestrictionBase.swift */; };
 		B4A860AFE8B28F0380F655836F0E0982 /* RecordMoodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA6947CC316B6EDEA4B1CCFDB806676 /* RecordMoodTableViewCell.swift */; };
+		B5301CC0118538B5ADAD785DC7A6C5C7 /* MedicationDoseTableViewCellFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAD0EC332DCE67EB23993FC2A33E884 /* MedicationDoseTableViewCellFunctionalTests.swift */; };
 		B5862A8794194FE167CB5B19D6207008 /* DurationAttributeUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482F954CDF0EF3ED2F2A564599090A4B /* DurationAttributeUnitTests.swift */; };
 		B5A08BC0D0D96F89CFA6200B1E3147A8 /* GreaterThanDosageAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E15F3E59AA5DC0860CBCA89BCC3B382 /* GreaterThanDosageAttributeRestrictionUnitTests.swift */; };
 		B60C8B23D92F01EAD67CF05301EB9A88 /* GraphSetup.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1DDA829A4AAEC89886C812D4186945A0 /* GraphSetup.storyboard */; };
@@ -623,6 +624,7 @@
 		1EB7A64F6B9033EEA98DB8B27BB2FFE8 /* CalendarUtilUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUtilUnitTests.swift; sourceTree = "<group>"; };
 		1EC35BA576759FA61B15F904C42335C0 /* RestingHeartRateQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestingHeartRateQueryFunctionalTests.swift; sourceTree = "<group>"; };
 		1ECCB7BC00D30097B7C115F4B53031EB /* MinimumInformationFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimumInformationFunctionalTests.swift; sourceTree = "<group>"; };
+		1FAD0EC332DCE67EB23993FC2A33E884 /* MedicationDoseTableViewCellFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDoseTableViewCellFunctionalTests.swift; sourceTree = "<group>"; };
 		1FAFF42FF420D4608CEAF21719F88EF8 /* Pods-Introspective.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Introspective.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Introspective/Pods-Introspective.debug.xcconfig"; sourceTree = "<group>"; };
 		2110A84D7F3829E47E887374BFF96D2C /* NotEmptyStringAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotEmptyStringAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		2159810D8189590206E083E9804FA562 /* MaximumInformationFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaximumInformationFunctionalTests.swift; sourceTree = "<group>"; };
@@ -899,7 +901,7 @@
 		9FAD6A8CE5B12D85BB43F2F13128C320 /* BloodPressureQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPressureQueryFunctionalTests.swift; sourceTree = "<group>"; };
 		A1B6336EF7C8BA63691FB3CF1C00CFAD /* DateOnlyAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOnlyAttribute.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
-		1FAD0EC332DCE67EB23993FC2A33E884 /* MedicationDoseTableViewCellFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDoseTableViewCellFunctionalTests.swift; sourceTree = "<group>"; };
+		7F5CD5A4E64BA19B75C6C044E9506111 /* BloodPressureTableViewCellUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPressureTableViewCellUnitTests.swift; sourceTree = "<group>"; };
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A342AF1968189AC86554DAEAED555EA4 /* HasTagAttributeRestrictionFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTagAttributeRestrictionFunctionalTests.swift; sourceTree = "<group>"; };
@@ -2100,6 +2102,7 @@
 			isa = PBXGroup;
 			children = (
 				C686E1CE0A5792BAC945FE3EC7F660C6 /* ExtraInformationTableViewCellUnitTests.swift */,
+				7F5CD5A4E64BA19B75C6C044E9506111 /* BloodPressureTableViewCellUnitTests.swift */,
 				1D716C50FB9FD876AAAB8924DED80016 /* WeightTableViewCellUnitTests.swift */,
 			);
 			path = Results;
@@ -2201,14 +2204,6 @@
 			path = Testing;
 			sourceTree = "<group>";
 		};
-		B05AC3FC253AAB5AE4A05D518FA9FD7A /* Results */ = {
-			isa = PBXGroup;
-			children = (
-				1FAD0EC332DCE67EB23993FC2A33E884 /* MedicationDoseTableViewCellFunctionalTests.swift */,
-			);
-			path = Results;
-			sourceTree = "<group>";
-		};
 		A42A3755C14DFA73187CC83B596D96EF /* RecordData */ = {
 			isa = PBXGroup;
 			children = (
@@ -2288,6 +2283,14 @@
 				B9B68DC83EE978FDC7B16268E9515B52 /* ErrorsUnitTests.swift */,
 			);
 			path = Misc;
+			sourceTree = "<group>";
+		};
+		B05AC3FC253AAB5AE4A05D518FA9FD7A /* Results */ = {
+			isa = PBXGroup;
+			children = (
+				1FAD0EC332DCE67EB23993FC2A33E884 /* MedicationDoseTableViewCellFunctionalTests.swift */,
+			);
+			path = Results;
 			sourceTree = "<group>";
 		};
 		B12CF70FD18D28CDE8FA8C2404263825 /* CoreData */ = {
@@ -3067,6 +3070,7 @@
 				4055690B3EB5EB046D44B9AB8FA9F801 /* MedicationFunctionalTests.swift in Sources */,
 				2A435E354300E98863CFDC4AFFD05BCD /* CountInformationFunctionalTests.swift in Sources */,
 				3DBDFAF4F795A2DC97CCD4CA0815F551 /* CalendarComponentAttributeUnitTests.swift in Sources */,
+				1DEC0C6A839C5863EF78024C25879765 /* BloodPressureTableViewCellUnitTests.swift in Sources */,
 				EE93BF4A13F2E5EC9372588874987EBC /* SameEndDatesSubQueryMatcherUnitTests.swift in Sources */,
 				452902FEB60DBEF3BD3AEDB166E116DA /* LessThanDurationAttributeRestrictionUnitTests.swift in Sources */,
 				11520C0039066C381096F585ECE636BB /* BodyMassIndexUnitTests.swift in Sources */,

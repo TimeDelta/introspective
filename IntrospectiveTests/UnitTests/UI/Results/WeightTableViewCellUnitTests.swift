@@ -16,8 +16,6 @@ final class WeightTableViewCellUnitTests: UnitTest {
 	private final var valueLabel: UILabel!
 	private final var timestampLabel: UILabel!
 
-	private final let frame = CGRect(x: 0, y: 0, width: 0, height: 0)
-
 	private final var weightSample: Weight!
 	private final let weight = 12.3
 	private final let timestamp = Date()
@@ -25,10 +23,10 @@ final class WeightTableViewCellUnitTests: UnitTest {
 	final override func setUp() {
 		super.setUp()
 
-		valueLabel = UILabel(frame: frame)
-		timestampLabel = UILabel(frame: frame)
+		valueLabel = UILabel()
+		timestampLabel = UILabel()
 
-		cell = WeightTableViewCell(frame: frame)
+		cell = WeightTableViewCell()
 		cell.valueLabel = valueLabel
 		cell.timestampLabel = timestampLabel
 

@@ -15,8 +15,6 @@ final class ExtraInformationTableViewCellUnitTests: UnitTest {
 	private final var cell: ExtraInformationTableViewCell!
 	private final var keyValueLabel: UILabel!
 
-	private final let frame = CGRect(x: 0, y: 0, width: 0, height: 0)
-
 	private final var information: ExtraInformationMock!
 	private final let informationDescription = "description of information"
 	private final let value = "value of information"
@@ -24,9 +22,9 @@ final class ExtraInformationTableViewCellUnitTests: UnitTest {
 	final override func setUp() {
 		super.setUp()
 
-		keyValueLabel = UILabel(frame: frame)
+		keyValueLabel = UILabel()
 
-		cell = ExtraInformationTableViewCell(frame: frame)
+		cell = ExtraInformationTableViewCell()
 		cell.keyValueLabel = keyValueLabel
 
 		information = ExtraInformationMock()
