@@ -340,7 +340,7 @@
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
 		A1741703508EA4B538BF55AB8D4C19D4 /* InSameCalendarUnitSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D17C897038BC72D188BF5938E99B20 /* InSameCalendarUnitSubQueryMatcher.swift */; };
 		A1C71792CBA04C0532416EA5E539FD3A /* InCurrentTimeUnitDateAttributeRestrictionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313A90403CADA44EC55B31233C2EED73 /* InCurrentTimeUnitDateAttributeRestrictionFunctionalTests.swift */; };
-		A3DDA74C14DC03384ABEDE470581E15F /* ExtraInformationTableViewCellUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C686E1CE0A5792BAC945FE3EC7F660C6 /* ExtraInformationTableViewCellUnitTests.swift */; };
+		B5301CC0118538B5ADAD785DC7A6C5C7 /* MedicationDoseTableViewCellFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAD0EC332DCE67EB23993FC2A33E884 /* MedicationDoseTableViewCellFunctionalTests.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A29CEA756966FF63181D103F30EE2E29 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C87A3B46E853FFC3382ED9BC4A609 /* Activity.swift */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -348,6 +348,7 @@
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
 		A3368D662B2813C5A4FCBD8B8F668E3A /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0EEB29C94DB9134E4B7AF25C9A6037A /* NotificationName.swift */; };
 		A34600A18766AE66F0324FF5AB10E114 /* GraphType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */; };
+		A3DDA74C14DC03384ABEDE470581E15F /* ExtraInformationTableViewCellUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C686E1CE0A5792BAC945FE3EC7F660C6 /* ExtraInformationTableViewCellUnitTests.swift */; };
 		A4D62D5E8F31E71700667007DFE443D2 /* Introspective.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A7581418039FB6FD454DA7AA8C114E56 /* Introspective.xcdatamodeld */; };
 		A4DB11637F7D4C8EFE5993031C8D4308 /* MoodDataTestUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C71FDB2A0716C179F5C6A253A2B39B /* MoodDataTestUtil.swift */; };
 		A5CB0A5E3D337AE04FCFB7CEF39E7537 /* NotEqualToAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB990570ACB7A06E76B1F703D2DBFE3 /* NotEqualToAttributeRestriction.swift */; };
@@ -898,7 +899,7 @@
 		9FAD6A8CE5B12D85BB43F2F13128C320 /* BloodPressureQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPressureQueryFunctionalTests.swift; sourceTree = "<group>"; };
 		A1B6336EF7C8BA63691FB3CF1C00CFAD /* DateOnlyAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOnlyAttribute.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
-		C686E1CE0A5792BAC945FE3EC7F660C6 /* ExtraInformationTableViewCellUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtraInformationTableViewCellUnitTests.swift; sourceTree = "<group>"; };
+		1FAD0EC332DCE67EB23993FC2A33E884 /* MedicationDoseTableViewCellFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDoseTableViewCellFunctionalTests.swift; sourceTree = "<group>"; };
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A342AF1968189AC86554DAEAED555EA4 /* HasTagAttributeRestrictionFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTagAttributeRestrictionFunctionalTests.swift; sourceTree = "<group>"; };
@@ -966,6 +967,7 @@
 		C5D9277409C32599DAB075D109C3E408 /* DoesNotHaveOneOfTagAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoesNotHaveOneOfTagAttributeRestriction.swift; sourceTree = "<group>"; };
 		C62A3AC3AEA8E497B110D0AB765E3D1F /* WeightQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightQuery.swift; sourceTree = "<group>"; };
 		C639B0ACA0A5991ABCF9EE4CED92F0B4 /* GreaterThanOrEqualToFrequencyAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreaterThanOrEqualToFrequencyAttributeRestriction.swift; sourceTree = "<group>"; };
+		C686E1CE0A5792BAC945FE3EC7F660C6 /* ExtraInformationTableViewCellUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtraInformationTableViewCellUnitTests.swift; sourceTree = "<group>"; };
 		C73641CF009AFE7489700381F2DE815B /* EqualToFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		C7BBAF8BDAD34ADC4D1030CFBE73E411 /* InjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InjectionProvider.swift; sourceTree = "<group>"; };
 		C7E807FBF799286E402E2271B57AC1B2 /* AutoCodable.swifttemplate */ = {isa = PBXFileReference; lastKnownFileType = text; path = AutoCodable.swifttemplate; sourceTree = "<group>"; };
@@ -1378,6 +1380,7 @@
 			isa = PBXGroup;
 			children = (
 				18229DBDEA72BD26574B1F73286D2073 /* RecordData */,
+				B05AC3FC253AAB5AE4A05D518FA9FD7A /* Results */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -2096,8 +2099,8 @@
 		9A90A78A4A60F1A044A131E45A023652 /* Results */ = {
 			isa = PBXGroup;
 			children = (
-				1D716C50FB9FD876AAAB8924DED80016 /* WeightTableViewCellUnitTests.swift */,
 				C686E1CE0A5792BAC945FE3EC7F660C6 /* ExtraInformationTableViewCellUnitTests.swift */,
+				1D716C50FB9FD876AAAB8924DED80016 /* WeightTableViewCellUnitTests.swift */,
 			);
 			path = Results;
 			sourceTree = "<group>";
@@ -2196,6 +2199,14 @@
 				BB3F3239D5DA24E154657AC2EC4C6F16 /* TestDataCreationSampleTypeTableViewCell.swift */,
 			);
 			path = Testing;
+			sourceTree = "<group>";
+		};
+		B05AC3FC253AAB5AE4A05D518FA9FD7A /* Results */ = {
+			isa = PBXGroup;
+			children = (
+				1FAD0EC332DCE67EB23993FC2A33E884 /* MedicationDoseTableViewCellFunctionalTests.swift */,
+			);
+			path = Results;
 			sourceTree = "<group>";
 		};
 		A42A3755C14DFA73187CC83B596D96EF /* RecordData */ = {
@@ -3086,6 +3097,7 @@
 				3379C679B5E793533F20FDF3F27D97C4 /* ErrorsUnitTests.swift in Sources */,
 				1741495F829B086EB5116D3808ACCA14 /* MinimumInformationFunctionalTests.swift in Sources */,
 				BE8EC48964A2CA203789B7ECD39E103B /* CalendarUtilUnitTests.swift in Sources */,
+				B5301CC0118538B5ADAD785DC7A6C5C7 /* MedicationDoseTableViewCellFunctionalTests.swift in Sources */,
 				0F86498AB616EEB440B6232CD2B5AB1A /* StartsWithStringAttributeRestrictionUnitTests.swift in Sources */,
 				0F5AF793A9CE3ECC77E0C2CA861D00BA /* AttributeRestrictionMock.swift in Sources */,
 				3E515B3DE980A3DB28DEFD959474D588 /* IntegerAttributeUnitTests.swift in Sources */,

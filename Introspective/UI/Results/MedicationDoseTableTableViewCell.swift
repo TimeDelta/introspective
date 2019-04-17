@@ -19,6 +19,7 @@ public final class MedicationDoseTableTableViewCell: UITableViewCell {
 
 	public final var medicationDose: MedicationDose! {
 		didSet {
+			guard let medicationDose = medicationDose else { return }
 			medicationNameLabel.text = medicationDose.medication.name
 
 			var doseText = ""
