@@ -9,6 +9,7 @@
 import Foundation
 import XCTest
 import SwiftyMocky
+import CSV
 @testable import Introspective
 
 // sourcery: mock = "Mood"
@@ -146,6 +147,14 @@ class MoodMock: Mood, Mock {
 	private static var __p_entityName: (String)?
 
 
+    public static var exportFileDescription: String {
+		get {	MoodMock.invocations.append(.p_exportFileDescription_get); return MoodMock.__p_exportFileDescription ?? givenGetterValue(.p_exportFileDescription_get, "MoodMock - stub value for exportFileDescription was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	MoodMock.__p_exportFileDescription = newValue }
+	}
+	private static var __p_exportFileDescription: (String)?
+
+
     public static var name: String {
 		get {	MoodMock.invocations.append(.p_name_get); return MoodMock.__p_name ?? givenGetterValue(.p_name_get, "MoodMock - stub value for name was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
@@ -180,6 +189,19 @@ class MoodMock: Mood, Mock {
 
 
 
+
+    public static func exportHeaderRow(to csv: CSVWriter) throws {
+        addInvocation(.sm_exportHeaderRow__to_csv(Parameter<CSVWriter>.value(`csv`)))
+		let perform = methodPerformValue(.sm_exportHeaderRow__to_csv(Parameter<CSVWriter>.value(`csv`))) as? (CSVWriter) -> Void
+		perform?(`csv`)
+		do {
+		    _ = try methodReturnValue(.sm_exportHeaderRow__to_csv(Parameter<CSVWriter>.value(`csv`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
 
     open func setSource(_ source: Sources.MoodSourceNum) {
         addInvocation(.m_setSource__source(Parameter<Sources.MoodSourceNum>.value(`source`)))
@@ -243,6 +265,19 @@ class MoodMock: Mood, Mock {
 		return __value
     }
 
+    open func export(to csv: CSVWriter) throws {
+        addInvocation(.m_export__to_csv(Parameter<CSVWriter>.value(`csv`)))
+		let perform = methodPerformValue(.m_export__to_csv(Parameter<CSVWriter>.value(`csv`))) as? (CSVWriter) -> Void
+		perform?(`csv`)
+		do {
+		    _ = try methodReturnValue(.m_export__to_csv(Parameter<CSVWriter>.value(`csv`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
     open func graphableValue(of attribute: Attribute) throws -> Any? {
         addInvocation(.m_graphableValue__of_attribute(Parameter<Attribute>.value(`attribute`)))
 		let perform = methodPerformValue(.m_graphableValue__of_attribute(Parameter<Attribute>.value(`attribute`))) as? (Attribute) -> Void
@@ -301,10 +336,12 @@ class MoodMock: Mood, Mock {
     }
 
     fileprivate enum StaticMethodType {
+        case sm_exportHeaderRow__to_csv(Parameter<CSVWriter>)
         case p_rating_get
         case p_maxRating_get
         case p_note_get
         case p_entityName_get
+        case p_exportFileDescription_get
         case p_name_get
         case p_attributes_get
         case p_defaultDependentAttribute_get
@@ -312,10 +349,14 @@ class MoodMock: Mood, Mock {
 
         static func compareParameters(lhs: StaticMethodType, rhs: StaticMethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
+            case (.sm_exportHeaderRow__to_csv(let lhsCsv), .sm_exportHeaderRow__to_csv(let rhsCsv)):
+                guard Parameter.compare(lhs: lhsCsv, rhs: rhsCsv, with: matcher) else { return false } 
+                return true 
             case (.p_rating_get,.p_rating_get): return true
             case (.p_maxRating_get,.p_maxRating_get): return true
             case (.p_note_get,.p_note_get): return true
             case (.p_entityName_get,.p_entityName_get): return true
+            case (.p_exportFileDescription_get,.p_exportFileDescription_get): return true
             case (.p_name_get,.p_name_get): return true
             case (.p_attributes_get,.p_attributes_get): return true
             case (.p_defaultDependentAttribute_get,.p_defaultDependentAttribute_get): return true
@@ -326,10 +367,12 @@ class MoodMock: Mood, Mock {
 
         func intValue() -> Int {
             switch self {
+                case let .sm_exportHeaderRow__to_csv(p0): return p0.intValue
                 case .p_rating_get: return 0
                 case .p_maxRating_get: return 0
                 case .p_note_get: return 0
                 case .p_entityName_get: return 0
+                case .p_exportFileDescription_get: return 0
                 case .p_name_get: return 0
                 case .p_attributes_get: return 0
                 case .p_defaultDependentAttribute_get: return 0
@@ -358,6 +401,9 @@ class MoodMock: Mood, Mock {
         public static func entityName(getter defaultValue: String...) -> StaticPropertyStub {
             return StaticGiven(method: .p_entityName_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
+        public static func exportFileDescription(getter defaultValue: String...) -> StaticPropertyStub {
+            return StaticGiven(method: .p_exportFileDescription_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
         public static func name(getter defaultValue: String...) -> StaticPropertyStub {
             return StaticGiven(method: .p_name_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
@@ -371,15 +417,27 @@ class MoodMock: Mood, Mock {
             return StaticGiven(method: .p_defaultIndependentAttribute_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
+        public static func exportHeaderRow(to csv: Parameter<CSVWriter>, willThrow: Error...) -> StaticMethodStub {
+            return StaticGiven(method: .sm_exportHeaderRow__to_csv(`csv`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func exportHeaderRow(to csv: Parameter<CSVWriter>, willProduce: (StubberThrows<Void>) -> Void) -> StaticMethodStub {
+            let willThrow: [Error] = []
+			let given: StaticGiven = { return StaticGiven(method: .sm_exportHeaderRow__to_csv(`csv`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct StaticVerify {
         fileprivate var method: StaticMethodType
 
+        public static func exportHeaderRow(to csv: Parameter<CSVWriter>) -> StaticVerify { return StaticVerify(method: .sm_exportHeaderRow__to_csv(`csv`))}
         public static var rating: StaticVerify { return StaticVerify(method: .p_rating_get) }
         public static var maxRating: StaticVerify { return StaticVerify(method: .p_maxRating_get) }
         public static var note: StaticVerify { return StaticVerify(method: .p_note_get) }
         public static var entityName: StaticVerify { return StaticVerify(method: .p_entityName_get) }
+        public static var exportFileDescription: StaticVerify { return StaticVerify(method: .p_exportFileDescription_get) }
         public static var name: StaticVerify { return StaticVerify(method: .p_name_get) }
         public static var attributes: StaticVerify { return StaticVerify(method: .p_attributes_get) }
         public static var defaultDependentAttribute: StaticVerify { return StaticVerify(method: .p_defaultDependentAttribute_get) }
@@ -390,6 +448,9 @@ class MoodMock: Mood, Mock {
         fileprivate var method: StaticMethodType
         var performs: Any
 
+        public static func exportHeaderRow(to csv: Parameter<CSVWriter>, perform: @escaping (CSVWriter) -> Void) -> StaticPerform {
+            return StaticPerform(method: .sm_exportHeaderRow__to_csv(`csv`), performs: perform)
+        }
     }
 
     
@@ -399,6 +460,7 @@ class MoodMock: Mood, Mock {
         case m_value__of_attribute(Parameter<Attribute>)
         case m_set__attribute_attributeto_value(Parameter<Attribute>, Parameter<Any?>)
         case m_equalTo__otherAttributed(Parameter<Attributed>)
+        case m_export__to_csv(Parameter<CSVWriter>)
         case m_graphableValue__of_attribute(Parameter<Attribute>)
         case m_dates
         case m_equalTo__otherSample(Parameter<Sample>)
@@ -433,6 +495,9 @@ class MoodMock: Mood, Mock {
                 return true 
             case (.m_equalTo__otherAttributed(let lhsOtherattributed), .m_equalTo__otherAttributed(let rhsOtherattributed)):
                 guard Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher) else { return false } 
+                return true 
+            case (.m_export__to_csv(let lhsCsv), .m_export__to_csv(let rhsCsv)):
+                guard Parameter.compare(lhs: lhsCsv, rhs: rhsCsv, with: matcher) else { return false } 
                 return true 
             case (.m_graphableValue__of_attribute(let lhsAttribute), .m_graphableValue__of_attribute(let rhsAttribute)):
                 guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
@@ -471,6 +536,7 @@ class MoodMock: Mood, Mock {
             case let .m_value__of_attribute(p0): return p0.intValue
             case let .m_set__attribute_attributeto_value(p0, p1): return p0.intValue + p1.intValue
             case let .m_equalTo__otherAttributed(p0): return p0.intValue
+            case let .m_export__to_csv(p0): return p0.intValue
             case let .m_graphableValue__of_attribute(p0): return p0.intValue
             case .m_dates: return 0
             case let .m_equalTo__otherSample(p0): return p0.intValue
@@ -601,6 +667,16 @@ class MoodMock: Mood, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func export(to csv: Parameter<CSVWriter>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_export__to_csv(`csv`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func export(to csv: Parameter<CSVWriter>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_export__to_csv(`csv`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
         public static func graphableValue(of attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willThrow.map({ StubProduct.throw($0) }))
         }
@@ -621,6 +697,7 @@ class MoodMock: Mood, Mock {
         public static func value(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_value__of_attribute(`attribute`))}
         public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>) -> Verify { return Verify(method: .m_set__attribute_attributeto_value(`attribute`, `value`))}
         public static func equalTo(_ otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
+        public static func export(to csv: Parameter<CSVWriter>) -> Verify { return Verify(method: .m_export__to_csv(`csv`))}
         public static func graphableValue(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_graphableValue__of_attribute(`attribute`))}
         public static func dates() -> Verify { return Verify(method: .m_dates)}
         public static func equalTo(_ otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
@@ -658,6 +735,9 @@ class MoodMock: Mood, Mock {
         }
         public static func equalTo(_ otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherAttributed(`otherAttributed`), performs: perform)
+        }
+        public static func export(to csv: Parameter<CSVWriter>, perform: @escaping (CSVWriter) -> Void) -> Perform {
+            return Perform(method: .m_export__to_csv(`csv`), performs: perform)
         }
         public static func graphableValue(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
             return Perform(method: .m_graphableValue__of_attribute(`attribute`), performs: perform)

@@ -22,4 +22,5 @@ public protocol InjectionProvider {
 	func extraInformationFactory() -> ExtraInformationFactory
 	func sampleGrouperFactory() -> SampleGrouperFactory
 	func importerFactory() -> ImporterFactory
+	func exporterFactory() -> ExporterFactory
 }

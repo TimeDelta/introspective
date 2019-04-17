@@ -21,6 +21,10 @@ public enum NotificationName {
 	case extendBackgroundTaskTime
 	case cancelBackgroundTask
 
+	// MARK: - Export
+	case backgroundExportFinished
+	case shareExportFile
+
 	// MARK: - Mood Value Changes
 
 	case moodRatingChanged
@@ -45,6 +49,10 @@ public enum NotificationName {
 			// background tasks
 			case .extendBackgroundTaskTime: return "extendBackgroundTaskTime"
 			case .cancelBackgroundTask: return "cancelBackgroundTask"
+
+			// export
+			case .backgroundExportFinished: return "backgroundExportFinished"
+			case .shareExportFile: return "shareExportFile"
 
 			// mood value changes
 			case .moodRatingChanged: return "moodRatingChanged"

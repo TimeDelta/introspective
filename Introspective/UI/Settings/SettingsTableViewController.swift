@@ -16,10 +16,19 @@ public final class SettingsTableViewController: UITableViewController {
 	public static let enableGenerateTestData = Notification.Name("enableGenerateTestData")
 	private static let resetInstructionPromptsCellIdentifier = "resetInstructionPrompts"
 	private static let identifiers = [
-		"general",
-		"activitySettings",
-		"moodSettings",
-		resetInstructionPromptsCellIdentifier,
+		(
+			section: "Settings",
+			rows: [
+				"general",
+				"activitySettings",
+				"moodSettings",
+			]),
+		(
+			section: "Other",
+			rows: [
+				"export",
+				resetInstructionPromptsCellIdentifier,
+			]),
 	]
 
 	// MARK: - Member Variables
@@ -41,24 +50,23 @@ public final class SettingsTableViewController: UITableViewController {
 
 	public final override func numberOfSections(in tableView: UITableView) -> Int {
 		if testing {
-			return 2
+			return 3
 		}
-		return 1
+		return 2
 	}
 
 	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if testing && section == 0 {
 			return 2
 		}
-		return Me.identifiers.count
+		return Me.identifiers[section].rows.count
 	}
 
 	public final override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		guard testing else { return nil }
-		if section == 0 {
+		if testing && section == 0 {
 			return "Testing Only"
 		}
-		return "Normal Settings"
+		return Me.identifiers[section].section
 	}
 
 	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -71,7 +79,7 @@ public final class SettingsTableViewController: UITableViewController {
 			}
 			return tableView.dequeueReusableCell(withIdentifier: "deleteCoreData", for: indexPath)
 		}
-		return tableView.dequeueReusableCell(withIdentifier: Me.identifiers[indexPath.row], for: indexPath)
+		return tableView.dequeueReusableCell(withIdentifier: identifier(for: indexPath), for: indexPath)
 	}
 
 	// MARK: - Table view delegate
@@ -102,10 +110,14 @@ public final class SettingsTableViewController: UITableViewController {
 	// MARK: - Helper Functions
 
 	private final func indexPath(_ indexPath: IndexPath, isNonTestOnlySectionRowNamed rowIdentifier: String) -> Bool {
-		return indexPathIsNonTestOnlySection(indexPath) && Me.identifiers[indexPath.row] == rowIdentifier
+		return indexPathIsNonTestOnlySection(indexPath) && identifier(for: indexPath) == rowIdentifier
 	}
 
 	private final func indexPathIsNonTestOnlySection(_ indexPath: IndexPath) -> Bool {
 		return !testing || indexPath.section != 0
+	}
+
+	private final func identifier(for indexPath: IndexPath) -> String {
+		return Me.identifiers[indexPath.section].rows[indexPath.row]
 	}
 }

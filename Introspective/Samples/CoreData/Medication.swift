@@ -9,8 +9,9 @@
 
 import Foundation
 import CoreData
+import CSV
 
-public final class Medication: NSManagedObject, CoreDataObject, Attributed {
+public final class Medication: NSManagedObject, CoreDataObject, Attributed, Exportable {
 
 	private typealias Me = Medication
 
@@ -51,10 +52,53 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed {
 		}
 		set {
 			storedStartedOn = newValue
-			if source == Sources.ActivitySourceNum.introspective.rawValue && startedOnTimeZoneId == nil {
+			if source == Sources.MedicationSourceNum.introspective.rawValue && startedOnTimeZoneId == nil {
 				startedOnTimeZoneId = DependencyInjector.util.calendar.currentTimeZone().identifier
 			}
 		}
+	}
+
+	// MARK: - Export
+
+	public static let exportFileDescription: String = "Medications"
+
+	public static func exportHeaderRow(to csv: CSVWriter) throws {
+		try csv.write(
+			row: [
+				"Name",
+				"Normal Dosage",
+				"Frequency",
+				"Started On",
+				"Started On Time Zone",
+				"Notes",
+				"Definition Source",
+			],
+			quotedAtIndex: { _ in true })
+	}
+
+	public func export(to csv: CSVWriter) throws {
+		try csv.write(field: name, quoted: true)
+
+		let dosageText = dosage?.description ?? ""
+		try csv.write(field: dosageText, quoted: true)
+
+		let frequencyText = frequency?.description ?? ""
+		try csv.write(field: frequencyText, quoted: true)
+
+		if let startedOn = startedOn {
+			let timestampText = DependencyInjector.util.calendar.string(for: startedOn, dateStyle: .full, timeStyle: .full)
+			try csv.write(field: timestampText, quoted: true)
+		} else {
+			try csv.write(field: "", quoted: true)
+		}
+
+		let timeZone = startedOnTimeZoneId ?? ""
+		try csv.write(field: timeZone, quoted: true)
+
+		try csv.write(field: notes ?? "", quoted: true)
+
+		let sourceText = Sources.resolveMedicationSource(source).description
+		try csv.write(field: sourceText, quoted: true)
 	}
 
 	// MARK: - Attributed Functions

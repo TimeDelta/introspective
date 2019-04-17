@@ -18,6 +18,7 @@ public class MedicationDataTestUtil {
 		dosage: Dosage? = nil,
 		startedOn: Date? = nil,
 		note: String? = nil,
+		source: Sources.MedicationSourceNum = .introspective,
 		recordScreenIndex: Int16 = 0)
 	-> Medication {
 		let transaction = DependencyInjector.db.transaction()
@@ -28,20 +29,37 @@ public class MedicationDataTestUtil {
 		medication.startedOn = startedOn
 		medication.notes = note
 		medication.recordScreenIndex = recordScreenIndex
+		medication.setSource(source)
 		try! transaction.commit()
 		return try! DependencyInjector.db.pull(savedObject: medication)
 	}
 
 	@discardableResult
-	public static func createDose(medication: Medication = createMedication(), dosage: Dosage? = nil, timestamp: Date = Date()) -> MedicationDose {
+	public static func createDose(
+		medication: Medication = createMedication(),
+		dosage: Dosage? = nil,
+		timestamp: Date = Date(),
+		source: Sources.MedicationSourceNum = .introspective)
+	-> MedicationDose {
 		let transaction = DependencyInjector.db.transaction()
 		let dose = try! transaction.new(MedicationDose.self)
 		let sameContextMedication = try! transaction.pull(savedObject: medication)
 		dose.medication = sameContextMedication
 		dose.date = timestamp
 		dose.dosage = dosage
+		dose.setSource(source)
 		sameContextMedication.addToDoses(dose)
 		try! transaction.commit()
 		return try! DependencyInjector.db.pull(savedObject: dose)
+	}
+
+	@discardableResult
+	public static func createDose(
+		name: String,
+		dosage: Dosage? = nil,
+		timestamp: Date = Date(),
+		source: Sources.MedicationSourceNum = .introspective)
+	-> MedicationDose {
+		return createDose(medication: createMedication(name: name), dosage: dosage, timestamp: timestamp)
 	}
 }

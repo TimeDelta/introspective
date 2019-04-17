@@ -26,6 +26,7 @@ class FunctionalTest: XCTestCase {
 	final var extraInformationFactory: ExtraInformationFactoryImpl!
 	final var sampleGrouperFactory: SampleGrouperFactoryImpl!
 	final var importerFactory: ImporterFactoryImpl!
+	final var exporterFactory: ExporterFactoryImpl!
 
 	final var ioUtil: IOUtilMock!
 	final var uiUtil: UiUtilMock!
@@ -55,6 +56,7 @@ class FunctionalTest: XCTestCase {
 		extraInformationFactory = ExtraInformationFactoryImpl()
 		sampleGrouperFactory = SampleGrouperFactoryImpl()
 		importerFactory = ImporterFactoryImpl()
+		exporterFactory = ExporterFactoryImpl()
 
 		Given(injectionProvider, .queryFactory(willReturn: queryFactory))
 		Given(injectionProvider, .sampleFactory(willReturn: sampleFactory))
@@ -63,12 +65,15 @@ class FunctionalTest: XCTestCase {
 		Given(injectionProvider, .extraInformationFactory(willReturn: extraInformationFactory))
 		Given(injectionProvider, .sampleGrouperFactory(willReturn: sampleGrouperFactory))
 		Given(injectionProvider, .importerFactory(willReturn: importerFactory))
+		Given(injectionProvider, .exporterFactory(willReturn: exporterFactory))
 
 		ioUtil = IOUtilMock()
 		utilFactory.io = ioUtil
 
 		uiUtil = UiUtilMock()
 		utilFactory.ui = uiUtil
+
+		Matcher.default.register(Exportable.Type.self) { $0 == $1 }
 
 		HamcrestReportFunction = {message, file, line in XCTFail(message, file: file, line: line)}
 	}

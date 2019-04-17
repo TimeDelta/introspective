@@ -217,15 +217,15 @@ public final class ImportDataTableViewController: UITableViewController {
 			"This will only import data that was recorded after the imported record with the most recent date and time."
 		let prompt = UIAlertController(title: "Import new data only?", message: message, preferredStyle: .alert)
 		prompt.addAction(UIAlertAction(title: "No", style: .destructive) { _ in
-			self.importData(newDataOnly: false, indexPath: indexPath)
+			self.importData(newDataOnly: false)
 		})
 		prompt.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
-			self.importData(newDataOnly: true, indexPath: indexPath)
+			self.importData(newDataOnly: true)
 		})
 		presentView(prompt)
 	}
 
-	private final func importData(newDataOnly: Bool, indexPath: IndexPath) {
+	private final func importData(newDataOnly: Bool) {
 		let documentPickerController = DependencyInjector.util.ui.documentPicker(docTypes: ["public.data"], in: .import)
 		documentPickerController.allowsMultipleSelection = false
 		documentPickerController.delegate = self
@@ -319,10 +319,13 @@ public final class ImportDataTableViewController: UITableViewController {
 		switch(importer) {
 			case is ActivityImporter:
 				content.categoryIdentifier = UserNotificationDelegate.finishedImportingActivities.identifier
+				break
 			case is MedicationImporter:
 				content.categoryIdentifier = UserNotificationDelegate.finishedImportingMedications.identifier
+				break
 			case is MoodImporter:
 				content.categoryIdentifier = UserNotificationDelegate.finishedImportingMoods.identifier
+				break
 			default:
 				log.error("Forgot a type of importer for notifications: %@", String(describing: importer))
 		}

@@ -23,4 +23,5 @@ public final class DependencyInjector {
 	public static var extraInformation: ExtraInformationFactory { get { return injectionProvider.extraInformationFactory() } }
 	public static var sampleGrouper: SampleGrouperFactory { get { return injectionProvider.sampleGrouperFactory() } }
 	public static var importer: ImporterFactory { get { return injectionProvider.importerFactory() } }
+	public static var exporter: ExporterFactory { get { return injectionProvider.exporterFactory() } }
 }

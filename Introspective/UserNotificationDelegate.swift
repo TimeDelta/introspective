@@ -38,6 +38,10 @@ public final class UserNotificationDelegate: NSObject, UNUserNotificationCenterD
 		options: .foreground)
 	public static let finishedImportingMoods = basicCategory(id: "finished importing moods", actions: [showMoodHistory])
 
+	public static let finishedExportingActivities = basicCategory(id: "finished exporting activities")
+	public static let finishedExportingMedications = basicCategory(id: "finished exporting medications")
+	public static let finishedExportingMoods = basicCategory(id: "finished exporting moods")
+
 	public static let categories = Set([
 		generalError,
 		timeExpired,

@@ -93,6 +93,10 @@ extension UIViewController {
 		}
 	}
 
+	final func post(_ name: NotificationName, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
+		post(name.toName(), object: object, userInfo: userInfo)
+	}
+
 	final func present(_ viewController: UIViewController, using presenter: Presentr, animated: Bool = false) {
 		customPresentViewController(presenter, viewController: viewController, animated: animated)
 	}

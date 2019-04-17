@@ -18,7 +18,6 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 	private final var controller: ImportDataTableViewController!
 	private final var tableView: UITableView { return controller.tableView }
 	private final let url = URL(fileURLWithPath: "/")
-	private final var mockImporterFactory: ImporterFactoryMock!
 	private final var importer: ATrackerActivityImporterMock!
 
 	private final let importSleepTime: UInt32 = 2
@@ -30,8 +29,6 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 
 	final override func setUp() {
 		super.setUp()
-		mockImporterFactory = ImporterFactoryMock()
-		Given(injectionProvider, .importerFactory(willReturn: mockImporterFactory))
 
 		importer = ATrackerActivityImporterMock()
 		Given(importer, .percentComplete(willReturn: 0.5))

@@ -35,6 +35,10 @@ public protocol UiUtil {
 
 	/// - Note: This is mainly for testability
 	func stopObserving(_ observer: Any, name: NotificationName?, object: Any?)
+	/// - Note: This is mainly for testability
+	func post(name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]?)
+	/// - Note: This is mainly for testability
+	func post(name: NotificationName, object: Any?, userInfo: [AnyHashable: Any]?)
 
 	/// Present `controllerBeingPresented` from `presentingController` then run `completion` if provided.
 	/// - Note: This is mainly for testability
@@ -72,6 +76,7 @@ extension UiUtil {
 		return value(for: key, from: notification, keyIsOptional: keyIsOptional)
 	}
 
+	/// This is mainly for testability
 	func stopObserving(_ observer: Any, name: NotificationName? = nil, object: Any? = nil) {
 		stopObserving(observer, name: name, object: object)
 	}
@@ -198,6 +203,16 @@ public final class UiUtilImpl: UiUtil {
 
 	public func stopObserving(_ observer: Any, name: NotificationName?, object: Any?) {
 		NotificationCenter.default.removeObserver(observer, name: name?.toName(), object: object)
+	}
+
+	public func post(name: NotificationName, object: Any?, userInfo: [AnyHashable: Any]?) {
+		post(name: name.toName(), object: object, userInfo: userInfo)
+	}
+
+	public func post(name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]?) {
+		DispatchQueue.main.async {
+			NotificationCenter.default.post(name: name, object: object, userInfo: userInfo)
+		}
 	}
 
 	public func present(

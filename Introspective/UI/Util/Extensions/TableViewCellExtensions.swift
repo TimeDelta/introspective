@@ -36,12 +36,10 @@ extension UITableViewCell {
 	}
 
 	final func post(_ name: Notification.Name, object: Any? = self, userInfo: [AnyHashable: Any]? = nil) {
-		DispatchQueue.main.async {
-			NotificationCenter.default.post(name: name, object: object, userInfo: userInfo)
-		}
+		DependencyInjector.util.ui.post(name: name, object: object, userInfo: userInfo)
 	}
 
 	final func post(_ name: NotificationName, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
-		post(name.toName(), object: object, userInfo: userInfo)
+		DependencyInjector.util.ui.post(name: name, object: object, userInfo: userInfo)
 	}
 }

@@ -12,6 +12,7 @@ public protocol Importer {
 
 	var dataTypePluralName: String { get }
 	var sourceName: String { get }
+	/// This will be displayed to the user as the message of the "Import new data only?" prompt
 	var customImportMessage: String? { get }
 	var lastImport: Date? { get }
 	var isPaused: Bool { get }

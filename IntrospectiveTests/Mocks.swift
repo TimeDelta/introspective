@@ -466,6 +466,342 @@ open class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
     }
 }
 
+// MARK: - ActivityExporter
+open class ActivityExporterMock: ActivityExporter, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    public var dataTypePluralName: String {
+		get {	invocations.append(.p_dataTypePluralName_get); return __p_dataTypePluralName ?? givenGetterValue(.p_dataTypePluralName_get, "ActivityExporterMock - stub value for dataTypePluralName was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_dataTypePluralName = newValue }
+	}
+	private var __p_dataTypePluralName: (String)?
+
+    public var isPaused: Bool {
+		get {	invocations.append(.p_isPaused_get); return __p_isPaused ?? givenGetterValue(.p_isPaused_get, "ActivityExporterMock - stub value for isPaused was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_isPaused = newValue }
+	}
+	private var __p_isPaused: (Bool)?
+
+    public var isCancelled: Bool {
+		get {	invocations.append(.p_isCancelled_get); return __p_isCancelled ?? givenGetterValue(.p_isCancelled_get, "ActivityExporterMock - stub value for isCancelled was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_isCancelled = newValue }
+	}
+	private var __p_isCancelled: (Bool)?
+
+    public var url: URL {
+		get {	invocations.append(.p_url_get); return __p_url ?? givenGetterValue(.p_url_get, "ActivityExporterMock - stub value for url was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_url = newValue }
+	}
+	private var __p_url: (URL)?
+
+
+
+
+
+    open func exportData() throws {
+        addInvocation(.m_exportData)
+		let perform = methodPerformValue(.m_exportData) as? () -> Void
+		perform?()
+		do {
+		    _ = try methodReturnValue(.m_exportData).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func percentComplete() -> Double {
+        addInvocation(.m_percentComplete)
+		let perform = methodPerformValue(.m_percentComplete) as? () -> Void
+		perform?()
+		var __value: Double
+		do {
+		    __value = try methodReturnValue(.m_percentComplete).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for percentComplete(). Use given")
+			Failure("Stub return value not specified for percentComplete(). Use given")
+		}
+		return __value
+    }
+
+    open func cancel() {
+        addInvocation(.m_cancel)
+		let perform = methodPerformValue(.m_cancel) as? () -> Void
+		perform?()
+    }
+
+    open func pause() {
+        addInvocation(.m_pause)
+		let perform = methodPerformValue(.m_pause) as? () -> Void
+		perform?()
+    }
+
+    open func resume() throws {
+        addInvocation(.m_resume)
+		let perform = methodPerformValue(.m_resume) as? () -> Void
+		perform?()
+		do {
+		    _ = try methodReturnValue(.m_resume).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func equalTo(_ other: Exporter) -> Bool {
+        addInvocation(.m_equalTo__other(Parameter<Exporter>.value(`other`)))
+		let perform = methodPerformValue(.m_equalTo__other(Parameter<Exporter>.value(`other`))) as? (Exporter) -> Void
+		perform?(`other`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_equalTo__other(Parameter<Exporter>.value(`other`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for equalTo(_ other: Exporter). Use given")
+			Failure("Stub return value not specified for equalTo(_ other: Exporter). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_exportData
+        case m_percentComplete
+        case m_cancel
+        case m_pause
+        case m_resume
+        case m_equalTo__other(Parameter<Exporter>)
+        case p_dataTypePluralName_get
+        case p_isPaused_get
+        case p_isCancelled_get
+        case p_url_get
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_exportData, .m_exportData):
+                return true 
+            case (.m_percentComplete, .m_percentComplete):
+                return true 
+            case (.m_cancel, .m_cancel):
+                return true 
+            case (.m_pause, .m_pause):
+                return true 
+            case (.m_resume, .m_resume):
+                return true 
+            case (.m_equalTo__other(let lhsOther), .m_equalTo__other(let rhsOther)):
+                guard Parameter.compare(lhs: lhsOther, rhs: rhsOther, with: matcher) else { return false } 
+                return true 
+            case (.p_dataTypePluralName_get,.p_dataTypePluralName_get): return true
+            case (.p_isPaused_get,.p_isPaused_get): return true
+            case (.p_isCancelled_get,.p_isCancelled_get): return true
+            case (.p_url_get,.p_url_get): return true
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .m_exportData: return 0
+            case .m_percentComplete: return 0
+            case .m_cancel: return 0
+            case .m_pause: return 0
+            case .m_resume: return 0
+            case let .m_equalTo__other(p0): return p0.intValue
+            case .p_dataTypePluralName_get: return 0
+            case .p_isPaused_get: return 0
+            case .p_isCancelled_get: return 0
+            case .p_url_get: return 0
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+        public static func dataTypePluralName(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_dataTypePluralName_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func isPaused(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_isPaused_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func isCancelled(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_isCancelled_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func url(getter defaultValue: URL...) -> PropertyStub {
+            return Given(method: .p_url_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+
+        public static func percentComplete(willReturn: Double...) -> MethodStub {
+            return Given(method: .m_percentComplete, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func equalTo(_ other: Parameter<Exporter>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__other(`other`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func percentComplete(willProduce: (Stubber<Double>) -> Void) -> MethodStub {
+            let willReturn: [Double] = []
+			let given: Given = { return Given(method: .m_percentComplete, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Double).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func equalTo(_ other: Parameter<Exporter>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_equalTo__other(`other`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func exportData(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_exportData, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func exportData(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_exportData, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func resume(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_resume, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func resume(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_resume, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func exportData() -> Verify { return Verify(method: .m_exportData)}
+        public static func percentComplete() -> Verify { return Verify(method: .m_percentComplete)}
+        public static func cancel() -> Verify { return Verify(method: .m_cancel)}
+        public static func pause() -> Verify { return Verify(method: .m_pause)}
+        public static func resume() -> Verify { return Verify(method: .m_resume)}
+        public static func equalTo(_ other: Parameter<Exporter>) -> Verify { return Verify(method: .m_equalTo__other(`other`))}
+        public static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
+        public static var isPaused: Verify { return Verify(method: .p_isPaused_get) }
+        public static var isCancelled: Verify { return Verify(method: .p_isCancelled_get) }
+        public static var url: Verify { return Verify(method: .p_url_get) }
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func exportData(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_exportData, performs: perform)
+        }
+        public static func percentComplete(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_percentComplete, performs: perform)
+        }
+        public static func cancel(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_cancel, performs: perform)
+        }
+        public static func pause(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_pause, performs: perform)
+        }
+        public static func resume(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resume, performs: perform)
+        }
+        public static func equalTo(_ other: Parameter<Exporter>, perform: @escaping (Exporter) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__other(`other`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
 // MARK: - ActivityQuery
 open class ActivityQueryMock: ActivityQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
@@ -3984,6 +4320,578 @@ open class EasyPillMedicationImporterMock: EasyPillMedicationImporter, Mock {
     }
 }
 
+// MARK: - Exporter
+open class ExporterMock: Exporter, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    public var dataTypePluralName: String {
+		get {	invocations.append(.p_dataTypePluralName_get); return __p_dataTypePluralName ?? givenGetterValue(.p_dataTypePluralName_get, "ExporterMock - stub value for dataTypePluralName was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_dataTypePluralName = newValue }
+	}
+	private var __p_dataTypePluralName: (String)?
+
+    public var isPaused: Bool {
+		get {	invocations.append(.p_isPaused_get); return __p_isPaused ?? givenGetterValue(.p_isPaused_get, "ExporterMock - stub value for isPaused was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_isPaused = newValue }
+	}
+	private var __p_isPaused: (Bool)?
+
+    public var isCancelled: Bool {
+		get {	invocations.append(.p_isCancelled_get); return __p_isCancelled ?? givenGetterValue(.p_isCancelled_get, "ExporterMock - stub value for isCancelled was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_isCancelled = newValue }
+	}
+	private var __p_isCancelled: (Bool)?
+
+    public var url: URL {
+		get {	invocations.append(.p_url_get); return __p_url ?? givenGetterValue(.p_url_get, "ExporterMock - stub value for url was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_url = newValue }
+	}
+	private var __p_url: (URL)?
+
+
+
+
+
+    open func exportData() throws {
+        addInvocation(.m_exportData)
+		let perform = methodPerformValue(.m_exportData) as? () -> Void
+		perform?()
+		do {
+		    _ = try methodReturnValue(.m_exportData).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func percentComplete() -> Double {
+        addInvocation(.m_percentComplete)
+		let perform = methodPerformValue(.m_percentComplete) as? () -> Void
+		perform?()
+		var __value: Double
+		do {
+		    __value = try methodReturnValue(.m_percentComplete).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for percentComplete(). Use given")
+			Failure("Stub return value not specified for percentComplete(). Use given")
+		}
+		return __value
+    }
+
+    open func cancel() {
+        addInvocation(.m_cancel)
+		let perform = methodPerformValue(.m_cancel) as? () -> Void
+		perform?()
+    }
+
+    open func pause() {
+        addInvocation(.m_pause)
+		let perform = methodPerformValue(.m_pause) as? () -> Void
+		perform?()
+    }
+
+    open func resume() throws {
+        addInvocation(.m_resume)
+		let perform = methodPerformValue(.m_resume) as? () -> Void
+		perform?()
+		do {
+		    _ = try methodReturnValue(.m_resume).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func equalTo(_ other: Exporter) -> Bool {
+        addInvocation(.m_equalTo__other(Parameter<Exporter>.value(`other`)))
+		let perform = methodPerformValue(.m_equalTo__other(Parameter<Exporter>.value(`other`))) as? (Exporter) -> Void
+		perform?(`other`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_equalTo__other(Parameter<Exporter>.value(`other`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for equalTo(_ other: Exporter). Use given")
+			Failure("Stub return value not specified for equalTo(_ other: Exporter). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_exportData
+        case m_percentComplete
+        case m_cancel
+        case m_pause
+        case m_resume
+        case m_equalTo__other(Parameter<Exporter>)
+        case p_dataTypePluralName_get
+        case p_isPaused_get
+        case p_isCancelled_get
+        case p_url_get
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_exportData, .m_exportData):
+                return true 
+            case (.m_percentComplete, .m_percentComplete):
+                return true 
+            case (.m_cancel, .m_cancel):
+                return true 
+            case (.m_pause, .m_pause):
+                return true 
+            case (.m_resume, .m_resume):
+                return true 
+            case (.m_equalTo__other(let lhsOther), .m_equalTo__other(let rhsOther)):
+                guard Parameter.compare(lhs: lhsOther, rhs: rhsOther, with: matcher) else { return false } 
+                return true 
+            case (.p_dataTypePluralName_get,.p_dataTypePluralName_get): return true
+            case (.p_isPaused_get,.p_isPaused_get): return true
+            case (.p_isCancelled_get,.p_isCancelled_get): return true
+            case (.p_url_get,.p_url_get): return true
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .m_exportData: return 0
+            case .m_percentComplete: return 0
+            case .m_cancel: return 0
+            case .m_pause: return 0
+            case .m_resume: return 0
+            case let .m_equalTo__other(p0): return p0.intValue
+            case .p_dataTypePluralName_get: return 0
+            case .p_isPaused_get: return 0
+            case .p_isCancelled_get: return 0
+            case .p_url_get: return 0
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+        public static func dataTypePluralName(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_dataTypePluralName_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func isPaused(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_isPaused_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func isCancelled(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_isCancelled_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func url(getter defaultValue: URL...) -> PropertyStub {
+            return Given(method: .p_url_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+
+        public static func percentComplete(willReturn: Double...) -> MethodStub {
+            return Given(method: .m_percentComplete, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func equalTo(_ other: Parameter<Exporter>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__other(`other`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func percentComplete(willProduce: (Stubber<Double>) -> Void) -> MethodStub {
+            let willReturn: [Double] = []
+			let given: Given = { return Given(method: .m_percentComplete, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Double).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func equalTo(_ other: Parameter<Exporter>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_equalTo__other(`other`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func exportData(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_exportData, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func exportData(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_exportData, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func resume(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_resume, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func resume(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_resume, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func exportData() -> Verify { return Verify(method: .m_exportData)}
+        public static func percentComplete() -> Verify { return Verify(method: .m_percentComplete)}
+        public static func cancel() -> Verify { return Verify(method: .m_cancel)}
+        public static func pause() -> Verify { return Verify(method: .m_pause)}
+        public static func resume() -> Verify { return Verify(method: .m_resume)}
+        public static func equalTo(_ other: Parameter<Exporter>) -> Verify { return Verify(method: .m_equalTo__other(`other`))}
+        public static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
+        public static var isPaused: Verify { return Verify(method: .p_isPaused_get) }
+        public static var isCancelled: Verify { return Verify(method: .p_isCancelled_get) }
+        public static var url: Verify { return Verify(method: .p_url_get) }
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func exportData(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_exportData, performs: perform)
+        }
+        public static func percentComplete(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_percentComplete, performs: perform)
+        }
+        public static func cancel(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_cancel, performs: perform)
+        }
+        public static func pause(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_pause, performs: perform)
+        }
+        public static func resume(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resume, performs: perform)
+        }
+        public static func equalTo(_ other: Parameter<Exporter>, perform: @escaping (Exporter) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__other(`other`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
+// MARK: - ExporterFactory
+open class ExporterFactoryMock: ExporterFactory, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    open func activityExporter() throws -> ActivityExporter {
+        addInvocation(.m_activityExporter)
+		let perform = methodPerformValue(.m_activityExporter) as? () -> Void
+		perform?()
+		var __value: ActivityExporter
+		do {
+		    __value = try methodReturnValue(.m_activityExporter).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for activityExporter(). Use given")
+			Failure("Stub return value not specified for activityExporter(). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func medicationExporter() throws -> MedicationExporter {
+        addInvocation(.m_medicationExporter)
+		let perform = methodPerformValue(.m_medicationExporter) as? () -> Void
+		perform?()
+		var __value: MedicationExporter
+		do {
+		    __value = try methodReturnValue(.m_medicationExporter).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for medicationExporter(). Use given")
+			Failure("Stub return value not specified for medicationExporter(). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func moodExporter() throws -> MoodExporter {
+        addInvocation(.m_moodExporter)
+		let perform = methodPerformValue(.m_moodExporter) as? () -> Void
+		perform?()
+		var __value: MoodExporter
+		do {
+		    __value = try methodReturnValue(.m_moodExporter).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for moodExporter(). Use given")
+			Failure("Stub return value not specified for moodExporter(). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_activityExporter
+        case m_medicationExporter
+        case m_moodExporter
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_activityExporter, .m_activityExporter):
+                return true 
+            case (.m_medicationExporter, .m_medicationExporter):
+                return true 
+            case (.m_moodExporter, .m_moodExporter):
+                return true 
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .m_activityExporter: return 0
+            case .m_medicationExporter: return 0
+            case .m_moodExporter: return 0
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func activityExporter(willReturn: ActivityExporter...) -> MethodStub {
+            return Given(method: .m_activityExporter, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func medicationExporter(willReturn: MedicationExporter...) -> MethodStub {
+            return Given(method: .m_medicationExporter, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func moodExporter(willReturn: MoodExporter...) -> MethodStub {
+            return Given(method: .m_moodExporter, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func activityExporter(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_activityExporter, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func activityExporter(willProduce: (StubberThrows<ActivityExporter>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_activityExporter, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (ActivityExporter).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func medicationExporter(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_medicationExporter, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func medicationExporter(willProduce: (StubberThrows<MedicationExporter>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_medicationExporter, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (MedicationExporter).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func moodExporter(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_moodExporter, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func moodExporter(willProduce: (StubberThrows<MoodExporter>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_moodExporter, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (MoodExporter).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func activityExporter() -> Verify { return Verify(method: .m_activityExporter)}
+        public static func medicationExporter() -> Verify { return Verify(method: .m_medicationExporter)}
+        public static func moodExporter() -> Verify { return Verify(method: .m_moodExporter)}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func activityExporter(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_activityExporter, performs: perform)
+        }
+        public static func medicationExporter(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_medicationExporter, performs: perform)
+        }
+        public static func moodExporter(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_moodExporter, performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
 // MARK: - ExtraInformation
 open class ExtraInformationMock: ExtraInformation, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
@@ -4845,10 +5753,42 @@ open class IOUtilMock: IOUtil, Mock {
 		return __value
     }
 
+    open func csvWriter(url: URL) throws -> CSVWriter {
+        addInvocation(.m_csvWriter__url_url(Parameter<URL>.value(`url`)))
+		let perform = methodPerformValue(.m_csvWriter__url_url(Parameter<URL>.value(`url`))) as? (URL) -> Void
+		perform?(`url`)
+		var __value: CSVWriter
+		do {
+		    __value = try methodReturnValue(.m_csvWriter__url_url(Parameter<URL>.value(`url`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for csvWriter(url: URL). Use given")
+			Failure("Stub return value not specified for csvWriter(url: URL). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func urlOfExportFile(for sampleType: Exportable.Type, in directory: URL) -> URL {
+        addInvocation(.m_urlOfExportFile__for_sampleTypein_directory(Parameter<Exportable.Type>.value(`sampleType`), Parameter<URL>.value(`directory`)))
+		let perform = methodPerformValue(.m_urlOfExportFile__for_sampleTypein_directory(Parameter<Exportable.Type>.value(`sampleType`), Parameter<URL>.value(`directory`))) as? (Exportable.Type, URL) -> Void
+		perform?(`sampleType`, `directory`)
+		var __value: URL
+		do {
+		    __value = try methodReturnValue(.m_urlOfExportFile__for_sampleTypein_directory(Parameter<Exportable.Type>.value(`sampleType`), Parameter<URL>.value(`directory`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for urlOfExportFile(for sampleType: Exportable.Type, in directory: URL). Use given")
+			Failure("Stub return value not specified for urlOfExportFile(for sampleType: Exportable.Type, in directory: URL). Use given")
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_contentsOf__url(Parameter<URL>)
         case m_csvReader__url_urlhasHeaderRow_hasHeaderRow(Parameter<URL>, Parameter<Bool>)
+        case m_csvWriter__url_url(Parameter<URL>)
+        case m_urlOfExportFile__for_sampleTypein_directory(Parameter<Exportable.Type>, Parameter<URL>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -4859,6 +5799,13 @@ open class IOUtilMock: IOUtil, Mock {
                 guard Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsHasheaderrow, rhs: rhsHasheaderrow, with: matcher) else { return false } 
                 return true 
+            case (.m_csvWriter__url_url(let lhsUrl), .m_csvWriter__url_url(let rhsUrl)):
+                guard Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher) else { return false } 
+                return true 
+            case (.m_urlOfExportFile__for_sampleTypein_directory(let lhsSampletype, let lhsDirectory), .m_urlOfExportFile__for_sampleTypein_directory(let rhsSampletype, let rhsDirectory)):
+                guard Parameter.compare(lhs: lhsSampletype, rhs: rhsSampletype, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsDirectory, rhs: rhsDirectory, with: matcher) else { return false } 
+                return true 
             default: return false
             }
         }
@@ -4867,6 +5814,8 @@ open class IOUtilMock: IOUtil, Mock {
             switch self {
             case let .m_contentsOf__url(p0): return p0.intValue
             case let .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(p0, p1): return p0.intValue + p1.intValue
+            case let .m_csvWriter__url_url(p0): return p0.intValue
+            case let .m_urlOfExportFile__for_sampleTypein_directory(p0, p1): return p0.intValue + p1.intValue
             }
         }
     }
@@ -4885,6 +5834,19 @@ open class IOUtilMock: IOUtil, Mock {
         }
         public static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>, willReturn: CSVReader...) -> MethodStub {
             return Given(method: .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(`url`, `hasHeaderRow`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func csvWriter(url: Parameter<URL>, willReturn: CSVWriter...) -> MethodStub {
+            return Given(method: .m_csvWriter__url_url(`url`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func urlOfExportFile(for sampleType: Parameter<Exportable.Type>, in directory: Parameter<URL>, willReturn: URL...) -> MethodStub {
+            return Given(method: .m_urlOfExportFile__for_sampleTypein_directory(`sampleType`, `directory`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func urlOfExportFile(for sampleType: Parameter<Exportable.Type>, in directory: Parameter<URL>, willProduce: (Stubber<URL>) -> Void) -> MethodStub {
+            let willReturn: [URL] = []
+			let given: Given = { return Given(method: .m_urlOfExportFile__for_sampleTypein_directory(`sampleType`, `directory`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (URL).self)
+			willProduce(stubber)
+			return given
         }
         public static func contentsOf(_ url: Parameter<URL>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_contentsOf__url(`url`), products: willThrow.map({ StubProduct.throw($0) }))
@@ -4906,6 +5868,16 @@ open class IOUtilMock: IOUtil, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func csvWriter(url: Parameter<URL>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_csvWriter__url_url(`url`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func csvWriter(url: Parameter<URL>, willProduce: (StubberThrows<CSVWriter>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_csvWriter__url_url(`url`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (CSVWriter).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct Verify {
@@ -4913,6 +5885,8 @@ open class IOUtilMock: IOUtil, Mock {
 
         public static func contentsOf(_ url: Parameter<URL>) -> Verify { return Verify(method: .m_contentsOf__url(`url`))}
         public static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>) -> Verify { return Verify(method: .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(`url`, `hasHeaderRow`))}
+        public static func csvWriter(url: Parameter<URL>) -> Verify { return Verify(method: .m_csvWriter__url_url(`url`))}
+        public static func urlOfExportFile(for sampleType: Parameter<Exportable.Type>, in directory: Parameter<URL>) -> Verify { return Verify(method: .m_urlOfExportFile__for_sampleTypein_directory(`sampleType`, `directory`))}
     }
 
     public struct Perform {
@@ -4924,6 +5898,12 @@ open class IOUtilMock: IOUtil, Mock {
         }
         public static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>, perform: @escaping (URL, Bool) -> Void) -> Perform {
             return Perform(method: .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(`url`, `hasHeaderRow`), performs: perform)
+        }
+        public static func csvWriter(url: Parameter<URL>, perform: @escaping (URL) -> Void) -> Perform {
+            return Perform(method: .m_csvWriter__url_url(`url`), performs: perform)
+        }
+        public static func urlOfExportFile(for sampleType: Parameter<Exportable.Type>, in directory: Parameter<URL>, perform: @escaping (Exportable.Type, URL) -> Void) -> Perform {
+            return Perform(method: .m_urlOfExportFile__for_sampleTypein_directory(`sampleType`, `directory`), performs: perform)
         }
     }
 
@@ -5442,6 +6422,20 @@ open class InjectionProviderMock: InjectionProvider, Mock {
 		return __value
     }
 
+    open func exporterFactory() -> ExporterFactory {
+        addInvocation(.m_exporterFactory)
+		let perform = methodPerformValue(.m_exporterFactory) as? () -> Void
+		perform?()
+		var __value: ExporterFactory
+		do {
+		    __value = try methodReturnValue(.m_exporterFactory).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for exporterFactory(). Use given")
+			Failure("Stub return value not specified for exporterFactory(). Use given")
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_database
@@ -5455,6 +6449,7 @@ open class InjectionProviderMock: InjectionProvider, Mock {
         case m_extraInformationFactory
         case m_sampleGrouperFactory
         case m_importerFactory
+        case m_exporterFactory
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -5480,6 +6475,8 @@ open class InjectionProviderMock: InjectionProvider, Mock {
                 return true 
             case (.m_importerFactory, .m_importerFactory):
                 return true 
+            case (.m_exporterFactory, .m_exporterFactory):
+                return true 
             default: return false
             }
         }
@@ -5497,6 +6494,7 @@ open class InjectionProviderMock: InjectionProvider, Mock {
             case .m_extraInformationFactory: return 0
             case .m_sampleGrouperFactory: return 0
             case .m_importerFactory: return 0
+            case .m_exporterFactory: return 0
             }
         }
     }
@@ -5542,6 +6540,9 @@ open class InjectionProviderMock: InjectionProvider, Mock {
         }
         public static func importerFactory(willReturn: ImporterFactory...) -> MethodStub {
             return Given(method: .m_importerFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func exporterFactory(willReturn: ExporterFactory...) -> MethodStub {
+            return Given(method: .m_exporterFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func database(willProduce: (Stubber<Database>) -> Void) -> MethodStub {
             let willReturn: [Database] = []
@@ -5620,6 +6621,13 @@ open class InjectionProviderMock: InjectionProvider, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func exporterFactory(willProduce: (Stubber<ExporterFactory>) -> Void) -> MethodStub {
+            let willReturn: [ExporterFactory] = []
+			let given: Given = { return Given(method: .m_exporterFactory, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (ExporterFactory).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct Verify {
@@ -5636,6 +6644,7 @@ open class InjectionProviderMock: InjectionProvider, Mock {
         public static func extraInformationFactory() -> Verify { return Verify(method: .m_extraInformationFactory)}
         public static func sampleGrouperFactory() -> Verify { return Verify(method: .m_sampleGrouperFactory)}
         public static func importerFactory() -> Verify { return Verify(method: .m_importerFactory)}
+        public static func exporterFactory() -> Verify { return Verify(method: .m_exporterFactory)}
     }
 
     public struct Perform {
@@ -5674,6 +6683,9 @@ open class InjectionProviderMock: InjectionProvider, Mock {
         }
         public static func importerFactory(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_importerFactory, performs: perform)
+        }
+        public static func exporterFactory(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_exporterFactory, performs: perform)
         }
     }
 
@@ -6150,6 +7162,342 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
         }
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
+// MARK: - MedicationExporter
+open class MedicationExporterMock: MedicationExporter, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    public var dataTypePluralName: String {
+		get {	invocations.append(.p_dataTypePluralName_get); return __p_dataTypePluralName ?? givenGetterValue(.p_dataTypePluralName_get, "MedicationExporterMock - stub value for dataTypePluralName was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_dataTypePluralName = newValue }
+	}
+	private var __p_dataTypePluralName: (String)?
+
+    public var isPaused: Bool {
+		get {	invocations.append(.p_isPaused_get); return __p_isPaused ?? givenGetterValue(.p_isPaused_get, "MedicationExporterMock - stub value for isPaused was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_isPaused = newValue }
+	}
+	private var __p_isPaused: (Bool)?
+
+    public var isCancelled: Bool {
+		get {	invocations.append(.p_isCancelled_get); return __p_isCancelled ?? givenGetterValue(.p_isCancelled_get, "MedicationExporterMock - stub value for isCancelled was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_isCancelled = newValue }
+	}
+	private var __p_isCancelled: (Bool)?
+
+    public var url: URL {
+		get {	invocations.append(.p_url_get); return __p_url ?? givenGetterValue(.p_url_get, "MedicationExporterMock - stub value for url was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_url = newValue }
+	}
+	private var __p_url: (URL)?
+
+
+
+
+
+    open func exportData() throws {
+        addInvocation(.m_exportData)
+		let perform = methodPerformValue(.m_exportData) as? () -> Void
+		perform?()
+		do {
+		    _ = try methodReturnValue(.m_exportData).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func percentComplete() -> Double {
+        addInvocation(.m_percentComplete)
+		let perform = methodPerformValue(.m_percentComplete) as? () -> Void
+		perform?()
+		var __value: Double
+		do {
+		    __value = try methodReturnValue(.m_percentComplete).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for percentComplete(). Use given")
+			Failure("Stub return value not specified for percentComplete(). Use given")
+		}
+		return __value
+    }
+
+    open func cancel() {
+        addInvocation(.m_cancel)
+		let perform = methodPerformValue(.m_cancel) as? () -> Void
+		perform?()
+    }
+
+    open func pause() {
+        addInvocation(.m_pause)
+		let perform = methodPerformValue(.m_pause) as? () -> Void
+		perform?()
+    }
+
+    open func resume() throws {
+        addInvocation(.m_resume)
+		let perform = methodPerformValue(.m_resume) as? () -> Void
+		perform?()
+		do {
+		    _ = try methodReturnValue(.m_resume).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func equalTo(_ other: Exporter) -> Bool {
+        addInvocation(.m_equalTo__other(Parameter<Exporter>.value(`other`)))
+		let perform = methodPerformValue(.m_equalTo__other(Parameter<Exporter>.value(`other`))) as? (Exporter) -> Void
+		perform?(`other`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_equalTo__other(Parameter<Exporter>.value(`other`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for equalTo(_ other: Exporter). Use given")
+			Failure("Stub return value not specified for equalTo(_ other: Exporter). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_exportData
+        case m_percentComplete
+        case m_cancel
+        case m_pause
+        case m_resume
+        case m_equalTo__other(Parameter<Exporter>)
+        case p_dataTypePluralName_get
+        case p_isPaused_get
+        case p_isCancelled_get
+        case p_url_get
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_exportData, .m_exportData):
+                return true 
+            case (.m_percentComplete, .m_percentComplete):
+                return true 
+            case (.m_cancel, .m_cancel):
+                return true 
+            case (.m_pause, .m_pause):
+                return true 
+            case (.m_resume, .m_resume):
+                return true 
+            case (.m_equalTo__other(let lhsOther), .m_equalTo__other(let rhsOther)):
+                guard Parameter.compare(lhs: lhsOther, rhs: rhsOther, with: matcher) else { return false } 
+                return true 
+            case (.p_dataTypePluralName_get,.p_dataTypePluralName_get): return true
+            case (.p_isPaused_get,.p_isPaused_get): return true
+            case (.p_isCancelled_get,.p_isCancelled_get): return true
+            case (.p_url_get,.p_url_get): return true
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .m_exportData: return 0
+            case .m_percentComplete: return 0
+            case .m_cancel: return 0
+            case .m_pause: return 0
+            case .m_resume: return 0
+            case let .m_equalTo__other(p0): return p0.intValue
+            case .p_dataTypePluralName_get: return 0
+            case .p_isPaused_get: return 0
+            case .p_isCancelled_get: return 0
+            case .p_url_get: return 0
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+        public static func dataTypePluralName(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_dataTypePluralName_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func isPaused(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_isPaused_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func isCancelled(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_isCancelled_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func url(getter defaultValue: URL...) -> PropertyStub {
+            return Given(method: .p_url_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+
+        public static func percentComplete(willReturn: Double...) -> MethodStub {
+            return Given(method: .m_percentComplete, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func equalTo(_ other: Parameter<Exporter>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__other(`other`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func percentComplete(willProduce: (Stubber<Double>) -> Void) -> MethodStub {
+            let willReturn: [Double] = []
+			let given: Given = { return Given(method: .m_percentComplete, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Double).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func equalTo(_ other: Parameter<Exporter>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_equalTo__other(`other`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func exportData(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_exportData, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func exportData(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_exportData, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func resume(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_resume, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func resume(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_resume, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func exportData() -> Verify { return Verify(method: .m_exportData)}
+        public static func percentComplete() -> Verify { return Verify(method: .m_percentComplete)}
+        public static func cancel() -> Verify { return Verify(method: .m_cancel)}
+        public static func pause() -> Verify { return Verify(method: .m_pause)}
+        public static func resume() -> Verify { return Verify(method: .m_resume)}
+        public static func equalTo(_ other: Parameter<Exporter>) -> Verify { return Verify(method: .m_equalTo__other(`other`))}
+        public static var dataTypePluralName: Verify { return Verify(method: .p_dataTypePluralName_get) }
+        public static var isPaused: Verify { return Verify(method: .p_isPaused_get) }
+        public static var isCancelled: Verify { return Verify(method: .p_isCancelled_get) }
+        public static var url: Verify { return Verify(method: .p_url_get) }
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func exportData(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_exportData, performs: perform)
+        }
+        public static func percentComplete(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_percentComplete, performs: perform)
+        }
+        public static func cancel(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_cancel, performs: perform)
+        }
+        public static func pause(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_pause, performs: perform)
+        }
+        public static func resume(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resume, performs: perform)
+        }
+        public static func equalTo(_ other: Parameter<Exporter>, perform: @escaping (Exporter) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__other(`other`), performs: perform)
         }
     }
 
@@ -12009,6 +13357,18 @@ open class UiUtilMock: UiUtil, Mock {
 		perform?(`observer`, `name`, `object`)
     }
 
+    open func post(name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]?) {
+        addInvocation(.m_post__name_nameobject_objectuserInfo_userInfo_1(Parameter<Notification.Name>.value(`name`), Parameter<Any?>.value(`object`), Parameter<[AnyHashable: Any]?>.value(`userInfo`)))
+		let perform = methodPerformValue(.m_post__name_nameobject_objectuserInfo_userInfo_1(Parameter<Notification.Name>.value(`name`), Parameter<Any?>.value(`object`), Parameter<[AnyHashable: Any]?>.value(`userInfo`))) as? (Notification.Name, Any?, [AnyHashable: Any]?) -> Void
+		perform?(`name`, `object`, `userInfo`)
+    }
+
+    open func post(name: NotificationName, object: Any?, userInfo: [AnyHashable: Any]?) {
+        addInvocation(.m_post__name_nameobject_objectuserInfo_userInfo_2(Parameter<NotificationName>.value(`name`), Parameter<Any?>.value(`object`), Parameter<[AnyHashable: Any]?>.value(`userInfo`)))
+		let perform = methodPerformValue(.m_post__name_nameobject_objectuserInfo_userInfo_2(Parameter<NotificationName>.value(`name`), Parameter<Any?>.value(`object`), Parameter<[AnyHashable: Any]?>.value(`userInfo`))) as? (NotificationName, Any?, [AnyHashable: Any]?) -> Void
+		perform?(`name`, `object`, `userInfo`)
+    }
+
     open func present(		_ presentingController: UIViewController,		_ controllerBeingPresented: UIViewController,		animated: Bool,		completion: (() -> Void)?) {
         addInvocation(.m_present__presentingController_controllerBeingPresentedanimated_animatedcompletion_completion(Parameter<UIViewController>.value(`presentingController`), Parameter<UIViewController>.value(`controllerBeingPresented`), Parameter<Bool>.value(`animated`), Parameter<(() -> Void)?>.value(`completion`)))
 		let perform = methodPerformValue(.m_present__presentingController_controllerBeingPresentedanimated_animatedcompletion_completion(Parameter<UIViewController>.value(`presentingController`), Parameter<UIViewController>.value(`controllerBeingPresented`), Parameter<Bool>.value(`animated`), Parameter<(() -> Void)?>.value(`completion`))) as? (UIViewController, UIViewController, Bool, (() -> Void)?) -> Void
@@ -12034,6 +13394,8 @@ open class UiUtilMock: UiUtil, Mock {
         case m_controller__named_controllerNamefrom_storyboardNameas_as(Parameter<String>, Parameter<String>, Parameter<GenericAttribute>)
         case m_documentPicker__docTypes_docTypesin_pickerMode(Parameter<[String]>, Parameter<UIDocumentPickerMode>)
         case m_stopObserving__observername_nameobject_object(Parameter<Any>, Parameter<NotificationName?>, Parameter<Any?>)
+        case m_post__name_nameobject_objectuserInfo_userInfo_1(Parameter<Notification.Name>, Parameter<Any?>, Parameter<[AnyHashable: Any]?>)
+        case m_post__name_nameobject_objectuserInfo_userInfo_2(Parameter<NotificationName>, Parameter<Any?>, Parameter<[AnyHashable: Any]?>)
         case m_present__presentingController_controllerBeingPresentedanimated_animatedcompletion_completion(Parameter<UIViewController>, Parameter<UIViewController>, Parameter<Bool>, Parameter<(() -> Void)?>)
         case m_sendUserNotification__withContent_contentid_idrepeats_repeatsinterval_interval(Parameter<UNMutableNotificationContent>, Parameter<String>, Parameter<Bool>, Parameter<TimeInterval>)
         case p_defaultPresenter_get
@@ -12093,6 +13455,16 @@ open class UiUtilMock: UiUtil, Mock {
                 guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsObject, rhs: rhsObject, with: matcher) else { return false } 
                 return true 
+            case (.m_post__name_nameobject_objectuserInfo_userInfo_1(let lhsName, let lhsObject, let lhsUserinfo), .m_post__name_nameobject_objectuserInfo_userInfo_1(let rhsName, let rhsObject, let rhsUserinfo)):
+                guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsObject, rhs: rhsObject, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsUserinfo, rhs: rhsUserinfo, with: matcher) else { return false } 
+                return true 
+            case (.m_post__name_nameobject_objectuserInfo_userInfo_2(let lhsName, let lhsObject, let lhsUserinfo), .m_post__name_nameobject_objectuserInfo_userInfo_2(let rhsName, let rhsObject, let rhsUserinfo)):
+                guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsObject, rhs: rhsObject, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsUserinfo, rhs: rhsUserinfo, with: matcher) else { return false } 
+                return true 
             case (.m_present__presentingController_controllerBeingPresentedanimated_animatedcompletion_completion(let lhsPresentingcontroller, let lhsControllerbeingpresented, let lhsAnimated, let lhsCompletion), .m_present__presentingController_controllerBeingPresentedanimated_animatedcompletion_completion(let rhsPresentingcontroller, let rhsControllerbeingpresented, let rhsAnimated, let rhsCompletion)):
                 guard Parameter.compare(lhs: lhsPresentingcontroller, rhs: rhsPresentingcontroller, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsControllerbeingpresented, rhs: rhsControllerbeingpresented, with: matcher) else { return false } 
@@ -12124,6 +13496,8 @@ open class UiUtilMock: UiUtil, Mock {
             case let .m_controller__named_controllerNamefrom_storyboardNameas_as(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_documentPicker__docTypes_docTypesin_pickerMode(p0, p1): return p0.intValue + p1.intValue
             case let .m_stopObserving__observername_nameobject_object(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_post__name_nameobject_objectuserInfo_userInfo_1(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_post__name_nameobject_objectuserInfo_userInfo_2(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_present__presentingController_controllerBeingPresentedanimated_animatedcompletion_completion(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
             case let .m_sendUserNotification__withContent_contentid_idrepeats_repeatsinterval_interval(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
             case .p_defaultPresenter_get: return 0
@@ -12223,6 +13597,8 @@ open class UiUtilMock: UiUtil, Mock {
         public static func controller<Type>(named controllerName: Parameter<String>, from storyboardName: Parameter<String>, as: Parameter<Type.Type>) -> Verify where Type:UIViewController { return Verify(method: .m_controller__named_controllerNamefrom_storyboardNameas_as(`controllerName`, `storyboardName`, `as`.wrapAsGeneric()))}
         public static func documentPicker(docTypes: Parameter<[String]>, in pickerMode: Parameter<UIDocumentPickerMode>) -> Verify { return Verify(method: .m_documentPicker__docTypes_docTypesin_pickerMode(`docTypes`, `pickerMode`))}
         public static func stopObserving(_ observer: Parameter<Any>, name: Parameter<NotificationName?>, object: Parameter<Any?>) -> Verify { return Verify(method: .m_stopObserving__observername_nameobject_object(`observer`, `name`, `object`))}
+        public static func post(name: Parameter<Notification.Name>, object: Parameter<Any?>, userInfo: Parameter<[AnyHashable: Any]?>) -> Verify { return Verify(method: .m_post__name_nameobject_objectuserInfo_userInfo_1(`name`, `object`, `userInfo`))}
+        public static func post(name: Parameter<NotificationName>, object: Parameter<Any?>, userInfo: Parameter<[AnyHashable: Any]?>) -> Verify { return Verify(method: .m_post__name_nameobject_objectuserInfo_userInfo_2(`name`, `object`, `userInfo`))}
         public static func present(_ presentingController: Parameter<UIViewController>, _ controllerBeingPresented: Parameter<UIViewController>, animated: Parameter<Bool>, completion: Parameter<(() -> Void)?>) -> Verify { return Verify(method: .m_present__presentingController_controllerBeingPresentedanimated_animatedcompletion_completion(`presentingController`, `controllerBeingPresented`, `animated`, `completion`))}
         public static func sendUserNotification(withContent content: Parameter<UNMutableNotificationContent>, id: Parameter<String>, repeats: Parameter<Bool>, interval: Parameter<TimeInterval>) -> Verify { return Verify(method: .m_sendUserNotification__withContent_contentid_idrepeats_repeatsinterval_interval(`content`, `id`, `repeats`, `interval`))}
         public static var defaultPresenter: Verify { return Verify(method: .p_defaultPresenter_get) }
@@ -12265,6 +13641,12 @@ open class UiUtilMock: UiUtil, Mock {
         }
         public static func stopObserving(_ observer: Parameter<Any>, name: Parameter<NotificationName?>, object: Parameter<Any?>, perform: @escaping (Any, NotificationName?, Any?) -> Void) -> Perform {
             return Perform(method: .m_stopObserving__observername_nameobject_object(`observer`, `name`, `object`), performs: perform)
+        }
+        public static func post(name: Parameter<Notification.Name>, object: Parameter<Any?>, userInfo: Parameter<[AnyHashable: Any]?>, perform: @escaping (Notification.Name, Any?, [AnyHashable: Any]?) -> Void) -> Perform {
+            return Perform(method: .m_post__name_nameobject_objectuserInfo_userInfo_1(`name`, `object`, `userInfo`), performs: perform)
+        }
+        public static func post(name: Parameter<NotificationName>, object: Parameter<Any?>, userInfo: Parameter<[AnyHashable: Any]?>, perform: @escaping (NotificationName, Any?, [AnyHashable: Any]?) -> Void) -> Perform {
+            return Perform(method: .m_post__name_nameobject_objectuserInfo_userInfo_2(`name`, `object`, `userInfo`), performs: perform)
         }
         public static func present(_ presentingController: Parameter<UIViewController>, _ controllerBeingPresented: Parameter<UIViewController>, animated: Parameter<Bool>, completion: Parameter<(() -> Void)?>, perform: @escaping (UIViewController, UIViewController, Bool, (() -> Void)?) -> Void) -> Perform {
             return Perform(method: .m_present__presentingController_controllerBeingPresentedanimated_animatedcompletion_completion(`presentingController`, `controllerBeingPresented`, `animated`, `completion`), performs: perform)

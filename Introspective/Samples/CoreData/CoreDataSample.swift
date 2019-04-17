@@ -8,5 +8,5 @@
 
 import Foundation
 
-public protocol CoreDataSample: Sample, CoreDataObject {
+public protocol CoreDataSample: Sample, CoreDataObject, Exportable {
 }

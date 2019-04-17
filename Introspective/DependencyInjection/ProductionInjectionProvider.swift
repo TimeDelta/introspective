@@ -24,6 +24,7 @@ public final class ProductionInjectionProvider: InjectionProvider {
 	private static let realExtraInformationFactory = ExtraInformationFactoryImpl()
 	private static let realSampleGrouperFactory = SampleGrouperFactoryImpl()
 	private static let realImporterFactory = ImporterFactoryImpl()
+	private static let realExporterFactory = ExporterFactoryImpl()
 
 	public final func database() -> Database {
 		if Me.realDatabase == nil {
@@ -67,4 +68,5 @@ public final class ProductionInjectionProvider: InjectionProvider {
 	public final func extraInformationFactory() -> ExtraInformationFactory { return Me.realExtraInformationFactory }
 	public final func sampleGrouperFactory() -> SampleGrouperFactory { return Me.realSampleGrouperFactory }
 	public final func importerFactory() -> ImporterFactory { return Me.realImporterFactory }
+	public final func exporterFactory() -> ExporterFactory { return Me.realExporterFactory }
 }

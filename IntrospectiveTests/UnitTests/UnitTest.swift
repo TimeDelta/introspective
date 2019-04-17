@@ -31,6 +31,8 @@ class UnitTest: XCTestCase {
 
 	var mockSampleFactory: SampleFactoryMock!
 	var mockQueryFactory: QueryFactoryMock!
+	var mockImporterFactory: ImporterFactoryMock!
+	var mockExporterFactory: ExporterFactoryMock!
 
 	override func setUp() {
 		super.setUp()
@@ -62,6 +64,7 @@ class UnitTest: XCTestCase {
 		Matcher.default.register(ResultsViewController.Type.self)
 		Matcher.default.register(Any.self) { return self.anyMatcher($0, $1) }
 		Matcher.default.register(Optional<Any>.self) { return self.anyMatcher($0, $1) }
+		Matcher.default.register(Exportable.Type.self) { $0 == $1 }
 	}
 
 	private func resetMocks() {
@@ -80,28 +83,45 @@ class UnitTest: XCTestCase {
 		mockQueryFactory = QueryFactoryMock()
 		Given(injectionProvider, .queryFactory(willReturn: mockQueryFactory))
 
+		mockImporterFactory = ImporterFactoryMock()
+		Given(injectionProvider, .importerFactory(willReturn: mockImporterFactory))
+
+		mockExporterFactory = ExporterFactoryMock()
+		Given(injectionProvider, .exporterFactory(willReturn: mockExporterFactory))
+
 		utilFactory = UtilFactory()
 		Given(injectionProvider, .utilFactory(willReturn: utilFactory))
 
-		mockAttributeRestrictionUtil = AttributeRestrictionUtilMock()
-		utilFactory.attributeRestriction = mockAttributeRestrictionUtil
-		mockCalendarUtil = CalendarUtilMock()
-		utilFactory.calendar = mockCalendarUtil
-		mockNumericSampleUtil = NumericSampleUtilMock()
-		utilFactory.numericSample = mockNumericSampleUtil
-		mockSampleUtil = SampleUtilMock()
-		utilFactory.sample = mockSampleUtil
-		mockSearchUtil = SearchUtilMock()
-		utilFactory.search = mockSearchUtil
-		mockStringUtil = StringUtilMock()
-		utilFactory.string = mockStringUtil
-		mockTextNormalizationUtil = TextNormalizationUtilMock()
-		utilFactory.textNormalization = mockTextNormalizationUtil
-		mockUiUtil = UiUtilMock()
-		utilFactory.ui = mockUiUtil
+		setUpUtilMocks()
 	}
 
 	// MARK: - Helper Functions
+
+	private final func setUpUtilMocks() {
+		mockAttributeRestrictionUtil = AttributeRestrictionUtilMock()
+		utilFactory.attributeRestriction = mockAttributeRestrictionUtil
+
+		mockCalendarUtil = CalendarUtilMock()
+		utilFactory.calendar = mockCalendarUtil
+
+		mockNumericSampleUtil = NumericSampleUtilMock()
+		utilFactory.numericSample = mockNumericSampleUtil
+
+		mockSampleUtil = SampleUtilMock()
+		utilFactory.sample = mockSampleUtil
+
+		mockSearchUtil = SearchUtilMock()
+		utilFactory.search = mockSearchUtil
+
+		mockStringUtil = StringUtilMock()
+		utilFactory.string = mockStringUtil
+
+		mockTextNormalizationUtil = TextNormalizationUtilMock()
+		utilFactory.textNormalization = mockTextNormalizationUtil
+
+		mockUiUtil = UiUtilMock()
+		utilFactory.ui = mockUiUtil
+	}
 
 	private final func anyMatcher(_ one: Any?, _ two: Any?) -> Bool {
 		if type(of: one) != type(of: two) && (isOptional(one) == isOptional(two)) {
@@ -121,11 +141,31 @@ class UnitTest: XCTestCase {
 			// constructor.
 			return true
 		}
+		if let _ = one as? ActivityExporterMock, let _ = two as? ActivityExporterMock {
+			// no way to mock equalTo function when other value is also a mock because the
+			// Given statement would recursively call this code:
+			// Given(exporter, .equalTo(.value(other), willReturn: true))
+			//                          ^^^^^^^^^^^^^
+			// when this ran, it would go to check if the passed other value matches the
+			// one from the Given statement, which would call this code, ending in infinite
+			// recursion. Also, pointer comparison is not good enough because of copy
+			// constructor.
+			return true
+		}
 		if let importer1 = one as? Importer, let importer2 = two as? Importer {
 			return importer1.equalTo(importer2)
 		}
+		if let exporter1 = one as? Exporter, let exporter2 = two as? Exporter {
+			return exporter1.equalTo(exporter2)
+		}
+		if let view1 = one as? UIView, let view2 = two as? UIView {
+			return view1 == view2
+		}
 		if let viewController1 = one as? UIViewController, let viewController2 = two as? UIViewController {
 			return viewController1 == viewController2
+		}
+		if let cell1 = one as? UITableViewCell, let cell2 = two as? UITableViewCell {
+			return cell1 == cell2
 		}
 		fatalError("Missing equality test for Any Matcher")
 	}

@@ -9,6 +9,7 @@
 
 import Foundation
 import CoreData
+import CSV
 
 public class Activity: NSManagedObject, CoreDataSample {
 
@@ -107,6 +108,49 @@ public class Activity: NSManagedObject, CoreDataSample {
 		return try value(of: attribute)
 	}
 
+	// MARK: - Export
+
+	public static let exportFileDescription: String = "Activities"
+
+	public static func exportHeaderRow(to csv: CSVWriter) throws {
+		try ActivityDefinition.exportHeaderRow(to: csv)
+		try csv.write(field: "Start", quoted: true)
+		try csv.write(field: "Start Time Zone", quoted: true)
+		try csv.write(field: "End", quoted: true)
+		try csv.write(field: "End Time Zone", quoted: true)
+		try csv.write(field: "Note", quoted: true)
+		try csv.write(field: "Extra Tags", quoted: true)
+		try csv.write(field: "Instance Source", quoted: true)
+	}
+
+	public final func export(to csv: CSVWriter) throws {
+		try definition.export(to: csv)
+
+		let startText = DependencyInjector.util.calendar.string(for: startDate, dateStyle: .full, timeStyle: .full)
+		try csv.write(field: startText, quoted: true)
+
+		let startTimeZone = startDateTimeZoneId ?? ""
+		try csv.write(field: startTimeZone, quoted: true)
+
+		if let endDate = endDate {
+			let endText = DependencyInjector.util.calendar.string(for: endDate, dateStyle: .full, timeStyle: .full)
+			try csv.write(field: endText, quoted: true)
+		} else {
+			try csv.write(field: "", quoted: true)
+		}
+
+		let endTimeZone = endDateTimeZoneId ?? ""
+		try csv.write(field: endTimeZone, quoted: true)
+
+		try csv.write(field: note ?? "", quoted: true)
+
+		let tags = tagsArray().map{ $0.name }.joined(separator: "|")
+		try csv.write(field: tags, quoted: true)
+
+		let sourceText = Sources.resolveActivitySource(source).description
+		try csv.write(field: sourceText, quoted: true)
+	}
+
 	// MARK: - Attributed Functions
 
 	public final func value(of attribute: Attribute) throws -> Any? {
@@ -190,6 +234,10 @@ public class Activity: NSManagedObject, CoreDataSample {
 	}
 
 	// MARK: - Other
+
+	public final func getSource() -> Sources.ActivitySourceNum {
+		return Sources.resolveActivitySource(source)
+	}
 
 	public final func setSource(_ source: Sources.ActivitySourceNum) {
 		self.source = source.rawValue

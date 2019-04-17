@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import CSV
 
 public protocol Mood: CoreDataSample {
 
@@ -84,6 +85,38 @@ public final class MoodImpl: NSManagedObject, Mood {
 		return [.start: date]
 	}
 
+	// MARK: - Export
+
+	public static let exportFileDescription: String = "Moods"
+
+	public static func exportHeaderRow(to csv: CSVWriter) throws {
+		try csv.write(
+			row: [
+				"Timestamp",
+				"Time Zone",
+				"Rating",
+				"Minimum Allowed Rating",
+				"Maximum Allowed Rating",
+				"Note",
+				"Source",
+			],
+			quotedAtIndex: { _ in true })
+	}
+
+	public func export(to csv: CSVWriter) throws {
+		let timestampText = DependencyInjector.util.calendar.string(for: timestamp, dateStyle: .full, timeStyle: .full)
+		try csv.write(field: timestampText, quoted: true)
+
+		try csv.write(field: timestampTimeZoneId ?? "", quoted: true)
+		try csv.write(field: String(rating), quoted: true)
+		try csv.write(field: String(minRating), quoted: true)
+		try csv.write(field: String(maxRating), quoted: true)
+		try csv.write(field: note ?? "", quoted: true)
+
+		let sourceText = Sources.resolveMoodSource(source).description
+		try csv.write(field: sourceText, quoted: true)
+	}
+
 	// MARK: - Attributed Functions
 
 	public final func value(of attribute: Attribute) throws -> Any? {
@@ -152,6 +185,10 @@ public final class MoodImpl: NSManagedObject, Mood {
 	}
 
 	// MARK: - Other
+
+	public final func getSource() -> Sources.MoodSourceNum {
+		return Sources.resolveMoodSource(source)
+	}
 
 	public final func setSource(_ source: Sources.MoodSourceNum) {
 		self.source = source.rawValue

@@ -16,6 +16,7 @@ public final class ActivityDataTestUtil {
 		name: String = "",
 		description: String? = nil,
 		tags: [Tag] = [],
+		source: Sources.ActivitySourceNum = .introspective,
 		recordScreenIndex: Int16 = 0)
 	-> ActivityDefinition {
 		let transaction = DependencyInjector.db.transaction()
@@ -36,6 +37,7 @@ public final class ActivityDataTestUtil {
 		startDate: Date = Date(),
 		endDate: Date? = nil,
 		note: String? = nil,
+		source: Sources.ActivitySourceNum = .introspective,
 		tags: [Tag] = [])
 	-> Activity {
 		let transaction = DependencyInjector.db.transaction()
@@ -47,6 +49,7 @@ public final class ActivityDataTestUtil {
 		for tag in tags {
 			activity.addToTags(try! transaction.pull(savedObject: tag))
 		}
+		activity.setSource(source)
 		try! transaction.commit()
 		return try! DependencyInjector.db.pull(savedObject: activity)
 	}
@@ -57,13 +60,15 @@ public final class ActivityDataTestUtil {
 		startDate: Date = Date(),
 		endDate: Date? = nil,
 		note: String? = nil,
+		source: Sources.ActivitySourceNum = .introspective,
 		tags: [Tag] = [])
 	-> Activity {
 		return createActivity(
-			definition: createActivityDefinition(name: name),
+			definition: createActivityDefinition(name: name, source: source),
 			startDate: startDate,
 			endDate: endDate,
 			note: note,
+			source: source,
 			tags: tags)
 	}
 }

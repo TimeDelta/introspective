@@ -9,6 +9,7 @@
 
 import Foundation
 import CoreData
+import CSV
 
 public final class MedicationDose: NSManagedObject, CoreDataSample {
 
@@ -59,7 +60,35 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 		return [.start: date]
 	}
 
+	// MARK: - Export
+
+	public static let exportFileDescription: String = "Medication Dosage History"
+
+	public static func exportHeaderRow(to csv: CSVWriter) throws {
+		try Medication.exportHeaderRow(to: csv)
+		try csv.write(field: "Dosage", quoted: true)
+		try csv.write(field: "Timestamp", quoted: true)
+		try csv.write(field: "Time Zone", quoted: true)
+		try csv.write(field: "Instance Source", quoted: true)
+	}
+
+	public func export(to csv: CSVWriter) throws {
+		try medication.export(to: csv)
+		let dose = dosage?.description ?? ""
+		try csv.write(field: dose, quoted: true)
+		let timestampText = DependencyInjector.util.calendar.string(for: timestamp, dateStyle: .full, timeStyle: .full)
+		try csv.write(field: timestampText, quoted: true)
+		let timeZone = timestampTimeZoneId ?? ""
+		try csv.write(field: timeZone, quoted: true)
+		let sourceText = Sources.resolveMedicationSource(source).description
+		try csv.write(field: sourceText, quoted: true)
+	}
+
 	// MARK: - Other
+
+	public final func getSource() -> Sources.MedicationSourceNum {
+		return Sources.resolveMedicationSource(source)
+	}
 
 	public final func setSource(_ source: Sources.MedicationSourceNum) {
 		self.source = source.rawValue

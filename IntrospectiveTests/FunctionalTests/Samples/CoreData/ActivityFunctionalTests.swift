@@ -9,9 +9,54 @@
 import XCTest
 import SwiftDate
 import Hamcrest
+import CSV
 @testable import Introspective
 
 final class ActivityFunctionalTests: FunctionalTest {
+
+	// MARK: - export(to:)
+
+	func testGivenNilStartDateTimeZone_exportTo_doesNotThrowError() throws {
+		// given
+		let transaction = database.transaction()
+		let definition = ActivityDataTestUtil.createActivityDefinition()
+		let activity = try transaction.new(Activity.self)
+		let csv = try CSVWriter(stream: OutputStream.toMemory())
+		activity.definition = try transaction.pull(savedObject: definition)
+		activity.setSource(.aTracker)
+		activity.start = Date()
+
+		// when
+		try activity.export(to: csv)
+
+		// then - no error thrown
+	}
+
+	func testGivenNilEndDate_exportTo_doesNotThrowError() throws {
+		// given
+		let activity = ActivityDataTestUtil.createActivity(endDate: nil)
+		let csv = try CSVWriter(stream: OutputStream.toMemory())
+
+		// when
+		try activity.export(to: csv)
+
+		// then - no error thrown
+	}
+
+	func testGivenNilEndDateTimeZone_exportTo_doesNotThrowError() throws {
+		// given
+		let transaction = database.transaction()
+		let definition = ActivityDataTestUtil.createActivityDefinition()
+		let activity = try transaction.new(Activity.self)
+		activity.definition = try transaction.pull(savedObject: definition)
+		activity.start = Date()
+		let csv = try CSVWriter(stream: OutputStream.toMemory())
+
+		// when
+		try activity.export(to: csv)
+
+		// then - no error thrown
+	}
 
 	// MARK: - value(of:)
 
