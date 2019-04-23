@@ -935,7 +935,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <toolbar key="tableHeaderView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" misplaced="YES" id="PVx-Hz-nHg">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                            <rect key="frame" x="0.0" y="-113" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             <items>
                                 <barButtonItem style="plain" systemItem="flexibleSpace" id="bhO-xk-zoo"/>
@@ -1020,7 +1020,7 @@
                                 <accessibility key="accessibilityConfiguration" hint="Specify the dosage being taken" identifier="dosage taken text field" label="dosage taken text field"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="ASCIICapableNumberPad"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                 <connections>
                                     <action selector="dosageTextChanged:" destination="Q2N-tG-6dG" eventType="editingChanged" id="4zX-we-oMo"/>
                                 </connections>
