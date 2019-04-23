@@ -47,7 +47,6 @@ public final class ActiveImportTableViewCell: UITableViewCell {
 			message: nil,
 			preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
-			self.importer.cancel()
 			self.timer?.invalidate()
 			self.post(.cancelBackgroundTask, userInfo: [.backgroundTaskId: String(self.backgroundTaskId.rawValue)])
 		})

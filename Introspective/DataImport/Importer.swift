@@ -8,6 +8,7 @@
 
 import Foundation
 
+//sourcery: AutoMockable
 public protocol Importer {
 
 	var dataTypePluralName: String { get }
