@@ -190,7 +190,7 @@ final class ImportDataTableViewControllerUnitTests: UnitTest {
 		try setUpActiveImport()
 
 		// when
-		sleep(importSleepTime)
+		sleep(importSleepTime + 1)
 
 		// then
 		let expectedId = "FinishedImport"
