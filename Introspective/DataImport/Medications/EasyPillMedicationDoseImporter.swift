@@ -155,6 +155,7 @@ public final class EasyPillMedicationDoseImporterImpl: NSManagedObject, EasyPill
 			let dose = try childTransaction.new(MedicationDose.self)
 			let medication = try childTransaction.pull(savedObject: medicationsWithName[0])
 			dose.medication = medication
+			dose.dosage = medication.dosage
 			dose.date = date
 			dose.setSource(.easyPill)
 			medication.addToDoses(dose)
