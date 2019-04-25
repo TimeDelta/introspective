@@ -28,11 +28,13 @@ class UnitTest: XCTestCase {
 	var mockStringUtil: StringUtilMock!
 	var mockTextNormalizationUtil: TextNormalizationUtilMock!
 	var mockUiUtil: UiUtilMock!
+	var mockUserDefaultsUtil: UserDefaultsUtilMock!
 
 	var mockSampleFactory: SampleFactoryMock!
 	var mockQueryFactory: QueryFactoryMock!
 	var mockImporterFactory: ImporterFactoryMock!
 	var mockExporterFactory: ExporterFactoryMock!
+	var mockCoachMarkFactory: CoachMarkFactoryMock!
 
 	override func setUp() {
 		super.setUp()
@@ -89,6 +91,9 @@ class UnitTest: XCTestCase {
 		mockExporterFactory = ExporterFactoryMock()
 		Given(injectionProvider, .exporterFactory(willReturn: mockExporterFactory))
 
+		mockCoachMarkFactory = CoachMarkFactoryMock()
+		Given(injectionProvider, .coachMarkFactory(willReturn: mockCoachMarkFactory))
+
 		utilFactory = UtilFactory()
 		Given(injectionProvider, .utilFactory(willReturn: utilFactory))
 
@@ -121,6 +126,9 @@ class UnitTest: XCTestCase {
 
 		mockUiUtil = UiUtilMock()
 		utilFactory.ui = mockUiUtil
+
+		mockUserDefaultsUtil = UserDefaultsUtilMock()
+		utilFactory.userDefaults = mockUserDefaultsUtil
 	}
 
 	private final func anyMatcher(_ one: Any?, _ two: Any?) -> Bool {

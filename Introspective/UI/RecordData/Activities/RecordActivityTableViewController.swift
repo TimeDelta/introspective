@@ -39,7 +39,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		CoachMarkInfo(
 			hint: "Tap the + button to create new activities. You can also type the name of a new activity in the searchh bar and long press the + button to quickly create and start it.",
 			useArrow: true,
-			view: { return self.navigationController!.navigationBar }),
+			view: { return self.navigationItem.rightBarButtonItem?.value(forKey: "view") as? UIView }),
 		CoachMarkInfo(
 			hint: "This is the name of the activity.",
 			useArrow: true,
@@ -126,7 +126,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
 			coachMarksInfo,
-			instructionsShownKey: UserDefaultKeys.recordActivitiesInstructionsShown,
+			instructionsShownKey: .recordActivitiesInstructionsShown,
 			cleanup: deleteExampleActivity,
 			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints())
 		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
@@ -136,7 +136,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	public final override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		if !UserDefaults().bool(forKey: UserDefaultKeys.recordActivitiesInstructionsShown) {
+		if !DependencyInjector.util.userDefaults.bool(forKey: .recordActivitiesInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
 	}

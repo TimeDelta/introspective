@@ -71,8 +71,8 @@ func userInfoHasKey(_ key: AnyHashable) -> Matcher<UserInfo?> {
 	}
 }
 
-func userInfoHasKey<ValueType: Equatable>(_ key: AnyHashable, withValue expectedValiue: ValueType) -> Matcher<UserInfo?> {
-	return userInfoHasKey(key, withValue: expectedValiue, { $0 == $1 })
+func userInfoHasKey<ValueType: Equatable>(_ key: AnyHashable, withValue expectedValue: ValueType) -> Matcher<UserInfo?> {
+	return userInfoHasKey(key, withValue: equalTo(expectedValue))
 }
 
 func userInfoHasKey<ValueType>(
@@ -80,7 +80,17 @@ func userInfoHasKey<ValueType>(
 	withValue expectedValue: ValueType,
 	_ equalTo: @escaping (ValueType, ValueType) -> Bool)
 -> Matcher<UserInfo?> {
-	let matcherDescription = "User Info has \"\(key.description)\" key with value \"\(String(describing: expectedValue))\""
+	let equalToMatcher = Matcher("equal to \(String(describing: expectedValue))") { (value: ValueType) -> MatchResult in
+		if equalTo(value, expectedValue) {
+			return .match
+		}
+		return .mismatch("'\(String(describing: value))' is not equal to '\(String(describing: expectedValue))'")
+	}
+	return userInfoHasKey(key, withValue: equalToMatcher)
+}
+
+func userInfoHasKey<ValueType>(_ key: AnyHashable, withValue expectedValueMatcher: Matcher<ValueType>) -> Matcher<UserInfo?> {
+	let matcherDescription = "User Info has \"\(key.description)\" key with value \"\(expectedValueMatcher.description))\""
 	return Matcher(matcherDescription) { (userInfo: UserInfo?) -> MatchResult in
 		guard let userInfo = userInfo else {
 			return .mismatch("User Info was nil")
@@ -91,10 +101,7 @@ func userInfoHasKey<ValueType>(
 		guard let actualValue = userInfo[key] as? ValueType else {
 			return .mismatch("Value for \"\(key.description)\" is not a \(String(describing: ValueType.self))")
 		}
-		if equalTo(actualValue, expectedValue) {
-			return .match
-		}
-		return .mismatch("Value for \"\(key.description)\" is \"\(String(describing: actualValue))\"")
+		return expectedValueMatcher.matches(actualValue)
 	}
 }
 

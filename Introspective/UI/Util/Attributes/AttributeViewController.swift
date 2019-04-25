@@ -103,9 +103,9 @@ final class AttributeViewController: UIViewController {
 		attributeValue = booleanValueSwitch.isOn
 		post(
 			notificationToSendOnValueChange,
-			userInfo: info([
+			userInfo: [
 				.attributeValue: attributeValue,
-			]))
+			])
 	}
 
 	// MARK: - Received Notifications

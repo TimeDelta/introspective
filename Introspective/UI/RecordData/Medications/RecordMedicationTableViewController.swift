@@ -55,7 +55,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		CoachMarkInfo(
 			hint: "Tap the + button to create new medications. You can also type the name of a new medication in the searchh bar and long press the + button to quickly create and mark it as taken.",
 			useArrow: true,
-			view: { return self.navigationController!.navigationBar }),
+			view: { return self.navigationItem.rightBarButtonItem?.value(forKey: "view") as? UIView }),
 		CoachMarkInfo(
 			hint: "This is the name of the medication. Tap it to edit the medication.",
 			useArrow: true,
@@ -122,7 +122,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
 			coachMarksInfo,
-			instructionsShownKey: UserDefaultKeys.recordMedicationsInstructionsShown,
+			instructionsShownKey: .recordMedicationsInstructionsShown,
 			cleanup: deleteExampleMedication,
 			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints())
 		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
@@ -132,7 +132,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	public final override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		if !UserDefaults().bool(forKey: UserDefaultKeys.recordMedicationsInstructionsShown) {
+		if !DependencyInjector.util.userDefaults.bool(forKey: .recordMedicationsInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
 	}

@@ -23,4 +23,5 @@ public protocol InjectionProvider {
 	func sampleGrouperFactory() -> SampleGrouperFactory
 	func importerFactory() -> ImporterFactory
 	func exporterFactory() -> ExporterFactory
+	func coachMarkFactory() -> CoachMarkFactory
 }

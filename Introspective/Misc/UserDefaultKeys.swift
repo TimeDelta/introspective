@@ -8,9 +8,12 @@
 
 import Foundation
 
-public final class UserDefaultKeys {
+public enum UserDefaultKey: String {
 
-	public static let queryViewInstructionsShown = "queryViewInstructionsShown"
-	public static let recordActivitiesInstructionsShown = "recordActivitiesInstructionsShown"
-	public static let recordMedicationsInstructionsShown = "recordMedicationsInstructionsShown"
+	// MARK: - Instructions
+
+	case queryViewInstructionsShown = "queryViewInstructionsShown"
+	case recordActivitiesInstructionsShown = "recordActivitiesInstructionsShown"
+	case recordMedicationsInstructionsShown = "recordMedicationsInstructionsShown"
+	case selectDateViewInstructionsShown = "selectDateViewInstructionsShown"
 }

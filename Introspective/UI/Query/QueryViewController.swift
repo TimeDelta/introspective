@@ -153,7 +153,7 @@ public final class QueryViewController: UITableViewController {
 
 		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
 			coachMarksInfo,
-			instructionsShownKey: UserDefaultKeys.queryViewInstructionsShown,
+			instructionsShownKey: .queryViewInstructionsShown,
 			skipViewLayoutConstraints: defaultCoachMarkSkipViewConstraints())
 		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
 		coachMarksController.delegate = coachMarksDataSourceAndDelegate
@@ -162,7 +162,7 @@ public final class QueryViewController: UITableViewController {
 
 	public final override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		if !UserDefaults().bool(forKey: UserDefaultKeys.queryViewInstructionsShown) {
+		if !DependencyInjector.util.userDefaults.bool(forKey: .queryViewInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
 	}

@@ -62,9 +62,9 @@ public final class MedicationDoseEditorViewController: UIViewController {
 			medicationDose = try DependencyInjector.db.pull(savedObject: medicationDose!)
 			post(
 				notificationToSendOnAccept,
-				userInfo: self.info([
+				userInfo: [
 					.dose: self.medicationDose as Any,
-				]))
+				])
 			dismiss(animated: false, completion: nil)
 		} catch {
 			log.error("Failed to create medication dose: %@", errorInfo(error))

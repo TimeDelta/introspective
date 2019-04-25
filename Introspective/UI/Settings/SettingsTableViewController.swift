@@ -86,9 +86,7 @@ public final class SettingsTableViewController: UITableViewController {
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt _indexPath: IndexPath) {
 		if indexPath(_indexPath, isNonTestOnlySectionRowNamed: Me.resetInstructionPromptsCellIdentifier) {
-			UserDefaults().set(false, forKey: UserDefaultKeys.queryViewInstructionsShown)
-			UserDefaults().set(false, forKey: UserDefaultKeys.recordActivitiesInstructionsShown)
-			UserDefaults().set(false, forKey: UserDefaultKeys.recordMedicationsInstructionsShown)
+			DependencyInjector.util.userDefaults.resetInstructionPrompts()
 			tableView.deselectRow(at: _indexPath, animated: false)
 		} else if testing && disableGenerateTestDataCell && _indexPath.section == 0 && _indexPath.row == 0 {
 			tableView.deselectRow(at: _indexPath, animated: false)

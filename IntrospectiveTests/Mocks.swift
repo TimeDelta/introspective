@@ -16,6 +16,7 @@ import Presentr
 import CSV
 import SwiftDate
 import UserNotifications
+import Instructions
 @testable import Introspective
 
     public final class MockyAssertion {
@@ -39,6 +40,7 @@ import Presentr
 import CSV
 import SwiftDate
 import UserNotifications
+import Instructions
 @testable import Introspective
 
     func MockyAssert(_ expression: @autoclosure () -> Bool, _ message: @autoclosure () -> String = "Verification failed", file: StaticString = #file, line: UInt = #line) {
@@ -2760,6 +2762,481 @@ open class CalendarUtilMock: CalendarUtil, Mock {
         }
         public static func currentTimeZone(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_currentTimeZone, performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
+// MARK: - CoachMarkFactory
+open class CoachMarkFactoryMock: CoachMarkFactory, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    open func controller() -> CoachMarksControllerProtocol {
+        addInvocation(.m_controller)
+		let perform = methodPerformValue(.m_controller) as? () -> Void
+		perform?()
+		var __value: CoachMarksControllerProtocol
+		do {
+		    __value = try methodReturnValue(.m_controller).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for controller(). Use given")
+			Failure("Stub return value not specified for controller(). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_controller
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_controller, .m_controller):
+                return true 
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .m_controller: return 0
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func controller(willReturn: CoachMarksControllerProtocol...) -> MethodStub {
+            return Given(method: .m_controller, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func controller(willProduce: (Stubber<CoachMarksControllerProtocol>) -> Void) -> MethodStub {
+            let willReturn: [CoachMarksControllerProtocol] = []
+			let given: Given = { return Given(method: .m_controller, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (CoachMarksControllerProtocol).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func controller() -> Verify { return Verify(method: .m_controller)}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func controller(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_controller, performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
+// MARK: - CoachMarksControllerProtocol
+open class CoachMarksControllerProtocolMock: CoachMarksControllerProtocol, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    public var dataSource: CoachMarksControllerDataSource? {
+		get {	invocations.append(.p_dataSource_get); return __p_dataSource ?? optionalGivenGetterValue(.p_dataSource_get, "CoachMarksControllerProtocolMock - stub value for dataSource was not defined") }
+		set {	invocations.append(.p_dataSource_set(.value(newValue))); __p_dataSource = newValue }
+	}
+	private var __p_dataSource: (CoachMarksControllerDataSource)?
+
+    public var delegate: CoachMarksControllerDelegate? {
+		get {	invocations.append(.p_delegate_get); return __p_delegate ?? optionalGivenGetterValue(.p_delegate_get, "CoachMarksControllerProtocolMock - stub value for delegate was not defined") }
+		set {	invocations.append(.p_delegate_set(.value(newValue))); __p_delegate = newValue }
+	}
+	private var __p_delegate: (CoachMarksControllerDelegate)?
+
+    public var animationDelegate: CoachMarksControllerAnimationDelegate? {
+		get {	invocations.append(.p_animationDelegate_get); return __p_animationDelegate ?? optionalGivenGetterValue(.p_animationDelegate_get, "CoachMarksControllerProtocolMock - stub value for animationDelegate was not defined") }
+		set {	invocations.append(.p_animationDelegate_set(.value(newValue))); __p_animationDelegate = newValue }
+	}
+	private var __p_animationDelegate: (CoachMarksControllerAnimationDelegate)?
+
+    public var statusBarStyle: UIStatusBarStyle? {
+		get {	invocations.append(.p_statusBarStyle_get); return __p_statusBarStyle ?? optionalGivenGetterValue(.p_statusBarStyle_get, "CoachMarksControllerProtocolMock - stub value for statusBarStyle was not defined") }
+		set {	invocations.append(.p_statusBarStyle_set(.value(newValue))); __p_statusBarStyle = newValue }
+	}
+	private var __p_statusBarStyle: (UIStatusBarStyle)?
+
+    public var rotationStyle: RotationStyle {
+		get {	invocations.append(.p_rotationStyle_get); return __p_rotationStyle ?? givenGetterValue(.p_rotationStyle_get, "CoachMarksControllerProtocolMock - stub value for rotationStyle was not defined") }
+		set {	invocations.append(.p_rotationStyle_set(.value(newValue))); __p_rotationStyle = newValue }
+	}
+	private var __p_rotationStyle: (RotationStyle)?
+
+    public var statusBarVisibility: StatusBarVisibility {
+		get {	invocations.append(.p_statusBarVisibility_get); return __p_statusBarVisibility ?? givenGetterValue(.p_statusBarVisibility_get, "CoachMarksControllerProtocolMock - stub value for statusBarVisibility was not defined") }
+		set {	invocations.append(.p_statusBarVisibility_set(.value(newValue))); __p_statusBarVisibility = newValue }
+	}
+	private var __p_statusBarVisibility: (StatusBarVisibility)?
+
+    public var interfaceOrientations: InterfaceOrientations {
+		get {	invocations.append(.p_interfaceOrientations_get); return __p_interfaceOrientations ?? givenGetterValue(.p_interfaceOrientations_get, "CoachMarksControllerProtocolMock - stub value for interfaceOrientations was not defined") }
+		set {	invocations.append(.p_interfaceOrientations_set(.value(newValue))); __p_interfaceOrientations = newValue }
+	}
+	private var __p_interfaceOrientations: (InterfaceOrientations)?
+
+    public var skipView: CoachMarkSkipView? {
+		get {	invocations.append(.p_skipView_get); return __p_skipView ?? optionalGivenGetterValue(.p_skipView_get, "CoachMarksControllerProtocolMock - stub value for skipView was not defined") }
+		set {	invocations.append(.p_skipView_set(.value(newValue))); __p_skipView = newValue }
+	}
+	private var __p_skipView: (CoachMarkSkipView)?
+
+
+
+
+
+    open func start(in presentationContext: PresentationContext) {
+        addInvocation(.m_start__in_presentationContext(Parameter<PresentationContext>.value(`presentationContext`)))
+		let perform = methodPerformValue(.m_start__in_presentationContext(Parameter<PresentationContext>.value(`presentationContext`))) as? (PresentationContext) -> Void
+		perform?(`presentationContext`)
+    }
+
+    open func stop(immediately: Bool) {
+        addInvocation(.m_stop__immediately_immediately(Parameter<Bool>.value(`immediately`)))
+		let perform = methodPerformValue(.m_stop__immediately_immediately(Parameter<Bool>.value(`immediately`))) as? (Bool) -> Void
+		perform?(`immediately`)
+    }
+
+    open func prepareForChange() {
+        addInvocation(.m_prepareForChange)
+		let perform = methodPerformValue(.m_prepareForChange) as? () -> Void
+		perform?()
+    }
+
+    open func restoreAfterChangeDidComplete() {
+        addInvocation(.m_restoreAfterChangeDidComplete)
+		let perform = methodPerformValue(.m_restoreAfterChangeDidComplete) as? () -> Void
+		perform?()
+    }
+
+
+    fileprivate enum MethodType {
+        case m_start__in_presentationContext(Parameter<PresentationContext>)
+        case m_stop__immediately_immediately(Parameter<Bool>)
+        case m_prepareForChange
+        case m_restoreAfterChangeDidComplete
+        case p_dataSource_get
+		case p_dataSource_set(Parameter<CoachMarksControllerDataSource?>)
+        case p_delegate_get
+		case p_delegate_set(Parameter<CoachMarksControllerDelegate?>)
+        case p_animationDelegate_get
+		case p_animationDelegate_set(Parameter<CoachMarksControllerAnimationDelegate?>)
+        case p_statusBarStyle_get
+		case p_statusBarStyle_set(Parameter<UIStatusBarStyle?>)
+        case p_rotationStyle_get
+		case p_rotationStyle_set(Parameter<RotationStyle>)
+        case p_statusBarVisibility_get
+		case p_statusBarVisibility_set(Parameter<StatusBarVisibility>)
+        case p_interfaceOrientations_get
+		case p_interfaceOrientations_set(Parameter<InterfaceOrientations>)
+        case p_skipView_get
+		case p_skipView_set(Parameter<CoachMarkSkipView?>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_start__in_presentationContext(let lhsPresentationcontext), .m_start__in_presentationContext(let rhsPresentationcontext)):
+                guard Parameter.compare(lhs: lhsPresentationcontext, rhs: rhsPresentationcontext, with: matcher) else { return false } 
+                return true 
+            case (.m_stop__immediately_immediately(let lhsImmediately), .m_stop__immediately_immediately(let rhsImmediately)):
+                guard Parameter.compare(lhs: lhsImmediately, rhs: rhsImmediately, with: matcher) else { return false } 
+                return true 
+            case (.m_prepareForChange, .m_prepareForChange):
+                return true 
+            case (.m_restoreAfterChangeDidComplete, .m_restoreAfterChangeDidComplete):
+                return true 
+            case (.p_dataSource_get,.p_dataSource_get): return true
+			case (.p_dataSource_set(let left),.p_dataSource_set(let right)): return Parameter<CoachMarksControllerDataSource?>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_delegate_get,.p_delegate_get): return true
+			case (.p_delegate_set(let left),.p_delegate_set(let right)): return Parameter<CoachMarksControllerDelegate?>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_animationDelegate_get,.p_animationDelegate_get): return true
+			case (.p_animationDelegate_set(let left),.p_animationDelegate_set(let right)): return Parameter<CoachMarksControllerAnimationDelegate?>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_statusBarStyle_get,.p_statusBarStyle_get): return true
+			case (.p_statusBarStyle_set(let left),.p_statusBarStyle_set(let right)): return Parameter<UIStatusBarStyle?>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_rotationStyle_get,.p_rotationStyle_get): return true
+			case (.p_rotationStyle_set(let left),.p_rotationStyle_set(let right)): return Parameter<RotationStyle>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_statusBarVisibility_get,.p_statusBarVisibility_get): return true
+			case (.p_statusBarVisibility_set(let left),.p_statusBarVisibility_set(let right)): return Parameter<StatusBarVisibility>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_interfaceOrientations_get,.p_interfaceOrientations_get): return true
+			case (.p_interfaceOrientations_set(let left),.p_interfaceOrientations_set(let right)): return Parameter<InterfaceOrientations>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_skipView_get,.p_skipView_get): return true
+			case (.p_skipView_set(let left),.p_skipView_set(let right)): return Parameter<CoachMarkSkipView?>.compare(lhs: left, rhs: right, with: matcher)
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_start__in_presentationContext(p0): return p0.intValue
+            case let .m_stop__immediately_immediately(p0): return p0.intValue
+            case .m_prepareForChange: return 0
+            case .m_restoreAfterChangeDidComplete: return 0
+            case .p_dataSource_get: return 0
+			case .p_dataSource_set(let newValue): return newValue.intValue
+            case .p_delegate_get: return 0
+			case .p_delegate_set(let newValue): return newValue.intValue
+            case .p_animationDelegate_get: return 0
+			case .p_animationDelegate_set(let newValue): return newValue.intValue
+            case .p_statusBarStyle_get: return 0
+			case .p_statusBarStyle_set(let newValue): return newValue.intValue
+            case .p_rotationStyle_get: return 0
+			case .p_rotationStyle_set(let newValue): return newValue.intValue
+            case .p_statusBarVisibility_get: return 0
+			case .p_statusBarVisibility_set(let newValue): return newValue.intValue
+            case .p_interfaceOrientations_get: return 0
+			case .p_interfaceOrientations_set(let newValue): return newValue.intValue
+            case .p_skipView_get: return 0
+			case .p_skipView_set(let newValue): return newValue.intValue
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+        public static func dataSource(getter defaultValue: CoachMarksControllerDataSource?...) -> PropertyStub {
+            return Given(method: .p_dataSource_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func delegate(getter defaultValue: CoachMarksControllerDelegate?...) -> PropertyStub {
+            return Given(method: .p_delegate_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func animationDelegate(getter defaultValue: CoachMarksControllerAnimationDelegate?...) -> PropertyStub {
+            return Given(method: .p_animationDelegate_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func statusBarStyle(getter defaultValue: UIStatusBarStyle?...) -> PropertyStub {
+            return Given(method: .p_statusBarStyle_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func rotationStyle(getter defaultValue: RotationStyle...) -> PropertyStub {
+            return Given(method: .p_rotationStyle_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func statusBarVisibility(getter defaultValue: StatusBarVisibility...) -> PropertyStub {
+            return Given(method: .p_statusBarVisibility_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func interfaceOrientations(getter defaultValue: InterfaceOrientations...) -> PropertyStub {
+            return Given(method: .p_interfaceOrientations_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func skipView(getter defaultValue: CoachMarkSkipView?...) -> PropertyStub {
+            return Given(method: .p_skipView_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func start(in presentationContext: Parameter<PresentationContext>) -> Verify { return Verify(method: .m_start__in_presentationContext(`presentationContext`))}
+        public static func stop(immediately: Parameter<Bool>) -> Verify { return Verify(method: .m_stop__immediately_immediately(`immediately`))}
+        public static func prepareForChange() -> Verify { return Verify(method: .m_prepareForChange)}
+        public static func restoreAfterChangeDidComplete() -> Verify { return Verify(method: .m_restoreAfterChangeDidComplete)}
+        public static var dataSource: Verify { return Verify(method: .p_dataSource_get) }
+		public static func dataSource(set newValue: Parameter<CoachMarksControllerDataSource?>) -> Verify { return Verify(method: .p_dataSource_set(newValue)) }
+        public static var delegate: Verify { return Verify(method: .p_delegate_get) }
+		public static func delegate(set newValue: Parameter<CoachMarksControllerDelegate?>) -> Verify { return Verify(method: .p_delegate_set(newValue)) }
+        public static var animationDelegate: Verify { return Verify(method: .p_animationDelegate_get) }
+		public static func animationDelegate(set newValue: Parameter<CoachMarksControllerAnimationDelegate?>) -> Verify { return Verify(method: .p_animationDelegate_set(newValue)) }
+        public static var statusBarStyle: Verify { return Verify(method: .p_statusBarStyle_get) }
+		public static func statusBarStyle(set newValue: Parameter<UIStatusBarStyle?>) -> Verify { return Verify(method: .p_statusBarStyle_set(newValue)) }
+        public static var rotationStyle: Verify { return Verify(method: .p_rotationStyle_get) }
+		public static func rotationStyle(set newValue: Parameter<RotationStyle>) -> Verify { return Verify(method: .p_rotationStyle_set(newValue)) }
+        public static var statusBarVisibility: Verify { return Verify(method: .p_statusBarVisibility_get) }
+		public static func statusBarVisibility(set newValue: Parameter<StatusBarVisibility>) -> Verify { return Verify(method: .p_statusBarVisibility_set(newValue)) }
+        public static var interfaceOrientations: Verify { return Verify(method: .p_interfaceOrientations_get) }
+		public static func interfaceOrientations(set newValue: Parameter<InterfaceOrientations>) -> Verify { return Verify(method: .p_interfaceOrientations_set(newValue)) }
+        public static var skipView: Verify { return Verify(method: .p_skipView_get) }
+		public static func skipView(set newValue: Parameter<CoachMarkSkipView?>) -> Verify { return Verify(method: .p_skipView_set(newValue)) }
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func start(in presentationContext: Parameter<PresentationContext>, perform: @escaping (PresentationContext) -> Void) -> Perform {
+            return Perform(method: .m_start__in_presentationContext(`presentationContext`), performs: perform)
+        }
+        public static func stop(immediately: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
+            return Perform(method: .m_stop__immediately_immediately(`immediately`), performs: perform)
+        }
+        public static func prepareForChange(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_prepareForChange, performs: perform)
+        }
+        public static func restoreAfterChangeDidComplete(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_restoreAfterChangeDidComplete, performs: perform)
         }
     }
 
@@ -6849,6 +7326,20 @@ open class InjectionProviderMock: InjectionProvider, Mock {
 		return __value
     }
 
+    open func coachMarkFactory() -> CoachMarkFactory {
+        addInvocation(.m_coachMarkFactory)
+		let perform = methodPerformValue(.m_coachMarkFactory) as? () -> Void
+		perform?()
+		var __value: CoachMarkFactory
+		do {
+		    __value = try methodReturnValue(.m_coachMarkFactory).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for coachMarkFactory(). Use given")
+			Failure("Stub return value not specified for coachMarkFactory(). Use given")
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_database
@@ -6863,6 +7354,7 @@ open class InjectionProviderMock: InjectionProvider, Mock {
         case m_sampleGrouperFactory
         case m_importerFactory
         case m_exporterFactory
+        case m_coachMarkFactory
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -6890,6 +7382,8 @@ open class InjectionProviderMock: InjectionProvider, Mock {
                 return true 
             case (.m_exporterFactory, .m_exporterFactory):
                 return true 
+            case (.m_coachMarkFactory, .m_coachMarkFactory):
+                return true 
             default: return false
             }
         }
@@ -6908,6 +7402,7 @@ open class InjectionProviderMock: InjectionProvider, Mock {
             case .m_sampleGrouperFactory: return 0
             case .m_importerFactory: return 0
             case .m_exporterFactory: return 0
+            case .m_coachMarkFactory: return 0
             }
         }
     }
@@ -6956,6 +7451,9 @@ open class InjectionProviderMock: InjectionProvider, Mock {
         }
         public static func exporterFactory(willReturn: ExporterFactory...) -> MethodStub {
             return Given(method: .m_exporterFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func coachMarkFactory(willReturn: CoachMarkFactory...) -> MethodStub {
+            return Given(method: .m_coachMarkFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func database(willProduce: (Stubber<Database>) -> Void) -> MethodStub {
             let willReturn: [Database] = []
@@ -7041,6 +7539,13 @@ open class InjectionProviderMock: InjectionProvider, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func coachMarkFactory(willProduce: (Stubber<CoachMarkFactory>) -> Void) -> MethodStub {
+            let willReturn: [CoachMarkFactory] = []
+			let given: Given = { return Given(method: .m_coachMarkFactory, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (CoachMarkFactory).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct Verify {
@@ -7058,6 +7563,7 @@ open class InjectionProviderMock: InjectionProvider, Mock {
         public static func sampleGrouperFactory() -> Verify { return Verify(method: .m_sampleGrouperFactory)}
         public static func importerFactory() -> Verify { return Verify(method: .m_importerFactory)}
         public static func exporterFactory() -> Verify { return Verify(method: .m_exporterFactory)}
+        public static func coachMarkFactory() -> Verify { return Verify(method: .m_coachMarkFactory)}
     }
 
     public struct Perform {
@@ -7099,6 +7605,9 @@ open class InjectionProviderMock: InjectionProvider, Mock {
         }
         public static func exporterFactory(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_exporterFactory, performs: perform)
+        }
+        public static func coachMarkFactory(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_coachMarkFactory, performs: perform)
         }
     }
 
@@ -14066,6 +14575,194 @@ open class UiUtilMock: UiUtil, Mock {
         }
         public static func sendUserNotification(withContent content: Parameter<UNMutableNotificationContent>, id: Parameter<String>, repeats: Parameter<Bool>, interval: Parameter<TimeInterval>, perform: @escaping (UNMutableNotificationContent, String, Bool, TimeInterval) -> Void) -> Perform {
             return Perform(method: .m_sendUserNotification__withContent_contentid_idrepeats_repeatsinterval_interval(`content`, `id`, `repeats`, `interval`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
+// MARK: - UserDefaultsUtil
+open class UserDefaultsUtilMock: UserDefaultsUtil, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    open func resetInstructionPrompts() {
+        addInvocation(.m_resetInstructionPrompts)
+		let perform = methodPerformValue(.m_resetInstructionPrompts) as? () -> Void
+		perform?()
+    }
+
+    open func setUserDefault<ValueType>(_ value: ValueType, forKey key: UserDefaultKey) {
+        addInvocation(.m_setUserDefault__valueforKey_key(Parameter<ValueType>.value(`value`).wrapAsGeneric(), Parameter<UserDefaultKey>.value(`key`)))
+		let perform = methodPerformValue(.m_setUserDefault__valueforKey_key(Parameter<ValueType>.value(`value`).wrapAsGeneric(), Parameter<UserDefaultKey>.value(`key`))) as? (ValueType, UserDefaultKey) -> Void
+		perform?(`value`, `key`)
+    }
+
+    open func bool(forKey key: UserDefaultKey) -> Bool {
+        addInvocation(.m_bool__forKey_key(Parameter<UserDefaultKey>.value(`key`)))
+		let perform = methodPerformValue(.m_bool__forKey_key(Parameter<UserDefaultKey>.value(`key`))) as? (UserDefaultKey) -> Void
+		perform?(`key`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_bool__forKey_key(Parameter<UserDefaultKey>.value(`key`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for bool(forKey key: UserDefaultKey). Use given")
+			Failure("Stub return value not specified for bool(forKey key: UserDefaultKey). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_resetInstructionPrompts
+        case m_setUserDefault__valueforKey_key(Parameter<GenericAttribute>, Parameter<UserDefaultKey>)
+        case m_bool__forKey_key(Parameter<UserDefaultKey>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_resetInstructionPrompts, .m_resetInstructionPrompts):
+                return true 
+            case (.m_setUserDefault__valueforKey_key(let lhsValue, let lhsKey), .m_setUserDefault__valueforKey_key(let rhsValue, let rhsKey)):
+                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsKey, rhs: rhsKey, with: matcher) else { return false } 
+                return true 
+            case (.m_bool__forKey_key(let lhsKey), .m_bool__forKey_key(let rhsKey)):
+                guard Parameter.compare(lhs: lhsKey, rhs: rhsKey, with: matcher) else { return false } 
+                return true 
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .m_resetInstructionPrompts: return 0
+            case let .m_setUserDefault__valueforKey_key(p0, p1): return p0.intValue + p1.intValue
+            case let .m_bool__forKey_key(p0): return p0.intValue
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func bool(forKey key: Parameter<UserDefaultKey>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_bool__forKey_key(`key`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func bool(forKey key: Parameter<UserDefaultKey>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_bool__forKey_key(`key`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func resetInstructionPrompts() -> Verify { return Verify(method: .m_resetInstructionPrompts)}
+        public static func setUserDefault<ValueType>(_ value: Parameter<ValueType>, forKey key: Parameter<UserDefaultKey>) -> Verify { return Verify(method: .m_setUserDefault__valueforKey_key(`value`.wrapAsGeneric(), `key`))}
+        public static func bool(forKey key: Parameter<UserDefaultKey>) -> Verify { return Verify(method: .m_bool__forKey_key(`key`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func resetInstructionPrompts(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resetInstructionPrompts, performs: perform)
+        }
+        public static func setUserDefault<ValueType>(_ value: Parameter<ValueType>, forKey key: Parameter<UserDefaultKey>, perform: @escaping (ValueType, UserDefaultKey) -> Void) -> Perform {
+            return Perform(method: .m_setUserDefault__valueforKey_key(`value`.wrapAsGeneric(), `key`), performs: perform)
+        }
+        public static func bool(forKey key: Parameter<UserDefaultKey>, perform: @escaping (UserDefaultKey) -> Void) -> Perform {
+            return Perform(method: .m_bool__forKey_key(`key`), performs: perform)
         }
     }
 

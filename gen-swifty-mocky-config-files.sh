@@ -16,6 +16,7 @@ addArgs() {
     echo "    - CSV" >> "$1"
     echo "    - SwiftDate" >> "$1"
     echo "    - UserNotifications" >> "$1"
+    echo "    - Instructions" >> "$1"
     echo "  excludedSwiftLintRules:" >> "$1"
     echo "    - force_cast" >> "$1"
     echo "    - function_body_length" >> "$1"

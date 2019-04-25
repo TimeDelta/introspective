@@ -9,10 +9,13 @@
 import Foundation
 import Instructions
 
-public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksControllerDataSource, CoachMarksControllerDelegate {
+//sourcery: AutoMockable
+public protocol CoachMarksDataSourceAndDelegate: CoachMarksControllerDataSource, CoachMarksControllerDelegate {}
+
+public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate {
 
 	private final let coachMarksInfo: [CoachMarkInfo]
-	private final let instructionsShownKey: String
+	private final let instructionsShownKey: UserDefaultKey
 	private final let cleanup: (() -> Void)?
 	private final let skipViewLayoutConstraints: [CoachMarkSkipViewConstraint]?
 
@@ -20,7 +23,7 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksControllerD
 	/// - Parameter cleanup: When the user either skips the remaining instructions or finishes the instructions, this will run.
 	public init(
 		_ coachMarksInfo: [CoachMarkInfo],
-		instructionsShownKey: String,
+		instructionsShownKey: UserDefaultKey,
 		cleanup: (() -> Void)? = nil,
 		skipViewLayoutConstraints: [CoachMarkSkipViewConstraint]? = nil)
 	{
@@ -52,11 +55,10 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksControllerD
 			runSetup()
 		}
 		if index == coachMarksInfo.count - 1 {
-			UserDefaults().set(true, forKey: instructionsShownKey)
+			DependencyInjector.util.userDefaults.setUserDefault(true, forKey: instructionsShownKey)
 		}
 		return coachMarksController.helper.makeCoachMark(for: coachMarksInfo[index].view)
 	}
-
 
 	public final func numberOfCoachMarks(for coachMarksController: CoachMarksController) -> Int {
 		return coachMarksInfo.count
@@ -73,10 +75,10 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksControllerD
 
 	public final func coachMarksController(_ coachMarksController: CoachMarksController, didEndShowingBySkipping skipped: Bool) {
 		if skipped {
-			UserDefaults().set(true, forKey: instructionsShownKey)
+			DependencyInjector.util.userDefaults.setUserDefault(true, forKey: instructionsShownKey)
 		}
-			if let cleanup = cleanup {
-				cleanup()
-			}
+		if let cleanup = cleanup {
+			cleanup()
+		}
 	}
 }

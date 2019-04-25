@@ -206,9 +206,9 @@ public final class EditMedicationViewController: UIViewController {
 
 			post(
 				notificationToSendOnAccept,
-				userInfo: info([
+				userInfo: [
 					.medication: medication as Any,
-				]))
+				])
 			navigationController?.popViewController(animated: false)
 		} catch {
 			log.error("Failed to save medication: %@", errorInfo(error))
