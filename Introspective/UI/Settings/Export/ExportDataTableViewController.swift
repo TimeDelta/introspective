@@ -22,17 +22,23 @@ public final class ExportDataTableViewController: UITableViewController {
 		MoodImpl.self,
 	]
 
-	// MARK: - Instance Variables
+	/// This is for testing purposes only
+	public static func resetExports() {
+		backgroundExportOrder = []
+		_backgroundExports = [:]
+		taskIds = [:]
+	}
 
-	private final var backgroundExportOrder = [UIBackgroundTaskIdentifier]()
-	private final let backgroundExportsAccessQueue = DispatchQueue(
+	// keep these as static so that they persist if the user goes back to settings screen
+	private static var backgroundExportOrder = [UIBackgroundTaskIdentifier]()
+	private static let backgroundExportsAccessQueue = DispatchQueue(
 		label: "backgroundExports access",
 		attributes: .concurrent)
-	private final var _backgroundExports = [UIBackgroundTaskIdentifier: Exporter]()
-	public final func backgroundExports<Type>(_ code: ([UIBackgroundTaskIdentifier: Exporter]) -> Type) -> Type {
+	private static var _backgroundExports = [UIBackgroundTaskIdentifier: Exporter]()
+	public static func backgroundExports<Type>(_ code: ([UIBackgroundTaskIdentifier: Exporter]) -> Type) -> Type {
 		var result: Type?
 		// for synchronization to provide thread safety
-		backgroundExportsAccessQueue.sync(flags: .barrier) {
+		Me.backgroundExportsAccessQueue.sync(flags: .barrier) {
 			result = code(_backgroundExports)
 		}
 		return result!
@@ -40,7 +46,10 @@ public final class ExportDataTableViewController: UITableViewController {
 	/// This is necessary because can't reference the local variable with
 	/// the returned id from its expiration handler otherwise compiler will
 	/// complain about referencing a variable in its definition.
-	private final var taskIds = [UUID: UIBackgroundTaskIdentifier]()
+	private static var taskIds = [UUID: UIBackgroundTaskIdentifier]()
+
+	// MARK: - Instance Variables
+
 	/// Leave this as an instance variable because making it local will cause
 	/// a bug with ARC that prevents the user from actually saving the file
 	private final var documentInteractionController: UIDocumentInteractionController!
@@ -58,7 +67,7 @@ public final class ExportDataTableViewController: UITableViewController {
 	// MARK: - Table View Data Source
 
 	public final override func numberOfSections(in tableView: UITableView) -> Int {
-		if backgroundExports({ $0.count }) > 0 {
+		if Me.backgroundExports({ $0.count }) > 0 {
 			return 2
 		}
 		return 1
@@ -73,7 +82,7 @@ public final class ExportDataTableViewController: UITableViewController {
 
 	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == Me.activeExportsSection {
-			return backgroundExports({ $0.count })
+			return Me.backgroundExports({ $0.count })
 		}
 		return Me.sampleTypes.count
 	}
@@ -85,8 +94,8 @@ public final class ExportDataTableViewController: UITableViewController {
 			return cell
 		}
 		let cell = tableView.dequeueReusableCell(withIdentifier: "activeExport", for: indexPath) as! ActiveExportTableViewCell
-		cell.backgroundTaskId = backgroundExportOrder[indexPath.row]
-		cell.exporter = backgroundExports({ $0[cell.backgroundTaskId] })
+		cell.backgroundTaskId = Me.backgroundExportOrder[indexPath.row]
+		cell.exporter = Me.backgroundExports({ $0[cell.backgroundTaskId] })
 		// need to do this or will double subscribe and receive event twice, causing app to crash
 		DependencyInjector.util.ui.stopObserving(self, name: .presentView, object: cell.exporter)
 		observe(selector: #selector(presentViewFrom), name: .presentView, object: cell.exporter)
@@ -131,12 +140,12 @@ public final class ExportDataTableViewController: UITableViewController {
 				return
 			}
 			let backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: taskIdRawValue)
-			if let exporter = backgroundExports({ $0[backgroundTaskId] }) {
+			if let exporter = Me.backgroundExports({ $0[backgroundTaskId] }) {
 				runExportInBackground(exporter)
-				backgroundExportsAccessQueue.sync(flags: .barrier) {
-					_backgroundExports[backgroundTaskId] = nil
+				Me.backgroundExportsAccessQueue.sync(flags: .barrier) {
+					Me._backgroundExports[backgroundTaskId] = nil
 				}
-				backgroundExportOrder.removeAll(where: { $0 == backgroundTaskId })
+				Me.backgroundExportOrder.removeAll(where: { $0 == backgroundTaskId })
 			} else {
 				log.error("Unable to retrieve exporter for background task: %d", backgroundTaskId.rawValue)
 			}
@@ -150,13 +159,13 @@ public final class ExportDataTableViewController: UITableViewController {
 				return
 			}
 			let backgroundTaskId = UIBackgroundTaskIdentifier(rawValue: taskIdRawValue)
-			if let exporter = backgroundExports({ $0[backgroundTaskId] }) {
+			if let exporter = Me.backgroundExports({ $0[backgroundTaskId] }) {
 				exporter.cancel()
 			}
-			backgroundExportsAccessQueue.sync(flags: .barrier) {
-				_backgroundExports[backgroundTaskId] = nil
+			Me.backgroundExportsAccessQueue.sync(flags: .barrier) {
+				Me._backgroundExports[backgroundTaskId] = nil
 			}
-			backgroundExportOrder.removeAll(where: { $0 == backgroundTaskId })
+			Me.backgroundExportOrder.removeAll(where: { $0 == backgroundTaskId })
 			tableView.reloadData()
 		}
 	}
@@ -169,7 +178,7 @@ public final class ExportDataTableViewController: UITableViewController {
 
 	@objc private final func shareExportFile(notification: Notification) {
 		if let backgroundTaskId: UIBackgroundTaskIdentifier = value(for: .backgroundTaskId, from: notification) {
-			guard let exporter = backgroundExports({ $0[backgroundTaskId] }) else {
+			guard let exporter = Me.backgroundExports({ $0[backgroundTaskId] }) else {
 				log.error("Did not find exporter associated with background task id")
 				return
 			}
@@ -190,7 +199,7 @@ public final class ExportDataTableViewController: UITableViewController {
 			let backgroundTask = UIApplication.shared.beginBackgroundTask(withName: taskDescription) { [weak self] in
 				self?.log.info("Background task to export %@ expired", dataType)
 				exporter.pause()
-				guard let taskId = self?.taskIds[uuid] else {
+				guard let taskId = Me.taskIds[uuid] else {
 					self?.log.error("Missing background task id. App might be killed by iOS due to inability to end background task.")
 					return
 				}
@@ -199,14 +208,14 @@ public final class ExportDataTableViewController: UITableViewController {
 			}
 
 			do {
-				if !self.backgroundExportOrder.contains(backgroundTask) {
-					self.backgroundExportOrder.append(backgroundTask)
+				if !Me.backgroundExportOrder.contains(backgroundTask) {
+					Me.backgroundExportOrder.append(backgroundTask)
 					DispatchQueue.main.async { self.tableView.reloadData() }
 				}
-				self.backgroundExportsAccessQueue.sync(flags: .barrier) {
-					self._backgroundExports[backgroundTask] = exporter
+				Me.backgroundExportsAccessQueue.sync(flags: .barrier) {
+					Me._backgroundExports[backgroundTask] = exporter
 				}
-				self.taskIds[uuid] = backgroundTask
+				Me.taskIds[uuid] = backgroundTask
 				if exporter.isPaused {
 					self.log.info("Continuing background export of %@", dataType)
 					try exporter.resume()
@@ -230,10 +239,10 @@ public final class ExportDataTableViewController: UITableViewController {
 	}
 
 	private final func removeExporterFor(_ backgroundTask: UIBackgroundTaskIdentifier) {
-		self.backgroundExportsAccessQueue.sync(flags: .barrier) {
-			self._backgroundExports[backgroundTask] = nil
+		Me.backgroundExportsAccessQueue.sync(flags: .barrier) {
+			Me._backgroundExports[backgroundTask] = nil
 		}
-		self.backgroundExportOrder.removeAll(where: { $0 == backgroundTask })
+		Me.backgroundExportOrder.removeAll(where: { $0 == backgroundTask })
 		self.endBackgroundTask(id: backgroundTask)
 		DispatchQueue.main.async { self.tableView.reloadData() }
 	}
@@ -284,7 +293,7 @@ public final class ExportDataTableViewController: UITableViewController {
 	}
 
 	private final func sendExtendTimeNotification(for backgroundTaskId: UIBackgroundTaskIdentifier) {
-		guard let exporter = backgroundExports({ $0[backgroundTaskId] }) else {
+		guard let exporter = Me.backgroundExports({ $0[backgroundTaskId] }) else {
 			log.error("Missing exporter for background task")
 			// just let it go because won't be able to resume the export anyways
 			return

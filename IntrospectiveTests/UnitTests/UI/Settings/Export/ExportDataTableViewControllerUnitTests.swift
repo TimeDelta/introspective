@@ -35,6 +35,11 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 		controller = (storyboard.instantiateViewController(withIdentifier: "exportData") as! ExportDataTableViewController)
 	}
 
+	final override func tearDown() {
+		ExportDataTableViewController.resetExports()
+		super.tearDown()
+	}
+
 	// MARK: - numberOfSections
 
 	func testGivenNoActiveExports_numberOfSections_returns1() {
@@ -145,7 +150,7 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 		setUpActiveExport()
 
 		// when
-		sleep(exportSleepTime)
+		sleep(exportSleepTime + 1)
 
 		// then
 		let expectedId = "FinishedExport"
@@ -244,8 +249,8 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 	}
 
 	private final func setUpBackgroundTaskIdForNotification() {
-		while controller.backgroundExports({ $0.count }) == 0 {}
-		let backgroundTaskId = controller.backgroundExports({ $0.first!.key })
+		while ExportDataTableViewController.backgroundExports({ $0.count }) == 0 {}
+		let backgroundTaskId = ExportDataTableViewController.backgroundExports({ $0.first!.key })
 		let taskIdString = String(backgroundTaskId.rawValue)
 		Given(mockUiUtil, .value(for: .value(.backgroundTaskId), from: .any, keyIsOptional: .any, willReturn: taskIdString))
 	}
