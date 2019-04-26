@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol AttributeRestriction: Attributed {
+public protocol AttributeRestriction: Attributed, BooleanExpression {
 
 	var restrictedAttribute: Attribute { get set }
 
@@ -16,6 +16,23 @@ public protocol AttributeRestriction: Attributed {
 
 	func samplePasses(_ sample: Sample) throws -> Bool
 	func equalTo(_ otherRestriction: AttributeRestriction) -> Bool
+}
+
+extension AttributeRestriction {
+
+	public func evaluate(_ parameters: [UserInfoKey: Any]?) throws -> Bool {
+		guard let sample = parameters?[.sample] as? Sample else {
+			throw GenericError("Missing sample parameter for evaluation of attribute restriction: \(String(describing: parameters))")
+		}
+		return try samplePasses(sample)
+	}
+
+	public func equalTo(_ otherExpression: BooleanExpression) -> Bool {
+		guard let restriction = otherExpression as? AttributeRestriction else {
+			return false
+		}
+		return equalTo(restriction)
+	}
 }
 
 public class AnyAttributeRestriction: AttributeRestriction {

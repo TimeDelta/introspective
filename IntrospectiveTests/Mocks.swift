@@ -2282,6 +2282,168 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
     }
 }
 
+// MARK: - BooleanExpressionParser
+open class BooleanExpressionParserMock: BooleanExpressionParser, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    open func parse(_ parts :[(type: ExpressionType, expression: BooleanExpression?)]) throws -> BooleanExpression {
+        addInvocation(.m_parse__parts(Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>.value(`parts`)))
+		let perform = methodPerformValue(.m_parse__parts(Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>.value(`parts`))) as? ([(type: ExpressionType, expression: BooleanExpression?)]) -> Void
+		perform?(`parts`)
+		var __value: BooleanExpression
+		do {
+		    __value = try methodReturnValue(.m_parse__parts(Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>.value(`parts`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for parse(_ parts :[(type: ExpressionType, expression: BooleanExpression?)]). Use given")
+			Failure("Stub return value not specified for parse(_ parts :[(type: ExpressionType, expression: BooleanExpression?)]). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_parse__parts(Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_parse__parts(let lhsParts), .m_parse__parts(let rhsParts)):
+                guard Parameter.compare(lhs: lhsParts, rhs: rhsParts, with: matcher) else { return false } 
+                return true 
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_parse__parts(p0): return p0.intValue
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func parse(_ parts: Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>, willReturn: BooleanExpression...) -> MethodStub {
+            return Given(method: .m_parse__parts(`parts`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func parse(_ parts: Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_parse__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func parse(_ parts: Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>, willProduce: (StubberThrows<BooleanExpression>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_parse__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (BooleanExpression).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func parse(_ parts: Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>) -> Verify { return Verify(method: .m_parse__parts(`parts`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func parse(_ parts: Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>, perform: @escaping ([(type: ExpressionType, expression: BooleanExpression?)]) -> Void) -> Perform {
+            return Perform(method: .m_parse__parts(`parts`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
 // MARK: - CalendarUtil
 open class CalendarUtilMock: CalendarUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
