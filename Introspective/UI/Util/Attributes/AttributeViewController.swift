@@ -111,7 +111,9 @@ final class AttributeViewController: UIViewController {
 	// MARK: - Received Notifications
 
 	@objc private final func valueChanged(notification: Notification) {
-		attributeValue = value(for: .attributeValue, from: notification)
+		if let newValue: Any? = value(for: .attributeValue, from: notification) {
+			attributeValue = newValue!
+		}
 		updateDisplay()
 	}
 

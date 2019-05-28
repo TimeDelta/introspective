@@ -13,7 +13,7 @@ import Hamcrest
 final class AttributeSelectAttributeUnitTests: UnitTest {
 
 	private typealias Me = AttributeSelectAttributeUnitTests
-	private static let possibleValues = [
+	private static let possibleValues: [Attribute] = [
 		TextAttribute(name: "text"),
 		DoubleAttribute(name: "double"),
 		IntegerAttribute(name: "integer")
@@ -184,144 +184,144 @@ final class AttributeSelectAttributeUnitTests: UnitTest {
 
 	// MARK: - valuesAreEqual()
 
-	func testGivenFirstValueNotAttribute_valuesAreEqual_returnsFalse() {
+	func testGivenFirstValueNotAttribute_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue = "abc"
 		let secondValue = Me.possibleValues[0]
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenSecondValueNotAttribute_valuesAreEqual_returnsFalse() {
+	func testGivenSecondValueNotAttribute_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue = Me.possibleValues[0]
 		let secondValue = "abc"
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenBothValuesAreNotAttributes_valuesAreEqual_returnsFalse() {
+	func testGivenBothValuesAreNotAttributes_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue = "abc"
 		let secondValue = "abc"
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenTwoEqualAttributes_valuesAreEqual_returnsTrue() {
+	func testGivenTwoEqualAttributes_valuesAreEqual_returnsTrue() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue = Me.possibleValues[0]
 		let secondValue = firstValue
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssert(areEqual)
 	}
 
-	func testGivenTwoDifferentAttributes_valuesAreEqual_returnsFalse() {
+	func testGivenTwoDifferentAttributes_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue = Me.possibleValues[0]
 		let secondValue = Me.possibleValues[1]
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenRequiredAttributeAndBothValuesNil_valuesAreEqual_returnsTrue() {
+	func testGivenRequiredAttributeAndBothValuesNil_valuesAreEqual_returnsTrue() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue: Any? = nil
 		let secondValue: Any? = nil
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssert(areEqual)
 	}
 
-	func testGivenRequiredAttributeAndOnlyFirstValueIsNil_valuesAreEqual_returnsFalse() {
+	func testGivenRequiredAttributeAndOnlyFirstValueIsNil_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue: Any? = nil
 		let secondValue = Me.possibleValues[0]
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenRequiredAttributeAndOnlySecondValueIsNil_valuesAreEqual_returnsFalse() {
+	func testGivenRequiredAttributeAndOnlySecondValueIsNil_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue = Me.possibleValues[0]
 		let secondValue: Any? = nil
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenOptionalAttributeAndBothValuesNil_valuesAreEqual_returnsTrue() {
+	func testGivenOptionalAttributeAndBothValuesNil_valuesAreEqual_returnsTrue() throws {
 		// given
 		useOptionalAttribute()
 		let firstValue: Any? = nil
 		let secondValue: Any? = nil
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssert(areEqual)
 	}
 
-	func testGivenOptionalAttributeAndOnlyFirstValueIsNil_valuesAreEqual_returnsFalse() {
+	func testGivenOptionalAttributeAndOnlyFirstValueIsNil_valuesAreEqual_returnsFalse() throws {
 		// given
 		useOptionalAttribute()
 		let firstValue: Any? = nil
 		let secondValue = Me.possibleValues[0]
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenOptionalAttributeAndOnlySecondValueIsNil_valuesAreEqual_returnsFalse() {
+	func testGivenOptionalAttributeAndOnlySecondValueIsNil_valuesAreEqual_returnsFalse() throws {
 		// given
 		useOptionalAttribute()
 		let firstValue = Me.possibleValues[0]
 		let secondValue: Any? = nil
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)

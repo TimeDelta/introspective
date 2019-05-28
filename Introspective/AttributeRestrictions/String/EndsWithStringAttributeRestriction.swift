@@ -71,6 +71,10 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 		return value.localizedLowercase.hasSuffix(suffix)
 	}
 
+	public override func copy() -> AttributeRestriction {
+		return EndsWithStringAttributeRestriction(restrictedAttribute: restrictedAttribute, suffix: suffix)
+	}
+
 	public final func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K ENDSWITH[cd] %@", restrictedAttribute.variableName!, suffix)
 	}

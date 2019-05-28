@@ -20,6 +20,7 @@ public final class AttributeSelectAttribute: TypedSelectOneAttribute<Attribute> 
 	{
 		super.init(
 			name: name,
+			typeName: "Attribute",
 			pluralName: pluralName,
 			description: description,
 			variableName: variableName,

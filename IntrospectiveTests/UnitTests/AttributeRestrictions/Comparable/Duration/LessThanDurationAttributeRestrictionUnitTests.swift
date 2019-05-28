@@ -165,6 +165,20 @@ final class LessThanDurationAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(samplePasses)
 	}
 
+	// MARK: - copy()
+
+	func test_copy_returnsCopy() {
+		// when
+		let copy = restriction.copy()
+
+		// then
+		guard let castedCopy = copy as? LessThanDurationAttributeRestriction else {
+			XCTFail("Wrong type returned")
+			return
+		}
+		assertThat(castedCopy, equals(restriction))
+	}
+
 	// MARK: - equalTo()
 
 	func testGivenSameObjectTwice_equalToOperator_returnsTrue() {

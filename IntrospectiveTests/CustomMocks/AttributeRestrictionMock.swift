@@ -93,6 +93,20 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
 		return __value
     }
 
+    open func copy() -> AttributeRestriction {
+        addInvocation(.m_copy_1)
+		let perform = methodPerformValue(.m_copy_1) as? () -> Void
+		perform?()
+		var __value: AttributeRestriction
+		do {
+		    __value = try methodReturnValue(.m_copy_1).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for copy(). Use given")
+			Failure("Stub return value not specified for copy(). Use given")
+		}
+		return __value
+    }
+
     open func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
         addInvocation(.m_equalTo__otherRestriction(Parameter<AttributeRestriction>.value(`otherRestriction`)))
 		let perform = methodPerformValue(.m_equalTo__otherRestriction(Parameter<AttributeRestriction>.value(`otherRestriction`))) as? (AttributeRestriction) -> Void
@@ -103,6 +117,50 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
 		} catch {
 			onFatalFailure("Stub return value not specified for equalTo(_ otherRestriction: AttributeRestriction). Use given")
 			Failure("Stub return value not specified for equalTo(_ otherRestriction: AttributeRestriction). Use given")
+		}
+		return __value
+    }
+
+    open func evaluate(_ parameters: [UserInfoKey: Any]?) throws -> Bool {
+        addInvocation(.m_evaluate__parameters(Parameter<[UserInfoKey: Any]?>.value(`parameters`)))
+		let perform = methodPerformValue(.m_evaluate__parameters(Parameter<[UserInfoKey: Any]?>.value(`parameters`))) as? ([UserInfoKey: Any]?) -> Void
+		perform?(`parameters`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_evaluate__parameters(Parameter<[UserInfoKey: Any]?>.value(`parameters`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for evaluate(_ parameters: [UserInfoKey: Any]?). Use given")
+			Failure("Stub return value not specified for evaluate(_ parameters: [UserInfoKey: Any]?). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func isValid() -> Bool {
+        addInvocation(.m_isValid)
+		let perform = methodPerformValue(.m_isValid) as? () -> Void
+		perform?()
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_isValid).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for isValid(). Use given")
+			Failure("Stub return value not specified for isValid(). Use given")
+		}
+		return __value
+    }
+
+    open func copy() -> BooleanExpression {
+        addInvocation(.m_copy_2)
+		let perform = methodPerformValue(.m_copy_2) as? () -> Void
+		perform?()
+		var __value: BooleanExpression
+		do {
+		    __value = try methodReturnValue(.m_copy_2).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for copy(). Use given")
+			Failure("Stub return value not specified for copy(). Use given")
 		}
 		return __value
     }
@@ -163,14 +221,50 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
 		return __value
     }
 
+    open func equalTo(_ other: BooleanExpression) -> Bool {
+        addInvocation(.m_equalTo__other(Parameter<BooleanExpression>.value(`other`)))
+		let perform = methodPerformValue(.m_equalTo__other(Parameter<BooleanExpression>.value(`other`))) as? (BooleanExpression) -> Void
+		perform?(`other`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_equalTo__other(Parameter<BooleanExpression>.value(`other`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for equalTo(_ other: BooleanExpression). Use given")
+			Failure("Stub return value not specified for equalTo(_ other: BooleanExpression). Use given")
+		}
+		return __value
+    }
+
+    open func evaluate() throws -> Bool {
+        addInvocation(.m_evaluate)
+		let perform = methodPerformValue(.m_evaluate) as? () -> Void
+		perform?()
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_evaluate).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for evaluate(). Use given")
+			Failure("Stub return value not specified for evaluate(). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_samplePasses__sample(Parameter<Sample>)
+        case m_copy_1
         case m_equalTo__otherRestriction(Parameter<AttributeRestriction>)
+        case m_evaluate__parameters(Parameter<[UserInfoKey: Any]?>)
+        case m_isValid
+        case m_copy_2
         case m_attributeValuesAreValid
         case m_value__of_attribute(Parameter<Attribute>)
         case m_set__attribute_attributeto_value(Parameter<Attribute>, Parameter<Any?>)
         case m_equalTo__otherAttributed(Parameter<Attributed>)
+        case m_equalTo__other(Parameter<BooleanExpression>)
+        case m_evaluate
         case p_restrictedAttribute_get
 		case p_restrictedAttribute_set(Parameter<Attribute>)
         case p_attributedName_get
@@ -182,8 +276,17 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
             case (.m_samplePasses__sample(let lhsSample), .m_samplePasses__sample(let rhsSample)):
                 guard Parameter.compare(lhs: lhsSample, rhs: rhsSample, with: matcher) else { return false } 
                 return true 
+            case (.m_copy_1, .m_copy_1):
+                return true 
             case (.m_equalTo__otherRestriction(let lhsOtherrestriction), .m_equalTo__otherRestriction(let rhsOtherrestriction)):
                 guard Parameter.compare(lhs: lhsOtherrestriction, rhs: rhsOtherrestriction, with: matcher) else { return false } 
+                return true 
+            case (.m_evaluate__parameters(let lhsParameters), .m_evaluate__parameters(let rhsParameters)):
+                guard Parameter.compare(lhs: lhsParameters, rhs: rhsParameters, with: matcher) else { return false } 
+                return true 
+            case (.m_isValid, .m_isValid):
+                return true 
+            case (.m_copy_2, .m_copy_2):
                 return true 
             case (.m_attributeValuesAreValid, .m_attributeValuesAreValid):
                 return true 
@@ -197,6 +300,11 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
             case (.m_equalTo__otherAttributed(let lhsOtherattributed), .m_equalTo__otherAttributed(let rhsOtherattributed)):
                 guard Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher) else { return false } 
                 return true 
+            case (.m_equalTo__other(let lhsOther), .m_equalTo__other(let rhsOther)):
+                guard Parameter.compare(lhs: lhsOther, rhs: rhsOther, with: matcher) else { return false } 
+                return true 
+            case (.m_evaluate, .m_evaluate):
+                return true 
             case (.p_restrictedAttribute_get,.p_restrictedAttribute_get): return true
 			case (.p_restrictedAttribute_set(let left),.p_restrictedAttribute_set(let right)): return Parameter<Attribute>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_attributedName_get,.p_attributedName_get): return true
@@ -209,11 +317,17 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
         func intValue() -> Int {
             switch self {
             case let .m_samplePasses__sample(p0): return p0.intValue
+            case .m_copy_1: return 0
             case let .m_equalTo__otherRestriction(p0): return p0.intValue
+            case let .m_evaluate__parameters(p0): return p0.intValue
+            case .m_isValid: return 0
+            case .m_copy_2: return 0
             case .m_attributeValuesAreValid: return 0
             case let .m_value__of_attribute(p0): return p0.intValue
             case let .m_set__attribute_attributeto_value(p0, p1): return p0.intValue + p1.intValue
             case let .m_equalTo__otherAttributed(p0): return p0.intValue
+            case let .m_equalTo__other(p0): return p0.intValue
+            case .m_evaluate: return 0
             case .p_restrictedAttribute_get: return 0
 			case .p_restrictedAttribute_set(let newValue): return newValue.intValue
             case .p_attributedName_get: return 0
@@ -247,8 +361,20 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
         public static func samplePasses(_ sample: Parameter<Sample>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_samplePasses__sample(`sample`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func copy(willReturn: AttributeRestriction...) -> MethodStub {
+            return Given(method: .m_copy_1, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func equalTo(_ otherRestriction: Parameter<AttributeRestriction>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherRestriction(`otherRestriction`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func evaluate(_ parameters: Parameter<[UserInfoKey: Any]?>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_evaluate__parameters(`parameters`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func isValid(willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_isValid, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func copy(willReturn: BooleanExpression...) -> MethodStub {
+            return Given(method: .m_copy_2, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func attributeValuesAreValid(willReturn: Bool...) -> MethodStub {
             return Given(method: .m_attributeValuesAreValid, products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -259,10 +385,37 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
         public static func equalTo(_ otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func equalTo(_ other: Parameter<BooleanExpression>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__other(`other`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func evaluate(willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_evaluate, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func copy(willProduce: (Stubber<AttributeRestriction>) -> Void) -> MethodStub {
+            let willReturn: [AttributeRestriction] = []
+			let given: Given = { return Given(method: .m_copy_1, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (AttributeRestriction).self)
+			willProduce(stubber)
+			return given
+        }
         public static func equalTo(_ otherRestriction: Parameter<AttributeRestriction>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherRestriction(`otherRestriction`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func isValid(willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_isValid, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func copy(willProduce: (Stubber<BooleanExpression>) -> Void) -> MethodStub {
+            let willReturn: [BooleanExpression] = []
+			let given: Given = { return Given(method: .m_copy_2, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (BooleanExpression).self)
 			willProduce(stubber)
 			return given
         }
@@ -280,12 +433,29 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func equalTo(_ other: Parameter<BooleanExpression>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_equalTo__other(`other`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
         public static func samplePasses(_ sample: Parameter<Sample>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_samplePasses__sample(`sample`), products: willThrow.map({ StubProduct.throw($0) }))
         }
         public static func samplePasses(_ sample: Parameter<Sample>, willProduce: (StubberThrows<Bool>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_samplePasses__sample(`sample`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func evaluate(_ parameters: Parameter<[UserInfoKey: Any]?>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_evaluate__parameters(`parameters`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func evaluate(_ parameters: Parameter<[UserInfoKey: Any]?>, willProduce: (StubberThrows<Bool>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_evaluate__parameters(`parameters`), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Bool).self)
 			willProduce(stubber)
 			return given
@@ -310,17 +480,33 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func evaluate(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_evaluate, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func evaluate(willProduce: (StubberThrows<Bool>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_evaluate, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct Verify {
         fileprivate var method: MethodType
 
         public static func samplePasses(_ sample: Parameter<Sample>) -> Verify { return Verify(method: .m_samplePasses__sample(`sample`))}
+        public static func copy(returning: (AttributeRestriction).Type) -> Verify { return Verify(method: .m_copy_1)}
         public static func equalTo(_ otherRestriction: Parameter<AttributeRestriction>) -> Verify { return Verify(method: .m_equalTo__otherRestriction(`otherRestriction`))}
+        public static func evaluate(_ parameters: Parameter<[UserInfoKey: Any]?>) -> Verify { return Verify(method: .m_evaluate__parameters(`parameters`))}
+        public static func isValid() -> Verify { return Verify(method: .m_isValid)}
+        public static func copy(returning: (BooleanExpression).Type) -> Verify { return Verify(method: .m_copy_2)}
         public static func attributeValuesAreValid() -> Verify { return Verify(method: .m_attributeValuesAreValid)}
         public static func value(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_value__of_attribute(`attribute`))}
         public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>) -> Verify { return Verify(method: .m_set__attribute_attributeto_value(`attribute`, `value`))}
         public static func equalTo(_ otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
+        public static func equalTo(_ other: Parameter<BooleanExpression>) -> Verify { return Verify(method: .m_equalTo__other(`other`))}
+        public static func evaluate() -> Verify { return Verify(method: .m_evaluate)}
         public static var restrictedAttribute: Verify { return Verify(method: .p_restrictedAttribute_get) }
 		public static func restrictedAttribute(set newValue: Parameter<Attribute>) -> Verify { return Verify(method: .p_restrictedAttribute_set(newValue)) }
         public static var attributedName: Verify { return Verify(method: .p_attributedName_get) }
@@ -335,8 +521,20 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
         public static func samplePasses(_ sample: Parameter<Sample>, perform: @escaping (Sample) -> Void) -> Perform {
             return Perform(method: .m_samplePasses__sample(`sample`), performs: perform)
         }
+        public static func copy(returning: (AttributeRestriction).Type, perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_copy_1, performs: perform)
+        }
         public static func equalTo(_ otherRestriction: Parameter<AttributeRestriction>, perform: @escaping (AttributeRestriction) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherRestriction(`otherRestriction`), performs: perform)
+        }
+        public static func evaluate(_ parameters: Parameter<[UserInfoKey: Any]?>, perform: @escaping ([UserInfoKey: Any]?) -> Void) -> Perform {
+            return Perform(method: .m_evaluate__parameters(`parameters`), performs: perform)
+        }
+        public static func isValid(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_isValid, performs: perform)
+        }
+        public static func copy(returning: (BooleanExpression).Type, perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_copy_2, performs: perform)
         }
         public static func attributeValuesAreValid(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_attributeValuesAreValid, performs: perform)
@@ -349,6 +547,12 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
         }
         public static func equalTo(_ otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherAttributed(`otherAttributed`), performs: perform)
+        }
+        public static func equalTo(_ other: Parameter<BooleanExpression>, perform: @escaping (BooleanExpression) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__other(`other`), performs: perform)
+        }
+        public static func evaluate(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_evaluate, performs: perform)
         }
     }
 

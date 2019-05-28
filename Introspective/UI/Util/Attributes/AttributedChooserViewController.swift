@@ -92,9 +92,11 @@ final class AttributedChooserViewController: UIViewController {
 		}) {
 			do {
 				let attribute = attributeViewControllers[controllerIndex].attribute!
-				try currentValue.set(attribute: attribute, to: value(for: .attributeValue, from: notification))
-				updateAcceptButtonStatus()
-				sendValueChangeNotification()
+				if let newValue: Any? = value(for: .attributeValue, from: notification) {
+					try currentValue.set(attribute: attribute, to: newValue!)
+					updateAcceptButtonStatus()
+					sendValueChangeNotification()
+				}
 			} catch {
 				log.error("Failed to set attribute value: %@", errorInfo(error))
 			}

@@ -20,4 +20,8 @@ public final class LessThanOrEqualToDurationAttributeRestriction: TypedLessThanO
 	public init(restrictedAttribute: Attribute, value: Duration = Duration(0)) {
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
+
+	public override func copy() -> AttributeRestriction {
+		return LessThanOrEqualToDurationAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
+	}
 }

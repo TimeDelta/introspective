@@ -8,7 +8,11 @@
 
 import Foundation
 
-public final class DurationAttribute: AttributeBase, ComparableAttribute {
+public final class DurationAttribute: AttributeBase<Duration>, ComparableAttribute {
+
+	public final override var typeName: String {
+		return "Duration"
+	}
 
 	// MARK: - Initializers
 
@@ -35,5 +39,9 @@ public final class DurationAttribute: AttributeBase, ComparableAttribute {
 			throw TypeMismatchError(attribute: self, wasA: type(of: value))
 		}
 		return castedValue.description
+	}
+
+	public final override func typedValuesAreEqual(_ first: Duration, _ second: Duration) -> Bool {
+		return first == second
 	}
 }

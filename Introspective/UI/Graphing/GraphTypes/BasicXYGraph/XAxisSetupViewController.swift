@@ -25,14 +25,12 @@ final class XAxisSetupViewController: UIViewController {
 
 	// MARK: - IBOutlets
 
-	@IBOutlet weak final var clearGroupingButton: UIButton!
-	@IBOutlet weak final var chooseGroupingButton: UIButton!
 	@IBOutlet weak final var attributePicker: UIPickerView!
 	@IBOutlet weak final var informationPicker: UIPickerView!
 
 	// MARK: - Instance Variables
 
-	public final var grouping: Calendar.Component? { didSet { updateDisplay() } }
+	public final var grouped: Bool = false { didSet { updateDisplay() } }
 	public final var attributes: [Attribute]!
 	public final var selectedAttribute: Attribute! {
 		didSet {
@@ -49,7 +47,7 @@ final class XAxisSetupViewController: UIViewController {
 		}
 	}
 	public final var selectedInformation: ExtraInformation!
-	public final var notificationToSendWhenFinished: Notification.Name!
+	public final var notificationToSendWhenFinished: NotificationName!
 	private final var finishedLoading = false
 
 	private final let log = Log()
@@ -77,31 +75,17 @@ final class XAxisSetupViewController: UIViewController {
 			informationPicker.selectRow(selectedInformationIndex, inComponent: 0, animated: false)
 		}
 
-		observe(selector: #selector(groupingChanged), name: Me.groupingChanged)
-
 		finishedLoading = true
 		updateDisplay()
 	}
 
 	// MARK: - Button Actions
 
-	@IBAction final func clearGroupingButtonPressed(_ sender: Any) {
-		grouping = nil
-	}
-
-	@IBAction final func chooseGroupingButtonPressed(_ sender: Any) {
-		let controller: ChooseCalendarComponentViewController = viewController(named: "chooseCalendarComponent", fromStoryboard: "Util")
-		controller.applicableComponents = [ .year, .quarter, .month, .weekOfMonth, .weekOfYear, .day, .hour, .minute, .second, .nanosecond]
-		controller.selectedComponent = grouping
-		controller.notificationToSendOnAccept = Me.groupingChanged
-		customPresentViewController(Me.presenter, viewController: controller, animated: false)
-	}
-
 	@IBAction final func acceptButtonPressed(_ sender: Any) {
-		if grouping == nil {
-			sendUngroupedAcceptedNotification()
-		} else {
+		if grouped {
 			sendGroupedAcceptedNotification()
+		} else {
+			sendUngroupedAcceptedNotification()
 		}
 		if let navigationController = navigationController {
 			navigationController.popViewController(animated: false)
@@ -115,12 +99,11 @@ final class XAxisSetupViewController: UIViewController {
 			log.error("Selected attribute not set")
 			return
 		}
-		NotificationCenter.default.post(
-			name: notificationToSendWhenFinished,
-			object: self,
-			userInfo: info([
+		syncPost(
+			notificationToSendWhenFinished,
+			userInfo: [
 				.attribute: selectedAttribute,
-			]))
+			])
 	}
 
 	private final func sendGroupedAcceptedNotification() {
@@ -128,21 +111,11 @@ final class XAxisSetupViewController: UIViewController {
 			log.error("Selected information not set")
 			return
 		}
-		NotificationCenter.default.post(
-			name: notificationToSendWhenFinished,
-			object: self,
-			userInfo: info([
-				.calendarComponent: grouping as Any,
+		syncPost(
+			notificationToSendWhenFinished,
+			userInfo: [
 				.information: selectedInformation,
-			]))
-	}
-
-	// MARK: - Received Notifications
-
-	@objc private final func groupingChanged(notification: Notification) {
-		if let grouping: Calendar.Component = value(for: .calendarComponent, from: notification) {
-			self.grouping = grouping
-		}
+			])
 	}
 
 	// MARK: - Helper Functions
@@ -158,16 +131,7 @@ final class XAxisSetupViewController: UIViewController {
 
 	private final func updateDisplay() {
 		if finishedLoading {
-			if grouping == nil {
-				chooseGroupingButton.setTitle("Choose grouping (optional)", for: .normal)
-				DependencyInjector.util.ui.setView(informationPicker, enabled: false, hidden: true)
-				DependencyInjector.util.ui.setButton(clearGroupingButton, enabled: false, hidden: true)
-			} else {
-				chooseGroupingButton.setTitle("Per " + grouping!.description.localizedLowercase, for: .normal)
-				DependencyInjector.util.ui.setView(informationPicker, enabled: true, hidden: false)
-				DependencyInjector.util.ui.setButton(clearGroupingButton, enabled: true, hidden: false)
-			}
-			chooseGroupingButton.accessibilityValue = chooseGroupingButton.currentTitle
+			DependencyInjector.util.ui.setView(informationPicker, enabled: grouped, hidden: !grouped)
 		}
 	}
 }

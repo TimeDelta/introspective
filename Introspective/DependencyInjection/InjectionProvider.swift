@@ -24,4 +24,5 @@ public protocol InjectionProvider {
 	func importerFactory() -> ImporterFactory
 	func exporterFactory() -> ExporterFactory
 	func coachMarkFactory() -> CoachMarkFactory
+	func booleanAlgebraFactory() -> BooleanAlgebraFactory
 }

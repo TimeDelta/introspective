@@ -200,7 +200,13 @@ public final class Duration: Equatable, Comparable {
 extension Duration: CustomStringConvertible {
 
 	public final var description: String {
-		var clockTime = interval.toClock()
+		var clockTime = interval.toIntervalString(options: {
+			$0.collapsesLargestUnit = false
+			$0.maximumUnitCount = 0
+			$0.unitsStyle = .positional
+			$0.locale = Locales.englishUnitedStatesComputer
+			$0.zeroFormattingBehavior = [.dropLeading]
+		})
 		if clockTime.count < 2 {
 			clockTime = "0:00:0" + clockTime
 		} else if clockTime.count < 3 {

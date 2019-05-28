@@ -14,7 +14,7 @@ import SwiftDate
 class CountInformationFunctionalTests: FunctionalTest {
 
 	private typealias Me = CountInformationFunctionalTests
-	private static let attribute = AttributeBase(name: "attribute")
+	private static let attribute = AttributeBase<Any>(name: "attribute")
 
 	private var information: CountInformation!
 

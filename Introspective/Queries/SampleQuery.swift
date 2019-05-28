@@ -63,6 +63,11 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 		subQuery?.query.stop()
 	}
 
+	public final func resetStoppedState() {
+		stopped = false
+		subQuery?.query.resetStoppedState()
+	}
+
 	final func queryDone(_ result: SampleQueryResult<SampleType>?, _ error: Error?) {
 		queryCallbackParameters = (result, error)
 		if subQuery == nil || subQueryCallbackParameters != nil {

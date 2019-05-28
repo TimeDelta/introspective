@@ -10,7 +10,15 @@ import UIKit
 import Presentr
 import Instructions
 
-public final class QueryViewController: UITableViewController {
+public protocol QueryViewController: UITableViewController {
+
+	var finishedButtonTitle: String! { get set }
+	var finishedButtonNotification: NotificationName! { get set }
+	var topmostSampleType: Sample.Type? { get set }
+	var initialQuery: Query? { get set }
+}
+
+public final class QueryViewControllerImpl: UITableViewController, QueryViewController {
 
 	// MARK: - Enums / Structs
 
@@ -55,11 +63,9 @@ public final class QueryViewController: UITableViewController {
 
 	// MARK: - Static Variables
 
-	private typealias Me = QueryViewController
+	private typealias Me = QueryViewControllerImpl
 	private static let acceptedAttributeRestrictionEdit = Notification.Name("acceptedAttributeRestrictionEdit")
 	private static let acceptedSubSampleTypeEdit = Notification.Name("acceptedSubSampleTypeEdit")
-	private static let acceptedSampleTypeEdit = Notification.Name("acceptedSampleTypeEdit")
-	private static let runQueryNotification = Notification.Name("runQuery")
 
 	private static let editSampleTypePresenter: Presentr = {
 		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
@@ -81,7 +87,7 @@ public final class QueryViewController: UITableViewController {
 
 	public final var finishedButtonTitle: String! = "Run"
 	/// Corresponding notification object will contain the built query as the object
-	public final var finishedButtonNotification: Notification.Name! = Me.runQueryNotification
+	public final var finishedButtonNotification: NotificationName! = .runQuery
 	/// This will prevent the topmost sample type from being changed by the user
 	public final var topmostSampleType: Sample.Type?
 	public final var initialQuery: Query?
@@ -144,9 +150,8 @@ public final class QueryViewController: UITableViewController {
 			partWasAdded()
 		}
 
-		observe(selector: #selector(saveEditedAttributeRestriction), name: Me.acceptedAttributeRestrictionEdit)
 		observe(selector: #selector(saveEditedSubQuerySampleType), name: Me.acceptedSubSampleTypeEdit)
-		observe(selector: #selector(saveEditedSampleType), name: Me.acceptedSampleTypeEdit)
+		observe(selector: #selector(saveEditedSampleType), name: .sampleTypeEdited)
 
 		addPartButton?.target = self
 		addPartButton?.action = #selector(addPartButtonWasPressed)
@@ -259,10 +264,10 @@ public final class QueryViewController: UITableViewController {
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.section == 0 && indexPath.row == 0 {
-			let controller: ChooseSampleTypeViewController = viewController(named: "chooseSampleType", fromStoryboard: "Util")
+			let controller = viewController(named: "chooseSampleType", fromStoryboard: "Util") as! ChooseSampleTypeViewController
 			editedIndex = 0
 			controller.selectedSampleType = parts[0].sampleTypeInfo!.sampleType
-			controller.notificationToSendOnAccept = Me.acceptedSampleTypeEdit
+			controller.notificationToSendOnAccept = .sampleTypeEdited
 			tableView.deselectRow(at: indexPath, animated: false)
 			customPresentViewController(Me.editSampleTypePresenter, viewController: controller, animated: false)
 		}
@@ -279,13 +284,12 @@ public final class QueryViewController: UITableViewController {
 			log.error("buildQuery() returned nil")
 			return
 		}
-		if finishedButtonNotification != Me.runQueryNotification {
-			NotificationCenter.default.post(
-				name: finishedButtonNotification,
-				object: self,
-				userInfo: info([
+		if finishedButtonNotification != .runQuery {
+			syncPost(
+				finishedButtonNotification,
+				userInfo: [
 					.query: query,
-				]))
+				])
 			navigationController?.popViewController(animated: false)
 		} else {
 			let controller: ResultsViewController = viewController(named: "results", fromStoryboard: "Results")
@@ -329,7 +333,7 @@ public final class QueryViewController: UITableViewController {
 			editedIndex = tableView.indexPath(for: source)!.row
 			controller.sampleType = bottomMostSampleTypeAbove(index: editedIndex)
 			controller.attributeRestriction = parts[editedIndex].attributeRestriction!
-			controller.notificationToSendWhenAccepted = Me.acceptedAttributeRestrictionEdit
+			observe(selector: #selector(saveEditedAttributeRestriction), name: .attributeRestrictionEdited)
 		} else if segue.destination is EditSubSampleTypeViewController {
 			let controller = (segue.destination as! EditSubSampleTypeViewController)
 			let source = (sender as! UITableViewCell)

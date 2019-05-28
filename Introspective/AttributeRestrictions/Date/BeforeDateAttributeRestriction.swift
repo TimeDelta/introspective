@@ -84,6 +84,10 @@ public final class BeforeDateAttributeRestriction: DateAttributeRestriction, Equ
 		return sampleDate.isBeforeDate(date, granularity: .second)
 	}
 
+	public override func copy() -> AttributeRestriction {
+		return BeforeDateAttributeRestriction(restrictedAttribute: restrictedAttribute, date: date)
+	}
+
 	// MARK: - Equality
 
 	public static func ==(lhs: BeforeDateAttributeRestriction, rhs: BeforeDateAttributeRestriction) -> Bool {

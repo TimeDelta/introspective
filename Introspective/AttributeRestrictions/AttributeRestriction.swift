@@ -15,6 +15,7 @@ public protocol AttributeRestriction: Attributed, BooleanExpression {
 	init(restrictedAttribute: Attribute)
 
 	func samplePasses(_ sample: Sample) throws -> Bool
+	func copy() -> AttributeRestriction
 	func equalTo(_ otherRestriction: AttributeRestriction) -> Bool
 }
 
@@ -27,11 +28,13 @@ extension AttributeRestriction {
 		return try samplePasses(sample)
 	}
 
-	public func equalTo(_ otherExpression: BooleanExpression) -> Bool {
-		guard let restriction = otherExpression as? AttributeRestriction else {
-			return false
-		}
-		return equalTo(restriction)
+	// from BooleanExpression
+	public func isValid() -> Bool {
+		return attributeValuesAreValid()
+	}
+
+	public func copy() -> BooleanExpression {
+		return copy()
 	}
 }
 
@@ -88,6 +91,22 @@ public class AnyAttributeRestriction: AttributeRestriction {
 	public func equalTo(_ otherRestriction: AttributeRestriction) -> Bool {
 		log.error("Must override equalTo()")
 		return type(of: self) == type(of: otherRestriction)
+	}
+
+	// Leave this here instead of as a default implementation on the protocol because there is
+	// a bug with the SwiftyMocky framework where the generated AttributeRestrictionMock causes
+	// a compiler error about a re-implementation of this method
+	public func equalTo(_ otherExpression: BooleanExpression) -> Bool {
+		guard let restriction = otherExpression as? AttributeRestriction else {
+			return false
+		}
+		return equalTo(restriction)
+	}
+
+	public func copy() -> AttributeRestriction {
+		let typeDescription = String(describing: type(of: self))
+		log.error("Did not override copy() for %@", typeDescription)
+		return self
 	}
 
 	/// Do not call this function. It is only meant to be used internally but cannot be declared as private because it must be overridable by subclasses

@@ -24,7 +24,8 @@ public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 	}
 
 	public final var value: Any?
-	fileprivate final let valueAttribute: Attribute
+	// need this to be visible for EqualToSelectOneAttributeRestriction.copy()
+	final let valueAttribute: Attribute
 	fileprivate final let areEqual: (Any?, Any?) throws -> Bool
 
 	fileprivate final let log = Log()
@@ -68,6 +69,10 @@ public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 		return try areEqual(actualValue, value)
 	}
 
+	public override func copy() -> AttributeRestriction {
+		return EqualToAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: valueAttribute, areEqual: areEqual)
+	}
+
 	// MARK: Equality
 
 	public static func ==(lhs: EqualToAttributeRestriction, rhs: EqualToAttributeRestriction) -> Bool {
@@ -101,9 +106,13 @@ public class EqualToAttributeRestriction: AnyAttributeRestriction, Equatable {
 
 public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualToAttributeRestriction {
 
+	/// for copy purposes
+	final private let typedAreEqual: (ValueType?, ValueType?) -> Bool
+
 	// MARK: Initializers
 
-	public init(restrictedAttribute: Attribute, value: ValueType, valueAttribute: Attribute) {
+	public init(restrictedAttribute: Attribute, value: ValueType?, valueAttribute: Attribute) {
+		typedAreEqual = { $0 == $1 }
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: valueAttribute) {
 			if !($0 is ValueType?) || !($1 is ValueType?) {
 				throw TypeMismatchError(attribute: restrictedAttribute, wasA: type(of: value))
@@ -116,10 +125,11 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 
 	public init(
 		restrictedAttribute: Attribute,
-		value: ValueType,
+		value: ValueType?,
 		valueAttribute: Attribute,
 		areEqual: @escaping (ValueType?, ValueType?) -> Bool)
 	{
+		typedAreEqual = areEqual
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: valueAttribute) {
 			if !($0 is ValueType?) || !($1 is ValueType?) {
 				throw TypeMismatchError(attribute: restrictedAttribute, wasA: type(of: value))
@@ -131,6 +141,7 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 	}
 
 	public required init(restrictedAttribute: Attribute) {
+		typedAreEqual = { _,_  in true }
 		super.init(restrictedAttribute: restrictedAttribute)
 		log.error("This should never be called because this is an abstract base class")
 	}
@@ -163,6 +174,14 @@ public class TypedEqualToAttributeRestrictionBase<ValueType: Equatable>: EqualTo
 			throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: sampleValue))
 		}
 		return try areEqual(castedValue, value)
+	}
+
+	public override func copy() -> AttributeRestriction {
+		return TypedEqualToAttributeRestrictionBase<ValueType>(
+			restrictedAttribute: restrictedAttribute,
+			value: value as? ValueType,
+			valueAttribute: valueAttribute,
+			areEqual: typedAreEqual)
 	}
 
 	// MARK: Equality

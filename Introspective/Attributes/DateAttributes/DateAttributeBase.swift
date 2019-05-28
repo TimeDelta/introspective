@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class DateAttributeBase: AttributeBase, DateAttribute {
+public class DateAttributeBase: AttributeBase<Date>, DateAttribute {
 
 	public final let includeTime: Bool
 	public final let earliestDate: Date?

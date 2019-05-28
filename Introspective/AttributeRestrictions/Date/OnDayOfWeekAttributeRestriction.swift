@@ -88,6 +88,10 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 		return DependencyInjector.util.calendar.date(sampleDate, isOnOneOf: daysOfWeek)
 	}
 
+	public override func copy() -> AttributeRestriction {
+		return OnDayOfWeekAttributeRestriction(restrictedAttribute: restrictedAttribute, daysOfWeek: daysOfWeek)
+	}
+
 	// MARK: - Equality
 
 	public static func ==(lhs: OnDayOfWeekAttributeRestriction, rhs: OnDayOfWeekAttributeRestriction) -> Bool {

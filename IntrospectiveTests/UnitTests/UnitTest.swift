@@ -29,12 +29,15 @@ class UnitTest: XCTestCase {
 	var mockTextNormalizationUtil: TextNormalizationUtilMock!
 	var mockUiUtil: UiUtilMock!
 	var mockUserDefaultsUtil: UserDefaultsUtilMock!
+	var mockNotificationUtil: NotificationUtilMock!
 
 	var mockSampleFactory: SampleFactoryMock!
 	var mockQueryFactory: QueryFactoryMock!
 	var mockImporterFactory: ImporterFactoryMock!
 	var mockExporterFactory: ExporterFactoryMock!
 	var mockCoachMarkFactory: CoachMarkFactoryMock!
+	var mockSampleGrouperFactory: SampleGrouperFactoryMock!
+	var mockBooleanAlgebraFactory: BooleanAlgebraFactoryMock!
 
 	override func setUp() {
 		super.setUp()
@@ -44,6 +47,7 @@ class UnitTest: XCTestCase {
 
 	override func tearDown() {
 		DependencyInjector.injectionProvider = ProductionInjectionProvider()
+		resetButtonDescriber()
 		super.tearDown()
 	}
 
@@ -67,6 +71,15 @@ class UnitTest: XCTestCase {
 		Matcher.default.register(Any.self) { return self.anyMatcher($0, $1) }
 		Matcher.default.register(Optional<Any>.self) { return self.anyMatcher($0, $1) }
 		Matcher.default.register(Exportable.Type.self) { $0 == $1 }
+		Matcher.default.register(UIViewController.Type.self)
+		Matcher.default.register(Sample.Type.self) { $0.name == $1.name }
+		Matcher.default.register(GroupDefinition.self) {
+			if let first = $0 as? GroupDefinitionMock, let second = $1 as? GroupDefinitionMock {
+				return first === second
+			}
+			return $0.equalTo($1)
+		}
+		Matcher.default.register(BooleanExpressionPart.self) { self.booleanExpressionPartsMatch($0, $1) }
 	}
 
 	private func resetMocks() {
@@ -93,6 +106,12 @@ class UnitTest: XCTestCase {
 
 		mockCoachMarkFactory = CoachMarkFactoryMock()
 		Given(injectionProvider, .coachMarkFactory(willReturn: mockCoachMarkFactory))
+
+		mockSampleGrouperFactory = SampleGrouperFactoryMock()
+		Given(injectionProvider, .sampleGrouperFactory(willReturn: mockSampleGrouperFactory))
+
+		mockBooleanAlgebraFactory = BooleanAlgebraFactoryMock()
+		Given(injectionProvider, .booleanAlgebraFactory(willReturn: mockBooleanAlgebraFactory))
 
 		utilFactory = UtilFactory()
 		Given(injectionProvider, .utilFactory(willReturn: utilFactory))
@@ -129,12 +148,16 @@ class UnitTest: XCTestCase {
 
 		mockUserDefaultsUtil = UserDefaultsUtilMock()
 		utilFactory.userDefaults = mockUserDefaultsUtil
+
+		mockNotificationUtil = NotificationUtilMock()
+		utilFactory.notification = mockNotificationUtil
 	}
 
 	private final func anyMatcher(_ one: Any?, _ two: Any?) -> Bool {
 		if type(of: one) != type(of: two) && (isOptional(one) == isOptional(two)) {
 			return false
 		}
+		if (one == nil && two == nil) { return true }
 		if let attribute1 = one as? Attribute, let attribute2 = two as? Attribute {
 			return attribute1.equalTo(attribute2)
 		}
@@ -176,5 +199,18 @@ class UnitTest: XCTestCase {
 			return cell1 == cell2
 		}
 		fatalError("Missing equality test for Any Matcher")
+	}
+
+	private final func booleanExpressionPartsMatch(_ first: BooleanExpressionPart, _ second: BooleanExpressionPart) -> Bool {
+		if first.type != second.type {
+			return false
+		}
+		if first.expression == nil && second.expression == nil {
+			return true
+		}
+		guard let expression1 = first.expression, let expression2 = second.expression else {
+			return false
+		}
+		return expression1.equalTo(expression2)
 	}
 }

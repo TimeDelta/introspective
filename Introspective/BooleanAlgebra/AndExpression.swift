@@ -13,7 +13,8 @@ public final class AndExpression: BooleanExpression {
 	// MARK: - Display Information
 
 	public final var description: String {
-		return expression1.description + " AND " + expression2.description
+		guard let left = expression1, let right = expression2 else { return "AND" }
+		return left.description + " AND " + right.description
 	}
 
 	// MARK: - Instance Variables
@@ -38,8 +39,19 @@ public final class AndExpression: BooleanExpression {
 		return expression1Value && expression2Value
 	}
 
+	public final func copy() -> BooleanExpression {
+		return AndExpression(expression1.copy(), expression2.copy())
+	}
+
 	public final func equalTo(_ other: BooleanExpression) -> Bool {
 		guard let otherAnd = other as? AndExpression else { return false }
 		return expression1.equalTo(otherAnd.expression1) && expression2.equalTo(otherAnd.expression2)
+	}
+
+	public final func isValid() -> Bool {
+		guard let left = expression1, let right = expression2 else {
+			return false
+		}
+		return left.isValid() && right.isValid()
 	}
 }

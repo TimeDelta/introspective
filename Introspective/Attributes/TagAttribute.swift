@@ -22,6 +22,7 @@ public final class TagAttribute: TypedSelectOneAttribute<Tag> {
 	{
 		super.init(
 			name: name,
+			typeName: "Tag",
 			pluralName: pluralName,
 			description: description,
 			variableName: variableName,

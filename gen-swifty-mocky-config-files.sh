@@ -25,7 +25,6 @@ addArgs() {
 }
 
 EXCLUSION_PATTERN="Delegate|\
-ViewController|\
 Mock|\
 DateExtension"
 

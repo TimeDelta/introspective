@@ -40,10 +40,10 @@ public final class NotificationUtilImpl: NotificationUtil {
 	public final func post(_ name: NotificationName, object: Any?, userInfo: [UserInfoKey: Any]?, qos: DispatchQoS.QoSClass?) {
 		if let qos = qos {
 			DispatchQueue.global(qos: qos).async {
-				NotificationCenter.default.post(name: name.toName(), object: object, userInfo: self.info(userInfo))
+				NotificationCenter.default.post(name: name.toName(), object: object, userInfo: userInfo)
 			}
 		} else {
-			NotificationCenter.default.post(name: name.toName(), object: object, userInfo: self.info(userInfo))
+			NotificationCenter.default.post(name: name.toName(), object: object, userInfo: userInfo)
 		}
 	}
 

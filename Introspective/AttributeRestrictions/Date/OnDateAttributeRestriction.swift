@@ -81,6 +81,10 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 		return DependencyInjector.util.calendar.date(sampleDate, occursOnSame: .day, as: date)
 	}
 
+	public override func copy() -> AttributeRestriction {
+		return OnDateAttributeRestriction(restrictedAttribute: restrictedAttribute, date: date)
+	}
+
 	// MARK: - Equality
 
 	public static func ==(lhs: OnDateAttributeRestriction, rhs: OnDateAttributeRestriction) -> Bool {

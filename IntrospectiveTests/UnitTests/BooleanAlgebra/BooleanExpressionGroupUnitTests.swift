@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Hamcrest
 @testable import Introspective
 
 final class BooleanExpressionGroupUnitTests: UnitTest {
@@ -43,5 +44,23 @@ final class BooleanExpressionGroupUnitTests: UnitTest {
 
 		// then
 		XCTAssertFalse(evaluation)
+	}
+
+	// MARK: - copy()
+
+	func test_copy_returnsCopy() {
+		// given
+		let expectedSubExpression = ExpressionStub("copy")
+		subExpression.copyOf = expectedSubExpression
+
+		// when
+		let copy = group.copy()
+
+		// then
+		guard let castedCopy = copy as? BooleanExpressionGroup else {
+			XCTFail("Wrong type returned")
+			return
+		}
+		assertThat(castedCopy.subExpression, equals(expectedSubExpression))
 	}
 }

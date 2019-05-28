@@ -68,6 +68,20 @@ final class NotEmptyStringAttributeRestrictionUnitTests: UnitTest {
 		}
 	}
 
+	// MARK: - copy()
+
+	func test_copy_returnsCopy() {
+		// when
+		let copy = restriction.copy()
+
+		// then
+		guard let castedCopy = copy as? NotEmptyStringAttributeRestriction else {
+			XCTFail("Wrong type returned")
+			return
+		}
+		assertThat(castedCopy, equals(restriction))
+	}
+
 	// MARK: - value(of:)
 
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {

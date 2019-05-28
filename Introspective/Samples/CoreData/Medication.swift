@@ -28,6 +28,7 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 	public static let notes = TextAttribute(name: "Notes", variableName: "notes", optional: true)
 	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
 		name: "Source",
+		typeName: "Medication Source",
 		pluralName: "Sources",
 		possibleValues: Sources.MedicationSourceNum.values.map{ $0.description },
 		possibleValueToString: { $0 })

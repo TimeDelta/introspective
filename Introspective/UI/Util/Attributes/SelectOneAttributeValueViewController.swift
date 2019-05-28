@@ -27,11 +27,11 @@ public final class SelectOneAttributeValueViewController: AttributeValueTypeView
 		selectOnePicker.delegate = self
 		selectOnePicker.dataSource = self
 
-		if currentValue != nil {
-			let index = selectOneAttribute.indexOf(possibleValue: currentValue!)
-			if index != nil {
-				selectOnePicker.selectRow(index!, inComponent: 0, animated: false)
-			}
+		if let index = selectOneAttribute.indexOf(possibleValue: currentValue) {
+			selectOnePicker.selectRow(index, inComponent: 0, animated: false)
+		} else {
+			log.debug("currentValue not set for select one attribute on load")
+			currentValue = selectOneAttribute.possibleValues[0]
 		}
 	}
 }
@@ -66,6 +66,10 @@ extension SelectOneAttributeValueViewController: UIPickerViewDelegate {
 	}
 
 	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+		guard row >= 0 && row < selectOneAttribute.possibleValues.count else {
+			log.error("Selected value out of index range for possible values: %d", row)
+			return
+		}
 		currentValue = selectOneAttribute.possibleValues[row]
 	}
 }

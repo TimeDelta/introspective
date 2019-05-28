@@ -108,6 +108,13 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 			minDate.isBeforeDate(sampleDate, orEqual: true, granularity: .nanosecond)
 	}
 
+	public override func copy() -> AttributeRestriction {
+		return InThePastXTimeUnitsDateAttributeRestriction(
+			restrictedAttribute: restrictedAttribute,
+			numberOfTimeUnits,
+			timeUnit)
+	}
+
 	// MARK: - Equality
 
 	public static func ==(lhs: InThePastXTimeUnitsDateAttributeRestriction, rhs: InThePastXTimeUnitsDateAttributeRestriction) -> Bool {

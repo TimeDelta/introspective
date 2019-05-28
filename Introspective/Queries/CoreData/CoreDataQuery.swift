@@ -11,7 +11,7 @@ import CoreData
 
 public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: SampleQueryImpl<SampleType> {
 
-	final override func run() { 
+	final override func run() {
 		let fetchRequest: NSFetchRequest<SampleType> = NSFetchRequest<SampleType>(entityName: SampleType.entityName)
 		fetchRequest.predicate = getPredicate()
 

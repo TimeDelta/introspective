@@ -20,4 +20,8 @@ public final class LessThanOrEqualToFrequencyAttributeRestriction: TypedLessThan
 	public init(restrictedAttribute: Attribute, value: Frequency = Frequency(0, .day)!) {
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
+
+	public override func copy() -> AttributeRestriction {
+		return LessThanOrEqualToFrequencyAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
+	}
 }

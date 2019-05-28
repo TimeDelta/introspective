@@ -22,13 +22,15 @@ public final class SettingsTableViewController: UITableViewController {
 				"general",
 				"activitySettings",
 				"moodSettings",
-			]),
+			]
+		),
 		(
 			section: "Other",
 			rows: [
 				"export",
 				resetInstructionPromptsCellIdentifier,
-			]),
+			]
+		),
 	]
 
 	// MARK: - Member Variables
@@ -59,6 +61,7 @@ public final class SettingsTableViewController: UITableViewController {
 		if testing && section == 0 {
 			return 2
 		}
+		let section = testing ? section - 1 : section
 		return Me.identifiers[section].rows.count
 	}
 
@@ -66,6 +69,7 @@ public final class SettingsTableViewController: UITableViewController {
 		if testing && section == 0 {
 			return "Testing Only"
 		}
+		let section = testing ? section - 1 : section
 		return Me.identifiers[section].section
 	}
 
@@ -116,6 +120,7 @@ public final class SettingsTableViewController: UITableViewController {
 	}
 
 	private final func identifier(for indexPath: IndexPath) -> String {
-		return Me.identifiers[indexPath.section].rows[indexPath.row]
+		let section = testing ? indexPath.section - 1 : indexPath.section
+		return Me.identifiers[section].rows[indexPath.row]
 	}
 }

@@ -69,6 +69,10 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 		return value.contains(substring)
 	}
 
+	public override func copy() -> AttributeRestriction {
+		return ContainsStringAttributeRestriction(restrictedAttribute: restrictedAttribute, substring: substring)
+	}
+
 	public final func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K CONTAINS[cd] %@", restrictedAttribute.variableName!, substring)
 	}

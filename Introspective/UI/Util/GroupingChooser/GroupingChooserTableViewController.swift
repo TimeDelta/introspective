@@ -8,83 +8,230 @@
 
 import UIKit
 
-class GroupingChooserTableViewController: UITableViewController {
+public protocol GroupingChooserTableViewController: UITableViewController {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	var sampleType: Sample.Type! { get set }
+	var currentGrouper: SampleGrouper! { get set }
+	var limitToAttributes: [Attribute]? { get set }
+	var allowUserToChangeGrouperType: Bool { get set }
+	var notificationToSendOnAccept: NotificationName { get set }
+}
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+public final class GroupingChooserTableViewControllerImpl: UITableViewController, GroupingChooserTableViewController {
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
-    }
+	// MARK: - IBOutlets
 
-    // MARK: - Table view data source
+	@IBOutlet weak final var addButton: UIBarButtonItem!
+	@IBOutlet weak final var doneButton: UIBarButtonItem!
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
+	// MARK: - Instance Variables
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
-    }
+	public final var sampleType: Sample.Type!
+	public final var currentGrouper: SampleGrouper!
+	/// Limit the groupers to using these attributes only
+	public final var limitToAttributes: [Attribute]?
+	public final var allowUserToChangeGrouperType = true
+	public final var notificationToSendOnAccept: NotificationName = .grouperEdited
 
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+	private final var availableGroupers: [SampleGrouper]!
+	private final var editedGroupDefinitionIndex: Int!
 
-        // Configure the cell...
+	private final let log = Log()
 
-        return cell
-    }
-    */
+	// MARK: - UIViewController Overrides
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
+	public final override func viewDidLoad() {
+		super.viewDidLoad()
 
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
+		if let limitToAttributes = limitToAttributes {
+			availableGroupers = DependencyInjector.sampleGrouper.groupersFor(attributes: limitToAttributes)
+		} else {
+			availableGroupers = DependencyInjector.sampleGrouper.groupersFor(sampleType: sampleType)
+		}
+		guard availableGroupers.count > 0 else {
+			showNoAvailableGroupersError()
+			popFromNavigationController()
+			return
+		}
 
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+		if currentGrouper == nil {
+			currentGrouper = availableGroupers[0]
+		}
 
-    }
-    */
+		updateDoneButtonState()
+		updateNavBarButtons()
 
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
+		observe(selector: #selector(grouperChanged), name: .grouperAttributesSet)
+		observe(selector: #selector(groupDefinitionEdited), name: .groupDefinitionEdited)
 
-    /*
-    // MARK: - Navigation
+		tableView.rowHeight = UITableView.automaticDimension
+		tableView.estimatedRowHeight = 44
+	}
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
+	// MARK: - Table View Data Source
 
+	public final override func numberOfSections(in tableView: UITableView) -> Int {
+		if currentGrouper is AdvancedSampleGrouper {
+			return 2
+		}
+		return 1
+	}
+
+	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		if section == 0 {
+			return 1
+		}
+		guard let advancedGrouper = currentGrouper as? AdvancedSampleGrouper else {
+			log.error(
+				"Asked for number of rows in section %d but current grouper is not advanced grouper: %s",
+				section,
+				String(describing: type(of: currentGrouper)))
+			return 0
+		}
+		return advancedGrouper.groupDefinitions.count
+	}
+
+	public final override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		if section == 0 { return nil }
+		if section == 1 { return "Group Definitions" }
+		log.error("Unknown section number: %d", section)
+		return nil
+	}
+
+	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		if indexPath.section == 0 {
+			let cell = tableView.dequeueReusableCell(withIdentifier: "basic", for: indexPath)
+			if currentGrouper is AdvancedSampleGrouper {
+				cell.textLabel?.text = currentGrouper.attributedName
+			} else {
+				cell.textLabel?.text = currentGrouper.description
+			}
+			return cell
+		}
+
+		guard let advancedGrouper = currentGrouper as? AdvancedSampleGrouper else {
+			log.error(
+				"Current grouper is not advanced grouper: %s",
+				String(describing: type(of: currentGrouper)))
+			return UITableViewCell()
+		}
+
+		let cell = tableView.dequeueReusableCell(withIdentifier: "groupDefinition", for: indexPath) as! GroupDefinitionTableViewCell
+		cell.groupDefinition = advancedGrouper.groupDefinitions[indexPath.row]
+		return cell
+	}
+
+	// MARK: - Table View Delegate
+
+	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		if indexPath.section == 0 {
+			showSelectGrouperView()
+		} else {
+			showGroupDefinitionView(for: indexPath)
+		}
+	}
+
+	public final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+		guard indexPath.section == 1 else { return [] }
+		guard let advancedGrouper = currentGrouper as? AdvancedSampleGrouper else { return nil }
+		let delete = UITableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
+			advancedGrouper.groupDefinitions.remove(at: indexPath.row)
+			self.updateDoneButtonState()
+			tableView.deleteRows(at: [indexPath], with: .fade)
+			tableView.reloadData()
+		}
+		return [delete]
+	}
+
+	// MARK: - Button Actions
+
+	@IBAction final func doneButtonPressed(_ sender: Any) {
+		syncPost(notificationToSendOnAccept, userInfo: [.sampleGrouper: currentGrouper])
+		popFromNavigationController()
+	}
+
+	@IBAction final func addButtonPressed(_ sender: Any) {
+		guard let advancedGrouper = currentGrouper as? AdvancedSampleGrouper else {
+			log.error("Add button pressed when current grouper not AdvancedSampleGrouper")
+			return
+		}
+		let groupDefinition = DependencyInjector.sampleGrouper.groupDefinition(sampleType)
+		advancedGrouper.groupDefinitions.append(groupDefinition)
+		updateDoneButtonState()
+		tableView.reloadData()
+	}
+
+	// MARK: - Received Notifications
+
+	@objc private final func grouperChanged(notification: Notification) {
+		if let grouper: SampleGrouper? = value(for: .sampleGrouper, from: notification) {
+			currentGrouper = grouper
+			updateDoneButtonState()
+			updateNavBarButtons()
+			tableView.reloadData()
+		}
+		popFromNavigationController()
+	}
+
+	@objc private final func groupDefinitionEdited(notification: Notification) {
+		guard let advancedGrouper = currentGrouper as? AdvancedSampleGrouper else {
+			log.error("Received groupDefinitionEdited notification when grouper was not AdvancedSampleGrouper")
+			return
+		}
+		if let newDefinition: GroupDefinition = value(for: .groupDefinition, from: notification) {
+			advancedGrouper.groupDefinitions[editedGroupDefinitionIndex] = newDefinition
+			tableView.reloadData()
+		}
+		updateDoneButtonState()
+	}
+
+	// MARK: - Helper Functions
+
+	private final func showNoAvailableGroupersError() {
+		let alert = UIAlertController(title: "Unable to group \(sampleType.name)", message: nil, preferredStyle: .alert)
+		alert.addAction(UIAlertAction(title: "Ok", style: .cancel) { _ in
+			self.popFromNavigationController()
+		})
+		presentView(alert)
+	}
+
+	private final func showSelectGrouperView() {
+		let controller = viewController(named: "editGrouper") as! EditGrouperViewController
+		controller.currentGrouper = currentGrouper
+		if allowUserToChangeGrouperType {
+			controller.availableGroupers = availableGroupers
+		} else {
+			controller.availableGroupers = [currentGrouper]
+		}
+		controller.notificationToSendWhenAccepted = .grouperAttributesSet
+		pushToNavigationController(controller)
+	}
+
+	private final func showGroupDefinitionView(for indexPath: IndexPath) {
+		let controller: GroupDefinitionTableViewController = viewController(named: "groupDefinitionView")
+		guard let advancedGrouper = currentGrouper as? AdvancedSampleGrouper else {
+			log.error("Unable to cast currentGrouper as AdvancedSampleGrouper")
+			showError(title: "You found a bug. Please report it.")
+			return
+		}
+		controller.groupDefinition = advancedGrouper.groupDefinitions[indexPath.row]
+		editedGroupDefinitionIndex = indexPath.row
+		pushToNavigationController(controller)
+	}
+
+	private final func updateDoneButtonState() {
+		if currentGrouper is AdvancedSampleGrouper {
+			doneButton.isEnabled = (currentGrouper as! AdvancedSampleGrouper).isValid()
+		} else {
+			doneButton.isEnabled = currentGrouper.attributeValuesAreValid()
+		}
+	}
+
+	private final func updateNavBarButtons() {
+		var buttons: [UIBarButtonItem] = [doneButton]
+		if currentGrouper is AdvancedSampleGrouper {
+			buttons.append(addButton)
+		}
+		navigationItem.setRightBarButtonItems(buttons, animated: false)
+	}
 }

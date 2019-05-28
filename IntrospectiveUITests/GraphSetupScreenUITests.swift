@@ -32,7 +32,9 @@ final class GraphSetupScreenUITests: UITest {
 		let aggregationMethod = "average"
 		goToSingleDataTypeGraphSetupScreen()
 		setPicker(to: "Blood Pressure")
-		setSingleDataTypeXAxis(attribute: xAxisAttribute, aggregation: (timeUnit: aggregationTimeUnit, method: aggregationMethod))
+		setGrouping(groupingType: "series", timeUnit: aggregationTimeUnit)
+		setGrouping(groupingType: "point", timeUnit: aggregationTimeUnit)
+		setSingleDataTypeXAxis(attribute: xAxisAttribute, groupResolutionMethod: aggregationMethod)
 
 		// when
 		set(graphType: graphType)
@@ -40,7 +42,9 @@ final class GraphSetupScreenUITests: UITest {
 		// then
 		XCTAssertEqual(
 			app.buttons["choose x-axis information button"].value as? String,
-			"X-Axis: " + aggregationMethod + " " + xAxisAttribute + " per " + aggregationTimeUnit)
+			"X-Axis: " + aggregationMethod + " " + xAxisAttribute)
+		XCTAssertEqual(seriesGroupingButton().value as? String, "Series grouping chosen")
+		XCTAssertEqual(pointGroupingButton().value as? String, "Point grouping chosen")
 	}
 
 	func testChangingGraphTypeFromScatterToBar_doesNotResetSelections() {
@@ -52,7 +56,9 @@ final class GraphSetupScreenUITests: UITest {
 		let aggregationMethod = "average"
 		goToSingleDataTypeGraphSetupScreen()
 		setPicker(to: "Blood Pressure")
-		setSingleDataTypeXAxis(attribute: xAxisAttribute, aggregation: (timeUnit: aggregationTimeUnit, method: aggregationMethod))
+		setGrouping(groupingType: "series", timeUnit: aggregationTimeUnit)
+		setGrouping(groupingType: "point", timeUnit: aggregationTimeUnit)
+		setSingleDataTypeXAxis(attribute: xAxisAttribute, groupResolutionMethod: aggregationMethod)
 		set(graphType: originalGraphType)
 
 		// when
@@ -61,7 +67,9 @@ final class GraphSetupScreenUITests: UITest {
 		// then
 		XCTAssertEqual(
 			app.buttons["choose x-axis information button"].value as? String,
-			"X-Axis: " + aggregationMethod + " " + xAxisAttribute + " per " + aggregationTimeUnit)
+			"X-Axis: " + aggregationMethod + " " + xAxisAttribute)
+		XCTAssertEqual(seriesGroupingButton().value as? String, "Series grouping chosen")
+		XCTAssertEqual(pointGroupingButton().value as? String, "Point grouping chosen")
 	}
 
 	// MARK: - Single Data Type
@@ -106,19 +114,19 @@ final class GraphSetupScreenUITests: UITest {
 		let aggregationTimeUnit = "week"
 		let aggregationMethod = "average"
 		let originalXAxisAttribute = "systolic blood pressure"
-		let originalAggregationTimeUnit = "day"
-		let originalAggregationMethod = "minimum"
 		goToSingleDataTypeGraphSetupScreen()
 		setPicker(to: "Blood Pressure")
-		setSingleDataTypeXAxis(attribute: originalXAxisAttribute, aggregation: (timeUnit: originalAggregationTimeUnit, method: originalAggregationMethod))
+		setGrouping(groupingType: "series", timeUnit: aggregationTimeUnit)
+		setGrouping(groupingType: "point", timeUnit: aggregationTimeUnit)
+		setSingleDataTypeXAxis(attribute: originalXAxisAttribute, groupResolutionMethod: aggregationMethod)
 
 		// when
-		setSingleDataTypeXAxis(attribute: xAxisAttribute, aggregation: (timeUnit: aggregationTimeUnit, method: aggregationMethod))
+		setSingleDataTypeXAxis(attribute: xAxisAttribute)
 
 		// then
 		XCTAssertEqual(
 			app.buttons["choose x-axis information button"].value as? String,
-			"X-Axis: " + aggregationMethod + " " + xAxisAttribute + " per " + aggregationTimeUnit)
+			"X-Axis: " + aggregationMethod + " " + xAxisAttribute)
 	}
 
 	func testEditingYAxisInformationWithGroupingOnSingleDataTypeScreen_correctlyUpdatesYAxisInformationButtonTitle() {
@@ -136,7 +144,9 @@ final class GraphSetupScreenUITests: UITest {
 		]
 		goToSingleDataTypeGraphSetupScreen()
 		setPicker(to: "Blood Pressure")
-		setSingleDataTypeXAxis(attribute: xAxisAttribute, aggregation: (timeUnit: aggregationTimeUnit, method: xAxisAggregationMethod))
+		setGrouping(groupingType: "series", timeUnit: aggregationTimeUnit)
+		setGrouping(groupingType: "point", timeUnit: aggregationTimeUnit)
+		setSingleDataTypeXAxis(attribute: xAxisAttribute, groupResolutionMethod: xAxisAggregationMethod)
 		setYAxisInformation(originalYAxis)
 
 		// when
@@ -176,7 +186,9 @@ final class GraphSetupScreenUITests: UITest {
 		]
 		goToSingleDataTypeGraphSetupScreen()
 		setPicker(to: "Blood Pressure")
-		setSingleDataTypeXAxis(attribute: xAxisAttribute, aggregation: (timeUnit: aggregationTimeUnit, method: xAxisAggregationMethod))
+		setGrouping(groupingType: "series", timeUnit: aggregationTimeUnit)
+		setGrouping(groupingType: "point", timeUnit: aggregationTimeUnit)
+		setSingleDataTypeXAxis(attribute: xAxisAttribute, groupResolutionMethod: xAxisAggregationMethod)
 		setYAxisInformation(yAxis)
 		app.buttons["choose y-axis information button"].tap()
 
@@ -222,7 +234,9 @@ final class GraphSetupScreenUITests: UITest {
 		setPicker(to: "Blood Pressure")
 		app.buttons["choose query button"].tap()
 		app.buttons["Use Query"].tap()
-		setSingleDataTypeXAxis(attribute: "timestamp", aggregation: (timeUnit: "day", method: "count"))
+		setGrouping(groupingType: "series", timeUnit: "day")
+		setGrouping(groupingType: "point", timeUnit: "day")
+		setSingleDataTypeXAxis(attribute: "timestamp", groupResolutionMethod: "count")
 		setYAxisInformation([(attribute: "timestamp", information: "count")])
 
 		// when
@@ -232,6 +246,8 @@ final class GraphSetupScreenUITests: UITest {
 		XCTAssertEqual(app.buttons["choose query button"].value as? String, "Choose query (optional)")
 		XCTAssertEqual(app.buttons["choose x-axis information button"].value as? String, "Choose x-axis information")
 		XCTAssertEqual(app.buttons["choose y-axis information button"].value as? String, "Choose y-axis information")
+		XCTAssertEqual(seriesGroupingButton().value as? String, "Choose series grouping (optional)")
+		XCTAssertEqual(pointGroupingButton().value as? String, "Choose point grouping (optional)")
 	}
 
 	// MARK: - Multiple Data Types
@@ -367,14 +383,21 @@ final class GraphSetupScreenUITests: UITest {
 		app.buttons["save graph type button"].tap()
 	}
 
-	private final func setSingleDataTypeXAxis(attribute: String, aggregation: (timeUnit: String, method: String)? = nil) {
+	private final func setGrouping(groupingType: String, timeUnit: String) {
+		app.buttons["choose \(groupingType) grouping button"].tap()
+		app.tables.cells.allElementsBoundByIndex[0].tap()
+		app.buttons["set time unit button"].tap()
+		setPicker(to: timeUnit)
+		app.buttons["save button"].tap()
+		app.buttons["save grouper button"].tap()
+		app.buttons["Done"].tap()
+	}
+
+	private final func setSingleDataTypeXAxis(attribute: String, groupResolutionMethod: String? = nil) {
 		app.buttons["choose x-axis information button"].tap()
 		setPicker("attribute picker", to: attribute)
-		if let aggregation = aggregation {
-			app.buttons["aggregation time unit button"].tap()
-			setPicker("time unit picker", to: aggregation.timeUnit)
-			app.buttons["save button"].tap()
-			setPicker("grouping method picker", to: aggregation.method)
+		if let groupResolutionMethod = groupResolutionMethod {
+			setPicker("grouping method picker", to: groupResolutionMethod)
 		}
 		app.buttons["save x-axis button"].tap()
 	}
@@ -451,5 +474,13 @@ final class GraphSetupScreenUITests: UITest {
 			parts.append(cell.value as? String)
 		}
 		return parts
+	}
+
+	private final func seriesGroupingButton() -> XCUIElement {
+		return app.buttons["choose series grouping button"]
+	}
+
+	private final func pointGroupingButton() -> XCUIElement {
+		return app.buttons["choose point grouping button"]
 	}
 }

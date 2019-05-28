@@ -13,19 +13,23 @@ import SwiftyMocky
 
 class QueryViewControllerUnitTests: UnitTest {
 
-	private typealias Me = QueryViewControllerUnitTests
-	private static let frame = CGRect(x: 0, y: 0, width: 0, height: 0)
-	private static let editButton = UIBarButtonItem(barButtonSystemItem: .edit, target: nil, action: nil)
-	private static let finishedButton = UIBarButtonItem(barButtonSystemItem: .edit, target: nil, action: nil)
+	private final var editButton: UIBarButtonItem!
+	private final var finishedButton: UIBarButtonItem!
 
-	private var controller: QueryViewController!
+	private var controller: QueryViewControllerImpl!
 
 	override func setUp() {
 		super.setUp()
-		controller = QueryViewController()
-		controller.editButton = Me.editButton
-		controller.finishedButton = Me.finishedButton
+
+		editButton = UIBarButtonItem()
+		finishedButton = UIBarButtonItem()
+
+		controller = QueryViewControllerImpl()
+		controller.editButton = editButton
+		controller.finishedButton = finishedButton
 	}
+
+	// MARK: - prepareForSegue()
 
 	func testGivenHeartRateDataTypeWithNoRestrictionsOrSubQuery_prepareForSegue_correctlyBuildsAndRunsQuery() {
 		// given
@@ -34,12 +38,12 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.Part(QueryViewController.SampleTypeInfo(HeartRate.self))
+		controller.parts[0] = QueryViewControllerImpl.Part(QueryViewControllerImpl.SampleTypeInfo(HeartRate.self))
 
 		mockResultsViewController()
 
 		// when
-		controller.finishedButtonPressed(Me.finishedButton)
+		controller.finishedButtonPressed(finishedButton)
 
 		// then
 		Verify(sampleQuery, .runQuery(callback: .any(((QueryResult?, Error?) -> ()).self)))
@@ -53,15 +57,15 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.Part(QueryViewController.SampleTypeInfo(HeartRate.self))
+		controller.parts[0] = QueryViewControllerImpl.Part(QueryViewControllerImpl.SampleTypeInfo(HeartRate.self))
 
 		let attributeRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
-		controller.parts.append(QueryViewController.Part(attributeRestriction))
+		controller.parts.append(QueryViewControllerImpl.Part(attributeRestriction))
 
 		mockResultsViewController()
 
 		// when
-		controller.finishedButtonPressed(Me.finishedButton)
+		controller.finishedButtonPressed(finishedButton)
 
 		// then
 		XCTAssert(sampleQuery.attributeRestrictions.contains(where: { r in return r.equalTo(attributeRestriction) }))
@@ -76,17 +80,17 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.Part(QueryViewController.SampleTypeInfo(HeartRate.self))
+		controller.parts[0] = QueryViewControllerImpl.Part(QueryViewControllerImpl.SampleTypeInfo(HeartRate.self))
 
 		let attributeRestriction1 = EqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
 		let attributeRestriction2 = NotEqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
-		controller.parts.append(QueryViewController.Part(attributeRestriction1))
-		controller.parts.append(QueryViewController.Part(attributeRestriction2))
+		controller.parts.append(QueryViewControllerImpl.Part(attributeRestriction1))
+		controller.parts.append(QueryViewControllerImpl.Part(attributeRestriction2))
 
 		mockResultsViewController()
 
 		// when
-		controller.finishedButtonPressed(Me.finishedButton)
+		controller.finishedButtonPressed(finishedButton)
 
 		// then
 		XCTAssert(sampleQuery.attributeRestrictions.contains(where: { r in return r.equalTo(attributeRestriction1) }))
@@ -104,17 +108,17 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.Part(QueryViewController.SampleTypeInfo(HeartRate.self))
+		controller.parts[0] = QueryViewControllerImpl.Part(QueryViewControllerImpl.SampleTypeInfo(HeartRate.self))
 
-		var dataTypeInfo = QueryViewController.SampleTypeInfo(MoodImpl.self)
+		var dataTypeInfo = QueryViewControllerImpl.SampleTypeInfo(MoodImpl.self)
 		dataTypeInfo.matcher = SubQueryMatcherMock()
 		dataTypeInfo.matcher!.mostRecentOnly = false
-		controller.parts.append(QueryViewController.Part(dataTypeInfo))
+		controller.parts.append(QueryViewControllerImpl.Part(dataTypeInfo))
 
 		mockResultsViewController()
 
 		// when
-		controller.finishedButtonPressed(Me.finishedButton)
+		controller.finishedButtonPressed(finishedButton)
 
 		// then
 		XCTAssert(sampleQuery.subQuery != nil)
@@ -136,21 +140,21 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.Part(QueryViewController.SampleTypeInfo(HeartRate.self))
+		controller.parts[0] = QueryViewControllerImpl.Part(QueryViewControllerImpl.SampleTypeInfo(HeartRate.self))
 
-		var dataTypeInfo = QueryViewController.SampleTypeInfo(MoodImpl.self)
+		var dataTypeInfo = QueryViewControllerImpl.SampleTypeInfo(MoodImpl.self)
 		dataTypeInfo.matcher = SubQueryMatcherMock()
-		controller.parts.append(QueryViewController.Part(dataTypeInfo))
+		controller.parts.append(QueryViewControllerImpl.Part(dataTypeInfo))
 
 		let attributeRestriction1 = EqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating)
 		let attributeRestriction2 = NotEqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating)
-		controller.parts.append(QueryViewController.Part(attributeRestriction1))
-		controller.parts.append(QueryViewController.Part(attributeRestriction2))
+		controller.parts.append(QueryViewControllerImpl.Part(attributeRestriction1))
+		controller.parts.append(QueryViewControllerImpl.Part(attributeRestriction2))
 
 		mockResultsViewController()
 
 		// when
-		controller.finishedButtonPressed(Me.finishedButton)
+		controller.finishedButtonPressed(finishedButton)
 
 		// then
 		XCTAssert(sampleQuery.subQuery != nil)
@@ -175,26 +179,26 @@ class QueryViewControllerUnitTests: UnitTest {
 
 		Given(mockSampleFactory, .allTypes(willReturn: [HeartRate.self, MoodImpl.self]))
 		controller.viewDidLoad()
-		controller.parts[0] = QueryViewController.Part(QueryViewController.SampleTypeInfo(HeartRate.self))
+		controller.parts[0] = QueryViewControllerImpl.Part(QueryViewControllerImpl.SampleTypeInfo(HeartRate.self))
 
 		let heartRateAttributeRestriction1 = EqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
 		let heartRateAttributeRestriction2 = NotEqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)
-		controller.parts.append(QueryViewController.Part(heartRateAttributeRestriction1))
-		controller.parts.append(QueryViewController.Part(heartRateAttributeRestriction2))
+		controller.parts.append(QueryViewControllerImpl.Part(heartRateAttributeRestriction1))
+		controller.parts.append(QueryViewControllerImpl.Part(heartRateAttributeRestriction2))
 
-		var dataTypeInfo = QueryViewController.SampleTypeInfo(MoodImpl.self)
+		var dataTypeInfo = QueryViewControllerImpl.SampleTypeInfo(MoodImpl.self)
 		dataTypeInfo.matcher = SubQueryMatcherMock()
-		controller.parts.append(QueryViewController.Part(dataTypeInfo))
+		controller.parts.append(QueryViewControllerImpl.Part(dataTypeInfo))
 
 		let moodAttributeRestriction1 = EqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating)
 		let moodAttributeRestriction2 = NotEqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating)
-		controller.parts.append(QueryViewController.Part(moodAttributeRestriction1))
-		controller.parts.append(QueryViewController.Part(moodAttributeRestriction2))
+		controller.parts.append(QueryViewControllerImpl.Part(moodAttributeRestriction1))
+		controller.parts.append(QueryViewControllerImpl.Part(moodAttributeRestriction2))
 
 		mockResultsViewController()
 
 		// when
-		controller.finishedButtonPressed(Me.finishedButton)
+		controller.finishedButtonPressed(finishedButton)
 
 		// then
 		XCTAssert(sampleQuery.subQuery != nil)

@@ -87,6 +87,10 @@ public final class InCurrentTimeUnitDateAttributeRestriction: DateAttributeRestr
 		return currentTimeUnitIndex == sampleTimeUnitIndex
 	}
 
+	public override func copy() -> AttributeRestriction {
+		return InCurrentTimeUnitDateAttributeRestriction(restrictedAttribute: restrictedAttribute, timeUnit)
+	}
+
 	// MARK: - Equality
 
 	public static func ==(lhs: InCurrentTimeUnitDateAttributeRestriction, rhs: InCurrentTimeUnitDateAttributeRestriction) -> Bool {

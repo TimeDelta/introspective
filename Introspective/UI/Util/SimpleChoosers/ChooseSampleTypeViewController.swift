@@ -8,7 +8,13 @@
 
 import UIKit
 
-final class ChooseSampleTypeViewController: UIViewController {
+protocol ChooseSampleTypeViewController: UIViewController {
+
+	var selectedSampleType: Sample.Type? { get set }
+	var notificationToSendOnAccept: NotificationName! { get set }
+}
+
+final class ChooseSampleTypeViewControllerImpl: UIViewController, ChooseSampleTypeViewController {
 
 	// MARK: - IBOutlets
 
@@ -17,7 +23,7 @@ final class ChooseSampleTypeViewController: UIViewController {
 	// MARK: - Instance Variables
 
 	public final var selectedSampleType: Sample.Type?
-	public final var notificationToSendOnAccept: Notification.Name!
+	public final var notificationToSendOnAccept: NotificationName!
 
 	private final let log = Log()
 
@@ -41,19 +47,18 @@ final class ChooseSampleTypeViewController: UIViewController {
 	@IBAction final func userPressedAccept(_ sender: Any) {
 		let selectedIndex = sampleTypePicker.selectedRow(inComponent: 0)
 		let selectedSampleType = DependencyInjector.sample.allTypes()[selectedIndex]
-		NotificationCenter.default.post(
-			name: notificationToSendOnAccept,
-			object: self,
-			userInfo: info([
+		syncPost(
+			notificationToSendOnAccept,
+			userInfo: [
 				.sampleType: selectedSampleType,
-			]))
+			])
 		dismiss(animated: false, completion: nil)
 	}
 }
 
 // MARK: - UIPickerViewDataSource
 
-extension ChooseSampleTypeViewController: UIPickerViewDataSource {
+extension ChooseSampleTypeViewControllerImpl: UIPickerViewDataSource {
 
 	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
@@ -66,7 +71,7 @@ extension ChooseSampleTypeViewController: UIPickerViewDataSource {
 
 // MARK: - UIPickerViewDelegate
 
-extension ChooseSampleTypeViewController: UIPickerViewDelegate {
+extension ChooseSampleTypeViewControllerImpl: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		return DependencyInjector.sample.allTypes()[row].name.localizedCapitalized

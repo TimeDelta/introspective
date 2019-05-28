@@ -16,7 +16,6 @@ final class ResultsViewController: UITableViewController {
 	// MARK: - Static Variables
 
 	private typealias Me = ResultsViewController
-	private static let editedExtraInformation = Notification.Name("editedExtraInformationFromResultsScreen")
 	private static let sortSamples = Notification.Name("sortSamplesBy")
 	private static let editedSample = Notification.Name("editedSampleFromResultsScreen")
 	private static let sortPresenter: Presentr = {
@@ -70,7 +69,7 @@ final class ResultsViewController: UITableViewController {
 		actionsButton.action = #selector(presentActions)
 		actionsButton.accessibilityLabel = "actions button"
 
-		observe(selector: #selector(saveEditedExtraInformation), name: Me.editedExtraInformation)
+		observe(selector: #selector(saveEditedExtraInformation), name: .editedInformation)
 		observe(selector: #selector(sortSamplesBy), name: Me.sortSamples)
 		observe(selector: #selector(editedSample), name: Me.editedSample)
 
@@ -443,8 +442,8 @@ final class ResultsViewController: UITableViewController {
 		extraInformationEditIndex = indexPath.row
 		let selectedInformation = extraInformation[extraInformationEditIndex]
 
-		let controller: SelectExtraInformationViewController = viewController(named: "editExtraInformation", fromStoryboard: "Util")
-		controller.notificationToSendWhenFinished = Me.editedExtraInformation
+		let controller = viewController(named: "editExtraInformation", fromStoryboard: "Util") as! SelectExtraInformationViewController
+		controller.notificationToSendWhenFinished = .editedInformation
 		controller.attributes = samples[0].attributes
 		controller.selectedAttribute = selectedInformation.attribute
 		controller.selectedInformation = selectedInformation

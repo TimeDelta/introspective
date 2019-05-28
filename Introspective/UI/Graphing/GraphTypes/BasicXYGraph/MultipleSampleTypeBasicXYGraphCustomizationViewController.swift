@@ -16,13 +16,6 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	// MARK: - Static Variables
 
 	private typealias Me = MultipleSampleTypeBasicXYGraphCustomizationViewController
-	private static let yAxisInformationChanged = Notification.Name("chosenDataToGraphChanged")
-	private static let xAxisSampleTypeChanged = Notification.Name("xAxisSampleTypeChanged")
-	private static let yAxisSampleTypeChanged = Notification.Name("yAxisSampleTypeChanged")
-	private static let xAxisQueryChanged = Notification.Name("xAxisQueryChanged")
-	private static let yAxisQueryChanged = Notification.Name("yAxisQueryChanged")
-	private static let groupingChanged = Notification.Name("xAxisGroupingChanged")
-	private static let xAxisInformationChanged = Notification.Name("xAxisInformationChanged")
 	private static let presenter: Presentr = {
 		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
 		let customPresenter = Presentr(presentationType: customType)
@@ -30,6 +23,18 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		customPresenter.roundCorners = true
 		return customPresenter
 	}()
+
+	// MARK: - Structs
+
+	private struct Groupers {
+		var x: SampleGrouper
+		var y: SampleGrouper
+
+		init(x: SampleGrouper, y: SampleGrouper) {
+			self.x = x
+			self.y = y
+		}
+	}
 
 	// MARK: - IBOutlets
 
@@ -43,104 +48,43 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	@IBOutlet weak final var chooseYAxisQueryButton: UIButton!
 	@IBOutlet weak final var chooseYAxisInformationButton: UIButton!
 
-	@IBOutlet weak final var chooseGroupingButton: UIButton!
-	@IBOutlet weak var showGraphButton: UIButton!
+	@IBOutlet weak final var clearSeriesGroupingButton: UIButton!
+	@IBOutlet weak final var chooseSeriesGroupingButton: UIButton!
+	@IBOutlet weak final var chooseAxisGroupingButton: UIButton!
+	@IBOutlet weak final var showGraphButton: UIButton!
 
 	// MARK: - Instance Variables
 
 	private final var oldXAxisSampleType: Sample.Type!
 	private final var xAxisSampleType: Sample.Type! {
-		didSet {
-			if oldXAxisSampleType != xAxisSampleType {
-				xAxisQuery = nil
-				xAxisInformation = nil
-				chooseXAxisSampleTypeButton.setTitle(xAxisSampleType.name, for: .normal)
-			}
-			if xAxisSampleType != nil {
-				chooseXAxisQueryButton.isEnabled = true
-				chooseXAxisInformationButton.isEnabled = true
-			}
-			chooseXAxisSampleTypeButton.accessibilityValue = chooseXAxisSampleTypeButton.currentTitle
-		}
+		didSet { xAxisSampleTypeSet() }
 	}
 	private final var oldYAxisSampleType: Sample.Type!
 	private final var yAxisSampleType: Sample.Type! {
-		didSet {
-			if oldYAxisSampleType != yAxisSampleType {
-				yAxisQuery = nil
-				yAxisInformation = nil
-				chooseYAxisSampleTypeButton.setTitle(yAxisSampleType.name, for: .normal)
-			}
-			if yAxisSampleType != nil {
-				chooseYAxisQueryButton.isEnabled = true
-				chooseYAxisInformationButton.isEnabled = true
-			}
-			chooseYAxisSampleTypeButton.accessibilityValue = chooseYAxisSampleTypeButton.currentTitle
-		}
+		didSet { yAxisSampleTypeSet() }
 	}
 	private final var xAxisQuery: Query? {
-		didSet {
-			if xAxisQuery == nil {
-				chooseXAxisQueryButton.setTitle("Choose query (optional)", for: .normal)
-				DependencyInjector.util.ui.setButton(clearXAxisQueryButton, enabled: false, hidden: true)
-			} else {
-				chooseXAxisQueryButton.setTitle("Query chosen (click to change)", for: .normal)
-				DependencyInjector.util.ui.setButton(clearXAxisQueryButton, enabled: true, hidden: false)
-			}
-			chooseXAxisQueryButton.accessibilityValue = chooseXAxisQueryButton.currentTitle
-		}
+		didSet { xAxisQuerySet() }
 	}
 	private final var yAxisQuery: Query? {
-		didSet {
-			if yAxisQuery == nil {
-				chooseYAxisQueryButton.setTitle("Choose query (optional)", for: .normal)
-				DependencyInjector.util.ui.setButton(clearYAxisQueryButton, enabled: false, hidden: true)
-			} else {
-				chooseYAxisQueryButton.setTitle("Query chosen (click to change)", for: .normal)
-				DependencyInjector.util.ui.setButton(clearYAxisQueryButton, enabled: true, hidden: false)
-			}
-			chooseYAxisQueryButton.accessibilityValue = chooseYAxisQueryButton.currentTitle
-		}
+		didSet { yAxisQuerySet() }
 	}
-	private final var grouping: Calendar.Component? {
-		didSet {
-			if grouping != nil {
-				chooseGroupingButton.setTitle("Group by same " + grouping!.description.localizedLowercase, for: .normal)
-			}
-			chooseGroupingButton.accessibilityValue = chooseGroupingButton.currentTitle
-			updateShowGraphButtonState()
-		}
+	private final var seriesGrouperAttributeType: String?
+	private final var seriesGroupers: Groupers? {
+		didSet { seriesGrouperSet() }
+	}
+	private final var axisGrouperAttributeType: String?
+	private final var axisGroupers: Groupers? {
+		didSet { axisGrouperSet() }
 	}
 	private final var xAxisInformation: ExtraInformation? {
-		didSet {
-			if xAxisInformation == nil {
-				chooseXAxisInformationButton.setTitle("Choose information", for: .normal)
-			} else {
-				chooseXAxisInformationButton.setTitle(xAxisInformation!.description.localizedLowercase, for: .normal)
-			}
-			chooseXAxisInformationButton.accessibilityValue = chooseXAxisInformationButton.currentTitle
-			updateShowGraphButtonState()
-		}
+		didSet { xAxisInformationSet() }
 	}
 	private final var yAxisInformation: [ExtraInformation]? {
-		didSet {
-			if yAxisInformation == nil {
-				chooseYAxisInformationButton.setTitle("Choose information", for: .normal)
-			} else {
-				var description = ""
-				for information in yAxisInformation! {
-					description += information.description.localizedLowercase + ", "
-				}
-				description.removeLast()
-				description.removeLast()
-				chooseYAxisInformationButton.setTitle(description, for: .normal)
-			}
-			chooseYAxisInformationButton.accessibilityValue = chooseYAxisInformationButton.currentTitle
-			updateShowGraphButtonState()
-		}
+		didSet { yAxisInformationSet() }
 	}
-	private final var xAxisSampleGroups: [(Date, [Sample])]! { didSet { sampleGroupsAssigned() } }
-	private final var yAxisSampleGroups: [(Date, [Sample])]! { didSet { sampleGroupsAssigned() } }
+	private final var xAxisSamples: [Sample]! { didSet { samplesAssigned() } }
+	private final var yAxisSamples: [Sample]! { didSet { samplesAssigned() } }
 	private final var chartController: BasicXYChartViewController!
 
 	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "MultiplSampleTypeGraphCreationPerformance"))
@@ -151,13 +95,12 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	final override func viewDidLoad() {
 		super.viewDidLoad()
 
-		observe(selector: #selector(groupingChanged), name: Me.groupingChanged)
-		observe(selector: #selector(xAxisQueryChanged), name: Me.xAxisQueryChanged)
-		observe(selector: #selector(yAxisQueryChanged), name: Me.yAxisQueryChanged)
-		observe(selector: #selector(xAxisSampleTypeChanged), name: Me.xAxisSampleTypeChanged)
-		observe(selector: #selector(yAxisSampleTypeChanged), name: Me.yAxisSampleTypeChanged)
-		observe(selector: #selector(xAxisInformationChanged), name: Me.xAxisInformationChanged)
-		observe(selector: #selector(yAxisInformationChanged), name: Me.yAxisInformationChanged)
+		observe(selector: #selector(xAxisQueryChanged), name: .xAxisQueryChanged)
+		observe(selector: #selector(yAxisQueryChanged), name: .yAxisQueryChanged)
+		observe(selector: #selector(xAxisSampleTypeChanged), name: .xAxisSampleTypeChanged)
+		observe(selector: #selector(yAxisSampleTypeChanged), name: .yAxisSampleTypeChanged)
+		observe(selector: #selector(xAxisInformationChanged), name: .xAxisInformationChanged)
+		observe(selector: #selector(yAxisInformationChanged), name: .yAxisInformationChanged)
 
 		updateShowGraphButtonState()
 	}
@@ -168,18 +111,50 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 
 	// MARK: - Button Actions
 
-	@IBAction final func chooseGroupingButtonPressed(_ sender: Any) {
-		let controller: ChooseCalendarComponentViewController = viewController(named: "chooseCalendarComponent", fromStoryboard: "Util")
-		controller.applicableComponents = [ .year, .quarter, .month, .weekOfMonth, .weekOfYear, .day, .hour, .minute, .second, .nanosecond]
-		controller.selectedComponent = grouping
-		controller.notificationToSendOnAccept = Me.groupingChanged
-		customPresentViewController(Me.presenter, viewController: controller, animated: false)
+	@IBAction final func clearSeriesGroupingButtonPressed(_ sender: Any) {
+		seriesGroupers = nil
+	}
+
+	@IBAction final func chooseSeriesGroupingButtonPressed(_ sender: Any) {
+		let controller = viewController(named: "chooseXYGroupers") as! ChooseGroupersForXYGraphViewController
+		controller.xSampleType = xAxisSampleType
+		controller.ySampleType = yAxisSampleType
+		controller.navBarTitle = "Series Grouping"
+		controller.xGrouper = seriesGroupers?.x
+		controller.yGrouper = seriesGroupers?.y
+		controller.currentAttributeType = seriesGrouperAttributeType
+		observe(selector: #selector(seriesGroupersChanged), name: .groupersEdited)
+		realNavigationController?.pushViewController(controller, animated: false)
+	}
+
+	@IBAction final func seriesGroupingInfoButtonPressed(_ sender: Any) {
+		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
+		controller.descriptionText = "This allows you to optionally group things into different data series. Each data series is drawn in its own color on the generated graph."
+		present(controller, using: Me.presenter)
+	}
+
+	@IBAction final func chooseAxisGroupingButtonPressed(_ sender: Any) {
+		let controller = viewController(named: "chooseXYGroupers") as! ChooseGroupersForXYGraphViewController
+		controller.xSampleType = xAxisSampleType
+		controller.ySampleType = yAxisSampleType
+		controller.navBarTitle = "Axis Grouping"
+		controller.xGrouper = axisGroupers?.x
+		controller.yGrouper = axisGroupers?.y
+		controller.currentAttributeType = axisGrouperAttributeType
+		observe(selector: #selector(axisGroupersChanged), name: .groupersEdited)
+		realNavigationController?.pushViewController(controller, animated: false)
+	}
+
+	@IBAction final func axisGroupingInfoButtonPressed(_ sender: Any) {
+		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
+		controller.descriptionText = "This is how the x-axis samples are connected to the y-axis samples. Groups from the x-axis samples are matched to groups from the y-axis samples based on group values (i.e. same day of week or same group name for advanced grouping). This allows you to connect two types of data that don't have the same attributes."
+		present(controller, using: Me.presenter)
 	}
 
 	@IBAction final func chooseXAxisSampleTypeButtonPressed(_ sender: Any) {
-		let controller: ChooseSampleTypeViewController = viewController(named: "chooseSampleType", fromStoryboard: "Util")
+		let controller = viewController(named: "chooseSampleType", fromStoryboard: "Util") as! ChooseSampleTypeViewController
 		controller.selectedSampleType = xAxisSampleType
-		controller.notificationToSendOnAccept = Me.xAxisSampleTypeChanged
+		controller.notificationToSendOnAccept = .xAxisSampleTypeChanged
 		customPresentViewController(Me.presenter, viewController: controller, animated: false)
 	}
 
@@ -188,27 +163,27 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	}
 
 	@IBAction final func chooseXAxisQueryButtonPressed(_ sender: Any) {
-		let controller: QueryViewController = viewController(named: "queryView", fromStoryboard: "Query")
+		let controller = viewController(named: "queryView", fromStoryboard: "Query") as! QueryViewController
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = xAxisSampleType
 		controller.initialQuery = xAxisQuery
-		controller.finishedButtonNotification = Me.xAxisQueryChanged
-		realNavigationController!.pushViewController(controller, animated: false)
+		controller.finishedButtonNotification = .xAxisQueryChanged
+		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
 	@IBAction final func chooseXAxisInformationButtonPressed(_ sender: Any) {
-		let controller: SelectExtraInformationViewController = viewController(named: "editExtraInformation", fromStoryboard: "Util")
+		let controller = viewController(named: "editExtraInformation", fromStoryboard: "Util") as! SelectExtraInformationViewController
 		controller.attributes = xAxisSampleType.attributes
 		controller.selectedAttribute = xAxisInformation?.attribute
 		controller.selectedInformation = xAxisInformation
-		controller.notificationToSendWhenFinished = Me.xAxisInformationChanged
-		realNavigationController!.pushViewController(controller, animated: false)
+		controller.notificationToSendWhenFinished = .xAxisInformationChanged
+		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
 	@IBAction final func chooseYAxisSampleTypeButtonPressed(_ sender: Any) {
-		let controller: ChooseSampleTypeViewController = viewController(named: "chooseSampleType", fromStoryboard: "Util")
+		let controller = viewController(named: "chooseSampleType", fromStoryboard: "Util") as! ChooseSampleTypeViewController
 		controller.selectedSampleType = yAxisSampleType
-		controller.notificationToSendOnAccept = Me.yAxisSampleTypeChanged
+		controller.notificationToSendOnAccept = .yAxisSampleTypeChanged
 		customPresentViewController(Me.presenter, viewController: controller, animated: false)
 	}
 
@@ -217,26 +192,26 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	}
 
 	@IBAction final func chooseYAxisQueryButtonPressed(_ sender: Any) {
-		let controller: QueryViewController = viewController(named: "queryView", fromStoryboard: "Query")
+		let controller = viewController(named: "queryView", fromStoryboard: "Query") as! QueryViewController
 		controller.finishedButtonTitle = "Use Query"
 		controller.topmostSampleType = yAxisSampleType
 		controller.initialQuery = yAxisQuery
-		controller.finishedButtonNotification = Me.yAxisQueryChanged
+		controller.finishedButtonNotification = .yAxisQueryChanged
 		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
 	@IBAction final func chooseYAxisInformationButtonPressed(_ sender: Any) {
-		let controller: ChooseInformationToGraphTableViewController = viewController(named: "chooseInformation")
+		let controller = viewController(named: "chooseInformation") as! ChooseInformationToGraphTableViewController
 		controller.attributes = yAxisSampleType.attributes
 		if let yAxisInformation = yAxisInformation {
 			controller.chosenInformation = yAxisInformation
 		}
-		controller.notificationToSendWhenFinished = Me.yAxisInformationChanged
+		controller.notificationToSendWhenFinished = .yAxisInformationChanged
 		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
 	@IBAction final func showMeTheGraphButtonPressed(_ sender: Any) {
-		chartController = viewController(named: "BasicXYChartViewController")
+		chartController = (viewController(named: "BasicXYChartViewController") as! BasicXYChartViewController)
 
 		do {
 			if xAxisQuery == nil {
@@ -251,7 +226,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			DispatchQueue.global(qos: .userInteractive).async {
 				self.runQueries()
 			}
-			realNavigationController!.pushViewController(chartController, animated: false)
+			realNavigationController?.pushViewController(chartController, animated: false)
 		} catch {
 			log.error("Failed to get query: %@", errorInfo(error))
 			showError(title: "You found a bug", error: error)
@@ -260,9 +235,27 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 
 	// MARK: - Received Notifications
 
-	@objc private final func groupingChanged(notification: Notification) {
-		if let grouping: Calendar.Component = value(for: .calendarComponent, from: notification) {
-			self.grouping = grouping
+	@objc private final func seriesGroupersChanged(notification: Notification) {
+		stopObserving(.groupersEdited)
+		if
+			let xGrouper: SampleGrouper? = value(for: .x, from: notification),
+			let yGrouper: SampleGrouper? = value(for: .y, from: notification),
+			let currentAttributeType: String? = value(for: .attribute, from: notification)
+		{
+			seriesGroupers = Groupers(x: xGrouper!, y: yGrouper!)
+			seriesGrouperAttributeType = currentAttributeType
+		}
+	}
+
+	@objc private final func axisGroupersChanged(notification: Notification) {
+		stopObserving(.groupersEdited)
+		if
+			let xGrouper: SampleGrouper? = value(for: .x, from: notification),
+			let yGrouper: SampleGrouper? = value(for: .y, from: notification),
+			let currentAttributeType: String? = value(for: .attribute, from: notification)
+		{
+			axisGroupers = Groupers(x: xGrouper!, y: yGrouper!)
+			axisGrouperAttributeType = currentAttributeType
 		}
 	}
 
@@ -297,7 +290,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	}
 
 	@objc private final func yAxisInformationChanged(notification: Notification) {
-		 if let information: [ExtraInformation] = value(for: .information, from: notification) {
+		if let information: [ExtraInformation] = value(for: .information, from: notification) {
 			yAxisInformation = information
 		}
 	}
@@ -305,16 +298,17 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	// MARK: - Helper Functions
 
 	private final func updateShowGraphButtonState() {
-		 showGraphButton.isEnabled =
+		showGraphButton.isEnabled =
 			xAxisSampleType != nil &&
 			yAxisSampleType != nil &&
 			xAxisInformation != nil &&
 			yAxisInformation != nil &&
-			grouping != nil
+			axisGroupers != nil
 		showGraphButton.backgroundColor = showGraphButton.isEnabled ? .black : .gray
 	}
 
 	private final func runQueries() {
+		xAxisQuery?.resetStoppedState()
 		xAxisQuery!.runQuery { (result, error) in
 			if let error = error {
 				self.log.error("X-axis query run failed: %@", errorInfo(error))
@@ -324,23 +318,13 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 				return
 			}
 			if let samples = result?.samples {
-				self.signpost.begin(name: "Grouping x-axis samples", "Grouping %d samples", samples.count)
-				let grouper = SameTimeUnitSampleGrouper(self.grouping!)
-				let firstDateAttribute = self.firstDateAttributeFor(self.xAxisSampleType)
-				do {
-					self.xAxisSampleGroups = (try grouper.group(samples: samples, by: firstDateAttribute) as! [(Date, [Sample])])
-				} catch {
-					self.log.error("Failed to group x-axis samples: %@", errorInfo(error))
-					DispatchQueue.main.async {
-						self.chartController.showError(title: "Failed to group the x-axis samples", error: error)
-					}
-				}
-				self.signpost.end(name: "Grouping x-axis samples", "Grouped %d samples into %d groups", samples.count, self.xAxisSampleGroups.count)
+				self.xAxisSamples = samples
 			} else {
 				self.log.error("X-axis query run did not return an error or any results")
 			}
 		}
 
+		yAxisQuery?.resetStoppedState()
 		yAxisQuery!.runQuery { (result, error) in
 			if let error = error {
 				self.log.error("Y-axis query run failed: %@", errorInfo(error))
@@ -350,18 +334,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 				return
 			}
 			if let samples = result?.samples {
-				self.signpost.begin(name: "Grouping y-axis samples", "Grouping %d samples", samples.count)
-				let grouper = SameTimeUnitSampleGrouper(self.grouping!)
-				let firstDateAttribute = self.firstDateAttributeFor(self.yAxisSampleType)
-				do {
-					self.yAxisSampleGroups = (try grouper.group(samples: samples, by: firstDateAttribute) as! [(Date, [Sample])])
-				} catch {
-					self.log.error("Failed to group y-axis samples: %@", errorInfo(error))
-					DispatchQueue.main.async {
-						self.chartController.showError(title: "Failed to group the y-axis samples", error: error)
-					}
-				}
-				self.signpost.end(name: "Grouping y-axis samples", "Grouped %d samples into %d groups", samples.count, self.yAxisSampleGroups.count)
+				self.yAxisSamples = samples
 			} else {
 				self.log.error("Y-axis query run did not return an error or any results")
 			}
@@ -376,7 +349,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		return CommonSampleAttributes.timestamp
 	}
 
-	private final func sampleGroupsAssigned() {
+	private final func samplesAssigned() {
 		do {
 			try updateChartData()
 		} catch {
@@ -388,40 +361,94 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	}
 
 	private final func updateChartData() throws {
-		if xAxisSampleGroups == nil || yAxisSampleGroups == nil { return }
-		if xAxisSampleGroups.count == 0 {
+		guard let xAxisSamples = xAxisSamples, let yAxisSamples = yAxisSamples else { return }
+		if xAxisSamples.count == 0 {
 			DispatchQueue.main.async {
 				self.chartController.showError(title: "No data returned for x-axis query")
 			}
 			return
 		}
-		if yAxisSampleGroups.count == 0 {
+		if yAxisSamples.count == 0 {
 			DispatchQueue.main.async {
 				self.chartController.showError(title: "No data returned for y-axis query")
 			}
 			return
 		}
 
-		signpost.begin(name: "Update Chart Data", "Number of groups: (x-axis: %d, y-axis: %d)", xAxisSampleGroups.count, yAxisSampleGroups.count)
+		signpost.begin(name: "Update Chart Data", "Number of samples: (x-axis: %d, y-axis: %d)", xAxisSamples.count, yAxisSamples.count)
 
-		let xValues = try transform(sampleGroups: xAxisSampleGroups, information: xAxisInformation!)
+		var allData = [Dictionary<String, Any>]()
+
+		if let seriesGroupers = seriesGroupers {
+			signpost.begin(name: "Grouping x-axis samples for series", "Grouping %d samples", xAxisSamples.count)
+			let xAxisSeriesGroups = try seriesGroupers.x.group(samples: xAxisSamples)
+			signpost.end(
+				name: "Grouping x-axis samples for series",
+				"Grouped %d samples into %d groups",
+				xAxisSamples.count,
+				xAxisSeriesGroups.count)
+			signpost.begin(name: "Grouping y-axis samples for series", "Grouping %d samples", yAxisSamples.count)
+			let yAxisSeriesGroups = try seriesGroupers.y.group(samples: yAxisSamples)
+			signpost.end(
+				name: "Grouping y-axis samples for series",
+				"Grouped %d samples into %d groups",
+				yAxisSamples.count,
+				yAxisSeriesGroups.count)
+			for (xGroupValue, xSamples) in xAxisSeriesGroups {
+				let correspondingYAxisSeriesGroupIndex = try yAxisSeriesGroups.firstIndex{ (yGroupValue, _) -> Bool in
+					return try seriesGroupers.x.groupValuesAreEqual(xGroupValue, yGroupValue)
+				}
+				if let correspondingYAxisSeriesGroupIndex = correspondingYAxisSeriesGroupIndex {
+					let ySamples = yAxisSeriesGroups[correspondingYAxisSeriesGroupIndex].1
+					let groupName = try seriesGroupers.x.groupNameFor(value: xGroupValue)
+					try addData(to: &allData, forX: xSamples, andY: ySamples, as: groupName)
+				}
+			}
+		} else {
+			try addData(to: &allData, forX: xAxisSamples, andY: yAxisSamples)
+		}
+
+		DispatchQueue.main.async {
+			self.chartController.dataSeries = allData
+		}
+	}
+
+	private final func addData(
+		to allData: inout [Dictionary<String, Any>],
+		forX xSamples: [Sample],
+		andY ySamples: [Sample],
+		as groupName: String? = nil)
+	throws {
+		guard let axisGroupers = axisGroupers else {
+			throw GenericDisplayableError(
+				title: "Unable to graph",
+				description: "Must choose axis grouping or there is no way to correlate x-axis to y-axis")
+		}
+		guard let yAxisInformation = yAxisInformation else {
+			throw GenericDisplayableError(title: "Must choose y-axis information")
+		}
+		self.signpost.begin(name: "Grouping x-axis samples", "Grouping %d samples", xSamples.count)
+		let xGroups = try axisGroupers.x.group(samples: xSamples)
+		self.signpost.end(name: "Grouping x-axis samples", "Grouped %d samples into %d groups", xSamples.count, xGroups.count)
+		let xValues = try transform(sampleGroups: xGroups, information: xAxisInformation!)
 		let xValuesAreNumbers = areAllNumbers(xValues.map{ $0.sampleValue })
 		var sortedXValues = xValues
-		// if x values are numbers or dates and are not sorted, graph will look very weird
+		// if x values are numbers and are not sorted, graph will look very weird
 		if xValuesAreNumbers {
 			sortedXValues = sortXValuesByNumber(xValues)
 		} else if areAllDates(xValues.map{ $0.sampleValue }) {
 			sortedXValues = sortXValuesByDate(xValues)
 		}
 
-		signpost.begin(name: "Creating series data", "Creating %d series", yAxisInformation!.count)
-		var allData = [Dictionary<String, Any>]()
-		for yInformation in yAxisInformation! {
-			signpost.begin(name: "Computing data points for information", idObject: yInformation as AnyObject, "%@", yInformation.description)
-			let yValues = try transform(sampleGroups: yAxisSampleGroups, information: yInformation)
+		self.signpost.begin(name: "Grouping y-axis samples", "Grouping %d samples", ySamples.count)
+		let yGroups = try axisGroupers.y.group(samples: ySamples)
+		self.signpost.end(name: "Grouping x-axis samples", "Grouped %d samples into %d groups", ySamples.count, yGroups.count)
+
+		for yInformation in yAxisInformation {
 			var seriesData = [[Any]]()
+			let yValues = try transform(sampleGroups: yGroups, information: yInformation)
 			for (xGroupValue, xSampleValue) in sortedXValues { // loop over x values so that series data is already sorted
-				if let yValueIndex = yValues.index(where: { $0.groupValue == xGroupValue }) {
+				if let yValueIndex = index(ofValue: xGroupValue, in: yValues, groupedBy: axisGroupers.x) {
 					let yValue = yValues[yValueIndex].sampleValue
 					var xValue: Any = xSampleValue
 					if xValuesAreNumbers {
@@ -430,26 +457,44 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 					seriesData.append([xValue, Double(formatNumber(yValue))!])
 				}
 			}
+			var name = yInformation.description.localizedCapitalized
+			if let groupName = groupName {
+				name = "\(groupName): \(name)"
+			}
 			allData.append(AASeriesElement()
-				.name(yInformation.description.localizedCapitalized)
+				.name(name)
 				.data(seriesData)
 				.toDic()!)
-			signpost.end(name: "Computing data points for information", idObject: yInformation as AnyObject, "%@", yInformation.description)
 		}
-		signpost.end(name: "Creating series data")
 
 		DispatchQueue.main.async {
 			self.chartController.displayXAxisValueLabels = xValuesAreNumbers
-			self.chartController.dataSeries = allData
 		}
-
-		signpost.end(name: "Update Chart Data", "Finished updating chart data")
 	}
 
-	private final func transform(sampleGroups: [(Date, [Sample])], information: ExtraInformation)
-	throws -> [(groupValue: Date, sampleValue: String)] {
+	private final func index(
+		ofValue value: Any,
+		in groupValues: [(groupValue: Any, sampleValue: String)],
+		groupedBy grouper: SampleGrouper)
+	-> Int? {
+		return groupValues.index(where: {
+			do {
+				return try grouper.groupValuesAreEqual($0.groupValue, value)
+			} catch {
+				self.log.error(
+					"Failed to test for value equality between '%@' and '%@': %@",
+					String(describing: $0.groupValue),
+					String(describing: value),
+					errorInfo(error))
+					return false
+			}
+		})
+	}
+
+	private final func transform(sampleGroups: [(Any, [Sample])], information: ExtraInformation)
+	throws -> [(groupValue: Any, sampleValue: String)] {
 		signpost.begin(name: "Transform", "Number of sample groups: %d", sampleGroups.count)
-		var values = [(groupValue: Date, sampleValue: String)]()
+		var values = [(groupValue: Any, sampleValue: String)]()
 		for (groupValue, samples) in sampleGroups {
 			let sampleValue = try information.computeGraphable(forSamples: samples)
 			values.append((groupValue: groupValue, sampleValue: sampleValue))
@@ -483,7 +528,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		return true
 	}
 
-	private final func sortXValuesByNumber(_ xValues: [(groupValue: Date, sampleValue: String)]) -> [(groupValue: Date, sampleValue: String)] {
+	private final func sortXValuesByNumber(_ xValues: [(groupValue: Any, sampleValue: String)]) -> [(groupValue: Any, sampleValue: String)] {
 		var sortedXValues = xValues
 		signpost.begin(name: "Sort x values as numbers", "Number of x values: %d", xValues.count)
 		sortedXValues = xValues.sorted(by: { Double($0.sampleValue)! < Double($1.sampleValue)! })
@@ -492,7 +537,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	}
 
 	/// - Precondition: All sample values are valid date strings
-	private final func sortXValuesByDate(_ xValues: [(groupValue: Date, sampleValue: String)]) -> [(groupValue: Date, sampleValue: String)] {
+	private final func sortXValuesByDate(_ xValues: [(groupValue: Any, sampleValue: String)]) -> [(groupValue: Any, sampleValue: String)] {
 		var sortedXValues = xValues
 		signpost.begin(name: "Sort x values as dates", "Number of x values: %d", xValues.count)
 		sortedXValues = xValues.sorted(by: { getDate($0.sampleValue)! < getDate($1.sampleValue)! })
@@ -513,5 +558,109 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	private final func getDate(_ value: String) -> Date? {
 		return DependencyInjector.util.calendar.date(from: value)
 	}
-}
 
+	// MARK: Did Set Functions
+
+	private final func xAxisSampleTypeSet() {
+		if oldXAxisSampleType != xAxisSampleType {
+			xAxisQuery = nil
+			xAxisInformation = nil
+			chooseXAxisSampleTypeButton.setTitle(xAxisSampleType.name, for: .normal)
+		}
+		if xAxisSampleType != nil {
+			chooseXAxisQueryButton.isEnabled = true
+			chooseXAxisInformationButton.isEnabled = true
+		}
+		chooseXAxisSampleTypeButton.accessibilityValue = chooseXAxisSampleTypeButton.currentTitle
+		updateGroupingButtonStates()
+	}
+
+	private final func yAxisSampleTypeSet() {
+		if oldYAxisSampleType != yAxisSampleType {
+			yAxisQuery = nil
+			yAxisInformation = nil
+			chooseYAxisSampleTypeButton.setTitle(yAxisSampleType.name, for: .normal)
+		}
+		if yAxisSampleType != nil {
+			chooseYAxisQueryButton.isEnabled = true
+			chooseYAxisInformationButton.isEnabled = true
+		}
+		chooseYAxisSampleTypeButton.accessibilityValue = chooseYAxisSampleTypeButton.currentTitle
+		updateGroupingButtonStates()
+	}
+
+	private final func xAxisQuerySet() {
+		if xAxisQuery == nil {
+			chooseXAxisQueryButton.setTitle("Choose query (optional)", for: .normal)
+			DependencyInjector.util.ui.setButton(clearXAxisQueryButton, enabled: false, hidden: true)
+		} else {
+			chooseXAxisQueryButton.setTitle("Query chosen (click to change)", for: .normal)
+			DependencyInjector.util.ui.setButton(clearXAxisQueryButton, enabled: true, hidden: false)
+		}
+		chooseXAxisQueryButton.accessibilityValue = chooseXAxisQueryButton.currentTitle
+	}
+
+	private final func yAxisQuerySet() {
+		if yAxisQuery == nil {
+			chooseYAxisQueryButton.setTitle("Choose query (optional)", for: .normal)
+			DependencyInjector.util.ui.setButton(clearYAxisQueryButton, enabled: false, hidden: true)
+		} else {
+			chooseYAxisQueryButton.setTitle("Query chosen (click to change)", for: .normal)
+			DependencyInjector.util.ui.setButton(clearYAxisQueryButton, enabled: true, hidden: false)
+		}
+		chooseYAxisQueryButton.accessibilityValue = chooseYAxisQueryButton.currentTitle
+	}
+
+	private final func xAxisInformationSet() {
+		if xAxisInformation == nil {
+			chooseXAxisInformationButton.setTitle("Choose information", for: .normal)
+		} else {
+			chooseXAxisInformationButton.setTitle(xAxisInformation!.description.localizedLowercase, for: .normal)
+		}
+		chooseXAxisInformationButton.accessibilityValue = chooseXAxisInformationButton.currentTitle
+		updateShowGraphButtonState()
+	}
+
+	private final func yAxisInformationSet() {
+		if yAxisInformation == nil {
+			chooseYAxisInformationButton.setTitle("Choose information", for: .normal)
+		} else {
+			var description = ""
+			for information in yAxisInformation! {
+				description += information.description.localizedLowercase + ", "
+			}
+			description.removeLast()
+			description.removeLast()
+			chooseYAxisInformationButton.setTitle(description, for: .normal)
+		}
+		chooseYAxisInformationButton.accessibilityValue = chooseYAxisInformationButton.currentTitle
+		updateShowGraphButtonState()
+	}
+
+	private final func seriesGrouperSet() {
+		if seriesGroupers == nil {
+			chooseSeriesGroupingButton.setTitle("Choose series grouping", for: .normal)
+			DependencyInjector.util.ui.setButton(clearSeriesGroupingButton, enabled: false, hidden: true)
+		} else {
+			chooseSeriesGroupingButton.setTitle("Series grouping chosen", for: .normal)
+			DependencyInjector.util.ui.setButton(clearSeriesGroupingButton, enabled: true, hidden: false)
+		}
+		chooseSeriesGroupingButton.accessibilityValue = chooseSeriesGroupingButton.currentTitle
+	}
+
+	private final func axisGrouperSet() {
+		if axisGroupers == nil {
+			chooseAxisGroupingButton.setTitle("Choose axis grouping", for: .normal)
+		} else {
+			chooseAxisGroupingButton.setTitle("Axis grouping chosen", for: .normal)
+		}
+		chooseAxisGroupingButton.accessibilityValue = chooseAxisGroupingButton.currentTitle
+		updateShowGraphButtonState()
+	}
+
+	private final func updateGroupingButtonStates() {
+		guard xAxisSampleType != nil && yAxisSampleType != nil else { return }
+		chooseSeriesGroupingButton.isEnabled = true
+		chooseAxisGroupingButton.isEnabled = true
+	}
+}

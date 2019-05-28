@@ -8,7 +8,11 @@
 
 import Foundation
 
-public final class IntegerAttribute: AttributeBase, NumericAttribute {
+public final class IntegerAttribute: AttributeBase<Int>, NumericAttribute {
+
+	public final override var typeName: String {
+		return "Integer Number"
+	}
 
 	public final func isValid(value: String) -> Bool {
 		return (optional && value == "") || Int(value) != nil
@@ -42,5 +46,9 @@ public final class IntegerAttribute: AttributeBase, NumericAttribute {
 			throw TypeMismatchError(attribute: self, wasA: type(of: value))
 		}
 		return String(castedValue)
+	}
+
+	public final override func typedValuesAreEqual(_ first: Int, _ second: Int) -> Bool {
+		return first == second
 	}
 }

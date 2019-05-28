@@ -33,6 +33,10 @@ public final class NotEqualToStringAttributeRestriction: TypedNotEqualToAttribut
 
 	// MARK: - Attribute Restriction Functions
 
+	public override func copy() -> AttributeRestriction {
+		return NotEqualToStringAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! String)
+	}
+
 	public final func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K !=[cd] %@", restrictedAttribute.variableName!, value as! String)
 	}

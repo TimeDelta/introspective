@@ -9,11 +9,17 @@
 import UIKit
 import os
 
-public final class EditAttributeRestrictionViewController: UIViewController {
+public protocol EditAttributeRestrictionViewController: UIViewController {
+
+	var sampleType: Sample.Type! { get set }
+	var attributeRestriction: AttributeRestriction? { get set }
+}
+
+public final class EditAttributeRestrictionViewControllerImpl: UIViewController, EditAttributeRestrictionViewController {
 
 	// MARK: - Static Variables
 
-	private typealias Me = EditAttributeRestrictionViewController
+	private typealias Me = EditAttributeRestrictionViewControllerImpl
 	private static let doneEditing = Notification.Name("doneChoosingAttributeRestrictionAttributes")
 	private static let valueChanged = Notification.Name("attributeRestrictionValueChanged")
 
@@ -24,7 +30,6 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 
 	// MARK: - Instance Variables
 
-	public final var notificationToSendWhenAccepted: Notification.Name!
 	public final var sampleType: Sample.Type!
 	public final var attributeRestriction: AttributeRestriction?
 	private final var attributedChooserViewController: AttributedChooserViewController!
@@ -52,12 +57,7 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 
 	@objc private final func doneEditing(notification: Notification) {
 		if let attributeRestriction: AttributeRestriction? = value(for: .attributed, from: notification) {
-			NotificationCenter.default.post(
-				name: notificationToSendWhenAccepted,
-				object: notification.object,
-				userInfo: info([
-					.attributeRestriction: attributeRestriction as Any,
-				]))
+			syncPost(.attributeRestrictionEdited, userInfo: [.attributeRestriction: attributeRestriction as Any])
 			navigationController?.popViewController(animated: false)
 		}
 	}
@@ -139,7 +139,7 @@ public final class EditAttributeRestrictionViewController: UIViewController {
 
 // MARK: - UIPickerViewDataSource
 
-extension EditAttributeRestrictionViewController: UIPickerViewDataSource {
+extension EditAttributeRestrictionViewControllerImpl: UIPickerViewDataSource {
 
 	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
@@ -152,7 +152,7 @@ extension EditAttributeRestrictionViewController: UIPickerViewDataSource {
 
 // MARK: - UIPickerViewDelegate
 
-extension EditAttributeRestrictionViewController: UIPickerViewDelegate {
+extension EditAttributeRestrictionViewControllerImpl: UIPickerViewDelegate {
 
 	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		return sampleType.attributes[row].name

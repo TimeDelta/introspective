@@ -20,4 +20,8 @@ public final class EqualToDosageAttributeRestriction: TypedEqualToAttributeRestr
 	public init(restrictedAttribute: Attribute, value: Dosage = Dosage(0, "")) {
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
+
+	public override func copy() -> AttributeRestriction {
+		return EqualToDosageAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Dosage)
+	}
 }

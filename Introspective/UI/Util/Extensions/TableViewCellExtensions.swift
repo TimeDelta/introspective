@@ -42,4 +42,8 @@ extension UITableViewCell {
 	final func post(_ name: NotificationName, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
 		DependencyInjector.util.ui.post(name: name, object: object, userInfo: userInfo)
 	}
+
+	final func syncPost(_ name: NotificationName, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
+		DependencyInjector.util.notification.post(name, object: object, userInfo: userInfo, qos: nil)
+	}
 }

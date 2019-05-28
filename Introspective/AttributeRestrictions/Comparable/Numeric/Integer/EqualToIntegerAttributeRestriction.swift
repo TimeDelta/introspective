@@ -21,6 +21,10 @@ public final class EqualToIntegerAttributeRestriction: TypedEqualToAttributeRest
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
+	public override func copy() -> AttributeRestriction {
+		return EqualToIntegerAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Int)
+	}
+
 	public final func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K == %d", restrictedAttribute.variableName!, value as! Int)
 	}

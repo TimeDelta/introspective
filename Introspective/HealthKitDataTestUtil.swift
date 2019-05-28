@@ -82,6 +82,7 @@ public class HealthKitDataTestUtil {
 			group = DispatchGroup()
 			group.enter()
 			Me.healthStore.delete(allSamples) { _, error in
+				// if this happens, check to make sure that there is only data from Introspective
 				if error != nil { fatalError("Failed to delete " + type.name + ": " + error!.localizedDescription) }
 				group.leave()
 			}

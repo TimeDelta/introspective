@@ -166,144 +166,144 @@ final class DayOfWeekAttributeUnitTests: UnitTest {
 
 	// MARK: - valuesAreEqual()
 
-	func testGivenFirstValueNotDayOfWeek_valuesAreEqual_returnsFalse() {
+	func testGivenFirstValueNotDayOfWeek_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue = "abc"
 		let secondValue = DayOfWeek.Friday
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenSecondValueNotDayOfWeek_valuesAreEqual_returnsFalse() {
+	func testGivenSecondValueNotDayOfWeek_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue = DayOfWeek.Monday
 		let secondValue = "abc"
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenBothValuesAreNotDayOfWeek_valuesAreEqual_returnsFalse() {
+	func testGivenBothValuesAreNotDayOfWeek_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue = "abc"
 		let secondValue = "abc"
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenTwoEqualDaysOfWeek_valuesAreEqual_returnsTrue() {
+	func testGivenTwoEqualDaysOfWeek_valuesAreEqual_returnsTrue() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue = DayOfWeek.Wednesday
 		let secondValue = firstValue
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssert(areEqual)
 	}
 
-	func testGivenTwoDifferentDaysOfWeek_valuesAreEqual_returnsFalse() {
+	func testGivenTwoDifferentDaysOfWeek_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue = DayOfWeek.Thursday
 		let secondValue = DayOfWeek.Sunday
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenRequiredAttributeAndBothValuesNil_valuesAreEqual_returnsTrue() {
+	func testGivenRequiredAttributeAndBothValuesNil_valuesAreEqual_returnsTrue() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue: Any? = nil
 		let secondValue: Any? = nil
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssert(areEqual)
 	}
 
-	func testGivenRequiredAttributeAndOnlyFirstValueIsNil_valuesAreEqual_returnsFalse() {
+	func testGivenRequiredAttributeAndOnlyFirstValueIsNil_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue: Any? = nil
 		let secondValue = DayOfWeek.Saturday
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenRequiredAttributeAndOnlySecondValueIsNil_valuesAreEqual_returnsFalse() {
+	func testGivenRequiredAttributeAndOnlySecondValueIsNil_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue = DayOfWeek.Tuesday
 		let secondValue: Any? = nil
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenOptionalAttributeAndBothValuesNil_valuesAreEqual_returnsTrue() {
+	func testGivenOptionalAttributeAndBothValuesNil_valuesAreEqual_returnsTrue() throws {
 		// given
 		useOptionalAttribute()
 		let firstValue: Any? = nil
 		let secondValue: Any? = nil
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssert(areEqual)
 	}
 
-	func testGivenOptionalAttributeAndOnlyFirstValueIsNil_valuesAreEqual_returnsFalse() {
+	func testGivenOptionalAttributeAndOnlyFirstValueIsNil_valuesAreEqual_returnsFalse() throws {
 		// given
 		useOptionalAttribute()
 		let firstValue: Any? = nil
 		let secondValue = DayOfWeek.Monday
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenOptionalAttributeAndOnlySecondValueIsNil_valuesAreEqual_returnsFalse() {
+	func testGivenOptionalAttributeAndOnlySecondValueIsNil_valuesAreEqual_returnsFalse() throws {
 		// given
 		useOptionalAttribute()
 		let firstValue = DayOfWeek.Thursday
 		let secondValue: Any? = nil
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)

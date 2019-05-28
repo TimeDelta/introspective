@@ -45,6 +45,7 @@ public final class SexualActivity: HealthKitCategorySample {
 
 	public static let protectionUsed = TypedSelectOneAttribute<Protection>(
 		name: "Protection used",
+		typeName: "Protection used",
 		variableName: HKMetadataKeySexualActivityProtectionUsed,
 		possibleValues: Protection.allValues,
 		possibleValueToString: { $0.description },

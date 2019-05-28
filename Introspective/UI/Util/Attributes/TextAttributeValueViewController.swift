@@ -10,18 +10,28 @@ import UIKit
 
 public final class TextAttributeValueViewController: AttributeValueTypeViewController, UITextViewDelegate {
 
-	public final var textAttribute: TextAttribute!
+	// MARK: - IBOutlets
 
 	@IBOutlet weak final var textView: UITextView!
 	@IBOutlet weak final var validationLabel: UILabel!
 
+	// MARK: - Instance Variables
+
+	public final var textAttribute: TextAttribute!
+
+	// MARK: - UIViewController Overrides
+
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
 		textView.delegate = self
-		if currentValue != nil {
-			textView.text = (currentValue as! String)
+		if let text = currentValue as? String {
+			textView.text = text
+		} else {
+
 		}
 	}
+
+	// MARK: - Functions
 
 	public final func textViewDidChange(_ textView: UITextView) {
 		if textAttribute.isValid(value: textView.text) {

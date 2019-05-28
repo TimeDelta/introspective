@@ -13,7 +13,8 @@ public final class BooleanExpressionGroup: BooleanExpression {
 	// MARK: - Display Information
 
 	public final var description: String {
-		return "(" + subExpression.description + ")"
+		guard let expression = subExpression else { return "()" }
+		return "(" + expression.description + ")"
 	}
 
 	// MARK: - Instance Variables
@@ -34,8 +35,19 @@ public final class BooleanExpressionGroup: BooleanExpression {
 		return try subExpression.evaluate(parameters)
 	}
 
+	public final func copy() -> BooleanExpression {
+		return BooleanExpressionGroup(subExpression.copy())
+	}
+
 	public final func equalTo(_ other: BooleanExpression) -> Bool {
 		guard let otherGroup = other as? BooleanExpressionGroup else { return false }
 		return subExpression.equalTo(otherGroup.subExpression)
+	}
+
+	public final func isValid() -> Bool {
+		guard let expression = subExpression else {
+			return false
+		}
+		return expression.isValid()
 	}
 }

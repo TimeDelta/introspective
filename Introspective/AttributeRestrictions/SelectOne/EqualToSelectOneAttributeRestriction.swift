@@ -14,6 +14,8 @@ public final class EqualToSelectOneAttributeRestriction: EqualToAttributeRestric
 
 	private final var selectOneAttribute: SelectOneAttribute
 
+	private final let log = Log()
+
 	// MARK: - Initializers
 
 	public init(restrictedAttribute: Attribute, value: Any, valueAttribute: SelectOneAttribute) {
@@ -23,7 +25,7 @@ public final class EqualToSelectOneAttributeRestriction: EqualToAttributeRestric
 			value: value,
 			valueAttribute: valueAttribute,
 			areEqual: {
-				valueAttribute.valuesAreEqual($0, $1)
+				try valueAttribute.valuesAreEqual($0, $1)
 			})
 	}
 
@@ -33,12 +35,26 @@ public final class EqualToSelectOneAttributeRestriction: EqualToAttributeRestric
 		self.init(restrictedAttribute: restrictedAttribute, value: initialValue, valueAttribute: selectAttribute)
 	}
 
+	// MARK: - Attribute Restriction Functions
+
+	public override func copy() -> AttributeRestriction {
+		return EqualToSelectOneAttributeRestriction(
+			restrictedAttribute: restrictedAttribute,
+			value: value as Any,
+			valueAttribute: valueAttribute as! SelectOneAttribute)
+	}
+
 	// MARK: - Other
 
 	public final override func restrictedAttributeWasSet() {
 		selectOneAttribute = restrictedAttribute as! SelectOneAttribute
-		if selectOneAttribute.possibleValues.firstIndex(where: { selectOneAttribute.valuesAreEqual($0, value) }) == nil {
-			value = selectOneAttribute.possibleValues[0]
+		do {
+			let index = try selectOneAttribute.possibleValues.firstIndex{ try selectOneAttribute.valuesAreEqual($0, value) }
+			if index == nil {
+				value = selectOneAttribute.possibleValues[0]
+			}
+		} catch {
+			log.error("Failed to check for possible value: %@", errorInfo(error))
 		}
 	}
 
@@ -61,6 +77,12 @@ public final class EqualToSelectOneAttributeRestriction: EqualToAttributeRestric
 	}
 
 	public final func equalTo(_ other: EqualToSelectOneAttributeRestriction) -> Bool {
-		return restrictedAttribute.equalTo(other.restrictedAttribute) && selectOneAttribute.valuesAreEqual(value, other.value)
+		if !restrictedAttribute.equalTo(other.restrictedAttribute) { return false }
+		do {
+			return try selectOneAttribute.valuesAreEqual(value, other.value)
+		} catch {
+			log.error("Failed to check if values are equal: %@", errorInfo(error))
+			return false
+		}
 	}
 }

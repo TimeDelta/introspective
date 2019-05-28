@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--BasicXY Chart View Controller-->
+        <!--BasicXY Chart View Controller Impl-->
         <scene sceneID="6Pf-pm-8FX">
             <objects>
-                <viewController storyboardIdentifier="BasicXYChartViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wyt-VF-PBn" customClass="BasicXYChartViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="BasicXYChartViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wyt-VF-PBn" customClass="BasicXYChartViewControllerImpl" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="SrV-5L-VYa">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -40,7 +40,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="beD-Yj-EtG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="192.80000000000001" y="-548.27586206896558"/>
+            <point key="canvasLocation" x="-1226" y="832"/>
         </scene>
         <!--BasicXY Graph Setup View Controller-->
         <scene sceneID="60n-EZ-Gom">
@@ -77,7 +77,81 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="acn-Ax-4Z5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-874.39999999999998" y="-1212.1439280359821"/>
+            <point key="canvasLocation" x="-1226" y="-1227"/>
+        </scene>
+        <!--Choose Groupers ForXY Graph View Controller Impl-->
+        <scene sceneID="Pjk-8c-4S9">
+            <objects>
+                <viewController storyboardIdentifier="chooseXYGroupers" useStoryboardIdentifierAsRestorationIdentifier="YES" id="RN6-hb-Q7x" customClass="ChooseGroupersForXYGraphViewControllerImpl" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Mvc-j1-uYb">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" preservesSuperviewLayoutMargins="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rhb-Ll-G7s">
+                                <rect key="frame" x="16" y="352" width="343" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Choose Attribute Type"/>
+                                <connections>
+                                    <action selector="chooseAttributeTypeButtonPressed:" destination="RN6-hb-Q7x" eventType="touchUpInside" id="3eq-NX-rOb"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" preservesSuperviewLayoutMargins="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RSz-qM-Hve">
+                                <rect key="frame" x="16" y="428" width="343" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Choose X-Axis Grouping"/>
+                                <connections>
+                                    <action selector="chooseXAxisGrouperButtonPressed:" destination="RN6-hb-Q7x" eventType="touchUpInside" id="j2q-Ke-H84"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" preservesSuperviewLayoutMargins="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EvW-cz-HNw">
+                                <rect key="frame" x="16" y="504" width="343" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <accessibility key="accessibilityConfiguration" identifier="show me the graph button" label="show me the graph button"/>
+                                <state key="normal" title="Save">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <state key="disabled">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="saveButtonPressed:" destination="RN6-hb-Q7x" eventType="touchUpInside" id="5WH-jK-ZlX"/>
+                                    <action selector="showMeTheGraphButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="RQi-n1-XeT"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" preservesSuperviewLayoutMargins="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="saz-eg-w18">
+                                <rect key="frame" x="16" y="390" width="343" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Choose Grouping Type"/>
+                                <connections>
+                                    <action selector="chooseGrouperTypeButtonPressed:" destination="RN6-hb-Q7x" eventType="touchUpInside" id="GfA-ek-2Ch"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" preservesSuperviewLayoutMargins="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BOR-Gz-qof">
+                                <rect key="frame" x="16" y="466" width="343" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <state key="normal" title="Choose Y-Axis Grouping"/>
+                                <connections>
+                                    <action selector="chooseYAxisGrouperButtonPressed:" destination="RN6-hb-Q7x" eventType="touchUpInside" id="wWe-oA-KAX"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="09x-fw-pEJ"/>
+                    </view>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
+                    <connections>
+                        <outlet property="chooseAttributeTypeButton" destination="Rhb-Ll-G7s" id="NUC-nZ-omH"/>
+                        <outlet property="chooseGrouperTypeButton" destination="saz-eg-w18" id="neY-F3-YHk"/>
+                        <outlet property="chooseXGrouperButton" destination="RSz-qM-Hve" id="LBU-aS-of2"/>
+                        <outlet property="chooseYGrouperButton" destination="BOR-Gz-qof" id="IHS-9z-3No"/>
+                        <outlet property="saveButton" destination="EvW-cz-HNw" id="3iD-Ar-ziV"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lFK-69-cGP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-194.40000000000001" y="137.18140929535232"/>
         </scene>
         <!--Multiple Sample Type BasicXY Graph Customization View Controller-->
         <scene sceneID="LGk-43-ijj">
@@ -126,30 +200,6 @@
                                 <state key="normal" title="Choose information"/>
                                 <connections>
                                     <action selector="chooseYAxisInformationButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="Bm6-4O-3BS"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WWB-wl-rDn">
-                                <rect key="frame" x="16" y="363" width="343" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <accessibility key="accessibilityConfiguration" identifier="choose grouping button" label="choose grouping button"/>
-                                <state key="normal" title="Choose grouping"/>
-                                <connections>
-                                    <action selector="chooseGroupingButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="4iT-zj-ASk"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="puh-yl-8rv">
-                                <rect key="frame" x="16" y="401" width="343" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <accessibility key="accessibilityConfiguration" identifier="show me the graph button" label="show me the graph button"/>
-                                <state key="normal" title="Show me the graph">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <state key="disabled">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="showMeTheGraphButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="D8G-v4-Zy4"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="_________________________________" textAlignment="center" lineBreakMode="clip" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ihC-z4-sIE">
@@ -218,6 +268,65 @@
                                     <action selector="clearXAxisQueryButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="E5S-yk-1nW"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J8w-Wn-ae0">
+                                <rect key="frame" x="45" y="364" width="284" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="choose series grouping button" label="choose series grouping button"/>
+                                <state key="normal" title="Choose series grouping"/>
+                                <connections>
+                                    <action selector="chooseSeriesGroupingButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="Qok-IQ-Ige"/>
+                                    <action selector="editXAxis:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="09p-Gz-6Hc"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ibL-h3-Ytv">
+                                <rect key="frame" x="45" y="402" width="284" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="choose axis grouping button" label="choose axis grouping button"/>
+                                <state key="normal" title="Choose axis grouping"/>
+                                <connections>
+                                    <action selector="chooseAxisGroupingButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="qNW-Qw-fdU"/>
+                                    <action selector="editXAxis:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="XYx-24-Ufj"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qte-DZ-wuv">
+                                <rect key="frame" x="15" y="368" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="clear query button" label="clear query button"/>
+                                <state key="normal" title="X"/>
+                                <connections>
+                                    <action selector="clearQueryButtonPressed:" destination="lY4-vc-GUS" eventType="touchUpInside" id="rDu-P4-9Gx"/>
+                                    <action selector="clearSeriesGroupingButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="4WQ-qo-Xqe"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ga0-sh-Dnr">
+                                <rect key="frame" x="337" y="368" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="seriesGroupingInfoButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="Y8Q-Pn-sPl"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JWa-oZ-myB">
+                                <rect key="frame" x="337" y="406" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="axisGroupingInfoButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="giR-5q-a0S"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="puh-yl-8rv">
+                                <rect key="frame" x="16" y="440" width="343" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <accessibility key="accessibilityConfiguration" identifier="show me the graph button" label="show me the graph button"/>
+                                <state key="normal" title="Show me the graph">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <state key="disabled">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="showMeTheGraphButtonPressed:" destination="4xZ-0p-oXx" eventType="touchUpInside" id="D8G-v4-Zy4"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="xjs-I8-uMP"/>
@@ -225,13 +334,15 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="chooseGroupingButton" destination="WWB-wl-rDn" id="7AU-8P-MWZ"/>
+                        <outlet property="chooseAxisGroupingButton" destination="ibL-h3-Ytv" id="Ht0-po-Ljj"/>
+                        <outlet property="chooseSeriesGroupingButton" destination="J8w-Wn-ae0" id="0sf-a3-XYh"/>
                         <outlet property="chooseXAxisInformationButton" destination="hdM-QY-YKD" id="5sw-MB-L0L"/>
                         <outlet property="chooseXAxisQueryButton" destination="ZbO-41-0rU" id="ZsI-xU-Yfx"/>
                         <outlet property="chooseXAxisSampleTypeButton" destination="8xU-zL-oJE" id="vvK-D3-vx2"/>
                         <outlet property="chooseYAxisInformationButton" destination="mxe-Wc-9Po" id="4Og-tI-BUM"/>
                         <outlet property="chooseYAxisQueryButton" destination="TGf-6q-C2U" id="8TO-Ir-2Ia"/>
                         <outlet property="chooseYAxisSampleTypeButton" destination="zY6-nj-87d" id="uxb-R3-6xt"/>
+                        <outlet property="clearSeriesGroupingButton" destination="Qte-DZ-wuv" id="A4J-dk-5AB"/>
                         <outlet property="clearXAxisQueryButton" destination="O6I-UQ-OHk" id="HX8-B3-ksM"/>
                         <outlet property="clearYAxisQueryButton" destination="xwR-Ud-Thz" id="clB-e1-vFW"/>
                         <outlet property="showGraphButton" destination="puh-yl-8rv" id="Aa7-pD-0pb"/>
@@ -244,7 +355,7 @@
         <!--Choose Information-->
         <scene sceneID="Ymt-E5-tUB">
             <objects>
-                <tableViewController storyboardIdentifier="chooseInformation" title="Choose Information" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FBF-3k-koa" customClass="ChooseInformationToGraphTableViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="chooseInformation" title="Choose Information" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FBF-3k-koa" customClass="ChooseInformationToGraphTableViewControllerImpl" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Ejy-H4-omQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -301,7 +412,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yc8-qE-dOP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-519" y="153"/>
+            <point key="canvasLocation" x="-890" y="139"/>
         </scene>
         <!--Graph Setup-->
         <scene sceneID="Z8t-2U-Zhj">
@@ -311,8 +422,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="foV-X4-4ym">
+                                <rect key="frame" x="46" y="20" width="284" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="choose series grouping button" label="choose series grouping button"/>
+                                <state key="normal" title="Choose series grouping (optional)"/>
+                                <connections>
+                                    <action selector="chooseSeriesGroupingButtonPressed:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="qk9-WT-hWU"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UKn-HW-P1g">
+                                <rect key="frame" x="46" y="58" width="284" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="choose axis grouping button" label="choose axis grouping button"/>
+                                <state key="normal" title="Choose point grouping (optional)"/>
+                                <connections>
+                                    <action selector="choosePointGroupingButtonPressed:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="3eM-cq-M9h"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4ad-RJ-rPP">
-                                <rect key="frame" x="16" y="96" width="343" height="30"/>
+                                <rect key="frame" x="16" y="172" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <accessibility key="accessibilityConfiguration" identifier="show me the graph button" label="show me the graph button"/>
@@ -327,7 +456,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c9B-Ny-KM0">
-                                <rect key="frame" x="16" y="20" width="343" height="30"/>
+                                <rect key="frame" x="16" y="96" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <accessibility key="accessibilityConfiguration" identifier="choose x-axis information button" label="choose x-axis information button"/>
                                 <state key="normal" title="Choose x-axis information"/>
@@ -335,13 +464,47 @@
                                     <action selector="editXAxis:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="SIG-oF-HUC"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nr2-WX-IXz">
-                                <rect key="frame" x="16" y="58" width="343" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nr2-WX-IXz">
+                                <rect key="frame" x="16" y="134" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <accessibility key="accessibilityConfiguration" identifier="choose y-axis information button" label="choose y-axis information button"/>
                                 <state key="normal" title="Choose y-axis information"/>
                                 <connections>
                                     <action selector="editYAxis:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="eFn-m0-eWX"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hf7-62-HR4">
+                                <rect key="frame" x="16" y="24" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="clear query button" label="clear query button"/>
+                                <state key="normal" title="X"/>
+                                <connections>
+                                    <action selector="clearQueryButtonPressed:" destination="lY4-vc-GUS" eventType="touchUpInside" id="lQH-Yt-Br2"/>
+                                    <action selector="clearSeriesGroupingButtonPressed:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="YxZ-uT-jnU"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nsg-uH-sE1">
+                                <rect key="frame" x="16" y="62" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="clear query button" label="clear query button"/>
+                                <state key="normal" title="X"/>
+                                <connections>
+                                    <action selector="clearPointGroupingButtonPressed:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="Fwh-hL-WPx"/>
+                                    <action selector="clearQueryButtonPressed:" destination="lY4-vc-GUS" eventType="touchUpInside" id="SMF-YG-3gT"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hJE-4X-acK">
+                                <rect key="frame" x="338" y="24" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="seriesGroupingInfoButtonPressed:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="27e-7e-PPU"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i7P-za-pys">
+                                <rect key="frame" x="338" y="62" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="pointGroupingInfoButtonPressed:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="iPa-3i-1Pr"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -351,6 +514,10 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
                     <connections>
+                        <outlet property="choosePointGrouperButton" destination="UKn-HW-P1g" id="dJz-Sw-0Kl"/>
+                        <outlet property="chooseSeriesGrouperButton" destination="foV-X4-4ym" id="MPH-94-ldY"/>
+                        <outlet property="clearPointGrouperButton" destination="Nsg-uH-sE1" id="uhQ-ru-htx"/>
+                        <outlet property="clearSeriesGrouperButton" destination="Hf7-62-HR4" id="8kD-TH-w4W"/>
                         <outlet property="showGraphButton" destination="4ad-RJ-rPP" id="xDU-2R-uWx"/>
                         <outlet property="xAxisButton" destination="c9B-Ny-KM0" id="Sfl-Om-bI0"/>
                         <outlet property="yAxisButton" destination="Nr2-WX-IXz" id="OKy-I7-iVE"/>
@@ -358,7 +525,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Plv-pp-7ff" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1954" y="-548"/>
+            <point key="canvasLocation" x="-1954.4000000000001" y="-548.27586206896558"/>
         </scene>
         <!--X-Axis Setup-->
         <scene sceneID="G8o-ah-oVL">
@@ -368,15 +535,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Oit-Yb-YZR">
-                                <rect key="frame" x="46" y="336" width="282" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <accessibility key="accessibilityConfiguration" hint="Set the time unit over which to aggregate (optional)" identifier="aggregation time unit button" label="aggregation time unit button"/>
-                                <state key="normal" title="Choose grouping (optional)"/>
-                                <connections>
-                                    <action selector="chooseGroupingButtonPressed:" destination="rzj-bc-0U9" eventType="touchUpInside" id="8vx-Xg-qsz"/>
-                                </connections>
-                            </button>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hd0-Cd-LPt">
                                 <rect key="frame" x="0.0" y="170" width="375" height="162"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
@@ -404,15 +562,6 @@
                                     <action selector="showGraph:" destination="lY4-vc-GUS" eventType="touchUpInside" id="u2e-U1-MoJ"/>
                                 </connections>
                             </button>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kPG-gF-MxN">
-                                <rect key="frame" x="16" y="340" width="22" height="22"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <accessibility key="accessibilityConfiguration" identifier="clear grouping button" label="clear grouping button"/>
-                                <state key="normal" title="X"/>
-                                <connections>
-                                    <action selector="clearGroupingButtonPressed:" destination="rzj-bc-0U9" eventType="touchUpInside" id="EeO-xs-vF9"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="nI5-sN-eLd"/>
@@ -421,14 +570,12 @@
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
                     <connections>
                         <outlet property="attributePicker" destination="hd0-Cd-LPt" id="B7g-dE-NCV"/>
-                        <outlet property="chooseGroupingButton" destination="Oit-Yb-YZR" id="IWb-Zr-8vF"/>
-                        <outlet property="clearGroupingButton" destination="kPG-gF-MxN" id="xBV-7I-6bc"/>
                         <outlet property="informationPicker" destination="Aky-Nj-Y3S" id="zrz-b9-A1e"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SWh-MX-JnS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1954" y="154"/>
+            <point key="canvasLocation" x="-2326" y="140"/>
         </scene>
         <!--Graph Setup-->
         <scene sceneID="3jh-t0-FHX">
@@ -438,8 +585,69 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o00-l3-PQb">
+                                <rect key="frame" x="0.0" y="20" width="375" height="162"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="sample type picker" label="sample type picker">
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
+                            </pickerView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6ie-ue-bvH">
+                                <rect key="frame" x="45" y="190" width="284" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="choose series grouping button" label="choose series grouping button"/>
+                                <state key="normal" title="Choose series grouping (optional)"/>
+                                <connections>
+                                    <action selector="chooseSeriesGroupingButtonPressed:" destination="lY4-vc-GUS" eventType="touchUpInside" id="PR2-BU-kLf"/>
+                                    <action selector="editXAxis:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="qMA-Ne-Ngr"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LWv-oZ-7Ps">
+                                <rect key="frame" x="45" y="228" width="284" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="choose point grouping button" label="choose point grouping button"/>
+                                <state key="normal" title="Choose point grouping (optional)"/>
+                                <connections>
+                                    <action selector="choosePointGroupingButtonPressed:" destination="lY4-vc-GUS" eventType="touchUpInside" id="Y3t-tO-0Tw"/>
+                                    <action selector="editXAxis:" destination="6BZ-0A-CbZ" eventType="touchUpInside" id="Yc8-N1-5Qm"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GVY-z3-QGo">
+                                <rect key="frame" x="15" y="194" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="clear query button" label="clear query button"/>
+                                <state key="normal" title="X"/>
+                                <connections>
+                                    <action selector="clearQueryButtonPressed:" destination="lY4-vc-GUS" eventType="touchUpInside" id="QmA-V0-a54"/>
+                                    <action selector="clearSeriesGroupingButtonPressed:" destination="lY4-vc-GUS" eventType="touchUpInside" id="5Tm-g5-R9v"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ECa-af-Bde">
+                                <rect key="frame" x="15" y="232" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="clear query button" label="clear query button"/>
+                                <state key="normal" title="X"/>
+                                <connections>
+                                    <action selector="clearPointGroupingButtonPressed:" destination="lY4-vc-GUS" eventType="touchUpInside" id="I9k-1L-MwP"/>
+                                    <action selector="clearQueryButtonPressed:" destination="lY4-vc-GUS" eventType="touchUpInside" id="sCx-Y6-BcS"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Dt-kT-97J">
+                                <rect key="frame" x="337" y="194" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="seriesGroupingInfoButtonPressed:" destination="lY4-vc-GUS" eventType="touchUpInside" id="Vs8-t2-5jS"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LR9-Xg-M6B">
+                                <rect key="frame" x="337" y="232" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="pointGroupingInfoButtonPressed:" destination="lY4-vc-GUS" eventType="touchUpInside" id="Rgx-GH-LQc"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ss2-tD-fkF">
-                                <rect key="frame" x="16" y="228" width="343" height="30"/>
+                                <rect key="frame" x="16" y="304" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <accessibility key="accessibilityConfiguration" identifier="choose x-axis information button" label="choose x-axis information button"/>
                                 <state key="normal" title="Choose x-axis information"/>
@@ -447,8 +655,8 @@
                                     <action selector="editXAxis:" destination="lY4-vc-GUS" eventType="touchUpInside" id="Uo8-HH-HLO"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Pe-Ia-XeU">
-                                <rect key="frame" x="16" y="266" width="343" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Pe-Ia-XeU">
+                                <rect key="frame" x="16" y="342" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <accessibility key="accessibilityConfiguration" identifier="choose y-axis information button" label="choose y-axis information button"/>
                                 <state key="normal" title="Choose y-axis information"/>
@@ -457,7 +665,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kpR-s2-gWu">
-                                <rect key="frame" x="16" y="304" width="343" height="30"/>
+                                <rect key="frame" x="16" y="380" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <accessibility key="accessibilityConfiguration" identifier="show me the graph button" label="show me the graph button"/>
@@ -472,7 +680,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zb1-Dx-Wvx">
-                                <rect key="frame" x="46" y="190" width="282" height="30"/>
+                                <rect key="frame" x="46" y="266" width="282" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <accessibility key="accessibilityConfiguration" hint="Choose the query to use (optional)" identifier="choose query button" label="choose query button"/>
                                 <state key="normal" title="Choose query (optional)"/>
@@ -480,15 +688,8 @@
                                     <action selector="chooseQueryButtonPressed:" destination="lY4-vc-GUS" eventType="touchUpInside" id="cQE-9E-XvS"/>
                                 </connections>
                             </button>
-                            <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o00-l3-PQb">
-                                <rect key="frame" x="0.0" y="20" width="375" height="162"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <accessibility key="accessibilityConfiguration" identifier="sample type picker" label="sample type picker">
-                                    <bool key="isElement" value="YES"/>
-                                </accessibility>
-                            </pickerView>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JDS-g5-far">
-                                <rect key="frame" x="16" y="194" width="22" height="22"/>
+                                <rect key="frame" x="16" y="270" width="22" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <accessibility key="accessibilityConfiguration" identifier="clear query button" label="clear query button"/>
                                 <state key="normal" title="X"/>
@@ -503,7 +704,11 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="choosePointGrouperButton" destination="LWv-oZ-7Ps" id="aFR-w3-ZYV"/>
+                        <outlet property="chooseSeriesGrouperButton" destination="6ie-ue-bvH" id="TJN-9X-tvw"/>
+                        <outlet property="clearPointGrouperButton" destination="ECa-af-Bde" id="Nmb-oB-I0Q"/>
                         <outlet property="clearQueryButton" destination="JDS-g5-far" id="d2g-7d-scC"/>
+                        <outlet property="clearSeriesGrouperButton" destination="GVY-z3-QGo" id="kUw-9b-6hG"/>
                         <outlet property="queryButton" destination="zb1-Dx-Wvx" id="6Zf-Nf-okH"/>
                         <outlet property="sampleTypePicker" destination="o00-l3-PQb" id="y4Z-AQ-ClD"/>
                         <outlet property="showGraphButton" destination="kpR-s2-gWu" id="f5s-hH-aWd"/>
@@ -578,7 +783,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kHY-VB-V0a" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1226" y="153"/>
+            <point key="canvasLocation" x="-1598" y="139"/>
         </scene>
     </scenes>
 </document>

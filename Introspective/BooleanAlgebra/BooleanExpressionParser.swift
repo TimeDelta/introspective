@@ -8,7 +8,8 @@
 
 import Foundation
 
-public enum ExpressionType {
+public typealias BooleanExpressionPart = (type: BooleanExpressionType, expression: BooleanExpression?)
+public enum BooleanExpressionType {
 	case groupStart
 	case groupEnd
 	case expression
@@ -19,12 +20,12 @@ public enum ExpressionType {
 //sourcery: AutoMockable
 public protocol BooleanExpressionParser {
 
-	func parse(_ parts :[(type: ExpressionType, expression: BooleanExpression?)]) throws -> BooleanExpression
+	func parse(_ parts: [BooleanExpressionPart]) throws -> BooleanExpression
 }
 
 public final class BooleanExpressionParserImpl: BooleanExpressionParser {
 
-	public final func parse(_ parts :[(type: ExpressionType, expression: BooleanExpression?)]) throws -> BooleanExpression {
+	public final func parse(_ parts: [BooleanExpressionPart]) throws -> BooleanExpression {
 		precondition(parts.count > 0)
 		var stack = [BooleanExpression]()
 		for part in parts {
@@ -43,20 +44,7 @@ public final class BooleanExpressionParserImpl: BooleanExpressionParser {
 					try parseGroupEnd(&stack)
 					break
 				case .expression:
-					guard let expression = part.expression else {
-						throw GenericError("Missing expression for sub-expression")
-					}
-					if stack.isEmpty {
-						stack.append(expression)
-					} else if let and = stack.last as? AndExpression {
-						and.expression2 = expression
-						stack[stack.count - 1] = and
-					} else if let or = stack.last as? OrExpression {
-						or.expression2 = expression
-						stack[stack.count - 1] = or
-					} else if stack.last is BooleanExpressionGroup {
-						stack.append(expression)
-					}
+					try parseExpression(&stack, part.expression)
 					break
 			}
 		}
@@ -74,6 +62,9 @@ public final class BooleanExpressionParserImpl: BooleanExpressionParser {
 		}
 		guard let expression = stack.first else {
 			throw GenericError("No expression")
+		}
+		guard expression.isValid() else {
+			throw GenericError("Invalid expression")
 		}
 		return expression
 	}
@@ -97,6 +88,9 @@ public final class BooleanExpressionParserImpl: BooleanExpressionParser {
 	}
 
 	private final func parseGroupEnd(_ stack: inout [BooleanExpression]) throws {
+		guard stack.count > 1 else {
+			throw GenericError("Empty stack while parsing group end")
+		}
 		var subGroup = stack.removeLast()
 		var current = stack.removeLast()
 		while !(current is BooleanExpressionGroup) {
@@ -108,6 +102,9 @@ public final class BooleanExpressionParserImpl: BooleanExpressionParser {
 				subGroup = or
 			} else {
 				throw GenericError("Expected AND or OR but received \(current.description)")
+			}
+			guard stack.count > 0 else {
+				throw GenericError("Empty stack while parsing group end")
 			}
 			current = stack.removeLast()
 		}
@@ -123,5 +120,24 @@ public final class BooleanExpressionParserImpl: BooleanExpressionParser {
 			stack[stack.count - 1] = or
 		}
 		stack.append(group)
+	}
+
+	private final func parseExpression(_ stack: inout [BooleanExpression], _ expression: BooleanExpression?) throws {
+		guard let expression = expression else {
+			throw GenericError("Missing expression for sub-expression")
+		}
+		if stack.isEmpty {
+			stack.append(expression)
+		} else if let and = stack.last as? AndExpression {
+			and.expression2 = expression
+			stack[stack.count - 1] = and
+		} else if let or = stack.last as? OrExpression {
+			or.expression2 = expression
+			stack[stack.count - 1] = or
+		} else if stack.last is BooleanExpressionGroup {
+			stack.append(expression)
+		} else {
+			throw GenericError("Cannot have two expressions next to each other without an and / or")
+		}
 	}
 }

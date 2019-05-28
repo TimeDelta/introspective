@@ -55,7 +55,7 @@ final class EditSubSampleTypeViewController: UIViewController {
 
 	@objc public final func doneEditing(notification: Notification) {
 		guard let subQueryMatcher: SubQueryMatcher? = value(for: .attributed, from: notification) else { return }
-		let savedValue = QueryViewController.SampleTypeInfo(sampleType, subQueryMatcher!)
+		let savedValue = QueryViewControllerImpl.SampleTypeInfo(sampleType, subQueryMatcher!)
 		NotificationCenter.default.post(
 			name: notificationToSendWhenAccepted,
 			object: self,

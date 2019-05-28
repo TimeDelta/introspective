@@ -34,6 +34,10 @@ public final class EmptyStringAttributeRestriction: AnyAttributeRestriction, Str
 		return value.isEmpty
 	}
 
+	public override func copy() -> AttributeRestriction {
+		return EmptyStringAttributeRestriction(restrictedAttribute: restrictedAttribute)
+	}
+
 	public final func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K.length == 0", restrictedAttribute.variableName!)
 	}

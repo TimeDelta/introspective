@@ -26,6 +26,7 @@ public final class ProductionInjectionProvider: InjectionProvider {
 	private static let realImporterFactory = ImporterFactoryImpl()
 	private static let realExporterFactory = ExporterFactoryImpl()
 	private static let realCoachMarkFactory = CoachMarkFactoryImpl()
+	private static let realBooleanAlgebraFactory = BooleanAlgebraFactoryImpl()
 
 	public final func database() -> Database {
 		if Me.realDatabase == nil {
@@ -71,4 +72,5 @@ public final class ProductionInjectionProvider: InjectionProvider {
 	public final func importerFactory() -> ImporterFactory { return Me.realImporterFactory }
 	public final func exporterFactory() -> ExporterFactory { return Me.realExporterFactory }
 	public final func coachMarkFactory() -> CoachMarkFactory { return Me.realCoachMarkFactory }
+	public final func booleanAlgebraFactory() -> BooleanAlgebraFactory { return Me.realBooleanAlgebraFactory }
 }

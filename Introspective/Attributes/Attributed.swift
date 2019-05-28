@@ -36,11 +36,13 @@ extension Attributed {
 					attribute.name,
 					attributedName,
 					errorInfo(error))
+				return false
 			}
 		}
 		return true
 	}
 
+	#warning("does this allow equality with Optional version?")
 	public func equalTo(_ otherAttributed: Attributed) -> Bool {
 		if type(of: self) != type(of: otherAttributed) { return false }
 		if attributedName != otherAttributed.attributedName { return false }

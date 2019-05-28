@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Hamcrest
 @testable import Introspective
 
 final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
@@ -153,6 +154,23 @@ final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
 			// then
 			XCTAssert(error is TypeMismatchError)
 		}
+	}
+
+	// MARK: - copy()
+
+	func test_copy_returnsCopy() {
+		// given
+		restriction.tag = TagDataTestUtil.createTag(name: "target tag")
+
+		// when
+		let copy = restriction.copy()
+
+		// then
+		guard let castedCopy = copy as? HasTagAttributeRestriction else {
+			XCTFail("Wrong type returned")
+			return
+		}
+		assertThat(castedCopy, equals(restriction))
 	}
 
 	// MARK: - value(of:)

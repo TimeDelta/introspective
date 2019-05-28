@@ -13,13 +13,13 @@
         <!--Query-->
         <scene sceneID="BuD-iL-Y85">
             <objects>
-                <tableViewController storyboardIdentifier="queryView" title="Query" useStoryboardIdentifierAsRestorationIdentifier="YES" id="WJ9-gy-FSd" customClass="QueryViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="queryView" title="Query" useStoryboardIdentifierAsRestorationIdentifier="YES" id="WJ9-gy-FSd" customClass="QueryViewControllerImpl" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Vg8-c6-iz7">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="a8Y-9T-RMg">
-                            <rect key="frame" x="0.0" y="160" width="375" height="44"/>
+                        <toolbar key="tableFooterView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" misplaced="YES" id="a8Y-9T-RMg">
+                            <rect key="frame" x="0.0" y="47" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             <items>
                                 <barButtonItem systemItem="add" id="z9J-Hy-7FO">
@@ -186,7 +186,7 @@
         <!--Edit Attribute Restriction-->
         <scene sceneID="MN9-6C-1GP">
             <objects>
-                <viewController title="Edit Attribute Restriction" id="L2p-RU-HId" customClass="EditAttributeRestrictionViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="editAttributeRestriction" title="Edit Attribute Restriction" useStoryboardIdentifierAsRestorationIdentifier="YES" id="L2p-RU-HId" customClass="EditAttributeRestrictionViewControllerImpl" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ewH-tz-GfQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

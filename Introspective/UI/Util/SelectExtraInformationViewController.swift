@@ -8,7 +8,16 @@
 
 import UIKit
 
-final class SelectExtraInformationViewController: UIViewController {
+protocol SelectExtraInformationViewController: UIViewController {
+
+	var attributes: [Attribute]! { get set }
+	var selectedAttribute: Attribute! { get set }
+	var selectedInformation: ExtraInformation! { get set }
+	var limitToNumericInformation: Bool { get set }
+	var notificationToSendWhenFinished: NotificationName! { get set }
+}
+
+final class SelectExtraInformationViewControllerImpl: UIViewController, SelectExtraInformationViewController {
 
 	// MARK: - IBOutlets
 
@@ -21,7 +30,7 @@ final class SelectExtraInformationViewController: UIViewController {
 	public final var selectedAttribute: Attribute!
 	public final var selectedInformation: ExtraInformation!
 	public final var limitToNumericInformation: Bool = false
-	public final var notificationToSendWhenFinished: Notification.Name!
+	public final var notificationToSendWhenFinished: NotificationName!
 
 	private final let log = Log()
 
@@ -56,12 +65,11 @@ final class SelectExtraInformationViewController: UIViewController {
 
 	@IBAction final func acceptButtonPressed(_ sender: Any) {
 		DispatchQueue.main.async {
-			NotificationCenter.default.post(
-				name: self.notificationToSendWhenFinished,
-				object: self,
-				userInfo: self.info([
+			self.syncPost(
+				self.notificationToSendWhenFinished,
+				userInfo: [
 					.information: self.selectedInformation,
-				]))
+				])
 		}
 		if let navigationController = navigationController {
 			navigationController.popViewController(animated: false)
@@ -92,7 +100,7 @@ final class SelectExtraInformationViewController: UIViewController {
 
 // MARK: - UIPickerViewDataSource
 
-extension SelectExtraInformationViewController: UIPickerViewDataSource {
+extension SelectExtraInformationViewControllerImpl: UIPickerViewDataSource {
 
 	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
@@ -112,7 +120,7 @@ extension SelectExtraInformationViewController: UIPickerViewDataSource {
 
 // MARK: - UIPickerViewDelegate
 
-extension SelectExtraInformationViewController: UIPickerViewDelegate {
+extension SelectExtraInformationViewControllerImpl: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		if pickerView == attributePicker {

@@ -20,4 +20,8 @@ public final class NotEqualToFrequencyAttributeRestriction: TypedNotEqualToAttri
 	public init(restrictedAttribute: Attribute, value: Frequency = Frequency(0, .day)!) {
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
+
+	public override func copy() -> AttributeRestriction {
+		return NotEqualToFrequencyAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Frequency)
+	}
 }

@@ -71,6 +71,10 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 		return value.localizedLowercase.starts(with: prefix)
 	}
 
+	public override func copy() -> AttributeRestriction {
+		return StartsWithStringAttributeRestriction(restrictedAttribute: restrictedAttribute, prefix: prefix)
+	}
+
 	public final func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K BEGINSWITH[cd] %@", restrictedAttribute.variableName!, prefix)
 	}

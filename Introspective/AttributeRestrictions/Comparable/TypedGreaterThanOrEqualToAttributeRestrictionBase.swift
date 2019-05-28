@@ -71,6 +71,13 @@ public class TypedGreaterThanOrEqualToAttributeRestrictionBase<ValueType: Compar
 		return castedValue >= value
 	}
 
+	public override func copy() -> AttributeRestriction {
+		return TypedGreaterThanOrEqualToAttributeRestrictionBase<ValueType>(
+			restrictedAttribute: restrictedAttribute,
+			value: value,
+			valueAttribute: valueAttribute)
+	}
+
 	// MARK: - Equality
 
 	public static func ==(lhs: TypedGreaterThanOrEqualToAttributeRestrictionBase, rhs: TypedGreaterThanOrEqualToAttributeRestrictionBase) -> Bool {

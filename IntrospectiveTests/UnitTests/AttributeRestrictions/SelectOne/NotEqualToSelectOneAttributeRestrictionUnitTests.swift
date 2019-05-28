@@ -1,5 +1,5 @@
 //
-//  NotNotEqualToSelectOneAttributeRestrictionUnitTests.swift
+//  NotEqualToSelectOneAttributeRestrictionUnitTests.swift
 //  IntrospectiveTests
 //
 //  Created by Bryan Nova on 3/28/19.
@@ -10,7 +10,7 @@ import XCTest
 import Hamcrest
 @testable import Introspective
 
-final class NotNotEqualToSelectOneAttributeRestrictionUnitTests: UnitTest {
+final class NotEqualToSelectOneAttributeRestrictionUnitTests: UnitTest {
 
 	private final var restriction: NotEqualToSelectOneAttributeRestriction!
 	private final var attribute: SelectOneAttribute!
@@ -157,6 +157,20 @@ final class NotNotEqualToSelectOneAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(samplePasses)
 	}
 
+	// MARK: - copy()
+
+	func test_copy_returnsCopy() {
+		// when
+		let copy = restriction.copy()
+
+		// then
+		guard let castedCopy = copy as? NotEqualToSelectOneAttributeRestriction else {
+			XCTFail("Wrong type returned")
+			return
+		}
+		assertThat(castedCopy, equals(restriction))
+	}
+
 	// MARK: - restrictedAttributeWasSet()
 
 	func testGivenValueIsNoLongerPossible_setRestrictedAttribute_setsValueToFirstPossibleValueOfNewAttribute() {
@@ -164,6 +178,7 @@ final class NotNotEqualToSelectOneAttributeRestrictionUnitTests: UnitTest {
 		let expectedNewRestrictionValue = 2.0
 		let newAttribute = TypedEquatableSelectOneAttribute<Double>(
 			name: "new attribute",
+			typeName: "type",
 			possibleValues: [
 				expectedNewRestrictionValue,
 				expectedNewRestrictionValue + 1,

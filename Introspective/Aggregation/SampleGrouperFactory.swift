@@ -8,10 +8,13 @@
 
 import Foundation
 
+//sourcery: AutoMockable
 public protocol SampleGrouperFactory {
-	func typesFor(attribute: Attribute) -> [SampleGrouper.Type]
-	func groupersFor(attribute: Attribute) -> [SampleGrouper]
-	func initialize(type: SampleGrouper.Type) -> SampleGrouper
+	func typesFor(sampleType: Sample.Type) -> [SampleGrouper.Type]
+	func typesFor(attributes: [Attribute]) -> [SampleGrouper.Type]
+	func groupersFor(sampleType: Sample.Type) -> [SampleGrouper]
+	func groupersFor(attributes: [Attribute]) -> [SampleGrouper]
+	func groupDefinition(_ sampleType: Sample.Type) -> GroupDefinition
 }
 
 public final class SampleGrouperFactoryImpl: SampleGrouperFactory {
@@ -22,19 +25,44 @@ public final class SampleGrouperFactoryImpl: SampleGrouperFactory {
 		SameTimeUnitSampleGrouper.self,
 	]
 
-	public final func typesFor(attribute: Attribute) -> [SampleGrouper.Type] {
+	private static let genericTypes: [SampleGrouper.Type] = [
+		SameValueSampleGrouper.self,
+		AdvancedSampleGrouper.self,
+	]
+
+	private final let log = Log()
+
+	public final func typesFor(sampleType: Sample.Type) -> [SampleGrouper.Type] {
+		return typesFor(attributes: sampleType.attributes)
+	}
+
+	public final func typesFor(attributes: [Attribute]) -> [SampleGrouper.Type] {
 		var types = [SampleGrouper.Type]()
-		if attribute is DateAttribute {
-			types.append(contentsOf: Me.dateTypes)
+		var typeNames = Set<String>()
+		for attribute in attributes {
+			switch (attribute) {
+				case is DateAttribute:
+					if !typeNames.contains(attribute.typeName) {
+						types.append(contentsOf: Me.dateTypes)
+						typeNames.insert(attribute.typeName)
+					}
+					break
+				default: log.error("Missing attribute type: %@", attribute.typeName)
+			}
 		}
+		types.append(contentsOf: Me.genericTypes)
 		return types
 	}
 
-	public final func groupersFor(attribute: Attribute) -> [SampleGrouper] {
-		return typesFor(attribute: attribute).map() { type in return type.init() }
+	public final func groupersFor(sampleType: Sample.Type) -> [SampleGrouper] {
+		return typesFor(sampleType: sampleType).map{ $0.init(sampleType: sampleType) }
 	}
 
-	public final func initialize(type: SampleGrouper.Type) -> SampleGrouper {
-		return type.init()
+	public final func groupersFor(attributes: [Attribute]) -> [SampleGrouper] {
+		return typesFor(attributes: attributes).map{ $0.init(attributes: attributes) }
+	}
+
+	public final func groupDefinition(_ sampleType: Sample.Type) -> GroupDefinition {
+		return GroupDefinitionImpl(sampleType)
 	}
 }

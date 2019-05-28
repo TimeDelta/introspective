@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Hamcrest
 @testable import Introspective
 
 final class OrExpressionUnitTests: UnitTest {
@@ -71,5 +72,26 @@ final class OrExpressionUnitTests: UnitTest {
 
 		// then
 		XCTAssertFalse(evaluation)
+	}
+
+	// MARK: - copy()
+
+	func test_copy_returnsCopy() {
+		// given
+		let expectedExpression1 = ExpressionStub("copy1")
+		let expectedExpression2 = ExpressionStub("copy2")
+		expression1.copyOf = expectedExpression1
+		expression2.copyOf = expectedExpression2
+
+		// when
+		let copy = or.copy()
+
+		// then
+		guard let castedCopy = copy as? OrExpression else {
+			XCTFail("Wrong type returned")
+			return
+		}
+		assertThat(castedCopy.expression1, equals(expectedExpression1))
+		assertThat(castedCopy.expression2, equals(expectedExpression2))
 	}
 }

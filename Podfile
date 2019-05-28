@@ -7,7 +7,7 @@ target 'Introspective' do
 
   pod "Sourcery"
   pod "Presentr"
-  pod "SwiftDate"
+  pod 'SwiftDate', '6.0.3'
   pod 'AAInfographics'
   pod 'NotificationBannerSwift'
   pod 'CalendarKit'

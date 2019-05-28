@@ -69,6 +69,10 @@ public final class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestrict
 		return false
 	}
 
+	public override func copy() -> AttributeRestriction {
+		return DoesNotHaveOneOfTagAttributeRestriction(tags: tags, restrictedAttribute: restrictedAttribute)
+	}
+
 	// MARK: - Attributed Functions
 
 	public final override func value(of attribute: Attribute) throws -> Any? {

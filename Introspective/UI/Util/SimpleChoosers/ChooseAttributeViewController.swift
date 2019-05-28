@@ -18,7 +18,7 @@ final class ChooseAttributeViewController: UIViewController {
 
 	public final var attributes: [Attribute]!
 	public final var selectedAttribute: Attribute?
-	public final var notificationToSendOnAccept: Notification.Name!
+	public final var notificationToSendOnAccept: NotificationName!
 
 	private final let log = Log()
 
@@ -44,12 +44,7 @@ final class ChooseAttributeViewController: UIViewController {
 	// MARK: - Button Actions
 
 	@IBAction final func userPressedAccept(_ sender: Any) {
-		NotificationCenter.default.post(
-			name: notificationToSendOnAccept,
-			object: self,
-			userInfo: info([
-				.attribute: selectedAttribute as Any,
-			]))
+		syncPost(notificationToSendOnAccept, userInfo: [.attribute: selectedAttribute as Any])
 		dismiss(animated: false, completion: nil)
 	}
 }

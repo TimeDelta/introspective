@@ -53,6 +53,7 @@ public final class Sleep: HealthKitCategorySample {
 
 	public static let stateAttribute = TypedSelectOneAttribute<State>(
 		name: "Waking state",
+		typeName: "Waking state",
 		variableName: HKPredicateKeyPathCategoryValue,
 		possibleValues: State.allValues,
 		possibleValueToString: { $0.description },

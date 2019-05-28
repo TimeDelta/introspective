@@ -76,6 +76,12 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
 		perform?()
     }
 
+    open func resetStoppedState() {
+        addInvocation(.m_resetStoppedState)
+		let perform = methodPerformValue(.m_resetStoppedState) as? () -> Void
+		perform?()
+    }
+
     open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
@@ -95,6 +101,7 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
         case m_runQuery__callback_callback_1(Parameter<(SampleQueryResult<SampleType>?, Error?) -> ()>)
         case m_runQuery__callback_callback_2(Parameter<(QueryResult?, Error?) -> ()>)
         case m_stop
+        case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
         case p_attributeRestrictions_get
 		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
@@ -112,6 +119,8 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
                 guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
                 return true 
             case (.m_stop, .m_stop):
+                return true 
+            case (.m_resetStoppedState, .m_resetStoppedState):
                 return true 
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
@@ -131,6 +140,7 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
             case let .m_runQuery__callback_callback_1(p0): return p0.intValue
             case let .m_runQuery__callback_callback_2(p0): return p0.intValue
             case .m_stop: return 0
+            case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
             case .p_attributeRestrictions_get: return 0
 			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
@@ -178,6 +188,7 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
         public static func runQuery(callback: Parameter<(SampleQueryResult<SampleType>?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback_1(`callback`))}
         public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback_2(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
 		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
@@ -199,6 +210,9 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
+        }
+        public static func resetStoppedState(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resetStoppedState, performs: perform)
         }
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)

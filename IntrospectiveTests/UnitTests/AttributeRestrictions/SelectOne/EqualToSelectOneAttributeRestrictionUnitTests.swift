@@ -154,6 +154,20 @@ final class EqualToSelectOneAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(samplePasses)
 	}
 
+	// MARK: - copy()
+
+	func test_copy_returnsCopy() {
+		// when
+		let copy = restriction.copy()
+
+		// then
+		guard let castedCopy = copy as? EqualToSelectOneAttributeRestriction else {
+			XCTFail("Wrong type returned")
+			return
+		}
+		assertThat(castedCopy, equals(restriction))
+	}
+
 	// MARK: - restrictedAttributeWasSet()
 
 	func testGivenValueIsNoLongerPossible_setRestrictedAttribute_setsValueToFirstPossibleValueOfNewAttribute() {
@@ -161,6 +175,7 @@ final class EqualToSelectOneAttributeRestrictionUnitTests: UnitTest {
 		let expectedNewRestrictionValue = 2.0
 		let newAttribute = TypedEquatableSelectOneAttribute<Double>(
 			name: "new attribute",
+			typeName: "type",
 			possibleValues: [
 				expectedNewRestrictionValue,
 				expectedNewRestrictionValue + 1,

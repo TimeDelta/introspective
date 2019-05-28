@@ -80,6 +80,10 @@ public final class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction
 		return sampleDate < timeOfDay
 	}
 
+	public override func copy() -> AttributeRestriction {
+		return BeforeTimeOfDayAttributeRestriction(restrictedAttribute: restrictedAttribute, timeOfDay: timeOfDay)
+	}
+
 	// MARK: - Equality
 
 	public static func ==(lhs: BeforeTimeOfDayAttributeRestriction, rhs: BeforeTimeOfDayAttributeRestriction) -> Bool {

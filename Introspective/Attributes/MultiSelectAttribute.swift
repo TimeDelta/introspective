@@ -19,14 +19,14 @@ public protocol MultiSelectAttribute: SelectAttribute {
 
 // MARK: - TypedMultiSelectAttribute
 
-public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSelectAttribute {
+public class TypedMultiSelectAttribute<ValueType: Hashable>: AttributeBase<ValueType>, MultiSelectAttribute {
 
 	// MARK: Instance Variables
 
-	private final let _typedPossibleValues: [Type]?
-	private final let possibleValuesFunction: (() -> [Type])?
+	private final let _typedPossibleValues: [ValueType]?
+	private final let possibleValuesFunction: (() -> [ValueType])?
 	public final var possibleValues: [Any] { return typedPossibleValues }
-	public final var typedPossibleValues: [Type] {
+	public final var typedPossibleValues: [ValueType] {
 		if let _typedPossibleValues = _typedPossibleValues {
 			return _typedPossibleValues
 		}
@@ -37,7 +37,7 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 		return []
 	}
 
-	fileprivate final let possibleValueToString: (Type) -> String
+	fileprivate final let possibleValueToString: (ValueType) -> String
 
 	private final let log = Log()
 
@@ -49,8 +49,8 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 		description: String? = nil,
 		variableName: String? = nil,
 		optional: Bool = false,
-		possibleValues: [Type] = [Type](),
-		possibleValueToString: @escaping (Type) -> String)
+		possibleValues: [ValueType] = [ValueType](),
+		possibleValueToString: @escaping (ValueType) -> String)
 	{
 		_typedPossibleValues = possibleValues
 		possibleValuesFunction = nil
@@ -69,8 +69,8 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 		description: String? = nil,
 		variableName: String? = nil,
 		optional: Bool = false,
-		possibleValues: @escaping () -> [Type],
-		possibleValueToString: @escaping (Type) -> String)
+		possibleValues: @escaping () -> [ValueType],
+		possibleValueToString: @escaping (ValueType) -> String)
 	{
 		_typedPossibleValues = nil
 		possibleValuesFunction = possibleValues
@@ -86,29 +86,29 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 	// MARK: MultiSelectAttribute Functions
 
 	public final func valueAsArray(_ value: Any) throws -> [Any] {
-		if let castedValue = value as? Set<Type> {
+		if let castedValue = value as? Set<ValueType> {
 			return castedValue.map{ $0 }
 		}
-		if let castedValue = value as? [Type] {
+		if let castedValue = value as? [ValueType] {
 			return castedValue
 		}
 		throw UnsupportedValueError(attribute: self, is: value)
 	}
 
 	public final func valueFromArray(_ value: [Any]) throws -> Any {
-		guard let castedValue = value as? [Type] else {
+		guard let castedValue = value as? [ValueType] else {
 			throw TypeMismatchError(attribute: self, wasA: type(of: value))
 		}
-		return Set<Type>(castedValue)
+		return Set<ValueType>(castedValue)
 	}
 
 	// MARK: SelectAttribute Functions
 
 	public final override func isValid(value: Any?) -> Bool {
 		if let nonNilValue = value {
-			if let castedValues = nonNilValue as? [Type] {
+			if let castedValues = nonNilValue as? [ValueType] {
 				return allValuesArePossible(castedValues)
-			} else if let castedValues = value as? Set<Type> {
+			} else if let castedValues = value as? Set<ValueType> {
 				return allValuesArePossible(castedValues)
 			}
 			return false
@@ -116,7 +116,7 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 		return optional
 	}
 
-	private final func allValuesArePossible<C : Collection>(_ values: C) -> Bool where C.Element == Type {
+	private final func allValuesArePossible<C : Collection>(_ values: C) -> Bool where C.Element == ValueType {
 		if values.count == 0 {
 			return optional
 		}
@@ -129,15 +129,15 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 	}
 
 	public final func indexOf(possibleValue: Any, in values: [Any]? = nil) -> Int? {
-		guard let castedValue = possibleValue as? Type else {
+		guard let castedValue = possibleValue as? ValueType else {
 			return nil
 		}
-		let values: [Type] = (values as? [Type]) ?? typedPossibleValues
+		let values: [ValueType] = (values as? [ValueType]) ?? typedPossibleValues
 		return values.index(of: castedValue)
 	}
 
 	public func convertPossibleValueToDisplayableString(_ value: Any) throws -> String {
-		guard let castedValue = value as? Type else {
+		guard let castedValue = value as? ValueType else {
 			throw TypeMismatchError(attribute: self, wasA: type(of: value))
 		}
 		return possibleValueToString(castedValue)
@@ -145,23 +145,27 @@ public class TypedMultiSelectAttribute<Type: Hashable>: AttributeBase, MultiSele
 
 	// MARK: Attribute Functions
 
+	public final override func typedValuesAreEqual(_ first: ValueType, _ second: ValueType) -> Bool {
+		return first == second
+	}
+
 	public override func convertToDisplayableString(from value: Any?) throws -> String {
 		if optional && value == nil { return "" }
 		if !optional && value == nil { throw UnsupportedValueError(attribute: self, is: nil) }
-		if let castedValue = value as? Set<Type> {
+		if let castedValue = value as? Set<ValueType> {
 			let arrayOfTypes = castedValue.map{ $0 }
 			return convertTypesIntoDisplayString(arrayOfTypes)
 		}
-		if let castedValue = value as? [Type] {
+		if let castedValue = value as? [ValueType] {
 			return convertTypesIntoDisplayString(castedValue)
 		}
-		if let castedValue = value as? Type {
+		if let castedValue = value as? ValueType {
 			return possibleValueToString(castedValue)
 		}
 		throw TypeMismatchError(attribute: self, wasA: type(of: value))
 	}
 
-	fileprivate final func convertTypesIntoDisplayString(_ sortedTypes: [Type]) -> String {
+	fileprivate final func convertTypesIntoDisplayString(_ sortedTypes: [ValueType]) -> String {
 		var text = ""
 		let valueStrings = sortedTypes.map{ possibleValueToString($0) }
 		for index in 0 ..< valueStrings.count {

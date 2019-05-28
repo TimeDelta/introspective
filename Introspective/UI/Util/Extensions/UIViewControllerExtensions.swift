@@ -21,6 +21,10 @@ extension UIViewController {
 		NotificationCenter.default.addObserver(self, selector: selector, name: name, object: object)
 	}
 
+	final func stopObserving(_ name: NotificationName, object: Any? = nil) {
+		DependencyInjector.util.ui.stopObserving(self, name: name, object: object)
+	}
+
 	@objc public func showError(
 		title: String,
 		message: String? = "Sorry for the inconvenience.",
@@ -84,7 +88,7 @@ extension UIViewController {
 		if let storyboardName = storyboardName {
 			return DependencyInjector.util.ui.controller(named: controllerName, from: storyboardName, as: Type.self)
 		}
-		return storyboard!.instantiateViewController(withIdentifier: controllerName) as! Type
+		return DependencyInjector.util.ui.controller(named: controllerName, from: storyboard!, as: Type.self)
 	}
 
 	final func post(_ name: Notification.Name, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
@@ -95,12 +99,24 @@ extension UIViewController {
 		post(name.toName(), object: object, userInfo: userInfo)
 	}
 
-	final func present(_ viewController: UIViewController, using presenter: Presentr, animated: Bool = false) {
-		customPresentViewController(presenter, viewController: viewController, animated: animated)
+	final func syncPost(_ name: NotificationName, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
+		DependencyInjector.util.notification.post(name, object: object, userInfo: userInfo, qos: nil)
+	}
+
+	final func present(_ viewController: UIViewController, using presenter: Presentr, animated: Bool = false, completion: (() -> Void)? = nil) {
+		DependencyInjector.util.ui.present(viewController, on: self, using: presenter, animated: animated, completion: completion)
 	}
 
 	final func presentView(_ viewController: UIViewController, animated: Bool = false, completion: (() -> Void)? = nil) {
 		DependencyInjector.util.ui.present(self, viewController, animated: animated, completion: completion)
+	}
+
+	final func pushToNavigationController(_ controller: UIViewController, animated: Bool = false) {
+		DependencyInjector.util.ui.push(controller: controller, toNavigationController: navigationController, animated: animated)
+	}
+
+	final func popFromNavigationController(animated: Bool = false) {
+		DependencyInjector.util.ui.popFrom(navigationController, animated: animated)
 	}
 
 	final func defaultSkipInstructionsView() -> CoachMarkSkipView {

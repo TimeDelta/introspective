@@ -8,7 +8,11 @@
 
 import Foundation
 
-public final class DosageAttribute: AttributeBase, ComparableAttribute {
+public final class DosageAttribute: AttributeBase<Dosage>, ComparableAttribute {
+
+	public final override var typeName: String {
+		return "Dosage"
+	}
 
 	public override init(
 		name: String = "Dosage",
@@ -31,5 +35,9 @@ public final class DosageAttribute: AttributeBase, ComparableAttribute {
 			throw TypeMismatchError(attribute: self, wasA: type(of: value))
 		}
 		return castedValue.description
+	}
+
+	public final override func typedValuesAreEqual(_ first: Dosage, _ second: Dosage) -> Bool {
+		return first == second
 	}
 }

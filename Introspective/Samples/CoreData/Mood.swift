@@ -44,6 +44,7 @@ public final class MoodImpl: NSManagedObject, Mood {
 	public static let note = TextAttribute(name: "Note", pluralName: "Notes", variableName: "note")
 	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
 		name: "Source",
+		typeName: "Mood Source",
 		pluralName: "Sources",
 		possibleValues: Sources.MoodSourceNum.values.map{ $0.description },
 		possibleValueToString: { $0 })

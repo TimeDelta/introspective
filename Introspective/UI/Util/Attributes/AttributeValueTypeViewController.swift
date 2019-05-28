@@ -13,7 +13,7 @@ public class AttributeValueTypeViewController: UIViewController {
 	public final var notificationToSendOnValueInvalid: Notification.Name!
 	public final var notificationToSendOnValueValid: Notification.Name!
 
-	public final var currentValue: Any!
+	public final var currentValue: Any = ""
 
 	final func valueIsInvalid() {
 		NotificationCenter.default.post(name: notificationToSendOnValueInvalid, object: self)

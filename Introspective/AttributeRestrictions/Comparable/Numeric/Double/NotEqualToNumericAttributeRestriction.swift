@@ -21,6 +21,10 @@ public final class NotEqualToDoubleAttributeRestriction: TypedNotEqualToAttribut
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
+	public override func copy() -> AttributeRestriction {
+		return NotEqualToDoubleAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Double)
+	}
+
 	public final func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K != %f", restrictedAttribute.variableName!, value as! Double)
 	}

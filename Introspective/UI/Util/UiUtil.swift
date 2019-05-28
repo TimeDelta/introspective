@@ -30,23 +30,44 @@ public protocol UiUtil {
 	/// This is just a pass-through method that will return the input. It is solely for syntactic
 	/// sugar so that you don't have to type out "UserInfoKey." everywhere.
 	func info(_ info: [UserInfoKey: Any]) -> [AnyHashable: Any]
-	func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String, as: Type.Type) -> Type
-	func documentPicker(docTypes: [String], in pickerMode: UIDocumentPickerMode) -> UIDocumentPickerViewController
 
-	/// - Note: This is mainly for testability
+	func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String, as: Type.Type) -> Type
+	func controller<Type: UIViewController>(named controllerName: String, from storyboard: UIStoryboard, as: Type.Type) -> Type
+	func documentPicker(docTypes: [String], in pickerMode: UIDocumentPickerMode) -> UIDocumentPickerViewController
+	func alert(title: String?, message: String?, preferredStyle: UIAlertController.Style) -> UIAlertController
+	func tableViewRowAction(
+		style: UITableViewRowAction.Style,
+		title: String?,
+		handler: @escaping (UITableViewRowAction, IndexPath) -> Void)
+	-> UITableViewRowAction
+
+	/// - Note: This is just for testability
 	func stopObserving(_ observer: Any, name: NotificationName?, object: Any?)
-	/// - Note: This is mainly for testability
+	/// - Note: This is just for testability
 	func post(name: Notification.Name, object: Any?, userInfo: [AnyHashable: Any]?)
-	/// - Note: This is mainly for testability
+	/// - Note: This is just for testability
 	func post(name: NotificationName, object: Any?, userInfo: [AnyHashable: Any]?)
 
 	/// Present `controllerBeingPresented` from `presentingController` then run `completion` if provided.
-	/// - Note: This is mainly for testability
+	/// - Note: This is just for testability
 	func present(
 		_ presentingController: UIViewController,
 		_ controllerBeingPresented: UIViewController,
 		animated: Bool,
 		completion: (() -> Void)?)
+	/// Present `viewController` from `presentingController` using `presenter`.
+	/// - Note: This is just for testability
+	func present(
+		_ viewController: UIViewController,
+		on presentingController: UIViewController,
+		using presenter: Presentr,
+		animated: Bool,
+		completion: (() -> Void)?)
+
+	/// - Note: This is just for testability
+	func push(controller: UIViewController, toNavigationController navigationController: UINavigationController?, animated: Bool)
+	/// - Note: This is just for testability
+	func popFrom(_ navigationController: UINavigationController?, animated: Bool)
 
 	func sendUserNotification(
 		withContent content: UNMutableNotificationContent,
@@ -109,6 +130,7 @@ public final class UiUtilImpl: UiUtil {
 		let customPresenter = Presentr(presentationType: customType)
 		customPresenter.dismissTransitionType = .crossDissolve
 		customPresenter.roundCorners = true
+		customPresenter.backgroundTap = .noAction
 		return customPresenter
 	}()
 
@@ -197,8 +219,24 @@ public final class UiUtilImpl: UiUtil {
 		return UIStoryboard(name: storyboardName, bundle: nil).instantiateViewController(withIdentifier: controllerName) as! Type
 	}
 
+	public func controller<Type: UIViewController>(named controllerName: String, from storyboard: UIStoryboard, as: Type.Type) -> Type {
+		return storyboard.instantiateViewController(withIdentifier: controllerName) as! Type
+	}
+
 	public func documentPicker(docTypes: [String], in pickerMode: UIDocumentPickerMode) -> UIDocumentPickerViewController {
 		return UIDocumentPickerViewController(documentTypes: docTypes, in: pickerMode)
+	}
+
+	public func alert(title: String?, message: String?, preferredStyle: UIAlertController.Style) -> UIAlertController {
+		return UIAlertController(title: title, message: message, preferredStyle: preferredStyle)
+	}
+
+	public func tableViewRowAction(
+		style: UITableViewRowAction.Style,
+		title: String?,
+		handler: @escaping (UITableViewRowAction, IndexPath) -> Void)
+	-> UITableViewRowAction {
+		return UITableViewRowAction(style: style, title: title, handler: handler)
 	}
 
 	public func stopObserving(_ observer: Any, name: NotificationName?, object: Any?) {
@@ -222,6 +260,28 @@ public final class UiUtilImpl: UiUtil {
 		completion: (() -> Void)?)
 	{
 		presentingController.present(controllerBeingPresented, animated: animated, completion: completion)
+	}
+
+	public func present(
+		_ viewController: UIViewController,
+		on presentingController: UIViewController,
+		using presenter: Presentr,
+		animated: Bool,
+		completion: (() -> Void)?)
+	{
+		presentingController.customPresentViewController(presenter, viewController: viewController, animated: animated, completion: completion)
+	}
+
+	public func push(
+		controller: UIViewController,
+		toNavigationController navigationController: UINavigationController?,
+		animated: Bool)
+	{
+		navigationController?.pushViewController(controller, animated: animated)
+	}
+
+	public func popFrom(_ navigationController: UINavigationController?, animated: Bool) {
+		navigationController?.popViewController(animated: animated)
 	}
 
 	public func sendUserNotification(

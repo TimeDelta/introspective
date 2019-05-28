@@ -8,7 +8,11 @@
 
 import Foundation
 
-public final class TimeOfDayAttribute: AttributeBase, ComparableAttribute {
+public final class TimeOfDayAttribute: AttributeBase<TimeOfDay>, ComparableAttribute {
+
+	public final override var typeName: String {
+		return "Time Unit"
+	}
 
 	public override init(
 		name: String = "Time of day",

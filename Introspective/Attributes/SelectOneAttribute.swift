@@ -9,11 +9,9 @@
 import Foundation
 
 public protocol SelectOneAttribute: SelectAttribute {
-
-	func valuesAreEqual(_ first: Any?, _ second: Any?) -> Bool
 }
 
-public class TypedSelectOneAttribute<Type>: AttributeBase, SelectOneAttribute {
+public class TypedSelectOneAttribute<Type>: AttributeBase<Type>, SelectOneAttribute {
 
 	// MARK: - Instance Variables
 
@@ -30,6 +28,10 @@ public class TypedSelectOneAttribute<Type>: AttributeBase, SelectOneAttribute {
 		log.error("Unable to determine possible values for multiselect attribute")
 		return []
 	}
+	private final let _typeName: String
+	public final override var typeName: String {
+		return _typeName
+	}
 
 	public final let areEqual: (Type, Type) -> Bool
 
@@ -41,6 +43,7 @@ public class TypedSelectOneAttribute<Type>: AttributeBase, SelectOneAttribute {
 
 	public init(
 		name: String,
+		typeName: String,
 		pluralName: String? = nil,
 		description: String? = nil,
 		variableName: String? = nil,
@@ -53,11 +56,13 @@ public class TypedSelectOneAttribute<Type>: AttributeBase, SelectOneAttribute {
 		possibleValuesFunction = nil
 		self.possibleValueToString = possibleValueToString
 		self.areEqual = areEqual
+		_typeName = typeName
 		super.init(name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional)
 	}
 
 	public init(
 		name: String,
+		typeName: String,
 		pluralName: String? = nil,
 		description: String? = nil,
 		variableName: String? = nil,
@@ -70,6 +75,7 @@ public class TypedSelectOneAttribute<Type>: AttributeBase, SelectOneAttribute {
 		possibleValuesFunction = possibleValues
 		self.possibleValueToString = possibleValueToString
 		self.areEqual = areEqual
+		_typeName = typeName
 		super.init( name: name, pluralName: pluralName, description: description, variableName: variableName, optional: optional)
 	}
 
@@ -101,26 +107,16 @@ public class TypedSelectOneAttribute<Type>: AttributeBase, SelectOneAttribute {
 
 	// MARK: - Select One Attribute Functions
 
-	public final func valuesAreEqual(_ first: Any?, _ second: Any?) -> Bool {
-		guard let first = first else { return second == nil }
-		guard let second = second else { return false }
-		guard let castedFirst = first as? Type else {
-			log.error("Failed to cast first value when testing equality: %@", String(describing: first))
-			return false
-		}
-		guard let castedSecond = second as? Type else {
-			log.error("Failed to cast second value when testing equality: %@", String(describing: first))
-			return false
-		}
-		return areEqual(castedFirst, castedSecond)
+	public final override func typedValuesAreEqual(_ first: Type, _ second: Type) -> Bool {
+		return areEqual(first, second)
 	}
 
 	// MARK: - Equality
 
 	public final func equalTo(_ otherAttribute: Attribute) -> Bool {
 		guard let other = otherAttribute as? TypedSelectOneAttribute<Type> else { return false }
-		return super.equalTo(otherAttribute) &&
-			possibleValues.elementsEqual(other.possibleValues, by: valuesAreEqual)
+		if !super.equalTo(otherAttribute) { return false }
+		return (try? possibleValues.elementsEqual(other.possibleValues, by: valuesAreEqual)) ?? false
 	}
 }
 
@@ -128,6 +124,7 @@ public class TypedEquatableSelectOneAttribute<Type: Equatable>: TypedSelectOneAt
 
 	public init(
 		name: String,
+		typeName: String,
 		pluralName: String? = nil,
 		description: String? = nil,
 		variableName: String? = nil,
@@ -137,6 +134,7 @@ public class TypedEquatableSelectOneAttribute<Type: Equatable>: TypedSelectOneAt
 	{
 		super.init(
 			name: name,
+			typeName: typeName,
 			pluralName: pluralName,
 			description: description,
 			variableName: variableName,

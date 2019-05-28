@@ -10,7 +10,16 @@ import UIKit
 import AAInfographics
 import SwiftDate
 
-public final class BasicXYChartViewController: UIViewController {
+public protocol BasicXYChartViewController: UIViewController {
+
+	var queries: [Query]? { get set }
+	var dataSeries: [Dictionary<String, Any>]! { get set }
+	var displayXAxisValueLabels: Bool { get set }
+	var chartType: AAChartType! { get set }
+	var categories: [String]? { get set }
+}
+
+public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChartViewController {
 
 	// MARK: - IBOutlets
 

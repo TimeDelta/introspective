@@ -14,7 +14,11 @@ public protocol TextAttributeDelegate {
 	func errorMessageFor(invalidValue: String?) -> String
 }
 
-public final class TextAttribute: AttributeBase, ComparableAttribute {
+public final class TextAttribute: AttributeBase<String>, ComparableAttribute {
+
+	public final override var typeName: String {
+		return "Text"
+	}
 
 	private final let delegate: TextAttributeDelegate?
 
@@ -57,5 +61,9 @@ public final class TextAttribute: AttributeBase, ComparableAttribute {
 			throw TypeMismatchError(attribute: self, wasA: type(of: value))
 		}
 		return castedValue
+	}
+
+	public final override func typedValuesAreEqual(_ first: String, _ second: String) -> Bool {
+		return first == second
 	}
 }

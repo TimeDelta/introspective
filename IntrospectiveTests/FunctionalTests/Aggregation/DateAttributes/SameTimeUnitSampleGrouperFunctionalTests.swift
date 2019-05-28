@@ -17,7 +17,7 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 
 	func testGivenGroupStartDateBySameDay_group_returnsCorrectlyGroupedSamples() throws {
 		// given
-		let grouper = SameTimeUnitSampleGrouper(.day)
+		let grouper = SameTimeUnitSampleGrouper(attributes: [], .day, CommonSampleAttributes.startDate)
 		let group1Date = Date()
 		let group2Date = group1Date + 1.days
 		let group3Date = group1Date - 1.days
@@ -35,17 +35,17 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 		let expectedGroup3Date = DependencyInjector.util.calendar.start(of: .day, in: group3Date)
 
 		// when
-		let groups = try grouper.group(samples: samples, by: CommonSampleAttributes.startDate)
+		let groups = try grouper.group(samples: samples)
 
 		// then
-		assertThat(groups, groupExists(withDate: expectedGroup1Date, andSamples: samples[0...1].map({ $0 })))
-		assertThat(groups, groupExists(withDate: expectedGroup2Date, andSamples: samples[2...4].map({ $0 })))
-		assertThat(groups, groupExists(withDate: expectedGroup3Date, andSamples: samples[5...6].map({ $0 })))
+		assertThat(groups, hasGroup(forValue: expectedGroup1Date, withSamples: samples[0...1].map({ $0 })))
+		assertThat(groups, hasGroup(forValue: expectedGroup2Date, withSamples: samples[2...4].map({ $0 })))
+		assertThat(groups, hasGroup(forValue: expectedGroup3Date, withSamples: samples[5...6].map({ $0 })))
 	}
 
 	func testGivenGroupHealthKitStartDateBySameHour_group_returnsCorrectlyGroupedSamples() throws {
 		// given
-		let grouper = SameTimeUnitSampleGrouper(.hour)
+		let grouper = SameTimeUnitSampleGrouper(attributes: [], .hour, CommonSampleAttributes.healthKitStartDate)
 		let group1Date = Date()
 		let group2Date = group1Date + 1.hours
 		let group3Date = group1Date - 1.hours
@@ -63,17 +63,17 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 		let expectedGroup3Date = DependencyInjector.util.calendar.start(of: .hour, in: group3Date)
 
 		// when
-		let groups = try grouper.group(samples: samples, by: CommonSampleAttributes.healthKitStartDate)
+		let groups = try grouper.group(samples: samples)
 
 		// then
-		assertThat(groups, groupExists(withDate: expectedGroup1Date, andSamples: samples[0...1].map({ $0 })))
-		assertThat(groups, groupExists(withDate: expectedGroup2Date, andSamples: samples[2...4].map({ $0 })))
-		assertThat(groups, groupExists(withDate: expectedGroup3Date, andSamples: samples[5...6].map({ $0 })))
+		assertThat(groups, hasGroup(forValue: expectedGroup1Date, withSamples: samples[0...1].map({ $0 })))
+		assertThat(groups, hasGroup(forValue: expectedGroup2Date, withSamples: samples[2...4].map({ $0 })))
+		assertThat(groups, hasGroup(forValue: expectedGroup3Date, withSamples: samples[5...6].map({ $0 })))
 	}
 
 	func testGivenGroupHealthKitEndDateBySameMinute_group_returnsCorrectlyGroupedSamples() throws {
 		// given
-		let grouper = SameTimeUnitSampleGrouper(.minute)
+		let grouper = SameTimeUnitSampleGrouper(attributes: [], .minute, CommonSampleAttributes.healthKitEndDate)
 		let group1Date = Date()
 		let group2Date = group1Date + 1.minutes
 		let group3Date = group1Date - 1.minutes
@@ -91,12 +91,12 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 		let expectedGroup3Date = DependencyInjector.util.calendar.start(of: .minute, in: group3Date)
 
 		// when
-		let groups = try grouper.group(samples: samples, by: CommonSampleAttributes.healthKitEndDate)
+		let groups = try grouper.group(samples: samples)
 
 		// then
-		assertThat(groups, groupExists(withDate: expectedGroup1Date, andSamples: samples[0...1].map({ $0 })))
-		assertThat(groups, groupExists(withDate: expectedGroup2Date, andSamples: samples[2...4].map({ $0 })))
-		assertThat(groups, groupExists(withDate: expectedGroup3Date, andSamples: samples[5...6].map({ $0 })))
+		assertThat(groups, hasGroup(forValue: expectedGroup1Date, withSamples: samples[0...1].map({ $0 })))
+		assertThat(groups, hasGroup(forValue: expectedGroup2Date, withSamples: samples[2...4].map({ $0 })))
+		assertThat(groups, hasGroup(forValue: expectedGroup3Date, withSamples: samples[5...6].map({ $0 })))
 	}
 
 	// MARK: - value(of:)
@@ -104,7 +104,7 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
 		// given
 		let unknownAttribute = TextAttribute(name: "text")
-		let grouper = SameTimeUnitSampleGrouper(.minute)
+		let grouper = SameTimeUnitSampleGrouper(attributes: [], .minute)
 
 		// when
 		XCTAssertThrowsError(try grouper.value(of: unknownAttribute)) { error in
@@ -116,7 +116,7 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 	func testGivenTimeUnitAttribute_valueOf_returnsCorrectValue() throws {
 		// given
 		let expectedValue = Calendar.Component.hour
-		let grouper = SameTimeUnitSampleGrouper(expectedValue)
+		let grouper = SameTimeUnitSampleGrouper(attributes: [], expectedValue)
 
 		// when
 		let actualValue = try grouper.value(of: SameTimeUnitSampleGrouper.timeUnitAttribute) as! Calendar.Component
@@ -130,7 +130,7 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 	func testGivenUnknownAttribute_set_throwsUnknownAttributeError() {
 		// given
 		let unknownAttribute = TextAttribute(name: "text")
-		let grouper = SameTimeUnitSampleGrouper(.minute)
+		let grouper = SameTimeUnitSampleGrouper(attributes: [], .minute)
 
 		// when
 		XCTAssertThrowsError(try grouper.set(attribute: unknownAttribute, to: nil)) { error in
@@ -141,7 +141,7 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 
 	func testGivenTimeUnitAttributeWithNonCalendarComponentValue_set_throwsTypeMismatchError() {
 		// given
-		let grouper = SameTimeUnitSampleGrouper(.minute)
+		let grouper = SameTimeUnitSampleGrouper(attributes: [], .minute)
 		let value = "not a calendar component"
 
 		// when
@@ -153,7 +153,7 @@ final class SameTimeUnitSampleGrouperFunctionalTests: FunctionalTest {
 
 	func testGivenTimeUnitAttributeWithCalendarComponentValue_set_correctlySetsValue() throws {
 		// given
-		let grouper = SameTimeUnitSampleGrouper(.minute)
+		let grouper = SameTimeUnitSampleGrouper(attributes: [], .minute)
 		let expectedValue = Calendar.Component.day
 
 		// when

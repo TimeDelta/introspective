@@ -1,150 +1,15 @@
 //
-//  Matchers.swift
+//  CSVMatchers.swift
 //  IntrospectiveTests
 //
-//  Created by Bryan Nova on 3/25/19.
+//  Created by Bryan Nova on 5/27/19.
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
 import Foundation
 import Hamcrest
-import CoreData
 import CSV
 @testable import Introspective
-
-typealias UserInfo = [AnyHashable: Any]
-
-// MARK: - Misc. Matchers
-
-func groupExists(withDate date: Date, andSamples samples: [Sample]) -> Matcher<[(Any, [Sample])]> {
-	return Matcher("Group with date \(date.debugDescription)") { groups -> MatchResult in
-		guard let group = groups.first(where: { group in return group.0 as? Date == date }) else {
-			return .mismatch("Missing group with date: \(date)")
-		}
-		let unexpectedSamples = group.1.filter({ sample in !samples.contains(where: { $0.equalTo(sample) }) })
-		var mismatchMessage = ""
-		if unexpectedSamples.count != 0 {
-			mismatchMessage += "\(unexpectedSamples.count) unexpected Samples: \(unexpectedSamples.debugDescription)\n"
-		}
-		let missingSamples = samples[0...1].filter({ expectedSample in return !group.1.contains(where: { $0.equalTo(expectedSample) }) })
-		if missingSamples.count != 0 {
-			mismatchMessage += "\(missingSamples.count) missing Samples for \(date.description): \(missingSamples.debugDescription)"
-		}
-		if !mismatchMessage.isEmpty {
-			return .mismatch(mismatchMessage)
-		}
-		return .match
-	}
-}
-
-func noneStoredInDatabase<Type: NSManagedObject & CoreDataObject>() -> Matcher<Type.Type> {
-	return Matcher("No \(Type.entityName) exists") { _ -> MatchResult in
-		let count = try! DependencyInjector.db.query(Type.fetchRequest() as! NSFetchRequest<Type>).count
-		if count == 0 { return .match }
-		return .mismatch("Found \(count) \(Type.entityName)")
-	}
-}
-
-// MARK: - Activity Matchers
-
-func equivalentDoesNotExistInDatabase() -> Matcher<Activity> {
-	return Matcher("does not exist") { activity -> MatchResult in
-		let activities = try! DependencyInjector.db.query(Activity.fetchRequest())
-		if activities.contains(where: { $0.equalTo(activity) }) {
-			return .mismatch("\(activity.debugDescription) exists in database")
-		}
-		return .match
-	}
-}
-
-// MARK: - UserInfo Matchers
-
-func userInfoHasKey(_ key: AnyHashable) -> Matcher<UserInfo?> {
-	return Matcher("User Info has \"\(key.description)\" key") { (userInfo: UserInfo?) -> MatchResult in
-		guard let userInfo = userInfo else {
-			return .mismatch("User Info was nil")
-		}
-		if !userInfo.keys.contains(key) {
-			return .mismatch("User Info does not contain \"\(key.description)\" key")
-		}
-		return .match
-	}
-}
-
-func userInfoHasKey<ValueType: Equatable>(_ key: AnyHashable, withValue expectedValue: ValueType) -> Matcher<UserInfo?> {
-	return userInfoHasKey(key, withValue: equalTo(expectedValue))
-}
-
-func userInfoHasKey<ValueType>(
-	_ key: AnyHashable,
-	withValue expectedValue: ValueType,
-	_ equalTo: @escaping (ValueType, ValueType) -> Bool)
--> Matcher<UserInfo?> {
-	let equalToMatcher = Matcher("equal to \(String(describing: expectedValue))") { (value: ValueType) -> MatchResult in
-		if equalTo(value, expectedValue) {
-			return .match
-		}
-		return .mismatch("'\(String(describing: value))' is not equal to '\(String(describing: expectedValue))'")
-	}
-	return userInfoHasKey(key, withValue: equalToMatcher)
-}
-
-func userInfoHasKey<ValueType>(_ key: AnyHashable, withValue expectedValueMatcher: Matcher<ValueType>) -> Matcher<UserInfo?> {
-	let matcherDescription = "User Info has \"\(key.description)\" key with value \"\(expectedValueMatcher.description))\""
-	return Matcher(matcherDescription) { (userInfo: UserInfo?) -> MatchResult in
-		guard let userInfo = userInfo else {
-			return .mismatch("User Info was nil")
-		}
-		if !userInfo.keys.contains(key) {
-			return .mismatch("User Info does not contain \"\(key.description)\" key")
-		}
-		guard let actualValue = userInfo[key] as? ValueType else {
-			return .mismatch("Value for \"\(key.description)\" is not a \(String(describing: ValueType.self))")
-		}
-		return expectedValueMatcher.matches(actualValue)
-	}
-}
-
-// MARK: - String Matchers
-
-/// - Note: Will fail match if actual is nil
-func containsLine(_ matcher: Matcher<String>) -> Matcher<String?> {
-	return Matcher("Contains line \(matcher.description)") { (text: String?) -> MatchResult in
-		guard let text = text else {
-			return .mismatch("String is nil")
-		}
-		let lines = text.split(separator: "\n")
-		if lines.count == 0 {
-			return .mismatch("String is empty")
-		}
-		for line in lines {
-			if matcher.matches(String(line)).boolValue {
-				return .match
-			}
-		}
-		return .mismatch("No line found \(matcher.description)")
-	}
-}
-
-/// - Note: Will fail match if actual is nil
-/// - Parameter lineNumber: Indexes start at 1
-func line(_ lineNumber: Int, _ matcher: Matcher<String>) -> Matcher<String?> {
-	return Matcher("Line \(lineNumber) \(matcher.description)") { (text: String?) -> MatchResult in
-		guard let text = text else {
-			return .mismatch("String is nil")
-		}
-		let lines = text.split(separator: "\n")
-		if lines.count == 0 {
-			return .mismatch("String is empty")
-		}
-		if lines.count < lineNumber {
-			return .mismatch("Only \(lines.count) lines found")
-		}
-		return matcher.matches(String(lines[lineNumber - 1]))
-	}
-}
-
-// MARK: - CSV Matchers
 
 func csvContainsRow(withFields fields: [String]) -> Matcher<String?> {
 	return csvContainsRow(withFields: fields.map{ equalTo($0) })
@@ -300,24 +165,5 @@ func csvFields(matching expectedFields: [Matcher<String>], baseIndentation: Int 
 			return "Field \($0.index + 1) does not match: \($0.description)"
 		}.joined(separator: "\n\(indentation)")
 		return .mismatch(mismatchDescription)
-	}
-}
-
-// MARK: - Helpers
-
-func delegateMatching<T>(_ value: T, _ matcher: Matcher<T>, _ mismatchDescriber: (String?) -> String?) -> MatchResult {
-	switch matcher.matches(value) {
-		case .match:
-			return .match
-		case let .mismatch(mismatchDescription):
-			return .mismatch(mismatchDescriber(mismatchDescription))
-	}
-}
-
-func getMismatchDescription<T>(_ matcher: Matcher<T>, value: T) -> (MatchResult, String?) {
-	let matchResult = matcher.matches(value)
-	switch matchResult {
-		case let .mismatch(mismatchDescription): return (matchResult, mismatchDescription)
-		default: return (matchResult, nil)
 	}
 }

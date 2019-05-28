@@ -36,6 +36,7 @@ public final class CalendarComponentAttribute: TypedEquatableSelectOneAttribute<
 	{
 		super.init(
 			name: name,
+			typeName: "Time Unit",
 			pluralName: pluralName,
 			description: description,
 			variableName: variableName,

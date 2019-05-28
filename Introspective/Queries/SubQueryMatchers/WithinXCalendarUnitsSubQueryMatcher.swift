@@ -27,7 +27,7 @@ public final class WithinXCalendarUnitsSubQueryMatcher: SubQueryMatcher, Equatab
 		.second,
 		.nanosecond,
 	])
-	public static let attributes = [CommonSubQueryMatcherAttributes.mostRecentOnly, amountOfTime, timeUnit]
+	public static let attributes: [Attribute] = [CommonSubQueryMatcherAttributes.mostRecentOnly, amountOfTime, timeUnit]
 	public final let attributes: [Attribute] = Me.attributes
 
 	// MARK: - Display Information

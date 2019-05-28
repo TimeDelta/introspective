@@ -9,17 +9,20 @@
 import UIKit
 import os
 
-final class ChooseInformationToGraphTableViewController: UITableViewController {
+protocol ChooseInformationToGraphTableViewController: UITableViewController {
 
-	// MARK: - Static Variables
+	var limitToNumericInformation: Bool { get set }
+	var notificationToSendWhenFinished: NotificationName! { get set }
+	var attributes: [Attribute]! { get set }
+	var chosenInformation: [ExtraInformation] { get set }
+}
 
-	private typealias Me = ChooseInformationToGraphTableViewController
-	private static let editedInformation = Notification.Name("editedInformationWhileChoosingInfoToGraph")
+final class ChooseInformationToGraphTableViewControllerImpl: UITableViewController, ChooseInformationToGraphTableViewController {
 
 	// MARK: - Instance Variables
 
 	public final var limitToNumericInformation: Bool = false
-	public final var notificationToSendWhenFinished: Notification.Name!
+	public final var notificationToSendWhenFinished: NotificationName!
 	public final var attributes: [Attribute]!
 	public final var chosenInformation = [ExtraInformation]()
 
@@ -30,7 +33,7 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 	final override func viewDidLoad() {
 		super.viewDidLoad()
 		navigationItem.rightBarButtonItem = editButtonItem
-		observe(selector: #selector(saveEditedInformation), name: Me.editedInformation)
+		observe(selector: #selector(saveEditedInformation), name: .editedInformation)
 	}
 
 	// MARK: - TableView Data Source
@@ -51,8 +54,8 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 		informationEditIndex = indexPath.row
 		let selectedInformation = chosenInformation[informationEditIndex]
 
-		let controller: SelectExtraInformationViewController = viewController(named: "editExtraInformation", fromStoryboard: "Util")
-		controller.notificationToSendWhenFinished = Me.editedInformation
+		let controller = viewController(named: "editExtraInformation", fromStoryboard: "Util") as! SelectExtraInformationViewController
+		controller.notificationToSendWhenFinished = .editedInformation
 		controller.attributes = attributes
 		controller.limitToNumericInformation = limitToNumericInformation
 		controller.selectedAttribute = selectedInformation.attribute
@@ -95,12 +98,11 @@ final class ChooseInformationToGraphTableViewController: UITableViewController {
 	}
 
 	@IBAction final func doneButtonPressed(_ sender: Any) {
-		NotificationCenter.default.post(
-			name: notificationToSendWhenFinished,
-			object: self,
-			userInfo: info([
+		syncPost(
+			notificationToSendWhenFinished,
+			userInfo: [
 				.information: chosenInformation,
-			]))
+			])
 		navigationController!.popViewController(animated: false)
 	}
 

@@ -19,6 +19,8 @@ public protocol Query: class {
 
 	func runQuery(callback: @escaping (QueryResult?, Error?) -> ())
 	func stop()
+	/// This resets the stopped state so that the query can be ran again
+	func resetStoppedState()
 	func equalTo(_ otherQuery: Query) -> Bool
 }
 
@@ -26,7 +28,9 @@ extension Query {
 
 	public func equalTo(_ otherQuery: Query) -> Bool {
 		if type(of: self) != type(of: otherQuery) { return false }
-		if !attributeRestrictions.elementsEqual(otherQuery.attributeRestrictions, by: { l,r in return l.equalTo(r) }) { return false }
+		if !attributeRestrictions.elementsEqual(otherQuery.attributeRestrictions, by: { $0.equalTo($1) }) {
+			return false
+		}
 		if mostRecentEntryOnly != otherQuery.mostRecentEntryOnly { return false }
 		if subQuery == nil && otherQuery.subQuery != nil { return false }
 		if subQuery != nil && otherQuery.subQuery == nil { return false }

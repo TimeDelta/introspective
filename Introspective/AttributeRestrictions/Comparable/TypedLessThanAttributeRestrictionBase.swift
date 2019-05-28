@@ -71,6 +71,13 @@ public class TypedLessThanAttributeRestrictionBase<ValueType: Comparable>: AnyAt
 		return castedValue < value
 	}
 
+	public override func copy() -> AttributeRestriction {
+		return TypedLessThanAttributeRestrictionBase<ValueType>(
+			restrictedAttribute: restrictedAttribute,
+			value: value,
+			valueAttribute: valueAttribute)
+	}
+
 	// MARK: - Equality
 
 	public static func ==(lhs: TypedLessThanAttributeRestrictionBase, rhs: TypedLessThanAttributeRestrictionBase) -> Bool {

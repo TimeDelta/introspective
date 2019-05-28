@@ -30,6 +30,7 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 	public static let dosage = DosageAttribute(optional: true)
 	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
 		name: "Source",
+		typeName: "Medication Source",
 		pluralName: "Sources",
 		possibleValues: Sources.MedicationSourceNum.values.map{ $0.description },
 		possibleValueToString: { $0 })

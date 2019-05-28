@@ -199,46 +199,46 @@ final class TagAttributeFunctionalTests: FunctionalTest {
 
 	// MARK: - valuesAreEqual()
 
-	func testGivenFirstValueNotTag_valuesAreEqual_returnsFalse() {
+	func testGivenFirstValueNotTag_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue = "abc"
 		let secondValue = TagDataTestUtil.createTag()
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenSecondValueNotTag_valuesAreEqual_returnsFalse() {
+	func testGivenSecondValueNotTag_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue = TagDataTestUtil.createTag()
 		let secondValue = "abc"
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenBothValuesAreNotTags_valuesAreEqual_returnsFalse() {
+	func testGivenBothValuesAreNotTags_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue = "abc"
 		let secondValue = "abc"
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenTwoTagsWithSameName_valuesAreEqual_returnsTrue() {
+	func testGivenTwoTagsWithSameName_valuesAreEqual_returnsTrue() throws {
 		// given
 		useRequiredAttribute()
 		let tagName = "tag name"
@@ -246,98 +246,98 @@ final class TagAttributeFunctionalTests: FunctionalTest {
 		let secondValue = TagDataTestUtil.createTag(name: tagName)
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssert(areEqual)
 	}
 
-	func testGivenTwoDifferentTags_valuesAreEqual_returnsFalse() {
+	func testGivenTwoDifferentTags_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue = TagDataTestUtil.createTag(name: "tag 1")
 		let secondValue = TagDataTestUtil.createTag(name: "tag 2")
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenRequiredAttributeAndBothValuesNil_valuesAreEqual_returnsTrue() {
+	func testGivenRequiredAttributeAndBothValuesNil_valuesAreEqual_returnsTrue() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue: Any? = nil
 		let secondValue: Any? = nil
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssert(areEqual)
 	}
 
-	func testGivenRequiredAttributeAndOnlyFirstValueIsNil_valuesAreEqual_returnsFalse() {
+	func testGivenRequiredAttributeAndOnlyFirstValueIsNil_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue: Any? = nil
 		let secondValue = TagDataTestUtil.createTag(name: "tag 1")
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenRequiredAttributeAndOnlySecondValueIsNil_valuesAreEqual_returnsFalse() {
+	func testGivenRequiredAttributeAndOnlySecondValueIsNil_valuesAreEqual_returnsFalse() throws {
 		// given
 		useRequiredAttribute()
 		let firstValue = TagDataTestUtil.createTag(name: "tag 1")
 		let secondValue: Any? = nil
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenOptionalAttributeAndBothValuesNil_valuesAreEqual_returnsTrue() {
+	func testGivenOptionalAttributeAndBothValuesNil_valuesAreEqual_returnsTrue() throws {
 		// given
 		useOptionalAttribute()
 		let firstValue: Any? = nil
 		let secondValue: Any? = nil
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssert(areEqual)
 	}
 
-	func testGivenOptionalAttributeAndOnlyFirstValueIsNil_valuesAreEqual_returnsFalse() {
+	func testGivenOptionalAttributeAndOnlyFirstValueIsNil_valuesAreEqual_returnsFalse() throws {
 		// given
 		useOptionalAttribute()
 		let firstValue: Any? = nil
 		let secondValue = TagDataTestUtil.createTag(name: "tag 1")
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)
 	}
 
-	func testGivenOptionalAttributeAndOnlySecondValueIsNil_valuesAreEqual_returnsFalse() {
+	func testGivenOptionalAttributeAndOnlySecondValueIsNil_valuesAreEqual_returnsFalse() throws {
 		// given
 		useOptionalAttribute()
 		let firstValue = TagDataTestUtil.createTag(name: "tag 1")
 		let secondValue: Any? = nil
 
 		// when
-		let areEqual = attribute.valuesAreEqual(firstValue, secondValue)
+		let areEqual = try attribute.valuesAreEqual(firstValue, secondValue)
 
 		// then
 		XCTAssertFalse(areEqual)

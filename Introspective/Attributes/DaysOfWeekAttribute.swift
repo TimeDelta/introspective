@@ -10,6 +10,10 @@ import Foundation
 
 public final class DaysOfWeekAttribute: ComparableTypedMultiSelectAttribute<DayOfWeek> {
 
+	public final override var typeName: String {
+		return "Days of the Week"
+	}
+
 	public init(
 		name: String = "Days of the week",
 		pluralName: String? = "Days of the week",

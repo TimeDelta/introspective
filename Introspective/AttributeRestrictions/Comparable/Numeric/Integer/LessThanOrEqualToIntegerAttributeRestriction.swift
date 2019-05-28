@@ -21,6 +21,10 @@ public final class LessThanOrEqualToIntegerAttributeRestriction: TypedLessThanOr
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
 
+	public override func copy() -> AttributeRestriction {
+		return LessThanOrEqualToIntegerAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
+	}
+
 	public final func toPredicate() -> NSPredicate {
 		return NSPredicate(format: "%K <= %d", restrictedAttribute.variableName!, value)
 	}

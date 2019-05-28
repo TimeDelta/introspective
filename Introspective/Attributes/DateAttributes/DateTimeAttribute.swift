@@ -10,6 +10,10 @@ import Foundation
 
 public final class DateTimeAttribute: DateAttributeBase {
 
+	public final override var typeName: String {
+		return "Date & Time"
+	}
+
 	public init(
 		name: String = "Date and time",
 		pluralName: String? = "Dates and times",
@@ -30,5 +34,9 @@ public final class DateTimeAttribute: DateAttributeBase {
 			format: format,
 			earliestDate: earliestDate,
 			latestDate: latestDate)
+	}
+
+	public final override func typedValuesAreEqual(_ first: Date, _ second: Date) -> Bool {
+		return first == second
 	}
 }

@@ -8,7 +8,11 @@
 
 import Foundation
 
-public final class BooleanAttribute: AttributeBase {
+public final class BooleanAttribute: AttributeBase<Bool> {
+
+	public final override var typeName: String {
+		return "On / Off"
+	}
 
 	public final override func isValid(value: Any?) -> Bool {
 		return (value == nil && optional) || value as? Bool != nil
@@ -21,5 +25,9 @@ public final class BooleanAttribute: AttributeBase {
 			throw TypeMismatchError(attribute: self, wasA: type(of: value))
 		}
 		return castedValue ? "on" : "off"
+	}
+
+	public final override func typedValuesAreEqual(_ first: Bool, _ second: Bool) -> Bool {
+		return first == second
 	}
 }

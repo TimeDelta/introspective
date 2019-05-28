@@ -137,6 +137,7 @@ public final class EditMedicationViewController: UIViewController {
 	// MARK: - Button Actions
 
 	@IBAction final func frequencyDescriptionButtonPressed(_ sender: Any) {
+		#warning("check all uses of DescriptionViewController to make sure they dismiss correctly")
 		let controller: DescriptionViewController = viewController(named:"description", fromStoryboard: "Util")
 		controller.descriptionText = Medication.frequency.extendedDescription ?? "No description"
 		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)

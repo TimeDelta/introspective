@@ -1,4 +1,4 @@
-// Generated using Sourcery 0.16.0 — https://github.com/krzysztofzablocki/Sourcery
+// Generated using Sourcery 0.16.1 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
 
 
@@ -50,6 +50,17 @@ import Instructions
 import Sourcery
 import SourceryRuntime
 #endif
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -866,6 +877,12 @@ open class ActivityQueryMock: ActivityQuery, Mock {
 		perform?()
     }
 
+    open func resetStoppedState() {
+        addInvocation(.m_resetStoppedState)
+		let perform = methodPerformValue(.m_resetStoppedState) as? () -> Void
+		perform?()
+    }
+
     open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
@@ -884,6 +901,7 @@ open class ActivityQueryMock: ActivityQuery, Mock {
     fileprivate enum MethodType {
         case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
         case m_stop
+        case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
         case p_attributeRestrictions_get
 		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
@@ -898,6 +916,8 @@ open class ActivityQueryMock: ActivityQuery, Mock {
                 guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
                 return true 
             case (.m_stop, .m_stop):
+                return true 
+            case (.m_resetStoppedState, .m_resetStoppedState):
                 return true 
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
@@ -916,6 +936,7 @@ open class ActivityQueryMock: ActivityQuery, Mock {
             switch self {
             case let .m_runQuery__callback_callback(p0): return p0.intValue
             case .m_stop: return 0
+            case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
             case .p_attributeRestrictions_get: return 0
 			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
@@ -962,6 +983,7 @@ open class ActivityQueryMock: ActivityQuery, Mock {
 
         public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
 		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
@@ -980,6 +1002,9 @@ open class ActivityQueryMock: ActivityQuery, Mock {
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
+        }
+        public static func resetStoppedState(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resetStoppedState, performs: perform)
         }
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
@@ -1105,6 +1130,20 @@ open class AttributeMock: Attribute, Mock {
 	}
 	private var __p_optional: (Bool)?
 
+    public var valueType: Any.Type {
+		get {	invocations.append(.p_valueType_get); return __p_valueType ?? givenGetterValue(.p_valueType_get, "AttributeMock - stub value for valueType was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_valueType = newValue }
+	}
+	private var __p_valueType: (Any.Type)?
+
+    public var typeName: String {
+		get {	invocations.append(.p_typeName_get); return __p_typeName ?? givenGetterValue(.p_typeName_get, "AttributeMock - stub value for typeName was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_typeName = newValue }
+	}
+	private var __p_typeName: (String)?
+
 
 
 
@@ -1153,16 +1192,35 @@ open class AttributeMock: Attribute, Mock {
 		return __value
     }
 
+    open func valuesAreEqual(_ first: Any?, _ second: Any?) throws -> Bool {
+        addInvocation(.m_valuesAreEqual__first_second(Parameter<Any?>.value(`first`), Parameter<Any?>.value(`second`)))
+		let perform = methodPerformValue(.m_valuesAreEqual__first_second(Parameter<Any?>.value(`first`), Parameter<Any?>.value(`second`))) as? (Any?, Any?) -> Void
+		perform?(`first`, `second`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_valuesAreEqual__first_second(Parameter<Any?>.value(`first`), Parameter<Any?>.value(`second`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for valuesAreEqual(_ first: Any?, _ second: Any?). Use given")
+			Failure("Stub return value not specified for valuesAreEqual(_ first: Any?, _ second: Any?). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_isValid__value_value(Parameter<Any?>)
         case m_equalTo__otherAttribute(Parameter<Attribute>)
         case m_convertToDisplayableString__from_value(Parameter<Any?>)
+        case m_valuesAreEqual__first_second(Parameter<Any?>, Parameter<Any?>)
         case p_name_get
         case p_pluralName_get
         case p_variableName_get
         case p_extendedDescription_get
         case p_optional_get
+        case p_valueType_get
+        case p_typeName_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -1175,11 +1233,17 @@ open class AttributeMock: Attribute, Mock {
             case (.m_convertToDisplayableString__from_value(let lhsValue), .m_convertToDisplayableString__from_value(let rhsValue)):
                 guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
                 return true 
+            case (.m_valuesAreEqual__first_second(let lhsFirst, let lhsSecond), .m_valuesAreEqual__first_second(let rhsFirst, let rhsSecond)):
+                guard Parameter.compare(lhs: lhsFirst, rhs: rhsFirst, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsSecond, rhs: rhsSecond, with: matcher) else { return false } 
+                return true 
             case (.p_name_get,.p_name_get): return true
             case (.p_pluralName_get,.p_pluralName_get): return true
             case (.p_variableName_get,.p_variableName_get): return true
             case (.p_extendedDescription_get,.p_extendedDescription_get): return true
             case (.p_optional_get,.p_optional_get): return true
+            case (.p_valueType_get,.p_valueType_get): return true
+            case (.p_typeName_get,.p_typeName_get): return true
             default: return false
             }
         }
@@ -1189,11 +1253,14 @@ open class AttributeMock: Attribute, Mock {
             case let .m_isValid__value_value(p0): return p0.intValue
             case let .m_equalTo__otherAttribute(p0): return p0.intValue
             case let .m_convertToDisplayableString__from_value(p0): return p0.intValue
+            case let .m_valuesAreEqual__first_second(p0, p1): return p0.intValue + p1.intValue
             case .p_name_get: return 0
             case .p_pluralName_get: return 0
             case .p_variableName_get: return 0
             case .p_extendedDescription_get: return 0
             case .p_optional_get: return 0
+            case .p_valueType_get: return 0
+            case .p_typeName_get: return 0
             }
         }
     }
@@ -1221,6 +1288,12 @@ open class AttributeMock: Attribute, Mock {
         public static func optional(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_optional_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
+        public static func valueType(getter defaultValue: Any.Type...) -> PropertyStub {
+            return Given(method: .p_valueType_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func typeName(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_typeName_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
 
         public static func isValid(value: Parameter<Any?>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_isValid__value_value(`value`), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -1230,6 +1303,9 @@ open class AttributeMock: Attribute, Mock {
         }
         public static func convertToDisplayableString(from value: Parameter<Any?>, willReturn: String...) -> MethodStub {
             return Given(method: .m_convertToDisplayableString__from_value(`value`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func valuesAreEqual(_ first: Parameter<Any?>, _ second: Parameter<Any?>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_valuesAreEqual__first_second(`first`, `second`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func isValid(value: Parameter<Any?>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
@@ -1255,6 +1331,16 @@ open class AttributeMock: Attribute, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func valuesAreEqual(_ first: Parameter<Any?>, _ second: Parameter<Any?>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_valuesAreEqual__first_second(`first`, `second`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func valuesAreEqual(_ first: Parameter<Any?>, _ second: Parameter<Any?>, willProduce: (StubberThrows<Bool>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_valuesAreEqual__first_second(`first`, `second`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct Verify {
@@ -1263,11 +1349,14 @@ open class AttributeMock: Attribute, Mock {
         public static func isValid(value: Parameter<Any?>) -> Verify { return Verify(method: .m_isValid__value_value(`value`))}
         public static func equalTo(_ otherAttribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_equalTo__otherAttribute(`otherAttribute`))}
         public static func convertToDisplayableString(from value: Parameter<Any?>) -> Verify { return Verify(method: .m_convertToDisplayableString__from_value(`value`))}
+        public static func valuesAreEqual(_ first: Parameter<Any?>, _ second: Parameter<Any?>) -> Verify { return Verify(method: .m_valuesAreEqual__first_second(`first`, `second`))}
         public static var name: Verify { return Verify(method: .p_name_get) }
         public static var pluralName: Verify { return Verify(method: .p_pluralName_get) }
         public static var variableName: Verify { return Verify(method: .p_variableName_get) }
         public static var extendedDescription: Verify { return Verify(method: .p_extendedDescription_get) }
         public static var optional: Verify { return Verify(method: .p_optional_get) }
+        public static var valueType: Verify { return Verify(method: .p_valueType_get) }
+        public static var typeName: Verify { return Verify(method: .p_typeName_get) }
     }
 
     public struct Perform {
@@ -1282,6 +1371,9 @@ open class AttributeMock: Attribute, Mock {
         }
         public static func convertToDisplayableString(from value: Parameter<Any?>, perform: @escaping (Any?) -> Void) -> Perform {
             return Perform(method: .m_convertToDisplayableString__from_value(`value`), performs: perform)
+        }
+        public static func valuesAreEqual(_ first: Parameter<Any?>, _ second: Parameter<Any?>, perform: @escaping (Any?, Any?) -> Void) -> Perform {
+            return Perform(method: .m_valuesAreEqual__first_second(`first`, `second`), performs: perform)
         }
     }
 
@@ -1868,6 +1960,12 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
 		perform?()
     }
 
+    open func resetStoppedState() {
+        addInvocation(.m_resetStoppedState)
+		let perform = methodPerformValue(.m_resetStoppedState) as? () -> Void
+		perform?()
+    }
+
     open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
@@ -1886,6 +1984,7 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
     fileprivate enum MethodType {
         case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
         case m_stop
+        case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
         case p_attributeRestrictions_get
 		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
@@ -1900,6 +1999,8 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
                 guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
                 return true 
             case (.m_stop, .m_stop):
+                return true 
+            case (.m_resetStoppedState, .m_resetStoppedState):
                 return true 
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
@@ -1918,6 +2019,7 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
             switch self {
             case let .m_runQuery__callback_callback(p0): return p0.intValue
             case .m_stop: return 0
+            case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
             case .p_attributeRestrictions_get: return 0
 			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
@@ -1964,6 +2066,7 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
 
         public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
 		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
@@ -1982,6 +2085,9 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
+        }
+        public static func resetStoppedState(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resetStoppedState, performs: perform)
         }
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
@@ -2106,6 +2212,12 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
 		perform?()
     }
 
+    open func resetStoppedState() {
+        addInvocation(.m_resetStoppedState)
+		let perform = methodPerformValue(.m_resetStoppedState) as? () -> Void
+		perform?()
+    }
+
     open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
@@ -2124,6 +2236,7 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
     fileprivate enum MethodType {
         case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
         case m_stop
+        case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
         case p_attributeRestrictions_get
 		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
@@ -2138,6 +2251,8 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
                 guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
                 return true 
             case (.m_stop, .m_stop):
+                return true 
+            case (.m_resetStoppedState, .m_resetStoppedState):
                 return true 
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
@@ -2156,6 +2271,7 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
             switch self {
             case let .m_runQuery__callback_callback(p0): return p0.intValue
             case .m_stop: return 0
+            case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
             case .p_attributeRestrictions_get: return 0
 			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
@@ -2202,6 +2318,7 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
 
         public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
 		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
@@ -2221,8 +2338,167 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
         public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
         }
+        public static func resetStoppedState(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resetStoppedState, performs: perform)
+        }
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
+// MARK: - BooleanAlgebraFactory
+open class BooleanAlgebraFactoryMock: BooleanAlgebraFactory, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    open func parser() -> BooleanExpressionParser {
+        addInvocation(.m_parser)
+		let perform = methodPerformValue(.m_parser) as? () -> Void
+		perform?()
+		var __value: BooleanExpressionParser
+		do {
+		    __value = try methodReturnValue(.m_parser).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for parser(). Use given")
+			Failure("Stub return value not specified for parser(). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_parser
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_parser, .m_parser):
+                return true 
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .m_parser: return 0
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func parser(willReturn: BooleanExpressionParser...) -> MethodStub {
+            return Given(method: .m_parser, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func parser(willProduce: (Stubber<BooleanExpressionParser>) -> Void) -> MethodStub {
+            let willReturn: [BooleanExpressionParser] = []
+			let given: Given = { return Given(method: .m_parser, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (BooleanExpressionParser).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func parser() -> Verify { return Verify(method: .m_parser)}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func parser(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_parser, performs: perform)
         }
     }
 
@@ -2314,16 +2590,16 @@ open class BooleanExpressionParserMock: BooleanExpressionParser, Mock {
 
 
 
-    open func parse(_ parts :[(type: ExpressionType, expression: BooleanExpression?)]) throws -> BooleanExpression {
-        addInvocation(.m_parse__parts(Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>.value(`parts`)))
-		let perform = methodPerformValue(.m_parse__parts(Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>.value(`parts`))) as? ([(type: ExpressionType, expression: BooleanExpression?)]) -> Void
+    open func parse(_ parts: [BooleanExpressionPart]) throws -> BooleanExpression {
+        addInvocation(.m_parse__parts(Parameter<[BooleanExpressionPart]>.value(`parts`)))
+		let perform = methodPerformValue(.m_parse__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))) as? ([BooleanExpressionPart]) -> Void
 		perform?(`parts`)
 		var __value: BooleanExpression
 		do {
-		    __value = try methodReturnValue(.m_parse__parts(Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>.value(`parts`))).casted()
+		    __value = try methodReturnValue(.m_parse__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))).casted()
 		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for parse(_ parts :[(type: ExpressionType, expression: BooleanExpression?)]). Use given")
-			Failure("Stub return value not specified for parse(_ parts :[(type: ExpressionType, expression: BooleanExpression?)]). Use given")
+			onFatalFailure("Stub return value not specified for parse(_ parts: [BooleanExpressionPart]). Use given")
+			Failure("Stub return value not specified for parse(_ parts: [BooleanExpressionPart]). Use given")
 		} catch {
 		    throw error
 		}
@@ -2332,7 +2608,7 @@ open class BooleanExpressionParserMock: BooleanExpressionParser, Mock {
 
 
     fileprivate enum MethodType {
-        case m_parse__parts(Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>)
+        case m_parse__parts(Parameter<[BooleanExpressionPart]>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -2358,13 +2634,13 @@ open class BooleanExpressionParserMock: BooleanExpressionParser, Mock {
         }
 
 
-        public static func parse(_ parts: Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>, willReturn: BooleanExpression...) -> MethodStub {
+        public static func parse(_ parts: Parameter<[BooleanExpressionPart]>, willReturn: BooleanExpression...) -> MethodStub {
             return Given(method: .m_parse__parts(`parts`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func parse(_ parts: Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>, willThrow: Error...) -> MethodStub {
+        public static func parse(_ parts: Parameter<[BooleanExpressionPart]>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_parse__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) }))
         }
-        public static func parse(_ parts: Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>, willProduce: (StubberThrows<BooleanExpression>) -> Void) -> MethodStub {
+        public static func parse(_ parts: Parameter<[BooleanExpressionPart]>, willProduce: (StubberThrows<BooleanExpression>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_parse__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: (BooleanExpression).self)
@@ -2376,14 +2652,14 @@ open class BooleanExpressionParserMock: BooleanExpressionParser, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func parse(_ parts: Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>) -> Verify { return Verify(method: .m_parse__parts(`parts`))}
+        public static func parse(_ parts: Parameter<[BooleanExpressionPart]>) -> Verify { return Verify(method: .m_parse__parts(`parts`))}
     }
 
     public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func parse(_ parts: Parameter<[(type: ExpressionType, expression: BooleanExpression?)]>, perform: @escaping ([(type: ExpressionType, expression: BooleanExpression?)]) -> Void) -> Perform {
+        public static func parse(_ parts: Parameter<[BooleanExpressionPart]>, perform: @escaping ([BooleanExpressionPart]) -> Void) -> Perform {
             return Perform(method: .m_parse__parts(`parts`), performs: perform)
         }
     }
@@ -5846,6 +6122,344 @@ open class ExtraInformationMock: ExtraInformation, Mock {
     }
 }
 
+// MARK: - GroupDefinition
+open class GroupDefinitionMock: GroupDefinition, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+    public var name: String {
+		get {	invocations.append(.p_name_get); return __p_name ?? givenGetterValue(.p_name_get, "GroupDefinitionMock - stub value for name was not defined") }
+		set {	invocations.append(.p_name_set(.value(newValue))); __p_name = newValue }
+	}
+	private var __p_name: (String)?
+
+    public var description: String {
+		get {	invocations.append(.p_description_get); return __p_description ?? givenGetterValue(.p_description_get, "GroupDefinitionMock - stub value for description was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_description = newValue }
+	}
+	private var __p_description: (String)?
+
+    public var sampleType: Sample.Type {
+		get {	invocations.append(.p_sampleType_get); return __p_sampleType ?? givenGetterValue(.p_sampleType_get, "GroupDefinitionMock - stub value for sampleType was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_sampleType = newValue }
+	}
+	private var __p_sampleType: (Sample.Type)?
+
+    public var attributeRestrictionExpression: BooleanExpression? {
+		get {	invocations.append(.p_attributeRestrictionExpression_get); return __p_attributeRestrictionExpression ?? optionalGivenGetterValue(.p_attributeRestrictionExpression_get, "GroupDefinitionMock - stub value for attributeRestrictionExpression was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_attributeRestrictionExpression = newValue }
+	}
+	private var __p_attributeRestrictionExpression: (BooleanExpression)?
+
+    public var expressionParts: [BooleanExpressionPart] {
+		get {	invocations.append(.p_expressionParts_get); return __p_expressionParts ?? givenGetterValue(.p_expressionParts_get, "GroupDefinitionMock - stub value for expressionParts was not defined") }
+		set {	invocations.append(.p_expressionParts_set(.value(newValue))); __p_expressionParts = newValue }
+	}
+	private var __p_expressionParts: ([BooleanExpressionPart])?
+
+
+
+
+
+    public required init(_ sampleType: Sample.Type) { }
+
+    open func sampleBelongsInGroup(_ sample: Sample) throws -> Bool {
+        addInvocation(.m_sampleBelongsInGroup__sample(Parameter<Sample>.value(`sample`)))
+		let perform = methodPerformValue(.m_sampleBelongsInGroup__sample(Parameter<Sample>.value(`sample`))) as? (Sample) -> Void
+		perform?(`sample`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_sampleBelongsInGroup__sample(Parameter<Sample>.value(`sample`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for sampleBelongsInGroup(_ sample: Sample). Use given")
+			Failure("Stub return value not specified for sampleBelongsInGroup(_ sample: Sample). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func isValid() -> Bool {
+        addInvocation(.m_isValid)
+		let perform = methodPerformValue(.m_isValid) as? () -> Void
+		perform?()
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_isValid).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for isValid(). Use given")
+			Failure("Stub return value not specified for isValid(). Use given")
+		}
+		return __value
+    }
+
+    open func copy() -> GroupDefinition {
+        addInvocation(.m_copy)
+		let perform = methodPerformValue(.m_copy) as? () -> Void
+		perform?()
+		var __value: GroupDefinition
+		do {
+		    __value = try methodReturnValue(.m_copy).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for copy(). Use given")
+			Failure("Stub return value not specified for copy(). Use given")
+		}
+		return __value
+    }
+
+    open func equalTo(_ other: GroupDefinition) -> Bool {
+        addInvocation(.m_equalTo__other(Parameter<GroupDefinition>.value(`other`)))
+		let perform = methodPerformValue(.m_equalTo__other(Parameter<GroupDefinition>.value(`other`))) as? (GroupDefinition) -> Void
+		perform?(`other`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_equalTo__other(Parameter<GroupDefinition>.value(`other`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for equalTo(_ other: GroupDefinition). Use given")
+			Failure("Stub return value not specified for equalTo(_ other: GroupDefinition). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_sampleBelongsInGroup__sample(Parameter<Sample>)
+        case m_isValid
+        case m_copy
+        case m_equalTo__other(Parameter<GroupDefinition>)
+        case p_name_get
+		case p_name_set(Parameter<String>)
+        case p_description_get
+        case p_sampleType_get
+        case p_attributeRestrictionExpression_get
+        case p_expressionParts_get
+		case p_expressionParts_set(Parameter<[BooleanExpressionPart]>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_sampleBelongsInGroup__sample(let lhsSample), .m_sampleBelongsInGroup__sample(let rhsSample)):
+                guard Parameter.compare(lhs: lhsSample, rhs: rhsSample, with: matcher) else { return false } 
+                return true 
+            case (.m_isValid, .m_isValid):
+                return true 
+            case (.m_copy, .m_copy):
+                return true 
+            case (.m_equalTo__other(let lhsOther), .m_equalTo__other(let rhsOther)):
+                guard Parameter.compare(lhs: lhsOther, rhs: rhsOther, with: matcher) else { return false } 
+                return true 
+            case (.p_name_get,.p_name_get): return true
+			case (.p_name_set(let left),.p_name_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_description_get,.p_description_get): return true
+            case (.p_sampleType_get,.p_sampleType_get): return true
+            case (.p_attributeRestrictionExpression_get,.p_attributeRestrictionExpression_get): return true
+            case (.p_expressionParts_get,.p_expressionParts_get): return true
+			case (.p_expressionParts_set(let left),.p_expressionParts_set(let right)): return Parameter<[BooleanExpressionPart]>.compare(lhs: left, rhs: right, with: matcher)
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_sampleBelongsInGroup__sample(p0): return p0.intValue
+            case .m_isValid: return 0
+            case .m_copy: return 0
+            case let .m_equalTo__other(p0): return p0.intValue
+            case .p_name_get: return 0
+			case .p_name_set(let newValue): return newValue.intValue
+            case .p_description_get: return 0
+            case .p_sampleType_get: return 0
+            case .p_attributeRestrictionExpression_get: return 0
+            case .p_expressionParts_get: return 0
+			case .p_expressionParts_set(let newValue): return newValue.intValue
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+        public static func name(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_name_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func description(getter defaultValue: String...) -> PropertyStub {
+            return Given(method: .p_description_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func sampleType(getter defaultValue: Sample.Type...) -> PropertyStub {
+            return Given(method: .p_sampleType_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func attributeRestrictionExpression(getter defaultValue: BooleanExpression?...) -> PropertyStub {
+            return Given(method: .p_attributeRestrictionExpression_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func expressionParts(getter defaultValue: [BooleanExpressionPart]...) -> PropertyStub {
+            return Given(method: .p_expressionParts_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+
+        public static func sampleBelongsInGroup(_ sample: Parameter<Sample>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_sampleBelongsInGroup__sample(`sample`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func isValid(willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_isValid, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func copy(willReturn: GroupDefinition...) -> MethodStub {
+            return Given(method: .m_copy, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func equalTo(_ other: Parameter<GroupDefinition>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__other(`other`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func isValid(willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_isValid, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func copy(willProduce: (Stubber<GroupDefinition>) -> Void) -> MethodStub {
+            let willReturn: [GroupDefinition] = []
+			let given: Given = { return Given(method: .m_copy, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (GroupDefinition).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func equalTo(_ other: Parameter<GroupDefinition>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_equalTo__other(`other`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func sampleBelongsInGroup(_ sample: Parameter<Sample>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_sampleBelongsInGroup__sample(`sample`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func sampleBelongsInGroup(_ sample: Parameter<Sample>, willProduce: (StubberThrows<Bool>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_sampleBelongsInGroup__sample(`sample`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func sampleBelongsInGroup(_ sample: Parameter<Sample>) -> Verify { return Verify(method: .m_sampleBelongsInGroup__sample(`sample`))}
+        public static func isValid() -> Verify { return Verify(method: .m_isValid)}
+        public static func copy() -> Verify { return Verify(method: .m_copy)}
+        public static func equalTo(_ other: Parameter<GroupDefinition>) -> Verify { return Verify(method: .m_equalTo__other(`other`))}
+        public static var name: Verify { return Verify(method: .p_name_get) }
+		public static func name(set newValue: Parameter<String>) -> Verify { return Verify(method: .p_name_set(newValue)) }
+        public static var description: Verify { return Verify(method: .p_description_get) }
+        public static var sampleType: Verify { return Verify(method: .p_sampleType_get) }
+        public static var attributeRestrictionExpression: Verify { return Verify(method: .p_attributeRestrictionExpression_get) }
+        public static var expressionParts: Verify { return Verify(method: .p_expressionParts_get) }
+		public static func expressionParts(set newValue: Parameter<[BooleanExpressionPart]>) -> Verify { return Verify(method: .p_expressionParts_set(newValue)) }
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func sampleBelongsInGroup(_ sample: Parameter<Sample>, perform: @escaping (Sample) -> Void) -> Perform {
+            return Perform(method: .m_sampleBelongsInGroup__sample(`sample`), performs: perform)
+        }
+        public static func isValid(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_isValid, performs: perform)
+        }
+        public static func copy(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_copy, performs: perform)
+        }
+        public static func equalTo(_ other: Parameter<GroupDefinition>, perform: @escaping (GroupDefinition) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__other(`other`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
 // MARK: - HealthKitUtil
 open class HealthKitUtilMock: HealthKitUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
@@ -6152,6 +6766,12 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
 		perform?()
     }
 
+    open func resetStoppedState() {
+        addInvocation(.m_resetStoppedState)
+		let perform = methodPerformValue(.m_resetStoppedState) as? () -> Void
+		perform?()
+    }
+
     open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
@@ -6170,6 +6790,7 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
     fileprivate enum MethodType {
         case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
         case m_stop
+        case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
         case p_attributeRestrictions_get
 		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
@@ -6184,6 +6805,8 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
                 guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
                 return true 
             case (.m_stop, .m_stop):
+                return true 
+            case (.m_resetStoppedState, .m_resetStoppedState):
                 return true 
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
@@ -6202,6 +6825,7 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
             switch self {
             case let .m_runQuery__callback_callback(p0): return p0.intValue
             case .m_stop: return 0
+            case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
             case .p_attributeRestrictions_get: return 0
 			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
@@ -6248,6 +6872,7 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
 
         public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
 		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
@@ -6266,6 +6891,9 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
+        }
+        public static func resetStoppedState(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resetStoppedState, performs: perform)
         }
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
@@ -7502,6 +8130,20 @@ open class InjectionProviderMock: InjectionProvider, Mock {
 		return __value
     }
 
+    open func booleanAlgebraFactory() -> BooleanAlgebraFactory {
+        addInvocation(.m_booleanAlgebraFactory)
+		let perform = methodPerformValue(.m_booleanAlgebraFactory) as? () -> Void
+		perform?()
+		var __value: BooleanAlgebraFactory
+		do {
+		    __value = try methodReturnValue(.m_booleanAlgebraFactory).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for booleanAlgebraFactory(). Use given")
+			Failure("Stub return value not specified for booleanAlgebraFactory(). Use given")
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_database
@@ -7517,6 +8159,7 @@ open class InjectionProviderMock: InjectionProvider, Mock {
         case m_importerFactory
         case m_exporterFactory
         case m_coachMarkFactory
+        case m_booleanAlgebraFactory
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -7546,6 +8189,8 @@ open class InjectionProviderMock: InjectionProvider, Mock {
                 return true 
             case (.m_coachMarkFactory, .m_coachMarkFactory):
                 return true 
+            case (.m_booleanAlgebraFactory, .m_booleanAlgebraFactory):
+                return true 
             default: return false
             }
         }
@@ -7565,6 +8210,7 @@ open class InjectionProviderMock: InjectionProvider, Mock {
             case .m_importerFactory: return 0
             case .m_exporterFactory: return 0
             case .m_coachMarkFactory: return 0
+            case .m_booleanAlgebraFactory: return 0
             }
         }
     }
@@ -7616,6 +8262,9 @@ open class InjectionProviderMock: InjectionProvider, Mock {
         }
         public static func coachMarkFactory(willReturn: CoachMarkFactory...) -> MethodStub {
             return Given(method: .m_coachMarkFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func booleanAlgebraFactory(willReturn: BooleanAlgebraFactory...) -> MethodStub {
+            return Given(method: .m_booleanAlgebraFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func database(willProduce: (Stubber<Database>) -> Void) -> MethodStub {
             let willReturn: [Database] = []
@@ -7708,6 +8357,13 @@ open class InjectionProviderMock: InjectionProvider, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func booleanAlgebraFactory(willProduce: (Stubber<BooleanAlgebraFactory>) -> Void) -> MethodStub {
+            let willReturn: [BooleanAlgebraFactory] = []
+			let given: Given = { return Given(method: .m_booleanAlgebraFactory, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (BooleanAlgebraFactory).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct Verify {
@@ -7726,6 +8382,7 @@ open class InjectionProviderMock: InjectionProvider, Mock {
         public static func importerFactory() -> Verify { return Verify(method: .m_importerFactory)}
         public static func exporterFactory() -> Verify { return Verify(method: .m_exporterFactory)}
         public static func coachMarkFactory() -> Verify { return Verify(method: .m_coachMarkFactory)}
+        public static func booleanAlgebraFactory() -> Verify { return Verify(method: .m_booleanAlgebraFactory)}
     }
 
     public struct Perform {
@@ -7770,6 +8427,9 @@ open class InjectionProviderMock: InjectionProvider, Mock {
         }
         public static func coachMarkFactory(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_coachMarkFactory, performs: perform)
+        }
+        public static func booleanAlgebraFactory(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_booleanAlgebraFactory, performs: perform)
         }
     }
 
@@ -7891,6 +8551,12 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
 		perform?()
     }
 
+    open func resetStoppedState() {
+        addInvocation(.m_resetStoppedState)
+		let perform = methodPerformValue(.m_resetStoppedState) as? () -> Void
+		perform?()
+    }
+
     open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
@@ -7909,6 +8575,7 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
     fileprivate enum MethodType {
         case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
         case m_stop
+        case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
         case p_attributeRestrictions_get
 		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
@@ -7923,6 +8590,8 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
                 guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
                 return true 
             case (.m_stop, .m_stop):
+                return true 
+            case (.m_resetStoppedState, .m_resetStoppedState):
                 return true 
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
@@ -7941,6 +8610,7 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
             switch self {
             case let .m_runQuery__callback_callback(p0): return p0.intValue
             case .m_stop: return 0
+            case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
             case .p_attributeRestrictions_get: return 0
 			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
@@ -7987,6 +8657,7 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
 
         public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
 		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
@@ -8005,6 +8676,9 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
+        }
+        public static func resetStoppedState(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resetStoppedState, performs: perform)
         }
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
@@ -8129,6 +8803,12 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
 		perform?()
     }
 
+    open func resetStoppedState() {
+        addInvocation(.m_resetStoppedState)
+		let perform = methodPerformValue(.m_resetStoppedState) as? () -> Void
+		perform?()
+    }
+
     open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
@@ -8147,6 +8827,7 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
     fileprivate enum MethodType {
         case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
         case m_stop
+        case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
         case p_attributeRestrictions_get
 		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
@@ -8161,6 +8842,8 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
                 guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
                 return true 
             case (.m_stop, .m_stop):
+                return true 
+            case (.m_resetStoppedState, .m_resetStoppedState):
                 return true 
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
@@ -8179,6 +8862,7 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
             switch self {
             case let .m_runQuery__callback_callback(p0): return p0.intValue
             case .m_stop: return 0
+            case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
             case .p_attributeRestrictions_get: return 0
 			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
@@ -8225,6 +8909,7 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
 
         public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
 		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
@@ -8243,6 +8928,9 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
+        }
+        public static func resetStoppedState(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resetStoppedState, performs: perform)
         }
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
@@ -8722,6 +9410,12 @@ open class MoodQueryMock: MoodQuery, Mock, StaticMock {
 		perform?()
     }
 
+    open func resetStoppedState() {
+        addInvocation(.m_resetStoppedState)
+		let perform = methodPerformValue(.m_resetStoppedState) as? () -> Void
+		perform?()
+    }
+
     open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
@@ -8787,6 +9481,7 @@ open class MoodQueryMock: MoodQuery, Mock, StaticMock {
     fileprivate enum MethodType {
         case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
         case m_stop
+        case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
         case p_attributeRestrictions_get
 		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
@@ -8801,6 +9496,8 @@ open class MoodQueryMock: MoodQuery, Mock, StaticMock {
                 guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
                 return true 
             case (.m_stop, .m_stop):
+                return true 
+            case (.m_resetStoppedState, .m_resetStoppedState):
                 return true 
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
@@ -8819,6 +9516,7 @@ open class MoodQueryMock: MoodQuery, Mock, StaticMock {
             switch self {
             case let .m_runQuery__callback_callback(p0): return p0.intValue
             case .m_stop: return 0
+            case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
             case .p_attributeRestrictions_get: return 0
 			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
@@ -8865,6 +9563,7 @@ open class MoodQueryMock: MoodQuery, Mock, StaticMock {
 
         public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
 		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
@@ -8883,6 +9582,9 @@ open class MoodQueryMock: MoodQuery, Mock, StaticMock {
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
+        }
+        public static func resetStoppedState(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resetStoppedState, performs: perform)
         }
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
@@ -9854,6 +10556,12 @@ open class QueryMock: Query, Mock {
 		perform?()
     }
 
+    open func resetStoppedState() {
+        addInvocation(.m_resetStoppedState)
+		let perform = methodPerformValue(.m_resetStoppedState) as? () -> Void
+		perform?()
+    }
+
     open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
@@ -9872,6 +10580,7 @@ open class QueryMock: Query, Mock {
     fileprivate enum MethodType {
         case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
         case m_stop
+        case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
         case p_attributeRestrictions_get
 		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
@@ -9886,6 +10595,8 @@ open class QueryMock: Query, Mock {
                 guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
                 return true 
             case (.m_stop, .m_stop):
+                return true 
+            case (.m_resetStoppedState, .m_resetStoppedState):
                 return true 
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
@@ -9904,6 +10615,7 @@ open class QueryMock: Query, Mock {
             switch self {
             case let .m_runQuery__callback_callback(p0): return p0.intValue
             case .m_stop: return 0
+            case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
             case .p_attributeRestrictions_get: return 0
 			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
@@ -9950,6 +10662,7 @@ open class QueryMock: Query, Mock {
 
         public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
 		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
@@ -9968,6 +10681,9 @@ open class QueryMock: Query, Mock {
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
+        }
+        public static func resetStoppedState(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resetStoppedState, performs: perform)
         }
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
@@ -10607,6 +11323,12 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
 		perform?()
     }
 
+    open func resetStoppedState() {
+        addInvocation(.m_resetStoppedState)
+		let perform = methodPerformValue(.m_resetStoppedState) as? () -> Void
+		perform?()
+    }
+
     open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
@@ -10625,6 +11347,7 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
     fileprivate enum MethodType {
         case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
         case m_stop
+        case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
         case p_attributeRestrictions_get
 		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
@@ -10639,6 +11362,8 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
                 guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
                 return true 
             case (.m_stop, .m_stop):
+                return true 
+            case (.m_resetStoppedState, .m_resetStoppedState):
                 return true 
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
@@ -10657,6 +11382,7 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
             switch self {
             case let .m_runQuery__callback_callback(p0): return p0.intValue
             case .m_stop: return 0
+            case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
             case .p_attributeRestrictions_get: return 0
 			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
@@ -10703,6 +11429,7 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
 
         public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
 		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
@@ -10721,6 +11448,9 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
+        }
+        public static func resetStoppedState(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resetStoppedState, performs: perform)
         }
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
@@ -11127,6 +11857,296 @@ open class SampleFactoryMock: SampleFactory, Mock {
         }
         public static func mood(using transaction: Parameter<Transaction>, perform: @escaping (Transaction) -> Void) -> Perform {
             return Perform(method: .m_mood__using_transaction(`transaction`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
+// MARK: - SampleGrouperFactory
+open class SampleGrouperFactoryMock: SampleGrouperFactory, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    open func typesFor(sampleType: Sample.Type) -> [SampleGrouper.Type] {
+        addInvocation(.m_typesFor__sampleType_sampleType(Parameter<Sample.Type>.value(`sampleType`)))
+		let perform = methodPerformValue(.m_typesFor__sampleType_sampleType(Parameter<Sample.Type>.value(`sampleType`))) as? (Sample.Type) -> Void
+		perform?(`sampleType`)
+		var __value: [SampleGrouper.Type]
+		do {
+		    __value = try methodReturnValue(.m_typesFor__sampleType_sampleType(Parameter<Sample.Type>.value(`sampleType`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for typesFor(sampleType: Sample.Type). Use given")
+			Failure("Stub return value not specified for typesFor(sampleType: Sample.Type). Use given")
+		}
+		return __value
+    }
+
+    open func typesFor(attributes: [Attribute]) -> [SampleGrouper.Type] {
+        addInvocation(.m_typesFor__attributes_attributes(Parameter<[Attribute]>.value(`attributes`)))
+		let perform = methodPerformValue(.m_typesFor__attributes_attributes(Parameter<[Attribute]>.value(`attributes`))) as? ([Attribute]) -> Void
+		perform?(`attributes`)
+		var __value: [SampleGrouper.Type]
+		do {
+		    __value = try methodReturnValue(.m_typesFor__attributes_attributes(Parameter<[Attribute]>.value(`attributes`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for typesFor(attributes: [Attribute]). Use given")
+			Failure("Stub return value not specified for typesFor(attributes: [Attribute]). Use given")
+		}
+		return __value
+    }
+
+    open func groupersFor(sampleType: Sample.Type) -> [SampleGrouper] {
+        addInvocation(.m_groupersFor__sampleType_sampleType(Parameter<Sample.Type>.value(`sampleType`)))
+		let perform = methodPerformValue(.m_groupersFor__sampleType_sampleType(Parameter<Sample.Type>.value(`sampleType`))) as? (Sample.Type) -> Void
+		perform?(`sampleType`)
+		var __value: [SampleGrouper]
+		do {
+		    __value = try methodReturnValue(.m_groupersFor__sampleType_sampleType(Parameter<Sample.Type>.value(`sampleType`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for groupersFor(sampleType: Sample.Type). Use given")
+			Failure("Stub return value not specified for groupersFor(sampleType: Sample.Type). Use given")
+		}
+		return __value
+    }
+
+    open func groupersFor(attributes: [Attribute]) -> [SampleGrouper] {
+        addInvocation(.m_groupersFor__attributes_attributes(Parameter<[Attribute]>.value(`attributes`)))
+		let perform = methodPerformValue(.m_groupersFor__attributes_attributes(Parameter<[Attribute]>.value(`attributes`))) as? ([Attribute]) -> Void
+		perform?(`attributes`)
+		var __value: [SampleGrouper]
+		do {
+		    __value = try methodReturnValue(.m_groupersFor__attributes_attributes(Parameter<[Attribute]>.value(`attributes`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for groupersFor(attributes: [Attribute]). Use given")
+			Failure("Stub return value not specified for groupersFor(attributes: [Attribute]). Use given")
+		}
+		return __value
+    }
+
+    open func groupDefinition(_ sampleType: Sample.Type) -> GroupDefinition {
+        addInvocation(.m_groupDefinition__sampleType(Parameter<Sample.Type>.value(`sampleType`)))
+		let perform = methodPerformValue(.m_groupDefinition__sampleType(Parameter<Sample.Type>.value(`sampleType`))) as? (Sample.Type) -> Void
+		perform?(`sampleType`)
+		var __value: GroupDefinition
+		do {
+		    __value = try methodReturnValue(.m_groupDefinition__sampleType(Parameter<Sample.Type>.value(`sampleType`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for groupDefinition(_ sampleType: Sample.Type). Use given")
+			Failure("Stub return value not specified for groupDefinition(_ sampleType: Sample.Type). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_typesFor__sampleType_sampleType(Parameter<Sample.Type>)
+        case m_typesFor__attributes_attributes(Parameter<[Attribute]>)
+        case m_groupersFor__sampleType_sampleType(Parameter<Sample.Type>)
+        case m_groupersFor__attributes_attributes(Parameter<[Attribute]>)
+        case m_groupDefinition__sampleType(Parameter<Sample.Type>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_typesFor__sampleType_sampleType(let lhsSampletype), .m_typesFor__sampleType_sampleType(let rhsSampletype)):
+                guard Parameter.compare(lhs: lhsSampletype, rhs: rhsSampletype, with: matcher) else { return false } 
+                return true 
+            case (.m_typesFor__attributes_attributes(let lhsAttributes), .m_typesFor__attributes_attributes(let rhsAttributes)):
+                guard Parameter.compare(lhs: lhsAttributes, rhs: rhsAttributes, with: matcher) else { return false } 
+                return true 
+            case (.m_groupersFor__sampleType_sampleType(let lhsSampletype), .m_groupersFor__sampleType_sampleType(let rhsSampletype)):
+                guard Parameter.compare(lhs: lhsSampletype, rhs: rhsSampletype, with: matcher) else { return false } 
+                return true 
+            case (.m_groupersFor__attributes_attributes(let lhsAttributes), .m_groupersFor__attributes_attributes(let rhsAttributes)):
+                guard Parameter.compare(lhs: lhsAttributes, rhs: rhsAttributes, with: matcher) else { return false } 
+                return true 
+            case (.m_groupDefinition__sampleType(let lhsSampletype), .m_groupDefinition__sampleType(let rhsSampletype)):
+                guard Parameter.compare(lhs: lhsSampletype, rhs: rhsSampletype, with: matcher) else { return false } 
+                return true 
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_typesFor__sampleType_sampleType(p0): return p0.intValue
+            case let .m_typesFor__attributes_attributes(p0): return p0.intValue
+            case let .m_groupersFor__sampleType_sampleType(p0): return p0.intValue
+            case let .m_groupersFor__attributes_attributes(p0): return p0.intValue
+            case let .m_groupDefinition__sampleType(p0): return p0.intValue
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func typesFor(sampleType: Parameter<Sample.Type>, willReturn: [SampleGrouper.Type]...) -> MethodStub {
+            return Given(method: .m_typesFor__sampleType_sampleType(`sampleType`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func typesFor(attributes: Parameter<[Attribute]>, willReturn: [SampleGrouper.Type]...) -> MethodStub {
+            return Given(method: .m_typesFor__attributes_attributes(`attributes`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func groupersFor(sampleType: Parameter<Sample.Type>, willReturn: [SampleGrouper]...) -> MethodStub {
+            return Given(method: .m_groupersFor__sampleType_sampleType(`sampleType`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func groupersFor(attributes: Parameter<[Attribute]>, willReturn: [SampleGrouper]...) -> MethodStub {
+            return Given(method: .m_groupersFor__attributes_attributes(`attributes`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func groupDefinition(_ sampleType: Parameter<Sample.Type>, willReturn: GroupDefinition...) -> MethodStub {
+            return Given(method: .m_groupDefinition__sampleType(`sampleType`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func typesFor(sampleType: Parameter<Sample.Type>, willProduce: (Stubber<[SampleGrouper.Type]>) -> Void) -> MethodStub {
+            let willReturn: [[SampleGrouper.Type]] = []
+			let given: Given = { return Given(method: .m_typesFor__sampleType_sampleType(`sampleType`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: ([SampleGrouper.Type]).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func typesFor(attributes: Parameter<[Attribute]>, willProduce: (Stubber<[SampleGrouper.Type]>) -> Void) -> MethodStub {
+            let willReturn: [[SampleGrouper.Type]] = []
+			let given: Given = { return Given(method: .m_typesFor__attributes_attributes(`attributes`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: ([SampleGrouper.Type]).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func groupersFor(sampleType: Parameter<Sample.Type>, willProduce: (Stubber<[SampleGrouper]>) -> Void) -> MethodStub {
+            let willReturn: [[SampleGrouper]] = []
+			let given: Given = { return Given(method: .m_groupersFor__sampleType_sampleType(`sampleType`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: ([SampleGrouper]).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func groupersFor(attributes: Parameter<[Attribute]>, willProduce: (Stubber<[SampleGrouper]>) -> Void) -> MethodStub {
+            let willReturn: [[SampleGrouper]] = []
+			let given: Given = { return Given(method: .m_groupersFor__attributes_attributes(`attributes`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: ([SampleGrouper]).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func groupDefinition(_ sampleType: Parameter<Sample.Type>, willProduce: (Stubber<GroupDefinition>) -> Void) -> MethodStub {
+            let willReturn: [GroupDefinition] = []
+			let given: Given = { return Given(method: .m_groupDefinition__sampleType(`sampleType`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (GroupDefinition).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func typesFor(sampleType: Parameter<Sample.Type>) -> Verify { return Verify(method: .m_typesFor__sampleType_sampleType(`sampleType`))}
+        public static func typesFor(attributes: Parameter<[Attribute]>) -> Verify { return Verify(method: .m_typesFor__attributes_attributes(`attributes`))}
+        public static func groupersFor(sampleType: Parameter<Sample.Type>) -> Verify { return Verify(method: .m_groupersFor__sampleType_sampleType(`sampleType`))}
+        public static func groupersFor(attributes: Parameter<[Attribute]>) -> Verify { return Verify(method: .m_groupersFor__attributes_attributes(`attributes`))}
+        public static func groupDefinition(_ sampleType: Parameter<Sample.Type>) -> Verify { return Verify(method: .m_groupDefinition__sampleType(`sampleType`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func typesFor(sampleType: Parameter<Sample.Type>, perform: @escaping (Sample.Type) -> Void) -> Perform {
+            return Perform(method: .m_typesFor__sampleType_sampleType(`sampleType`), performs: perform)
+        }
+        public static func typesFor(attributes: Parameter<[Attribute]>, perform: @escaping ([Attribute]) -> Void) -> Perform {
+            return Perform(method: .m_typesFor__attributes_attributes(`attributes`), performs: perform)
+        }
+        public static func groupersFor(sampleType: Parameter<Sample.Type>, perform: @escaping (Sample.Type) -> Void) -> Perform {
+            return Perform(method: .m_groupersFor__sampleType_sampleType(`sampleType`), performs: perform)
+        }
+        public static func groupersFor(attributes: Parameter<[Attribute]>, perform: @escaping ([Attribute]) -> Void) -> Perform {
+            return Perform(method: .m_groupersFor__attributes_attributes(`attributes`), performs: perform)
+        }
+        public static func groupDefinition(_ sampleType: Parameter<Sample.Type>, perform: @escaping (Sample.Type) -> Void) -> Perform {
+            return Perform(method: .m_groupDefinition__sampleType(`sampleType`), performs: perform)
         }
     }
 
@@ -12621,6 +13641,12 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
 		perform?()
     }
 
+    open func resetStoppedState() {
+        addInvocation(.m_resetStoppedState)
+		let perform = methodPerformValue(.m_resetStoppedState) as? () -> Void
+		perform?()
+    }
+
     open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
@@ -12639,6 +13665,7 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
     fileprivate enum MethodType {
         case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
         case m_stop
+        case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
         case p_attributeRestrictions_get
 		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
@@ -12653,6 +13680,8 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
                 guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
                 return true 
             case (.m_stop, .m_stop):
+                return true 
+            case (.m_resetStoppedState, .m_resetStoppedState):
                 return true 
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
@@ -12671,6 +13700,7 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
             switch self {
             case let .m_runQuery__callback_callback(p0): return p0.intValue
             case .m_stop: return 0
+            case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
             case .p_attributeRestrictions_get: return 0
 			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
@@ -12717,6 +13747,7 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
 
         public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
 		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
@@ -12735,6 +13766,9 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
+        }
+        public static func resetStoppedState(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resetStoppedState, performs: perform)
         }
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
@@ -12859,6 +13893,12 @@ open class SleepQueryMock: SleepQuery, Mock {
 		perform?()
     }
 
+    open func resetStoppedState() {
+        addInvocation(.m_resetStoppedState)
+		let perform = methodPerformValue(.m_resetStoppedState) as? () -> Void
+		perform?()
+    }
+
     open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
@@ -12877,6 +13917,7 @@ open class SleepQueryMock: SleepQuery, Mock {
     fileprivate enum MethodType {
         case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
         case m_stop
+        case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
         case p_attributeRestrictions_get
 		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
@@ -12891,6 +13932,8 @@ open class SleepQueryMock: SleepQuery, Mock {
                 guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
                 return true 
             case (.m_stop, .m_stop):
+                return true 
+            case (.m_resetStoppedState, .m_resetStoppedState):
                 return true 
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
@@ -12909,6 +13952,7 @@ open class SleepQueryMock: SleepQuery, Mock {
             switch self {
             case let .m_runQuery__callback_callback(p0): return p0.intValue
             case .m_stop: return 0
+            case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
             case .p_attributeRestrictions_get: return 0
 			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
@@ -12955,6 +13999,7 @@ open class SleepQueryMock: SleepQuery, Mock {
 
         public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
 		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
@@ -12973,6 +14018,9 @@ open class SleepQueryMock: SleepQuery, Mock {
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
+        }
+        public static func resetStoppedState(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resetStoppedState, performs: perform)
         }
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
@@ -14421,6 +15469,20 @@ open class UiUtilMock: UiUtil, Mock {
 		return __value
     }
 
+    open func controller<Type: UIViewController>(named controllerName: String, from storyboard: UIStoryboard, as: Type.Type) -> Type {
+        addInvocation(.m_controller__named_controllerNamefrom_storyboardas_as(Parameter<String>.value(`controllerName`), Parameter<UIStoryboard>.value(`storyboard`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_controller__named_controllerNamefrom_storyboardas_as(Parameter<String>.value(`controllerName`), Parameter<UIStoryboard>.value(`storyboard`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (String, UIStoryboard, Type.Type) -> Void
+		perform?(`controllerName`, `storyboard`, `as`)
+		var __value: Type
+		do {
+		    __value = try methodReturnValue(.m_controller__named_controllerNamefrom_storyboardas_as(Parameter<String>.value(`controllerName`), Parameter<UIStoryboard>.value(`storyboard`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for controller<Type: UIViewController>(named controllerName: String, from storyboard: UIStoryboard, as: Type.Type). Use given")
+			Failure("Stub return value not specified for controller<Type: UIViewController>(named controllerName: String, from storyboard: UIStoryboard, as: Type.Type). Use given")
+		}
+		return __value
+    }
+
     open func documentPicker(docTypes: [String], in pickerMode: UIDocumentPickerMode) -> UIDocumentPickerViewController {
         addInvocation(.m_documentPicker__docTypes_docTypesin_pickerMode(Parameter<[String]>.value(`docTypes`), Parameter<UIDocumentPickerMode>.value(`pickerMode`)))
 		let perform = methodPerformValue(.m_documentPicker__docTypes_docTypesin_pickerMode(Parameter<[String]>.value(`docTypes`), Parameter<UIDocumentPickerMode>.value(`pickerMode`))) as? ([String], UIDocumentPickerMode) -> Void
@@ -14431,6 +15493,34 @@ open class UiUtilMock: UiUtil, Mock {
 		} catch {
 			onFatalFailure("Stub return value not specified for documentPicker(docTypes: [String], in pickerMode: UIDocumentPickerMode). Use given")
 			Failure("Stub return value not specified for documentPicker(docTypes: [String], in pickerMode: UIDocumentPickerMode). Use given")
+		}
+		return __value
+    }
+
+    open func alert(title: String?, message: String?, preferredStyle: UIAlertController.Style) -> UIAlertController {
+        addInvocation(.m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(Parameter<String?>.value(`title`), Parameter<String?>.value(`message`), Parameter<UIAlertController.Style>.value(`preferredStyle`)))
+		let perform = methodPerformValue(.m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(Parameter<String?>.value(`title`), Parameter<String?>.value(`message`), Parameter<UIAlertController.Style>.value(`preferredStyle`))) as? (String?, String?, UIAlertController.Style) -> Void
+		perform?(`title`, `message`, `preferredStyle`)
+		var __value: UIAlertController
+		do {
+		    __value = try methodReturnValue(.m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(Parameter<String?>.value(`title`), Parameter<String?>.value(`message`), Parameter<UIAlertController.Style>.value(`preferredStyle`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for alert(title: String?, message: String?, preferredStyle: UIAlertController.Style). Use given")
+			Failure("Stub return value not specified for alert(title: String?, message: String?, preferredStyle: UIAlertController.Style). Use given")
+		}
+		return __value
+    }
+
+    open func tableViewRowAction(		style: UITableViewRowAction.Style,		title: String?,		handler: @escaping (UITableViewRowAction, IndexPath) -> Void) -> UITableViewRowAction {
+        addInvocation(.m_tableViewRowAction__style_styletitle_titlehandler_handler(Parameter<UITableViewRowAction.Style>.value(`style`), Parameter<String?>.value(`title`), Parameter<(UITableViewRowAction, IndexPath) -> Void>.value(`handler`)))
+		let perform = methodPerformValue(.m_tableViewRowAction__style_styletitle_titlehandler_handler(Parameter<UITableViewRowAction.Style>.value(`style`), Parameter<String?>.value(`title`), Parameter<(UITableViewRowAction, IndexPath) -> Void>.value(`handler`))) as? (UITableViewRowAction.Style, String?, @escaping (UITableViewRowAction, IndexPath) -> Void) -> Void
+		perform?(`style`, `title`, `handler`)
+		var __value: UITableViewRowAction
+		do {
+		    __value = try methodReturnValue(.m_tableViewRowAction__style_styletitle_titlehandler_handler(Parameter<UITableViewRowAction.Style>.value(`style`), Parameter<String?>.value(`title`), Parameter<(UITableViewRowAction, IndexPath) -> Void>.value(`handler`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for tableViewRowAction(  style: UITableViewRowAction.Style,  title: String?,  handler: @escaping (UITableViewRowAction, IndexPath) -> Void). Use given")
+			Failure("Stub return value not specified for tableViewRowAction(  style: UITableViewRowAction.Style,  title: String?,  handler: @escaping (UITableViewRowAction, IndexPath) -> Void). Use given")
 		}
 		return __value
     }
@@ -14459,6 +15549,24 @@ open class UiUtilMock: UiUtil, Mock {
 		perform?(`presentingController`, `controllerBeingPresented`, `animated`, `completion`)
     }
 
+    open func present(		_ viewController: UIViewController,		on presentingController: UIViewController,		using presenter: Presentr,		animated: Bool,		completion: (() -> Void)?) {
+        addInvocation(.m_present__viewControlleron_presentingControllerusing_presenteranimated_animatedcompletion_completion(Parameter<UIViewController>.value(`viewController`), Parameter<UIViewController>.value(`presentingController`), Parameter<Presentr>.value(`presenter`), Parameter<Bool>.value(`animated`), Parameter<(() -> Void)?>.value(`completion`)))
+		let perform = methodPerformValue(.m_present__viewControlleron_presentingControllerusing_presenteranimated_animatedcompletion_completion(Parameter<UIViewController>.value(`viewController`), Parameter<UIViewController>.value(`presentingController`), Parameter<Presentr>.value(`presenter`), Parameter<Bool>.value(`animated`), Parameter<(() -> Void)?>.value(`completion`))) as? (UIViewController, UIViewController, Presentr, Bool, (() -> Void)?) -> Void
+		perform?(`viewController`, `presentingController`, `presenter`, `animated`, `completion`)
+    }
+
+    open func push(controller: UIViewController, toNavigationController navigationController: UINavigationController?, animated: Bool) {
+        addInvocation(.m_push__controller_controllertoNavigationController_navigationControlleranimated_animated(Parameter<UIViewController>.value(`controller`), Parameter<UINavigationController?>.value(`navigationController`), Parameter<Bool>.value(`animated`)))
+		let perform = methodPerformValue(.m_push__controller_controllertoNavigationController_navigationControlleranimated_animated(Parameter<UIViewController>.value(`controller`), Parameter<UINavigationController?>.value(`navigationController`), Parameter<Bool>.value(`animated`))) as? (UIViewController, UINavigationController?, Bool) -> Void
+		perform?(`controller`, `navigationController`, `animated`)
+    }
+
+    open func popFrom(_ navigationController: UINavigationController?, animated: Bool) {
+        addInvocation(.m_popFrom__navigationControlleranimated_animated(Parameter<UINavigationController?>.value(`navigationController`), Parameter<Bool>.value(`animated`)))
+		let perform = methodPerformValue(.m_popFrom__navigationControlleranimated_animated(Parameter<UINavigationController?>.value(`navigationController`), Parameter<Bool>.value(`animated`))) as? (UINavigationController?, Bool) -> Void
+		perform?(`navigationController`, `animated`)
+    }
+
     open func sendUserNotification(		withContent content: UNMutableNotificationContent,		id: String,		repeats: Bool,		interval: TimeInterval) {
         addInvocation(.m_sendUserNotification__withContent_contentid_idrepeats_repeatsinterval_interval(Parameter<UNMutableNotificationContent>.value(`content`), Parameter<String>.value(`id`), Parameter<Bool>.value(`repeats`), Parameter<TimeInterval>.value(`interval`)))
 		let perform = methodPerformValue(.m_sendUserNotification__withContent_contentid_idrepeats_repeatsinterval_interval(Parameter<UNMutableNotificationContent>.value(`content`), Parameter<String>.value(`id`), Parameter<Bool>.value(`repeats`), Parameter<TimeInterval>.value(`interval`))) as? (UNMutableNotificationContent, String, Bool, TimeInterval) -> Void
@@ -14476,11 +15584,17 @@ open class UiUtilMock: UiUtil, Mock {
         case m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(Parameter<UserInfoKey>, Parameter<Notification>, Parameter<Bool>)
         case m_info__info(Parameter<[UserInfoKey: Any]>)
         case m_controller__named_controllerNamefrom_storyboardNameas_as(Parameter<String>, Parameter<String>, Parameter<GenericAttribute>)
+        case m_controller__named_controllerNamefrom_storyboardas_as(Parameter<String>, Parameter<UIStoryboard>, Parameter<GenericAttribute>)
         case m_documentPicker__docTypes_docTypesin_pickerMode(Parameter<[String]>, Parameter<UIDocumentPickerMode>)
+        case m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(Parameter<String?>, Parameter<String?>, Parameter<UIAlertController.Style>)
+        case m_tableViewRowAction__style_styletitle_titlehandler_handler(Parameter<UITableViewRowAction.Style>, Parameter<String?>, Parameter<(UITableViewRowAction, IndexPath) -> Void>)
         case m_stopObserving__observername_nameobject_object(Parameter<Any>, Parameter<NotificationName?>, Parameter<Any?>)
         case m_post__name_nameobject_objectuserInfo_userInfo_1(Parameter<Notification.Name>, Parameter<Any?>, Parameter<[AnyHashable: Any]?>)
         case m_post__name_nameobject_objectuserInfo_userInfo_2(Parameter<NotificationName>, Parameter<Any?>, Parameter<[AnyHashable: Any]?>)
         case m_present__presentingController_controllerBeingPresentedanimated_animatedcompletion_completion(Parameter<UIViewController>, Parameter<UIViewController>, Parameter<Bool>, Parameter<(() -> Void)?>)
+        case m_present__viewControlleron_presentingControllerusing_presenteranimated_animatedcompletion_completion(Parameter<UIViewController>, Parameter<UIViewController>, Parameter<Presentr>, Parameter<Bool>, Parameter<(() -> Void)?>)
+        case m_push__controller_controllertoNavigationController_navigationControlleranimated_animated(Parameter<UIViewController>, Parameter<UINavigationController?>, Parameter<Bool>)
+        case m_popFrom__navigationControlleranimated_animated(Parameter<UINavigationController?>, Parameter<Bool>)
         case m_sendUserNotification__withContent_contentid_idrepeats_repeatsinterval_interval(Parameter<UNMutableNotificationContent>, Parameter<String>, Parameter<Bool>, Parameter<TimeInterval>)
         case p_defaultPresenter_get
         case p_hasTopNotch_get
@@ -14530,9 +15644,24 @@ open class UiUtilMock: UiUtil, Mock {
                 guard Parameter.compare(lhs: lhsStoryboardname, rhs: rhsStoryboardname, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsAs, rhs: rhsAs, with: matcher) else { return false } 
                 return true 
+            case (.m_controller__named_controllerNamefrom_storyboardas_as(let lhsControllername, let lhsStoryboard, let lhsAs), .m_controller__named_controllerNamefrom_storyboardas_as(let rhsControllername, let rhsStoryboard, let rhsAs)):
+                guard Parameter.compare(lhs: lhsControllername, rhs: rhsControllername, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsStoryboard, rhs: rhsStoryboard, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAs, rhs: rhsAs, with: matcher) else { return false } 
+                return true 
             case (.m_documentPicker__docTypes_docTypesin_pickerMode(let lhsDoctypes, let lhsPickermode), .m_documentPicker__docTypes_docTypesin_pickerMode(let rhsDoctypes, let rhsPickermode)):
                 guard Parameter.compare(lhs: lhsDoctypes, rhs: rhsDoctypes, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsPickermode, rhs: rhsPickermode, with: matcher) else { return false } 
+                return true 
+            case (.m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(let lhsTitle, let lhsMessage, let lhsPreferredstyle), .m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(let rhsTitle, let rhsMessage, let rhsPreferredstyle)):
+                guard Parameter.compare(lhs: lhsTitle, rhs: rhsTitle, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsMessage, rhs: rhsMessage, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsPreferredstyle, rhs: rhsPreferredstyle, with: matcher) else { return false } 
+                return true 
+            case (.m_tableViewRowAction__style_styletitle_titlehandler_handler(let lhsStyle, let lhsTitle, let lhsHandler), .m_tableViewRowAction__style_styletitle_titlehandler_handler(let rhsStyle, let rhsTitle, let rhsHandler)):
+                guard Parameter.compare(lhs: lhsStyle, rhs: rhsStyle, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsTitle, rhs: rhsTitle, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher) else { return false } 
                 return true 
             case (.m_stopObserving__observername_nameobject_object(let lhsObserver, let lhsName, let lhsObject), .m_stopObserving__observername_nameobject_object(let rhsObserver, let rhsName, let rhsObject)):
                 guard Parameter.compare(lhs: lhsObserver, rhs: rhsObserver, with: matcher) else { return false } 
@@ -14554,6 +15683,22 @@ open class UiUtilMock: UiUtil, Mock {
                 guard Parameter.compare(lhs: lhsControllerbeingpresented, rhs: rhsControllerbeingpresented, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsAnimated, rhs: rhsAnimated, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsCompletion, rhs: rhsCompletion, with: matcher) else { return false } 
+                return true 
+            case (.m_present__viewControlleron_presentingControllerusing_presenteranimated_animatedcompletion_completion(let lhsViewcontroller, let lhsPresentingcontroller, let lhsPresenter, let lhsAnimated, let lhsCompletion), .m_present__viewControlleron_presentingControllerusing_presenteranimated_animatedcompletion_completion(let rhsViewcontroller, let rhsPresentingcontroller, let rhsPresenter, let rhsAnimated, let rhsCompletion)):
+                guard Parameter.compare(lhs: lhsViewcontroller, rhs: rhsViewcontroller, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsPresentingcontroller, rhs: rhsPresentingcontroller, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsPresenter, rhs: rhsPresenter, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAnimated, rhs: rhsAnimated, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsCompletion, rhs: rhsCompletion, with: matcher) else { return false } 
+                return true 
+            case (.m_push__controller_controllertoNavigationController_navigationControlleranimated_animated(let lhsController, let lhsNavigationcontroller, let lhsAnimated), .m_push__controller_controllertoNavigationController_navigationControlleranimated_animated(let rhsController, let rhsNavigationcontroller, let rhsAnimated)):
+                guard Parameter.compare(lhs: lhsController, rhs: rhsController, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsNavigationcontroller, rhs: rhsNavigationcontroller, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAnimated, rhs: rhsAnimated, with: matcher) else { return false } 
+                return true 
+            case (.m_popFrom__navigationControlleranimated_animated(let lhsNavigationcontroller, let lhsAnimated), .m_popFrom__navigationControlleranimated_animated(let rhsNavigationcontroller, let rhsAnimated)):
+                guard Parameter.compare(lhs: lhsNavigationcontroller, rhs: rhsNavigationcontroller, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAnimated, rhs: rhsAnimated, with: matcher) else { return false } 
                 return true 
             case (.m_sendUserNotification__withContent_contentid_idrepeats_repeatsinterval_interval(let lhsContent, let lhsId, let lhsRepeats, let lhsInterval), .m_sendUserNotification__withContent_contentid_idrepeats_repeatsinterval_interval(let rhsContent, let rhsId, let rhsRepeats, let rhsInterval)):
                 guard Parameter.compare(lhs: lhsContent, rhs: rhsContent, with: matcher) else { return false } 
@@ -14578,11 +15723,17 @@ open class UiUtilMock: UiUtil, Mock {
             case let .m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_info__info(p0): return p0.intValue
             case let .m_controller__named_controllerNamefrom_storyboardNameas_as(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_controller__named_controllerNamefrom_storyboardas_as(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_documentPicker__docTypes_docTypesin_pickerMode(p0, p1): return p0.intValue + p1.intValue
+            case let .m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_tableViewRowAction__style_styletitle_titlehandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_stopObserving__observername_nameobject_object(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_post__name_nameobject_objectuserInfo_userInfo_1(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_post__name_nameobject_objectuserInfo_userInfo_2(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_present__presentingController_controllerBeingPresentedanimated_animatedcompletion_completion(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
+            case let .m_present__viewControlleron_presentingControllerusing_presenteranimated_animatedcompletion_completion(p0, p1, p2, p3, p4): return p0.intValue + p1.intValue + p2.intValue + p3.intValue + p4.intValue
+            case let .m_push__controller_controllertoNavigationController_navigationControlleranimated_animated(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_popFrom__navigationControlleranimated_animated(p0, p1): return p0.intValue + p1.intValue
             case let .m_sendUserNotification__withContent_contentid_idrepeats_repeatsinterval_interval(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
             case .p_defaultPresenter_get: return 0
             case .p_hasTopNotch_get: return 0
@@ -14620,8 +15771,17 @@ open class UiUtilMock: UiUtil, Mock {
         public static func controller<Type: UIViewController>(named controllerName: Parameter<String>, from storyboardName: Parameter<String>, as: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
             return Given(method: .m_controller__named_controllerNamefrom_storyboardNameas_as(`controllerName`, `storyboardName`, `as`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func controller<Type: UIViewController>(named controllerName: Parameter<String>, from storyboard: Parameter<UIStoryboard>, as: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
+            return Given(method: .m_controller__named_controllerNamefrom_storyboardas_as(`controllerName`, `storyboard`, `as`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func documentPicker(docTypes: Parameter<[String]>, in pickerMode: Parameter<UIDocumentPickerMode>, willReturn: UIDocumentPickerViewController...) -> MethodStub {
             return Given(method: .m_documentPicker__docTypes_docTypesin_pickerMode(`docTypes`, `pickerMode`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func alert(title: Parameter<String?>, message: Parameter<String?>, preferredStyle: Parameter<UIAlertController.Style>, willReturn: UIAlertController...) -> MethodStub {
+            return Given(method: .m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(`title`, `message`, `preferredStyle`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func tableViewRowAction(style: Parameter<UITableViewRowAction.Style>, title: Parameter<String?>, handler: Parameter<(UITableViewRowAction, IndexPath) -> Void>, willReturn: UITableViewRowAction...) -> MethodStub {
+            return Given(method: .m_tableViewRowAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>, willProduce: (Stubber<Presentr>) -> Void) -> MethodStub {
             let willReturn: [Presentr] = []
@@ -14658,10 +15818,31 @@ open class UiUtilMock: UiUtil, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func controller<Type: UIViewController>(named controllerName: Parameter<String>, from storyboard: Parameter<UIStoryboard>, as: Parameter<Type.Type>, willProduce: (Stubber<Type>) -> Void) -> MethodStub {
+            let willReturn: [Type] = []
+			let given: Given = { return Given(method: .m_controller__named_controllerNamefrom_storyboardas_as(`controllerName`, `storyboard`, `as`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Type).self)
+			willProduce(stubber)
+			return given
+        }
         public static func documentPicker(docTypes: Parameter<[String]>, in pickerMode: Parameter<UIDocumentPickerMode>, willProduce: (Stubber<UIDocumentPickerViewController>) -> Void) -> MethodStub {
             let willReturn: [UIDocumentPickerViewController] = []
 			let given: Given = { return Given(method: .m_documentPicker__docTypes_docTypesin_pickerMode(`docTypes`, `pickerMode`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (UIDocumentPickerViewController).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func alert(title: Parameter<String?>, message: Parameter<String?>, preferredStyle: Parameter<UIAlertController.Style>, willProduce: (Stubber<UIAlertController>) -> Void) -> MethodStub {
+            let willReturn: [UIAlertController] = []
+			let given: Given = { return Given(method: .m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(`title`, `message`, `preferredStyle`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (UIAlertController).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func tableViewRowAction(style: Parameter<UITableViewRowAction.Style>, title: Parameter<String?>, handler: Parameter<(UITableViewRowAction, IndexPath) -> Void>, willProduce: (Stubber<UITableViewRowAction>) -> Void) -> MethodStub {
+            let willReturn: [UITableViewRowAction] = []
+			let given: Given = { return Given(method: .m_tableViewRowAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (UITableViewRowAction).self)
 			willProduce(stubber)
 			return given
         }
@@ -14679,11 +15860,17 @@ open class UiUtilMock: UiUtil, Mock {
         public static func value(for key: Parameter<UserInfoKey>, from notification: Parameter<Notification>, keyIsOptional: Parameter<Bool>) -> Verify { return Verify(method: .m_value__for_keyfrom_notificationkeyIsOptional_keyIsOptional(`key`, `notification`, `keyIsOptional`))}
         public static func info(_ info: Parameter<[UserInfoKey: Any]>) -> Verify { return Verify(method: .m_info__info(`info`))}
         public static func controller<Type>(named controllerName: Parameter<String>, from storyboardName: Parameter<String>, as: Parameter<Type.Type>) -> Verify where Type:UIViewController { return Verify(method: .m_controller__named_controllerNamefrom_storyboardNameas_as(`controllerName`, `storyboardName`, `as`.wrapAsGeneric()))}
+        public static func controller<Type>(named controllerName: Parameter<String>, from storyboard: Parameter<UIStoryboard>, as: Parameter<Type.Type>) -> Verify where Type:UIViewController { return Verify(method: .m_controller__named_controllerNamefrom_storyboardas_as(`controllerName`, `storyboard`, `as`.wrapAsGeneric()))}
         public static func documentPicker(docTypes: Parameter<[String]>, in pickerMode: Parameter<UIDocumentPickerMode>) -> Verify { return Verify(method: .m_documentPicker__docTypes_docTypesin_pickerMode(`docTypes`, `pickerMode`))}
+        public static func alert(title: Parameter<String?>, message: Parameter<String?>, preferredStyle: Parameter<UIAlertController.Style>) -> Verify { return Verify(method: .m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(`title`, `message`, `preferredStyle`))}
+        public static func tableViewRowAction(style: Parameter<UITableViewRowAction.Style>, title: Parameter<String?>, handler: Parameter<(UITableViewRowAction, IndexPath) -> Void>) -> Verify { return Verify(method: .m_tableViewRowAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`))}
         public static func stopObserving(_ observer: Parameter<Any>, name: Parameter<NotificationName?>, object: Parameter<Any?>) -> Verify { return Verify(method: .m_stopObserving__observername_nameobject_object(`observer`, `name`, `object`))}
         public static func post(name: Parameter<Notification.Name>, object: Parameter<Any?>, userInfo: Parameter<[AnyHashable: Any]?>) -> Verify { return Verify(method: .m_post__name_nameobject_objectuserInfo_userInfo_1(`name`, `object`, `userInfo`))}
         public static func post(name: Parameter<NotificationName>, object: Parameter<Any?>, userInfo: Parameter<[AnyHashable: Any]?>) -> Verify { return Verify(method: .m_post__name_nameobject_objectuserInfo_userInfo_2(`name`, `object`, `userInfo`))}
         public static func present(_ presentingController: Parameter<UIViewController>, _ controllerBeingPresented: Parameter<UIViewController>, animated: Parameter<Bool>, completion: Parameter<(() -> Void)?>) -> Verify { return Verify(method: .m_present__presentingController_controllerBeingPresentedanimated_animatedcompletion_completion(`presentingController`, `controllerBeingPresented`, `animated`, `completion`))}
+        public static func present(_ viewController: Parameter<UIViewController>, on presentingController: Parameter<UIViewController>, using presenter: Parameter<Presentr>, animated: Parameter<Bool>, completion: Parameter<(() -> Void)?>) -> Verify { return Verify(method: .m_present__viewControlleron_presentingControllerusing_presenteranimated_animatedcompletion_completion(`viewController`, `presentingController`, `presenter`, `animated`, `completion`))}
+        public static func push(controller: Parameter<UIViewController>, toNavigationController navigationController: Parameter<UINavigationController?>, animated: Parameter<Bool>) -> Verify { return Verify(method: .m_push__controller_controllertoNavigationController_navigationControlleranimated_animated(`controller`, `navigationController`, `animated`))}
+        public static func popFrom(_ navigationController: Parameter<UINavigationController?>, animated: Parameter<Bool>) -> Verify { return Verify(method: .m_popFrom__navigationControlleranimated_animated(`navigationController`, `animated`))}
         public static func sendUserNotification(withContent content: Parameter<UNMutableNotificationContent>, id: Parameter<String>, repeats: Parameter<Bool>, interval: Parameter<TimeInterval>) -> Verify { return Verify(method: .m_sendUserNotification__withContent_contentid_idrepeats_repeatsinterval_interval(`content`, `id`, `repeats`, `interval`))}
         public static var defaultPresenter: Verify { return Verify(method: .p_defaultPresenter_get) }
         public static var hasTopNotch: Verify { return Verify(method: .p_hasTopNotch_get) }
@@ -14720,8 +15907,17 @@ open class UiUtilMock: UiUtil, Mock {
         public static func controller<Type>(named controllerName: Parameter<String>, from storyboardName: Parameter<String>, as: Parameter<Type.Type>, perform: @escaping (String, String, Type.Type) -> Void) -> Perform where Type:UIViewController {
             return Perform(method: .m_controller__named_controllerNamefrom_storyboardNameas_as(`controllerName`, `storyboardName`, `as`.wrapAsGeneric()), performs: perform)
         }
+        public static func controller<Type>(named controllerName: Parameter<String>, from storyboard: Parameter<UIStoryboard>, as: Parameter<Type.Type>, perform: @escaping (String, UIStoryboard, Type.Type) -> Void) -> Perform where Type:UIViewController {
+            return Perform(method: .m_controller__named_controllerNamefrom_storyboardas_as(`controllerName`, `storyboard`, `as`.wrapAsGeneric()), performs: perform)
+        }
         public static func documentPicker(docTypes: Parameter<[String]>, in pickerMode: Parameter<UIDocumentPickerMode>, perform: @escaping ([String], UIDocumentPickerMode) -> Void) -> Perform {
             return Perform(method: .m_documentPicker__docTypes_docTypesin_pickerMode(`docTypes`, `pickerMode`), performs: perform)
+        }
+        public static func alert(title: Parameter<String?>, message: Parameter<String?>, preferredStyle: Parameter<UIAlertController.Style>, perform: @escaping (String?, String?, UIAlertController.Style) -> Void) -> Perform {
+            return Perform(method: .m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(`title`, `message`, `preferredStyle`), performs: perform)
+        }
+        public static func tableViewRowAction(style: Parameter<UITableViewRowAction.Style>, title: Parameter<String?>, handler: Parameter<(UITableViewRowAction, IndexPath) -> Void>, perform: @escaping (UITableViewRowAction.Style, String?, @escaping (UITableViewRowAction, IndexPath) -> Void) -> Void) -> Perform {
+            return Perform(method: .m_tableViewRowAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`), performs: perform)
         }
         public static func stopObserving(_ observer: Parameter<Any>, name: Parameter<NotificationName?>, object: Parameter<Any?>, perform: @escaping (Any, NotificationName?, Any?) -> Void) -> Perform {
             return Perform(method: .m_stopObserving__observername_nameobject_object(`observer`, `name`, `object`), performs: perform)
@@ -14734,6 +15930,15 @@ open class UiUtilMock: UiUtil, Mock {
         }
         public static func present(_ presentingController: Parameter<UIViewController>, _ controllerBeingPresented: Parameter<UIViewController>, animated: Parameter<Bool>, completion: Parameter<(() -> Void)?>, perform: @escaping (UIViewController, UIViewController, Bool, (() -> Void)?) -> Void) -> Perform {
             return Perform(method: .m_present__presentingController_controllerBeingPresentedanimated_animatedcompletion_completion(`presentingController`, `controllerBeingPresented`, `animated`, `completion`), performs: perform)
+        }
+        public static func present(_ viewController: Parameter<UIViewController>, on presentingController: Parameter<UIViewController>, using presenter: Parameter<Presentr>, animated: Parameter<Bool>, completion: Parameter<(() -> Void)?>, perform: @escaping (UIViewController, UIViewController, Presentr, Bool, (() -> Void)?) -> Void) -> Perform {
+            return Perform(method: .m_present__viewControlleron_presentingControllerusing_presenteranimated_animatedcompletion_completion(`viewController`, `presentingController`, `presenter`, `animated`, `completion`), performs: perform)
+        }
+        public static func push(controller: Parameter<UIViewController>, toNavigationController navigationController: Parameter<UINavigationController?>, animated: Parameter<Bool>, perform: @escaping (UIViewController, UINavigationController?, Bool) -> Void) -> Perform {
+            return Perform(method: .m_push__controller_controllertoNavigationController_navigationControlleranimated_animated(`controller`, `navigationController`, `animated`), performs: perform)
+        }
+        public static func popFrom(_ navigationController: Parameter<UINavigationController?>, animated: Parameter<Bool>, perform: @escaping (UINavigationController?, Bool) -> Void) -> Perform {
+            return Perform(method: .m_popFrom__navigationControlleranimated_animated(`navigationController`, `animated`), performs: perform)
         }
         public static func sendUserNotification(withContent content: Parameter<UNMutableNotificationContent>, id: Parameter<String>, repeats: Parameter<Bool>, interval: Parameter<TimeInterval>, perform: @escaping (UNMutableNotificationContent, String, Bool, TimeInterval) -> Void) -> Perform {
             return Perform(method: .m_sendUserNotification__withContent_contentid_idrepeats_repeatsinterval_interval(`content`, `id`, `repeats`, `interval`), performs: perform)
@@ -15046,6 +16251,12 @@ open class WeightQueryMock: WeightQuery, Mock {
 		perform?()
     }
 
+    open func resetStoppedState() {
+        addInvocation(.m_resetStoppedState)
+		let perform = methodPerformValue(.m_resetStoppedState) as? () -> Void
+		perform?()
+    }
+
     open func equalTo(_ otherQuery: Query) -> Bool {
         addInvocation(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`)))
 		let perform = methodPerformValue(.m_equalTo__otherQuery(Parameter<Query>.value(`otherQuery`))) as? (Query) -> Void
@@ -15064,6 +16275,7 @@ open class WeightQueryMock: WeightQuery, Mock {
     fileprivate enum MethodType {
         case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
         case m_stop
+        case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
         case p_attributeRestrictions_get
 		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
@@ -15078,6 +16290,8 @@ open class WeightQueryMock: WeightQuery, Mock {
                 guard Parameter.compare(lhs: lhsCallback, rhs: rhsCallback, with: matcher) else { return false } 
                 return true 
             case (.m_stop, .m_stop):
+                return true 
+            case (.m_resetStoppedState, .m_resetStoppedState):
                 return true 
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
@@ -15096,6 +16310,7 @@ open class WeightQueryMock: WeightQuery, Mock {
             switch self {
             case let .m_runQuery__callback_callback(p0): return p0.intValue
             case .m_stop: return 0
+            case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
             case .p_attributeRestrictions_get: return 0
 			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
@@ -15142,6 +16357,7 @@ open class WeightQueryMock: WeightQuery, Mock {
 
         public static func runQuery(callback: Parameter<(QueryResult?, Error?) -> ()>) -> Verify { return Verify(method: .m_runQuery__callback_callback(`callback`))}
         public static func stop() -> Verify { return Verify(method: .m_stop)}
+        public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
         public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
 		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
@@ -15160,6 +16376,9 @@ open class WeightQueryMock: WeightQuery, Mock {
         }
         public static func stop(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_stop, performs: perform)
+        }
+        public static func resetStoppedState(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_resetStoppedState, performs: perform)
         }
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)

@@ -10,7 +10,17 @@ import Foundation
 
 public protocol SampleGrouper: Attributed {
 
-	init()
+	static var userVisibleDescription: String { get }
 
-	func group(samples: [Sample], by attribute: Attribute) throws -> [(Any, [Sample])]
+	init(sampleType: Sample.Type)
+	init(attributes: [Attribute])
+
+	func group(samples: [Sample]) throws -> [(Any, [Sample])]
+	func groupNameFor(value: Any) throws -> String
+	func groupValuesAreEqual(_ first: Any, _ second: Any) throws -> Bool
+
+	/// create and return a deep copy of this object
+	func copy() -> SampleGrouper
+
+	func equalTo(_ otherGrouper: SampleGrouper) -> Bool
 }

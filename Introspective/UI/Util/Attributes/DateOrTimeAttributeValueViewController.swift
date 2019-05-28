@@ -10,10 +10,18 @@ import UIKit
 
 public final class DateOrTimeAttributeValueViewController: AttributeValueTypeViewController {
 
+	// MARK: - IBOutlets
+
+	@IBOutlet weak final var datePicker: UIDatePicker!
+
+	// MARK: - Instance Variables
+
 	public final var dateAttribute: DateAttribute!
 	public final var timeOfDayAttribute: TimeOfDayAttribute!
 
-	@IBOutlet weak final var datePicker: UIDatePicker!
+	private final let log = Log()
+
+	// MARK: - UIViewController Overrides
 
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
@@ -35,14 +43,16 @@ public final class DateOrTimeAttributeValueViewController: AttributeValueTypeVie
 		datePicker.timeZone = Calendar.autoupdatingCurrent.timeZone
 		datePicker.locale = Calendar.autoupdatingCurrent.locale
 
-		if currentValue != nil {
-			if currentValue is Date {
-				datePicker.setDate(currentValue as! Date, animated: false)
-			} else {
-				datePicker.setDate(Date(currentValue as! TimeOfDay), animated: false)
-			}
+		if let date = currentValue as? Date {
+			datePicker.setDate(date, animated: false)
+		} else if let time = currentValue as? TimeOfDay {
+			datePicker.setDate(Date(time), animated: false)
+		} else {
+			log.error("Unknown value type: %@", String(describing: currentValue))
 		}
 	}
+
+	// MARK: - Actions
 
 	@IBAction final func dateValueChanged(_ sender: Any) {
 		if timeOfDayAttribute != nil {

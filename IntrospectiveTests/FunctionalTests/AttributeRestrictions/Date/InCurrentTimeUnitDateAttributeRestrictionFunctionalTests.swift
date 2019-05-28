@@ -8,6 +8,7 @@
 
 import XCTest
 import SwiftDate
+import Hamcrest
 @testable import Introspective
 
 class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
@@ -135,6 +136,20 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 		// then
 		XCTAssertFalse(samplePasses)
+	}
+
+	// MARK: - copy()
+
+	func test_copy_returnsCopy() {
+		// when
+		let copy = restriction.copy()
+
+		// then
+		guard let castedCopy = copy as? InCurrentTimeUnitDateAttributeRestriction else {
+			XCTFail("Wrong type returned")
+			return
+		}
+		assertThat(castedCopy, equals(restriction))
 	}
 
 	// MARK: - ==

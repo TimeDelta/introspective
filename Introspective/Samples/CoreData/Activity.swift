@@ -32,6 +32,7 @@ public class Activity: NSManagedObject, CoreDataSample {
 	public static let durationAttribute = DurationAttribute()
 	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
 		name: "Source",
+		typeName: "Activity Source",
 		pluralName: "Sources",
 		possibleValues: Sources.ActivitySourceNum.values.map{ $0.description },
 		possibleValueToString: { $0 })

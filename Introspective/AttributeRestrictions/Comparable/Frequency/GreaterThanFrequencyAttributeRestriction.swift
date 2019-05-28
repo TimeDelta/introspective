@@ -20,4 +20,8 @@ public final class GreaterThanFrequencyAttributeRestriction: TypedGreaterThanAtt
 	public init(restrictedAttribute: Attribute, value: Frequency = Frequency(0, .day)!) {
 		super.init(restrictedAttribute: restrictedAttribute, value: value, valueAttribute: Me.valueAttribute)
 	}
+
+	public override func copy() -> AttributeRestriction {
+		return GreaterThanFrequencyAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
+	}
 }

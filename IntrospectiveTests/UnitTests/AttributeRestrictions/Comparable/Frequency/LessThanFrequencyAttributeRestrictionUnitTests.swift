@@ -170,6 +170,20 @@ final class LessThanFrequencyAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(samplePasses)
 	}
 
+	// MARK: - copy()
+
+	func test_copy_returnsCopy() {
+		// when
+		let copy = restriction.copy()
+
+		// then
+		guard let castedCopy = copy as? LessThanFrequencyAttributeRestriction else {
+			XCTFail("Wrong type returned")
+			return
+		}
+		assertThat(castedCopy, equals(restriction))
+	}
+
 	// MARK: - ==
 
 	func testGivenSameObjectTwice_equalToOperator_returnsTrue() {

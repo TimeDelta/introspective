@@ -10,11 +10,6 @@ import UIKit
 
 final class SortResultsViewController: UIViewController {
 
-	// MARK: - Static Variables
-
-	private typealias Me = SortResultsViewController
-	private static let userAccepted = Notification.Name("userAccepted")
-
 	// MARK: - IBOutlets
 
 	@IBOutlet weak final var sortAscendingSwitch: UISwitch!
@@ -37,7 +32,7 @@ final class SortResultsViewController: UIViewController {
 
 		installSubView()
 
-		observe(selector: #selector(userPressedAccept), name: Me.userAccepted)
+		observe(selector: #selector(userPressedAccept), name: .attributeChosen)
 	}
 
 	// MARK: - Received Notifications
@@ -61,7 +56,7 @@ final class SortResultsViewController: UIViewController {
 		chooseAttributeController = viewController(named: "chooseAttribute", fromStoryboard: "Util")
 		chooseAttributeController.attributes = attributes
 		chooseAttributeController.selectedAttribute = sortAttribute
-		chooseAttributeController.notificationToSendOnAccept = Me.userAccepted
+		chooseAttributeController.notificationToSendOnAccept = .attributeChosen
 		let containerView = ContainerView<ChooseAttributeViewController>(parentController: self)
 		containerView.install(chooseAttributeController)
 		chooseAttributeView.addArrangedSubview(containerView)

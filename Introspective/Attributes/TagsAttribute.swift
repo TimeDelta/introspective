@@ -11,6 +11,10 @@ import CoreData
 
 public final class TagsAttribute: TypedMultiSelectAttribute<Tag> {
 
+	public final override var typeName: String {
+		return "Tags"
+	}
+
 	// MARK: - Initializers
 
 	public init(

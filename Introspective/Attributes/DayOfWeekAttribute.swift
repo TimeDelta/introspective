@@ -19,6 +19,7 @@ public final class DayOfWeekAttribute: TypedSelectOneAttribute<DayOfWeek>, Compa
 	{
 		super.init(
 			name: name,
+			typeName: "Day of the Week",
 			pluralName: pluralName,
 			description: description,
 			variableName: variableName,

@@ -10,18 +10,13 @@ import UIKit
 
 final class ChooseAttributesToGraphTableViewController: UITableViewController {
 
-	// MARK: - Static Variables
-
-	private typealias Me = ChooseAttributesToGraphTableViewController
-	private static let editedAttribute = Notification.Name("editedAttributesWhileChoosingWhatToGraph")
-
 	// MARK: - IBOutlets
 
 	@IBOutlet weak final var addButton: UIBarButtonItem!
 
 	// MARK: - Instance Variables
 
-	public final var notificationToSendWhenFinished: Notification.Name!
+	public final var notificationToSendWhenFinished: NotificationName!
 	public final var allowedAttributes: [Attribute]! {
 		didSet { allowedAttributes = allowedAttributes ?? [Attribute]() }
 	}
@@ -41,13 +36,13 @@ final class ChooseAttributesToGraphTableViewController: UITableViewController {
 		if allowedAttributes.count == 0 {
 			let alert = UIAlertController(title: "No graphable attributes", message: "There are no graphable attributes on the chosen data type.", preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
-				NotificationCenter.default.post(name: self.notificationToSendWhenFinished, object: nil, userInfo: self.info([:]))
+				self.syncPost(self.notificationToSendWhenFinished, userInfo: [:])
 				self.navigationController!.popViewController(animated: false)
 			})
 			present(alert, animated: false)
 		}
+		observe(selector: #selector(saveEditedAttribute), name: .attributeChosen)
 		navigationItem.rightBarButtonItem = editButtonItem
-		observe(selector: #selector(saveEditedAttribute), name: Me.editedAttribute)
 	}
 
 	deinit {
@@ -71,7 +66,7 @@ final class ChooseAttributesToGraphTableViewController: UITableViewController {
 	final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		editIndex = indexPath.row
 		let controller: ChooseAttributeViewController = viewController(named: "chooseAttribute", fromStoryboard: "Util")
-		controller.notificationToSendOnAccept = Me.editedAttribute
+		controller.notificationToSendOnAccept = .attributeChosen
 		controller.selectedAttribute = selectedAttributes[editIndex]
 		var unselectedAttributes = allowedAttributes.filter{ attribute in
 			!selectedAttributes.contains(where: { $0.equalTo(attribute) })
@@ -121,12 +116,11 @@ final class ChooseAttributesToGraphTableViewController: UITableViewController {
 	}
 
 	@IBAction final func doneButtonPressed(_ sender: Any) {
-		NotificationCenter.default.post(
-			name: notificationToSendWhenFinished,
-			object: self,
-			userInfo: info([
+		syncPost(
+			notificationToSendWhenFinished,
+			userInfo: [
 				.attributes: selectedAttributes,
-			]))
+			])
 		navigationController!.popViewController(animated: false)
 	}
 
