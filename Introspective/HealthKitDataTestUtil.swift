@@ -63,12 +63,20 @@ public class HealthKitDataTestUtil {
 		var allSamples = [HKSample]()
 		var group = DispatchGroup()
 		group.enter()
-		Me.healthStore.execute(HKSampleQuery(sampleType: type.sampleType, predicate: nil, limit: Int(HKObjectQueryNoLimit), sortDescriptors: nil) {
-			(_, results, error) in
-			if error != nil { fatalError("Failed to fetch all " + type.name + ": " + error!.localizedDescription) }
+		let queryCallback = { (_: HKSampleQuery, results: [HKSample]?, error: Error?) in
+			if error != nil {
+				fatalError("Failed to fetch all " + type.name + ": " + error!.localizedDescription)
+			}
 			allSamples = results!
 			group.leave()
-		})
+		}
+		Me.healthStore.execute(
+			HKSampleQuery(
+				sampleType: type.sampleType,
+				predicate: nil,
+				limit: Int(HKObjectQueryNoLimit),
+				sortDescriptors: nil,
+				resultsHandler: queryCallback))
 		group.wait()
 		if allSamples.count > 0 {
 			group = DispatchGroup()
