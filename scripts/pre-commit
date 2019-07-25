@@ -1,0 +1,29 @@
+#!/bin/sh
+set -e
+
+fullpath () {
+	[[ `uname` == Darwin* ]] && realpath "$@" || readlink -f "$@"
+}
+
+gitrootdir() {
+	git rev-parse --show-toplevel
+}
+
+SCRIPT_DIR="`dirname "$(fullpath "$0")"`"
+
+xunique -u -c "`gitrootdir`/Introspective.xcodeproj"
+
+missing_tests="`"$SCRIPT_DIR/missing-tests" -s`"
+if [[ -n $missing_tests ]]; then
+	echo "It seems that tests are missing for the following:"
+	echo "$missing_tests" | sed 's/^/  /'
+	exec < /dev/tty
+	while [[ true ]]; do
+		read -p "Continue with commit [y/n]? " continue
+		if [[ $continue == "y" ]]; then
+			exit 0
+		elif [[ $continue == "n" ]]; then
+			exit 1
+		fi
+	done
+fi

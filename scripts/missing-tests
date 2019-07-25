@@ -1,0 +1,51 @@
+#!/usr/local/bin/bash
+set -e
+
+if [[ $1 == '--help' ]]; then
+	echo "Usage: missing-tests [options]"
+	echo "Options:"
+	echo "  -c : just for the most recent commit"
+	echo "  -s : since the most recent commit"
+	exit 0
+fi
+
+fullpath () {
+	[[ `uname` == Darwin* ]] && realpath "$@" || readlink -f "$@"
+}
+
+gitrootdir() {
+	git rev-parse --show-toplevel
+}
+
+prevci() {
+	local commits_ago="$((${1:-0}+1))"
+	git log --no-color -n $commits_ago --format=oneline | tail -1 | awk '{print $1}'
+}
+
+notest() {
+	grep -vF 'IntrospectiveTests/' | \
+	grep -vF '+CoreDataProperties' | \
+	egrep -v '.*Factory.swift$' | {
+		local file
+		while read -s file; do
+			if [[ $file =~ .*\.swift$ ]]; then
+				test_file_regex=".*`basename "${file%.swift}"`(Unit|Functional)Tests?\.swift"
+				if [[ -z `find -E "$(gitrootdir)" -iregex "$test_file_regex"` ]]; then
+					echo "$file"
+				fi
+			fi
+		done
+	}
+}
+
+SCRIPT_DIR="`dirname "$(fullpath "$0")"`"
+
+cd "$SCRIPT_DIR/.."
+
+if [[ $1 == "-c" ]]; then
+	git diff --diff-filter=A --name-only --relative `prevci 1` | notest
+elif [[ $1 == "-s" ]]; then
+	git diff --diff-filter=A --name-only --cached | notest
+else
+	find "`gitrootdir`/Introspective" -iname \*.swift | notest
+fi
