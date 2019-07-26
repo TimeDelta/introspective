@@ -22,17 +22,43 @@ prevci() {
 	git log --no-color -n $commits_ago --format=oneline | tail -1 | awk '{print $1}'
 }
 
+has_protocol_or_enum() {
+	if [[ -n `grep 'protocol ' "$1"` ]]; then
+		echo 1
+	elif [[ -n `grep 'enum ' "$1"` ]]; then
+		echo 1
+	else
+		echo 0
+	fi
+}
+
+has_class() {
+	if [[ -n `grep 'class ' "$1"` ]]; then
+		echo 1
+	else
+		echo 0
+	fi
+}
+
 notest() {
 	grep -vF 'IntrospectiveTests/' | \
 	grep -vF '+CoreDataProperties' | \
+	grep -vF '/Log.swift' | \
+	grep -vF '/Signpost.swift' | \
+	grep -vF '/UserDefaultKeys.swift' | \
+	grep -vF 'Mock' | \
 	egrep -v '.*Factory.swift$' | {
 		local file
 		while read -s file; do
 			if [[ $file =~ .*\.swift$ ]]; then
-				test_file_regex=".*`basename "${file%.swift}"`(Unit|Functional)Tests?\.swift"
-				if [[ -z `find -E "$(gitrootdir)" -iregex "$test_file_regex"` ]]; then
-					echo "$file"
+				if [[ `has_protocol_or_enum "$file"` -eq 1 && `has_class "$file"` -eq 0 ]]; then
+					continue
 				fi
+				test_file_regex=".*/`basename "${file%.swift}"`(Unit|Functional)Tests?\.swift"
+				if [[ -n `find -E "$(gitrootdir)" -iregex "$test_file_regex"` ]]; then
+					continue
+				fi
+				echo "$file"
 			fi
 		done
 	}
