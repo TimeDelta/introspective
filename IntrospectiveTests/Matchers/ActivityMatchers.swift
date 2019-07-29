@@ -19,3 +19,9 @@ func equivalentDoesNotExistInDatabase() -> Matcher<Activity> {
 		return .match
 	}
 }
+
+func isStopped() -> Matcher<Activity> {
+	return Matcher("is stopped") { activity -> Bool in
+		return activity.end != nil
+	}
+}

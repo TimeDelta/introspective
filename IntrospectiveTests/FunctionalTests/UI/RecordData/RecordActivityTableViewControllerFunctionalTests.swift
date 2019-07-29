@@ -9,6 +9,7 @@
 import XCTest
 import Hamcrest
 import SwiftyMocky
+import SwiftDate
 import CSV
 @testable import Introspective
 
@@ -20,6 +21,44 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		super.setUp()
 		let storyboard = UIStoryboard(name: "RecordData", bundle: nil)
 		controller = (storyboard.instantiateViewController(withIdentifier: "activitiesTable") as! RecordActivityTableViewController)
+	}
+
+	// MARK: - stopAllButtonPressed()
+
+	func testGivenMultipleActivitiesRuning_stopAllButtonPressed_stopsAllRunningActivities() {
+		// given
+		DependencyInjector.settings.setAutoIgnoreEnabled(false)
+		let definition1 = ActivityDataTestUtil.createActivityDefinition(name: "1")
+		let activity1a = ActivityDataTestUtil.createActivity(
+			definition: definition1,
+			startDate: Date() - 1.hours,
+			endDate: nil)
+		let activity1b = ActivityDataTestUtil.createActivity(
+			definition: definition1,
+			startDate: Date() - 1.minutes,
+			endDate: nil)
+		let activity2 = ActivityDataTestUtil.createActivity(name: "2", startDate: Date() - 1.hours, endDate: nil)
+
+		// when
+		controller.stopAllButtonPressed(self)
+
+		// then
+		assertThat(activity1a, isStopped())
+		assertThat(activity1b, isStopped())
+		assertThat(activity2, isStopped())
+	}
+
+	func testGivenAutoIgnoreEnabledWithActivityRunningLessThanMinTime_stopAllButtonPressed_deletesThatActivity() {
+		// given
+		DependencyInjector.settings.setAutoIgnoreEnabled(true)
+		DependencyInjector.settings.setAutoIgnoreSeconds(15)
+		let activity = ActivityDataTestUtil.createActivity(name: "a", startDate: Date())
+
+		// when
+		controller.stopAllButtonPressed(self)
+
+		// then
+		assertThat(activity, equivalentDoesNotExistInDatabase())
 	}
 
 	// MARK: - Reordering

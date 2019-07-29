@@ -39,7 +39,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		CoachMarkInfo(
 			hint: "Tap the + button to create new activities. You can also type the name of a new activity in the searchh bar and long press the + button to quickly create and start it.",
 			useArrow: true,
-			view: { return self.navigationItem.rightBarButtonItem?.value(forKey: "view") as? UIView }),
+			view: { return self.navigationItem.rightBarButtonItems?[0].value(forKey: "view") as? UIView }),
 		CoachMarkInfo(
 			hint: "This is the name of the activity.",
 			useArrow: true,
@@ -64,6 +64,10 @@ public final class RecordActivityTableViewController: UITableViewController {
 			hint: "To start or stop an activity, simply tap it.",
 			useArrow: true,
 			view: { return self.tableView.visibleCells[0] }),
+		CoachMarkInfo(
+			hint: "You can also stop all activities by tapping this button.",
+			useArrow: true,
+			view: { return self.navigationItem.rightBarButtonItems?[1].value(forKey: "view") as? UIView }),
 		CoachMarkInfo(
 			hint: "This is the total amount of time spent on this activity today.",
 			useArrow: true,
@@ -103,10 +107,16 @@ public final class RecordActivityTableViewController: UITableViewController {
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
-		navigationItem.rightBarButtonItem = UIBarButtonItem(
+		let addButton = UIBarButtonItem(
 			barButtonSystemItem: .add,
 			target: self,
 			action: #selector(addButtonPressed))
+		let stopAllButton = UIBarButtonItem(
+			title: "■",
+			style: .plain,
+			target: self,
+			action: #selector(stopAllButtonPressed))
+		navigationItem.rightBarButtonItems = [addButton, stopAllButton]
 
 		searchController.searchResultsUpdater = self
 		searchController.obscuresBackgroundDuringPresentation = false
@@ -399,6 +409,37 @@ public final class RecordActivityTableViewController: UITableViewController {
 		}
 	}
 
+	@IBAction final func stopAllButtonPressed(_ sender: Any) {
+		do {
+			let endDateVariableName = CommonSampleAttributes.endDate.variableName!
+			let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
+			fetchRequest.predicate = NSPredicate(format: "%K == nil", endDateVariableName)
+			let activitiesToStop = try DependencyInjector.db.query(fetchRequest)
+			let now = Date()
+			var activitiesToAutoNote = [Activity]()
+			for activity in activitiesToStop {
+				if !autoIgnoreIfAppropriate(activity, end: now) {
+					let transaction = DependencyInjector.db.transaction()
+					activity.end = now
+					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+					if activity.definition.autoNote {
+						activitiesToAutoNote.append(activity)
+					}
+				}
+			}
+			tableView.reloadData()
+			for activity in activitiesToAutoNote {
+				showEditScreenForActivity(activity, autoFocusNote: true)
+			}
+		} catch {
+			showError(
+				title: "Failed to stop activities",
+				message: "Something went wrong while trying to stop all activities. Sorry for the inconvenience.",
+				error: error,
+				tryAgain: { self.stopAllButtonPressed(sender) })
+		}
+	}
+
 	// MARK: - Helper Functions
 
 	private final func loadActivitiyDefinitions() {
@@ -485,20 +526,9 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func stopActivity(_ activity: Activity, associatedCell: RecordActivityDefinitionTableViewCell) {
 		let now = Date()
-		if DependencyInjector.settings.autoIgnoreEnabled {
-			let minSeconds = DependencyInjector.settings.autoIgnoreSeconds
-			if Duration(start: activity.start, end: now).inUnit(.second) < Double(minSeconds) {
-				do {
-					let transaction = DependencyInjector.db.transaction()
-					// can't really explain this to the user
-					try retryOnFail({ try transaction.delete(activity) }, maxRetries: 2)
-					try transaction.commit()
-					associatedCell.updateUiElements()
-					return
-				} catch {
-					log.error("Failed to delete activity that should be auto-ignored: %@", errorInfo(error))
-				}
-			}
+		if autoIgnoreIfAppropriate(activity, end: now) {
+			associatedCell.updateUiElements()
+			return
 		}
 		do {
 			let transaction = DependencyInjector.db.transaction()
@@ -511,6 +541,26 @@ public final class RecordActivityTableViewController: UITableViewController {
 		} catch {
 			showError(title: "Failed to stop activity", error: error)
 		}
+	}
+
+	/// - Parameter now: If provided, use this as the stop date / time.
+	/// - Returns: Whether or not the activity was ignored
+	private final func autoIgnoreIfAppropriate(_ activity: Activity, end: Date = Date()) -> Bool {
+		if DependencyInjector.settings.autoIgnoreEnabled {
+			let minSeconds = DependencyInjector.settings.autoIgnoreSeconds
+			if Duration(start: activity.start, end: end).inUnit(.second) < Double(minSeconds) {
+				do {
+					let transaction = DependencyInjector.db.transaction()
+					// can't really explain this to the user
+					try retryOnFail({ try transaction.delete(activity) }, maxRetries: 2)
+					try transaction.commit()
+					return true
+				} catch {
+					log.error("Failed to delete activity that should be auto-ignored: %@", errorInfo(error))
+				}
+			}
+		}
+		return false
 	}
 
 	private final func getTimeTextFor(_ activity: Activity) -> String {
@@ -547,7 +597,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		controller.notificationToSendOnAccept = Me.activityEditedOrCreated
 		controller.autoFocusNote = autoFocusNote
 
-		self.navigationController?.pushViewController(controller, animated: false)
+		pushToNavigationController(controller, animated: false)
 	}
 
 	private final func getMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) -> Activity? {
