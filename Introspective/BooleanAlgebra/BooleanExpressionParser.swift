@@ -26,7 +26,9 @@ public protocol BooleanExpressionParser {
 public final class BooleanExpressionParserImpl: BooleanExpressionParser {
 
 	public final func parse(_ parts: [BooleanExpressionPart]) throws -> BooleanExpression {
-		precondition(parts.count > 0)
+		guard parts.count > 0 else {
+			throw GenericError("Nothing to parse")
+		}
 		var stack = [BooleanExpression]()
 		for part in parts {
 			switch (part.type) {

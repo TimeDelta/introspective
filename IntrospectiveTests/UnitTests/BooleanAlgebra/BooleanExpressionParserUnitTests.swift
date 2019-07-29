@@ -18,6 +18,16 @@ final class BooleanExpressionParserUnitTests: UnitTest {
 		parser = BooleanExpressionParserImpl()
 	}
 
+	// MARK: - parse()
+
+	func testGivenEmptyArray_parse_throwsError() throws {
+		// given
+		let parts = [BooleanExpressionPart]()
+
+		// when / then
+		XCTAssertThrowsError(try parser.parse(parts))
+	}
+
 	func testGivenHangingOr_parse_throwsError() throws {
 		// given
 		let parts: [BooleanExpressionPart] = [
