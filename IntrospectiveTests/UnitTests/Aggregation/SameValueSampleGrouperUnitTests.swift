@@ -171,7 +171,7 @@ final class SameValueSampleGrouperUnitTests: UnitTest {
 		XCTAssert(areEqual)
 	}
 
-	func tesstGivenNotEqualValues_groupValuesAreEqual_returnsFalse() throws {
+	func testGivenNotEqualValues_groupValuesAreEqual_returnsFalse() throws {
 		// given
 		let value1 = "value"
 		let value2 = value1 + "other stuff"
@@ -199,6 +199,7 @@ final class SameValueSampleGrouperUnitTests: UnitTest {
 			return
 		}
 		assertThat(castedCopy.groupByAttribute, equals(grouper.groupByAttribute!))
+		assertThat(castedCopy.attributeSelectAttribute, equals(grouper.attributeSelectAttribute))
 		assertThat(castedCopy.attributes, arrayHasExactly(grouper.attributes, areEqual: { $0.equalTo($1) }))
 	}
 

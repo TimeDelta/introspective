@@ -44,6 +44,12 @@ public final class SameValueSampleGrouper: SampleGrouper {
 		]
 	}
 
+	private init(groupByAttribute: Attribute?, attributeSelectAttribute: AttributeSelectAttribute) {
+		self.groupByAttribute = groupByAttribute
+		self.attributeSelectAttribute = attributeSelectAttribute
+		attributes = [attributeSelectAttribute]
+	}
+
 	// MARK: - Grouper Functions
 
 	public final func group(samples: [Sample]) throws -> [(Any, [Sample])] {
@@ -68,7 +74,9 @@ public final class SameValueSampleGrouper: SampleGrouper {
 	}
 
 	public final func copy() -> SampleGrouper {
-		let copy = SameValueSampleGrouper(attributes: attributes)
+		let copy = SameValueSampleGrouper(
+			groupByAttribute: groupByAttribute,
+			attributeSelectAttribute: attributeSelectAttribute)
 		copy.groupByAttribute = groupByAttribute
 		return copy
 	}

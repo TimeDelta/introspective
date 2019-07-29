@@ -25,6 +25,10 @@ public final class SampleGrouperFactoryImpl: SampleGrouperFactory {
 		SameTimeUnitSampleGrouper.self,
 	]
 
+	private static let tagTypes: [SampleGrouper.Type] = [
+		PerTagSampleGrouper.self,
+	]
+
 	private static let genericTypes: [SampleGrouper.Type] = [
 		SameValueSampleGrouper.self,
 		AdvancedSampleGrouper.self,
@@ -44,6 +48,12 @@ public final class SampleGrouperFactoryImpl: SampleGrouperFactory {
 				case is DateAttribute:
 					if !typeNames.contains(attribute.typeName) {
 						types.append(contentsOf: Me.dateTypes)
+						typeNames.insert(attribute.typeName)
+					}
+					break
+				case is TagAttribute, is TagsAttribute:
+					if !typeNames.contains(attribute.typeName) {
+						types.append(contentsOf: Me.tagTypes)
 						typeNames.insert(attribute.typeName)
 					}
 					break
