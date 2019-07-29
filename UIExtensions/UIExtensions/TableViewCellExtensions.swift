@@ -42,6 +42,10 @@ public extension UITableViewCell {
 		DependencyInjector.get(UiUtil.self).post(name: name, object: object, userInfo: userInfo)
 	}
 
+	final func post(_ name: Notification.Name, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
+		DependencyInjector.get(UiUtil.self).post(name: name, object: object, userInfo: userInfo)
+	}
+
 	final func post(_ name: NotificationName, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
 		DependencyInjector.get(UiUtil.self).post(name: name, object: object, userInfo: userInfo)
 	}

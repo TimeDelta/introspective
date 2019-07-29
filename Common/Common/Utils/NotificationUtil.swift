@@ -19,6 +19,7 @@ public protocol NotificationUtil {
 	///                  If specified, post will happen asynchronously.
 	///                  Otherwise post will happen synchronously.
 	func post(_ name: NotificationName, object: Any?, userInfo: [UserInfoKey: Any]?, qos: DispatchQoS.QoSClass?)
+
 	/// Creates a notification with a given name and sender and posts it to the notification center.
 	/// - Parameter name: The name of the notification.
 	/// - Parameter object: The object posting the notification.
@@ -68,13 +69,5 @@ public final class NotificationUtilImpl: NotificationUtil {
 		} else {
 			NotificationCenter.default.post(name: name, object: object, userInfo: userInfo)
 		}
-	}
-
-	// MARK: - Helper Functions
-
-	/// This is just a pass-through method that will return the input. It is solely for syntactic
-	/// sugar so that you don't have to type out "UserInfoKey." everywhere.
-	private final func info(_ info: [UserInfoKey: Any]?) -> [AnyHashable: Any]? {
-		return info
 	}
 }

@@ -56,7 +56,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	private final var coachMarksDataSourceAndDelegate: DefaultCoachMarksDataSourceAndDelegate!
 	private final lazy var coachMarksInfo: [CoachMarkInfo] = [
 		CoachMarkInfo(
-			hint: "Tap the + button to create new medications. You can also type the name of a new medication in the searchh bar and long press the + button to quickly create and mark it as taken.",
+			hint: "Tap the + button to create new medications. You can also type the name of a new medication in the search bar and long press the + button to quickly create and mark it as taken.",
 			useArrow: true,
 			view: { return self.navigationItem.rightBarButtonItem?.value(forKey: "view") as? UIView }),
 		CoachMarkInfo(
@@ -73,7 +73,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 				}
 			}),
 		CoachMarkInfo(
-			hint: "Press this button to mark this medication as taken. You will be able to set the dosage and date / time taken.",
+			hint: "Press this button to quickly mark this medication as taken. Long pressing allows setting the dosage and date / time that it was taken.",
 			useArrow: true,
 			view: {
 				let exampleMedicationCell = self.tableView.visibleCells[0] as! RecordMedicationTableViewCell
