@@ -30,6 +30,7 @@ public protocol CalendarUtil {
 	/// otherwise will only attempt using the given format.
 	/// - Returns: The date represented by the passed String if it can be converted, otherwise `nil`.
 	func date(from dateStr: String, format: String?) -> Date?
+	func dayOfWeek(forDate date: Date) -> DayOfWeek
 	func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) throws -> Int
 	// need to inject this dependency for testing
 	func currentTimeZone() -> TimeZone
@@ -111,7 +112,8 @@ public final class CalendarUtilImpl: CalendarUtil {
 		return .orderedSame
 	}
 
-	public final func date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek {
+	public final func date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType) -> Bool
+	where CollectionType.Element == DayOfWeek {
 		let calendar = Calendar.current
 		let dayOfWeekIntForDate = calendar.component(.weekday, from: date) - 1
 		let dayOfWeekForDate = DayOfWeek.fromInt(dayOfWeekIntForDate)
@@ -125,7 +127,8 @@ public final class CalendarUtilImpl: CalendarUtil {
 		return dayOfWeekForDate == dayOfWeek
 	}
 
-	/// If `format` is `nil`, will attempt to convert the date string to a date using standard formats, otherwise will only attempt using the given format.
+	/// If `format` is `nil`, will attempt to convert the date string to a date using standard formats,
+	/// otherwise will only attempt using the given format.
 	/// - Returns: The date represented by the passed String if it can be converted, otherwise `nil`.
 	public final func date(from dateStr: String, format: String?) -> Date? {
 		let realFormat = format ?? defaultDateFormat
@@ -144,6 +147,12 @@ public final class CalendarUtilImpl: CalendarUtil {
 			}
 		}
 		return nil
+	}
+
+	public final func dayOfWeek(forDate date: Date) -> DayOfWeek {
+		let calendar = Calendar.current
+		let dayOfWeekIntForDate = calendar.component(.weekday, from: date) - 1
+		return DayOfWeek.fromInt(dayOfWeekIntForDate)
 	}
 
 	public final func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) throws -> Int {

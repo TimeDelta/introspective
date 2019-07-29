@@ -77,7 +77,6 @@ public final class SameValueSampleGrouper: SampleGrouper {
 		let copy = SameValueSampleGrouper(
 			groupByAttribute: groupByAttribute,
 			attributeSelectAttribute: attributeSelectAttribute)
-		copy.groupByAttribute = groupByAttribute
 		return copy
 	}
 

@@ -23,6 +23,11 @@ public final class SampleGrouperFactoryImpl: SampleGrouperFactory {
 
 	private static let dateTypes: [SampleGrouper.Type] = [
 		SameTimeUnitSampleGrouper.self,
+		DayOfWeekSampleGrouper.self,
+	]
+
+	private static let dayOfWeekTypes: [SampleGrouper.Type] = [
+		DayOfWeekSampleGrouper.self
 	]
 
 	private static let tagTypes: [SampleGrouper.Type] = [
@@ -42,25 +47,22 @@ public final class SampleGrouperFactoryImpl: SampleGrouperFactory {
 
 	public final func typesFor(attributes: [Attribute]) -> [SampleGrouper.Type] {
 		var types = [SampleGrouper.Type]()
-		var typeNames = Set<String>()
+		var addedSoFar = Set<String>()
 		for attribute in attributes {
 			switch (attribute) {
 				case is DateAttribute:
-					if !typeNames.contains(attribute.typeName) {
-						types.append(contentsOf: Me.dateTypes)
-						typeNames.insert(attribute.typeName)
-					}
+					addEverythingNotAdded(to: &types, from: Me.dateTypes, addedSoFar: &addedSoFar)
+					break
+				case is DayOfWeekAttribute:
+					addEverythingNotAdded(to: &types, from: Me.dayOfWeekTypes, addedSoFar: &addedSoFar)
 					break
 				case is TagAttribute, is TagsAttribute:
-					if !typeNames.contains(attribute.typeName) {
-						types.append(contentsOf: Me.tagTypes)
-						typeNames.insert(attribute.typeName)
-					}
+					addEverythingNotAdded(to: &types, from: Me.tagTypes, addedSoFar: &addedSoFar)
 					break
 				default: log.error("Missing attribute type: %@", attribute.typeName)
 			}
 		}
-		types.append(contentsOf: Me.genericTypes)
+		addEverythingNotAdded(to: &types, from: Me.genericTypes, addedSoFar: &addedSoFar)
 		return types
 	}
 
@@ -74,5 +76,18 @@ public final class SampleGrouperFactoryImpl: SampleGrouperFactory {
 
 	public final func groupDefinition(_ sampleType: Sample.Type) -> GroupDefinition {
 		return GroupDefinitionImpl(sampleType)
+	}
+
+	private final func addEverythingNotAdded(
+		to types: inout [SampleGrouper.Type],
+		from toAdd: [SampleGrouper.Type],
+		addedSoFar: inout Set<String>)
+	{
+		for type in toAdd {
+			if !addedSoFar.contains(type.userVisibleDescription) {
+				types.append(type)
+				addedSoFar.insert(type.userVisibleDescription)
+			}
+		}
 	}
 }

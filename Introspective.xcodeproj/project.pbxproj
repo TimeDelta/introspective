@@ -43,6 +43,7 @@
 		0F5AF793A9CE3ECC77E0C2CA861D00BA /* AttributeRestrictionMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617C6BCCF0165B9473761AEFDD8AD1CF /* AttributeRestrictionMock.swift */; };
 		0F9BC9D427412BABD17891D1E8FE21CB /* MultipleSampleTypeBasicXYGraphCustomizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2355F2BADF3EA05A8C326AC2665B82B /* MultipleSampleTypeBasicXYGraphCustomizationViewController.swift */; };
 		1001249C3BE897549C9A1B712459AA4E /* NotEqualToSelectOneAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDC10CCEC5C2B4A1EDE50CFBB7265FB6 /* NotEqualToSelectOneAttributeRestriction.swift */; };
+		106B28C2CFDD698885FD17F966CDDBCD /* PerTagSampleGrouperFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CDEBEE5D2E8C37621E9816D5297CF2D /* PerTagSampleGrouperFunctionalTests.swift */; };
 		1098F028A6B910CDD949D742C4580B53 /* RecordMoodRatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6633BB94153F634280855EAA4F06319A /* RecordMoodRatingViewController.swift */; };
 		1108E9AEEBFB1B86C8CE98642AAF493C /* NotEqualToStringAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677888274E37D327FED1FE64C8596875 /* NotEqualToStringAttributeRestriction.swift */; };
 		1126C1ECC8DCED954C70FF38E97D04E9 /* EqualToDoubleAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8C96BB1559619CC12D3FCBE6A9053F /* EqualToDoubleAttributeRestrictionUnitTests.swift */; };
@@ -183,6 +184,7 @@
 		5057789F64B382AA015B9D376A038455 /* AfterTimeOfDayAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FC3F6721D19CF6B3645AAA6A866C1C3 /* AfterTimeOfDayAttributeRestriction.swift */; };
 		50C34BAD031485CE926D10C19B9F90C6 /* DateAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E7D8C185641EE101C9E081300DBE3E /* DateAttribute.swift */; };
 		50D55D8F53FF798EC0909D21973B3613 /* EndsWithStringAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D291AE35CC64DEFD6C92EC84B7DA00 /* EndsWithStringAttributeRestriction.swift */; };
+		510361123DEDB125FFD03B9DD87B960D /* PerTagSampleGrouperUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348A6D30232B8D50BBA855D5C24CD238 /* PerTagSampleGrouperUnitTests.swift */; };
 		5124DE4D6B559023CB485CAB9C77CFCC /* BeforeDateAndTimeAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4032C40359F9678A72C2AFF311056B /* BeforeDateAndTimeAttributeRestrictionUnitTests.swift */; };
 		52041BAA75AFC35FC2B896A3113C3971 /* EasyPillMedicationDoseImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40699DB9BA6B3DB06E2C6FA82B2190DC /* EasyPillMedicationDoseImporter.swift */; };
 		5253B6020BBCC6ABBA67CF987064B3D3 /* Introspective.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A7581418039FB6FD454DA7AA8C114E56 /* Introspective.xcdatamodeld */; };
@@ -306,6 +308,7 @@
 		8101C5AB9EA3299D4CF48060766700F6 /* ActivityDataTestUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA6ED1D1053994BE68045C67442C4AC /* ActivityDataTestUtil.swift */; };
 		8284A14FA7E5DD8263104F966950FD0E /* GroupDefinitionTableViewControllerUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E3DB3196823710DF9C6F82F0438225 /* GroupDefinitionTableViewControllerUnitTests.swift */; };
 		82A0C1C49F12566659DCF4B02C8201D2 /* MoodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1EDA1CC83C2700BA49DE41A5757F26 /* MoodTableViewCell.swift */; };
+		832CC4D804B1AF6661ED34997915B735 /* PerTagSampleGrouper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8417EAA48E44992CB5F2143B210A0231 /* PerTagSampleGrouper.swift */; };
 		8342D608B77176551392FD5BD22DDA1D /* QueryViewControllerUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4C81828C305C246818B11C2F6BFE3A /* QueryViewControllerUnitTests.swift */; };
 		83BF475E489DABCBC4E422F258116928 /* AttributeSelectAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7838247CF24AE65E58FC5A1C0B0D3055 /* AttributeSelectAttribute.swift */; };
 		83DFC1DC8A5BF7424DE89489994487B8 /* LessThanDoubleAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A455D3386BC23DDD4E8C89EF40475474 /* LessThanDoubleAttributeRestrictionUnitTests.swift */; };
@@ -387,9 +390,8 @@
 		A29CEA756966FF63181D103F30EE2E29 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C87A3B46E853FFC3382ED9BC4A609 /* Activity.swift */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
 		A2DF8D22C94D6F91A865D337C0730F03 /* DurationUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA96F5DDD263FD0D99095EBADBA4AACC /* DurationUnitTests.swift */; };
-		832CC4D804B1AF6661ED34997915B735 /* PerTagSampleGrouper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8417EAA48E44992CB5F2143B210A0231 /* PerTagSampleGrouper.swift */; };
-		106B28C2CFDD698885FD17F966CDDBCD /* PerTagSampleGrouperFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CDEBEE5D2E8C37621E9816D5297CF2D /* PerTagSampleGrouperFunctionalTests.swift */; };
-		510361123DEDB125FFD03B9DD87B960D /* PerTagSampleGrouperUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 348A6D30232B8D50BBA855D5C24CD238 /* PerTagSampleGrouperUnitTests.swift */; };
+		AEB0BCD1C836E05DCE38B0C0AABD46CF /* DayOfWeekSampleGrouper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC78CBD4931FC8513DC2CBC4057E200 /* DayOfWeekSampleGrouper.swift */; };
+		D45AF4108F4AD29666B129020C515FA4 /* DayOfWeekSampleGrouperUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37BE3A5416079AC8A8021278278AB8F4 /* DayOfWeekSampleGrouperUnitTests.swift */; };
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
 		A3368D662B2813C5A4FCBD8B8F668E3A /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0EEB29C94DB9134E4B7AF25C9A6037A /* NotificationName.swift */; };
 		A34600A18766AE66F0324FF5AB10E114 /* GraphType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */; };
@@ -761,6 +763,7 @@
 		33EE8EDF8784BE19DBB211F9A85F4F7B /* DateAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateAttributeRestriction.swift; sourceTree = "<group>"; };
 		3459BF8F561B8FCE604634D207F9624E /* BasicXYGraphTypeSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicXYGraphTypeSetupViewController.swift; sourceTree = "<group>"; };
 		34840F6E9485E0790484014BE228F79C /* UserDefaultKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultKeys.swift; sourceTree = "<group>"; };
+		348A6D30232B8D50BBA855D5C24CD238 /* PerTagSampleGrouperUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerTagSampleGrouperUnitTests.swift; sourceTree = "<group>"; };
 		3612CFF3541D360CFB27CB2846BB3A4C /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		3620BF7BFC6546A64D0889E2B67504AF /* GenericUIMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericUIMatchers.swift; sourceTree = "<group>"; };
 		36EF3396E5F2F4BE7D13B30A3BBCEE2F /* GreaterThanOrEqualToDurationAttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreaterThanOrEqualToDurationAttributeRestriction.swift; sourceTree = "<group>"; };
@@ -973,6 +976,7 @@
 		82C2DFEBFCF9D6194274D3839EE0B44F /* Sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample.swift; sourceTree = "<group>"; };
 		8355BAB21ED6865EE904FE18B793428B /* ActivityMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityMatchers.swift; sourceTree = "<group>"; };
 		83731893CC837B1AD79D0E58DF4E66EC /* NumericSampleUtilUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericSampleUtilUnitTests.swift; sourceTree = "<group>"; };
+		8417EAA48E44992CB5F2143B210A0231 /* PerTagSampleGrouper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerTagSampleGrouper.swift; sourceTree = "<group>"; };
 		84AA1DCF95D6A08D5DE00DAE32A56471 /* ActivityDefinitionNameTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDefinitionNameTableViewCell.swift; sourceTree = "<group>"; };
 		84B045F7996B708F0CF8F44C0E2C5969 /* AttributeRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeRestriction.swift; sourceTree = "<group>"; };
 		8540E15D404F937D84E0729AF6E4A545 /* Query.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Query.storyboard; sourceTree = "<group>"; };
@@ -994,6 +998,7 @@
 		8AEC843A9367FDB05CCACB0F6454E178 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		8B2B99AAF73186829B771D412DC1EFBD /* HealthKitQuantitySample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitQuantitySample.swift; sourceTree = "<group>"; };
 		8CD659FD9F3A6C70494176E33EAD3368 /* CodableStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableStorage.swift; sourceTree = "<group>"; };
+		8CDEBEE5D2E8C37621E9816D5297CF2D /* PerTagSampleGrouperFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerTagSampleGrouperFunctionalTests.swift; sourceTree = "<group>"; };
 		8CE227F628F3B36F895AD85FF557CB7D /* SameEndDatesSubQueryMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SameEndDatesSubQueryMatcher.swift; sourceTree = "<group>"; };
 		8DD392C4DD524119C04D60613C84663C /* Introspective.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Introspective.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E3E22075D1D96F016516CC33CB0926C /* NumericAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericAttribute.swift; sourceTree = "<group>"; };
@@ -1046,9 +1051,8 @@
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
-		8417EAA48E44992CB5F2143B210A0231 /* PerTagSampleGrouper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerTagSampleGrouper.swift; sourceTree = "<group>"; };
-		8CDEBEE5D2E8C37621E9816D5297CF2D /* PerTagSampleGrouperFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerTagSampleGrouperFunctionalTests.swift; sourceTree = "<group>"; };
-		348A6D30232B8D50BBA855D5C24CD238 /* PerTagSampleGrouperUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerTagSampleGrouperUnitTests.swift; sourceTree = "<group>"; };
+		5CC78CBD4931FC8513DC2CBC4057E200 /* DayOfWeekSampleGrouper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeekSampleGrouper.swift; sourceTree = "<group>"; };
+		37BE3A5416079AC8A8021278278AB8F4 /* DayOfWeekSampleGrouperUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeekSampleGrouperUnitTests.swift; sourceTree = "<group>"; };
 		A455D3386BC23DDD4E8C89EF40475474 /* LessThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A64E0788E27B3B4FE185D06F3F454E46 /* ChooseSampleGrouperTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseSampleGrouperTypeViewController.swift; sourceTree = "<group>"; };
@@ -1396,6 +1400,7 @@
 			isa = PBXGroup;
 			children = (
 				1000AD64AAB6DB224CC7BD2A0BB69EDB /* SameTimeUnitSampleGrouper.swift */,
+				5CC78CBD4931FC8513DC2CBC4057E200 /* DayOfWeekSampleGrouper.swift */,
 			);
 			path = DateAttributes;
 			sourceTree = "<group>";
@@ -1534,6 +1539,7 @@
 				7C835393CC1EB20AE6C15EC6C759560B /* AdvancedSampleGrouperUnitTests.swift */,
 				0BF4DE799B44CCE1F36CA673829CA7DF /* SameValueSampleGrouperUnitTests.swift */,
 				3B6038CBB38F2E37E7AE9ACB7463C41D /* TagAttributes */,
+				4798FDE29A4A14323F2E080070784DA5 /* DateAttributes */,
 			);
 			path = Aggregation;
 			sourceTree = "<group>";
@@ -1756,6 +1762,14 @@
 				F528C2519A053A6766680ECC7FFF8B8F /* ModeInformation.swift */,
 			);
 			path = Generic;
+			sourceTree = "<group>";
+		};
+		3B6038CBB38F2E37E7AE9ACB7463C41D /* TagAttributes */ = {
+			isa = PBXGroup;
+			children = (
+				348A6D30232B8D50BBA855D5C24CD238 /* PerTagSampleGrouperUnitTests.swift */,
+			);
+			path = TagAttributes;
 			sourceTree = "<group>";
 		};
 		3FB0F3312BBC6874330EEF783D23649E /* Utils */ = {
@@ -1995,6 +2009,14 @@
 				EB35E452FEA5A653CFD2853BAB4EA693 /* Weight.swift */,
 			);
 			path = HealthKit;
+			sourceTree = "<group>";
+		};
+		5F81BCD0778F929EEE084CAE9D2A0F4B /* TagAttributes */ = {
+			isa = PBXGroup;
+			children = (
+				8417EAA48E44992CB5F2143B210A0231 /* PerTagSampleGrouper.swift */,
+			);
+			path = TagAttributes;
 			sourceTree = "<group>";
 		};
 		62E523879AE0C2746909D113E80C11A8 /* Settings */ = {
@@ -2447,28 +2469,12 @@
 			path = Testing;
 			sourceTree = "<group>";
 		};
-		5F81BCD0778F929EEE084CAE9D2A0F4B /* TagAttributes */ = {
+		4798FDE29A4A14323F2E080070784DA5 /* DateAttributes */ = {
 			isa = PBXGroup;
 			children = (
-				8417EAA48E44992CB5F2143B210A0231 /* PerTagSampleGrouper.swift */,
+				37BE3A5416079AC8A8021278278AB8F4 /* DayOfWeekSampleGrouperUnitTests.swift */,
 			);
-			path = TagAttributes;
-			sourceTree = "<group>";
-		};
-		F9A4A37474FF40E1B4CBC55ECE7ACB4F /* TagAttributes */ = {
-			isa = PBXGroup;
-			children = (
-				8CDEBEE5D2E8C37621E9816D5297CF2D /* PerTagSampleGrouperFunctionalTests.swift */,
-			);
-			path = TagAttributes;
-			sourceTree = "<group>";
-		};
-		3B6038CBB38F2E37E7AE9ACB7463C41D /* TagAttributes */ = {
-			isa = PBXGroup;
-			children = (
-				348A6D30232B8D50BBA855D5C24CD238 /* PerTagSampleGrouperUnitTests.swift */,
-			);
-			path = TagAttributes;
+			path = DateAttributes;
 			sourceTree = "<group>";
 		};
 		A42A3755C14DFA73187CC83B596D96EF /* RecordData */ = {
@@ -3080,6 +3086,14 @@
 			path = Date;
 			sourceTree = "<group>";
 		};
+		F9A4A37474FF40E1B4CBC55ECE7ACB4F /* TagAttributes */ = {
+			isa = PBXGroup;
+			children = (
+				8CDEBEE5D2E8C37621E9816D5297CF2D /* PerTagSampleGrouperFunctionalTests.swift */,
+			);
+			path = TagAttributes;
+			sourceTree = "<group>";
+		};
 		F9AB63B1F298037E8D52463C642E3483 /* Activity */ = {
 			isa = PBXGroup;
 			children = (
@@ -3527,6 +3541,7 @@
 				3A6BF727F319FAB6B1CAC58C8FC4EDBE /* SampleMock.swift in Sources */,
 				67EB531BEEEFBE9F2ECE521E62C3DCDE /* SubQueryMatcherMock.swift in Sources */,
 				D3E9962EB4589288DBA855C453FB909E /* BooleanExpressionGroupUnitTests.swift in Sources */,
+				D45AF4108F4AD29666B129020C515FA4 /* DayOfWeekSampleGrouperUnitTests.swift in Sources */,
 				D21CDB2725A229A3F085E4E52DA9E5A1 /* ChooseGroupersForXYGraphViewControllerUnitTests.swift in Sources */,
 				480658ECD8C614C6FD8B993E343A0BD2 /* ExpressionStub.swift in Sources */,
 				62AB9FA7DD8C3BFBA271FBA6DA07D7FE /* ContainsStringAttributeRestrictionUnitTests.swift in Sources */,
@@ -3839,6 +3854,7 @@
 				9186C7F702AF2E5543E6EE7247FE30B9 /* Log.swift in Sources */,
 				7D8B3503C3173AB5272B0F9BAE314F20 /* MedicationExporter.swift in Sources */,
 				BAA14F41C7A32B338ABB746A683CDC97 /* SelectDateViewController.swift in Sources */,
+				AEB0BCD1C836E05DCE38B0C0AABD46CF /* DayOfWeekSampleGrouper.swift in Sources */,
 				F304A73E107826FC0ECD207EDAEEA850 /* ExporterFactory.swift in Sources */,
 				8A27D3C768ED8ED642428D52BD457667 /* Weight.swift in Sources */,
 				0F1768E8F30251711DD92C193564AA51 /* SampleFactory.swift in Sources */,

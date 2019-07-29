@@ -1,24 +1,24 @@
 //
-//  PerTagSampleGrouper.swift
+//  DayOfWeekSampleGrouper.swift
 //  Introspective
 //
-//  Created by Bryan Nova on 7/28/19.
+//  Created by Bryan Nova on 7/29/19.
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
 import Foundation
 
-public final class PerTagSampleGrouper: SampleGrouper {
+public final class DayOfWeekSampleGrouper: SampleGrouper {
 
 	// MARK: - Display Information
 
-	public static var userVisibleDescription: String = "Group By Tag"
-	public let attributedName: String = "Group By Tag"
+	public static var userVisibleDescription: String = "Group By Day Of Week"
+	public let attributedName: String = "Group By Day Of Week"
 	public var description: String {
 		guard let groupByAttribute = groupByAttribute else {
 			return attributedName
 		}
-		return "Group by \(groupByAttribute.name.localizedLowercase)"
+		return "Group by day of week for \(groupByAttribute.name.localizedLowercase)"
 	}
 
 	// MARK: - Attributes
@@ -38,10 +38,12 @@ public final class PerTagSampleGrouper: SampleGrouper {
 	}
 
 	public required init(attributes: [Attribute]) {
-		let applicableAttributes = attributes.filter{ $0 is TagAttribute || $0 is TagsAttribute }
+		let applicableAttributes = attributes.filter{
+			$0 is DateAttribute || $0 is DayOfWeekAttribute || $0 is DaysOfWeekAttribute
+		}
 		groupByAttribute = applicableAttributes.first
 		if groupByAttribute == nil {
-			log.error("No tag attributes provided to PerTagSampleGrouper")
+			log.error("No date or day of week attributes provided to DayOfWeekSampleGrouper")
 		}
 		attributeSelectAttribute = AttributeSelectAttribute(attributes: applicableAttributes)
 		self.attributes = [attributeSelectAttribute]
@@ -60,12 +62,12 @@ public final class PerTagSampleGrouper: SampleGrouper {
 		guard samples.count > 0 else { return [] }
 		var groups = [(Any, [Sample])]()
 		for sample in samples {
-			let tags = try getTagsForSample(sample, forAttribute: groupByAttribute)
-			for tag in tags {
-				if let index = groups.firstIndex(where: { $0.0 as? String == tag.name }) {
+			let daysOfWeek = try getDaysOfWeekForSample(sample, forAttribute: groupByAttribute)
+			for dayOfWeek in daysOfWeek {
+				if let index = groups.firstIndex(where: { $0.0 as? DayOfWeek == dayOfWeek }) {
 					groups[index].1.append(sample)
 				} else {
-					groups.append((tag.name, [sample]))
+					groups.append((dayOfWeek, [sample]))
 				}
 			}
 		}
@@ -74,27 +76,29 @@ public final class PerTagSampleGrouper: SampleGrouper {
 
 	public final func groupNameFor(value: Any) throws -> String {
 		let groupByAttribute = try getGroupByAttribute(methodName: "groupNameFor(value:)")
-		let tagName: String
-		if let tag = value as? Tag {
-			tagName = tag.name
+		let dayName: String
+		if let dayOfWeek = value as? DayOfWeek {
+			dayName = dayOfWeek.fullDayName
 		} else if let str = value as? String {
-			tagName = str
+			dayName = str
 		} else {
 			let valueDescription = String(describing: value)
 			throw GenericError("Unknown value type for tag group with value: \(valueDescription)")
 		}
-		if groupByAttribute is TagAttribute {
-			return "\(groupByAttribute.name) = \(tagName)"
-		} else if groupByAttribute is TagsAttribute {
-			return "\(groupByAttribute.name) has \(tagName)"
+		if groupByAttribute is DateAttribute {
+			return "\(groupByAttribute.name) is on a \(dayName)"
+		} else if groupByAttribute is DayOfWeekAttribute {
+			return "\(groupByAttribute.name) is \(dayName)"
+		} else if groupByAttribute is DaysOfWeekAttribute {
+			return "\(groupByAttribute.name) contains \(dayName)"
 		} else {
-			throw GenericError("Unknown type of tag attribute for attribute named \(groupByAttribute.name)")
+			throw GenericError("Unknown type of attribute in DayOfWeekSampleGrouper for attribute named \(groupByAttribute.name)")
 		}
 	}
 
 	public final func groupValuesAreEqual(_ first: Any, _ second: Any) throws -> Bool {
-		if let tag1 = first as? Tag, let tag2 = second as? Tag {
-			return tag1.equalTo(tag2)
+		if let dayOfWeek1 = first as? DayOfWeek, let dayOfWeek2 = second as? DayOfWeek {
+			return dayOfWeek1 == dayOfWeek2
 		} else if let name1 = first as? String, let name2 = second as? String {
 			return name1 == name2
 		}
@@ -104,7 +108,7 @@ public final class PerTagSampleGrouper: SampleGrouper {
 	}
 
 	public final func copy() -> SampleGrouper {
-		let copy = PerTagSampleGrouper(
+		let copy = DayOfWeekSampleGrouper(
 			groupByAttribute: groupByAttribute,
 			attributeSelectAttribute: attributeSelectAttribute)
 		return copy
@@ -135,19 +139,27 @@ public final class PerTagSampleGrouper: SampleGrouper {
 
 	// MARK: - Helper Functions
 
-	private final func getTagsForSample(_ sample: Sample, forAttribute attribute: Attribute) throws -> [Tag] {
-		if groupByAttribute is TagAttribute {
+	private final func getDaysOfWeekForSample(_ sample: Sample, forAttribute attribute: Attribute) throws -> [DayOfWeek] {
+		if attribute is DateAttribute {
 			let sampleValue = try sample.value(of: attribute)
-			guard let tag = sampleValue as? Tag else {
+			guard let date = sampleValue as? Date else {
 				throw TypeMismatchError(attribute: attribute, of: sample, wasA: type(of: sampleValue))
 			}
-			return [tag]
-		} else if groupByAttribute is TagsAttribute {
+			return [DependencyInjector.util.calendar.dayOfWeek(forDate: date)]
+		} else if attribute is DayOfWeekAttribute {
 			let sampleValue = try sample.value(of: attribute)
-			guard let tags = sampleValue as? [Tag] else {
+			guard let dayOfWeek = sampleValue as? DayOfWeek else {
 				throw TypeMismatchError(attribute: attribute, of: sample, wasA: type(of: sampleValue))
 			}
-			return tags
+			return [dayOfWeek]
+		} else if attribute is DaysOfWeekAttribute {
+			let sampleValue = try sample.value(of: attribute)
+			if let daysOfWeek = sampleValue as? [DayOfWeek] {
+				return daysOfWeek
+			} else if let daysOfWeek = sampleValue as? Set<DayOfWeek> {
+				return daysOfWeek.map{ $0 }
+			}
+			throw TypeMismatchError(attribute: attribute, of: sample, wasA: type(of: sampleValue))
 		}
 		let attributeType = String(describing: type(of: attribute))
 		throw GenericError("Unknown type of tag attribute: \(attributeType)")
@@ -163,7 +175,7 @@ public final class PerTagSampleGrouper: SampleGrouper {
 	// MARK: - Equality
 
 	public final func equalTo(_ otherGrouper: SampleGrouper) -> Bool {
-		guard let sameValueGrouper = otherGrouper as? PerTagSampleGrouper else { return false }
+		guard let sameValueGrouper = otherGrouper as? DayOfWeekSampleGrouper else { return false }
 		if groupByAttribute == nil && sameValueGrouper.groupByAttribute == nil {
 			return true
 		}
