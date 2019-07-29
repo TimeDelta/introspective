@@ -35,15 +35,19 @@ extension UITableViewCell {
 		return DependencyInjector.util.ui.controller(named: controllerName, from: storyboardName, as: Type.self)
 	}
 
-	final func post(_ name: Notification.Name, object: Any? = self, userInfo: [AnyHashable: Any]? = nil) {
+	final func post(_ name: Notification.Name, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
 		DependencyInjector.util.ui.post(name: name, object: object, userInfo: userInfo)
 	}
 
 	final func post(_ name: NotificationName, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
-		DependencyInjector.util.ui.post(name: name, object: object, userInfo: userInfo)
+		post(name.toName(), object: object, userInfo: userInfo)
 	}
 
 	final func syncPost(_ name: NotificationName, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
+		DependencyInjector.util.notification.post(name, object: object, userInfo: userInfo, qos: nil)
+	}
+
+	final func syncPost(_ name: Notification.Name, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
 		DependencyInjector.util.notification.post(name, object: object, userInfo: userInfo, qos: nil)
 	}
 }

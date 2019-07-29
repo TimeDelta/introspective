@@ -48,30 +48,30 @@ public final class TestDataCreationSampleTypeTableViewCell: UITableViewCell {
 		updateHideShowState()
 		post(
 			TestDataGenerationTableViewController.shouldGenerateSampleTypeChanged,
-			userInfo: info([
+			userInfo: [
 				.sampleType: sampleType,
 				.shouldGenerate: generateDataSwitch.isOn,
-			]))
+			])
 	}
 
 	@IBAction final func numberOfDaysChanged(_ sender: Any) {
 		guard let numberOfDays = Int(numberOfDaysTextField.text ?? "") else { return }
 		post(
 			TestDataGenerationTableViewController.numberOfDaysChanged,
-			userInfo: info([
+			userInfo: [
 				.sampleType: sampleType,
 				.number: numberOfDays,
-			]))
+			])
 	}
 
 	@IBAction final func samplesPerHourChanged(_ sender: Any) {
 		guard let samplesPerHour = Int(samplesPerHourTextField.text ?? "") else { return }
 		post(
 			TestDataGenerationTableViewController.samplesPerHourChanged,
-			userInfo: info([
+			userInfo: [
 				.sampleType: sampleType,
 				.number: samplesPerHour,
-			]))
+			])
 	}
 
 	// MARK: - Helper Functions

@@ -663,7 +663,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Take"/>
                                             <connections>
-                                                <action selector="takeButtonPressed:" destination="ra1-6I-wRd" eventType="touchUpInside" id="5OB-te-NS6"/>
+                                                <action selector="takeButtonPressed:forEvent:" destination="ra1-6I-wRd" eventType="touchUpInside" id="6Q3-Qf-7sW"/>
                                             </connections>
                                         </button>
                                     </subviews>

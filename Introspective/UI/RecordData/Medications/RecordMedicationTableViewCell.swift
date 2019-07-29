@@ -56,48 +56,35 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 				updateLastTakenButton()
 			}
 		} catch {
-			log.error("Failed to mark medication (%@) as taken: %@", medication.name, errorInfo(error))
-			var title = "Failed to mark \(medication.name) as taken."
-			var message = "Sorry for the inconvenience"
-			if let error = error as? DisplayableError {
-				title = error.displayableTitle
-				if let description = error.displayableDescription {
-					message = description
-				}
-			}
-			NotificationCenter.default.post(
-				name: Me.errorOccurred,
-				object: self,
-				userInfo: info([
-					.title: title,
-					.message: message,
-				]))
+			failedToMarkAsTaken(error)
 		}
 	}
 
 	// MARK: - Button Actions
 
-	@IBAction final func takeButtonPressed(_ sender: Any) {
-		DispatchQueue.main.async {
-			NotificationCenter.default.post(
-				name: Me.shouldPresentMedicationDoseView,
-				object: self,
-				userInfo: self.info([
-					.notificationName: self.uniqueNotificationNameForMedication,
-					.medication: self.medication,
-				]))
+	@IBAction final func takeButtonPressed(_ sender: Any, forEvent event: UIEvent) {
+		if let touch = event.allTouches?.first {
+			if touch.tapCount == 1 { // tap
+				quickTakeMedication()
+			} else if touch.tapCount == 0 { // long press
+				post(
+					Me.shouldPresentMedicationDoseView,
+					userInfo: [
+						.notificationName: uniqueNotificationNameForMedication,
+						.medication: medication,
+					])
+			}
+		} else {
+			quickTakeMedication()
 		}
 	}
 
 	@IBAction final func lastTakenButtonPressed(_ sender: Any) {
-		DispatchQueue.main.async {
-			NotificationCenter.default.post(
-				name: Me.shouldPresentDosesView,
-				object: self,
-				userInfo: self.info([
-					.medication: self.medication,
-				]))
-		}
+		post(
+			Me.shouldPresentDosesView,
+			userInfo: [
+				.medication: medication,
+			])
 	}
 
 	// MARK: - Helper Functions
@@ -125,5 +112,44 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 		takeButton.accessibilityIdentifier = "take \(medication.name) button"
 		takeButton.accessibilityLabel = "take \(medication.name) button"
 		takeButton.accessibilityHint = "Take a dose of \(medication.name)"
+	}
+
+	private final func quickTakeMedication() {
+		do {
+			var transaction = DependencyInjector.db.transaction()
+			let medicationDose = try transaction.new(MedicationDose.self)
+			medicationDose.setSource(.introspective)
+			medicationDose.medication = try transaction.pull(savedObject: medication)
+			medicationDose.dosage = medication.dosage
+			medicationDose.date = Date()
+			// have to save created dose before adding it to medication doses
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+
+			transaction = DependencyInjector.db.transaction()
+			let doseFromTransaction = try transaction.pull(savedObject: medicationDose)
+			medication = try transaction.pull(savedObject: medication)
+			medication.addToDoses(doseFromTransaction)
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+		} catch {
+			failedToMarkAsTaken(error)
+		}
+	}
+
+	private final func failedToMarkAsTaken(_ error: Error) {
+		log.error("Failed to mark medication (%@) as taken: %@", medication.name, errorInfo(error))
+		var title = "Failed to mark \(medication.name) as taken."
+		var message = "Sorry for the inconvenience"
+		if let error = error as? DisplayableError {
+			title = error.displayableTitle
+			if let description = error.displayableDescription {
+				message = description
+			}
+		}
+		syncPost(
+			Me.errorOccurred,
+			userInfo: [
+				.title: title,
+				.message: message,
+			])
 	}
 }
