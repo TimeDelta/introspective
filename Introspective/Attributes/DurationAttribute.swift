@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class DurationAttribute: AttributeBase<Duration>, ComparableAttribute {
+public final class DurationAttribute: AttributeBase<Duration>, ComparableAttribute, GraphableAttribute {
 
 	public final override var typeName: String {
 		return "Duration"
@@ -43,5 +43,14 @@ public final class DurationAttribute: AttributeBase<Duration>, ComparableAttribu
 
 	public final override func typedValuesAreEqual(_ first: Duration, _ second: Duration) -> Bool {
 		return first == second
+	}
+
+	// MARK: - GraphableAttribute Functions
+
+	public final func graphableValueFor(_ value: Any) throws -> Double {
+		guard let duration = value as? Duration else {
+			throw GenericError("Passed \(String(describing: value)) to graphableValueFor()")
+		}
+		return duration.inUnit(.hour)
 	}
 }

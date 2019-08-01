@@ -22,6 +22,7 @@ extension UIViewController {
 	}
 
 	final func stopObserving(_ name: NotificationName, object: Any? = nil) {
+		NotificationCenter.default.removeObserver(self, name: name.toName(), object: object)
 		DependencyInjector.util.ui.stopObserving(self, name: name, object: object)
 	}
 

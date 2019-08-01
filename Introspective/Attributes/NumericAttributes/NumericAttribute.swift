@@ -9,7 +9,7 @@
 import Foundation
 import HealthKit
 
-public protocol NumericAttribute: ComparableAttribute {
+public protocol NumericAttribute: GraphableAttribute, ComparableAttribute {
 
 	/// Is the specified value valid for this attribute?
 	func isValid(value: String) -> Bool

@@ -9,11 +9,21 @@
 import UIKit
 import Presentr
 
-final class XAxisSetupViewController: UIViewController {
+public protocol XAxisSetupViewController: UIViewController {
+
+	var usePointGroupValue: Bool { get set }
+	var grouped: Bool { get set }
+	var attributes: [Attribute]! { get set }
+	var selectedAttribute: Attribute! { get set }
+	var selectedInformation: ExtraInformation! { get set }
+	var notificationToSendWhenFinished: NotificationName! { get set }
+}
+
+final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewController {
 
 	// MARK: - Static Variables
 
-	private typealias Me = XAxisSetupViewController
+	private typealias Me = XAxisSetupViewControllerImpl
 	private static let groupingChanged = Notification.Name("groupingChanged")
 	private static let presenter: Presentr = {
 		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
@@ -25,11 +35,14 @@ final class XAxisSetupViewController: UIViewController {
 
 	// MARK: - IBOutlets
 
+	@IBOutlet weak final var usePointGroupValueLabel: UILabel!
+	@IBOutlet weak final var usePointGroupValueSwitch: UISwitch!
 	@IBOutlet weak final var attributePicker: UIPickerView!
 	@IBOutlet weak final var informationPicker: UIPickerView!
 
 	// MARK: - Instance Variables
 
+	public final var usePointGroupValue: Bool = false
 	public final var grouped: Bool = false { didSet { updateDisplay() } }
 	public final var attributes: [Attribute]!
 	public final var selectedAttribute: Attribute! {
@@ -75,6 +88,7 @@ final class XAxisSetupViewController: UIViewController {
 			informationPicker.selectRow(selectedInformationIndex, inComponent: 0, animated: false)
 		}
 
+		usePointGroupValueSwitch.isOn = usePointGroupValue
 		finishedLoading = true
 		updateDisplay()
 	}
@@ -94,6 +108,10 @@ final class XAxisSetupViewController: UIViewController {
 		}
 	}
 
+	@IBAction final func useGroupValueChanged(_ sender: Any) {
+		updateDisplay()
+	}
+
 	private final func sendUngroupedAcceptedNotification() {
 		guard let selectedAttribute = selectedAttribute else {
 			log.error("Selected attribute not set")
@@ -107,15 +125,23 @@ final class XAxisSetupViewController: UIViewController {
 	}
 
 	private final func sendGroupedAcceptedNotification() {
-		guard let selectedInformation = selectedInformation else {
-			log.error("Selected information not set")
-			return
+		if usePointGroupValueSwitch.isOn {
+			syncPost(
+				notificationToSendWhenFinished,
+				userInfo: [
+					.usePointGroupValue: true
+				])
+		} else {
+			guard let selectedInformation = selectedInformation else {
+				log.error("Selected information not set")
+				return
+			}
+			syncPost(
+				notificationToSendWhenFinished,
+				userInfo: [
+					.information: selectedInformation,
+				])
 		}
-		syncPost(
-			notificationToSendWhenFinished,
-			userInfo: [
-				.information: selectedInformation,
-			])
 	}
 
 	// MARK: - Helper Functions
@@ -131,14 +157,22 @@ final class XAxisSetupViewController: UIViewController {
 
 	private final func updateDisplay() {
 		if finishedLoading {
-			DependencyInjector.util.ui.setView(informationPicker, enabled: grouped, hidden: !grouped)
+			DependencyInjector.util.ui.setView(usePointGroupValueLabel, enabled: grouped, hidden: !grouped)
+			DependencyInjector.util.ui.setView(usePointGroupValueSwitch, enabled: grouped, hidden: !grouped)
+			if grouped && usePointGroupValueSwitch.isOn {
+				DependencyInjector.util.ui.setView(informationPicker, enabled: false, hidden: true)
+				DependencyInjector.util.ui.setView(attributePicker, enabled: false, hidden: true)
+			} else {
+				DependencyInjector.util.ui.setView(informationPicker, enabled: grouped, hidden: !grouped)
+				DependencyInjector.util.ui.setView(attributePicker, enabled: true, hidden: false)
+			}
 		}
 	}
 }
 
 // MARK: - UIPickerViewDataSource
 
-extension XAxisSetupViewController: UIPickerViewDataSource {
+extension XAxisSetupViewControllerImpl: UIPickerViewDataSource {
 
 	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
@@ -158,7 +192,7 @@ extension XAxisSetupViewController: UIPickerViewDataSource {
 
 // MARK: - UIPickerViewDelegate
 
-extension XAxisSetupViewController: UIPickerViewDelegate {
+extension XAxisSetupViewControllerImpl: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		if pickerView == attributePicker {

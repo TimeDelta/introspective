@@ -139,8 +139,9 @@ public final class CalendarUtilImpl: CalendarUtil {
 		}
 		if format == nil {
 			if let dateDetector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.date.rawValue) {
-				let matches = dateDetector.matches(in: dateStr, range: NSRange(location: 0, length: dateStr.count))
-				let possibleDates = matches.compactMap{$0.date}
+				let fullRangeOfString = NSRange(location: 0, length: dateStr.count)
+				let matches = dateDetector.matches(in: dateStr, range: fullRangeOfString)
+				let possibleDates = matches.filter{ $0.range == fullRangeOfString }.compactMap{$0.date}
 				if possibleDates.count > 0 {
 					return possibleDates[0]
 				}

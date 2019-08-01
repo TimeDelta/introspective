@@ -24,7 +24,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 	private final var chooseYAxisInformationButton: UIButton!
 	private final var clearSeriesGroupingButton: UIButton!
 	private final var chooseSeriesGroupingButton: UIButton!
-	private final var chooseAxisGroupingButton: UIButton!
+	private final var choosePointGroupingButton: UIButton!
 	private final var showGraphButton: UIButton!
 
 	private final var controller: MultipleSampleTypeBasicXYGraphCustomizationViewController!
@@ -42,7 +42,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 		chooseYAxisInformationButton = UIButton()
 		clearSeriesGroupingButton = UIButton()
 		chooseSeriesGroupingButton = UIButton()
-		chooseAxisGroupingButton = UIButton()
+		choosePointGroupingButton = UIButton()
 		showGraphButton = UIButton()
 
 		let storyboard = UIStoryboard(name: "BasicXYGraph", bundle: nil)
@@ -58,7 +58,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 		controller.chooseYAxisInformationButton = chooseYAxisInformationButton
 		controller.clearSeriesGroupingButton = clearSeriesGroupingButton
 		controller.chooseSeriesGroupingButton = chooseSeriesGroupingButton
-		controller.chooseAxisGroupingButton = chooseAxisGroupingButton
+		controller.choosePointGroupingButton = choosePointGroupingButton
 		controller.showGraphButton = showGraphButton
 	}
 
@@ -182,9 +182,9 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 		assertThat(presentedController.currentAttributeType, equalTo(expectedAttributeType))
 	}
 
-	// MARK: - chooseAxisGroupingButtonPressed()
+	// MARK: - choosePointGroupingButtonPressed()
 
-	func test_chooseAxisGroupingButtonPressed_setsXAxisSampleTypeOnPresentedController() {
+	func test_choosePointGroupingButtonPressed_setsXAxisSampleTypeOnPresentedController() {
 		// given
 		controller.viewDidLoad()
 		let presentedController = mockChooseGroupersForXYGraphViewController()
@@ -196,13 +196,13 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 			userInfo: [UserInfoKey.sampleType: expectedSampleType])
 
 		// when
-		controller.chooseAxisGroupingButtonPressed(self)
+		controller.choosePointGroupingButtonPressed(self)
 
 		// then
 		assertThat(presentedController.xSampleType, equals(expectedSampleType))
 	}
 
-	func test_chooseAxisGroupingButtonPressed_setsYAxisSampleTypeOnPresentedController() {
+	func test_choosePointGroupingButtonPressed_setsYAxisSampleTypeOnPresentedController() {
 		// given
 		controller.viewDidLoad()
 		let presentedController = mockChooseGroupersForXYGraphViewController()
@@ -214,62 +214,62 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 			userInfo: [UserInfoKey.sampleType: expectedSampleType])
 
 		// when
-		controller.chooseAxisGroupingButtonPressed(self)
+		controller.choosePointGroupingButtonPressed(self)
 
 		// then
 		assertThat(presentedController.ySampleType, equals(expectedSampleType))
 	}
 
-	func test_chooseAxisGroupingButtonPressed_setsNavBarTitleOnPresentedControllerToAxisGrouping() {
+	func test_choosePointGroupingButtonPressed_setsNavBarTitleOnPresentedControllerToAxisGrouping() {
 		// given
 		let presentedController = mockChooseGroupersForXYGraphViewController()
 
 		// when
-		controller.chooseAxisGroupingButtonPressed(self)
+		controller.choosePointGroupingButtonPressed(self)
 
 		// then
-		assertThat(presentedController.navBarTitle, equalTo("Axis Grouping"))
+		assertThat(presentedController.navBarTitle, equalTo("Point Grouping"))
 	}
 
-	func testGivenSeriesGroupersPreviouslySet_chooseAxisGroupingButtonPressed_setsXGrouperOnPresentedController() {
+	func testGivenSeriesGroupersPreviouslySet_choosePointGroupingButtonPressed_setsXGrouperOnPresentedController() {
 		// given
 		let presentedController = mockChooseGroupersForXYGraphViewController()
 		let expectedGrouper = AdvancedSampleGrouper()
 		expectedGrouper.groupDefinitions.append(GroupDefinitionMock())
-		controller.chooseAxisGroupingButtonPressed(self)
+		controller.choosePointGroupingButtonPressed(self)
 		setGroupers(x: expectedGrouper)
 
 		// when
-		controller.chooseAxisGroupingButtonPressed(self)
+		controller.choosePointGroupingButtonPressed(self)
 
 		// then
 		assertThat(presentedController.xGrouper, sameObject(expectedGrouper))
 	}
 
-	func testGivenSeriesGroupersPreviouslySet_chooseAxisGroupingButtonPressed_setsYGrouperOnPresentedController() {
+	func testGivenSeriesGroupersPreviouslySet_choosePointGroupingButtonPressed_setsYGrouperOnPresentedController() {
 		// given
 		let presentedController = mockChooseGroupersForXYGraphViewController()
 		let expectedGrouper = AdvancedSampleGrouper()
 		expectedGrouper.groupDefinitions.append(GroupDefinitionMock())
-		controller.chooseAxisGroupingButtonPressed(self)
+		controller.choosePointGroupingButtonPressed(self)
 		setGroupers(y: expectedGrouper)
 
 		// when
-		controller.chooseAxisGroupingButtonPressed(self)
+		controller.choosePointGroupingButtonPressed(self)
 
 		// then
 		assertThat(presentedController.yGrouper, sameObject(expectedGrouper))
 	}
 
-	func test_chooseAxisGroupingButtonPressed_setsCurrentAttributeTypeOnPresentedController() {
+	func test_choosePointGroupingButtonPressed_setsCurrentAttributeTypeOnPresentedController() {
 		// given
 		let presentedController = mockChooseGroupersForXYGraphViewController()
 		let expectedAttributeType = "fjdsio hfuioerw hqiup n"
-		controller.chooseAxisGroupingButtonPressed(self)
+		controller.choosePointGroupingButtonPressed(self)
 		setGroupers(attributeType: expectedAttributeType)
 
 		// when
-		controller.chooseAxisGroupingButtonPressed(self)
+		controller.choosePointGroupingButtonPressed(self)
 
 		// then
 		assertThat(presentedController.currentAttributeType, equalTo(expectedAttributeType))
@@ -352,7 +352,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 
 	func test_chooseXAxisInformationButtonPressed_setsAttributesOnPresentedControllerToXSampleTypeAttributes() {
 		// given
-		let presentedController = mockSelectInformationViewController()
+		let presentedController = mockXAxisSetupController()
 		let expectedSampleType = HeartRate.self
 		setXSampleType(expectedSampleType)
 
@@ -367,7 +367,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 
 	func test_chooseXAxisInformationButtonPressed_setsSelectedAttributeOnPresentedController() {
 		// given
-		let presentedController = mockSelectInformationViewController()
+		let presentedController = mockXAxisSetupController()
 		setXSampleType(HeartRate.self)
 		let expectedAttribute = HeartRate.heartRate
 		let expectedInformation = AverageInformation(expectedAttribute)
@@ -382,7 +382,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 
 	func test_chooseXAxisInformationButtonPressed_setsSelectedInformationOnPresentedController() {
 		// given
-		let presentedController = mockSelectInformationViewController()
+		let presentedController = mockXAxisSetupController()
 		setXSampleType(HeartRate.self)
 		let expectedInformation = AverageInformation(HeartRate.heartRate)
 		setXAxisInformation(expectedInformation)
@@ -570,7 +570,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 	func testGivenAllRequirementsSet_updateShowGraphButtonState_enablesShowGraphButton() {
 		// given
 		mockChooseGroupersForXYGraphViewController()
-		controller.chooseAxisGroupingButtonPressed(self)
+		controller.choosePointGroupingButtonPressed(self)
 		setGroupers()
 		setXSampleType(HeartRate.self)
 		setYSampleType(HeartRate.self)
@@ -584,7 +584,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 	func testGivenAllRequirementsExceptXSampleTypeSet_updateShowGraphButtonState_disablesShowGraphButton() {
 		// given
 		mockChooseGroupersForXYGraphViewController()
-		controller.chooseAxisGroupingButtonPressed(self)
+		controller.choosePointGroupingButtonPressed(self)
 		setGroupers()
 		setYSampleType(HeartRate.self)
 		setXAxisInformation(AverageInformation(HeartRate.heartRate))
@@ -597,7 +597,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 	func testGivenAllRequirementsExceptYSampleTypeSet_updateShowGraphButtonState_disablesShowGraphButton() {
 		// given
 		mockChooseGroupersForXYGraphViewController()
-		controller.chooseAxisGroupingButtonPressed(self)
+		controller.choosePointGroupingButtonPressed(self)
 		setGroupers()
 		setXSampleType(HeartRate.self)
 		setXAxisInformation(AverageInformation(HeartRate.heartRate))
@@ -610,7 +610,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 	func testGivenAllRequirementsExceptXAxisInformationSet_updateShowGraphButtonState_disablesShowGraphButton() {
 		// given
 		mockChooseGroupersForXYGraphViewController()
-		controller.chooseAxisGroupingButtonPressed(self)
+		controller.choosePointGroupingButtonPressed(self)
 		setGroupers()
 		setXSampleType(HeartRate.self)
 		setYSampleType(HeartRate.self)
@@ -623,7 +623,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 	func testGivenAllRequirementsExceptYAxisInformationSet_updateShowGraphButtonState_disablesShowGraphButton() {
 		// given
 		mockChooseGroupersForXYGraphViewController()
-		controller.chooseAxisGroupingButtonPressed(self)
+		controller.choosePointGroupingButtonPressed(self)
 		setGroupers()
 		setXSampleType(HeartRate.self)
 		setYSampleType(HeartRate.self)
@@ -645,72 +645,6 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 	}
 
 	// MARK: - Helper Functions
-
-	@discardableResult
-	private final func mockChooseGroupersForXYGraphViewController() -> ChooseGroupersForXYGraphViewControllerMock {
-		let controller = ChooseGroupersForXYGraphViewControllerMock()
-		Given(mockUiUtil, .controller(
-			named: .value("chooseXYGroupers"),
-			from: .any(UIStoryboard.self),
-			as: .value(UIViewController.self),
-			willReturn: controller))
-		return controller
-	}
-
-	@discardableResult
-	private final func mockChooseSampleTypeViewController() -> ChooseSampleTypeViewControllerMock {
-		let controller = ChooseSampleTypeViewControllerMock()
-		Given(mockUiUtil, .controller(
-			named: .value("chooseSampleType"),
-			from: .value("Util"),
-			as: .value(UIViewController.self),
-			willReturn: controller))
-		return controller
-	}
-
-	@discardableResult
-	private final func mockQueryViewController() -> QueryViewControllerMock {
-		let controller = QueryViewControllerMock()
-		Given(mockUiUtil, .controller(
-			named: .value("queryView"),
-			from: .value("Query"),
-			as: .value(UIViewController.self),
-			willReturn: controller))
-		return controller
-	}
-
-	@discardableResult
-	private final func mockSelectInformationViewController() -> SelectExtraInformationViewControllerMock {
-		let controller = SelectExtraInformationViewControllerMock()
-		Given(mockUiUtil, .controller(
-			named: .value("editExtraInformation"),
-			from: .value("Util"),
-			as: .value(UIViewController.self),
-			willReturn: controller))
-		return controller
-	}
-
-	@discardableResult
-	private final func mockChooseInformationToGraphViewController() -> ChooseInformationToGraphTableViewControllerMock {
-		let controller = ChooseInformationToGraphTableViewControllerMock()
-		Given(mockUiUtil, .controller(
-			named: .value("chooseInformation"),
-			from: .any(UIStoryboard.self),
-			as: .value(UIViewController.self),
-			willReturn: controller))
-		return controller
-	}
-
-	@discardableResult
-	private final func mockXYChartViewController() -> BasicXYChartViewControllerMock {
-		let controller = BasicXYChartViewControllerMock()
-		Given(mockUiUtil, .controller(
-			named: .value("BasicXYChartViewController"),
-			from: .any(UIStoryboard.self),
-			as: .value(UIViewController.self),
-			willReturn: controller))
-		return controller
-	}
 
 	private final func setGroupers(
 		x: SampleGrouper = SameValueSampleGrouper(sampleType: HeartRate.self),
@@ -782,5 +716,84 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 			name: NotificationName.yAxisInformationChanged.toName(),
 			object: nil,
 			userInfo: [UserInfoKey.information: information])
+	}
+
+	// MARK: Mock Controllers
+
+	@discardableResult
+	private final func mockChooseGroupersForXYGraphViewController() -> ChooseGroupersForXYGraphViewControllerMock {
+		let controller = ChooseGroupersForXYGraphViewControllerMock()
+		Given(mockUiUtil, .controller(
+			named: .value("chooseXYGroupers"),
+			from: .any(UIStoryboard.self),
+			as: .value(UIViewController.self),
+			willReturn: controller))
+		return controller
+	}
+
+	@discardableResult
+	private final func mockChooseSampleTypeViewController() -> ChooseSampleTypeViewControllerMock {
+		let controller = ChooseSampleTypeViewControllerMock()
+		Given(mockUiUtil, .controller(
+			named: .value("chooseSampleType"),
+			from: .value("Util"),
+			as: .value(UIViewController.self),
+			willReturn: controller))
+		return controller
+	}
+
+	@discardableResult
+	private final func mockQueryViewController() -> QueryViewControllerMock {
+		let controller = QueryViewControllerMock()
+		Given(mockUiUtil, .controller(
+			named: .value("queryView"),
+			from: .value("Query"),
+			as: .value(UIViewController.self),
+			willReturn: controller))
+		return controller
+	}
+
+	@discardableResult
+	private final func mockSelectInformationViewController() -> SelectExtraInformationViewControllerMock {
+		let controller = SelectExtraInformationViewControllerMock()
+		Given(mockUiUtil, .controller(
+			named: .value("editExtraInformation"),
+			from: .value("Util"),
+			as: .value(UIViewController.self),
+			willReturn: controller))
+		return controller
+	}
+
+	@discardableResult
+	private final func mockChooseInformationToGraphViewController() -> ChooseInformationToGraphTableViewControllerMock {
+		let controller = ChooseInformationToGraphTableViewControllerMock()
+		Given(mockUiUtil, .controller(
+			named: .value("chooseInformation"),
+			from: .any(UIStoryboard.self),
+			as: .value(UIViewController.self),
+			willReturn: controller))
+		return controller
+	}
+
+	@discardableResult
+	private final func mockXAxisSetupController() -> XAxisSetupViewController {
+		let controller = XAxisSetupViewControllerMock()
+		Given(mockUiUtil, .controller(
+			named: .value("xAxisSetup"),
+			from: .any(UIStoryboard.self),
+			as: .value(UIViewController.self),
+			willReturn: controller))
+		return controller
+	}
+
+	@discardableResult
+	private final func mockXYChartViewController() -> BasicXYChartViewControllerMock {
+		let controller = BasicXYChartViewControllerMock()
+		Given(mockUiUtil, .controller(
+			named: .value("BasicXYChartViewController"),
+			from: .any(UIStoryboard.self),
+			as: .value(UIViewController.self),
+			willReturn: controller))
+		return controller
 	}
 }

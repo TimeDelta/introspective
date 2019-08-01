@@ -8,7 +8,14 @@
 
 import UIKit
 
-final class ChooseAttributesToGraphTableViewController: UITableViewController {
+public protocol ChooseAttributesToGraphTableViewController: UITableViewController {
+
+	var notificationToSendWhenFinished: NotificationName! { get set }
+	var allowedAttributes: [Attribute]! { get set }
+	var selectedAttributes: [Attribute]! { get set }
+}
+
+final class ChooseAttributesToGraphTableViewControllerImpl: UITableViewController, ChooseAttributesToGraphTableViewController {
 
 	// MARK: - IBOutlets
 

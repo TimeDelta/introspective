@@ -49,6 +49,7 @@ public enum UserInfoKey: StringLiteralType, Hashable, CustomStringConvertible {
 	case text = "text"
 	case title = "title"
 	case toDate = "toDate"
+	case usePointGroupValue = "usePointGroupValue"
 	case x = "x"
 	case y = "y"
 

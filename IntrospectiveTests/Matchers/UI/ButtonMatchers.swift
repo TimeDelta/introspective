@@ -23,6 +23,16 @@ func hasTitle(_ titleMatcher: Matcher<String>) -> Matcher<UIButton> {
 	}
 }
 
+func hasAccessibilityValue(_ expectedTitle: String?) -> Matcher<UIButton> {
+	return hasAccessibilityValue(equalTo(expectedTitle))
+}
+
+func hasAccessibilityValue(_ valueMatcher: Matcher<String?>) -> Matcher<UIButton> {
+	return Matcher("button has accessibility value " + valueMatcher.description) { (button: UIButton) -> MatchResult in
+		return valueMatcher.matches(button.accessibilityValue)
+	}
+}
+
 // MARK: - Button Descriptions
 
 let describeButtonWithCurrentTitle: (UIButton) -> String = { $0.currentTitle ?? "" }

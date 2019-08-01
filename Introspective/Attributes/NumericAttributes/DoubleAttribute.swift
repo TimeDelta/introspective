@@ -51,4 +51,11 @@ public final class DoubleAttribute: AttributeBase<Double>, NumericAttribute {
 	public final override func typedValuesAreEqual(_ first: Double, _ second: Double) -> Bool {
 		return first == second
 	}
+
+	public final func graphableValueFor(_ value: Any) throws -> Double {
+		guard let castedValue = value as? Double else {
+			throw GenericError("Passed \(String(describing: value)) to graphableValueFor()")
+		}
+		return castedValue
+	}
 }

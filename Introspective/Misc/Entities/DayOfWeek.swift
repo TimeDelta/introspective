@@ -44,6 +44,17 @@ public final class DayOfWeek: Hashable, Comparable {
 		return lhs.intValue > rhs.intValue
 	}
 
+	public static func isDayOfWeek(_ str: String) -> Bool {
+		let dayName = str.lowercased()
+		for day in allDays {
+			if dayName.contains(day.abbreviation.lowercased()) {
+				return true
+			}
+		}
+		return false
+	}
+
+	/// - Throws: When not a valid day name
 	public static func fromString(_ str: String) throws -> DayOfWeek {
 		let dayName = str.lowercased()
 		for day in allDays {

@@ -51,6 +51,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 
 	public final var samples: [Sample]!
 
+	private final var usePointGroupValueForXAxis = false
 	private final var xAxis: AttributeOrInformation! {
 		didSet { xAxisSet() }
 	}
@@ -120,20 +121,20 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	}
 
 	@IBAction func editXAxis(_ sender: Any) {
-		let controller: XAxisSetupViewController = viewController(named: "xAxisSetup")
-		controller.attributes = type(of: samples[0]).attributes
+		let controller = viewController(named: "xAxisSetup") as! XAxisSetupViewController
+		controller.attributes = samples[0].attributes
 		controller.selectedAttribute = xAxis?.attribute
 		controller.selectedInformation = xAxis?.information
 		controller.grouped = pointGrouper != nil
+		controller.usePointGroupValue = usePointGroupValueForXAxis
 		controller.notificationToSendWhenFinished = .xAxisInformationChanged
-		controller.attributes = samples[0].attributes
 		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
 	@IBAction func editYAxis(_ sender: Any) {
 		if pointGrouper == nil {
-			let controller: ChooseAttributesToGraphTableViewController = viewController(named: "chooseAttributes")
-			controller.allowedAttributes = type(of: samples[0]).attributes.filter{ $0 is NumericAttribute }
+			let controller = viewController(named: "chooseAttributes") as! ChooseAttributesToGraphTableViewController
+			controller.allowedAttributes = samples[0].attributes.filter{ $0 is GraphableAttribute }
 			controller.selectedAttributes = yAxis?.map{ $0.attribute! }
 			controller.notificationToSendWhenFinished = .yAxisInformationChanged
 			realNavigationController?.pushViewController(controller, animated: false)
@@ -195,9 +196,14 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 
 	@objc private final func xAxisChanged(notification: Notification) {
 		if let attribute: Attribute? = value(for: .attribute, from: notification, keyIsOptional: true) {
+			usePointGroupValueForXAxis = false
 			xAxis = AttributeOrInformation(attribute: attribute)
 		} else if let information: ExtraInformation = value(for: .information, from: notification, keyIsOptional: true) {
+			usePointGroupValueForXAxis = false
 			xAxis = AttributeOrInformation(information: information)
+		} else if let usePointGroupValue: Bool = value(for: .usePointGroupValue, from: notification) {
+			usePointGroupValueForXAxis = usePointGroupValue
+			xAxis = nil
 		} else {
 			log.error("Missing both optional attributes in x-axis setup notification")
 		}
@@ -216,10 +222,13 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	// MARK: - Helper Functions
 
 	private final func updateShowGraphButtonState() {
-		 showGraphButton.isEnabled =
-			xAxis != nil &&
-			(xAxis.attribute != nil || xAxis.information != nil) &&
-			yAxis != nil
+		showGraphButton.isEnabled =
+			(
+				(xAxis != nil && (xAxis.attribute != nil || xAxis.information != nil)) ||
+				usePointGroupValueForXAxis
+			) &&
+			yAxis != nil &&
+			!yAxis.isEmpty
 		showGraphButton.backgroundColor = showGraphButton.isEnabled ? .black : .gray
 	}
 
@@ -288,9 +297,18 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 		}
 	}
 
-	private final func getDataFor(groups: [(Any, [Sample])], groupedBy grouper: SampleGrouper, as groupName: String? = nil)
-	throws -> [Dictionary<String, Any>] {
-		let xValues = try transform(sampleGroups: groups, information: xAxis.information!)
+	private final func getDataFor(
+		groups: [(Any, [Sample])],
+		groupedBy grouper: SampleGrouper,
+		as groupName: String? = nil)
+	throws
+	-> [Dictionary<String, Any>] {
+		let xValues: [(groupValue: Any, sampleValue: String)]
+		if usePointGroupValueForXAxis {
+			xValues = try groups.map{ (groupValue: $0.0, sampleValue: try grouper.groupNameFor(value: $0.0)) }
+		} else {
+			xValues = try transform(sampleGroups: groups, information: xAxis.information!)
+		}
 		let xValuesAreNumbers = areAllNumbers(xValues.map{ $0.sampleValue })
 		var sortedXValues = xValues
 		// if x values are numbers and are not sorted, graph will look very weird
@@ -298,6 +316,8 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 			sortedXValues = sortXValuesByNumber(xValues)
 		} else if areAllDates(xValues.map{ $0.sampleValue }) {
 			sortedXValues = sortXValuesByDate(xValues)
+		} else if areAllDaysOfWeek(xValues.map{ $0.sampleValue }) {
+			sortedXValues = sortXValuesByDayOfWeek(xValues)
 		}
 
 		var allData = [Dictionary<String, Any>]()
@@ -386,6 +406,24 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 		return true
 	}
 
+	private final func areAllDaysOfWeek(_ values: [String]) -> Bool {
+		signpost.begin(name: "Are all days of week", "Checking if %d values are all days of week", values.count)
+		for value in values {
+			if !DayOfWeek.isDayOfWeek(value) {
+				signpost.end(
+					name: "Are all days of week",
+					"Finished checking if %d values are all days of week",
+					values.count)
+				return false
+			}
+		}
+		signpost.end(
+			name: "Are all days of week",
+			"Finished checking if %d values are all days of week",
+			values.count)
+		return true
+	}
+
 	private final func getDate(_ value: String) -> Date? {
 		return DependencyInjector.util.calendar.date(from: value)
 	}
@@ -400,8 +438,9 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 		return copiedValue
 	}
 
-	private final func sortXValuesByNumber(_ xValues: [(groupValue: Any, sampleValue: String)]) -> [(groupValue: Any, sampleValue: String)] {
-		var sortedXValues = xValues
+	private final func sortXValuesByNumber(_ xValues: [(groupValue: Any, sampleValue: String)])
+	-> [(groupValue: Any, sampleValue: String)] {
+		let sortedXValues: [(groupValue: Any, sampleValue: String)]
 		signpost.begin(name: "Sort x values as numbers", "Number of x values: %d", xValues.count)
 		sortedXValues = xValues.sorted(by: { Double($0.sampleValue)! < Double($1.sampleValue)! })
 		signpost.end(name: "Sort x values as numbers")
@@ -411,10 +450,23 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	/// - Precondition: All sample values are valid date strings
 	private final func sortXValuesByDate(_ xValues: [(groupValue: Any, sampleValue: String)])
 	-> [(groupValue: Any, sampleValue: String)] {
-		var sortedXValues = xValues
+		let sortedXValues: [(groupValue: Any, sampleValue: String)]
 		signpost.begin(name: "Sort x values as dates", "Number of x values: %d", xValues.count)
 		sortedXValues = xValues.sorted(by: { getDate($0.sampleValue)! < getDate($1.sampleValue)! })
 		signpost.end(name: "Sort x values as dates")
+		return sortedXValues
+	}
+
+	private final func sortXValuesByDayOfWeek(_ xValues: [(groupValue: Any, sampleValue: String)])
+	-> [(groupValue: Any, sampleValue: String)] {
+		let sortedXValues: [(groupValue: Any, sampleValue: String)]
+		signpost.begin(name: "Sort x values as days of week", "Number of x values: %d", xValues.count)
+		sortedXValues = xValues.sorted(by: {
+			let day1 = try! DayOfWeek.fromString($0.sampleValue)
+			let day2 = try! DayOfWeek.fromString($1.sampleValue)
+			return day1 < day2
+		})
+		signpost.end(name: "Sort x values as days of week")
 		return sortedXValues
 	}
 
@@ -436,7 +488,11 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 
 	private final func xAxisSet() {
 		if xAxis == nil {
-			xAxisButton.setTitle("Choose x-axis information", for: .normal)
+			if usePointGroupValueForXAxis {
+				xAxisButton.setTitle("X-Axis: Use point group value", for: .normal)
+			} else {
+				xAxisButton.setTitle("Choose x-axis information", for: .normal)
+			}
 		} else if let attribute = xAxis.attribute {
 			xAxisButton.setTitle("X-Axis: " + attribute.name.localizedLowercase, for: .normal)
 		} else if let information = xAxis.information {
@@ -448,7 +504,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 
 	private final func yAxisSet() {
 		if yAxis == nil {
-			yAxisButton.setTitle("Choose y-axis information", for: .disabled)
+			yAxisButton.setTitle("Choose y-axis information", for: .normal)
 		} else {
 			var description = "Y-Axis: "
 			for value in yAxis! {

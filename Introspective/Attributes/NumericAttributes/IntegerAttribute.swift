@@ -51,4 +51,11 @@ public final class IntegerAttribute: AttributeBase<Int>, NumericAttribute {
 	public final override func typedValuesAreEqual(_ first: Int, _ second: Int) -> Bool {
 		return first == second
 	}
+
+	public final func graphableValueFor(_ value: Any) throws -> Double {
+		guard let castedValue = value as? Int else {
+			throw GenericError("Passed \(String(describing: value)) to graphableValueFor()")
+		}
+		return Double(castedValue)
+	}
 }

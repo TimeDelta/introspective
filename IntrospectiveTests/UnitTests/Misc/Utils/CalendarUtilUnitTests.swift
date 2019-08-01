@@ -8,6 +8,7 @@
 
 import XCTest
 import SwiftDate
+import Hamcrest
 @testable import Introspective
 
 final class CalendarUtilUnitTests: UnitTest {
@@ -799,6 +800,17 @@ final class CalendarUtilUnitTests: UnitTest {
 
 		// then
 		XCTAssertEqual(actualDate, expectedDate)
+	}
+
+	func testGivenInvalidDateStringWithNilFormat_dateFromStringInFormat_returnsNil() {
+		// given
+		let str = "Start Date is on a Wednesday"
+
+		// when
+		let date = util.date(from: str, format: nil)
+
+		// then
+		assertThat(date, nilValue())
 	}
 
 	private func defaultRegion() -> Region {
