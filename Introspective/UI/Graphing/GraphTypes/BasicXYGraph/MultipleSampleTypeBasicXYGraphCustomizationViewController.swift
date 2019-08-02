@@ -348,14 +348,6 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		}
 	}
 
-	private final func firstDateAttributeFor(_ sampleType: Sample.Type) -> DateAttribute {
-		if let index = sampleType.attributes.index(where: { $0 is DateAttribute }) {
-			return sampleType.attributes[index] as! DateAttribute
-		}
-		log.error("No DateAttribute found for sample type: %@", String(describing: sampleType))
-		return CommonSampleAttributes.timestamp
-	}
-
 	private final func samplesAssigned() {
 		do {
 			try updateChartData()
