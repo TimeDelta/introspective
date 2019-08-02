@@ -61,15 +61,15 @@ class UnitTest: XCTestCase {
 	}
 
 	private func registerMatchers() {
-		Matcher.default.register(AnySample.self) { lhs,rhs in return lhs.equalTo(rhs) }
-		Matcher.default.register(Attribute.self) { lhs,rhs in return lhs.equalTo(rhs) }
-		Matcher.default.register(AttributeRestriction.self) { lhs,rhs in return lhs.equalTo(rhs) }
+		Matcher.default.register(AnySample.self) { $0.equalTo($1) }
+		Matcher.default.register(Attribute.self) { $0.equalTo($1) }
+		Matcher.default.register(AttributeRestriction.self) { $0.equalTo($1) }
 		Matcher.default.register(DayOfWeek.self)
-		Matcher.default.register(HeartRate.Type.self) { _,_ in return true }
-		Matcher.default.register(Sample.self) { lhs,rhs in return lhs.equalTo(rhs) }
+		Matcher.default.register(HeartRate.Type.self) { _,_ in true }
+		Matcher.default.register(Sample.self) { $0.equalTo($1) }
 		Matcher.default.register(ResultsViewController.Type.self)
-		Matcher.default.register(Any.self) { return self.anyMatcher($0, $1) }
-		Matcher.default.register(Optional<Any>.self) { return self.anyMatcher($0, $1) }
+		Matcher.default.register(Any.self) { self.anyMatcher($0, $1) }
+		Matcher.default.register(Optional<Any>.self) { self.anyMatcher($0, $1) }
 		Matcher.default.register(Exportable.Type.self) { $0 == $1 }
 		Matcher.default.register(UIViewController.Type.self)
 		Matcher.default.register(Sample.Type.self) { $0.name == $1.name }
@@ -80,6 +80,19 @@ class UnitTest: XCTestCase {
 			return $0.equalTo($1)
 		}
 		Matcher.default.register(BooleanExpressionPart.self) { self.booleanExpressionPartsMatch($0, $1) }
+		Matcher.default.register(ExtraInformation.self) { $0.equalTo($1) }
+		Matcher.default.register(Optional<SampleGrouper>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
+		Matcher.default.register(Optional<Query>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
+		Matcher.default.register(Optional<Attribute>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
+		Matcher.default.register(Optional<ExtraInformation>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
+		Matcher.default.register(Optional<Array<Attribute>>.self) {
+			self.optionalEqualTo($0, $1, { $0.elementsEqual($1, by: { $0.equalTo($1) }) })
+		}
+		Matcher.default.register(Array<Attribute>.self) { $0.elementsEqual($1, by: { $0.equalTo($1) }) }
+		Matcher.default.register(Optional<Array<ExtraInformation>>.self) {
+			self.optionalEqualTo($0, $1, { $0.elementsEqual($1, by: { $0.equalTo($1) }) })
+		}
+		Matcher.default.register(Array<ExtraInformation>.self) { $0.elementsEqual($1, by: { $0.equalTo($1) }) }
 	}
 
 	private func resetMocks() {
@@ -212,5 +225,11 @@ class UnitTest: XCTestCase {
 			return false
 		}
 		return expression1.equalTo(expression2)
+	}
+
+	private final func optionalEqualTo<Type>(_ first: Type?, _ second: Type?, _ areEqual: (Type, Type) -> Bool) -> Bool {
+		guard let first = first else { return second == nil }
+		guard let second = second else { return false }
+		return areEqual(first, second)
 	}
 }

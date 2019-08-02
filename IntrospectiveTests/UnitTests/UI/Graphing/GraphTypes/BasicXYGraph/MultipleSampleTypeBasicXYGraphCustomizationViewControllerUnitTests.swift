@@ -76,7 +76,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 
 	func test_clearSeriesGroupingButtonPressed_clearsSeriesGroupers() {
 		// given
-		let presentedController = mockChooseGroupersForXYGraphViewController()
+		mockChooseGroupersForXYGraphViewController()
 		controller.chooseSeriesGroupingButtonPressed(self)
 		setGroupers(x: AdvancedSampleGrouper(), y: AdvancedSampleGrouper())
 
@@ -84,9 +84,10 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 		controller.clearSeriesGroupingButtonPressed(self)
 
 		// then
+		let presentedController = mockChooseGroupersForXYGraphViewController()
 		controller.chooseSeriesGroupingButtonPressed(self)
-		assertThat(presentedController.xGrouper, nilValue())
-		assertThat(presentedController.yGrouper, nilValue())
+		Verify(presentedController, .xGrouper(set: .value(nil)))
+		Verify(presentedController, .yGrouper(set: .value(nil)))
 	}
 
 	// MARK: - chooseSeriesGroupingButtonPressed()
@@ -302,7 +303,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 		// then
 		let presentedController = mockQueryViewController()
 		controller.chooseXAxisQueryButtonPressed(self)
-		assertThat(presentedController.initialQuery, nilValue())
+		Verify(presentedController, .initialQuery(set: .value(nil)))
 	}
 
 	// MARK: - chooseXAxisQueryButtonPressed()
@@ -421,7 +422,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 		// then
 		let presentedController = mockQueryViewController()
 		controller.chooseYAxisQueryButtonPressed(self)
-		assertThat(presentedController.initialQuery, nilValue())
+		Verify(presentedController, .initialQuery(set: .value(nil)))
 	}
 
 	// MARK: - chooseYAxisQueryButtonPressed()
@@ -776,7 +777,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 	}
 
 	@discardableResult
-	private final func mockXAxisSetupController() -> XAxisSetupViewController {
+	private final func mockXAxisSetupController() -> XAxisSetupViewControllerMock {
 		let controller = XAxisSetupViewControllerMock()
 		Given(mockUiUtil, .controller(
 			named: .value("xAxisSetup"),

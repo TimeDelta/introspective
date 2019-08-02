@@ -69,7 +69,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	private final var pointGrouper: SampleGrouper? = nil {
 		didSet { pointGrouperSet() }
 	}
-	private final var oldSampleType: Sample.Type!
+	private final var oldSampleType: Sample.Type! = nil
 	private final var sampleType: Sample.Type! {
 		didSet { sampleTypeSet() }
 	}
@@ -92,6 +92,10 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		observe(selector: #selector(queryChanged), name: .queryChanged)
 
 		updateShowGraphButtonState()
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	// MARK: - Button Actions
@@ -665,6 +669,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			seriesGrouper = nil
 			pointGrouper = nil
 		}
+		oldSampleType = sampleType
 	}
 }
 

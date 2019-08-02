@@ -11,7 +11,7 @@ import SwiftyMocky
 @testable import Introspective
 
 // sourcery: mock = "ChooseGroupersForXYGraphViewController"
-class ChooseGroupersForXYGraphViewControllerMock: UIViewController, ChooseGroupersForXYGraphViewController {
+class ChooseGroupersForXYGraphViewControllerMock: UIViewController, ChooseGroupersForXYGraphViewController, Mock {
 
 // sourcery:inline:auto:ChooseGroupersForXYGraphViewControllerMock.autoMocked
     var matcher: Matcher = Matcher.default

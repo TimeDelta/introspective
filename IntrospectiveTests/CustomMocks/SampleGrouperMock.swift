@@ -11,7 +11,7 @@ import SwiftyMocky
 @testable import Introspective
 
 // sourcery: mock = "SampleGrouper"
-final class SampleGrouperMock: SampleGrouper, Mock {
+class SampleGrouperMock: SampleGrouper, Mock {
 
 	public final var description: String = ""
 

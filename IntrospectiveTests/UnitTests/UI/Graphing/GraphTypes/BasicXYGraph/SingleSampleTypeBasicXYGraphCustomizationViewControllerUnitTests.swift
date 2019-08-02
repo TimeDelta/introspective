@@ -61,6 +61,12 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 		controller.viewDidLoad()
 	}
 
+	override func tearDown() {
+		NotificationCenter.default.removeObserver(controller)
+		controller = nil
+		super.tearDown()
+	}
+
 	// MARK: - viewDidLoad()
 
 	func test_viewDidLoad_setsInitialShowGraphButtonStateToDisabled() {
@@ -124,14 +130,14 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 	func test_clearSeriesGroupingButtonPressed_setsSeriesGrouperToNil() {
 		// given
 		setSeriesGrouper(mockSampleGrouper())
-		let presentedController = mockGroupingChooserTableViewController()
 
 		// when
 		controller.clearSeriesGroupingButtonPressed(clearSeriesGrouperButton)
 
 		// then
+		let presentedController = mockGroupingChooserTableViewController()
 		controller.chooseSeriesGroupingButtonPressed(chooseSeriesGrouperButton)
-		assertThat(presentedController.currentGrouper, nilValue())
+		Verify(presentedController, .currentGrouper(set: .value(nil)))
 	}
 
 	// MARK: - choosePointGroupingButtonPressed()
@@ -183,15 +189,65 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 	func test_clearPointGroupingButtonPressed_setsPointGrouperToNil() {
 		// given
-		let presentedController = mockGroupingChooserTableViewController()
 		setPointGrouper(mockSampleGrouper())
 
 		// when
 		controller.clearPointGroupingButtonPressed(clearPointGrouperButton)
 
 		// then
+		let presentedController = mockGroupingChooserTableViewController()
 		controller.choosePointGroupingButtonPressed(choosePointGrouperButton)
-		assertThat(presentedController.currentGrouper, nilValue())
+		Verify(presentedController, .currentGrouper(set: .value(nil)))
+	}
+
+	// MARK: - clearQueryButtonPressed()
+
+	func test_clearQueryButtonPressed_setsQueryToNil() {
+		// given
+		setQuery(QueryMock())
+		let presentedController = mockQueryViewController()
+
+		// when
+		controller.clearQueryButtonPressed(clearQueryButton)
+
+		// then
+		controller.chooseQueryButtonPressed(queryButton)
+		Verify(presentedController, .initialQuery(set: .value(nil)))
+	}
+
+	// MARK: - chooseQueryButtonPressed()
+
+	func test_chooseQueryButtonPressed_setsFinishedButtonTitleOnPresentedControllerToUseQuery() {
+		// given
+		let presentedController = mockQueryViewController()
+
+		// when
+		controller.chooseQueryButtonPressed(queryButton)
+
+		// then
+		assertThat(presentedController.finishedButtonTitle, equalTo("Use Query"))
+	}
+
+	func test_chooseQueryButtonPressed_setsTopmostSampleTypeOnPresentedControllerToCurrentSampleType() {
+		// given
+		let presentedController = mockQueryViewController()
+
+		// when
+		controller.chooseQueryButtonPressed(queryButton)
+
+		// then
+		assertThat(presentedController.topmostSampleType, equals(sampleTypes[0]))
+	}
+
+	func test_chooseQueryButtonPressed_setsFinishedButtonNotificationOnPresentedControllerToQueryChanged() {
+		// given
+		let presentedController = mockQueryViewController()
+
+		// when
+		controller.chooseQueryButtonPressed(queryButton)
+
+		// then
+		assertThat(presentedController.finishedButtonNotification, equalTo(.queryChanged))
 	}
 
 	// MARK: - editXAxis()
@@ -353,6 +409,54 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 		assertThat(presentedController.notificationToSendWhenFinished, equalTo(.yAxisInformationChanged))
 	}
 
+	// MARK: - querySet()
+
+	func testGivenQuerySetToNil_querySet_setsCorrectTitleForQueryButton() {
+		// given
+		setQuery(QueryMock())
+
+		// when
+		controller.clearQueryButtonPressed(clearQueryButton)
+
+		// then
+		assertThat(queryButton, hasTitle("Choose query (optional)"))
+	}
+
+	func testGivenQuerySetToNil_querySet_disablesAndHidesClearQueryButton() {
+		// given
+		setQuery(QueryMock())
+
+		// when
+		controller.clearQueryButtonPressed(clearQueryButton)
+
+		// then
+		Verify(mockUiUtil, .setButton(.value(clearQueryButton), enabled: .value(false), hidden: .value(true)))
+	}
+
+	func testGivenQuerySetToNonNilValue_querySet_setsCorrectTitleForQueryButton() {
+		// when
+		setQuery(QueryMock())
+
+		// then
+		assertThat(queryButton, hasTitle("Query chosen (click to change)"))
+	}
+
+	func testGivenQuerySetToNonNilValue_querySet_enablesAndShowsClearQueryButton() {
+		// when
+		setQuery(QueryMock())
+
+		// then
+		Verify(mockUiUtil, .setButton(.value(clearQueryButton), enabled: .value(true), hidden: .value(false)))
+	}
+
+	func test_querySet_setsQueryButtonAccessibilityValueToQueryButtonTitle() {
+		// when
+		setQuery(QueryMock())
+
+		// then
+		assertThat(queryButton, hasAccessibilityValue(queryButton.currentTitle))
+	}
+
 	// MARK: - xAxisSet()
 
 	func testGivenXAxisSetToNilAndUsePointGroupValueTrue_xAxisSet_setsCorrectTitleForXAxisButton() {
@@ -507,7 +611,10 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 		setPointGrouper(mockSampleGrouper())
 
 		// then
-		assertThat(xAxisButton, hasTitle("Choose x-axis information"))
+		let presentedController = mockXAxisSetupController()
+		controller.editXAxis(xAxisButton)
+		Verify(presentedController, .selectedAttribute(set: .value(nil)))
+		Verify(presentedController, .selectedInformation(set: .value(nil)))
 	}
 
 	func testGivenPointGrouperSetToNonNilValueFromNil_pointGrouperSet_clearsYAxis() {
@@ -518,7 +625,9 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 		setPointGrouper(mockSampleGrouper())
 
 		// then
-		assertThat(yAxisButton, hasTitle("Choose y-axis information"))
+		let presentedController = mockChooseInformationToGraphViewController()
+		controller.editYAxis(yAxisButton)
+		Verify(presentedController, .never, .chosenInformation(set: .any))
 	}
 
 	func testGivenPointGrouperSetToNonNilValueFromNonNilValue_pointGrouperSet_doesNotClearXAxis() {
@@ -533,7 +642,9 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 		setPointGrouper(mockSampleGrouper())
 
 		// then
-		assertThat(xAxisButton, not(hasTitle("Choose x-axis information")))
+		let presentedController = mockXAxisSetupController()
+		controller.editXAxis(xAxisButton)
+		Verify(presentedController, .selectedAttribute(set: .notNil))
 	}
 
 	func testGivenPointGrouperSetToNonNilValueFromNonNilValue_pointGrouperSet_doesNotClearYAxis() {
@@ -542,13 +653,16 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 		Given(pointGrouper, .equalTo(.any(SampleGrouper.self), willReturn: false))
 		Given(pointGrouper, .copy(willReturn: pointGrouper))
 		setPointGrouper(pointGrouper)
-		setYAxis([TextAttribute(name: "a")])
+		let yAxis = [AverageInformation(TextAttribute(name: "a"))]
+		setYAxis(yAxis)
 
 		// when
 		setPointGrouper(mockSampleGrouper())
 
 		// then
-		assertThat(yAxisButton, not(hasTitle("Choose y-axis information")))
+		let presentedController = mockChooseInformationToGraphViewController()
+		controller.editYAxis(yAxisButton)
+		Verify(presentedController, .chosenInformation(set: .value(yAxis)))
 	}
 
 	func testGivenPointGrouperSetToNil_pointGrouperSet_disablesAndHidesClearPointGrouperButton() {
@@ -588,7 +702,10 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 		controller.clearPointGroupingButtonPressed(clearPointGrouperButton)
 
 		// then
-		assertThat(xAxisButton, hasTitle("Choose x-axis information"))
+		let presentedController = mockXAxisSetupController()
+		controller.editXAxis(xAxisButton)
+		Verify(presentedController, .selectedAttribute(set: .value(nil)))
+		Verify(presentedController, .selectedInformation(set: .value(nil)))
 	}
 
 	func testGivenPointGrouperSetToNilFromNonNilValue_pointGrouperSet_clearsYAxis() {
@@ -602,7 +719,9 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 		controller.clearPointGroupingButtonPressed(clearPointGrouperButton)
 
 		// then
-		assertThat(yAxisButton, hasTitle("Choose y-axis information"))
+		let presentedController = mockChooseAttributesToGraphController()
+		controller.editYAxis(yAxisButton)
+		Verify(presentedController, .selectedAttributes(set: .value(nil)))
 	}
 
 	func testGivenPointGrouperSetToNilFromNil_pointGrouperSet_doesNotClearXAxis() {
@@ -613,18 +732,23 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 		controller.clearPointGroupingButtonPressed(clearPointGrouperButton)
 
 		// then
-		assertThat(xAxisButton, not(hasTitle("Choose x-axis information")))
+		let presentedController = mockXAxisSetupController()
+		controller.editXAxis(xAxisButton)
+		Verify(presentedController, .selectedAttribute(set: .notNil))
 	}
 
 	func testGivenPointGrouperSetToNilFromNil_pointGrouperSet_doesNotClearYAxis() {
 		// given
-		setYAxis([TextAttribute(name: "a")])
+		let yAxis = [TextAttribute(name: "a")]
+		setYAxis(yAxis)
 
 		// when
 		controller.clearPointGroupingButtonPressed(clearPointGrouperButton)
 
 		// then
-		assertThat(yAxisButton, not(hasTitle("Choose y-axis information")))
+		let presentedController = mockChooseAttributesToGraphController()
+		controller.editYAxis(yAxisButton)
+		Verify(presentedController, .selectedAttributes(set: .value(yAxis)))
 	}
 
 	// MARK: - updateShowGraphButtonState()
@@ -679,6 +803,143 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 
 		// then
 		assertThat(showGraphButton, not(isEnabled()))
+	}
+
+	// MARK: - sampleTypeSet()
+
+	func testGivenQueryNotNilAndSampleTypeSetToDifferentValue_sampleTypeSet_setsQueryToNil() {
+		// given
+		setQuery(QueryMock())
+
+		// when
+		controller.pickerView(sampleTypePicker, didSelectRow: 1, inComponent: 0)
+
+		// then
+		let presentedController = mockQueryViewController()
+		controller.chooseQueryButtonPressed(queryButton)
+		Verify(presentedController, .initialQuery(set: .value(nil)))
+	}
+
+	func testGivenXAxisNotNilAndSampleTypeSetToDifferentValue_sampleTypeSet_setsXAxisToNil() {
+		// given
+		setXAxis(TextAttribute(name: ""))
+
+		// when
+		controller.pickerView(sampleTypePicker, didSelectRow: 1, inComponent: 0)
+
+		// then
+		let presentedController = mockXAxisSetupController()
+		controller.editXAxis(xAxisButton)
+		Verify(presentedController, .selectedAttribute(set: .value(nil)))
+		Verify(presentedController, .selectedInformation(set: .value(nil)))
+	}
+
+	func testGivenYAxisNotNilAndSampleTypeSetToDifferentValue_sampleTypeSet_setsYAxisToNil() {
+		// given
+		setYAxis([TextAttribute(name: "")])
+
+		// when
+		controller.pickerView(sampleTypePicker, didSelectRow: 1, inComponent: 0)
+
+		// then
+		let presentedController = mockChooseAttributesToGraphController()
+		controller.editYAxis(yAxisButton)
+		Verify(presentedController, .selectedAttributes(set: .value(nil)))
+	}
+
+	func testGivenSeriesGrouperNotNilAndSampleTypeSetToDifferentValue_sampleTypeSet_setsSeriesGrouperToNil() {
+		// given
+		setSeriesGrouper(mockSampleGrouper())
+
+		// when
+		controller.pickerView(sampleTypePicker, didSelectRow: 1, inComponent: 0)
+
+		// then
+		let presentedController = mockGroupingChooserTableViewController()
+		controller.chooseSeriesGroupingButtonPressed(chooseSeriesGrouperButton)
+		Verify(presentedController, .currentGrouper(set: .value(nil)))
+	}
+
+	func testGivenPointGrouperNotNilAndSampleTypeSetToDifferentValue_sampleTypeSet_setsPointGrouperToNil() {
+		// given
+		setPointGrouper(mockSampleGrouper())
+
+		// when
+		controller.pickerView(sampleTypePicker, didSelectRow: 1, inComponent: 0)
+
+		// then
+		let presentedController = mockGroupingChooserTableViewController()
+		controller.choosePointGroupingButtonPressed(choosePointGrouperButton)
+		Verify(presentedController, .currentGrouper(set: .value(nil)))
+	}
+
+	func testGivenQueryNotNilAndSampleTypeSetToSameValue_sampleTypeSet_doesNotSetQueryToNil() {
+		// given
+		setQuery(QueryMock())
+
+		// when
+		controller.pickerView(sampleTypePicker, didSelectRow: 0, inComponent: 0)
+
+		// then
+		let presentedController = mockQueryViewController()
+		controller.chooseQueryButtonPressed(queryButton)
+		Verify(presentedController, .initialQuery(set: .notNil))
+	}
+
+	func testGivenXAxisNotNilAndSampleTypeSetToSameValue_sampleTypeSet_doesNotSetXAxisToNil() {
+		// given
+		setXAxis(TextAttribute(name: ""))
+
+		// when
+		controller.pickerView(sampleTypePicker, didSelectRow: 0, inComponent: 0)
+
+		// then
+		let presentedController = mockXAxisSetupController()
+		controller.editXAxis(xAxisButton)
+		Verify(presentedController, .selectedAttribute(set: .notNil))
+	}
+
+	func testGivenYAxisNotNilAndSampleTypeSetToSameValue_sampleTypeSet_doesNotSetYAxisToNil() {
+		// given
+		setYAxis([TextAttribute(name: "")])
+
+		// when
+		controller.pickerView(sampleTypePicker, didSelectRow: 0, inComponent: 0)
+
+		// then
+		let presentedController = mockChooseAttributesToGraphController()
+		controller.editYAxis(yAxisButton)
+		Verify(presentedController, .selectedAttributes(set: .notNil))
+	}
+
+	func testGivenSeriesGrouperNotNilAndSampleTypeSetToSameValue_sampleTypeSet_doesNotSetSeriesGrouperToNil() {
+		// given
+		let grouper = mockSampleGrouper()
+		Given(grouper, .copy(willReturn: grouper))
+		setSeriesGrouper(grouper)
+
+		// when
+		controller.pickerView(sampleTypePicker, didSelectRow: 0, inComponent: 0)
+
+		// then
+		let presentedController = mockGroupingChooserTableViewController()
+		controller.chooseSeriesGroupingButtonPressed(chooseSeriesGrouperButton)
+		Verify(presentedController, .currentGrouper(set: .notNil))
+	}
+
+	func testGivenPointGrouperNotNilAndSampleTypeSetToSameValue_sampleTypeSet_doesNotSetPointGrouperToNil() {
+		// given
+		let grouper = mockSampleGrouper()
+		Given(grouper, .copy(willReturn: grouper))
+		setPointGrouper(grouper)
+
+		// when
+		controller.pickerView(sampleTypePicker, didSelectRow: 0, inComponent: 0)
+
+		// then
+		let presentedController = mockGroupingChooserTableViewController()
+		controller.choosePointGroupingButtonPressed(choosePointGrouperButton)
+		Verify(presentedController, .currentGrouper(set: .notNil))
 	}
 
 	// MARK: - Helper Functions
@@ -777,6 +1038,16 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 			])
 	}
 
+	private final func setQuery(_ query: Query) {
+		Given(mockUiUtil, .value(for: .value(.query), from: .any, keyIsOptional: .any, willReturn: query))
+		NotificationCenter.default.post(
+			name: NotificationName.queryChanged.toName(),
+			object: nil,
+			userInfo: [
+				UserInfoKey.query: query,
+			])
+	}
+
 	private final func mockSampleGrouper(debugDescription: String = "sample grouper") -> SampleGrouperMock {
 		let grouper = SampleGrouperMock(attributes: [])
 		Given(grouper, .debugDescription(getter: debugDescription))
@@ -786,7 +1057,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 	// MARK: Mock Controllers
 
 	@discardableResult
-	private final func mockGroupingChooserTableViewController() -> GroupingChooserTableViewController {
+	private final func mockGroupingChooserTableViewController() -> GroupingChooserTableViewControllerMock {
 		let controller = GroupingChooserTableViewControllerMock()
 		Given(mockUiUtil, .controller(
 			named: .value("chooseGrouper"),
@@ -797,7 +1068,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 	}
 
 	@discardableResult
-	private final func mockXAxisSetupController() -> XAxisSetupViewController {
+	private final func mockXAxisSetupController() -> XAxisSetupViewControllerMock {
 		let controller = XAxisSetupViewControllerMock()
 		Given(mockUiUtil, .controller(
 			named: .value("xAxisSetup"),
@@ -835,6 +1106,17 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 		Given(mockUiUtil, .controller(
 			named: .value("BasicXYChartViewController"),
 			from: .any(UIStoryboard.self),
+			as: .value(UIViewController.self),
+			willReturn: controller))
+		return controller
+	}
+
+	@discardableResult
+	private final func mockQueryViewController() -> QueryViewControllerMock {
+		let controller = QueryViewControllerMock()
+		Given(mockUiUtil, .controller(
+			named: .value("queryView"),
+			from: .value("Query"),
 			as: .value(UIViewController.self),
 			willReturn: controller))
 		return controller
