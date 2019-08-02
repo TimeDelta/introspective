@@ -128,7 +128,7 @@ public final class PerTagSampleGrouper: SampleGrouper {
 				groupByAttribute = castedValue
 				return
 			}
-			throw GenericError("Provided attribute was not one of the allowed values")
+			throw GenericError("Provided attribute was not one of the allowed values: \(castedValue.name)")
 		}
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}

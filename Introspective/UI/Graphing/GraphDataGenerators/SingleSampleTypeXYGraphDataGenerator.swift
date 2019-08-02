@@ -1,0 +1,139 @@
+//
+//  SingleSampleTypeXYGraphDataGenerator.swift
+//  Introspective
+//
+//  Created by Bryan Nova on 8/2/19.
+//  Copyright © 2019 Bryan Nova. All rights reserved.
+//
+
+import Foundation
+import os
+import AAInfographics
+
+public final class SingleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator {
+
+	// MARK: - Structs
+
+	public struct AttributeOrInformation {
+		public var attribute: Attribute?
+		public var information: ExtraInformation?
+
+		public init(attribute: Attribute? = nil, information: ExtraInformation? = nil) {
+			self.attribute = attribute
+			self.information = information
+		}
+	}
+
+	// MARK: - Instance Variables
+
+	private final let seriesGrouper: SampleGrouper?
+	private final let pointGrouper: SampleGrouper?
+	private final let xAxis: AttributeOrInformation!
+	private final let yAxis: [AttributeOrInformation]
+	// leaving this as public only for testing purposes
+	public final var usePointGroupValueForXAxis: Bool
+
+	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "SingleSampleTypeXYGraphCreationPerformance"))
+	private final let log = Log()
+
+	// MARK: - Initializers
+
+	public init(
+		seriesGrouper: SampleGrouper?,
+		pointGrouper: SampleGrouper?,
+		xAxis: AttributeOrInformation?,
+		yAxis: [AttributeOrInformation],
+		usePointGroupValueForXAxis: Bool)
+	{
+		self.seriesGrouper = seriesGrouper
+		self.pointGrouper = pointGrouper
+		self.xAxis = xAxis
+		self.yAxis = yAxis
+		self.usePointGroupValueForXAxis = usePointGroupValueForXAxis
+		super.init(signpost: signpost, log: log)
+	}
+
+	// MARK: - Public Functions
+
+	public final func generateData(samples: [Sample]) throws -> GraphData {
+		var allData = GraphData()
+
+		if let seriesGrouper = seriesGrouper {
+			signpost.begin(name: "Grouping samples for series", "Grouping %d samples", samples.count)
+			let seriesGroups = try seriesGrouper.group(samples: samples)
+			signpost.end(name: "Grouping samples for series", "Grouped %d samples into %d groups", samples.count, seriesGroups.count)
+			for (groupValue, samples) in seriesGroups {
+				let groupName = try seriesGrouper.groupNameFor(value: groupValue)
+				try addData(to: &allData, for: samples, as: groupName)
+			}
+		} else {
+			try addData(to: &allData, for: samples)
+		}
+
+		return allData
+	}
+
+	// MARK: - Helper Functions
+
+	private final func addData(
+		to allData: inout GraphData,
+		for samples: [Sample],
+		as groupName: String? = nil)
+	throws {
+		if let pointGrouper = pointGrouper {
+			let groups = try pointGrouper.group(samples: samples)
+			allData.append(contentsOf: try getDataFor(groups: groups, groupedBy: pointGrouper, as: groupName))
+		} else {
+			for yAttribute in yAxis.map({ $0.attribute! }) {
+				let data = try getSeriesDataFor(yAttribute, from: samples)
+				var name = yAttribute.name
+				if let groupName = groupName {
+					name = "\(groupName): \(name)"
+				}
+				allData.append(AASeriesElement()
+					.name(name)
+					.data(data)
+					.toDic()!)
+			}
+		}
+	}
+
+	private final func getSeriesDataFor(_ yAttribute: Attribute, from samples: [Sample]) throws -> [[Any]] {
+		let filteredSamples = try samples.filter{
+			let xValue = try $0.graphableValue(of: self.xAxis.attribute!)
+			if xValue == nil { return false }
+			let yValue = try! $0.graphableValue(of: yAttribute)
+			return yValue != nil
+		}
+		return try filteredSamples.map{ (sample: Sample) -> [Any] in
+			let rawXValue = try sample.graphableValue(of: self.xAxis.attribute!)
+			var xValue: Any = rawXValue as Any
+			if !(xAxis.attribute is NumericAttribute) {
+				xValue = try self.xAxis.attribute!.convertToDisplayableString(from: rawXValue)
+			}
+			return [xValue, try sample.graphableValue(of: yAttribute) as Any]
+		}
+	}
+
+	private final func getDataFor(
+		groups: [(Any, [Sample])],
+		groupedBy grouper: SampleGrouper,
+		as groupName: String? = nil)
+	throws
+	-> GraphData {
+		let xValues: [(groupValue: Any, sampleValue: String)]
+		if usePointGroupValueForXAxis {
+			xValues = try groups.map{ (groupValue: $0.0, sampleValue: try grouper.groupNameFor(value: $0.0)) }
+		} else {
+			xValues = try transform(sampleGroups: groups, information: xAxis.information!)
+		}
+		let sortedXValues = getSortedXValues(xValues)
+
+		return try getSeriesDataForYInformation(
+			yAxis.map{ $0.information! },
+			fromGroups: groups,
+			groupedBy: grouper,
+			withGroupName: groupName,
+			sortedXValues: sortedXValues)
+	}
+}

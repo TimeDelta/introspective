@@ -24,18 +24,6 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		return customPresenter
 	}()
 
-	// MARK: - Structs
-
-	private struct Groupers {
-		var x: SampleGrouper
-		var y: SampleGrouper
-
-		init(x: SampleGrouper, y: SampleGrouper) {
-			self.x = x
-			self.y = y
-		}
-	}
-
 	// MARK: - IBOutlets
 
 	@IBOutlet weak final var chooseXAxisSampleTypeButton: UIButton!
@@ -70,11 +58,11 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		didSet { yAxisQuerySet() }
 	}
 	private final var seriesGrouperAttributeType: String?
-	private final var seriesGroupers: Groupers? {
+	private final var seriesGroupers: MultipleSampleTypeXYGraphDataGenerator.Groupers? {
 		didSet { seriesGrouperSet() }
 	}
 	private final var pointGrouperAttributeType: String?
-	private final var pointGroupers: Groupers? {
+	private final var pointGroupers: MultipleSampleTypeXYGraphDataGenerator.Groupers? {
 		didSet { pointGrouperSet() }
 	}
 	private final var usePointGroupValueForXAxis = false
@@ -88,7 +76,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	private final var yAxisSamples: [Sample]! { didSet { samplesAssigned() } }
 	private final var chartController: BasicXYChartViewController!
 
-	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "MultiplSampleTypeGraphCreationPerformance"))
+	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "MultipleSampleTypeBasicXYGraphCustomizationViewController"))
 	private final let log = Log()
 
 	// MARK: - UIViewController Overloads
@@ -245,7 +233,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			let yGrouper: SampleGrouper? = value(for: .y, from: notification),
 			let currentAttributeType: String? = value(for: .attribute, from: notification)
 		{
-			seriesGroupers = Groupers(x: xGrouper!, y: yGrouper!)
+			seriesGroupers = MultipleSampleTypeXYGraphDataGenerator.Groupers(x: xGrouper!, y: yGrouper!)
 			seriesGrouperAttributeType = currentAttributeType
 		}
 	}
@@ -257,7 +245,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			let yGrouper: SampleGrouper? = value(for: .y, from: notification),
 			let currentAttributeType: String? = value(for: .attribute, from: notification)
 		{
-			pointGroupers = Groupers(x: xGrouper!, y: yGrouper!)
+			pointGroupers = MultipleSampleTypeXYGraphDataGenerator.Groupers(x: xGrouper!, y: yGrouper!)
 			pointGrouperAttributeType = currentAttributeType
 		}
 	}
@@ -374,228 +362,33 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			return
 		}
 
-		signpost.begin(name: "Update Chart Data", "Number of samples: (x-axis: %d, y-axis: %d)", xAxisSamples.count, yAxisSamples.count)
+		signpost.begin(
+			name: "Update Chart Data", "Number of samples: (x-axis: %d, y-axis: %d)",
+			xAxisSamples.count,
+			yAxisSamples.count)
 
-		var allData = [Dictionary<String, Any>]()
-
-		if let seriesGroupers = seriesGroupers {
-			signpost.begin(name: "Grouping x-axis samples for series", "Grouping %d samples", xAxisSamples.count)
-			let xAxisSeriesGroups = try seriesGroupers.x.group(samples: xAxisSamples)
-			signpost.end(
-				name: "Grouping x-axis samples for series",
-				"Grouped %d samples into %d groups",
-				xAxisSamples.count,
-				xAxisSeriesGroups.count)
-			signpost.begin(name: "Grouping y-axis samples for series", "Grouping %d samples", yAxisSamples.count)
-			let yAxisSeriesGroups = try seriesGroupers.y.group(samples: yAxisSamples)
-			signpost.end(
-				name: "Grouping y-axis samples for series",
-				"Grouped %d samples into %d groups",
-				yAxisSamples.count,
-				yAxisSeriesGroups.count)
-			for (xGroupValue, xSamples) in xAxisSeriesGroups {
-				let correspondingYAxisSeriesGroupIndex = try yAxisSeriesGroups.firstIndex{ (yGroupValue, _) -> Bool in
-					return try seriesGroupers.x.groupValuesAreEqual(xGroupValue, yGroupValue)
-				}
-				if let correspondingYAxisSeriesGroupIndex = correspondingYAxisSeriesGroupIndex {
-					let ySamples = yAxisSeriesGroups[correspondingYAxisSeriesGroupIndex].1
-					let groupName = try seriesGroupers.x.groupNameFor(value: xGroupValue)
-					try addData(to: &allData, forX: xSamples, andY: ySamples, as: groupName)
-				}
-			}
-		} else {
-			try addData(to: &allData, forX: xAxisSamples, andY: yAxisSamples)
+		guard let yInformation = yAxisInformation else {
+			throw GenericDisplayableError(title: "Must choose y-axis information")
 		}
 
-		DispatchQueue.main.async {
-			self.chartController.dataSeries = allData
-		}
-	}
-
-	private final func addData(
-		to allData: inout [Dictionary<String, Any>],
-		forX xSamples: [Sample],
-		andY ySamples: [Sample],
-		as groupName: String? = nil)
-	throws {
 		guard let pointGroupers = pointGroupers else {
 			throw GenericDisplayableError(
 				title: "Unable to graph",
 				description: "Must choose point grouping or there is no way to correlate x-axis to y-axis")
 		}
-		guard let yAxisInformation = yAxisInformation else {
-			throw GenericDisplayableError(title: "Must choose y-axis information")
-		}
-		self.signpost.begin(name: "Grouping x-axis samples", "Grouping %d samples", xSamples.count)
-		let xGroups = try pointGroupers.x.group(samples: xSamples)
-		self.signpost.end(name: "Grouping x-axis samples", "Grouped %d samples into %d groups", xSamples.count, xGroups.count)
-		let xValues: [(groupValue: Any, sampleValue: String)]
-		if usePointGroupValueForXAxis {
-			xValues = try xGroups.map{ (groupValue: $0.0, sampleValue: try pointGroupers.x.groupNameFor(value: $0.0)) }
-		} else {
-			xValues = try transform(sampleGroups: xGroups, information: xAxisInformation!)
-		}
-		let xValuesAreNumbers = areAllNumbers(xValues.map{ $0.sampleValue })
-		var sortedXValues = xValues
-		// if x values are numbers and are not sorted, graph will look very weird
-		if xValuesAreNumbers {
-			sortedXValues = sortXValuesByNumber(xValues)
-		} else if areAllDates(xValues.map{ $0.sampleValue }) {
-			sortedXValues = sortXValuesByDate(xValues)
-		} else if areAllDaysOfWeek(xValues.map{ $0.sampleValue }) {
-			sortedXValues = sortXValuesByDayOfWeek(xValues)
-		}
 
-		self.signpost.begin(name: "Grouping y-axis samples", "Grouping %d samples", ySamples.count)
-		let yGroups = try pointGroupers.y.group(samples: ySamples)
-		self.signpost.end(name: "Grouping x-axis samples", "Grouped %d samples into %d groups", ySamples.count, yGroups.count)
-
-		for yInformation in yAxisInformation {
-			var seriesData = [[Any]]()
-			let yValues = try transform(sampleGroups: yGroups, information: yInformation)
-			for (xGroupValue, xSampleValue) in sortedXValues { // loop over x values so that series data is already sorted
-				if let yValueIndex = index(ofValue: xGroupValue, in: yValues, groupedBy: pointGroupers.x) {
-					let yValue = yValues[yValueIndex].sampleValue
-					var xValue: Any = xSampleValue
-					if xValuesAreNumbers {
-						xValue = Double(formatNumber(xSampleValue))!
-					}
-					seriesData.append([xValue, Double(formatNumber(yValue))!])
-				}
-			}
-			var name = yInformation.description.localizedCapitalized
-			if let groupName = groupName {
-				name = "\(groupName): \(name)"
-			}
-			allData.append(AASeriesElement()
-				.name(name)
-				.data(seriesData)
-				.toDic()!)
-		}
+		let dataGenerator = MultipleSampleTypeXYGraphDataGenerator(
+			seriesGroupers: seriesGroupers,
+			pointGroupers: pointGroupers,
+			xInformation: xAxisInformation,
+			yInformation: yInformation,
+			usePointGroupValueForXAxis: usePointGroupValueForXAxis)
+		// leave this outside of DispatchQueue.main.async because it can take a while
+		let allData = try dataGenerator.generateData(xSamples: xAxisSamples, ySamples: yAxisSamples)
 
 		DispatchQueue.main.async {
-			self.chartController.displayXAxisValueLabels = xValuesAreNumbers
+			self.chartController.dataSeries = allData
 		}
-	}
-
-	private final func index(
-		ofValue value: Any,
-		in groupValues: [(groupValue: Any, sampleValue: String)],
-		groupedBy grouper: SampleGrouper)
-	-> Int? {
-		return groupValues.index(where: {
-			do {
-				return try grouper.groupValuesAreEqual($0.groupValue, value)
-			} catch {
-				self.log.error(
-					"Failed to test for value equality between '%@' and '%@': %@",
-					String(describing: $0.groupValue),
-					String(describing: value),
-					errorInfo(error))
-					return false
-			}
-		})
-	}
-
-	private final func transform(sampleGroups: [(Any, [Sample])], information: ExtraInformation)
-	throws -> [(groupValue: Any, sampleValue: String)] {
-		signpost.begin(name: "Transform", "Number of sample groups: %d", sampleGroups.count)
-		var values = [(groupValue: Any, sampleValue: String)]()
-		for (groupValue, samples) in sampleGroups {
-			let sampleValue = try information.computeGraphable(forSamples: samples)
-			values.append((groupValue: groupValue, sampleValue: sampleValue))
-		}
-		signpost.end(name: "Transform", "Finished transforming %d groups", sampleGroups.count)
-		return values
-	}
-
-	private final func areAllNumbers(_ values: [String]) -> Bool {
-		signpost.begin(name: "Are all numbers", "Checking if %d values are all numbers", values.count)
-		for value in values {
-			if !DependencyInjector.util.string.isNumber(value) {
-				signpost.end(name: "Are all numbers", "Finished checking if %d values are all numbers", values.count)
-				return false
-			}
-		}
-		signpost.end(name: "Are all numbers", "Finished checking if %d values are all numbers", values.count)
-		return true
-	}
-
-	private final func areAllDates(_ values: [String]) -> Bool {
-		signpost.begin(name: "Are all dates", "Checking if %d values are all dates", values.count)
-		for value in values {
-			let date = getDate(value)
-			if date == nil {
-				signpost.end(name: "Are all dates", "Finished checking if %d values are all dates", values.count)
-				return false
-			}
-		}
-		signpost.end(name: "Are all dates", "Finished checking if %d values are all dates", values.count)
-		return true
-	}
-
-	private final func areAllDaysOfWeek(_ values: [String]) -> Bool {
-		signpost.begin(name: "Are all days of week", "Checking if %d values are all days of week", values.count)
-		for value in values {
-			if !DayOfWeek.isDayOfWeek(value) {
-				signpost.end(
-					name: "Are all days of week",
-					"Finished checking if %d values are all days of week",
-					values.count)
-				return false
-			}
-		}
-		signpost.end(
-			name: "Are all days of week",
-			"Finished checking if %d values are all days of week",
-			values.count)
-		return true
-	}
-
-	private final func sortXValuesByNumber(_ xValues: [(groupValue: Any, sampleValue: String)])
-	-> [(groupValue: Any, sampleValue: String)] {
-		let sortedXValues: [(groupValue: Any, sampleValue: String)]
-		signpost.begin(name: "Sort x values as numbers", "Number of x values: %d", xValues.count)
-		sortedXValues = xValues.sorted(by: { Double($0.sampleValue)! < Double($1.sampleValue)! })
-		signpost.end(name: "Sort x values as numbers")
-		return sortedXValues
-	}
-
-	/// - Precondition: All sample values are valid date strings
-	private final func sortXValuesByDate(_ xValues: [(groupValue: Any, sampleValue: String)])
-	-> [(groupValue: Any, sampleValue: String)] {
-		let sortedXValues: [(groupValue: Any, sampleValue: String)]
-		signpost.begin(name: "Sort x values as dates", "Number of x values: %d", xValues.count)
-		sortedXValues = xValues.sorted(by: { getDate($0.sampleValue)! < getDate($1.sampleValue)! })
-		signpost.end(name: "Sort x values as dates")
-		return sortedXValues
-	}
-
-	private final func sortXValuesByDayOfWeek(_ xValues: [(groupValue: Any, sampleValue: String)])
-	-> [(groupValue: Any, sampleValue: String)] {
-		let sortedXValues: [(groupValue: Any, sampleValue: String)]
-		signpost.begin(name: "Sort x values as days of week", "Number of x values: %d", xValues.count)
-		sortedXValues = xValues.sorted(by: {
-			let day1 = try! DayOfWeek.fromString($0.sampleValue)
-			let day2 = try! DayOfWeek.fromString($1.sampleValue)
-			return day1 < day2
-		})
-		signpost.end(name: "Sort x values as days of week")
-		return sortedXValues
-	}
-
-	private final func formatNumber(_ value: String) -> String {
-		var copiedValue = value
-		if let decimalIndex = value.index(where: { $0 == "." }) {
-			if let lastCharIndex = copiedValue.index(decimalIndex, offsetBy: 3, limitedBy: value.endIndex) {
-				copiedValue.removeSubrange(lastCharIndex ..< value.endIndex)
-			}
-		}
-		return copiedValue
-	}
-
-	private final func getDate(_ value: String) -> Date? {
-		return DependencyInjector.util.calendar.date(from: value)
 	}
 
 	// MARK: Did Set Functions

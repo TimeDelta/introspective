@@ -13,18 +13,6 @@ import os
 
 final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGraphTypeSetupViewController {
 
-	// MARK: - Enums / Structs
-
-	private struct AttributeOrInformation {
-		fileprivate var attribute: Attribute?
-		fileprivate var information: ExtraInformation?
-
-		fileprivate init(attribute: Attribute? = nil, information: ExtraInformation? = nil) {
-			self.attribute = attribute
-			self.information = information
-		}
-	}
-
 	// MARK: - Static Variables
 
 	private typealias Me = SingleSampleTypeBasicXYGraphCustomizationViewController
@@ -55,10 +43,10 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		didSet { querySet() }
 	}
 	private final var usePointGroupValueForXAxis = false
-	private final var xAxis: AttributeOrInformation! {
+	private final var xAxis: SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation? {
 		didSet { xAxisSet() }
 	}
-	private final var yAxis: [AttributeOrInformation]! {
+	private final var yAxis: [SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation]! {
 		didSet { yAxisSet() }
 	}
 	private final var seriesGrouper: SampleGrouper? {
@@ -75,7 +63,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	}
 	private final var chartController: BasicXYChartViewController!
 
-	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "SingleSampleTypeGraphCreationPerformance"))
+	private final let signpost = Signpost(log: OSLog(subsystem: Bundle.main.bundleIdentifier!, category: "SingleSampleTypeBasicXYGraphCustomizationViewController"))
 	private final let log = Log()
 
 	// MARK: - UIViewController Overrides
@@ -230,10 +218,10 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	@objc private final func xAxisChanged(notification: Notification) {
 		if let attribute: Attribute? = value(for: .attribute, from: notification, keyIsOptional: true) {
 			usePointGroupValueForXAxis = false
-			xAxis = AttributeOrInformation(attribute: attribute)
+			xAxis = SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(attribute: attribute)
 		} else if let information: ExtraInformation? = value(for: .information, from: notification, keyIsOptional: true) {
 			usePointGroupValueForXAxis = false
-			xAxis = AttributeOrInformation(information: information)
+			xAxis = SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(information: information)
 		} else if let usePointGroupValue: Bool = value(for: .usePointGroupValue, from: notification) {
 			usePointGroupValueForXAxis = usePointGroupValue
 			xAxis = nil
@@ -244,9 +232,9 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 
 	@objc private final func yAxisChanged(notification: Notification) {
 		if let attributes: [Attribute] = value(for: .attributes, from: notification, keyIsOptional: true) {
-			yAxis = attributes.map{ AttributeOrInformation(attribute: $0) }
+			yAxis = attributes.map{ SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(attribute: $0) }
 		} else if let information: [ExtraInformation] = value(for: .information, from: notification, keyIsOptional: true) {
-			yAxis = information.map{ AttributeOrInformation(information: $0) }
+			yAxis = information.map{ SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(information: $0) }
 		} else {
 			yAxis = nil
 		}
@@ -256,10 +244,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 
 	private final func updateShowGraphButtonState() {
 		showGraphButton.isEnabled =
-			(
-				(xAxis != nil && (xAxis.attribute != nil || xAxis.information != nil)) ||
-				usePointGroupValueForXAxis
-			) &&
+			(xAxis?.attribute != nil || xAxis?.information != nil || usePointGroupValueForXAxis) &&
 			yAxis != nil &&
 			!yAxis.isEmpty
 		showGraphButton.backgroundColor = showGraphButton.isEnabled ? .black : .gray
@@ -296,267 +281,19 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	private final func updateChartData(_ samples: [Sample]) throws {
 		signpost.begin(name: "Update Chart Data", "Number of samples: %d", samples.count)
 
-		var allData = [Dictionary<String, Any>]()
+		let dataGenerator = SingleSampleTypeXYGraphDataGenerator(
+			seriesGrouper: seriesGrouper,
+			pointGrouper: pointGrouper,
+			xAxis: xAxis,
+			yAxis: yAxis,
+			usePointGroupValueForXAxis: usePointGroupValueForXAxis)
 
-		if let seriesGrouper = seriesGrouper {
-			signpost.begin(name: "Grouping samples for series", "Grouping %d samples", samples.count)
-			let seriesGroups = try seriesGrouper.group(samples: samples)
-			signpost.end(name: "Grouping samples for series", "Grouped %d samples into %d groups", samples.count, seriesGroups.count)
-			for (groupValue, samples) in seriesGroups {
-				let groupName = try seriesGrouper.groupNameFor(value: groupValue)
-				try addData(to: &allData, for: samples, as: groupName)
-			}
-		} else {
-			try addData(to: &allData, for: samples)
-		}
+		// leave this outside of DispatchQueue.main.async because it can take a while
+		let allData = try dataGenerator.generateData(samples: samples)
 
 		DispatchQueue.main.async {
 			self.chartController.dataSeries = allData
 		}
-	}
-
-	private final func addData(
-		to allData: inout [Dictionary<String, Any>],
-		for samples: [Sample],
-		as groupName: String? = nil)
-	throws {
-		if let pointGrouper = pointGrouper {
-			let groups = try pointGrouper.group(samples: samples)
-			allData.append(contentsOf: try getDataFor(groups: groups, groupedBy: pointGrouper, as: groupName))
-		} else {
-			let xValuesAreNumbers = xAxis.attribute is NumericAttribute
-			for yAttribute in yAxis.map({ $0.attribute! }) {
-				let data = try getSeriesDataFor(yAttribute, from: samples)
-				var name = yAttribute.name
-				if let groupName = groupName {
-					name = "\(groupName): \(name)"
-				}
-				allData.append(AASeriesElement()
-					.name(name)
-					.data(data)
-					.toDic()!)
-			}
-
-			DispatchQueue.main.async {
-				self.chartController.displayXAxisValueLabels = xValuesAreNumbers
-			}
-		}
-	}
-
-	private final func getSeriesDataFor(_ yAttribute: Attribute, from samples: [Sample]) throws -> [[Any]] {
-		let filteredSamples = try samples.filter{
-			let xValue = try $0.graphableValue(of: self.xAxis.attribute!)
-			if xValue == nil { return false }
-			let yValue = try! $0.graphableValue(of: yAttribute)
-			return yValue != nil
-		}
-		return try filteredSamples.map{ (sample: Sample) -> [Any] in
-			let rawXValue = try sample.graphableValue(of: self.xAxis.attribute!)
-			var xValue: Any = rawXValue as Any
-			if !(xAxis.attribute is NumericAttribute) {
-				xValue = try self.xAxis.attribute!.convertToDisplayableString(from: rawXValue)
-			}
-			return [xValue, try sample.graphableValue(of: yAttribute) as Any]
-		}
-	}
-
-	private final func getDataFor(
-		groups: [(Any, [Sample])],
-		groupedBy grouper: SampleGrouper,
-		as groupName: String? = nil)
-	throws
-	-> [Dictionary<String, Any>] {
-		let xValues: [(groupValue: Any, sampleValue: String)]
-		if usePointGroupValueForXAxis {
-			xValues = try groups.map{ (groupValue: $0.0, sampleValue: try grouper.groupNameFor(value: $0.0)) }
-		} else {
-			xValues = try transform(sampleGroups: groups, information: xAxis.information!)
-		}
-		let xValuesAreNumbers = areAllNumbers(xValues.map{ $0.sampleValue })
-		var sortedXValues = xValues
-		// if x values are numbers and are not sorted, graph will look very weird
-		if xValuesAreNumbers {
-			sortedXValues = sortXValuesByNumber(xValues)
-		} else if areAllDates(xValues.map{ $0.sampleValue }) {
-			sortedXValues = sortXValuesByDate(xValues)
-		} else if areAllDaysOfWeek(xValues.map{ $0.sampleValue }) {
-			sortedXValues = sortXValuesByDayOfWeek(xValues)
-		}
-
-		var allData = [Dictionary<String, Any>]()
-		for yInformation in yAxis.map({ $0.information! }) {
-			var seriesData = [[Any]]()
-			let yValues = try transform(sampleGroups: groups, information: yInformation)
-			for (xGroupValue, xSampleValue) in sortedXValues { // loop over x values so that series data is already sorted
-				if let yValueIndex = index(ofValue: xGroupValue, in: yValues, groupedBy: grouper) {
-					let yValue = yValues[yValueIndex].sampleValue
-					var xValue: Any = xSampleValue
-					if xValuesAreNumbers {
-						xValue = Double(formatNumber(xSampleValue))!
-					}
-					seriesData.append([xValue, Double(formatNumber(yValue))!])
-				}
-			}
-			var name = yInformation.description.localizedCapitalized
-			if let groupName = groupName {
-				name = "\(groupName): \(name)"
-			}
-			allData.append(AASeriesElement()
-				.name(name)
-				.data(seriesData)
-				.toDic()!)
-		}
-
-		DispatchQueue.main.async {
-			self.chartController.displayXAxisValueLabels = xValuesAreNumbers
-		}
-
-		return allData
-	}
-
-	private final func index(
-		ofValue value: Any,
-		in groupValues: [(groupValue: Any, sampleValue: String)],
-		groupedBy grouper: SampleGrouper)
-	-> Int? {
-		return groupValues.index(where: {
-			do {
-				return try grouper.groupValuesAreEqual($0.groupValue, value)
-			} catch {
-				self.log.error(
-					"Failed to test for value equality between '%@' and '%@': %@",
-					String(describing: $0.groupValue),
-					String(describing: value),
-					errorInfo(error))
-					return false
-			}
-		})
-	}
-
-	private final func transform(sampleGroups: [(Any, [Sample])], information: ExtraInformation)
-	throws -> [(groupValue: Any, sampleValue: String)] {
-		signpost.begin(name: "Transform", "Number of sample groups: %d", sampleGroups.count)
-		var values = [(groupValue: Any, sampleValue: String)]()
-		for (groupValue, samples) in sampleGroups {
-			let sampleValue = try information.computeGraphable(forSamples: samples)
-			values.append((groupValue: groupValue, sampleValue: sampleValue))
-		}
-		signpost.end(name: "Transform", "Finished transforming %d groups", sampleGroups.count)
-		return values
-	}
-
-	private final func areAllNumbers(_ values: [String]) -> Bool {
-		signpost.begin(name: "Are all numbers", "Checking if %d values are all numbers", values.count)
-		for value in values {
-			if !DependencyInjector.util.string.isNumber(value) {
-				signpost.end(name: "Are all numbers", "Finished checking if %d values are all numbers", values.count)
-				return false
-			}
-		}
-		signpost.end(name: "Are all numbers", "Finished checking if %d values are all numbers", values.count)
-		return true
-	}
-
-	private final func areAllDates(_ values: [String]) -> Bool {
-		signpost.begin(name: "Are all dates", "Checking if %d values are all dates", values.count)
-		for value in values {
-			let date = getDate(value)
-			if date == nil {
-				signpost.end(name: "Are all dates", "Finished checking if %d values are all dates", values.count)
-				return false
-			}
-		}
-		signpost.end(name: "Are all dates", "Finished checking if %d values are all dates", values.count)
-		return true
-	}
-
-	private final func areAllDaysOfWeek(_ values: [String]) -> Bool {
-		signpost.begin(name: "Are all days of week", "Checking if %d values are all days of week", values.count)
-		for value in values {
-			if !DayOfWeek.isDayOfWeek(value) {
-				signpost.end(
-					name: "Are all days of week",
-					"Finished checking if %d values are all days of week",
-					values.count)
-				return false
-			}
-		}
-		signpost.end(
-			name: "Are all days of week",
-			"Finished checking if %d values are all days of week",
-			values.count)
-		return true
-	}
-
-	private final func formatNumber(_ value: String) -> String {
-		var copiedValue = value
-		if let decimalIndex = value.index(where: { $0 == "." }) {
-			if let lastCharIndex = copiedValue.index(decimalIndex, offsetBy: 3, limitedBy: value.endIndex) {
-				copiedValue.removeSubrange(lastCharIndex ..< value.endIndex)
-			}
-		}
-		return copiedValue
-	}
-
-	private final func getDate(_ value: String) -> Date? {
-		return DependencyInjector.util.calendar.date(from: value)
-	}
-
-	/// - Precondition: Samples array is not empty and no samples have invalid or nil value for given attribute
-	private final func sortSamples(_ samples: [Sample], by attribute: Attribute) throws -> [Sample] {
-		signpost.begin(name: "Sort samples", "Sorting %d sample by %@", samples.count, attribute.name)
-		let sortedSamples = try samples.sorted(by: {
-			if let attribute = attribute as? DoubleAttribute {
-				let first = try $0.graphableValue(of: attribute) as! Double
-				let second = try $1.graphableValue(of: attribute) as! Double
-				return first < second
-			}
-			if let attribute = attribute as? IntegerAttribute {
-				let first = try $0.graphableValue(of: attribute) as! Int
-				let second = try $1.graphableValue(of: attribute) as! Int
-				return first < second
-			}
-			if let attribute = attribute as? DateAttribute {
-				let first = try $0.graphableValue(of: attribute) as! Date
-				let second = try $1.graphableValue(of: attribute) as! Date
-				return first < second
-			}
-			return true
-		})
-		signpost.end(name: "Sort samples")
-		return sortedSamples
-	}
-
-	private final func sortXValuesByNumber(_ xValues: [(groupValue: Any, sampleValue: String)])
-	-> [(groupValue: Any, sampleValue: String)] {
-		let sortedXValues: [(groupValue: Any, sampleValue: String)]
-		signpost.begin(name: "Sort x values as numbers", "Number of x values: %d", xValues.count)
-		sortedXValues = xValues.sorted(by: { Double($0.sampleValue)! < Double($1.sampleValue)! })
-		signpost.end(name: "Sort x values as numbers")
-		return sortedXValues
-	}
-
-	/// - Precondition: All sample values are valid date strings
-	private final func sortXValuesByDate(_ xValues: [(groupValue: Any, sampleValue: String)])
-	-> [(groupValue: Any, sampleValue: String)] {
-		let sortedXValues: [(groupValue: Any, sampleValue: String)]
-		signpost.begin(name: "Sort x values as dates", "Number of x values: %d", xValues.count)
-		sortedXValues = xValues.sorted(by: { getDate($0.sampleValue)! < getDate($1.sampleValue)! })
-		signpost.end(name: "Sort x values as dates")
-		return sortedXValues
-	}
-
-	private final func sortXValuesByDayOfWeek(_ xValues: [(groupValue: Any, sampleValue: String)])
-	-> [(groupValue: Any, sampleValue: String)] {
-		let sortedXValues: [(groupValue: Any, sampleValue: String)]
-		signpost.begin(name: "Sort x values as days of week", "Number of x values: %d", xValues.count)
-		sortedXValues = xValues.sorted(by: {
-			let day1 = try! DayOfWeek.fromString($0.sampleValue)
-			let day2 = try! DayOfWeek.fromString($1.sampleValue)
-			return day1 < day2
-		})
-		signpost.end(name: "Sort x values as days of week")
-		return sortedXValues
 	}
 
 	private final func showGrouperEditController(
@@ -593,9 +330,9 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			} else {
 				xAxisButton.setTitle("Choose x-axis information", for: .normal)
 			}
-		} else if let attribute = xAxis.attribute {
+		} else if let attribute = xAxis?.attribute {
 			xAxisButton.setTitle("X-Axis: " + attribute.name.localizedLowercase, for: .normal)
-		} else if let information = xAxis.information {
+		} else if let information = xAxis?.information {
 			xAxisButton.setTitle("X-Axis: " + information.description.localizedLowercase, for: .normal)
 		}
 		xAxisButton.accessibilityValue = xAxisButton.currentTitle
