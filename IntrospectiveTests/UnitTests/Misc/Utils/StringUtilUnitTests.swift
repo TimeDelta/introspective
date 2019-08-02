@@ -18,6 +18,8 @@ class StringUtilUnitTests: UnitTest {
 		util = StringUtilImpl()
 	}
 
+	// MARK: - isNumber()
+
 	func testGivenEmptyString_isNumber_returnsFalse() {
 		// given
 		let str = ""
@@ -149,6 +151,8 @@ class StringUtilUnitTests: UnitTest {
 		// then
 		XCTAssert(isNumber)
 	}
+
+	// MARK: - isInteger()
 
 	func testGivenEmptyString_isInteger_returnsFalse() {
 		// given

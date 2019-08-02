@@ -15,12 +15,12 @@ public class XYGraphDataGenerator {
 
 	// MARK: - Instance Variables
 
-	private final let signpost: Signpost
+	private final let signpost: Signpost?
 	private final let log: Log
 
 	// MARK: - Initializers
 
-	init(signpost: Signpost, log: Log) {
+	init(signpost: Signpost? = nil, log: Log) {
 		self.signpost = signpost
 		self.log = log
 	}
@@ -28,42 +28,42 @@ public class XYGraphDataGenerator {
 	// MARK: - Are All _
 
 	final func areAllNumbers(_ values: [String]) -> Bool {
-		signpost.begin(name: "Are all numbers", "Checking if %d values are all numbers", values.count)
+		signpost?.begin(name: "Are all numbers", "Checking if %d values are all numbers", values.count)
 		for value in values {
 			if !DependencyInjector.util.string.isNumber(value) {
-				signpost.end(name: "Are all numbers", "Finished checking if %d values are all numbers", values.count)
+				signpost?.end(name: "Are all numbers", "Finished checking if %d values are all numbers", values.count)
 				return false
 			}
 		}
-		signpost.end(name: "Are all numbers", "Finished checking if %d values are all numbers", values.count)
+		signpost?.end(name: "Are all numbers", "Finished checking if %d values are all numbers", values.count)
 		return true
 	}
 
 	final func areAllDates(_ values: [String]) -> Bool {
-		signpost.begin(name: "Are all dates", "Checking if %d values are all dates", values.count)
+		signpost?.begin(name: "Are all dates", "Checking if %d values are all dates", values.count)
 		for value in values {
 			let date = getDate(value)
 			if date == nil {
-				signpost.end(name: "Are all dates", "Finished checking if %d values are all dates", values.count)
+				signpost?.end(name: "Are all dates", "Finished checking if %d values are all dates", values.count)
 				return false
 			}
 		}
-		signpost.end(name: "Are all dates", "Finished checking if %d values are all dates", values.count)
+		signpost?.end(name: "Are all dates", "Finished checking if %d values are all dates", values.count)
 		return true
 	}
 
 	final func areAllDaysOfWeek(_ values: [String]) -> Bool {
-		signpost.begin(name: "Are all days of week", "Checking if %d values are all days of week", values.count)
+		signpost?.begin(name: "Are all days of week", "Checking if %d values are all days of week", values.count)
 		for value in values {
 			if !DayOfWeek.isDayOfWeek(value) {
-				signpost.end(
+				signpost?.end(
 					name: "Are all days of week",
 					"Finished checking if %d values are all days of week",
 					values.count)
 				return false
 			}
 		}
-		signpost.end(
+		signpost?.end(
 			name: "Are all days of week",
 			"Finished checking if %d values are all days of week",
 			values.count)
@@ -73,13 +73,13 @@ public class XYGraphDataGenerator {
 	// MARK: - Sorting
 
 	final func getSortedXValues(_ xValues: [(groupValue: Any, sampleValue: String)]) -> [(groupValue: Any, sampleValue: Any)] {
-		let xValuesAreNumbers = areAllNumbers(xValues.map{ $0.sampleValue })
+		let values = xValues.map{ $0.sampleValue }
 		// if x values are numbers and are not sorted, graph will look very weird
-		if xValuesAreNumbers {
+		if areAllNumbers(values) {
 			return sortXValuesByNumber(xValues)
-		} else if areAllDates(xValues.map{ $0.sampleValue }) {
+		} else if areAllDates(values) {
 			return sortXValuesByDate(xValues)
-		} else if areAllDaysOfWeek(xValues.map{ $0.sampleValue }) {
+		} else if areAllDaysOfWeek(values) {
 			return sortXValuesByDayOfWeek(xValues)
 		}
 		return xValues.map{ (groupValue: $0.groupValue, sampleValue: $0.sampleValue as Any) }
@@ -89,13 +89,13 @@ public class XYGraphDataGenerator {
 	-> [(groupValue: Any, sampleValue: Any)] {
 		let sortedXValues: [(groupValue: Any, sampleValue: Any)]
 		let mappedXValues = xValues.map{ (groupValue: $0.groupValue, sampleValue: Double(formatNumber($0.sampleValue))!) }
-		signpost.begin(name: "Sort x values as numbers", "Number of x values: %d", xValues.count)
+		signpost?.begin(name: "Sort x values as numbers", "Number of x values: %d", xValues.count)
 		sortedXValues = mappedXValues.sorted{
 			$0.sampleValue < $1.sampleValue
 		}.map{
 			(groupValue: $0.groupValue, sampleValue: $0.sampleValue as Any)
 		}
-		signpost.end(name: "Sort x values as numbers")
+		signpost?.end(name: "Sort x values as numbers")
 		return sortedXValues
 	}
 
@@ -103,20 +103,20 @@ public class XYGraphDataGenerator {
 	final func sortXValuesByDate(_ xValues: [(groupValue: Any, sampleValue: String)])
 	-> [(groupValue: Any, sampleValue: Any)] {
 		let sortedXValues: [(groupValue: Any, sampleValue: Any)]
-		signpost.begin(name: "Sort x values as dates", "Number of x values: %d", xValues.count)
+		signpost?.begin(name: "Sort x values as dates", "Number of x values: %d", xValues.count)
 		sortedXValues = xValues.sorted{
 			getDate($0.sampleValue)! < getDate($1.sampleValue)!
 		}.map{
 			(groupValue: $0.groupValue, sampleValue: $0.sampleValue as Any)
 		}
-		signpost.end(name: "Sort x values as dates")
+		signpost?.end(name: "Sort x values as dates")
 		return sortedXValues
 	}
 
 	final func sortXValuesByDayOfWeek(_ xValues: [(groupValue: Any, sampleValue: String)])
 	-> [(groupValue: Any, sampleValue: Any)] {
 		let sortedXValues: [(groupValue: Any, sampleValue: Any)]
-		signpost.begin(name: "Sort x values as days of week", "Number of x values: %d", xValues.count)
+		signpost?.begin(name: "Sort x values as days of week", "Number of x values: %d", xValues.count)
 		sortedXValues = xValues.sorted{
 			let day1 = try! DayOfWeek.fromString($0.sampleValue)
 			let day2 = try! DayOfWeek.fromString($1.sampleValue)
@@ -124,7 +124,7 @@ public class XYGraphDataGenerator {
 		}.map{
 			(groupValue: $0.groupValue, sampleValue: $0.sampleValue as Any)
 		}
-		signpost.end(name: "Sort x values as days of week")
+		signpost?.end(name: "Sort x values as days of week")
 		return sortedXValues
 	}
 
@@ -175,13 +175,13 @@ public class XYGraphDataGenerator {
 
 	final func transform(sampleGroups: [(Any, [Sample])], information: ExtraInformation)
 	throws -> [(groupValue: Any, sampleValue: String)] {
-		signpost.begin(name: "Transform", "Number of sample groups: %d", sampleGroups.count)
+		signpost?.begin(name: "Transform", "Number of sample groups: %d", sampleGroups.count)
 		var values = [(groupValue: Any, sampleValue: String)]()
 		for (groupValue, samples) in sampleGroups {
 			let sampleValue = try information.computeGraphable(forSamples: samples)
 			values.append((groupValue: groupValue, sampleValue: sampleValue))
 		}
-		signpost.end(name: "Transform", "Finished transforming %d groups", sampleGroups.count)
+		signpost?.end(name: "Transform", "Finished transforming %d groups", sampleGroups.count)
 		return values
 	}
 

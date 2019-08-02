@@ -10,10 +10,12 @@ import Foundation
 import Hamcrest
 @testable import Introspective
 
+/// Elements can be in any order but all specified elements must be present and no extra elements can be present
 func arrayHasExactly<Type: Equatable>(_ expected: [Type]) -> Matcher<[Type]?> {
 	return arrayHasExactly(expected, areEqual: { $0 == $1 })
 }
 
+/// Elements can be in any order but all specified elements must be present and no extra elements can be present
 func arrayHasExactly<Type>(_ expected: [Type], areEqual: @escaping (Type, Type) -> Bool) -> Matcher<[Type]?> {
 	return Matcher("array with \(expected.debugDescription)") { (actual: [Type]?) -> MatchResult in
 		guard let actual = actual else {
