@@ -14,83 +14,83 @@ final class ErrorsUnitTests: UnitTest {
 
 	// MARK: - GenericDisplayableError
 
-	func testGivenGenericDisplayableErrorWithOnlyTitle_localizedDescription_returnsTitle() {
+	func testGivenGenericDisplayableErrorWithOnlyTitle_description_containsTitle() {
 		// given
 		let title = "error title"
 		let error = GenericDisplayableError(title: title)
 
 		// when
-		let description = error.localizedDescription
+		let actualDescription = error.description
 
 		// then
-		XCTAssertEqual(description, title)
+		assertThat(actualDescription, containsString(title))
 	}
 
-	func testGivenGenericDisplayableErrorWithTitleAndDescription_localizedDescription_containsTitle() {
+	func testGivenGenericDisplayableErrorWithTitleAndDescription_description_containsTitle() {
 		// given
 		let title = "error title"
 		let description = "error description"
 		let error = GenericDisplayableError(title: title, description: description)
 
 		// when
-		let localizedDescription = error.localizedDescription
+		let actualDescription = error.description
 
 		// then
-		assertThat(localizedDescription, containsString(title))
+		assertThat(actualDescription, containsString(title))
 	}
 
-	func testGivenGenericDisplayableErrorWithTitleAndDescription_localizedDescription_containsDescription() {
+	func testGivenGenericDisplayableErrorWithTitleAndDescription_description_containsDescription() {
 		// given
 		let title = "error title"
 		let description = "error description"
 		let error = GenericDisplayableError(title: title, description: description)
 
 		// when
-		let localizedDescription = error.localizedDescription
+		let actualDescription = error.description
 
 		// then
-		assertThat(localizedDescription, containsString(description))
+		assertThat(actualDescription, containsString(description))
 	}
 
 	// MARK: - NotOverriddenError
 
-	func testGivenNotOverriddenError_localizedDescription_containsNameOfFunctionThatIsNotOverridden() {
+	func testGivenNotOverriddenError_description_containsNameOfFunctionThatIsNotOverridden() {
 		// given
 		let functionName = "name of function not overridden"
 		let error = NotOverriddenError(functionName: functionName)
 
 		// when
-		let description = error.localizedDescription
+		let actualDescription = error.description
 
 		// then
-		assertThat(description, containsString(functionName))
+		assertThat(actualDescription, containsString(functionName))
 	}
 
 	// MARK: - UnknownSampleTypeError
 
-	func testGivenUnknownSampleTypeError_localizedDescription_containsNameOfUnknownSampleType() {
+	func testGivenUnknownSampleTypeError_description_containsNameOfUnknownSampleType() {
 		// given
 		let sampleType: Sample.Type = HeartRate.self
 		let error = UnknownSampleTypeError(sampleType)
 
 		// when
-		let description = error.localizedDescription
+		let actualDescription = error.description
 
 		// then
-		assertThat(description, containsString(sampleType.name))
+		assertThat(actualDescription, containsString(sampleType.name))
 	}
 
 	// MARK: - GenericError
 
-	func testGivenGenericError_localizedDescription_returnsPassedMessage() {
+	func testGivenGenericError_description_containsPassedMessage() {
 		// given
 		let message = "this is a generic error message"
 		let error = GenericError(message)
 
 		// when
-		let description = error.localizedDescription
+		let actualDescription = error.description
 
 		// then
-		XCTAssertEqual(description, message)
+		assertThat(actualDescription, containsString(message))
 	}
 }

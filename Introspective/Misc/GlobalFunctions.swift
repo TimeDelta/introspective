@@ -51,5 +51,9 @@ func retryOnFail(_ code: () throws -> Void, maxRetries: Int? = nil, _ firstError
 }
 
 func errorInfo(_ error: Error) -> String {
-	return String(format: "%@ %@", error.localizedDescription, (error as NSError).userInfo)
+	var errorDescription: String = error.localizedDescription
+	if let customError = error as? GenericError {
+		errorDescription = customError.description
+	}
+	return String(format: "%@ %@", errorDescription, (error as NSError).userInfo)
 }

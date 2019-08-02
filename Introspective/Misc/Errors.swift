@@ -14,57 +14,46 @@ public protocol DisplayableError: Error {
 	var displayableDescription: String? { get }
 }
 
-public class GenericDisplayableError: DisplayableError {
+public class GenericDisplayableError: GenericError, DisplayableError {
 
 	public final let displayableTitle: String
 	public final let displayableDescription: String?
 
-	public final var localizedDescription: String {
+	public init(title: String, description: String? = nil) {
+		displayableTitle = title
+		displayableDescription = description
 		var text = displayableTitle
 		if let description = displayableDescription {
 			text += ": \(description)"
 		}
-		return text
-	}
-
-	public init(title: String, description: String? = nil) {
-		displayableTitle = title
-		displayableDescription = description
+		super.init(text)
 	}
 }
 
-public final class NotOverriddenError: Error {
+public class GenericError: Error {
 
-	private final let functionName: String
-	public final var localizedDescription: String {
-		return "Must override \(functionName)"
-	}
-
-	public init(functionName: String) {
-		self.functionName = functionName
-	}
-}
-
-public final class UnknownSampleTypeError: Error {
-
-	private final let sampleType: Sample.Type
-	public final var localizedDescription: String {
-		return "Unknown sample type: \(sampleType.name)"
-	}
-
-	public init(_ sampleType: Sample.Type) {
-		self.sampleType = sampleType
-	}
-}
-
-public final class GenericError: Error {
-
+	private final let callStack: [String]
 	private final let message: String
-	public final var localizedDescription: String {
-		return message
+	public final var description: String {
+		return message + "\nStack Trace:\n\t" + callStack.joined(separator: "\n\t")
 	}
 
 	public init(_ message: String) {
+		callStack = Thread.callStackSymbols
 		self.message = message
+	}
+}
+
+public final class NotOverriddenError: GenericError {
+
+	public init(functionName: String) {
+		super.init("Must override \(functionName)")
+	}
+}
+
+public final class UnknownSampleTypeError: GenericError {
+
+	public init(_ sampleType: Sample.Type) {
+		super.init("Unknown sample type: \(sampleType.name)")
 	}
 }
