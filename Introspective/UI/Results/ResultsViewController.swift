@@ -304,6 +304,7 @@ final class ResultsViewController: UITableViewController {
 				}
 			} else {
 				log.error("Extra Information edit index was nil")
+				#warning("this is getting triggered when graphing results on choose information screen")
 				showError(title: "Failed to edit selected information")
 			}
 		}
