@@ -111,20 +111,56 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		CoachMarkInfo(
 			hint: "This is an attribute restriction. It allows you to restrict which samples are returned based on their attributes. Tap it to edit.",
 			useArrow: false,
-			view: { return self.tableView.visibleCells[1] },
+			view: {
+				var attributeRestrictionIndex = 1
+				for i in 0 ..< self.parts.count {
+					if self.parts[i].attributeRestriction != nil {
+						attributeRestrictionIndex = i
+						break
+					}
+				}
+				return self.tableView.visibleCells[attributeRestrictionIndex]
+			},
 			setup: {
-				self.addAttributeRestriction()
+				var hasAttributeRestriction = false
+				for part in self.parts {
+					if part.attributeRestriction != nil {
+						hasAttributeRestriction = true
+						break
+					}
+				}
+				if !hasAttributeRestriction {
+					self.addAttributeRestriction()
+				}
 			}),
 		CoachMarkInfo(
 			hint: "This is the start of a subquery. It allows you to restrict what samples are returned based on other types of data. Tap it to edit.",
 			useArrow: false,
-			view: { return self.tableView.visibleCells[2] },
+			view: {
+				var subQueryIndex = 1
+				for i in 1 ..< self.parts.count {
+					if self.parts[i].sampleTypeInfo != nil {
+						subQueryIndex = i
+						break
+					}
+				}
+				return self.tableView.visibleCells[subQueryIndex]
+			},
 			setup: {
-				self.parts.append(Part(SampleTypeInfo(DependencyInjector.sample.allTypes()[1])))
-				self.partWasAdded()
+				var hasSubQuery = false
+				for part in self.parts[1...] {
+					if part.sampleTypeInfo != nil {
+						hasSubQuery = true
+						break
+					}
+				}
+				if !hasSubQuery {
+					self.parts.append(Part(SampleTypeInfo(DependencyInjector.sample.allTypes()[1])))
+					self.partWasAdded()
+				}
 			}),
 		CoachMarkInfo(
-			hint: "Swipe left on any part of the query to reveal a button that will remove that part of the query.",
+			hint: "Swipe left on any part of the query (except the main data type) to reveal a button that will remove that part of the query.",
 			useArrow: true,
 			view: { return self.tableView.visibleCells[2] })
 	]
