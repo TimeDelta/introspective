@@ -34,7 +34,7 @@ extension AttributeRestriction {
 	}
 
 	public func copy() -> BooleanExpression {
-		return copy()
+		return copy() as AttributeRestriction
 	}
 }
 

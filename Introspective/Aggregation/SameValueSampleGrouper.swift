@@ -74,10 +74,9 @@ public final class SameValueSampleGrouper: SampleGrouper {
 	}
 
 	public final func copy() -> SampleGrouper {
-		let copy = SameValueSampleGrouper(
+		return SameValueSampleGrouper(
 			groupByAttribute: groupByAttribute,
 			attributeSelectAttribute: attributeSelectAttribute)
-		return copy
 	}
 
 	// MARK: - Attributed Functions

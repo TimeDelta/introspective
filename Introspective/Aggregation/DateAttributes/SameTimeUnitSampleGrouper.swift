@@ -55,6 +55,20 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 		self.timeUnit = timeUnit
 	}
 
+	private init(
+		groupByAttribute: DateAttribute?,
+		attributeSelectAttribute: AttributeSelectAttribute,
+		_ timeUnit: Calendar.Component)
+	{
+		self.groupByAttribute = groupByAttribute
+		self.attributeSelectAttribute = attributeSelectAttribute
+		attributes = [
+			attributeSelectAttribute,
+			Me.timeUnitAttribute,
+		]
+		self.timeUnit = timeUnit
+	}
+
 	// MARK: - Grouper Functions
 
 	public final func group(samples: [Sample]) throws -> [(Any, [Sample])] {
@@ -89,7 +103,10 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 	}
 
 	public final func copy() -> SampleGrouper {
-		return SameTimeUnitSampleGrouper(attributes: attributes, timeUnit, groupByAttribute)
+		return SameTimeUnitSampleGrouper(
+			groupByAttribute: groupByAttribute,
+			attributeSelectAttribute: attributeSelectAttribute,
+			timeUnit)
 	}
 
 	// MARK: - Attributed Functions

@@ -104,10 +104,9 @@ public final class PerTagSampleGrouper: SampleGrouper {
 	}
 
 	public final func copy() -> SampleGrouper {
-		let copy = PerTagSampleGrouper(
+		return PerTagSampleGrouper(
 			groupByAttribute: groupByAttribute,
 			attributeSelectAttribute: attributeSelectAttribute)
-		return copy
 	}
 
 	// MARK: - Attributed Functions

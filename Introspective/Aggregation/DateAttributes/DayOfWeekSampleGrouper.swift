@@ -108,10 +108,9 @@ public final class DayOfWeekSampleGrouper: SampleGrouper {
 	}
 
 	public final func copy() -> SampleGrouper {
-		let copy = DayOfWeekSampleGrouper(
+		return DayOfWeekSampleGrouper(
 			groupByAttribute: groupByAttribute,
 			attributeSelectAttribute: attributeSelectAttribute)
-		return copy
 	}
 
 	// MARK: - Attributed Functions
