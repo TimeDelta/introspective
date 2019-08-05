@@ -57,6 +57,8 @@ final class AttributeViewController: UIViewController {
 			attributeDescriptionButton.isUserInteractionEnabled = false
 		}
 
+		observe(selector: #selector(errorOccurred), name: .showError)
+
 		updateDisplay()
 	}
 
@@ -115,6 +117,13 @@ final class AttributeViewController: UIViewController {
 			attributeValue = newValue!
 		}
 		updateDisplay()
+	}
+
+	@objc private final func errorOccurred(notification: Notification) {
+		let message: String? = value(for: .message, from: notification, keyIsOptional: true)
+		if let title: String = value(for: .title, from: notification) {
+			showError(title: title, message: message)
+		}
 	}
 
 	// MARK: - Show View Functions

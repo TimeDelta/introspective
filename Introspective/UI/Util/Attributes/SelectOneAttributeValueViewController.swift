@@ -31,6 +31,21 @@ public final class SelectOneAttributeValueViewController: AttributeValueTypeView
 			selectOnePicker.selectRow(index, inComponent: 0, animated: false)
 		} else {
 			log.debug("currentValue not set for select one attribute on load")
+			guard selectOneAttribute.possibleValues.count > 0 else {
+				log.info("No possible values for SelectOneAttribute: %@", selectOneAttribute.name)
+				var message: String? = nil
+				if selectOneAttribute is TagAttribute {
+					message = "You must first create a tag."
+				}
+				syncPost(
+					.showError,
+					userInfo: [
+						.title: "No \(selectOneAttribute.pluralName) to choose from",
+						.message: message as Any
+					])
+				dismiss(animated: false)
+				return
+			}
 			currentValue = selectOneAttribute.possibleValues[0]
 		}
 	}

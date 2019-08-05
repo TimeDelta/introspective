@@ -28,6 +28,7 @@ public enum NotificationName: StringLiteralType {
 
 	// MARK: - General UI
 	case presentView = "presentView"
+	case showError = "showError"
 
 	// MARK: - Attributes
 	case attributeChosen = "attributeChosen"
