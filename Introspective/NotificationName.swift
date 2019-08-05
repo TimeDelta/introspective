@@ -39,6 +39,8 @@ public enum NotificationName: StringLiteralType {
 	// MARK: - Sample Groupers
 	case grouperAttributesSet = "grouperAttributesSet"
 	case grouperEdited = "grouperEdited"
+	case pointGrouperEdited = "pointGrouperEdited"
+	case seriesGrouperEdited = "seriesGrouperEdited"
 	case xGrouperEdited = "xGrouperEdited"
 	case yGrouperEdited = "yGrouperEdited"
 	case groupersEdited = "groupersEdited"

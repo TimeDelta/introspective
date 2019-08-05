@@ -945,18 +945,17 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 	// MARK: - Helper Functions
 
 	private final func setSeriesGrouper(_ grouper: SampleGrouper) {
-		mockGroupingChooserTableViewController()
-		controller.chooseSeriesGroupingButtonPressed(chooseSeriesGrouperButton)
-		sendGrouperEditedNotification(grouper)
+		sendGrouperEditedNotification(grouper, .seriesGrouperEdited)
 	}
 
 	private final func setPointGrouper(_ grouper: SampleGrouper) {
-		mockGroupingChooserTableViewController()
-		controller.choosePointGroupingButtonPressed(choosePointGrouperButton)
-		sendGrouperEditedNotification(grouper)
+		sendGrouperEditedNotification(grouper, .pointGrouperEdited)
 	}
 
-	private final func sendGrouperEditedNotification(_ grouper: SampleGrouper) {
+	private final func sendGrouperEditedNotification(
+		_ grouper: SampleGrouper,
+		_ notification: NotificationName)
+	{
 		Given(mockUiUtil, .value(for: .value(.sampleGrouper), from: .any, keyIsOptional: .any, willReturn: grouper))
 		NotificationCenter.default.post(
 			name: NotificationName.grouperEdited.toName(),
