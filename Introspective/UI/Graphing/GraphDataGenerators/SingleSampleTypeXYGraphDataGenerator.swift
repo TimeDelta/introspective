@@ -99,19 +99,28 @@ public final class SingleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator {
 	}
 
 	private final func getSeriesDataFor(_ yAttribute: Attribute, from samples: [Sample]) throws -> [[Any]] {
+		guard let xAxisAttribute = xAxis.attribute else {
+			throw GenericError("No x-axis attribute specified")
+		}
 		let filteredSamples = try samples.filter{
-			let xValue = try $0.graphableValue(of: self.xAxis.attribute!)
+			let xValue = try $0.value(of: xAxisAttribute)
 			if xValue == nil { return false }
-			let yValue = try! $0.graphableValue(of: yAttribute)
+			let yValue = try! $0.value(of: yAttribute)
 			return yValue != nil
 		}
 		return try filteredSamples.map{ (sample: Sample) -> [Any] in
-			let rawXValue = try sample.graphableValue(of: self.xAxis.attribute!)
-			var xValue: Any = rawXValue as Any
-			if !(xAxis.attribute is NumericAttribute) {
-				xValue = try self.xAxis.attribute!.convertToDisplayableString(from: rawXValue)
+			var xValue: Any = try sample.value(of: xAxisAttribute) as Any
+			if !(xAxisAttribute is NumericAttribute) {
+				xValue = try self.xAxis.attribute!.convertToDisplayableString(from: xValue)
 			}
-			return [xValue, try sample.graphableValue(of: yAttribute) as Any]
+
+			var yValue: Any = try sample.value(of: yAttribute) as Any
+			if let graphableAttribute = yAttribute as? GraphableAttribute {
+				yValue = try graphableAttribute.graphableValueFor(yValue)
+			} else {
+				yValue = try xAxisAttribute.convertToDisplayableString(from: yValue)
+			}
+			return [xValue, yValue]
 		}
 	}
 
