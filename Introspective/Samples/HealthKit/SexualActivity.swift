@@ -36,6 +36,10 @@ public final class SexualActivity: HealthKitCategorySample {
 	public static let readPermissions: Set<HKObjectType> = Set([sampleType])
 	public static let writePermissions: Set<HKSampleType> = Set([sampleType])
 
+	public static func initUnits() {
+		// nothing to init
+	}
+
 	// MARK: - Display Information
 
 	public static let name: String = "Sexual Activity"

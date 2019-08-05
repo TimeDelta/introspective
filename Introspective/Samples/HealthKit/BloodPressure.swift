@@ -21,11 +21,12 @@ public final class BloodPressure: HealthKitCorrelationSample {
 	public static let sampleType: HKSampleType = correlationType
 	public static var readPermissions: Set<HKObjectType> = Set([systolicQuantityType, diastolicQuantityType])
 	public static var writePermissions: Set<HKSampleType> = Set([systolicQuantityType, diastolicQuantityType])
-	public static var systolicUnit: HKUnit {
-		return DependencyInjector.util.healthKit.preferredUnitFor(.bloodPressureSystolic) ?? HKUnit.millimeterOfMercury()
-	}
-	public static var diastolicUnit: HKUnit {
-		return DependencyInjector.util.healthKit.preferredUnitFor(.bloodPressureDiastolic) ?? HKUnit.millimeterOfMercury()
+	public static var systolicUnit: HKUnit = HKUnit.millimeterOfMercury()
+	public static var diastolicUnit: HKUnit = HKUnit.millimeterOfMercury()
+
+	public static func initUnits() {
+		systolicUnit = DependencyInjector.util.healthKit.preferredUnitFor(.bloodPressureSystolic) ?? HKUnit.millimeterOfMercury()
+		diastolicUnit = DependencyInjector.util.healthKit.preferredUnitFor(.bloodPressureDiastolic) ?? HKUnit.millimeterOfMercury()
 	}
 
 	// MARK: - Display Information

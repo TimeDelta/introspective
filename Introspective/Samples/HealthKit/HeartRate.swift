@@ -19,11 +19,13 @@ public final class HeartRate: HealthKitQuantitySample {
 	public static let sampleType: HKSampleType = quantityType
 	public static let readPermissions: Set<HKObjectType> = Set([sampleType])
 	public static let writePermissions: Set<HKSampleType> = Set([sampleType])
-	public static var unit: HKUnit {
-		return DependencyInjector.util.healthKit.preferredUnitFor(.heartRate) ?? HKUnit(from: "count/min")
-	}
+	public static var unit: HKUnit = HKUnit(from: "count/min")
 	public final var unitString: String {
 		return Me.unit.unitString
+	}
+
+	public static func initUnits() {
+		unit = DependencyInjector.util.healthKit.preferredUnitFor(.heartRate) ?? HKUnit(from: "count/min")
 	}
 
 	// MARK: - Display Information

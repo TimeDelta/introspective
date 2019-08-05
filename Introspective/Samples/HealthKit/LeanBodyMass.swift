@@ -19,11 +19,13 @@ public final class LeanBodyMass: HealthKitQuantitySample {
 	public static let sampleType: HKSampleType = quantityType
 	public static var readPermissions: Set<HKObjectType> = Set([sampleType])
 	public static var writePermissions: Set<HKSampleType> = Set([sampleType])
-	public static var unit: HKUnit {
-		return DependencyInjector.util.healthKit.preferredUnitFor(.leanBodyMass) ?? HKUnit(from: .pound)
-	}
+	public static var unit: HKUnit = HKUnit(from: .pound)
 	public final var unitString: String {
 		return Me.unit.unitString
+	}
+
+	public static func initUnits() {
+		unit = DependencyInjector.util.healthKit.preferredUnitFor(.leanBodyMass) ?? HKUnit(from: .pound)
 	}
 
 	// MARK: - Display Information

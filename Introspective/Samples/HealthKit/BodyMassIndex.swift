@@ -19,11 +19,13 @@ public final class BodyMassIndex: HealthKitQuantitySample {
 	public static let sampleType: HKSampleType = quantityType
 	public static let readPermissions: Set<HKObjectType> = Set([sampleType])
 	public static let writePermissions: Set<HKSampleType> = Set([sampleType])
-	public static var unit: HKUnit {
-		return DependencyInjector.util.healthKit.preferredUnitFor(.bodyMassIndex) ?? HKUnit.count()
-	}
+	public static var unit: HKUnit = HKUnit.count()
 	public final var unitString: String {
 		return Me.unit.unitString
+	}
+
+	public static func initUnits() {
+		unit = DependencyInjector.util.healthKit.preferredUnitFor(.bodyMassIndex) ?? HKUnit.count()
 	}
 
 	// MARK: - Display Information

@@ -30,6 +30,7 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 				return
 			}
 
+			SampleType.initUnits()
 			self.stopFunction = DependencyInjector.util.healthKit.getSamples(
 				for: SampleType.self,
 				from: dateConstraints.start,
