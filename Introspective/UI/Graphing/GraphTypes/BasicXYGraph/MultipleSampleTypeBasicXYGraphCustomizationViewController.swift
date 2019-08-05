@@ -90,6 +90,8 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		observe(selector: #selector(yAxisSampleTypeChanged), name: .yAxisSampleTypeChanged)
 		observe(selector: #selector(xAxisInformationChanged), name: .xAxisInformationChanged)
 		observe(selector: #selector(yAxisInformationChanged), name: .yAxisInformationChanged)
+		observe(selector: #selector(seriesGroupersChanged), name: .seriesGrouperEdited)
+		observe(selector: #selector(pointGroupersChanged), name: .pointGrouperEdited)
 
 		updateShowGraphButtonState()
 	}
@@ -109,10 +111,10 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		controller.xSampleType = xAxisSampleType
 		controller.ySampleType = yAxisSampleType
 		controller.navBarTitle = "Series Grouping"
-		controller.xGrouper = seriesGroupers?.x
-		controller.yGrouper = seriesGroupers?.y
+		controller.xGrouper = seriesGroupers?.x.copy()
+		controller.yGrouper = seriesGroupers?.y.copy()
 		controller.currentAttributeType = seriesGrouperAttributeType
-		observe(selector: #selector(seriesGroupersChanged), name: .groupersEdited)
+		controller.notificationToSendOnAccept = .seriesGrouperEdited
 		realNavigationController?.pushViewController(controller, animated: false)
 	}
 
@@ -127,10 +129,10 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		controller.xSampleType = xAxisSampleType
 		controller.ySampleType = yAxisSampleType
 		controller.navBarTitle = "Point Grouping"
-		controller.xGrouper = pointGroupers?.x
-		controller.yGrouper = pointGroupers?.y
+		controller.xGrouper = pointGroupers?.x.copy()
+		controller.yGrouper = pointGroupers?.y.copy()
 		controller.currentAttributeType = pointGrouperAttributeType
-		observe(selector: #selector(pointGroupersChanged), name: .groupersEdited)
+		controller.notificationToSendOnAccept = .pointGrouperEdited
 		realNavigationController?.pushViewController(controller, animated: false)
 	}
 

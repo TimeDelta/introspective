@@ -15,6 +15,7 @@ public protocol ChooseGroupersForXYGraphViewController: UIViewController {
 	var xGrouper: SampleGrouper! { get set }
 	var yGrouper: SampleGrouper! { get set }
 	var currentAttributeType: String! { get set }
+	var notificationToSendOnAccept: NotificationName! { get set }
 }
 
 public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController, ChooseGroupersForXYGraphViewController {
@@ -41,6 +42,7 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 	public final var currentAttributeType: String! {
 		didSet { waitUntilLoaded{ self.attributeTypeSet() } }
 	}
+	public final var notificationToSendOnAccept: NotificationName!
 
 	private final var xAttributeTypeToAttributes = [String: [Attribute]]()
 	private final var yAttributeTypeToAttributes = [String: [Attribute]]()
