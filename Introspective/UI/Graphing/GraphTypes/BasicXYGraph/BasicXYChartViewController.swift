@@ -35,7 +35,7 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 			updateChartData()
 		}
 	}
-	public final var displayXAxisValueLabels: Bool = true
+	public final var displayXAxisValueLabels: Bool = false
 	public final var chartType: AAChartType!
 	public final var categories: [String]?
 	private final var finishedSetup: Bool = false
