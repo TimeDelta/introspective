@@ -69,7 +69,7 @@ final class ResultsViewController: UITableViewController {
 		actionsButton.action = #selector(presentActions)
 		actionsButton.accessibilityLabel = "actions button"
 
-		observe(selector: #selector(saveEditedExtraInformation), name: .editedInformation)
+		observe(selector: #selector(saveEditedExtraInformation), name: .editedInformation, object: self)
 		observe(selector: #selector(sortSamplesBy), name: Me.sortSamples)
 		observe(selector: #selector(editedSample), name: Me.editedSample)
 
@@ -304,7 +304,6 @@ final class ResultsViewController: UITableViewController {
 				}
 			} else {
 				log.error("Extra Information edit index was nil")
-				#warning("this is getting triggered when graphing results on choose information screen")
 				showError(title: "Failed to edit selected information")
 			}
 		}
@@ -448,6 +447,7 @@ final class ResultsViewController: UITableViewController {
 		controller.attributes = samples[0].attributes
 		controller.selectedAttribute = selectedInformation.attribute
 		controller.selectedInformation = selectedInformation
+		controller.notificationFilter = self
 		if let navigationController = navigationController {
 			navigationController.pushViewController(controller, animated: false)
 		} else {

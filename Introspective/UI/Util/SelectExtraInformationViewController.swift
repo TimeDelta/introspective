@@ -15,6 +15,8 @@ protocol SelectExtraInformationViewController: UIViewController {
 	var selectedInformation: ExtraInformation! { get set }
 	var limitToNumericInformation: Bool { get set }
 	var notificationToSendWhenFinished: NotificationName! { get set }
+	/// Setting this allows to filter sent notifications
+	var notificationFilter: Any? { get set }
 }
 
 final class SelectExtraInformationViewControllerImpl: UIViewController, SelectExtraInformationViewController {
@@ -31,6 +33,7 @@ final class SelectExtraInformationViewControllerImpl: UIViewController, SelectEx
 	public final var selectedInformation: ExtraInformation!
 	public final var limitToNumericInformation: Bool = false
 	public final var notificationToSendWhenFinished: NotificationName!
+	public final var notificationFilter: Any?
 
 	private final let log = Log()
 
@@ -67,6 +70,7 @@ final class SelectExtraInformationViewControllerImpl: UIViewController, SelectEx
 		DispatchQueue.main.async {
 			self.syncPost(
 				self.notificationToSendWhenFinished,
+				object: self.notificationFilter ?? self,
 				userInfo: [
 					.information: self.selectedInformation,
 				])
