@@ -98,6 +98,7 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 	func testsGivenAllDates_areAllDaysOfWeek_returnsTrue() {
 		// given
 		let values = [DayOfWeek.Sunday.fullDayName]
+		Given(mockStringUtil, .isDayOfWeek(.any, willReturn: true))
 
 		// when
 		let areAllDaysOfWeek = generator.areAllDaysOfWeek(values)
@@ -109,6 +110,7 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 	func testsGivenOnlySomeDates_areAllDaysOfWeek_returnsFalse() {
 		// given
 		let values = [DayOfWeek.Sunday.fullDayName, "not a day of week", DayOfWeek.Saturday.fullDayName]
+		Given(mockStringUtil, .isDayOfWeek(.any, willReturn: true, false, true))
 
 		// when
 		let areAllDaysOfWeek = generator.areAllDaysOfWeek(values)
@@ -185,6 +187,7 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 		]
 		Given(mockStringUtil, .isNumber(.any, willReturn: false))
 		Given(mockCalendarUtil, .date(from: .any, format: .any, willReturn: nil))
+		Given(mockStringUtil, .isDayOfWeek(.any, willReturn: true))
 
 		// when
 		let sortedValues = generator.getSortedXValues(values)
@@ -207,6 +210,7 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 		]
 		Given(mockStringUtil, .isNumber(.any, willReturn: false))
 		Given(mockCalendarUtil, .date(from: .any, format: .any, willReturn: nil))
+		Given(mockStringUtil, .isDayOfWeek(.any, willReturn: false))
 
 		// when
 		let sortedValues = generator.getSortedXValues(values)

@@ -230,4 +230,94 @@ class StringUtilUnitTests: UnitTest {
 		// then
 		XCTAssertFalse(isInteger)
 	}
+
+	// MARK: - isDayOfWeek()
+
+	func testGivenSunday_isDayOfWeek_returnsTrue() {
+		// given
+		let value = "Sunday"
+
+		// when
+		let isDayOfWeek = util.isDayOfWeek(value)
+
+		// then
+		XCTAssert(isDayOfWeek)
+	}
+
+	func testGivenMonday_isDayOfWeek_returnsTrue() {
+		// given
+		let value = "Monday"
+
+		// when
+		let isDayOfWeek = util.isDayOfWeek(value)
+
+		// then
+		XCTAssert(isDayOfWeek)
+	}
+
+	func testGivenTuesday_isDayOfWeek_returnsTrue() {
+		// given
+		let value = "Tuesday"
+
+		// when
+		let isDayOfWeek = util.isDayOfWeek(value)
+
+		// then
+		XCTAssert(isDayOfWeek)
+	}
+
+	func testGivenWednesday_isDayOfWeek_returnsTrue() {
+		// given
+		let value = "Wednesday"
+
+		// when
+		let isDayOfWeek = util.isDayOfWeek(value)
+
+		// then
+		XCTAssert(isDayOfWeek)
+	}
+
+	func testGivenThursday_isDayOfWeek_returnsTrue() {
+		// given
+		let value = "Thursday"
+
+		// when
+		let isDayOfWeek = util.isDayOfWeek(value)
+
+		// then
+		XCTAssert(isDayOfWeek)
+	}
+
+	func testGivenFriday_isDayOfWeek_returnsTrue() {
+		// given
+		let value = "Friday"
+
+		// when
+		let isDayOfWeek = util.isDayOfWeek(value)
+
+		// then
+		XCTAssert(isDayOfWeek)
+	}
+
+	func testGivenSaturday_isDayOfWeek_returnsTrue() {
+		// given
+		let value = "Saturday"
+
+		// when
+		let isDayOfWeek = util.isDayOfWeek(value)
+
+		// then
+		XCTAssert(isDayOfWeek)
+	}
+
+	func testGivenNonDay_isDayOfWeek_returnsTrue() {
+		// given
+		let value = "NonDay"
+
+		// when
+		let isDayOfWeek = util.isDayOfWeek(value)
+
+		// then
+		XCTAssertFalse(isDayOfWeek)
+	}
 }

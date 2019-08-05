@@ -55,7 +55,7 @@ public class XYGraphDataGenerator {
 	final func areAllDaysOfWeek(_ values: [String]) -> Bool {
 		signpost?.begin(name: "Are all days of week", "Checking if %d values are all days of week", values.count)
 		for value in values {
-			if !DayOfWeek.isDayOfWeek(value) {
+			if !DependencyInjector.util.string.isDayOfWeek(value) {
 				signpost?.end(
 					name: "Are all days of week",
 					"Finished checking if %d values are all days of week",

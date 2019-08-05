@@ -1,4 +1,4 @@
-// Generated using Sourcery 0.16.1 — https://github.com/krzysztofzablocki/Sourcery
+// Generated using Sourcery 0.16.2 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
 
 
@@ -14192,11 +14192,26 @@ open class StringUtilMock: StringUtil, Mock {
 		return __value
     }
 
+    open func isDayOfWeek(_ str: String) -> Bool {
+        addInvocation(.m_isDayOfWeek__str(Parameter<String>.value(`str`)))
+		let perform = methodPerformValue(.m_isDayOfWeek__str(Parameter<String>.value(`str`))) as? (String) -> Void
+		perform?(`str`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_isDayOfWeek__str(Parameter<String>.value(`str`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for isDayOfWeek(_ str: String). Use given")
+			Failure("Stub return value not specified for isDayOfWeek(_ str: String). Use given")
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_isNumber__str(Parameter<String>)
         case m_isInteger__str(Parameter<String>)
         case m_rangeOfNumberIn__str(Parameter<String>)
+        case m_isDayOfWeek__str(Parameter<String>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -14209,6 +14224,9 @@ open class StringUtilMock: StringUtil, Mock {
             case (.m_rangeOfNumberIn__str(let lhsStr), .m_rangeOfNumberIn__str(let rhsStr)):
                 guard Parameter.compare(lhs: lhsStr, rhs: rhsStr, with: matcher) else { return false } 
                 return true 
+            case (.m_isDayOfWeek__str(let lhsStr), .m_isDayOfWeek__str(let rhsStr)):
+                guard Parameter.compare(lhs: lhsStr, rhs: rhsStr, with: matcher) else { return false } 
+                return true 
             default: return false
             }
         }
@@ -14218,6 +14236,7 @@ open class StringUtilMock: StringUtil, Mock {
             case let .m_isNumber__str(p0): return p0.intValue
             case let .m_isInteger__str(p0): return p0.intValue
             case let .m_rangeOfNumberIn__str(p0): return p0.intValue
+            case let .m_isDayOfWeek__str(p0): return p0.intValue
             }
         }
     }
@@ -14240,6 +14259,9 @@ open class StringUtilMock: StringUtil, Mock {
         public static func rangeOfNumberIn(_ str: Parameter<String>, willReturn: Range<String.Index>?...) -> MethodStub {
             return Given(method: .m_rangeOfNumberIn__str(`str`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func isDayOfWeek(_ str: Parameter<String>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_isDayOfWeek__str(`str`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func isNumber(_ str: Parameter<String>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_isNumber__str(`str`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
@@ -14261,6 +14283,13 @@ open class StringUtilMock: StringUtil, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func isDayOfWeek(_ str: Parameter<String>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_isDayOfWeek__str(`str`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct Verify {
@@ -14269,6 +14298,7 @@ open class StringUtilMock: StringUtil, Mock {
         public static func isNumber(_ str: Parameter<String>) -> Verify { return Verify(method: .m_isNumber__str(`str`))}
         public static func isInteger(_ str: Parameter<String>) -> Verify { return Verify(method: .m_isInteger__str(`str`))}
         public static func rangeOfNumberIn(_ str: Parameter<String>) -> Verify { return Verify(method: .m_rangeOfNumberIn__str(`str`))}
+        public static func isDayOfWeek(_ str: Parameter<String>) -> Verify { return Verify(method: .m_isDayOfWeek__str(`str`))}
     }
 
     public struct Perform {
@@ -14283,6 +14313,9 @@ open class StringUtilMock: StringUtil, Mock {
         }
         public static func rangeOfNumberIn(_ str: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_rangeOfNumberIn__str(`str`), performs: perform)
+        }
+        public static func isDayOfWeek(_ str: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_isDayOfWeek__str(`str`), performs: perform)
         }
     }
 

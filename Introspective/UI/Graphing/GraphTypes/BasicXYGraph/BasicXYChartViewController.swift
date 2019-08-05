@@ -92,8 +92,8 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 	// MARK: - Button Actions
 
 	@objc private final func back() {
-		if queries != nil {
-			for query in queries! {
+		if let queries = queries {
+			for query in queries {
 				query.stop()
 			}
 		}

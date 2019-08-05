@@ -13,6 +13,7 @@ public protocol StringUtil {
 	func isNumber(_ str: String) -> Bool
 	func isInteger(_ str: String) -> Bool
 	func rangeOfNumberIn(_ str: String) -> Range<String.Index>?
+	func isDayOfWeek(_ str: String) -> Bool
 }
 
 public final class StringUtilImpl: StringUtil {
@@ -32,5 +33,15 @@ public final class StringUtilImpl: StringUtil {
 
 	public final func rangeOfNumberIn(_ str: String) -> Range<String.Index>? {
 		return str.range(of: Me.numberRegex, options: .regularExpression, range: nil, locale: nil)
+	}
+
+	public final func isDayOfWeek(_ str: String) -> Bool {
+		let dayName = str.lowercased()
+		for day in DayOfWeek.allDays {
+			if dayName.contains(day.abbreviation.lowercased()) {
+				return true
+			}
+		}
+		return false
 	}
 }
