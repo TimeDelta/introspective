@@ -226,16 +226,273 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 
 	// MARK: - getSeriesDataForYInformation()
 
-	func test_getSeriesDataForYInformation_() {
+	func testGivenNoYInformation_getSeriesDataForYInformation_returnsEmptyGraphData() throws {
+		// when
+		let graphData = try generator.getSeriesDataForYInformation(
+			[],
+			fromGroups: [],
+			groupedBy: SampleGrouperMock(attributes: []),
+			withGroupName: nil,
+			sortedXValues: [])
+
+		// then
+		assertThat(graphData, hasCount(0))
+	}
+
+	func testGivenNoXValues_getSeriesDataForYInformation_returnsSeriesWithNoData() throws {
 		// given
+		let yInformation = mockInformation()
+		Given(yInformation, .computeGraphable(forSamples: .any, willReturn: "0"))
+		let grouper = SampleGrouperMock(attributes: [])
+		let groups: [(Any, [Sample])] = [("", [SampleCreatorTestUtil.createSample()])]
 
 		// when
+		let graphData = try generator.getSeriesDataForYInformation(
+			[yInformation],
+			fromGroups: groups,
+			groupedBy: grouper,
+			withGroupName: nil,
+			sortedXValues: [])
+
+		// then
+		assertThat(graphData, hasSeriesWithData([] as [[Double]]))
+	}
+
+	func testGivenGroupValuesDoNotMatchUp_getSeriesDataForYInformation_returnsSeriesWithNoData() throws {
+		// given
+		let yInformation = mockInformation()
+		Given(yInformation, .computeGraphable(forSamples: .any, willReturn: "0"))
+		let grouper = SampleGrouperMock(attributes: [])
+		Given(grouper, .groupValuesAreEqual(.any, .any, willReturn: false))
+		let groups: [(Any, [Sample])] = [("no match in x", [SampleCreatorTestUtil.createSample()])]
+		let xValues: [(groupValue: Any, sampleValue: Any)] = [
+			(groupValue: "1", sampleValue: "1"),
+		]
+
+		// when
+		let graphData = try generator.getSeriesDataForYInformation(
+			[yInformation],
+			fromGroups: groups,
+			groupedBy: grouper,
+			withGroupName: nil,
+			sortedXValues: xValues)
+
+		// then
+		assertThat(graphData, hasSeriesWithData([] as [[Double]]))
+	}
+
+	func testGivenXGroupValuesMapToYGroupValues_getSeriesDataForYInformation_returnsSeriesWithCorrectData() throws {
+		// given
+		let yInformation = mockInformation()
+		let xValue = 0.0
+		let yValue = 1.0
+		let groupValue = "group"
+		Given(yInformation, .computeGraphable(forSamples: .any, willReturn: String(yValue)))
+		let grouper = SampleGrouperMock(attributes: [])
+		Given(grouper, .groupValuesAreEqual(.any, .any, willReturn: true))
+		let groups: [(Any, [Sample])] = [(groupValue, [SampleCreatorTestUtil.createSample()])]
+		let xValues: [(groupValue: Any, sampleValue: Any)] = [
+			(groupValue: groupValue, sampleValue: xValue),
+		]
+
+		// when
+		let graphData = try generator.getSeriesDataForYInformation(
+			[yInformation],
+			fromGroups: groups,
+			groupedBy: grouper,
+			withGroupName: nil,
+			sortedXValues: xValues)
+
+		// then
+		assertThat(graphData, hasSeriesWithData([[xValue, yValue]]))
+	}
+
+	func testGivenGroupName_getSeriesDataForYInformation_includesGroupNameInSeriesName() throws {
+		// given
+		let informationDescription = "information"
+		let yInformation = mockInformation(description: informationDescription)
+		let xValue = 0.0
+		let yValue = 1.0
+		let groupValue = "group"
+		Given(yInformation, .computeGraphable(forSamples: .any, willReturn: String(yValue)))
+		let grouper = SampleGrouperMock(attributes: [])
+		Given(grouper, .groupValuesAreEqual(.any, .any, willReturn: true))
+		let groups: [(Any, [Sample])] = [(groupValue, [SampleCreatorTestUtil.createSample()])]
+		let xValues: [(groupValue: Any, sampleValue: Any)] = [
+			(groupValue: groupValue, sampleValue: xValue),
+		]
+		let groupName = "group name"
+
+		// when
+		let graphData = try generator.getSeriesDataForYInformation(
+			[yInformation],
+			fromGroups: groups,
+			groupedBy: grouper,
+			withGroupName: groupName,
+			sortedXValues: xValues)
+
+		// then
+		assertThat(graphData, hasSeriesWithName("\(groupName): \(informationDescription.localizedCapitalized)"))
+	}
+
+	// MARK: - formatNumber()
+
+	func testGivenMoreThanTwoDecimalPoints_formatNumber_returnsOnlyTwoPlacesAfterDecimalPoint() {
+		// given
+		let input = "000.1234"
+
+		// when
+		let output = generator.formatNumber(input)
+
+		// then
+		assertThat(output, equalTo("000.12"))
+	}
+
+	// MARK: - transform()
+
+	func testGivenEmptyGroupsArray_transform_returnsEmptyArray() throws {
+		// given
+		let information = ExtraInformationMock()
+
+		// when
+		let transformedValues = try generator.transform(sampleGroups: [], information: information)
+
+		// then
+		assertThat(transformedValues, hasCount(0))
+	}
+
+	func testGivenMultipleGroups_transform_returnsCorrectlyTransformedArray() throws {
+		// given
+		let information = ExtraInformationMock()
+		let group1Samples = [SampleCreatorTestUtil.createSample()]
+		let group2Samples = [SampleCreatorTestUtil.createSample()]
+		let group1Value = "1"
+		let group2Value = "2"
+		let group1SampleValue = 1.2
+		let group2SampleValue = 2.3
+		Given(information, .computeGraphable(forSamples: .value(group1Samples), willReturn: String(group1SampleValue)))
+		Given(information, .computeGraphable(forSamples: .value(group2Samples), willReturn: String(group2SampleValue)))
+		let groups: [(Any, [Sample])] = [
+			(group1Value, group1Samples),
+			(group2Value, group2Samples),
+		]
+
+		// when
+		let transformedValues = try generator.transform(sampleGroups: groups, information: information)
 
 		// then
 		XCTFail()
+		#warning("uncomment this when swift compiler error is fixed")
+//		assertThat(
+//			transformedValues,
+//			contains(
+//				has(groupValue: group1Value, sampleValue: group1SampleValue),
+//				has(groupValue: group2Value, sampleValue: group2SampleValue)))
+	}
+
+	// MARK: - index()
+
+	func testGivenEmptyGroupsArray_index_returnsNil() {
+		// given
+		let grouper = SampleGrouperMock(attributes: [])
+
+		// when
+		let index = generator.index(ofValue: "", in: [], groupedBy: grouper)
+
+		// then
+		assertThat(index, nilValue())
+	}
+
+	func testGivenGroupValueDoesNotAppear_index_returnsNil() {
+		// given
+		let value = ""
+		let groups: [(groupValue: Any, sampleValue: String)] = [
+			(groupValue: value + "1", sampleValue: ""),
+			(groupValue: value + "2", sampleValue: ""),
+		]
+		let grouper = SampleGrouperMock(attributes: [])
+		Given(grouper, .groupValuesAreEqual(.any, .any, willReturn: false))
+
+		// when
+		let index = generator.index(ofValue: value, in: groups, groupedBy: grouper)
+
+		// then
+		assertThat(index, nilValue())
+	}
+
+	func testGivenGroupValueAppears_index_returnsCorrectIndex() {
+		// given
+		let value = ""
+		let groups: [(groupValue: Any, sampleValue: String)] = [
+			(groupValue: value + "1", sampleValue: ""),
+			(groupValue: value, sampleValue: ""),
+			(groupValue: value + "2", sampleValue: ""),
+		]
+		let grouper = SampleGrouperMock(attributes: [])
+		Given(grouper, .groupValuesAreEqual(.any, .any, willReturn: false, true, false))
+
+		// when
+		let index = generator.index(ofValue: value, in: groups, groupedBy: grouper)
+
+		// then
+		assertThat(index, equalTo(1))
+	}
+
+	func testGivenGrouperThrowsErrorWhileDeterminingGroupValueEqualityForAllValues_index_returnsNil() {
+		// given
+		let value = ""
+		let groups: [(groupValue: Any, sampleValue: String)] = [
+			(groupValue: value + "1", sampleValue: ""),
+			(groupValue: value + "2", sampleValue: ""),
+		]
+		let grouper = SampleGrouperMock(attributes: [])
+		Given(grouper, .groupValuesAreEqual(.any, .any, willThrow: GenericError("")))
+
+		// when
+		let index = generator.index(ofValue: value, in: groups, groupedBy: grouper)
+
+		// then
+		assertThat(index, nilValue())
 	}
 
 	// MARK: - Helper Functions
+
+	// MARK: Matchers
+
+	// there is an error in the swift compiler that causes a segmentation fault when trying to compile the following method
+	private final func has<GroupType: Equatable, SampleType: Equatable>(
+		groupValue: GroupType,
+		sampleValue: SampleType)
+	-> Hamcrest.Matcher<(groupValue: Any, sampleValue: Any)> {
+		return has(
+			groupValue: groupValue,
+			sampleValue: sampleValue,
+			groupValuesEqual: { $0 == $1 },
+			sampleValuesEqual: { $0 == $1 })
+	}
+
+	private final func has<GroupType, SampleType>(
+		groupValue: GroupType,
+		sampleValue: SampleType,
+		groupValuesEqual: @escaping (GroupType, GroupType) -> Bool,
+		sampleValuesEqual: @escaping (SampleType, SampleType) -> Bool)
+	-> Hamcrest.Matcher<(groupValue: Any, sampleValue: Any)> {
+		return Hamcrest.Matcher("") { group -> MatchResult in
+			guard let actualGroupValue = group.groupValue as? GroupType else {
+				return .mismatch("Wrong type of group value")
+			}
+			guard let actualSampleValue = group.sampleValue as? SampleType else {
+				return .mismatch("Wrong type of sample value")
+			}
+			if !groupValuesEqual(groupValue, actualGroupValue) {
+				return .mismatch("Group values do not match")
+			}
+			if !sampleValuesEqual(sampleValue, actualSampleValue) {
+				return .mismatch("Sample values do not match")
+			}
+			return .match
+		}
+	}
 
 	private final func hasSampleValue<Type: Equatable>(_ expectedValue: Type)
 	-> Hamcrest.Matcher<(groupValue: Any, sampleValue: Any)> {
@@ -253,5 +510,13 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 			}
 			return .mismatch("Was \(String(describing: sampleValue))")
 		}
+	}
+
+	// MARK: Other
+
+	private final func mockInformation(description: String = "information") -> ExtraInformationMock {
+		let information = ExtraInformationMock(AttributeMock())
+		Given(information, .description(getter: description))
+		return information
 	}
 }

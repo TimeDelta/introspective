@@ -199,7 +199,7 @@ public class XYGraphDataGenerator {
 					String(describing: $0.groupValue),
 					String(describing: value),
 					errorInfo(error))
-					return false
+				return false
 			}
 		})
 	}

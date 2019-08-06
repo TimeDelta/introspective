@@ -69,6 +69,13 @@ class SelectExtraInformationViewControllerMock: UIViewController, SelectExtraInf
 	private var __p_notificationToSendWhenFinished: (NotificationName)?
 
 
+    public var notificationFilter: Any? {
+		get {	invocations.append(.p_notificationFilter_get); return __p_notificationFilter ?? optionalGivenGetterValue(.p_notificationFilter_get, "SelectExtraInformationViewControllerMock - stub value for notificationFilter was not defined") }
+		set {	invocations.append(.p_notificationFilter_set(.value(newValue))); __p_notificationFilter = newValue }
+	}
+	private var __p_notificationFilter: (Any)?
+
+
 
 
 
@@ -85,6 +92,8 @@ class SelectExtraInformationViewControllerMock: UIViewController, SelectExtraInf
 		case p_limitToNumericInformation_set(Parameter<Bool>)
         case p_notificationToSendWhenFinished_get
 		case p_notificationToSendWhenFinished_set(Parameter<NotificationName?>)
+        case p_notificationFilter_get
+		case p_notificationFilter_set(Parameter<Any?>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -98,6 +107,8 @@ class SelectExtraInformationViewControllerMock: UIViewController, SelectExtraInf
 			case (.p_limitToNumericInformation_set(let left),.p_limitToNumericInformation_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_notificationToSendWhenFinished_get,.p_notificationToSendWhenFinished_get): return true
 			case (.p_notificationToSendWhenFinished_set(let left),.p_notificationToSendWhenFinished_set(let right)): return Parameter<NotificationName?>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_notificationFilter_get,.p_notificationFilter_get): return true
+			case (.p_notificationFilter_set(let left),.p_notificationFilter_set(let right)): return Parameter<Any?>.compare(lhs: left, rhs: right, with: matcher)
             default: return false
             }
         }
@@ -114,6 +125,8 @@ class SelectExtraInformationViewControllerMock: UIViewController, SelectExtraInf
 			case .p_limitToNumericInformation_set(let newValue): return newValue.intValue
             case .p_notificationToSendWhenFinished_get: return 0
 			case .p_notificationToSendWhenFinished_set(let newValue): return newValue.intValue
+            case .p_notificationFilter_get: return 0
+			case .p_notificationFilter_set(let newValue): return newValue.intValue
             }
         }
     }
@@ -141,6 +154,9 @@ class SelectExtraInformationViewControllerMock: UIViewController, SelectExtraInf
         public static func notificationToSendWhenFinished(getter defaultValue: NotificationName?...) -> PropertyStub {
             return Given(method: .p_notificationToSendWhenFinished_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
+        public static func notificationFilter(getter defaultValue: Any?...) -> PropertyStub {
+            return Given(method: .p_notificationFilter_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
 
     }
 
@@ -157,6 +173,8 @@ class SelectExtraInformationViewControllerMock: UIViewController, SelectExtraInf
 		public static func limitToNumericInformation(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_limitToNumericInformation_set(newValue)) }
         public static var notificationToSendWhenFinished: Verify { return Verify(method: .p_notificationToSendWhenFinished_get) }
 		public static func notificationToSendWhenFinished(set newValue: Parameter<NotificationName?>) -> Verify { return Verify(method: .p_notificationToSendWhenFinished_set(newValue)) }
+        public static var notificationFilter: Verify { return Verify(method: .p_notificationFilter_get) }
+		public static func notificationFilter(set newValue: Parameter<Any?>) -> Verify { return Verify(method: .p_notificationFilter_set(newValue)) }
     }
 
     public struct Perform {

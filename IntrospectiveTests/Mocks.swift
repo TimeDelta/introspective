@@ -6534,9 +6534,9 @@ open class HealthKitUtilMock: HealthKitUtil, Mock {
 		perform?(&`date`, `sample`)
     }
 
-    open func calculate(_ calculation: HKStatisticsOptions, _ type: HealthKitQuantitySample.Type, from startDate: Date, to endDate: Date, callback: @escaping (Double?, Error?) -> ()) {
-        addInvocation(.m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(Parameter<HKStatisticsOptions>.value(`calculation`), Parameter<HealthKitQuantitySample.Type>.value(`type`), Parameter<Date>.value(`startDate`), Parameter<Date>.value(`endDate`), Parameter<(Double?, Error?) -> ()>.value(`callback`)))
-		let perform = methodPerformValue(.m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(Parameter<HKStatisticsOptions>.value(`calculation`), Parameter<HealthKitQuantitySample.Type>.value(`type`), Parameter<Date>.value(`startDate`), Parameter<Date>.value(`endDate`), Parameter<(Double?, Error?) -> ()>.value(`callback`))) as? (HKStatisticsOptions, HealthKitQuantitySample.Type, Date, Date, @escaping (Double?, Error?) -> ()) -> Void
+    open func calculate(_ calculation: HKStatisticsOptions, _ type: HealthKitQuantitySample.Type, from startDate: Date, to endDate: Date, callback: @escaping (Double?, Error?) -> Void) {
+        addInvocation(.m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(Parameter<HKStatisticsOptions>.value(`calculation`), Parameter<HealthKitQuantitySample.Type>.value(`type`), Parameter<Date>.value(`startDate`), Parameter<Date>.value(`endDate`), Parameter<(Double?, Error?) -> Void>.value(`callback`)))
+		let perform = methodPerformValue(.m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(Parameter<HKStatisticsOptions>.value(`calculation`), Parameter<HealthKitQuantitySample.Type>.value(`type`), Parameter<Date>.value(`startDate`), Parameter<Date>.value(`endDate`), Parameter<(Double?, Error?) -> Void>.value(`callback`))) as? (HKStatisticsOptions, HealthKitQuantitySample.Type, Date, Date, @escaping (Double?, Error?) -> Void) -> Void
 		perform?(`calculation`, `type`, `startDate`, `endDate`, `callback`)
     }
 
@@ -6576,7 +6576,7 @@ open class HealthKitUtilMock: HealthKitUtil, Mock {
 
     fileprivate enum MethodType {
         case m_setTimeZoneIfApplicable__for_datefrom_sample(Parameter<Date>, Parameter<HKSample>)
-        case m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(Parameter<HKStatisticsOptions>, Parameter<HealthKitQuantitySample.Type>, Parameter<Date>, Parameter<Date>, Parameter<(Double?, Error?) -> ()>)
+        case m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(Parameter<HKStatisticsOptions>, Parameter<HealthKitQuantitySample.Type>, Parameter<Date>, Parameter<Date>, Parameter<(Double?, Error?) -> Void>)
         case m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(Parameter<HealthKitSample.Type>, Parameter<Date?>, Parameter<Date?>, Parameter<NSPredicate?>, Parameter<(Array<HKSample>?, Error?) -> Void>)
         case m_preferredUnitFor__typeId(Parameter<HKQuantityTypeIdentifier>)
         case m_getAuthorization__callback_callback(Parameter<(Error?) -> Void>)
@@ -6657,7 +6657,7 @@ open class HealthKitUtilMock: HealthKitUtil, Mock {
         fileprivate var method: MethodType
 
         public static func setTimeZoneIfApplicable(for date: Parameter<Date>, from sample: Parameter<HKSample>) -> Verify { return Verify(method: .m_setTimeZoneIfApplicable__for_datefrom_sample(`date`, `sample`))}
-        public static func calculate(_ calculation: Parameter<HKStatisticsOptions>, _ type: Parameter<HealthKitQuantitySample.Type>, from startDate: Parameter<Date>, to endDate: Parameter<Date>, callback: Parameter<(Double?, Error?) -> ()>) -> Verify { return Verify(method: .m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(`calculation`, `type`, `startDate`, `endDate`, `callback`))}
+        public static func calculate(_ calculation: Parameter<HKStatisticsOptions>, _ type: Parameter<HealthKitQuantitySample.Type>, from startDate: Parameter<Date>, to endDate: Parameter<Date>, callback: Parameter<(Double?, Error?) -> Void>) -> Verify { return Verify(method: .m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(`calculation`, `type`, `startDate`, `endDate`, `callback`))}
         public static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<(Array<HKSample>?, Error?) -> Void>) -> Verify { return Verify(method: .m_getSamples__for_typefrom_startDateto_endDatepredicate_predicatecallback_callback(`type`, `startDate`, `endDate`, `predicate`, `callback`))}
         public static func preferredUnitFor(_ typeId: Parameter<HKQuantityTypeIdentifier>) -> Verify { return Verify(method: .m_preferredUnitFor__typeId(`typeId`))}
         public static func getAuthorization(callback: Parameter<(Error?) -> Void>) -> Verify { return Verify(method: .m_getAuthorization__callback_callback(`callback`))}
@@ -6670,7 +6670,7 @@ open class HealthKitUtilMock: HealthKitUtil, Mock {
         public static func setTimeZoneIfApplicable(for date: Parameter<Date>, from sample: Parameter<HKSample>, perform: @escaping (inout Date, HKSample) -> Void) -> Perform {
             return Perform(method: .m_setTimeZoneIfApplicable__for_datefrom_sample(`date`, `sample`), performs: perform)
         }
-        public static func calculate(_ calculation: Parameter<HKStatisticsOptions>, _ type: Parameter<HealthKitQuantitySample.Type>, from startDate: Parameter<Date>, to endDate: Parameter<Date>, callback: Parameter<(Double?, Error?) -> ()>, perform: @escaping (HKStatisticsOptions, HealthKitQuantitySample.Type, Date, Date, @escaping (Double?, Error?) -> ()) -> Void) -> Perform {
+        public static func calculate(_ calculation: Parameter<HKStatisticsOptions>, _ type: Parameter<HealthKitQuantitySample.Type>, from startDate: Parameter<Date>, to endDate: Parameter<Date>, callback: Parameter<(Double?, Error?) -> Void>, perform: @escaping (HKStatisticsOptions, HealthKitQuantitySample.Type, Date, Date, @escaping (Double?, Error?) -> Void) -> Void) -> Perform {
             return Perform(method: .m_calculate__calculation_typefrom_startDateto_endDatecallback_callback(`calculation`, `type`, `startDate`, `endDate`, `callback`), performs: perform)
         }
         public static func getSamples(for type: Parameter<HealthKitSample.Type>, from startDate: Parameter<Date?>, to endDate: Parameter<Date?>, predicate: Parameter<NSPredicate?>, callback: Parameter<(Array<HKSample>?, Error?) -> Void>, perform: @escaping (HealthKitSample.Type, Date?, Date?, NSPredicate?, @escaping (Array<HKSample>?, Error?) -> Void) -> Void) -> Perform {
