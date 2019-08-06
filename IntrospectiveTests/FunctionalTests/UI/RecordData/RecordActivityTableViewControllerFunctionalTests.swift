@@ -76,6 +76,8 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(0), to: inactiveCellIndex(1))
 
 		// then
+		// note: throws "Attempted to dequeue multiple cells for the same index path" without this lines
+		controller.viewDidLoad()
 		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
 		//       and cannot use asynchronous asserts
 		XCTAssertEqual(getDefinition(atIndex: 0).name, definition2.name)
@@ -94,6 +96,8 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(2), to: inactiveCellIndex(1))
 
 		// then
+		// note: throws "Attempted to dequeue multiple cells for the same index path" without this lines
+		controller.viewDidLoad()
 		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
 		//       and cannot use asynchronous asserts
 		XCTAssertEqual(getDefinition(atIndex: 0).name, definition1.name)
@@ -266,6 +270,8 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(0), to: inactiveCellIndex(2))
 
 		// then
+		// note: throws "Attempted to dequeue multiple cells for the same index path" without this lines
+		controller.viewDidLoad()
 		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
 		//       and cannot use asynchronous asserts
 		XCTAssertEqual(getDefinition(atIndex: 0).name, existingDefinition2.name)
@@ -291,6 +297,8 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(2), to: inactiveCellIndex(0))
 
 		// then
+		// note: throws "Attempted to dequeue multiple cells for the same index path" without this lines
+		controller.viewDidLoad()
 		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
 		//       and cannot use asynchronous asserts
 		XCTAssertEqual(getDefinition(atIndex: 0).name, importedName1)
@@ -385,6 +393,8 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(2), to: inactiveCellIndex(4))
 
 		// then
+		// note: throws "Attempted to dequeue multiple cells for the same index path" without this lines
+		controller.viewDidLoad()
 		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
 		//       and cannot use asynchronous asserts
 		XCTAssertEqual(getDefinition(atIndex: 0).name, existingDefinition1.name)
@@ -423,6 +433,8 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(4), to: inactiveCellIndex(2))
 
 		// then
+		// note: throws "Attempted to dequeue multiple cells for the same index path" without this lines
+		controller.viewDidLoad()
 		// note: recordScreenIndex appears to not be updated in the CoreData stack until Fafter the calling thread is done
 		//       and cannot use asynchronous asserts
 		XCTAssertEqual(getDefinition(atIndex: 0).name, existingDefinition1.name)
@@ -463,7 +475,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 	private final func stopActivity(_ activity: Activity) throws {
 		let transaction = DependencyInjector.db.transaction()
 		let transactionActivity = try transaction.pull(savedObject: activity)
-		activity.end = Date()
+		transactionActivity.end = Date()
 		try transaction.commit()
 	}
 }
