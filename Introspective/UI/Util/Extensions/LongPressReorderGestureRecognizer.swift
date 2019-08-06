@@ -68,19 +68,18 @@ public final class LongPressReorderGestureRecognizer: UILongPressGestureRecogniz
 					completion: { finished in
 						if finished { cell.isHidden = true }
 					})
+				break
 			case .changed:
-				if let allowReorder = allowReorder {
-					guard allowReorder(initialIndexPath, indexPath) else { return }
-				}
 				var center = cellSnapshot!.center
 				center.y = locationInView.y
 				cellSnapshot!.center = center
+				break
+			case .ended:
 				guard let indexPath = indexPath else { return }
 				if indexPath != initialIndexPath {
 					tableViewController().tableView(tableView, moveRowAt: initialIndexPath, to: indexPath)
 					initialIndexPath = indexPath
 				}
-			default:
 				if let allowReorder = allowReorder {
 					guard allowReorder(initialIndexPath, indexPath) else { return }
 				}
@@ -102,6 +101,9 @@ public final class LongPressReorderGestureRecognizer: UILongPressGestureRecogniz
 							self.cellSnapshot = nil
 						}
 					})
+				break
+			default:
+				break
 		}
 	}
 
