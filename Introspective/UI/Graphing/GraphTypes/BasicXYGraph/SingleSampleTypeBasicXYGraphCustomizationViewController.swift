@@ -78,6 +78,8 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 		observe(selector: #selector(xAxisChanged), name: .xAxisInformationChanged)
 		observe(selector: #selector(yAxisChanged), name: .yAxisInformationChanged)
 		observe(selector: #selector(queryChanged), name: .queryChanged)
+		observe(selector: #selector(seriesGrouperEdited), name: .seriesGrouperEdited)
+		observe(selector: #selector(pointGrouperEdited), name: .pointGrouperEdited)
 
 		updateShowGraphButtonState()
 	}
@@ -97,7 +99,6 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	@IBAction final func chooseSeriesGroupingButtonPressed(_ sender: Any) {
 		showGrouperEditController(
 			grouper: seriesGrouper,
-			editedCallback: #selector(seriesGrouperEdited),
 			notification: .seriesGrouperEdited,
 			grouperName: "Series Grouping")
 	}
@@ -115,7 +116,6 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	@IBAction final func choosePointGroupingButtonPressed(_ sender: Any) {
 		showGrouperEditController(
 			grouper: pointGrouper,
-			editedCallback: #selector(pointGrouperEdited),
 			notification: .pointGrouperEdited,
 			grouperName: "Point Grouping")
 	}
@@ -300,12 +300,9 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 
 	private final func showGrouperEditController(
 		grouper: SampleGrouper?,
-		editedCallback: Selector,
 		notification: NotificationName,
 		grouperName: String)
 	{
-		observe(selector: editedCallback, name: notification)
-
 		let controller = viewController(named: "chooseGrouper", fromStoryboard: "Util") as! GroupingChooserTableViewController
 		controller.sampleType = sampleType
 		controller.currentGrouper = grouper?.copy()

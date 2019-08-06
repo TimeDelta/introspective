@@ -958,7 +958,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 	{
 		Given(mockUiUtil, .value(for: .value(.sampleGrouper), from: .any, keyIsOptional: .any, willReturn: grouper))
 		NotificationCenter.default.post(
-			name: NotificationName.grouperEdited.toName(),
+			name: notification.toName(),
 			object: nil,
 			userInfo: [
 				UserInfoKey.sampleGrouper: grouper,
