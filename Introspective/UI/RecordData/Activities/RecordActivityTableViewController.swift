@@ -91,7 +91,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 				return exampleActivityCell.mostRecentTimeLabel
 			}),
 		CoachMarkInfo(
-			hint: "Swipe left for actions related to individual instances of this activity. Swipe right for actions related to the common definition of this activity.",
+			hint: "Swipe left for actions related to individual instances of this activity. Swipe right for actions related to all instances of this activity.",
 			useArrow: true,
 			view: { return self.tableView.visibleCells[0] }),
 		CoachMarkInfo(
