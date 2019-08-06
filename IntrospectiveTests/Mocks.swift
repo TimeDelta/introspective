@@ -13182,6 +13182,13 @@ open class SettingsMock: Settings, Mock, StaticMock {
 	}
 	private var __p_autoIgnoreSeconds: (Int)?
 
+    public var bubbleRunningActivitiesToTop: Bool {
+		get {	invocations.append(.p_bubbleRunningActivitiesToTop_get); return __p_bubbleRunningActivitiesToTop ?? givenGetterValue(.p_bubbleRunningActivitiesToTop_get, "SettingsMock - stub value for bubbleRunningActivitiesToTop was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_bubbleRunningActivitiesToTop = newValue }
+	}
+	private var __p_bubbleRunningActivitiesToTop: (Bool)?
+
     public var convertTimeZones: Bool {
 		get {	invocations.append(.p_convertTimeZones_get); return __p_convertTimeZones ?? givenGetterValue(.p_convertTimeZones_get, "SettingsMock - stub value for convertTimeZones was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
@@ -13233,6 +13240,12 @@ open class SettingsMock: Settings, Mock, StaticMock {
     open func setAutoIgnoreSeconds(_ value: Int) {
         addInvocation(.m_setAutoIgnoreSeconds__value(Parameter<Int>.value(`value`)))
 		let perform = methodPerformValue(.m_setAutoIgnoreSeconds__value(Parameter<Int>.value(`value`))) as? (Int) -> Void
+		perform?(`value`)
+    }
+
+    open func setBubbleRunningActivitiesToTop(_ value: Bool) {
+        addInvocation(.m_setBubbleRunningActivitiesToTop__value(Parameter<Bool>.value(`value`)))
+		let perform = methodPerformValue(.m_setBubbleRunningActivitiesToTop__value(Parameter<Bool>.value(`value`))) as? (Bool) -> Void
 		perform?(`value`)
     }
 
@@ -13325,6 +13338,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
         case m_setScaleMoodsOnImport__value(Parameter<Bool>)
         case m_setAutoIgnoreEnabled__value(Parameter<Bool>)
         case m_setAutoIgnoreSeconds__value(Parameter<Int>)
+        case m_setBubbleRunningActivitiesToTop__value(Parameter<Bool>)
         case m_setConvertTimeZones__value(Parameter<Bool>)
         case m_changed__setting(Parameter<Setting>)
         case m_reset
@@ -13335,6 +13349,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
         case p_scaleMoodsOnImport_get
         case p_autoIgnoreEnabled_get
         case p_autoIgnoreSeconds_get
+        case p_bubbleRunningActivitiesToTop_get
         case p_convertTimeZones_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
@@ -13357,6 +13372,9 @@ open class SettingsMock: Settings, Mock, StaticMock {
             case (.m_setAutoIgnoreSeconds__value(let lhsValue), .m_setAutoIgnoreSeconds__value(let rhsValue)):
                 guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
                 return true 
+            case (.m_setBubbleRunningActivitiesToTop__value(let lhsValue), .m_setBubbleRunningActivitiesToTop__value(let rhsValue)):
+                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                return true 
             case (.m_setConvertTimeZones__value(let lhsValue), .m_setConvertTimeZones__value(let rhsValue)):
                 guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
                 return true 
@@ -13373,6 +13391,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
             case (.p_scaleMoodsOnImport_get,.p_scaleMoodsOnImport_get): return true
             case (.p_autoIgnoreEnabled_get,.p_autoIgnoreEnabled_get): return true
             case (.p_autoIgnoreSeconds_get,.p_autoIgnoreSeconds_get): return true
+            case (.p_bubbleRunningActivitiesToTop_get,.p_bubbleRunningActivitiesToTop_get): return true
             case (.p_convertTimeZones_get,.p_convertTimeZones_get): return true
             default: return false
             }
@@ -13386,6 +13405,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
             case let .m_setScaleMoodsOnImport__value(p0): return p0.intValue
             case let .m_setAutoIgnoreEnabled__value(p0): return p0.intValue
             case let .m_setAutoIgnoreSeconds__value(p0): return p0.intValue
+            case let .m_setBubbleRunningActivitiesToTop__value(p0): return p0.intValue
             case let .m_setConvertTimeZones__value(p0): return p0.intValue
             case let .m_changed__setting(p0): return p0.intValue
             case .m_reset: return 0
@@ -13396,6 +13416,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
             case .p_scaleMoodsOnImport_get: return 0
             case .p_autoIgnoreEnabled_get: return 0
             case .p_autoIgnoreSeconds_get: return 0
+            case .p_bubbleRunningActivitiesToTop_get: return 0
             case .p_convertTimeZones_get: return 0
             }
         }
@@ -13426,6 +13447,9 @@ open class SettingsMock: Settings, Mock, StaticMock {
         }
         public static func autoIgnoreSeconds(getter defaultValue: Int...) -> PropertyStub {
             return Given(method: .p_autoIgnoreSeconds_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func bubbleRunningActivitiesToTop(getter defaultValue: Bool...) -> PropertyStub {
+            return Given(method: .p_bubbleRunningActivitiesToTop_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func convertTimeZones(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_convertTimeZones_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
@@ -13462,6 +13486,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
         public static func setScaleMoodsOnImport(_ value: Parameter<Bool>) -> Verify { return Verify(method: .m_setScaleMoodsOnImport__value(`value`))}
         public static func setAutoIgnoreEnabled(_ value: Parameter<Bool>) -> Verify { return Verify(method: .m_setAutoIgnoreEnabled__value(`value`))}
         public static func setAutoIgnoreSeconds(_ value: Parameter<Int>) -> Verify { return Verify(method: .m_setAutoIgnoreSeconds__value(`value`))}
+        public static func setBubbleRunningActivitiesToTop(_ value: Parameter<Bool>) -> Verify { return Verify(method: .m_setBubbleRunningActivitiesToTop__value(`value`))}
         public static func setConvertTimeZones(_ value: Parameter<Bool>) -> Verify { return Verify(method: .m_setConvertTimeZones__value(`value`))}
         public static func changed(_ setting: Parameter<Setting>) -> Verify { return Verify(method: .m_changed__setting(`setting`))}
         public static func reset() -> Verify { return Verify(method: .m_reset)}
@@ -13472,6 +13497,7 @@ open class SettingsMock: Settings, Mock, StaticMock {
         public static var scaleMoodsOnImport: Verify { return Verify(method: .p_scaleMoodsOnImport_get) }
         public static var autoIgnoreEnabled: Verify { return Verify(method: .p_autoIgnoreEnabled_get) }
         public static var autoIgnoreSeconds: Verify { return Verify(method: .p_autoIgnoreSeconds_get) }
+        public static var bubbleRunningActivitiesToTop: Verify { return Verify(method: .p_bubbleRunningActivitiesToTop_get) }
         public static var convertTimeZones: Verify { return Verify(method: .p_convertTimeZones_get) }
     }
 
@@ -13496,6 +13522,9 @@ open class SettingsMock: Settings, Mock, StaticMock {
         }
         public static func setAutoIgnoreSeconds(_ value: Parameter<Int>, perform: @escaping (Int) -> Void) -> Perform {
             return Perform(method: .m_setAutoIgnoreSeconds__value(`value`), performs: perform)
+        }
+        public static func setBubbleRunningActivitiesToTop(_ value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
+            return Perform(method: .m_setBubbleRunningActivitiesToTop__value(`value`), performs: perform)
         }
         public static func setConvertTimeZones(_ value: Parameter<Bool>, perform: @escaping (Bool) -> Void) -> Perform {
             return Perform(method: .m_setConvertTimeZones__value(`value`), performs: perform)

@@ -17,6 +17,7 @@ public enum Setting {
 	case scaleMoodsOnImport
 	case autoIgnoreEnabled
 	case autoIgnoreSeconds
+	case bubbleRunningActivitiesToTop
 	case convertTimeZones
 }
 
@@ -41,6 +42,9 @@ public protocol Settings: CoreDataObject {
 
 	var autoIgnoreSeconds: Int { get }
 	func setAutoIgnoreSeconds(_ value: Int)
+
+	var bubbleRunningActivitiesToTop: Bool { get }
+	func setBubbleRunningActivitiesToTop(_ value: Bool)
 
 	var convertTimeZones: Bool { get }
 	func setConvertTimeZones(_ value: Bool)
@@ -128,6 +132,17 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		}
 	}
 
+	// MARK: Bubble Running Activities To Top
+	private final var newBubbleRunningActivitiesToTop: Bool? = nil
+	public final var bubbleRunningActivitiesToTop: Bool {
+		return newBubbleRunningActivitiesToTop ?? storedBubbleRunningActivitiesToTop
+	}
+	public final func setBubbleRunningActivitiesToTop(_ value: Bool) {
+		if value != storedBubbleRunningActivitiesToTop {
+			newBubbleRunningActivitiesToTop = value
+		}
+	}
+
 	// MARK: - General
 
 	// MARK: Convert Time Zones
@@ -151,6 +166,7 @@ public final class SettingsImpl: NSManagedObject, Settings {
 			case .scaleMoodsOnImport: return newScaleMoodsOnImport != nil
 			case .autoIgnoreEnabled: return newAutoIgnoreEnabled != nil
 			case .autoIgnoreSeconds: return newAutoIgnoreSeconds != nil
+			case .bubbleRunningActivitiesToTop: return newBubbleRunningActivitiesToTop != nil
 			case .convertTimeZones: return newConvertTimeZones != nil
 		}
 	}
@@ -162,6 +178,7 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		newScaleMoodsOnImport = nil
 		newAutoIgnoreEnabled = nil
 		newAutoIgnoreSeconds = nil
+		newBubbleRunningActivitiesToTop = nil
 		newConvertTimeZones = nil
 	}
 
@@ -173,6 +190,7 @@ public final class SettingsImpl: NSManagedObject, Settings {
 		storedScaleMoodsOnImport = scaleMoodsOnImport
 		storedAutoIgnoreEnabled = autoIgnoreEnabled
 		storedAutoIgnoreSeconds = autoIgnoreSeconds
+		storedBubbleRunningActivitiesToTop = bubbleRunningActivitiesToTop
 		storedConvertTimeZones = convertTimeZones
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		reset()
@@ -193,5 +211,6 @@ extension SettingsImpl {
 	@NSManaged fileprivate var storedScaleMoodsOnImport: Bool
 	@NSManaged fileprivate var storedAutoIgnoreEnabled: Bool
 	@NSManaged fileprivate var storedAutoIgnoreSeconds: Int
+	@NSManaged fileprivate var storedBubbleRunningActivitiesToTop: Bool
 	@NSManaged fileprivate var storedConvertTimeZones: Bool
 }

@@ -145,6 +145,28 @@ final class SettingsFunctionalTests: FunctionalTest {
 		XCTAssert(changed)
 	}
 
+	func testGivenBubbleRunningActivitiesToTopNotChanged_changed_returnsFalse() {
+		// given
+		settings.setBubbleRunningActivitiesToTop(settings.bubbleRunningActivitiesToTop)
+
+		// when
+		let changed = settings.changed(.bubbleRunningActivitiesToTop)
+
+		// then
+		XCTAssertFalse(changed)
+	}
+
+	func testGivenBubbleRunningActivitiesToTopChanged_changed_returnsTrue() {
+		// given
+		settings.setBubbleRunningActivitiesToTop(!settings.bubbleRunningActivitiesToTop)
+
+		// when
+		let changed = settings.changed(.bubbleRunningActivitiesToTop)
+
+		// then
+		XCTAssert(changed)
+	}
+
 	func testGivenConvertTimeZonesNotChanged_changed_returnsFalse() {
 		// given
 		settings.setConvertTimeZones(settings.convertTimeZones)
@@ -245,6 +267,19 @@ final class SettingsFunctionalTests: FunctionalTest {
 		XCTAssertEqual(settings.autoIgnoreSeconds, expectedValue)
 	}
 
+	// MARK: - setBubbleRunningActivitiesToTop()
+
+	func testGivenNewBubbleRunningActivitiesToTop_setBubbleRunningActivitiesToTop_correctlySetsValue() {
+		// given
+		let expectedValue = !settings.bubbleRunningActivitiesToTop
+
+		// when
+		settings.setBubbleRunningActivitiesToTop(expectedValue)
+
+		// then
+		XCTAssertEqual(settings.bubbleRunningActivitiesToTop, expectedValue)
+	}
+
 	// MARK: - setConvertTimeZones()
 
 	func testGivenNewConvertTimeZones_setConvertTimeZones_correctlySetsValue() {
@@ -330,6 +365,18 @@ final class SettingsFunctionalTests: FunctionalTest {
 
 		// then
 		XCTAssertNotEqual(settings.autoIgnoreSeconds, expectedValue)
+	}
+
+	func testGivenNewBubbleRunningActivitiesToTop_reset_resetsBubbleRunningActivitiesToTop() {
+		// given
+		let expectedValue = !settings.bubbleRunningActivitiesToTop
+		settings.setBubbleRunningActivitiesToTop(expectedValue)
+
+		// when
+		settings.reset()
+
+		// then
+		XCTAssertNotEqual(settings.bubbleRunningActivitiesToTop, expectedValue)
 	}
 
 	func testGivenNewConvertTimeZones_reset_resetsConvertTimeZones() {
@@ -434,6 +481,21 @@ final class SettingsFunctionalTests: FunctionalTest {
 		let newSettingsObject = try DependencyInjector.db.query(SettingsImpl.fetchRequest())[0]
 		try transaction.commit()
 		XCTAssertEqual(newSettingsObject.autoIgnoreSeconds, expectedValue)
+	}
+
+	func testGivenNewBubbleRunningActivitiesToTop_save_savesBubbleRunningActivitiesToTop() throws {
+		// given
+		let expectedValue = !settings.bubbleRunningActivitiesToTop
+		settings.setBubbleRunningActivitiesToTop(expectedValue)
+
+		// when
+		try settings.save()
+
+		// then
+		let transaction = DependencyInjector.db.transaction()
+		let newSettingsObject = try DependencyInjector.db.query(SettingsImpl.fetchRequest())[0]
+		try transaction.commit()
+		XCTAssertEqual(newSettingsObject.bubbleRunningActivitiesToTop, expectedValue)
 	}
 
 	func testGivenNewConvertTimeZones_save_savesConvertTimeZones() throws {

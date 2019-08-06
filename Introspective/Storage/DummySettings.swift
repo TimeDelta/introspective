@@ -58,6 +58,11 @@ public final class DummySettings: Settings {
 		log.error("tried to set AutoIgnoreSeconds")
 	}
 
+	public final let bubbleRunningActivitiesToTop: Bool = true
+	public final func setBubbleRunningActivitiesToTop(_ value: Bool) {
+		log.error("tried to set BubbleRunningActivitiesToTop")
+	}
+
 	public final let convertTimeZones: Bool = true
 	public final func setConvertTimeZones(_ value: Bool) {
 		log.error("tried to set ConvertTimeZones")
