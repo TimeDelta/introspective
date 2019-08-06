@@ -63,6 +63,8 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 
 	// MARK: - Reordering
 
+	// MARK: Without running activities
+
 	func testGivenMoveToLowerSpotWhileNotFiltering_tableViewMoveRowAtTo_correctlyReordersDefinitions() throws {
 		// given
 		let definition1 = ActivityDataTestUtil.createActivityDefinition(name: "definition 1", recordScreenIndex: 0)
@@ -71,7 +73,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		controller.viewDidLoad()
 
 		// when
-		controller.tableView(controller.tableView, moveRowAt: cellIndex(0), to: cellIndex(1))
+		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(0), to: inactiveCellIndex(1))
 
 		// then
 		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
@@ -89,7 +91,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		controller.viewDidLoad()
 
 		// when
-		controller.tableView(controller.tableView, moveRowAt: cellIndex(2), to: cellIndex(1))
+		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(2), to: inactiveCellIndex(1))
 
 		// then
 		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
@@ -110,7 +112,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		filterDefinitions(by: filterString)
 
 		// when
-		controller.tableView(controller.tableView, moveRowAt: cellIndex(0), to: cellIndex(1))
+		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(0), to: inactiveCellIndex(1))
 
 		// then
 		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
@@ -133,7 +135,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		filterDefinitions(by: filterString)
 
 		// when
-		controller.tableView(controller.tableView, moveRowAt: cellIndex(1), to: cellIndex(0))
+		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(1), to: inactiveCellIndex(0))
 
 		// then
 		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
@@ -143,6 +145,106 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		XCTAssertEqual(getDefinition(atIndex: 1).name, definition1.name)
 		XCTAssertEqual(getDefinition(atIndex: 2).name, definition2.name)
 		XCTAssertEqual(getDefinition(atIndex: 3).name, definition4.name)
+	}
+
+	// MARK: With running activity
+
+	func testGivenMoveToLowerSpotWhileActivityRunning_tableViewMoveRowAtTo_correctlyReordersDefinitions() throws {
+		// given
+		let definition1 = ActivityDataTestUtil.createActivityDefinition(name: "definition 1", recordScreenIndex: 0)
+		let definition2 = ActivityDataTestUtil.createActivityDefinition(name: "definition 2", recordScreenIndex: 1)
+		let definition3 = ActivityDataTestUtil.createActivityDefinition(name: "definition 3", recordScreenIndex: 2)
+		let activity = ActivityDataTestUtil.createActivity(definition: definition2, startDate: Date(), endDate: nil)
+		controller.viewDidLoad()
+
+		// when
+		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(0), to: inactiveCellIndex(1))
+
+		// then
+		try stopActivity(activity)
+		controller.viewDidLoad()
+		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
+		//       and cannot use asynchronous asserts
+		XCTAssertEqual(getDefinition(atIndex: 0).name, definition2.name)
+		XCTAssertEqual(getDefinition(atIndex: 1).name, definition3.name)
+		XCTAssertEqual(getDefinition(atIndex: 2).name, definition1.name)
+	}
+
+	func testGivenMoveToHigherSpotWhileActivityRunning_tableViewMoveRowAtTo_correctlyReordersDefinitions() throws {
+		// given
+		let definition1 = ActivityDataTestUtil.createActivityDefinition(name: "definition 1", recordScreenIndex: 0)
+		let definition2 = ActivityDataTestUtil.createActivityDefinition(name: "definition 2", recordScreenIndex: 1)
+		let definition3 = ActivityDataTestUtil.createActivityDefinition(name: "definition 3", recordScreenIndex: 2)
+		let activity = ActivityDataTestUtil.createActivity(definition: definition2, startDate: Date(), endDate: nil)
+		controller.viewDidLoad()
+
+		// when
+		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(1), to: inactiveCellIndex(0))
+
+		// then
+		try stopActivity(activity)
+		controller.viewDidLoad()
+		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
+		//       and cannot use asynchronous asserts
+		XCTAssertEqual(getDefinition(atIndex: 0).name, definition3.name)
+		XCTAssertEqual(getDefinition(atIndex: 1).name, definition1.name)
+		XCTAssertEqual(getDefinition(atIndex: 2).name, definition2.name)
+	}
+
+	// MARK: With running activity while filtering
+
+	func testGivenMoveToLowerSpotWithWhileActivityRunningAndFiltering_tableViewMoveRowAtTo_correctlyReordersDefinitions() throws {
+		// given
+		let filterString = "filter string"
+		let definition1 = ActivityDataTestUtil.createActivityDefinition(name: filterString, recordScreenIndex: 0)
+		let definition2 = ActivityDataTestUtil.createActivityDefinition(name: "definition 2", recordScreenIndex: 1)
+		let definition3 = ActivityDataTestUtil.createActivityDefinition(name: "\(filterString) definition 3 (running)", recordScreenIndex: 2)
+		let definition4 = ActivityDataTestUtil.createActivityDefinition(name: "definition 4 \(filterString)", recordScreenIndex: 3)
+		let definition5 = ActivityDataTestUtil.createActivityDefinition(name: "definition 5 \(filterString)", recordScreenIndex: 4)
+		let activity = ActivityDataTestUtil.createActivity(definition: definition3, startDate: Date(), endDate: nil)
+		controller.viewDidLoad()
+		filterDefinitions(by: filterString)
+
+		// when
+		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(0), to: inactiveCellIndex(1))
+
+		// then
+		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
+		//       and cannot use asynchronous asserts
+		try stopActivity(activity)
+		filterDefinitions(by: "") // reset filter string in order to check that all definitions are in correct spot
+		XCTAssertEqual(getDefinition(atIndex: 0).name, definition2.name)
+		XCTAssertEqual(getDefinition(atIndex: 1).name, definition3.name)
+		XCTAssertEqual(getDefinition(atIndex: 2).name, definition4.name)
+		XCTAssertEqual(getDefinition(atIndex: 3).name, definition1.name)
+		XCTAssertEqual(getDefinition(atIndex: 4).name, definition5.name)
+	}
+
+	func testGivenMoveToHigherSpotWhileActivityRunningAndFiltering_tableViewMoveRowAtTo_correctlyReordersDefinitions() throws {
+		// given
+		let filterString = "filter string"
+		let definition1 = ActivityDataTestUtil.createActivityDefinition(name: filterString, recordScreenIndex: 0)
+		let definition2 = ActivityDataTestUtil.createActivityDefinition(name: "definition 2", recordScreenIndex: 1)
+		let definition3 = ActivityDataTestUtil.createActivityDefinition(name: "\(filterString) definition 3 (running)", recordScreenIndex: 2)
+		let definition4 = ActivityDataTestUtil.createActivityDefinition(name: "definition 4 \(filterString)", recordScreenIndex: 3)
+		let definition5 = ActivityDataTestUtil.createActivityDefinition(name: "definition 5 \(filterString)", recordScreenIndex: 4)
+		let activity = ActivityDataTestUtil.createActivity(definition: definition3, startDate: Date(), endDate: nil)
+		controller.viewDidLoad()
+		filterDefinitions(by: filterString)
+
+		// when
+		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(1), to: inactiveCellIndex(0))
+
+		// then
+		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
+		//       and cannot use asynchronous asserts
+		try stopActivity(activity)
+		filterDefinitions(by: "") // reset filter string in order to check that all definitions are in correct spot
+		XCTAssertEqual(getDefinition(atIndex: 0).name, definition4.name)
+		XCTAssertEqual(getDefinition(atIndex: 1).name, definition1.name)
+		XCTAssertEqual(getDefinition(atIndex: 2).name, definition2.name)
+		XCTAssertEqual(getDefinition(atIndex: 3).name, definition3.name)
+		XCTAssertEqual(getDefinition(atIndex: 4).name, definition5.name)
 	}
 
 	// MARK: Imported definitions
@@ -161,7 +263,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		controller.viewDidLoad()
 
 		// when
-		controller.tableView(controller.tableView, moveRowAt: cellIndex(0), to: cellIndex(2))
+		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(0), to: inactiveCellIndex(2))
 
 		// then
 		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
@@ -186,7 +288,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		controller.viewDidLoad()
 
 		// when
-		controller.tableView(controller.tableView, moveRowAt: cellIndex(2), to: cellIndex(0))
+		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(2), to: inactiveCellIndex(0))
 
 		// then
 		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
@@ -214,7 +316,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		filterDefinitions(by: filterString)
 
 		// when
-		controller.tableView(controller.tableView, moveRowAt: cellIndex(0), to: cellIndex(2))
+		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(0), to: inactiveCellIndex(2))
 
 		// then
 		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
@@ -243,7 +345,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		filterDefinitions(by: filterString)
 
 		// when
-		controller.tableView(controller.tableView, moveRowAt: cellIndex(2), to: cellIndex(0))
+		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(2), to: inactiveCellIndex(0))
 
 		// then
 		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
@@ -280,7 +382,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		controller.viewDidLoad()
 
 		// when
-		controller.tableView(controller.tableView, moveRowAt: cellIndex(2), to: cellIndex(4))
+		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(2), to: inactiveCellIndex(4))
 
 		// then
 		// note: recordScreenIndex appears to not be updated in the CoreData stack until after the calling thread is done
@@ -318,7 +420,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		controller.viewDidLoad()
 
 		// when
-		controller.tableView(controller.tableView, moveRowAt: cellIndex(4), to: cellIndex(2))
+		controller.tableView(controller.tableView, moveRowAt: inactiveCellIndex(4), to: inactiveCellIndex(2))
 
 		// then
 		// note: recordScreenIndex appears to not be updated in the CoreData stack until Fafter the calling thread is done
@@ -334,7 +436,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 	// MARK: - Helper Functions
 
 	private final func getDefinition(atIndex index: Int) -> ActivityDefinition {
-		let cell = controller.tableView(controller.tableView, cellForRowAt: IndexPath(row: index, section: 0)) as! RecordActivityDefinitionTableViewCell
+		let cell = controller.tableView(controller.tableView, cellForRowAt: IndexPath(row: index, section: 1)) as! RecordActivityDefinitionTableViewCell
 		return cell.activityDefinition
 	}
 
@@ -342,19 +444,26 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		controller.setSearchText(filterString)
 	}
 
-	private final func cellIndex(_ i: Int) -> IndexPath {
-		return IndexPath(row: i, section: 0)
+	private final func inactiveCellIndex(_ i: Int) -> IndexPath {
+		return IndexPath(row: i, section: 1)
 	}
 
 	private final func setUpActivityImportFileContents(_ activityNames: [String]) {
-		var input = "Task name, Task description, Start time, End time, Duration,Duration in hours, Note, Category"
+		var input = "Task name, Task description, Start time, End time, Duration,Duration in hours, Note, Tag"
 		for name in activityNames {
-			input += "\n\"\(name)\",\"\",\"2018-02-07 21:17\",\"\",\"00:41:50\",0.6973508,\"\",\"\""
+			input += "\n\"\(name)\",\"\",\"2018-02-07 21:17\",\"2018-02-07 23:14\",\"00:41:50\",0.6973508,\"\",\"\""
 		}
 		Given(ioUtil, .csvReader(
 			url: .any,
 			hasHeaderRow: .value(true),
 			willReturn: try! CSVReader(string: input, hasHeaderRow: true)))
 		Given(ioUtil, .contentsOf(.any, willReturn: input))
+	}
+
+	private final func stopActivity(_ activity: Activity) throws {
+		let transaction = DependencyInjector.db.transaction()
+		let transactionActivity = try transaction.pull(savedObject: activity)
+		activity.end = Date()
+		try transaction.commit()
 	}
 }

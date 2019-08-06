@@ -394,6 +394,7 @@
 		A1741703508EA4B538BF55AB8D4C19D4 /* InSameCalendarUnitSubQueryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87D17C897038BC72D188BF5938E99B20 /* InSameCalendarUnitSubQueryMatcher.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A29CEA756966FF63181D103F30EE2E29 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C87A3B46E853FFC3382ED9BC4A609 /* Activity.swift */; };
+		8F07747E5FD4DD66869888188BDCCDD6 /* LongPressReorderGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E729DF850CDB64E6B2D521590822587 /* LongPressReorderGestureRecognizer.swift */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
 		A2DF8D22C94D6F91A865D337C0730F03 /* DurationUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA96F5DDD263FD0D99095EBADBA4AACC /* DurationUnitTests.swift */; };
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
@@ -1071,6 +1072,7 @@
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
+		0E729DF850CDB64E6B2D521590822587 /* LongPressReorderGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongPressReorderGestureRecognizer.swift; sourceTree = "<group>"; };
 		A455D3386BC23DDD4E8C89EF40475474 /* LessThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A64E0788E27B3B4FE185D06F3F454E46 /* ChooseSampleGrouperTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseSampleGrouperTypeViewController.swift; sourceTree = "<group>"; };
@@ -2559,6 +2561,7 @@
 				C8BBCA156A67F289EDC61778C17A2EAF /* TableViewCellExtensions.swift */,
 				9571433DEA980A686387E0BBD7485780 /* UIColorExtensions.swift */,
 				D6AECF5D57501827CDB07CAD3589EBD9 /* RecordMoodScrollView.swift */,
+				0E729DF850CDB64E6B2D521590822587 /* LongPressReorderGestureRecognizer.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -3873,6 +3876,7 @@
 				BC0C608AD646A9C97D7DC5DC2602FB36 /* EmptyStringAttributeRestriction.swift in Sources */,
 				998637560F26827A56A207121E42D18D /* ActivityNoteTableViewCell.swift in Sources */,
 				89D808381DA6695A788961E61B9DB04A /* Attributed.swift in Sources */,
+				8F07747E5FD4DD66869888188BDCCDD6 /* LongPressReorderGestureRecognizer.swift in Sources */,
 				75E5834894536821228DED5FF926A881 /* ActivityDefinitionNameTableViewCell.swift in Sources */,
 				142EA63AF16C836155F95133B7B01503 /* RecordMedicationTableViewController.swift in Sources */,
 				E8B10AF9D3CA9631096BA3092D8F15E3 /* StartsWithStringAttributeRestriction.swift in Sources */,

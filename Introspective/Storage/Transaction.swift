@@ -176,6 +176,8 @@ public final class TransactionImpl: Transaction {
 		signpost.begin(name: "Save", idObject: context)
 		var errorToThrow: Error? = nil
 		context.performAndWait {
+			// NOTE: if getting an error here that this coordinator has no persistent stores,
+			//       probably just pressed "Delete all CoreData" button and need to re-run app
 			if context.hasChanges {
 				do {
 					try context.save()

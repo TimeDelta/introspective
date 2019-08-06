@@ -31,7 +31,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 		}
 	}
 	private final var definitionEditIndex: IndexPath?
-	private final var fetchedResultsController: NSFetchedResultsController<ActivityDefinition>!
+	private final var activeActivitiesFetchedResultsController: NSFetchedResultsController<ActivityDefinition>!
+	private final var inactiveActivitiesFetchedResultsController: NSFetchedResultsController<ActivityDefinition>!
 
 	private final let coachMarksController = CoachMarksController()
 	private final var coachMarksDataSourceAndDelegate: DefaultCoachMarksDataSourceAndDelegate!
@@ -132,7 +133,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		observe(selector: #selector(activityEditedOrCreated), name: Me.activityEditedOrCreated, object: nil)
 		observe(selector: #selector(activityDefinitionEdited), name: Me.activityDefinitionEdited, object: nil)
 
-		reorderOnLongPress()
+		reorderOnLongPress(allowReorder: { $0.section == 1 && ($1 == nil || $1?.section == 1) })
 
 		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
 			coachMarksInfo,
@@ -163,15 +164,24 @@ public final class RecordActivityTableViewController: UITableViewController {
 	// MARK: - TableView Data Source
 
 	public final override func numberOfSections(in tableView: UITableView) -> Int {
-		return 1
+		if !finishedLoading {
+			return 1
+		}
+		return 2
 	}
 
 	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if !finishedLoading {
 			return 1
 		}
-		if let fetchedObjects = fetchedResultsController.fetchedObjects {
-			return fetchedObjects.count
+		if section == 0 {
+			if let fetchedObjects = activeActivitiesFetchedResultsController.fetchedObjects {
+				return fetchedObjects.count
+			}
+		} else if section == 1 {
+			if let fetchedObjects = inactiveActivitiesFetchedResultsController.fetchedObjects {
+				return fetchedObjects.count
+			}
 		}
 		log.error("Unable to determine number of expected rows because fetched objects was nil")
 		return 0
@@ -185,7 +195,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		}
 
 		let cell = tableView.dequeueReusableCell(withIdentifier: "activity", for: indexPath) as! RecordActivityDefinitionTableViewCell
-		cell.activityDefinition = fetchedResultsController.object(at: indexPath)
+		cell.activityDefinition = definition(at: indexPath)
 		return cell
 	}
 
@@ -198,8 +208,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard finishedLoading else { return }
-		let activityDefinition = fetchedResultsController.object(at: indexPath)
-		guard let cell = tableView.visibleCells[indexPath.row] as? RecordActivityDefinitionTableViewCell else {
+		let activityDefinition = definition(at: indexPath)
+		guard let cell = visibleCellFor(indexPath) else {
 			return
 		}
 		if cell.running {
@@ -212,22 +222,24 @@ public final class RecordActivityTableViewController: UITableViewController {
 		} else {
 			startActivity(for: activityDefinition, cell: cell)
 		}
-		tableView.deselectRow(at: indexPath, animated: false)
+		loadActivitiyDefinitions()
 	}
 
 	// MARK: - TableView Reordering
 
+	public final override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+		return indexPath.section == 1
+	}
+
 	public final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-		let definitionsFromIndex = Int(fetchedResultsController.object(at: fromIndexPath).recordScreenIndex)
-		let definitionsToIndex = Int(fetchedResultsController.object(at: to).recordScreenIndex)
-		let searchText = getSearchText()
-		searchController.searchBar.text = ""
-		resetFetchedResultsController()
+		let definitionsFromIndex = Int(definition(at: fromIndexPath).recordScreenIndex)
+		let definitionsToIndex = Int(definition(at: to).recordScreenIndex)
 		do {
+			let allFetchedResultsController = try getAllFetchedResultsController()
 			let transaction = DependencyInjector.db.transaction()
 			if definitionsFromIndex < definitionsToIndex {
 				for i in definitionsFromIndex + 1 ... definitionsToIndex {
-					if let definition = fetchedResultsController.fetchedObjects?[i] {
+					if let definition = allFetchedResultsController.fetchedObjects?[i] {
 						try transaction.pull(savedObject: definition).recordScreenIndex -= 1
 					} else {
 						log.error("Failed to get activity definition for index %d", i)
@@ -235,14 +247,14 @@ public final class RecordActivityTableViewController: UITableViewController {
 				}
 			} else {
 				for i in definitionsToIndex ..< definitionsFromIndex {
-					if let definition = fetchedResultsController.fetchedObjects?[i] {
+					if let definition = allFetchedResultsController.fetchedObjects?[i] {
 						try transaction.pull(savedObject: definition).recordScreenIndex += 1
 					} else {
 						log.error("Failed to get activity definition for index %d", i)
 					}
 				}
 			}
-			if let definition = fetchedResultsController.fetchedObjects?[definitionsFromIndex] {
+			if let definition = allFetchedResultsController.fetchedObjects?[definitionsFromIndex] {
 				try transaction.pull(savedObject: definition).recordScreenIndex = Int16(definitionsToIndex)
 			} else {
 				log.error("Failed to get activity definition for index %d", definitionsFromIndex)
@@ -251,14 +263,14 @@ public final class RecordActivityTableViewController: UITableViewController {
 		} catch {
 			log.error("Failed to reorder activities: %@", errorInfo(error))
 		}
-		searchController.searchBar.text = searchText
-		loadActivitiyDefinitions()
+		resetInactiveActivitiesFetchedResultsController()
+		tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
 	}
 
 	// MARK: - Swipe Actions
 
 	public final override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		let activityDefinition = fetchedResultsController.object(at: indexPath)
+		let activityDefinition = definition(at: indexPath)
 
 		var actions = [UIContextualAction]()
 		actions.append(getDeleteActivityDefinitionActionFor(activityDefinition, at: indexPath))
@@ -267,7 +279,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	public final override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		let activityDefinition = fetchedResultsController.object(at: indexPath)
+		let activityDefinition = definition(at: indexPath)
 
 		var actions = [UIContextualAction]()
 		if let activity = self.getMostRecentActivity(activityDefinition) {
@@ -367,7 +379,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 			do {
 				let transaction = DependencyInjector.db.transaction()
 				if let activityDefinition = activityDefinition {
-					let newIndex = Int16(fetchedResultsController.fetchedObjects?.count ?? 0)
+					let allDefinitionsController = try getAllFetchedResultsController()
+					let newIndex = Int16(allDefinitionsController.fetchedObjects?.count ?? 1) - 1
 					try transaction.pull(savedObject: activityDefinition).recordScreenIndex = newIndex
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 				}
@@ -427,7 +440,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 					}
 				}
 			}
-			tableView.reloadData()
+			loadActivitiyDefinitions()
 			for activity in activitiesToAutoNote {
 				showEditScreenForActivity(activity, autoFocusNote: true)
 			}
@@ -443,29 +456,72 @@ public final class RecordActivityTableViewController: UITableViewController {
 	// MARK: - Helper Functions
 
 	private final func loadActivitiyDefinitions() {
-		self.resetFetchedResultsController()
+		self.resetFetchedResultsControllers()
 		self.finishedLoading = true
 		self.tableView.reloadData()
 	}
 
-	private final func resetFetchedResultsController() {
+	// MARK: FetchedResultsController Helpers
+
+	private final func resetFetchedResultsControllers() {
+		resetActiveActivitiesFetchedResultsController()
+		resetInactiveActivitiesFetchedResultsController()
+	}
+
+	private final func resetActiveActivitiesFetchedResultsController() {
 		do {
-			signpost.begin(name: "resetting fetched results controller")
-			fetchedResultsController = DependencyInjector.db.fetchedResultsController(
+			signpost.begin(name: "resetting active fetched results controller")
+			activeActivitiesFetchedResultsController = DependencyInjector.db.fetchedResultsController(
+				type: ActivityDefinition.self,
+				sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
+				cacheName: "activeDefinitions")
+			let fetchRequest = activeActivitiesFetchedResultsController.fetchRequest
+
+			let isActivePredicate = NSPredicate(format: "SUBQUERY(activities, $activity, $activity.endDate == nil) .@count > 0")
+			fetchRequest.predicate = isActivePredicate
+
+			let searchText: String = self.getSearchText()
+			if !searchText.isEmpty {
+				fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+					isActivePredicate,
+					getSearchTextPredicate(searchText),
+				])
+			}
+
+			try activeActivitiesFetchedResultsController.performFetch()
+			signpost.end(name: "resetting active fetched results controller")
+		} catch {
+			log.error("Failed to fetch active activities: %@", errorInfo(error))
+			showError(
+				title: "Failed to retrieve activities",
+				message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.",
+				error: error,
+				tryAgain: loadActivitiyDefinitions)
+		}
+	}
+
+	private final func resetInactiveActivitiesFetchedResultsController() {
+		do {
+			signpost.begin(name: "resetting inactive fetched results controller")
+			inactiveActivitiesFetchedResultsController = DependencyInjector.db.fetchedResultsController(
 				type: ActivityDefinition.self,
 				sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
 				cacheName: "definitions")
-			let fetchRequest = fetchedResultsController.fetchRequest
+			let fetchRequest = inactiveActivitiesFetchedResultsController.fetchRequest
+
+			let isInactivePredicate = NSPredicate(format: "SUBQUERY(activities, $activity, $activity.endDate == nil) .@count == 0")
+			fetchRequest.predicate = isInactivePredicate
+
 			let searchText: String = self.getSearchText()
 			if !searchText.isEmpty {
-				fetchRequest.predicate = NSPredicate(
-					format: "name CONTAINS[cd] %@ OR activityDescription CONTAINS[cd] %@ OR SUBQUERY(tags, $tag, $tag.name CONTAINS[cd] %@) .@count > 0",
-					searchText,
-					searchText,
-					searchText)
+				fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+					isInactivePredicate,
+					getSearchTextPredicate(searchText),
+				])
 			}
-			try fetchedResultsController.performFetch()
-			signpost.end(name: "resetting fetched results controller")
+
+			try inactiveActivitiesFetchedResultsController.performFetch()
+			signpost.end(name: "resetting inactive fetched results controller")
 		} catch {
 			log.error("Failed to fetch activities: %@", errorInfo(error))
 			showError(
@@ -474,6 +530,25 @@ public final class RecordActivityTableViewController: UITableViewController {
 				error: error,
 				tryAgain: loadActivitiyDefinitions)
 		}
+	}
+
+	private final func getAllFetchedResultsController() throws -> NSFetchedResultsController<ActivityDefinition> {
+		signpost.begin(name: "getting all fetched results controller")
+		let controller = DependencyInjector.db.fetchedResultsController(
+			type: ActivityDefinition.self,
+			sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
+			cacheName: "definitions")
+		try controller.performFetch()
+		signpost.end(name: "getting all fetched results controller")
+		return controller
+	}
+
+	private final func getSearchTextPredicate(_ searchText: String) -> NSPredicate {
+		return NSPredicate(
+			format: "name CONTAINS[cd] %@ OR activityDescription CONTAINS[cd] %@ OR SUBQUERY(tags, $tag, $tag.name CONTAINS[cd] %@) .@count > 0",
+			searchText,
+			searchText,
+			searchText)
 	}
 
 	private final func quickCreateAndStart() {
@@ -653,6 +728,22 @@ public final class RecordActivityTableViewController: UITableViewController {
 			log.error("Failed to fetch activities while retrieving most recent: %@", errorInfo(error))
 		}
 	}
+
+	private final func definition(at indexPath: IndexPath) -> ActivityDefinition {
+		if indexPath.section == 0 {
+			return activeActivitiesFetchedResultsController.object(at: indexPath)
+		}
+		let offsetIndexPath = IndexPath(row: indexPath.row, section: 0)
+		return inactiveActivitiesFetchedResultsController.object(at: offsetIndexPath)
+	}
+
+	private final func visibleCellFor(_ indexPath: IndexPath) -> RecordActivityDefinitionTableViewCell? {
+		if indexPath.section == 0 {
+			return tableView.visibleCells[indexPath.row] as? RecordActivityDefinitionTableViewCell
+		}
+		let additionalRows = tableView(tableView, numberOfRowsInSection: 0)
+		return tableView.visibleCells[additionalRows + indexPath.row] as? RecordActivityDefinitionTableViewCell
+	}
 }
 
 // MARK: - UISearchResultsUpdating
@@ -660,7 +751,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 extension RecordActivityTableViewController: UISearchResultsUpdating {
 
 	/// This is used to provide a hook into setting the search text for testing. For some reason
-	/// passing searchController into resetFetchedResultsController() directly from
+	/// passing searchController into resetFetchedResultsControllers() directly from
 	/// updateSearchResults() to use it instead results in localSearchController.searchBar being
 	/// nil in that function even though it is not nil when passed in.
 	public func setSearchText(_ text: String) {
