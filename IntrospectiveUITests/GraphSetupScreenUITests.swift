@@ -406,7 +406,7 @@ final class GraphSetupScreenUITests: UITest {
 		app.buttons["choose x-axis information button"].tap()
 		setPicker("attribute picker", to: attribute.localizedCapitalized)
 		setPicker("grouping method picker", to: aggregationMethod)
-		app.buttons["save button"].tap()
+		app.buttons["save x-axis button"].tap()
 	}
 
 	private final func setXAxisDataType(_ type: String? = nil) {
@@ -422,7 +422,13 @@ final class GraphSetupScreenUITests: UITest {
 		if let type = type {
 			setPicker("data type picker", to: type)
 		}
-		app.buttons["save button"].tap()
+		if app.buttons["save button"].exists {
+			app.buttons["save button"].tap()
+		} else if app.buttons["save x-axis button"].exists {
+			app.buttons["save \(axis)-axis button"].tap()
+		} else {
+			XCTFail("Unable to find save button")
+		}
 	}
 
 	private final func setYAxisAttributes(_ attributes: [String]) {
