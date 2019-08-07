@@ -55,11 +55,22 @@ public final class RecordActivityTableViewController: UITableViewController {
 				}
 			}),
 		CoachMarkInfo(
-			hint: "If an activity is currently active, meaning it was started and has not yet been stopped, it will have a progress indicator here.",
+			hint: "If an activity is currently running, meaning it was started and has not yet been stopped, it will have a progress indicator here.",
 			useArrow: true,
 			view: {
 				let exampleActivityCell = self.tableView.visibleCells[0] as! RecordActivityDefinitionTableViewCell
 				return exampleActivityCell.progressIndicator
+			}),
+		CoachMarkInfo(
+			hint: "All running activities will be bubbled to the top of the list",
+			useArrow: true,
+			view: { return self.tableView.visibleCells[0] },
+			setup: {
+				let cell = self.tableView.visibleCells[0] as! RecordActivityDefinitionTableViewCell
+				if !cell.running {
+					self.searchController.searchBar.text = Me.exampleActivityName
+					self.quickCreateAndStart()
+				}
 			}),
 		CoachMarkInfo(
 			hint: "To start or stop an activity, simply tap it.",
