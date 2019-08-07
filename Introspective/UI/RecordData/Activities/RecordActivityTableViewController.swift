@@ -407,7 +407,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	@objc private final func activityEditedOrCreated(notification: Notification) {
-		tableView.reloadData()
+		loadActivitiyDefinitions()
 	}
 
 	@objc private final func activityDefinitionEdited(notification: Notification) {
