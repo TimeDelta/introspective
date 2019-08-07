@@ -37,9 +37,7 @@ public final class LongPressReorderGestureRecognizer: UILongPressGestureRecogniz
 	// MARK: - Actions
 
 	@objc private final func longPressGestureRecognized(gestureRecognizer: UIGestureRecognizer) {
-		let longPress = gestureRecognizer as! UILongPressGestureRecognizer
-		let state = longPress.state
-		let locationInView = longPress.location(in: tableView)
+		let locationInView = location(in: tableView)
 		let indexPath = tableView.indexPathForRow(at: locationInView)
 
 		switch state {
@@ -83,24 +81,9 @@ public final class LongPressReorderGestureRecognizer: UILongPressGestureRecogniz
 				if let allowReorder = allowReorder {
 					guard allowReorder(initialIndexPath, indexPath) else { return }
 				}
-				guard let cell = tableView.cellForRow(at: initialIndexPath!) else { return }
-				cell.isHidden = false
-				cell.alpha = 0.0
-				UIView.animate(
-					withDuration: 0.25,
-					animations: {
-						self.cellSnapshot!.center = cell.center
-						self.cellSnapshot!.transform = CGAffineTransform.identity
-						self.cellSnapshot!.alpha = 0.0
-						cell.alpha = 1.0
-					},
-					completion: { finished in
-						if finished {
-							self.initialIndexPath = nil
-							self.cellSnapshot!.removeFromSuperview()
-							self.cellSnapshot = nil
-						}
-					})
+				self.initialIndexPath = nil
+				self.cellSnapshot!.removeFromSuperview()
+				self.cellSnapshot = nil
 				break
 			default:
 				break
