@@ -738,11 +738,14 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func visibleCellFor(_ indexPath: IndexPath) -> RecordActivityDefinitionTableViewCell? {
-		if indexPath.section == 0 {
-			return tableView.visibleCells[indexPath.row] as? RecordActivityDefinitionTableViewCell
+		let targetDefinition = definition(at: indexPath)
+		let cells = tableView.visibleCells.map{ $0 as! RecordActivityDefinitionTableViewCell }
+		for cell in cells {
+			if cell.activityDefinition.equalTo(targetDefinition) {
+				return cell
+			}
 		}
-		let additionalRows = tableView(tableView, numberOfRowsInSection: 0)
-		return tableView.visibleCells[additionalRows + indexPath.row] as? RecordActivityDefinitionTableViewCell
+		return nil
 	}
 }
 
