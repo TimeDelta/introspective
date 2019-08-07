@@ -47,6 +47,7 @@ notest() {
 	grep -vF '/Signpost.swift' | \
 	grep -vF '/UserDefaultKeys.swift' | \
 	grep -vF 'Mock' | \
+	grep -vF 'Pods/' | \
 	egrep -v '.*Factory.swift$' | {
 		local file
 		while read -s file; do
