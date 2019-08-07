@@ -15,7 +15,20 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 
 	// MARK: - Attributes
 
-	public static let timeUnitAttribute = CalendarComponentAttribute(description: "Combine all samples within the same time unit")
+	private static let supportedTimeUnits: [Calendar.Component] = [
+		.year,
+		.quarter,
+		.month,
+		.weekOfMonth,
+		.weekOfYear,
+		.day,
+		.hour,
+		.minute,
+		.second,
+		.nanosecond,
+	]
+
+	public static let timeUnitAttribute = CalendarComponentAttribute(description: "Combine all samples within the same time unit", possibleValues: supportedTimeUnits)
 	public final let attributes: [Attribute]
 	public final let attributeSelectAttribute: AttributeSelectAttribute
 

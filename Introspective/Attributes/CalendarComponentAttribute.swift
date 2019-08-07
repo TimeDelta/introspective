@@ -10,8 +10,6 @@ import Foundation
 
 public final class CalendarComponentAttribute: TypedEquatableSelectOneAttribute<Calendar.Component> {
 
-	private typealias Me = CalendarComponentAttribute
-
 	public static let supportedComponents: [Calendar.Component] = [
 		.year,
 		.quarter,
