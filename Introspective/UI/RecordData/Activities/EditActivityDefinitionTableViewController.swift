@@ -236,14 +236,12 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 	// MARK: - Helper Functions
 
 	private final func updateTagsForActivityDefinition(_ activityDefinition: inout ActivityDefinition, using transaction: Transaction) throws {
-		var tagsCreated = [Tag]()
 		var allTags = [Tag]()
 		for tagName in tagNames {
 			var tag: Tag! = try findTagWithName(tagName, using: transaction)
 			if tag == nil {
 				tag = try transaction.new(Tag.self)
 				tag.name = tagName
-				tagsCreated.append(tag)
 			}
 			allTags.append(tag)
 		}

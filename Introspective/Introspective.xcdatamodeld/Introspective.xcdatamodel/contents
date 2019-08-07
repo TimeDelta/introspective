@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="18D109" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14490.99" systemVersion="18G87" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Activity" representedClassName=".Activity" syncable="YES">
         <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="endDateTimeZoneId" optional="YES" attributeType="String" syncable="YES"/>
@@ -20,7 +20,7 @@
         <attribute name="recordScreenIndex" attributeType="Integer 16" minValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="activities" toMany="YES" deletionRule="Cascade" destinationEntity="Activity" inverseName="definition" inverseEntity="Activity" syncable="YES"/>
-        <relationship name="tags" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" syncable="YES"/>
+        <relationship name="tags" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="activityDefinitions" inverseEntity="Tag" syncable="YES"/>
         <fetchIndex name="byName">
             <fetchIndexElement property="name" type="Binary" order="ascending"/>
         </fetchIndex>
@@ -84,6 +84,7 @@
     </entity>
     <entity name="Tag" representedClassName=".Tag" syncable="YES">
         <attribute name="name" attributeType="String" syncable="YES"/>
+        <relationship name="activityDefinitions" toMany="YES" deletionRule="Nullify" destinationEntity="ActivityDefinition" inverseName="tags" inverseEntity="ActivityDefinition" syncable="YES"/>
     </entity>
     <entity name="WellnessMoodImporter" representedClassName=".WellnessMoodImporterImpl" syncable="YES">
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -99,7 +100,7 @@
         <element name="MedicationDose" positionX="-45" positionY="45" width="128" height="120"/>
         <element name="Mood" positionX="-63" positionY="-18" width="128" height="150"/>
         <element name="Settings" positionX="-63" positionY="9" width="128" height="150"/>
-        <element name="Tag" positionX="-18" positionY="81" width="128" height="60"/>
+        <element name="Tag" positionX="-18" positionY="81" width="128" height="75"/>
         <element name="WellnessMoodImporter" positionX="-54" positionY="18" width="128" height="60"/>
     </elements>
 </model>

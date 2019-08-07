@@ -18,4 +18,21 @@ extension Tag {
 	}
 
 	@NSManaged public var name: String
+	@NSManaged public var activityDefinitions: NSSet
+}
+
+// MARK: Generated accessors for activityDefinitions
+extension Tag {
+
+	@objc(addActivityDefinitionsObject:)
+	@NSManaged public func addToActivityDefinitions(_ value: ActivityDefinition)
+
+	@objc(removeActivityDefinitionsObject:)
+	@NSManaged public func removeFromActivityDefinitions(_ value: ActivityDefinition)
+
+	@objc(addActivityDefinitions:)
+	@NSManaged public func addToActivityDefinitions(_ values: NSSet)
+
+	@objc(removeActivityDefinitions:)
+	@NSManaged public func removeFromActivityDefinitions(_ values: NSSet)
 }
