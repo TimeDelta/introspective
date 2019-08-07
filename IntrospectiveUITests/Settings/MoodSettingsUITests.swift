@@ -142,7 +142,7 @@ final class MoodSettingsUITests: UITest {
 
 	// MARK: - reset
 
-	func testPressingReset_resetsAllASettings() {
+	func testPressingReset_resetsAllSettings() {
 		// given
 		let originalMin = minMoodField().value as! String
 		let originalMax = maxMoodField().value as! String
