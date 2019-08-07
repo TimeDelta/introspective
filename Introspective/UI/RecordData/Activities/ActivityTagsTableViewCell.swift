@@ -23,6 +23,7 @@ public final class ActivityTagsTableViewCell: UITableViewCell {
 			tagsField.returnKeyType = .next
 			tagsField.onDidAddTag = addedTag
 			tagsField.onDidRemoveTag = removedTag
+//			tagsField.onDidSelectSuggestedTag = suggestedTagChosen
 			tagsField.textField.accessibilityLabel = "activity tags"
 			tagsField.textDelegate = self
 			tagsField.maxHeight = 109
@@ -71,6 +72,10 @@ public final class ActivityTagsTableViewCell: UITableViewCell {
 		tagsField.accessibilityValue = tagNames.map{ $0 }.joined(separator: ";")
 		tagsField.textField.accessibilityValue = tagNames.map{ $0 }.joined(separator: ";")
 	}
+
+//	private final func suggestedTagChosen(_ field: WSTagsField, _ tag: WSTag) {
+//		tagsField.acceptCurrentTextAsTag()
+//	}
 
 	private final func sendTagsChangedNotification() {
 		DispatchQueue.main.async {

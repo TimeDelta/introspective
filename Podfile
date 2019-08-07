@@ -11,7 +11,7 @@ target 'Introspective' do
   pod 'AAInfographics'
   pod 'NotificationBannerSwift'
   pod 'CalendarKit'
-  pod 'WSTagsField', '4.0'
+  pod 'WSTagsField', '5.0.0'
   pod "SearchTextField"
   pod 'CSV.swift', '~> 2.3.1'
   pod 'Instructions', '~> 1.2.2'
