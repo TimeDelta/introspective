@@ -82,8 +82,11 @@ public class Activity: NSManagedObject, CoreDataSample {
 		}
 		set {
 			endDate = newValue
-			if source == Sources.ActivitySourceNum.introspective.rawValue && endDateTimeZoneId == nil {
+			if source == Sources.ActivitySourceNum.introspective.rawValue && endDateTimeZoneId == nil && endDate != nil {
 				endDateTimeZoneId = DependencyInjector.util.calendar.currentTimeZone().identifier
+			}
+			if endDate == nil {
+				endDateTimeZoneId = nil
 			}
 		}
 	}
@@ -212,8 +215,11 @@ public class Activity: NSManagedObject, CoreDataSample {
 				throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 			}
 			endDate = (value as! Date?)
-			if source == Sources.ActivitySourceNum.introspective.rawValue && endDateTimeZoneId == nil {
+			if source == Sources.ActivitySourceNum.introspective.rawValue && endDateTimeZoneId == nil && endDate != nil {
 				endDateTimeZoneId = DependencyInjector.util.calendar.currentTimeZone().identifier
+			}
+			if endDate == nil {
+				endDateTimeZoneId = nil
 			}
 			return
 		}
@@ -245,7 +251,7 @@ public class Activity: NSManagedObject, CoreDataSample {
 		if source == Sources.ActivitySourceNum.introspective && startDateTimeZoneId == nil {
 			startDateTimeZoneId = DependencyInjector.util.calendar.currentTimeZone().identifier
 		}
-		if source == Sources.ActivitySourceNum.introspective && endDateTimeZoneId == nil {
+		if source == Sources.ActivitySourceNum.introspective && endDateTimeZoneId == nil && endDate != nil {
 			endDateTimeZoneId = DependencyInjector.util.calendar.currentTimeZone().identifier
 		}
 	}
