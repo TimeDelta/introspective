@@ -38,8 +38,9 @@ public final class EmptyStringAttributeRestriction: AnyAttributeRestriction, Str
 		return EmptyStringAttributeRestriction(restrictedAttribute: restrictedAttribute)
 	}
 
-	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K.length == 0", restrictedAttribute.variableName!)
+	public override func predicate() -> NSPredicate? {
+		guard let variableName = restrictedAttribute.variableName else { return nil }
+		return NSPredicate(format: "%K.length == 0", variableName)
 	}
 
 	// MARK: - Attributed Functions

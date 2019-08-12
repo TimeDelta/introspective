@@ -24,4 +24,6 @@ public final class LessThanFrequencyAttributeRestriction: TypedLessThanAttribute
 	public override func copy() -> AttributeRestriction {
 		return LessThanFrequencyAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
 	}
+
+	public override func predicate() -> NSPredicate? { return nil }
 }

@@ -11,11 +11,18 @@ import Presentr
 import NotificationBannerSwift
 import CoreData
 
-final class ResultsViewController: UITableViewController {
+public protocol ResultsViewController: UITableViewController {
+
+	var query: Query! { get set }
+	var samples: [Sample]! { get set }
+	var backButtonTitle: String? { get set }
+}
+
+final class ResultsViewControllerImpl: UITableViewController, ResultsViewController {
 
 	// MARK: - Static Variables
 
-	private typealias Me = ResultsViewController
+	private typealias Me = ResultsViewControllerImpl
 	private static let sortSamples = Notification.Name("sortSamplesBy")
 	private static let editedSample = Notification.Name("editedSampleFromResultsScreen")
 	private static let sortPresenter: Presentr = {

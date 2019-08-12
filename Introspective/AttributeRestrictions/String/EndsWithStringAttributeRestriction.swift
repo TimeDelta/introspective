@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, PredicateAttributeRestriction, Equatable {
+public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, Equatable {
 
 	private typealias Me = EndsWithStringAttributeRestriction
 
@@ -75,8 +75,9 @@ public final class EndsWithStringAttributeRestriction: AnyAttributeRestriction, 
 		return EndsWithStringAttributeRestriction(restrictedAttribute: restrictedAttribute, suffix: suffix)
 	}
 
-	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K ENDSWITH[cd] %@", restrictedAttribute.variableName!, suffix)
+	public override func predicate() -> NSPredicate? {
+		guard let variableName = restrictedAttribute.variableName else { return nil }
+		return NSPredicate(format: "%K ENDSWITH[cd] %@", variableName, suffix)
 	}
 
 	// MARK: - Equality

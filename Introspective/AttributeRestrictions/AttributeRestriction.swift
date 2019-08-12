@@ -49,7 +49,7 @@ public class AnyAttributeRestriction: AttributeRestriction {
 
 	public var attributedName: String {
 		get {
-			log.error("Must override name")
+			log.error("Must override attributedName")
 			return ""
 		}
 	}
@@ -85,6 +85,10 @@ public class AnyAttributeRestriction: AttributeRestriction {
 
 	// MARK: - Functions
 
+	public func predicate() -> NSPredicate? {
+		log.error("predicate() not overriden")
+		return nil
+	}
 	public func samplePasses(_ sample: Sample) throws -> Bool { throw NotOverriddenError(functionName: "samplePasses") }
 	public func value(of attribute: Attribute) throws -> Any? { throw NotOverriddenError(functionName: "value(of:)") }
 	public func set(attribute: Attribute, to value: Any?) throws { throw NotOverriddenError(functionName: "set(attribute:to:)") }

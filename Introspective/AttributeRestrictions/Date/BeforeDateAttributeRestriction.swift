@@ -88,6 +88,14 @@ public final class BeforeDateAttributeRestriction: DateAttributeRestriction, Equ
 		return BeforeDateAttributeRestriction(restrictedAttribute: restrictedAttribute, date: date)
 	}
 
+	// MARK: - Boolean Expression Functions
+
+	public override func predicate() -> NSPredicate? {
+		guard !DependencyInjector.settings.convertTimeZones else { return nil }
+		guard let variableName = restrictedAttribute.variableName else { return nil }
+		return NSPredicate(format: "%K < %@", variableName, date as NSDate)
+	}
+
 	// MARK: - Equality
 
 	public static func ==(lhs: BeforeDateAttributeRestriction, rhs: BeforeDateAttributeRestriction) -> Bool {

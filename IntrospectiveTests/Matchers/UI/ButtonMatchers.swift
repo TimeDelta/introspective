@@ -23,13 +23,16 @@ func hasTitle(_ titleMatcher: Matcher<String>) -> Matcher<UIButton> {
 	}
 }
 
-func hasAccessibilityValue(_ expectedTitle: String?) -> Matcher<UIButton> {
-	return hasAccessibilityValue(equalTo(expectedTitle))
+func hasTitle(_ expectedTitle: String) -> Matcher<UIBarButtonItem> {
+	return hasTitle(equalTo(expectedTitle))
 }
 
-func hasAccessibilityValue(_ valueMatcher: Matcher<String?>) -> Matcher<UIButton> {
-	return Matcher("button has accessibility value " + valueMatcher.description) { (button: UIButton) -> MatchResult in
-		return valueMatcher.matches(button.accessibilityValue)
+func hasTitle(_ titleMatcher: Matcher<String>) -> Matcher<UIBarButtonItem> {
+	return Matcher("button has title " + titleMatcher.description) { button -> MatchResult in
+		if let title = button.title {
+			return titleMatcher.matches(title)
+		}
+		return .mismatch("Current title is nil")
 	}
 }
 

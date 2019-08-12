@@ -68,7 +68,7 @@ class SexualActivityQueryFunctionalTests: QueryFunctionalTest {
 		HealthKitDataTestUtil.save([SexualActivity(date - 1.days)])
 
 		let timestampRestriction = OnDateAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitTimestamp, date: date)
-		query.attributeRestrictions.append(timestampRestriction)
+		query.expression = timestampRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -89,7 +89,7 @@ class SexualActivityQueryFunctionalTests: QueryFunctionalTest {
 		HealthKitDataTestUtil.save([SexualActivity(date - 1.days)])
 
 		let timestampRestriction = AfterDateAndTimeAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitTimestamp, date: date)
-		query.attributeRestrictions.append(timestampRestriction)
+		query.expression = timestampRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)

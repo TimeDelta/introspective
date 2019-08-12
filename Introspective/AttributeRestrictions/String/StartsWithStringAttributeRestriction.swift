@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, PredicateAttributeRestriction, Equatable {
+public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, Equatable {
 
 	private typealias Me = StartsWithStringAttributeRestriction
 
@@ -75,8 +75,9 @@ public final class StartsWithStringAttributeRestriction: AnyAttributeRestriction
 		return StartsWithStringAttributeRestriction(restrictedAttribute: restrictedAttribute, prefix: prefix)
 	}
 
-	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K BEGINSWITH[cd] %@", restrictedAttribute.variableName!, prefix)
+	public override func predicate() -> NSPredicate? {
+		guard let variableName = restrictedAttribute.variableName else { return nil }
+		return NSPredicate(format: "%K BEGINSWITH[cd] %@", variableName, prefix)
 	}
 
 	// MARK: - Equality

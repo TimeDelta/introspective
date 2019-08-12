@@ -68,7 +68,7 @@ class BodyMassIndexQueryFunctionalTests: QueryFunctionalTest {
 		HealthKitDataTestUtil.save([BodyMassIndex(value - 1)])
 
 		let bmiRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: BodyMassIndex.bmi, value: value)
-		query.attributeRestrictions.append(bmiRestriction)
+		query.expression = bmiRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -89,7 +89,7 @@ class BodyMassIndexQueryFunctionalTests: QueryFunctionalTest {
 		HealthKitDataTestUtil.save([BodyMassIndex(value + 1)])
 
 		let bmiRestriction = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: BodyMassIndex.bmi, value: value)
-		query.attributeRestrictions.append(bmiRestriction)
+		query.expression = bmiRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -115,8 +115,7 @@ class BodyMassIndexQueryFunctionalTests: QueryFunctionalTest {
 
 		let bmiRestriction = GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: BodyMassIndex.bmi, value: value)
 		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitTimestamp, date: Date() - 1.days)
-		query.attributeRestrictions.append(bmiRestriction)
-		query.attributeRestrictions.append(timestampRestriction)
+		query.expression = andExpression(bmiRestriction, timestampRestriction)
 
 		// when
 		query.runQuery(callback: queryComplete)

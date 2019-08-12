@@ -68,7 +68,7 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 		HealthKitDataTestUtil.save([LeanBodyMass(value - 1)])
 
 		let leanBodyMassRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: LeanBodyMass.leanBodyMass, value: value)
-		query.attributeRestrictions.append(leanBodyMassRestriction)
+		query.expression = leanBodyMassRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -89,7 +89,7 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 		HealthKitDataTestUtil.save([LeanBodyMass(value + 1)])
 
 		let leanBodyMassRestriction = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: LeanBodyMass.leanBodyMass, value: value)
-		query.attributeRestrictions.append(leanBodyMassRestriction)
+		query.expression = leanBodyMassRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -115,8 +115,7 @@ final class LeanBodyMassQueryFunctionalTests: QueryFunctionalTest {
 
 		let leanBodyMassRestriction = GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: LeanBodyMass.leanBodyMass, value: value)
 		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitTimestamp, date: Date() - 1.days)
-		query.attributeRestrictions.append(leanBodyMassRestriction)
-		query.attributeRestrictions.append(timestampRestriction)
+		query.expression = andExpression(leanBodyMassRestriction, timestampRestriction)
 
 		// when
 		query.runQuery(callback: queryComplete)

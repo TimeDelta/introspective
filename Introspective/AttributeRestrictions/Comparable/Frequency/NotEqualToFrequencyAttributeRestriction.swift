@@ -24,4 +24,6 @@ public final class NotEqualToFrequencyAttributeRestriction: TypedNotEqualToAttri
 	public override func copy() -> AttributeRestriction {
 		return NotEqualToFrequencyAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Frequency)
 	}
+
+	public override func predicate() -> NSPredicate? { return nil }
 }

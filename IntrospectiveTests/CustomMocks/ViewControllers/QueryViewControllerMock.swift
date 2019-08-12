@@ -34,15 +34,15 @@ class QueryViewControllerMock: UITableViewController, QueryViewController, Mock 
     }
 
 
-    public var finishedButtonTitle: String! {
-		get {	invocations.append(.p_finishedButtonTitle_get); return __p_finishedButtonTitle ?? optionalGivenGetterValue(.p_finishedButtonTitle_get, "QueryViewControllerMock - stub value for finishedButtonTitle was not defined") }
+    public var finishedButtonTitle: String {
+		get {	invocations.append(.p_finishedButtonTitle_get); return __p_finishedButtonTitle ?? givenGetterValue(.p_finishedButtonTitle_get, "QueryViewControllerMock - stub value for finishedButtonTitle was not defined") }
 		set {	invocations.append(.p_finishedButtonTitle_set(.value(newValue))); __p_finishedButtonTitle = newValue }
 	}
 	private var __p_finishedButtonTitle: (String)?
 
 
-    public var finishedButtonNotification: NotificationName! {
-		get {	invocations.append(.p_finishedButtonNotification_get); return __p_finishedButtonNotification ?? optionalGivenGetterValue(.p_finishedButtonNotification_get, "QueryViewControllerMock - stub value for finishedButtonNotification was not defined") }
+    public var finishedButtonNotification: NotificationName {
+		get {	invocations.append(.p_finishedButtonNotification_get); return __p_finishedButtonNotification ?? givenGetterValue(.p_finishedButtonNotification_get, "QueryViewControllerMock - stub value for finishedButtonNotification was not defined") }
 		set {	invocations.append(.p_finishedButtonNotification_set(.value(newValue))); __p_finishedButtonNotification = newValue }
 	}
 	private var __p_finishedButtonNotification: (NotificationName)?
@@ -69,9 +69,9 @@ class QueryViewControllerMock: UITableViewController, QueryViewController, Mock 
 
     fileprivate enum MethodType {
         case p_finishedButtonTitle_get
-		case p_finishedButtonTitle_set(Parameter<String?>)
+		case p_finishedButtonTitle_set(Parameter<String>)
         case p_finishedButtonNotification_get
-		case p_finishedButtonNotification_set(Parameter<NotificationName?>)
+		case p_finishedButtonNotification_set(Parameter<NotificationName>)
         case p_topmostSampleType_get
 		case p_topmostSampleType_set(Parameter<Sample.Type?>)
         case p_initialQuery_get
@@ -80,9 +80,9 @@ class QueryViewControllerMock: UITableViewController, QueryViewController, Mock 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
             case (.p_finishedButtonTitle_get,.p_finishedButtonTitle_get): return true
-			case (.p_finishedButtonTitle_set(let left),.p_finishedButtonTitle_set(let right)): return Parameter<String?>.compare(lhs: left, rhs: right, with: matcher)
+			case (.p_finishedButtonTitle_set(let left),.p_finishedButtonTitle_set(let right)): return Parameter<String>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_finishedButtonNotification_get,.p_finishedButtonNotification_get): return true
-			case (.p_finishedButtonNotification_set(let left),.p_finishedButtonNotification_set(let right)): return Parameter<NotificationName?>.compare(lhs: left, rhs: right, with: matcher)
+			case (.p_finishedButtonNotification_set(let left),.p_finishedButtonNotification_set(let right)): return Parameter<NotificationName>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_topmostSampleType_get,.p_topmostSampleType_get): return true
 			case (.p_topmostSampleType_set(let left),.p_topmostSampleType_set(let right)): return Parameter<Sample.Type?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_initialQuery_get,.p_initialQuery_get): return true
@@ -113,10 +113,10 @@ class QueryViewControllerMock: UITableViewController, QueryViewController, Mock 
             super.init(products)
         }
 
-        public static func finishedButtonTitle(getter defaultValue: String?...) -> PropertyStub {
+        public static func finishedButtonTitle(getter defaultValue: String...) -> PropertyStub {
             return Given(method: .p_finishedButtonTitle_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func finishedButtonNotification(getter defaultValue: NotificationName?...) -> PropertyStub {
+        public static func finishedButtonNotification(getter defaultValue: NotificationName...) -> PropertyStub {
             return Given(method: .p_finishedButtonNotification_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func topmostSampleType(getter defaultValue: Sample.Type?...) -> PropertyStub {
@@ -132,9 +132,9 @@ class QueryViewControllerMock: UITableViewController, QueryViewController, Mock 
         fileprivate var method: MethodType
 
         public static var finishedButtonTitle: Verify { return Verify(method: .p_finishedButtonTitle_get) }
-		public static func finishedButtonTitle(set newValue: Parameter<String?>) -> Verify { return Verify(method: .p_finishedButtonTitle_set(newValue)) }
+		public static func finishedButtonTitle(set newValue: Parameter<String>) -> Verify { return Verify(method: .p_finishedButtonTitle_set(newValue)) }
         public static var finishedButtonNotification: Verify { return Verify(method: .p_finishedButtonNotification_get) }
-		public static func finishedButtonNotification(set newValue: Parameter<NotificationName?>) -> Verify { return Verify(method: .p_finishedButtonNotification_set(newValue)) }
+		public static func finishedButtonNotification(set newValue: Parameter<NotificationName>) -> Verify { return Verify(method: .p_finishedButtonNotification_set(newValue)) }
         public static var topmostSampleType: Verify { return Verify(method: .p_topmostSampleType_get) }
 		public static func topmostSampleType(set newValue: Parameter<Sample.Type?>) -> Verify { return Verify(method: .p_topmostSampleType_set(newValue)) }
         public static var initialQuery: Verify { return Verify(method: .p_initialQuery_get) }

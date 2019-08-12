@@ -24,4 +24,6 @@ public final class GreaterThanOrEqualToDosageAttributeRestriction: TypedGreaterT
 	public override func copy() -> AttributeRestriction {
 		return GreaterThanOrEqualToDosageAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
 	}
+
+	public override func predicate() -> NSPredicate? { return nil }
 }

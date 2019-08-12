@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class LessThanOrEqualToIntegerAttributeRestriction: TypedLessThanOrEqualToAttributeRestrictionBase<Int>, IntegerAttributeRestriction, PredicateAttributeRestriction {
+public final class LessThanOrEqualToIntegerAttributeRestriction: TypedLessThanOrEqualToAttributeRestrictionBase<Int>, IntegerAttributeRestriction {
 
 	private typealias Me = LessThanOrEqualToIntegerAttributeRestriction
 	public static let valueAttribute = IntegerAttribute(name: "Value", pluralName: "Values")
@@ -25,7 +25,8 @@ public final class LessThanOrEqualToIntegerAttributeRestriction: TypedLessThanOr
 		return LessThanOrEqualToIntegerAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
 	}
 
-	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K <= %d", restrictedAttribute.variableName!, value)
+	public override func predicate() -> NSPredicate? {
+		guard let variableName = restrictedAttribute.variableName else { return nil }
+		return NSPredicate(format: "%K <= %d", variableName, value)
 	}
 }

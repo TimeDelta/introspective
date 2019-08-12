@@ -74,7 +74,7 @@ public final class InCurrentTimeUnitDateAttributeRestriction: DateAttributeRestr
 		timeUnit = castedValue
 	}
 
-	// MARk: - Attribute Restriction Functions
+	// MARK: - Attribute Restriction Functions
 
 	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
@@ -89,6 +89,22 @@ public final class InCurrentTimeUnitDateAttributeRestriction: DateAttributeRestr
 
 	public override func copy() -> AttributeRestriction {
 		return InCurrentTimeUnitDateAttributeRestriction(restrictedAttribute: restrictedAttribute, timeUnit)
+	}
+
+	// MARK: - Boolean Expression Functions
+
+	public override func predicate() -> NSPredicate? {
+		guard !DependencyInjector.settings.convertTimeZones else { return nil }
+		guard let variableName = restrictedAttribute.variableName else { return nil }
+		let now = Date()
+		let minDate = DependencyInjector.util.calendar.start(of: timeUnit, in: now)
+		let maxDate = DependencyInjector.util.calendar.end(of: timeUnit, in: now)
+		return NSPredicate(
+			format: "%K >= %@ && %K <= %@",
+			variableName,
+			minDate as NSDate,
+			variableName,
+			maxDate as NSDate)
 	}
 
 	// MARK: - Equality

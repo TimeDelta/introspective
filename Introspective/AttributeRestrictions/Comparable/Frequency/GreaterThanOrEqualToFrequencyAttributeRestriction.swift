@@ -24,4 +24,6 @@ public final class GreaterThanOrEqualToFrequencyAttributeRestriction: TypedGreat
 	public override func copy() -> AttributeRestriction {
 		return GreaterThanOrEqualToFrequencyAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
 	}
+
+	public override func predicate() -> NSPredicate? { return nil }
 }

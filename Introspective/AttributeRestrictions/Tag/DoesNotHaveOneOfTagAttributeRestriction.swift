@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestriction, Equatable {
+public class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestriction, Equatable {
 
 	private typealias Me = DoesNotHaveOneOfTagAttributeRestriction
 
@@ -31,7 +31,7 @@ public final class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestrict
 	// MARK: - Instance Variables
 
 	public final var tags: [Tag]
-	private final let log = Log()
+	fileprivate final let log = Log()
 
 	// MARK: - Initializers
 
@@ -71,6 +71,26 @@ public final class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestrict
 
 	public override func copy() -> AttributeRestriction {
 		return DoesNotHaveOneOfTagAttributeRestriction(tags: tags, restrictedAttribute: restrictedAttribute)
+	}
+
+	// MARK: - Boolean Expression Functions
+
+	public override func predicate() -> NSPredicate? {
+		guard let variableName = restrictedAttribute.variableName else { return nil }
+		if restrictedAttribute is TagAttribute {
+			let predicates = tags.map{
+				NSPredicate(format: "%K.name !=[cd] %@", variableName, $0.name)
+			}
+			return NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+		}
+		if restrictedAttribute is TagsAttribute {
+			let predicates = tags.map{
+				NSPredicate(format: "SUBQUERY(%K, $tag, $tag.name ==[cd] %@) .@count == 0", variableName, $0.name)
+			}
+			return NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+		}
+		log.debug("Unsupported restricted attribute type for predicate")
+		return nil
 	}
 
 	// MARK: - Attributed Functions
@@ -130,5 +150,31 @@ public final class DoesNotHaveOneOfTagAttributeRestriction: AnyAttributeRestrict
 			}
 		}
 		return true
+	}
+}
+
+public final class ActivityDoesNotHaveOneOfTagAttributeRestriction: DoesNotHaveOneOfTagAttributeRestriction {
+
+	public override func predicate() -> NSPredicate? {
+		guard let variableName = restrictedAttribute.variableName else { return nil }
+		var activityPredicates = tags.map{
+			NSPredicate(format: "SUBQUERY(definition.tags, $tag, $tag.name ==[cd] %@) .@count == 0", $0.name)
+		}
+		if restrictedAttribute is TagAttribute {
+			let regularPredicates = tags.map{
+				NSPredicate(format: "%K.name !=[cd] %@", variableName, $0.name)
+			}
+			activityPredicates.append(contentsOf: regularPredicates)
+			return NSCompoundPredicate(andPredicateWithSubpredicates: activityPredicates)
+		}
+		if restrictedAttribute is TagsAttribute {
+			let regularPredicates = tags.map{
+				NSPredicate(format: "SUBQUERY(%K, $tag, $tag.name ==[cd] %@) .@count == 0", variableName, $0.name)
+			}
+			activityPredicates.append(contentsOf: regularPredicates)
+			return NSCompoundPredicate(andPredicateWithSubpredicates: activityPredicates)
+		}
+		log.debug("Unsupported restricted attribute type for predicate")
+		return nil
 	}
 }

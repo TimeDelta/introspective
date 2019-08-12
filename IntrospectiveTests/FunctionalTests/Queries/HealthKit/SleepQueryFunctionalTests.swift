@@ -68,7 +68,7 @@ class SleepQueryFunctionalTests: QueryFunctionalTest {
 		HealthKitDataTestUtil.save([Sleep(startDate: date - 1.days)])
 
 		let timestampRestriction = OnDateAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitStartDate, date: date)
-		query.attributeRestrictions.append(timestampRestriction)
+		query.expression = timestampRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -100,9 +100,7 @@ class SleepQueryFunctionalTests: QueryFunctionalTest {
 		let sleepStateRestriction = EqualToSelectOneAttributeRestriction(restrictedAttribute: Sleep.stateAttribute, value: Sleep.State.asleep, valueAttribute: Sleep.stateAttribute)
 		let startDateRestriction = AfterDateAndTimeAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitStartDate, date: startDate)
 		let endDateRestriction = OnDateAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitEndDate, date: endDate)
-		query.attributeRestrictions.append(sleepStateRestriction)
-		query.attributeRestrictions.append(startDateRestriction)
-		query.attributeRestrictions.append(endDateRestriction)
+		query.expression = andExpression(sleepStateRestriction, startDateRestriction, endDateRestriction)
 
 		// when
 		query.runQuery(callback: queryComplete)

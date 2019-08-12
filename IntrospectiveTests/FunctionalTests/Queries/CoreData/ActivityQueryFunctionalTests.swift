@@ -53,7 +53,7 @@ class ActivityQueryFunctionalTests: QueryFunctionalTest {
 		let _ = createActivity(name: "unexpected")
 
 		let nameRestriction = EqualToStringAttributeRestriction(restrictedAttribute: Activity.nameAttribute, value: expectedActivityName)
-		query.attributeRestrictions.append(nameRestriction)
+		query.expression = nameRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -73,7 +73,7 @@ class ActivityQueryFunctionalTests: QueryFunctionalTest {
 		let _ = createActivity(name: "unexpected")
 
 		let tagRestriction = HasTagAttributeRestriction(restrictedAttribute: Activity.tagsAttribute, tag: targetTag)
-		query.attributeRestrictions.append(tagRestriction)
+		query.expression = tagRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -93,7 +93,7 @@ class ActivityQueryFunctionalTests: QueryFunctionalTest {
 		let _ = createActivity(name: "unexpected", startDate: targetDate - 10.days)
 
 		let startDateRestriction = AfterDateAttributeRestriction(restrictedAttribute: CommonSampleAttributes.startDate, date: targetDate)
-		query.attributeRestrictions.append(startDateRestriction)
+		query.expression = startDateRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -113,7 +113,7 @@ class ActivityQueryFunctionalTests: QueryFunctionalTest {
 		let _ = createActivity(name: "unexpected", endDate: targetDate + 10.days)
 
 		let endDateRestriction = BeforeDateAttributeRestriction(restrictedAttribute: CommonSampleAttributes.optionalEndDate, date: targetDate)
-		query.attributeRestrictions.append(endDateRestriction)
+		query.expression = endDateRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -133,8 +133,8 @@ class ActivityQueryFunctionalTests: QueryFunctionalTest {
 		let expectedSamples: [Sample] = [createActivity(definition: targetDefinition)]
 		let _ = createActivity(name: "unexpected")
 
-		let tagRestriction = HasTagAttributeRestriction(restrictedAttribute: Activity.tagsAttribute, tag: targetTag)
-		query.attributeRestrictions.append(tagRestriction)
+		let tagRestriction = ActivityHasTagAttributeRestriction(restrictedAttribute: Activity.tagsAttribute, tag: targetTag)
+		query.expression = tagRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -154,7 +154,7 @@ class ActivityQueryFunctionalTests: QueryFunctionalTest {
 		let _ = createActivity(name: "unexpected", note: "does not contain target substring")
 
 		let noteRestriction = ContainsStringAttributeRestriction(restrictedAttribute: Activity.noteAttribute, substring: targetNoteSubstring)
-		query.attributeRestrictions.append(noteRestriction)
+		query.expression = noteRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)

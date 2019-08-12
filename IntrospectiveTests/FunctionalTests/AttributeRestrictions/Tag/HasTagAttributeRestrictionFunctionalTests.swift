@@ -8,6 +8,7 @@
 
 import XCTest
 import Hamcrest
+import CoreData
 @testable import Introspective
 
 final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
@@ -154,6 +155,40 @@ final class HasTagAttributeRestrictionFunctionalTests: FunctionalTest {
 			// then
 			XCTAssert(error is TypeMismatchError)
 		}
+	}
+
+	// MARK: - predicate()
+
+	func testGivenActivityWithSpecifiedTag_predicate_properlyFilters() throws {
+		// given
+		let tag = TagDataTestUtil.createTag(name: "tag1")
+		let activity = ActivityDataTestUtil.createActivity(tags: [tag])
+		restriction.restrictedAttribute = Activity.tagsAttribute
+		restriction.tag = tag
+		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
+		fetchRequest.predicate = restriction.predicate()
+
+		// when
+		let activities = try database.query(fetchRequest)
+
+		// then
+		assertThat(activities, arrayHasExactly([activity], areEqual: { $0.equalTo($1) }))
+	}
+
+	func testGivenActivityWithoutOneSpecifiedTag_predicate_properlyFilters() throws {
+		// given
+		let tag = TagDataTestUtil.createTag(name: "tag1")
+		ActivityDataTestUtil.createActivity()
+		restriction.restrictedAttribute = Activity.tagsAttribute
+		restriction.tag = tag
+		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
+		fetchRequest.predicate = restriction.predicate()
+
+		// when
+		let activities = try database.query(fetchRequest)
+
+		// then
+		assertThat(activities, hasCount(0))
 	}
 
 	// MARK: - copy()

@@ -24,4 +24,6 @@ public final class EqualToFrequencyAttributeRestriction: TypedEqualToAttributeRe
 	public override func copy() -> AttributeRestriction {
 		return EqualToFrequencyAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Frequency)
 	}
+
+	public override func predicate() -> NSPredicate? { return nil }
 }

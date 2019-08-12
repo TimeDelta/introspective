@@ -92,6 +92,12 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 		return OnDayOfWeekAttributeRestriction(restrictedAttribute: restrictedAttribute, daysOfWeek: daysOfWeek)
 	}
 
+	// MARK: - Boolean Expression Functions
+
+	public override func predicate() -> NSPredicate? {
+		return nil
+	}
+
 	// MARK: - Equality
 
 	public static func ==(lhs: OnDayOfWeekAttributeRestriction, rhs: OnDayOfWeekAttributeRestriction) -> Bool {

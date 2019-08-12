@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class NotEqualToDoubleAttributeRestriction: TypedNotEqualToAttributeRestrictionBase<Double>, DoubleAttributeRestriction, PredicateAttributeRestriction {
+public final class NotEqualToDoubleAttributeRestriction: TypedNotEqualToAttributeRestrictionBase<Double>, DoubleAttributeRestriction {
 
 	private typealias Me = NotEqualToDoubleAttributeRestriction
 	public static let valueAttribute = DoubleAttribute(name: "Value", pluralName: "Values")
@@ -25,7 +25,8 @@ public final class NotEqualToDoubleAttributeRestriction: TypedNotEqualToAttribut
 		return NotEqualToDoubleAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Double)
 	}
 
-	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K != %f", restrictedAttribute.variableName!, value as! Double)
+	public override func predicate() -> NSPredicate? {
+		guard let variableName = restrictedAttribute.variableName else { return nil }
+		return NSPredicate(format: "%K != %f", variableName, value as! Double)
 	}
 }

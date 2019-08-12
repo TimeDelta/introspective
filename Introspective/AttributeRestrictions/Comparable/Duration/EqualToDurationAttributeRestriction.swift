@@ -24,4 +24,6 @@ public final class EqualToDurationAttributeRestriction: TypedEqualToAttributeRes
 	public override func copy() -> AttributeRestriction {
 		return EqualToDurationAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Duration)
 	}
+
+	public override func predicate() -> NSPredicate? { return nil }
 }

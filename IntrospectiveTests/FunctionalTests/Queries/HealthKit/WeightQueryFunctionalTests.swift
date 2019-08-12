@@ -67,8 +67,8 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 		HealthKitDataTestUtil.save(expectedSamples)
 		HealthKitDataTestUtil.save([Weight(value - 1)])
 
-		let WeightRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: Weight.weight, value: value)
-		query.attributeRestrictions.append(WeightRestriction)
+		let weightRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: Weight.weight, value: value)
+		query.expression = weightRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -88,8 +88,8 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 		HealthKitDataTestUtil.save(expectedSamples)
 		HealthKitDataTestUtil.save([Weight(value + 1)])
 
-		let WeightRestriction = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: Weight.weight, value: value)
-		query.attributeRestrictions.append(WeightRestriction)
+		let weightRestriction = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: Weight.weight, value: value)
+		query.expression = weightRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -109,10 +109,9 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 		HealthKitDataTestUtil.save(expectedSamples)
 		HealthKitDataTestUtil.save([Weight(value - 2), Weight(value - 1), Weight()])
 
-		let WeightRestriction = GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: Weight.weight, value: value)
+		let weightRestriction = GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: Weight.weight, value: value)
 		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitTimestamp, date: Date() - 1.days)
-		query.attributeRestrictions.append(WeightRestriction)
-		query.attributeRestrictions.append(timestampRestriction)
+		query.expression = andExpression(weightRestriction, timestampRestriction)
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -143,9 +142,8 @@ class WeightQueryFunctionalTests: QueryFunctionalTest {
 		])
 
 		let minWeightRestriction = GreaterThanDoubleAttributeRestriction(restrictedAttribute: Weight.weight, value: minWeight)
-		query.attributeRestrictions.append(minWeightRestriction)
 		let dateRestriction = OnDateAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitTimestamp, date: startOfTargetDay)
-		query.attributeRestrictions.append(dateRestriction)
+		query.expression = andExpression(minWeightRestriction, dateRestriction)
 
 		// when
 		query.runQuery(callback: queryComplete)

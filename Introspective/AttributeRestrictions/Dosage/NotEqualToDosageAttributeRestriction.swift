@@ -24,4 +24,6 @@ public final class NotEqualToDosageAttributeRestriction: TypedNotEqualToAttribut
 	public override func copy() -> AttributeRestriction {
 		return NotEqualToDosageAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Dosage)
 	}
+
+	public override func predicate() -> NSPredicate? { return nil }
 }

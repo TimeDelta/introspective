@@ -55,4 +55,15 @@ class QueryFunctionalTest: FunctionalTest {
 	func expected(_ expected: Sample, butGot actual: Sample) -> String {
 		return "EXPECTED: " + expected.debugDescription + "; ACTUAL: " + actual.debugDescription
 	}
+
+	func andExpression(_ restrictions: AttributeRestriction...) -> BooleanExpression {
+		precondition(restrictions.count > 1)
+		var mutableRestrictions = restrictions
+		var expression = AndExpression(restrictions[0], restrictions[1])
+		mutableRestrictions.removeFirst(2)
+		while mutableRestrictions.count > 0 {
+			expression = AndExpression(expression, mutableRestrictions.removeFirst())
+		}
+		return expression
+	}
 }

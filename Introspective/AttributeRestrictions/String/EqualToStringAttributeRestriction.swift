@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class EqualToStringAttributeRestriction: TypedEqualToAttributeRestrictionBase<String>, PredicateAttributeRestriction {
+public final class EqualToStringAttributeRestriction: TypedEqualToAttributeRestrictionBase<String> {
 
 	private typealias Me = EqualToStringAttributeRestriction
 
@@ -37,7 +37,8 @@ public final class EqualToStringAttributeRestriction: TypedEqualToAttributeRestr
 		return EqualToStringAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! String)
 	}
 
-	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K ==[cd] %@", restrictedAttribute.variableName!, value as! String)
+	public override func predicate() -> NSPredicate? {
+		guard let variableName = restrictedAttribute.variableName else { return nil }
+		return NSPredicate(format: "%K ==[cd] %@", variableName, value as! String)
 	}
 }

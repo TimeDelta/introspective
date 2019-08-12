@@ -85,6 +85,22 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 		return OnDateAttributeRestriction(restrictedAttribute: restrictedAttribute, date: date)
 	}
 
+	// MARK: - Boolean Expression Functions
+
+	public override func predicate() -> NSPredicate? {
+		guard !DependencyInjector.settings.convertTimeZones else { return nil }
+		guard let variableName = restrictedAttribute.variableName else { return nil }
+		let now = Date()
+		let minDate = DependencyInjector.util.calendar.start(of: .day, in: now)
+		let maxDate = DependencyInjector.util.calendar.end(of: .day, in: now)
+		return NSPredicate(
+			format: "%K >= %@ && %K <= %@",
+			variableName,
+			minDate as NSDate,
+			variableName,
+			maxDate as NSDate)
+	}
+
 	// MARK: - Equality
 
 	public static func ==(lhs: OnDateAttributeRestriction, rhs: OnDateAttributeRestriction) -> Bool {

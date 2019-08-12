@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class LessThanOrEqualToDoubleAttributeRestriction: TypedLessThanOrEqualToAttributeRestrictionBase<Double>, DoubleAttributeRestriction, PredicateAttributeRestriction {
+public final class LessThanOrEqualToDoubleAttributeRestriction: TypedLessThanOrEqualToAttributeRestrictionBase<Double>, DoubleAttributeRestriction {
 
 	private typealias Me = LessThanOrEqualToDoubleAttributeRestriction
 	public static let valueAttribute = DoubleAttribute(name: "Value", pluralName: "Values")
@@ -25,7 +25,8 @@ public final class LessThanOrEqualToDoubleAttributeRestriction: TypedLessThanOrE
 		return LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
 	}
 
-	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K <= %f", restrictedAttribute.variableName!, value)
+	public override func predicate() -> NSPredicate? {
+		guard let variableName = restrictedAttribute.variableName else { return nil }
+		return NSPredicate(format: "%K <= %f", variableName, value)
 	}
 }

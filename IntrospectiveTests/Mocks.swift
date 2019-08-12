@@ -69,6 +69,7 @@ import SourceryRuntime
 
 
 
+
 // MARK: - ATrackerActivityImporter
 open class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
@@ -846,11 +847,11 @@ open class ActivityQueryMock: ActivityQuery, Mock {
         self.line = line
     }
 
-    public var attributeRestrictions: [AttributeRestriction] {
-		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "ActivityQueryMock - stub value for attributeRestrictions was not defined") }
-		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
+    public var expression: BooleanExpression? {
+		get {	invocations.append(.p_expression_get); return __p_expression ?? optionalGivenGetterValue(.p_expression_get, "ActivityQueryMock - stub value for expression was not defined") }
+		set {	invocations.append(.p_expression_set(.value(newValue))); __p_expression = newValue }
 	}
-	private var __p_attributeRestrictions: ([AttributeRestriction])?
+	private var __p_expression: (BooleanExpression)?
 
     public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "ActivityQueryMock - stub value for mostRecentEntryOnly was not defined") }
@@ -867,6 +868,8 @@ open class ActivityQueryMock: ActivityQuery, Mock {
 
 
 
+
+    public required init(parts: [BooleanExpressionPart]) throws { }
 
     open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
@@ -906,8 +909,8 @@ open class ActivityQueryMock: ActivityQuery, Mock {
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
-        case p_attributeRestrictions_get
-		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
+        case p_expression_get
+		case p_expression_set(Parameter<BooleanExpression?>)
         case p_mostRecentEntryOnly_get
 		case p_mostRecentEntryOnly_set(Parameter<Bool>)
         case p_subQuery_get
@@ -925,8 +928,8 @@ open class ActivityQueryMock: ActivityQuery, Mock {
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
                 return true 
-            case (.p_attributeRestrictions_get,.p_attributeRestrictions_get): return true
-			case (.p_attributeRestrictions_set(let left),.p_attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_expression_get,.p_expression_get): return true
+			case (.p_expression_set(let left),.p_expression_set(let right)): return Parameter<BooleanExpression?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_mostRecentEntryOnly_get,.p_mostRecentEntryOnly_get): return true
 			case (.p_mostRecentEntryOnly_set(let left),.p_mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_subQuery_get,.p_subQuery_get): return true
@@ -941,8 +944,8 @@ open class ActivityQueryMock: ActivityQuery, Mock {
             case .m_stop: return 0
             case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
-            case .p_attributeRestrictions_get: return 0
-			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
+            case .p_expression_get: return 0
+			case .p_expression_set(let newValue): return newValue.intValue
             case .p_mostRecentEntryOnly_get: return 0
 			case .p_mostRecentEntryOnly_set(let newValue): return newValue.intValue
             case .p_subQuery_get: return 0
@@ -959,8 +962,8 @@ open class ActivityQueryMock: ActivityQuery, Mock {
             super.init(products)
         }
 
-        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
-            return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func expression(getter defaultValue: BooleanExpression?...) -> PropertyStub {
+            return Given(method: .p_expression_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
@@ -988,8 +991,8 @@ open class ActivityQueryMock: ActivityQuery, Mock {
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var expression: Verify { return Verify(method: .p_expression_get) }
+		public static func expression(set newValue: Parameter<BooleanExpression?>) -> Verify { return Verify(method: .p_expression_set(newValue)) }
         public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
 		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
         public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
@@ -1744,163 +1747,6 @@ open class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
     }
 }
 
-// MARK: - AttributeRestrictionUtil
-open class AttributeRestrictionUtilMock: AttributeRestrictionUtil, Mock {
-    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
-        self.sequencingPolicy = sequencingPolicy
-        self.stubbingPolicy = stubbingPolicy
-        self.file = file
-        self.line = line
-    }
-
-    var matcher: Matcher = Matcher.default
-    var stubbingPolicy: StubbingPolicy = .wrap
-    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
-    private var invocations: [MethodType] = []
-    private var methodReturnValues: [Given] = []
-    private var methodPerformValues: [Perform] = []
-    private var file: StaticString?
-    private var line: UInt?
-
-    public typealias PropertyStub = Given
-    public typealias MethodStub = Given
-    public typealias SubscriptStub = Given
-
-    /// Convenience method - call setupMock() to extend debug information when failure occurs
-    public func setupMock(file: StaticString = #file, line: UInt = #line) {
-        self.file = file
-        self.line = line
-    }
-
-
-
-
-
-    open func getMostRestrictiveStartAndEndDates(from attributeRestrictions: [AttributeRestriction]) -> (start: Date?, end: Date?) {
-        addInvocation(.m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(Parameter<[AttributeRestriction]>.value(`attributeRestrictions`)))
-		let perform = methodPerformValue(.m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(Parameter<[AttributeRestriction]>.value(`attributeRestrictions`))) as? ([AttributeRestriction]) -> Void
-		perform?(`attributeRestrictions`)
-		var __value: (start: Date?, end: Date?)
-		do {
-		    __value = try methodReturnValue(.m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(Parameter<[AttributeRestriction]>.value(`attributeRestrictions`))).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for getMostRestrictiveStartAndEndDates(from attributeRestrictions: [AttributeRestriction]). Use given")
-			Failure("Stub return value not specified for getMostRestrictiveStartAndEndDates(from attributeRestrictions: [AttributeRestriction]). Use given")
-		}
-		return __value
-    }
-
-
-    fileprivate enum MethodType {
-        case m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(Parameter<[AttributeRestriction]>)
-
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
-            switch (lhs, rhs) {
-            case (.m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(let lhsAttributerestrictions), .m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(let rhsAttributerestrictions)):
-                guard Parameter.compare(lhs: lhsAttributerestrictions, rhs: rhsAttributerestrictions, with: matcher) else { return false } 
-                return true 
-            }
-        }
-
-        func intValue() -> Int {
-            switch self {
-            case let .m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(p0): return p0.intValue
-            }
-        }
-    }
-
-    open class Given: StubbedMethod {
-        fileprivate var method: MethodType
-
-        private init(method: MethodType, products: [StubProduct]) {
-            self.method = method
-            super.init(products)
-        }
-
-
-        public static func getMostRestrictiveStartAndEndDates(from attributeRestrictions: Parameter<[AttributeRestriction]>, willReturn: (start: Date?, end: Date?)...) -> MethodStub {
-            return Given(method: .m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(`attributeRestrictions`), products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func getMostRestrictiveStartAndEndDates(from attributeRestrictions: Parameter<[AttributeRestriction]>, willProduce: (Stubber<(start: Date?, end: Date?)>) -> Void) -> MethodStub {
-            let willReturn: [(start: Date?, end: Date?)] = []
-			let given: Given = { return Given(method: .m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(`attributeRestrictions`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: ((start: Date?, end: Date?)).self)
-			willProduce(stubber)
-			return given
-        }
-    }
-
-    public struct Verify {
-        fileprivate var method: MethodType
-
-        public static func getMostRestrictiveStartAndEndDates(from attributeRestrictions: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(`attributeRestrictions`))}
-    }
-
-    public struct Perform {
-        fileprivate var method: MethodType
-        var performs: Any
-
-        public static func getMostRestrictiveStartAndEndDates(from attributeRestrictions: Parameter<[AttributeRestriction]>, perform: @escaping ([AttributeRestriction]) -> Void) -> Perform {
-            return Perform(method: .m_getMostRestrictiveStartAndEndDates__from_attributeRestrictions(`attributeRestrictions`), performs: perform)
-        }
-    }
-
-    public func given(_ method: Given) {
-        methodReturnValues.append(method)
-    }
-
-    public func perform(_ method: Perform) {
-        methodPerformValues.append(method)
-        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
-    }
-
-    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
-    }
-
-    private func addInvocation(_ call: MethodType) {
-        invocations.append(call)
-    }
-    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
-        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
-        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
-        return product
-    }
-    private func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
-        return matched?.performs
-    }
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
-    }
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
-    }
-    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            onFatalFailure(message)
-            Failure(message)
-        }
-    }
-    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            return nil
-        }
-    }
-    private func onFatalFailure(_ message: String) {
-        #if Mocky
-        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
-        #endif
-    }
-}
-
 // MARK: - BloodPressureQuery
 open class BloodPressureQueryMock: BloodPressureQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
@@ -1929,11 +1775,11 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
         self.line = line
     }
 
-    public var attributeRestrictions: [AttributeRestriction] {
-		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "BloodPressureQueryMock - stub value for attributeRestrictions was not defined") }
-		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
+    public var expression: BooleanExpression? {
+		get {	invocations.append(.p_expression_get); return __p_expression ?? optionalGivenGetterValue(.p_expression_get, "BloodPressureQueryMock - stub value for expression was not defined") }
+		set {	invocations.append(.p_expression_set(.value(newValue))); __p_expression = newValue }
 	}
-	private var __p_attributeRestrictions: ([AttributeRestriction])?
+	private var __p_expression: (BooleanExpression)?
 
     public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "BloodPressureQueryMock - stub value for mostRecentEntryOnly was not defined") }
@@ -1950,6 +1796,8 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
 
 
 
+
+    public required init(parts: [BooleanExpressionPart]) throws { }
 
     open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
@@ -1989,8 +1837,8 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
-        case p_attributeRestrictions_get
-		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
+        case p_expression_get
+		case p_expression_set(Parameter<BooleanExpression?>)
         case p_mostRecentEntryOnly_get
 		case p_mostRecentEntryOnly_set(Parameter<Bool>)
         case p_subQuery_get
@@ -2008,8 +1856,8 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
                 return true 
-            case (.p_attributeRestrictions_get,.p_attributeRestrictions_get): return true
-			case (.p_attributeRestrictions_set(let left),.p_attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_expression_get,.p_expression_get): return true
+			case (.p_expression_set(let left),.p_expression_set(let right)): return Parameter<BooleanExpression?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_mostRecentEntryOnly_get,.p_mostRecentEntryOnly_get): return true
 			case (.p_mostRecentEntryOnly_set(let left),.p_mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_subQuery_get,.p_subQuery_get): return true
@@ -2024,8 +1872,8 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
             case .m_stop: return 0
             case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
-            case .p_attributeRestrictions_get: return 0
-			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
+            case .p_expression_get: return 0
+			case .p_expression_set(let newValue): return newValue.intValue
             case .p_mostRecentEntryOnly_get: return 0
 			case .p_mostRecentEntryOnly_set(let newValue): return newValue.intValue
             case .p_subQuery_get: return 0
@@ -2042,8 +1890,8 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
             super.init(products)
         }
 
-        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
-            return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func expression(getter defaultValue: BooleanExpression?...) -> PropertyStub {
+            return Given(method: .p_expression_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
@@ -2071,8 +1919,8 @@ open class BloodPressureQueryMock: BloodPressureQuery, Mock {
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var expression: Verify { return Verify(method: .p_expression_get) }
+		public static func expression(set newValue: Parameter<BooleanExpression?>) -> Verify { return Verify(method: .p_expression_set(newValue)) }
         public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
 		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
         public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
@@ -2181,11 +2029,11 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
         self.line = line
     }
 
-    public var attributeRestrictions: [AttributeRestriction] {
-		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "BodyMassIndexQueryMock - stub value for attributeRestrictions was not defined") }
-		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
+    public var expression: BooleanExpression? {
+		get {	invocations.append(.p_expression_get); return __p_expression ?? optionalGivenGetterValue(.p_expression_get, "BodyMassIndexQueryMock - stub value for expression was not defined") }
+		set {	invocations.append(.p_expression_set(.value(newValue))); __p_expression = newValue }
 	}
-	private var __p_attributeRestrictions: ([AttributeRestriction])?
+	private var __p_expression: (BooleanExpression)?
 
     public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "BodyMassIndexQueryMock - stub value for mostRecentEntryOnly was not defined") }
@@ -2202,6 +2050,8 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
 
 
 
+
+    public required init(parts: [BooleanExpressionPart]) throws { }
 
     open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
@@ -2241,8 +2091,8 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
-        case p_attributeRestrictions_get
-		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
+        case p_expression_get
+		case p_expression_set(Parameter<BooleanExpression?>)
         case p_mostRecentEntryOnly_get
 		case p_mostRecentEntryOnly_set(Parameter<Bool>)
         case p_subQuery_get
@@ -2260,8 +2110,8 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
                 return true 
-            case (.p_attributeRestrictions_get,.p_attributeRestrictions_get): return true
-			case (.p_attributeRestrictions_set(let left),.p_attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_expression_get,.p_expression_get): return true
+			case (.p_expression_set(let left),.p_expression_set(let right)): return Parameter<BooleanExpression?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_mostRecentEntryOnly_get,.p_mostRecentEntryOnly_get): return true
 			case (.p_mostRecentEntryOnly_set(let left),.p_mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_subQuery_get,.p_subQuery_get): return true
@@ -2276,8 +2126,8 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
             case .m_stop: return 0
             case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
-            case .p_attributeRestrictions_get: return 0
-			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
+            case .p_expression_get: return 0
+			case .p_expression_set(let newValue): return newValue.intValue
             case .p_mostRecentEntryOnly_get: return 0
 			case .p_mostRecentEntryOnly_set(let newValue): return newValue.intValue
             case .p_subQuery_get: return 0
@@ -2294,8 +2144,8 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
             super.init(products)
         }
 
-        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
-            return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func expression(getter defaultValue: BooleanExpression?...) -> PropertyStub {
+            return Given(method: .p_expression_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
@@ -2323,8 +2173,8 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var expression: Verify { return Verify(method: .p_expression_get) }
+		public static func expression(set newValue: Parameter<BooleanExpression?>) -> Verify { return Verify(method: .p_expression_set(newValue)) }
         public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
 		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
         public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
@@ -6768,11 +6618,11 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
         self.line = line
     }
 
-    public var attributeRestrictions: [AttributeRestriction] {
-		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "HeartRateQueryMock - stub value for attributeRestrictions was not defined") }
-		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
+    public var expression: BooleanExpression? {
+		get {	invocations.append(.p_expression_get); return __p_expression ?? optionalGivenGetterValue(.p_expression_get, "HeartRateQueryMock - stub value for expression was not defined") }
+		set {	invocations.append(.p_expression_set(.value(newValue))); __p_expression = newValue }
 	}
-	private var __p_attributeRestrictions: ([AttributeRestriction])?
+	private var __p_expression: (BooleanExpression)?
 
     public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "HeartRateQueryMock - stub value for mostRecentEntryOnly was not defined") }
@@ -6789,6 +6639,8 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
 
 
 
+
+    public required init(parts: [BooleanExpressionPart]) throws { }
 
     open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
@@ -6828,8 +6680,8 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
-        case p_attributeRestrictions_get
-		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
+        case p_expression_get
+		case p_expression_set(Parameter<BooleanExpression?>)
         case p_mostRecentEntryOnly_get
 		case p_mostRecentEntryOnly_set(Parameter<Bool>)
         case p_subQuery_get
@@ -6847,8 +6699,8 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
                 return true 
-            case (.p_attributeRestrictions_get,.p_attributeRestrictions_get): return true
-			case (.p_attributeRestrictions_set(let left),.p_attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_expression_get,.p_expression_get): return true
+			case (.p_expression_set(let left),.p_expression_set(let right)): return Parameter<BooleanExpression?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_mostRecentEntryOnly_get,.p_mostRecentEntryOnly_get): return true
 			case (.p_mostRecentEntryOnly_set(let left),.p_mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_subQuery_get,.p_subQuery_get): return true
@@ -6863,8 +6715,8 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
             case .m_stop: return 0
             case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
-            case .p_attributeRestrictions_get: return 0
-			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
+            case .p_expression_get: return 0
+			case .p_expression_set(let newValue): return newValue.intValue
             case .p_mostRecentEntryOnly_get: return 0
 			case .p_mostRecentEntryOnly_set(let newValue): return newValue.intValue
             case .p_subQuery_get: return 0
@@ -6881,8 +6733,8 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
             super.init(products)
         }
 
-        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
-            return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func expression(getter defaultValue: BooleanExpression?...) -> PropertyStub {
+            return Given(method: .p_expression_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
@@ -6910,8 +6762,8 @@ open class HeartRateQueryMock: HeartRateQuery, Mock {
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var expression: Verify { return Verify(method: .p_expression_get) }
+		public static func expression(set newValue: Parameter<BooleanExpression?>) -> Verify { return Verify(method: .p_expression_set(newValue)) }
         public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
 		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
         public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
@@ -8553,11 +8405,11 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
         self.line = line
     }
 
-    public var attributeRestrictions: [AttributeRestriction] {
-		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "LeanBodyMassQueryMock - stub value for attributeRestrictions was not defined") }
-		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
+    public var expression: BooleanExpression? {
+		get {	invocations.append(.p_expression_get); return __p_expression ?? optionalGivenGetterValue(.p_expression_get, "LeanBodyMassQueryMock - stub value for expression was not defined") }
+		set {	invocations.append(.p_expression_set(.value(newValue))); __p_expression = newValue }
 	}
-	private var __p_attributeRestrictions: ([AttributeRestriction])?
+	private var __p_expression: (BooleanExpression)?
 
     public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "LeanBodyMassQueryMock - stub value for mostRecentEntryOnly was not defined") }
@@ -8574,6 +8426,8 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
 
 
 
+
+    public required init(parts: [BooleanExpressionPart]) throws { }
 
     open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
@@ -8613,8 +8467,8 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
-        case p_attributeRestrictions_get
-		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
+        case p_expression_get
+		case p_expression_set(Parameter<BooleanExpression?>)
         case p_mostRecentEntryOnly_get
 		case p_mostRecentEntryOnly_set(Parameter<Bool>)
         case p_subQuery_get
@@ -8632,8 +8486,8 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
                 return true 
-            case (.p_attributeRestrictions_get,.p_attributeRestrictions_get): return true
-			case (.p_attributeRestrictions_set(let left),.p_attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_expression_get,.p_expression_get): return true
+			case (.p_expression_set(let left),.p_expression_set(let right)): return Parameter<BooleanExpression?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_mostRecentEntryOnly_get,.p_mostRecentEntryOnly_get): return true
 			case (.p_mostRecentEntryOnly_set(let left),.p_mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_subQuery_get,.p_subQuery_get): return true
@@ -8648,8 +8502,8 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
             case .m_stop: return 0
             case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
-            case .p_attributeRestrictions_get: return 0
-			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
+            case .p_expression_get: return 0
+			case .p_expression_set(let newValue): return newValue.intValue
             case .p_mostRecentEntryOnly_get: return 0
 			case .p_mostRecentEntryOnly_set(let newValue): return newValue.intValue
             case .p_subQuery_get: return 0
@@ -8666,8 +8520,8 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
             super.init(products)
         }
 
-        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
-            return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func expression(getter defaultValue: BooleanExpression?...) -> PropertyStub {
+            return Given(method: .p_expression_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
@@ -8695,8 +8549,8 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var expression: Verify { return Verify(method: .p_expression_get) }
+		public static func expression(set newValue: Parameter<BooleanExpression?>) -> Verify { return Verify(method: .p_expression_set(newValue)) }
         public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
 		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
         public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
@@ -8805,11 +8659,11 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
         self.line = line
     }
 
-    public var attributeRestrictions: [AttributeRestriction] {
-		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "MedicationDoseQueryMock - stub value for attributeRestrictions was not defined") }
-		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
+    public var expression: BooleanExpression? {
+		get {	invocations.append(.p_expression_get); return __p_expression ?? optionalGivenGetterValue(.p_expression_get, "MedicationDoseQueryMock - stub value for expression was not defined") }
+		set {	invocations.append(.p_expression_set(.value(newValue))); __p_expression = newValue }
 	}
-	private var __p_attributeRestrictions: ([AttributeRestriction])?
+	private var __p_expression: (BooleanExpression)?
 
     public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "MedicationDoseQueryMock - stub value for mostRecentEntryOnly was not defined") }
@@ -8826,6 +8680,8 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
 
 
 
+
+    public required init(parts: [BooleanExpressionPart]) throws { }
 
     open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
@@ -8865,8 +8721,8 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
-        case p_attributeRestrictions_get
-		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
+        case p_expression_get
+		case p_expression_set(Parameter<BooleanExpression?>)
         case p_mostRecentEntryOnly_get
 		case p_mostRecentEntryOnly_set(Parameter<Bool>)
         case p_subQuery_get
@@ -8884,8 +8740,8 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
                 return true 
-            case (.p_attributeRestrictions_get,.p_attributeRestrictions_get): return true
-			case (.p_attributeRestrictions_set(let left),.p_attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_expression_get,.p_expression_get): return true
+			case (.p_expression_set(let left),.p_expression_set(let right)): return Parameter<BooleanExpression?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_mostRecentEntryOnly_get,.p_mostRecentEntryOnly_get): return true
 			case (.p_mostRecentEntryOnly_set(let left),.p_mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_subQuery_get,.p_subQuery_get): return true
@@ -8900,8 +8756,8 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
             case .m_stop: return 0
             case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
-            case .p_attributeRestrictions_get: return 0
-			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
+            case .p_expression_get: return 0
+			case .p_expression_set(let newValue): return newValue.intValue
             case .p_mostRecentEntryOnly_get: return 0
 			case .p_mostRecentEntryOnly_set(let newValue): return newValue.intValue
             case .p_subQuery_get: return 0
@@ -8918,8 +8774,8 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
             super.init(products)
         }
 
-        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
-            return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func expression(getter defaultValue: BooleanExpression?...) -> PropertyStub {
+            return Given(method: .p_expression_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
@@ -8947,8 +8803,8 @@ open class MedicationDoseQueryMock: MedicationDoseQuery, Mock {
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var expression: Verify { return Verify(method: .p_expression_get) }
+		public static func expression(set newValue: Parameter<BooleanExpression?>) -> Verify { return Verify(method: .p_expression_set(newValue)) }
         public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
 		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
         public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
@@ -9406,11 +9262,11 @@ open class MoodQueryMock: MoodQuery, Mock, StaticMock {
         methodPerformValues = []
     }
 
-    public var attributeRestrictions: [AttributeRestriction] {
-		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "MoodQueryMock - stub value for attributeRestrictions was not defined") }
-		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
+    public var expression: BooleanExpression? {
+		get {	invocations.append(.p_expression_get); return __p_expression ?? optionalGivenGetterValue(.p_expression_get, "MoodQueryMock - stub value for expression was not defined") }
+		set {	invocations.append(.p_expression_set(.value(newValue))); __p_expression = newValue }
 	}
-	private var __p_attributeRestrictions: ([AttributeRestriction])?
+	private var __p_expression: (BooleanExpression)?
 
     public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "MoodQueryMock - stub value for mostRecentEntryOnly was not defined") }
@@ -9433,6 +9289,8 @@ open class MoodQueryMock: MoodQuery, Mock, StaticMock {
 
 
 
+
+    public required init(parts: [BooleanExpressionPart]) throws { }
 
     open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
@@ -9519,8 +9377,8 @@ open class MoodQueryMock: MoodQuery, Mock, StaticMock {
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
-        case p_attributeRestrictions_get
-		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
+        case p_expression_get
+		case p_expression_set(Parameter<BooleanExpression?>)
         case p_mostRecentEntryOnly_get
 		case p_mostRecentEntryOnly_set(Parameter<Bool>)
         case p_subQuery_get
@@ -9538,8 +9396,8 @@ open class MoodQueryMock: MoodQuery, Mock, StaticMock {
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
                 return true 
-            case (.p_attributeRestrictions_get,.p_attributeRestrictions_get): return true
-			case (.p_attributeRestrictions_set(let left),.p_attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_expression_get,.p_expression_get): return true
+			case (.p_expression_set(let left),.p_expression_set(let right)): return Parameter<BooleanExpression?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_mostRecentEntryOnly_get,.p_mostRecentEntryOnly_get): return true
 			case (.p_mostRecentEntryOnly_set(let left),.p_mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_subQuery_get,.p_subQuery_get): return true
@@ -9554,8 +9412,8 @@ open class MoodQueryMock: MoodQuery, Mock, StaticMock {
             case .m_stop: return 0
             case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
-            case .p_attributeRestrictions_get: return 0
-			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
+            case .p_expression_get: return 0
+			case .p_expression_set(let newValue): return newValue.intValue
             case .p_mostRecentEntryOnly_get: return 0
 			case .p_mostRecentEntryOnly_set(let newValue): return newValue.intValue
             case .p_subQuery_get: return 0
@@ -9572,8 +9430,8 @@ open class MoodQueryMock: MoodQuery, Mock, StaticMock {
             super.init(products)
         }
 
-        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
-            return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func expression(getter defaultValue: BooleanExpression?...) -> PropertyStub {
+            return Given(method: .p_expression_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
@@ -9601,8 +9459,8 @@ open class MoodQueryMock: MoodQuery, Mock, StaticMock {
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var expression: Verify { return Verify(method: .p_expression_get) }
+		public static func expression(set newValue: Parameter<BooleanExpression?>) -> Verify { return Verify(method: .p_expression_set(newValue)) }
         public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
 		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
         public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
@@ -10558,11 +10416,11 @@ open class QueryMock: Query, Mock {
         self.line = line
     }
 
-    public var attributeRestrictions: [AttributeRestriction] {
-		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "QueryMock - stub value for attributeRestrictions was not defined") }
-		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
+    public var expression: BooleanExpression? {
+		get {	invocations.append(.p_expression_get); return __p_expression ?? optionalGivenGetterValue(.p_expression_get, "QueryMock - stub value for expression was not defined") }
+		set {	invocations.append(.p_expression_set(.value(newValue))); __p_expression = newValue }
 	}
-	private var __p_attributeRestrictions: ([AttributeRestriction])?
+	private var __p_expression: (BooleanExpression)?
 
     public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "QueryMock - stub value for mostRecentEntryOnly was not defined") }
@@ -10579,6 +10437,8 @@ open class QueryMock: Query, Mock {
 
 
 
+
+    public required init(parts: [BooleanExpressionPart]) throws { }
 
     open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
@@ -10618,8 +10478,8 @@ open class QueryMock: Query, Mock {
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
-        case p_attributeRestrictions_get
-		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
+        case p_expression_get
+		case p_expression_set(Parameter<BooleanExpression?>)
         case p_mostRecentEntryOnly_get
 		case p_mostRecentEntryOnly_set(Parameter<Bool>)
         case p_subQuery_get
@@ -10637,8 +10497,8 @@ open class QueryMock: Query, Mock {
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
                 return true 
-            case (.p_attributeRestrictions_get,.p_attributeRestrictions_get): return true
-			case (.p_attributeRestrictions_set(let left),.p_attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_expression_get,.p_expression_get): return true
+			case (.p_expression_set(let left),.p_expression_set(let right)): return Parameter<BooleanExpression?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_mostRecentEntryOnly_get,.p_mostRecentEntryOnly_get): return true
 			case (.p_mostRecentEntryOnly_set(let left),.p_mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_subQuery_get,.p_subQuery_get): return true
@@ -10653,8 +10513,8 @@ open class QueryMock: Query, Mock {
             case .m_stop: return 0
             case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
-            case .p_attributeRestrictions_get: return 0
-			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
+            case .p_expression_get: return 0
+			case .p_expression_set(let newValue): return newValue.intValue
             case .p_mostRecentEntryOnly_get: return 0
 			case .p_mostRecentEntryOnly_set(let newValue): return newValue.intValue
             case .p_subQuery_get: return 0
@@ -10671,8 +10531,8 @@ open class QueryMock: Query, Mock {
             super.init(products)
         }
 
-        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
-            return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func expression(getter defaultValue: BooleanExpression?...) -> PropertyStub {
+            return Given(method: .p_expression_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
@@ -10700,8 +10560,8 @@ open class QueryMock: Query, Mock {
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var expression: Verify { return Verify(method: .p_expression_get) }
+		public static func expression(set newValue: Parameter<BooleanExpression?>) -> Verify { return Verify(method: .p_expression_set(newValue)) }
         public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
 		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
         public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
@@ -10828,6 +10688,22 @@ open class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
+    open func activityQuery(_ parts: [BooleanExpressionPart]) throws -> ActivityQuery {
+        addInvocation(.m_activityQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`)))
+		let perform = methodPerformValue(.m_activityQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))) as? ([BooleanExpressionPart]) -> Void
+		perform?(`parts`)
+		var __value: ActivityQuery
+		do {
+		    __value = try methodReturnValue(.m_activityQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for activityQuery(_ parts: [BooleanExpressionPart]). Use given")
+			Failure("Stub return value not specified for activityQuery(_ parts: [BooleanExpressionPart]). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     open func bloodPressureQuery() -> BloodPressureQuery {
         addInvocation(.m_bloodPressureQuery)
 		let perform = methodPerformValue(.m_bloodPressureQuery) as? () -> Void
@@ -10838,6 +10714,22 @@ open class QueryFactoryMock: QueryFactory, Mock {
 		} catch {
 			onFatalFailure("Stub return value not specified for bloodPressureQuery(). Use given")
 			Failure("Stub return value not specified for bloodPressureQuery(). Use given")
+		}
+		return __value
+    }
+
+    open func bloodPressureQuery(_ parts: [BooleanExpressionPart]) throws -> BloodPressureQuery {
+        addInvocation(.m_bloodPressureQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`)))
+		let perform = methodPerformValue(.m_bloodPressureQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))) as? ([BooleanExpressionPart]) -> Void
+		perform?(`parts`)
+		var __value: BloodPressureQuery
+		do {
+		    __value = try methodReturnValue(.m_bloodPressureQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for bloodPressureQuery(_ parts: [BooleanExpressionPart]). Use given")
+			Failure("Stub return value not specified for bloodPressureQuery(_ parts: [BooleanExpressionPart]). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
@@ -10856,6 +10748,22 @@ open class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
+    open func bmiQuery(_ parts: [BooleanExpressionPart]) throws -> BodyMassIndexQuery {
+        addInvocation(.m_bmiQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`)))
+		let perform = methodPerformValue(.m_bmiQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))) as? ([BooleanExpressionPart]) -> Void
+		perform?(`parts`)
+		var __value: BodyMassIndexQuery
+		do {
+		    __value = try methodReturnValue(.m_bmiQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for bmiQuery(_ parts: [BooleanExpressionPart]). Use given")
+			Failure("Stub return value not specified for bmiQuery(_ parts: [BooleanExpressionPart]). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     open func heartRateQuery() -> HeartRateQuery {
         addInvocation(.m_heartRateQuery)
 		let perform = methodPerformValue(.m_heartRateQuery) as? () -> Void
@@ -10866,6 +10774,22 @@ open class QueryFactoryMock: QueryFactory, Mock {
 		} catch {
 			onFatalFailure("Stub return value not specified for heartRateQuery(). Use given")
 			Failure("Stub return value not specified for heartRateQuery(). Use given")
+		}
+		return __value
+    }
+
+    open func heartRateQuery(_ parts: [BooleanExpressionPart]) throws -> HeartRateQuery {
+        addInvocation(.m_heartRateQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`)))
+		let perform = methodPerformValue(.m_heartRateQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))) as? ([BooleanExpressionPart]) -> Void
+		perform?(`parts`)
+		var __value: HeartRateQuery
+		do {
+		    __value = try methodReturnValue(.m_heartRateQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for heartRateQuery(_ parts: [BooleanExpressionPart]). Use given")
+			Failure("Stub return value not specified for heartRateQuery(_ parts: [BooleanExpressionPart]). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
@@ -10884,6 +10808,22 @@ open class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
+    open func leanBodyMassQuery(_ parts: [BooleanExpressionPart]) throws -> LeanBodyMassQuery {
+        addInvocation(.m_leanBodyMassQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`)))
+		let perform = methodPerformValue(.m_leanBodyMassQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))) as? ([BooleanExpressionPart]) -> Void
+		perform?(`parts`)
+		var __value: LeanBodyMassQuery
+		do {
+		    __value = try methodReturnValue(.m_leanBodyMassQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for leanBodyMassQuery(_ parts: [BooleanExpressionPart]). Use given")
+			Failure("Stub return value not specified for leanBodyMassQuery(_ parts: [BooleanExpressionPart]). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     open func medicationDoseQuery() -> MedicationDoseQuery {
         addInvocation(.m_medicationDoseQuery)
 		let perform = methodPerformValue(.m_medicationDoseQuery) as? () -> Void
@@ -10894,6 +10834,22 @@ open class QueryFactoryMock: QueryFactory, Mock {
 		} catch {
 			onFatalFailure("Stub return value not specified for medicationDoseQuery(). Use given")
 			Failure("Stub return value not specified for medicationDoseQuery(). Use given")
+		}
+		return __value
+    }
+
+    open func medicationDoseQuery(_ parts: [BooleanExpressionPart]) throws -> MedicationDoseQuery {
+        addInvocation(.m_medicationDoseQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`)))
+		let perform = methodPerformValue(.m_medicationDoseQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))) as? ([BooleanExpressionPart]) -> Void
+		perform?(`parts`)
+		var __value: MedicationDoseQuery
+		do {
+		    __value = try methodReturnValue(.m_medicationDoseQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for medicationDoseQuery(_ parts: [BooleanExpressionPart]). Use given")
+			Failure("Stub return value not specified for medicationDoseQuery(_ parts: [BooleanExpressionPart]). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
@@ -10912,6 +10868,22 @@ open class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
+    open func moodQuery(_ parts: [BooleanExpressionPart]) throws -> MoodQuery {
+        addInvocation(.m_moodQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`)))
+		let perform = methodPerformValue(.m_moodQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))) as? ([BooleanExpressionPart]) -> Void
+		perform?(`parts`)
+		var __value: MoodQuery
+		do {
+		    __value = try methodReturnValue(.m_moodQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for moodQuery(_ parts: [BooleanExpressionPart]). Use given")
+			Failure("Stub return value not specified for moodQuery(_ parts: [BooleanExpressionPart]). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     open func restingHeartRateQuery() -> RestingHeartRateQuery {
         addInvocation(.m_restingHeartRateQuery)
 		let perform = methodPerformValue(.m_restingHeartRateQuery) as? () -> Void
@@ -10922,6 +10894,22 @@ open class QueryFactoryMock: QueryFactory, Mock {
 		} catch {
 			onFatalFailure("Stub return value not specified for restingHeartRateQuery(). Use given")
 			Failure("Stub return value not specified for restingHeartRateQuery(). Use given")
+		}
+		return __value
+    }
+
+    open func restingHeartRateQuery(_ parts: [BooleanExpressionPart]) throws -> RestingHeartRateQuery {
+        addInvocation(.m_restingHeartRateQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`)))
+		let perform = methodPerformValue(.m_restingHeartRateQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))) as? ([BooleanExpressionPart]) -> Void
+		perform?(`parts`)
+		var __value: RestingHeartRateQuery
+		do {
+		    __value = try methodReturnValue(.m_restingHeartRateQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for restingHeartRateQuery(_ parts: [BooleanExpressionPart]). Use given")
+			Failure("Stub return value not specified for restingHeartRateQuery(_ parts: [BooleanExpressionPart]). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
@@ -10940,6 +10928,22 @@ open class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
+    open func sexualActivityQuery(_ parts: [BooleanExpressionPart]) throws -> SexualActivityQuery {
+        addInvocation(.m_sexualActivityQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`)))
+		let perform = methodPerformValue(.m_sexualActivityQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))) as? ([BooleanExpressionPart]) -> Void
+		perform?(`parts`)
+		var __value: SexualActivityQuery
+		do {
+		    __value = try methodReturnValue(.m_sexualActivityQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for sexualActivityQuery(_ parts: [BooleanExpressionPart]). Use given")
+			Failure("Stub return value not specified for sexualActivityQuery(_ parts: [BooleanExpressionPart]). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     open func sleepQuery() -> SleepQuery {
         addInvocation(.m_sleepQuery)
 		let perform = methodPerformValue(.m_sleepQuery) as? () -> Void
@@ -10954,6 +10958,22 @@ open class QueryFactoryMock: QueryFactory, Mock {
 		return __value
     }
 
+    open func sleepQuery(_ parts: [BooleanExpressionPart]) throws -> SleepQuery {
+        addInvocation(.m_sleepQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`)))
+		let perform = methodPerformValue(.m_sleepQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))) as? ([BooleanExpressionPart]) -> Void
+		perform?(`parts`)
+		var __value: SleepQuery
+		do {
+		    __value = try methodReturnValue(.m_sleepQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for sleepQuery(_ parts: [BooleanExpressionPart]). Use given")
+			Failure("Stub return value not specified for sleepQuery(_ parts: [BooleanExpressionPart]). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     open func weightQuery() -> WeightQuery {
         addInvocation(.m_weightQuery)
 		let perform = methodPerformValue(.m_weightQuery) as? () -> Void
@@ -10964,6 +10984,22 @@ open class QueryFactoryMock: QueryFactory, Mock {
 		} catch {
 			onFatalFailure("Stub return value not specified for weightQuery(). Use given")
 			Failure("Stub return value not specified for weightQuery(). Use given")
+		}
+		return __value
+    }
+
+    open func weightQuery(_ parts: [BooleanExpressionPart]) throws -> WeightQuery {
+        addInvocation(.m_weightQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`)))
+		let perform = methodPerformValue(.m_weightQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))) as? ([BooleanExpressionPart]) -> Void
+		perform?(`parts`)
+		var __value: WeightQuery
+		do {
+		    __value = try methodReturnValue(.m_weightQuery__parts(Parameter<[BooleanExpressionPart]>.value(`parts`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for weightQuery(_ parts: [BooleanExpressionPart]). Use given")
+			Failure("Stub return value not specified for weightQuery(_ parts: [BooleanExpressionPart]). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
@@ -10987,41 +11023,85 @@ open class QueryFactoryMock: QueryFactory, Mock {
 
     fileprivate enum MethodType {
         case m_activityQuery
+        case m_activityQuery__parts(Parameter<[BooleanExpressionPart]>)
         case m_bloodPressureQuery
+        case m_bloodPressureQuery__parts(Parameter<[BooleanExpressionPart]>)
         case m_bmiQuery
+        case m_bmiQuery__parts(Parameter<[BooleanExpressionPart]>)
         case m_heartRateQuery
+        case m_heartRateQuery__parts(Parameter<[BooleanExpressionPart]>)
         case m_leanBodyMassQuery
+        case m_leanBodyMassQuery__parts(Parameter<[BooleanExpressionPart]>)
         case m_medicationDoseQuery
+        case m_medicationDoseQuery__parts(Parameter<[BooleanExpressionPart]>)
         case m_moodQuery
+        case m_moodQuery__parts(Parameter<[BooleanExpressionPart]>)
         case m_restingHeartRateQuery
+        case m_restingHeartRateQuery__parts(Parameter<[BooleanExpressionPart]>)
         case m_sexualActivityQuery
+        case m_sexualActivityQuery__parts(Parameter<[BooleanExpressionPart]>)
         case m_sleepQuery
+        case m_sleepQuery__parts(Parameter<[BooleanExpressionPart]>)
         case m_weightQuery
+        case m_weightQuery__parts(Parameter<[BooleanExpressionPart]>)
         case m_queryFor__sampleType(Parameter<Sample.Type>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
             case (.m_activityQuery, .m_activityQuery):
                 return true 
+            case (.m_activityQuery__parts(let lhsParts), .m_activityQuery__parts(let rhsParts)):
+                guard Parameter.compare(lhs: lhsParts, rhs: rhsParts, with: matcher) else { return false } 
+                return true 
             case (.m_bloodPressureQuery, .m_bloodPressureQuery):
+                return true 
+            case (.m_bloodPressureQuery__parts(let lhsParts), .m_bloodPressureQuery__parts(let rhsParts)):
+                guard Parameter.compare(lhs: lhsParts, rhs: rhsParts, with: matcher) else { return false } 
                 return true 
             case (.m_bmiQuery, .m_bmiQuery):
                 return true 
+            case (.m_bmiQuery__parts(let lhsParts), .m_bmiQuery__parts(let rhsParts)):
+                guard Parameter.compare(lhs: lhsParts, rhs: rhsParts, with: matcher) else { return false } 
+                return true 
             case (.m_heartRateQuery, .m_heartRateQuery):
+                return true 
+            case (.m_heartRateQuery__parts(let lhsParts), .m_heartRateQuery__parts(let rhsParts)):
+                guard Parameter.compare(lhs: lhsParts, rhs: rhsParts, with: matcher) else { return false } 
                 return true 
             case (.m_leanBodyMassQuery, .m_leanBodyMassQuery):
                 return true 
+            case (.m_leanBodyMassQuery__parts(let lhsParts), .m_leanBodyMassQuery__parts(let rhsParts)):
+                guard Parameter.compare(lhs: lhsParts, rhs: rhsParts, with: matcher) else { return false } 
+                return true 
             case (.m_medicationDoseQuery, .m_medicationDoseQuery):
+                return true 
+            case (.m_medicationDoseQuery__parts(let lhsParts), .m_medicationDoseQuery__parts(let rhsParts)):
+                guard Parameter.compare(lhs: lhsParts, rhs: rhsParts, with: matcher) else { return false } 
                 return true 
             case (.m_moodQuery, .m_moodQuery):
                 return true 
+            case (.m_moodQuery__parts(let lhsParts), .m_moodQuery__parts(let rhsParts)):
+                guard Parameter.compare(lhs: lhsParts, rhs: rhsParts, with: matcher) else { return false } 
+                return true 
             case (.m_restingHeartRateQuery, .m_restingHeartRateQuery):
+                return true 
+            case (.m_restingHeartRateQuery__parts(let lhsParts), .m_restingHeartRateQuery__parts(let rhsParts)):
+                guard Parameter.compare(lhs: lhsParts, rhs: rhsParts, with: matcher) else { return false } 
                 return true 
             case (.m_sexualActivityQuery, .m_sexualActivityQuery):
                 return true 
+            case (.m_sexualActivityQuery__parts(let lhsParts), .m_sexualActivityQuery__parts(let rhsParts)):
+                guard Parameter.compare(lhs: lhsParts, rhs: rhsParts, with: matcher) else { return false } 
+                return true 
             case (.m_sleepQuery, .m_sleepQuery):
                 return true 
+            case (.m_sleepQuery__parts(let lhsParts), .m_sleepQuery__parts(let rhsParts)):
+                guard Parameter.compare(lhs: lhsParts, rhs: rhsParts, with: matcher) else { return false } 
+                return true 
             case (.m_weightQuery, .m_weightQuery):
+                return true 
+            case (.m_weightQuery__parts(let lhsParts), .m_weightQuery__parts(let rhsParts)):
+                guard Parameter.compare(lhs: lhsParts, rhs: rhsParts, with: matcher) else { return false } 
                 return true 
             case (.m_queryFor__sampleType(let lhsSampletype), .m_queryFor__sampleType(let rhsSampletype)):
                 guard Parameter.compare(lhs: lhsSampletype, rhs: rhsSampletype, with: matcher) else { return false } 
@@ -11033,16 +11113,27 @@ open class QueryFactoryMock: QueryFactory, Mock {
         func intValue() -> Int {
             switch self {
             case .m_activityQuery: return 0
+            case let .m_activityQuery__parts(p0): return p0.intValue
             case .m_bloodPressureQuery: return 0
+            case let .m_bloodPressureQuery__parts(p0): return p0.intValue
             case .m_bmiQuery: return 0
+            case let .m_bmiQuery__parts(p0): return p0.intValue
             case .m_heartRateQuery: return 0
+            case let .m_heartRateQuery__parts(p0): return p0.intValue
             case .m_leanBodyMassQuery: return 0
+            case let .m_leanBodyMassQuery__parts(p0): return p0.intValue
             case .m_medicationDoseQuery: return 0
+            case let .m_medicationDoseQuery__parts(p0): return p0.intValue
             case .m_moodQuery: return 0
+            case let .m_moodQuery__parts(p0): return p0.intValue
             case .m_restingHeartRateQuery: return 0
+            case let .m_restingHeartRateQuery__parts(p0): return p0.intValue
             case .m_sexualActivityQuery: return 0
+            case let .m_sexualActivityQuery__parts(p0): return p0.intValue
             case .m_sleepQuery: return 0
+            case let .m_sleepQuery__parts(p0): return p0.intValue
             case .m_weightQuery: return 0
+            case let .m_weightQuery__parts(p0): return p0.intValue
             case let .m_queryFor__sampleType(p0): return p0.intValue
             }
         }
@@ -11060,35 +11151,68 @@ open class QueryFactoryMock: QueryFactory, Mock {
         public static func activityQuery(willReturn: ActivityQuery...) -> MethodStub {
             return Given(method: .m_activityQuery, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func activityQuery(_ parts: Parameter<[BooleanExpressionPart]>, willReturn: ActivityQuery...) -> MethodStub {
+            return Given(method: .m_activityQuery__parts(`parts`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func bloodPressureQuery(willReturn: BloodPressureQuery...) -> MethodStub {
             return Given(method: .m_bloodPressureQuery, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func bloodPressureQuery(_ parts: Parameter<[BooleanExpressionPart]>, willReturn: BloodPressureQuery...) -> MethodStub {
+            return Given(method: .m_bloodPressureQuery__parts(`parts`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func bmiQuery(willReturn: BodyMassIndexQuery...) -> MethodStub {
             return Given(method: .m_bmiQuery, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func bmiQuery(_ parts: Parameter<[BooleanExpressionPart]>, willReturn: BodyMassIndexQuery...) -> MethodStub {
+            return Given(method: .m_bmiQuery__parts(`parts`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func heartRateQuery(willReturn: HeartRateQuery...) -> MethodStub {
             return Given(method: .m_heartRateQuery, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func heartRateQuery(_ parts: Parameter<[BooleanExpressionPart]>, willReturn: HeartRateQuery...) -> MethodStub {
+            return Given(method: .m_heartRateQuery__parts(`parts`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func leanBodyMassQuery(willReturn: LeanBodyMassQuery...) -> MethodStub {
             return Given(method: .m_leanBodyMassQuery, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func leanBodyMassQuery(_ parts: Parameter<[BooleanExpressionPart]>, willReturn: LeanBodyMassQuery...) -> MethodStub {
+            return Given(method: .m_leanBodyMassQuery__parts(`parts`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func medicationDoseQuery(willReturn: MedicationDoseQuery...) -> MethodStub {
             return Given(method: .m_medicationDoseQuery, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func medicationDoseQuery(_ parts: Parameter<[BooleanExpressionPart]>, willReturn: MedicationDoseQuery...) -> MethodStub {
+            return Given(method: .m_medicationDoseQuery__parts(`parts`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func moodQuery(willReturn: MoodQuery...) -> MethodStub {
             return Given(method: .m_moodQuery, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func moodQuery(_ parts: Parameter<[BooleanExpressionPart]>, willReturn: MoodQuery...) -> MethodStub {
+            return Given(method: .m_moodQuery__parts(`parts`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func restingHeartRateQuery(willReturn: RestingHeartRateQuery...) -> MethodStub {
             return Given(method: .m_restingHeartRateQuery, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func restingHeartRateQuery(_ parts: Parameter<[BooleanExpressionPart]>, willReturn: RestingHeartRateQuery...) -> MethodStub {
+            return Given(method: .m_restingHeartRateQuery__parts(`parts`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func sexualActivityQuery(willReturn: SexualActivityQuery...) -> MethodStub {
             return Given(method: .m_sexualActivityQuery, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func sexualActivityQuery(_ parts: Parameter<[BooleanExpressionPart]>, willReturn: SexualActivityQuery...) -> MethodStub {
+            return Given(method: .m_sexualActivityQuery__parts(`parts`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func sleepQuery(willReturn: SleepQuery...) -> MethodStub {
             return Given(method: .m_sleepQuery, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func sleepQuery(_ parts: Parameter<[BooleanExpressionPart]>, willReturn: SleepQuery...) -> MethodStub {
+            return Given(method: .m_sleepQuery__parts(`parts`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func weightQuery(willReturn: WeightQuery...) -> MethodStub {
             return Given(method: .m_weightQuery, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func weightQuery(_ parts: Parameter<[BooleanExpressionPart]>, willReturn: WeightQuery...) -> MethodStub {
+            return Given(method: .m_weightQuery__parts(`parts`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func queryFor(_ sampleType: Parameter<Sample.Type>, willReturn: Query...) -> MethodStub {
             return Given(method: .m_queryFor__sampleType(`sampleType`), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -11170,6 +11294,116 @@ open class QueryFactoryMock: QueryFactory, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func activityQuery(_ parts: Parameter<[BooleanExpressionPart]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_activityQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func activityQuery(_ parts: Parameter<[BooleanExpressionPart]>, willProduce: (StubberThrows<ActivityQuery>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_activityQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (ActivityQuery).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func bloodPressureQuery(_ parts: Parameter<[BooleanExpressionPart]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_bloodPressureQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func bloodPressureQuery(_ parts: Parameter<[BooleanExpressionPart]>, willProduce: (StubberThrows<BloodPressureQuery>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_bloodPressureQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (BloodPressureQuery).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func bmiQuery(_ parts: Parameter<[BooleanExpressionPart]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_bmiQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func bmiQuery(_ parts: Parameter<[BooleanExpressionPart]>, willProduce: (StubberThrows<BodyMassIndexQuery>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_bmiQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (BodyMassIndexQuery).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func heartRateQuery(_ parts: Parameter<[BooleanExpressionPart]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_heartRateQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func heartRateQuery(_ parts: Parameter<[BooleanExpressionPart]>, willProduce: (StubberThrows<HeartRateQuery>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_heartRateQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (HeartRateQuery).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func leanBodyMassQuery(_ parts: Parameter<[BooleanExpressionPart]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_leanBodyMassQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func leanBodyMassQuery(_ parts: Parameter<[BooleanExpressionPart]>, willProduce: (StubberThrows<LeanBodyMassQuery>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_leanBodyMassQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (LeanBodyMassQuery).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func medicationDoseQuery(_ parts: Parameter<[BooleanExpressionPart]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_medicationDoseQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func medicationDoseQuery(_ parts: Parameter<[BooleanExpressionPart]>, willProduce: (StubberThrows<MedicationDoseQuery>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_medicationDoseQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (MedicationDoseQuery).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func moodQuery(_ parts: Parameter<[BooleanExpressionPart]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_moodQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func moodQuery(_ parts: Parameter<[BooleanExpressionPart]>, willProduce: (StubberThrows<MoodQuery>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_moodQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (MoodQuery).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func restingHeartRateQuery(_ parts: Parameter<[BooleanExpressionPart]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_restingHeartRateQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func restingHeartRateQuery(_ parts: Parameter<[BooleanExpressionPart]>, willProduce: (StubberThrows<RestingHeartRateQuery>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_restingHeartRateQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (RestingHeartRateQuery).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func sexualActivityQuery(_ parts: Parameter<[BooleanExpressionPart]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_sexualActivityQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func sexualActivityQuery(_ parts: Parameter<[BooleanExpressionPart]>, willProduce: (StubberThrows<SexualActivityQuery>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_sexualActivityQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (SexualActivityQuery).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func sleepQuery(_ parts: Parameter<[BooleanExpressionPart]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_sleepQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func sleepQuery(_ parts: Parameter<[BooleanExpressionPart]>, willProduce: (StubberThrows<SleepQuery>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_sleepQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (SleepQuery).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func weightQuery(_ parts: Parameter<[BooleanExpressionPart]>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_weightQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func weightQuery(_ parts: Parameter<[BooleanExpressionPart]>, willProduce: (StubberThrows<WeightQuery>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_weightQuery__parts(`parts`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (WeightQuery).self)
+			willProduce(stubber)
+			return given
+        }
         public static func queryFor(_ sampleType: Parameter<Sample.Type>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_queryFor__sampleType(`sampleType`), products: willThrow.map({ StubProduct.throw($0) }))
         }
@@ -11186,16 +11420,27 @@ open class QueryFactoryMock: QueryFactory, Mock {
         fileprivate var method: MethodType
 
         public static func activityQuery() -> Verify { return Verify(method: .m_activityQuery)}
+        public static func activityQuery(_ parts: Parameter<[BooleanExpressionPart]>) -> Verify { return Verify(method: .m_activityQuery__parts(`parts`))}
         public static func bloodPressureQuery() -> Verify { return Verify(method: .m_bloodPressureQuery)}
+        public static func bloodPressureQuery(_ parts: Parameter<[BooleanExpressionPart]>) -> Verify { return Verify(method: .m_bloodPressureQuery__parts(`parts`))}
         public static func bmiQuery() -> Verify { return Verify(method: .m_bmiQuery)}
+        public static func bmiQuery(_ parts: Parameter<[BooleanExpressionPart]>) -> Verify { return Verify(method: .m_bmiQuery__parts(`parts`))}
         public static func heartRateQuery() -> Verify { return Verify(method: .m_heartRateQuery)}
+        public static func heartRateQuery(_ parts: Parameter<[BooleanExpressionPart]>) -> Verify { return Verify(method: .m_heartRateQuery__parts(`parts`))}
         public static func leanBodyMassQuery() -> Verify { return Verify(method: .m_leanBodyMassQuery)}
+        public static func leanBodyMassQuery(_ parts: Parameter<[BooleanExpressionPart]>) -> Verify { return Verify(method: .m_leanBodyMassQuery__parts(`parts`))}
         public static func medicationDoseQuery() -> Verify { return Verify(method: .m_medicationDoseQuery)}
+        public static func medicationDoseQuery(_ parts: Parameter<[BooleanExpressionPart]>) -> Verify { return Verify(method: .m_medicationDoseQuery__parts(`parts`))}
         public static func moodQuery() -> Verify { return Verify(method: .m_moodQuery)}
+        public static func moodQuery(_ parts: Parameter<[BooleanExpressionPart]>) -> Verify { return Verify(method: .m_moodQuery__parts(`parts`))}
         public static func restingHeartRateQuery() -> Verify { return Verify(method: .m_restingHeartRateQuery)}
+        public static func restingHeartRateQuery(_ parts: Parameter<[BooleanExpressionPart]>) -> Verify { return Verify(method: .m_restingHeartRateQuery__parts(`parts`))}
         public static func sexualActivityQuery() -> Verify { return Verify(method: .m_sexualActivityQuery)}
+        public static func sexualActivityQuery(_ parts: Parameter<[BooleanExpressionPart]>) -> Verify { return Verify(method: .m_sexualActivityQuery__parts(`parts`))}
         public static func sleepQuery() -> Verify { return Verify(method: .m_sleepQuery)}
+        public static func sleepQuery(_ parts: Parameter<[BooleanExpressionPart]>) -> Verify { return Verify(method: .m_sleepQuery__parts(`parts`))}
         public static func weightQuery() -> Verify { return Verify(method: .m_weightQuery)}
+        public static func weightQuery(_ parts: Parameter<[BooleanExpressionPart]>) -> Verify { return Verify(method: .m_weightQuery__parts(`parts`))}
         public static func queryFor(_ sampleType: Parameter<Sample.Type>) -> Verify { return Verify(method: .m_queryFor__sampleType(`sampleType`))}
     }
 
@@ -11206,35 +11451,68 @@ open class QueryFactoryMock: QueryFactory, Mock {
         public static func activityQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_activityQuery, performs: perform)
         }
+        public static func activityQuery(_ parts: Parameter<[BooleanExpressionPart]>, perform: @escaping ([BooleanExpressionPart]) -> Void) -> Perform {
+            return Perform(method: .m_activityQuery__parts(`parts`), performs: perform)
+        }
         public static func bloodPressureQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_bloodPressureQuery, performs: perform)
+        }
+        public static func bloodPressureQuery(_ parts: Parameter<[BooleanExpressionPart]>, perform: @escaping ([BooleanExpressionPart]) -> Void) -> Perform {
+            return Perform(method: .m_bloodPressureQuery__parts(`parts`), performs: perform)
         }
         public static func bmiQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_bmiQuery, performs: perform)
         }
+        public static func bmiQuery(_ parts: Parameter<[BooleanExpressionPart]>, perform: @escaping ([BooleanExpressionPart]) -> Void) -> Perform {
+            return Perform(method: .m_bmiQuery__parts(`parts`), performs: perform)
+        }
         public static func heartRateQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_heartRateQuery, performs: perform)
+        }
+        public static func heartRateQuery(_ parts: Parameter<[BooleanExpressionPart]>, perform: @escaping ([BooleanExpressionPart]) -> Void) -> Perform {
+            return Perform(method: .m_heartRateQuery__parts(`parts`), performs: perform)
         }
         public static func leanBodyMassQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_leanBodyMassQuery, performs: perform)
         }
+        public static func leanBodyMassQuery(_ parts: Parameter<[BooleanExpressionPart]>, perform: @escaping ([BooleanExpressionPart]) -> Void) -> Perform {
+            return Perform(method: .m_leanBodyMassQuery__parts(`parts`), performs: perform)
+        }
         public static func medicationDoseQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_medicationDoseQuery, performs: perform)
+        }
+        public static func medicationDoseQuery(_ parts: Parameter<[BooleanExpressionPart]>, perform: @escaping ([BooleanExpressionPart]) -> Void) -> Perform {
+            return Perform(method: .m_medicationDoseQuery__parts(`parts`), performs: perform)
         }
         public static func moodQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_moodQuery, performs: perform)
         }
+        public static func moodQuery(_ parts: Parameter<[BooleanExpressionPart]>, perform: @escaping ([BooleanExpressionPart]) -> Void) -> Perform {
+            return Perform(method: .m_moodQuery__parts(`parts`), performs: perform)
+        }
         public static func restingHeartRateQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_restingHeartRateQuery, performs: perform)
+        }
+        public static func restingHeartRateQuery(_ parts: Parameter<[BooleanExpressionPart]>, perform: @escaping ([BooleanExpressionPart]) -> Void) -> Perform {
+            return Perform(method: .m_restingHeartRateQuery__parts(`parts`), performs: perform)
         }
         public static func sexualActivityQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_sexualActivityQuery, performs: perform)
         }
+        public static func sexualActivityQuery(_ parts: Parameter<[BooleanExpressionPart]>, perform: @escaping ([BooleanExpressionPart]) -> Void) -> Perform {
+            return Perform(method: .m_sexualActivityQuery__parts(`parts`), performs: perform)
+        }
         public static func sleepQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_sleepQuery, performs: perform)
         }
+        public static func sleepQuery(_ parts: Parameter<[BooleanExpressionPart]>, perform: @escaping ([BooleanExpressionPart]) -> Void) -> Perform {
+            return Perform(method: .m_sleepQuery__parts(`parts`), performs: perform)
+        }
         public static func weightQuery(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_weightQuery, performs: perform)
+        }
+        public static func weightQuery(_ parts: Parameter<[BooleanExpressionPart]>, perform: @escaping ([BooleanExpressionPart]) -> Void) -> Perform {
+            return Perform(method: .m_weightQuery__parts(`parts`), performs: perform)
         }
         public static func queryFor(_ sampleType: Parameter<Sample.Type>, perform: @escaping (Sample.Type) -> Void) -> Perform {
             return Perform(method: .m_queryFor__sampleType(`sampleType`), performs: perform)
@@ -11325,11 +11603,11 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
         self.line = line
     }
 
-    public var attributeRestrictions: [AttributeRestriction] {
-		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "RestingHeartRateQueryMock - stub value for attributeRestrictions was not defined") }
-		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
+    public var expression: BooleanExpression? {
+		get {	invocations.append(.p_expression_get); return __p_expression ?? optionalGivenGetterValue(.p_expression_get, "RestingHeartRateQueryMock - stub value for expression was not defined") }
+		set {	invocations.append(.p_expression_set(.value(newValue))); __p_expression = newValue }
 	}
-	private var __p_attributeRestrictions: ([AttributeRestriction])?
+	private var __p_expression: (BooleanExpression)?
 
     public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "RestingHeartRateQueryMock - stub value for mostRecentEntryOnly was not defined") }
@@ -11346,6 +11624,8 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
 
 
 
+
+    public required init(parts: [BooleanExpressionPart]) throws { }
 
     open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
@@ -11385,8 +11665,8 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
-        case p_attributeRestrictions_get
-		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
+        case p_expression_get
+		case p_expression_set(Parameter<BooleanExpression?>)
         case p_mostRecentEntryOnly_get
 		case p_mostRecentEntryOnly_set(Parameter<Bool>)
         case p_subQuery_get
@@ -11404,8 +11684,8 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
                 return true 
-            case (.p_attributeRestrictions_get,.p_attributeRestrictions_get): return true
-			case (.p_attributeRestrictions_set(let left),.p_attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_expression_get,.p_expression_get): return true
+			case (.p_expression_set(let left),.p_expression_set(let right)): return Parameter<BooleanExpression?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_mostRecentEntryOnly_get,.p_mostRecentEntryOnly_get): return true
 			case (.p_mostRecentEntryOnly_set(let left),.p_mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_subQuery_get,.p_subQuery_get): return true
@@ -11420,8 +11700,8 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
             case .m_stop: return 0
             case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
-            case .p_attributeRestrictions_get: return 0
-			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
+            case .p_expression_get: return 0
+			case .p_expression_set(let newValue): return newValue.intValue
             case .p_mostRecentEntryOnly_get: return 0
 			case .p_mostRecentEntryOnly_set(let newValue): return newValue.intValue
             case .p_subQuery_get: return 0
@@ -11438,8 +11718,8 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
             super.init(products)
         }
 
-        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
-            return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func expression(getter defaultValue: BooleanExpression?...) -> PropertyStub {
+            return Given(method: .p_expression_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
@@ -11467,8 +11747,8 @@ open class RestingHeartRateQueryMock: RestingHeartRateQuery, Mock {
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var expression: Verify { return Verify(method: .p_expression_get) }
+		public static func expression(set newValue: Parameter<BooleanExpression?>) -> Verify { return Verify(method: .p_expression_set(newValue)) }
         public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
 		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
         public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
@@ -13643,11 +13923,11 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
         self.line = line
     }
 
-    public var attributeRestrictions: [AttributeRestriction] {
-		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "SexualActivityQueryMock - stub value for attributeRestrictions was not defined") }
-		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
+    public var expression: BooleanExpression? {
+		get {	invocations.append(.p_expression_get); return __p_expression ?? optionalGivenGetterValue(.p_expression_get, "SexualActivityQueryMock - stub value for expression was not defined") }
+		set {	invocations.append(.p_expression_set(.value(newValue))); __p_expression = newValue }
 	}
-	private var __p_attributeRestrictions: ([AttributeRestriction])?
+	private var __p_expression: (BooleanExpression)?
 
     public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "SexualActivityQueryMock - stub value for mostRecentEntryOnly was not defined") }
@@ -13664,6 +13944,8 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
 
 
 
+
+    public required init(parts: [BooleanExpressionPart]) throws { }
 
     open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
@@ -13703,8 +13985,8 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
-        case p_attributeRestrictions_get
-		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
+        case p_expression_get
+		case p_expression_set(Parameter<BooleanExpression?>)
         case p_mostRecentEntryOnly_get
 		case p_mostRecentEntryOnly_set(Parameter<Bool>)
         case p_subQuery_get
@@ -13722,8 +14004,8 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
                 return true 
-            case (.p_attributeRestrictions_get,.p_attributeRestrictions_get): return true
-			case (.p_attributeRestrictions_set(let left),.p_attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_expression_get,.p_expression_get): return true
+			case (.p_expression_set(let left),.p_expression_set(let right)): return Parameter<BooleanExpression?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_mostRecentEntryOnly_get,.p_mostRecentEntryOnly_get): return true
 			case (.p_mostRecentEntryOnly_set(let left),.p_mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_subQuery_get,.p_subQuery_get): return true
@@ -13738,8 +14020,8 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
             case .m_stop: return 0
             case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
-            case .p_attributeRestrictions_get: return 0
-			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
+            case .p_expression_get: return 0
+			case .p_expression_set(let newValue): return newValue.intValue
             case .p_mostRecentEntryOnly_get: return 0
 			case .p_mostRecentEntryOnly_set(let newValue): return newValue.intValue
             case .p_subQuery_get: return 0
@@ -13756,8 +14038,8 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
             super.init(products)
         }
 
-        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
-            return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func expression(getter defaultValue: BooleanExpression?...) -> PropertyStub {
+            return Given(method: .p_expression_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
@@ -13785,8 +14067,8 @@ open class SexualActivityQueryMock: SexualActivityQuery, Mock {
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var expression: Verify { return Verify(method: .p_expression_get) }
+		public static func expression(set newValue: Parameter<BooleanExpression?>) -> Verify { return Verify(method: .p_expression_set(newValue)) }
         public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
 		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
         public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
@@ -13895,11 +14177,11 @@ open class SleepQueryMock: SleepQuery, Mock {
         self.line = line
     }
 
-    public var attributeRestrictions: [AttributeRestriction] {
-		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "SleepQueryMock - stub value for attributeRestrictions was not defined") }
-		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
+    public var expression: BooleanExpression? {
+		get {	invocations.append(.p_expression_get); return __p_expression ?? optionalGivenGetterValue(.p_expression_get, "SleepQueryMock - stub value for expression was not defined") }
+		set {	invocations.append(.p_expression_set(.value(newValue))); __p_expression = newValue }
 	}
-	private var __p_attributeRestrictions: ([AttributeRestriction])?
+	private var __p_expression: (BooleanExpression)?
 
     public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "SleepQueryMock - stub value for mostRecentEntryOnly was not defined") }
@@ -13916,6 +14198,8 @@ open class SleepQueryMock: SleepQuery, Mock {
 
 
 
+
+    public required init(parts: [BooleanExpressionPart]) throws { }
 
     open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
@@ -13955,8 +14239,8 @@ open class SleepQueryMock: SleepQuery, Mock {
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
-        case p_attributeRestrictions_get
-		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
+        case p_expression_get
+		case p_expression_set(Parameter<BooleanExpression?>)
         case p_mostRecentEntryOnly_get
 		case p_mostRecentEntryOnly_set(Parameter<Bool>)
         case p_subQuery_get
@@ -13974,8 +14258,8 @@ open class SleepQueryMock: SleepQuery, Mock {
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
                 return true 
-            case (.p_attributeRestrictions_get,.p_attributeRestrictions_get): return true
-			case (.p_attributeRestrictions_set(let left),.p_attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_expression_get,.p_expression_get): return true
+			case (.p_expression_set(let left),.p_expression_set(let right)): return Parameter<BooleanExpression?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_mostRecentEntryOnly_get,.p_mostRecentEntryOnly_get): return true
 			case (.p_mostRecentEntryOnly_set(let left),.p_mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_subQuery_get,.p_subQuery_get): return true
@@ -13990,8 +14274,8 @@ open class SleepQueryMock: SleepQuery, Mock {
             case .m_stop: return 0
             case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
-            case .p_attributeRestrictions_get: return 0
-			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
+            case .p_expression_get: return 0
+			case .p_expression_set(let newValue): return newValue.intValue
             case .p_mostRecentEntryOnly_get: return 0
 			case .p_mostRecentEntryOnly_set(let newValue): return newValue.intValue
             case .p_subQuery_get: return 0
@@ -14008,8 +14292,8 @@ open class SleepQueryMock: SleepQuery, Mock {
             super.init(products)
         }
 
-        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
-            return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func expression(getter defaultValue: BooleanExpression?...) -> PropertyStub {
+            return Given(method: .p_expression_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
@@ -14037,8 +14321,8 @@ open class SleepQueryMock: SleepQuery, Mock {
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var expression: Verify { return Verify(method: .p_expression_get) }
+		public static func expression(set newValue: Parameter<BooleanExpression?>) -> Verify { return Verify(method: .p_expression_set(newValue)) }
         public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
 		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
         public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
@@ -15594,6 +15878,20 @@ open class UiUtilMock: UiUtil, Mock {
 		return __value
     }
 
+    open func alertAction(		title: String?,		style: UIAlertAction.Style,		handler: ((UIAlertAction) -> Void)?) -> UIAlertAction {
+        addInvocation(.m_alertAction__title_titlestyle_stylehandler_handler(Parameter<String?>.value(`title`), Parameter<UIAlertAction.Style>.value(`style`), Parameter<((UIAlertAction) -> Void)?>.value(`handler`)))
+		let perform = methodPerformValue(.m_alertAction__title_titlestyle_stylehandler_handler(Parameter<String?>.value(`title`), Parameter<UIAlertAction.Style>.value(`style`), Parameter<((UIAlertAction) -> Void)?>.value(`handler`))) as? (String?, UIAlertAction.Style, ((UIAlertAction) -> Void)?) -> Void
+		perform?(`title`, `style`, `handler`)
+		var __value: UIAlertAction
+		do {
+		    __value = try methodReturnValue(.m_alertAction__title_titlestyle_stylehandler_handler(Parameter<String?>.value(`title`), Parameter<UIAlertAction.Style>.value(`style`), Parameter<((UIAlertAction) -> Void)?>.value(`handler`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for alertAction(  title: String?,  style: UIAlertAction.Style,  handler: ((UIAlertAction) -> Void)?). Use given")
+			Failure("Stub return value not specified for alertAction(  title: String?,  style: UIAlertAction.Style,  handler: ((UIAlertAction) -> Void)?). Use given")
+		}
+		return __value
+    }
+
     open func stopObserving(_ observer: Any, name: NotificationName?, object: Any?) {
         addInvocation(.m_stopObserving__observername_nameobject_object(Parameter<Any>.value(`observer`), Parameter<NotificationName?>.value(`name`), Parameter<Any?>.value(`object`)))
 		let perform = methodPerformValue(.m_stopObserving__observername_nameobject_object(Parameter<Any>.value(`observer`), Parameter<NotificationName?>.value(`name`), Parameter<Any?>.value(`object`))) as? (Any, NotificationName?, Any?) -> Void
@@ -15657,6 +15955,7 @@ open class UiUtilMock: UiUtil, Mock {
         case m_documentPicker__docTypes_docTypesin_pickerMode(Parameter<[String]>, Parameter<UIDocumentPickerMode>)
         case m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(Parameter<String?>, Parameter<String?>, Parameter<UIAlertController.Style>)
         case m_tableViewRowAction__style_styletitle_titlehandler_handler(Parameter<UITableViewRowAction.Style>, Parameter<String?>, Parameter<(UITableViewRowAction, IndexPath) -> Void>)
+        case m_alertAction__title_titlestyle_stylehandler_handler(Parameter<String?>, Parameter<UIAlertAction.Style>, Parameter<((UIAlertAction) -> Void)?>)
         case m_stopObserving__observername_nameobject_object(Parameter<Any>, Parameter<NotificationName?>, Parameter<Any?>)
         case m_post__name_nameobject_objectuserInfo_userInfo_1(Parameter<Notification.Name>, Parameter<Any?>, Parameter<[AnyHashable: Any]?>)
         case m_post__name_nameobject_objectuserInfo_userInfo_2(Parameter<NotificationName>, Parameter<Any?>, Parameter<[AnyHashable: Any]?>)
@@ -15732,6 +16031,11 @@ open class UiUtilMock: UiUtil, Mock {
                 guard Parameter.compare(lhs: lhsTitle, rhs: rhsTitle, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher) else { return false } 
                 return true 
+            case (.m_alertAction__title_titlestyle_stylehandler_handler(let lhsTitle, let lhsStyle, let lhsHandler), .m_alertAction__title_titlestyle_stylehandler_handler(let rhsTitle, let rhsStyle, let rhsHandler)):
+                guard Parameter.compare(lhs: lhsTitle, rhs: rhsTitle, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsStyle, rhs: rhsStyle, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher) else { return false } 
+                return true 
             case (.m_stopObserving__observername_nameobject_object(let lhsObserver, let lhsName, let lhsObject), .m_stopObserving__observername_nameobject_object(let rhsObserver, let rhsName, let rhsObject)):
                 guard Parameter.compare(lhs: lhsObserver, rhs: rhsObserver, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
@@ -15796,6 +16100,7 @@ open class UiUtilMock: UiUtil, Mock {
             case let .m_documentPicker__docTypes_docTypesin_pickerMode(p0, p1): return p0.intValue + p1.intValue
             case let .m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_tableViewRowAction__style_styletitle_titlehandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_alertAction__title_titlestyle_stylehandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_stopObserving__observername_nameobject_object(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_post__name_nameobject_objectuserInfo_userInfo_1(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_post__name_nameobject_objectuserInfo_userInfo_2(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
@@ -15851,6 +16156,9 @@ open class UiUtilMock: UiUtil, Mock {
         }
         public static func tableViewRowAction(style: Parameter<UITableViewRowAction.Style>, title: Parameter<String?>, handler: Parameter<(UITableViewRowAction, IndexPath) -> Void>, willReturn: UITableViewRowAction...) -> MethodStub {
             return Given(method: .m_tableViewRowAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func alertAction(title: Parameter<String?>, style: Parameter<UIAlertAction.Style>, handler: Parameter<((UIAlertAction) -> Void)?>, willReturn: UIAlertAction...) -> MethodStub {
+            return Given(method: .m_alertAction__title_titlestyle_stylehandler_handler(`title`, `style`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>, willProduce: (Stubber<Presentr>) -> Void) -> MethodStub {
             let willReturn: [Presentr] = []
@@ -15915,6 +16223,13 @@ open class UiUtilMock: UiUtil, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func alertAction(title: Parameter<String?>, style: Parameter<UIAlertAction.Style>, handler: Parameter<((UIAlertAction) -> Void)?>, willProduce: (Stubber<UIAlertAction>) -> Void) -> MethodStub {
+            let willReturn: [UIAlertAction] = []
+			let given: Given = { return Given(method: .m_alertAction__title_titlestyle_stylehandler_handler(`title`, `style`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (UIAlertAction).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct Verify {
@@ -15933,6 +16248,7 @@ open class UiUtilMock: UiUtil, Mock {
         public static func documentPicker(docTypes: Parameter<[String]>, in pickerMode: Parameter<UIDocumentPickerMode>) -> Verify { return Verify(method: .m_documentPicker__docTypes_docTypesin_pickerMode(`docTypes`, `pickerMode`))}
         public static func alert(title: Parameter<String?>, message: Parameter<String?>, preferredStyle: Parameter<UIAlertController.Style>) -> Verify { return Verify(method: .m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(`title`, `message`, `preferredStyle`))}
         public static func tableViewRowAction(style: Parameter<UITableViewRowAction.Style>, title: Parameter<String?>, handler: Parameter<(UITableViewRowAction, IndexPath) -> Void>) -> Verify { return Verify(method: .m_tableViewRowAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`))}
+        public static func alertAction(title: Parameter<String?>, style: Parameter<UIAlertAction.Style>, handler: Parameter<((UIAlertAction) -> Void)?>) -> Verify { return Verify(method: .m_alertAction__title_titlestyle_stylehandler_handler(`title`, `style`, `handler`))}
         public static func stopObserving(_ observer: Parameter<Any>, name: Parameter<NotificationName?>, object: Parameter<Any?>) -> Verify { return Verify(method: .m_stopObserving__observername_nameobject_object(`observer`, `name`, `object`))}
         public static func post(name: Parameter<Notification.Name>, object: Parameter<Any?>, userInfo: Parameter<[AnyHashable: Any]?>) -> Verify { return Verify(method: .m_post__name_nameobject_objectuserInfo_userInfo_1(`name`, `object`, `userInfo`))}
         public static func post(name: Parameter<NotificationName>, object: Parameter<Any?>, userInfo: Parameter<[AnyHashable: Any]?>) -> Verify { return Verify(method: .m_post__name_nameobject_objectuserInfo_userInfo_2(`name`, `object`, `userInfo`))}
@@ -15987,6 +16303,9 @@ open class UiUtilMock: UiUtil, Mock {
         }
         public static func tableViewRowAction(style: Parameter<UITableViewRowAction.Style>, title: Parameter<String?>, handler: Parameter<(UITableViewRowAction, IndexPath) -> Void>, perform: @escaping (UITableViewRowAction.Style, String?, @escaping (UITableViewRowAction, IndexPath) -> Void) -> Void) -> Perform {
             return Perform(method: .m_tableViewRowAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`), performs: perform)
+        }
+        public static func alertAction(title: Parameter<String?>, style: Parameter<UIAlertAction.Style>, handler: Parameter<((UIAlertAction) -> Void)?>, perform: @escaping (String?, UIAlertAction.Style, ((UIAlertAction) -> Void)?) -> Void) -> Perform {
+            return Perform(method: .m_alertAction__title_titlestyle_stylehandler_handler(`title`, `style`, `handler`), performs: perform)
         }
         public static func stopObserving(_ observer: Parameter<Any>, name: Parameter<NotificationName?>, object: Parameter<Any?>, perform: @escaping (Any, NotificationName?, Any?) -> Void) -> Perform {
             return Perform(method: .m_stopObserving__observername_nameobject_object(`observer`, `name`, `object`), performs: perform)
@@ -16286,11 +16605,11 @@ open class WeightQueryMock: WeightQuery, Mock {
         self.line = line
     }
 
-    public var attributeRestrictions: [AttributeRestriction] {
-		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "WeightQueryMock - stub value for attributeRestrictions was not defined") }
-		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
+    public var expression: BooleanExpression? {
+		get {	invocations.append(.p_expression_get); return __p_expression ?? optionalGivenGetterValue(.p_expression_get, "WeightQueryMock - stub value for expression was not defined") }
+		set {	invocations.append(.p_expression_set(.value(newValue))); __p_expression = newValue }
 	}
-	private var __p_attributeRestrictions: ([AttributeRestriction])?
+	private var __p_expression: (BooleanExpression)?
 
     public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "WeightQueryMock - stub value for mostRecentEntryOnly was not defined") }
@@ -16307,6 +16626,8 @@ open class WeightQueryMock: WeightQuery, Mock {
 
 
 
+
+    public required init(parts: [BooleanExpressionPart]) throws { }
 
     open func runQuery(callback: @escaping (QueryResult?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>.value(`callback`)))
@@ -16346,8 +16667,8 @@ open class WeightQueryMock: WeightQuery, Mock {
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
-        case p_attributeRestrictions_get
-		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
+        case p_expression_get
+		case p_expression_set(Parameter<BooleanExpression?>)
         case p_mostRecentEntryOnly_get
 		case p_mostRecentEntryOnly_set(Parameter<Bool>)
         case p_subQuery_get
@@ -16365,8 +16686,8 @@ open class WeightQueryMock: WeightQuery, Mock {
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
                 return true 
-            case (.p_attributeRestrictions_get,.p_attributeRestrictions_get): return true
-			case (.p_attributeRestrictions_set(let left),.p_attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_expression_get,.p_expression_get): return true
+			case (.p_expression_set(let left),.p_expression_set(let right)): return Parameter<BooleanExpression?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_mostRecentEntryOnly_get,.p_mostRecentEntryOnly_get): return true
 			case (.p_mostRecentEntryOnly_set(let left),.p_mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_subQuery_get,.p_subQuery_get): return true
@@ -16381,8 +16702,8 @@ open class WeightQueryMock: WeightQuery, Mock {
             case .m_stop: return 0
             case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
-            case .p_attributeRestrictions_get: return 0
-			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
+            case .p_expression_get: return 0
+			case .p_expression_set(let newValue): return newValue.intValue
             case .p_mostRecentEntryOnly_get: return 0
 			case .p_mostRecentEntryOnly_set(let newValue): return newValue.intValue
             case .p_subQuery_get: return 0
@@ -16399,8 +16720,8 @@ open class WeightQueryMock: WeightQuery, Mock {
             super.init(products)
         }
 
-        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
-            return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        public static func expression(getter defaultValue: BooleanExpression?...) -> PropertyStub {
+            return Given(method: .p_expression_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
@@ -16428,8 +16749,8 @@ open class WeightQueryMock: WeightQuery, Mock {
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
+        public static var expression: Verify { return Verify(method: .p_expression_get) }
+		public static func expression(set newValue: Parameter<BooleanExpression?>) -> Verify { return Verify(method: .p_expression_set(newValue)) }
         public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
 		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
         public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }

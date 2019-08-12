@@ -96,6 +96,13 @@ public final class AttributeRestrictionFactoryImpl: AttributeRestrictionFactory 
 		DoesNotHaveTagAttributeRestriction.self,
 	]
 
+	private static let activityTagsTypes: [AttributeRestriction.Type] = [
+		ActivityHasOneOfTagAttributeRestriction.self,
+		ActivityDoesNotHaveOneOfTagAttributeRestriction.self,
+		ActivityHasTagAttributeRestriction.self,
+		ActivityDoesNotHaveTagAttributeRestriction.self,
+	]
+
 	private static let durationTypes: [AttributeRestriction.Type] = [
 		LessThanOrEqualToDurationAttributeRestriction.self,
 		LessThanOrEqualToDurationAttributeRestriction.self,
@@ -117,6 +124,7 @@ public final class AttributeRestrictionFactoryImpl: AttributeRestrictionFactory 
 			case is DosageAttribute: return Me.dosageTypes
 			case is FrequencyAttribute: return Me.frequencyTypes
 			case is TagAttribute: return Me.tagTypes
+			case is ActivityTagsAttribute: return Me.activityTagsTypes
 			case is TagsAttribute: return Me.tagsTypes
 			case is DurationAttribute: return Me.durationTypes
 			default:

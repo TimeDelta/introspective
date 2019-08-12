@@ -105,7 +105,6 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 		predicate: NSPredicate?,
 		callback: @escaping (Array<HKSample>?, Error?) -> Void)
 	-> (() -> Void) {
-		let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
 		let query = HKSampleQuery(
 			sampleType: type.sampleType,
 			predicate: predicate,

@@ -33,18 +33,18 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
     }
 
 
-    public var attributeRestrictions: [AttributeRestriction] {
-		get {	invocations.append(.p_attributeRestrictions_get); return __p_attributeRestrictions ?? givenGetterValue(.p_attributeRestrictions_get, "SampleQueryMock - stub value for attributeRestrictions was not defined") }
-		set {	invocations.append(.p_attributeRestrictions_set(.value(newValue))); __p_attributeRestrictions = newValue }
-	}
-	private var __p_attributeRestrictions: ([AttributeRestriction])?
-
-
     public var mostRecentEntryOnly: Bool {
 		get {	invocations.append(.p_mostRecentEntryOnly_get); return __p_mostRecentEntryOnly ?? givenGetterValue(.p_mostRecentEntryOnly_get, "SampleQueryMock - stub value for mostRecentEntryOnly was not defined") }
 		set {	invocations.append(.p_mostRecentEntryOnly_set(.value(newValue))); __p_mostRecentEntryOnly = newValue }
 	}
 	private var __p_mostRecentEntryOnly: (Bool)?
+
+
+    public var expression: BooleanExpression? {
+		get {	invocations.append(.p_expression_get); return __p_expression ?? optionalGivenGetterValue(.p_expression_get, "SampleQueryMock - stub value for expression was not defined") }
+		set {	invocations.append(.p_expression_set(.value(newValue))); __p_expression = newValue }
+	}
+	private var __p_expression: (BooleanExpression)?
 
 
     public var subQuery: (matcher: SubQueryMatcher, query: Query)? {
@@ -57,6 +57,8 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
 
 
 
+
+    public required init(parts: [BooleanExpressionPart]) throws { }
 
     open func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> ()) {
         addInvocation(.m_runQuery__callback_callback_1(Parameter<(SampleQueryResult<SampleType>?, Error?) -> ()>.value(`callback`)))
@@ -103,10 +105,10 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
         case m_stop
         case m_resetStoppedState
         case m_equalTo__otherQuery(Parameter<Query>)
-        case p_attributeRestrictions_get
-		case p_attributeRestrictions_set(Parameter<[AttributeRestriction]>)
         case p_mostRecentEntryOnly_get
 		case p_mostRecentEntryOnly_set(Parameter<Bool>)
+        case p_expression_get
+		case p_expression_set(Parameter<BooleanExpression?>)
         case p_subQuery_get
 		case p_subQuery_set(Parameter<(matcher: SubQueryMatcher, query: Query)?>)
 
@@ -125,10 +127,10 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
             case (.m_equalTo__otherQuery(let lhsOtherquery), .m_equalTo__otherQuery(let rhsOtherquery)):
                 guard Parameter.compare(lhs: lhsOtherquery, rhs: rhsOtherquery, with: matcher) else { return false } 
                 return true 
-            case (.p_attributeRestrictions_get,.p_attributeRestrictions_get): return true
-			case (.p_attributeRestrictions_set(let left),.p_attributeRestrictions_set(let right)): return Parameter<[AttributeRestriction]>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_mostRecentEntryOnly_get,.p_mostRecentEntryOnly_get): return true
 			case (.p_mostRecentEntryOnly_set(let left),.p_mostRecentEntryOnly_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_expression_get,.p_expression_get): return true
+			case (.p_expression_set(let left),.p_expression_set(let right)): return Parameter<BooleanExpression?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_subQuery_get,.p_subQuery_get): return true
 			case (.p_subQuery_set(let left),.p_subQuery_set(let right)): return Parameter<(matcher: SubQueryMatcher, query: Query)?>.compare(lhs: left, rhs: right, with: matcher)
             default: return false
@@ -142,10 +144,10 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
             case .m_stop: return 0
             case .m_resetStoppedState: return 0
             case let .m_equalTo__otherQuery(p0): return p0.intValue
-            case .p_attributeRestrictions_get: return 0
-			case .p_attributeRestrictions_set(let newValue): return newValue.intValue
             case .p_mostRecentEntryOnly_get: return 0
 			case .p_mostRecentEntryOnly_set(let newValue): return newValue.intValue
+            case .p_expression_get: return 0
+			case .p_expression_set(let newValue): return newValue.intValue
             case .p_subQuery_get: return 0
 			case .p_subQuery_set(let newValue): return newValue.intValue
             }
@@ -160,11 +162,11 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
             super.init(products)
         }
 
-        public static func attributeRestrictions(getter defaultValue: [AttributeRestriction]...) -> PropertyStub {
-            return Given(method: .p_attributeRestrictions_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
-        }
         public static func mostRecentEntryOnly(getter defaultValue: Bool...) -> PropertyStub {
             return Given(method: .p_mostRecentEntryOnly_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func expression(getter defaultValue: BooleanExpression?...) -> PropertyStub {
+            return Given(method: .p_expression_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func subQuery(getter defaultValue: (matcher: SubQueryMatcher, query: Query)?...) -> PropertyStub {
             return Given(method: .p_subQuery_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
@@ -190,10 +192,10 @@ class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {
         public static func stop() -> Verify { return Verify(method: .m_stop)}
         public static func resetStoppedState() -> Verify { return Verify(method: .m_resetStoppedState)}
         public static func equalTo(_ otherQuery: Parameter<Query>) -> Verify { return Verify(method: .m_equalTo__otherQuery(`otherQuery`))}
-        public static var attributeRestrictions: Verify { return Verify(method: .p_attributeRestrictions_get) }
-		public static func attributeRestrictions(set newValue: Parameter<[AttributeRestriction]>) -> Verify { return Verify(method: .p_attributeRestrictions_set(newValue)) }
         public static var mostRecentEntryOnly: Verify { return Verify(method: .p_mostRecentEntryOnly_get) }
 		public static func mostRecentEntryOnly(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_mostRecentEntryOnly_set(newValue)) }
+        public static var expression: Verify { return Verify(method: .p_expression_get) }
+		public static func expression(set newValue: Parameter<BooleanExpression?>) -> Verify { return Verify(method: .p_expression_set(newValue)) }
         public static var subQuery: Verify { return Verify(method: .p_subQuery_get) }
 		public static func subQuery(set newValue: Parameter<(matcher: SubQueryMatcher, query: Query)?>) -> Verify { return Verify(method: .p_subQuery_set(newValue)) }
     }

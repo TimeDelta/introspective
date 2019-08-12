@@ -11,11 +11,14 @@ import Foundation
 
 class NonRunningSampleQueryStub<SampleType: Sample>: SampleQuery {
 
-	public final var attributeRestrictions = [AttributeRestriction]()
+	public final var expression: BooleanExpression?
 	public final var mostRecentEntryOnly: Bool = false
 	public final var subQuery: (matcher: SubQueryMatcher, query: Query)?
 
 	public init() {
+	}
+
+	public required init(parts: [BooleanExpressionPart]) throws {
 	}
 
 	public final func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> ()) {

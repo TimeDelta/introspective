@@ -44,6 +44,13 @@ public final class EqualToSelectOneAttributeRestriction: EqualToAttributeRestric
 			valueAttribute: valueAttribute as! SelectOneAttribute)
 	}
 
+	// MARK: - Boolean Expression Functions
+
+	public override func predicate() -> NSPredicate? {
+		#warning("can use TypedSelectOneAttribute<Type> to return predicate for certain cases")
+		return nil
+	}
+
 	// MARK: - Other
 
 	public final override func restrictedAttributeWasSet() {

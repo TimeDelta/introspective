@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-public final class TagsAttribute: TypedMultiSelectAttribute<Tag> {
+public class TagsAttribute: TypedMultiSelectAttribute<Tag> {
 
 	public final override var typeName: String {
 		return "Tags"
@@ -42,4 +42,10 @@ public final class TagsAttribute: TypedMultiSelectAttribute<Tag> {
 			},
 			possibleValueToString: { $0.name })
 	}
+}
+
+/// Just to be able to identify it for tag attribute restrictions
+/// because it has to be treated differently since a tag can from
+/// the activity definition as well as the activity's tags variable
+public final class ActivityTagsAttribute: TagsAttribute {
 }

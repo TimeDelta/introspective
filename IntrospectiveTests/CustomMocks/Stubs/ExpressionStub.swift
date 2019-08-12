@@ -36,4 +36,8 @@ final class ExpressionStub: BooleanExpression {
 	func isValid() -> Bool {
 		return true
 	}
+
+	func predicate() -> NSPredicate? {
+		return nil
+	}
 }

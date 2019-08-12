@@ -28,7 +28,7 @@ public class Activity: NSManagedObject, CoreDataSample {
 
 	public static let nameAttribute = TextAttribute(name: "Name", pluralName: "Names", description: "The name of this activity", variableName: "definition.name")
 	public static let noteAttribute = TextAttribute(name: "Note", pluralName: "Notes", variableName: "note")
-	public static let tagsAttribute = TagsAttribute()
+	public static let tagsAttribute = ActivityTagsAttribute(variableName: "tags")
 	public static let durationAttribute = DurationAttribute()
 	public static let sourceAttribute = TypedEquatableSelectOneAttribute<String>(
 		name: "Source",

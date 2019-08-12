@@ -54,4 +54,10 @@ public final class OrExpression: BooleanExpression {
 		}
 		return left.isValid() && right.isValid()
 	}
+
+	public final func predicate() -> NSPredicate? {
+		guard let subPredicate1 = expression1.predicate() else { return nil }
+		guard let subPredicate2 = expression2.predicate() else { return nil }
+		return NSCompoundPredicate(orPredicateWithSubpredicates: [subPredicate1, subPredicate2])
+	}
 }

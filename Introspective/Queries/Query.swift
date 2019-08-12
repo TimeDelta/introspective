@@ -11,7 +11,10 @@ import Foundation
 //sourcery: AutoMockable
 public protocol Query: class {
 
-	var attributeRestrictions: [AttributeRestriction] { get set }
+	/// - Throws: If a valid query cannot be made from the provided parts
+	init(parts: [BooleanExpressionPart]) throws
+
+	var expression: BooleanExpression? { get set }
 	var mostRecentEntryOnly: Bool { get set }
 
 	/// The timestamps from the results of the sub-query will be used to limit the results of this query
@@ -28,9 +31,10 @@ extension Query {
 
 	public func equalTo(_ otherQuery: Query) -> Bool {
 		if type(of: self) != type(of: otherQuery) { return false }
-		if !attributeRestrictions.elementsEqual(otherQuery.attributeRestrictions, by: { $0.equalTo($1) }) {
-			return false
-		}
+		if let myExpression = expression {
+			guard let otherExpression = otherQuery.expression else { return false }
+			if !myExpression.equalTo(otherExpression) { return false }
+		} else if let _ = otherQuery.expression { return false }
 		if mostRecentEntryOnly != otherQuery.mostRecentEntryOnly { return false }
 		if subQuery == nil && otherQuery.subQuery != nil { return false }
 		if subQuery != nil && otherQuery.subQuery == nil { return false }

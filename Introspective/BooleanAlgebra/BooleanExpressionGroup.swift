@@ -50,4 +50,8 @@ public final class BooleanExpressionGroup: BooleanExpression {
 		}
 		return expression.isValid()
 	}
+
+	public final func predicate() -> NSPredicate? {
+		return subExpression.predicate()
+	}
 }

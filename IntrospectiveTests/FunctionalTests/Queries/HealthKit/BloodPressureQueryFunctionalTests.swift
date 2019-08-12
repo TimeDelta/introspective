@@ -68,7 +68,7 @@ final class BloodPressureQueryFunctionalTests: QueryFunctionalTest {
 		HealthKitDataTestUtil.save([BloodPressure(systolic: value - 1)])
 
 		let systolicRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: BloodPressure.systolic, value: value)
-		query.attributeRestrictions.append(systolicRestriction)
+		query.expression = systolicRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -98,8 +98,7 @@ final class BloodPressureQueryFunctionalTests: QueryFunctionalTest {
 
 		let systolicRestriction = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: BloodPressure.systolic, value: systolicValue)
 		let diastolicRestriction = GreaterThanDoubleAttributeRestriction(restrictedAttribute: BloodPressure.diastolic, value: diastolicValue)
-		query.attributeRestrictions.append(systolicRestriction)
-		query.attributeRestrictions.append(diastolicRestriction)
+		query.expression = andExpression(systolicRestriction, diastolicRestriction)
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -129,9 +128,7 @@ final class BloodPressureQueryFunctionalTests: QueryFunctionalTest {
 		let systolicRestriction = GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: BloodPressure.systolic, value: systolicValue)
 		let diastolicRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: BloodPressure.diastolic, value: diastolicValue)
 		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitTimestamp, date: Date() - 1.days)
-		query.attributeRestrictions.append(systolicRestriction)
-		query.attributeRestrictions.append(diastolicRestriction)
-		query.attributeRestrictions.append(timestampRestriction)
+		query.expression = andExpression(systolicRestriction, diastolicRestriction, timestampRestriction)
 
 		// when
 		query.runQuery(callback: queryComplete)

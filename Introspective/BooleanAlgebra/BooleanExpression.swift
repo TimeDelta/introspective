@@ -15,6 +15,8 @@ public protocol BooleanExpression: CustomStringConvertible {
 	/// create and return a deep copy of this object
 	func copy() -> BooleanExpression
 	func equalTo(_ other: BooleanExpression) -> Bool
+	/// - Returns: `nil` if a predicate can not be made
+	func predicate() -> NSPredicate?
 }
 
 extension BooleanExpression {

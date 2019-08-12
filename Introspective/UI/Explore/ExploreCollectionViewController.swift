@@ -73,10 +73,7 @@ final class ExploreCollectionViewController: UICollectionViewController {
 
 	@objc private final func showResultsScreen(notification: Notification) {
 		if let query: Query = value(for: .query, from: notification) {
-			let resultsController = DependencyInjector.util.ui.controller(
-				named: "results",
-				from: "Results",
-				as: ResultsViewController.self)
+			let resultsController = viewController(named: "results", fromStoryboard: "Results") as! ResultsViewController
 			query.runQuery { (result: QueryResult?, error: Error?) in
 				if let error = error {
 					DispatchQueue.main.async {

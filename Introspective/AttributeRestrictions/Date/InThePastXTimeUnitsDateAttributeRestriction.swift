@@ -94,7 +94,7 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 		throw UnknownAttributeError(attribute: attribute, for: self)
 	}
 
-	// MARk: - Attribute Restriction Functions
+	// MARK: - Attribute Restriction Functions
 
 	public final override func samplePasses(_ sample: Sample) throws -> Bool {
 		let sampleValue = try sample.value(of: restrictedAttribute)
@@ -113,6 +113,21 @@ public final class InThePastXTimeUnitsDateAttributeRestriction: DateAttributeRes
 			restrictedAttribute: restrictedAttribute,
 			numberOfTimeUnits,
 			timeUnit)
+	}
+
+	// MARK: - Boolean Expression Functions
+
+	public override func predicate() -> NSPredicate? {
+		guard !DependencyInjector.settings.convertTimeZones else { return nil }
+		guard let variableName = restrictedAttribute.variableName else { return nil }
+		let now = Date()
+		let minDate = now - getMinDateComponents()
+		return NSPredicate(
+			format: "%K >= %@ && %K <= %@",
+			variableName,
+			minDate as NSDate,
+			variableName,
+			now as NSDate)
 	}
 
 	// MARK: - Equality

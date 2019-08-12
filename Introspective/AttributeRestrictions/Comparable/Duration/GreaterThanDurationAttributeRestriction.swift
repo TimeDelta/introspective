@@ -24,4 +24,6 @@ public final class GreaterThanDurationAttributeRestriction: TypedGreaterThanAttr
 	public override func copy() -> AttributeRestriction {
 		return GreaterThanDurationAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
 	}
+
+	public override func predicate() -> NSPredicate? { return nil }
 }

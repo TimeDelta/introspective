@@ -24,4 +24,6 @@ public final class LessThanOrEqualToDosageAttributeRestriction: TypedLessThanOrE
 	public override func copy() -> AttributeRestriction {
 		return LessThanOrEqualToDosageAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
 	}
+
+	public override func predicate() -> NSPredicate? { return nil }
 }

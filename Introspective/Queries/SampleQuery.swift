@@ -11,7 +11,6 @@ import Foundation
 public protocol SampleQuery: Query {
 	associatedtype SampleType: Sample
 
-	var attributeRestrictions: [AttributeRestriction] { get set }
 	var mostRecentEntryOnly: Bool { get set }
 
 	func runQuery(callback: @escaping (SampleQueryResult<SampleType>?, Error?) -> ())
@@ -19,7 +18,7 @@ public protocol SampleQuery: Query {
 
 public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 
-	public final var attributeRestrictions: [AttributeRestriction]
+	public final var expression: BooleanExpression?
 	public final var mostRecentEntryOnly: Bool
 	public final var subQuery: (matcher: SubQueryMatcher, query: Query)?
 
@@ -33,7 +32,16 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 	private final let log = Log()
 
 	public init() {
-		attributeRestrictions = [AttributeRestriction]()
+		expression = nil
+		mostRecentEntryOnly = false
+	}
+
+	public required init(parts: [BooleanExpressionPart]) throws {
+		if parts.count > 0 {
+			expression = try DependencyInjector.booleanAlgebra.parser().parse(parts)
+		} else {
+			expression = nil
+		}
 		mostRecentEntryOnly = false
 	}
 
@@ -75,32 +83,13 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 		}
 	}
 
-	func getPredicate() -> NSPredicate {
-		var subPredicates = [NSPredicate]()
-		for attributeRestriction in attributeRestrictions {
-			if attributeRestriction.restrictedAttribute.variableName == nil { continue }
-			if let predicateRestriction = attributeRestriction as? PredicateAttributeRestriction {
-				subPredicates.append(predicateRestriction.toPredicate())
-			}
+	func samplePassesFilters(_ sample: Sample) throws -> Bool {
+		guard !stopped else { return false }
+		guard let expression = expression else {
+			return true
 		}
-		return NSCompoundPredicate(andPredicateWithSubpredicates: subPredicates)
-	}
-
-	func samplePassesFilters(_ sample: Sample) -> Bool {
-		for attributeRestriction in attributeRestrictions {
-			if stopped { return false }
-			if attributeRestriction.restrictedAttribute.variableName == nil || !(attributeRestriction is PredicateAttributeRestriction) {
-				do {
-					if try !attributeRestriction.samplePasses(sample) {
-						return false
-					}
-				} catch {
-					log.error("Failed to test for sample passing: %@", errorInfo(error))
-					return false
-				}
-			}
-		}
-		return true
+		guard expression.predicate() == nil else { return true }
+		return try expression.evaluate([.sample: sample])
 	}
 
 	private final func filterAndCallBack() {
@@ -122,7 +111,7 @@ public class SampleQueryImpl<SampleType: Sample>: SampleQuery {
 	}
 
 	private final func filterResults() throws -> SampleQueryResult<SampleType>? {
-		assert(queryCallbackParameters!.result != nil, "query result is nil")
+		guard queryCallbackParameters!.result != nil else { throw GenericError("query result is nil") }
 
 		if subQuery == nil {
 			return queryCallbackParameters!.result

@@ -13,7 +13,7 @@ public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: Sample
 
 	final override func run() {
 		let fetchRequest: NSFetchRequest<SampleType> = NSFetchRequest<SampleType>(entityName: SampleType.entityName)
-		fetchRequest.predicate = getPredicate()
+		fetchRequest.predicate = expression?.predicate()
 
 		do {
 			let samples: [SampleType] = try DependencyInjector.db.query(fetchRequest)
@@ -23,7 +23,7 @@ public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: Sample
 				return
 			}
 
-			let filteredSamples = samples.filter(self.samplePassesFilters)
+			let filteredSamples = try samples.filter(self.samplePassesFilters)
 
 			if !self.stopped {
 				if filteredSamples.count == 0 {
@@ -36,7 +36,6 @@ public class CoreDataQuery<SampleType: NSManagedObject & CoreDataSample>: Sample
 			}
 		} catch {
 			self.queryDone(nil, error)
-			return
 		}
 	}
 

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, PredicateAttributeRestriction, Equatable {
+public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, StringAttributeRestriction, Equatable {
 
 	private typealias Me = ContainsStringAttributeRestriction
 
@@ -73,8 +73,9 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 		return ContainsStringAttributeRestriction(restrictedAttribute: restrictedAttribute, substring: substring)
 	}
 
-	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K CONTAINS[cd] %@", restrictedAttribute.variableName!, substring)
+	public override func predicate() -> NSPredicate? {
+		guard let variableName = restrictedAttribute.variableName else { return nil }
+		return NSPredicate(format: "%K CONTAINS[cd] %@", variableName, substring)
 	}
 
 	// MARK: - Equality

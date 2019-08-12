@@ -20,8 +20,6 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 	}
 
 	final override func run() {
-		let dateConstraints = DependencyInjector.util.attributeRestriction.getMostRestrictiveStartAndEndDates(from: attributeRestrictions)
-
 		DependencyInjector.util.healthKit.getAuthorization() {
 			(error: Error?) in
 
@@ -31,10 +29,11 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 			}
 
 			SampleType.initUnits()
+			// need a way of building HealthKit-specific predicates to avoid failures like
+			// "Expected constant value of class HKQuantity, received 83.699996948242188"
 			self.stopFunction = DependencyInjector.util.healthKit.getSamples(
 				for: SampleType.self,
-				from: dateConstraints.start,
-				to: dateConstraints.end,
+				predicate: nil,
 				callback: self.processQueryResults)
 		}
 	}
@@ -47,18 +46,13 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 		}
 	}
 
-	final override func samplePassesFilters(_ sample: Sample) -> Bool {
-		for attributeRestriction in attributeRestrictions {
-			do {
-				if try !attributeRestriction.samplePasses(sample) {
-					return false
-				}
-			} catch {
-				log.error("Failed to test for sample passing: %@", errorInfo(error))
-				return false
-			}
+	override func samplePassesFilters(_ sample: Sample) throws -> Bool {
+		guard !stopped else { return false }
+		guard let expression = expression else {
+			return true
 		}
-		return true
+		// predicate not relevant until there's a HealthKit-specific way of building predicates
+		return try expression.evaluate([.sample: sample])
 	}
 
 	private final func processQueryResults(originalSamples: Array<HKSample>?, error: Error?) {
@@ -72,17 +66,21 @@ public class HealthKitQuery<SampleType: HealthKitSample>: SampleQueryImpl<Sample
 		}
 
 		let mappedSamples = originalSamples!.map({ self.initFromHKSample($0)})
-		let filteredSamples = mappedSamples.filter(self.samplePassesFilters)
+		do {
+			let filteredSamples = try mappedSamples.filter(self.samplePassesFilters)
 
-		if !self.stopped {
-			if filteredSamples.count == 0 {
-				self.queryDone(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
-				return
+			if !self.stopped {
+				if filteredSamples.count == 0 {
+					self.queryDone(nil, NoHealthKitSamplesFoundQueryError(sampleType: SampleType.self))
+					return
+				}
+
+				let result = SampleQueryResult<SampleType>(filteredSamples)
+				self.finishedQuery = true
+				self.queryDone(result, nil)
 			}
-
-			let result = SampleQueryResult<SampleType>(filteredSamples)
-			self.finishedQuery = true
-			self.queryDone(result, nil)
+		} catch {
+			self.queryDone(nil, error)
 		}
 	}
 }

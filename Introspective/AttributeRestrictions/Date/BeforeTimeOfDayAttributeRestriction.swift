@@ -84,6 +84,12 @@ public final class BeforeTimeOfDayAttributeRestriction: DateAttributeRestriction
 		return BeforeTimeOfDayAttributeRestriction(restrictedAttribute: restrictedAttribute, timeOfDay: timeOfDay)
 	}
 
+	// MARK: - Boolean Expression Functions
+
+	public override func predicate() -> NSPredicate? {
+		return nil
+	}
+
 	// MARK: - Equality
 
 	public static func ==(lhs: BeforeTimeOfDayAttributeRestriction, rhs: BeforeTimeOfDayAttributeRestriction) -> Bool {

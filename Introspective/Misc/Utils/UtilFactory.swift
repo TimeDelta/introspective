@@ -16,7 +16,6 @@ public final class UtilFactory {
 	private static let realHKQuantitySampleUtil = NumericSampleUtilImpl()
 	private static let realTextNormalizationUtil = TextNormalizationUtilImpl()
 	private static let realSampleUtil = SampleUtilImpl()
-	private static let realTimeConstraintUtil = AttributeRestrictionUtilImpl()
 	private static let realSearchUtil = SearchUtilImpl()
 	private static let realStringUtil = StringUtilImpl()
 	private static let realIOUtil = IOUtilImpl()
@@ -31,7 +30,6 @@ public final class UtilFactory {
 	public final var numericSample: NumericSampleUtil = Me.realHKQuantitySampleUtil
 	public final var textNormalization: TextNormalizationUtil = Me.realTextNormalizationUtil
 	public final var sample: SampleUtil = Me.realSampleUtil
-	public final var attributeRestriction: AttributeRestrictionUtil = Me.realTimeConstraintUtil
 	public final var search: SearchUtil = Me.realSearchUtil
 	public final var string: StringUtil = Me.realStringUtil
 	public final var io: IOUtil = Me.realIOUtil

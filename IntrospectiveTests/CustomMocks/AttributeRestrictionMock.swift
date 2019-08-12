@@ -12,7 +12,7 @@ import SwiftyMocky
 
 // sourcery: mock = "AttributeRestriction"
 class AttributeRestrictionMock: AttributeRestriction, Mock {
-	fileprivate var _description: String!
+	fileprivate var _description: String = "attribute restriction mock"
 
 	var description: String {
 		get { return _description }
@@ -235,6 +235,19 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
 		return __value
     }
 
+    open func predicate() -> NSPredicate? {
+        addInvocation(.m_predicate)
+		let perform = methodPerformValue(.m_predicate) as? () -> Void
+		perform?()
+		var __value: NSPredicate? = nil
+		do {
+		    __value = try methodReturnValue(.m_predicate).casted()
+		} catch {
+			// do nothing
+		}
+		return __value
+    }
+
     open func evaluate() throws -> Bool {
         addInvocation(.m_evaluate)
 		let perform = methodPerformValue(.m_evaluate) as? () -> Void
@@ -264,6 +277,7 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
         case m_set__attribute_attributeto_value(Parameter<Attribute>, Parameter<Any?>)
         case m_equalTo__otherAttributed(Parameter<Attributed>)
         case m_equalTo__other(Parameter<BooleanExpression>)
+        case m_predicate
         case m_evaluate
         case p_restrictedAttribute_get
 		case p_restrictedAttribute_set(Parameter<Attribute>)
@@ -303,6 +317,8 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
             case (.m_equalTo__other(let lhsOther), .m_equalTo__other(let rhsOther)):
                 guard Parameter.compare(lhs: lhsOther, rhs: rhsOther, with: matcher) else { return false } 
                 return true 
+            case (.m_predicate, .m_predicate):
+                return true 
             case (.m_evaluate, .m_evaluate):
                 return true 
             case (.p_restrictedAttribute_get,.p_restrictedAttribute_get): return true
@@ -327,6 +343,7 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
             case let .m_set__attribute_attributeto_value(p0, p1): return p0.intValue + p1.intValue
             case let .m_equalTo__otherAttributed(p0): return p0.intValue
             case let .m_equalTo__other(p0): return p0.intValue
+            case .m_predicate: return 0
             case .m_evaluate: return 0
             case .p_restrictedAttribute_get: return 0
 			case .p_restrictedAttribute_set(let newValue): return newValue.intValue
@@ -388,6 +405,9 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
         public static func equalTo(_ other: Parameter<BooleanExpression>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_equalTo__other(`other`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func predicate(willReturn: NSPredicate?...) -> MethodStub {
+            return Given(method: .m_predicate, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func evaluate(willReturn: Bool...) -> MethodStub {
             return Given(method: .m_evaluate, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
@@ -437,6 +457,13 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__other(`other`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func predicate(willProduce: (Stubber<NSPredicate?>) -> Void) -> MethodStub {
+            let willReturn: [NSPredicate?] = []
+			let given: Given = { return Given(method: .m_predicate, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (NSPredicate?).self)
 			willProduce(stubber)
 			return given
         }
@@ -506,6 +533,7 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
         public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>) -> Verify { return Verify(method: .m_set__attribute_attributeto_value(`attribute`, `value`))}
         public static func equalTo(_ otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
         public static func equalTo(_ other: Parameter<BooleanExpression>) -> Verify { return Verify(method: .m_equalTo__other(`other`))}
+        public static func predicate() -> Verify { return Verify(method: .m_predicate)}
         public static func evaluate() -> Verify { return Verify(method: .m_evaluate)}
         public static var restrictedAttribute: Verify { return Verify(method: .p_restrictedAttribute_get) }
 		public static func restrictedAttribute(set newValue: Parameter<Attribute>) -> Verify { return Verify(method: .p_restrictedAttribute_set(newValue)) }
@@ -550,6 +578,9 @@ class AttributeRestrictionMock: AttributeRestriction, Mock {
         }
         public static func equalTo(_ other: Parameter<BooleanExpression>, perform: @escaping (BooleanExpression) -> Void) -> Perform {
             return Perform(method: .m_equalTo__other(`other`), performs: perform)
+        }
+        public static func predicate(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_predicate, performs: perform)
         }
         public static func evaluate(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_evaluate, performs: perform)

@@ -24,4 +24,6 @@ public final class LessThanDurationAttributeRestriction: TypedLessThanAttributeR
 	public override func copy() -> AttributeRestriction {
 		return LessThanDurationAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value)
 	}
+
+	public override func predicate() -> NSPredicate? { return nil }
 }

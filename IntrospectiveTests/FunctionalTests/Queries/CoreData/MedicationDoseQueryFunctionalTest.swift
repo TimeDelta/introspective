@@ -56,11 +56,9 @@ final class MedicationDoseQueryFunctionalTest: QueryFunctionalTest {
 		let _ = createDose(dosage: dosage, timestamp: timestamp)
 
 		let medicationNameRestriction = ContainsStringAttributeRestriction(restrictedAttribute: MedicationDose.nameAttribute, substring: medicationName)
-		query.attributeRestrictions.append(medicationNameRestriction)
 		let dosageRestriction = EqualToDosageAttributeRestriction(restrictedAttribute: MedicationDose.dosage, value: dosage)
-		query.attributeRestrictions.append(dosageRestriction)
 		let timestampRestriction = OnDateAttributeRestriction(restrictedAttribute: CommonSampleAttributes.timestamp, date: timestamp)
-		query.attributeRestrictions.append(timestampRestriction)
+		query.expression = andExpression(medicationNameRestriction, dosageRestriction, timestampRestriction)
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -83,7 +81,7 @@ final class MedicationDoseQueryFunctionalTest: QueryFunctionalTest {
 		let _ = createDose(dosage: Dosage(2, "µg"))
 
 		let noteRestriction = GreaterThanDosageAttributeRestriction(restrictedAttribute: MedicationDose.dosage, value: targetDosage)
-		query.attributeRestrictions.append(noteRestriction)
+		query.expression = noteRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -106,9 +104,8 @@ final class MedicationDoseQueryFunctionalTest: QueryFunctionalTest {
 		let _ = createDose()
 
 		let medicationNameRestriction = ContainsStringAttributeRestriction(restrictedAttribute: MedicationDose.nameAttribute, substring: targetMedication.name)
-		query.attributeRestrictions.append(medicationNameRestriction)
 		let dosageRestriction = LessThanOrEqualToDosageAttributeRestriction(restrictedAttribute: MedicationDose.dosage, value: targetDosage)
-		query.attributeRestrictions.append(dosageRestriction)
+		query.expression = andExpression(medicationNameRestriction, dosageRestriction)
 
 		// when
 		query.runQuery(callback: queryComplete)

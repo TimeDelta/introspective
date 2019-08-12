@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class NotEqualToIntegerAttributeRestriction: TypedNotEqualToAttributeRestrictionBase<Int>, IntegerAttributeRestriction, PredicateAttributeRestriction {
+public final class NotEqualToIntegerAttributeRestriction: TypedNotEqualToAttributeRestrictionBase<Int>, IntegerAttributeRestriction {
 
 	private typealias Me = NotEqualToIntegerAttributeRestriction
 	public static let valueAttribute = IntegerAttribute(name: "Value", pluralName: "Values")
@@ -25,7 +25,8 @@ public final class NotEqualToIntegerAttributeRestriction: TypedNotEqualToAttribu
 		return NotEqualToIntegerAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Int)
 	}
 
-	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K != %d", restrictedAttribute.variableName!, value as! Int)
+	public override func predicate() -> NSPredicate? {
+		guard let variableName = restrictedAttribute.variableName else { return nil }
+		return NSPredicate(format: "%K != %d", variableName, value as! Int)
 	}
 }

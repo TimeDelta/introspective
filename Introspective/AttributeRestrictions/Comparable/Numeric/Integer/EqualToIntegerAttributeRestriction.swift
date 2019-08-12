@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final class EqualToIntegerAttributeRestriction: TypedEqualToAttributeRestrictionBase<Int>, IntegerAttributeRestriction, PredicateAttributeRestriction {
+public final class EqualToIntegerAttributeRestriction: TypedEqualToAttributeRestrictionBase<Int>, IntegerAttributeRestriction {
 
 	private typealias Me = EqualToIntegerAttributeRestriction
 	public static let valueAttribute = IntegerAttribute(name: "Value", pluralName: "Values")
@@ -25,7 +25,8 @@ public final class EqualToIntegerAttributeRestriction: TypedEqualToAttributeRest
 		return EqualToIntegerAttributeRestriction(restrictedAttribute: restrictedAttribute, value: value as! Int)
 	}
 
-	public final func toPredicate() -> NSPredicate {
-		return NSPredicate(format: "%K == %d", restrictedAttribute.variableName!, value as! Int)
+	public override func predicate() -> NSPredicate? {
+		guard let variableName = restrictedAttribute.variableName else { return nil }
+		return NSPredicate(format: "%K == %d", variableName, value as! Int)
 	}
 }

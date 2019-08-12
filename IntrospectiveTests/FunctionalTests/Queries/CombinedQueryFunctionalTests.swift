@@ -56,8 +56,7 @@ final class CombinedQueryFunctionalTests: QueryFunctionalTest {
 		let minMood = 2.0
 		let noteRestriction = ContainsStringAttributeRestriction(restrictedAttribute: MoodImpl.note, substring: targetSubstring)
 		let ratingRestriction = GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating, value: minMood)
-		subQuery.attributeRestrictions.append(noteRestriction)
-		subQuery.attributeRestrictions.append(ratingRestriction)
+		subQuery.expression = andExpression(noteRestriction, ratingRestriction)
 		let matcher = WithinXCalendarUnitsSubQueryMatcher(numberOfTimeUnits: numberOfDaysWithinMood, timeUnit: .day, mostRecentOnly: false)
 		let _ = createMood(note: "\(targetSubstring) some other stuff", rating: minMood, timestamp: earliestTargetMoodDate) // target mood
 		let _ = createMood(note: "prefix \(targetSubstring) suffix", rating: minMood + 1, timestamp: latestTargetMoodDate) // target mood
@@ -98,7 +97,7 @@ final class CombinedQueryFunctionalTests: QueryFunctionalTest {
 		let moodSubQuery = MoodQueryImpl()
 		let maxMood = 2.0
 		let ratingRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: MoodImpl.rating, value: maxMood)
-		moodSubQuery.attributeRestrictions.append(ratingRestriction)
+		moodSubQuery.expression = ratingRestriction
 		let _ = createMood(rating: 0.0, timestamp: startOfTargetDay) // target mood
 		let _ = createMood(rating: maxMood - 0.1, timestamp: startOfTargetDay) // target mood
 		let _ = createMood(rating: maxMood + 1, timestamp: startOfTargetDay - 1.hours)
@@ -115,7 +114,7 @@ final class CombinedQueryFunctionalTests: QueryFunctionalTest {
 			Weight(minWeight - 23, startOfTargetDay + 1.days),
 		])
 		let minWeightRestriction = GreaterThanDoubleAttributeRestriction(restrictedAttribute: Weight.weight, value: minWeight)
-		weightSubQuery.attributeRestrictions.append(minWeightRestriction)
+		weightSubQuery.expression = minWeightRestriction
 
 		let matcher = InSameCalendarUnitSubQueryMatcher(timeUnit: .day, mostRecentOnly: false)
 		moodSubQuery.subQuery = (matcher: matcher, query: weightSubQuery)

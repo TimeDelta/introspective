@@ -40,6 +40,11 @@ public protocol UiUtil {
 		title: String?,
 		handler: @escaping (UITableViewRowAction, IndexPath) -> Void)
 	-> UITableViewRowAction
+	func alertAction(
+		title: String?,
+		style: UIAlertAction.Style,
+		handler: ((UIAlertAction) -> Void)?)
+	-> UIAlertAction
 
 	/// - Note: This is just for testability
 	func stopObserving(_ observer: Any, name: NotificationName?, object: Any?)
@@ -237,6 +242,14 @@ public final class UiUtilImpl: UiUtil {
 		handler: @escaping (UITableViewRowAction, IndexPath) -> Void)
 	-> UITableViewRowAction {
 		return UITableViewRowAction(style: style, title: title, handler: handler)
+	}
+
+	public func alertAction(
+		title: String?,
+		style: UIAlertAction.Style,
+		handler: ((UIAlertAction) -> Void)?)
+	-> UIAlertAction {
+		return UIAlertAction(title: title, style: style, handler: handler)
 	}
 
 	public func stopObserving(_ observer: Any, name: NotificationName?, object: Any?) {

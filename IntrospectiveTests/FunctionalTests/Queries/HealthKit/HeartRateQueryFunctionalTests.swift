@@ -68,7 +68,7 @@ class HeartRateQueryFunctionalTests: QueryFunctionalTest {
 		HealthKitDataTestUtil.save([HeartRate(value - 1)])
 
 		let heartRateRestriction = EqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate, value: value)
-		query.attributeRestrictions.append(heartRateRestriction)
+		query.expression = heartRateRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -89,7 +89,7 @@ class HeartRateQueryFunctionalTests: QueryFunctionalTest {
 		HealthKitDataTestUtil.save([HeartRate(value + 1)])
 
 		let heartRateRestriction = LessThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate, value: value)
-		query.attributeRestrictions.append(heartRateRestriction)
+		query.expression = heartRateRestriction
 
 		// when
 		query.runQuery(callback: queryComplete)
@@ -115,8 +115,7 @@ class HeartRateQueryFunctionalTests: QueryFunctionalTest {
 
 		let heartRateRestriction = GreaterThanOrEqualToDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate, value: value)
 		let timestampRestriction = BeforeDateAndTimeAttributeRestriction(restrictedAttribute: CommonSampleAttributes.healthKitTimestamp, date: Date() - 1.days)
-		query.attributeRestrictions.append(heartRateRestriction)
-		query.attributeRestrictions.append(timestampRestriction)
+		query.expression = andExpression(heartRateRestriction, timestampRestriction)
 
 		// when
 		query.runQuery(callback: queryComplete)

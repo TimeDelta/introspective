@@ -20,7 +20,6 @@ class UnitTest: XCTestCase {
 	var mockSettings: SettingsMock!
 
 	var utilFactory: UtilFactory!
-	var mockAttributeRestrictionUtil: AttributeRestrictionUtilMock!
 	var mockCalendarUtil: CalendarUtilMock!
 	var mockNumericSampleUtil: NumericSampleUtilMock!
 	var mockSampleUtil: SampleUtilMock!
@@ -38,6 +37,7 @@ class UnitTest: XCTestCase {
 	var mockCoachMarkFactory: CoachMarkFactoryMock!
 	var mockSampleGrouperFactory: SampleGrouperFactoryMock!
 	var mockBooleanAlgebraFactory: BooleanAlgebraFactoryMock!
+	var mockAttributeRestrictionFactory: AttributeRestrictionFactoryMock!
 
 	override func setUp() {
 		super.setUp()
@@ -64,10 +64,10 @@ class UnitTest: XCTestCase {
 		Matcher.default.register(AnySample.self) { $0.equalTo($1) }
 		Matcher.default.register(Attribute.self) { $0.equalTo($1) }
 		Matcher.default.register(AttributeRestriction.self) { $0.equalTo($1) }
+		Matcher.default.register(AttributeRestriction.Type.self) { $0 == $1 }
 		Matcher.default.register(DayOfWeek.self)
 		Matcher.default.register(HeartRate.Type.self) { _,_ in true }
 		Matcher.default.register(Sample.self) { $0.equalTo($1) }
-		Matcher.default.register(ResultsViewController.Type.self)
 		Matcher.default.register(Any.self) { self.anyMatcher($0, $1) }
 		Matcher.default.register(Optional<Any>.self) { self.anyMatcher($0, $1) }
 		Matcher.default.register(Exportable.Type.self) { $0 == $1 }
@@ -126,6 +126,9 @@ class UnitTest: XCTestCase {
 		mockBooleanAlgebraFactory = BooleanAlgebraFactoryMock()
 		Given(injectionProvider, .booleanAlgebraFactory(willReturn: mockBooleanAlgebraFactory))
 
+		mockAttributeRestrictionFactory = AttributeRestrictionFactoryMock()
+		Given(injectionProvider, .attributeRestrictionFactory(willReturn: mockAttributeRestrictionFactory))
+
 		utilFactory = UtilFactory()
 		Given(injectionProvider, .utilFactory(willReturn: utilFactory))
 
@@ -135,9 +138,6 @@ class UnitTest: XCTestCase {
 	// MARK: - Helper Functions
 
 	private final func setUpUtilMocks() {
-		mockAttributeRestrictionUtil = AttributeRestrictionUtilMock()
-		utilFactory.attributeRestriction = mockAttributeRestrictionUtil
-
 		mockCalendarUtil = CalendarUtilMock()
 		utilFactory.calendar = mockCalendarUtil
 
