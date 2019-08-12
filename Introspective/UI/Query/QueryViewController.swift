@@ -69,7 +69,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	// leave non-private for testing purposes
 	final var queries = [(sampleTypeInfo: SampleTypeInfo, parts: [BooleanExpressionPart])]()
-	private final var editedIndex: Int!
+	private final var editedSampleTypeSectionIndex: Int!
 	private final var editedAttributeRestrictionIndex: IndexPath!
 
 	private final let log = Log()
@@ -298,9 +298,8 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 				queries[fromIndexPath.section - 1].parts.append(contentsOf: orphanedParts)
 				updateAttributeRestrictionsForSampleType(at: fromIndexPath.section - 1)
 			}
-			tableView.reloadSections(IndexSet(arrayLiteral: fromIndexPath.section - 1), with: .automatic)
 		}
-		tableView.reloadSections(IndexSet(arrayLiteral: fromIndexPath.section, to.section), with: .automatic)
+		tableView.reloadData()
 		validate()
 	}
 
@@ -316,7 +315,6 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 				// row has + 1 because of data type cell
 				self.queries[indexPath.section].parts.remove(at: indexPath.row - 1)
 			}
-			tableView.deleteRows(at: [indexPath], with: .fade)
 			tableView.reloadData()
 			self.validate()
 		}
@@ -327,7 +325,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.section == 0 && indexPath.row == 0 {
 			let controller = viewController(named: "chooseSampleType", fromStoryboard: "Util") as! ChooseSampleTypeViewController
-			editedIndex = 0
+			editedSampleTypeSectionIndex = 0
 			controller.selectedSampleType = queries[0].sampleTypeInfo.sampleType
 			controller.notificationToSendOnAccept = .sampleTypeEdited
 			tableView.deselectRow(at: indexPath, animated: false)
@@ -399,9 +397,9 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		} else if segue.destination is EditSubSampleTypeViewController {
 			let controller = (segue.destination as! EditSubSampleTypeViewController)
 			let source = (sender as! UITableViewCell)
-			editedIndex = tableView.indexPath(for: source)!.row
-			controller.sampleType = queries[editedIndex].sampleTypeInfo.sampleType
-			controller.matcher = queries[editedIndex].sampleTypeInfo.matcher
+			editedSampleTypeSectionIndex = tableView.indexPath(for: source)!.section
+			controller.sampleType = queries[editedSampleTypeSectionIndex].sampleTypeInfo.sampleType
+			controller.matcher = queries[editedSampleTypeSectionIndex].sampleTypeInfo.matcher
 			controller.notificationToSendWhenAccepted = Me.acceptedSubSampleTypeEdit
 		}
 	}
@@ -410,8 +408,8 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	@objc final func saveEditedSampleType(notification: Notification) {
 		guard let sampleType: Sample.Type? = value(for: .sampleType, from: notification) else { return }
-		queries[editedIndex].sampleTypeInfo = SampleTypeInfo(sampleType!)
-		updateAttributeRestrictionsForSampleType(at: editedIndex)
+		queries[editedSampleTypeSectionIndex].sampleTypeInfo = SampleTypeInfo(sampleType!)
+		updateAttributeRestrictionsForSampleType(at: editedSampleTypeSectionIndex)
 		validate()
 		tableView.reloadData()
 	}
@@ -430,8 +428,8 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 
 	@objc final func saveEditedSubQuerySampleType(notification: Notification) {
 		guard let sampleTypeInfo: SampleTypeInfo = value(for: .sampleType, from: notification) else { return }
-		queries[editedIndex].sampleTypeInfo = sampleTypeInfo
-		updateAttributeRestrictionsForSampleType(at: editedIndex)
+		queries[editedSampleTypeSectionIndex].sampleTypeInfo = sampleTypeInfo
+		updateAttributeRestrictionsForSampleType(at: editedSampleTypeSectionIndex)
 		validate()
 		tableView.reloadData()
 	}
@@ -467,10 +465,9 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 	}
 
 	private final func partWasAdded() {
-		let indexPath = IndexPath(
-			row: queries[queries.count - 1].parts.count - 1,
-			section: queries.count - 1)
-		tableView.insertRows(at: [indexPath], with: .automatic)
+		if queries.count > 1 || queries[0].parts.count > 0 {
+			tableView.reloadData()
+		}
 		validate()
 	}
 
