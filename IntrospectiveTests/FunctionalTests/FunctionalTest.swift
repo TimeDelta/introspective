@@ -12,7 +12,7 @@ import Hamcrest
 import CoreData
 @testable import Introspective
 
-class FunctionalTest: XCTestCase {
+class FunctionalTest: Test {
 
 	final var injectionProvider: InjectionProviderMock!
 

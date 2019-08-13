@@ -269,7 +269,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			let notificationToSend: Notification.Name = value(for: .notificationName, from: notification),
 			let medication: Medication = value(for: .medication, from: notification)
 		{
-			let controller: MedicationDoseEditorViewController = viewController(named: "medicationDoseEditor")
+			let controller = viewController(named: "medicationDoseEditor") as! MedicationDoseEditorViewController
 			controller.notificationToSendOnAccept = notificationToSend
 			controller.medication = medication
 			customPresentViewController(Me.setDosePresenter, viewController: controller, animated: false)

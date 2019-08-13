@@ -8,7 +8,15 @@
 
 import UIKit
 
-public final class MedicationDoseEditorViewController: UIViewController {
+public protocol MedicationDoseEditorViewController: UIViewController {
+
+	var medicationDose: MedicationDose? { get set }
+	/// If `medicationDose` is not set, will use default dosage and is only required if not editing an existing dose
+	var medication: Medication! { get set }
+	var notificationToSendOnAccept: Notification.Name! { get set }
+}
+
+public final class MedicationDoseEditorViewControllerImpl: UIViewController, MedicationDoseEditorViewController {
 
 	// MARK: - IBOutlets
 

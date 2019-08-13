@@ -93,6 +93,7 @@ public final class CalendarUtilImpl: CalendarUtil {
 		let formatter = DateFormatter()
 		formatter.dateStyle = dateStyle
 		formatter.timeStyle = timeStyle
+		#warning("this needs access to the timezone for the activity dates, etc.")
 		formatter.timeZone = TimeZone.autoupdatingCurrent
 		return formatter.string(from: date)
 	}

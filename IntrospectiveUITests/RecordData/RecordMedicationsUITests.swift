@@ -421,15 +421,15 @@ final class RecordMedicationsUITests: UITest {
 		// given
 		let medication = Medication("ghrui")
 		let dose1Date = Date()
-		let dose2Date = dose1Date - 2.weeks
-		let filterRange = 10.days
-		let filterStart = dose1Date - 1.weeks
+		let dose2Date = dose1Date - 5.days
+		let filterRange = 7.days
+		let filterStart = dose1Date - filterRange - 1.days
 		let filterEnd = filterStart + filterRange
 		createMedication(medication)
 		takeDoseOf(medication, at: dose1Date)
 		takeDoseOf(medication, at: dose2Date)
 		app.buttons["last \(medication.name) dose button"].tap()
-		filterDoseDates(from: dose2Date - 1.days, to: dose2Date + 1.weeks)
+		filterDoseDates(from: filterStart, to: filterEnd)
 
 		// when
 		app.tables.buttons[">"].tap()
@@ -445,6 +445,7 @@ final class RecordMedicationsUITests: UITest {
 		XCTAssertEqual(app.tables.buttons["filter dates button"].value as? String, expectedDateFilterButtonTitle)
 
 		XCTAssert(app.tables.staticTexts[doseDescription(date: dose1Date)].exists)
+		XCTAssert(!app.tables.staticTexts[doseDescription(date: dose2Date)].exists)
 	}
 
 	func testSettingFromDateAfterToDate_doesNotAllowSavingFilter() {

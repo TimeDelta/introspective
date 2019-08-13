@@ -8,7 +8,19 @@
 
 import UIKit
 
-public final class DateRangeViewController: UIViewController {
+public protocol DateRangeViewController: UIViewController {
+
+	var datePickerMode: UIDatePicker.Mode { get set }
+	var initialFromDate: Date? { get set }
+	var minFromDate: Date? { get set }
+	var maxFromDate: Date? { get set }
+	var initialToDate: Date? { get set }
+	var minToDate: Date? { get set }
+	var maxToDate: Date? { get set }
+	var notificationToSendOnAccept: Notification.Name! { get set }
+}
+
+public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewController {
 
 	// MARK: - IBOutlets
 

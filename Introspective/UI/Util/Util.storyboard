@@ -247,10 +247,10 @@
             </objects>
             <point key="canvasLocation" x="1394" y="-430"/>
         </scene>
-        <!--Date Range View Controller-->
+        <!--Date Range View Controller Impl-->
         <scene sceneID="TSq-89-Hh7">
             <objects>
-                <viewController storyboardIdentifier="dateRangeChooser" useStoryboardIdentifierAsRestorationIdentifier="YES" id="QBn-na-xdj" customClass="DateRangeViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="dateRangeChooser" useStoryboardIdentifierAsRestorationIdentifier="YES" id="QBn-na-xdj" customClass="DateRangeViewControllerImpl" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="i2q-KP-pX9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="438"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

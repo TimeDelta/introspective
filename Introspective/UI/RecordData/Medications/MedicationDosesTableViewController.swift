@@ -15,9 +15,9 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	// MARK: - Static Variables
 
 	private typealias Me = MedicationDosesTableViewController
-	private static let dateRangeSet = Notification.Name("medicationDosesTableDateRangeSet")
-	private static let medicationDoseEdited = Notification.Name("medicationDoseEdited")
-	private static let dateFiliterPresenter: Presentr = {
+	static let dateRangeSet = Notification.Name("medicationDosesTableDateRangeSet")
+	static let medicationDoseEdited = Notification.Name("medicationDoseEdited")
+	private static let dateFilterPresenter: Presentr = {
 		let customType = PresentationType.custom(width: .default, height: .custom(size: 438), center: .center)
 		let customPresenter = Presentr(presentationType: customType)
 		customPresenter.dismissTransitionType = .crossDissolve
@@ -46,7 +46,8 @@ public final class MedicationDosesTableViewController: UITableViewController {
 			tableView.reloadData()
 		}
 	}
-	private final var filteredDoses: NSOrderedSet!
+	// leave not private for testing purposes
+	final var filteredDoses = [MedicationDose]()
 	private final var filterStartDate: Date?
 	private final var filterEndDate: Date?
 	private final var lastClickedIndex: Int!
@@ -92,13 +93,13 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	// MARK: - TableViewDelegate
 
 	public final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-		let dose = filteredDoses.object(at: indexPath.row) as! MedicationDose
-		let delete = UITableViewRowAction(style: .destructive, title: "🗑️") { (_, indexPath) in
-			let alert = UIAlertController(
+		let dose = filteredDoses[indexPath.row]
+		let delete = DependencyInjector.util.ui.tableViewRowAction(style: .destructive, title: "🗑️") { (_, indexPath) in
+			let alert = DependencyInjector.util.ui.alert(
 				title: "Are you sure you want to delete this dose?",
 				message: self.getTextForDoseAt(indexPath.row),
 				preferredStyle: .alert)
-			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
+			alert.addAction(DependencyInjector.util.ui.alertAction(title: "Yes", style: .destructive) { _ in
 				let indexToDelete = self.medication.doses.index(of: dose)
 				let transaction = DependencyInjector.db.transaction()
 				do {
@@ -113,7 +114,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 					self.showError(title: "Failed to delete dose", error: error)
 				}
 			})
-			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+			alert.addAction(DependencyInjector.util.ui.alertAction(title: "No", style: .cancel, handler: nil))
 			self.present(alert, animated: false, completion: nil)
 		}
 		delete.accessibilityLabel = "delete dose button"
@@ -128,16 +129,16 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	}
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let controller: MedicationDoseEditorViewController = viewController(named: "medicationDoseEditor")
+		let controller = viewController(named: "medicationDoseEditor") as! MedicationDoseEditorViewController
 		controller.medicationDose = medication.doses.object(at: indexPath.row) as? MedicationDose
 		controller.notificationToSendOnAccept = Me.medicationDoseEdited
 		controller.medication = medication
-		lastClickedIndex = indexPath.row
+		lastClickedIndex = medication.doses.index(of: filteredDoses[indexPath.row])
 		customPresentViewController(Me.medicationDosePresenter, viewController: controller, animated: false)
 		tableView.deselectRow(at: indexPath, animated: false)
 	}
 
-	// MARK: - Received Notificaitons
+	// MARK: - Received Notifications
 
 	@objc private final func dateRangeSet(notification: Notification) {
 		filterStartDate = value(for: .fromDate, from: notification)
@@ -174,14 +175,14 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	// MARK: - Actions
 
 	@IBAction final func filterDatesButtonPressed(_ sender: Any) {
-		let controller: DateRangeViewController = viewController(named: "dateRangeChooser", fromStoryboard: "Util")
+		let controller = viewController(named: "dateRangeChooser", fromStoryboard: "Util") as! DateRangeViewController
 		controller.initialFromDate = filterStartDate
 		controller.initialToDate = filterEndDate
 		controller.maxFromDate = Date()
 		controller.maxToDate = Date() + 1.days
 		controller.datePickerMode = .date
 		controller.notificationToSendOnAccept = Me.dateRangeSet
-		customPresentViewController(Me.dateFiliterPresenter, viewController: controller, animated: false)
+		customPresentViewController(Me.dateFilterPresenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func previousDateRangeButtonPressed(_ sender: Any) {
@@ -223,7 +224,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	// MARK: - Helper Functions
 
 	private final func getTextForDoseAt(_ index: Int) -> String {
-		let dose = filteredDoses.object(at: index) as! MedicationDose
+		let dose = filteredDoses[index]
 		var doseText = ""
 		if let dosage = dose.dosage {
 			doseText += dosage.description + " on "
@@ -233,24 +234,36 @@ public final class MedicationDosesTableViewController: UITableViewController {
 	}
 
 	private final func resetFilteredDoses() {
-		filteredDoses = NSOrderedSet(array: medication.sortedDoses(ascending: false))
+		filteredDoses = medication.sortedDoses(ascending: false)
 		if filterStartDate != nil || filterEndDate != nil {
-			var filterPredicates = [NSPredicate]()
-			if var startDate = filterStartDate {
+			var startDate = filterStartDate
+			if let start = startDate {
 				if filterEndDate == nil {
-					startDate = DependencyInjector.util.calendar.end(of: .day, in: startDate)
+					startDate = DependencyInjector.util.calendar.end(of: .day, in: start)
 				}
-				filterPredicates.append(NSPredicate(format: "%K > %@", "timestamp", startDate as NSDate))
 			}
-			if var endDate = filterEndDate {
+			var endDate = filterEndDate
+			if let end = endDate {
 				if filterStartDate == filterEndDate {
-					endDate = DependencyInjector.util.calendar.end(of: .day, in: endDate)
+					endDate = DependencyInjector.util.calendar.end(of: .day, in: end)
 				} else if filterStartDate == nil {
-					endDate = DependencyInjector.util.calendar.start(of: .day, in: endDate)
+					endDate = DependencyInjector.util.calendar.start(of: .day, in: end)
 				}
-				filterPredicates.append(NSPredicate(format: "%K < %@", "timestamp", endDate as NSDate))
 			}
-			filteredDoses = filteredDoses.filtered(using: NSCompoundPredicate(andPredicateWithSubpredicates: filterPredicates))
+			// note: can't use NSFetchedResultsController or predicates because of timezone requirements
+			filteredDoses = filteredDoses.filter({
+				if let start = startDate {
+					if start > $0.date {
+						return false
+					}
+				}
+				if let end = endDate {
+					if end < $0.date {
+						return false
+					}
+				}
+				return true
+			})
 		}
 	}
 

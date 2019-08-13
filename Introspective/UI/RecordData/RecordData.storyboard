@@ -935,7 +935,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <toolbar key="tableHeaderView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" misplaced="YES" id="PVx-Hz-nHg">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                            <rect key="frame" x="0.0" y="-113" width="375" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             <items>
                                 <barButtonItem style="plain" systemItem="flexibleSpace" id="bhO-xk-zoo"/>
@@ -984,10 +984,10 @@
             </objects>
             <point key="canvasLocation" x="2086" y="-1114"/>
         </scene>
-        <!--Medication Dose Editor View Controller-->
+        <!--Medication Dose Editor View Controller Impl-->
         <scene sceneID="MDp-8I-1la">
             <objects>
-                <viewController storyboardIdentifier="medicationDoseEditor" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Q2N-tG-6dG" customClass="MedicationDoseEditorViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="medicationDoseEditor" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Q2N-tG-6dG" customClass="MedicationDoseEditorViewControllerImpl" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DEZ-Yi-zsY">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="250"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
