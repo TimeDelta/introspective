@@ -80,6 +80,10 @@ public final class EditActivityTableViewController: UITableViewController {
 		observe(selector: #selector(noteChanged), name: Me.noteChanged)
 		observe(selector: #selector(tagsChanged), name: Me.tagsChanged)
 
+		if activity == nil {
+			startDate = getMostRecentActivityDate() ?? Date()
+		}
+
 		hideKeyboardOnTapNonTextInput()
 	}
 
