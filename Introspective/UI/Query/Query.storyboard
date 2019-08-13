@@ -58,16 +58,16 @@
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Attribute Restriction" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Attribute Restriction" id="MNv-3c-tDo" customClass="AttributeRestrictionTableViewCell" customModule="Introspective" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Attribute Restriction" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Attribute Restriction" textLabel="b3s-eo-tPi" style="IBUITableViewCellStyleDefault" id="MNv-3c-tDo" customClass="AttributeRestrictionTableViewCell" customModule="Introspective" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="MNv-3c-tDo" id="RUV-6D-o6N">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="average heart rate per month ≥ 126" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aw5-CB-dfa">
-                                            <rect key="frame" x="33" y="11" width="326" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="heart rate ≥ 126" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="b3s-eo-tPi">
+                                            <rect key="frame" x="16" y="0.0" width="343" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -76,7 +76,6 @@
                                 </tableViewCellContentView>
                                 <accessibility key="accessibilityConfiguration" hint="Edits this attribute restriction"/>
                                 <connections>
-                                    <outlet property="label" destination="Aw5-CB-dfa" id="QLN-4R-xpH"/>
                                     <segue destination="L2p-RU-HId" kind="show" id="2Xt-cS-96n"/>
                                 </connections>
                             </tableViewCell>
@@ -110,7 +109,7 @@
                                     <segue destination="TpJ-zB-lRv" kind="show" id="zDh-RC-cv7"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="basic" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationLevel="1" indentationWidth="10" reuseIdentifier="basic" textLabel="tu2-ZU-Hpk" style="IBUITableViewCellStyleDefault" id="nnq-qG-eIj" customClass="SubSampleTypeTableViewCell" customModule="Introspective" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="basic" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationLevel="1" indentationWidth="10" reuseIdentifier="basic" textLabel="tu2-ZU-Hpk" style="IBUITableViewCellStyleDefault" id="nnq-qG-eIj">
                                 <rect key="frame" x="0.0" y="160" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="nnq-qG-eIj" id="c8a-PP-7KP">
@@ -159,7 +158,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oNl-5P-b6T" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2106" y="-836"/>
+            <point key="canvasLocation" x="2104.8000000000002" y="-836.13193403298362"/>
         </scene>
         <!--Data Type Restriction-->
         <scene sceneID="wOb-hl-1eA">

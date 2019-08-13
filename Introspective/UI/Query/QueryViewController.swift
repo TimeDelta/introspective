@@ -733,7 +733,7 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		guard indexPath.row > 0 else { return 0 }
 		let expressionParts = queries[indexPath.section].parts
 		let targetIndex = indexPath.row - 1
-		var indentation: Int = 0
+		var indentation: Int = 1
 		for i in 0 ..< targetIndex {
 			let part = expressionParts[i]
 			switch part.type {
@@ -750,6 +750,6 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 		if targetIndex > 1 && targetExpressionPart.type == .groupEnd {
 			indentation -= 1
 		}
-		return max(indentation, 0)
+		return max(indentation, 1)
 	}
 }

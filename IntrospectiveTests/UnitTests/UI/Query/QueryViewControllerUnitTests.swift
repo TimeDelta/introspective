@@ -365,7 +365,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		let cell = controller.tableView(tableView, cellForRowAt: IndexPath(row: 6, section: 0))
 
 		// then
-		assertThat(cell, hasIndentationLevel(2))
+		assertThat(cell, hasIndentationLevel(3))
 	}
 
 	func testGivenAndAtSpecifiedIndex_tableViewCellForRowAt_returnsAndCellWithCorrectText() {
@@ -396,7 +396,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		let cell = controller.tableView(tableView, cellForRowAt: IndexPath(row: 6, section: 0))
 
 		// then
-		assertThat(cell, hasIndentationLevel(2))
+		assertThat(cell, hasIndentationLevel(3))
 	}
 
 	func testGivenOrAtSpecifiedIndex_tableViewCellForRowAt_returnsOrCellWithCorrectText() {
@@ -427,7 +427,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		let cell = controller.tableView(tableView, cellForRowAt: IndexPath(row: 6, section: 0))
 
 		// then
-		assertThat(cell, hasIndentationLevel(2))
+		assertThat(cell, hasIndentationLevel(3))
 	}
 
 	func testGivenGroupStartAtSpecifiedIndex_tableViewCellForRowAt_returnsGroupStartCellWithCorrectText() {
@@ -458,7 +458,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		let cell = controller.tableView(tableView, cellForRowAt: IndexPath(row: 6, section: 0))
 
 		// then
-		assertThat(cell, hasIndentationLevel(2))
+		assertThat(cell, hasIndentationLevel(3))
 	}
 
 	func testGivenGroupEndAtSpecifiedIndex_tableViewCellForRowAt_returnsGroupEndCellWithCorrectText() {
@@ -489,7 +489,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		let cell = controller.tableView(tableView, cellForRowAt: IndexPath(row: 6, section: 0))
 
 		// then
-		assertThat(cell, hasIndentationLevel(1))
+		assertThat(cell, hasIndentationLevel(2))
 	}
 
 	func testGivenGroupEndAtSpecifiedIndexWithRow1_tableViewCellForRowAt_returnsCellWithCorrectIndentationLevel() {
@@ -502,7 +502,7 @@ final class QueryViewControllerUnitTests: UnitTest {
 		let cell = controller.tableView(tableView, cellForRowAt: IndexPath(row: 1, section: 0))
 
 		// then
-		assertThat(cell, hasIndentationLevel(0))
+		assertThat(cell, hasIndentationLevel(1))
 	}
 
 	// MARK: - tableViewCanEditRowAt()
