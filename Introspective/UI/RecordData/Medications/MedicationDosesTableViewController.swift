@@ -178,8 +178,6 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		let controller = viewController(named: "dateRangeChooser", fromStoryboard: "Util") as! DateRangeViewController
 		controller.initialFromDate = filterStartDate
 		controller.initialToDate = filterEndDate
-		controller.maxFromDate = Date()
-		controller.maxToDate = Date() + 1.days
 		controller.datePickerMode = .date
 		controller.notificationToSendOnAccept = Me.dateRangeSet
 		customPresentViewController(Me.dateFilterPresenter, viewController: controller, animated: false)
