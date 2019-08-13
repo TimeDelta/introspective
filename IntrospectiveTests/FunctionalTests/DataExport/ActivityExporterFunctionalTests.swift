@@ -507,7 +507,7 @@ final class ActivityExporterFunctionalTests: ExporterFunctionalTest {
 			startText,
 			TimeZone.autoupdatingCurrent.identifier,
 			endText,
-			TimeZone.autoupdatingCurrent.identifier,
+			endText.isEmpty ? "" : TimeZone.autoupdatingCurrent.identifier,
 			activity.note ?? "",
 			tagsText,
 			activity.getSource().description,
