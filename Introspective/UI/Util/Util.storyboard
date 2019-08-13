@@ -408,39 +408,15 @@
                                 <rect key="frame" x="0.0" y="0.0" width="350" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
-                                    <barButtonItem title="Last" id="7LL-AH-bth">
-                                        <connections>
-                                            <action selector="lastButtonPressed:" destination="6Iz-O7-qxY" id="AAS-4d-qmx"/>
-                                        </connections>
-                                    </barButtonItem>
+                                    <barButtonItem title="Last" id="7LL-AH-bth"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="XDO-vU-j6R"/>
-                                    <barButtonItem title="-30" id="7EO-Vl-e8r">
-                                        <connections>
-                                            <action selector="decrementByThirtyButtonPressedWithSender:forEvent:" destination="6Iz-O7-qxY" id="d4r-1K-8Mu"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem title="-15" id="O1v-8p-0dR">
-                                        <connections>
-                                            <action selector="decrementByFifteenButtonPressedWithSender:forEvent:" destination="6Iz-O7-qxY" id="X13-WL-jGl"/>
-                                        </connections>
-                                    </barButtonItem>
+                                    <barButtonItem title="-30" id="7EO-Vl-e8r"/>
+                                    <barButtonItem title="-15" id="O1v-8p-0dR"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="X4X-NY-hPK"/>
-                                    <barButtonItem title="+15" id="Nh9-PD-gmu">
-                                        <connections>
-                                            <action selector="incrementByFifteenButtonPressedWithSender:forEvent:" destination="6Iz-O7-qxY" id="Kbn-AR-VSi"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem title="+30" id="QYe-p1-A2G">
-                                        <connections>
-                                            <action selector="incrementByThirtyButtonPressedWithSender:forEvent:" destination="6Iz-O7-qxY" id="cRN-LG-zGo"/>
-                                        </connections>
-                                    </barButtonItem>
+                                    <barButtonItem title="+15" id="Nh9-PD-gmu"/>
+                                    <barButtonItem title="+30" id="QYe-p1-A2G"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="wXk-z6-0dx"/>
-                                    <barButtonItem title="Now" id="U62-zE-RfO">
-                                        <connections>
-                                            <action selector="nowButtonPressed:" destination="6Iz-O7-qxY" id="UBM-qb-hs4"/>
-                                        </connections>
-                                    </barButtonItem>
+                                    <barButtonItem title="Now" id="U62-zE-RfO"/>
                                 </items>
                             </toolbar>
                         </subviews>
@@ -450,8 +426,7 @@
                     <size key="freeformSize" width="350" height="200"/>
                     <connections>
                         <outlet property="datePicker" destination="MIp-es-gdi" id="7sc-V0-TOQ"/>
-                        <outlet property="decrementByThirtyButton" destination="7EO-Vl-e8r" id="bbi-OY-Y5E"/>
-                        <outlet property="lastButton" destination="7LL-AH-bth" id="qKB-pG-7kX"/>
+                        <outlet property="toolbar" destination="wxK-bj-fIl" id="oBO-Kg-0xq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zj9-ZU-Syd" userLabel="First Responder" sceneMemberID="firstResponder"/>

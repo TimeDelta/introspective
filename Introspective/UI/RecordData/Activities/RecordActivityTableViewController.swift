@@ -119,10 +119,10 @@ public final class RecordActivityTableViewController: UITableViewController {
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
-		let addButton = UIBarButtonItem(
-			barButtonSystemItem: .add,
-			target: self,
-			action: #selector(addButtonPressed))
+		let addButton = barButton(
+			title: "+",
+			quickPress: #selector(quickPressAddButton),
+			longPress: #selector(longPressAddButton))
 		let stopAllButton = UIBarButtonItem(
 			title: "■",
 			style: .plain,
@@ -421,16 +421,12 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	// MARK: - Actions
 
-	@IBAction private final func addButtonPressed(_ sender: Any, forEvent event: UIEvent) {
-		if let touch = event.allTouches?.first {
-			if touch.tapCount == 1 { // tap
-				showActivityDefinitionCreationScreen()
-			} else if touch.tapCount == 0 { // long press
-				quickCreateAndStart()
-			}
-		} else {
-			showActivityDefinitionCreationScreen()
-		}
+	@IBAction final func quickPressAddButton() {
+		showActivityDefinitionCreationScreen()
+	}
+
+	@IBAction final func longPressAddButton() {
+		quickCreateAndStart()
 	}
 
 	@IBAction final func stopAllButtonPressed(_ sender: Any) {

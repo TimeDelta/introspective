@@ -17,7 +17,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 	private final var coachMarksController: CoachMarksControllerProtocolMock!
 
 	private final var datePicker: UIDatePicker!
-	private final var lastButton: UIBarButtonItem!
+	private final var toolbar: UIToolbar!
 
 	private final var controller: SelectDateViewController!
 
@@ -37,12 +37,12 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 		Given(mockCoachMarkFactory, .controller(willReturn: coachMarksController))
 
 		datePicker = UIDatePicker()
-		lastButton = UIBarButtonItem()
+		toolbar = UIToolbar()
 
 		let storyboard = UIStoryboard(name: "Util", bundle: nil)
 		controller = (storyboard.instantiateViewController(withIdentifier: "datePicker") as! SelectDateViewController)
 		controller.datePicker = datePicker
-		controller.lastButton = lastButton
+		controller.toolbar = toolbar
 	}
 
 	// MARK: - viewDidLoad
@@ -118,6 +118,10 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 		controller.viewDidLoad()
 
 		// then
+		guard let lastButton = controller.toolbar.items?[0] else {
+			XCTFail("No last button")
+			return
+		}
 		XCTAssert(lastButton.isEnabled)
 	}
 
@@ -129,6 +133,10 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 		controller.viewDidLoad()
 
 		// then
+		guard let lastButton = controller.toolbar.items?[0] else {
+			XCTFail("No last button")
+			return
+		}
 		XCTAssertFalse(lastButton.isEnabled)
 	}
 
@@ -177,7 +185,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 		controller.lastDate = lastDate
 
 		// when
-		controller.lastButtonPressed(lastButton)
+		controller.lastButtonPressed(self)
 
 		// then
 		XCTAssertEqual(datePicker.date, lastDate)
@@ -189,7 +197,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 		datePicker.setDate(originalDate, animated: false)
 
 		// when
-		controller.lastButtonPressed(lastButton)
+		controller.lastButtonPressed(self)
 
 		// then
 		XCTAssertEqual(datePicker.date, originalDate)
@@ -199,12 +207,11 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 	func testGivenTap_decrementByThirtyButtonPressed_decrementsDateByThirtyMinutes() {
 		// given
-		let uiEvent = getUiEventWithTapCount(1)
 		let originalDate = Date()
 		datePicker.setDate(originalDate, animated: false)
 
 		// when
-		controller.decrementByThirtyButtonPressed(sender: self, forEvent: uiEvent)
+		controller.quickPressDecrementByThirty()
 
 		// then
 		XCTAssertEqual(datePicker.date, originalDate - 30.minutes)
@@ -213,11 +220,10 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 	func testGivenLongPressAndUserChoosesOption_decrementByThirtyButtonPressed_decrementsDateByThirtyAssociatedTimeUnits() throws {
 		for unit in timeUnits {
 			// given
-			let uiEvent = getUiEventWithTapCount(0)
 			let originalDate = Date()
 			datePicker.setDate(originalDate, animated: false)
 
-			controller.decrementByThirtyButtonPressed(sender: self, forEvent: uiEvent)
+			controller.longPressDecrementByThirty()
 			let actionSheetCaptor = ArgumentCaptor<UIViewController>()
 			Verify(mockUiUtil, .present(.value(controller), actionSheetCaptor.capture(), animated: .any, completion: .any))
 			guard let actionSheet = actionSheetCaptor.value as? UIAlertController else {
@@ -235,11 +241,10 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 	func testGivenLongPressAndUserChoosesCancel_decrementByThirtyButtonPressed_doesNotChangeDate() throws {
 		// given
-		let uiEvent = getUiEventWithTapCount(0)
 		let originalDate = Date()
 		datePicker.setDate(originalDate, animated: false)
 
-		controller.decrementByThirtyButtonPressed(sender: self, forEvent: uiEvent)
+		controller.longPressDecrementByThirty()
 		let actionSheetCaptor = ArgumentCaptor<UIViewController>()
 		Verify(mockUiUtil, .present(.value(controller), actionSheetCaptor.capture(), animated: .any, completion: .any))
 		guard let actionSheet = actionSheetCaptor.value as? UIAlertController else {
@@ -258,12 +263,11 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 	func testGivenTap_decrementByFifteenButtonPressed_decrementsDateByFifteenMinutes() {
 		// given
-		let uiEvent = getUiEventWithTapCount(1)
 		let originalDate = Date()
 		datePicker.setDate(originalDate, animated: false)
 
 		// when
-		controller.decrementByFifteenButtonPressed(sender: self, forEvent: uiEvent)
+		controller.quickPressDecrementByFifteen()
 
 		// then
 		XCTAssertEqual(datePicker.date, originalDate - 15.minutes)
@@ -272,11 +276,10 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 	func testGivenLongPressAndUserChoosesOption_decrementByFifteenButtonPressed_decrementsDateByFifteenAssociatedTimeUnits() throws {
 		for unit in timeUnits {
 			// given
-			let uiEvent = getUiEventWithTapCount(0)
 			let originalDate = Date()
 			datePicker.setDate(originalDate, animated: false)
 
-			controller.decrementByFifteenButtonPressed(sender: self, forEvent: uiEvent)
+			controller.longPressDecrementByFifteen()
 			let actionSheetCaptor = ArgumentCaptor<UIViewController>()
 			Verify(mockUiUtil, .present(.value(controller), actionSheetCaptor.capture(), animated: .any, completion: .any))
 			guard let actionSheet = actionSheetCaptor.value as? UIAlertController else {
@@ -294,11 +297,10 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 	func testGivenLongPressAndUserChoosesCancel_decrementByFifteenButtonPressed_doesNotChangeDate() throws {
 		// given
-		let uiEvent = getUiEventWithTapCount(0)
 		let originalDate = Date()
 		datePicker.setDate(originalDate, animated: false)
 
-		controller.decrementByFifteenButtonPressed(sender: self, forEvent: uiEvent)
+		controller.longPressDecrementByFifteen()
 		let actionSheetCaptor = ArgumentCaptor<UIViewController>()
 		Verify(mockUiUtil, .present(.value(controller), actionSheetCaptor.capture(), animated: .any, completion: .any))
 		guard let actionSheet = actionSheetCaptor.value as? UIAlertController else {
@@ -317,12 +319,11 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 	func testGivenTap_incrementByFifteenButtonPressed_decrementsDateByFifteenMinutes() {
 		// given
-		let uiEvent = getUiEventWithTapCount(1)
 		let originalDate = Date()
 		datePicker.setDate(originalDate, animated: false)
 
 		// when
-		controller.incrementByFifteenButtonPressed(sender: self, forEvent: uiEvent)
+		controller.quickPressIncrementByFifteen()
 
 		// then
 		XCTAssertEqual(datePicker.date, originalDate + 15.minutes)
@@ -331,11 +332,10 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 	func testGivenLongPressAndUserChoosesOption_incrementByFifteenButtonPressed_decrementsDateByFifteenAssociatedTimeUnits() throws {
 		for unit in timeUnits {
 			// given
-			let uiEvent = getUiEventWithTapCount(0)
 			let originalDate = Date()
 			datePicker.setDate(originalDate, animated: false)
 
-			controller.incrementByFifteenButtonPressed(sender: self, forEvent: uiEvent)
+			controller.longPressIncrementByFifteen()
 			let actionSheetCaptor = ArgumentCaptor<UIViewController>()
 			Verify(mockUiUtil, .present(.value(controller), actionSheetCaptor.capture(), animated: .any, completion: .any))
 			guard let actionSheet = actionSheetCaptor.value as? UIAlertController else {
@@ -353,11 +353,10 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 	func testGivenLongPressAndUserChoosesCancel_incrementByFifteenButtonPressed_doesNotChangeDate() throws {
 		// given
-		let uiEvent = getUiEventWithTapCount(0)
 		let originalDate = Date()
 		datePicker.setDate(originalDate, animated: false)
 
-		controller.incrementByFifteenButtonPressed(sender: self, forEvent: uiEvent)
+		controller.longPressIncrementByFifteen()
 		let actionSheetCaptor = ArgumentCaptor<UIViewController>()
 		Verify(mockUiUtil, .present(.value(controller), actionSheetCaptor.capture(), animated: .any, completion: .any))
 		guard let actionSheet = actionSheetCaptor.value as? UIAlertController else {
@@ -376,12 +375,11 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 	func testGivenTap_incrementByThirtyButtonPressed_decrementsDateByThirtyMinutes() {
 		// given
-		let uiEvent = getUiEventWithTapCount(1)
 		let originalDate = Date()
 		datePicker.setDate(originalDate, animated: false)
 
 		// when
-		controller.incrementByThirtyButtonPressed(sender: self, forEvent: uiEvent)
+		controller.quickPressIncrementByThirty()
 
 		// then
 		XCTAssertEqual(datePicker.date, originalDate + 30.minutes)
@@ -390,11 +388,10 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 	func testGivenLongPressAndUserChoosesOption_incrementByThirtyButtonPressed_decrementsDateByThirtyAssociatedTimeUnits() throws {
 		for unit in timeUnits {
 			// given
-			let uiEvent = getUiEventWithTapCount(0)
 			let originalDate = Date()
 			datePicker.setDate(originalDate, animated: false)
 
-			controller.incrementByThirtyButtonPressed(sender: self, forEvent: uiEvent)
+			controller.longPressIncrementByThirty()
 			let actionSheetCaptor = ArgumentCaptor<UIViewController>()
 			Verify(mockUiUtil, .present(.value(controller), actionSheetCaptor.capture(), animated: .any, completion: .any))
 			guard let actionSheet = actionSheetCaptor.value as? UIAlertController else {
@@ -412,11 +409,10 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 
 	func testGivenLongPressAndUserChoosesCancel_incrementByThirtyButtonPressed_doesNotChangeDate() throws {
 		// given
-		let uiEvent = getUiEventWithTapCount(0)
 		let originalDate = Date()
 		datePicker.setDate(originalDate, animated: false)
 
-		controller.incrementByThirtyButtonPressed(sender: self, forEvent: uiEvent)
+		controller.longPressIncrementByThirty()
 		let actionSheetCaptor = ArgumentCaptor<UIViewController>()
 		Verify(mockUiUtil, .present(.value(controller), actionSheetCaptor.capture(), animated: .any, completion: .any))
 		guard let actionSheet = actionSheetCaptor.value as? UIAlertController else {
@@ -573,7 +569,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 		controller.datePickerMode = .date
 		controller.notificationToSendOnAccept = Notification.Name("abc")
 		controller.viewDidLoad()
-		controller.lastButtonPressed(lastButton)
+		controller.lastButtonPressed(self)
 
 		// when
 		controller.acceptButtonPressed(self)
@@ -596,7 +592,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 		controller.datePickerMode = .date
 		controller.notificationToSendOnAccept = Notification.Name("abc")
 		controller.viewDidLoad()
-		controller.nowButtonPressed(lastButton)
+		controller.nowButtonPressed(self)
 
 		// when
 		controller.acceptButtonPressed(self)
@@ -632,15 +628,5 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 			return
 		}
 		assertThat(userInfo, userInfoHasKey(UserInfoKey.date, withValue: startOfDay))
-	}
-
-	// MARK: - Helper Functions
-
-	private final func getUiEventWithTapCount(_ tapCount: Int) -> UIEvent {
-		let touch = UITouch()
-		touch.setValue(tapCount as Any, forKey: "tapCount")
-		let uiEvent = UIEventTestStub()
-		uiEvent.touches = Set([touch])
-		return uiEvent
 	}
 }

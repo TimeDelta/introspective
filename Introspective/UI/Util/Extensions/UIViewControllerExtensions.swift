@@ -145,4 +145,15 @@ extension UIViewController {
 	{
 		DependencyInjector.util.ui.sendUserNotification(withContent: content, id: id, repeats: repeats, interval: interval)
 	}
+
+	final func barButton(title: String, quickPress: Selector, longPress: Selector) -> UIBarButtonItem {
+		let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: longPress)
+		let button = UIButton(type: .custom)
+		button.setTitle(title, for: .normal)
+		// same color as normal button text
+		button.setTitleColor(UIColor(red: 47/255, green: 124/255, blue: 246/255, alpha: 1), for: .normal)
+		button.addTarget(self, action: quickPress, for: .touchUpInside)
+		button.addGestureRecognizer(longPressRecognizer)
+		return UIBarButtonItem(customView: button)
+	}
 }

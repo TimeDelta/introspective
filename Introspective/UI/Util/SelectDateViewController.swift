@@ -15,8 +15,7 @@ public final class SelectDateViewController: UIViewController {
 	// MARK: - IBOutlets
 
 	@IBOutlet weak final var datePicker: UIDatePicker!
-	@IBOutlet weak final var lastButton: UIBarButtonItem!
-	@IBOutlet weak final var decrementByThirtyButton: UIBarButtonItem!
+	@IBOutlet weak final var toolbar: UIToolbar!
 
 	// MARK: - Instance Variables
 
@@ -34,6 +33,8 @@ public final class SelectDateViewController: UIViewController {
 	public final var notificationToSendOnAccept: Notification.Name!
 
 	private final var limitDateToStartOfMinute = true
+
+	private final var decrementByThirtyButton: UIBarButtonItem!
 
 	private final let log = Log()
 
@@ -58,8 +59,6 @@ public final class SelectDateViewController: UIViewController {
 		datePicker.maximumDate = latestPossibleDate
 		datePicker.datePickerMode = datePickerMode
 
-		lastButton.isEnabled = lastDate != nil
-
 		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
 			coachMarksInfo,
 			instructionsShownKey: .selectDateViewInstructionsShown,
@@ -67,6 +66,38 @@ public final class SelectDateViewController: UIViewController {
 		coachMarksController.dataSource = coachMarksDataSourceAndDelegate
 		coachMarksController.delegate = coachMarksDataSourceAndDelegate
 		coachMarksController.skipView = defaultSkipInstructionsView()
+
+		let lastButton = UIBarButtonItem(title: "Last", style: .plain, target: self, action: #selector(lastButtonPressed))
+		lastButton.isEnabled = lastDate != nil
+		decrementByThirtyButton = barButton(
+			title: "-30",
+			quickPress: #selector(quickPressDecrementByThirty),
+			longPress: #selector(longPressDecrementByThirty))
+		let fixedSpace = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+		fixedSpace.width = CGFloat(10)
+		toolbar.setItems([
+			lastButton,
+			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+			decrementByThirtyButton,
+			fixedSpace,
+			barButton(
+				title: "-15",
+				quickPress: #selector(quickPressDecrementByFifteen),
+				longPress: #selector(longPressDecrementByFifteen)),
+			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+			barButton(
+				title: "+15",
+				quickPress: #selector(quickPressIncrementByFifteen),
+				longPress: #selector(longPressIncrementByFifteen)),
+			fixedSpace,
+			barButton(
+				title: "+30",
+				quickPress: #selector(quickPressIncrementByThirty),
+				longPress: #selector(longPressIncrementByThirty)),
+			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+			UIBarButtonItem(title: "Now", style: .plain, target: self, action: #selector(nowButtonPressed)),
+		], animated: false)
+
 	}
 
 	public final override func viewDidAppear(_ animated: Bool) {
@@ -92,20 +123,36 @@ public final class SelectDateViewController: UIViewController {
 		}
 	}
 
-	@IBAction final func decrementByThirtyButtonPressed(sender: AnyObject, forEvent event: UIEvent) {
-		processIncrementOrDecrementEvent(event, amountToAdd: -30)
+	@IBAction final func quickPressDecrementByThirty() {
+		quickPressIncrementOrDecrement(amountToAdd: -30)
 	}
 
-	@IBAction final func decrementByFifteenButtonPressed(sender: AnyObject, forEvent event: UIEvent) {
-		processIncrementOrDecrementEvent(event, amountToAdd: -15)
+	@IBAction final func longPressDecrementByThirty() {
+		showChooseTimeUnitActionSheet(amountToAdd: -30)
 	}
 
-	@IBAction final func incrementByFifteenButtonPressed(sender: AnyObject, forEvent event: UIEvent) {
-		processIncrementOrDecrementEvent(event, amountToAdd: 15)
+	@IBAction final func quickPressDecrementByFifteen() {
+		quickPressIncrementOrDecrement(amountToAdd: -15)
 	}
 
-	@IBAction final func incrementByThirtyButtonPressed(sender: AnyObject, forEvent event: UIEvent) {
-		processIncrementOrDecrementEvent(event, amountToAdd: 30)
+	@IBAction final func longPressDecrementByFifteen() {
+		showChooseTimeUnitActionSheet(amountToAdd: -15)
+	}
+
+	@IBAction final func quickPressIncrementByFifteen() {
+		quickPressIncrementOrDecrement(amountToAdd: 15)
+	}
+
+	@IBAction final func longPressIncrementByFifteen() {
+		showChooseTimeUnitActionSheet(amountToAdd: 15)
+	}
+
+	@IBAction final func quickPressIncrementByThirty() {
+		quickPressIncrementOrDecrement(amountToAdd: 30)
+	}
+
+	@IBAction final func longPressIncrementByThirty() {
+		showChooseTimeUnitActionSheet(amountToAdd: 30)
 	}
 
 	@IBAction final func nowButtonPressed(_ sender: Any) {
@@ -130,16 +177,8 @@ public final class SelectDateViewController: UIViewController {
 
 	// MARK: - Helper Functions
 
-	private final func processIncrementOrDecrementEvent(_ event: UIEvent, amountToAdd: Int) {
-		if let touch = event.allTouches?.first {
-			if touch.tapCount == 1 { // tap
-				datePicker.date = datePicker.date + amountToAdd.minutes
-			} else if touch.tapCount == 0 { // long press
-				showChooseTimeUnitActionSheet(amountToAdd: amountToAdd)
-			}
-		} else {
-			datePicker.date = datePicker.date + amountToAdd.minutes
-		}
+	private final func quickPressIncrementOrDecrement(amountToAdd: Int) {
+		datePicker.date = datePicker.date + amountToAdd.minutes
 	}
 
 	private final func showChooseTimeUnitActionSheet(amountToAdd: Int) {

@@ -97,10 +97,10 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
-		navigationItem.rightBarButtonItem = UIBarButtonItem(
-			barButtonSystemItem: .add,
-			target: self,
-			action: #selector(addButtonPressed))
+		navigationItem.rightBarButtonItem = barButton(
+			title: "+",
+			quickPress: #selector(quickPressAddButton),
+			longPress: #selector(longPressAddButton))
 
 		searchController.searchResultsUpdater = self
 		searchController.obscuresBackgroundDuringPresentation = false
@@ -293,16 +293,12 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	// MARK: - Button Actions
 
-	@IBAction private final func addButtonPressed(_ sender: Any, forEvent event: UIEvent) {
-		if let touch = event.allTouches?.first {
-			if touch.tapCount == 1 { // tap
-				showMedicationCreationScreen()
-			} else if touch.tapCount == 0 { // long press
-				quickCreateAndTake()
-			}
-		} else {
-			showMedicationCreationScreen()
-		}
+	@IBAction final func quickPressAddButton() {
+		showMedicationCreationScreen()
+	}
+
+	@IBAction final func longPressAddButton() {
+		quickCreateAndTake()
 	}
 
 	// MARK: - Helper Functions
