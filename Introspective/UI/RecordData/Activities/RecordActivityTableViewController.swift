@@ -314,7 +314,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 					let transaction = DependencyInjector.db.transaction()
 					try transaction.delete(activity)
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-					self.tableView.reloadData()
+					self.loadActivitiyDefinitions()
 				} catch {
 					self.log.error("Failed to delete activity: %@", errorInfo(error))
 					self.showError(title: "Failed to delete activity instance", error: error)
