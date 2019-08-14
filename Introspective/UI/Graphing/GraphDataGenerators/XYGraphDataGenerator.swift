@@ -15,6 +15,8 @@ public class XYGraphDataGenerator {
 
 	// MARK: - Instance Variables
 
+	private final var colors = [UIColor]()
+
 	private final let signpost: Signpost?
 	private final let log: Log
 
@@ -154,6 +156,7 @@ public class XYGraphDataGenerator {
 			graphData.append(AASeriesElement()
 				.name(name)
 				.data(seriesData)
+				.color(getNextColor())
 				.toDic()!)
 		}
 		return graphData
@@ -202,5 +205,26 @@ public class XYGraphDataGenerator {
 				return false
 			}
 		})
+	}
+
+	final func populateColors(_ number: Int) {
+		for i in 0 ..< number {
+			let hue = CGFloat((Double(i) / Double(number)) * 360.0)
+			let brightness = CGFloat(Double.random(in: 0.6 ... 1.0))
+			let saturation = CGFloat(Double.random(in: 0.6 ... 1.0))
+			colors.append(UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: 1))
+		}
+	}
+
+	final func getNextColor() -> String {
+		return colorToHex(colors.removeFirst())
+	}
+
+	private final func colorToHex(_ color: UIColor) -> String {
+		let components = color.cgColor.components!
+		let r = Float(components[0])
+		let g = Float(components[1])
+		let b = Float(components[2])
+		return String(format: "#%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255))
 	}
 }

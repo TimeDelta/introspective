@@ -62,11 +62,13 @@ public final class SingleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator {
 			signpost.begin(name: "Grouping samples for series", "Grouping %d samples", samples.count)
 			let seriesGroups = try seriesGrouper.group(samples: samples)
 			signpost.end(name: "Grouping samples for series", "Grouped %d samples into %d groups", samples.count, seriesGroups.count)
+			populateColors(seriesGroups.count)
 			for (groupValue, samples) in seriesGroups {
 				let groupName = try seriesGrouper.groupNameFor(value: groupValue)
 				try addData(to: &allData, for: samples, as: groupName)
 			}
 		} else {
+			populateColors(1)
 			try addData(to: &allData, for: samples)
 		}
 
@@ -93,6 +95,7 @@ public final class SingleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator {
 				allData.append(AASeriesElement()
 					.name(name)
 					.data(data)
+					.color(getNextColor())
 					.toDic()!)
 			}
 		}

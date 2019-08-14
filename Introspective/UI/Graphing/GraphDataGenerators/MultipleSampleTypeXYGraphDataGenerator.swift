@@ -61,6 +61,7 @@ public final class MultipleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator 
 		if let seriesGroupers = seriesGroupers {
 			let xAxisSeriesGroups = try groupXAxisSeries(xSamples)
 			let yAxisSeriesGroups = try groupYAxisSeries(ySamples)
+			populateColors(max(xAxisSeriesGroups.count, yAxisSeriesGroups.count))
 			for (xGroupValue, xSamples) in xAxisSeriesGroups {
 				let correspondingYAxisSeriesGroupIndex = try yAxisSeriesGroups.firstIndex{ (yGroupValue, _) -> Bool in
 					return try seriesGroupers.x.groupValuesAreEqual(xGroupValue, yGroupValue)
