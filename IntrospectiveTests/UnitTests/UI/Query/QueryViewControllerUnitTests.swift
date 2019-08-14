@@ -108,6 +108,27 @@ final class QueryViewControllerUnitTests: UnitTest {
 		assertThat(controller.queries, queriesEquals(expectedState))
 	}
 
+	func testGivenInitialQueryWithWithSubQueryButNoExpression_viewDidLoad_properlyPopulatesQueryParts() throws {
+		// given
+		let mainQuery = try HeartRateQueryMock(parts: [])
+		Given(mainQuery, .expression(getter: nil))
+		let subQuery = try WeightQueryMock(parts: [])
+		Given(subQuery, .expression(getter: nil))
+		let matcher = SameDatesSubQueryMatcher(mostRecentOnly: false)
+		Given(mainQuery, .subQuery(getter: (matcher: matcher, query: subQuery)))
+		Given(subQuery, .subQuery(getter: nil))
+		controller.initialQuery = mainQuery
+
+		// when
+		let _ = controller.view // gets called twice by calling controller.viewDidLoad()
+
+		// then
+		assertThat(controller.queries, queriesEquals([
+			(sampleTypeInfo: SampleTypeInfo(HeartRate.self), parts: []),
+			(sampleTypeInfo: SampleTypeInfo(Weight.self), parts: []),
+		]))
+	}
+
 	func testGivenInitialQuery_viewDidLoad_enablesFinishedButton() throws {
 		// given
 		let restriction = LessThanDoubleAttributeRestriction(restrictedAttribute: HeartRate.heartRate)

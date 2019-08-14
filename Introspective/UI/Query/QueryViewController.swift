@@ -544,12 +544,9 @@ public final class QueryViewControllerImpl: UITableViewController, QueryViewCont
 			case is WeightQuery: addQuerySampleType(Weight.self, matcher); break
 			default: log.error("Forgot query type: %@", String(describing: type(of: query)))
 		}
-		guard let expression = query.expression else {
-			log.error("Unable to parse query: expression was nil")
-			showError(title: "Failed to load query")
-			return
+		if let expression = query.expression {
+			populateExpression(expression)
 		}
-		populateExpression(expression)
 		if let subQuery = query.subQuery {
 			populateQuery(subQuery.query, subQuery.matcher)
 		}
