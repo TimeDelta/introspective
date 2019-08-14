@@ -200,6 +200,7 @@ public final class SelectDateViewController: UIViewController {
 		})
 		actionSheet.addAction(UIAlertAction(title: "Seconds", style: .default) { _ in
 			self.datePicker.date = self.datePicker.date + amountToAdd.seconds
+			self.limitDateToStartOfMinute = false
 		})
 		actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
 		presentView(actionSheet)
