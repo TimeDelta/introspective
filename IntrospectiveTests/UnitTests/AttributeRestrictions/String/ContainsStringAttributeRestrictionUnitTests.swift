@@ -26,7 +26,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	// MARK: - description
 
-	func test_description_containsSubstring() {
+	func test_description_containsSubstring() throws {
 		// given
 		let substring = "i should be in the description"
 		restriction.substring = substring
@@ -38,7 +38,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		assertThat(description, containsString(substring))
 	}
 
-	func test_description_containsRestrictedAttributeName() {
+	func test_description_containsRestrictedAttributeName() throws {
 		// when
 		let description = restriction.description
 
@@ -49,7 +49,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	// MARK: - value(of:)
 
-	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
+	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() throws {
 		// when
 		XCTAssertThrowsError(try restriction.value(of: Me.restrictedAttribute)) { error in
 			// then
@@ -57,13 +57,13 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSubstringAttribute_valueOf_returnsCorrectString() {
+	func testGivenSubstringAttribute_valueOf_returnsCorrectString() throws {
 		// given
 		let expectedSubstring = "expected substring"
 		restriction.substring = expectedSubstring
 
 		// when
-		let actualSubstring = try! restriction.value(of: Me.substringAttribute) as! String
+		let actualSubstring = try restriction.value(of: Me.substringAttribute) as! String
 
 		// then
 		XCTAssertEqual(actualSubstring, expectedSubstring)
@@ -71,7 +71,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	// MARK: - set(attribute: to:)
 
-	func testGivenUnknownAttribute_set_throwsUnknownAttributeError() {
+	func testGivenUnknownAttribute_set_throwsUnknownAttributeError() throws {
 		// when
 		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: 1 as Any)) { error in
 			// then
@@ -79,7 +79,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenWrongValueType_set_throwsTypeMismatchError() {
+	func testGivenWrongValueType_set_throwsTypeMismatchError() throws {
 		// when
 		XCTAssertThrowsError(try restriction.set(attribute: Me.substringAttribute, to: 1 as Any)) { error in
 			// then
@@ -87,12 +87,12 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSubstringAttributeAndValidValue_set_setsCorrectValue() {
+	func testGivenSubstringAttributeAndValidValue_set_setsCorrectValue() throws {
 		// given
 		let expectedSubstring = "expected substring"
 
 		// when
-		try! restriction.set(attribute: Me.substringAttribute, to: expectedSubstring)
+		try restriction.set(attribute: Me.substringAttribute, to: expectedSubstring)
 
 		// then
 		XCTAssertEqual(restriction.substring, expectedSubstring)
@@ -100,7 +100,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	// MARK: - samplePasses
 
-	func testGivenSampleWithNonStringValueForGivenAttribute_samplePasses_throwsTypeMismatchError() {
+	func testGivenSampleWithNonStringValueForGivenAttribute_samplePasses_throwsTypeMismatchError() throws {
 		// given
 		let mockSample = SampleMock()
 		Given(mockSample, .value(of: .value(Me.restrictedAttribute), willReturn: 1 as Any))
@@ -112,18 +112,18 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		}
 	}
 
-	func testGivenSampleWithEmptyStringForRestrictedAttribute_samplePasses_returnsFalse() {
+	func testGivenSampleWithEmptyStringForRestrictedAttribute_samplePasses_returnsFalse() throws {
 		// given
 		let sample = SampleCreatorTestUtil.createSample(withValue: "", for: Me.restrictedAttribute)
 
 		// when
-		let contains = try! restriction.samplePasses(sample)
+		let contains = try restriction.samplePasses(sample)
 
 		// then
 		XCTAssertFalse(contains)
 	}
 
-	func testGivenSampleWithPartialSubstringMatchForRestrictedAttribute_samplePasses_returnsFalse() {
+	func testGivenSampleWithPartialSubstringMatchForRestrictedAttribute_samplePasses_returnsFalse() throws {
 		// given
 		let partialSubstring = "partial"
 		let substring = partialSubstring + "some other stuff"
@@ -131,70 +131,83 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		restriction.substring = substring
 
 		// when
-		let contains = try! restriction.samplePasses(sample)
+		let contains = try restriction.samplePasses(sample)
 
 		// then
 		XCTAssertFalse(contains)
 	}
 
-	func testGivenSampleWithExactMatchForRestrictedAttribute_samplePasses_returnsTrue() {
+	func testGivenSampleWithExactMatchForRestrictedAttribute_samplePasses_returnsTrue() throws {
 		// given
 		let substring = "exact match"
 		let sample = SampleCreatorTestUtil.createSample(withValue: substring, for: Me.restrictedAttribute)
 		restriction.substring = substring
 
 		// when
-		let contains = try! restriction.samplePasses(sample)
+		let contains = try restriction.samplePasses(sample)
 
 		// then
 		XCTAssert(contains)
 	}
 
-	func testGivenSampleThatStartsWithSubstringForRestrictedAttribute_samplePasses_returnsTrue() {
+	func testGivenSampleWithDifferentCaseMatchForRestrictedAttribute_samplePasses_returnsTrue() throws {
+		// given
+		let substring = "different case"
+		let sample = SampleCreatorTestUtil.createSample(withValue: substring.uppercased(), for: Me.restrictedAttribute)
+		restriction.substring = substring
+
+		// when
+		let contains = try restriction.samplePasses(sample)
+
+		// then
+		XCTAssert(contains)
+	}
+
+	func testGivenSampleThatStartsWithSubstringForRestrictedAttribute_samplePasses_returnsTrue() throws {
 		// given
 		let substring = "prefix "
 		let sample = SampleCreatorTestUtil.createSample(withValue: substring + " some other stuff", for: Me.restrictedAttribute)
 		restriction.substring = substring
 
 		// when
-		let contains = try! restriction.samplePasses(sample)
+		let contains = try restriction.samplePasses(sample)
 
 		// then
 		XCTAssert(contains)
 	}
 
-	func testGivenSampleThatEndsWithSubstringForRestrictedAttribute_samplePasses_returnsTrue() {
+	func testGivenSampleThatEndsWithSubstringForRestrictedAttribute_samplePasses_returnsTrue() throws {
 		// given
 		let substring = "suffix"
 		let sample = SampleCreatorTestUtil.createSample(withValue: "some other stuff" + substring, for: Me.restrictedAttribute)
 		restriction.substring = substring
 
 		// when
-		let contains = try! restriction.samplePasses(sample)
+		let contains = try restriction.samplePasses(sample)
 
 		// then
 		XCTAssert(contains)
 	}
 
-	func testGivenSampleWithValueAndEmptySubstringForRestrictedAttribute_samplePasses_returnsFalse() {
+	func testGivenSampleWithValueAndEmptySubstringForRestrictedAttribute_samplePasses_returnsFalse() throws {
 		// given
 		let sample = SampleCreatorTestUtil.createSample(withValue: "some stuff", for: Me.restrictedAttribute)
 		restriction.substring = ""
 
 		// when
-		let contains = try! restriction.samplePasses(sample)
+		let contains = try restriction.samplePasses(sample)
 
 		// then
 		XCTAssertFalse(contains)
 	}
 
-	func testGivenSampleWithNonEmptyStringThatDoesNotContainSubstringForRestrictedAttribute_samplePasses_returnsFalse() {
+	func testGivenSampleWithNonEmptyStringThatDoesNotContainSubstringForRestrictedAttribute_samplePasses_returnsFalse() throws {
 		// given
 		let sample = SampleCreatorTestUtil.createSample(withValue: "i am not empty", for: Me.restrictedAttribute)
 		restriction.substring = "this is definitely not contained in the text the sample has"
 
 		// when
-		let contains = try! restriction.samplePasses(sample)
+		let contains = try restriction.samplePasses(sample)
 
 		// then
 		XCTAssertFalse(contains)
@@ -226,7 +239,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	// MARK: - copy()
 
-	func test_copy_returnsCopy() {
+	func test_copy_returnsCopy() throws {
 		// when
 		let copy = restriction.copy()
 
@@ -240,7 +253,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	// MARK: - ==
 
-	func testGivenSameObjectTwice_equalToOperator_returnsTrue() {
+	func testGivenSameObjectTwice_equalToOperator_returnsTrue() throws {
 		// when
 		let equal = restriction == restriction
 
@@ -248,7 +261,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
-	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() {
+	func testGivenSameClassWithDifferentAttributes_equalToOperator_returnsFalse() throws {
 		// given
 		let other = ContainsStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
 
@@ -259,7 +272,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToOperator_returnsFalse() {
+	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToOperator_returnsFalse() throws {
 		// given
 		let other = ContainsStringAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
@@ -272,7 +285,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameMatcherTypeWithAllSameAttributes_equalToOperator_returnsTrue() {
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalToOperator_returnsTrue() throws {
 		// given
 		let other = ContainsStringAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
@@ -287,7 +300,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	// MARK: - equalTo(attributed:)
 
-	func testGivenOtherOfDifferentTypes_equalToAttributed_returnsFalse() {
+	func testGivenOtherOfDifferentTypes_equalToAttributed_returnsFalse() throws {
 		// given
 		let otherAttributed: Attributed = SameDatesSubQueryMatcher()
 
@@ -298,7 +311,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameObjectTwice_equalToAttributed_returnsTrue() {
+	func testGivenSameObjectTwice_equalToAttributed_returnsTrue() throws {
 		// when
 		let equal = restriction.equalTo(restriction as Attributed)
 
@@ -306,7 +319,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
-	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() {
+	func testGivenSameClassWithDifferentAttributes_equalToAttributed_returnsFalse() throws {
 		// given
 		let otherAttributed: Attributed = ContainsStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
 
@@ -317,7 +330,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToAttributed_returnsFalse() {
+	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToAttributed_returnsFalse() throws {
 		// given
 		let otherAttributed: Attributed = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, substring: restriction.substring + "other stuff")
 
@@ -328,7 +341,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameMatcherTypeWithAllSameAttributes_equalToAttributed_returnsTrue() {
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalToAttributed_returnsTrue() throws {
 		// given
 		let otherAttributed: Attributed = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
@@ -341,7 +354,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	// MARK: - equalTo(restriction:)
 
-	func testGivenOtherOfDifferentTypes_equalToRestriction_returnsFalse() {
+	func testGivenOtherOfDifferentTypes_equalToRestriction_returnsFalse() throws {
 		// given
 		let otherAttributed: AttributeRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
@@ -352,7 +365,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameObjectTwice_equalToRestriction_returnsTrue() {
+	func testGivenSameObjectTwice_equalToRestriction_returnsTrue() throws {
 		// when
 		let equal = restriction.equalTo(restriction as AttributeRestriction)
 
@@ -360,7 +373,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
-	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() {
+	func testGivenSameClassWithDifferentAttributes_equalToRestriction_returnsFalse() throws {
 		// given
 		let otherAttributed: AttributeRestriction = ContainsStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
 
@@ -371,7 +384,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToRestriction_returnsFalse() {
+	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalToRestriction_returnsFalse() throws {
 		// given
 		let otherAttributed: AttributeRestriction = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute, substring: restriction.substring + "other stuff")
 
@@ -382,7 +395,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameMatcherTypeWithAllSameAttributes_equalToRestriction_returnsTrue() {
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalToRestriction_returnsTrue() throws {
 		// given
 		let otherAttributed: AttributeRestriction = ContainsStringAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
@@ -395,7 +408,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 
 	// MARK: - equalTo()
 
-	func testGivenSameObjectTwice_equalTo_returnsTrue() {
+	func testGivenSameObjectTwice_equalTo_returnsTrue() throws {
 		// when
 		let equal = restriction.equalTo(restriction)
 
@@ -403,7 +416,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssert(equal)
 	}
 
-	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() {
+	func testGivenSameClassWithDifferentAttributes_equalTo_returnsFalse() throws {
 		// given
 		let other = ContainsStringAttributeRestriction(restrictedAttribute: TextAttribute(name: "not the same attribute"))
 
@@ -414,7 +427,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalTo_returnsFalse() {
+	func testGivenSameClassWithSameAttributeButDifferentSubstrings_equalTo_returnsFalse() throws {
 		// given
 		let other = ContainsStringAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
@@ -427,7 +440,7 @@ final class ContainsStringAttributeRestrictionUnitTests: UnitTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() {
+	func testGivenSameMatcherTypeWithAllSameAttributes_equalTo_returnsTrue() throws {
 		// given
 		let other = ContainsStringAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,

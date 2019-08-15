@@ -66,7 +66,7 @@ public final class ContainsStringAttributeRestriction: AnyAttributeRestriction, 
 		guard let value = sampleValue as? String else {
 			throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: sampleValue))
 		}
-		return value.contains(substring)
+		return value.localizedCaseInsensitiveContains(substring)
 	}
 
 	public override func copy() -> AttributeRestriction {
