@@ -38,9 +38,13 @@ public final class RecordActivityTableViewController: UITableViewController {
 	private final var coachMarksDataSourceAndDelegate: DefaultCoachMarksDataSourceAndDelegate!
 	private final lazy var coachMarksInfo: [CoachMarkInfo] = [
 		CoachMarkInfo(
-			hint: "Tap the + button to create new activities. You can also type the name of a new activity in the searchh bar and long press the + button to quickly create and start it.",
+			hint: "Tap the + button to create new activities. You can also type the name of a new activity in the search bar and long press the + button to quickly create and start it.",
 			useArrow: true,
 			view: { return self.navigationItem.rightBarButtonItems?[0].value(forKey: "view") as? UIView }),
+		CoachMarkInfo(
+			hint: "You can filter on the name of an activity, its description or its tags.",
+			useArrow: true,
+			view: { return self.searchController.searchBar }),
 		CoachMarkInfo(
 			hint: "This is the name of the activity.",
 			useArrow: true,
