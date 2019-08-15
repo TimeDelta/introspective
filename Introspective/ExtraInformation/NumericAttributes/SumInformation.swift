@@ -46,7 +46,17 @@ public final class SumInformation: AnyInformation {
 		if attribute is DurationAttribute {
 			let filteredSamples = try filterSamples(samples, as: Duration.self)
 			if filteredSamples.count == 0 { return "No samples match filter" }
-			return try getSumOfDurationAttribute(filteredSamples).description
+			let total = try getSumOfDurationAttribute(filteredSamples)
+			let numHours = total.inUnit(.hour)
+			var additionalText = ""
+			if numHours > 24 {
+				let numFormatter = NumberFormatter()
+				numFormatter.numberStyle = .decimal
+				numFormatter.maximumFractionDigits = 1
+				let hoursString = numFormatter.string(from: NSNumber(value: numHours))!
+				additionalText = " (\(hoursString)h)"
+			}
+			return total.description + additionalText
 		}
 
 		if samples.count == 0 {

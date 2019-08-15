@@ -178,7 +178,6 @@ final class SumInformationFunctionalTests: FunctionalTest {
 		let attribute = DurationAttribute()
 		let date = Date()
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
-			Duration(start: date, end: date + 4.days),
 			Duration(start: date, end: date + 5.hours),
 			Duration(start: date, end: date + 6.minutes),
 			Duration(start: date, end: date + 7.seconds),
@@ -189,15 +188,14 @@ final class SumInformationFunctionalTests: FunctionalTest {
 		let sum = try information.compute(forSamples: samples)
 
 		// then
-		XCTAssertEqual(sum, "4d 5:06:07")
+		XCTAssertEqual(sum, "5:06:07")
 	}
 
 	func testGivenOptionalDurationAttributeWithSomeSamplesHavingNilValue_compute_returnsCorrectValue() throws {
 		// given
-		let attribute = DurationAttribute()
+		let attribute = DurationAttribute(optional: true)
 		let date = Date()
 		let samples = SampleCreatorTestUtil.createSamples(withValues: [
-			Duration(start: date, end: date + 4.days),
 			nil, nil,
 			Duration(start: date, end: date + 5.hours),
 			Duration(start: date, end: date + 6.minutes),
@@ -210,7 +208,26 @@ final class SumInformationFunctionalTests: FunctionalTest {
 		let sum = try information.compute(forSamples: samples)
 
 		// then
-		XCTAssertEqual(sum, "4d 5:06:07")
+		XCTAssertEqual(sum, "5:06:07")
+	}
+
+	func testGivenDurationAttributeWithTotalMoreThanOneDay_compute_returnsTotalPlusNumberOfHoursInParentheses() throws {
+		// given
+		let attribute = DurationAttribute()
+		let date = Date()
+		let samples = SampleCreatorTestUtil.createSamples(withValues: [
+			Duration(start: date, end: date + 4.days),
+			Duration(start: date, end: date + 5.hours),
+			Duration(start: date, end: date + 6.minutes),
+			Duration(start: date, end: date + 7.seconds),
+		], for: attribute)
+		let information = SumInformation(attribute)
+
+		// when
+		let sum = try information.compute(forSamples: samples)
+
+		// then
+		assertThat(sum, equalTo("4d 5:06:07 (101.1h)"))
 	}
 
 	func testGivenUnknownAttributeTypeWithNonEmptySampleArray_compute_throwsUnknownAttributeError() throws {
