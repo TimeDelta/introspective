@@ -178,8 +178,8 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 			log.error("Received groupDefinitionEdited notification when grouper was not AdvancedSampleGrouper")
 			return
 		}
-		if let newDefinition: GroupDefinition = value(for: .groupDefinition, from: notification) {
-			advancedGrouper.groupDefinitions[editedGroupDefinitionIndex] = newDefinition
+		if let newDefinition: GroupDefinition? = value(for: .groupDefinition, from: notification) {
+			advancedGrouper.groupDefinitions[editedGroupDefinitionIndex] = newDefinition!
 			tableView.reloadData()
 		}
 		updateDoneButtonState()
