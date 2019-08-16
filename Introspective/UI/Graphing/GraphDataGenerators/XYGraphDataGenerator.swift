@@ -212,7 +212,7 @@ public class XYGraphDataGenerator {
 
 	final func populateColors(_ number: Int) {
 		for i in 0 ..< number {
-			let hue = CGFloat((Double(i) / Double(number)) * 360.0)
+			let hue = CGFloat(Double(i) / Double(number))
 			let brightness = CGFloat(Double.random(in: 0.6 ... 1.0))
 			let saturation = CGFloat(Double.random(in: 0.6 ... 1.0))
 			colors.append(UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: 1))
