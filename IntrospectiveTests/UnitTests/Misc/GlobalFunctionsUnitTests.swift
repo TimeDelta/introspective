@@ -194,7 +194,7 @@ final class GlobalFunctionsUnitTests: UnitTest {
 		}
 	}
 
-	// MARK - copyArray()
+	// MARK: - copyArray()
 
 	func test_copyArray_returnsArrayThatModifyingDoesNotAffectOriginal() {
 		// given
