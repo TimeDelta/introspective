@@ -140,6 +140,9 @@ public class XYGraphDataGenerator {
 		sortedXValues: [(groupValue: Any, sampleValue: Any)])
 	throws -> GraphData {
 		var graphData = GraphData()
+		if colors.count == 0 {
+			populateColors(yInformation.count)
+		}
 		for yInformation in yInformation {
 			var seriesData = [[Any]]()
 			let yValues = try transform(sampleGroups: groups, information: yInformation)
