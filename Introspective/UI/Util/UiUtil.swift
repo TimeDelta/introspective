@@ -33,6 +33,12 @@ public protocol UiUtil {
 
 	func controller<Type: UIViewController>(named controllerName: String, from storyboardName: String, as: Type.Type) -> Type
 	func controller<Type: UIViewController>(named controllerName: String, from storyboard: UIStoryboard, as: Type.Type) -> Type
+	func tableViewCell<Type: UITableViewCell>(
+		from tableView: UITableView,
+		withIdentifier identifier: String,
+		for indexPath: IndexPath,
+		as: Type.Type)
+	-> Type
 	func documentPicker(docTypes: [String], in pickerMode: UIDocumentPickerMode) -> UIDocumentPickerViewController
 	func alert(title: String?, message: String?, preferredStyle: UIAlertController.Style) -> UIAlertController
 	func tableViewRowAction(
@@ -226,6 +232,15 @@ public final class UiUtilImpl: UiUtil {
 
 	public func controller<Type: UIViewController>(named controllerName: String, from storyboard: UIStoryboard, as: Type.Type) -> Type {
 		return storyboard.instantiateViewController(withIdentifier: controllerName) as! Type
+	}
+
+	public func tableViewCell<Type: UITableViewCell>(
+		from tableView: UITableView,
+		withIdentifier identifier: String,
+		for indexPath: IndexPath,
+		as: Type.Type)
+	-> Type {
+		return tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! Type
 	}
 
 	public func documentPicker(docTypes: [String], in pickerMode: UIDocumentPickerMode) -> UIDocumentPickerViewController {

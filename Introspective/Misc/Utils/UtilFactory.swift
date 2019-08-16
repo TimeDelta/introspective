@@ -25,6 +25,7 @@ public final class UtilFactory {
 	private static let realCoreDataSampleUtil = CoreDataSampleUtilImpl()
 	private static let realNotificationUtil = NotificationUtilImpl()
 	private static let realUserDefaultsUtil = UserDefaultsUtilImpl()
+	private static let realAsyncUtil = AsyncUtilImpl()
 
 	public final var calendar: CalendarUtil = Me.realCalendarUtil
 	public final var numericSample: NumericSampleUtil = Me.realHKQuantitySampleUtil
@@ -39,4 +40,5 @@ public final class UtilFactory {
 	public final var coreDataSample: CoreDataSampleUtil = Me.realCoreDataSampleUtil
 	public final var notification: NotificationUtil = Me.realNotificationUtil
 	public final var userDefaults: UserDefaultsUtil = Me.realUserDefaultsUtil
+	public final var async: AsyncUtil = Me.realAsyncUtil
 }

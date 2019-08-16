@@ -1,8 +1,8 @@
 //
-//  MedicationDoseEditorViewControllerMock.swift
+//  EditMoodTableViewControllerMock.swift
 //  IntrospectiveTests
 //
-//  Created by Bryan Nova on 8/12/19.
+//  Created by Bryan Nova on 8/16/19.
 //  Copyright © 2019 Bryan Nova. All rights reserved.
 //
 
@@ -10,10 +10,10 @@ import Foundation
 import SwiftyMocky
 @testable import Introspective
 
-// sourcery: mock = "MedicationDoseEditorViewController"
-public class MedicationDoseEditorViewControllerMock: UIViewController, MedicationDoseEditorViewController, Mock {
+// sourcery: mock = "EditMoodTableViewController"
+public class EditMoodTableViewControllerMock: UITableViewController, EditMoodTableViewController, Mock {
 
-// sourcery:inline:auto:MedicationDoseEditorViewControllerMock.autoMocked
+// sourcery:inline:auto:EditMoodTableViewControllerMock.autoMocked
     var matcher: Matcher = Matcher.default
     var stubbingPolicy: StubbingPolicy = .wrap
     var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
@@ -34,32 +34,25 @@ public class MedicationDoseEditorViewControllerMock: UIViewController, Medicatio
     }
 
 
-    public var medicationDose: MedicationDose? {
-		get {	invocations.append(.p_medicationDose_get); return __p_medicationDose ?? optionalGivenGetterValue(.p_medicationDose_get, "MedicationDoseEditorViewControllerMock - stub value for medicationDose was not defined") }
-		set {	invocations.append(.p_medicationDose_set(.value(newValue))); __p_medicationDose = newValue }
-	}
-	private var __p_medicationDose: (MedicationDose)?
-
-
-    public var medication: Medication! {
-		get {	invocations.append(.p_medication_get); return __p_medication ?? optionalGivenGetterValue(.p_medication_get, "MedicationDoseEditorViewControllerMock - stub value for medication was not defined") }
-		set {	invocations.append(.p_medication_set(.value(newValue))); __p_medication = newValue }
-	}
-	private var __p_medication: (Medication)?
-
-
     public var notificationToSendOnAccept: Notification.Name! {
-		get {	invocations.append(.p_notificationToSendOnAccept_get); return __p_notificationToSendOnAccept ?? optionalGivenGetterValue(.p_notificationToSendOnAccept_get, "MedicationDoseEditorViewControllerMock - stub value for notificationToSendOnAccept was not defined") }
+		get {	invocations.append(.p_notificationToSendOnAccept_get); return __p_notificationToSendOnAccept ?? optionalGivenGetterValue(.p_notificationToSendOnAccept_get, "EditMoodTableViewControllerMock - stub value for notificationToSendOnAccept was not defined") }
 		set {	invocations.append(.p_notificationToSendOnAccept_set(.value(newValue))); __p_notificationToSendOnAccept = newValue }
 	}
 	private var __p_notificationToSendOnAccept: (Notification.Name)?
 
 
     public var userInfoKey: UserInfoKey {
-		get {	invocations.append(.p_userInfoKey_get); return __p_userInfoKey ?? givenGetterValue(.p_userInfoKey_get, "MedicationDoseEditorViewControllerMock - stub value for userInfoKey was not defined") }
+		get {	invocations.append(.p_userInfoKey_get); return __p_userInfoKey ?? givenGetterValue(.p_userInfoKey_get, "EditMoodTableViewControllerMock - stub value for userInfoKey was not defined") }
 		set {	invocations.append(.p_userInfoKey_set(.value(newValue))); __p_userInfoKey = newValue }
 	}
 	private var __p_userInfoKey: (UserInfoKey)?
+
+
+    public var mood: Mood? {
+		get {	invocations.append(.p_mood_get); return __p_mood ?? optionalGivenGetterValue(.p_mood_get, "EditMoodTableViewControllerMock - stub value for mood was not defined") }
+		set {	invocations.append(.p_mood_set(.value(newValue))); __p_mood = newValue }
+	}
+	private var __p_mood: (Mood)?
 
 
 
@@ -68,39 +61,33 @@ public class MedicationDoseEditorViewControllerMock: UIViewController, Medicatio
 
 
     fileprivate enum MethodType {
-        case p_medicationDose_get
-		case p_medicationDose_set(Parameter<MedicationDose?>)
-        case p_medication_get
-		case p_medication_set(Parameter<Medication?>)
         case p_notificationToSendOnAccept_get
 		case p_notificationToSendOnAccept_set(Parameter<Notification.Name?>)
         case p_userInfoKey_get
 		case p_userInfoKey_set(Parameter<UserInfoKey>)
+        case p_mood_get
+		case p_mood_set(Parameter<Mood?>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
-            case (.p_medicationDose_get,.p_medicationDose_get): return true
-			case (.p_medicationDose_set(let left),.p_medicationDose_set(let right)): return Parameter<MedicationDose?>.compare(lhs: left, rhs: right, with: matcher)
-            case (.p_medication_get,.p_medication_get): return true
-			case (.p_medication_set(let left),.p_medication_set(let right)): return Parameter<Medication?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_notificationToSendOnAccept_get,.p_notificationToSendOnAccept_get): return true
 			case (.p_notificationToSendOnAccept_set(let left),.p_notificationToSendOnAccept_set(let right)): return Parameter<Notification.Name?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_userInfoKey_get,.p_userInfoKey_get): return true
 			case (.p_userInfoKey_set(let left),.p_userInfoKey_set(let right)): return Parameter<UserInfoKey>.compare(lhs: left, rhs: right, with: matcher)
+            case (.p_mood_get,.p_mood_get): return true
+			case (.p_mood_set(let left),.p_mood_set(let right)): return Parameter<Mood?>.compare(lhs: left, rhs: right, with: matcher)
             default: return false
             }
         }
 
         func intValue() -> Int {
             switch self {
-            case .p_medicationDose_get: return 0
-			case .p_medicationDose_set(let newValue): return newValue.intValue
-            case .p_medication_get: return 0
-			case .p_medication_set(let newValue): return newValue.intValue
             case .p_notificationToSendOnAccept_get: return 0
 			case .p_notificationToSendOnAccept_set(let newValue): return newValue.intValue
             case .p_userInfoKey_get: return 0
 			case .p_userInfoKey_set(let newValue): return newValue.intValue
+            case .p_mood_get: return 0
+			case .p_mood_set(let newValue): return newValue.intValue
             }
         }
     }
@@ -113,17 +100,14 @@ public class MedicationDoseEditorViewControllerMock: UIViewController, Medicatio
             super.init(products)
         }
 
-        public static func medicationDose(getter defaultValue: MedicationDose?...) -> PropertyStub {
-            return Given(method: .p_medicationDose_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func medication(getter defaultValue: Medication?...) -> PropertyStub {
-            return Given(method: .p_medication_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
-        }
         public static func notificationToSendOnAccept(getter defaultValue: Notification.Name?...) -> PropertyStub {
             return Given(method: .p_notificationToSendOnAccept_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func userInfoKey(getter defaultValue: UserInfoKey...) -> PropertyStub {
             return Given(method: .p_userInfoKey_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func mood(getter defaultValue: Mood?...) -> PropertyStub {
+            return Given(method: .p_mood_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
     }
@@ -131,14 +115,12 @@ public class MedicationDoseEditorViewControllerMock: UIViewController, Medicatio
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static var medicationDose: Verify { return Verify(method: .p_medicationDose_get) }
-		public static func medicationDose(set newValue: Parameter<MedicationDose?>) -> Verify { return Verify(method: .p_medicationDose_set(newValue)) }
-        public static var medication: Verify { return Verify(method: .p_medication_get) }
-		public static func medication(set newValue: Parameter<Medication?>) -> Verify { return Verify(method: .p_medication_set(newValue)) }
         public static var notificationToSendOnAccept: Verify { return Verify(method: .p_notificationToSendOnAccept_get) }
 		public static func notificationToSendOnAccept(set newValue: Parameter<Notification.Name?>) -> Verify { return Verify(method: .p_notificationToSendOnAccept_set(newValue)) }
         public static var userInfoKey: Verify { return Verify(method: .p_userInfoKey_get) }
 		public static func userInfoKey(set newValue: Parameter<UserInfoKey>) -> Verify { return Verify(method: .p_userInfoKey_set(newValue)) }
+        public static var mood: Verify { return Verify(method: .p_mood_get) }
+		public static func mood(set newValue: Parameter<Mood?>) -> Verify { return Verify(method: .p_mood_set(newValue)) }
     }
 
     public struct Perform {

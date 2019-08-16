@@ -12,7 +12,12 @@ import Foundation
 public class SampleCreatorTestUtil {
 
 	/// Create a mock sample
-	static func createSample(startDate: Date? = nil, endDate: Date? = nil, withAttributes passedAttributes: [Attribute] = [Attribute]()) -> AnySample {
+	/// - Note: This will automatically add at least a start date attribute if no date attribute exists
+	static func createSample(
+		startDate: Date? = nil,
+		endDate: Date? = nil,
+		withAttributes passedAttributes: [Attribute] = [Attribute]())
+	-> AnySample {
 		let sample = AnySample()
 		var dates = [DateType: Date]()
 		var finalAttributes = passedAttributes
@@ -35,11 +40,31 @@ public class SampleCreatorTestUtil {
 		return sample
 	}
 
+	// Create a mock sample without a date attribute
+	static func createSampleWithoutDateAttribute(withAttributes attributes: [Attribute]) -> AnySample {
+		let sample = AnySample()
+		sample.attributes = attributes
+		return sample
+	}
+
 	/// Create a single sample with the specified value for the given attribute
 	static func createSample<ValueType: Any>(withValue value: ValueType?, for attribute: Attribute, otherAttributes: [Attribute] = [Attribute]()) -> AnySample {
 		var finalAttributes = otherAttributes
 		finalAttributes.append(attribute)
 		let sample = SampleCreatorTestUtil.createSample(withAttributes: finalAttributes)
+		try! sample.set(attribute: attribute, to: value)
+		return sample
+	}
+
+	/// Create a single sample without a date attribute with the specified value for the given attribute
+	static func createSampleWithoutDateAttribute<ValueType: Any>(
+		withValue value: ValueType?,
+		for attribute: Attribute,
+		otherAttributes: [Attribute] = [Attribute]())
+	-> AnySample {
+		var finalAttributes = otherAttributes
+		finalAttributes.append(attribute)
+		let sample = SampleCreatorTestUtil.createSampleWithoutDateAttribute(withAttributes: finalAttributes)
 		try! sample.set(attribute: attribute, to: value)
 		return sample
 	}
@@ -65,10 +90,26 @@ public class SampleCreatorTestUtil {
 	}
 
 	/// Create a new sample for each given value, assigning the value to the given attribute
-	static func createSamples<ValueType: Any>(withValues values: [ValueType?], for attribute: Attribute, otherAttributes: [Attribute] = [Attribute]()) -> [AnySample] {
+	static func createSamples<ValueType: Any>(
+		withValues values: [ValueType?],
+		for attribute: Attribute,
+		otherAttributes: [Attribute] = [Attribute]())
+	-> [AnySample] {
 		var samples = [AnySample]()
 		for value in values {
 			samples.append(SampleCreatorTestUtil.createSample(withValue: value, for: attribute))
+		}
+		return samples
+	}
+
+	static func createSamplesWithoutDateAttribute<ValueType: Any>(
+		withValues values: [ValueType?],
+		for attribute: Attribute,
+		otherAttributes: [Attribute] = [Attribute]())
+	-> [AnySample] {
+		var samples = [AnySample]()
+		for value in values {
+			samples.append(SampleCreatorTestUtil.createSampleWithoutDateAttribute(withValue: value, for: attribute))
 		}
 		return samples
 	}
@@ -89,7 +130,11 @@ public class SampleCreatorTestUtil {
 		return samples
 	}
 
-	static func createSamples<ValueType: Any>(_ sampleValues: [(startDate: Date, value: ValueType?)], for attribute: Attribute, otherAttributes: [Attribute] = [Attribute]()) -> [AnySample] {
+	static func createSamples<ValueType: Any>(
+		_ sampleValues: [(startDate: Date, value: ValueType?)],
+		for attribute: Attribute,
+		otherAttributes: [Attribute] = [Attribute]())
+	-> [AnySample] {
 		var finalAttributes = otherAttributes
 		finalAttributes.append(attribute)
 		var samples = [AnySample]()

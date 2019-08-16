@@ -53,7 +53,7 @@
                                     <outlet property="keyValueLabel" destination="2S0-nB-LTp" id="BAW-m9-Quj"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="moodSampleCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="moodSampleCell" rowHeight="78" id="l1y-vP-wUp" customClass="MoodTableViewCell" customModule="Introspective" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="moodSampleCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="moodSampleCell" rowHeight="78" id="l1y-vP-wUp" customClass="MoodTableViewCellImpl" customModule="Introspective" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="116" width="375" height="78"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="l1y-vP-wUp" id="KGl-ux-7NW">

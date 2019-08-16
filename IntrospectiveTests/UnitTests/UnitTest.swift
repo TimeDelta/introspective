@@ -29,6 +29,7 @@ class UnitTest: Test {
 	var mockUiUtil: UiUtilMock!
 	var mockUserDefaultsUtil: UserDefaultsUtilMock!
 	var mockNotificationUtil: NotificationUtilMock!
+	var mockAsyncUtil: AsyncUtilMock!
 
 	var mockSampleFactory: SampleFactoryMock!
 	var mockQueryFactory: QueryFactoryMock!
@@ -38,6 +39,7 @@ class UnitTest: Test {
 	var mockSampleGrouperFactory: SampleGrouperFactoryMock!
 	var mockBooleanAlgebraFactory: BooleanAlgebraFactoryMock!
 	var mockAttributeRestrictionFactory: AttributeRestrictionFactoryMock!
+	var mockExtraInformationFactory: ExtraInformationFactoryMock!
 
 	override func setUp() {
 		super.setUp()
@@ -93,6 +95,9 @@ class UnitTest: Test {
 		mockAttributeRestrictionFactory = AttributeRestrictionFactoryMock()
 		Given(injectionProvider, .attributeRestrictionFactory(willReturn: mockAttributeRestrictionFactory))
 
+		mockExtraInformationFactory = ExtraInformationFactoryMock()
+		Given(injectionProvider, .extraInformationFactory(willReturn: mockExtraInformationFactory))
+
 		utilFactory = UtilFactory()
 		Given(injectionProvider, .utilFactory(willReturn: utilFactory))
 
@@ -128,5 +133,8 @@ class UnitTest: Test {
 
 		mockNotificationUtil = NotificationUtilMock()
 		utilFactory.notification = mockNotificationUtil
+
+		mockAsyncUtil = AsyncUtilMock()
+		utilFactory.async = mockAsyncUtil
 	}
 }

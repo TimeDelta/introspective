@@ -9,11 +9,18 @@
 import UIKit
 import Presentr
 
-public final class EditMoodTableViewController: UITableViewController {
+public protocol EditMoodTableViewController: UITableViewController {
+
+	var notificationToSendOnAccept: Notification.Name! { get set }
+	var userInfoKey: UserInfoKey { get set }
+	var mood: Mood? { get set }
+}
+
+public final class EditMoodTableViewControllerImpl: UITableViewController, EditMoodTableViewController {
 
 	// MARK: - Static Variables
 
-	private typealias Me = EditMoodTableViewController
+	private typealias Me = EditMoodTableViewControllerImpl
 
 	private static let timestampChanged = Notification.Name("moodTimestampChanged")
 	private static let noteChanged = Notification.Name("moodNoteChanged")

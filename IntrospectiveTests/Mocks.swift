@@ -72,6 +72,9 @@ import SourceryRuntime
 
 
 
+
+
+
 // MARK: - ATrackerActivityImporter
 open class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
@@ -1016,6 +1019,146 @@ open class ActivityQueryMock: ActivityQuery, Mock {
         }
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
+// MARK: - AsyncUtil
+open class AsyncUtilMock: AsyncUtil, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    open func run(qos: DispatchQoS.QoSClass, code: @escaping () -> Void) {
+        addInvocation(.m_run__qos_qoscode_code(Parameter<DispatchQoS.QoSClass>.value(`qos`), Parameter<() -> Void>.value(`code`)))
+		let perform = methodPerformValue(.m_run__qos_qoscode_code(Parameter<DispatchQoS.QoSClass>.value(`qos`), Parameter<() -> Void>.value(`code`))) as? (DispatchQoS.QoSClass, @escaping () -> Void) -> Void
+		perform?(`qos`, `code`)
+    }
+
+
+    fileprivate enum MethodType {
+        case m_run__qos_qoscode_code(Parameter<DispatchQoS.QoSClass>, Parameter<() -> Void>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_run__qos_qoscode_code(let lhsQos, let lhsCode), .m_run__qos_qoscode_code(let rhsQos, let rhsCode)):
+                guard Parameter.compare(lhs: lhsQos, rhs: rhsQos, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsCode, rhs: rhsCode, with: matcher) else { return false } 
+                return true 
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_run__qos_qoscode_code(p0, p1): return p0.intValue + p1.intValue
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func run(qos: Parameter<DispatchQoS.QoSClass>, code: Parameter<() -> Void>) -> Verify { return Verify(method: .m_run__qos_qoscode_code(`qos`, `code`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func run(qos: Parameter<DispatchQoS.QoSClass>, code: Parameter<() -> Void>, perform: @escaping (DispatchQoS.QoSClass, @escaping () -> Void) -> Void) -> Perform {
+            return Perform(method: .m_run__qos_qoscode_code(`qos`, `code`), performs: perform)
         }
     }
 
@@ -5951,6 +6094,231 @@ open class ExtraInformationMock: ExtraInformation, Mock {
         }
         public static func equalTo(_ other: Parameter<ExtraInformation>, perform: @escaping (ExtraInformation) -> Void) -> Perform {
             return Perform(method: .m_equalTo__other(`other`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
+// MARK: - ExtraInformationFactory
+open class ExtraInformationFactoryMock: ExtraInformationFactory, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    open func getApplicableInformationTypes(forAttribute attribute: Attribute) -> [ExtraInformation.Type] {
+        addInvocation(.m_getApplicableInformationTypes__forAttribute_attribute(Parameter<Attribute>.value(`attribute`)))
+		let perform = methodPerformValue(.m_getApplicableInformationTypes__forAttribute_attribute(Parameter<Attribute>.value(`attribute`))) as? (Attribute) -> Void
+		perform?(`attribute`)
+		var __value: [ExtraInformation.Type]
+		do {
+		    __value = try methodReturnValue(.m_getApplicableInformationTypes__forAttribute_attribute(Parameter<Attribute>.value(`attribute`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for getApplicableInformationTypes(forAttribute attribute: Attribute). Use given")
+			Failure("Stub return value not specified for getApplicableInformationTypes(forAttribute attribute: Attribute). Use given")
+		}
+		return __value
+    }
+
+    open func getApplicableNumericInformationTypes(forAttribute attribute: Attribute) -> [ExtraInformation.Type] {
+        addInvocation(.m_getApplicableNumericInformationTypes__forAttribute_attribute(Parameter<Attribute>.value(`attribute`)))
+		let perform = methodPerformValue(.m_getApplicableNumericInformationTypes__forAttribute_attribute(Parameter<Attribute>.value(`attribute`))) as? (Attribute) -> Void
+		perform?(`attribute`)
+		var __value: [ExtraInformation.Type]
+		do {
+		    __value = try methodReturnValue(.m_getApplicableNumericInformationTypes__forAttribute_attribute(Parameter<Attribute>.value(`attribute`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for getApplicableNumericInformationTypes(forAttribute attribute: Attribute). Use given")
+			Failure("Stub return value not specified for getApplicableNumericInformationTypes(forAttribute attribute: Attribute). Use given")
+		}
+		return __value
+    }
+
+    open func initInformation(		_ informationType: ExtraInformation.Type,		_ attribute: Attribute) -> ExtraInformation {
+        addInvocation(.m_initInformation__informationType_attribute(Parameter<ExtraInformation.Type>.value(`informationType`), Parameter<Attribute>.value(`attribute`)))
+		let perform = methodPerformValue(.m_initInformation__informationType_attribute(Parameter<ExtraInformation.Type>.value(`informationType`), Parameter<Attribute>.value(`attribute`))) as? (ExtraInformation.Type, Attribute) -> Void
+		perform?(`informationType`, `attribute`)
+		var __value: ExtraInformation
+		do {
+		    __value = try methodReturnValue(.m_initInformation__informationType_attribute(Parameter<ExtraInformation.Type>.value(`informationType`), Parameter<Attribute>.value(`attribute`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for initInformation(  _ informationType: ExtraInformation.Type,  _ attribute: Attribute). Use given")
+			Failure("Stub return value not specified for initInformation(  _ informationType: ExtraInformation.Type,  _ attribute: Attribute). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_getApplicableInformationTypes__forAttribute_attribute(Parameter<Attribute>)
+        case m_getApplicableNumericInformationTypes__forAttribute_attribute(Parameter<Attribute>)
+        case m_initInformation__informationType_attribute(Parameter<ExtraInformation.Type>, Parameter<Attribute>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_getApplicableInformationTypes__forAttribute_attribute(let lhsAttribute), .m_getApplicableInformationTypes__forAttribute_attribute(let rhsAttribute)):
+                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
+                return true 
+            case (.m_getApplicableNumericInformationTypes__forAttribute_attribute(let lhsAttribute), .m_getApplicableNumericInformationTypes__forAttribute_attribute(let rhsAttribute)):
+                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
+                return true 
+            case (.m_initInformation__informationType_attribute(let lhsInformationtype, let lhsAttribute), .m_initInformation__informationType_attribute(let rhsInformationtype, let rhsAttribute)):
+                guard Parameter.compare(lhs: lhsInformationtype, rhs: rhsInformationtype, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
+                return true 
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_getApplicableInformationTypes__forAttribute_attribute(p0): return p0.intValue
+            case let .m_getApplicableNumericInformationTypes__forAttribute_attribute(p0): return p0.intValue
+            case let .m_initInformation__informationType_attribute(p0, p1): return p0.intValue + p1.intValue
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func getApplicableInformationTypes(forAttribute attribute: Parameter<Attribute>, willReturn: [ExtraInformation.Type]...) -> MethodStub {
+            return Given(method: .m_getApplicableInformationTypes__forAttribute_attribute(`attribute`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func getApplicableNumericInformationTypes(forAttribute attribute: Parameter<Attribute>, willReturn: [ExtraInformation.Type]...) -> MethodStub {
+            return Given(method: .m_getApplicableNumericInformationTypes__forAttribute_attribute(`attribute`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func initInformation(_ informationType: Parameter<ExtraInformation.Type>, _ attribute: Parameter<Attribute>, willReturn: ExtraInformation...) -> MethodStub {
+            return Given(method: .m_initInformation__informationType_attribute(`informationType`, `attribute`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func getApplicableInformationTypes(forAttribute attribute: Parameter<Attribute>, willProduce: (Stubber<[ExtraInformation.Type]>) -> Void) -> MethodStub {
+            let willReturn: [[ExtraInformation.Type]] = []
+			let given: Given = { return Given(method: .m_getApplicableInformationTypes__forAttribute_attribute(`attribute`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: ([ExtraInformation.Type]).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func getApplicableNumericInformationTypes(forAttribute attribute: Parameter<Attribute>, willProduce: (Stubber<[ExtraInformation.Type]>) -> Void) -> MethodStub {
+            let willReturn: [[ExtraInformation.Type]] = []
+			let given: Given = { return Given(method: .m_getApplicableNumericInformationTypes__forAttribute_attribute(`attribute`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: ([ExtraInformation.Type]).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func initInformation(_ informationType: Parameter<ExtraInformation.Type>, _ attribute: Parameter<Attribute>, willProduce: (Stubber<ExtraInformation>) -> Void) -> MethodStub {
+            let willReturn: [ExtraInformation] = []
+			let given: Given = { return Given(method: .m_initInformation__informationType_attribute(`informationType`, `attribute`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (ExtraInformation).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func getApplicableInformationTypes(forAttribute attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_getApplicableInformationTypes__forAttribute_attribute(`attribute`))}
+        public static func getApplicableNumericInformationTypes(forAttribute attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_getApplicableNumericInformationTypes__forAttribute_attribute(`attribute`))}
+        public static func initInformation(_ informationType: Parameter<ExtraInformation.Type>, _ attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_initInformation__informationType_attribute(`informationType`, `attribute`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func getApplicableInformationTypes(forAttribute attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
+            return Perform(method: .m_getApplicableInformationTypes__forAttribute_attribute(`attribute`), performs: perform)
+        }
+        public static func getApplicableNumericInformationTypes(forAttribute attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
+            return Perform(method: .m_getApplicableNumericInformationTypes__forAttribute_attribute(`attribute`), performs: perform)
+        }
+        public static func initInformation(_ informationType: Parameter<ExtraInformation.Type>, _ attribute: Parameter<Attribute>, perform: @escaping (ExtraInformation.Type, Attribute) -> Void) -> Perform {
+            return Perform(method: .m_initInformation__informationType_attribute(`informationType`, `attribute`), performs: perform)
         }
     }
 
@@ -15313,12 +15681,12 @@ open class TransactionMock: Transaction, Mock {
 		return __value
     }
 
-    open func delete(_ object: NSManagedObject) throws {
-        addInvocation(.m_delete__object(Parameter<NSManagedObject>.value(`object`)))
-		let perform = methodPerformValue(.m_delete__object(Parameter<NSManagedObject>.value(`object`))) as? (NSManagedObject) -> Void
-		perform?(`object`)
+    open func delete(_ coreDataObject: CoreDataObject) throws {
+        addInvocation(.m_delete__coreDataObject(Parameter<CoreDataObject>.value(`coreDataObject`)))
+		let perform = methodPerformValue(.m_delete__coreDataObject(Parameter<CoreDataObject>.value(`coreDataObject`))) as? (CoreDataObject) -> Void
+		perform?(`coreDataObject`)
 		do {
-		    _ = try methodReturnValue(.m_delete__object(Parameter<NSManagedObject>.value(`object`))).casted() as Void
+		    _ = try methodReturnValue(.m_delete__coreDataObject(Parameter<CoreDataObject>.value(`coreDataObject`))).casted() as Void
 		} catch MockError.notStubed {
 			// do nothing
 		} catch {
@@ -15375,7 +15743,7 @@ open class TransactionMock: Transaction, Mock {
         case m_batchUpdateRequest__for_type(Parameter<GenericAttribute>)
         case m_batchUpdate__request(Parameter<NSBatchUpdateRequest>)
         case m_pull__savedObject_savedObject(Parameter<GenericAttribute>)
-        case m_delete__object(Parameter<NSManagedObject>)
+        case m_delete__coreDataObject(Parameter<CoreDataObject>)
         case m_deleteAll__objects(Parameter<[NSManagedObject]>)
         case m_deleteAll__objectType(Parameter<NSManagedObject.Type>)
         case m_deleteAll__entityName(Parameter<String>)
@@ -15403,8 +15771,8 @@ open class TransactionMock: Transaction, Mock {
             case (.m_pull__savedObject_savedObject(let lhsSavedobject), .m_pull__savedObject_savedObject(let rhsSavedobject)):
                 guard Parameter.compare(lhs: lhsSavedobject, rhs: rhsSavedobject, with: matcher) else { return false } 
                 return true 
-            case (.m_delete__object(let lhsObject), .m_delete__object(let rhsObject)):
-                guard Parameter.compare(lhs: lhsObject, rhs: rhsObject, with: matcher) else { return false } 
+            case (.m_delete__coreDataObject(let lhsCoredataobject), .m_delete__coreDataObject(let rhsCoredataobject)):
+                guard Parameter.compare(lhs: lhsCoredataobject, rhs: rhsCoredataobject, with: matcher) else { return false } 
                 return true 
             case (.m_deleteAll__objects(let lhsObjects), .m_deleteAll__objects(let rhsObjects)):
                 guard Parameter.compare(lhs: lhsObjects, rhs: rhsObjects, with: matcher) else { return false } 
@@ -15429,7 +15797,7 @@ open class TransactionMock: Transaction, Mock {
             case let .m_batchUpdateRequest__for_type(p0): return p0.intValue
             case let .m_batchUpdate__request(p0): return p0.intValue
             case let .m_pull__savedObject_savedObject(p0): return p0.intValue
-            case let .m_delete__object(p0): return p0.intValue
+            case let .m_delete__coreDataObject(p0): return p0.intValue
             case let .m_deleteAll__objects(p0): return p0.intValue
             case let .m_deleteAll__objectType(p0): return p0.intValue
             case let .m_deleteAll__entityName(p0): return p0.intValue
@@ -15528,12 +15896,12 @@ open class TransactionMock: Transaction, Mock {
 			willProduce(stubber)
 			return given
         }
-        public static func delete(_ object: Parameter<NSManagedObject>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_delete__object(`object`), products: willThrow.map({ StubProduct.throw($0) }))
+        public static func delete(_ coreDataObject: Parameter<CoreDataObject>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_delete__coreDataObject(`coreDataObject`), products: willThrow.map({ StubProduct.throw($0) }))
         }
-        public static func delete(_ object: Parameter<NSManagedObject>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+        public static func delete(_ coreDataObject: Parameter<CoreDataObject>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
             let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_delete__object(`object`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let given: Given = { return Given(method: .m_delete__coreDataObject(`coreDataObject`), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Void).self)
 			willProduce(stubber)
 			return given
@@ -15581,7 +15949,7 @@ open class TransactionMock: Transaction, Mock {
         public static func batchUpdateRequest<Type>(for type: Parameter<Type.Type>) -> Verify where Type:CoreDataObject { return Verify(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()))}
         public static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>) -> Verify { return Verify(method: .m_batchUpdate__request(`request`))}
         public static func pull<Type>(savedObject: Parameter<Type>) -> Verify where Type:NSManagedObject { return Verify(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()))}
-        public static func delete(_ object: Parameter<NSManagedObject>) -> Verify { return Verify(method: .m_delete__object(`object`))}
+        public static func delete(_ coreDataObject: Parameter<CoreDataObject>) -> Verify { return Verify(method: .m_delete__coreDataObject(`coreDataObject`))}
         public static func deleteAll(_ objects: Parameter<[NSManagedObject]>) -> Verify { return Verify(method: .m_deleteAll__objects(`objects`))}
         public static func deleteAll(_ objectType: Parameter<NSManagedObject.Type>) -> Verify { return Verify(method: .m_deleteAll__objectType(`objectType`))}
         public static func deleteAll(_ entityName: Parameter<String>) -> Verify { return Verify(method: .m_deleteAll__entityName(`entityName`))}
@@ -15615,8 +15983,8 @@ open class TransactionMock: Transaction, Mock {
         public static func pull<Type>(savedObject: Parameter<Type>, perform: @escaping (Type) -> Void) -> Perform where Type:NSManagedObject {
             return Perform(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), performs: perform)
         }
-        public static func delete(_ object: Parameter<NSManagedObject>, perform: @escaping (NSManagedObject) -> Void) -> Perform {
-            return Perform(method: .m_delete__object(`object`), performs: perform)
+        public static func delete(_ coreDataObject: Parameter<CoreDataObject>, perform: @escaping (CoreDataObject) -> Void) -> Perform {
+            return Perform(method: .m_delete__coreDataObject(`coreDataObject`), performs: perform)
         }
         public static func deleteAll(_ objects: Parameter<[NSManagedObject]>, perform: @escaping ([NSManagedObject]) -> Void) -> Perform {
             return Perform(method: .m_deleteAll__objects(`objects`), performs: perform)
@@ -15838,6 +16206,20 @@ open class UiUtilMock: UiUtil, Mock {
 		return __value
     }
 
+    open func tableViewCell<Type: UITableViewCell>(		from tableView: UITableView,		withIdentifier identifier: String,		for indexPath: IndexPath,		as: Type.Type) -> Type {
+        addInvocation(.m_tableViewCell__from_tableViewwithIdentifier_identifierfor_indexPathas_as(Parameter<UITableView>.value(`tableView`), Parameter<String>.value(`identifier`), Parameter<IndexPath>.value(`indexPath`), Parameter<Type.Type>.value(`as`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_tableViewCell__from_tableViewwithIdentifier_identifierfor_indexPathas_as(Parameter<UITableView>.value(`tableView`), Parameter<String>.value(`identifier`), Parameter<IndexPath>.value(`indexPath`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())) as? (UITableView, String, IndexPath, Type.Type) -> Void
+		perform?(`tableView`, `identifier`, `indexPath`, `as`)
+		var __value: Type
+		do {
+		    __value = try methodReturnValue(.m_tableViewCell__from_tableViewwithIdentifier_identifierfor_indexPathas_as(Parameter<UITableView>.value(`tableView`), Parameter<String>.value(`identifier`), Parameter<IndexPath>.value(`indexPath`), Parameter<Type.Type>.value(`as`).wrapAsGeneric())).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for tableViewCell<Type: UITableViewCell>(  from tableView: UITableView,  withIdentifier identifier: String,  for indexPath: IndexPath,  as: Type.Type). Use given")
+			Failure("Stub return value not specified for tableViewCell<Type: UITableViewCell>(  from tableView: UITableView,  withIdentifier identifier: String,  for indexPath: IndexPath,  as: Type.Type). Use given")
+		}
+		return __value
+    }
+
     open func documentPicker(docTypes: [String], in pickerMode: UIDocumentPickerMode) -> UIDocumentPickerViewController {
         addInvocation(.m_documentPicker__docTypes_docTypesin_pickerMode(Parameter<[String]>.value(`docTypes`), Parameter<UIDocumentPickerMode>.value(`pickerMode`)))
 		let perform = methodPerformValue(.m_documentPicker__docTypes_docTypesin_pickerMode(Parameter<[String]>.value(`docTypes`), Parameter<UIDocumentPickerMode>.value(`pickerMode`))) as? ([String], UIDocumentPickerMode) -> Void
@@ -15954,6 +16336,7 @@ open class UiUtilMock: UiUtil, Mock {
         case m_info__info(Parameter<[UserInfoKey: Any]>)
         case m_controller__named_controllerNamefrom_storyboardNameas_as(Parameter<String>, Parameter<String>, Parameter<GenericAttribute>)
         case m_controller__named_controllerNamefrom_storyboardas_as(Parameter<String>, Parameter<UIStoryboard>, Parameter<GenericAttribute>)
+        case m_tableViewCell__from_tableViewwithIdentifier_identifierfor_indexPathas_as(Parameter<UITableView>, Parameter<String>, Parameter<IndexPath>, Parameter<GenericAttribute>)
         case m_documentPicker__docTypes_docTypesin_pickerMode(Parameter<[String]>, Parameter<UIDocumentPickerMode>)
         case m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(Parameter<String?>, Parameter<String?>, Parameter<UIAlertController.Style>)
         case m_tableViewRowAction__style_styletitle_titlehandler_handler(Parameter<UITableViewRowAction.Style>, Parameter<String?>, Parameter<(UITableViewRowAction, IndexPath) -> Void>)
@@ -16017,6 +16400,12 @@ open class UiUtilMock: UiUtil, Mock {
             case (.m_controller__named_controllerNamefrom_storyboardas_as(let lhsControllername, let lhsStoryboard, let lhsAs), .m_controller__named_controllerNamefrom_storyboardas_as(let rhsControllername, let rhsStoryboard, let rhsAs)):
                 guard Parameter.compare(lhs: lhsControllername, rhs: rhsControllername, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsStoryboard, rhs: rhsStoryboard, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAs, rhs: rhsAs, with: matcher) else { return false } 
+                return true 
+            case (.m_tableViewCell__from_tableViewwithIdentifier_identifierfor_indexPathas_as(let lhsTableview, let lhsIdentifier, let lhsIndexpath, let lhsAs), .m_tableViewCell__from_tableViewwithIdentifier_identifierfor_indexPathas_as(let rhsTableview, let rhsIdentifier, let rhsIndexpath, let rhsAs)):
+                guard Parameter.compare(lhs: lhsTableview, rhs: rhsTableview, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsIdentifier, rhs: rhsIdentifier, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsIndexpath, rhs: rhsIndexpath, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsAs, rhs: rhsAs, with: matcher) else { return false } 
                 return true 
             case (.m_documentPicker__docTypes_docTypesin_pickerMode(let lhsDoctypes, let lhsPickermode), .m_documentPicker__docTypes_docTypesin_pickerMode(let rhsDoctypes, let rhsPickermode)):
@@ -16099,6 +16488,7 @@ open class UiUtilMock: UiUtil, Mock {
             case let .m_info__info(p0): return p0.intValue
             case let .m_controller__named_controllerNamefrom_storyboardNameas_as(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_controller__named_controllerNamefrom_storyboardas_as(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_tableViewCell__from_tableViewwithIdentifier_identifierfor_indexPathas_as(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
             case let .m_documentPicker__docTypes_docTypesin_pickerMode(p0, p1): return p0.intValue + p1.intValue
             case let .m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_tableViewRowAction__style_styletitle_titlehandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
@@ -16149,6 +16539,9 @@ open class UiUtilMock: UiUtil, Mock {
         }
         public static func controller<Type: UIViewController>(named controllerName: Parameter<String>, from storyboard: Parameter<UIStoryboard>, as: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
             return Given(method: .m_controller__named_controllerNamefrom_storyboardas_as(`controllerName`, `storyboard`, `as`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func tableViewCell<Type: UITableViewCell>(from tableView: Parameter<UITableView>, withIdentifier identifier: Parameter<String>, for indexPath: Parameter<IndexPath>, as: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
+            return Given(method: .m_tableViewCell__from_tableViewwithIdentifier_identifierfor_indexPathas_as(`tableView`, `identifier`, `indexPath`, `as`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func documentPicker(docTypes: Parameter<[String]>, in pickerMode: Parameter<UIDocumentPickerMode>, willReturn: UIDocumentPickerViewController...) -> MethodStub {
             return Given(method: .m_documentPicker__docTypes_docTypesin_pickerMode(`docTypes`, `pickerMode`), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -16204,6 +16597,13 @@ open class UiUtilMock: UiUtil, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func tableViewCell<Type: UITableViewCell>(from tableView: Parameter<UITableView>, withIdentifier identifier: Parameter<String>, for indexPath: Parameter<IndexPath>, as: Parameter<Type.Type>, willProduce: (Stubber<Type>) -> Void) -> MethodStub {
+            let willReturn: [Type] = []
+			let given: Given = { return Given(method: .m_tableViewCell__from_tableViewwithIdentifier_identifierfor_indexPathas_as(`tableView`, `identifier`, `indexPath`, `as`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Type).self)
+			willProduce(stubber)
+			return given
+        }
         public static func documentPicker(docTypes: Parameter<[String]>, in pickerMode: Parameter<UIDocumentPickerMode>, willProduce: (Stubber<UIDocumentPickerViewController>) -> Void) -> MethodStub {
             let willReturn: [UIDocumentPickerViewController] = []
 			let given: Given = { return Given(method: .m_documentPicker__docTypes_docTypesin_pickerMode(`docTypes`, `pickerMode`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
@@ -16247,6 +16647,7 @@ open class UiUtilMock: UiUtil, Mock {
         public static func info(_ info: Parameter<[UserInfoKey: Any]>) -> Verify { return Verify(method: .m_info__info(`info`))}
         public static func controller<Type>(named controllerName: Parameter<String>, from storyboardName: Parameter<String>, as: Parameter<Type.Type>) -> Verify where Type:UIViewController { return Verify(method: .m_controller__named_controllerNamefrom_storyboardNameas_as(`controllerName`, `storyboardName`, `as`.wrapAsGeneric()))}
         public static func controller<Type>(named controllerName: Parameter<String>, from storyboard: Parameter<UIStoryboard>, as: Parameter<Type.Type>) -> Verify where Type:UIViewController { return Verify(method: .m_controller__named_controllerNamefrom_storyboardas_as(`controllerName`, `storyboard`, `as`.wrapAsGeneric()))}
+        public static func tableViewCell<Type>(from tableView: Parameter<UITableView>, withIdentifier identifier: Parameter<String>, for indexPath: Parameter<IndexPath>, as: Parameter<Type.Type>) -> Verify where Type:UITableViewCell { return Verify(method: .m_tableViewCell__from_tableViewwithIdentifier_identifierfor_indexPathas_as(`tableView`, `identifier`, `indexPath`, `as`.wrapAsGeneric()))}
         public static func documentPicker(docTypes: Parameter<[String]>, in pickerMode: Parameter<UIDocumentPickerMode>) -> Verify { return Verify(method: .m_documentPicker__docTypes_docTypesin_pickerMode(`docTypes`, `pickerMode`))}
         public static func alert(title: Parameter<String?>, message: Parameter<String?>, preferredStyle: Parameter<UIAlertController.Style>) -> Verify { return Verify(method: .m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(`title`, `message`, `preferredStyle`))}
         public static func tableViewRowAction(style: Parameter<UITableViewRowAction.Style>, title: Parameter<String?>, handler: Parameter<(UITableViewRowAction, IndexPath) -> Void>) -> Verify { return Verify(method: .m_tableViewRowAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`))}
@@ -16296,6 +16697,9 @@ open class UiUtilMock: UiUtil, Mock {
         }
         public static func controller<Type>(named controllerName: Parameter<String>, from storyboard: Parameter<UIStoryboard>, as: Parameter<Type.Type>, perform: @escaping (String, UIStoryboard, Type.Type) -> Void) -> Perform where Type:UIViewController {
             return Perform(method: .m_controller__named_controllerNamefrom_storyboardas_as(`controllerName`, `storyboard`, `as`.wrapAsGeneric()), performs: perform)
+        }
+        public static func tableViewCell<Type>(from tableView: Parameter<UITableView>, withIdentifier identifier: Parameter<String>, for indexPath: Parameter<IndexPath>, as: Parameter<Type.Type>, perform: @escaping (UITableView, String, IndexPath, Type.Type) -> Void) -> Perform where Type:UITableViewCell {
+            return Perform(method: .m_tableViewCell__from_tableViewwithIdentifier_identifierfor_indexPathas_as(`tableView`, `identifier`, `indexPath`, `as`.wrapAsGeneric()), performs: perform)
         }
         public static func documentPicker(docTypes: Parameter<[String]>, in pickerMode: Parameter<UIDocumentPickerMode>, perform: @escaping ([String], UIDocumentPickerMode) -> Void) -> Perform {
             return Perform(method: .m_documentPicker__docTypes_docTypesin_pickerMode(`docTypes`, `pickerMode`), performs: perform)

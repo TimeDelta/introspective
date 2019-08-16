@@ -57,3 +57,9 @@ func errorInfo(_ error: Error) -> String {
 	}
 	return String(format: "%@ %@", errorDescription, (error as NSError).userInfo)
 }
+
+func copyArray<Type>(_ array: [Type]) -> [Type] {
+	var copy = [Type]()
+	copy.append(contentsOf: array)
+	return copy
+}

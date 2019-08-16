@@ -433,10 +433,10 @@
             </objects>
             <point key="canvasLocation" x="1688" y="-1330"/>
         </scene>
-        <!--Edit Mood Table View Controller-->
+        <!--Edit Mood Table View Controller Impl-->
         <scene sceneID="6gw-x8-cQt">
             <objects>
-                <tableViewController storyboardIdentifier="editMood" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ra4-23-Tkg" customClass="EditMoodTableViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="editMood" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ra4-23-Tkg" customClass="EditMoodTableViewControllerImpl" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Pbp-yX-RvR">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

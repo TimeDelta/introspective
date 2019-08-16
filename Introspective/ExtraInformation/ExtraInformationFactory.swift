@@ -8,10 +8,15 @@
 
 import Foundation
 
+//sourcery: AutoMockable
 public protocol ExtraInformationFactory {
 
 	func getApplicableInformationTypes(forAttribute attribute: Attribute) -> [ExtraInformation.Type]
 	func getApplicableNumericInformationTypes(forAttribute attribute: Attribute) -> [ExtraInformation.Type]
+	func initInformation(
+		_ informationType: ExtraInformation.Type,
+		_ attribute: Attribute)
+	-> ExtraInformation
 }
 
 public final class ExtraInformationFactoryImpl: ExtraInformationFactory {
@@ -92,5 +97,12 @@ public final class ExtraInformationFactoryImpl: ExtraInformationFactory {
 		}
 		applicableInformationTypes.append(CountInformation.self)
 		return applicableInformationTypes
+	}
+
+	public final func initInformation(
+		_ informationType: ExtraInformation.Type,
+		_ attribute: Attribute)
+	-> ExtraInformation {
+		return informationType.init(attribute)
 	}
 }

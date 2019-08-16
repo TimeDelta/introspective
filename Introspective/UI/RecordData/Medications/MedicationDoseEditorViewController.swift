@@ -14,6 +14,7 @@ public protocol MedicationDoseEditorViewController: UIViewController {
 	/// If `medicationDose` is not set, will use default dosage and is only required if not editing an existing dose
 	var medication: Medication! { get set }
 	var notificationToSendOnAccept: Notification.Name! { get set }
+	var userInfoKey: UserInfoKey { get set }
 }
 
 public final class MedicationDoseEditorViewControllerImpl: UIViewController, MedicationDoseEditorViewController {
@@ -31,6 +32,7 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 	/// If `medicationDose` is not set, will use default dosage and is only required if not editing an existing dose
 	public final var medication: Medication!
 	public final var notificationToSendOnAccept: Notification.Name!
+	public final var userInfoKey: UserInfoKey = .dose
 
 	private final let log = Log()
 
@@ -71,7 +73,7 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 			post(
 				notificationToSendOnAccept,
 				userInfo: [
-					.dose: self.medicationDose as Any,
+					userInfoKey: self.medicationDose as Any,
 				])
 			dismiss(animated: false, completion: nil)
 		} catch {

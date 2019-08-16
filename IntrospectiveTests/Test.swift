@@ -29,6 +29,7 @@ class Test: XCTestCase {
 		Matcher.default.register(Optional<Any>.self) { self.anyMatcher($0, $1) }
 		Matcher.default.register(Exportable.Type.self) { $0 == $1 }
 		Matcher.default.register(UIViewController.Type.self)
+		Matcher.default.register(UITableViewCell.Type.self)
 		Matcher.default.register(Sample.Type.self) { $0.name == $1.name }
 		Matcher.default.register(GroupDefinition.self) {
 			if let first = $0 as? GroupDefinitionMock, let second = $1 as? GroupDefinitionMock {

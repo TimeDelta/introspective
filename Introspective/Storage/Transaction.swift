@@ -33,7 +33,7 @@ public protocol Transaction {
 	/// - Note: Any changes made to the returned object will be saved when `commit()` is called on this `Transaction`.
 	func pull<Type: NSManagedObject>(savedObject: Type) throws -> Type
 
-	func delete(_ object: NSManagedObject) throws
+	func delete(_ coreDataObject: CoreDataObject) throws
 	func deleteAll(_ objects: [NSManagedObject]) throws
 	func deleteAll(_ objectType: NSManagedObject.Type) throws
 	func deleteAll(_ entityName: String) throws
@@ -132,7 +132,10 @@ public final class TransactionImpl: Transaction {
 
 	// MARK: - Deleting
 
-	public final func delete(_ object: NSManagedObject) throws {
+	public final func delete(_ coreDataObject: CoreDataObject) throws {
+		guard let object = coreDataObject as? NSManagedObject else {
+			throw GenericError("Tried to delete non NSManagedObject")
+		}
 		signpost.begin(name: "Delete", idObject: object)
 		let objectToDelete = try pull(savedObject: object, fromContext: myContext)
 		myContext.delete(objectToDelete)

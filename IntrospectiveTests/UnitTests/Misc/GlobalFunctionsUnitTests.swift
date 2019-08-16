@@ -1,5 +1,5 @@
 //
-//  GlobalFunctionsTests.swift
+//  GlobalFunctionsUnitTests.swift
 //  IntrospectiveTests
 //
 //  Created by Bryan Nova on 1/17/19.
@@ -7,9 +7,10 @@
 //
 
 import XCTest
+import Hamcrest
 @testable import Introspective
 
-final class GlobalFunctionsTests: UnitTest {
+final class GlobalFunctionsUnitTests: UnitTest {
 
 	private enum Errors: Error {
 		case error1
@@ -191,6 +192,20 @@ final class GlobalFunctionsTests: UnitTest {
 		waitForExpectations(timeout: 0.1) { waitError in
 			XCTAssert(waitError == nil, waitError?.localizedDescription ?? "Timed out")
 		}
+	}
+
+	// MARK - copyArray()
+
+	func test_copyArray_returnsArrayThatModifyingDoesNotAffectOriginal() {
+		// given
+		let original = [1, 2, 3]
+
+		// when
+		var copy = copyArray(original)
+		copy[0] = 8
+
+		// then
+		assertThat(original, contains(1, 2, 3))
 	}
 
 	// MARK: - Helper Functions

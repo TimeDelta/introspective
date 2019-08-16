@@ -1948,12 +1948,6 @@ final class QueryViewControllerUnitTests: UnitTest {
 
 	// MARK: - Helper Functions
 
-	private final func copyArray<Type>(_ array: [Type]) -> [Type] {
-		var copy = [Type]()
-		copy.append(contentsOf: array)
-		return copy
-	}
-
 	private final func setValidation(_ passes: Bool = true) {
 		if passes {
 			Given(mockQueryFactory, .activityQuery(.any, willReturn: ActivityQueryMock()))

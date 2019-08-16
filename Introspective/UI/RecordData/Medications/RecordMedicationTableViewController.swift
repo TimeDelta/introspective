@@ -29,13 +29,6 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		customPresenter.roundCorners = true
 		return customPresenter
 	}()
-	private static let dosesViewPresenter: Presentr = {
-		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 500), center: .center)
-		let customPresenter = Presentr(presentationType: customType)
-		customPresenter.dismissTransitionType = .crossDissolve
-		customPresenter.roundCorners = true
-		return customPresenter
-	}()
 	private static let exampleMedicationName = "Example Medication"
 
 	// MARK: - Instance Variables

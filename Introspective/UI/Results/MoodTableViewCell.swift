@@ -8,9 +8,12 @@
 
 import UIKit
 
-final class MoodTableViewCell: UITableViewCell {
+public protocol MoodTableViewCell: UITableViewCell {
 
-	private typealias Me = MoodTableViewCell
+	var mood: Mood! { get set }
+}
+
+final class MoodTableViewCellImpl: UITableViewCell, MoodTableViewCell {
 
 	public final var mood: Mood! {
 		didSet {
