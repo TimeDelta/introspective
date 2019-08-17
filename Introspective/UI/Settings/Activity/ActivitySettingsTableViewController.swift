@@ -14,6 +14,11 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 
 	private typealias Me = ActivitySettingsTableViewController
 
+	private static let descriptionPresenter = DependencyInjector.util.ui.customPresenter(
+		width: .custom(size: 300),
+		height: .custom(size: 200),
+		center: .center)
+
 	private static let changeNotifications = [
 		Notification.Name("autoIgnoreChanged"),
 	]
@@ -95,7 +100,7 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 	@IBAction final func informationButtonPressed(_ sender: Any) {
 		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
 		controller.descriptionText = "If an activity is completed before this many seconds have passed, it will not be saved. This only applies when tapping to stop a running activity on the record screen."
-		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
+		customPresentViewController(Me.descriptionPresenter, viewController: controller, animated: false)
 	}
 
 	// MARK: - Helper Functions

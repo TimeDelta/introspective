@@ -10,6 +10,14 @@ import UIKit
 
 public final class ActivityDefinitionAutoNoteTableViewCell: UITableViewCell {
 
+	// MARK: - Static Variables
+
+	private typealias Me = ActivityDefinitionAutoNoteTableViewCell
+	private static let descriptionPresenter = DependencyInjector.util.ui.customPresenter(
+		width: .custom(size: 300),
+		height: .custom(size: 200),
+		center: .center)
+
 	// MARK: - IBOutlets
 
 	@IBOutlet weak final var toggleSwitch: UISwitch! {
@@ -43,7 +51,7 @@ public final class ActivityDefinitionAutoNoteTableViewCell: UITableViewCell {
 			object: self,
 			userInfo: info([
 				.controller: controller,
-				.presenter: DependencyInjector.util.ui.defaultPresenter,
+				.presenter: Me.descriptionPresenter,
 			]))
 	}
 

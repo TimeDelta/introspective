@@ -20,6 +20,10 @@ final class AttributeViewController: UIViewController {
 	private static let frequencyPresenter = DependencyInjector.util.ui.customPresenter(width: .custom(size: 250), height: .custom(size: 250), center: .topCenter)
 	private static let multiSelectPresenter = DependencyInjector.util.ui.customPresenter(width: .full, height: .fluid(percentage: 0.45), center: .topCenter)
 	private static let defaultPresenter = DependencyInjector.util.ui.customPresenter(width: .full, height: .custom(size: 200), center: .topCenter)
+	private static let descriptionPresenter = DependencyInjector.util.ui.customPresenter(
+		width: .custom(size: 300),
+		height: .custom(size: 200),
+		center: .center)
 
 	// MARK: - IBOutlets
 
@@ -82,7 +86,7 @@ final class AttributeViewController: UIViewController {
 	@IBAction final func descriptionButtonPressed(_ sender: Any) {
 		let controller: AttributeDescriptionViewController = viewController(named: "attributeDescription")
 		controller.descriptionText = attribute.extendedDescription
-		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
+		customPresentViewController(Me.descriptionPresenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func valueButtonPressed(_ sender: Any) {

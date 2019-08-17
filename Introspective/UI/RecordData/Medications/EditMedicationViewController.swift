@@ -24,6 +24,10 @@ public final class EditMedicationViewController: UIViewController {
 		customPresenter.roundCorners = true
 		return customPresenter
 	}()
+	private static let descriptionPresenter = DependencyInjector.util.ui.customPresenter(
+		width: .custom(size: 300),
+		height: .custom(size: 200),
+		center: .center)
 
 	// MARK: - IBOutlets
 
@@ -137,10 +141,9 @@ public final class EditMedicationViewController: UIViewController {
 	// MARK: - Button Actions
 
 	@IBAction final func frequencyDescriptionButtonPressed(_ sender: Any) {
-		#warning("check all uses of DescriptionViewController to make sure they dismiss correctly")
 		let controller: DescriptionViewController = viewController(named:"description", fromStoryboard: "Util")
 		controller.descriptionText = Medication.frequency.extendedDescription ?? "No description"
-		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
+		customPresentViewController(Me.descriptionPresenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func frequencyButtonPressed(_ sender: Any) {
@@ -159,7 +162,7 @@ public final class EditMedicationViewController: UIViewController {
 	@IBAction final func startedOnDescriptionButtonPressed(_ sender: Any) {
 		let controller: DescriptionViewController = viewController(named:"description", fromStoryboard: "Util")
 		controller.descriptionText = Medication.startedOn.extendedDescription ?? "No description"
-		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
+		customPresentViewController(Me.descriptionPresenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func startedOnButtonPressed(_ sender: Any) {
@@ -179,7 +182,7 @@ public final class EditMedicationViewController: UIViewController {
 	@IBAction final func dosageDescriptionButtonPressed(_ sender: Any) {
 		let controller: DescriptionViewController = viewController(named:"description", fromStoryboard: "Util")
 		controller.descriptionText = Medication.dosage.extendedDescription ?? "No description"
-		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
+		customPresentViewController(Me.descriptionPresenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func saveButtonPressed(_ sender: Any) {

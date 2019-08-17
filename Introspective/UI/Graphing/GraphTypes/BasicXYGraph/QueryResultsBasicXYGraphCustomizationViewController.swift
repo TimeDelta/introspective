@@ -17,13 +17,10 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 
 	private typealias Me = QueryResultsBasicXYGraphCustomizationViewController
 	private static let aggregationChanged = Notification.Name("aggregationChanged")
-	private static let presenter: Presentr = {
-		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 200), center: .center)
-		let customPresenter = Presentr(presentationType: customType)
-		customPresenter.dismissTransitionType = .crossDissolve
-		customPresenter.roundCorners = true
-		return customPresenter
-	}()
+	private static let presenter: Presentr = DependencyInjector.util.ui.customPresenter(
+		width: .custom(size: 300),
+		height: .custom(size: 200),
+		center: .center)
 
 	// MARK: - IBOutlets
 

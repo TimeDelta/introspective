@@ -12,6 +12,14 @@ import NotificationBannerSwift
 
 final class MoodSettingsViewController: UIViewController {
 
+	// MARK: - Static Variables
+
+	private typealias Me = MoodSettingsViewController
+	public static let descriptionPresenter = DependencyInjector.util.ui.customPresenter(
+		width: .custom(size: 300),
+		height: .custom(size: 200),
+		center: .center)
+
 	// MARK: - IBOutlets
 
 	@IBOutlet weak final var minMoodField: UITextField!
@@ -38,13 +46,13 @@ final class MoodSettingsViewController: UIViewController {
 	@IBAction final func showAutoScaleMoodsOnImportDescription(_ sender: Any) {
 		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
 		controller.descriptionText = "Automatically scale any imported moods to match the minimum and maximum moods at the time of import."
-		present(controller, using: DependencyInjector.util.ui.defaultPresenter)
+		present(controller, using: Me.descriptionPresenter)
 	}
 
 	@IBAction final func showDiscreteMoodsDescription(_ sender: Any) {
 		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
 		controller.descriptionText = "Instead of letting you set whatever value you want (i.e. 4.367) for your mood, only allow integer values like 1, 2, or 3. This will not change any existing mood records."
-		present(controller, using: DependencyInjector.util.ui.defaultPresenter)
+		present(controller, using: Me.descriptionPresenter)
 	}
 
 	@objc private func reset(_ sender: Any) {
