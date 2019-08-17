@@ -32,7 +32,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 	private final var definitionEditIndex: IndexPath?
 	private final var activeActivitiesFetchedResultsController: NSFetchedResultsController<ActivityDefinition>!
-	private final var inactiveActivitiesFetchedResultsController: NSFetchedResultsController<ActivityDefinition>!
+	private final var allActivitiesFetchedResultsController: NSFetchedResultsController<ActivityDefinition>!
 
 	private final let coachMarksController = CoachMarksController()
 	private final var coachMarksDataSourceAndDelegate: DefaultCoachMarksDataSourceAndDelegate!
@@ -194,7 +194,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 				return fetchedObjects.count
 			}
 		} else if section == 1 {
-			if let fetchedObjects = inactiveActivitiesFetchedResultsController.fetchedObjects {
+			if let fetchedObjects = allActivitiesFetchedResultsController.fetchedObjects {
 				return fetchedObjects.count
 			}
 		}
@@ -224,18 +224,21 @@ public final class RecordActivityTableViewController: UITableViewController {
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard finishedLoading else { return }
 		let activityDefinition = definition(at: indexPath)
-		guard let cell = visibleCellFor(indexPath) else {
+		let cells = visibleCellsFor(activityDefinition)
+		guard cells.count > 0 else {
+			log.error("Unable to determine cell for definition")
+			showError(title: "Failed to start / stop activity")
 			return
 		}
-		if cell.running {
+		if cells[0].running {
 			if let activity = getMostRecentlyStartedIncompleteActivity(for: activityDefinition) {
-				stopActivity(activity, associatedCell: cell)
+				stopActivity(activity, associatedCells: cells)
 			} else {
 				log.error("Could not find activity to stop.")
 				showError(title: "Failed to stop activity")
 			}
 		} else {
-			startActivity(for: activityDefinition, cell: cell)
+			startActivity(for: activityDefinition, cells: cells)
 		}
 		loadActivitiyDefinitions()
 	}
@@ -278,7 +281,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		} catch {
 			log.error("Failed to reorder activities: %@", errorInfo(error))
 		}
-		resetInactiveActivitiesFetchedResultsController()
+		resetAllActivitiesFetchedResultsController()
 		tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
 	}
 
@@ -476,7 +479,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func resetFetchedResultsControllers() {
 		resetActiveActivitiesFetchedResultsController()
-		resetInactiveActivitiesFetchedResultsController()
+		resetAllActivitiesFetchedResultsController()
 	}
 
 	private final func resetActiveActivitiesFetchedResultsController() {
@@ -511,27 +514,21 @@ public final class RecordActivityTableViewController: UITableViewController {
 		}
 	}
 
-	private final func resetInactiveActivitiesFetchedResultsController() {
+	private final func resetAllActivitiesFetchedResultsController() {
 		do {
 			signpost.begin(name: "resetting inactive fetched results controller")
-			inactiveActivitiesFetchedResultsController = DependencyInjector.db.fetchedResultsController(
+			allActivitiesFetchedResultsController = DependencyInjector.db.fetchedResultsController(
 				type: ActivityDefinition.self,
 				sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
 				cacheName: "definitions")
-			let fetchRequest = inactiveActivitiesFetchedResultsController.fetchRequest
-
-			let isInactivePredicate = NSPredicate(format: "SUBQUERY(activities, $activity, $activity.endDate == nil) .@count == 0")
-			fetchRequest.predicate = isInactivePredicate
+			let fetchRequest = allActivitiesFetchedResultsController.fetchRequest
 
 			let searchText: String = self.getSearchText()
 			if !searchText.isEmpty {
-				fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
-					isInactivePredicate,
-					getSearchTextPredicate(searchText),
-				])
+				fetchRequest.predicate = getSearchTextPredicate(searchText)
 			}
 
-			try inactiveActivitiesFetchedResultsController.performFetch()
+			try allActivitiesFetchedResultsController.performFetch()
 			signpost.end(name: "resetting inactive fetched results controller")
 		} catch {
 			log.error("Failed to fetch activities: %@", errorInfo(error))
@@ -592,7 +589,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		}
 	}
 
-	private final func startActivity(for activityDefinition: ActivityDefinition, cell: RecordActivityDefinitionTableViewCell) {
+	private final func startActivity(for activityDefinition: ActivityDefinition, cells: [RecordActivityDefinitionTableViewCell]) {
 		do {
 			let transaction = DependencyInjector.db.transaction()
 			let activity = try transaction.new(Activity.self)
@@ -603,24 +600,31 @@ public final class RecordActivityTableViewController: UITableViewController {
 			definition.addToActivities(activity)
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			// just calling updateUiElements here doesn't display the progress indicator for some reason
-			cell.activityDefinition = try DependencyInjector.db.pull(savedObject: definition)
+			let updatedDefinition = try DependencyInjector.db.pull(savedObject: definition)
+			for cell in cells {
+				cell.activityDefinition = updatedDefinition
+			}
 		} catch {
 			log.error("Failed to start activity: %@", errorInfo(error))
 			showError(title: "Failed to start activity", error: error)
 		}
 	}
 
-	private final func stopActivity(_ activity: Activity, associatedCell: RecordActivityDefinitionTableViewCell) {
+	private final func stopActivity(_ activity: Activity, associatedCells: [RecordActivityDefinitionTableViewCell]) {
 		let now = Date()
 		if autoIgnoreIfAppropriate(activity, end: now) {
-			associatedCell.updateUiElements()
+			for cell in associatedCells {
+				cell.updateUiElements()
+			}
 			return
 		}
 		do {
 			let transaction = DependencyInjector.db.transaction()
 			activity.end = now
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-			associatedCell.updateUiElements()
+			for cell in associatedCells {
+				cell.updateUiElements()
+			}
 			if activity.definition.autoNote {
 				showEditScreenForActivity(activity, autoFocusNote: true)
 			}
@@ -688,7 +692,9 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func getMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) -> Activity? {
 		let endDateVariableName = CommonSampleAttributes.endDate.variableName!
-		let incompleteActivities = activityDefinition.activities.filtered(using: NSPredicate(format: "%K == nil", endDateVariableName)) as! Set<Activity>
+		let incompleteActivities = activityDefinition.activities.filtered(
+			using: NSPredicate(format: "%K == nil", endDateVariableName)
+		) as! Set<Activity>
 
 		if incompleteActivities.count > 0 {
 			let sortedIncompleteActivities = incompleteActivities.sorted(by: { $0.start > $1.start })
@@ -745,18 +751,12 @@ public final class RecordActivityTableViewController: UITableViewController {
 			return activeActivitiesFetchedResultsController.object(at: indexPath)
 		}
 		let offsetIndexPath = IndexPath(row: indexPath.row, section: 0)
-		return inactiveActivitiesFetchedResultsController.object(at: offsetIndexPath)
+		return allActivitiesFetchedResultsController.object(at: offsetIndexPath)
 	}
 
-	private final func visibleCellFor(_ indexPath: IndexPath) -> RecordActivityDefinitionTableViewCell? {
-		let targetDefinition = definition(at: indexPath)
+	private final func visibleCellsFor(_ activityDefinition: ActivityDefinition) -> [RecordActivityDefinitionTableViewCell] {
 		let cells = tableView.visibleCells.map{ $0 as! RecordActivityDefinitionTableViewCell }
-		for cell in cells {
-			if cell.activityDefinition.equalTo(targetDefinition) {
-				return cell
-			}
-		}
-		return nil
+		return cells.filter{ $0.activityDefinition.equalTo(activityDefinition) }
 	}
 }
 
