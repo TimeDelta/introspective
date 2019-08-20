@@ -328,7 +328,7 @@ class UITest: XCTestCase {
 		}
 		skipInstructionsIfPresent()
 
-		app.buttons["Add"].tap()
+		app.buttons["+"].tap()
 
 		let nameField = app.textFields["medication name"]
 		nameField.tap()
