@@ -10,7 +10,17 @@ import UIKit
 import SwiftDate
 import Instructions
 
-public final class SelectDateViewController: UIViewController {
+public protocol SelectDateViewController: UIViewController {
+
+	var initialDate: Date? { get set }
+	var earliestPossibleDate: Date? { get set }
+	var latestPossibleDate: Date? { get set }
+	var datePickerMode: UIDatePicker.Mode { get set }
+	var lastDate: Date? { get set }
+	var notificationToSendOnAccept: Notification.Name! { get set }
+}
+
+public final class SelectDateViewControllerImpl: UIViewController, SelectDateViewController {
 
 	// MARK: - IBOutlets
 

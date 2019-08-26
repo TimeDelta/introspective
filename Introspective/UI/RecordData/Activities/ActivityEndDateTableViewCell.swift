@@ -8,7 +8,13 @@
 
 import UIKit
 
-public final class ActivityEndDateTableViewCell: UITableViewCell {
+public protocol ActivityEndDateTableViewCell: UITableViewCell {
+
+	var notificationToSendOnDateChange: Notification.Name! { get set }
+	var endDate: Date? { get set }
+}
+
+public final class ActivityEndDateTableViewCellImpl: UITableViewCell, ActivityEndDateTableViewCell {
 
 	// MARK: - IBOutlets
 

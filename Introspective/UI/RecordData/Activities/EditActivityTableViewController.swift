@@ -10,28 +10,42 @@ import UIKit
 import Presentr
 import CoreData
 
-public final class EditActivityTableViewController: UITableViewController {
+public protocol EditActivityTableViewController: UITableViewController {
+
+	var notificationToSendOnAccept: Notification.Name! { get set }
+	var userInfoKey: UserInfoKey { get set }
+
+	var activity: Activity? { get set }
+	var autoFocusNote: Bool { get set }
+
+	/// - Note: This will be overwritten if `activity` is set after this is
+	var definition: ActivityDefinition? { get set }
+}
+
+public final class EditActivityTableViewControllerImpl: UITableViewController, EditActivityTableViewController {
 
 	// MARK: - Static Variables
 
-	private typealias Me = EditActivityTableViewController
+	private typealias Me = EditActivityTableViewControllerImpl
 
-	private static let activityIndex = IndexPath(row: 0, section: 0)
-	private static let startIndex = IndexPath(row: activityIndex.row + 1, section: 0)
-	private static let endIndex = IndexPath(row: startIndex.row + 1, section: 0)
-	private static let noteIndex = IndexPath(row: 0, section: 1)
-	private static let tagsIndex = IndexPath(row: 0, section: 2)
+	static let definitionIndex = IndexPath(row: 0, section: 0)
+	static let startIndex = IndexPath(row: definitionIndex.row + 1, section: 0)
+	static let endIndex = IndexPath(row: startIndex.row + 1, section: 0)
+	static let durationIndex = IndexPath(row: endIndex.row + 1, section: 0)
+	static let noteIndex = IndexPath(row: 0, section: 1)
+	static let tagsIndex = IndexPath(row: 0, section: 2)
 
 	private static let presenter: Presentr = DependencyInjector.util.ui.customPresenter(
 		width: .full,
 		height: .fluid(percentage: 0.4),
 		center: .bottomCenter)
 
-	private static let activityDefinitionChanged = Notification.Name("activityDefinitionChanged")
-	private static let startDateChanged = Notification.Name("activityStartDateChanged")
-	private static let endDateChanged = Notification.Name("activityEndDateChanged")
-	private static let noteChanged = Notification.Name("activityNoteChanged")
-	private static let tagsChanged = Notification.Name("tagsChanged")
+	static let activityDefinitionChanged = Notification.Name("activityDefinitionChanged")
+	static let startDateChanged = Notification.Name("activityStartDateChanged")
+	static let endDateChanged = Notification.Name("activityEndDateChanged")
+	static let noteChanged = Notification.Name("activityNoteChanged")
+	static let tagsChanged = Notification.Name("tagsChanged")
+	static let durationChanged = Notification.Name("activityDurationChanged")
 
 	// MARK: - Instance Variables
 
@@ -49,12 +63,12 @@ public final class EditActivityTableViewController: UITableViewController {
 	}
 	public final var autoFocusNote = false
 
-	/// This will be overridden if `activity` is set after this is
+	/// - Note: This will be overwritten if `activity` is set after this is
 	public final var definition: ActivityDefinition? = nil { didSet { validate() } }
-	private final var startDate: Date = Date() { didSet { validate() } }
-	private final var endDate: Date? { didSet { validate() } }
-	private final var note: String?
-	private final var tagNames = Set<String>()
+	final var startDate: Date = Date() { didSet { validate() } }
+	final var endDate: Date? { didSet { validate() } }
+	final var note: String?
+	final var tagNames = Set<String>()
 
 	private final var saveButton: UIBarButtonItem!
 
@@ -77,11 +91,12 @@ public final class EditActivityTableViewController: UITableViewController {
 		observe(selector: #selector(activityDefinitionChanged), name: Me.activityDefinitionChanged)
 		observe(selector: #selector(startDateChanged), name: Me.startDateChanged)
 		observe(selector: #selector(endDateChanged), name: Me.endDateChanged)
+		observe(selector: #selector(durationChanged), name: Me.durationChanged)
 		observe(selector: #selector(noteChanged), name: Me.noteChanged)
 		observe(selector: #selector(tagsChanged), name: Me.tagsChanged)
 
 		if activity == nil {
-			startDate = getMostRecentActivityDate() ?? Date()
+			startDate = DependencyInjector.daos.activityDao().getMostRecentActivityDate() ?? Date()
 		}
 
 		hideKeyboardOnTapNonTextInput()
@@ -99,35 +114,50 @@ public final class EditActivityTableViewController: UITableViewController {
 
 	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == 0 {
-			return 3
+			return 4
 		}
 		return 1
 	}
 
 	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell: UITableViewCell
-		if indexPath == Me.activityIndex {
+		if indexPath == Me.definitionIndex {
 			cell = tableView.dequeueReusableCell(withIdentifier: "activity", for: indexPath)
 			cell.detailTextLabel?.text = definition?.name ?? "Choose Activity"
+			cell.detailTextLabel?.accessibilityValue = cell.detailTextLabel?.text
+			cell.detailTextLabel?.accessibilityLabel = "activity name"
+			cell.accessibilityHint = "Tap this to change this instance to another activity definition"
 		} else if indexPath == Me.startIndex {
 			cell = tableView.dequeueReusableCell(withIdentifier: "start", for: indexPath)
 			let startDateText = DependencyInjector.util.calendar.string(for: startDate, dateStyle: .medium, timeStyle: .medium)
 			cell.detailTextLabel?.text = startDateText
-			cell.detailTextLabel?.accessibilityValue = startDateText
+			cell.detailTextLabel?.accessibilityValue = cell.detailTextLabel?.text
 			cell.detailTextLabel?.accessibilityLabel = "start date"
+			cell.accessibilityHint = "Tap this to change the start date"
 		} else if indexPath == Me.endIndex {
-			let endDateCell = tableView.dequeueReusableCell(withIdentifier: "end", for: indexPath) as! ActivityEndDateTableViewCell
+			let endDateCell = tableViewCell(withIdentifier: "end", for: indexPath) as! ActivityEndDateTableViewCell
 			endDateCell.endDate = endDate
 			endDateCell.notificationToSendOnDateChange = Me.endDateChanged
 			cell = endDateCell
+			cell.accessibilityHint = "Tap this to change the end date"
+		} else if indexPath == Me.durationIndex {
+			cell = tableView.dequeueReusableCell(withIdentifier: "duration", for: indexPath)
+			if let endDate = endDate {
+				cell.detailTextLabel?.text = Duration(start: startDate, end: endDate).description
+			} else {
+				cell.detailTextLabel?.text = ""
+			}
+			cell.detailTextLabel?.accessibilityValue = cell.detailTextLabel?.text
+			cell.detailTextLabel?.accessibilityLabel = "duration"
+			cell.accessibilityHint = "Tap this to change the duration (start date will remain the same)"
 		} else if indexPath == Me.noteIndex {
-			let noteCell = tableView.dequeueReusableCell(withIdentifier: "note", for: indexPath) as! ActivityNoteTableViewCell
+			let noteCell = tableViewCell(withIdentifier: "note", for: indexPath) as! ActivityNoteTableViewCell
 			noteCell.note = note
 			noteCell.notificationToSendOnChange = Me.noteChanged
 			noteCell.autoFocus = autoFocusNote
 			cell = noteCell
 		} else if indexPath == Me.tagsIndex {
-			let tagsCell = tableView.dequeueReusableCell(withIdentifier: "tags", for: indexPath) as! ActivityTagsTableViewCell
+			let tagsCell = tableViewCell(withIdentifier: "tags", for: indexPath) as! ActivityTagsTableViewCell
 			tagsCell.tagNames = tagNames
 			tagsCell.notificationToSendOnChange = Me.tagsChanged
 			cell = tagsCell
@@ -149,33 +179,44 @@ public final class EditActivityTableViewController: UITableViewController {
 	// MARK: - Table view delegate
 
 	public final override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		if section == 1 {
+		if section == Me.noteIndex.section {
 			return "Note"
 		}
-		if section == 2 {
+		if section == Me.tagsIndex.section {
 			return "Additional Tags"
 		}
 		return nil
 	}
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		if indexPath == Me.activityIndex {
-			let controller: ChooseActivityDefinitionViewController = viewController(named: "chooseActivityDefinition", fromStoryboard: "Util")
+		if indexPath == Me.definitionIndex {
+			let controller = viewController(named: "chooseActivityDefinition", fromStoryboard: "Util") as! ChooseActivityDefinitionViewController
 			controller.selectedDefinition = definition
 			controller.notificationToSendOnAccept = Me.activityDefinitionChanged
 			customPresentViewController(Me.presenter, viewController: controller, animated: false)
 		} else if indexPath == Me.startIndex {
-			let controller: SelectDateViewController = viewController(named: "datePicker", fromStoryboard: "Util")
+			let controller = viewController(named: "datePicker", fromStoryboard: "Util") as! SelectDateViewController
 			controller.initialDate = startDate
 			controller.notificationToSendOnAccept = Me.startDateChanged
-			controller.lastDate = getMostRecentActivityDate()
+			controller.lastDate = DependencyInjector.daos.activityDao().getMostRecentActivityDate()
 			customPresentViewController(Me.presenter, viewController: controller, animated: false)
 		} else if indexPath == Me.endIndex {
-			let controller: SelectDateViewController = viewController(named: "datePicker", fromStoryboard: "Util")
+			let controller = viewController(named: "datePicker", fromStoryboard: "Util") as! SelectDateViewController
 			controller.initialDate = endDate
 			controller.notificationToSendOnAccept = Me.endDateChanged
-			controller.lastDate = getMostRecentActivityDate()
+			controller.lastDate = DependencyInjector.daos.activityDao().getMostRecentActivityDate()
 			customPresentViewController(Me.presenter, viewController: controller, animated: false)
+		} else if indexPath == Me.durationIndex {
+			let controller = viewController(named: "durationChooser", fromStoryboard: "Util") as! SelectDurationViewController
+			controller.notificationToSendOnAccept = Me.durationChanged
+			if endDate != nil {
+				controller.initialDuration = Duration(start: startDate, end: endDate)
+			}
+			let presenter = DependencyInjector.util.ui.customPresenter(
+				width: .custom(size: 300),
+				height: .custom(size: 200),
+				center: .center)
+			customPresentViewController(presenter, viewController: controller, animated: false)
 		}
 		tableView.deselectRow(at: indexPath, animated: false)
 		tableView.reloadData()
@@ -199,9 +240,12 @@ public final class EditActivityTableViewController: UITableViewController {
 
 	@objc private final func endDateChanged(notification: Notification) {
 		endDate = value(for: .date, from: notification)
-		// clearing the end date is done by the cell itself so no need to have
-		// it update its UI when set to nil
-		if endDate != nil {
+		tableView.reloadData()
+	}
+
+	@objc private final func durationChanged(notification: Notification) {
+		if let duration: Duration = value(for: .duration, from: notification) {
+			endDate = startDate + duration
 			tableView.reloadData()
 		}
 	}
@@ -222,8 +266,8 @@ public final class EditActivityTableViewController: UITableViewController {
 		do {
 			let transaction = DependencyInjector.db.transaction()
 
-			// have to use local variable here otherwise description will be
-			// overwritten when self.activityDefinition is set
+			// have to use local variable here otherwise everything will be
+			// overwritten when activity.definition is set
 			var activity: Activity! = self.activity
 			if let localActivity = activity {
 				activity = try transaction.pull(savedObject: localActivity)
@@ -286,20 +330,5 @@ public final class EditActivityTableViewController: UITableViewController {
 
 	private final func endDateIsBeforeStartDate() -> Bool {
 		return endDate?.isBeforeDate(startDate, granularity: .second) ?? false
-	}
-
-	private final func getMostRecentActivityDate() -> Date? {
-		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
-		fetchRequest.predicate = NSPredicate(format: "endDate != nil")
-		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "endDate", ascending: false)]
-		do {
-			let activities = try DependencyInjector.db.query(fetchRequest)
-			if activities.count > 0 {
-				return activities[0].end
-			}
-		} catch {
-			log.error("Failed to fetch most recent activity: %@", errorInfo(error))
-		}
-		return nil
 	}
 }

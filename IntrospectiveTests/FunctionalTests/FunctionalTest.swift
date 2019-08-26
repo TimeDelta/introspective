@@ -27,6 +27,7 @@ class FunctionalTest: Test {
 	final var sampleGrouperFactory: SampleGrouperFactoryImpl!
 	final var importerFactory: ImporterFactoryImpl!
 	final var exporterFactory: ExporterFactoryImpl!
+	final var daoFactory: DaoFactoryImpl!
 
 	final var ioUtil: IOUtilMock!
 	final var uiUtil: UiUtilMock!
@@ -57,6 +58,7 @@ class FunctionalTest: Test {
 		sampleGrouperFactory = SampleGrouperFactoryImpl()
 		importerFactory = ImporterFactoryImpl()
 		exporterFactory = ExporterFactoryImpl()
+		daoFactory = DaoFactoryImpl()
 
 		Given(injectionProvider, .queryFactory(willReturn: queryFactory))
 		Given(injectionProvider, .sampleFactory(willReturn: sampleFactory))
@@ -66,6 +68,7 @@ class FunctionalTest: Test {
 		Given(injectionProvider, .sampleGrouperFactory(willReturn: sampleGrouperFactory))
 		Given(injectionProvider, .importerFactory(willReturn: importerFactory))
 		Given(injectionProvider, .exporterFactory(willReturn: exporterFactory))
+		Given(injectionProvider, .daoFactory(willReturn: daoFactory))
 
 		ioUtil = IOUtilMock()
 		utilFactory.io = ioUtil

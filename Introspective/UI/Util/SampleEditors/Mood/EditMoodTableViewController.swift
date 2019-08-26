@@ -126,7 +126,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath == Me.timestampIndex {
-			let controller: SelectDateViewController = viewController(named: "datePicker", fromStoryboard: "Util")
+			let controller = viewController(named: "datePicker", fromStoryboard: "Util") as! SelectDateViewController
 			controller.initialDate = timestamp
 			controller.notificationToSendOnAccept = Me.timestampChanged
 			customPresentViewController(Me.datePresenter, viewController: controller, animated: false)

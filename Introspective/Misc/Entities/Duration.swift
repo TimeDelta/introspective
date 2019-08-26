@@ -98,6 +98,10 @@ public final class Duration: Equatable, Comparable {
 		return Duration(lhs.interval - rhs.timeInterval)
 	}
 
+	public static func -(lhs: Date, rhs: Duration) -> Date {
+		return lhs.addingTimeInterval(-rhs.interval)
+	}
+
 	public static func -=(lhs: inout Duration, rhs: Duration) {
 		lhs = lhs - rhs
 	}
@@ -128,6 +132,10 @@ public final class Duration: Equatable, Comparable {
 
 	public static func +(lhs: Duration, rhs: DateComponents) -> Duration {
 		return Duration(lhs.interval + rhs.timeInterval)
+	}
+
+	public static func +(lhs: Date, rhs: Duration) -> Date {
+		return lhs.addingTimeInterval(rhs.interval)
 	}
 
 	public static func +=(lhs: inout Duration, rhs: Duration) {

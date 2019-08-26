@@ -40,6 +40,7 @@ class UnitTest: Test {
 	var mockBooleanAlgebraFactory: BooleanAlgebraFactoryMock!
 	var mockAttributeRestrictionFactory: AttributeRestrictionFactoryMock!
 	var mockExtraInformationFactory: ExtraInformationFactoryMock!
+	var mockDaoFactory: DaoFactoryMock!
 
 	override func setUp() {
 		super.setUp()
@@ -97,6 +98,9 @@ class UnitTest: Test {
 
 		mockExtraInformationFactory = ExtraInformationFactoryMock()
 		Given(injectionProvider, .extraInformationFactory(willReturn: mockExtraInformationFactory))
+
+		mockDaoFactory = DaoFactoryMock()
+		Given(injectionProvider, .daoFactory(willReturn: mockDaoFactory))
 
 		utilFactory = UtilFactory()
 		Given(injectionProvider, .utilFactory(willReturn: utilFactory))

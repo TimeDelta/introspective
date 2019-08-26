@@ -21,3 +21,9 @@ func equals(_ expected: ActivityDefinition) -> Matcher<ActivityDefinition?> {
 		return .mismatch(nil)
 	}
 }
+
+func equals(_ expected: ActivityDefinition) -> Matcher<ActivityDefinition> {
+	return Matcher("\(expected.description)") { actual -> Bool in
+		return expected.equalTo(actual)
+	}
+}

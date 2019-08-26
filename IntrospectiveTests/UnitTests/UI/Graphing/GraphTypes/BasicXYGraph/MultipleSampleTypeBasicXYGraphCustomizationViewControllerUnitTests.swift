@@ -10,6 +10,7 @@ import XCTest
 import SwiftyMocky
 import Hamcrest
 import AAInfographics
+import Presentr
 @testable import Introspective
 
 final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: UnitTest {
@@ -44,6 +45,8 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 		chooseSeriesGroupingButton = UIButton()
 		choosePointGroupingButton = UIButton()
 		showGraphButton = UIButton()
+
+		Given(mockUiUtil, .customPresenter(width: .any, height: .any, center: .any, willReturn: Presentr(presentationType: .popup)))
 
 		let storyboard = UIStoryboard(name: "BasicXYGraph", bundle: nil)
 		controller = (storyboard.instantiateViewController(withIdentifier: "multipleSampleTypeSetup") as! MultipleSampleTypeBasicXYGraphCustomizationViewController)

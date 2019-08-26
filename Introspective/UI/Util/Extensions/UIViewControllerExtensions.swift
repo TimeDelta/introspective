@@ -104,6 +104,10 @@ extension UIViewController {
 		DependencyInjector.util.notification.post(name, object: object, userInfo: userInfo, qos: nil)
 	}
 
+	final func syncPost(_ name: Notification.Name, object: Any? = self, userInfo: [UserInfoKey: Any]? = nil) {
+		DependencyInjector.util.notification.post(name, object: object, userInfo: userInfo, qos: nil)
+	}
+
 	final func present(_ viewController: UIViewController, using presenter: Presentr, animated: Bool = false, completion: (() -> Void)? = nil) {
 		DependencyInjector.util.ui.present(viewController, on: self, using: presenter, animated: animated, completion: completion)
 	}

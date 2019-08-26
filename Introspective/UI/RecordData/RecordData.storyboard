@@ -415,10 +415,10 @@
             </objects>
             <point key="canvasLocation" x="2085.5999999999999" y="241.52923538230885"/>
         </scene>
-        <!--Edit Activity Table View Controller-->
+        <!--Edit Activity Table View Controller Impl-->
         <scene sceneID="IU7-bs-Baw">
             <objects>
-                <tableViewController storyboardIdentifier="editActivity" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Cfs-x5-p33" customClass="EditActivityTableViewController" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="editActivity" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Cfs-x5-p33" customClass="EditActivityTableViewControllerImpl" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="9a1-B9-Z9S">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="554"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -472,7 +472,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="end" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="end" id="vQH-6v-H84" customClass="ActivityEndDateTableViewCell" customModule="Introspective" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="end" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="end" id="vQH-6v-H84" customClass="ActivityEndDateTableViewCellImpl" customModule="Introspective" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="116" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vQH-6v-H84" id="lpK-7v-4DY">
@@ -511,8 +511,32 @@
                                     <outlet property="endDateLabel" destination="eGD-aA-PrV" id="wKE-uu-UnA"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="note" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="note" rowHeight="131" id="Djz-l3-c9V" customClass="ActivityNoteTableViewCell" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="160" width="375" height="131"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="duration" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="duration" textLabel="PwE-rG-ulE" detailTextLabel="WHm-5s-Usz" style="IBUITableViewCellStyleValue1" id="aYC-Ee-32F">
+                                <rect key="frame" x="0.0" y="160" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="aYC-Ee-32F" id="J9j-pz-D4h">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Duration" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="PwE-rG-ulE">
+                                            <rect key="frame" x="16" y="12" width="65.5" height="20.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="  " textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="WHm-5s-Usz">
+                                            <rect key="frame" x="350" y="12" width="9" height="20.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="note" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="note" rowHeight="131" id="Djz-l3-c9V" customClass="ActivityNoteTableViewCellImpl" customModule="Introspective" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="204" width="375" height="131"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Djz-l3-c9V" id="tHJ-mt-4dQ">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="130.5"/>
@@ -532,8 +556,8 @@
                                     <outlet property="noteView" destination="xh7-l0-mU7" id="xfr-IK-WIX"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="tags" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="tags" rowHeight="131" id="Iwe-n6-Zgr" customClass="ActivityTagsTableViewCell" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="291" width="375" height="131"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="tags" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="tags" rowHeight="131" id="Iwe-n6-Zgr" customClass="ActivityTagsTableViewCellImpl" customModule="Introspective" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="335" width="375" height="131"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Iwe-n6-Zgr" id="GQE-gD-Kp9">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="130.5"/>

@@ -8,7 +8,14 @@
 
 import UIKit
 
-public final class ActivityNoteTableViewCell: UITableViewCell {
+public protocol ActivityNoteTableViewCell: UITableViewCell {
+
+	var notificationToSendOnChange: Notification.Name! { get set }
+	var note: String? { get set }
+	var autoFocus: Bool! { get set }
+}
+
+public final class ActivityNoteTableViewCellImpl: UITableViewCell, ActivityNoteTableViewCell {
 
 	// MARK: - IBOutlets
 
@@ -47,7 +54,7 @@ public final class ActivityNoteTableViewCell: UITableViewCell {
 
 // MARK: - UITextViewDelegate
 
-extension ActivityNoteTableViewCell: UITextViewDelegate {
+extension ActivityNoteTableViewCellImpl: UITextViewDelegate {
 
 	public final func textViewDidChange(_ textView: UITextView) {
 		DispatchQueue.main.async {

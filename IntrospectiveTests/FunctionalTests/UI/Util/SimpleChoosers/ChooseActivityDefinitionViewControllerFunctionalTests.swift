@@ -15,7 +15,7 @@ final class ChooseActivityDefinitionViewControllerFunctionalTests: FunctionalTes
 
 	private final var picker: UIPickerView!
 
-	private final var controller: ChooseActivityDefinitionViewController!
+	private final var controller: ChooseActivityDefinitionViewControllerImpl!
 
 	final override func setUp() {
 		super.setUp()
@@ -23,7 +23,7 @@ final class ChooseActivityDefinitionViewControllerFunctionalTests: FunctionalTes
 		picker = UIPickerView()
 
 		let storyboard = UIStoryboard(name: "Util", bundle: nil)
-		controller = (storyboard.instantiateViewController(withIdentifier: "chooseActivityDefinition") as! ChooseActivityDefinitionViewController)
+		controller = (storyboard.instantiateViewController(withIdentifier: "chooseActivityDefinition") as! ChooseActivityDefinitionViewControllerImpl)
 
 		controller.picker = picker
 	}

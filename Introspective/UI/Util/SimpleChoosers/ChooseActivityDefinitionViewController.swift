@@ -9,7 +9,14 @@
 import UIKit
 import CoreData
 
-public final class ChooseActivityDefinitionViewController: UIViewController {
+public protocol ChooseActivityDefinitionViewController: UIViewController {
+
+	var notificationToSendOnAccept: Notification.Name! { get set }
+	var availableDefinitions: [ActivityDefinition]! { get set }
+	var selectedDefinition: ActivityDefinition? { get set }
+}
+
+public final class ChooseActivityDefinitionViewControllerImpl: UIViewController, ChooseActivityDefinitionViewController {
 
 	// MARK: - IBOutlets
 
@@ -72,7 +79,7 @@ public final class ChooseActivityDefinitionViewController: UIViewController {
 
 // MARK: - UIPickerViewDataSource
 
-extension ChooseActivityDefinitionViewController: UIPickerViewDataSource {
+extension ChooseActivityDefinitionViewControllerImpl: UIPickerViewDataSource {
 
 	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
@@ -85,7 +92,7 @@ extension ChooseActivityDefinitionViewController: UIPickerViewDataSource {
 
 // MARK: - UIPickerViewDelegate
 
-extension ChooseActivityDefinitionViewController: UIPickerViewDelegate {
+extension ChooseActivityDefinitionViewControllerImpl: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		return availableDefinitions[row].name

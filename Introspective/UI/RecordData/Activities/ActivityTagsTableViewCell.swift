@@ -10,7 +10,13 @@ import UIKit
 import WSTagsField
 import CoreData
 
-public final class ActivityTagsTableViewCell: UITableViewCell {
+public protocol ActivityTagsTableViewCell: UITableViewCell {
+
+	var notificationToSendOnChange: Notification.Name! { get set }
+	var tagNames: Set<String> { get set }
+}
+
+public final class ActivityTagsTableViewCellImpl: UITableViewCell, ActivityTagsTableViewCell {
 
 	// MARK: - IBOutlets
 
@@ -23,7 +29,6 @@ public final class ActivityTagsTableViewCell: UITableViewCell {
 			tagsField.returnKeyType = .next
 			tagsField.onDidAddTag = addedTag
 			tagsField.onDidRemoveTag = removedTag
-//			tagsField.onDidSelectSuggestedTag = suggestedTagChosen
 			tagsField.textField.accessibilityLabel = "activity tags"
 			tagsField.textDelegate = self
 			tagsField.maxHeight = 109
@@ -73,10 +78,6 @@ public final class ActivityTagsTableViewCell: UITableViewCell {
 		tagsField.textField.accessibilityValue = tagNames.map{ $0 }.joined(separator: ";")
 	}
 
-//	private final func suggestedTagChosen(_ field: WSTagsField, _ tag: WSTag) {
-//		tagsField.acceptCurrentTextAsTag()
-//	}
-
 	private final func sendTagsChangedNotification() {
 		DispatchQueue.main.async {
 			NotificationCenter.default.post(
@@ -89,7 +90,7 @@ public final class ActivityTagsTableViewCell: UITableViewCell {
 	}
 }
 
-extension ActivityTagsTableViewCell: UITextFieldDelegate {
+extension ActivityTagsTableViewCellImpl: UITextFieldDelegate {
 
 	public func textFieldDidEndEditing(_ textField: UITextField) {
 		tagsField.acceptCurrentTextAsTag()

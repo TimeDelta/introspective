@@ -341,7 +341,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func getAddNewActionFor(_ activityDefinition: ActivityDefinition) -> UIContextualAction {
 		let addNew = UIContextualAction(style: .normal, title: "+") { _, _, completionHandler in
-			let controller: EditActivityTableViewController = self.viewController(named: "editActivity")
+			let controller = self.viewController(named: "editActivity") as! EditActivityTableViewController
 			controller.definition = activityDefinition
 			controller.notificationToSendOnAccept = Me.activityEditedOrCreated
 
@@ -678,7 +678,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func showEditScreenForActivity(_ activity: Activity, autoFocusNote: Bool = false) {
-		let controller: EditActivityTableViewController = viewController(named: "editActivity")
+		let controller = viewController(named: "editActivity") as! EditActivityTableViewController
 		controller.activity = activity
 		controller.notificationToSendOnAccept = Me.activityEditedOrCreated
 		controller.autoFocusNote = autoFocusNote

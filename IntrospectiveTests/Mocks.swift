@@ -75,6 +75,12 @@ import SourceryRuntime
 
 
 
+
+
+
+
+
+
 // MARK: - ATrackerActivityImporter
 open class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
@@ -429,6 +435,161 @@ open class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
         }
         public static func equalTo(_ other: Parameter<Importer>, perform: @escaping (Importer) -> Void) -> Perform {
             return Perform(method: .m_equalTo__other(`other`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
+// MARK: - ActivityDao
+open class ActivityDaoMock: ActivityDao, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    open func getMostRecentActivityDate() -> Date? {
+        addInvocation(.m_getMostRecentActivityDate)
+		let perform = methodPerformValue(.m_getMostRecentActivityDate) as? () -> Void
+		perform?()
+		var __value: Date? = nil
+		do {
+		    __value = try methodReturnValue(.m_getMostRecentActivityDate).casted()
+		} catch {
+			// do nothing
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_getMostRecentActivityDate
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_getMostRecentActivityDate, .m_getMostRecentActivityDate):
+                return true 
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .m_getMostRecentActivityDate: return 0
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func getMostRecentActivityDate(willReturn: Date?...) -> MethodStub {
+            return Given(method: .m_getMostRecentActivityDate, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func getMostRecentActivityDate(willProduce: (Stubber<Date?>) -> Void) -> MethodStub {
+            let willReturn: [Date?] = []
+			let given: Given = { return Given(method: .m_getMostRecentActivityDate, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Date?).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func getMostRecentActivityDate() -> Verify { return Verify(method: .m_getMostRecentActivityDate)}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func getMostRecentActivityDate(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_getMostRecentActivityDate, performs: perform)
         }
     }
 
@@ -4004,6 +4165,162 @@ open class CodableStorageMock: CodableStorage, Mock {
         }
         public static func fileExists(_ fileName: Parameter<String>, in directory: Parameter<StorageDirectory>, perform: @escaping (String, StorageDirectory) -> Void) -> Perform {
             return Perform(method: .m_fileExists__fileNamein_directory(`fileName`, `directory`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
+// MARK: - DaoFactory
+open class DaoFactoryMock: DaoFactory, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    open func activityDao() -> ActivityDao {
+        addInvocation(.m_activityDao)
+		let perform = methodPerformValue(.m_activityDao) as? () -> Void
+		perform?()
+		var __value: ActivityDao
+		do {
+		    __value = try methodReturnValue(.m_activityDao).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for activityDao(). Use given")
+			Failure("Stub return value not specified for activityDao(). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_activityDao
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_activityDao, .m_activityDao):
+                return true 
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case .m_activityDao: return 0
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func activityDao(willReturn: ActivityDao...) -> MethodStub {
+            return Given(method: .m_activityDao, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func activityDao(willProduce: (Stubber<ActivityDao>) -> Void) -> MethodStub {
+            let willReturn: [ActivityDao] = []
+			let given: Given = { return Given(method: .m_activityDao, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (ActivityDao).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func activityDao() -> Verify { return Verify(method: .m_activityDao)}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func activityDao(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_activityDao, performs: perform)
         }
     }
 
@@ -8402,6 +8719,20 @@ open class InjectionProviderMock: InjectionProvider, Mock {
 		return __value
     }
 
+    open func daoFactory() -> DaoFactory {
+        addInvocation(.m_daoFactory)
+		let perform = methodPerformValue(.m_daoFactory) as? () -> Void
+		perform?()
+		var __value: DaoFactory
+		do {
+		    __value = try methodReturnValue(.m_daoFactory).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for daoFactory(). Use given")
+			Failure("Stub return value not specified for daoFactory(). Use given")
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_database
@@ -8418,6 +8749,7 @@ open class InjectionProviderMock: InjectionProvider, Mock {
         case m_exporterFactory
         case m_coachMarkFactory
         case m_booleanAlgebraFactory
+        case m_daoFactory
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -8449,6 +8781,8 @@ open class InjectionProviderMock: InjectionProvider, Mock {
                 return true 
             case (.m_booleanAlgebraFactory, .m_booleanAlgebraFactory):
                 return true 
+            case (.m_daoFactory, .m_daoFactory):
+                return true 
             default: return false
             }
         }
@@ -8469,6 +8803,7 @@ open class InjectionProviderMock: InjectionProvider, Mock {
             case .m_exporterFactory: return 0
             case .m_coachMarkFactory: return 0
             case .m_booleanAlgebraFactory: return 0
+            case .m_daoFactory: return 0
             }
         }
     }
@@ -8523,6 +8858,9 @@ open class InjectionProviderMock: InjectionProvider, Mock {
         }
         public static func booleanAlgebraFactory(willReturn: BooleanAlgebraFactory...) -> MethodStub {
             return Given(method: .m_booleanAlgebraFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func daoFactory(willReturn: DaoFactory...) -> MethodStub {
+            return Given(method: .m_daoFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func database(willProduce: (Stubber<Database>) -> Void) -> MethodStub {
             let willReturn: [Database] = []
@@ -8622,6 +8960,13 @@ open class InjectionProviderMock: InjectionProvider, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func daoFactory(willProduce: (Stubber<DaoFactory>) -> Void) -> MethodStub {
+            let willReturn: [DaoFactory] = []
+			let given: Given = { return Given(method: .m_daoFactory, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (DaoFactory).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct Verify {
@@ -8641,6 +8986,7 @@ open class InjectionProviderMock: InjectionProvider, Mock {
         public static func exporterFactory() -> Verify { return Verify(method: .m_exporterFactory)}
         public static func coachMarkFactory() -> Verify { return Verify(method: .m_coachMarkFactory)}
         public static func booleanAlgebraFactory() -> Verify { return Verify(method: .m_booleanAlgebraFactory)}
+        public static func daoFactory() -> Verify { return Verify(method: .m_daoFactory)}
     }
 
     public struct Perform {
@@ -8688,6 +9034,9 @@ open class InjectionProviderMock: InjectionProvider, Mock {
         }
         public static func booleanAlgebraFactory(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_booleanAlgebraFactory, performs: perform)
+        }
+        public static func daoFactory(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_daoFactory, performs: perform)
         }
     }
 
@@ -10163,29 +10512,44 @@ open class NotificationUtilMock: NotificationUtil, Mock {
 
 
     open func post(_ name: NotificationName, object: Any?, userInfo: [UserInfoKey: Any]?, qos: DispatchQoS.QoSClass?) {
-        addInvocation(.m_post__nameobject_objectuserInfo_userInfoqos_qos(Parameter<NotificationName>.value(`name`), Parameter<Any?>.value(`object`), Parameter<[UserInfoKey: Any]?>.value(`userInfo`), Parameter<DispatchQoS.QoSClass?>.value(`qos`)))
-		let perform = methodPerformValue(.m_post__nameobject_objectuserInfo_userInfoqos_qos(Parameter<NotificationName>.value(`name`), Parameter<Any?>.value(`object`), Parameter<[UserInfoKey: Any]?>.value(`userInfo`), Parameter<DispatchQoS.QoSClass?>.value(`qos`))) as? (NotificationName, Any?, [UserInfoKey: Any]?, DispatchQoS.QoSClass?) -> Void
+        addInvocation(.m_post__nameobject_objectuserInfo_userInfoqos_qos_1(Parameter<NotificationName>.value(`name`), Parameter<Any?>.value(`object`), Parameter<[UserInfoKey: Any]?>.value(`userInfo`), Parameter<DispatchQoS.QoSClass?>.value(`qos`)))
+		let perform = methodPerformValue(.m_post__nameobject_objectuserInfo_userInfoqos_qos_1(Parameter<NotificationName>.value(`name`), Parameter<Any?>.value(`object`), Parameter<[UserInfoKey: Any]?>.value(`userInfo`), Parameter<DispatchQoS.QoSClass?>.value(`qos`))) as? (NotificationName, Any?, [UserInfoKey: Any]?, DispatchQoS.QoSClass?) -> Void
+		perform?(`name`, `object`, `userInfo`, `qos`)
+    }
+
+    open func post(_ name: Notification.Name, object: Any?, userInfo: [UserInfoKey: Any]?, qos: DispatchQoS.QoSClass?) {
+        addInvocation(.m_post__nameobject_objectuserInfo_userInfoqos_qos_2(Parameter<Notification.Name>.value(`name`), Parameter<Any?>.value(`object`), Parameter<[UserInfoKey: Any]?>.value(`userInfo`), Parameter<DispatchQoS.QoSClass?>.value(`qos`)))
+		let perform = methodPerformValue(.m_post__nameobject_objectuserInfo_userInfoqos_qos_2(Parameter<Notification.Name>.value(`name`), Parameter<Any?>.value(`object`), Parameter<[UserInfoKey: Any]?>.value(`userInfo`), Parameter<DispatchQoS.QoSClass?>.value(`qos`))) as? (Notification.Name, Any?, [UserInfoKey: Any]?, DispatchQoS.QoSClass?) -> Void
 		perform?(`name`, `object`, `userInfo`, `qos`)
     }
 
 
     fileprivate enum MethodType {
-        case m_post__nameobject_objectuserInfo_userInfoqos_qos(Parameter<NotificationName>, Parameter<Any?>, Parameter<[UserInfoKey: Any]?>, Parameter<DispatchQoS.QoSClass?>)
+        case m_post__nameobject_objectuserInfo_userInfoqos_qos_1(Parameter<NotificationName>, Parameter<Any?>, Parameter<[UserInfoKey: Any]?>, Parameter<DispatchQoS.QoSClass?>)
+        case m_post__nameobject_objectuserInfo_userInfoqos_qos_2(Parameter<Notification.Name>, Parameter<Any?>, Parameter<[UserInfoKey: Any]?>, Parameter<DispatchQoS.QoSClass?>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
-            case (.m_post__nameobject_objectuserInfo_userInfoqos_qos(let lhsName, let lhsObject, let lhsUserinfo, let lhsQos), .m_post__nameobject_objectuserInfo_userInfoqos_qos(let rhsName, let rhsObject, let rhsUserinfo, let rhsQos)):
+            case (.m_post__nameobject_objectuserInfo_userInfoqos_qos_1(let lhsName, let lhsObject, let lhsUserinfo, let lhsQos), .m_post__nameobject_objectuserInfo_userInfoqos_qos_1(let rhsName, let rhsObject, let rhsUserinfo, let rhsQos)):
                 guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsObject, rhs: rhsObject, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsUserinfo, rhs: rhsUserinfo, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsQos, rhs: rhsQos, with: matcher) else { return false } 
                 return true 
+            case (.m_post__nameobject_objectuserInfo_userInfoqos_qos_2(let lhsName, let lhsObject, let lhsUserinfo, let lhsQos), .m_post__nameobject_objectuserInfo_userInfoqos_qos_2(let rhsName, let rhsObject, let rhsUserinfo, let rhsQos)):
+                guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsObject, rhs: rhsObject, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsUserinfo, rhs: rhsUserinfo, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsQos, rhs: rhsQos, with: matcher) else { return false } 
+                return true 
+            default: return false
             }
         }
 
         func intValue() -> Int {
             switch self {
-            case let .m_post__nameobject_objectuserInfo_userInfoqos_qos(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
+            case let .m_post__nameobject_objectuserInfo_userInfoqos_qos_1(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
+            case let .m_post__nameobject_objectuserInfo_userInfoqos_qos_2(p0, p1, p2, p3): return p0.intValue + p1.intValue + p2.intValue + p3.intValue
             }
         }
     }
@@ -10204,7 +10568,8 @@ open class NotificationUtilMock: NotificationUtil, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func post(_ name: Parameter<NotificationName>, object: Parameter<Any?>, userInfo: Parameter<[UserInfoKey: Any]?>, qos: Parameter<DispatchQoS.QoSClass?>) -> Verify { return Verify(method: .m_post__nameobject_objectuserInfo_userInfoqos_qos(`name`, `object`, `userInfo`, `qos`))}
+        public static func post(_ name: Parameter<NotificationName>, object: Parameter<Any?>, userInfo: Parameter<[UserInfoKey: Any]?>, qos: Parameter<DispatchQoS.QoSClass?>) -> Verify { return Verify(method: .m_post__nameobject_objectuserInfo_userInfoqos_qos_1(`name`, `object`, `userInfo`, `qos`))}
+        public static func post(_ name: Parameter<Notification.Name>, object: Parameter<Any?>, userInfo: Parameter<[UserInfoKey: Any]?>, qos: Parameter<DispatchQoS.QoSClass?>) -> Verify { return Verify(method: .m_post__nameobject_objectuserInfo_userInfoqos_qos_2(`name`, `object`, `userInfo`, `qos`))}
     }
 
     public struct Perform {
@@ -10212,7 +10577,10 @@ open class NotificationUtilMock: NotificationUtil, Mock {
         var performs: Any
 
         public static func post(_ name: Parameter<NotificationName>, object: Parameter<Any?>, userInfo: Parameter<[UserInfoKey: Any]?>, qos: Parameter<DispatchQoS.QoSClass?>, perform: @escaping (NotificationName, Any?, [UserInfoKey: Any]?, DispatchQoS.QoSClass?) -> Void) -> Perform {
-            return Perform(method: .m_post__nameobject_objectuserInfo_userInfoqos_qos(`name`, `object`, `userInfo`, `qos`), performs: perform)
+            return Perform(method: .m_post__nameobject_objectuserInfo_userInfoqos_qos_1(`name`, `object`, `userInfo`, `qos`), performs: perform)
+        }
+        public static func post(_ name: Parameter<Notification.Name>, object: Parameter<Any?>, userInfo: Parameter<[UserInfoKey: Any]?>, qos: Parameter<DispatchQoS.QoSClass?>, perform: @escaping (Notification.Name, Any?, [UserInfoKey: Any]?, DispatchQoS.QoSClass?) -> Void) -> Perform {
+            return Perform(method: .m_post__nameobject_objectuserInfo_userInfoqos_qos_2(`name`, `object`, `userInfo`, `qos`), performs: perform)
         }
     }
 

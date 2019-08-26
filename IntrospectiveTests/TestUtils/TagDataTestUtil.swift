@@ -19,4 +19,13 @@ public final class TagDataTestUtil {
 		try! transaction.commit()
 		return try! DependencyInjector.db.pull(savedObject: tag)
 	}
+
+	@discardableResult
+	public static func createTags(names: [String]) -> [Tag] {
+		var tags = [Tag]()
+		for name in names {
+			tags.append(createTag(name: name))
+		}
+		return tags
+	}
 }

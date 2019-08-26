@@ -19,7 +19,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 	private final var datePicker: UIDatePicker!
 	private final var toolbar: UIToolbar!
 
-	private final var controller: SelectDateViewController!
+	private final var controller: SelectDateViewControllerImpl!
 
 	private final let timeUnits = [
 		(title: "Months", units: { (amount: Int) -> DateComponents in return amount.months }),
@@ -40,7 +40,7 @@ final class SelectDateViewControllerUnitTests: UnitTest {
 		toolbar = UIToolbar()
 
 		let storyboard = UIStoryboard(name: "Util", bundle: nil)
-		controller = (storyboard.instantiateViewController(withIdentifier: "datePicker") as! SelectDateViewController)
+		controller = (storyboard.instantiateViewController(withIdentifier: "datePicker") as! SelectDateViewControllerImpl)
 		controller.datePicker = datePicker
 		controller.toolbar = toolbar
 	}

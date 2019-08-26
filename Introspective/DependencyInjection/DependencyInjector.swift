@@ -26,4 +26,5 @@ public final class DependencyInjector {
 	public static var exporter: ExporterFactory { get { return injectionProvider.exporterFactory() } }
 	public static var coachMarks: CoachMarkFactory { get { return injectionProvider.coachMarkFactory() } }
 	public static var booleanAlgebra: BooleanAlgebraFactory { get { return injectionProvider.booleanAlgebraFactory() } }
+	public static var daos: DaoFactory { get { return injectionProvider.daoFactory() } }
 }

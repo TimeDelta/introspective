@@ -166,7 +166,7 @@ public final class EditMedicationViewController: UIViewController {
 	}
 
 	@IBAction final func startedOnButtonPressed(_ sender: Any) {
-		let controller: SelectDateViewController = viewController(named:"datePicker", fromStoryboard: "Util")
+		let controller = viewController(named:"datePicker", fromStoryboard: "Util") as! SelectDateViewController
 		controller.initialDate = startedOnDate
 		controller.notificationToSendOnAccept = Me.startedOnChanged
 		controller.datePickerMode = .date

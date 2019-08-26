@@ -529,7 +529,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	private final func showEditActivityView(_ indexPath: IndexPath) {
 		lastSelectedRowIndex = indexPath.row
 
-		let controller: EditActivityTableViewController = viewController(named: "editActivity", fromStoryboard: "RecordData")
+		let controller = viewController(named: "editActivity", fromStoryboard: "RecordData") as! EditActivityTableViewController
 		controller.activity = (samples[indexPath.row] as! Activity)
 		controller.notificationToSendOnAccept = Me.editedSample
 		controller.userInfoKey = .sample

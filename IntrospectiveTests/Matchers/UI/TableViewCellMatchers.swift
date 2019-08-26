@@ -34,3 +34,19 @@ func hasIndentationLevel(_ indentationMatcher: Matcher<Int>) -> Matcher<UITableV
 		return indentationMatcher.matches(cell.indentationLevel)
 	}
 }
+
+func hasDetailText(_ text: String) -> Matcher<UITableViewCell> {
+	return hasDetailText(equalTo(text))
+}
+
+func hasDetailText(_ textMatcher: Matcher<String>) -> Matcher<UITableViewCell> {
+	return Matcher("has detail text \(textMatcher.description)") { cell -> MatchResult in
+		guard let detailTextLabel = cell.detailTextLabel else {
+			return .mismatch("Cell has no detail text label")
+		}
+		guard let detailText = detailTextLabel.text else {
+			return .mismatch("Detail text was nil")
+		}
+		return textMatcher.matches(detailText)
+	}
+}

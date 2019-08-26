@@ -353,6 +353,18 @@ final class DurationUnitTests: UnitTest {
 		XCTAssertEqual(result, expectedDuration)
 	}
 
+	func testGivenDatePlusDuration_plus_returnsCorrectValue() {
+		// given
+		let date = Date()
+		let duration = Duration(1.days)
+
+		// when
+		let addedDate = date + duration
+
+		// then
+		assertThat(addedDate, equalTo(date + 1.days))
+	}
+
 	// MARK: - +=
 
 	func testGiven10SecondsPlus50Seconds_plusEquals_assignsOneMinute() {
@@ -447,6 +459,18 @@ final class DurationUnitTests: UnitTest {
 		// then
 		let expectedDuration = Duration(22.seconds)
 		XCTAssertEqual(result, expectedDuration)
+	}
+
+	func testGivenDateMinusDuration_minus_returnsCorrectValue() {
+		// given
+		let date = Date()
+		let duration = Duration(1.days)
+
+		// when
+		let addedDate = date - duration
+
+		// then
+		assertThat(addedDate, equalTo(date - 1.days))
 	}
 
 	// MARK: - -=
