@@ -26,7 +26,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	// MARK: - valueOf()
 
-	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() {
+	func testGivenUnknownAttribute_valueOf_throwsUnknownAttributeError() throws {
 		// when
 		XCTAssertThrowsError(try restriction.value(of: Me.restrictedAttribute)) { error in
 			// then
@@ -34,13 +34,13 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		}
 	}
 
-	func testGivenTimeUnitAttribute_valueOf_returnsCorrectValue() {
+	func testGivenTimeUnitAttribute_valueOf_returnsCorrectValue() throws {
 		// given
 		let expectedTimeUnit = Calendar.Component.hour
 		restriction.timeUnit = expectedTimeUnit
 
 		// when
-		let actualTimeUnit = try! restriction.value(of: Me.timeUnitAttribute) as! Calendar.Component
+		let actualTimeUnit = try restriction.value(of: Me.timeUnitAttribute) as! Calendar.Component
 
 		// then
 		XCTAssertEqual(actualTimeUnit, expectedTimeUnit)
@@ -48,7 +48,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	// MARK: - setAttributeTo()
 
-	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() {
+	func testGivenUnknownAttribute_setAttributeTo_throwsUnknownAttributeError() throws {
 		// when
 		XCTAssertThrowsError(try restriction.set(attribute: Me.restrictedAttribute, to: 1 as Any)) { error in
 			// then
@@ -56,7 +56,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		}
 	}
 
-	func testGivenWrongValueTypeForTimeUnitAttribtue_setAttributeTo_throwsTypeMismatchError() {
+	func testGivenWrongValueTypeForTimeUnitAttribtue_setAttributeTo_throwsTypeMismatchError() throws {
 		// when
 		XCTAssertThrowsError(try restriction.set(attribute: Me.timeUnitAttribute, to: 1 as Any)) { error in
 			// then
@@ -64,12 +64,12 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		}
 	}
 
-	func testGivenValidValueForTimeUnitAttribute_setAttributeTo_correctlySetsTimeUnit() {
+	func testGivenValidValueForTimeUnitAttribute_setAttributeTo_correctlySetsTimeUnit() throws {
 		// given
 		let expectedTimeUnit = Calendar.Component.nanosecond
 
 		// when
-		try! restriction.set(attribute: Me.timeUnitAttribute, to: expectedTimeUnit)
+		try restriction.set(attribute: Me.timeUnitAttribute, to: expectedTimeUnit)
 
 		// then
 		XCTAssertEqual(restriction.timeUnit, expectedTimeUnit)
@@ -77,7 +77,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	// MARK: - samplePasses
 
-	func testGivenSampleWithNonDateValueForGivenAttribute_samplePasses_throwsTypeMismatchError() {
+	func testGivenSampleWithNonDateValueForGivenAttribute_samplePasses_throwsTypeMismatchError() throws {
 		// given
 		let sample = SampleCreatorTestUtil.createSample(withValue: 1, for: Me.restrictedAttribute)
 
@@ -88,51 +88,65 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		}
 	}
 
-	func testGivenSampleWithDateForGivenAttributeThatIsBeforeCurrentTimeUnit_samplePasses_returnsFalse() {
+	func testGivenSampleWithDateForGivenAttributeThatIsBeforeCurrentTimeUnit_samplePasses_returnsFalse() throws {
 		// given
 		let sampleDate = Date() - 1.days
 		let sample = SampleCreatorTestUtil.createSample(withValue: sampleDate, for: Me.restrictedAttribute)
 		restriction.timeUnit = .day
 
 		// when
-		let samplePasses = try! restriction.samplePasses(sample)
+		let samplePasses = try restriction.samplePasses(sample)
 
 		// then
 		XCTAssertFalse(samplePasses)
 	}
 
-	func testGivenSampleWithDateForGivenAttributeThatIsAfterCurrentTimeUnit_samplePasses_returnsFalse() {
+	func testGivenSampleWithDateForGivenAttributeThatIsAfterCurrentTimeUnit_samplePasses_returnsFalse() throws {
 		// given
 		let sampleDate = Date() + 1.weeks
 		let sample = SampleCreatorTestUtil.createSample(withValue: sampleDate, for: Me.restrictedAttribute)
 		restriction.timeUnit = .weekOfYear
 
 		// when
-		let samplePasses = try! restriction.samplePasses(sample)
+		let samplePasses = try restriction.samplePasses(sample)
 
 		// then
 		XCTAssertFalse(samplePasses)
 	}
 
-	func testGivenSampleWithDateForGivenAttributeThatIsInCurrentTimeUnit_samplePasses_returnsTrue() {
+	func testGivenSampleWithDateForGivenAttributeThatIsInCurrentTimeUnit_samplePasses_returnsTrue() throws {
 		// given
 		let sampleDate = Date()
 		let sample = SampleCreatorTestUtil.createSample(withValue: sampleDate, for: Me.restrictedAttribute)
 		restriction.timeUnit = .day
 
 		// when
-		let samplePasses = try! restriction.samplePasses(sample)
+		let samplePasses = try restriction.samplePasses(sample)
 
 		// then
 		XCTAssert(samplePasses)
 	}
 
-	func testGivenNilValueForGivenAttribute_samplePasses_returnsFalse() {
+	func testGivenNilValueForGivenAttribute_samplePasses_returnsFalse() throws {
 		// given
 		let sample = SampleCreatorTestUtil.createSample(withValue: nil as Any?, for: Me.restrictedAttribute)
 
 		// when
-		let samplePasses = try! restriction.samplePasses(sample)
+		let samplePasses = try restriction.samplePasses(sample)
+
+		// then
+		XCTAssertFalse(samplePasses)
+	}
+
+	func testGivenDateWithTargetDayFromWrongMonthOrYear_samplePasses_returnsFalse() throws {
+		// given
+		let targetDay = Date().component(.day)
+		let sampleDate = Date(year: 2019, month: 1, day: targetDay)
+		restriction.timeUnit = .day
+		let sample = SampleCreatorTestUtil.createSample(withValue: sampleDate, for: Me.restrictedAttribute)
+
+		// when
+		let samplePasses = try restriction.samplePasses(sample)
 
 		// then
 		XCTAssertFalse(samplePasses)
@@ -140,7 +154,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	// MARK: - copy()
 
-	func test_copy_returnsCopy() {
+	func test_copy_returnsCopy() throws {
 		// when
 		let copy = restriction.copy()
 
@@ -154,12 +168,12 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	// MARK: - ==
 
-	func testGivenSameObjectTwice_equalToOperator_returnsTrue() {
+	func testGivenSameObjectTwice_equalToOperator_returnsTrue() throws {
 		// when / then
 		XCTAssert(restriction == restriction)
 	}
 
-	func testGivenSameClassWithDifferentRestrictedAttributes_equalToOperator_returnsFalse() {
+	func testGivenSameClassWithDifferentRestrictedAttributes_equalToOperator_returnsFalse() throws {
 		// given
 		let otherRestriction = InCurrentTimeUnitDateAttributeRestriction(
 			restrictedAttribute: DateTimeAttribute(name: "not the same attribute"),
@@ -169,7 +183,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		XCTAssertFalse(restriction == otherRestriction)
 	}
 
-	func testGivenSameClassWithDifferentTimeUnits_equalToOperator_returnsFalse() {
+	func testGivenSameClassWithDifferentTimeUnits_equalToOperator_returnsFalse() throws {
 		// given
 		let otherRestriction = InCurrentTimeUnitDateAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
@@ -179,7 +193,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		XCTAssertFalse(restriction == otherRestriction)
 	}
 
-	func testGivenSameClassWithAllSameAttributes_equalToOperator_returnsTrue() {
+	func testGivenSameClassWithAllSameAttributes_equalToOperator_returnsTrue() throws {
 		// given
 		let otherRestriction = InCurrentTimeUnitDateAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
@@ -191,7 +205,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	// MARK: - equalTo(attributed:)
 
-	func testGivenOtherOfDifferentTypes_equalToAttributed_returnsFalse() {
+	func testGivenOtherOfDifferentTypes_equalToAttributed_returnsFalse() throws {
 		// given
 		let otherAttributed: Attributed = SameDatesSubQueryMatcher()
 
@@ -202,7 +216,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameObjectTwice_equalToAttributed_returnsTrue() {
+	func testGivenSameObjectTwice_equalToAttributed_returnsTrue() throws {
 		// when
 		let equal = restriction.equalTo(restriction as Attributed)
 
@@ -210,7 +224,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		XCTAssert(equal)
 	}
 
-	func testGivenSameClassWithDifferentRestrictedAttributes_equalToAttributed_returnsFalse() {
+	func testGivenSameClassWithDifferentRestrictedAttributes_equalToAttributed_returnsFalse() throws {
 		// given
 		let otherAttributed: Attributed = InCurrentTimeUnitDateAttributeRestriction(
 			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
@@ -222,7 +236,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithDifferentTimeUnits_equalToAttributed_returnsFalse() {
+	func testGivenSameClassWithDifferentTimeUnits_equalToAttributed_returnsFalse() throws {
 		// given
 		let otherAttributed: Attributed = InCurrentTimeUnitDateAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
@@ -235,7 +249,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithAllSameAttributes_equalToAttributed_returnsTrue() {
+	func testGivenSameClassWithAllSameAttributes_equalToAttributed_returnsTrue() throws {
 		// given
 		let otherAttributed: Attributed = InCurrentTimeUnitDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
@@ -248,7 +262,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	// MARK: - equalTo(restriction:)
 
-	func testGivenDifferentClass_equalToRestriction_returnsFalse() {
+	func testGivenDifferentClass_equalToRestriction_returnsFalse() throws {
 		// given
 		let otherAttributed: AttributeRestriction = LessThanDoubleAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
@@ -259,7 +273,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameObjectTwice_equalToRestriction_returnsTrue() {
+	func testGivenSameObjectTwice_equalToRestriction_returnsTrue() throws {
 		// when
 		let equal = restriction.equalTo(restriction as AttributeRestriction)
 
@@ -267,7 +281,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		XCTAssert(equal)
 	}
 
-	func testGivenSameClassWithDifferentRestrictedAttributes_equalToRestriction_returnsFalse() {
+	func testGivenSameClassWithDifferentRestrictedAttributes_equalToRestriction_returnsFalse() throws {
 		// given
 		let otherAttributed: AttributeRestriction = InCurrentTimeUnitDateAttributeRestriction(
 			restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"),
@@ -280,7 +294,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithDifferentTimeUnits_equalToRestriction_returnsFalse() {
+	func testGivenSameClassWithDifferentTimeUnits_equalToRestriction_returnsFalse() throws {
 		// given
 		let otherAttributed: AttributeRestriction = InCurrentTimeUnitDateAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
@@ -293,7 +307,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithSameRestrictedAttributes_equalToRestriction_returnsTrue() {
+	func testGivenSameClassWithSameRestrictedAttributes_equalToRestriction_returnsTrue() throws {
 		// given
 		let otherAttributed: AttributeRestriction = InCurrentTimeUnitDateAttributeRestriction(restrictedAttribute: restriction.restrictedAttribute)
 
@@ -306,7 +320,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
 	// MARK: - equalTo()
 
-	func testGivenSameObjectTwice_equalTo_returnsTrue() {
+	func testGivenSameObjectTwice_equalTo_returnsTrue() throws {
 		// when
 		let equal = restriction.equalTo(restriction)
 
@@ -314,7 +328,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		XCTAssert(equal)
 	}
 
-	func testGivenSameClassWithDifferentRestrictedAttributes_equalTo_returnsFalse() {
+	func testGivenSameClassWithDifferentRestrictedAttributes_equalTo_returnsFalse() throws {
 		// given
 		let other = InCurrentTimeUnitDateAttributeRestriction(restrictedAttribute: DateOnlyAttribute(name: "not the same attribute"))
 
@@ -325,7 +339,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameClassWithDifferentTimeUnits_equalTo_returnsFalse() {
+	func testGivenSameClassWithDifferentTimeUnits_equalTo_returnsFalse() throws {
 		// given
 		let other = InCurrentTimeUnitDateAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,
@@ -338,7 +352,7 @@ class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 		XCTAssertFalse(equal)
 	}
 
-	func testGivenSameMatcherTypeWithSameRestrictedAttributes_equalTo_returnsTrue() {
+	func testGivenSameMatcherTypeWithSameRestrictedAttributes_equalTo_returnsTrue() throws {
 		// given
 		let other = InCurrentTimeUnitDateAttributeRestriction(
 			restrictedAttribute: restriction.restrictedAttribute,

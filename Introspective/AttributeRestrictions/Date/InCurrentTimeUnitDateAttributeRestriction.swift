@@ -82,9 +82,10 @@ public final class InCurrentTimeUnitDateAttributeRestriction: DateAttributeRestr
 		guard let sampleDate = sampleValue as? Date else {
 			throw TypeMismatchError(attribute: restrictedAttribute, of: sample, wasA: type(of: sampleValue))
 		}
-		let currentTimeUnitIndex = Date().component(timeUnit)
-		let sampleTimeUnitIndex = sampleDate.component(timeUnit)
-		return currentTimeUnitIndex == sampleTimeUnitIndex
+		let now = Date()
+		let minDate = DependencyInjector.util.calendar.start(of: timeUnit, in: now)
+		let maxDate = DependencyInjector.util.calendar.end(of: timeUnit, in: now)
+		return minDate <= sampleDate && sampleDate <= maxDate
 	}
 
 	public override func copy() -> AttributeRestriction {
