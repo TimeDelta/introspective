@@ -35,6 +35,8 @@ public final class ActivityNoteTableViewCellImpl: UITableViewCell, ActivityNoteT
 	public final var autoFocus: Bool! {
 		didSet { updateUI() }
 	}
+	/// to avoid triggering it every time the containing table view is reloaded
+	private final var autoFocusTriggered: Bool = false
 
 	private final var noteSet = false
 
@@ -46,7 +48,8 @@ public final class ActivityNoteTableViewCellImpl: UITableViewCell, ActivityNoteT
 		guard noteSet else { return }
 		noteView.text = note ?? ""
 		noteView.delegate = self
-		if autoFocus {
+		if autoFocus && !autoFocusTriggered {
+			autoFocusTriggered = true
 			noteView.becomeFirstResponder()
 		}
 	}
