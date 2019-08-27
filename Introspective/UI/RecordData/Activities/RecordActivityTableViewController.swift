@@ -323,6 +323,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 				controller.samples = result?.samples
 			}
 			controller.query = query
+			controller.backButtonTitle = "Activities"
 			self.pushToNavigationController(controller)
 		}
 		action.accessibilityLabel = "view all history for \(definition.name)"
