@@ -112,6 +112,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 		DependencyInjector.util.ui.setBackButton(for: self, title: backButtonTitle ?? "Query", action: #selector(done))
 
+		extendedLayoutIncludesOpaqueBars = true
+
 		tableView.flashScrollIndicators()
 		finishedLoading = true
 

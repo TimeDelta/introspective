@@ -287,10 +287,11 @@ public final class RecordActivityTableViewController: UITableViewController {
 	public final override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		let activityDefinition = definition(at: indexPath)
 
-		var actions = [UIContextualAction]()
-		actions.append(getDeleteActivityDefinitionActionFor(activityDefinition, at: indexPath))
-		actions.append(getEditActivityDefinitionActionFor(activityDefinition, at: indexPath))
-		return UISwipeActionsConfiguration(actions: actions)
+		return UISwipeActionsConfiguration(actions: [
+			getDeleteActivityDefinitionActionFor(activityDefinition, at: indexPath),
+			getEditActivityDefinitionActionFor(activityDefinition, at: indexPath),
+			getViewHistoryActionFor(activityDefinition),
+		])
 	}
 
 	public final override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -306,8 +307,31 @@ public final class RecordActivityTableViewController: UITableViewController {
 		return UISwipeActionsConfiguration(actions: actions)
 	}
 
+	private final func getViewHistoryActionFor(_ definition: ActivityDefinition) -> UIContextualAction {
+		let action = DependencyInjector.util.ui.contextualAction(style: .normal, title: "History") { _, _, _ in
+			let query = DependencyInjector.query.activityQuery()
+			query.expression = EqualToStringAttributeRestriction(restrictedAttribute: Activity.nameAttribute, value: definition.name)
+			let controller = self.viewController(named: "results", fromStoryboard: "Results") as! ResultsViewController
+			controller.query = query
+			query.runQuery{ result, error in
+				if error != nil {
+					DispatchQueue.main.async {
+						controller.showError(title: "Failed to run query", error: error)
+					}
+					return
+				}
+				controller.samples = result?.samples
+			}
+			controller.query = query
+			self.pushToNavigationController(controller)
+		}
+		action.accessibilityLabel = "view all history for \(definition.name)"
+		action.backgroundColor = .blue
+		return action
+	}
+
 	private final func getDeleteActivityActionFor(_ activity: Activity) -> UIContextualAction {
-		let deleteAction = UIContextualAction(style: .destructive, title: "🗑️ Last") { _, _, completionHandler in
+		let deleteAction = DependencyInjector.util.ui.contextualAction(style: .destructive, title: "🗑️ Last") { _, _, _ in
 			let timeText = self.getTimeTextFor(activity)
 			let alert = UIAlertController(
 				title: "Are you sure you want to delete '\(activity.definition.name)'?",
@@ -332,7 +356,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getEditLastActionFor(_ activity: Activity) -> UIContextualAction {
-		let editLast = UIContextualAction(style: .normal, title: "✎ Last") { _, _, completionHandler in
+		let editLast = DependencyInjector.util.ui.contextualAction(style: .normal, title: "✎ Last") { _, _, _ in
 			self.showEditScreenForActivity(activity)
 		}
 		editLast.backgroundColor = .orange
@@ -340,7 +364,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getAddNewActionFor(_ activityDefinition: ActivityDefinition) -> UIContextualAction {
-		let addNew = UIContextualAction(style: .normal, title: "+") { _, _, completionHandler in
+		let addNew = DependencyInjector.util.ui.contextualAction(style: .normal, title: "+") { _, _, _ in
 			let controller = self.viewController(named: "editActivity") as! EditActivityTableViewController
 			controller.definition = activityDefinition
 			controller.notificationToSendOnAccept = Me.activityEditedOrCreated
@@ -352,7 +376,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getDeleteActivityDefinitionActionFor(_ activityDefinition: ActivityDefinition, at indexPath: IndexPath) -> UIContextualAction {
-		return UIContextualAction(style: .destructive, title: "🗑️ All") { _, _, completionHandler in
+		return DependencyInjector.util.ui.contextualAction(style: .destructive, title: "🗑️ All") { _, _, _ in
 			let alert = UIAlertController(
 				title: "Are you sure you want to delete \(activityDefinition.name)?",
 				message: "This will delete all history for this activity.",
@@ -374,7 +398,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getEditActivityDefinitionActionFor(_ activityDefinition: ActivityDefinition, at indexPath: IndexPath) -> UIContextualAction {
-		let editDefinitionAction = UIContextualAction(style: .normal, title: "✎ All") { _, _, completionHandler in
+		let editDefinitionAction = DependencyInjector.util.ui.contextualAction(style: .normal, title: "✎ All") { _, _, _ in
 			self.definitionEditIndex = indexPath
 			let controller: EditActivityDefinitionTableViewController = self.viewController(named: "editActivityDefinition")
 			controller.activityDefinition = activityDefinition

@@ -51,6 +51,11 @@ public protocol UiUtil {
 		style: UIAlertAction.Style,
 		handler: ((UIAlertAction) -> Void)?)
 	-> UIAlertAction
+	func contextualAction(
+		style: UIContextualAction.Style,
+		title: String?,
+		handler: @escaping UIContextualAction.Handler)
+	-> UIContextualAction
 
 	/// - Note: This is just for testability
 	func stopObserving(_ observer: Any, name: NotificationName?, object: Any?)
@@ -265,6 +270,14 @@ public final class UiUtilImpl: UiUtil {
 		handler: ((UIAlertAction) -> Void)?)
 	-> UIAlertAction {
 		return UIAlertAction(title: title, style: style, handler: handler)
+	}
+
+	public func contextualAction(
+		style: UIContextualAction.Style,
+		title: String?,
+		handler: @escaping UIContextualAction.Handler)
+	-> UIContextualAction {
+		return UIContextualAction(style: style, title: title, handler: handler)
 	}
 
 	public func stopObserving(_ observer: Any, name: NotificationName?, object: Any?) {
