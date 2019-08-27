@@ -287,11 +287,14 @@ public final class RecordActivityTableViewController: UITableViewController {
 	public final override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 		let activityDefinition = definition(at: indexPath)
 
-		return UISwipeActionsConfiguration(actions: [
+		var actions = [
 			getDeleteActivityDefinitionActionFor(activityDefinition, at: indexPath),
 			getEditActivityDefinitionActionFor(activityDefinition, at: indexPath),
-			getViewHistoryActionFor(activityDefinition),
-		])
+		]
+		if activityDefinition.activities.count > 0 {
+			actions.append(getViewHistoryActionFor(activityDefinition))
+		}
+		return UISwipeActionsConfiguration(actions: actions)
 	}
 
 	public final override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
