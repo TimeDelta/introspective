@@ -9,6 +9,7 @@
 import XCTest
 import CoreData
 import SwiftyMocky
+import CSV
 @testable import Introspective
 
 // This has to be a functional test because can't make a constructor for WellnessMoodImporter that doesn't require standing up CoreData
@@ -36,14 +37,14 @@ final class WellnessMoodImporterFunctionalTests: ImporterTest {
 	private static let note2 = "Just got a great massage from Nicole for my pinched neck. It feels a lot better"
 	private static let note3 = "Longing for a closer fit to my dream job\nDisheartened about current job because it doesn’t seem to be what I was hoping for"
 	private static let note4 = "Feeling a little better after talking to Nicole and crying"
-	private static let headerRow = "Date,Time,Rating,Note"
+	private static let headerRow = "Date,Time,Rating,Note,Health Entry Type"
 	private static let validImportFileText = """
 \(headerRow)
-\(date1Text),\(rating1),\(note1)
-\(date2Text),\(rating2),\(note2)
-\(date3Text),\(rating3),\(note3)
-\(date5Text),\(rating5),
-\(date4Text),\(rating4),\(note4)
+\(date1Text),\(Int(rating1)),"\(note1)"
+\(date2Text),\(Int(rating2)),"\(note2)"
+\(date3Text),\(Int(rating3)),"\(note3)"
+\(date5Text),\(Int(rating5)),""
+\(date4Text),\(Int(rating4)),"\(note4)"
 """
 
 	// MARK: - Instance Variables
@@ -158,28 +159,20 @@ final class WellnessMoodImporterFunctionalTests: ImporterTest {
 
 	// MARK: - importData() - Invalid Data
 
-	func testGivenWrongNumberOfColumnsInHeaderRow_importData_stillCorrectlyImports() throws {
+	func testGivenWrongNumberOfColumnsInHeaderRow_importData_throwsError() throws {
 		// given
 		scaleMoods = false
 		useInput("""
 wrong number of columns
-\(Me.date1Text),\(Me.rating1),\(Me.note1)
-\(Me.date2Text),\(Me.rating2),\(Me.note2)
-\(Me.date3Text),\(Me.rating3),\(Me.note3)
-\(Me.date5Text),\(Me.rating5),
-\(Me.date4Text),\(Me.rating4),\(Me.note4)
+\(Me.date1Text),\(Int(Me.rating1)),"\(Me.note1)"
+\(Me.date2Text),\(Int(Me.rating2)),"\(Me.note2)"
+\(Me.date3Text),\(Int(Me.rating3)),"\(Me.note3)"
+\(Me.date5Text),\(Int(Me.rating5)),""
+\(Me.date4Text),\(Int(Me.rating4)),"\(Me.note4)"
 """)
 
-		// when
-		try importer.importData(from: url)
-
-		// then
-		XCTAssert(mood1WasImported(), "Mood 1 was not imported correctly")
-		XCTAssert(mood2WasImported(), "Mood 2 was not imported correctly")
-		XCTAssert(mood3WasImported(), "Mood 3 was not imported correctly")
-		XCTAssert(mood4WasImported(), "Mood 4 was not imported correctly")
-		XCTAssert(mood5WasImported(), "Mood 5 was not imported correctly")
-		XCTAssertEqual(importer.lastImport, Me.date5)
+		// when / then
+		XCTAssertThrowsError(try importer.importData(from: url))
 	}
 
 	func testGivenTooFewColumnsInFirstDataRow_importData_throwsInvalidFileFormatError() throws {
@@ -187,7 +180,7 @@ wrong number of columns
 		scaleMoods = false
 		useInput("""
 \(Me.headerRow)
-\(Me.note1)
+"\(Me.note1)"
 """)
 
 		// when
@@ -201,8 +194,8 @@ wrong number of columns
 		// given
 		scaleMoods = false
 		useInput("""
-Date,Time,Rating,Note
-2018/09/21, 14:21,4.0,note
+\(Me.headerRow)
+2018/09/21, 14:21,4,"note"
 """)
 
 		// when
@@ -217,7 +210,7 @@ Date,Time,Rating,Note
 		scaleMoods = false
 		useInput("""
 \(Me.headerRow)
-99/99/99, 14:21,4.0,note
+99/99/99, 14:21,4,"note"
 """)
 
 		// when
@@ -232,7 +225,7 @@ Date,Time,Rating,Note
 		scaleMoods = false
 		useInput("""
 \(Me.headerRow)
-10/19/12, 99:99,4.0,note
+10/19/12, 99:99,4,"note"
 """)
 
 		// when
@@ -247,7 +240,7 @@ Date,Time,Rating,Note
 		scaleMoods = false
 		useInput("""
 \(Me.headerRow)
-10/19/12, 12:12,invalid rating,note
+10/19/12, 12:12,invalid rating,"note"
 """)
 
 		// when
@@ -262,8 +255,8 @@ Date,Time,Rating,Note
 		scaleMoods = false
 		useInput("""
 \(Me.headerRow)
-\(Me.date1Text),\(Me.rating1),\(Me.note1)
-10/19/12, 12:12,invalid rating,note
+\(Me.date1Text),\(Me.rating1),"\(Me.note1)"
+10/19/12, 12:12,invalid rating,"note"
 """)
 
 		// when
@@ -279,7 +272,7 @@ Date,Time,Rating,Note
 		MoodDataTestUtil.createMood(note: Me.note2, rating: Me.rating2, timestamp: Me.date2, min: 1, max: 7)
 		useInput("""
 \(Me.headerRow)
-10/19/12, 12:12,invalid rating,note
+10/19/12, 12:12,invalid rating,"note"
 """)
 
 		// when
@@ -350,6 +343,11 @@ Date,Time,Rating,Note
 
 	// MARK: - Helper Functions
 
+	final override func useInput(_ input: String) {
+		Given(ioUtil, .csvReader(url: .value(url), hasHeaderRow: .value(true), willReturn: try! CSVReader(string: input, hasHeaderRow: true)))
+		Given(ioUtil, .contentsOf(.value(url), willReturn: input))
+	}
+
 	private final func mood1WasImported() -> Bool {
 		return moodWasImported(at: Me.date1, withRating: Me.rating1, andNote: Me.note1)
 	}
@@ -378,7 +376,7 @@ Date,Time,Rating,Note
 		let scaledRating = scaleMoods ? scale(rating) : rating
 		let moodsFetchRequest: NSFetchRequest<MoodImpl> = MoodImpl.fetchRequest()
 		moodsFetchRequest.predicate = NSPredicate(
-			format: "%K == %@ AND %K == %f AND %K == %f",
+			format: "%K == %@ AND %K == %f AND %K == %f AND %K == %f",
 			"timestamp", timestamp as NSDate,
 			"rating", scaledRating,
 			"minRating", minMood,

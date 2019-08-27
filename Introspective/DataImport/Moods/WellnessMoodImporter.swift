@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import CSV
 
 //sourcery: AutoMockable
 public protocol WellnessMoodImporter: MoodImporter {}
@@ -16,7 +17,10 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 
 	private typealias Me = WellnessMoodImporterImpl
 	public static let entityName = "WellnessMoodImporter"
-	private static let dateRegex = "^\\d\\d?/\\d\\d?/\\d\\d, \\d\\d:\\d\\d"
+	private static let dateColumn = "Date"
+	private static let timeColumn = "Time"
+	private static let ratingColumn = "Rating"
+	private static let noteColumn = "Note"
 
 	public final let dataTypePluralName: String = "moods"
 	public final let sourceName: String = "Wellness"
@@ -26,28 +30,22 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 	public final var isPaused: Bool = false
 	public final var isCancelled: Bool = false
 
-	private final var currentMood: Mood? = nil
 	private final var recordNumber: Int = -1
 	private final var totalLines: Int = -1
 	private final let mainTransaction = DependencyInjector.db.transaction()
-	private final var lines = [String]()
+	private final var csv: CSVReader!
 	private final var latestDate: Date!
-	private final var currentNote = ""
 
 	private final let log = Log()
 
 	public final func importData(from url: URL) throws {
-		let contents = try DependencyInjector.util.io.contentsOf(url)
-		lines = contents.components(separatedBy: "\n")
-		lines.removeFirst()
+		csv = try DependencyInjector.util.io.csvReader(url: url, hasHeaderRow: true)
 		recordNumber = 1
-		totalLines = lines.count
+		// a rough approximation
+		totalLines = try DependencyInjector.util.io.contentsOf(url).split(separator: "\n").count
 
 		isPaused = false
 		isCancelled = false
-
-		currentMood = nil
-		currentNote = ""
 
 		latestDate = lastImport // use temp var to avoid bug where initial import doesn't import anything
 
@@ -84,16 +82,16 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 			return
 		}
 
+		// without this, pausing and returning skips a line
+		var currentRow: [String]? = []
+		if !isPaused { currentRow = csv.next() }
 		isPaused = false
 		do {
-			while lines.count > 0 {
+			while currentRow != nil {
 				guard !isPaused && !isCancelled else { return }
-				let line = lines.removeFirst()
-				try processLine(line, latestDate: &latestDate, using: mainTransaction)
+				try processLine(latestDate: &latestDate, using: mainTransaction)
 				recordNumber += 1
-			}
-			if !currentNote.isEmpty {
-				currentMood?.note = currentNote // make sure to save the final note
+				currentRow = csv.next()
 			}
 			lastImport = latestDate
 			try retryOnFail({ try mainTransaction.commit() }, maxRetries: 2)
@@ -105,48 +103,56 @@ public final class WellnessMoodImporterImpl: NSManagedObject, WellnessMoodImport
 
 	// MARK: - Helper Functions
 
-	private final func processLine(_ line: String, latestDate: inout Date!, using transaction: Transaction) throws {
-		if string(line, matches: Me.dateRegex) { // new mood record
-			if !currentNote.isEmpty {
-				currentMood?.note = currentNote
+	private final func processLine(latestDate: inout Date!, using transaction: Transaction) throws {
+		let date = try getDateForCurrentRecord()
+		if latestDate == nil { latestDate = date }
+		if date.isAfterDate(latestDate, granularity: .nanosecond) {
+			latestDate = date
+		}
+		if shouldImport(date) {
+			guard let rating = Double(csv[Me.ratingColumn] ?? "") else {
+				throw InvalidFileFormatError("Invalid rating for record \(recordNumber): \(csv[Me.ratingColumn] ?? "")")
 			}
-			let parts = line.components(separatedBy: ",")
-			guard let date = DependencyInjector.util.calendar.date(from: parts[0...1].joined(), format: "M/d/yy HH:mm") else {
-				throw InvalidFileFormatError("Unexpected date / time for record \(recordNumber): \(parts[0...1].joined())")
+			var note = csv[Me.noteColumn]
+			if note?.isEmpty ?? false {
+				note = nil
 			}
-			if latestDate == nil { latestDate = date }
-			if date.isAfterDate(latestDate, granularity: .nanosecond) {
-				latestDate = date
-			}
-			if shouldImport(date) {
-				guard let rating = Double(parts[2]) else {
-					throw InvalidFileFormatError("Invalid rating for record \(recordNumber): \(parts[2])")
-				}
-				try createAndScaleMood(withDate: date, andRating: rating, using: transaction)
-				currentNote = parts[3...].joined()
-			} else {
-				currentMood = nil
-			}
-		} else if recordNumber == 1 { // first non-header row
-			throw InvalidFileFormatError("Invalid or missing date / time for mood for record 1")
-		} else {
-			if !currentNote.isEmpty {
-				currentNote += "\n"
-			}
-			currentNote += line
+			try createAndScaleMood(withDate: date, rating: rating, andNote: note, using: transaction)
 		}
 	}
 
-	private final func createAndScaleMood(withDate date: Date, andRating rating: Double, using transaction: Transaction) throws {
-		currentMood = try transaction.new(MoodImpl.self)
-		currentMood!.date = date
-		currentMood!.minRating = 1
-		currentMood!.maxRating = 7
-		currentMood!.rating = rating
-		currentMood!.setSource(.wellness)
+	private final func createAndScaleMood(
+		withDate date: Date,
+		rating: Double,
+		andNote note: String?,
+		using transaction: Transaction)
+	throws {
+		let currentMood = try transaction.new(MoodImpl.self)
+		currentMood.date = date
+		currentMood.minRating = 1
+		currentMood.maxRating = 7
+		currentMood.rating = rating
+		currentMood.note = note
+		currentMood.setSource(.wellness)
 		if DependencyInjector.settings.scaleMoodsOnImport {
-			DependencyInjector.util.mood.scaleMood(currentMood!)
+			DependencyInjector.util.mood.scaleMood(currentMood)
 		}
+	}
+
+	private final func getDateForCurrentRecord() throws -> Date {
+		let currentLine = csv.currentRow?.joined(separator: ",") ?? ""
+		guard let dateString = csv[Me.dateColumn] else {
+			throw InvalidFileFormatError(
+				"No date for record \(recordNumber): \(currentLine)")
+		}
+		guard let timeString = csv[Me.timeColumn] else {
+			throw InvalidFileFormatError(
+				"No time for record \(recordNumber): \(currentLine)")
+		}
+		guard let date = DependencyInjector.util.calendar.date(from: dateString + timeString, format: "M/d/yy HH:mm") else {
+			throw InvalidFileFormatError("Unexpected date / time for record \(recordNumber): \(dateString + timeString)")
+		}
+		return date
 	}
 
 	private final func string(_ str: String, matches regex: String) -> Bool {
