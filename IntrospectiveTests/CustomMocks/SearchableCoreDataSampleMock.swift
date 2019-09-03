@@ -1,21 +1,23 @@
 //
-//  SampleMock.swift
+//  SearchableCoreDataSampleMock.swift
 //  IntrospectiveTests
 //
-//  Created by Bryan Nova on 8/14/18.
-//  Copyright © 2018 Bryan Nova. All rights reserved.
+//  Created by Bryan Nova on 6/16/20.
+//  Copyright © 2020 Bryan Nova. All rights reserved.
 //
 
 import Foundation
 import XCTest
+
+import CSV
 import SwiftyMocky
 
 @testable import Introspective
 @testable import Attributes
 @testable import Samples
 
-// sourcery: mock = "Sample"
-class SampleMock: Sample, Mock {
+// sourcery: mock = "SearchableCoreDataSample"
+class SearchableCoreDataSampleMock: SearchableCoreDataSample, Mock, StaticMock {
 	fileprivate var _description: String!
 
 	var description: String {
@@ -23,7 +25,7 @@ class SampleMock: Sample, Mock {
 		set { _description = newValue }
 	}
 
-// sourcery:inline:auto:SampleMock.autoMocked
+// sourcery:inline:auto:SearchableCoreDataSampleMock.autoMocked
     var matcher: Matcher = Matcher.default
     var stubbingPolicy: StubbingPolicy = .wrap
     var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
@@ -58,7 +60,7 @@ class SampleMock: Sample, Mock {
 
 
     public var attributedName: String {
-		get {	invocations.append(.p_attributedName_get); return __p_attributedName ?? givenGetterValue(.p_attributedName_get, "SampleMock - stub value for attributedName was not defined") }
+		get {	invocations.append(.p_attributedName_get); return __p_attributedName ?? givenGetterValue(.p_attributedName_get, "SearchableCoreDataSampleMock - stub value for attributedName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_attributedName = newValue }
 	}
@@ -66,7 +68,7 @@ class SampleMock: Sample, Mock {
 
 
     public var attributes: [Attribute] {
-		get {	invocations.append(.p_attributes_get); return __p_attributes ?? givenGetterValue(.p_attributes_get, "SampleMock - stub value for attributes was not defined") }
+		get {	invocations.append(.p_attributes_get); return __p_attributes ?? givenGetterValue(.p_attributes_get, "SearchableCoreDataSampleMock - stub value for attributes was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_attributes = newValue }
 	}
@@ -74,7 +76,7 @@ class SampleMock: Sample, Mock {
 
 
     public var debugDescription: String {
-		get {	invocations.append(.p_debugDescription_get); return __p_debugDescription ?? givenGetterValue(.p_debugDescription_get, "SampleMock - stub value for debugDescription was not defined") }
+		get {	invocations.append(.p_debugDescription_get); return __p_debugDescription ?? givenGetterValue(.p_debugDescription_get, "SearchableCoreDataSampleMock - stub value for debugDescription was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
 		set {	__p_debugDescription = newValue }
 	}
@@ -82,34 +84,50 @@ class SampleMock: Sample, Mock {
 
 
 
-    public static var name: String {
-		get {	SampleMock.invocations.append(.p_name_get); return SampleMock.__p_name ?? givenGetterValue(.p_name_get, "SampleMock - stub value for name was not defined") }
+    public static var entityName: String {
+		get {	SearchableCoreDataSampleMock.invocations.append(.p_entityName_get); return SearchableCoreDataSampleMock.__p_entityName ?? givenGetterValue(.p_entityName_get, "SearchableCoreDataSampleMock - stub value for entityName was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	SampleMock.__p_name = newValue }
+		set {	SearchableCoreDataSampleMock.__p_entityName = newValue }
+	}
+	private static var __p_entityName: (String)?
+
+
+    public static var exportFileDescription: String {
+		get {	SearchableCoreDataSampleMock.invocations.append(.p_exportFileDescription_get); return SearchableCoreDataSampleMock.__p_exportFileDescription ?? givenGetterValue(.p_exportFileDescription_get, "SearchableCoreDataSampleMock - stub value for exportFileDescription was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	SearchableCoreDataSampleMock.__p_exportFileDescription = newValue }
+	}
+	private static var __p_exportFileDescription: (String)?
+
+
+    public static var name: String {
+		get {	SearchableCoreDataSampleMock.invocations.append(.p_name_get); return SearchableCoreDataSampleMock.__p_name ?? givenGetterValue(.p_name_get, "SearchableCoreDataSampleMock - stub value for name was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	SearchableCoreDataSampleMock.__p_name = newValue }
 	}
 	private static var __p_name: (String)?
 
 
     public static var attributes: [Attribute] {
-		get {	SampleMock.invocations.append(.p_attributes_get); return SampleMock.__p_attributes ?? givenGetterValue(.p_attributes_get, "SampleMock - stub value for attributes was not defined") }
+		get {	SearchableCoreDataSampleMock.invocations.append(.p_attributes_get); return SearchableCoreDataSampleMock.__p_attributes ?? givenGetterValue(.p_attributes_get, "SearchableCoreDataSampleMock - stub value for attributes was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	SampleMock.__p_attributes = newValue }
+		set {	SearchableCoreDataSampleMock.__p_attributes = newValue }
 	}
 	private static var __p_attributes: ([Attribute])?
 
 
     public static var defaultDependentAttribute: Attribute {
-		get {	SampleMock.invocations.append(.p_defaultDependentAttribute_get); return SampleMock.__p_defaultDependentAttribute ?? givenGetterValue(.p_defaultDependentAttribute_get, "SampleMock - stub value for defaultDependentAttribute was not defined") }
+		get {	SearchableCoreDataSampleMock.invocations.append(.p_defaultDependentAttribute_get); return SearchableCoreDataSampleMock.__p_defaultDependentAttribute ?? givenGetterValue(.p_defaultDependentAttribute_get, "SearchableCoreDataSampleMock - stub value for defaultDependentAttribute was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	SampleMock.__p_defaultDependentAttribute = newValue }
+		set {	SearchableCoreDataSampleMock.__p_defaultDependentAttribute = newValue }
 	}
 	private static var __p_defaultDependentAttribute: (Attribute)?
 
 
     public static var defaultIndependentAttribute: Attribute {
-		get {	SampleMock.invocations.append(.p_defaultIndependentAttribute_get); return SampleMock.__p_defaultIndependentAttribute ?? givenGetterValue(.p_defaultIndependentAttribute_get, "SampleMock - stub value for defaultIndependentAttribute was not defined") }
+		get {	SearchableCoreDataSampleMock.invocations.append(.p_defaultIndependentAttribute_get); return SearchableCoreDataSampleMock.__p_defaultIndependentAttribute ?? givenGetterValue(.p_defaultIndependentAttribute_get, "SearchableCoreDataSampleMock - stub value for defaultIndependentAttribute was not defined") }
 		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
-		set {	SampleMock.__p_defaultIndependentAttribute = newValue }
+		set {	SearchableCoreDataSampleMock.__p_defaultIndependentAttribute = newValue }
 	}
 	private static var __p_defaultIndependentAttribute: (Attribute)?
 
@@ -117,61 +135,17 @@ class SampleMock: Sample, Mock {
 
 
 
-    open func graphableValue(of attribute: Attribute) throws -> Any? {
-        addInvocation(.m_graphableValue__of_attribute(Parameter<Attribute>.value(`attribute`)))
-		let perform = methodPerformValue(.m_graphableValue__of_attribute(Parameter<Attribute>.value(`attribute`))) as? (Attribute) -> Void
-		perform?(`attribute`)
-		var __value: Any? = nil
+    public static func exportHeaderRow(to csv: CSVWriter) throws {
+        addInvocation(.sm_exportHeaderRow__to_csv(Parameter<CSVWriter>.value(`csv`)))
+		let perform = methodPerformValue(.sm_exportHeaderRow__to_csv(Parameter<CSVWriter>.value(`csv`))) as? (CSVWriter) -> Void
+		perform?(`csv`)
 		do {
-		    __value = try methodReturnValue(.m_graphableValue__of_attribute(Parameter<Attribute>.value(`attribute`))).casted()
+		    _ = try methodReturnValue(.sm_exportHeaderRow__to_csv(Parameter<CSVWriter>.value(`csv`))).casted() as Void
 		} catch MockError.notStubed {
 			// do nothing
 		} catch {
 		    throw error
 		}
-		return __value
-    }
-
-    open func dates() -> [DateType: Date] {
-        addInvocation(.m_dates)
-		let perform = methodPerformValue(.m_dates) as? () -> Void
-		perform?()
-		var __value: [DateType: Date]
-		do {
-		    __value = try methodReturnValue(.m_dates).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for dates(). Use given")
-			Failure("Stub return value not specified for dates(). Use given")
-		}
-		return __value
-    }
-
-    open func equalTo(_ otherSample: Sample) -> Bool {
-        addInvocation(.m_equalTo__otherSample(Parameter<Sample>.value(`otherSample`)))
-		let perform = methodPerformValue(.m_equalTo__otherSample(Parameter<Sample>.value(`otherSample`))) as? (Sample) -> Void
-		perform?(`otherSample`)
-		var __value: Bool
-		do {
-		    __value = try methodReturnValue(.m_equalTo__otherSample(Parameter<Sample>.value(`otherSample`))).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for equalTo(_ otherSample: Sample). Use given")
-			Failure("Stub return value not specified for equalTo(_ otherSample: Sample). Use given")
-		}
-		return __value
-    }
-
-    open func safeEqualityCheck<Type: Equatable>(_ attribute: Attribute, _ otherSample: Sample, as type: Type.Type) -> Bool {
-        addInvocation(.m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>.value(`attribute`), Parameter<Sample>.value(`otherSample`), Parameter<Type.Type>.value(`type`).wrapAsGeneric()))
-		let perform = methodPerformValue(.m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>.value(`attribute`), Parameter<Sample>.value(`otherSample`), Parameter<Type.Type>.value(`type`).wrapAsGeneric())) as? (Attribute, Sample, Type.Type) -> Void
-		perform?(`attribute`, `otherSample`, `type`)
-		var __value: Bool
-		do {
-		    __value = try methodReturnValue(.m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>.value(`attribute`), Parameter<Sample>.value(`otherSample`), Parameter<Type.Type>.value(`type`).wrapAsGeneric())).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for safeEqualityCheck<Type: Equatable>(_ attribute: Attribute, _ otherSample: Sample, as type: Type.Type). Use given")
-			Failure("Stub return value not specified for safeEqualityCheck<Type: Equatable>(_ attribute: Attribute, _ otherSample: Sample, as type: Type.Type). Use given")
-		}
-		return __value
     }
 
     open func attributeValuesAreValid() -> Bool {
@@ -230,7 +204,94 @@ class SampleMock: Sample, Mock {
 		return __value
     }
 
+    open func export(to csv: CSVWriter) throws {
+        addInvocation(.m_export__to_csv(Parameter<CSVWriter>.value(`csv`)))
+		let perform = methodPerformValue(.m_export__to_csv(Parameter<CSVWriter>.value(`csv`))) as? (CSVWriter) -> Void
+		perform?(`csv`)
+		do {
+		    _ = try methodReturnValue(.m_export__to_csv(Parameter<CSVWriter>.value(`csv`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func graphableValue(of attribute: Attribute) throws -> Any? {
+        addInvocation(.m_graphableValue__of_attribute(Parameter<Attribute>.value(`attribute`)))
+		let perform = methodPerformValue(.m_graphableValue__of_attribute(Parameter<Attribute>.value(`attribute`))) as? (Attribute) -> Void
+		perform?(`attribute`)
+		var __value: Any? = nil
+		do {
+		    __value = try methodReturnValue(.m_graphableValue__of_attribute(Parameter<Attribute>.value(`attribute`))).casted()
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func dates() -> [DateType: Date] {
+        addInvocation(.m_dates)
+		let perform = methodPerformValue(.m_dates) as? () -> Void
+		perform?()
+		var __value: [DateType: Date]
+		do {
+		    __value = try methodReturnValue(.m_dates).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for dates(). Use given")
+			Failure("Stub return value not specified for dates(). Use given")
+		}
+		return __value
+    }
+
+    open func equalTo(_ otherSample: Sample) -> Bool {
+        addInvocation(.m_equalTo__otherSample(Parameter<Sample>.value(`otherSample`)))
+		let perform = methodPerformValue(.m_equalTo__otherSample(Parameter<Sample>.value(`otherSample`))) as? (Sample) -> Void
+		perform?(`otherSample`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_equalTo__otherSample(Parameter<Sample>.value(`otherSample`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for equalTo(_ otherSample: Sample). Use given")
+			Failure("Stub return value not specified for equalTo(_ otherSample: Sample). Use given")
+		}
+		return __value
+    }
+
+    open func safeEqualityCheck<Type: Equatable>(_ attribute: Attribute, _ otherSample: Sample, as type: Type.Type) -> Bool {
+        addInvocation(.m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>.value(`attribute`), Parameter<Sample>.value(`otherSample`), Parameter<Type.Type>.value(`type`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>.value(`attribute`), Parameter<Sample>.value(`otherSample`), Parameter<Type.Type>.value(`type`).wrapAsGeneric())) as? (Attribute, Sample, Type.Type) -> Void
+		perform?(`attribute`, `otherSample`, `type`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>.value(`attribute`), Parameter<Sample>.value(`otherSample`), Parameter<Type.Type>.value(`type`).wrapAsGeneric())).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for safeEqualityCheck<Type: Equatable>(_ attribute: Attribute, _ otherSample: Sample, as type: Type.Type). Use given")
+			Failure("Stub return value not specified for safeEqualityCheck<Type: Equatable>(_ attribute: Attribute, _ otherSample: Sample, as type: Type.Type). Use given")
+		}
+		return __value
+    }
+
+    open func matchesSearchString(_ searchString: String) -> Bool {
+        addInvocation(.m_matchesSearchString__searchString(Parameter<String>.value(`searchString`)))
+		let perform = methodPerformValue(.m_matchesSearchString__searchString(Parameter<String>.value(`searchString`))) as? (String) -> Void
+		perform?(`searchString`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_matchesSearchString__searchString(Parameter<String>.value(`searchString`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for matchesSearchString(_ searchString: String). Use given")
+			Failure("Stub return value not specified for matchesSearchString(_ searchString: String). Use given")
+		}
+		return __value
+    }
+
     fileprivate enum StaticMethodType {
+        case sm_exportHeaderRow__to_csv(Parameter<CSVWriter>)
+        case p_entityName_get
+        case p_exportFileDescription_get
         case p_name_get
         case p_attributes_get
         case p_defaultDependentAttribute_get
@@ -238,6 +299,11 @@ class SampleMock: Sample, Mock {
 
         static func compareParameters(lhs: StaticMethodType, rhs: StaticMethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
+            case (.sm_exportHeaderRow__to_csv(let lhsCsv), .sm_exportHeaderRow__to_csv(let rhsCsv)):
+                guard Parameter.compare(lhs: lhsCsv, rhs: rhsCsv, with: matcher) else { return false } 
+                return true 
+            case (.p_entityName_get,.p_entityName_get): return true
+            case (.p_exportFileDescription_get,.p_exportFileDescription_get): return true
             case (.p_name_get,.p_name_get): return true
             case (.p_attributes_get,.p_attributes_get): return true
             case (.p_defaultDependentAttribute_get,.p_defaultDependentAttribute_get): return true
@@ -248,6 +314,9 @@ class SampleMock: Sample, Mock {
 
         func intValue() -> Int {
             switch self {
+                case let .sm_exportHeaderRow__to_csv(p0): return p0.intValue
+                case .p_entityName_get: return 0
+                case .p_exportFileDescription_get: return 0
                 case .p_name_get: return 0
                 case .p_attributes_get: return 0
                 case .p_defaultDependentAttribute_get: return 0
@@ -264,6 +333,12 @@ class SampleMock: Sample, Mock {
             super.init(products)
         }
 
+        public static func entityName(getter defaultValue: String...) -> StaticPropertyStub {
+            return StaticGiven(method: .p_entityName_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func exportFileDescription(getter defaultValue: String...) -> StaticPropertyStub {
+            return StaticGiven(method: .p_exportFileDescription_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
         public static func name(getter defaultValue: String...) -> StaticPropertyStub {
             return StaticGiven(method: .p_name_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
@@ -277,11 +352,24 @@ class SampleMock: Sample, Mock {
             return StaticGiven(method: .p_defaultIndependentAttribute_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
+        public static func exportHeaderRow(to csv: Parameter<CSVWriter>, willThrow: Error...) -> StaticMethodStub {
+            return StaticGiven(method: .sm_exportHeaderRow__to_csv(`csv`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func exportHeaderRow(to csv: Parameter<CSVWriter>, willProduce: (StubberThrows<Void>) -> Void) -> StaticMethodStub {
+            let willThrow: [Error] = []
+			let given: StaticGiven = { return StaticGiven(method: .sm_exportHeaderRow__to_csv(`csv`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct StaticVerify {
         fileprivate var method: StaticMethodType
 
+        public static func exportHeaderRow(to csv: Parameter<CSVWriter>) -> StaticVerify { return StaticVerify(method: .sm_exportHeaderRow__to_csv(`csv`))}
+        public static var entityName: StaticVerify { return StaticVerify(method: .p_entityName_get) }
+        public static var exportFileDescription: StaticVerify { return StaticVerify(method: .p_exportFileDescription_get) }
         public static var name: StaticVerify { return StaticVerify(method: .p_name_get) }
         public static var attributes: StaticVerify { return StaticVerify(method: .p_attributes_get) }
         public static var defaultDependentAttribute: StaticVerify { return StaticVerify(method: .p_defaultDependentAttribute_get) }
@@ -292,24 +380,44 @@ class SampleMock: Sample, Mock {
         fileprivate var method: StaticMethodType
         var performs: Any
 
+        public static func exportHeaderRow(to csv: Parameter<CSVWriter>, perform: @escaping (CSVWriter) -> Void) -> StaticPerform {
+            return StaticPerform(method: .sm_exportHeaderRow__to_csv(`csv`), performs: perform)
+        }
     }
 
     
     fileprivate enum MethodType {
-        case m_graphableValue__of_attribute(Parameter<Attribute>)
-        case m_dates
-        case m_equalTo__otherSample(Parameter<Sample>)
-        case m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>, Parameter<Sample>, Parameter<GenericAttribute>)
         case m_attributeValuesAreValid
         case m_value__of_attribute(Parameter<Attribute>)
         case m_set__attribute_attributeto_value(Parameter<Attribute>, Parameter<Any?>)
         case m_equalTo__otherAttributed(Parameter<Attributed>)
+        case m_export__to_csv(Parameter<CSVWriter>)
+        case m_graphableValue__of_attribute(Parameter<Attribute>)
+        case m_dates
+        case m_equalTo__otherSample(Parameter<Sample>)
+        case m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>, Parameter<Sample>, Parameter<GenericAttribute>)
+        case m_matchesSearchString__searchString(Parameter<String>)
         case p_attributedName_get
         case p_attributes_get
         case p_debugDescription_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
+            case (.m_attributeValuesAreValid, .m_attributeValuesAreValid):
+                return true 
+            case (.m_value__of_attribute(let lhsAttribute), .m_value__of_attribute(let rhsAttribute)):
+                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
+                return true 
+            case (.m_set__attribute_attributeto_value(let lhsAttribute, let lhsValue), .m_set__attribute_attributeto_value(let rhsAttribute, let rhsValue)):
+                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                return true 
+            case (.m_equalTo__otherAttributed(let lhsOtherattributed), .m_equalTo__otherAttributed(let rhsOtherattributed)):
+                guard Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher) else { return false } 
+                return true 
+            case (.m_export__to_csv(let lhsCsv), .m_export__to_csv(let rhsCsv)):
+                guard Parameter.compare(lhs: lhsCsv, rhs: rhsCsv, with: matcher) else { return false } 
+                return true 
             case (.m_graphableValue__of_attribute(let lhsAttribute), .m_graphableValue__of_attribute(let rhsAttribute)):
                 guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
                 return true 
@@ -323,17 +431,8 @@ class SampleMock: Sample, Mock {
                 guard Parameter.compare(lhs: lhsOthersample, rhs: rhsOthersample, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsType, rhs: rhsType, with: matcher) else { return false } 
                 return true 
-            case (.m_attributeValuesAreValid, .m_attributeValuesAreValid):
-                return true 
-            case (.m_value__of_attribute(let lhsAttribute), .m_value__of_attribute(let rhsAttribute)):
-                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
-                return true 
-            case (.m_set__attribute_attributeto_value(let lhsAttribute, let lhsValue), .m_set__attribute_attributeto_value(let rhsAttribute, let rhsValue)):
-                guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
-                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
-                return true 
-            case (.m_equalTo__otherAttributed(let lhsOtherattributed), .m_equalTo__otherAttributed(let rhsOtherattributed)):
-                guard Parameter.compare(lhs: lhsOtherattributed, rhs: rhsOtherattributed, with: matcher) else { return false } 
+            case (.m_matchesSearchString__searchString(let lhsSearchstring), .m_matchesSearchString__searchString(let rhsSearchstring)):
+                guard Parameter.compare(lhs: lhsSearchstring, rhs: rhsSearchstring, with: matcher) else { return false } 
                 return true 
             case (.p_attributedName_get,.p_attributedName_get): return true
             case (.p_attributes_get,.p_attributes_get): return true
@@ -344,14 +443,16 @@ class SampleMock: Sample, Mock {
 
         func intValue() -> Int {
             switch self {
-            case let .m_graphableValue__of_attribute(p0): return p0.intValue
-            case .m_dates: return 0
-            case let .m_equalTo__otherSample(p0): return p0.intValue
-            case let .m_safeEqualityCheck__attribute_otherSampleas_type(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case .m_attributeValuesAreValid: return 0
             case let .m_value__of_attribute(p0): return p0.intValue
             case let .m_set__attribute_attributeto_value(p0, p1): return p0.intValue + p1.intValue
             case let .m_equalTo__otherAttributed(p0): return p0.intValue
+            case let .m_export__to_csv(p0): return p0.intValue
+            case let .m_graphableValue__of_attribute(p0): return p0.intValue
+            case .m_dates: return 0
+            case let .m_equalTo__otherSample(p0): return p0.intValue
+            case let .m_safeEqualityCheck__attribute_otherSampleas_type(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_matchesSearchString__searchString(p0): return p0.intValue
             case .p_attributedName_get: return 0
             case .p_attributes_get: return 0
             case .p_debugDescription_get: return 0
@@ -377,6 +478,15 @@ class SampleMock: Sample, Mock {
             return Given(method: .p_debugDescription_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
+        public static func attributeValuesAreValid(willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_attributeValuesAreValid, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func value(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
+            return Given(method: .m_value__of_attribute(`attribute`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func equalTo(_ otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func graphableValue(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
             return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
@@ -389,14 +499,22 @@ class SampleMock: Sample, Mock {
         public static func safeEqualityCheck<Type: Equatable>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func attributeValuesAreValid(willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_attributeValuesAreValid, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func matchesSearchString(_ searchString: Parameter<String>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_matchesSearchString__searchString(`searchString`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func value(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
-            return Given(method: .m_value__of_attribute(`attribute`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func attributeValuesAreValid(willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_attributeValuesAreValid, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
         }
-        public static func equalTo(_ otherAttributed: Parameter<Attributed>, willReturn: Bool...) -> MethodStub {
-            return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func equalTo(_ otherAttributed: Parameter<Attributed>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
         }
         public static func dates(willProduce: (Stubber<[DateType: Date]>) -> Void) -> MethodStub {
             let willReturn: [[DateType: Date]] = []
@@ -419,27 +537,10 @@ class SampleMock: Sample, Mock {
 			willProduce(stubber)
 			return given
         }
-        public static func attributeValuesAreValid(willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+        public static func matchesSearchString(_ searchString: Parameter<String>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
-			let given: Given = { return Given(method: .m_attributeValuesAreValid, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let given: Given = { return Given(method: .m_matchesSearchString__searchString(`searchString`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Bool).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func equalTo(_ otherAttributed: Parameter<Attributed>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
-            let willReturn: [Bool] = []
-			let given: Given = { return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (Bool).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func graphableValue(of attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
-            return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willThrow.map({ StubProduct.throw($0) }))
-        }
-        public static func graphableValue(of attribute: Parameter<Attribute>, willProduce: (StubberThrows<Any?>) -> Void) -> MethodStub {
-            let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willThrow.map({ StubProduct.throw($0) })) }()
-			let stubber = given.stubThrows(for: (Any?).self)
 			willProduce(stubber)
 			return given
         }
@@ -463,19 +564,41 @@ class SampleMock: Sample, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func export(to csv: Parameter<CSVWriter>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_export__to_csv(`csv`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func export(to csv: Parameter<CSVWriter>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_export__to_csv(`csv`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func graphableValue(of attribute: Parameter<Attribute>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func graphableValue(of attribute: Parameter<Attribute>, willProduce: (StubberThrows<Any?>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Any?).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func graphableValue(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_graphableValue__of_attribute(`attribute`))}
-        public static func dates() -> Verify { return Verify(method: .m_dates)}
-        public static func equalTo(_ otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
-        public static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>) -> Verify where Type:Equatable { return Verify(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()))}
         public static func attributeValuesAreValid() -> Verify { return Verify(method: .m_attributeValuesAreValid)}
         public static func value(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_value__of_attribute(`attribute`))}
         public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>) -> Verify { return Verify(method: .m_set__attribute_attributeto_value(`attribute`, `value`))}
         public static func equalTo(_ otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
+        public static func export(to csv: Parameter<CSVWriter>) -> Verify { return Verify(method: .m_export__to_csv(`csv`))}
+        public static func graphableValue(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_graphableValue__of_attribute(`attribute`))}
+        public static func dates() -> Verify { return Verify(method: .m_dates)}
+        public static func equalTo(_ otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
+        public static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>) -> Verify where Type:Equatable { return Verify(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()))}
+        public static func matchesSearchString(_ searchString: Parameter<String>) -> Verify { return Verify(method: .m_matchesSearchString__searchString(`searchString`))}
         public static var attributedName: Verify { return Verify(method: .p_attributedName_get) }
         public static var attributes: Verify { return Verify(method: .p_attributes_get) }
         public static var debugDescription: Verify { return Verify(method: .p_debugDescription_get) }
@@ -485,6 +608,21 @@ class SampleMock: Sample, Mock {
         fileprivate var method: MethodType
         var performs: Any
 
+        public static func attributeValuesAreValid(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_attributeValuesAreValid, performs: perform)
+        }
+        public static func value(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
+            return Perform(method: .m_value__of_attribute(`attribute`), performs: perform)
+        }
+        public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, perform: @escaping (Attribute, Any?) -> Void) -> Perform {
+            return Perform(method: .m_set__attribute_attributeto_value(`attribute`, `value`), performs: perform)
+        }
+        public static func equalTo(_ otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
+            return Perform(method: .m_equalTo__otherAttributed(`otherAttributed`), performs: perform)
+        }
+        public static func export(to csv: Parameter<CSVWriter>, perform: @escaping (CSVWriter) -> Void) -> Perform {
+            return Perform(method: .m_export__to_csv(`csv`), performs: perform)
+        }
         public static func graphableValue(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
             return Perform(method: .m_graphableValue__of_attribute(`attribute`), performs: perform)
         }
@@ -497,17 +635,8 @@ class SampleMock: Sample, Mock {
         public static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, perform: @escaping (Attribute, Sample, Type.Type) -> Void) -> Perform where Type:Equatable {
             return Perform(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), performs: perform)
         }
-        public static func attributeValuesAreValid(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_attributeValuesAreValid, performs: perform)
-        }
-        public static func value(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
-            return Perform(method: .m_value__of_attribute(`attribute`), performs: perform)
-        }
-        public static func set(attribute: Parameter<Attribute>, to value: Parameter<Any?>, perform: @escaping (Attribute, Any?) -> Void) -> Perform {
-            return Perform(method: .m_set__attribute_attributeto_value(`attribute`, `value`), performs: perform)
-        }
-        public static func equalTo(_ otherAttributed: Parameter<Attributed>, perform: @escaping (Attributed) -> Void) -> Perform {
-            return Perform(method: .m_equalTo__otherAttributed(`otherAttributed`), performs: perform)
+        public static func matchesSearchString(_ searchString: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_matchesSearchString__searchString(`searchString`), performs: perform)
         }
     }
 

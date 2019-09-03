@@ -16,7 +16,7 @@ import Common
 import DependencyInjection
 import Persistence
 
-public class Activity: NSManagedObject, CoreDataSample {
+public class Activity: NSManagedObject, CoreDataSample, SearchableSample {
 
 	private typealias Me = Activity
 
@@ -55,6 +55,15 @@ public class Activity: NSManagedObject, CoreDataSample {
 		sourceAttribute,
 	]
 	public final let attributes: [Attribute] = Me.attributes
+
+	// MARK: - Searching
+
+	public func matchesSearchString(_ searchString: String) -> Bool {
+		return definition.name.localizedCaseInsensitiveContains(searchString) ||
+			(note?.localizedCaseInsensitiveContains(searchString) ?? false) ||
+			hasTag(searchString) ||
+			getSource().description.localizedLowercase == searchString.localizedLowercase
+	}
 
 	// MARK: - Instance Variables
 
@@ -103,6 +112,8 @@ public class Activity: NSManagedObject, CoreDataSample {
 
 	public final var startDateTimeZone: String? { return startDateTimeZoneId }
 	public final var endDateTimeZone: String? { return endDateTimeZoneId }
+
+	private final let log = Log()
 
 	// MARK: - Testing Purposes
 
@@ -269,6 +280,8 @@ public class Activity: NSManagedObject, CoreDataSample {
 
 	// MARK: - Other
 
+	// MARK: Time Zone
+
 	public final func setStartTimeZone(_ timeZone: TimeZone?) {
 		startDateTimeZoneId = timeZone?.identifier
 	}
@@ -276,6 +289,8 @@ public class Activity: NSManagedObject, CoreDataSample {
 	public final func setEndTimeZone(_ timeZone: TimeZone?) {
 		endDateTimeZoneId = timeZone?.identifier
 	}
+
+	// MARK: Source
 
 	public final func getSource() -> Sources.ActivitySourceNum {
 		return Sources.resolveActivitySource(source)
@@ -291,6 +306,8 @@ public class Activity: NSManagedObject, CoreDataSample {
 		}
 	}
 
+	// MARK: Tags
+
 	/// - Returns: Only tags directly associated with this `Activity`.
 	///            Does not include tags associated with this activitiy's `ActivityDefinition`.
 	public final func tagsArray() -> [Tag] {
@@ -305,6 +322,15 @@ public class Activity: NSManagedObject, CoreDataSample {
 			let tagToAdd = try DependencyInjector.get(Database.self).pull(savedObject: tag, fromSameContextAs: self)
 			addToTags(tagToAdd)
 		}
+	}
+
+	public final func hasTag(_ targetName: String) -> Bool {
+		if var tags = tags.allObjects as? [Tag] {
+			tags.append(contentsOf: definition.tagsArray())
+			return tags.filter{ t in t.name.localizedLowercase == targetName.localizedLowercase }.count > 0
+		}
+		log.error("Failed to cast activity tags array")
+		return false
 	}
 
 	// MARK: - Equatable

@@ -16,7 +16,7 @@ import Common
 import DependencyInjection
 import Persistence
 
-public final class MedicationDose: NSManagedObject, CoreDataSample {
+public final class MedicationDose: NSManagedObject, CoreDataSample, SearchableSample {
 
 	private typealias Me = MedicationDose
 
@@ -43,6 +43,13 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 	public static let defaultDependentAttribute: Attribute = dosage
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.timestamp
 	public final let attributes: [Attribute] = Me.attributes
+
+	// MARK: - Searching
+
+	public func matchesSearchString(_ searchString: String) -> Bool {
+		return medication.name.localizedCaseInsensitiveContains(searchString) ||
+			(medication.notes?.localizedCaseInsensitiveContains(searchString) ?? false)
+	}
 
 	// MARK: - Instance Variables
 

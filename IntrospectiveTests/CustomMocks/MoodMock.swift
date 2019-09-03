@@ -15,7 +15,7 @@ import CSV
 @testable import Samples
 
 // sourcery: mock = "Mood"
-class MoodMock: Mood, Mock {
+class MoodMock: Mood, Mock, StaticMock {
 	private var _description: String!
 
 	var description: String {
@@ -337,6 +337,20 @@ class MoodMock: Mood, Mock {
 		return __value
     }
 
+    open func matchesSearchString(_ searchString: String) -> Bool {
+        addInvocation(.m_matchesSearchString__searchString(Parameter<String>.value(`searchString`)))
+		let perform = methodPerformValue(.m_matchesSearchString__searchString(Parameter<String>.value(`searchString`))) as? (String) -> Void
+		perform?(`searchString`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_matchesSearchString__searchString(Parameter<String>.value(`searchString`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for matchesSearchString(_ searchString: String). Use given")
+			Failure("Stub return value not specified for matchesSearchString(_ searchString: String). Use given")
+		}
+		return __value
+    }
+
     fileprivate enum StaticMethodType {
         case sm_exportHeaderRow__to_csv(Parameter<CSVWriter>)
         case p_rating_get
@@ -467,6 +481,7 @@ class MoodMock: Mood, Mock {
         case m_dates
         case m_equalTo__otherSample(Parameter<Sample>)
         case m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>, Parameter<Sample>, Parameter<GenericAttribute>)
+        case m_matchesSearchString__searchString(Parameter<String>)
         case p_minRating_get
 		case p_minRating_set(Parameter<Double>)
         case p_maxRating_get
@@ -514,6 +529,9 @@ class MoodMock: Mood, Mock {
                 guard Parameter.compare(lhs: lhsOthersample, rhs: rhsOthersample, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsType, rhs: rhsType, with: matcher) else { return false } 
                 return true 
+            case (.m_matchesSearchString__searchString(let lhsSearchstring), .m_matchesSearchString__searchString(let rhsSearchstring)):
+                guard Parameter.compare(lhs: lhsSearchstring, rhs: rhsSearchstring, with: matcher) else { return false } 
+                return true 
             case (.p_minRating_get,.p_minRating_get): return true
 			case (.p_minRating_set(let left),.p_minRating_set(let right)): return Parameter<Double>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_maxRating_get,.p_maxRating_get): return true
@@ -543,6 +561,7 @@ class MoodMock: Mood, Mock {
             case .m_dates: return 0
             case let .m_equalTo__otherSample(p0): return p0.intValue
             case let .m_safeEqualityCheck__attribute_otherSampleas_type(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_matchesSearchString__searchString(p0): return p0.intValue
             case .p_minRating_get: return 0
 			case .p_minRating_set(let newValue): return newValue.intValue
             case .p_maxRating_get: return 0
@@ -614,6 +633,9 @@ class MoodMock: Mood, Mock {
         public static func safeEqualityCheck<Type: Equatable>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func matchesSearchString(_ searchString: Parameter<String>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_matchesSearchString__searchString(`searchString`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func attributeValuesAreValid(willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_attributeValuesAreValid, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
@@ -645,6 +667,13 @@ class MoodMock: Mood, Mock {
         public static func safeEqualityCheck<Type: Equatable>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func matchesSearchString(_ searchString: Parameter<String>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_matchesSearchString__searchString(`searchString`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
@@ -704,6 +733,7 @@ class MoodMock: Mood, Mock {
         public static func dates() -> Verify { return Verify(method: .m_dates)}
         public static func equalTo(_ otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
         public static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>) -> Verify where Type:Equatable { return Verify(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()))}
+        public static func matchesSearchString(_ searchString: Parameter<String>) -> Verify { return Verify(method: .m_matchesSearchString__searchString(`searchString`))}
         public static var minRating: Verify { return Verify(method: .p_minRating_get) }
 		public static func minRating(set newValue: Parameter<Double>) -> Verify { return Verify(method: .p_minRating_set(newValue)) }
         public static var maxRating: Verify { return Verify(method: .p_maxRating_get) }
@@ -752,6 +782,9 @@ class MoodMock: Mood, Mock {
         }
         public static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>, perform: @escaping (Attribute, Sample, Type.Type) -> Void) -> Perform where Type:Equatable {
             return Perform(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()), performs: perform)
+        }
+        public static func matchesSearchString(_ searchString: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_matchesSearchString__searchString(`searchString`), performs: perform)
         }
     }
 

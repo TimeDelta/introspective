@@ -111,6 +111,7 @@ import SourceryRuntime
 
 
 
+
 // MARK: - ATrackerActivityImporter
 open class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
@@ -10772,10 +10773,25 @@ open class MoodUiUtilMock: MoodUiUtil, Mock {
 		return __value
     }
 
+    open func feedbackMessage(for rating: Double, min: Double, max: Double) -> String {
+        addInvocation(.m_feedbackMessage__for_ratingmin_minmax_max(Parameter<Double>.value(`rating`), Parameter<Double>.value(`min`), Parameter<Double>.value(`max`)))
+		let perform = methodPerformValue(.m_feedbackMessage__for_ratingmin_minmax_max(Parameter<Double>.value(`rating`), Parameter<Double>.value(`min`), Parameter<Double>.value(`max`))) as? (Double, Double, Double) -> Void
+		perform?(`rating`, `min`, `max`)
+		var __value: String
+		do {
+		    __value = try methodReturnValue(.m_feedbackMessage__for_ratingmin_minmax_max(Parameter<Double>.value(`rating`), Parameter<Double>.value(`min`), Parameter<Double>.value(`max`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for feedbackMessage(for rating: Double, min: Double, max: Double). Use given")
+			Failure("Stub return value not specified for feedbackMessage(for rating: Double, min: Double, max: Double). Use given")
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_valueToString__value(Parameter<Double>)
         case m_colorForMood__rating_ratingminRating_minRatingmaxRating_maxRating(Parameter<Double>, Parameter<Double>, Parameter<Double>)
+        case m_feedbackMessage__for_ratingmin_minmax_max(Parameter<Double>, Parameter<Double>, Parameter<Double>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -10787,6 +10803,11 @@ open class MoodUiUtilMock: MoodUiUtil, Mock {
                 guard Parameter.compare(lhs: lhsMinrating, rhs: rhsMinrating, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsMaxrating, rhs: rhsMaxrating, with: matcher) else { return false } 
                 return true 
+            case (.m_feedbackMessage__for_ratingmin_minmax_max(let lhsRating, let lhsMin, let lhsMax), .m_feedbackMessage__for_ratingmin_minmax_max(let rhsRating, let rhsMin, let rhsMax)):
+                guard Parameter.compare(lhs: lhsRating, rhs: rhsRating, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsMin, rhs: rhsMin, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsMax, rhs: rhsMax, with: matcher) else { return false } 
+                return true 
             default: return false
             }
         }
@@ -10795,6 +10816,7 @@ open class MoodUiUtilMock: MoodUiUtil, Mock {
             switch self {
             case let .m_valueToString__value(p0): return p0.intValue
             case let .m_colorForMood__rating_ratingminRating_minRatingmaxRating_maxRating(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_feedbackMessage__for_ratingmin_minmax_max(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             }
         }
     }
@@ -10814,6 +10836,9 @@ open class MoodUiUtilMock: MoodUiUtil, Mock {
         public static func colorForMood(rating: Parameter<Double>, minRating: Parameter<Double>, maxRating: Parameter<Double>, willReturn: UIColor...) -> MethodStub {
             return Given(method: .m_colorForMood__rating_ratingminRating_minRatingmaxRating_maxRating(`rating`, `minRating`, `maxRating`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func feedbackMessage(for rating: Parameter<Double>, min: Parameter<Double>, max: Parameter<Double>, willReturn: String...) -> MethodStub {
+            return Given(method: .m_feedbackMessage__for_ratingmin_minmax_max(`rating`, `min`, `max`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func valueToString(_ value: Parameter<Double>, willProduce: (Stubber<String>) -> Void) -> MethodStub {
             let willReturn: [String] = []
 			let given: Given = { return Given(method: .m_valueToString__value(`value`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
@@ -10828,6 +10853,13 @@ open class MoodUiUtilMock: MoodUiUtil, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func feedbackMessage(for rating: Parameter<Double>, min: Parameter<Double>, max: Parameter<Double>, willProduce: (Stubber<String>) -> Void) -> MethodStub {
+            let willReturn: [String] = []
+			let given: Given = { return Given(method: .m_feedbackMessage__for_ratingmin_minmax_max(`rating`, `min`, `max`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (String).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct Verify {
@@ -10835,6 +10867,7 @@ open class MoodUiUtilMock: MoodUiUtil, Mock {
 
         public static func valueToString(_ value: Parameter<Double>) -> Verify { return Verify(method: .m_valueToString__value(`value`))}
         public static func colorForMood(rating: Parameter<Double>, minRating: Parameter<Double>, maxRating: Parameter<Double>) -> Verify { return Verify(method: .m_colorForMood__rating_ratingminRating_minRatingmaxRating_maxRating(`rating`, `minRating`, `maxRating`))}
+        public static func feedbackMessage(for rating: Parameter<Double>, min: Parameter<Double>, max: Parameter<Double>) -> Verify { return Verify(method: .m_feedbackMessage__for_ratingmin_minmax_max(`rating`, `min`, `max`))}
     }
 
     public struct Perform {
@@ -10846,6 +10879,9 @@ open class MoodUiUtilMock: MoodUiUtil, Mock {
         }
         public static func colorForMood(rating: Parameter<Double>, minRating: Parameter<Double>, maxRating: Parameter<Double>, perform: @escaping (Double, Double, Double) -> Void) -> Perform {
             return Perform(method: .m_colorForMood__rating_ratingminRating_minRatingmaxRating_maxRating(`rating`, `minRating`, `maxRating`), performs: perform)
+        }
+        public static func feedbackMessage(for rating: Parameter<Double>, min: Parameter<Double>, max: Parameter<Double>, perform: @escaping (Double, Double, Double) -> Void) -> Perform {
+            return Perform(method: .m_feedbackMessage__for_ratingmin_minmax_max(`rating`, `min`, `max`), performs: perform)
         }
     }
 

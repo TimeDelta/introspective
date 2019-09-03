@@ -13,7 +13,7 @@ import Attributes
 import Common
 import DependencyInjection
 
-public final class SexualActivity: HealthKitCategorySample {
+public final class SexualActivity: HealthKitCategorySample, SearchableSample {
 
 	private typealias Me = SexualActivity
 
@@ -62,6 +62,12 @@ public final class SexualActivity: HealthKitCategorySample {
 	public static let defaultDependentAttribute: Attribute = protectionUsed
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
 	public final var attributes: [Attribute] { return Me.attributes }
+
+	// MARK: - Searching
+
+	public func matchesSearchString(_ searchString: String) -> Bool {
+		return protectionUsed.description.localizedLowercase.starts(with: searchString.localizedLowercase)
+	}
 
 	// MARK: - Instance Variables
 

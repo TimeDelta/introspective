@@ -13,7 +13,7 @@ import Attributes
 import Common
 import DependencyInjection
 
-public final class Sleep: HealthKitCategorySample {
+public final class Sleep: HealthKitCategorySample, SearchableSample {
 
 	private typealias Me = Sleep
 
@@ -76,6 +76,12 @@ public final class Sleep: HealthKitCategorySample {
 	public static let defaultDependentAttribute: Attribute = durationAttribute
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitStartDate
 	public final var attributes: [Attribute] { return Me.attributes }
+
+	// MARK: - Searching
+
+	public func matchesSearchString(_ searchString: String) -> Bool {
+		return state.description.localizedCaseInsensitiveContains(searchString)
+	}
 
 	// MARK: - Instance Variables
 

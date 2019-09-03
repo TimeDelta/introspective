@@ -14,7 +14,7 @@ import Attributes
 import Common
 import DependencyInjection
 
-public protocol Mood: CoreDataSample {
+public protocol Mood: CoreDataSample, SearchableSample {
 
 	static var rating: DoubleAttribute { get }
 	static var maxRating: DoubleAttribute { get }
@@ -73,6 +73,12 @@ public final class MoodImpl: NSManagedObject, Mood {
 		maxRating,
 	]
 	public final let attributes: [Attribute] = Me.attributes
+
+	// MARK: - Searching
+
+	public func matchesSearchString(_ searchString: String) -> Bool {
+		return (note?.localizedCaseInsensitiveContains(searchString) ?? false)
+	}
 
 	// MARK: - Instance Variables
 
