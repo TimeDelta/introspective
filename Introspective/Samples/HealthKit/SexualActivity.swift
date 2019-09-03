@@ -59,6 +59,14 @@ public final class SexualActivity: HealthKitCategorySample {
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
 	public final var attributes: [Attribute] { return Me.attributes }
 
+	// MARK: - Searching
+
+	public static let isSearchable = true
+
+	public func matchesSearchString(_ searchString: String) -> Bool {
+		return protectionUsed.description.localizedLowercase.starts(with: searchString.localizedLowercase)
+	}
+
 	// MARK: - Instance Variables
 
 	public final var attributedName: String = Me.name

@@ -73,6 +73,14 @@ public final class Sleep: HealthKitCategorySample {
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitStartDate
 	public final var attributes: [Attribute] { return Me.attributes }
 
+	// MARK: - Searching
+
+	public static let isSearchable = true
+
+	public func matchesSearchString(_ searchString: String) -> Bool {
+		return state.description.localizedCaseInsensitiveContains(searchString)
+	}
+
 	// MARK: - Instance Variables
 
 	public final var attributedName: String = Me.name

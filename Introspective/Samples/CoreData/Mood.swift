@@ -64,6 +64,14 @@ public final class MoodImpl: NSManagedObject, Mood {
 	]
 	public final let attributes: [Attribute] = Me.attributes
 
+	// MARK: - Searching
+
+	public static let isSearchable = true
+
+	public func matchesSearchString(_ searchString: String) -> Bool {
+		return (note?.localizedCaseInsensitiveContains(searchString) ?? false)
+	}
+
 	// MARK: - Instance Variables
 
 	public final let attributedName: String = "Mood"

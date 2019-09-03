@@ -43,6 +43,14 @@ public final class HeartRate: HealthKitQuantitySample {
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.healthKitTimestamp
 	public final var attributes: [Attribute] { return Me.attributes }
 
+	// MARK: - Searching
+
+	public static let isSearchable = false
+
+	public func matchesSearchString(_ searchString: String) -> Bool {
+		return false
+	}
+
 	// MARK: - Instance Variables
 
 	public final var timestamp: Date

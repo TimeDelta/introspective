@@ -39,6 +39,15 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 	public static let defaultIndependentAttribute: Attribute = CommonSampleAttributes.timestamp
 	public final let attributes: [Attribute] = Me.attributes
 
+	// MARK: - Searching
+
+	public static let isSearchable = true
+
+	public func matchesSearchString(_ searchString: String) -> Bool {
+		return medication.name.localizedCaseInsensitiveContains(searchString) ||
+			(medication.notes?.localizedCaseInsensitiveContains(searchString) ?? false)
+	}
+
 	// MARK: - Instance Variables
 
 	public final let attributedName: String = Me.name

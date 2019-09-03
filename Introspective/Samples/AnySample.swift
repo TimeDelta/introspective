@@ -36,6 +36,12 @@ public final class AnySample: Sample {
 		}
 	}
 
+	public static let isSearchable = false
+
+	public func matchesSearchString(_ searchString: String) -> Bool {
+		return false
+	}
+
 	private final var attributeValues: [String: Any?]
 
 	public init(name: String = "", description: String = "", attributes: [Attribute] = [Attribute](), attributeValues: [String: Any] = [String: Any]()) {

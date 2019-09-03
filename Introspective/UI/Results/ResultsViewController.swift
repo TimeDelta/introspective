@@ -74,6 +74,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			}
 		}
 	}
+	private final var filteredSamples: [Sample]!
 	private final var initialSampleSortDone = false
 
 	public final var backButtonTitle: String?
@@ -83,7 +84,9 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	private final var extraInformationValues = [String?]()
 	private final var lastSelectedRowIndex: Int!
 	private final var extraInformationEditIndex: Int!
-	private final var finishedLoading = false
+	private final var finishedLoading = false {
+		didSet { searchController.searchBar.isUserInteractionEnabled = finishedLoading }
+	}
 
 	private final var actionsController: UIAlertController?
 
@@ -92,6 +95,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	private final var sortTask: DispatchWorkItem?
 	private final var sortActionSheet: UIAlertController?
 	private final var sortController: SortResultsViewController?
+
+	private final let searchController = UISearchController(searchResultsController: nil)
 
 	private final var failed = false
 
@@ -103,6 +108,21 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		actionsButton.target = self
 		actionsButton.action = #selector(presentActions)
 		actionsButton.accessibilityLabel = "actions button"
+
+		guard samples.count > 0 else {
+			log.error("no samples in results view")
+			navigationController?.popViewController(animated: false)
+			return
+		}
+		if samplesAreSearchable() {
+			searchController.searchResultsUpdater = self
+			searchController.obscuresBackgroundDuringPresentation = false
+			searchController.searchBar.placeholder = "Search Activities"
+			searchController.hidesNavigationBarDuringPresentation = false
+			navigationItem.searchController = searchController
+			navigationItem.hidesSearchBarWhenScrolling = false
+			definesPresentationContext = true
+		}
 
 		observe(selector: #selector(saveEditedExtraInformation), name: .editedInformation, object: self)
 		observe(selector: #selector(sortSamplesBy), name: Me.sortSamples)
@@ -120,6 +140,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		tableView.rowHeight = UITableView.automaticDimension
 		tableView.estimatedRowHeight = 44
 
+		filterSamples()
+
 		tableView.reloadData()
 	}
 
@@ -136,7 +158,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		onDonePresenting: (() -> Void)? = nil)
 	{
 		var onDismiss: ((UIAlertAction) -> Void)? = originalOnDismiss
-		if samples == nil {
+		if filteredSamples == nil {
 			failed = true
 			onDismiss = { action in
 				if let originalOnDismiss = originalOnDismiss {
@@ -164,8 +186,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		if section == 0 {
 			return "Information"
 		} else if section == 1 {
-			if samples != nil && samples.count > 0 {
-				return samples[0].attributedName.capitalized
+			if filteredSamples != nil && filteredSamples.count > 0 {
+				return filteredSamples[0].attributedName.capitalized
 			}
 			return "Entries"
 		} else {
@@ -188,7 +210,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		}
 
 		if section == 1 {
-			return samples.count
+			return filteredSamples.count
 		}
 
 		log.error("Unexpected section index (%@) while determining number of rows in section", String(section))
@@ -216,7 +238,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		}
 
 		if section == 1 {
-			let sample = samples[row]
+			let sample = filteredSamples[row]
 			switch (sample) {
 				case is Activity:
 					let cell = (tableView.dequeueReusableCell(withIdentifier: "activityCell") as! ActivityTableViewCell)
@@ -260,11 +282,11 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		guard finishedLoading && !waiting() else { return }
 		if indexPath.section == 0 {
 			showEditInformationView(indexPath)
-		} else if samples[indexPath.row] is Activity {
+		} else if filteredSamples[indexPath.row] is Activity {
 			showEditActivityView(indexPath)
-		} else if samples[indexPath.row] is Mood {
+		} else if filteredSamples[indexPath.row] is Mood {
 			showEditMoodView(indexPath)
-		} else if samples[indexPath.row] is MedicationDose {
+		} else if filteredSamples[indexPath.row] is MedicationDose {
 			showEditDoseView(indexPath)
 		}
 	}
@@ -293,18 +315,19 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				tableView.deleteRows(at: [indexPath], with: .fade)
 			}]
 		}
-		guard let managedSample = self.samples[indexPath.row] as? CoreDataSample else { return [] }
+		guard let managedSample = self.filteredSamples[indexPath.row] as? CoreDataSample else { return [] }
 		let delete = DependencyInjector.util.ui.tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
 			let alert = UIAlertController(title: "Are you sure you want to delete this?", message: nil, preferredStyle: .alert)
 			alert.addAction(DependencyInjector.util.ui.alertAction(title: "Yes", style: .destructive) { _ in
-				let goBackAfterDelete = self.samples.count == 1
+				let goBackAfterDelete = self.filteredSamples.count == 1
 				do {
 					let transaction = DependencyInjector.db.transaction()
 					try retryOnFail({ try transaction.delete(managedSample) }, maxRetries: 2)
 					if goBackAfterDelete {
 						self.navigationController?.popViewController(animated: false)
 					} else {
-						self.samples.remove(at: indexPath.row)
+						let toRemove = self.filteredSamples.remove(at: indexPath.row)
+						self.samples.removeAll(where: { $0 === toRemove })
 						tableView.deleteRows(at: [indexPath], with: .fade)
 						self.recomputeExtraInformation()
 						tableView.reloadData()
@@ -312,7 +335,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				} catch {
 					self.log.error("Failed to delete sample: %@", errorInfo(error))
 					self.showError(
-						title: "Failed to delete " + self.samples[indexPath.row].attributedName.localizedLowercase,
+						title: "Failed to delete " + self.filteredSamples[indexPath.row].attributedName.localizedLowercase,
 						error: error)
 				}
 			})
@@ -335,7 +358,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				DependencyInjector.util.async.run(qos: .userInteractive) {
 					do {
 						self.extraInformationValues[editIndex] =
-							try self.extraInformation[editIndex].compute(forSamples: self.samples)
+							try self.extraInformation[editIndex].compute(forSamples: self.filteredSamples)
 						DispatchQueue.main.async {
 							self.tableView.reloadRows(at: [IndexPath(row: editIndex, section: 0)], with: .automatic)
 						}
@@ -359,7 +382,8 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				log.error("edit index nil")
 				return
 			}
-			samples[editIndex] = sample!
+			#warning("test this")
+			filteredSamples[editIndex] = sample!
 			tableView.reloadRows(at: [IndexPath(row: editIndex, section: 1)], with: .automatic)
 			for i in 0 ..< extraInformationValues.count {
 				extraInformationValues[i] = nil
@@ -649,5 +673,34 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	private final func tellUserSortFailed() {
 		showError(title: "Failed to sort")
+	}
+
+	private final func samplesAreSearchable() -> Bool {
+		return type(of: samples[0]).isSearchable
+	}
+}
+
+// MARK: - UISearchResultsUpdating
+
+extension ResultsViewControllerImpl: UISearchResultsUpdating {
+
+	/// This is used to provide a hook into setting the search text for testing. For some reason
+	/// passing searchController into resetFetchedResultsControllers() directly from
+	/// updateSearchResults() to use it instead results in localSearchController.searchBar being
+	/// nil in that function even though it is not nil when passed in.
+	public func setSearchText(_ text: String) {
+		searchController.searchBar.text = text
+	}
+
+	public func updateSearchResults(for searchController: UISearchController) {
+		filterSamples()
+	}
+
+	private final func filterSamples() {
+		if samplesAreSearchable() {
+			filteredSamples = samples.filter{ $0.matchesSearchString(searchController.searchBar.text ?? "") }
+		} else {
+			filteredSamples = samples
+		}
 	}
 }

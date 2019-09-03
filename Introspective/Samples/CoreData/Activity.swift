@@ -51,6 +51,15 @@ public class Activity: NSManagedObject, CoreDataSample {
 	]
 	public final let attributes: [Attribute] = Me.attributes
 
+	// MARK: - Searching
+
+	public static let isSearchable = true
+
+	public func matchesSearchString(_ searchString: String) -> Bool {
+		return definition.name.localizedCaseInsensitiveContains(searchString) ||
+			(note?.localizedCaseInsensitiveContains(searchString) ?? false)
+	}
+
 	// MARK: - Instance Variables
 
 	public final let attributedName: String = Me.name

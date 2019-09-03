@@ -22,8 +22,10 @@ public protocol Sample: Attributed {
 	static var attributes: [Attribute] { get }
 	static var defaultDependentAttribute: Attribute { get }
 	static var defaultIndependentAttribute: Attribute { get }
+	static var isSearchable: Bool { get }
 
 	func graphableValue(of attribute: Attribute) throws -> Any?
+	func matchesSearchString(_ searchString: String) -> Bool
 
 	func dates() -> [DateType: Date]
 	func equalTo(_ otherSample: Sample) -> Bool

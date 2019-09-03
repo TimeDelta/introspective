@@ -122,6 +122,14 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
 	private static var __p_defaultIndependentAttribute: (Attribute)?
 
 
+    public static var isSearchable: Bool {
+		get {	CoreDataSampleMock.invocations.append(.p_isSearchable_get); return CoreDataSampleMock.__p_isSearchable ?? givenGetterValue(.p_isSearchable_get, "CoreDataSampleMock - stub value for isSearchable was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	CoreDataSampleMock.__p_isSearchable = newValue }
+	}
+	private static var __p_isSearchable: (Bool)?
+
+
 
 
 
@@ -222,6 +230,20 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
 		return __value
     }
 
+    open func matchesSearchString(_ searchString: String) -> Bool {
+        addInvocation(.m_matchesSearchString__searchString(Parameter<String>.value(`searchString`)))
+		let perform = methodPerformValue(.m_matchesSearchString__searchString(Parameter<String>.value(`searchString`))) as? (String) -> Void
+		perform?(`searchString`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_matchesSearchString__searchString(Parameter<String>.value(`searchString`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for matchesSearchString(_ searchString: String). Use given")
+			Failure("Stub return value not specified for matchesSearchString(_ searchString: String). Use given")
+		}
+		return __value
+    }
+
     open func dates() -> [DateType: Date] {
         addInvocation(.m_dates)
 		let perform = methodPerformValue(.m_dates) as? () -> Void
@@ -272,6 +294,7 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
         case p_attributes_get
         case p_defaultDependentAttribute_get
         case p_defaultIndependentAttribute_get
+        case p_isSearchable_get
 
         static func compareParameters(lhs: StaticMethodType, rhs: StaticMethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -284,6 +307,7 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
             case (.p_attributes_get,.p_attributes_get): return true
             case (.p_defaultDependentAttribute_get,.p_defaultDependentAttribute_get): return true
             case (.p_defaultIndependentAttribute_get,.p_defaultIndependentAttribute_get): return true
+            case (.p_isSearchable_get,.p_isSearchable_get): return true
             default: return false
             }
         }
@@ -297,6 +321,7 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
                 case .p_attributes_get: return 0
                 case .p_defaultDependentAttribute_get: return 0
                 case .p_defaultIndependentAttribute_get: return 0
+                case .p_isSearchable_get: return 0
             }
         }
     }
@@ -327,6 +352,9 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
         public static func defaultIndependentAttribute(getter defaultValue: Attribute...) -> StaticPropertyStub {
             return StaticGiven(method: .p_defaultIndependentAttribute_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
+        public static func isSearchable(getter defaultValue: Bool...) -> StaticPropertyStub {
+            return StaticGiven(method: .p_isSearchable_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
 
         public static func exportHeaderRow(to csv: Parameter<CSVWriter>, willThrow: Error...) -> StaticMethodStub {
             return StaticGiven(method: .sm_exportHeaderRow__to_csv(`csv`), products: willThrow.map({ StubProduct.throw($0) }))
@@ -350,6 +378,7 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
         public static var attributes: StaticVerify { return StaticVerify(method: .p_attributes_get) }
         public static var defaultDependentAttribute: StaticVerify { return StaticVerify(method: .p_defaultDependentAttribute_get) }
         public static var defaultIndependentAttribute: StaticVerify { return StaticVerify(method: .p_defaultIndependentAttribute_get) }
+        public static var isSearchable: StaticVerify { return StaticVerify(method: .p_isSearchable_get) }
     }
 
     public struct StaticPerform {
@@ -369,6 +398,7 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
         case m_equalTo__otherAttributed(Parameter<Attributed>)
         case m_export__to_csv(Parameter<CSVWriter>)
         case m_graphableValue__of_attribute(Parameter<Attribute>)
+        case m_matchesSearchString__searchString(Parameter<String>)
         case m_dates
         case m_equalTo__otherSample(Parameter<Sample>)
         case m_safeEqualityCheck__attribute_otherSampleas_type(Parameter<Attribute>, Parameter<Sample>, Parameter<GenericAttribute>)
@@ -396,6 +426,9 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
             case (.m_graphableValue__of_attribute(let lhsAttribute), .m_graphableValue__of_attribute(let rhsAttribute)):
                 guard Parameter.compare(lhs: lhsAttribute, rhs: rhsAttribute, with: matcher) else { return false } 
                 return true 
+            case (.m_matchesSearchString__searchString(let lhsSearchstring), .m_matchesSearchString__searchString(let rhsSearchstring)):
+                guard Parameter.compare(lhs: lhsSearchstring, rhs: rhsSearchstring, with: matcher) else { return false } 
+                return true 
             case (.m_dates, .m_dates):
                 return true 
             case (.m_equalTo__otherSample(let lhsOthersample), .m_equalTo__otherSample(let rhsOthersample)):
@@ -421,6 +454,7 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
             case let .m_equalTo__otherAttributed(p0): return p0.intValue
             case let .m_export__to_csv(p0): return p0.intValue
             case let .m_graphableValue__of_attribute(p0): return p0.intValue
+            case let .m_matchesSearchString__searchString(p0): return p0.intValue
             case .m_dates: return 0
             case let .m_equalTo__otherSample(p0): return p0.intValue
             case let .m_safeEqualityCheck__attribute_otherSampleas_type(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
@@ -461,6 +495,9 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
         public static func graphableValue(of attribute: Parameter<Attribute>, willReturn: Any?...) -> MethodStub {
             return Given(method: .m_graphableValue__of_attribute(`attribute`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func matchesSearchString(_ searchString: Parameter<String>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_matchesSearchString__searchString(`searchString`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func dates(willReturn: [DateType: Date]...) -> MethodStub {
             return Given(method: .m_dates, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
@@ -480,6 +517,13 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
         public static func equalTo(_ otherAttributed: Parameter<Attributed>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
             let willReturn: [Bool] = []
 			let given: Given = { return Given(method: .m_equalTo__otherAttributed(`otherAttributed`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func matchesSearchString(_ searchString: Parameter<String>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_matchesSearchString__searchString(`searchString`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
 			let stubber = given.stub(for: (Bool).self)
 			willProduce(stubber)
 			return given
@@ -556,6 +600,7 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
         public static func equalTo(_ otherAttributed: Parameter<Attributed>) -> Verify { return Verify(method: .m_equalTo__otherAttributed(`otherAttributed`))}
         public static func export(to csv: Parameter<CSVWriter>) -> Verify { return Verify(method: .m_export__to_csv(`csv`))}
         public static func graphableValue(of attribute: Parameter<Attribute>) -> Verify { return Verify(method: .m_graphableValue__of_attribute(`attribute`))}
+        public static func matchesSearchString(_ searchString: Parameter<String>) -> Verify { return Verify(method: .m_matchesSearchString__searchString(`searchString`))}
         public static func dates() -> Verify { return Verify(method: .m_dates)}
         public static func equalTo(_ otherSample: Parameter<Sample>) -> Verify { return Verify(method: .m_equalTo__otherSample(`otherSample`))}
         public static func safeEqualityCheck<Type>(_ attribute: Parameter<Attribute>, _ otherSample: Parameter<Sample>, as type: Parameter<Type.Type>) -> Verify where Type:Equatable { return Verify(method: .m_safeEqualityCheck__attribute_otherSampleas_type(`attribute`, `otherSample`, `type`.wrapAsGeneric()))}
@@ -585,6 +630,9 @@ class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {
         }
         public static func graphableValue(of attribute: Parameter<Attribute>, perform: @escaping (Attribute) -> Void) -> Perform {
             return Perform(method: .m_graphableValue__of_attribute(`attribute`), performs: perform)
+        }
+        public static func matchesSearchString(_ searchString: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_matchesSearchString__searchString(`searchString`), performs: perform)
         }
         public static func dates(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_dates, performs: perform)

@@ -16644,6 +16644,20 @@ open class UiUtilMock: UiUtil, Mock {
 		return __value
     }
 
+    open func contextualAction(		style: UIContextualAction.Style,		title: String?,		handler: @escaping UIContextualAction.Handler) -> UIContextualAction {
+        addInvocation(.m_contextualAction__style_styletitle_titlehandler_handler(Parameter<UIContextualAction.Style>.value(`style`), Parameter<String?>.value(`title`), Parameter<UIContextualAction.Handler>.value(`handler`)))
+		let perform = methodPerformValue(.m_contextualAction__style_styletitle_titlehandler_handler(Parameter<UIContextualAction.Style>.value(`style`), Parameter<String?>.value(`title`), Parameter<UIContextualAction.Handler>.value(`handler`))) as? (UIContextualAction.Style, String?, @escaping UIContextualAction.Handler) -> Void
+		perform?(`style`, `title`, `handler`)
+		var __value: UIContextualAction
+		do {
+		    __value = try methodReturnValue(.m_contextualAction__style_styletitle_titlehandler_handler(Parameter<UIContextualAction.Style>.value(`style`), Parameter<String?>.value(`title`), Parameter<UIContextualAction.Handler>.value(`handler`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for contextualAction(  style: UIContextualAction.Style,  title: String?,  handler: @escaping UIContextualAction.Handler). Use given")
+			Failure("Stub return value not specified for contextualAction(  style: UIContextualAction.Style,  title: String?,  handler: @escaping UIContextualAction.Handler). Use given")
+		}
+		return __value
+    }
+
     open func stopObserving(_ observer: Any, name: NotificationName?, object: Any?) {
         addInvocation(.m_stopObserving__observername_nameobject_object(Parameter<Any>.value(`observer`), Parameter<NotificationName?>.value(`name`), Parameter<Any?>.value(`object`)))
 		let perform = methodPerformValue(.m_stopObserving__observername_nameobject_object(Parameter<Any>.value(`observer`), Parameter<NotificationName?>.value(`name`), Parameter<Any?>.value(`object`))) as? (Any, NotificationName?, Any?) -> Void
@@ -16709,6 +16723,7 @@ open class UiUtilMock: UiUtil, Mock {
         case m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(Parameter<String?>, Parameter<String?>, Parameter<UIAlertController.Style>)
         case m_tableViewRowAction__style_styletitle_titlehandler_handler(Parameter<UITableViewRowAction.Style>, Parameter<String?>, Parameter<(UITableViewRowAction, IndexPath) -> Void>)
         case m_alertAction__title_titlestyle_stylehandler_handler(Parameter<String?>, Parameter<UIAlertAction.Style>, Parameter<((UIAlertAction) -> Void)?>)
+        case m_contextualAction__style_styletitle_titlehandler_handler(Parameter<UIContextualAction.Style>, Parameter<String?>, Parameter<UIContextualAction.Handler>)
         case m_stopObserving__observername_nameobject_object(Parameter<Any>, Parameter<NotificationName?>, Parameter<Any?>)
         case m_post__name_nameobject_objectuserInfo_userInfo_1(Parameter<Notification.Name>, Parameter<Any?>, Parameter<[AnyHashable: Any]?>)
         case m_post__name_nameobject_objectuserInfo_userInfo_2(Parameter<NotificationName>, Parameter<Any?>, Parameter<[AnyHashable: Any]?>)
@@ -16795,6 +16810,11 @@ open class UiUtilMock: UiUtil, Mock {
                 guard Parameter.compare(lhs: lhsStyle, rhs: rhsStyle, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher) else { return false } 
                 return true 
+            case (.m_contextualAction__style_styletitle_titlehandler_handler(let lhsStyle, let lhsTitle, let lhsHandler), .m_contextualAction__style_styletitle_titlehandler_handler(let rhsStyle, let rhsTitle, let rhsHandler)):
+                guard Parameter.compare(lhs: lhsStyle, rhs: rhsStyle, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsTitle, rhs: rhsTitle, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsHandler, rhs: rhsHandler, with: matcher) else { return false } 
+                return true 
             case (.m_stopObserving__observername_nameobject_object(let lhsObserver, let lhsName, let lhsObject), .m_stopObserving__observername_nameobject_object(let rhsObserver, let rhsName, let rhsObject)):
                 guard Parameter.compare(lhs: lhsObserver, rhs: rhsObserver, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
@@ -16861,6 +16881,7 @@ open class UiUtilMock: UiUtil, Mock {
             case let .m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_tableViewRowAction__style_styletitle_titlehandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_alertAction__title_titlestyle_stylehandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            case let .m_contextualAction__style_styletitle_titlehandler_handler(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_stopObserving__observername_nameobject_object(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_post__name_nameobject_objectuserInfo_userInfo_1(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_post__name_nameobject_objectuserInfo_userInfo_2(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
@@ -16922,6 +16943,9 @@ open class UiUtilMock: UiUtil, Mock {
         }
         public static func alertAction(title: Parameter<String?>, style: Parameter<UIAlertAction.Style>, handler: Parameter<((UIAlertAction) -> Void)?>, willReturn: UIAlertAction...) -> MethodStub {
             return Given(method: .m_alertAction__title_titlestyle_stylehandler_handler(`title`, `style`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func contextualAction(style: Parameter<UIContextualAction.Style>, title: Parameter<String?>, handler: Parameter<UIContextualAction.Handler>, willReturn: UIContextualAction...) -> MethodStub {
+            return Given(method: .m_contextualAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func customPresenter(width: Parameter<ModalSize>, height: Parameter<ModalSize>, center: Parameter<ModalCenterPosition>, willProduce: (Stubber<Presentr>) -> Void) -> MethodStub {
             let willReturn: [Presentr] = []
@@ -17000,6 +17024,13 @@ open class UiUtilMock: UiUtil, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func contextualAction(style: Parameter<UIContextualAction.Style>, title: Parameter<String?>, handler: Parameter<UIContextualAction.Handler>, willProduce: (Stubber<UIContextualAction>) -> Void) -> MethodStub {
+            let willReturn: [UIContextualAction] = []
+			let given: Given = { return Given(method: .m_contextualAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (UIContextualAction).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct Verify {
@@ -17020,6 +17051,7 @@ open class UiUtilMock: UiUtil, Mock {
         public static func alert(title: Parameter<String?>, message: Parameter<String?>, preferredStyle: Parameter<UIAlertController.Style>) -> Verify { return Verify(method: .m_alert__title_titlemessage_messagepreferredStyle_preferredStyle(`title`, `message`, `preferredStyle`))}
         public static func tableViewRowAction(style: Parameter<UITableViewRowAction.Style>, title: Parameter<String?>, handler: Parameter<(UITableViewRowAction, IndexPath) -> Void>) -> Verify { return Verify(method: .m_tableViewRowAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`))}
         public static func alertAction(title: Parameter<String?>, style: Parameter<UIAlertAction.Style>, handler: Parameter<((UIAlertAction) -> Void)?>) -> Verify { return Verify(method: .m_alertAction__title_titlestyle_stylehandler_handler(`title`, `style`, `handler`))}
+        public static func contextualAction(style: Parameter<UIContextualAction.Style>, title: Parameter<String?>, handler: Parameter<UIContextualAction.Handler>) -> Verify { return Verify(method: .m_contextualAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`))}
         public static func stopObserving(_ observer: Parameter<Any>, name: Parameter<NotificationName?>, object: Parameter<Any?>) -> Verify { return Verify(method: .m_stopObserving__observername_nameobject_object(`observer`, `name`, `object`))}
         public static func post(name: Parameter<Notification.Name>, object: Parameter<Any?>, userInfo: Parameter<[AnyHashable: Any]?>) -> Verify { return Verify(method: .m_post__name_nameobject_objectuserInfo_userInfo_1(`name`, `object`, `userInfo`))}
         public static func post(name: Parameter<NotificationName>, object: Parameter<Any?>, userInfo: Parameter<[AnyHashable: Any]?>) -> Verify { return Verify(method: .m_post__name_nameobject_objectuserInfo_userInfo_2(`name`, `object`, `userInfo`))}
@@ -17080,6 +17112,9 @@ open class UiUtilMock: UiUtil, Mock {
         }
         public static func alertAction(title: Parameter<String?>, style: Parameter<UIAlertAction.Style>, handler: Parameter<((UIAlertAction) -> Void)?>, perform: @escaping (String?, UIAlertAction.Style, ((UIAlertAction) -> Void)?) -> Void) -> Perform {
             return Perform(method: .m_alertAction__title_titlestyle_stylehandler_handler(`title`, `style`, `handler`), performs: perform)
+        }
+        public static func contextualAction(style: Parameter<UIContextualAction.Style>, title: Parameter<String?>, handler: Parameter<UIContextualAction.Handler>, perform: @escaping (UIContextualAction.Style, String?, @escaping UIContextualAction.Handler) -> Void) -> Perform {
+            return Perform(method: .m_contextualAction__style_styletitle_titlehandler_handler(`style`, `title`, `handler`), performs: perform)
         }
         public static func stopObserving(_ observer: Parameter<Any>, name: Parameter<NotificationName?>, object: Parameter<Any?>, perform: @escaping (Any, NotificationName?, Any?) -> Void) -> Perform {
             return Perform(method: .m_stopObserving__observername_nameobject_object(`observer`, `name`, `object`), performs: perform)

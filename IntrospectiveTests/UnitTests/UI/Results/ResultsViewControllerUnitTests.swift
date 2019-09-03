@@ -540,6 +540,10 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		}
 	}
 
+	func testGivenSection1WithDeletableSampleAtGivenIndexWhileSearching_tableViewEditActionsForRowAt_returnsActionThatDeletesCorrectSample() {
+		XCTFail()
+	}
+
 	// MARK: - saveEditedExtraInformation()
 
 	func testGivenInformationEditedNotification_saveEditedExtraInformation_editsCorrectInformation() {
