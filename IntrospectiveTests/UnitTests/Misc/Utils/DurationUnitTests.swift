@@ -67,6 +67,22 @@ final class DurationUnitTests: UnitTest {
 		XCTAssertEqual(duration, expectedDuration)
 	}
 
+	func testGivenStartAndEndDateInDifferentTimeZones_init_returnsCorrectDuration() {
+		// given
+		let startDate = DateInRegion(
+			Date(),
+			region: Region(calendar: Calendars.gregorian, zone: Zones.americaDenver, locale: Locales.englishUnitedStates))
+		let endDate = DateInRegion(
+			(startDate + 3.hours).date,
+			region: Region(calendar: Calendars.gregorian, zone: Zones.americaNewYork, locale: Locales.englishUnitedStates))
+
+		// when
+		let duration = Duration(start: startDate.date, end: endDate.date)
+
+		// then
+		assertThat(duration.inUnit(.hour), equalTo(3))
+	}
+
 	func testGivenUnknownCalendarComponent_init_skipsIt() {
 		// given
 		let numDays = 1

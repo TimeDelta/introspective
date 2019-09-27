@@ -43,17 +43,29 @@ public final class GeneralSettingsViewController: UIViewController {
 	@IBAction final func showConvertTimeZonesDescription(_ sender: Any) {
 		let controller: DescriptionViewController = viewController(named: "description", fromStoryboard: "Util")
 		let date = Date()
-		guard
-			let sourceTimeZone = TimeZone(abbreviation: "MST"),
-			let targetTimeZone = TimeZone(abbreviation: "EST")
+		let currentTimeZone = TimeZone.autoupdatingCurrent
+		guard let currentTimeZoneName = currentTimeZone.localizedName(
+			for: .generic,
+			locale: Locale.autoupdatingCurrent)
 		else {
-			log.error("Failed to get MST or EST time zone.")
+			log.error("Failed to get localized name for current time zone", currentTimeZone.description)
+			return
+		}
+		guard let targetTimeZone = getTargetTimeZone(currentTimeZone) else {
+			log.error("Failed to get target time zone.")
+			return
+		}
+		guard let targetTimeZoneName = targetTimeZone.localizedName(
+			for: .generic,
+			locale: Locale.autoupdatingCurrent)
+		else {
+			log.error("Failed to get localized name for current time zone", currentTimeZone.description)
 			return
 		}
 		let recordedTime = TimeOfDay(date)
-		let convertedDate = DependencyInjector.util.calendar.convert(date, from: sourceTimeZone, to: targetTimeZone)
+		let convertedDate = DependencyInjector.util.calendar.convert(date, from: currentTimeZone, to: targetTimeZone)
 		let convertedTime = TimeOfDay(convertedDate)
-		controller.descriptionText = "When time zone information is available for a date, convert it to the current time zone. For example, with this enabled, if you were in Colorado (MST) on vacation and recorded a heart rate at \(recordedTime.toString()) then came back to Ohio (EST), it would appear as if it had been recorded at \(convertedTime.toString()). Without this enabled, it will appear to have been recorded at \(recordedTime.toString()). This does not have to be enabled at the time that the data was recorded for this conversion to happen. For data pulled from Apple Health, this information will not always be available as it is up to the source app to record it. Also, any data imported from external sources may not have time zone information recorded. However, any data recorded by this app will contain time zone information."
+		controller.descriptionText = "When time zone information is available for a date, convert it to the original time zone. For example, with this enabled, if you were in \(targetTimeZoneName) on vacation and recorded a heart rate at \(convertedTime.toString()) then came back to \(currentTimeZoneName), it would appear as if it had been recorded at \(convertedTime.toString()). Without this enabled, it will appear to have been recorded at \(recordedTime.toString()). This does not have to be enabled at the time that the data was recorded for this conversion to happen. For data pulled from Apple Health, this information will not always be available as it is up to the source app to record it. Also, any data imported from external sources may not have time zone information recorded. However, any data recorded by this app will contain time zone information."
 		present(controller, using: Me.descriptionPresenter)
 	}
 
@@ -81,5 +93,13 @@ public final class GeneralSettingsViewController: UIViewController {
 
 	private final func updateUI() {
 		convertTimeZonesSwitch.isOn = DependencyInjector.settings.convertTimeZones
+	}
+
+	private final func getTargetTimeZone(_ currentTimeZone: TimeZone) -> TimeZone? {
+		let currentAbbreviation = currentTimeZone.abbreviation()
+		let currentIsEastern = currentAbbreviation == "EST" || currentAbbreviation == "EDT"
+		let easternTimeZone = TimeZone.init(abbreviation: "EST")
+		let mountainTimeZone = TimeZone.init(abbreviation: "MST")
+		return currentIsEastern ? mountainTimeZone : easternTimeZone
 	}
 }

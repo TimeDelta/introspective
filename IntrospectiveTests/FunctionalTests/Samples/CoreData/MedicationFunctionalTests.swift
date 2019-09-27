@@ -202,7 +202,7 @@ final class MedicationFunctionalTests: FunctionalTest {
 		try medication.set(attribute: Medication.startedOn, to: startDate)
 
 		// then
-		let expectedDate = DependencyInjector.util.calendar.convert(startDate, from: timeZoneOnSet, to: timeZoneOnAccess)
+		let expectedDate = DependencyInjector.util.calendar.convert(startDate, from: timeZoneOnAccess, to: timeZoneOnSet)
 		calendarUtil.setTimeZone(timeZoneOnAccess)
 		XCTAssertEqual(medication.startedOn, expectedDate)
 	}
@@ -316,7 +316,7 @@ final class MedicationFunctionalTests: FunctionalTest {
 		// then
 		let startedOnDate = Date()
 		medication.startedOn = startedOnDate
-		let expectedDate = DependencyInjector.util.calendar.convert(startedOnDate, from: timeZoneOnSet, to: timeZoneOnAccess)
+		let expectedDate = DependencyInjector.util.calendar.convert(startedOnDate, from: timeZoneOnAccess, to: timeZoneOnSet)
 		calendarUtil.setTimeZone(timeZoneOnAccess)
 		XCTAssertEqual(medication.startedOn, expectedDate)
 	}

@@ -14,6 +14,41 @@ import CSV
 
 final class ActivityFunctionalTests: FunctionalTest {
 
+	// MARK: - duration
+
+	func testGivenDifferentTimeZonesForStartAndEnd_duration_returnsCorrectDuration() throws {
+		// given
+		DependencyInjector.settings.setConvertTimeZones(true)
+		do {
+			try DependencyInjector.settings.save()
+		} catch {
+			XCTFail("Failed to save convert time zone setting")
+		}
+
+		let transaction = DependencyInjector.db.transaction()
+		let activity = try transaction.new(Activity.self)
+
+		let calendarUtil = CalendarUtilImpl()
+		utilFactory.calendar = calendarUtil
+		let expectedInterval: DateComponents = 3.hours
+
+		let startTimeZone = TimeZone(abbreviation: "PST")!
+		calendarUtil.setTimeZone(startTimeZone)
+		let startDate = Date()
+		activity.start = startDate
+
+		let endTimeZone = TimeZone(abbreviation: "EST")!
+		calendarUtil.setTimeZone(endTimeZone)
+		activity.end = startDate + expectedInterval
+
+		// when
+		let duration = activity.duration
+
+		// then
+		let expectedDuration = Duration(expectedInterval)
+		assertThat(duration, equalTo(expectedDuration))
+	}
+
 	// MARK: - export(to:)
 
 	func testGivenNilStartDateTimeZone_exportTo_doesNotThrowError() throws {
@@ -232,6 +267,11 @@ final class ActivityFunctionalTests: FunctionalTest {
 		calendarUtil.setTimeZone(timeZoneOnSet)
 
 		DependencyInjector.settings.setConvertTimeZones(true)
+		do {
+			try DependencyInjector.settings.save()
+		} catch {
+			XCTFail("Failed to save convert time zone setting")
+		}
 		let transaction = DependencyInjector.db.transaction()
 		let activity = try transaction.new(Activity.self)
 		let startDate = Date()
@@ -240,7 +280,7 @@ final class ActivityFunctionalTests: FunctionalTest {
 		try activity.set(attribute: CommonSampleAttributes.startDate, to: startDate)
 
 		// then
-		let expectedDate = DependencyInjector.util.calendar.convert(startDate, from: timeZoneOnSet, to: timeZoneOnAccess)
+		let expectedDate = DependencyInjector.util.calendar.convert(startDate, from: timeZoneOnAccess, to: timeZoneOnSet)
 		calendarUtil.setTimeZone(timeZoneOnAccess)
 		XCTAssertEqual(activity.start, expectedDate)
 	}
@@ -278,6 +318,11 @@ final class ActivityFunctionalTests: FunctionalTest {
 		calendarUtil.setTimeZone(timeZoneOnSet)
 
 		DependencyInjector.settings.setConvertTimeZones(true)
+		do {
+			try DependencyInjector.settings.save()
+		} catch {
+			XCTFail("Failed to save convert time zone setting")
+		}
 		let transaction = DependencyInjector.db.transaction()
 		let activity = try transaction.new(Activity.self)
 		let endDate = Date()
@@ -286,7 +331,7 @@ final class ActivityFunctionalTests: FunctionalTest {
 		try activity.set(attribute: CommonSampleAttributes.optionalEndDate, to: endDate)
 
 		// then
-		let expectedDate = DependencyInjector.util.calendar.convert(endDate, from: timeZoneOnSet, to: timeZoneOnAccess)
+		let expectedDate = DependencyInjector.util.calendar.convert(endDate, from: timeZoneOnAccess, to: timeZoneOnSet)
 		calendarUtil.setTimeZone(timeZoneOnAccess)
 		XCTAssertEqual(activity.end, expectedDate)
 	}
@@ -371,6 +416,11 @@ final class ActivityFunctionalTests: FunctionalTest {
 		calendarUtil.setTimeZone(timeZoneOnSet)
 
 		DependencyInjector.settings.setConvertTimeZones(true)
+		do {
+			try DependencyInjector.settings.save()
+		} catch {
+			XCTFail("Failed to save convert time zone setting")
+		}
 		let transaction = DependencyInjector.db.transaction()
 		let activity = try transaction.new(Activity.self)
 
@@ -380,7 +430,7 @@ final class ActivityFunctionalTests: FunctionalTest {
 		// then
 		let startDate = Date()
 		activity.start = startDate
-		let expectedDate = DependencyInjector.util.calendar.convert(startDate, from: timeZoneOnSet, to: timeZoneOnAccess)
+		let expectedDate = DependencyInjector.util.calendar.convert(startDate, from: timeZoneOnAccess, to: timeZoneOnSet)
 		calendarUtil.setTimeZone(timeZoneOnAccess)
 		XCTAssertEqual(activity.start, expectedDate)
 	}
@@ -394,6 +444,11 @@ final class ActivityFunctionalTests: FunctionalTest {
 		calendarUtil.setTimeZone(timeZoneOnSet)
 
 		DependencyInjector.settings.setConvertTimeZones(true)
+		do {
+			try DependencyInjector.settings.save()
+		} catch {
+			XCTFail("Failed to save convert time zone setting")
+		}
 		let transaction = DependencyInjector.db.transaction()
 		let activity = try transaction.new(Activity.self)
 
@@ -403,7 +458,7 @@ final class ActivityFunctionalTests: FunctionalTest {
 		// then
 		let endDate = Date()
 		activity.end = endDate
-		let expectedDate = DependencyInjector.util.calendar.convert(endDate, from: timeZoneOnSet, to: timeZoneOnAccess)
+		let expectedDate = DependencyInjector.util.calendar.convert(endDate, from: timeZoneOnAccess, to: timeZoneOnSet)
 		calendarUtil.setTimeZone(timeZoneOnAccess)
 		XCTAssertEqual(activity.end, expectedDate)
 	}

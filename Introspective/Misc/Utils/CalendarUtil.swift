@@ -170,7 +170,7 @@ public final class CalendarUtilImpl: CalendarUtil {
 		return timeZone ?? TimeZone.autoupdatingCurrent
 	}
 
-	/// This is not
+	/// This is used only for testing
 	public final func setTimeZone(_ timeZone: TimeZone) {
 		self.timeZone = timeZone
 	}

@@ -91,7 +91,9 @@ public class Activity: NSManagedObject, CoreDataSample {
 		}
 	}
 	public final var duration: Duration {
-		return Duration(start: start, end: end)
+		// use raw unconverted dates to avoid issues caused by start and end being in
+		// different time zones such as negative durations
+		return Duration(start: startDate, end: endDate)
 	}
 
 	// MARK: - Sample Functions

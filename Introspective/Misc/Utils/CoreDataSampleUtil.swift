@@ -23,7 +23,12 @@ public final class CoreDataSampleUtilImpl: CoreDataSampleUtil {
 		guard DependencyInjector.settings.convertTimeZones else { return date }
 		if let timeZoneId = timeZoneId {
 			if let timeZone = TimeZone(identifier: timeZoneId) {
-				return DependencyInjector.util.calendar.convert(date, from: timeZone, to: TimeZone.autoupdatingCurrent)
+				// Date class assumes current time zone automatically
+				return DependencyInjector.util.calendar.convert(
+					date,
+					from: TimeZone.autoupdatingCurrent,
+					to: timeZone
+				)
 			}
 		}
 		return date
