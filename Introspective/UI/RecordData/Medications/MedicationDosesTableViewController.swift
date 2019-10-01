@@ -10,6 +10,11 @@ import UIKit
 import Presentr
 import SwiftDate
 
+import Common
+import DependencyInjection
+import Persistence
+import Samples
+
 public final class MedicationDosesTableViewController: UITableViewController {
 
 	// MARK: - Static Variables
@@ -94,14 +99,14 @@ public final class MedicationDosesTableViewController: UITableViewController {
 
 	public final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		let dose = filteredDoses[indexPath.row]
-		let delete = DependencyInjector.util.ui.tableViewRowAction(style: .destructive, title: "🗑️") { (_, indexPath) in
-			let alert = DependencyInjector.util.ui.alert(
+		let delete = DependencyInjector.get(UiUtil.self).tableViewRowAction(style: .destructive, title: "🗑️") { (_, indexPath) in
+			let alert = DependencyInjector.get(UiUtil.self).alert(
 				title: "Are you sure you want to delete this dose?",
 				message: self.getTextForDoseAt(indexPath.row),
 				preferredStyle: .alert)
-			alert.addAction(DependencyInjector.util.ui.alertAction(title: "Yes", style: .destructive) { _ in
+			alert.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Yes", style: .destructive) { _ in
 				let indexToDelete = self.medication.doses.index(of: dose)
-				let transaction = DependencyInjector.db.transaction()
+				let transaction = DependencyInjector.get(Database.self).transaction()
 				do {
 					try retryOnFail({ try transaction.delete(dose) }, maxRetries: 2)
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
@@ -114,11 +119,11 @@ public final class MedicationDosesTableViewController: UITableViewController {
 					self.showError(title: "Failed to delete dose", error: error)
 				}
 			})
-			alert.addAction(DependencyInjector.util.ui.alertAction(title: "No", style: .cancel, handler: nil))
+			alert.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "No", style: .cancel, handler: nil))
 			self.present(alert, animated: false, completion: nil)
 		}
 		delete.accessibilityLabel = "delete dose button"
-		let dateText = DependencyInjector.util.calendar.string(for: dose.date, dateStyle: .long, timeStyle: .short)
+		let dateText = DependencyInjector.get(CalendarUtil.self).string(for: dose.date, dateStyle: .long, timeStyle: .short)
 		var dosageText = dose.dosage?.description ?? ""
 		if !dosageText.isEmpty {
 			dosageText += " "
@@ -153,13 +158,13 @@ public final class MedicationDosesTableViewController: UITableViewController {
 
 	@objc private final func medicationDoseEdited(notification: Notification) {
 		if let dose: MedicationDose = value(for: .dose, from: notification) {
-			let transaction = DependencyInjector.db.transaction()
+			let transaction = DependencyInjector.get(Database.self).transaction()
 			do {
 				let doseFromTransaction = try transaction.pull(savedObject: dose)
 				medication = try transaction.pull(savedObject: medication)
 				medication.replaceDoses(at: lastClickedIndex, with: doseFromTransaction)
 				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-				medication = try DependencyInjector.db.pull(savedObject: medication)
+				medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
 				resetFilteredDoses()
 				tableView.reloadData()
 			} catch {
@@ -227,7 +232,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 		if let dosage = dose.dosage {
 			doseText += dosage.description + " on "
 		}
-		doseText += DependencyInjector.util.calendar.string(for: dose.date, dateStyle: .medium, timeStyle: .short)
+		doseText += DependencyInjector.get(CalendarUtil.self).string(for: dose.date, dateStyle: .medium, timeStyle: .short)
 		return doseText
 	}
 
@@ -237,15 +242,15 @@ public final class MedicationDosesTableViewController: UITableViewController {
 			var startDate = filterStartDate
 			if let start = startDate {
 				if filterEndDate == nil {
-					startDate = DependencyInjector.util.calendar.end(of: .day, in: start)
+					startDate = DependencyInjector.get(CalendarUtil.self).end(of: .day, in: start)
 				}
 			}
 			var endDate = filterEndDate
 			if let end = endDate {
 				if filterStartDate == filterEndDate {
-					endDate = DependencyInjector.util.calendar.end(of: .day, in: end)
+					endDate = DependencyInjector.get(CalendarUtil.self).end(of: .day, in: end)
 				} else if filterStartDate == nil {
-					endDate = DependencyInjector.util.calendar.start(of: .day, in: end)
+					endDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: end)
 				}
 			}
 			// note: can't use NSFetchedResultsController or predicates because of timezone requirements
@@ -271,18 +276,18 @@ public final class MedicationDosesTableViewController: UITableViewController {
 			dateText = "Filter Dates"
 		} else if filterEndDate == filterStartDate {
 			dateText = "On "
-			dateText += DependencyInjector.util.calendar.string(for: filterStartDate!, dateStyle: .medium, timeStyle: .none)
+			dateText += DependencyInjector.get(CalendarUtil.self).string(for: filterStartDate!, dateStyle: .medium, timeStyle: .none)
 		} else if filterEndDate == nil {
 			dateText = "After "
-			dateText += DependencyInjector.util.calendar.string(for: filterStartDate!, dateStyle: .medium, timeStyle: .none)
+			dateText += DependencyInjector.get(CalendarUtil.self).string(for: filterStartDate!, dateStyle: .medium, timeStyle: .none)
 		} else if filterStartDate == nil {
 			dateText = "Before "
-			dateText += DependencyInjector.util.calendar.string(for: filterEndDate!, dateStyle: .medium, timeStyle: .none)
+			dateText += DependencyInjector.get(CalendarUtil.self).string(for: filterEndDate!, dateStyle: .medium, timeStyle: .none)
 		} else {
 			dateText = "From "
-			dateText += DependencyInjector.util.calendar.string(for: filterStartDate!, dateStyle: .short, timeStyle: .none)
+			dateText += DependencyInjector.get(CalendarUtil.self).string(for: filterStartDate!, dateStyle: .short, timeStyle: .none)
 			dateText += " to "
-			dateText += DependencyInjector.util.calendar.string(for: filterEndDate!, dateStyle: .short, timeStyle: .none)
+			dateText += DependencyInjector.get(CalendarUtil.self).string(for: filterEndDate!, dateStyle: .short, timeStyle: .none)
 		}
 		dateRangeButton.title = dateText
 		dateRangeButton.accessibilityValue = dateText

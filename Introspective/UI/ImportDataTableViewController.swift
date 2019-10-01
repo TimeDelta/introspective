@@ -11,6 +11,11 @@ import SwiftDate
 import UserNotifications
 import NotificationBannerSwift
 
+import Common
+import DataImport
+import DependencyInjection
+import Notifications
+
 public final class ImportDataTableViewController: UITableViewController {
 
 	// MARK: - Static Variables
@@ -112,7 +117,7 @@ public final class ImportDataTableViewController: UITableViewController {
 			cell.backgroundTaskId = backgroundImportOrder[indexPath.row]
 			cell.importer = backgroundImports({ $0[cell.backgroundTaskId] })
 			// need to do this or will double subscribe and receive event twice, causing app to crash
-			DependencyInjector.util.ui.stopObserving(self, name: .presentView, object: cell.importer)
+			DependencyInjector.get(UiUtil.self).stopObserving(self, name: .presentView, object: cell.importer)
 			observe(selector: #selector(presentViewFrom), name: .presentView, object: cell.importer)
 			return cell
 		}
@@ -139,7 +144,7 @@ public final class ImportDataTableViewController: UITableViewController {
 			importer = try getImporterFor(indexPath)
 			var lastImportedText: String
 			if let importDate = importer.lastImport {
-				let dateText = DependencyInjector.util.calendar.string(for: importDate, dateStyle: .medium, timeStyle: .medium)
+				let dateText = DependencyInjector.get(CalendarUtil.self).string(for: importDate, dateStyle: .medium, timeStyle: .medium)
 				lastImportedText = "Last import date: \(dateText)"
 			} else {
 				lastImportedText = "Never imported"
@@ -226,7 +231,7 @@ public final class ImportDataTableViewController: UITableViewController {
 	}
 
 	private final func importData(newDataOnly: Bool) {
-		let documentPickerController = DependencyInjector.util.ui.documentPicker(docTypes: ["public.data"], in: .import)
+		let documentPickerController = DependencyInjector.get(UiUtil.self).documentPicker(docTypes: ["public.data"], in: .import)
 		documentPickerController.allowsMultipleSelection = false
 		documentPickerController.delegate = self
 		importer.importOnlyNewData = newDataOnly
@@ -287,13 +292,13 @@ public final class ImportDataTableViewController: UITableViewController {
 
 	private final func getImporterFor(_ indexPath: IndexPath) throws -> Importer {
 		if indexPath == Me.aTrackerActivityIndex {
-			return try DependencyInjector.importer.aTrackerActivityImporter()
+			return try DependencyInjector.get(ImporterFactory.self).aTrackerActivityImporter()
 		} else if indexPath == Me.wellnessMoodIndex {
-			return try DependencyInjector.importer.wellnessMoodImporter()
+			return try DependencyInjector.get(ImporterFactory.self).wellnessMoodImporter()
 		} else if indexPath == Me.easyPillMedicationIndex {
-			return try DependencyInjector.importer.easyPillMedicationImporter()
+			return try DependencyInjector.get(ImporterFactory.self).easyPillMedicationImporter()
 		} else if indexPath == Me.easyPillDoseIndex {
-			return try DependencyInjector.importer.easyPillMedicationDoseImporter()
+			return try DependencyInjector.get(ImporterFactory.self).easyPillMedicationDoseImporter()
 		} else {
 			log.error("Unknown index path: (section: %d, row: %d)", indexPath.section, indexPath.row)
 			throw Errors.unknownIndexPath

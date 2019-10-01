@@ -8,6 +8,8 @@
 
 import UIKit
 
+import Attributes
+
 public final class TextAttributeValueViewController: AttributeValueTypeViewController, UITextViewDelegate {
 
 	// MARK: - IBOutlets

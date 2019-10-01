@@ -8,13 +8,17 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+import Settings
+
 public final class ActivitySettingsTableViewController: UITableViewController {
 
 	// MARK: - Static Variables
 
 	private typealias Me = ActivitySettingsTableViewController
 
-	private static let descriptionPresenter = DependencyInjector.util.ui.customPresenter(
+	private static let descriptionPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center)
@@ -33,8 +37,8 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 
 	// MARK: - Instance Variables
 
-	private final var autoIgnoreEnabled: Bool = DependencyInjector.settings.autoIgnoreEnabled
-	private final var numberOfSeconds: Int = DependencyInjector.settings.autoIgnoreSeconds
+	private final var autoIgnoreEnabled: Bool = DependencyInjector.get(Settings.self).autoIgnoreEnabled
+	private final var numberOfSeconds: Int = DependencyInjector.get(Settings.self).autoIgnoreSeconds
 
 	private final let log = Log()
 
@@ -43,7 +47,7 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 	public final override func viewDidLoad() {
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(reset))
 
-		DependencyInjector.util.ui.setBackButton(for: self, title: "Settings", action: #selector(done))
+		DependencyInjector.get(UiUtil.self).setBackButton(for: self, title: "Settings", action: #selector(done))
 		observe(selector: #selector(autoIgnoreChanged), name: Me.changeNotifications[0])
 	}
 
@@ -91,7 +95,7 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 	// MARK: - Actions
 
 	@objc private final func reset(_ sender: Any) {
-		DependencyInjector.settings.reset()
+		DependencyInjector.get(Settings.self).reset()
 		for cell in tableView.visibleCells as! [ActivitySettingTableViewCell] {
 			cell.reset()
 		}
@@ -106,14 +110,14 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 	// MARK: - Helper Functions
 
 	@objc private final func done() {
-		DependencyInjector.settings.setAutoIgnoreEnabled(autoIgnoreEnabled)
-		DependencyInjector.settings.setAutoIgnoreSeconds(numberOfSeconds)
+		DependencyInjector.get(Settings.self).setAutoIgnoreEnabled(autoIgnoreEnabled)
+		DependencyInjector.get(Settings.self).setAutoIgnoreSeconds(numberOfSeconds)
 		saveAndGoBackToSettings()
 	}
 
 	@objc private final func saveAndGoBackToSettings() {
 		do {
-			try retryOnFail({ try DependencyInjector.settings.save() }, maxRetries: 2)
+			try retryOnFail({ try DependencyInjector.get(Settings.self).save() }, maxRetries: 2)
 			self.navigationController?.popViewController(animated: false)
 		} catch {
 			log.error("Failed to save activity settings: %@", errorInfo(error))

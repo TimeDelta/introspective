@@ -9,6 +9,10 @@
 import Foundation
 import Instructions
 
+import Common
+import DependencyInjection
+import UIExtensions
+
 //sourcery: AutoMockable
 public protocol CoachMarksDataSourceAndDelegate: CoachMarksControllerDataSource, CoachMarksControllerDelegate {}
 
@@ -55,7 +59,7 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceA
 			runSetup()
 		}
 		if index == coachMarksInfo.count - 1 {
-			DependencyInjector.util.userDefaults.setUserDefault(true, forKey: instructionsShownKey)
+			DependencyInjector.get(UserDefaultsUtil.self).setUserDefault(true, forKey: instructionsShownKey)
 		}
 		return coachMarksController.helper.makeCoachMark(for: coachMarksInfo[index].view)
 	}
@@ -75,7 +79,7 @@ public final class DefaultCoachMarksDataSourceAndDelegate: CoachMarksDataSourceA
 
 	public final func coachMarksController(_ coachMarksController: CoachMarksController, didEndShowingBySkipping skipped: Bool) {
 		if skipped {
-			DependencyInjector.util.userDefaults.setUserDefault(true, forKey: instructionsShownKey)
+			DependencyInjector.get(UserDefaultsUtil.self).setUserDefault(true, forKey: instructionsShownKey)
 		}
 		if let cleanup = cleanup {
 			cleanup()

@@ -286,7 +286,7 @@ class UITest: XCTestCase {
 			app.tabBars.buttons["Record"].tap()
 			app.tables.cells.staticTexts["Activities"].tap()
 		}
-		app.buttons["Add"].tap()
+		app.buttons["+"].tap()
 		setTextFor(field: app.tables.textFields["activity name"], to: definition.name)
 		if let autoNote = definition.autoNote {
 			let currentlyEnabled = activityDefinitionAutoNoteField().value as? String == "1"
@@ -376,6 +376,11 @@ class UITest: XCTestCase {
 	final func addAttributeRestrictionToQuery() {
 		app.tables.buttons["Add"].tap()
 		app.sheets["What would you like to add?"].buttons["Attribute Restriction"].tap()
+	}
+
+	final func addAndToQuery() {
+		app.tables.buttons["Add"].tap()
+		app.sheets["What would you like to add?"].buttons["And"].tap()
 	}
 
 	final func setMainDataTypeForQuery(_ type: String) {

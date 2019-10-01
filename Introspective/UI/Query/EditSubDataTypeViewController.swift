@@ -9,6 +9,10 @@
 import UIKit
 import os
 
+import DependencyInjection
+import Queries
+import Samples
+
 final class EditSubSampleTypeViewController: UIViewController {
 
 	// MARK: - Static Variables
@@ -36,7 +40,7 @@ final class EditSubSampleTypeViewController: UIViewController {
 		dataTypePicker.dataSource = self
 		dataTypePicker.delegate = self
 
-		let index = DependencyInjector.sample.allTypes().index { $0 == sampleType }
+		let index = DependencyInjector.get(SampleFactory.self).allTypes().index { $0 == sampleType }
 		if index != nil {
 			dataTypePicker.selectRow(index!, inComponent: 0, animated: false)
 		}
@@ -113,7 +117,7 @@ extension EditSubSampleTypeViewController: UIPickerViewDataSource {
 	}
 
 	final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return DependencyInjector.sample.allTypes().count
+		return DependencyInjector.get(SampleFactory.self).allTypes().count
 	}
 }
 
@@ -122,10 +126,10 @@ extension EditSubSampleTypeViewController: UIPickerViewDataSource {
 extension EditSubSampleTypeViewController: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return DependencyInjector.sample.allTypes()[row].name
+		return DependencyInjector.get(SampleFactory.self).allTypes()[row].name
 	}
 
 	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-		sampleType = DependencyInjector.sample.allTypes()[row]
+		sampleType = DependencyInjector.get(SampleFactory.self).allTypes()[row]
 	}
 }

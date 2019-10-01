@@ -1,4 +1,4 @@
-// Generated using Sourcery 0.16.2 — https://github.com/krzysztofzablocki/Sourcery
+// Generated using Sourcery 0.17.0 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
 
 
@@ -18,6 +18,21 @@ import SwiftDate
 import UserNotifications
 import Instructions
 @testable import Introspective
+@testable import AttributeRestrictions
+@testable import Attributes
+@testable import BooleanAlgebra
+@testable import Common
+@testable import DataExport
+@testable import DataImport
+@testable import DependencyInjection
+@testable import Notifications
+@testable import Persistence
+@testable import Queries
+@testable import SampleGroupers
+@testable import SampleGroupInformation
+@testable import Samples
+@testable import Settings
+@testable import UIExtensions
 
     public final class MockyAssertion {
         public static var handler: ((Bool, String, StaticString, UInt) -> Void)?
@@ -42,6 +57,21 @@ import SwiftDate
 import UserNotifications
 import Instructions
 @testable import Introspective
+@testable import AttributeRestrictions
+@testable import Attributes
+@testable import BooleanAlgebra
+@testable import Common
+@testable import DataExport
+@testable import DataImport
+@testable import DependencyInjection
+@testable import Notifications
+@testable import Persistence
+@testable import Queries
+@testable import SampleGroupers
+@testable import SampleGroupInformation
+@testable import Samples
+@testable import Settings
+@testable import UIExtensions
 
     func MockyAssert(_ expression: @autoclosure () -> Bool, _ message: @autoclosure () -> String = "Verification failed", file: StaticString = #file, line: UInt = #line) {
         XCTAssert(expression(), message(), file: file, line: line)
@@ -1745,122 +1775,6 @@ open class AttributeMock: Attribute, Mock {
     }
 }
 
-// MARK: - AttributeFactory
-open class AttributeFactoryMock: AttributeFactory, Mock {
-    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
-        self.sequencingPolicy = sequencingPolicy
-        self.stubbingPolicy = stubbingPolicy
-        self.file = file
-        self.line = line
-    }
-
-    var matcher: Matcher = Matcher.default
-    var stubbingPolicy: StubbingPolicy = .wrap
-    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
-    private var invocations: [MethodType] = []
-    private var methodReturnValues: [Given] = []
-    private var methodPerformValues: [Perform] = []
-    private var file: StaticString?
-    private var line: UInt?
-
-    public typealias PropertyStub = Given
-    public typealias MethodStub = Given
-    public typealias SubscriptStub = Given
-
-    /// Convenience method - call setupMock() to extend debug information when failure occurs
-    public func setupMock(file: StaticString = #file, line: UInt = #line) {
-        self.file = file
-        self.line = line
-    }
-
-
-
-
-
-
-    fileprivate struct MethodType {
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool { return true }
-        func intValue() -> Int { return 0 }
-    }
-
-    open class Given: StubbedMethod {
-        fileprivate var method: MethodType
-
-        private init(method: MethodType, products: [StubProduct]) {
-            self.method = method
-            super.init(products)
-        }
-
-
-    }
-
-    public struct Verify {
-        fileprivate var method: MethodType
-
-    }
-
-    public struct Perform {
-        fileprivate var method: MethodType
-        var performs: Any
-
-    }
-
-    public func given(_ method: Given) {
-        methodReturnValues.append(method)
-    }
-
-    public func perform(_ method: Perform) {
-        methodPerformValues.append(method)
-        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
-    }
-
-    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
-    }
-
-    private func addInvocation(_ call: MethodType) {
-        invocations.append(call)
-    }
-    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
-        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
-        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
-        return product
-    }
-    private func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
-        return matched?.performs
-    }
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
-    }
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
-    }
-    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            onFatalFailure(message)
-            Failure(message)
-        }
-    }
-    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            return nil
-        }
-    }
-    private func onFatalFailure(_ message: String) {
-        #if Mocky
-        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
-        #endif
-    }
-}
-
 // MARK: - AttributeRestrictionFactory
 open class AttributeRestrictionFactoryMock: AttributeRestrictionFactory, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
@@ -2502,162 +2416,6 @@ open class BodyMassIndexQueryMock: BodyMassIndexQuery, Mock {
         }
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
-        }
-    }
-
-    public func given(_ method: Given) {
-        methodReturnValues.append(method)
-    }
-
-    public func perform(_ method: Perform) {
-        methodPerformValues.append(method)
-        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
-    }
-
-    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
-    }
-
-    private func addInvocation(_ call: MethodType) {
-        invocations.append(call)
-    }
-    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
-        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
-        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
-        return product
-    }
-    private func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
-        return matched?.performs
-    }
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
-    }
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
-    }
-    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            onFatalFailure(message)
-            Failure(message)
-        }
-    }
-    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            return nil
-        }
-    }
-    private func onFatalFailure(_ message: String) {
-        #if Mocky
-        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
-        #endif
-    }
-}
-
-// MARK: - BooleanAlgebraFactory
-open class BooleanAlgebraFactoryMock: BooleanAlgebraFactory, Mock {
-    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
-        self.sequencingPolicy = sequencingPolicy
-        self.stubbingPolicy = stubbingPolicy
-        self.file = file
-        self.line = line
-    }
-
-    var matcher: Matcher = Matcher.default
-    var stubbingPolicy: StubbingPolicy = .wrap
-    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
-    private var invocations: [MethodType] = []
-    private var methodReturnValues: [Given] = []
-    private var methodPerformValues: [Perform] = []
-    private var file: StaticString?
-    private var line: UInt?
-
-    public typealias PropertyStub = Given
-    public typealias MethodStub = Given
-    public typealias SubscriptStub = Given
-
-    /// Convenience method - call setupMock() to extend debug information when failure occurs
-    public func setupMock(file: StaticString = #file, line: UInt = #line) {
-        self.file = file
-        self.line = line
-    }
-
-
-
-
-
-    open func parser() -> BooleanExpressionParser {
-        addInvocation(.m_parser)
-		let perform = methodPerformValue(.m_parser) as? () -> Void
-		perform?()
-		var __value: BooleanExpressionParser
-		do {
-		    __value = try methodReturnValue(.m_parser).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for parser(). Use given")
-			Failure("Stub return value not specified for parser(). Use given")
-		}
-		return __value
-    }
-
-
-    fileprivate enum MethodType {
-        case m_parser
-
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
-            switch (lhs, rhs) {
-            case (.m_parser, .m_parser):
-                return true 
-            }
-        }
-
-        func intValue() -> Int {
-            switch self {
-            case .m_parser: return 0
-            }
-        }
-    }
-
-    open class Given: StubbedMethod {
-        fileprivate var method: MethodType
-
-        private init(method: MethodType, products: [StubProduct]) {
-            self.method = method
-            super.init(products)
-        }
-
-
-        public static func parser(willReturn: BooleanExpressionParser...) -> MethodStub {
-            return Given(method: .m_parser, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func parser(willProduce: (Stubber<BooleanExpressionParser>) -> Void) -> MethodStub {
-            let willReturn: [BooleanExpressionParser] = []
-			let given: Given = { return Given(method: .m_parser, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (BooleanExpressionParser).self)
-			willProduce(stubber)
-			return given
-        }
-    }
-
-    public struct Verify {
-        fileprivate var method: MethodType
-
-        public static func parser() -> Verify { return Verify(method: .m_parser)}
-    }
-
-    public struct Perform {
-        fileprivate var method: MethodType
-        var performs: Any
-
-        public static func parser(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_parser, performs: perform)
         }
     }
 
@@ -4165,162 +3923,6 @@ open class CodableStorageMock: CodableStorage, Mock {
         }
         public static func fileExists(_ fileName: Parameter<String>, in directory: Parameter<StorageDirectory>, perform: @escaping (String, StorageDirectory) -> Void) -> Perform {
             return Perform(method: .m_fileExists__fileNamein_directory(`fileName`, `directory`), performs: perform)
-        }
-    }
-
-    public func given(_ method: Given) {
-        methodReturnValues.append(method)
-    }
-
-    public func perform(_ method: Perform) {
-        methodPerformValues.append(method)
-        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
-    }
-
-    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
-        let invocations = matchingCalls(method.method)
-        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
-    }
-
-    private func addInvocation(_ call: MethodType) {
-        invocations.append(call)
-    }
-    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
-        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
-        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
-        return product
-    }
-    private func methodPerformValue(_ method: MethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
-        return matched?.performs
-    }
-    private func matchingCalls(_ method: MethodType) -> [MethodType] {
-        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
-    }
-    private func matchingCalls(_ method: Verify) -> Int {
-        return matchingCalls(method.method).count
-    }
-    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            onFatalFailure(message)
-            Failure(message)
-        }
-    }
-    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
-        do {
-            return try methodReturnValue(method).casted()
-        } catch {
-            return nil
-        }
-    }
-    private func onFatalFailure(_ message: String) {
-        #if Mocky
-        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
-        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
-        #endif
-    }
-}
-
-// MARK: - DaoFactory
-open class DaoFactoryMock: DaoFactory, Mock {
-    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
-        self.sequencingPolicy = sequencingPolicy
-        self.stubbingPolicy = stubbingPolicy
-        self.file = file
-        self.line = line
-    }
-
-    var matcher: Matcher = Matcher.default
-    var stubbingPolicy: StubbingPolicy = .wrap
-    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
-    private var invocations: [MethodType] = []
-    private var methodReturnValues: [Given] = []
-    private var methodPerformValues: [Perform] = []
-    private var file: StaticString?
-    private var line: UInt?
-
-    public typealias PropertyStub = Given
-    public typealias MethodStub = Given
-    public typealias SubscriptStub = Given
-
-    /// Convenience method - call setupMock() to extend debug information when failure occurs
-    public func setupMock(file: StaticString = #file, line: UInt = #line) {
-        self.file = file
-        self.line = line
-    }
-
-
-
-
-
-    open func activityDao() -> ActivityDao {
-        addInvocation(.m_activityDao)
-		let perform = methodPerformValue(.m_activityDao) as? () -> Void
-		perform?()
-		var __value: ActivityDao
-		do {
-		    __value = try methodReturnValue(.m_activityDao).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for activityDao(). Use given")
-			Failure("Stub return value not specified for activityDao(). Use given")
-		}
-		return __value
-    }
-
-
-    fileprivate enum MethodType {
-        case m_activityDao
-
-        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
-            switch (lhs, rhs) {
-            case (.m_activityDao, .m_activityDao):
-                return true 
-            }
-        }
-
-        func intValue() -> Int {
-            switch self {
-            case .m_activityDao: return 0
-            }
-        }
-    }
-
-    open class Given: StubbedMethod {
-        fileprivate var method: MethodType
-
-        private init(method: MethodType, products: [StubProduct]) {
-            self.method = method
-            super.init(products)
-        }
-
-
-        public static func activityDao(willReturn: ActivityDao...) -> MethodStub {
-            return Given(method: .m_activityDao, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func activityDao(willProduce: (Stubber<ActivityDao>) -> Void) -> MethodStub {
-            let willReturn: [ActivityDao] = []
-			let given: Given = { return Given(method: .m_activityDao, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (ActivityDao).self)
-			willProduce(stubber)
-			return given
-        }
-    }
-
-    public struct Verify {
-        fileprivate var method: MethodType
-
-        public static func activityDao() -> Verify { return Verify(method: .m_activityDao)}
-    }
-
-    public struct Perform {
-        fileprivate var method: MethodType
-        var performs: Any
-
-        public static func activityDao(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_activityDao, performs: perform)
         }
     }
 
@@ -5919,8 +5521,8 @@ open class ExporterMock: Exporter, Mock {
     }
 }
 
-// MARK: - ExporterFactory
-open class ExporterFactoryMock: ExporterFactory, Mock {
+// MARK: - ExporterUtil
+open class ExporterUtilMock: ExporterUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -5951,77 +5553,36 @@ open class ExporterFactoryMock: ExporterFactory, Mock {
 
 
 
-    open func activityExporter() throws -> ActivityExporter {
-        addInvocation(.m_activityExporter)
-		let perform = methodPerformValue(.m_activityExporter) as? () -> Void
-		perform?()
-		var __value: ActivityExporter
+    open func urlOfExportFile(for sampleType: Exportable.Type, in directory: URL) -> URL {
+        addInvocation(.m_urlOfExportFile__for_sampleTypein_directory(Parameter<Exportable.Type>.value(`sampleType`), Parameter<URL>.value(`directory`)))
+		let perform = methodPerformValue(.m_urlOfExportFile__for_sampleTypein_directory(Parameter<Exportable.Type>.value(`sampleType`), Parameter<URL>.value(`directory`))) as? (Exportable.Type, URL) -> Void
+		perform?(`sampleType`, `directory`)
+		var __value: URL
 		do {
-		    __value = try methodReturnValue(.m_activityExporter).casted()
-		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for activityExporter(). Use given")
-			Failure("Stub return value not specified for activityExporter(). Use given")
+		    __value = try methodReturnValue(.m_urlOfExportFile__for_sampleTypein_directory(Parameter<Exportable.Type>.value(`sampleType`), Parameter<URL>.value(`directory`))).casted()
 		} catch {
-		    throw error
-		}
-		return __value
-    }
-
-    open func medicationExporter() throws -> MedicationExporter {
-        addInvocation(.m_medicationExporter)
-		let perform = methodPerformValue(.m_medicationExporter) as? () -> Void
-		perform?()
-		var __value: MedicationExporter
-		do {
-		    __value = try methodReturnValue(.m_medicationExporter).casted()
-		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for medicationExporter(). Use given")
-			Failure("Stub return value not specified for medicationExporter(). Use given")
-		} catch {
-		    throw error
-		}
-		return __value
-    }
-
-    open func moodExporter() throws -> MoodExporter {
-        addInvocation(.m_moodExporter)
-		let perform = methodPerformValue(.m_moodExporter) as? () -> Void
-		perform?()
-		var __value: MoodExporter
-		do {
-		    __value = try methodReturnValue(.m_moodExporter).casted()
-		} catch MockError.notStubed {
-			onFatalFailure("Stub return value not specified for moodExporter(). Use given")
-			Failure("Stub return value not specified for moodExporter(). Use given")
-		} catch {
-		    throw error
+			onFatalFailure("Stub return value not specified for urlOfExportFile(for sampleType: Exportable.Type, in directory: URL). Use given")
+			Failure("Stub return value not specified for urlOfExportFile(for sampleType: Exportable.Type, in directory: URL). Use given")
 		}
 		return __value
     }
 
 
     fileprivate enum MethodType {
-        case m_activityExporter
-        case m_medicationExporter
-        case m_moodExporter
+        case m_urlOfExportFile__for_sampleTypein_directory(Parameter<Exportable.Type>, Parameter<URL>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
-            case (.m_activityExporter, .m_activityExporter):
+            case (.m_urlOfExportFile__for_sampleTypein_directory(let lhsSampletype, let lhsDirectory), .m_urlOfExportFile__for_sampleTypein_directory(let rhsSampletype, let rhsDirectory)):
+                guard Parameter.compare(lhs: lhsSampletype, rhs: rhsSampletype, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsDirectory, rhs: rhsDirectory, with: matcher) else { return false } 
                 return true 
-            case (.m_medicationExporter, .m_medicationExporter):
-                return true 
-            case (.m_moodExporter, .m_moodExporter):
-                return true 
-            default: return false
             }
         }
 
         func intValue() -> Int {
             switch self {
-            case .m_activityExporter: return 0
-            case .m_medicationExporter: return 0
-            case .m_moodExporter: return 0
+            case let .m_urlOfExportFile__for_sampleTypein_directory(p0, p1): return p0.intValue + p1.intValue
             }
         }
     }
@@ -6035,42 +5596,13 @@ open class ExporterFactoryMock: ExporterFactory, Mock {
         }
 
 
-        public static func activityExporter(willReturn: ActivityExporter...) -> MethodStub {
-            return Given(method: .m_activityExporter, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func urlOfExportFile(for sampleType: Parameter<Exportable.Type>, in directory: Parameter<URL>, willReturn: URL...) -> MethodStub {
+            return Given(method: .m_urlOfExportFile__for_sampleTypein_directory(`sampleType`, `directory`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func medicationExporter(willReturn: MedicationExporter...) -> MethodStub {
-            return Given(method: .m_medicationExporter, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func moodExporter(willReturn: MoodExporter...) -> MethodStub {
-            return Given(method: .m_moodExporter, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func activityExporter(willThrow: Error...) -> MethodStub {
-            return Given(method: .m_activityExporter, products: willThrow.map({ StubProduct.throw($0) }))
-        }
-        public static func activityExporter(willProduce: (StubberThrows<ActivityExporter>) -> Void) -> MethodStub {
-            let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_activityExporter, products: willThrow.map({ StubProduct.throw($0) })) }()
-			let stubber = given.stubThrows(for: (ActivityExporter).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func medicationExporter(willThrow: Error...) -> MethodStub {
-            return Given(method: .m_medicationExporter, products: willThrow.map({ StubProduct.throw($0) }))
-        }
-        public static func medicationExporter(willProduce: (StubberThrows<MedicationExporter>) -> Void) -> MethodStub {
-            let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_medicationExporter, products: willThrow.map({ StubProduct.throw($0) })) }()
-			let stubber = given.stubThrows(for: (MedicationExporter).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func moodExporter(willThrow: Error...) -> MethodStub {
-            return Given(method: .m_moodExporter, products: willThrow.map({ StubProduct.throw($0) }))
-        }
-        public static func moodExporter(willProduce: (StubberThrows<MoodExporter>) -> Void) -> MethodStub {
-            let willThrow: [Error] = []
-			let given: Given = { return Given(method: .m_moodExporter, products: willThrow.map({ StubProduct.throw($0) })) }()
-			let stubber = given.stubThrows(for: (MoodExporter).self)
+        public static func urlOfExportFile(for sampleType: Parameter<Exportable.Type>, in directory: Parameter<URL>, willProduce: (Stubber<URL>) -> Void) -> MethodStub {
+            let willReturn: [URL] = []
+			let given: Given = { return Given(method: .m_urlOfExportFile__for_sampleTypein_directory(`sampleType`, `directory`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (URL).self)
 			willProduce(stubber)
 			return given
         }
@@ -6079,23 +5611,15 @@ open class ExporterFactoryMock: ExporterFactory, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func activityExporter() -> Verify { return Verify(method: .m_activityExporter)}
-        public static func medicationExporter() -> Verify { return Verify(method: .m_medicationExporter)}
-        public static func moodExporter() -> Verify { return Verify(method: .m_moodExporter)}
+        public static func urlOfExportFile(for sampleType: Parameter<Exportable.Type>, in directory: Parameter<URL>) -> Verify { return Verify(method: .m_urlOfExportFile__for_sampleTypein_directory(`sampleType`, `directory`))}
     }
 
     public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func activityExporter(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_activityExporter, performs: perform)
-        }
-        public static func medicationExporter(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_medicationExporter, performs: perform)
-        }
-        public static func moodExporter(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_moodExporter, performs: perform)
+        public static func urlOfExportFile(for sampleType: Parameter<Exportable.Type>, in directory: Parameter<URL>, perform: @escaping (Exportable.Type, URL) -> Void) -> Perform {
+            return Perform(method: .m_urlOfExportFile__for_sampleTypein_directory(`sampleType`, `directory`), performs: perform)
         }
     }
 
@@ -7611,26 +7135,11 @@ open class IOUtilMock: IOUtil, Mock {
 		return __value
     }
 
-    open func urlOfExportFile(for sampleType: Exportable.Type, in directory: URL) -> URL {
-        addInvocation(.m_urlOfExportFile__for_sampleTypein_directory(Parameter<Exportable.Type>.value(`sampleType`), Parameter<URL>.value(`directory`)))
-		let perform = methodPerformValue(.m_urlOfExportFile__for_sampleTypein_directory(Parameter<Exportable.Type>.value(`sampleType`), Parameter<URL>.value(`directory`))) as? (Exportable.Type, URL) -> Void
-		perform?(`sampleType`, `directory`)
-		var __value: URL
-		do {
-		    __value = try methodReturnValue(.m_urlOfExportFile__for_sampleTypein_directory(Parameter<Exportable.Type>.value(`sampleType`), Parameter<URL>.value(`directory`))).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for urlOfExportFile(for sampleType: Exportable.Type, in directory: URL). Use given")
-			Failure("Stub return value not specified for urlOfExportFile(for sampleType: Exportable.Type, in directory: URL). Use given")
-		}
-		return __value
-    }
-
 
     fileprivate enum MethodType {
         case m_contentsOf__url(Parameter<URL>)
         case m_csvReader__url_urlhasHeaderRow_hasHeaderRow(Parameter<URL>, Parameter<Bool>)
         case m_csvWriter__url_url(Parameter<URL>)
-        case m_urlOfExportFile__for_sampleTypein_directory(Parameter<Exportable.Type>, Parameter<URL>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -7644,10 +7153,6 @@ open class IOUtilMock: IOUtil, Mock {
             case (.m_csvWriter__url_url(let lhsUrl), .m_csvWriter__url_url(let rhsUrl)):
                 guard Parameter.compare(lhs: lhsUrl, rhs: rhsUrl, with: matcher) else { return false } 
                 return true 
-            case (.m_urlOfExportFile__for_sampleTypein_directory(let lhsSampletype, let lhsDirectory), .m_urlOfExportFile__for_sampleTypein_directory(let rhsSampletype, let rhsDirectory)):
-                guard Parameter.compare(lhs: lhsSampletype, rhs: rhsSampletype, with: matcher) else { return false } 
-                guard Parameter.compare(lhs: lhsDirectory, rhs: rhsDirectory, with: matcher) else { return false } 
-                return true 
             default: return false
             }
         }
@@ -7657,7 +7162,6 @@ open class IOUtilMock: IOUtil, Mock {
             case let .m_contentsOf__url(p0): return p0.intValue
             case let .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(p0, p1): return p0.intValue + p1.intValue
             case let .m_csvWriter__url_url(p0): return p0.intValue
-            case let .m_urlOfExportFile__for_sampleTypein_directory(p0, p1): return p0.intValue + p1.intValue
             }
         }
     }
@@ -7679,16 +7183,6 @@ open class IOUtilMock: IOUtil, Mock {
         }
         public static func csvWriter(url: Parameter<URL>, willReturn: CSVWriter...) -> MethodStub {
             return Given(method: .m_csvWriter__url_url(`url`), products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func urlOfExportFile(for sampleType: Parameter<Exportable.Type>, in directory: Parameter<URL>, willReturn: URL...) -> MethodStub {
-            return Given(method: .m_urlOfExportFile__for_sampleTypein_directory(`sampleType`, `directory`), products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func urlOfExportFile(for sampleType: Parameter<Exportable.Type>, in directory: Parameter<URL>, willProduce: (Stubber<URL>) -> Void) -> MethodStub {
-            let willReturn: [URL] = []
-			let given: Given = { return Given(method: .m_urlOfExportFile__for_sampleTypein_directory(`sampleType`, `directory`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (URL).self)
-			willProduce(stubber)
-			return given
         }
         public static func contentsOf(_ url: Parameter<URL>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_contentsOf__url(`url`), products: willThrow.map({ StubProduct.throw($0) }))
@@ -7728,7 +7222,6 @@ open class IOUtilMock: IOUtil, Mock {
         public static func contentsOf(_ url: Parameter<URL>) -> Verify { return Verify(method: .m_contentsOf__url(`url`))}
         public static func csvReader(url: Parameter<URL>, hasHeaderRow: Parameter<Bool>) -> Verify { return Verify(method: .m_csvReader__url_urlhasHeaderRow_hasHeaderRow(`url`, `hasHeaderRow`))}
         public static func csvWriter(url: Parameter<URL>) -> Verify { return Verify(method: .m_csvWriter__url_url(`url`))}
-        public static func urlOfExportFile(for sampleType: Parameter<Exportable.Type>, in directory: Parameter<URL>) -> Verify { return Verify(method: .m_urlOfExportFile__for_sampleTypein_directory(`sampleType`, `directory`))}
     }
 
     public struct Perform {
@@ -7743,9 +7236,6 @@ open class IOUtilMock: IOUtil, Mock {
         }
         public static func csvWriter(url: Parameter<URL>, perform: @escaping (URL) -> Void) -> Perform {
             return Perform(method: .m_csvWriter__url_url(`url`), performs: perform)
-        }
-        public static func urlOfExportFile(for sampleType: Parameter<Exportable.Type>, in directory: Parameter<URL>, perform: @escaping (Exportable.Type, URL) -> Void) -> Perform {
-            return Perform(method: .m_urlOfExportFile__for_sampleTypein_directory(`sampleType`, `directory`), performs: perform)
         }
     }
 
@@ -8519,291 +8009,52 @@ open class InjectionProviderMock: InjectionProvider, Mock {
         self.line = line
     }
 
+    public var types: [Any.Type] {
+		get {	invocations.append(.p_types_get); return __p_types ?? givenGetterValue(.p_types_get, "InjectionProviderMock - stub value for types was not defined") }
+		@available(*, deprecated, message: "Using setters on readonly variables is deprecated, and will be removed in 3.1. Use Given to define stubbed property return value.")
+		set {	__p_types = newValue }
+	}
+	private var __p_types: ([Any.Type])?
 
 
 
 
-    open func database() -> Database {
-        addInvocation(.m_database)
-		let perform = methodPerformValue(.m_database) as? () -> Void
-		perform?()
-		var __value: Database
+
+    open func get<Type>(_ type: Type.Type) throws -> Type {
+        addInvocation(.m_get__type(Parameter<Type.Type>.value(`type`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_get__type(Parameter<Type.Type>.value(`type`).wrapAsGeneric())) as? (Type.Type) -> Void
+		perform?(`type`)
+		var __value: Type
 		do {
-		    __value = try methodReturnValue(.m_database).casted()
+		    __value = try methodReturnValue(.m_get__type(Parameter<Type.Type>.value(`type`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for get<Type>(_ type: Type.Type). Use given")
+			Failure("Stub return value not specified for get<Type>(_ type: Type.Type). Use given")
 		} catch {
-			onFatalFailure("Stub return value not specified for database(). Use given")
-			Failure("Stub return value not specified for database(). Use given")
-		}
-		return __value
-    }
-
-    open func codableStorage() -> CodableStorage {
-        addInvocation(.m_codableStorage)
-		let perform = methodPerformValue(.m_codableStorage) as? () -> Void
-		perform?()
-		var __value: CodableStorage
-		do {
-		    __value = try methodReturnValue(.m_codableStorage).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for codableStorage(). Use given")
-			Failure("Stub return value not specified for codableStorage(). Use given")
-		}
-		return __value
-    }
-
-    open func settings() -> Settings {
-        addInvocation(.m_settings)
-		let perform = methodPerformValue(.m_settings) as? () -> Void
-		perform?()
-		var __value: Settings
-		do {
-		    __value = try methodReturnValue(.m_settings).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for settings(). Use given")
-			Failure("Stub return value not specified for settings(). Use given")
-		}
-		return __value
-    }
-
-    open func queryFactory() -> QueryFactory {
-        addInvocation(.m_queryFactory)
-		let perform = methodPerformValue(.m_queryFactory) as? () -> Void
-		perform?()
-		var __value: QueryFactory
-		do {
-		    __value = try methodReturnValue(.m_queryFactory).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for queryFactory(). Use given")
-			Failure("Stub return value not specified for queryFactory(). Use given")
-		}
-		return __value
-    }
-
-    open func attributeRestrictionFactory() -> AttributeRestrictionFactory {
-        addInvocation(.m_attributeRestrictionFactory)
-		let perform = methodPerformValue(.m_attributeRestrictionFactory) as? () -> Void
-		perform?()
-		var __value: AttributeRestrictionFactory
-		do {
-		    __value = try methodReturnValue(.m_attributeRestrictionFactory).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for attributeRestrictionFactory(). Use given")
-			Failure("Stub return value not specified for attributeRestrictionFactory(). Use given")
-		}
-		return __value
-    }
-
-    open func sampleFactory() -> SampleFactory {
-        addInvocation(.m_sampleFactory)
-		let perform = methodPerformValue(.m_sampleFactory) as? () -> Void
-		perform?()
-		var __value: SampleFactory
-		do {
-		    __value = try methodReturnValue(.m_sampleFactory).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for sampleFactory(). Use given")
-			Failure("Stub return value not specified for sampleFactory(). Use given")
-		}
-		return __value
-    }
-
-    open func utilFactory() -> UtilFactory {
-        addInvocation(.m_utilFactory)
-		let perform = methodPerformValue(.m_utilFactory) as? () -> Void
-		perform?()
-		var __value: UtilFactory
-		do {
-		    __value = try methodReturnValue(.m_utilFactory).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for utilFactory(). Use given")
-			Failure("Stub return value not specified for utilFactory(). Use given")
-		}
-		return __value
-    }
-
-    open func subQueryMatcherFactory() -> SubQueryMatcherFactory {
-        addInvocation(.m_subQueryMatcherFactory)
-		let perform = methodPerformValue(.m_subQueryMatcherFactory) as? () -> Void
-		perform?()
-		var __value: SubQueryMatcherFactory
-		do {
-		    __value = try methodReturnValue(.m_subQueryMatcherFactory).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for subQueryMatcherFactory(). Use given")
-			Failure("Stub return value not specified for subQueryMatcherFactory(). Use given")
-		}
-		return __value
-    }
-
-    open func extraInformationFactory() -> ExtraInformationFactory {
-        addInvocation(.m_extraInformationFactory)
-		let perform = methodPerformValue(.m_extraInformationFactory) as? () -> Void
-		perform?()
-		var __value: ExtraInformationFactory
-		do {
-		    __value = try methodReturnValue(.m_extraInformationFactory).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for extraInformationFactory(). Use given")
-			Failure("Stub return value not specified for extraInformationFactory(). Use given")
-		}
-		return __value
-    }
-
-    open func sampleGrouperFactory() -> SampleGrouperFactory {
-        addInvocation(.m_sampleGrouperFactory)
-		let perform = methodPerformValue(.m_sampleGrouperFactory) as? () -> Void
-		perform?()
-		var __value: SampleGrouperFactory
-		do {
-		    __value = try methodReturnValue(.m_sampleGrouperFactory).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for sampleGrouperFactory(). Use given")
-			Failure("Stub return value not specified for sampleGrouperFactory(). Use given")
-		}
-		return __value
-    }
-
-    open func importerFactory() -> ImporterFactory {
-        addInvocation(.m_importerFactory)
-		let perform = methodPerformValue(.m_importerFactory) as? () -> Void
-		perform?()
-		var __value: ImporterFactory
-		do {
-		    __value = try methodReturnValue(.m_importerFactory).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for importerFactory(). Use given")
-			Failure("Stub return value not specified for importerFactory(). Use given")
-		}
-		return __value
-    }
-
-    open func exporterFactory() -> ExporterFactory {
-        addInvocation(.m_exporterFactory)
-		let perform = methodPerformValue(.m_exporterFactory) as? () -> Void
-		perform?()
-		var __value: ExporterFactory
-		do {
-		    __value = try methodReturnValue(.m_exporterFactory).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for exporterFactory(). Use given")
-			Failure("Stub return value not specified for exporterFactory(). Use given")
-		}
-		return __value
-    }
-
-    open func coachMarkFactory() -> CoachMarkFactory {
-        addInvocation(.m_coachMarkFactory)
-		let perform = methodPerformValue(.m_coachMarkFactory) as? () -> Void
-		perform?()
-		var __value: CoachMarkFactory
-		do {
-		    __value = try methodReturnValue(.m_coachMarkFactory).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for coachMarkFactory(). Use given")
-			Failure("Stub return value not specified for coachMarkFactory(). Use given")
-		}
-		return __value
-    }
-
-    open func booleanAlgebraFactory() -> BooleanAlgebraFactory {
-        addInvocation(.m_booleanAlgebraFactory)
-		let perform = methodPerformValue(.m_booleanAlgebraFactory) as? () -> Void
-		perform?()
-		var __value: BooleanAlgebraFactory
-		do {
-		    __value = try methodReturnValue(.m_booleanAlgebraFactory).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for booleanAlgebraFactory(). Use given")
-			Failure("Stub return value not specified for booleanAlgebraFactory(). Use given")
-		}
-		return __value
-    }
-
-    open func daoFactory() -> DaoFactory {
-        addInvocation(.m_daoFactory)
-		let perform = methodPerformValue(.m_daoFactory) as? () -> Void
-		perform?()
-		var __value: DaoFactory
-		do {
-		    __value = try methodReturnValue(.m_daoFactory).casted()
-		} catch {
-			onFatalFailure("Stub return value not specified for daoFactory(). Use given")
-			Failure("Stub return value not specified for daoFactory(). Use given")
+		    throw error
 		}
 		return __value
     }
 
 
     fileprivate enum MethodType {
-        case m_database
-        case m_codableStorage
-        case m_settings
-        case m_queryFactory
-        case m_attributeRestrictionFactory
-        case m_sampleFactory
-        case m_utilFactory
-        case m_subQueryMatcherFactory
-        case m_extraInformationFactory
-        case m_sampleGrouperFactory
-        case m_importerFactory
-        case m_exporterFactory
-        case m_coachMarkFactory
-        case m_booleanAlgebraFactory
-        case m_daoFactory
+        case m_get__type(Parameter<GenericAttribute>)
+        case p_types_get
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
-            case (.m_database, .m_database):
+            case (.m_get__type(let lhsType), .m_get__type(let rhsType)):
+                guard Parameter.compare(lhs: lhsType, rhs: rhsType, with: matcher) else { return false } 
                 return true 
-            case (.m_codableStorage, .m_codableStorage):
-                return true 
-            case (.m_settings, .m_settings):
-                return true 
-            case (.m_queryFactory, .m_queryFactory):
-                return true 
-            case (.m_attributeRestrictionFactory, .m_attributeRestrictionFactory):
-                return true 
-            case (.m_sampleFactory, .m_sampleFactory):
-                return true 
-            case (.m_utilFactory, .m_utilFactory):
-                return true 
-            case (.m_subQueryMatcherFactory, .m_subQueryMatcherFactory):
-                return true 
-            case (.m_extraInformationFactory, .m_extraInformationFactory):
-                return true 
-            case (.m_sampleGrouperFactory, .m_sampleGrouperFactory):
-                return true 
-            case (.m_importerFactory, .m_importerFactory):
-                return true 
-            case (.m_exporterFactory, .m_exporterFactory):
-                return true 
-            case (.m_coachMarkFactory, .m_coachMarkFactory):
-                return true 
-            case (.m_booleanAlgebraFactory, .m_booleanAlgebraFactory):
-                return true 
-            case (.m_daoFactory, .m_daoFactory):
-                return true 
+            case (.p_types_get,.p_types_get): return true
             default: return false
             }
         }
 
         func intValue() -> Int {
             switch self {
-            case .m_database: return 0
-            case .m_codableStorage: return 0
-            case .m_settings: return 0
-            case .m_queryFactory: return 0
-            case .m_attributeRestrictionFactory: return 0
-            case .m_sampleFactory: return 0
-            case .m_utilFactory: return 0
-            case .m_subQueryMatcherFactory: return 0
-            case .m_extraInformationFactory: return 0
-            case .m_sampleGrouperFactory: return 0
-            case .m_importerFactory: return 0
-            case .m_exporterFactory: return 0
-            case .m_coachMarkFactory: return 0
-            case .m_booleanAlgebraFactory: return 0
-            case .m_daoFactory: return 0
+            case let .m_get__type(p0): return p0.intValue
+            case .p_types_get: return 0
             }
         }
     }
@@ -8816,154 +8067,20 @@ open class InjectionProviderMock: InjectionProvider, Mock {
             super.init(products)
         }
 
+        public static func types(getter defaultValue: [Any.Type]...) -> PropertyStub {
+            return Given(method: .p_types_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
+        }
 
-        public static func database(willReturn: Database...) -> MethodStub {
-            return Given(method: .m_database, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func get<Type>(_ type: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
+            return Given(method: .m_get__type(`type`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func codableStorage(willReturn: CodableStorage...) -> MethodStub {
-            return Given(method: .m_codableStorage, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func get<Type>(_ type: Parameter<Type.Type>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_get__type(`type`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) }))
         }
-        public static func settings(willReturn: Settings...) -> MethodStub {
-            return Given(method: .m_settings, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func queryFactory(willReturn: QueryFactory...) -> MethodStub {
-            return Given(method: .m_queryFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func attributeRestrictionFactory(willReturn: AttributeRestrictionFactory...) -> MethodStub {
-            return Given(method: .m_attributeRestrictionFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func sampleFactory(willReturn: SampleFactory...) -> MethodStub {
-            return Given(method: .m_sampleFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func utilFactory(willReturn: UtilFactory...) -> MethodStub {
-            return Given(method: .m_utilFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func subQueryMatcherFactory(willReturn: SubQueryMatcherFactory...) -> MethodStub {
-            return Given(method: .m_subQueryMatcherFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func extraInformationFactory(willReturn: ExtraInformationFactory...) -> MethodStub {
-            return Given(method: .m_extraInformationFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func sampleGrouperFactory(willReturn: SampleGrouperFactory...) -> MethodStub {
-            return Given(method: .m_sampleGrouperFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func importerFactory(willReturn: ImporterFactory...) -> MethodStub {
-            return Given(method: .m_importerFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func exporterFactory(willReturn: ExporterFactory...) -> MethodStub {
-            return Given(method: .m_exporterFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func coachMarkFactory(willReturn: CoachMarkFactory...) -> MethodStub {
-            return Given(method: .m_coachMarkFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func booleanAlgebraFactory(willReturn: BooleanAlgebraFactory...) -> MethodStub {
-            return Given(method: .m_booleanAlgebraFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func daoFactory(willReturn: DaoFactory...) -> MethodStub {
-            return Given(method: .m_daoFactory, products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func database(willProduce: (Stubber<Database>) -> Void) -> MethodStub {
-            let willReturn: [Database] = []
-			let given: Given = { return Given(method: .m_database, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (Database).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func codableStorage(willProduce: (Stubber<CodableStorage>) -> Void) -> MethodStub {
-            let willReturn: [CodableStorage] = []
-			let given: Given = { return Given(method: .m_codableStorage, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (CodableStorage).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func settings(willProduce: (Stubber<Settings>) -> Void) -> MethodStub {
-            let willReturn: [Settings] = []
-			let given: Given = { return Given(method: .m_settings, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (Settings).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func queryFactory(willProduce: (Stubber<QueryFactory>) -> Void) -> MethodStub {
-            let willReturn: [QueryFactory] = []
-			let given: Given = { return Given(method: .m_queryFactory, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (QueryFactory).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func attributeRestrictionFactory(willProduce: (Stubber<AttributeRestrictionFactory>) -> Void) -> MethodStub {
-            let willReturn: [AttributeRestrictionFactory] = []
-			let given: Given = { return Given(method: .m_attributeRestrictionFactory, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (AttributeRestrictionFactory).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func sampleFactory(willProduce: (Stubber<SampleFactory>) -> Void) -> MethodStub {
-            let willReturn: [SampleFactory] = []
-			let given: Given = { return Given(method: .m_sampleFactory, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (SampleFactory).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func utilFactory(willProduce: (Stubber<UtilFactory>) -> Void) -> MethodStub {
-            let willReturn: [UtilFactory] = []
-			let given: Given = { return Given(method: .m_utilFactory, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (UtilFactory).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func subQueryMatcherFactory(willProduce: (Stubber<SubQueryMatcherFactory>) -> Void) -> MethodStub {
-            let willReturn: [SubQueryMatcherFactory] = []
-			let given: Given = { return Given(method: .m_subQueryMatcherFactory, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (SubQueryMatcherFactory).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func extraInformationFactory(willProduce: (Stubber<ExtraInformationFactory>) -> Void) -> MethodStub {
-            let willReturn: [ExtraInformationFactory] = []
-			let given: Given = { return Given(method: .m_extraInformationFactory, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (ExtraInformationFactory).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func sampleGrouperFactory(willProduce: (Stubber<SampleGrouperFactory>) -> Void) -> MethodStub {
-            let willReturn: [SampleGrouperFactory] = []
-			let given: Given = { return Given(method: .m_sampleGrouperFactory, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (SampleGrouperFactory).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func importerFactory(willProduce: (Stubber<ImporterFactory>) -> Void) -> MethodStub {
-            let willReturn: [ImporterFactory] = []
-			let given: Given = { return Given(method: .m_importerFactory, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (ImporterFactory).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func exporterFactory(willProduce: (Stubber<ExporterFactory>) -> Void) -> MethodStub {
-            let willReturn: [ExporterFactory] = []
-			let given: Given = { return Given(method: .m_exporterFactory, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (ExporterFactory).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func coachMarkFactory(willProduce: (Stubber<CoachMarkFactory>) -> Void) -> MethodStub {
-            let willReturn: [CoachMarkFactory] = []
-			let given: Given = { return Given(method: .m_coachMarkFactory, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (CoachMarkFactory).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func booleanAlgebraFactory(willProduce: (Stubber<BooleanAlgebraFactory>) -> Void) -> MethodStub {
-            let willReturn: [BooleanAlgebraFactory] = []
-			let given: Given = { return Given(method: .m_booleanAlgebraFactory, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (BooleanAlgebraFactory).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func daoFactory(willProduce: (Stubber<DaoFactory>) -> Void) -> MethodStub {
-            let willReturn: [DaoFactory] = []
-			let given: Given = { return Given(method: .m_daoFactory, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (DaoFactory).self)
+        public static func get<Type>(_ type: Parameter<Type.Type>, willProduce: (StubberThrows<Type>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_get__type(`type`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Type).self)
 			willProduce(stubber)
 			return given
         }
@@ -8972,71 +8089,16 @@ open class InjectionProviderMock: InjectionProvider, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func database() -> Verify { return Verify(method: .m_database)}
-        public static func codableStorage() -> Verify { return Verify(method: .m_codableStorage)}
-        public static func settings() -> Verify { return Verify(method: .m_settings)}
-        public static func queryFactory() -> Verify { return Verify(method: .m_queryFactory)}
-        public static func attributeRestrictionFactory() -> Verify { return Verify(method: .m_attributeRestrictionFactory)}
-        public static func sampleFactory() -> Verify { return Verify(method: .m_sampleFactory)}
-        public static func utilFactory() -> Verify { return Verify(method: .m_utilFactory)}
-        public static func subQueryMatcherFactory() -> Verify { return Verify(method: .m_subQueryMatcherFactory)}
-        public static func extraInformationFactory() -> Verify { return Verify(method: .m_extraInformationFactory)}
-        public static func sampleGrouperFactory() -> Verify { return Verify(method: .m_sampleGrouperFactory)}
-        public static func importerFactory() -> Verify { return Verify(method: .m_importerFactory)}
-        public static func exporterFactory() -> Verify { return Verify(method: .m_exporterFactory)}
-        public static func coachMarkFactory() -> Verify { return Verify(method: .m_coachMarkFactory)}
-        public static func booleanAlgebraFactory() -> Verify { return Verify(method: .m_booleanAlgebraFactory)}
-        public static func daoFactory() -> Verify { return Verify(method: .m_daoFactory)}
+        public static func get<Type>(_ type: Parameter<Type.Type>) -> Verify { return Verify(method: .m_get__type(`type`.wrapAsGeneric()))}
+        public static var types: Verify { return Verify(method: .p_types_get) }
     }
 
     public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func database(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_database, performs: perform)
-        }
-        public static func codableStorage(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_codableStorage, performs: perform)
-        }
-        public static func settings(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_settings, performs: perform)
-        }
-        public static func queryFactory(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_queryFactory, performs: perform)
-        }
-        public static func attributeRestrictionFactory(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_attributeRestrictionFactory, performs: perform)
-        }
-        public static func sampleFactory(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_sampleFactory, performs: perform)
-        }
-        public static func utilFactory(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_utilFactory, performs: perform)
-        }
-        public static func subQueryMatcherFactory(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_subQueryMatcherFactory, performs: perform)
-        }
-        public static func extraInformationFactory(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_extraInformationFactory, performs: perform)
-        }
-        public static func sampleGrouperFactory(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_sampleGrouperFactory, performs: perform)
-        }
-        public static func importerFactory(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_importerFactory, performs: perform)
-        }
-        public static func exporterFactory(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_exporterFactory, performs: perform)
-        }
-        public static func coachMarkFactory(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_coachMarkFactory, performs: perform)
-        }
-        public static func booleanAlgebraFactory(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_booleanAlgebraFactory, performs: perform)
-        }
-        public static func daoFactory(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_daoFactory, performs: perform)
+        public static func get<Type>(_ type: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform {
+            return Perform(method: .m_get__type(`type`.wrapAsGeneric()), performs: perform)
         }
     }
 
@@ -9941,7 +9003,7 @@ open class MedicationExporterMock: MedicationExporter, Mock {
 }
 
 // MARK: - MoodQuery
-open class MoodQueryMock: MoodQuery, Mock, StaticMock {
+open class MoodQueryMock: MoodQuery, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -9967,19 +9029,6 @@ open class MoodQueryMock: MoodQuery, Mock, StaticMock {
         self.file = file
         self.line = line
     }
-    static var matcher: Matcher = Matcher.default
-    static var stubbingPolicy: StubbingPolicy = .wrap
-    static var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
-    static private var invocations: [StaticMethodType] = []
-    static private var methodReturnValues: [StaticGiven] = []
-    static private var methodPerformValues: [StaticPerform] = []
-    public typealias StaticPropertyStub = StaticGiven
-    public typealias StaticMethodStub = StaticGiven
-    public static func clear() {
-        invocations = []
-        methodReturnValues = []
-        methodPerformValues = []
-    }
 
     public var expression: BooleanExpression? {
 		get {	invocations.append(.p_expression_get); return __p_expression ?? optionalGivenGetterValue(.p_expression_get, "MoodQueryMock - stub value for expression was not defined") }
@@ -9999,12 +9048,6 @@ open class MoodQueryMock: MoodQuery, Mock, StaticMock {
 	}
 	private var __p_subQuery: ((matcher: SubQueryMatcher, query: Query))?
 
-
-    public static var updatingMoodsInBackground: Bool {
-		get {	MoodQueryMock.invocations.append(.p_updatingMoodsInBackground_get); return MoodQueryMock.__p_updatingMoodsInBackground ?? givenGetterValue(.p_updatingMoodsInBackground_get, "MoodQueryMock - stub value for updatingMoodsInBackground was not defined") }
-		set {	MoodQueryMock.invocations.append(.p_updatingMoodsInBackground_set(.value(newValue))); MoodQueryMock.__p_updatingMoodsInBackground = newValue }
-	}
-	private static var __p_updatingMoodsInBackground: (Bool)?
 
 
 
@@ -10043,54 +9086,7 @@ open class MoodQueryMock: MoodQuery, Mock, StaticMock {
 		return __value
     }
 
-    fileprivate enum StaticMethodType {
-        case p_updatingMoodsInBackground_get
-		case p_updatingMoodsInBackground_set(Parameter<Bool>)
 
-        static func compareParameters(lhs: StaticMethodType, rhs: StaticMethodType, matcher: Matcher) -> Bool {
-            switch (lhs, rhs) {
-            case (.p_updatingMoodsInBackground_get,.p_updatingMoodsInBackground_get): return true
-			case (.p_updatingMoodsInBackground_set(let left),.p_updatingMoodsInBackground_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
-            default: return false
-            }
-        }
-
-        func intValue() -> Int {
-            switch self {
-                case .p_updatingMoodsInBackground_get: return 0
-			case .p_updatingMoodsInBackground_set(let newValue): return newValue.intValue
-            }
-        }
-    }
-
-    open class StaticGiven: StubbedMethod {
-        fileprivate var method: StaticMethodType
-
-        private init(method: StaticMethodType, products: [StubProduct]) {
-            self.method = method
-            super.init(products)
-        }
-
-        public static func updatingMoodsInBackground(getter defaultValue: Bool...) -> StaticPropertyStub {
-            return StaticGiven(method: .p_updatingMoodsInBackground_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
-        }
-
-    }
-
-    public struct StaticVerify {
-        fileprivate var method: StaticMethodType
-
-        public static var updatingMoodsInBackground: StaticVerify { return StaticVerify(method: .p_updatingMoodsInBackground_get) }
-		public static func updatingMoodsInBackground(set newValue: Parameter<Bool>) -> StaticVerify { return StaticVerify(method: .p_updatingMoodsInBackground_set(newValue)) }
-    }
-
-    public struct StaticPerform {
-        fileprivate var method: StaticMethodType
-        var performs: Any
-
-    }
-
-    
     fileprivate enum MethodType {
         case m_runQuery__callback_callback(Parameter<(QueryResult?, Error?) -> ()>)
         case m_stop
@@ -10258,53 +9254,198 @@ open class MoodQueryMock: MoodQuery, Mock, StaticMock {
         SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
         #endif
     }
+}
 
-    static public func given(_ method: StaticGiven) {
+// MARK: - MoodUiUtil
+open class MoodUiUtilMock: MoodUiUtil, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    open func valueToString(_ value: Double) -> String {
+        addInvocation(.m_valueToString__value(Parameter<Double>.value(`value`)))
+		let perform = methodPerformValue(.m_valueToString__value(Parameter<Double>.value(`value`))) as? (Double) -> Void
+		perform?(`value`)
+		var __value: String
+		do {
+		    __value = try methodReturnValue(.m_valueToString__value(Parameter<Double>.value(`value`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for valueToString(_ value: Double). Use given")
+			Failure("Stub return value not specified for valueToString(_ value: Double). Use given")
+		}
+		return __value
+    }
+
+    open func colorForMood(rating: Double, minRating: Double, maxRating: Double) -> UIColor {
+        addInvocation(.m_colorForMood__rating_ratingminRating_minRatingmaxRating_maxRating(Parameter<Double>.value(`rating`), Parameter<Double>.value(`minRating`), Parameter<Double>.value(`maxRating`)))
+		let perform = methodPerformValue(.m_colorForMood__rating_ratingminRating_minRatingmaxRating_maxRating(Parameter<Double>.value(`rating`), Parameter<Double>.value(`minRating`), Parameter<Double>.value(`maxRating`))) as? (Double, Double, Double) -> Void
+		perform?(`rating`, `minRating`, `maxRating`)
+		var __value: UIColor
+		do {
+		    __value = try methodReturnValue(.m_colorForMood__rating_ratingminRating_minRatingmaxRating_maxRating(Parameter<Double>.value(`rating`), Parameter<Double>.value(`minRating`), Parameter<Double>.value(`maxRating`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for colorForMood(rating: Double, minRating: Double, maxRating: Double). Use given")
+			Failure("Stub return value not specified for colorForMood(rating: Double, minRating: Double, maxRating: Double). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_valueToString__value(Parameter<Double>)
+        case m_colorForMood__rating_ratingminRating_minRatingmaxRating_maxRating(Parameter<Double>, Parameter<Double>, Parameter<Double>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_valueToString__value(let lhsValue), .m_valueToString__value(let rhsValue)):
+                guard Parameter.compare(lhs: lhsValue, rhs: rhsValue, with: matcher) else { return false } 
+                return true 
+            case (.m_colorForMood__rating_ratingminRating_minRatingmaxRating_maxRating(let lhsRating, let lhsMinrating, let lhsMaxrating), .m_colorForMood__rating_ratingminRating_minRatingmaxRating_maxRating(let rhsRating, let rhsMinrating, let rhsMaxrating)):
+                guard Parameter.compare(lhs: lhsRating, rhs: rhsRating, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsMinrating, rhs: rhsMinrating, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsMaxrating, rhs: rhsMaxrating, with: matcher) else { return false } 
+                return true 
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_valueToString__value(p0): return p0.intValue
+            case let .m_colorForMood__rating_ratingminRating_minRatingmaxRating_maxRating(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func valueToString(_ value: Parameter<Double>, willReturn: String...) -> MethodStub {
+            return Given(method: .m_valueToString__value(`value`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func colorForMood(rating: Parameter<Double>, minRating: Parameter<Double>, maxRating: Parameter<Double>, willReturn: UIColor...) -> MethodStub {
+            return Given(method: .m_colorForMood__rating_ratingminRating_minRatingmaxRating_maxRating(`rating`, `minRating`, `maxRating`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func valueToString(_ value: Parameter<Double>, willProduce: (Stubber<String>) -> Void) -> MethodStub {
+            let willReturn: [String] = []
+			let given: Given = { return Given(method: .m_valueToString__value(`value`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (String).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func colorForMood(rating: Parameter<Double>, minRating: Parameter<Double>, maxRating: Parameter<Double>, willProduce: (Stubber<UIColor>) -> Void) -> MethodStub {
+            let willReturn: [UIColor] = []
+			let given: Given = { return Given(method: .m_colorForMood__rating_ratingminRating_minRatingmaxRating_maxRating(`rating`, `minRating`, `maxRating`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (UIColor).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func valueToString(_ value: Parameter<Double>) -> Verify { return Verify(method: .m_valueToString__value(`value`))}
+        public static func colorForMood(rating: Parameter<Double>, minRating: Parameter<Double>, maxRating: Parameter<Double>) -> Verify { return Verify(method: .m_colorForMood__rating_ratingminRating_minRatingmaxRating_maxRating(`rating`, `minRating`, `maxRating`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func valueToString(_ value: Parameter<Double>, perform: @escaping (Double) -> Void) -> Perform {
+            return Perform(method: .m_valueToString__value(`value`), performs: perform)
+        }
+        public static func colorForMood(rating: Parameter<Double>, minRating: Parameter<Double>, maxRating: Parameter<Double>, perform: @escaping (Double, Double, Double) -> Void) -> Perform {
+            return Perform(method: .m_colorForMood__rating_ratingminRating_minRatingmaxRating_maxRating(`rating`, `minRating`, `maxRating`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
         methodReturnValues.append(method)
     }
 
-    static public func perform(_ method: StaticPerform) {
+    public func perform(_ method: Perform) {
         methodPerformValues.append(method)
         methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
     }
 
-    static public func verify(_ method: StaticVerify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
         let invocations = matchingCalls(method.method)
         MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
     }
 
-    static private func addInvocation(_ call: StaticMethodType) {
+    private func addInvocation(_ call: MethodType) {
         invocations.append(call)
     }
-    static private func methodReturnValue(_ method: StaticMethodType) throws -> StubProduct {
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
         let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
-        let matched = candidates.first(where: { $0.isValid && StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
         guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
         return product
     }
-    static private func methodPerformValue(_ method: StaticMethodType) -> Any? {
-        let matched = methodPerformValues.reversed().first { StaticMethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
         return matched?.performs
     }
-    static private func matchingCalls(_ method: StaticMethodType) -> [StaticMethodType] {
-        return invocations.filter { StaticMethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
     }
-    static private func matchingCalls(_ method: StaticVerify) -> Int {
+    private func matchingCalls(_ method: Verify) -> Int {
         return matchingCalls(method.method).count
     }
-    static private func givenGetterValue<T>(_ method: StaticMethodType, _ message: String) -> T {
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
         do {
             return try methodReturnValue(method).casted()
         } catch {
+            onFatalFailure(message)
             Failure(message)
         }
     }
-    static private func optionalGivenGetterValue<T>(_ method: StaticMethodType, _ message: String) -> T? {
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
         do {
             return try methodReturnValue(method).casted()
         } catch {
             return nil
         }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
     }
 }
 

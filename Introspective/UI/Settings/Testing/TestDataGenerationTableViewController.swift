@@ -10,6 +10,12 @@ import UIKit
 import NotificationBannerSwift
 import SwiftDate
 
+import Common
+import DependencyInjection
+import Persistence
+import Samples
+import Settings
+
 final class TestDataGenerationTableViewController: UITableViewController {
 
 	// MARK: - Static Member Variables
@@ -27,7 +33,7 @@ final class TestDataGenerationTableViewController: UITableViewController {
 	private static let heartRateRange: (min: Double, max: Double) = (min: 45, max: 200)
 	private static let leanBodyMassRange: (min: Double, max: Double) = (min: 120, max: 150)
 	private static let medicationDoseAmountRange: (min: Double, max: Double) = (min: 10, max: 100)
-	private static let moodRatingRange: (min: Double, max: Double) = (min: 0, max: DependencyInjector.settings.maxMood)
+	private static let moodRatingRange: (min: Double, max: Double) = (min: 0, max: DependencyInjector.get(Settings.self).maxMood)
 	private static let sleepHoursRange: (min: Int, max: Int) = (min: 5, max: 10)
 	private static let weightRange: (min: Double, max: Double) = (min: 100, max: 200)
 
@@ -90,12 +96,12 @@ final class TestDataGenerationTableViewController: UITableViewController {
 	}
 
 	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return DependencyInjector.sample.allTypes().count
+		return DependencyInjector.get(SampleFactory.self).allTypes().count
 	}
 
 	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "sampleType", for: indexPath) as! TestDataCreationSampleTypeTableViewCell
-		cell.sampleType = DependencyInjector.sample.allTypes()[indexPath.row]
+		cell.sampleType = DependencyInjector.get(SampleFactory.self).allTypes()[indexPath.row]
 		cell.options = getOptions(for: cell.sampleType)
 		return cell
 	}
@@ -103,14 +109,14 @@ final class TestDataGenerationTableViewController: UITableViewController {
 	// MARK: - Table View Delegate
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let sampleType = DependencyInjector.sample.allTypes()[indexPath.row]
+		let sampleType = DependencyInjector.get(SampleFactory.self).allTypes()[indexPath.row]
 		setShouldGenerate(for: sampleType, to: !shouldGenerate(sampleType))
 		tableView.deselectRow(at: indexPath, animated: false)
 		tableView.reloadData()
 	}
 
 	public final override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		let sampleType = DependencyInjector.sample.allTypes()[indexPath.row]
+		let sampleType = DependencyInjector.get(SampleFactory.self).allTypes()[indexPath.row]
 		if shouldGenerate(sampleType) {
 			return 139
 		}
@@ -153,26 +159,26 @@ final class TestDataGenerationTableViewController: UITableViewController {
 		generateTestDataButton.isEnabled = false
 		post(SettingsTableViewController.disableGenerateTestData)
 
-		DependencyInjector.util.healthKit.getAuthorization() { error in
+		DependencyInjector.get(HealthKitUtil.self).getAuthorization() { error in
 			if error != nil {
 				fatalError("HealthKit authorization failed: " + error!.localizedDescription)
 			}
 			DispatchQueue.global(qos: .userInitiated).async {
 				var activityDefinitions = [ActivityDefinition]()
 				if self.shouldGenerate(Activity.self) {
-					let transaction = DependencyInjector.db.transaction()
+					let transaction = DependencyInjector.get(Database.self).transaction()
 					activityDefinitions = self.createRandomActivityDefinitions(using: transaction)
 					try! transaction.commit()
 				}
 				var medications = [Medication]()
 				if self.shouldGenerate(MedicationDose.self) {
-					let transaction = DependencyInjector.db.transaction()
+					let transaction = DependencyInjector.get(Database.self).transaction()
 					medications = self.createRandomMedications(using: transaction)
 					try! transaction.commit()
 				}
 
 				self.createSamples(Activity.self) { date, transaction in
-					let hoursAgo = try! abs(DependencyInjector.util.calendar.distance(from: date, to: Date(), in: .hour))
+					let hoursAgo = try! abs(DependencyInjector.get(CalendarUtil.self).distance(from: date, to: Date(), in: .hour))
 					self.createRandomActivity(Date() - hoursAgo.hours, activityDefinitions, using: transaction)
 				}
 				self.createSamples(BloodPressure.self) { bloodPressures, date in
@@ -200,7 +206,7 @@ final class TestDataGenerationTableViewController: UITableViewController {
 					sexualActivities.append(self.randomSexualActivity(date))
 				}
 				self.createSamples(Sleep.self) { sleepRecords, date in
-					let daysAgo = try! abs(DependencyInjector.util.calendar.distance(from: date, to: Date(), in: .day))
+					let daysAgo = try! abs(DependencyInjector.get(CalendarUtil.self).distance(from: date, to: Date(), in: .day))
 					sleepRecords.append(self.randomSleepSample(daysAgo))
 				}
 				self.createSamples(Weight.self) { weights, date in
@@ -224,7 +230,7 @@ final class TestDataGenerationTableViewController: UITableViewController {
 		_ sampleType: SampleType.Type,
 		_ createSample: (Date, Transaction) -> Void)
 	{
-		let transaction = DependencyInjector.db.transaction()
+		let transaction = DependencyInjector.get(Database.self).transaction()
 
 		for daysAgo in 0 ... numberOfDays(for: sampleType) {
 			for hoursAgo in 0 ... 23 {
@@ -272,7 +278,7 @@ final class TestDataGenerationTableViewController: UITableViewController {
 	}
 
 	private final func createRandomActivityDefinitions(using transaction: Transaction) -> [ActivityDefinition] {
-		var activityDefinitions = try! DependencyInjector.db.query(ActivityDefinition.fetchRequest())
+		var activityDefinitions = try! DependencyInjector.get(Database.self).query(ActivityDefinition.fetchRequest())
 		let numberOfDefinitionsToCreate = Me.names.count - activityDefinitions.count
 		for i in 0 ..< numberOfDefinitionsToCreate {
 			let definition = try! transaction.new(ActivityDefinition.self)
@@ -313,7 +319,7 @@ final class TestDataGenerationTableViewController: UITableViewController {
 	private final func createRandomMood(_ date: Date, using transaction: Transaction) {
 		let mood = try! transaction.new(MoodImpl.self)
 		mood.date = date
-		mood.maxRating = DependencyInjector.settings.maxMood
+		mood.maxRating = DependencyInjector.get(Settings.self).maxMood
 		mood.rating = randomDouble(Me.moodRatingRange)
 		mood.note = randomEntry(Me.moodNotes)
 	}
@@ -325,7 +331,7 @@ final class TestDataGenerationTableViewController: UITableViewController {
 	}
 
 	private final func randomSleepSample(_ daysAgo: Int) -> Sleep {
-		let sleepStartDate = DependencyInjector.util.calendar.start(of: .day, in: Date() - daysAgo.days) -
+		let sleepStartDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: Date() - daysAgo.days) -
 			randomInt((min: 0, max: 2)).hours -
 			randomInt((min: 0, max: 59)).minutes
 		let sleep = Sleep(startDate: sleepStartDate, endDate: sleepStartDate + randomInt(Me.sleepHoursRange).hours)

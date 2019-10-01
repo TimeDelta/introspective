@@ -9,18 +9,23 @@
 import UIKit
 import Presentr
 
+import Attributes
+import Common
+import DependencyInjection
+import UIExtensions
+
 final class AttributeViewController: UIViewController {
 
 	// MARK: - Static Variables
 
 	private typealias Me = AttributeViewController
-	private static let horizontalMultiSelectPresenter = DependencyInjector.util.ui.customPresenter(height: .custom(size: 100), center: .topCenter)
-	private static let numericPresenter = DependencyInjector.util.ui.customPresenter(width: .full, height: .custom(size: 100), center: .topCenter)
-	private static let dosagePresenter = DependencyInjector.util.ui.customPresenter(height: .custom(size: 100), center: .topCenter)
-	private static let frequencyPresenter = DependencyInjector.util.ui.customPresenter(width: .custom(size: 250), height: .custom(size: 250), center: .topCenter)
-	private static let multiSelectPresenter = DependencyInjector.util.ui.customPresenter(width: .full, height: .fluid(percentage: 0.45), center: .topCenter)
-	private static let defaultPresenter = DependencyInjector.util.ui.customPresenter(width: .full, height: .custom(size: 200), center: .topCenter)
-	private static let descriptionPresenter = DependencyInjector.util.ui.customPresenter(
+	private static let horizontalMultiSelectPresenter = DependencyInjector.get(UiUtil.self).customPresenter(height: .custom(size: 100), center: .topCenter)
+	private static let numericPresenter = DependencyInjector.get(UiUtil.self).customPresenter(width: .full, height: .custom(size: 100), center: .topCenter)
+	private static let dosagePresenter = DependencyInjector.get(UiUtil.self).customPresenter(height: .custom(size: 100), center: .topCenter)
+	private static let frequencyPresenter = DependencyInjector.get(UiUtil.self).customPresenter(width: .custom(size: 250), height: .custom(size: 250), center: .topCenter)
+	private static let multiSelectPresenter = DependencyInjector.get(UiUtil.self).customPresenter(width: .full, height: .fluid(percentage: 0.45), center: .topCenter)
+	private static let defaultPresenter = DependencyInjector.get(UiUtil.self).customPresenter(width: .full, height: .custom(size: 200), center: .topCenter)
+	private static let descriptionPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center)

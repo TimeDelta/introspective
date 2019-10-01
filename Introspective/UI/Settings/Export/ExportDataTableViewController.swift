@@ -9,6 +9,12 @@
 import UIKit
 import UserNotifications
 
+import Common
+import DataExport
+import DependencyInjection
+import Notifications
+import Samples
+
 public final class ExportDataTableViewController: UITableViewController {
 
 	// MARK: - Static Variables
@@ -97,7 +103,7 @@ public final class ExportDataTableViewController: UITableViewController {
 		cell.backgroundTaskId = Me.backgroundExportOrder[indexPath.row]
 		cell.exporter = Me.backgroundExports({ $0[cell.backgroundTaskId] })
 		// need to do this or will double subscribe and receive event twice, causing app to crash
-		DependencyInjector.util.ui.stopObserving(self, name: .presentView, object: cell.exporter)
+		DependencyInjector.get(UiUtil.self).stopObserving(self, name: .presentView, object: cell.exporter)
 		observe(selector: #selector(presentViewFrom), name: .presentView, object: cell.exporter)
 		return cell
 	}
@@ -250,13 +256,13 @@ public final class ExportDataTableViewController: UITableViewController {
 	private final func getExporterFor(_ indexPath: IndexPath) throws -> Exporter {
 		let type = Me.sampleTypes[indexPath.row]
 		if type == Activity.self || type == ActivityDefinition.self {
-			return try DependencyInjector.exporter.activityExporter()
+			return DependencyInjector.get(ActivityExporter.self)
 		}
 		if type == MedicationDose.self || type == Medication.self {
-			return try DependencyInjector.exporter.medicationExporter()
+			return DependencyInjector.get(MedicationExporter.self)
 		}
 		if type == Mood.self {
-			return try DependencyInjector.exporter.moodExporter()
+			return DependencyInjector.get(MoodExporter.self)
 		}
 		log.error("Unknown index path: (section: %d, row: %d)", indexPath.section, indexPath.row)
 		throw GenericError("Unknown index path")

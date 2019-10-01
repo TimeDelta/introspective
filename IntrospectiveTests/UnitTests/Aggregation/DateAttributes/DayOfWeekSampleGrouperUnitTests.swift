@@ -10,6 +10,11 @@ import XCTest
 import SwiftyMocky
 import Hamcrest
 @testable import Introspective
+@testable import Attributes
+@testable import Common
+@testable import DependencyInjection
+@testable import SampleGroupers
+@testable import Samples
 
 class DayOfWeekSampleGrouperUnitTests: UnitTest {
 

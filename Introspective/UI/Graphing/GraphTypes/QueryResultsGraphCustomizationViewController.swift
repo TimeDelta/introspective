@@ -8,6 +8,8 @@
 
 import UIKit
 
+import Samples
+
 protocol QueryResultsGraphCustomizationViewController {
 
 	var samples: [Sample]! { get set }

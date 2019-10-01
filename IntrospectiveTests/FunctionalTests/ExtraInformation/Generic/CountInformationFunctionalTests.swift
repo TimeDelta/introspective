@@ -10,6 +10,9 @@ import XCTest
 import Hamcrest
 import SwiftDate
 @testable import Introspective
+@testable import Attributes
+@testable import SampleGroupInformation
+@testable import Samples
 
 class CountInformationFunctionalTests: FunctionalTest {
 

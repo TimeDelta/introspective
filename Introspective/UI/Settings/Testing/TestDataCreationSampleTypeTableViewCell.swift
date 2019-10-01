@@ -8,6 +8,11 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+import Samples
+import UIExtensions
+
 public final class TestDataCreationSampleTypeTableViewCell: UITableViewCell {
 
 	// MARK: - IBOutlets
@@ -77,9 +82,9 @@ public final class TestDataCreationSampleTypeTableViewCell: UITableViewCell {
 	// MARK: - Helper Functions
 
 	private final func updateHideShowState() {
-		DependencyInjector.util.ui.setView(numberOfDaysLabel, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
-		DependencyInjector.util.ui.setView(numberOfDaysTextField, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
-		DependencyInjector.util.ui.setView(samplesPerHourLabel, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
-		DependencyInjector.util.ui.setView(samplesPerHourTextField, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
+		DependencyInjector.get(UiUtil.self).setView(numberOfDaysLabel, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
+		DependencyInjector.get(UiUtil.self).setView(numberOfDaysTextField, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
+		DependencyInjector.get(UiUtil.self).setView(samplesPerHourLabel, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
+		DependencyInjector.get(UiUtil.self).setView(samplesPerHourTextField, enabled: generateDataSwitch.isOn, hidden: !generateDataSwitch.isOn)
 	}
 }

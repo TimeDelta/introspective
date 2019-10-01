@@ -10,6 +10,7 @@ import XCTest
 import Hamcrest
 import SwiftyMocky
 @testable import Introspective
+@testable import Common
 
 final class ActiveImportTableViewCellUnitTests: UnitTest {
 

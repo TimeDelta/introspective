@@ -845,6 +845,7 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="300" height="200"/>
                     <connections>
+                        <outlet property="acceptButton" destination="6pQ-GJ-llc" id="OyQ-NH-10i"/>
                         <outlet property="attributePicker" destination="Hu4-TJ-lZl" id="C4K-oD-Umk"/>
                     </connections>
                 </viewController>
@@ -942,7 +943,6 @@
         <!--Select Duration View Controller Impl-->
         <scene sceneID="pjt-ih-hhF">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="XR0-6H-Gs7" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="durationChooser" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ehz-9G-4hK" customClass="SelectDurationViewControllerImpl" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Rzf-u3-st5">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
@@ -1030,6 +1030,7 @@
                         <outlet property="secondsTextField" destination="Hy3-FI-9N3" id="MSp-eX-NGN"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XR0-6H-Gs7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1676.8" y="-1123.5382308845578"/>
         </scene>

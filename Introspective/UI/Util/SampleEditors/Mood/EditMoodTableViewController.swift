@@ -9,6 +9,12 @@
 import UIKit
 import Presentr
 
+import Common
+import DependencyInjection
+import Persistence
+import Samples
+import Settings
+
 public protocol EditMoodTableViewController: UITableViewController {
 
 	var notificationToSendOnAccept: Notification.Name! { get set }
@@ -29,7 +35,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 	private static let ratingIndex = IndexPath(row: 1, section: 0)
 	private static let noteIndex = IndexPath(row: 0, section: 1)
 
-	private static let datePresenter = DependencyInjector.util.ui.customPresenter(
+	private static let datePresenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .full,
 		height: .fluid(percentage: 0.4),
 		center: .bottomCenter)
@@ -51,8 +57,8 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 
 	private final var timestamp: Date = Date()
 	private final var rating: Double = 0
-	private final var minRating: Double = DependencyInjector.settings.minMood
-	private final var maxRating: Double = DependencyInjector.settings.maxMood
+	private final var minRating: Double = DependencyInjector.get(Settings.self).minMood
+	private final var maxRating: Double = DependencyInjector.get(Settings.self).maxMood
 	private final var note: String? = nil
 
 	private final let log = Log()
@@ -71,7 +77,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 		observe(selector: #selector(timestampChanged), name: Me.timestampChanged)
 		observe(selector: #selector(ratingChanged), name: .moodRatingChanged)
 		observe(selector: #selector(noteChanged), name: Me.noteChanged)
-		observe(selector: #selector(useDiscreteMoodChanged), name: MoodUiUtil.useDiscreteMoodChanged)
+		observe(selector: #selector(useDiscreteMoodChanged), name: MoodUiUtilImpl.useDiscreteMoodChanged)
 	}
 
 	deinit {
@@ -101,7 +107,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		if indexPath == Me.timestampIndex {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "timestamp", for: indexPath)
-			cell.detailTextLabel?.text = DependencyInjector.util.calendar.string(for: timestamp, dateStyle: .medium, timeStyle: .medium)
+			cell.detailTextLabel?.text = DependencyInjector.get(CalendarUtil.self).string(for: timestamp, dateStyle: .medium, timeStyle: .medium)
 			return cell
 		} else if indexPath == Me.ratingIndex {
 			return getRatingCell(for: indexPath)
@@ -160,7 +166,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 
 	@objc private final func saveButtonPressed(_ sender: Any) {
 		do {
-			let transaction = DependencyInjector.db.transaction()
+			let transaction = DependencyInjector.get(Database.self).transaction()
 			var mood: Mood! = self.mood
 			if let localMood = mood {
 				if let localMood = localMood as? MoodImpl {
@@ -177,7 +183,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 			mood.note = note
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			if let localMood = mood as? MoodImpl {
-				mood = try DependencyInjector.db.pull(savedObject: localMood)
+				mood = try DependencyInjector.get(Database.self).pull(savedObject: localMood)
 			} else { // otherwise mood is a Mock and we're testing
 				log.debug("Mood not pulled from database")
 			}
@@ -199,7 +205,7 @@ public final class EditMoodTableViewControllerImpl: UITableViewController, EditM
 	// MARK: - Helper Functions
 
 	private final func getRatingCell(for indexPath: IndexPath) -> UITableViewCell {
-		if DependencyInjector.settings.discreteMoods {
+		if DependencyInjector.get(Settings.self).discreteMoods {
 			let cell = tableView.dequeueReusableCell(withIdentifier: "integerRating", for: indexPath) as! DiscreteRatingTableViewCell
 			cell.rating = Int(rating)
 			cell.minRating = Int(minRating)

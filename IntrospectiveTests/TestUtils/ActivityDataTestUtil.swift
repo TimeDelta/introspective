@@ -8,6 +8,9 @@
 
 import Foundation
 @testable import Introspective
+@testable import DependencyInjection
+@testable import Persistence
+@testable import Samples
 
 public final class ActivityDataTestUtil {
 
@@ -19,7 +22,7 @@ public final class ActivityDataTestUtil {
 		source: Sources.ActivitySourceNum = .introspective,
 		recordScreenIndex: Int16 = 0)
 	-> ActivityDefinition {
-		let transaction = DependencyInjector.db.transaction()
+		let transaction = DependencyInjector.get(Database.self).transaction()
 		let definition = try! transaction.new(ActivityDefinition.self)
 		definition.name = name
 		definition.activityDescription = description
@@ -28,7 +31,7 @@ public final class ActivityDataTestUtil {
 		}
 		definition.recordScreenIndex = recordScreenIndex
 		try! transaction.commit()
-		return try! DependencyInjector.db.pull(savedObject: definition)
+		return try! DependencyInjector.get(Database.self).pull(savedObject: definition)
 	}
 
 	@discardableResult
@@ -40,7 +43,7 @@ public final class ActivityDataTestUtil {
 		source: Sources.ActivitySourceNum = .introspective,
 		tags: [Tag] = [])
 	-> Activity {
-		let transaction = DependencyInjector.db.transaction()
+		let transaction = DependencyInjector.get(Database.self).transaction()
 		let activity = try! transaction.new(Activity.self)
 		activity.definition = try! transaction.pull(savedObject: definition)
 		activity.start = startDate
@@ -51,7 +54,7 @@ public final class ActivityDataTestUtil {
 		}
 		activity.setSource(source)
 		try! transaction.commit()
-		return try! DependencyInjector.db.pull(savedObject: activity)
+		return try! DependencyInjector.get(Database.self).pull(savedObject: activity)
 	}
 
 	@discardableResult

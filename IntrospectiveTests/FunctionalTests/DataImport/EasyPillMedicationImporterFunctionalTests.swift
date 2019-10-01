@@ -11,6 +11,11 @@ import Hamcrest
 import SwiftyMocky
 import CoreData
 @testable import Introspective
+@testable import Common
+@testable import DataImport
+@testable import DependencyInjection
+@testable import Persistence
+@testable import Samples
 
 final class EasyPillMedicationImporterFunctionalTests: ImporterTest {
 
@@ -46,7 +51,7 @@ Pill name,Notes,Dosage,Frequency,How many times per day,How many days,Starting,E
 
 	final override func setUp() {
 		super.setUp()
-		importer = try! DependencyInjector.importer.easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
+		importer = try! DependencyInjector.get(ImporterFactory.self).easyPillMedicationImporter() as! EasyPillMedicationImporterImpl
 	}
 
 	// MARK: - Valid Data
@@ -178,7 +183,7 @@ a,,,as needed
 		try importer.resetLastImportDate()
 
 		// then
-		importer = try DependencyInjector.db.pull(savedObject: importer)
+		importer = try DependencyInjector.get(Database.self).pull(savedObject: importer)
 		XCTAssertNil(importer.lastImport)
 	}
 
@@ -262,7 +267,7 @@ a,,,as needed
 	private final func getMedicationsWith(name: String) throws -> [Medication] {
 		let medicationsWithCurrentNameFetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 		medicationsWithCurrentNameFetchRequest.predicate = NSPredicate(format: "%K ==[cd] %@", "name", name)
-		return try DependencyInjector.db.query(medicationsWithCurrentNameFetchRequest)
+		return try DependencyInjector.get(Database.self).query(medicationsWithCurrentNameFetchRequest)
 	}
 
 	// MARK: - structs

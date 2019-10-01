@@ -9,6 +9,11 @@
 import UIKit
 import Presentr
 
+import Attributes
+import Common
+import DependencyInjection
+import SampleGroupInformation
+
 public protocol XAxisSetupViewController: UIViewController {
 
 	var usePointGroupValue: Bool { get set }
@@ -147,7 +152,7 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 	// MARK: - Helper Functions
 
 	private final func getApplicableInformationTypesForSelectedAttribute() -> [ExtraInformation.Type] {
-		return DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: selectedAttribute)
+		return DependencyInjector.get(ExtraInformationFactory.self).getApplicableInformationTypes(forAttribute: selectedAttribute)
 	}
 
 	private final func indexOfSelectedInformation() -> Int? {
@@ -157,14 +162,14 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 
 	private final func updateDisplay() {
 		if finishedLoading {
-			DependencyInjector.util.ui.setView(usePointGroupValueLabel, enabled: grouped, hidden: !grouped)
-			DependencyInjector.util.ui.setView(usePointGroupValueSwitch, enabled: grouped, hidden: !grouped)
+			DependencyInjector.get(UiUtil.self).setView(usePointGroupValueLabel, enabled: grouped, hidden: !grouped)
+			DependencyInjector.get(UiUtil.self).setView(usePointGroupValueSwitch, enabled: grouped, hidden: !grouped)
 			if grouped && usePointGroupValueSwitch.isOn {
-				DependencyInjector.util.ui.setView(informationPicker, enabled: false, hidden: true)
-				DependencyInjector.util.ui.setView(attributePicker, enabled: false, hidden: true)
+				DependencyInjector.get(UiUtil.self).setView(informationPicker, enabled: false, hidden: true)
+				DependencyInjector.get(UiUtil.self).setView(attributePicker, enabled: false, hidden: true)
 			} else {
-				DependencyInjector.util.ui.setView(informationPicker, enabled: grouped, hidden: !grouped)
-				DependencyInjector.util.ui.setView(attributePicker, enabled: true, hidden: false)
+				DependencyInjector.get(UiUtil.self).setView(informationPicker, enabled: grouped, hidden: !grouped)
+				DependencyInjector.get(UiUtil.self).setView(attributePicker, enabled: true, hidden: false)
 			}
 		}
 	}

@@ -11,6 +11,8 @@ import XCTest
 import SwiftyMocky
 import CSV
 @testable import Introspective
+@testable import Attributes
+@testable import Samples
 
 // sourcery: mock = "Mood"
 class MoodMock: Mood, Mock {

@@ -8,6 +8,9 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+
 final class MoodNoteViewController: UIViewController {
 
 	// MARK: - Static Variables
@@ -31,7 +34,7 @@ final class MoodNoteViewController: UIViewController {
 			textView.text = note
 		}
 
-		DependencyInjector.util.ui.addSaveButtonToKeyboardFor(textView, target: self, action: #selector(saveClicked))
+		DependencyInjector.get(UiUtil.self).addSaveButtonToKeyboardFor(textView, target: self, action: #selector(saveClicked))
 		textView.becomeFirstResponder()
 	}
 

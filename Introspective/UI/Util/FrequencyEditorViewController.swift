@@ -8,6 +8,9 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+
 public final class FrequencyEditorViewController: UIViewController {
 
 	// MARK: - Static Variables
@@ -58,7 +61,7 @@ public final class FrequencyEditorViewController: UIViewController {
 	@IBAction final func saveButtonPressed(_ sender: Any) {
 		var frequency: Frequency? = nil
 		if let times = amountTextField?.text {
-			if !times.isEmpty && DependencyInjector.util.string.isNumber(times) {
+			if !times.isEmpty && DependencyInjector.get(StringUtil.self).isNumber(times) {
 				let timeUnit = Me.timeUnits[timeUnitPicker.selectedRow(inComponent: 0)]
 				frequency = Frequency(Double(times)!, timeUnit)
 			}

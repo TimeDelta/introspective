@@ -9,6 +9,10 @@
 import XCTest
 import Hamcrest
 @testable import Introspective
+@testable import Attributes
+@testable import DependencyInjection
+@testable import SampleGroupers
+@testable import Samples
 
 final class PerTagSampleGrouperFunctionalTests: FunctionalTest {
 

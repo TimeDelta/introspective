@@ -8,6 +8,11 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+import Globals
+import UIExtensions
+
 public final class SettingsTableViewController: UITableViewController {
 
 	private typealias Me = SettingsTableViewController
@@ -51,30 +56,30 @@ public final class SettingsTableViewController: UITableViewController {
 	// MARK: - Table view data source
 
 	public final override func numberOfSections(in tableView: UITableView) -> Int {
-		if testing {
+		if Globals.testing {
 			return 3
 		}
 		return 2
 	}
 
 	public final override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		if testing && section == 0 {
+		if Globals.testing && section == 0 {
 			return 2
 		}
-		let section = testing ? section - 1 : section
+		let section = Globals.testing ? section - 1 : section
 		return Me.identifiers[section].rows.count
 	}
 
 	public final override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		if testing && section == 0 {
+		if Globals.testing && section == 0 {
 			return "Testing Only"
 		}
-		let section = testing ? section - 1 : section
+		let section = Globals.testing ? section - 1 : section
 		return Me.identifiers[section].section
 	}
 
 	public final override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		if testing && indexPath.section == 0 {
+		if Globals.testing && indexPath.section == 0 {
 			if indexPath.row == 0 {
 				if disableGenerateTestDataCell {
 					return tableView.dequeueReusableCell(withIdentifier: "progress", for: indexPath)
@@ -90,9 +95,9 @@ public final class SettingsTableViewController: UITableViewController {
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt _indexPath: IndexPath) {
 		if indexPath(_indexPath, isNonTestOnlySectionRowNamed: Me.resetInstructionPromptsCellIdentifier) {
-			DependencyInjector.util.userDefaults.resetInstructionPrompts()
+			DependencyInjector.get(UserDefaultsUtil.self).resetInstructionPrompts()
 			tableView.deselectRow(at: _indexPath, animated: false)
-		} else if testing && disableGenerateTestDataCell && _indexPath.section == 0 && _indexPath.row == 0 {
+		} else if Globals.testing && disableGenerateTestDataCell && _indexPath.section == 0 && _indexPath.row == 0 {
 			tableView.deselectRow(at: _indexPath, animated: false)
 		}
 	}
@@ -116,11 +121,11 @@ public final class SettingsTableViewController: UITableViewController {
 	}
 
 	private final func indexPathIsNonTestOnlySection(_ indexPath: IndexPath) -> Bool {
-		return !testing || indexPath.section != 0
+		return !Globals.testing || indexPath.section != 0
 	}
 
 	private final func identifier(for indexPath: IndexPath) -> String {
-		let section = testing ? indexPath.section - 1 : indexPath.section
+		let section = Globals.testing ? indexPath.section - 1 : indexPath.section
 		return Me.identifiers[section].rows[indexPath.row]
 	}
 }

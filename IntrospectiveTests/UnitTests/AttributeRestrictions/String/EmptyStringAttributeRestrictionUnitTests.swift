@@ -9,6 +9,8 @@
 import XCTest
 import Hamcrest
 @testable import Introspective
+@testable import AttributeRestrictions
+@testable import Attributes
 
 class EmptyStringAttributeRestrictionUnitTests: UnitTest {
 

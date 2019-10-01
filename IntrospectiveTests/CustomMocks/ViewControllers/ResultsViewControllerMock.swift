@@ -9,6 +9,8 @@
 import Foundation
 import SwiftyMocky
 @testable import Introspective
+@testable import Queries
+@testable import Samples
 
 // sourcery: mock = "ResultsViewController"
 public class ResultsViewControllerMock: UITableViewController, ResultsViewController, Mock {

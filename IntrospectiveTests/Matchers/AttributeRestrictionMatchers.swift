@@ -9,6 +9,7 @@
 import Foundation
 import Hamcrest
 @testable import Introspective
+@testable import AttributeRestrictions
 
 func equals(_ expected: AttributeRestriction) -> Matcher<AttributeRestriction?> {
 	return Matcher("\(expected.description)") { (actual: AttributeRestriction?) -> MatchResult in

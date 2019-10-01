@@ -1,0 +1,759 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		138C33E73451AEA27239997B /* Pods_AttributeRestrictions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 587502F23F58A5BDE9E0A3DA /* Pods_AttributeRestrictions.framework */; };
+		A297010E2344FEE3004B97E6 /* AttributeRestrictions.h in Headers */ = {isa = PBXBuildFile; fileRef = A297010C2344FEE3004B97E6 /* AttributeRestrictions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A29701602344FF10004B97E6 /* NotEmptyStringAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701152344FF0E004B97E6 /* NotEmptyStringAttributeRestriction.swift */; };
+		A29701612344FF10004B97E6 /* StartsWithStringAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701162344FF0E004B97E6 /* StartsWithStringAttributeRestriction.swift */; };
+		A29701622344FF10004B97E6 /* StringAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701172344FF0E004B97E6 /* StringAttributeRestriction.swift */; };
+		A29701632344FF10004B97E6 /* ContainsStringAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701182344FF0E004B97E6 /* ContainsStringAttributeRestriction.swift */; };
+		A29701642344FF10004B97E6 /* EqualToStringAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701192344FF0E004B97E6 /* EqualToStringAttributeRestriction.swift */; };
+		A29701652344FF10004B97E6 /* EndsWithStringAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297011A2344FF0E004B97E6 /* EndsWithStringAttributeRestriction.swift */; };
+		A29701662344FF10004B97E6 /* EmptyStringAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297011B2344FF0E004B97E6 /* EmptyStringAttributeRestriction.swift */; };
+		A29701672344FF10004B97E6 /* NotEqualToStringAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297011C2344FF0E004B97E6 /* NotEqualToStringAttributeRestriction.swift */; };
+		A29701682344FF10004B97E6 /* GreaterThanOrEqualToDosageAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297011E2344FF0E004B97E6 /* GreaterThanOrEqualToDosageAttributeRestriction.swift */; };
+		A29701692344FF10004B97E6 /* LessThanDosageAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297011F2344FF0E004B97E6 /* LessThanDosageAttributeRestriction.swift */; };
+		A297016A2344FF10004B97E6 /* NotEqualToDosageAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701202344FF0E004B97E6 /* NotEqualToDosageAttributeRestriction.swift */; };
+		A297016B2344FF10004B97E6 /* LessThanOrEqualToDosageAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701212344FF0E004B97E6 /* LessThanOrEqualToDosageAttributeRestriction.swift */; };
+		A297016C2344FF10004B97E6 /* GreaterThanDosageAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701222344FF0E004B97E6 /* GreaterThanDosageAttributeRestriction.swift */; };
+		A297016D2344FF10004B97E6 /* EqualToDosageAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701232344FF0E004B97E6 /* EqualToDosageAttributeRestriction.swift */; };
+		A297016E2344FF10004B97E6 /* OnDateAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701252344FF0E004B97E6 /* OnDateAttributeRestriction.swift */; };
+		A297016F2344FF10004B97E6 /* BeforeTimeOfDayAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701262344FF0E004B97E6 /* BeforeTimeOfDayAttributeRestriction.swift */; };
+		A29701702344FF10004B97E6 /* AfterDateAndTimeAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701272344FF0E004B97E6 /* AfterDateAndTimeAttributeRestriction.swift */; };
+		A29701712344FF10004B97E6 /* InCurrentTimeUnitDateAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701282344FF0E004B97E6 /* InCurrentTimeUnitDateAttributeRestriction.swift */; };
+		A29701722344FF10004B97E6 /* BeforeDateAndTimeAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701292344FF0E004B97E6 /* BeforeDateAndTimeAttributeRestriction.swift */; };
+		A29701732344FF10004B97E6 /* OnDayOfWeekAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297012A2344FF0E004B97E6 /* OnDayOfWeekAttributeRestriction.swift */; };
+		A29701742344FF10004B97E6 /* InThePastXTimeUnitsDateAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297012B2344FF0E004B97E6 /* InThePastXTimeUnitsDateAttributeRestriction.swift */; };
+		A29701752344FF10004B97E6 /* BeforeDateAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297012C2344FF0E004B97E6 /* BeforeDateAttributeRestriction.swift */; };
+		A29701762344FF10004B97E6 /* DateAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297012D2344FF0E004B97E6 /* DateAttributeRestriction.swift */; };
+		A29701772344FF10004B97E6 /* AfterTimeOfDayAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297012E2344FF0E004B97E6 /* AfterTimeOfDayAttributeRestriction.swift */; };
+		A29701782344FF10004B97E6 /* AfterDateAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297012F2344FF0E004B97E6 /* AfterDateAttributeRestriction.swift */; };
+		A29701792344FF10004B97E6 /* NotEqualToFrequencyAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701322344FF0E004B97E6 /* NotEqualToFrequencyAttributeRestriction.swift */; };
+		A297017A2344FF10004B97E6 /* EqualToFrequencyAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701332344FF0E004B97E6 /* EqualToFrequencyAttributeRestriction.swift */; };
+		A297017B2344FF10004B97E6 /* LessThanFrequencyAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701342344FF0E004B97E6 /* LessThanFrequencyAttributeRestriction.swift */; };
+		A297017C2344FF10004B97E6 /* GreaterThanOrEqualToFrequencyAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701352344FF0E004B97E6 /* GreaterThanOrEqualToFrequencyAttributeRestriction.swift */; };
+		A297017D2344FF10004B97E6 /* GreaterThanFrequencyAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701362344FF0E004B97E6 /* GreaterThanFrequencyAttributeRestriction.swift */; };
+		A297017E2344FF10004B97E6 /* LessThanOrEqualToFrequencyAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701372344FF0E004B97E6 /* LessThanOrEqualToFrequencyAttributeRestriction.swift */; };
+		A297017F2344FF10004B97E6 /* TypedGreaterThanAttributeRestrictionBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701382344FF0E004B97E6 /* TypedGreaterThanAttributeRestrictionBase.swift */; };
+		A29701802344FF10004B97E6 /* TypedGreaterThanOrEqualToAttributeRestrictionBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701392344FF0E004B97E6 /* TypedGreaterThanOrEqualToAttributeRestrictionBase.swift */; };
+		A29701812344FF10004B97E6 /* TypedLessThanOrEqualToAttributeRestrictionBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297013A2344FF0E004B97E6 /* TypedLessThanOrEqualToAttributeRestrictionBase.swift */; };
+		A29701822344FF10004B97E6 /* LessThanOrEqualToDoubleAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297013D2344FF0E004B97E6 /* LessThanOrEqualToDoubleAttributeRestriction.swift */; };
+		A29701832344FF10004B97E6 /* GreaterThanDoubleAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297013E2344FF0E004B97E6 /* GreaterThanDoubleAttributeRestriction.swift */; };
+		A29701842344FF10004B97E6 /* EqualToDoubleAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297013F2344FF0E004B97E6 /* EqualToDoubleAttributeRestriction.swift */; };
+		A29701852344FF10004B97E6 /* DoubleAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701402344FF0E004B97E6 /* DoubleAttributeRestriction.swift */; };
+		A29701862344FF10004B97E6 /* NotEqualToNumericAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701412344FF0E004B97E6 /* NotEqualToNumericAttributeRestriction.swift */; };
+		A29701872344FF10004B97E6 /* LessThanDoubleAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701422344FF0E004B97E6 /* LessThanDoubleAttributeRestriction.swift */; };
+		A29701882344FF10004B97E6 /* GreaterThanOrEqualToDoubleAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701432344FF0E004B97E6 /* GreaterThanOrEqualToDoubleAttributeRestriction.swift */; };
+		A29701892344FF10004B97E6 /* EqualToIntegerAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701452344FF0E004B97E6 /* EqualToIntegerAttributeRestriction.swift */; };
+		A297018A2344FF10004B97E6 /* LessThanIntegerAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701462344FF0E004B97E6 /* LessThanIntegerAttributeRestriction.swift */; };
+		A297018B2344FF10004B97E6 /* NotEqualToIntegerAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701472344FF0E004B97E6 /* NotEqualToIntegerAttributeRestriction.swift */; };
+		A297018C2344FF10004B97E6 /* IntegerAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701482344FF0E004B97E6 /* IntegerAttributeRestriction.swift */; };
+		A297018D2344FF10004B97E6 /* LessThanOrEqualToIntegerAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701492344FF0E004B97E6 /* LessThanOrEqualToIntegerAttributeRestriction.swift */; };
+		A297018E2344FF10004B97E6 /* GreaterThanOrEqualToIntegerAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297014A2344FF0E004B97E6 /* GreaterThanOrEqualToIntegerAttributeRestriction.swift */; };
+		A297018F2344FF10004B97E6 /* GreaterThanIntegerAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297014B2344FF0E004B97E6 /* GreaterThanIntegerAttributeRestriction.swift */; };
+		A29701902344FF10004B97E6 /* TypedLessThanAttributeRestrictionBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297014C2344FF0E004B97E6 /* TypedLessThanAttributeRestrictionBase.swift */; };
+		A29701912344FF10004B97E6 /* GreaterThanOrEqualToDurationAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297014E2344FF0E004B97E6 /* GreaterThanOrEqualToDurationAttributeRestriction.swift */; };
+		A29701922344FF10004B97E6 /* NotEqualToDurationAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297014F2344FF0E004B97E6 /* NotEqualToDurationAttributeRestriction.swift */; };
+		A29701932344FF10004B97E6 /* LessThanDurationAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701502344FF0E004B97E6 /* LessThanDurationAttributeRestriction.swift */; };
+		A29701942344FF10004B97E6 /* GreaterThanDurationAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701512344FF0E004B97E6 /* GreaterThanDurationAttributeRestriction.swift */; };
+		A29701952344FF10004B97E6 /* EqualToDurationAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701522344FF0E004B97E6 /* EqualToDurationAttributeRestriction.swift */; };
+		A29701962344FF10004B97E6 /* LessThanOrEqualToDurationAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701532344FF0E004B97E6 /* LessThanOrEqualToDurationAttributeRestriction.swift */; };
+		A29701972344FF10004B97E6 /* AttributeRestrictionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701542344FF0E004B97E6 /* AttributeRestrictionFactory.swift */; };
+		A29701982344FF10004B97E6 /* NotEqualToAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701552344FF0F004B97E6 /* NotEqualToAttributeRestriction.swift */; };
+		A29701992344FF10004B97E6 /* NotEqualToSelectOneAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701572344FF0F004B97E6 /* NotEqualToSelectOneAttributeRestriction.swift */; };
+		A297019A2344FF10004B97E6 /* EqualToSelectOneAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701582344FF0F004B97E6 /* EqualToSelectOneAttributeRestriction.swift */; };
+		A297019B2344FF10004B97E6 /* AttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701592344FF0F004B97E6 /* AttributeRestriction.swift */; };
+		A297019C2344FF10004B97E6 /* EqualToAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297015A2344FF0F004B97E6 /* EqualToAttributeRestriction.swift */; };
+		A297019D2344FF10004B97E6 /* DoesNotHaveTagAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297015C2344FF0F004B97E6 /* DoesNotHaveTagAttributeRestriction.swift */; };
+		A297019E2344FF10004B97E6 /* DoesNotHaveOneOfTagAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297015D2344FF0F004B97E6 /* DoesNotHaveOneOfTagAttributeRestriction.swift */; };
+		A297019F2344FF10004B97E6 /* HasOneOfTagAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297015E2344FF0F004B97E6 /* HasOneOfTagAttributeRestriction.swift */; };
+		A29701A02344FF10004B97E6 /* HasTagAttributeRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297015F2344FF0F004B97E6 /* HasTagAttributeRestriction.swift */; };
+		A29701A22344FFD6004B97E6 /* AttributeRestrictionsInjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29701A12344FFD6004B97E6 /* AttributeRestrictionsInjectionProvider.swift */; };
+		A29701A52345007E004B97E6 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A29701A42345007E004B97E6 /* Common.framework */; };
+		A29701A723450087004B97E6 /* Attributes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A29701A623450087004B97E6 /* Attributes.framework */; };
+		A29701A92345008E004B97E6 /* Samples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A29701A82345008E004B97E6 /* Samples.framework */; };
+		A29701AB2345009B004B97E6 /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A29701AA2345009B004B97E6 /* DependencyInjection.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		51E4A92846130888BFBD9456 /* Pods-AttributeRestrictions.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AttributeRestrictions.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-AttributeRestrictions/Pods-AttributeRestrictions.debug.xcconfig"; sourceTree = "<group>"; };
+		587502F23F58A5BDE9E0A3DA /* Pods_AttributeRestrictions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AttributeRestrictions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A29701092344FEE3004B97E6 /* AttributeRestrictions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AttributeRestrictions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A297010C2344FEE3004B97E6 /* AttributeRestrictions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AttributeRestrictions.h; sourceTree = "<group>"; };
+		A297010D2344FEE3004B97E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A29701152344FF0E004B97E6 /* NotEmptyStringAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotEmptyStringAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701162344FF0E004B97E6 /* StartsWithStringAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartsWithStringAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701172344FF0E004B97E6 /* StringAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701182344FF0E004B97E6 /* ContainsStringAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainsStringAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701192344FF0E004B97E6 /* EqualToStringAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EqualToStringAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297011A2344FF0E004B97E6 /* EndsWithStringAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndsWithStringAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297011B2344FF0E004B97E6 /* EmptyStringAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyStringAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297011C2344FF0E004B97E6 /* NotEqualToStringAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotEqualToStringAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297011E2344FF0E004B97E6 /* GreaterThanOrEqualToDosageAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GreaterThanOrEqualToDosageAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297011F2344FF0E004B97E6 /* LessThanDosageAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessThanDosageAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701202344FF0E004B97E6 /* NotEqualToDosageAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotEqualToDosageAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701212344FF0E004B97E6 /* LessThanOrEqualToDosageAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessThanOrEqualToDosageAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701222344FF0E004B97E6 /* GreaterThanDosageAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GreaterThanDosageAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701232344FF0E004B97E6 /* EqualToDosageAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EqualToDosageAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701252344FF0E004B97E6 /* OnDateAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDateAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701262344FF0E004B97E6 /* BeforeTimeOfDayAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeforeTimeOfDayAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701272344FF0E004B97E6 /* AfterDateAndTimeAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AfterDateAndTimeAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701282344FF0E004B97E6 /* InCurrentTimeUnitDateAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InCurrentTimeUnitDateAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701292344FF0E004B97E6 /* BeforeDateAndTimeAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeforeDateAndTimeAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297012A2344FF0E004B97E6 /* OnDayOfWeekAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnDayOfWeekAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297012B2344FF0E004B97E6 /* InThePastXTimeUnitsDateAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InThePastXTimeUnitsDateAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297012C2344FF0E004B97E6 /* BeforeDateAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BeforeDateAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297012D2344FF0E004B97E6 /* DateAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297012E2344FF0E004B97E6 /* AfterTimeOfDayAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AfterTimeOfDayAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297012F2344FF0E004B97E6 /* AfterDateAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AfterDateAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701322344FF0E004B97E6 /* NotEqualToFrequencyAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotEqualToFrequencyAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701332344FF0E004B97E6 /* EqualToFrequencyAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EqualToFrequencyAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701342344FF0E004B97E6 /* LessThanFrequencyAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessThanFrequencyAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701352344FF0E004B97E6 /* GreaterThanOrEqualToFrequencyAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GreaterThanOrEqualToFrequencyAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701362344FF0E004B97E6 /* GreaterThanFrequencyAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GreaterThanFrequencyAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701372344FF0E004B97E6 /* LessThanOrEqualToFrequencyAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessThanOrEqualToFrequencyAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701382344FF0E004B97E6 /* TypedGreaterThanAttributeRestrictionBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypedGreaterThanAttributeRestrictionBase.swift; sourceTree = "<group>"; };
+		A29701392344FF0E004B97E6 /* TypedGreaterThanOrEqualToAttributeRestrictionBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypedGreaterThanOrEqualToAttributeRestrictionBase.swift; sourceTree = "<group>"; };
+		A297013A2344FF0E004B97E6 /* TypedLessThanOrEqualToAttributeRestrictionBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypedLessThanOrEqualToAttributeRestrictionBase.swift; sourceTree = "<group>"; };
+		A297013D2344FF0E004B97E6 /* LessThanOrEqualToDoubleAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessThanOrEqualToDoubleAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297013E2344FF0E004B97E6 /* GreaterThanDoubleAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GreaterThanDoubleAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297013F2344FF0E004B97E6 /* EqualToDoubleAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EqualToDoubleAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701402344FF0E004B97E6 /* DoubleAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701412344FF0E004B97E6 /* NotEqualToNumericAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotEqualToNumericAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701422344FF0E004B97E6 /* LessThanDoubleAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701432344FF0E004B97E6 /* GreaterThanOrEqualToDoubleAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GreaterThanOrEqualToDoubleAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701452344FF0E004B97E6 /* EqualToIntegerAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EqualToIntegerAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701462344FF0E004B97E6 /* LessThanIntegerAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessThanIntegerAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701472344FF0E004B97E6 /* NotEqualToIntegerAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotEqualToIntegerAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701482344FF0E004B97E6 /* IntegerAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegerAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701492344FF0E004B97E6 /* LessThanOrEqualToIntegerAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessThanOrEqualToIntegerAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297014A2344FF0E004B97E6 /* GreaterThanOrEqualToIntegerAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GreaterThanOrEqualToIntegerAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297014B2344FF0E004B97E6 /* GreaterThanIntegerAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GreaterThanIntegerAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297014C2344FF0E004B97E6 /* TypedLessThanAttributeRestrictionBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypedLessThanAttributeRestrictionBase.swift; sourceTree = "<group>"; };
+		A297014E2344FF0E004B97E6 /* GreaterThanOrEqualToDurationAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GreaterThanOrEqualToDurationAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297014F2344FF0E004B97E6 /* NotEqualToDurationAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotEqualToDurationAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701502344FF0E004B97E6 /* LessThanDurationAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessThanDurationAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701512344FF0E004B97E6 /* GreaterThanDurationAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GreaterThanDurationAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701522344FF0E004B97E6 /* EqualToDurationAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EqualToDurationAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701532344FF0E004B97E6 /* LessThanOrEqualToDurationAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LessThanOrEqualToDurationAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701542344FF0E004B97E6 /* AttributeRestrictionFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributeRestrictionFactory.swift; sourceTree = "<group>"; };
+		A29701552344FF0F004B97E6 /* NotEqualToAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotEqualToAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701572344FF0F004B97E6 /* NotEqualToSelectOneAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotEqualToSelectOneAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701582344FF0F004B97E6 /* EqualToSelectOneAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EqualToSelectOneAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701592344FF0F004B97E6 /* AttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributeRestriction.swift; sourceTree = "<group>"; };
+		A297015A2344FF0F004B97E6 /* EqualToAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EqualToAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297015C2344FF0F004B97E6 /* DoesNotHaveTagAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoesNotHaveTagAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297015D2344FF0F004B97E6 /* DoesNotHaveOneOfTagAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoesNotHaveOneOfTagAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297015E2344FF0F004B97E6 /* HasOneOfTagAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HasOneOfTagAttributeRestriction.swift; sourceTree = "<group>"; };
+		A297015F2344FF0F004B97E6 /* HasTagAttributeRestriction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HasTagAttributeRestriction.swift; sourceTree = "<group>"; };
+		A29701A12344FFD6004B97E6 /* AttributeRestrictionsInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeRestrictionsInjectionProvider.swift; sourceTree = "<group>"; };
+		A29701A42345007E004B97E6 /* Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A29701A623450087004B97E6 /* Attributes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Attributes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A29701A82345008E004B97E6 /* Samples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Samples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A29701AA2345009B004B97E6 /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3E1F58CB37300E6AB438A14 /* Pods-AttributeRestrictions.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AttributeRestrictions.release.xcconfig"; path = "../Pods/Target Support Files/Pods-AttributeRestrictions/Pods-AttributeRestrictions.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A29701062344FEE3004B97E6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A29701AB2345009B004B97E6 /* DependencyInjection.framework in Frameworks */,
+				A29701A92345008E004B97E6 /* Samples.framework in Frameworks */,
+				A29701A723450087004B97E6 /* Attributes.framework in Frameworks */,
+				A29701A52345007E004B97E6 /* Common.framework in Frameworks */,
+				138C33E73451AEA27239997B /* Pods_AttributeRestrictions.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A29700FF2344FEE3004B97E6 = {
+			isa = PBXGroup;
+			children = (
+				A297010B2344FEE3004B97E6 /* AttributeRestrictions */,
+				A297010A2344FEE3004B97E6 /* Products */,
+				A29701A32345007E004B97E6 /* Frameworks */,
+				D07E056529BF07C32FA20F0B /* Pods */,
+			);
+			sourceTree = "<group>";
+		};
+		A297010A2344FEE3004B97E6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A29701092344FEE3004B97E6 /* AttributeRestrictions.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A297010B2344FEE3004B97E6 /* AttributeRestrictions */ = {
+			isa = PBXGroup;
+			children = (
+				A29701A12344FFD6004B97E6 /* AttributeRestrictionsInjectionProvider.swift */,
+				A29701542344FF0E004B97E6 /* AttributeRestrictionFactory.swift */,
+				A29701592344FF0F004B97E6 /* AttributeRestriction.swift */,
+				A297015A2344FF0F004B97E6 /* EqualToAttributeRestriction.swift */,
+				A29701552344FF0F004B97E6 /* NotEqualToAttributeRestriction.swift */,
+				A29701302344FF0E004B97E6 /* Comparable */,
+				A29701142344FF0E004B97E6 /* String */,
+				A29701242344FF0E004B97E6 /* Date */,
+				A29701562344FF0F004B97E6 /* SelectOne */,
+				A297015B2344FF0F004B97E6 /* Tag */,
+				A297010C2344FEE3004B97E6 /* AttributeRestrictions.h */,
+				A297010D2344FEE3004B97E6 /* Info.plist */,
+			);
+			path = AttributeRestrictions;
+			sourceTree = "<group>";
+		};
+		A29701142344FF0E004B97E6 /* String */ = {
+			isa = PBXGroup;
+			children = (
+				A29701172344FF0E004B97E6 /* StringAttributeRestriction.swift */,
+				A29701182344FF0E004B97E6 /* ContainsStringAttributeRestriction.swift */,
+				A29701162344FF0E004B97E6 /* StartsWithStringAttributeRestriction.swift */,
+				A297011A2344FF0E004B97E6 /* EndsWithStringAttributeRestriction.swift */,
+				A29701192344FF0E004B97E6 /* EqualToStringAttributeRestriction.swift */,
+				A297011C2344FF0E004B97E6 /* NotEqualToStringAttributeRestriction.swift */,
+				A297011B2344FF0E004B97E6 /* EmptyStringAttributeRestriction.swift */,
+				A29701152344FF0E004B97E6 /* NotEmptyStringAttributeRestriction.swift */,
+			);
+			path = String;
+			sourceTree = "<group>";
+		};
+		A297011D2344FF0E004B97E6 /* Dosage */ = {
+			isa = PBXGroup;
+			children = (
+				A297011E2344FF0E004B97E6 /* GreaterThanOrEqualToDosageAttributeRestriction.swift */,
+				A297011F2344FF0E004B97E6 /* LessThanDosageAttributeRestriction.swift */,
+				A29701202344FF0E004B97E6 /* NotEqualToDosageAttributeRestriction.swift */,
+				A29701212344FF0E004B97E6 /* LessThanOrEqualToDosageAttributeRestriction.swift */,
+				A29701222344FF0E004B97E6 /* GreaterThanDosageAttributeRestriction.swift */,
+				A29701232344FF0E004B97E6 /* EqualToDosageAttributeRestriction.swift */,
+			);
+			path = Dosage;
+			sourceTree = "<group>";
+		};
+		A29701242344FF0E004B97E6 /* Date */ = {
+			isa = PBXGroup;
+			children = (
+				A297012D2344FF0E004B97E6 /* DateAttributeRestriction.swift */,
+				A29701282344FF0E004B97E6 /* InCurrentTimeUnitDateAttributeRestriction.swift */,
+				A297012B2344FF0E004B97E6 /* InThePastXTimeUnitsDateAttributeRestriction.swift */,
+				A29701272344FF0E004B97E6 /* AfterDateAndTimeAttributeRestriction.swift */,
+				A297012F2344FF0E004B97E6 /* AfterDateAttributeRestriction.swift */,
+				A297012E2344FF0E004B97E6 /* AfterTimeOfDayAttributeRestriction.swift */,
+				A29701292344FF0E004B97E6 /* BeforeDateAndTimeAttributeRestriction.swift */,
+				A297012C2344FF0E004B97E6 /* BeforeDateAttributeRestriction.swift */,
+				A29701262344FF0E004B97E6 /* BeforeTimeOfDayAttributeRestriction.swift */,
+				A29701252344FF0E004B97E6 /* OnDateAttributeRestriction.swift */,
+				A297012A2344FF0E004B97E6 /* OnDayOfWeekAttributeRestriction.swift */,
+			);
+			path = Date;
+			sourceTree = "<group>";
+		};
+		A29701302344FF0E004B97E6 /* Comparable */ = {
+			isa = PBXGroup;
+			children = (
+				A297014C2344FF0E004B97E6 /* TypedLessThanAttributeRestrictionBase.swift */,
+				A297013A2344FF0E004B97E6 /* TypedLessThanOrEqualToAttributeRestrictionBase.swift */,
+				A29701392344FF0E004B97E6 /* TypedGreaterThanOrEqualToAttributeRestrictionBase.swift */,
+				A29701382344FF0E004B97E6 /* TypedGreaterThanAttributeRestrictionBase.swift */,
+				A297013B2344FF0E004B97E6 /* Numeric */,
+				A297011D2344FF0E004B97E6 /* Dosage */,
+				A29701312344FF0E004B97E6 /* Frequency */,
+				A297014D2344FF0E004B97E6 /* Duration */,
+			);
+			path = Comparable;
+			sourceTree = "<group>";
+		};
+		A29701312344FF0E004B97E6 /* Frequency */ = {
+			isa = PBXGroup;
+			children = (
+				A29701322344FF0E004B97E6 /* NotEqualToFrequencyAttributeRestriction.swift */,
+				A29701332344FF0E004B97E6 /* EqualToFrequencyAttributeRestriction.swift */,
+				A29701342344FF0E004B97E6 /* LessThanFrequencyAttributeRestriction.swift */,
+				A29701352344FF0E004B97E6 /* GreaterThanOrEqualToFrequencyAttributeRestriction.swift */,
+				A29701362344FF0E004B97E6 /* GreaterThanFrequencyAttributeRestriction.swift */,
+				A29701372344FF0E004B97E6 /* LessThanOrEqualToFrequencyAttributeRestriction.swift */,
+			);
+			path = Frequency;
+			sourceTree = "<group>";
+		};
+		A297013B2344FF0E004B97E6 /* Numeric */ = {
+			isa = PBXGroup;
+			children = (
+				A297013C2344FF0E004B97E6 /* Double */,
+				A29701442344FF0E004B97E6 /* Integer */,
+			);
+			path = Numeric;
+			sourceTree = "<group>";
+		};
+		A297013C2344FF0E004B97E6 /* Double */ = {
+			isa = PBXGroup;
+			children = (
+				A297013D2344FF0E004B97E6 /* LessThanOrEqualToDoubleAttributeRestriction.swift */,
+				A297013E2344FF0E004B97E6 /* GreaterThanDoubleAttributeRestriction.swift */,
+				A297013F2344FF0E004B97E6 /* EqualToDoubleAttributeRestriction.swift */,
+				A29701402344FF0E004B97E6 /* DoubleAttributeRestriction.swift */,
+				A29701412344FF0E004B97E6 /* NotEqualToNumericAttributeRestriction.swift */,
+				A29701422344FF0E004B97E6 /* LessThanDoubleAttributeRestriction.swift */,
+				A29701432344FF0E004B97E6 /* GreaterThanOrEqualToDoubleAttributeRestriction.swift */,
+			);
+			path = Double;
+			sourceTree = "<group>";
+		};
+		A29701442344FF0E004B97E6 /* Integer */ = {
+			isa = PBXGroup;
+			children = (
+				A29701452344FF0E004B97E6 /* EqualToIntegerAttributeRestriction.swift */,
+				A29701462344FF0E004B97E6 /* LessThanIntegerAttributeRestriction.swift */,
+				A29701472344FF0E004B97E6 /* NotEqualToIntegerAttributeRestriction.swift */,
+				A29701482344FF0E004B97E6 /* IntegerAttributeRestriction.swift */,
+				A29701492344FF0E004B97E6 /* LessThanOrEqualToIntegerAttributeRestriction.swift */,
+				A297014A2344FF0E004B97E6 /* GreaterThanOrEqualToIntegerAttributeRestriction.swift */,
+				A297014B2344FF0E004B97E6 /* GreaterThanIntegerAttributeRestriction.swift */,
+			);
+			path = Integer;
+			sourceTree = "<group>";
+		};
+		A297014D2344FF0E004B97E6 /* Duration */ = {
+			isa = PBXGroup;
+			children = (
+				A297014E2344FF0E004B97E6 /* GreaterThanOrEqualToDurationAttributeRestriction.swift */,
+				A297014F2344FF0E004B97E6 /* NotEqualToDurationAttributeRestriction.swift */,
+				A29701502344FF0E004B97E6 /* LessThanDurationAttributeRestriction.swift */,
+				A29701512344FF0E004B97E6 /* GreaterThanDurationAttributeRestriction.swift */,
+				A29701522344FF0E004B97E6 /* EqualToDurationAttributeRestriction.swift */,
+				A29701532344FF0E004B97E6 /* LessThanOrEqualToDurationAttributeRestriction.swift */,
+			);
+			path = Duration;
+			sourceTree = "<group>";
+		};
+		A29701562344FF0F004B97E6 /* SelectOne */ = {
+			isa = PBXGroup;
+			children = (
+				A29701582344FF0F004B97E6 /* EqualToSelectOneAttributeRestriction.swift */,
+				A29701572344FF0F004B97E6 /* NotEqualToSelectOneAttributeRestriction.swift */,
+			);
+			path = SelectOne;
+			sourceTree = "<group>";
+		};
+		A297015B2344FF0F004B97E6 /* Tag */ = {
+			isa = PBXGroup;
+			children = (
+				A297015F2344FF0F004B97E6 /* HasTagAttributeRestriction.swift */,
+				A297015C2344FF0F004B97E6 /* DoesNotHaveTagAttributeRestriction.swift */,
+				A297015E2344FF0F004B97E6 /* HasOneOfTagAttributeRestriction.swift */,
+				A297015D2344FF0F004B97E6 /* DoesNotHaveOneOfTagAttributeRestriction.swift */,
+			);
+			path = Tag;
+			sourceTree = "<group>";
+		};
+		A29701A32345007E004B97E6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A29701AA2345009B004B97E6 /* DependencyInjection.framework */,
+				A29701A82345008E004B97E6 /* Samples.framework */,
+				A29701A623450087004B97E6 /* Attributes.framework */,
+				A29701A42345007E004B97E6 /* Common.framework */,
+				587502F23F58A5BDE9E0A3DA /* Pods_AttributeRestrictions.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D07E056529BF07C32FA20F0B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				51E4A92846130888BFBD9456 /* Pods-AttributeRestrictions.debug.xcconfig */,
+				D3E1F58CB37300E6AB438A14 /* Pods-AttributeRestrictions.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		A29701042344FEE3004B97E6 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A297010E2344FEE3004B97E6 /* AttributeRestrictions.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		A29701082344FEE3004B97E6 /* AttributeRestrictions */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A29701112344FEE3004B97E6 /* Build configuration list for PBXNativeTarget "AttributeRestrictions" */;
+			buildPhases = (
+				41B7A9CE5F2C9D1C58645B5B /* [CP] Check Pods Manifest.lock */,
+				A29701042344FEE3004B97E6 /* Headers */,
+				A29701052344FEE3004B97E6 /* Sources */,
+				A29701062344FEE3004B97E6 /* Frameworks */,
+				A29701072344FEE3004B97E6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AttributeRestrictions;
+			productName = AttributeRestrictions;
+			productReference = A29701092344FEE3004B97E6 /* AttributeRestrictions.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A29701002344FEE3004B97E6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1030;
+				ORGANIZATIONNAME = "Bryan Nova";
+				TargetAttributes = {
+					A29701082344FEE3004B97E6 = {
+						CreatedOnToolsVersion = 10.3;
+						LastSwiftMigration = 1030;
+					};
+				};
+			};
+			buildConfigurationList = A29701032344FEE3004B97E6 /* Build configuration list for PBXProject "AttributeRestrictions" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = A29700FF2344FEE3004B97E6;
+			productRefGroup = A297010A2344FEE3004B97E6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A29701082344FEE3004B97E6 /* AttributeRestrictions */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A29701072344FEE3004B97E6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		41B7A9CE5F2C9D1C58645B5B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AttributeRestrictions-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A29701052344FEE3004B97E6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A29701692344FF10004B97E6 /* LessThanDosageAttributeRestriction.swift in Sources */,
+				A29701942344FF10004B97E6 /* GreaterThanDurationAttributeRestriction.swift in Sources */,
+				A29701772344FF10004B97E6 /* AfterTimeOfDayAttributeRestriction.swift in Sources */,
+				A29701622344FF10004B97E6 /* StringAttributeRestriction.swift in Sources */,
+				A29701702344FF10004B97E6 /* AfterDateAndTimeAttributeRestriction.swift in Sources */,
+				A297018F2344FF10004B97E6 /* GreaterThanIntegerAttributeRestriction.swift in Sources */,
+				A29701892344FF10004B97E6 /* EqualToIntegerAttributeRestriction.swift in Sources */,
+				A29701862344FF10004B97E6 /* NotEqualToNumericAttributeRestriction.swift in Sources */,
+				A297018E2344FF10004B97E6 /* GreaterThanOrEqualToIntegerAttributeRestriction.swift in Sources */,
+				A297018B2344FF10004B97E6 /* NotEqualToIntegerAttributeRestriction.swift in Sources */,
+				A29701972344FF10004B97E6 /* AttributeRestrictionFactory.swift in Sources */,
+				A297017B2344FF10004B97E6 /* LessThanFrequencyAttributeRestriction.swift in Sources */,
+				A297017A2344FF10004B97E6 /* EqualToFrequencyAttributeRestriction.swift in Sources */,
+				A297019E2344FF10004B97E6 /* DoesNotHaveOneOfTagAttributeRestriction.swift in Sources */,
+				A297018A2344FF10004B97E6 /* LessThanIntegerAttributeRestriction.swift in Sources */,
+				A29701912344FF10004B97E6 /* GreaterThanOrEqualToDurationAttributeRestriction.swift in Sources */,
+				A29701A22344FFD6004B97E6 /* AttributeRestrictionsInjectionProvider.swift in Sources */,
+				A29701962344FF10004B97E6 /* LessThanOrEqualToDurationAttributeRestriction.swift in Sources */,
+				A29701712344FF10004B97E6 /* InCurrentTimeUnitDateAttributeRestriction.swift in Sources */,
+				A297016D2344FF10004B97E6 /* EqualToDosageAttributeRestriction.swift in Sources */,
+				A29701832344FF10004B97E6 /* GreaterThanDoubleAttributeRestriction.swift in Sources */,
+				A297016F2344FF10004B97E6 /* BeforeTimeOfDayAttributeRestriction.swift in Sources */,
+				A297017F2344FF10004B97E6 /* TypedGreaterThanAttributeRestrictionBase.swift in Sources */,
+				A29701602344FF10004B97E6 /* NotEmptyStringAttributeRestriction.swift in Sources */,
+				A29701852344FF10004B97E6 /* DoubleAttributeRestriction.swift in Sources */,
+				A29701922344FF10004B97E6 /* NotEqualToDurationAttributeRestriction.swift in Sources */,
+				A297018D2344FF10004B97E6 /* LessThanOrEqualToIntegerAttributeRestriction.swift in Sources */,
+				A29701842344FF10004B97E6 /* EqualToDoubleAttributeRestriction.swift in Sources */,
+				A29701822344FF10004B97E6 /* LessThanOrEqualToDoubleAttributeRestriction.swift in Sources */,
+				A297019A2344FF10004B97E6 /* EqualToSelectOneAttributeRestriction.swift in Sources */,
+				A297016C2344FF10004B97E6 /* GreaterThanDosageAttributeRestriction.swift in Sources */,
+				A297016E2344FF10004B97E6 /* OnDateAttributeRestriction.swift in Sources */,
+				A29701682344FF10004B97E6 /* GreaterThanOrEqualToDosageAttributeRestriction.swift in Sources */,
+				A29701812344FF10004B97E6 /* TypedLessThanOrEqualToAttributeRestrictionBase.swift in Sources */,
+				A297017C2344FF10004B97E6 /* GreaterThanOrEqualToFrequencyAttributeRestriction.swift in Sources */,
+				A29701722344FF10004B97E6 /* BeforeDateAndTimeAttributeRestriction.swift in Sources */,
+				A29701A02344FF10004B97E6 /* HasTagAttributeRestriction.swift in Sources */,
+				A29701882344FF10004B97E6 /* GreaterThanOrEqualToDoubleAttributeRestriction.swift in Sources */,
+				A29701792344FF10004B97E6 /* NotEqualToFrequencyAttributeRestriction.swift in Sources */,
+				A29701672344FF10004B97E6 /* NotEqualToStringAttributeRestriction.swift in Sources */,
+				A297018C2344FF10004B97E6 /* IntegerAttributeRestriction.swift in Sources */,
+				A29701982344FF10004B97E6 /* NotEqualToAttributeRestriction.swift in Sources */,
+				A29701612344FF10004B97E6 /* StartsWithStringAttributeRestriction.swift in Sources */,
+				A29701762344FF10004B97E6 /* DateAttributeRestriction.swift in Sources */,
+				A297019D2344FF10004B97E6 /* DoesNotHaveTagAttributeRestriction.swift in Sources */,
+				A29701952344FF10004B97E6 /* EqualToDurationAttributeRestriction.swift in Sources */,
+				A29701902344FF10004B97E6 /* TypedLessThanAttributeRestrictionBase.swift in Sources */,
+				A29701872344FF10004B97E6 /* LessThanDoubleAttributeRestriction.swift in Sources */,
+				A297019C2344FF10004B97E6 /* EqualToAttributeRestriction.swift in Sources */,
+				A29701662344FF10004B97E6 /* EmptyStringAttributeRestriction.swift in Sources */,
+				A297017D2344FF10004B97E6 /* GreaterThanFrequencyAttributeRestriction.swift in Sources */,
+				A29701802344FF10004B97E6 /* TypedGreaterThanOrEqualToAttributeRestrictionBase.swift in Sources */,
+				A297016B2344FF10004B97E6 /* LessThanOrEqualToDosageAttributeRestriction.swift in Sources */,
+				A297017E2344FF10004B97E6 /* LessThanOrEqualToFrequencyAttributeRestriction.swift in Sources */,
+				A297016A2344FF10004B97E6 /* NotEqualToDosageAttributeRestriction.swift in Sources */,
+				A29701782344FF10004B97E6 /* AfterDateAttributeRestriction.swift in Sources */,
+				A297019B2344FF10004B97E6 /* AttributeRestriction.swift in Sources */,
+				A29701632344FF10004B97E6 /* ContainsStringAttributeRestriction.swift in Sources */,
+				A29701652344FF10004B97E6 /* EndsWithStringAttributeRestriction.swift in Sources */,
+				A297019F2344FF10004B97E6 /* HasOneOfTagAttributeRestriction.swift in Sources */,
+				A29701732344FF10004B97E6 /* OnDayOfWeekAttributeRestriction.swift in Sources */,
+				A29701742344FF10004B97E6 /* InThePastXTimeUnitsDateAttributeRestriction.swift in Sources */,
+				A29701992344FF10004B97E6 /* NotEqualToSelectOneAttributeRestriction.swift in Sources */,
+				A29701752344FF10004B97E6 /* BeforeDateAttributeRestriction.swift in Sources */,
+				A29701642344FF10004B97E6 /* EqualToStringAttributeRestriction.swift in Sources */,
+				A29701932344FF10004B97E6 /* LessThanDurationAttributeRestriction.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A297010F2344FEE3004B97E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		A29701102344FEE3004B97E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		A29701122344FEE3004B97E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51E4A92846130888BFBD9456 /* Pods-AttributeRestrictions.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = M4DG35ZPLD;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = AttributeRestrictions/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bnova.AttributeRestrictions;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A29701132344FEE3004B97E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D3E1F58CB37300E6AB438A14 /* Pods-AttributeRestrictions.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = M4DG35ZPLD;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = AttributeRestrictions/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bnova.AttributeRestrictions;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A29701032344FEE3004B97E6 /* Build configuration list for PBXProject "AttributeRestrictions" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A297010F2344FEE3004B97E6 /* Debug */,
+				A29701102344FEE3004B97E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A29701112344FEE3004B97E6 /* Build configuration list for PBXNativeTarget "AttributeRestrictions" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A29701122344FEE3004B97E6 /* Debug */,
+				A29701132344FEE3004B97E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A29701002344FEE3004B97E6 /* Project object */;
+}

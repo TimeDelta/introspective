@@ -10,6 +10,10 @@
 import Foundation
 import HealthKit
 
+import Common
+import DependencyInjection
+import Samples
+
 public class HealthKitDataTestUtil {
 
 	private typealias Me = HealthKitDataTestUtil
@@ -17,14 +21,14 @@ public class HealthKitDataTestUtil {
 	private static let healthStore = HKHealthStore()
 	private static let readPermissions: Set<HKObjectType> = {
 		var allPermissions = Set<HKObjectType>()
-		for permissions in DependencyInjector.sample.healthKitTypes().map({ return $0.readPermissions }) {
+		for permissions in DependencyInjector.get(SampleFactory.self).healthKitTypes().map({ return $0.readPermissions }) {
 			allPermissions = allPermissions.union(permissions)
 		}
 		return allPermissions
 	}()
 	private static let writePermissions: Set<HKSampleType> = {
 		var allPermissions = Set<HKSampleType>()
-		for permissions in DependencyInjector.sample.healthKitTypes().map({ return $0.writePermissions }) {
+		for permissions in DependencyInjector.get(SampleFactory.self).healthKitTypes().map({ return $0.writePermissions }) {
 			allPermissions = allPermissions.union(permissions)
 		}
 		return allPermissions

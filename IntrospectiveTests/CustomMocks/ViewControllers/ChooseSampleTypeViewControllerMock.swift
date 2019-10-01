@@ -9,6 +9,8 @@
 import Foundation
 import SwiftyMocky
 @testable import Introspective
+@testable import Common
+@testable import Samples
 
 // sourcery: mock = "ChooseSampleTypeViewController"
 class ChooseSampleTypeViewControllerMock: UIViewController, ChooseSampleTypeViewController, Mock {

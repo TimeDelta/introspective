@@ -8,6 +8,10 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+import Samples
+
 class SexualActivityTableViewCell: UITableViewCell {
 
 	// MARK: - IBOutlets
@@ -23,7 +27,7 @@ class SexualActivityTableViewCell: UITableViewCell {
 
 			valueLabel.text = "Protection: " + sample.protectionUsed.description
 
-			timestampLabel.text = DependencyInjector.util.calendar.string(
+			timestampLabel.text = DependencyInjector.get(CalendarUtil.self).string(
 				for: sample.timestamp,
 				dateStyle: .medium,
 				timeStyle: .short)

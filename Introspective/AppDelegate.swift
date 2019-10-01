@@ -10,17 +10,25 @@ import UIKit
 import UserNotifications
 import CoreData
 
-
-public var testing = false
-public var functionalTesting = false
-public var uiTesting = false
+import AttributeRestrictions
+import BooleanAlgebra
+import Common
+import DependencyInjection
+import DataExport
+import DataImport
+import Globals
+import Notifications
+import Persistence
+import Queries
+import Samples
+import SampleGroupers
+import SampleGroupInformation
+import Settings
 
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
 
-	// avoid issues with loading the managed object model multiple times in a single app
-	// caused by tearing down and recreating the persistent container for each functional test
-	public static let objectModel: NSManagedObjectModel = NSManagedObjectModel.mergedModel(from: [Bundle(for: AppDelegate.self)])!
+	private typealias Me = AppDelegate
 
 	final var window: UIWindow?
 
@@ -28,7 +36,12 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	private final let log = Log()
 
-	final func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+	final func application(
+		_ application: UIApplication,
+		willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil)
+	-> Bool {
+		Me.registerDependencies()
+
 		userNotificationDelegate = UserNotificationDelegate(window)
 
 		let center = UNUserNotificationCenter.current()
@@ -39,9 +52,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	final func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-		testing = CommandLine.arguments.contains("--testing")
-		functionalTesting = CommandLine.arguments.contains("--functional-testing")
-		uiTesting = CommandLine.arguments.contains("--ui-testing")
+		Globals.testing = CommandLine.arguments.contains("--testing")
+		Globals.functionalTesting = CommandLine.arguments.contains("--functional-testing")
+		Globals.uiTesting = CommandLine.arguments.contains("--ui-testing")
 
 		let options: UNAuthorizationOptions = [.alert, .sound, .badge]
 		UNUserNotificationCenter.current().requestAuthorization(options: options) { granted, error in
@@ -76,5 +89,20 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	final func applicationWillTerminate(_ application: UIApplication) {
 		// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+	}
+
+	static func registerDependencies() {
+		DependencyInjector.register(AttributeRestrictionsInjectionProvider())
+		DependencyInjector.register(BooleanAlgebraInjectionProvider())
+		DependencyInjector.register(CommonInjectionProvider())
+		DependencyInjector.register(DataExportInjectionProvider())
+		DependencyInjector.register(DataImportInjectionProvider())
+		DependencyInjector.register(IntrospectiveInjectionProvider())
+		DependencyInjector.register(PersistenceInjectionProvider(ObjectModelContainer.objectModel))
+		DependencyInjector.register(QueriesInjectionProvider())
+		DependencyInjector.register(SamplesInjectionProvider())
+		DependencyInjector.register(SampleGroupersInjectionProvider())
+		DependencyInjector.register(SampleGroupInformationInjectionProvider())
+		DependencyInjector.register(SettingsInjectionProvider())
 	}
 }

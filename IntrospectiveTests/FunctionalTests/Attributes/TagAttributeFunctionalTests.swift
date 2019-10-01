@@ -9,6 +9,11 @@
 import XCTest
 import Hamcrest
 @testable import Introspective
+@testable import Attributes
+@testable import Common
+@testable import DependencyInjection
+@testable import Persistence
+@testable import Samples
 
 final class TagAttributeFunctionalTests: FunctionalTest {
 
@@ -65,7 +70,7 @@ final class TagAttributeFunctionalTests: FunctionalTest {
 	func testGivenCorrectValueTypeAndValueIsNotPossibleValue_isValid_returnsFalse() throws {
 		// given
 		useOptionalAttribute()
-		let transaction = DependencyInjector.db.transaction()
+		let transaction = DependencyInjector.get(Database.self).transaction()
 		let value = try transaction.new(Tag.self)
 		value.name = "tag name"
 
@@ -94,7 +99,7 @@ final class TagAttributeFunctionalTests: FunctionalTest {
 		// given
 		useRequiredAttribute()
 		TagDataTestUtil.createTag(name: "possible value")
-		let transaction = DependencyInjector.db.transaction()
+		let transaction = DependencyInjector.get(Database.self).transaction()
 		let tag = try transaction.new(Tag.self)
 		tag.name = "not a possible value"
 

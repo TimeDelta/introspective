@@ -8,6 +8,8 @@
 
 import UIKit
 
+import Common
+
 public final class DurationAttributeValueViewController: AttributeValueTypeViewController {
 
 	// MARK: - IBOutlets

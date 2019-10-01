@@ -10,6 +10,7 @@ import XCTest
 import SwiftDate
 import Hamcrest
 @testable import Introspective
+@testable import Common
 
 final class CalendarUtilUnitTests: UnitTest {
 

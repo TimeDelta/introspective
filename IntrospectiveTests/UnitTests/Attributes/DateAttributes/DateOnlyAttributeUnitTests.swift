@@ -11,6 +11,8 @@ import Hamcrest
 import SwiftDate
 import SwiftyMocky
 @testable import Introspective
+@testable import Attributes
+@testable import Common
 
 final class DateOnlyAttributeUnitTests: UnitTest {
 

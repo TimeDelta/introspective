@@ -11,12 +11,20 @@ import AAInfographics
 import Presentr
 import os
 
+import Common
+import DependencyInjection
+import Queries
+import SampleGroupers
+import SampleGroupInformation
+import Samples
+import UIExtensions
+
 final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGraphTypeSetupViewController {
 
 	// MARK: - Static Variables
 
 	private typealias Me = MultipleSampleTypeBasicXYGraphCustomizationViewController
-	private static let presenter: Presentr = DependencyInjector.util.ui.customPresenter(
+	private static let presenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center)
@@ -205,10 +213,10 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 
 		do {
 			if xAxisQuery == nil {
-				xAxisQuery = try DependencyInjector.query.queryFor(xAxisSampleType)
+				xAxisQuery = try DependencyInjector.get(QueryFactory.self).queryFor(xAxisSampleType)
 			}
 			if yAxisQuery == nil {
-				yAxisQuery = try DependencyInjector.query.queryFor(yAxisSampleType)
+				yAxisQuery = try DependencyInjector.get(QueryFactory.self).queryFor(yAxisSampleType)
 			}
 
 			chartController.queries = [xAxisQuery!, yAxisQuery!]
@@ -423,10 +431,10 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	private final func xAxisQuerySet() {
 		if xAxisQuery == nil {
 			chooseXAxisQueryButton.setTitle("Choose query (optional)", for: .normal)
-			DependencyInjector.util.ui.setButton(clearXAxisQueryButton, enabled: false, hidden: true)
+			DependencyInjector.get(UiUtil.self).setButton(clearXAxisQueryButton, enabled: false, hidden: true)
 		} else {
 			chooseXAxisQueryButton.setTitle("Query chosen (click to change)", for: .normal)
-			DependencyInjector.util.ui.setButton(clearXAxisQueryButton, enabled: true, hidden: false)
+			DependencyInjector.get(UiUtil.self).setButton(clearXAxisQueryButton, enabled: true, hidden: false)
 		}
 		chooseXAxisQueryButton.accessibilityValue = chooseXAxisQueryButton.currentTitle
 	}
@@ -434,10 +442,10 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	private final func yAxisQuerySet() {
 		if yAxisQuery == nil {
 			chooseYAxisQueryButton.setTitle("Choose query (optional)", for: .normal)
-			DependencyInjector.util.ui.setButton(clearYAxisQueryButton, enabled: false, hidden: true)
+			DependencyInjector.get(UiUtil.self).setButton(clearYAxisQueryButton, enabled: false, hidden: true)
 		} else {
 			chooseYAxisQueryButton.setTitle("Query chosen (click to change)", for: .normal)
-			DependencyInjector.util.ui.setButton(clearYAxisQueryButton, enabled: true, hidden: false)
+			DependencyInjector.get(UiUtil.self).setButton(clearYAxisQueryButton, enabled: true, hidden: false)
 		}
 		chooseYAxisQueryButton.accessibilityValue = chooseYAxisQueryButton.currentTitle
 	}
@@ -475,10 +483,10 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	private final func seriesGrouperSet() {
 		if seriesGroupers == nil {
 			chooseSeriesGroupingButton.setTitle("Choose series grouping", for: .normal)
-			DependencyInjector.util.ui.setButton(clearSeriesGroupingButton, enabled: false, hidden: true)
+			DependencyInjector.get(UiUtil.self).setButton(clearSeriesGroupingButton, enabled: false, hidden: true)
 		} else {
 			chooseSeriesGroupingButton.setTitle("Series grouping chosen", for: .normal)
-			DependencyInjector.util.ui.setButton(clearSeriesGroupingButton, enabled: true, hidden: false)
+			DependencyInjector.get(UiUtil.self).setButton(clearSeriesGroupingButton, enabled: true, hidden: false)
 		}
 		chooseSeriesGroupingButton.accessibilityValue = chooseSeriesGroupingButton.currentTitle
 	}

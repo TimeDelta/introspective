@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14492.1" systemVersion="18G95" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Activity" representedClassName=".Activity" syncable="YES">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14492.1" systemVersion="18G95" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="0">
+    <entity name="Activity" representedClassName="Samples.Activity" syncable="YES">
         <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="endDateTimeZoneId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="note" optional="YES" attributeType="String" syncable="YES"/>
@@ -13,7 +13,7 @@
             <fetchIndexElement property="definition" type="Binary" order="ascending"/>
         </fetchIndex>
     </entity>
-    <entity name="ActivityDefinition" representedClassName=".ActivityDefinition" syncable="YES">
+    <entity name="ActivityDefinition" representedClassName="Samples.ActivityDefinition" syncable="YES">
         <attribute name="activityDescription" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="autoNote" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" attributeType="String" spotlightIndexingEnabled="YES" syncable="YES"/>
@@ -37,16 +37,16 @@
             <fetchIndexElement property="tags" type="Binary" order="ascending"/>
         </fetchIndex>
     </entity>
-    <entity name="ATrackerActivityImporter" representedClassName=".ATrackerActivityImporterImpl" syncable="YES">
+    <entity name="ATrackerActivityImporter" representedClassName="DataImport.ATrackerActivityImporterImpl" syncable="YES">
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
     </entity>
-    <entity name="EasyPillMedicationDoseImporter" representedClassName=".EasyPillMedicationDoseImporterImpl" syncable="YES">
+    <entity name="EasyPillMedicationDoseImporter" representedClassName="DataImport.EasyPillMedicationDoseImporterImpl" syncable="YES">
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
     </entity>
-    <entity name="EasyPillMedicationImporter" representedClassName=".EasyPillMedicationImporterImpl" syncable="YES">
+    <entity name="EasyPillMedicationImporter" representedClassName="DataImport.EasyPillMedicationImporterImpl" syncable="YES">
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
     </entity>
-    <entity name="Medication" representedClassName=".Medication" syncable="YES" coreSpotlightDisplayNameExpression="Medication">
+    <entity name="Medication" representedClassName="Samples.Medication" syncable="YES" coreSpotlightDisplayNameExpression="Medication">
         <attribute name="dosage" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="frequency" optional="YES" attributeType="Transformable" customClassName=".Frequency" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
@@ -57,14 +57,14 @@
         <attribute name="storedStartedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="doses" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="MedicationDose" inverseName="medication" inverseEntity="MedicationDose" syncable="YES"/>
     </entity>
-    <entity name="MedicationDose" representedClassName=".MedicationDose" syncable="YES">
+    <entity name="MedicationDose" representedClassName="Samples.MedicationDose" syncable="YES">
         <attribute name="dosage" optional="YES" attributeType="Transformable" syncable="YES"/>
         <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="timestampTimeZoneId" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="medication" maxCount="1" deletionRule="Nullify" destinationEntity="Medication" inverseName="doses" inverseEntity="Medication" syncable="YES"/>
     </entity>
-    <entity name="Mood" representedClassName=".MoodImpl" syncable="YES">
+    <entity name="Mood" representedClassName="Samples.MoodImpl" syncable="YES">
         <attribute name="maxRating" attributeType="Double" defaultValueString="7" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="minRating" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="note" optional="YES" attributeType="String" spotlightIndexingEnabled="YES" syncable="YES"/>
@@ -73,7 +73,7 @@
         <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="timestampTimeZoneId" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="Settings" representedClassName=".SettingsImpl" syncable="YES">
+    <entity name="Settings" representedClassName="Settings.SettingsImpl" syncable="YES">
         <attribute name="storedAutoIgnoreEnabled" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="storedAutoIgnoreSeconds" attributeType="Integer 64" defaultValueString="15" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="storedConvertTimeZones" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
@@ -82,25 +82,25 @@
         <attribute name="storedMinMood" attributeType="Double" defaultValueString="1" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="storedScaleMoodsOnImport" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES" syncable="YES"/>
     </entity>
-    <entity name="Tag" representedClassName=".Tag" syncable="YES">
+    <entity name="Tag" representedClassName="Samples.Tag" syncable="YES">
         <attribute name="name" attributeType="String" syncable="YES"/>
         <relationship name="activityDefinitions" toMany="YES" deletionRule="Nullify" destinationEntity="ActivityDefinition" inverseName="tags" inverseEntity="ActivityDefinition" syncable="YES"/>
     </entity>
-    <entity name="WellnessMoodImporter" representedClassName=".WellnessMoodImporterImpl" syncable="YES">
+    <entity name="WellnessMoodImporter" representedClassName="DataImport.WellnessMoodImporterImpl" syncable="YES">
         <attribute name="lastImport" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
     </entity>
     <fetchRequest name="allActivityDefinitions" entity="ActivityDefinition" predicateString="TRUEPREDICATE"/>
     <elements>
-        <element name="Activity" positionX="-36" positionY="63" width="128" height="165"/>
-        <element name="ActivityDefinition" positionX="-45" positionY="54" width="128" height="150"/>
-        <element name="ATrackerActivityImporter" positionX="-36" positionY="72" width="128" height="60"/>
-        <element name="EasyPillMedicationDoseImporter" positionX="-36" positionY="63" width="128" height="60"/>
-        <element name="EasyPillMedicationImporter" positionX="-45" positionY="54" width="128" height="60"/>
-        <element name="Medication" positionX="-54" positionY="9" width="128" height="180"/>
-        <element name="MedicationDose" positionX="-45" positionY="45" width="128" height="120"/>
-        <element name="Mood" positionX="-63" positionY="-18" width="128" height="150"/>
+        <element name="Activity" positionX="-36" positionY="63" width="128" height="30"/>
+        <element name="ActivityDefinition" positionX="-45" positionY="54" width="128" height="30"/>
+        <element name="ATrackerActivityImporter" positionX="-36" positionY="72" width="128" height="30"/>
+        <element name="EasyPillMedicationDoseImporter" positionX="-36" positionY="63" width="128" height="30"/>
+        <element name="EasyPillMedicationImporter" positionX="-45" positionY="54" width="128" height="30"/>
+        <element name="Medication" positionX="-54" positionY="9" width="128" height="30"/>
+        <element name="MedicationDose" positionX="-45" positionY="45" width="128" height="30"/>
+        <element name="Mood" positionX="-63" positionY="-18" width="128" height="30"/>
         <element name="Settings" positionX="-63" positionY="9" width="128" height="150"/>
-        <element name="Tag" positionX="-18" positionY="81" width="128" height="75"/>
-        <element name="WellnessMoodImporter" positionX="-54" positionY="18" width="128" height="60"/>
+        <element name="Tag" positionX="-18" positionY="81" width="128" height="30"/>
+        <element name="WellnessMoodImporter" positionX="-54" positionY="18" width="128" height="30"/>
     </elements>
 </model>

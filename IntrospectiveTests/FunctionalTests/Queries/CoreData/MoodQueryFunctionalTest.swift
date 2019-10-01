@@ -8,7 +8,12 @@
 
 import XCTest
 import SwiftDate
+import Hamcrest
 @testable import Introspective
+@testable import AttributeRestrictions
+@testable import Common
+@testable import Queries
+@testable import Samples
 
 class MoodQueryFunctionalTest: QueryFunctionalTest {
 
@@ -41,7 +46,7 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		// then
 		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
+				assertThat(self.samples, onlyHasExpectedSamples(expectedSamples))
 			}
 		}
 	}
@@ -61,7 +66,7 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		// then
 		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
+				assertThat(self.samples, onlyHasExpectedSamples(expectedSamples))
 			}
 		}
 	}
@@ -84,7 +89,7 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		// then
 		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
+				assertThat(self.samples, onlyHasExpectedSamples(expectedSamples))
 			}
 		}
 	}
@@ -111,7 +116,7 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		// then
 		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
+				assertThat(self.samples, onlyHasExpectedSamples(expectedSamples))
 			}
 		}
 	}
@@ -141,7 +146,7 @@ class MoodQueryFunctionalTest: QueryFunctionalTest {
 		// then
 		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
+				assertThat(self.samples, onlyHasExpectedSamples(expectedSamples))
 			}
 		}
 	}

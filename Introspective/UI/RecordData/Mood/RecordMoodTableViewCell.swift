@@ -9,13 +9,19 @@
 import UIKit
 import Presentr
 
+import Common
+import DependencyInjection
+import Persistence
+import Samples
+import Settings
+
 final class RecordMoodTableViewCell: UITableViewCell {
 
 	// MARK: - Static Variables
 
 	private typealias Me = RecordMoodTableViewCell
-	private static let notePresenter: Presentr = DependencyInjector.util.ui.customPresenter(width: .custom(size: 300), height: .custom(size: 200), center: .topCenter)
-	private static let ratingPresenter: Presentr = DependencyInjector.util.ui.customPresenter(width: .custom(size: 300), height: .custom(size: 70), center: .topCenter)
+	private static let notePresenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(width: .custom(size: 300), height: .custom(size: 200), center: .topCenter)
+	private static let ratingPresenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(width: .custom(size: 300), height: .custom(size: 70), center: .topCenter)
 
 	private static let ratingChanged = Notification.Name("moodRatingChanged")
 
@@ -31,7 +37,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 
 	/// This is not made private solely for testing purposes
 	final var note: String? = nil
-	private final var rating: Double = DependencyInjector.settings.maxMood / 2 {
+	private final var rating: Double = DependencyInjector.get(Settings.self).maxMood / 2 {
 		didSet { updateUI() }
 	}
 
@@ -45,8 +51,8 @@ final class RecordMoodTableViewCell: UITableViewCell {
 		updateUI()
 		observe(selector: #selector(noteSaved), name: MoodNoteViewController.noteSavedNotification)
 		observe(selector: #selector(ratingSaved), name: Me.ratingChanged)
-		observe(selector: #selector(updateUI), name: MoodUiUtil.minRatingChanged)
-		observe(selector: #selector(updateUI), name: MoodUiUtil.maxRatingChanged)
+		observe(selector: #selector(updateUI), name: MoodUiUtilImpl.minRatingChanged)
+		observe(selector: #selector(updateUI), name: MoodUiUtilImpl.maxRatingChanged)
 	}
 
 	deinit {
@@ -56,8 +62,8 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	// MARK: - Actions
 
 	@IBAction final func ratingChanged(_ sender: Any) {
-		let min = DependencyInjector.settings.minMood
-		let max = DependencyInjector.settings.maxMood
+		let min = DependencyInjector.get(Settings.self).minMood
+		let max = DependencyInjector.get(Settings.self).maxMood
 		rating = Double(ratingSlider.value) * (max - min) + min
 	}
 
@@ -88,13 +94,13 @@ final class RecordMoodTableViewCell: UITableViewCell {
 
 	@IBAction final func doneButtonPressed(_ sender: Any) {
 		do {
-			let transaction = DependencyInjector.db.transaction()
-			let mood = try DependencyInjector.sample.mood(using: transaction)
+			let transaction = DependencyInjector.get(Database.self).transaction()
+			let mood = try DependencyInjector.get(SampleFactory.self).mood(using: transaction)
 			mood.date = Date()
 			mood.rating = rating
 			mood.note = note
-			mood.minRating = DependencyInjector.settings.minMood
-			mood.maxRating = DependencyInjector.settings.maxMood
+			mood.minRating = DependencyInjector.get(Settings.self).minMood
+			mood.maxRating = DependencyInjector.get(Settings.self).maxMood
 			mood.setSource(.introspective)
 			try transaction.commit()
 
@@ -131,18 +137,18 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	private final func reset() {
 		note = nil
 		addNoteButton.setTitle("Add Note", for: .normal)
-		let min = DependencyInjector.settings.minMood
-		let max = DependencyInjector.settings.maxMood
+		let min = DependencyInjector.get(Settings.self).minMood
+		let max = DependencyInjector.get(Settings.self).maxMood
 		rating = (max - min) / 2 + min
 	}
 
 	@objc private final func updateUI() {
-		let min = DependencyInjector.settings.minMood
-		let max = DependencyInjector.settings.maxMood
+		let min = DependencyInjector.get(Settings.self).minMood
+		let max = DependencyInjector.get(Settings.self).maxMood
 		ratingSlider.setValue(Float((rating - min) / (max - min)), animated: false)
-		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: rating, minRating: min, maxRating: max)
-		ratingButton.setTitle(MoodUiUtil.valueToString(rating), for: .normal)
-		ratingButton.accessibilityValue = MoodUiUtil.valueToString(rating)
-		ratingRangeLabel.text = "(\(MoodUiUtil.valueToString(min))-\(MoodUiUtil.valueToString(max)))"
+		ratingSlider.thumbTintColor = DependencyInjector.get(MoodUiUtil.self).colorForMood(rating: rating, minRating: min, maxRating: max)
+		ratingButton.setTitle(DependencyInjector.get(MoodUiUtil.self).valueToString(rating), for: .normal)
+		ratingButton.accessibilityValue = DependencyInjector.get(MoodUiUtil.self).valueToString(rating)
+		ratingRangeLabel.text = "(\(DependencyInjector.get(MoodUiUtil.self).valueToString(min))-\(DependencyInjector.get(MoodUiUtil.self).valueToString(max)))"
 	}
 }

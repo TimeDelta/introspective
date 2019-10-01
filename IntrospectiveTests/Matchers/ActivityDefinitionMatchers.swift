@@ -9,6 +9,7 @@
 import Foundation
 import Hamcrest
 @testable import Introspective
+@testable import Samples
 
 func equals(_ expected: ActivityDefinition) -> Matcher<ActivityDefinition?> {
 	return Matcher("\(expected.description)") { actual -> MatchResult in

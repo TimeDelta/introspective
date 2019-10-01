@@ -9,6 +9,7 @@
 import XCTest
 import Hamcrest
 @testable import Introspective
+@testable import Common
 
 final class GlobalFunctionsUnitTests: UnitTest {
 

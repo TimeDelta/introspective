@@ -8,13 +8,17 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+import Settings
+
 public final class GeneralSettingsViewController: UIViewController {
 
 	// MARK - Static Variables
 
 	private typealias Me = GeneralSettingsViewController
 
-	private static let descriptionPresenter = DependencyInjector.util.ui.customPresenter(
+	private static let descriptionPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center)
@@ -35,7 +39,7 @@ public final class GeneralSettingsViewController: UIViewController {
 		updateUI()
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(reset))
 
-		DependencyInjector.util.ui.setBackButton(for: self, title: "Settings", action: #selector(done))
+		DependencyInjector.get(UiUtil.self).setBackButton(for: self, title: "Settings", action: #selector(done))
 	}
 
 	// MARK: - Actions
@@ -63,19 +67,19 @@ public final class GeneralSettingsViewController: UIViewController {
 			return
 		}
 		let recordedTime = TimeOfDay(date)
-		let convertedDate = DependencyInjector.util.calendar.convert(date, from: currentTimeZone, to: targetTimeZone)
+		let convertedDate = DependencyInjector.get(CalendarUtil.self).convert(date, from: currentTimeZone, to: targetTimeZone)
 		let convertedTime = TimeOfDay(convertedDate)
 		controller.descriptionText = "When time zone information is available for a date, convert it to the original time zone. For example, with this enabled, if you were in \(targetTimeZoneName) on vacation and recorded a heart rate at \(convertedTime.toString()) then came back to \(currentTimeZoneName), it would appear as if it had been recorded at \(convertedTime.toString()). Without this enabled, it will appear to have been recorded at \(recordedTime.toString()). This does not have to be enabled at the time that the data was recorded for this conversion to happen. For data pulled from Apple Health, this information will not always be available as it is up to the source app to record it. Also, any data imported from external sources may not have time zone information recorded. However, any data recorded by this app will contain time zone information."
 		present(controller, using: Me.descriptionPresenter)
 	}
 
 	@objc private final func reset(_ sender: Any) {
-		DependencyInjector.settings.reset()
+		DependencyInjector.get(Settings.self).reset()
 		updateUI()
 	}
 
 	@objc private final func done(_ sender: Any) {
-		DependencyInjector.settings.setConvertTimeZones(convertTimeZonesSwitch.isOn)
+		DependencyInjector.get(Settings.self).setConvertTimeZones(convertTimeZonesSwitch.isOn)
 		saveAndGoBackToSettings()
 	}
 
@@ -83,7 +87,7 @@ public final class GeneralSettingsViewController: UIViewController {
 
 	private final func saveAndGoBackToSettings() {
 		do {
-			try retryOnFail({ try DependencyInjector.settings.save() }, maxRetries: 2)
+			try retryOnFail({ try DependencyInjector.get(Settings.self).save() }, maxRetries: 2)
 			self.navigationController?.popViewController(animated: false)
 		} catch {
 			log.error("Failed to save mood settings: %@", errorInfo(error))
@@ -92,7 +96,7 @@ public final class GeneralSettingsViewController: UIViewController {
 	}
 
 	private final func updateUI() {
-		convertTimeZonesSwitch.isOn = DependencyInjector.settings.convertTimeZones
+		convertTimeZonesSwitch.isOn = DependencyInjector.get(Settings.self).convertTimeZones
 	}
 
 	private final func getTargetTimeZone(_ currentTimeZone: TimeZone) -> TimeZone? {

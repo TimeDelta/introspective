@@ -9,6 +9,7 @@
 import Foundation
 import Hamcrest
 @testable import Introspective
+@testable import SampleGroupInformation
 
 func equals(_ expected: ExtraInformation) -> Matcher<ExtraInformation?> {
 	return Matcher("\(expected.description)") { (actual: ExtraInformation?) -> MatchResult in

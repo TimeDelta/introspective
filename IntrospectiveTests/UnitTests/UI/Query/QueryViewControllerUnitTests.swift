@@ -11,6 +11,12 @@ import UIKit
 import SwiftyMocky
 import Hamcrest
 @testable import Introspective
+@testable import AttributeRestrictions
+@testable import Attributes
+@testable import BooleanAlgebra
+@testable import Common
+@testable import Queries
+@testable import Samples
 
 final class QueryViewControllerUnitTests: UnitTest {
 

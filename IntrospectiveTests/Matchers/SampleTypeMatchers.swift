@@ -9,6 +9,7 @@
 import Foundation
 import Hamcrest
 @testable import Introspective
+@testable import Samples
 
 func equals(_ expected: Sample.Type?) -> Matcher<Sample.Type?> {
 	return Matcher("Equal to \(expected?.name ?? "nil")") { (actual: Sample.Type?) -> Bool in

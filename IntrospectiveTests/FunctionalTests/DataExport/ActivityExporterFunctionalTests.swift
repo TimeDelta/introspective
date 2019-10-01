@@ -12,6 +12,9 @@ import Hamcrest
 import CSV
 import SwiftDate
 @testable import Introspective
+@testable import Common
+@testable import DependencyInjection
+@testable import Samples
 
 final class ActivityExporterFunctionalTests: ExporterFunctionalTest {
 
@@ -497,10 +500,10 @@ final class ActivityExporterFunctionalTests: ExporterFunctionalTest {
 
 	private final func expectedFields(for activity: Activity) -> [String] {
 		let tagsText = activity.tagsArray().map{ $0.name }.joined(separator: "|")
-		let startText = DependencyInjector.util.calendar.string(for: activity.start, dateStyle: .full, timeStyle: .full)
+		let startText = DependencyInjector.get(CalendarUtil.self).string(for: activity.start, dateStyle: .full, timeStyle: .full)
 		var endText = ""
 		if let end = activity.end {
-			endText = DependencyInjector.util.calendar.string(for: end, dateStyle: .full, timeStyle: .full)
+			endText = DependencyInjector.get(CalendarUtil.self).string(for: end, dateStyle: .full, timeStyle: .full)
 		}
 		var fieldValues = expectedFields(for: activity.definition)
 		fieldValues.append(contentsOf: [

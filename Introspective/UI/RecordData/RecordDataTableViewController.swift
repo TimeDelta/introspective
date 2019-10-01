@@ -8,7 +8,10 @@
 
 import UIKit
 import Presentr
-import os
+
+import Common
+import DependencyInjection
+import Settings
 
 final class RecordDataTableViewController: UITableViewController, UIPopoverPresentationControllerDelegate {
 
@@ -47,7 +50,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 		observe(selector: #selector(showErrorMessage), name: Me.showErrorMessage)
 		observe(selector: #selector(showRecordActivitiesScreen), name: .showRecordActivitiesScreen)
 		observe(selector: #selector(showRecordMedicationsScreen), name: .showRecordMedicationsScreen)
-		observe(selector: #selector(useDiscreteMoodChanged), name: MoodUiUtil.useDiscreteMoodChanged)
+		observe(selector: #selector(useDiscreteMoodChanged), name: MoodUiUtilImpl.useDiscreteMoodChanged)
 	}
 
 	deinit {
@@ -97,7 +100,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 
 	@objc private final func showViewController(notification: Notification) {
 		if let controller: UIViewController = value(for: .controller, from: notification) {
-			let presenter: Presentr! = value(for: .presenter, from: notification) ?? DependencyInjector.util.ui.defaultPresenter
+			let presenter: Presentr! = value(for: .presenter, from: notification) ?? DependencyInjector.get(UiUtil.self).defaultPresenter
 			customPresentViewController(presenter, viewController: controller, animated: false)
 		}
 	}
@@ -146,7 +149,7 @@ final class RecordDataTableViewController: UITableViewController, UIPopoverPrese
 	private final func getIdFor(_ indexPath: IndexPath) -> String {
 		var id = viewOrder[indexPath.row]
 		if id == Me.moodId {
-			if DependencyInjector.settings.discreteMoods {
+			if DependencyInjector.get(Settings.self).discreteMoods {
 				id = Me.discreteMoodId
 			} else {
 				id = Me.continuousMoodId

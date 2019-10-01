@@ -8,6 +8,9 @@
 
 import UIKit
 
+import Common
+import Queries
+
 final class ExploreCollectionViewController: UICollectionViewController {
 
 	// MARK: - Static Variables

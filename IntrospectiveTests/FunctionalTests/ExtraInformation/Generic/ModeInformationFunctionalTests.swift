@@ -9,6 +9,10 @@
 import XCTest
 import SwiftDate
 @testable import Introspective
+@testable import Attributes
+@testable import Common
+@testable import SampleGroupInformation
+@testable import Samples
 
 class ModeInformationFunctionalTests: FunctionalTest {
 

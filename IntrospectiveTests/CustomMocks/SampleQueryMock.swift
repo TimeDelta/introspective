@@ -9,6 +9,9 @@
 import Foundation
 import SwiftyMocky
 @testable import Introspective
+@testable import BooleanAlgebra
+@testable import Queries
+@testable import Samples
 
 // sourcery: mock = "SampleQuery"
 class SampleQueryMock<SampleType: Sample>: SampleQuery, Mock {

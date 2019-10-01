@@ -11,6 +11,12 @@ import CoreData
 import SwiftyMocky
 import CSV
 @testable import Introspective
+@testable import Common
+@testable import DataImport
+@testable import DependencyInjection
+@testable import Persistence
+@testable import Samples
+@testable import Settings
 
 // This has to be a functional test because can't make a constructor for WellnessMoodImporter that doesn't require standing up CoreData
 final class WellnessMoodImporterFunctionalTests: ImporterTest {
@@ -52,20 +58,20 @@ final class WellnessMoodImporterFunctionalTests: ImporterTest {
 	private final var importer: WellnessMoodImporterImpl!
 	private final var scaleMoods: Bool! {
 		didSet {
-			DependencyInjector.settings.setScaleMoodsOnImport(scaleMoods)
-			try! DependencyInjector.settings.save()
+			DependencyInjector.get(Settings.self).setScaleMoodsOnImport(scaleMoods)
+			try! DependencyInjector.get(Settings.self).save()
 		}
 	}
 	private var minMood = 1.0 {
 		didSet {
-			DependencyInjector.settings.setMinMood(minMood)
-			try! DependencyInjector.settings.save()
+			DependencyInjector.get(Settings.self).setMinMood(minMood)
+			try! DependencyInjector.get(Settings.self).save()
 		}
 	}
 	private var maxMood = 7.0 {
 		didSet {
-			DependencyInjector.settings.setMaxMood(maxMood)
-			try! DependencyInjector.settings.save()
+			DependencyInjector.get(Settings.self).setMaxMood(maxMood)
+			try! DependencyInjector.get(Settings.self).save()
 		}
 	}
 
@@ -73,8 +79,8 @@ final class WellnessMoodImporterFunctionalTests: ImporterTest {
 
 	final override func setUp() {
 		super.setUp()
-		importer = try! DependencyInjector.importer.wellnessMoodImporter() as! WellnessMoodImporterImpl
-		try! DependencyInjector.settings.save()
+		importer = try! DependencyInjector.get(ImporterFactory.self).wellnessMoodImporter() as! WellnessMoodImporterImpl
+		try! DependencyInjector.get(Settings.self).save()
 	}
 
 	// MARK: - importData() - Valid Data
@@ -292,7 +298,7 @@ wrong number of columns
 		try importer.resetLastImportDate()
 
 		// then
-		importer = try DependencyInjector.db.pull(savedObject: importer)
+		importer = try DependencyInjector.get(Database.self).pull(savedObject: importer)
 		XCTAssertNil(importer.lastImport)
 	}
 
@@ -388,7 +394,7 @@ wrong number of columns
 			notePredicate = NSPredicate(format: "%K == nil", "note")
 		}
 		moodsFetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [moodsFetchRequest.predicate!, notePredicate])
-		let moods = try! DependencyInjector.db.query(moodsFetchRequest)
+		let moods = try! DependencyInjector.get(Database.self).query(moodsFetchRequest)
 		if moods.count > 0 {
 			return moods[0]
 		}
@@ -396,8 +402,8 @@ wrong number of columns
 	}
 
 	private final func scale(_ rating: Double) -> Double {
-		let newMin = DependencyInjector.settings.minMood
-		let newMax = DependencyInjector.settings.maxMood
+		let newMin = DependencyInjector.get(Settings.self).minMood
+		let newMax = DependencyInjector.get(Settings.self).maxMood
 		let oldMin = 1.0
 		let oldMax = 7.0
 		return ((newMax - newMin) * (rating - oldMin) / (oldMax - oldMin)) + newMin

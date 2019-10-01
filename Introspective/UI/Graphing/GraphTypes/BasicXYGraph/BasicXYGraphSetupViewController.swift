@@ -9,6 +9,8 @@
 import UIKit
 import AAInfographics
 
+import Common
+
 final class BasicXYGraphSetupViewController: BasicXYGraphTypeSetupViewController {
 
 	// MARK: - Static Variables

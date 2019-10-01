@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14492.1" systemVersion="18G95" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Activity" representedClassName=".Activity" syncable="YES">
+        <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="endDateTimeZoneId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="note" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="startDate" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="startDateTimeZoneId" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="definition" maxCount="1" deletionRule="No Action" destinationEntity="ActivityDefinition" inverseName="activities" inverseEntity="ActivityDefinition" syncable="YES"/>
+        <relationship name="tags" toMany="YES" deletionRule="No Action" destinationEntity="Tag" syncable="YES"/>
+        <fetchIndex name="byDefinition">
+            <fetchIndexElement property="definition" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
+    <entity name="ActivityDefinition" representedClassName=".ActivityDefinition" syncable="YES">
+        <attribute name="activityDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="autoNote" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="name" attributeType="String" spotlightIndexingEnabled="YES" syncable="YES"/>
+        <attribute name="recordScreenIndex" attributeType="Integer 16" minValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="activities" toMany="YES" deletionRule="No Action" destinationEntity="Activity" inverseName="definition" inverseEntity="Activity" syncable="YES"/>
+        <relationship name="tags" toMany="YES" deletionRule="No Action" destinationEntity="Tag" inverseName="activityDefinitions" inverseEntity="Tag" syncable="YES"/>
+        <fetchIndex name="byName">
+            <fetchIndexElement property="name" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byRecordScreenIndex">
+            <fetchIndexElement property="recordScreenIndex" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byTag">
+            <fetchIndexElement property="tags" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byRecordScreenSearch">
+            <fetchIndexElement property="recordScreenIndex" type="Binary" order="ascending"/>
+            <fetchIndexElement property="name" type="Binary" order="ascending"/>
+            <fetchIndexElement property="activityDescription" type="Binary" order="ascending"/>
+            <fetchIndexElement property="tags" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
+    <entity name="Medication" representedClassName=".Medication" syncable="YES">
+        <attribute name="dosage" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="frequency" optional="YES" attributeType="Transformable" customClassName=".Frequency" syncable="YES"/>
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <attribute name="notes" optional="YES" attributeType="String" spotlightIndexingEnabled="YES" syncable="YES"/>
+        <attribute name="recordScreenIndex" attributeType="Integer 16" minValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="startedOnTimeZoneId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="storedStartedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="doses" toMany="YES" deletionRule="No Action" ordered="YES" destinationEntity="MedicationDose" inverseName="medication" inverseEntity="MedicationDose" syncable="YES"/>
+    </entity>
+    <entity name="MedicationDose" representedClassName=".MedicationDose" syncable="YES">
+        <attribute name="dosage" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="timestampTimeZoneId" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="medication" maxCount="1" deletionRule="No Action" destinationEntity="Medication" inverseName="doses" inverseEntity="Medication" syncable="YES"/>
+    </entity>
+    <entity name="Mood" representedClassName=".MoodImpl" syncable="YES">
+        <attribute name="maxRating" attributeType="Double" defaultValueString="7" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="minRating" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="note" optional="YES" attributeType="String" spotlightIndexingEnabled="YES" syncable="YES"/>
+        <attribute name="rating" attributeType="Double" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="source" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="timestamp" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="timestampTimeZoneId" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Tag" representedClassName=".Tag" syncable="YES">
+        <attribute name="name" attributeType="String" syncable="YES"/>
+        <relationship name="activityDefinitions" toMany="YES" deletionRule="No Action" destinationEntity="ActivityDefinition" inverseName="tags" inverseEntity="ActivityDefinition" syncable="YES"/>
+    </entity>
+    <fetchRequest name="allActivityDefinitions" entity="ActivityDefinition" predicateString="TRUEPREDICATE"/>
+    <elements>
+        <element name="Tag" positionX="-54" positionY="-9" width="128" height="75"/>
+        <element name="Mood" positionX="-36" positionY="27" width="128" height="150"/>
+        <element name="MedicationDose" positionX="-18" positionY="90" width="128" height="120"/>
+        <element name="Activity" positionX="0" positionY="99" width="128" height="165"/>
+        <element name="ActivityDefinition" positionX="18" positionY="108" width="128" height="150"/>
+        <element name="Medication" positionX="36" positionY="117" width="128" height="180"/>
+    </elements>
+</model>

@@ -26,7 +26,7 @@ final class RecordActivitiesUITests: UITest {
 		filterActivities(by: activityName)
 
 		// when
-		app.buttons["Add"].tap()
+		app.buttons["+"].tap()
 
 		// then
 		XCTAssertEqual(app.textFields["activity name"].value as? String, activityName)
@@ -54,7 +54,8 @@ final class RecordActivitiesUITests: UITest {
 		createActivityDefinition(definition)
 
 		// when
-		app.tables.staticTexts[definition.name].swipeRight()
+		// this is triggering the navigate back gesture all of the sudden
+		app.tables.staticTexts[definition.name].gentleSwipe(.right)
 		app.tables.buttons["✎ All"].tap()
 
 		// then
@@ -73,7 +74,7 @@ final class RecordActivitiesUITests: UITest {
 		createActivityDefinition(definition)
 
 		// when
-		app.tables.staticTexts[definition.name].swipeRight()
+		app.tables.staticTexts[definition.name].gentleSwipe(.right)
 		app.tables.buttons["✎ All"].tap()
 		deleteContentOf(textField: app.textViews["activity description"])
 		delete(numberOfTags: definition.tags!.count, fromTagsField: activityDefinitionTagsField())
@@ -86,7 +87,7 @@ final class RecordActivitiesUITests: UITest {
 
 	func testEditActivityDefinitionHasEmptyNameField_saveButtonIsDisabled() {
 		// when
-		app.buttons["Add"].tap()
+		app.buttons["+"].tap()
 
 		// then
 		XCTAssert(!app.buttons["Save"].isEnabled)
@@ -98,7 +99,7 @@ final class RecordActivitiesUITests: UITest {
 		createActivityDefinition(definition)
 
 		// when
-		app.buttons["Add"].tap()
+		app.buttons["+"].tap()
 		setTextFor(field: activityDefinitionNameField(), to: definition.name)
 
 		// then
@@ -421,7 +422,7 @@ final class RecordActivitiesUITests: UITest {
 
 	func testLongPressOnAddButtonWhenSearchBarIsEmpty_doesNotCreateActivity() {
 		// when
-		app.buttons["Add"].press(forDuration: 1.0)
+		app.buttons["+"].press(forDuration: 1.0)
 
 		// then
 		XCTAssertEqual(app.cells.allElementsBoundByIndex.count, 0)
@@ -435,7 +436,7 @@ final class RecordActivitiesUITests: UITest {
 		app.searchFields["Search Activities"].typeText(definition.name)
 
 		// when
-		app.buttons["Add"].press(forDuration: 1.0)
+		app.buttons["+"].press(forDuration: 1.0)
 		app.buttons["OK"].tap() // dismiss error alert
 
 		// then
@@ -450,7 +451,7 @@ final class RecordActivitiesUITests: UITest {
 		app.searchFields["Search Activities"].typeText(definition.name)
 
 		// when
-		app.buttons["Add"].press(forDuration: 1.0)
+		app.buttons["+"].press(forDuration: 1.0)
 		app.buttons["Cancel"].tap()
 
 		// then
@@ -556,7 +557,7 @@ final class RecordActivitiesUITests: UITest {
 		createActivityDefinition(definition3)
 
 		// when
-		app.tables.cells.staticTexts[definition2.name].swipeRight()
+		app.tables.cells.staticTexts[definition2.name].gentleSwipe(.right)
 		app.tables.buttons["🗑️ All"].tap()
 		app.buttons["Yes"].tap()
 
@@ -580,7 +581,7 @@ final class RecordActivitiesUITests: UITest {
 		filterActivities(by: "z")
 
 		// when
-		app.tables.cells.staticTexts[definition3.name].swipeRight()
+		app.tables.cells.staticTexts[definition3.name].gentleSwipe(.right)
 		app.tables.buttons["🗑️ All"].tap()
 		app.buttons["Yes"].tap()
 		app.buttons["Cancel"].tap() // clear search text
@@ -788,7 +789,7 @@ final class RecordActivitiesUITests: UITest {
 	// MARK: - Element Functions
 
 	private final func activityTagsField() -> XCUIElement {
-		return app.tables.children(matching: .cell).element(boundBy: 4).children(matching: .textField).element
+		return app.tables.children(matching: .cell).children(matching: .textField).element(boundBy: 0)
 	}
 
 	private final func autoIgnoreEnabledSwitch() -> XCUIElement {

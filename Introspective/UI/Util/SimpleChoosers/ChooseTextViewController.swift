@@ -8,6 +8,8 @@
 
 import UIKit
 
+import Common
+
 public protocol ChooseTextViewController: UIViewController {
 
 	var notificationToSendOnAccept: NotificationName! { get set }

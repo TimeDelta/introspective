@@ -9,6 +9,7 @@
 import Foundation
 import Hamcrest
 @testable import Introspective
+@testable import BooleanAlgebra
 
 func equals(_ expected: BooleanExpressionPart) -> Matcher<BooleanExpressionPart> {
 	let matcherDescription = "Part of type \(expected.type) with expression: \(expected.expression?.description ?? "nil")"

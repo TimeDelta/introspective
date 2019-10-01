@@ -11,6 +11,11 @@ import SwiftyMocky
 import Hamcrest
 import AAInfographics
 @testable import Introspective
+@testable import Attributes
+@testable import Common
+@testable import SampleGroupers
+@testable import SampleGroupInformation
+@testable import Samples
 
 final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTest {
 
@@ -76,16 +81,16 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenSeriesGrouperAndPointGrouperSelected_chooseSeriesGroupingButtonPressed_setsCopyOfCorrectGrouperOnPresentedController() {
 		// given
+		controller.viewDidLoad()
+
 		setRandomSamples()
 
 		let seriesGrouper = mockSampleGrouper(debugDescription: "series")
-		Given(seriesGrouper, .equalTo(.any(SampleGrouper.self), willReturn: false))
 		let seriesGrouperCopy = mockSampleGrouper(debugDescription: "series copy")
 		Given(seriesGrouper, .copy(willReturn: seriesGrouperCopy))
 		setSeriesGrouper(seriesGrouper)
 
 		let pointGrouper = mockSampleGrouper(debugDescription: "point")
-		Given(pointGrouper, .equalTo(.any(SampleGrouper.self), willReturn: false))
 		setPointGrouper(pointGrouper)
 
 		let presentedController = mockGroupingChooserTableViewController()
@@ -143,16 +148,16 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenSeriesGrouperAndPointGrouperSelected_choosePointGroupingButtonPressed_setsCopyOfCorrectGrouperOnPresentedController() {
 		// given
+		controller.viewDidLoad()
+
 		setRandomSamples()
 
-		let seriesGrouper = SampleGrouperMock(attributes: [])
-		Given(seriesGrouper, .equalTo(.any(SampleGrouper.self), willReturn: false))
+		let seriesGrouper = mockSampleGrouper()
 		setSeriesGrouper(seriesGrouper)
 
-		let pointGrouper = SampleGrouperMock(attributes: [])
-		Given(pointGrouper, .equalTo(.any(SampleGrouper.self), willReturn: false))
+		let pointGrouper = mockSampleGrouper()
 		setPointGrouper(pointGrouper)
-		let pointGrouperCopy = SampleGrouperMock(attributes: [])
+		let pointGrouperCopy = mockSampleGrouper()
 		Given(pointGrouper, .copy(willReturn: pointGrouperCopy))
 
 		let presentedController = mockGroupingChooserTableViewController()
@@ -181,6 +186,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func test_clearPointGroupingButtonPressed_setsPointGrouperToNil() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 		setPointGrouper(mockSampleGrouper())
 
@@ -197,6 +203,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenXAxisSet_editXAxis_setsSelectedAttributeOnPresentedController() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 		let presentedController = mockXAxisSetupController()
 		let expectedAttribute = TextAttribute(name: "f")
@@ -211,6 +218,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenXAxisSet_editXAxis_setsSelectedInformationOnPresentedController() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 		let presentedController = mockXAxisSetupController()
 		let expectedInformation = AverageInformation(TextAttribute(name: ""))
@@ -225,8 +233,10 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenPointGrouperNotNil_editXAxis_setsGroupedToTrueOnPresentedController() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
-		setPointGrouper(SampleGrouperMock(attributes: []))
+		let pointGrouper = mockSampleGrouper()
+		setPointGrouper(pointGrouper)
 		let presentedController = mockXAxisSetupController()
 
 		// when
@@ -251,6 +261,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenUsePointGroupValueForXAxis_editXAxis_setsUsePointGroupValueOnPresentedController() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 		setXAxis(usePointGroupValue: true)
 		let presentedController = mockXAxisSetupController()
@@ -303,6 +314,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenPointGrouperNotSetAndYAxisSet_editYAxis_setsSelectedAttributesOnPresentedController() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 		let attributes = [
 			HeartRate.heartRate,
@@ -332,8 +344,9 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenPointGrouperSet_editYAxis_setsLimitToNumericInformationToTrue() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
-		setPointGrouper(SampleGrouperMock(attributes: []))
+		setPointGrouper(mockSampleGrouper())
 		let presentedController = mockChooseInformationToGraphViewController()
 
 		// when
@@ -345,8 +358,9 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenPointGrouperSetAndYAxisSet_editYAxis_setsChosenInformationOnPresentedController() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
-		setPointGrouper(SampleGrouperMock(attributes: []))
+		setPointGrouper(mockSampleGrouper())
 		let information: [ExtraInformation] = [
 			AverageInformation(HeartRate.heartRate),
 			SumInformation(Weight.weight),
@@ -363,8 +377,9 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenPointGrouperSet_editYAxis_setsNotificationToSendToYAxisInformationChangedOnPresentedController() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
-		setPointGrouper(SampleGrouperMock(attributes: []))
+		setPointGrouper(mockSampleGrouper())
 		let presentedController = mockChooseInformationToGraphViewController()
 
 		// when
@@ -377,6 +392,9 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	// MARK: - xAxisSet()
 
 	func testGivenXAxisSetToNilAndUsePointGroupValueTrue_xAxisSet_setsCorrectTitleForXAxisButton() {
+		// given
+		controller.viewDidLoad()
+
 		// when
 		setXAxis(usePointGroupValue: true)
 
@@ -385,6 +403,9 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	}
 
 	func testGivenXAxisSetToNilAndUsePointGroupValueFalse_xAxisSet_setsCorrectTitleForXAxisButton() {
+		// given
+		controller.viewDidLoad()
+
 		// when
 		setXAxis(usePointGroupValue: false)
 
@@ -395,6 +416,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	func testGivenUseAttributeForXAxis_xAxisSet_setsCorrectTitleForXAxisButton() {
 		// given
 		let attribute = TextAttribute(name: "fhjidso")
+		controller.viewDidLoad()
 
 		// when
 		setXAxis(attribute)
@@ -406,6 +428,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	func testGivenUseInformationForXAxis_xAxisSet_setsCorrectTitleForXAxisButton() {
 		// given
 		let information = AverageInformation(HeartRate.heartRate)
+		controller.viewDidLoad()
 
 		// when
 		setXAxis(information)
@@ -415,6 +438,9 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	}
 
 	func test_xAxisSet_setsXAxisAccessibilityValueToTitle() {
+		// given
+		controller.viewDidLoad()
+
 		// when
 		setXAxis(usePointGroupValue: true)
 
@@ -426,6 +452,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenYAxisSetToNil_yAxisSet_setsCorrectTitleForYAxisButton() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 		setPointGrouper(mockSampleGrouper())
 
@@ -443,6 +470,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 			DoubleAttribute(name: "fdsjkl"),
 			DurationAttribute(name: "fggregeqmkp"),
 		]
+		controller.viewDidLoad()
 
 		// when
 		setYAxis(attributes)
@@ -454,6 +482,9 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	}
 
 	func test_yAxisSet_setsXAxisAccessibilityValueToTitle() {
+		// given
+		controller.viewDidLoad()
+
 		// when
 		setYAxis([TextAttribute(name: "")])
 
@@ -465,10 +496,11 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenSeriesGrouperSetToNonNilValue_seriesGrouperSet_enablesAndShowsClearSeriesGrouperButton() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 
 		// when
-		setSeriesGrouper(SampleGrouperMock(attributes: []))
+		setSeriesGrouper(mockSampleGrouper())
 
 		// then
 		Verify(mockUiUtil, .setButton(.value(clearSeriesGrouperButton), enabled: .value(true), hidden: .value(false)))
@@ -476,10 +508,11 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenSeriesGrouperSetToNonNilValue_seriesGrouperSet_setsCorrectTitleForChooseSeriesGrouperButton() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 
 		// when
-		setSeriesGrouper(SampleGrouperMock(attributes: []))
+		setSeriesGrouper(mockSampleGrouper())
 
 		// then
 		assertThat(chooseSeriesGrouperButton, hasTitle("Series grouping chosen"))
@@ -487,8 +520,9 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenSeriesGrouperSetToNil_seriesGrouperSet_disablesAndHidesClearSeriesGrouperButton() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
-		setSeriesGrouper(SampleGrouperMock(attributes: []))
+		setSeriesGrouper(mockSampleGrouper())
 		mockGroupingChooserTableViewController()
 
 		// when
@@ -500,8 +534,9 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenSeriesGrouperSetToNil_seriesGrouperSet_setsCorrectTitleForChooseSeriesGrouperButton() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
-		setSeriesGrouper(SampleGrouperMock(attributes: []))
+		setSeriesGrouper(mockSampleGrouper())
 		mockGroupingChooserTableViewController()
 
 		// when
@@ -515,6 +550,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenPointGrouperSetToNonNilValue_pointGrouperSet_enablesAndShowsClearPointGrouperButton() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 
 		// when
@@ -526,6 +562,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenPointGrouperSetToNonNilValue_pointGrouperSet_setsCorrectTitleForChoosePointGrouperButton() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 
 		// when
@@ -537,6 +574,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenPointGrouperSetToNonNilValueFromNil_pointGrouperSet_clearsXAxis() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 		setXAxis(TextAttribute(name: "a"))
 
@@ -552,6 +590,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenPointGrouperSetToNonNilValueFromNil_pointGrouperSet_clearsYAxis() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 		setYAxis([TextAttribute(name: "a")])
 
@@ -566,9 +605,9 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenPointGrouperSetToNonNilValueFromNonNilValue_pointGrouperSet_doesNotClearXAxis() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 		let pointGrouper = mockSampleGrouper(debugDescription: "point")
-		Given(pointGrouper, .equalTo(.any(SampleGrouper.self), willReturn: false))
 		Given(pointGrouper, .copy(willReturn: pointGrouper))
 		setPointGrouper(pointGrouper)
 		setXAxis(TextAttribute(name: "a"))
@@ -584,9 +623,9 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenPointGrouperSetToNonNilValueFromNonNilValue_pointGrouperSet_doesNotClearYAxis() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 		let pointGrouper = mockSampleGrouper(debugDescription: "point")
-		Given(pointGrouper, .equalTo(.any(SampleGrouper.self), willReturn: false))
 		Given(pointGrouper, .copy(willReturn: pointGrouper))
 		setPointGrouper(pointGrouper)
 		let yAxis = [AverageInformation(TextAttribute(name: "a"))]
@@ -603,8 +642,8 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenPointGrouperSetToNil_pointGrouperSet_disablesAndHidesClearPointGrouperButton() {
 		// given
+		controller.viewDidLoad()
 		let pointGrouper = mockSampleGrouper(debugDescription: "point")
-		Given(pointGrouper, .equalTo(.any(SampleGrouper.self), willReturn: false))
 		setRandomSamples()
 		setPointGrouper(pointGrouper)
 
@@ -617,8 +656,8 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenPointGrouperSetToNil_pointGrouperSet_setsCorrectTitleForChoosePointGrouperButton() {
 		// given
+		controller.viewDidLoad()
 		let pointGrouper = mockSampleGrouper(debugDescription: "point")
-		Given(pointGrouper, .equalTo(.any(SampleGrouper.self), willReturn: false))
 		setRandomSamples()
 		setPointGrouper(pointGrouper)
 
@@ -631,10 +670,10 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenPointGrouperSetToNilFromNonNilValue_pointGrouperSet_clearsXAxis() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 		setXAxis(TextAttribute(name: "a"))
 		let pointGrouper = mockSampleGrouper(debugDescription: "point")
-		Given(pointGrouper, .equalTo(.any(SampleGrouper.self), willReturn: false))
 		setPointGrouper(pointGrouper)
 
 		// when
@@ -649,10 +688,10 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenPointGrouperSetToNilFromNonNilValue_pointGrouperSet_clearsYAxis() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 		setYAxis([TextAttribute(name: "a")])
 		let pointGrouper = mockSampleGrouper(debugDescription: "point")
-		Given(pointGrouper, .equalTo(.any(SampleGrouper.self), willReturn: false))
 		setPointGrouper(pointGrouper)
 
 		// when
@@ -666,6 +705,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenPointGrouperSetToNilFromNil_pointGrouperSet_doesNotClearXAxis() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 		setXAxis(TextAttribute(name: "a"))
 
@@ -680,6 +720,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenPointGrouperSetToNilFromNil_pointGrouperSet_doesNotClearYAxis() {
 		// given
+		controller.viewDidLoad()
 		setRandomSamples()
 		let yAxis = [TextAttribute(name: "a")]
 		setYAxis(yAxis)
@@ -697,6 +738,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenAllRequirementsSetWithUsePointGroupValue_updateShowGraphButtonState_enablesShowGraphButton() {
 		// given
+		controller.viewDidLoad()
 		setXAxis(usePointGroupValue: true)
 		setYAxis([TextAttribute(name: "")])
 
@@ -706,6 +748,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenAllRequirementsSetWithXAxisAttribute_updateShowGraphButtonState_enablesShowGraphButton() {
 		// given
+		controller.viewDidLoad()
 		setXAxis(TextAttribute(name: ""))
 		setYAxis([TextAttribute(name: "")])
 
@@ -715,6 +758,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenAllRequirementsSetWithXAxisInformation_updateShowGraphButtonState_enablesShowGraphButton() {
 		// given
+		controller.viewDidLoad()
 		setXAxis(AverageInformation(DoubleAttribute(name: "")))
 		setYAxis([TextAttribute(name: "")])
 
@@ -724,6 +768,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenAllRequirementsSetWithYAxisInformation_updateShowGraphButtonState_enablesShowGraphButton() {
 		// given
+		controller.viewDidLoad()
 		setXAxis(TextAttribute(name: ""))
 		setYAxis([AverageInformation(DoubleAttribute(name: ""))])
 
@@ -733,6 +778,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenXAxisNotSetAndUsePointGroupValueFalse_updateShowGraphButtonState_disablesGraphButton() {
 		// given
+		controller.viewDidLoad()
 		setYAxis([TextAttribute(name: "")])
 
 		// then
@@ -741,6 +787,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 
 	func testGivenYAxisNotSet_updateShowGraphButtonState_disablesGraphButton() {
 		// given
+		controller.viewDidLoad()
 		setXAxis(TextAttribute(name: ""))
 
 		// then
@@ -750,21 +797,17 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	// MARK: - Helper Functions
 
 	private final func setSeriesGrouper(_ grouper: SampleGrouper) {
-		mockGroupingChooserTableViewController()
-		controller.chooseSeriesGroupingButtonPressed(chooseSeriesGrouperButton)
-		sendGrouperEditedNotification(grouper)
+		sendGrouperEditedNotification(.seriesGrouperEdited, grouper)
 	}
 
 	private final func setPointGrouper(_ grouper: SampleGrouper) {
-		mockGroupingChooserTableViewController()
-		controller.choosePointGroupingButtonPressed(choosePointGrouperButton)
-		sendGrouperEditedNotification(grouper)
+		sendGrouperEditedNotification(.pointGrouperEdited, grouper)
 	}
 
-	private final func sendGrouperEditedNotification(_ grouper: SampleGrouper) {
+	private final func sendGrouperEditedNotification(_ notificationType: NotificationName, _ grouper: SampleGrouper) {
 		Given(mockUiUtil, .value(for: .value(.sampleGrouper), from: .any, keyIsOptional: .any, willReturn: grouper))
 		NotificationCenter.default.post(
-			name: NotificationName.grouperEdited.toName(),
+			name: notificationType.toName(),
 			object: nil,
 			userInfo: [
 				UserInfoKey.sampleGrouper: grouper,
@@ -772,7 +815,6 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	}
 
 	private final func setXAxis(_ attribute: Attribute) {
-		controller.viewDidLoad()
 		Given(mockUiUtil, .value(for: .value(.attribute), from: .any, keyIsOptional: .any, willReturn: attribute))
 		Given(
 			mockUiUtil,
@@ -789,7 +831,6 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	}
 
 	private final func setXAxis(_ information: ExtraInformation) {
-		controller.viewDidLoad()
 		Given(mockUiUtil, .value(for: .value(.information), from: .any, keyIsOptional: .any, willReturn: information))
 		Given(mockUiUtil, .value(for: .value(.attribute), from: .any, keyIsOptional: .any, willReturn: nil as Attribute?))
 		Given(
@@ -804,7 +845,6 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	}
 
 	private final func setXAxis(usePointGroupValue: Bool) {
-		controller.viewDidLoad()
 		Given(
 			mockUiUtil,
 			.value(for: .value(.information), from: .any, keyIsOptional: .any, willReturn: nil as ExtraInformation?))
@@ -821,7 +861,6 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	}
 
 	private final func setYAxis(_ attributes: [Attribute]) {
-		controller.viewDidLoad()
 		Given(mockUiUtil, .value(for: .value(.attributes), from: .any, keyIsOptional: .any, willReturn: attributes))
 		Given(
 			mockUiUtil,
@@ -835,7 +874,6 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	}
 
 	private final func setYAxis(_ information: [ExtraInformation]) {
-		controller.viewDidLoad()
 		Given(
 			mockUiUtil,
 			.value(for: .value(.attributes), from: .any, keyIsOptional: .any, willReturn: nil as [Attribute]?))
@@ -856,6 +894,7 @@ final class QueryResultsBasicXYGraphCustomizationViewControllerUnitTests: UnitTe
 	private final func mockSampleGrouper(debugDescription: String = "sample grouper") -> SampleGrouperMock {
 		let grouper = SampleGrouperMock(attributes: [])
 		Given(grouper, .debugDescription(getter: debugDescription))
+		Given(grouper, .equalTo(.any(SampleGrouper.self), willReturn: false))
 		return grouper
 	}
 

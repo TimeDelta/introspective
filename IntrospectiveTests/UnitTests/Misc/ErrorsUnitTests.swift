@@ -9,6 +9,8 @@
 import XCTest
 import Hamcrest
 @testable import Introspective
+@testable import Common
+@testable import Samples
 
 final class ErrorsUnitTests: UnitTest {
 

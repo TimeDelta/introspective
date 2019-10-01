@@ -9,6 +9,8 @@
 import Foundation
 import SwiftyMocky
 @testable import Introspective
+@testable import Attributes
+@testable import Common
 
 // sourcery: mock = "ChooseAttributesToGraphTableViewController"
 public class ChooseAttributesToGraphTableViewControllerMock: UITableViewController, ChooseAttributesToGraphTableViewController, Mock {

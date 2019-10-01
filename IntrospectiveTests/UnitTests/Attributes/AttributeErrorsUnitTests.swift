@@ -9,6 +9,9 @@
 import XCTest
 import Hamcrest
 @testable import Introspective
+@testable import Attributes
+@testable import Common
+@testable import Samples
 
 final class AttributeErrorsUnitTests: UnitTest {
 

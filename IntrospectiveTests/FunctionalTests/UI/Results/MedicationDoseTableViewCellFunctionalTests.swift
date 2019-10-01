@@ -10,6 +10,8 @@ import XCTest
 import SwiftyMocky
 import Hamcrest
 @testable import Introspective
+@testable import Common
+@testable import Samples
 
 /// Has to be functional test because cannot create instance of MedicationDose
 /// without CoreData stack (can't even create mock)
@@ -29,7 +31,7 @@ final class MedicationDoseTableViewCellFunctionalTests: FunctionalTest {
 		super.setUp()
 
 		let mockCalendarUtil = CalendarUtilMock()
-		utilFactory.calendar = mockCalendarUtil
+		Given(injectionProvider, .get(.value(CalendarUtil.self), willReturn: mockCalendarUtil))
 		Given(mockCalendarUtil, .string(for: .value(timestamp), dateStyle: .any, timeStyle: .any, willReturn: timestampText))
 		Given(mockCalendarUtil, .currentTimeZone(willReturn: TimeZone.autoupdatingCurrent))
 		Given(mockCalendarUtil, .convert(.value(timestamp), from: .any, to: .any, willReturn: timestamp))

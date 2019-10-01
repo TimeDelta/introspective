@@ -8,6 +8,10 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+import Samples
+
 final class WeightTableViewCell: UITableViewCell {
 
 	public final var weight: Weight! {
@@ -18,7 +22,7 @@ final class WeightTableViewCell: UITableViewCell {
 			valueFormatter.numberStyle = .decimal
 			valueLabel.text = valueFormatter.string(from: NSNumber(value: weight.weight))
 
-			let dateString = DependencyInjector.util.calendar.string(for: weight.timestamp, dateStyle: .medium, timeStyle: .short)
+			let dateString = DependencyInjector.get(CalendarUtil.self).string(for: weight.timestamp, dateStyle: .medium, timeStyle: .short)
 			timestampLabel.text = dateString
 		}
 	}

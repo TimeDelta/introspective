@@ -11,6 +11,11 @@ import WSTagsField
 import Presentr
 import CoreData
 
+import Common
+import DependencyInjection
+import Persistence
+import Samples
+
 public final class EditActivityDefinitionTableViewController: UITableViewController {
 
 	// MARK: - Static Variables
@@ -194,7 +199,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 
 	@objc private final func saveButtonPressed(_ sender: Any) {
 		do {
-			let transaction = DependencyInjector.db.transaction()
+			let transaction = DependencyInjector.get(Database.self).transaction()
 
 			// have to use local variable here otherwise description will be
 			// overwritten when self.activityDefinition is set
@@ -204,7 +209,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			} else {
 				activityDefinition = try transaction.new(ActivityDefinition.self)
 				activityDefinition.setSource(.introspective)
-				activityDefinition.recordScreenIndex = Int16(try DependencyInjector.db.query(ActivityDefinition.fetchRequest()).count)
+				activityDefinition.recordScreenIndex = Int16(try DependencyInjector.get(Database.self).query(ActivityDefinition.fetchRequest()).count)
 			}
 
 			activityDefinition.name = name
@@ -213,7 +218,7 @@ public final class EditActivityDefinitionTableViewController: UITableViewControl
 			try updateTagsForActivityDefinition(&activityDefinition, using: transaction)
 
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-			activityDefinition = try DependencyInjector.db.pull(savedObject: activityDefinition)
+			activityDefinition = try DependencyInjector.get(Database.self).pull(savedObject: activityDefinition)
 
 			DispatchQueue.main.async {
 				NotificationCenter.default.post(

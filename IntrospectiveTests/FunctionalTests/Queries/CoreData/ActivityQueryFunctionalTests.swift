@@ -8,7 +8,11 @@
 
 import XCTest
 import SwiftDate
+import Hamcrest
 @testable import Introspective
+@testable import AttributeRestrictions
+@testable import Queries
+@testable import Samples
 
 class ActivityQueryFunctionalTests: QueryFunctionalTest {
 
@@ -41,7 +45,7 @@ class ActivityQueryFunctionalTests: QueryFunctionalTest {
 		// then
 		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
+				assertThat(self.samples, onlyHasExpectedSamples(expectedSamples))
 			}
 		}
 	}
@@ -61,7 +65,7 @@ class ActivityQueryFunctionalTests: QueryFunctionalTest {
 		// then
 		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
+				assertThat(self.samples, onlyHasExpectedSamples(expectedSamples))
 			}
 		}
 	}
@@ -81,7 +85,7 @@ class ActivityQueryFunctionalTests: QueryFunctionalTest {
 		// then
 		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
+				assertThat(self.samples, onlyHasExpectedSamples(expectedSamples))
 			}
 		}
 	}
@@ -101,7 +105,7 @@ class ActivityQueryFunctionalTests: QueryFunctionalTest {
 		// then
 		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
+				assertThat(self.samples, onlyHasExpectedSamples(expectedSamples))
 			}
 		}
 	}
@@ -121,7 +125,7 @@ class ActivityQueryFunctionalTests: QueryFunctionalTest {
 		// then
 		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
+				assertThat(self.samples, onlyHasExpectedSamples(expectedSamples))
 			}
 		}
 	}
@@ -142,7 +146,7 @@ class ActivityQueryFunctionalTests: QueryFunctionalTest {
 		// then
 		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
+				assertThat(self.samples, onlyHasExpectedSamples(expectedSamples))
 			}
 		}
 	}
@@ -162,7 +166,7 @@ class ActivityQueryFunctionalTests: QueryFunctionalTest {
 		// then
 		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
+				assertThat(self.samples, onlyHasExpectedSamples(expectedSamples))
 			}
 		}
 	}

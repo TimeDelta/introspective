@@ -12,6 +12,8 @@ import Hamcrest
 import CSV
 import UserNotifications
 @testable import Introspective
+@testable import Common
+@testable import Notifications
 
 final class ImportDataTableViewControllerUnitTests: UnitTest {
 

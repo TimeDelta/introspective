@@ -9,6 +9,7 @@
 import Foundation
 import Hamcrest
 @testable import Introspective
+@testable import SampleGroupers
 
 func equals(_ expected: GroupDefinition) -> Matcher<GroupDefinition?> {
 	return Matcher("\(expected.description)") { (actual: GroupDefinition?) -> MatchResult in

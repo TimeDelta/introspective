@@ -10,6 +10,7 @@ import XCTest
 import SwiftyMocky
 import Hamcrest
 @testable import Introspective
+@testable import SampleGroupers
 
 class GroupDefinitionTableViewCellUnitTests: UnitTest {
 

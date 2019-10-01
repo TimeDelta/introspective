@@ -8,6 +8,9 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+
 public protocol DateRangeViewController: UIViewController {
 
 	var datePickerMode: UIDatePicker.Mode { get set }
@@ -105,10 +108,10 @@ public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewC
 
 	@objc private final func dateChanged() {
 		if let fromDate = getFromDate(), let toDate = getToDate() {
-			DependencyInjector.util.ui.setButton(saveButton, enabled: fromDate <= toDate, hidden: false)
+			DependencyInjector.get(UiUtil.self).setButton(saveButton, enabled: fromDate <= toDate, hidden: false)
 			saveButton.backgroundColor = saveButton.isEnabled ? .black : .gray
 		} else {
-			DependencyInjector.util.ui.setButton(saveButton, enabled: true, hidden: false)
+			DependencyInjector.get(UiUtil.self).setButton(saveButton, enabled: true, hidden: false)
 			saveButton.backgroundColor = .black
 		}
 	}
@@ -128,7 +131,7 @@ public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewC
 		if enableFromDateSwitch.isOn {
 			fromDate = fromDatePicker.date
 			if datePickerMode == .date {
-				fromDate = DependencyInjector.util.calendar.start(of: .day, in: fromDatePicker.date)
+				fromDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: fromDatePicker.date)
 			}
 //			fromDate = constrainDate(fromDate, from: minFromDate, to: maxFromDate)
 		}
@@ -140,7 +143,7 @@ public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewC
 		if enableToDateSwitch.isOn {
 			toDate = toDatePicker.date
 			if datePickerMode == .date {
-				toDate = DependencyInjector.util.calendar.start(of: .day, in: toDatePicker.date)
+				toDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: toDatePicker.date)
 			}
 //			toDate = constrainDate(toDate, from: minToDate, to: maxToDate)
 		}

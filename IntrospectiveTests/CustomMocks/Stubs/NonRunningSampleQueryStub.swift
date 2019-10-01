@@ -8,6 +8,9 @@
 
 import Foundation
 @testable import Introspective
+@testable import BooleanAlgebra
+@testable import Samples
+@testable import Queries
 
 class NonRunningSampleQueryStub<SampleType: Sample>: SampleQuery {
 

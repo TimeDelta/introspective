@@ -9,6 +9,12 @@
 import Foundation
 import AAInfographics
 
+import Common
+import DependencyInjection
+import SampleGroupers
+import SampleGroupInformation
+import Samples
+
 public typealias GraphData = [Dictionary<String, Any>]
 
 public class XYGraphDataGenerator {
@@ -32,7 +38,7 @@ public class XYGraphDataGenerator {
 	final func areAllNumbers(_ values: [String]) -> Bool {
 		signpost?.begin(name: "Are all numbers", "Checking if %d values are all numbers", values.count)
 		for value in values {
-			if !DependencyInjector.util.string.isNumber(value) {
+			if !DependencyInjector.get(StringUtil.self).isNumber(value) {
 				signpost?.end(name: "Are all numbers", "Finished checking if %d values are all numbers", values.count)
 				return false
 			}
@@ -57,7 +63,7 @@ public class XYGraphDataGenerator {
 	final func areAllDaysOfWeek(_ values: [String]) -> Bool {
 		signpost?.begin(name: "Are all days of week", "Checking if %d values are all days of week", values.count)
 		for value in values {
-			if !DependencyInjector.util.string.isDayOfWeek(value) {
+			if !DependencyInjector.get(StringUtil.self).isDayOfWeek(value) {
 				signpost?.end(
 					name: "Are all days of week",
 					"Finished checking if %d values are all days of week",
@@ -176,7 +182,7 @@ public class XYGraphDataGenerator {
 	}
 
 	final func getDate(_ value: String) -> Date? {
-		return DependencyInjector.util.calendar.date(from: value)
+		return DependencyInjector.get(CalendarUtil.self).date(from: value)
 	}
 
 	final func transform(sampleGroups: [(Any, [Sample])], information: ExtraInformation)

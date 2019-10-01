@@ -9,6 +9,11 @@
 import UIKit
 import os
 
+import AttributeRestrictions
+import Attributes
+import DependencyInjection
+import Samples
+
 public protocol EditAttributeRestrictionViewController: UIViewController {
 
 	var sampleType: Sample.Type! { get set }
@@ -90,7 +95,7 @@ public final class EditAttributeRestrictionViewControllerImpl: UIViewController,
 	private final func updateAttributedChooserViewValues() {
 		let selectedAttribute = currentlySelectedAttribute()
 		var applicableAttributeRestrictionTypes: [AttributeRestriction.Type] = []
-		applicableAttributeRestrictionTypes = DependencyInjector.restriction.typesFor(selectedAttribute)
+		applicableAttributeRestrictionTypes = DependencyInjector.get(AttributeRestrictionFactory.self).typesFor(selectedAttribute)
 		let possibleValues = applicableAttributeRestrictionTypes.map { type in
 			return type.init(restrictedAttribute: selectedAttribute)
 		}
@@ -112,7 +117,7 @@ public final class EditAttributeRestrictionViewControllerImpl: UIViewController,
 
 	private final func attributeRestrictionMatchesAttribute() -> Bool {
 		return attributeRestriction != nil &&
-			DependencyInjector.restriction.typesFor(currentlySelectedAttribute()).contains(where: {
+			DependencyInjector.get(AttributeRestrictionFactory.self).typesFor(currentlySelectedAttribute()).contains(where: {
 				$0 == type(of: attributeRestriction!)
 			})
 	}

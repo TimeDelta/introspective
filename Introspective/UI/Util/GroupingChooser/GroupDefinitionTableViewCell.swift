@@ -8,6 +8,8 @@
 
 import UIKit
 
+import SampleGroupers
+
 public final class GroupDefinitionTableViewCell: UITableViewCell {
 
 	// MARK: - IBOutlets

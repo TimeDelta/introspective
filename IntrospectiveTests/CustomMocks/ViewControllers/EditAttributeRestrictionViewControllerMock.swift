@@ -9,6 +9,8 @@
 import Foundation
 import SwiftyMocky
 @testable import Introspective
+@testable import Samples
+@testable import AttributeRestrictions
 
 // sourcery: mock = "EditAttributeRestrictionViewController"
 class EditAttributeRestrictionViewControllerMock: UIViewController, EditAttributeRestrictionViewController, Mock {

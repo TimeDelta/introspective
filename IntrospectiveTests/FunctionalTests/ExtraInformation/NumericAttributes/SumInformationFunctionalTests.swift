@@ -10,6 +10,10 @@ import XCTest
 import Hamcrest
 import SwiftDate
 @testable import Introspective
+@testable import Attributes
+@testable import Common
+@testable import SampleGroupInformation
+@testable import Samples
 
 final class SumInformationFunctionalTests: FunctionalTest {
 

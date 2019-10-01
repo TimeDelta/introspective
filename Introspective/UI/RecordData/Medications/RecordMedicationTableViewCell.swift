@@ -9,6 +9,11 @@
 import UIKit
 import Presentr
 
+import Common
+import DependencyInjection
+import Persistence
+import Samples
+
 public final class RecordMedicationTableViewCell: UITableViewCell {
 
 	// MARK: - Static Variables
@@ -47,12 +52,12 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 	@objc private final func doseCreated(notification: Notification) {
 		do {
 			if let dose: MedicationDose = value(for: .dose, from: notification) {
-				let transaction = DependencyInjector.db.transaction()
+				let transaction = DependencyInjector.get(Database.self).transaction()
 				let doseFromTransaction = try transaction.pull(savedObject: dose)
 				medication = try transaction.pull(savedObject: medication)
 				medication.addToDoses(doseFromTransaction)
 				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-				medication = try DependencyInjector.db.pull(savedObject: medication)
+				medication = try DependencyInjector.get(Database.self).pull(savedObject: medication)
 				updateLastTakenButton()
 			}
 		} catch {
@@ -109,10 +114,10 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 			if let dosage = mostRecentDose.dosage {
 				lastTakenText += dosage.description + " on "
 			}
-			lastTakenText += DependencyInjector.util.calendar.string(for: mostRecentDose.date, dateStyle: .medium, timeStyle: .short)
-			DependencyInjector.util.ui.setButton(lastTakenOnDateButton, enabled: true, hidden: false)
+			lastTakenText += DependencyInjector.get(CalendarUtil.self).string(for: mostRecentDose.date, dateStyle: .medium, timeStyle: .short)
+			DependencyInjector.get(UiUtil.self).setButton(lastTakenOnDateButton, enabled: true, hidden: false)
 		} else {
-			DependencyInjector.util.ui.setButton(lastTakenOnDateButton, enabled: false, hidden: false)
+			DependencyInjector.get(UiUtil.self).setButton(lastTakenOnDateButton, enabled: false, hidden: false)
 		}
 		lastTakenOnDateButton.setTitle(lastTakenText, for: .normal)
 		lastTakenOnDateButton.accessibilityValue = lastTakenText

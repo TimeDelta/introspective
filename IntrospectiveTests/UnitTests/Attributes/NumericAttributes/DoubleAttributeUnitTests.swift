@@ -9,6 +9,8 @@
 import XCTest
 import Hamcrest
 @testable import Introspective
+@testable import Attributes
+@testable import Common
 
 class DoubleAttributeUnitTests: UnitTest {
 

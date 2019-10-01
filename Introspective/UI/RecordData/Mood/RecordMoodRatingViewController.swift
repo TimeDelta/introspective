@@ -8,6 +8,10 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+import Settings
+
 public final class RecordMoodRatingViewController: UIViewController {
 
 	// MARK: - IBOutlets
@@ -16,7 +20,7 @@ public final class RecordMoodRatingViewController: UIViewController {
 
 	// MARK: - Instance Variables
 
-	public final var rating: Double = DependencyInjector.settings.maxMood / 2
+	public final var rating: Double = DependencyInjector.get(Settings.self).maxMood / 2
 	public final var notificationToSendOnAccept: Notification.Name!
 
 	// MARK: - UIViewController Overrides
@@ -25,7 +29,7 @@ public final class RecordMoodRatingViewController: UIViewController {
 		super.viewDidLoad()
 
 		ratingTextField.text = String(rating)
-		DependencyInjector.util.ui.addSaveButtonToKeyboardFor(ratingTextField, target: self, action: #selector(saveClicked))
+		DependencyInjector.get(UiUtil.self).addSaveButtonToKeyboardFor(ratingTextField, target: self, action: #selector(saveClicked))
 		ratingTextField.becomeFirstResponder()
 	}
 
@@ -33,18 +37,18 @@ public final class RecordMoodRatingViewController: UIViewController {
 
 	@IBAction final func textFieldValueChanged(_ sender: Any) {
 		let ratingText = ratingTextField.text!
-		let minRating = DependencyInjector.settings.minMood
-		let maxRating = DependencyInjector.settings.maxMood
+		let minRating = DependencyInjector.get(Settings.self).minMood
+		let maxRating = DependencyInjector.get(Settings.self).maxMood
 		guard !ratingText.hasSuffix(".") else { return }
 		if let rating = Double(ratingText) {
 			if minRating <= rating && rating <= maxRating {
 				self.rating = rating
 			} else if rating > maxRating {
 				self.rating = maxRating
-				ratingTextField.text = MoodUiUtil.valueToString(maxRating)
+				ratingTextField.text = DependencyInjector.get(MoodUiUtil.self).valueToString(maxRating)
 			} else {
 				self.rating = minRating
-				ratingTextField.text = MoodUiUtil.valueToString(minRating)
+				ratingTextField.text = DependencyInjector.get(MoodUiUtil.self).valueToString(minRating)
 			}
 		}
 	}

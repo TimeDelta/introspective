@@ -9,6 +9,8 @@
 import Foundation
 import Hamcrest
 @testable import Introspective
+@testable import Common
+@testable import Samples
 
 typealias Group = (Any, [Sample])
 typealias Groups = [Group]

@@ -10,17 +10,33 @@ import XCTest
 import HealthKit
 import SwiftyMocky
 @testable import Introspective
+@testable import AttributeRestrictions
+@testable import Attributes
+@testable import BooleanAlgebra
+@testable import Common
+@testable import DataExport
+@testable import DataImport
+@testable import DependencyInjection
+@testable import Notifications
+@testable import Persistence
+@testable import Queries
+@testable import Samples
+@testable import SampleGroupers
+@testable import SampleGroupInformation
+@testable import Settings
+@testable import UIExtensions
 
 class UnitTest: Test {
-
-	var injectionProvider: InjectionProviderMock!
 
 	var mockDatabase: DatabaseMock!
 
 	var mockSettings: SettingsMock!
 
-	var utilFactory: UtilFactory!
+	var mockAsyncUtil: AsyncUtilMock!
 	var mockCalendarUtil: CalendarUtilMock!
+	var mockExporterUtil: ExporterUtilMock!
+	var mockMoodUiUtil: MoodUiUtilMock!
+	var mockNotificationUtil: NotificationUtilMock!
 	var mockNumericSampleUtil: NumericSampleUtilMock!
 	var mockSampleUtil: SampleUtilMock!
 	var mockSearchUtil: SearchUtilMock!
@@ -28,27 +44,22 @@ class UnitTest: Test {
 	var mockTextNormalizationUtil: TextNormalizationUtilMock!
 	var mockUiUtil: UiUtilMock!
 	var mockUserDefaultsUtil: UserDefaultsUtilMock!
-	var mockNotificationUtil: NotificationUtilMock!
-	var mockAsyncUtil: AsyncUtilMock!
 
 	var mockSampleFactory: SampleFactoryMock!
 	var mockQueryFactory: QueryFactoryMock!
 	var mockImporterFactory: ImporterFactoryMock!
-	var mockExporterFactory: ExporterFactoryMock!
 	var mockCoachMarkFactory: CoachMarkFactoryMock!
 	var mockSampleGrouperFactory: SampleGrouperFactoryMock!
-	var mockBooleanAlgebraFactory: BooleanAlgebraFactoryMock!
 	var mockAttributeRestrictionFactory: AttributeRestrictionFactoryMock!
 	var mockExtraInformationFactory: ExtraInformationFactoryMock!
-	var mockDaoFactory: DaoFactoryMock!
 
 	override func setUp() {
 		super.setUp()
-		resetMocks()
+		setMocks()
 	}
 
 	override func tearDown() {
-		DependencyInjector.injectionProvider = ProductionInjectionProvider()
+		AppDelegate.registerDependencies()
 		resetButtonDescriber()
 		super.tearDown()
 	}
@@ -62,48 +73,33 @@ class UnitTest: Test {
 		return Calendar.autoupdatingCurrent.date(from: dateComponents)!
 	}
 
-	private func resetMocks() {
-		injectionProvider = InjectionProviderMock()
-		DependencyInjector.injectionProvider = injectionProvider
-
+	private func setMocks() {
 		mockDatabase = DatabaseMock()
-		Given(injectionProvider, .database(willReturn: mockDatabase))
+		Given(injectionProvider, .get(.value(Database.self), willReturn: mockDatabase))
 
 		mockSettings = SettingsMock()
-		Given(injectionProvider, .settings(willReturn: mockSettings))
+		Given(injectionProvider, .get(.value(Settings.self), willReturn: mockSettings))
 
 		mockSampleFactory = SampleFactoryMock()
-		Given(injectionProvider, .sampleFactory(willReturn: mockSampleFactory))
+		Given(injectionProvider, .get(.value(SampleFactory.self), willReturn: mockSampleFactory))
 
 		mockQueryFactory = QueryFactoryMock()
-		Given(injectionProvider, .queryFactory(willReturn: mockQueryFactory))
+		Given(injectionProvider, .get(.value(QueryFactory.self), willReturn: mockQueryFactory))
 
 		mockImporterFactory = ImporterFactoryMock()
-		Given(injectionProvider, .importerFactory(willReturn: mockImporterFactory))
-
-		mockExporterFactory = ExporterFactoryMock()
-		Given(injectionProvider, .exporterFactory(willReturn: mockExporterFactory))
+		Given(injectionProvider, .get(.value(ImporterFactory.self), willReturn: mockImporterFactory))
 
 		mockCoachMarkFactory = CoachMarkFactoryMock()
-		Given(injectionProvider, .coachMarkFactory(willReturn: mockCoachMarkFactory))
+		Given(injectionProvider, .get(.value(CoachMarkFactory.self), willReturn: mockCoachMarkFactory))
 
 		mockSampleGrouperFactory = SampleGrouperFactoryMock()
-		Given(injectionProvider, .sampleGrouperFactory(willReturn: mockSampleGrouperFactory))
-
-		mockBooleanAlgebraFactory = BooleanAlgebraFactoryMock()
-		Given(injectionProvider, .booleanAlgebraFactory(willReturn: mockBooleanAlgebraFactory))
+		Given(injectionProvider, .get(.value(SampleGrouperFactory.self), willReturn: mockSampleGrouperFactory))
 
 		mockAttributeRestrictionFactory = AttributeRestrictionFactoryMock()
-		Given(injectionProvider, .attributeRestrictionFactory(willReturn: mockAttributeRestrictionFactory))
+		Given(injectionProvider, .get(.value(AttributeRestrictionFactory.self), willReturn: mockAttributeRestrictionFactory))
 
 		mockExtraInformationFactory = ExtraInformationFactoryMock()
-		Given(injectionProvider, .extraInformationFactory(willReturn: mockExtraInformationFactory))
-
-		mockDaoFactory = DaoFactoryMock()
-		Given(injectionProvider, .daoFactory(willReturn: mockDaoFactory))
-
-		utilFactory = UtilFactory()
-		Given(injectionProvider, .utilFactory(willReturn: utilFactory))
+		Given(injectionProvider, .get(.value(ExtraInformationFactory.self), willReturn: mockExtraInformationFactory))
 
 		setUpUtilMocks()
 	}
@@ -111,34 +107,40 @@ class UnitTest: Test {
 	// MARK: - Helper Functions
 
 	private final func setUpUtilMocks() {
+		mockAsyncUtil = AsyncUtilMock()
+		Given(injectionProvider, .get(.value(AsyncUtil.self), willReturn: mockAsyncUtil))
+
 		mockCalendarUtil = CalendarUtilMock()
-		utilFactory.calendar = mockCalendarUtil
+		Given(injectionProvider, .get(.value(CalendarUtil.self), willReturn: mockCalendarUtil))
 
-		mockNumericSampleUtil = NumericSampleUtilMock()
-		utilFactory.numericSample = mockNumericSampleUtil
+		mockExporterUtil = ExporterUtilMock()
+		Given(injectionProvider, .get(.value(ExporterUtil.self), willReturn: mockExporterUtil))
 
-		mockSampleUtil = SampleUtilMock()
-		utilFactory.sample = mockSampleUtil
-
-		mockSearchUtil = SearchUtilMock()
-		utilFactory.search = mockSearchUtil
-
-		mockStringUtil = StringUtilMock()
-		utilFactory.string = mockStringUtil
-
-		mockTextNormalizationUtil = TextNormalizationUtilMock()
-		utilFactory.textNormalization = mockTextNormalizationUtil
-
-		mockUiUtil = UiUtilMock()
-		utilFactory.ui = mockUiUtil
-
-		mockUserDefaultsUtil = UserDefaultsUtilMock()
-		utilFactory.userDefaults = mockUserDefaultsUtil
+		mockMoodUiUtil = MoodUiUtilMock()
+		Given(injectionProvider, .get(.value(MoodUiUtil.self), willReturn: mockMoodUiUtil))
 
 		mockNotificationUtil = NotificationUtilMock()
-		utilFactory.notification = mockNotificationUtil
+		Given(injectionProvider, .get(.value(NotificationUtil.self), willReturn: mockNotificationUtil))
 
-		mockAsyncUtil = AsyncUtilMock()
-		utilFactory.async = mockAsyncUtil
+		mockNumericSampleUtil = NumericSampleUtilMock()
+		Given(injectionProvider, .get(.value(NumericSampleUtil.self), willReturn: mockNumericSampleUtil))
+
+		mockSampleUtil = SampleUtilMock()
+		Given(injectionProvider, .get(.value(SampleUtil.self), willReturn: mockSampleUtil))
+
+		mockSearchUtil = SearchUtilMock()
+		Given(injectionProvider, .get(.value(SearchUtil.self), willReturn: mockSearchUtil))
+
+		mockStringUtil = StringUtilMock()
+		Given(injectionProvider, .get(.value(StringUtil.self), willReturn: mockStringUtil))
+
+		mockTextNormalizationUtil = TextNormalizationUtilMock()
+		Given(injectionProvider, .get(.value(TextNormalizationUtil.self), willReturn: mockTextNormalizationUtil))
+
+		mockUiUtil = UiUtilMock()
+		Given(injectionProvider, .get(.value(UiUtil.self), willReturn: mockUiUtil))
+
+		mockUserDefaultsUtil = UserDefaultsUtilMock()
+		Given(injectionProvider, .get(.value(UserDefaultsUtil.self), willReturn: mockUserDefaultsUtil))
 	}
 }

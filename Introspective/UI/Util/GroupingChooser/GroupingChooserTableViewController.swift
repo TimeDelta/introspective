@@ -8,6 +8,12 @@
 
 import UIKit
 
+import Attributes
+import Common
+import DependencyInjection
+import SampleGroupers
+import Samples
+
 public protocol GroupingChooserTableViewController: UITableViewController {
 
 	var sampleType: Sample.Type! { get set }
@@ -44,9 +50,9 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 		super.viewDidLoad()
 
 		if let limitToAttributes = limitToAttributes {
-			availableGroupers = DependencyInjector.sampleGrouper.groupersFor(attributes: limitToAttributes)
+			availableGroupers = DependencyInjector.get(SampleGrouperFactory.self).groupersFor(attributes: limitToAttributes)
 		} else {
-			availableGroupers = DependencyInjector.sampleGrouper.groupersFor(sampleType: sampleType)
+			availableGroupers = DependencyInjector.get(SampleGrouperFactory.self).groupersFor(sampleType: sampleType)
 		}
 		guard availableGroupers.count > 0 else {
 			showNoAvailableGroupersError()
@@ -155,7 +161,7 @@ public final class GroupingChooserTableViewControllerImpl: UITableViewController
 			log.error("Add button pressed when current grouper not AdvancedSampleGrouper")
 			return
 		}
-		let groupDefinition = DependencyInjector.sampleGrouper.groupDefinition(sampleType)
+		let groupDefinition = DependencyInjector.get(SampleGrouperFactory.self).groupDefinition(sampleType)
 		advancedGrouper.groupDefinitions.append(groupDefinition)
 		updateDoneButtonState()
 		tableView.reloadData()

@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension UIAlertController {
+public extension UIAlertController {
 	typealias AlertHandler = @convention(block) (UIAlertAction) -> Void
 
 	enum Errors: Error {

@@ -9,6 +9,8 @@
 import Foundation
 import SwiftyMocky
 @testable import Introspective
+@testable import Common
+@testable import Samples
 
 // sourcery: mock = "EditMoodTableViewController"
 public class EditMoodTableViewControllerMock: UITableViewController, EditMoodTableViewController, Mock {

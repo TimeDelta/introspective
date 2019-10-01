@@ -8,6 +8,10 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+import Samples
+
 class BloodPressureTableViewCell: UITableViewCell {
 
 	// MARK: - Static Variables
@@ -32,7 +36,7 @@ class BloodPressureTableViewCell: UITableViewCell {
 
 			valueLabel.text = formatValue(sample.systolic) + "/" + formatValue(sample.diastolic)
 
-			timestampLabel.text = DependencyInjector.util.calendar.string(
+			timestampLabel.text = DependencyInjector.get(CalendarUtil.self).string(
 				for: sample.timestamp,
 				dateStyle: .medium,
 				timeStyle: .short)

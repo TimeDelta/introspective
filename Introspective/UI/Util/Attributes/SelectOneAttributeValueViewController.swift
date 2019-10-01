@@ -8,6 +8,10 @@
 
 import UIKit
 
+import Attributes
+import Common
+import Samples
+
 public final class SelectOneAttributeValueViewController: AttributeValueTypeViewController {
 
 	// MARK: - IBOutlets

@@ -8,6 +8,11 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+import Persistence
+import Samples
+
 public protocol MedicationDoseEditorViewController: UIViewController {
 
 	var medicationDose: MedicationDose? { get set }
@@ -58,7 +63,7 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 			dosage = Dosage(dosageText)
 		}
 		do {
-			let transaction = DependencyInjector.db.transaction()
+			let transaction = DependencyInjector.get(Database.self).transaction()
 			if let dose = medicationDose {
 				medicationDose = try transaction.pull(savedObject: dose)
 			} else {
@@ -69,7 +74,7 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 			medicationDose?.dosage = dosage
 			medicationDose?.date = datePicker.date
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-			medicationDose = try DependencyInjector.db.pull(savedObject: medicationDose!)
+			medicationDose = try DependencyInjector.get(Database.self).pull(savedObject: medicationDose!)
 			post(
 				notificationToSendOnAccept,
 				userInfo: [
@@ -92,11 +97,11 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 		if dosageIsValid() {
 			dosageLabel.textColor = .black
 			saveButton.backgroundColor = .black
-			DependencyInjector.util.ui.setButton(saveButton, enabled: true, hidden: false)
+			DependencyInjector.get(UiUtil.self).setButton(saveButton, enabled: true, hidden: false)
 		} else {
 			dosageLabel.textColor = .red
 			saveButton.backgroundColor = .lightGray
-			DependencyInjector.util.ui.setButton(saveButton, enabled: false, hidden: false)
+			DependencyInjector.get(UiUtil.self).setButton(saveButton, enabled: false, hidden: false)
 		}
 	}
 

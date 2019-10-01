@@ -9,48 +9,116 @@
 import XCTest
 import SwiftyMocky
 @testable import Introspective
+@testable import AttributeRestrictions
+@testable import Attributes
+@testable import BooleanAlgebra
+@testable import Common
+@testable import DataExport
+@testable import DataImport
+@testable import DependencyInjection
+@testable import Notifications
+@testable import Persistence
+@testable import Queries
+@testable import Samples
+@testable import SampleGroupers
+@testable import SampleGroupInformation
+@testable import Settings
+@testable import UIExtensions
 
 class Test: XCTestCase {
+
+	public final var injectionProvider: InjectionProviderMock!
 
 	override func setUp() {
 		super.setUp()
 		registerMatchers()
+		registerTypesWithDependencyInjection()
+	}
+
+	final func registerTypesWithDependencyInjection() {
+		injectionProvider = InjectionProviderMock()
+		var types: [Any.Type] = AttributeRestrictionsInjectionProvider().types
+		types.append(contentsOf: BooleanAlgebraInjectionProvider().types)
+		types.append(contentsOf: CommonInjectionProvider().types)
+		types.append(contentsOf: DataExportInjectionProvider().types)
+		types.append(contentsOf: DataImportInjectionProvider().types)
+		types.append(contentsOf: IntrospectiveInjectionProvider().types)
+		types.append(contentsOf: PersistenceInjectionProvider(ObjectModelContainer.objectModel).types)
+		types.append(contentsOf: QueriesInjectionProvider().types)
+		types.append(contentsOf: SamplesInjectionProvider().types)
+		types.append(contentsOf: SampleGroupersInjectionProvider().types)
+		types.append(contentsOf: SampleGroupInformationInjectionProvider().types)
+		types.append(contentsOf: SettingsInjectionProvider().types)
+
+		Given(injectionProvider, .types(getter: types))
+		DependencyInjector.register(injectionProvider)
 	}
 
 	final func registerMatchers() {
+		Matcher.default.register(ActivityDao.Protocol.self) { _,_ in true }
+		Matcher.default.register(ActivityExporter.Protocol.self) { _,_ in true }
+		Matcher.default.register(Any.self) { self.anyMatcher($0, $1) }
 		Matcher.default.register(AnySample.self) { $0.equalTo($1) }
+		Matcher.default.register(Array<Attribute>.self) { $0.elementsEqual($1, by: { $0.equalTo($1) }) }
+		Matcher.default.register(Array<ExtraInformation>.self) { $0.elementsEqual($1, by: { $0.equalTo($1) }) }
+		Matcher.default.register(AsyncUtil.Protocol.self) { _,_ in true }
 		Matcher.default.register(Attribute.self) { $0.equalTo($1) }
 		Matcher.default.register(AttributeRestriction.self) { $0.equalTo($1) }
 		Matcher.default.register(AttributeRestriction.Type.self) { $0 == $1 }
+		Matcher.default.register(AttributeRestrictionFactory.Protocol.self) { _,_ in true }
+		Matcher.default.register(BooleanExpressionParser.Protocol.self) { _,_ in true }
+		Matcher.default.register(BooleanExpressionPart.self) { self.booleanExpressionPartsMatch($0, $1) }
+		Matcher.default.register(CalendarUtil.Protocol.self) { _,_ in true }
+		Matcher.default.register(CoachMarkFactory.Protocol.self) { _,_ in true }
+		Matcher.default.register(CoreDataSampleUtil.Protocol.self) { _,_ in true }
+		Matcher.default.register(Database.Protocol.self) { _,_ in true }
 		Matcher.default.register(DayOfWeek.self)
-		Matcher.default.register(HeartRate.Type.self) { _,_ in true }
-		Matcher.default.register(Sample.self) { $0.equalTo($1) }
-		Matcher.default.register(Any.self) { self.anyMatcher($0, $1) }
-		Matcher.default.register(Optional<Any>.self) { self.anyMatcher($0, $1) }
 		Matcher.default.register(Exportable.Type.self) { $0 == $1 }
-		Matcher.default.register(UIViewController.Type.self)
-		Matcher.default.register(UITableViewCell.Type.self)
-		Matcher.default.register(Sample.Type.self) { $0.name == $1.name }
+		Matcher.default.register(ExporterUtil.Protocol.self) { _,_ in true }
+		Matcher.default.register(ExtraInformation.self) { $0.equalTo($1) }
+		Matcher.default.register(ExtraInformationFactory.Protocol.self) { _,_ in true }
 		Matcher.default.register(GroupDefinition.self) {
 			if let first = $0 as? GroupDefinitionMock, let second = $1 as? GroupDefinitionMock {
 				return first === second
 			}
 			return $0.equalTo($1)
 		}
-		Matcher.default.register(BooleanExpressionPart.self) { self.booleanExpressionPartsMatch($0, $1) }
-		Matcher.default.register(ExtraInformation.self) { $0.equalTo($1) }
-		Matcher.default.register(Optional<SampleGrouper>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
-		Matcher.default.register(Optional<Query>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
-		Matcher.default.register(Optional<Attribute>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
-		Matcher.default.register(Optional<ExtraInformation>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
+		Matcher.default.register(HealthKitUtil.Protocol.self) { _,_ in true }
+		Matcher.default.register(HeartRate.Type.self) { _,_ in true }
+		Matcher.default.register(ImporterFactory.Protocol.self) { _,_ in true }
+		Matcher.default.register(IOUtil.Protocol.self) { _,_ in true }
+		Matcher.default.register(MedicationExporter.Protocol.self) { _,_ in true }
+		Matcher.default.register(MoodExporter.Protocol.self) { _,_ in true }
+		Matcher.default.register(MoodUiUtil.Protocol.self) { _,_ in true }
+		Matcher.default.register(MoodUtil.Protocol.self) { _,_ in true }
+		Matcher.default.register(NotificationUtil.Protocol.self) { _,_ in true }
+		Matcher.default.register(NumericSampleUtil.Protocol.self) { _,_ in true }
+		Matcher.default.register(Optional<Any>.self) { self.anyMatcher($0, $1) }
 		Matcher.default.register(Optional<Array<Attribute>>.self) {
 			self.optionalEqualTo($0, $1, { $0.elementsEqual($1, by: { $0.equalTo($1) }) })
 		}
-		Matcher.default.register(Array<Attribute>.self) { $0.elementsEqual($1, by: { $0.equalTo($1) }) }
 		Matcher.default.register(Optional<Array<ExtraInformation>>.self) {
 			self.optionalEqualTo($0, $1, { $0.elementsEqual($1, by: { $0.equalTo($1) }) })
 		}
-		Matcher.default.register(Array<ExtraInformation>.self) { $0.elementsEqual($1, by: { $0.equalTo($1) }) }
+		Matcher.default.register(Optional<Attribute>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
+		Matcher.default.register(Optional<ExtraInformation>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
+		Matcher.default.register(Optional<Query>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
+		Matcher.default.register(Optional<SampleGrouper>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
+		Matcher.default.register(QueryFactory.Protocol.self) { _,_ in true }
+		Matcher.default.register(Sample.self) { $0.equalTo($1) }
+		Matcher.default.register(Sample.Type.self) { $0.name == $1.name }
+		Matcher.default.register(SampleFactory.Protocol.self) { _,_ in true }
+		Matcher.default.register(SampleGrouperFactory.Protocol.self) { _,_ in true }
+		Matcher.default.register(SampleUtil.Protocol.self) { _,_ in true }
+		Matcher.default.register(SearchUtil.Protocol.self) { _,_ in true }
+		Matcher.default.register(Settings.Protocol.self) { _,_ in true }
+		Matcher.default.register(StringUtil.Protocol.self) { _,_ in true }
+		Matcher.default.register(SubQueryMatcherFactory.Protocol.self) { _,_ in true }
+		Matcher.default.register(TextNormalizationUtil.Protocol.self) { _,_ in true }
+		Matcher.default.register(UITableViewCell.Type.self)
+		Matcher.default.register(UiUtil.Protocol.self) { _,_ in true }
+		Matcher.default.register(UIViewController.Type.self)
+		Matcher.default.register(UserDefaultsUtil.Protocol.self) { _,_ in true }
 	}
 
 	// MARK: - Helper Functions

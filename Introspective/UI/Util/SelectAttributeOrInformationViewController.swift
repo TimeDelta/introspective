@@ -8,6 +8,12 @@
 
 import UIKit
 
+import Attributes
+import Common
+import DependencyInjection
+import SampleGroupInformation
+import Samples
+
 final class SelectAttributeOrInformationViewController: UIViewController {
 
 	// MARK: - IBOutlets
@@ -91,7 +97,7 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 	}
 
 	private final func getApplicableInformationTypesForSelectedAttribute() -> [ExtraInformation.Type] {
-		return DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: attribute)
+		return DependencyInjector.get(ExtraInformationFactory.self).getApplicableInformationTypes(forAttribute: attribute)
 	}
 }
 
@@ -99,11 +105,11 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 
 extension SelectAttributeOrInformationViewController: UIPickerViewDataSource {
 
-	func numberOfComponents(in pickerView: UIPickerView) -> Int {
+	public func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
 	}
 
-	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+	public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 		if pickerView == attributePicker {
 			return sampleType.attributes.count
 		}
@@ -119,7 +125,7 @@ extension SelectAttributeOrInformationViewController: UIPickerViewDataSource {
 
 extension SelectAttributeOrInformationViewController: UIPickerViewDelegate {
 
-	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+	public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		if pickerView == attributePicker {
 			return sampleType.attributes[row].name.localizedCapitalized
 		}
@@ -130,7 +136,7 @@ extension SelectAttributeOrInformationViewController: UIPickerViewDelegate {
 		return nil
 	}
 
-	func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 		if pickerView == attributePicker {
 			attribute = sampleType.attributes[row]
 			informationPicker.reloadAllComponents()

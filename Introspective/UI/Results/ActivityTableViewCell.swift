@@ -8,6 +8,10 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+import Samples
+
 public final class ActivityTableViewCell: UITableViewCell {
 
 	// MARK: - IBOutlets
@@ -23,9 +27,9 @@ public final class ActivityTableViewCell: UITableViewCell {
 		didSet {
 			nameLabel.text = activity.definition.name
 
-			timestampsLabel.text = DependencyInjector.util.calendar.string(for: activity.start, dateStyle: .short, timeStyle: .medium) + " - "
+			timestampsLabel.text = DependencyInjector.get(CalendarUtil.self).string(for: activity.start, dateStyle: .short, timeStyle: .medium) + " - "
 			if let endDate = activity.end {
-				timestampsLabel.text! += DependencyInjector.util.calendar.string(for: endDate, dateStyle: .short, timeStyle: .medium)
+				timestampsLabel.text! += DependencyInjector.get(CalendarUtil.self).string(for: endDate, dateStyle: .short, timeStyle: .medium)
 			}
 
 			durationLabel.text = activity.duration.description

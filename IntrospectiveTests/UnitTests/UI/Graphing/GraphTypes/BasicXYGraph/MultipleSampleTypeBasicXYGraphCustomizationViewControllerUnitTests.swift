@@ -12,6 +12,11 @@ import Hamcrest
 import AAInfographics
 import Presentr
 @testable import Introspective
+@testable import Common
+@testable import Queries
+@testable import SampleGroupers
+@testable import SampleGroupInformation
+@testable import Samples
 
 final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: UnitTest {
 

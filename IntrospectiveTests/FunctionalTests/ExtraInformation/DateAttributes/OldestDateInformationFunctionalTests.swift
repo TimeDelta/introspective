@@ -10,6 +10,11 @@ import XCTest
 import Hamcrest
 import SwiftDate
 @testable import Introspective
+@testable import Attributes
+@testable import Common
+@testable import DependencyInjection
+@testable import SampleGroupInformation
+@testable import Samples
 
 final class OldestDateInformationFunctionalTests: FunctionalTest {
 
@@ -436,6 +441,6 @@ final class OldestDateInformationFunctionalTests: FunctionalTest {
 	// MARK: - Helper Functions
 
 	private func toString(_ date: Date) -> String {
-		return DependencyInjector.util.calendar.string(for: date, dateStyle: .short, timeStyle: .short)
+		return DependencyInjector.get(CalendarUtil.self).string(for: date, dateStyle: .short, timeStyle: .short)
 	}
 }

@@ -12,6 +12,10 @@ import Hamcrest
 import CSV
 import UserNotifications
 @testable import Introspective
+@testable import Common
+@testable import DataExport
+@testable import Notifications
+@testable import Samples
 
 final class ExportDataTableViewControllerUnitTests: UnitTest {
 
@@ -29,7 +33,7 @@ final class ExportDataTableViewControllerUnitTests: UnitTest {
 		Given(exporter, .percentComplete(willReturn: 0.5))
 		Given(exporter, .dataTypePluralName(getter: dataType))
 		Given(exporter, .isCancelled(getter: false))
-		Given(mockExporterFactory, .activityExporter(willReturn: exporter))
+		Given(injectionProvider, .get(.value(ActivityExporter.self), willReturn: exporter))
 
 		let storyboard = UIStoryboard(name: "Settings", bundle: nil)
 		controller = (storyboard.instantiateViewController(withIdentifier: "exportData") as! ExportDataTableViewController)

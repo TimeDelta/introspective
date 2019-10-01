@@ -9,6 +9,7 @@
 import Foundation
 import Hamcrest
 @testable import Introspective
+@testable import Attributes
 
 func equals(_ expected: Attribute) -> Matcher<Attribute?> {
 	return Matcher("attribute \(expected)") { (actual: Attribute?) -> Bool in

@@ -10,6 +10,10 @@ import XCTest
 import Hamcrest
 import SwiftyMocky
 @testable import Introspective
+@testable import BooleanAlgebra
+@testable import Common
+@testable import SampleGroupers
+@testable import Samples
 
 class GroupDefinitionUnitTests: UnitTest {
 
@@ -22,7 +26,7 @@ class GroupDefinitionUnitTests: UnitTest {
 		super.setUp()
 		definition = GroupDefinitionImpl(sampleType)
 		parser = BooleanExpressionParserMock()
-		Given(mockBooleanAlgebraFactory, .parser(willReturn: parser))
+		Given(injectionProvider, .get(.value(BooleanExpressionParser.self), willReturn: parser))
 	}
 
 	// MARK: - description

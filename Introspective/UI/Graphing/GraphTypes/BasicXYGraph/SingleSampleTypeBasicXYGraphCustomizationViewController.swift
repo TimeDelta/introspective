@@ -11,12 +11,20 @@ import Presentr
 import AAInfographics
 import os
 
+import Attributes
+import Common
+import DependencyInjection
+import Queries
+import SampleGroupers
+import SampleGroupInformation
+import Samples
+
 final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGraphTypeSetupViewController {
 
 	// MARK: - Static Variables
 
 	private typealias Me = SingleSampleTypeBasicXYGraphCustomizationViewController
-	private static let presenter: Presentr = DependencyInjector.util.ui.customPresenter(
+	private static let presenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center)
@@ -68,7 +76,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	final override func viewDidLoad() {
 		super.viewDidLoad()
 
-		sampleType = DependencyInjector.sample.allTypes()[0]
+		sampleType = DependencyInjector.get(SampleFactory.self).allTypes()[0]
 		sampleTypePicker.dataSource = self
 		sampleTypePicker.delegate = self
 
@@ -137,7 +145,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	@IBAction final func showGraph(_ sender: Any) {
 		do {
 			if query == nil {
-				query = try DependencyInjector.query.queryFor(sampleType)
+				query = try DependencyInjector.get(QueryFactory.self).queryFor(sampleType)
 			}
 			chartController = (viewController(named: "BasicXYChartViewController") as! BasicXYChartViewController)
 			chartController.chartType = chartType
@@ -313,10 +321,10 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	private final func querySet() {
 		if query == nil {
 			queryButton.setTitle("Choose query (optional)", for: .normal)
-			DependencyInjector.util.ui.setButton(clearQueryButton, enabled: false, hidden: true)
+			DependencyInjector.get(UiUtil.self).setButton(clearQueryButton, enabled: false, hidden: true)
 		} else {
 			queryButton.setTitle("Query chosen (click to change)", for: .normal)
-			DependencyInjector.util.ui.setButton(clearQueryButton, enabled: true, hidden: false)
+			DependencyInjector.get(UiUtil.self).setButton(clearQueryButton, enabled: true, hidden: false)
 		}
 		queryButton.accessibilityValue = queryButton.currentTitle
 	}
@@ -360,10 +368,10 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	private final func seriesGrouperSet() {
 		if seriesGrouper != nil {
 			chooseSeriesGrouperButton.setTitle("Series grouping chosen", for: .normal)
-			DependencyInjector.util.ui.setButton(clearSeriesGrouperButton, enabled: true, hidden: false)
+			DependencyInjector.get(UiUtil.self).setButton(clearSeriesGrouperButton, enabled: true, hidden: false)
 		} else {
 			chooseSeriesGrouperButton.setTitle("Choose series grouping (optional)", for: .normal)
-			DependencyInjector.util.ui.setButton(clearSeriesGrouperButton, enabled: false, hidden: true)
+			DependencyInjector.get(UiUtil.self).setButton(clearSeriesGrouperButton, enabled: false, hidden: true)
 		}
 		chooseSeriesGrouperButton.accessibilityValue = chooseSeriesGrouperButton.title(for: .normal)
 	}
@@ -371,7 +379,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 	private final func pointGrouperSet() {
 		if pointGrouper != nil {
 			choosePointGrouperButton.setTitle("Point grouping chosen", for: .normal)
-			DependencyInjector.util.ui.setButton(clearPointGrouperButton, enabled: true, hidden: false)
+			DependencyInjector.get(UiUtil.self).setButton(clearPointGrouperButton, enabled: true, hidden: false)
 			if pointGrouperWasNil {
 				// old value of yAxis (if it exists) will be [Attribute] but [Information]
 				// is needed when pointGrouper is provided
@@ -382,7 +390,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			}
 		} else {
 			choosePointGrouperButton.setTitle("Choose point grouping (optional)", for: .normal)
-			DependencyInjector.util.ui.setButton(clearPointGrouperButton, enabled: false, hidden: true)
+			DependencyInjector.get(UiUtil.self).setButton(clearPointGrouperButton, enabled: false, hidden: true)
 			if !pointGrouperWasNil {
 				// old value of yAxis (if it exists) will be [Information] but [Attribute]
 				// is needed when pointGrouper is not provided
@@ -417,7 +425,7 @@ extension SingleSampleTypeBasicXYGraphCustomizationViewController: UIPickerViewD
 	}
 
 	public final func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		return DependencyInjector.sample.allTypes().count
+		return DependencyInjector.get(SampleFactory.self).allTypes().count
 	}
 }
 
@@ -426,10 +434,10 @@ extension SingleSampleTypeBasicXYGraphCustomizationViewController: UIPickerViewD
 extension SingleSampleTypeBasicXYGraphCustomizationViewController: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-		return DependencyInjector.sample.allTypes()[row].name
+		return DependencyInjector.get(SampleFactory.self).allTypes()[row].name
 	}
 
 	public final func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-		sampleType = DependencyInjector.sample.allTypes()[row]
+		sampleType = DependencyInjector.get(SampleFactory.self).allTypes()[row]
 	}
 }

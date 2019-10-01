@@ -8,12 +8,15 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+
 public final class ActivityDefinitionAutoNoteTableViewCell: UITableViewCell {
 
 	// MARK: - Static Variables
 
 	private typealias Me = ActivityDefinitionAutoNoteTableViewCell
-	private static let descriptionPresenter = DependencyInjector.util.ui.customPresenter(
+	private static let descriptionPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center)

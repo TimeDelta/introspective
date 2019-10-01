@@ -10,6 +10,7 @@ import XCTest
 import SwiftyMocky
 import CSV
 @testable import Introspective
+@testable import DataExport
 
 class ExporterFunctionalTest: FunctionalTest {
 
@@ -19,7 +20,7 @@ class ExporterFunctionalTest: FunctionalTest {
 
 	final func getOutputStreamFor(_ type: Exportable.Type) throws -> OutputStream {
 		let fileUrl = URL(fileURLWithPath: "/\(type.exportFileDescription) file.csv")
-		Given(ioUtil, .urlOfExportFile(for: .value(type), in: .any, willReturn: fileUrl))
+		Given(exporterUtil, .urlOfExportFile(for: .value(type), in: .any, willReturn: fileUrl))
 		let outputStream = OutputStream.toMemory()
 		let writer = try CSVWriter(stream: outputStream, delimiter: ",", newline: .lf)
 		Given(ioUtil, .csvWriter(url: .value(fileUrl), willReturn: writer))

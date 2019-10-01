@@ -9,6 +9,11 @@
 import Foundation
 import SwiftyMocky
 @testable import Introspective
+@testable import AttributeRestrictions
+@testable import Attributes
+@testable import BooleanAlgebra
+@testable import Common
+@testable import Samples
 
 // sourcery: mock = "AttributeRestriction"
 class AttributeRestrictionMock: AttributeRestriction, Mock {

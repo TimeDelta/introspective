@@ -11,6 +11,9 @@ import Hamcrest
 import SwiftDate
 import SwiftyMocky
 @testable import Introspective
+@testable import AttributeRestrictions
+@testable import Attributes
+@testable import Queries
 
 final class BeforeDateAttributeRestrictionUnitTests: UnitTest {
 

@@ -10,6 +10,11 @@ import XCTest
 import CoreData
 import SwiftyMocky
 @testable import Introspective
+@testable import Common
+@testable import DataImport
+@testable import DependencyInjection
+@testable import Persistence
+@testable import Samples
 
 final class EasyPillMedicationDoseImporterFunctionalTests: ImporterTest {
 
@@ -43,7 +48,7 @@ final class EasyPillMedicationDoseImporterFunctionalTests: ImporterTest {
 
 	final override func setUp() {
 		super.setUp()
-		importer = try! DependencyInjector.importer.easyPillMedicationDoseImporter() as! EasyPillMedicationDoseImporterImpl
+		importer = try! DependencyInjector.get(ImporterFactory.self).easyPillMedicationDoseImporter() as! EasyPillMedicationDoseImporterImpl
 	}
 
 	// MARK: - importData() - Valid Data
@@ -182,7 +187,7 @@ abc,,
 		try importer.resetLastImportDate()
 
 		// then
-		importer = try DependencyInjector.db.pull(savedObject: importer)
+		importer = try DependencyInjector.get(Database.self).pull(savedObject: importer)
 		XCTAssertNil(importer.lastImport)
 	}
 
@@ -264,6 +269,6 @@ abc,,
 	private final func getMedicationsWith(name: String) throws -> [Medication] {
 		let medicationsWithCurrentNameFetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 		medicationsWithCurrentNameFetchRequest.predicate = NSPredicate(format: "%K ==[cd] %@", "name", name)
-		return try DependencyInjector.db.query(medicationsWithCurrentNameFetchRequest)
+		return try DependencyInjector.get(Database.self).query(medicationsWithCurrentNameFetchRequest)
 	}
 }

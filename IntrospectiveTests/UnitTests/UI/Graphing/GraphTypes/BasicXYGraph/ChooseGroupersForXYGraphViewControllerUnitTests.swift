@@ -11,6 +11,10 @@ import SwiftyMocky
 import Hamcrest
 import Presentr
 @testable import Introspective
+@testable import Attributes
+@testable import Common
+@testable import SampleGroupers
+@testable import Samples
 
 final class ChooseGroupersForXYGraphViewControllerUnitTests: UnitTest {
 

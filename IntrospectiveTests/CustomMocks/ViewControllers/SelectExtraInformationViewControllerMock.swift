@@ -9,6 +9,9 @@
 import Foundation
 import SwiftyMocky
 @testable import Introspective
+@testable import Attributes
+@testable import Common
+@testable import SampleGroupInformation
 
 // sourcery: mock = "SelectExtraInformationViewController"
 class SelectExtraInformationViewControllerMock: UIViewController, SelectExtraInformationViewController, Mock {

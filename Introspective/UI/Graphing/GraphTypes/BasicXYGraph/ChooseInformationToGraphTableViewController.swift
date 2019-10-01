@@ -9,6 +9,11 @@
 import UIKit
 import os
 
+import Attributes
+import Common
+import DependencyInjection
+import SampleGroupInformation
+
 protocol ChooseInformationToGraphTableViewController: UITableViewController {
 
 	var limitToNumericInformation: Bool { get set }
@@ -79,9 +84,9 @@ final class ChooseInformationToGraphTableViewControllerImpl: UITableViewControll
 		let attribute = attributes[0]
 		var newInformation: ExtraInformation
 		if limitToNumericInformation {
-			newInformation = DependencyInjector.extraInformation.getApplicableNumericInformationTypes(forAttribute: attribute)[0].init(attribute)
+			newInformation = DependencyInjector.get(ExtraInformationFactory.self).getApplicableNumericInformationTypes(forAttribute: attribute)[0].init(attribute)
 		} else {
-			newInformation = DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: attribute)[0].init(attribute)
+			newInformation = DependencyInjector.get(ExtraInformationFactory.self).getApplicableInformationTypes(forAttribute: attribute)[0].init(attribute)
 		}
 		self.chosenInformation.append(newInformation)
 		self.tableView.reloadData()

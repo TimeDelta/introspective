@@ -11,6 +11,11 @@ import SwiftDate
 import CoreData
 import os
 
+import Common
+import DependencyInjection
+import Persistence
+import Samples
+
 public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 
 	// MARK: - IBOutlets
@@ -74,7 +79,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 			if startDate.isToday() {
 				startText = TimeOfDay(startDate).toString(.medium)
 			} else {
-				startText = DependencyInjector.util.calendar.string(for: startDate, dateStyle: .short, timeStyle: .short)
+				startText = DependencyInjector.get(CalendarUtil.self).string(for: startDate, dateStyle: .short, timeStyle: .short)
 			}
 			mostRecentTimeLabel.text = startText + " -"
 			if let endDate = mostRecentlyCompletedActivity.end {
@@ -83,7 +88,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 				} else if endDate.isToday() {
 					mostRecentTimeLabel.text! += " Today, " + TimeOfDay(endDate).toString(.medium)
 				} else {
-					mostRecentTimeLabel.text! += " " + DependencyInjector.util.calendar.string(for: endDate, dateStyle: .short, timeStyle: .short)
+					mostRecentTimeLabel.text! += " " + DependencyInjector.get(CalendarUtil.self).string(for: endDate, dateStyle: .short, timeStyle: .short)
 				}
 			}
 			mostRecentTimeLabel.accessibilityLabel = "last start / end time"
@@ -127,7 +132,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 		let fetchRequest: NSFetchRequest<Activity> = basicFetchRequest()
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: keyName, ascending: false)]
 		do {
-			let activities = try DependencyInjector.db.query(fetchRequest)
+			let activities = try DependencyInjector.get(Database.self).query(fetchRequest)
 			signpost.end(name: "getMostRecentlyStartedActivity", idObject: activityDefinition)
 			if activities.count > 0 {
 				return activities[0]
@@ -145,8 +150,8 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 				name: "getAllActivitiesForToday",
 				idObject: activityDefinition,
 				"# activities: %d", activityDefinition.activities.count)
-			let startOfDay = DependencyInjector.util.calendar.start(of: .day, in: Date()) as NSDate
-			let endOfDay = DependencyInjector.util.calendar.end(of: .day, in: Date()) as NSDate
+			let startOfDay = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: Date()) as NSDate
+			let endOfDay = DependencyInjector.get(CalendarUtil.self).end(of: .day, in: Date()) as NSDate
 			let fetchRequest = basicFetchRequest()
 			fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
 				fetchRequest.predicate!,
@@ -154,7 +159,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 					format: "(endDate == nil AND startDate > %@ AND startDate < %@) OR (endDate > %@ AND endDate < %@)",
 					startOfDay, endOfDay, startOfDay, endOfDay),
 			])
-			let activities = try DependencyInjector.db.query(fetchRequest)
+			let activities = try DependencyInjector.get(Database.self).query(fetchRequest)
 			signpost.end(name: "getAllActivitiesForToday", idObject: activityDefinition)
 			return activities
 		} catch {
@@ -172,7 +177,7 @@ public final class RecordActivityDefinitionTableViewCell: UITableViewCell {
 			NSPredicate(format: "endDate == nil"),
 		])
 		do {
-			let unfinishedActivities = try DependencyInjector.db.query(fetchRequest)
+			let unfinishedActivities = try DependencyInjector.get(Database.self).query(fetchRequest)
 			signpost.end(name: "hasUnfinishedActivity", idObject: activityDefinition)
 			return unfinishedActivities.count > 0
 		} catch {

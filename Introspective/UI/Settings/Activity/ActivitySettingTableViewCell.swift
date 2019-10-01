@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import os
+
+import Common
 
 public class ActivitySettingTableViewCell: UITableViewCell {
 

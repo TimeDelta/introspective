@@ -11,6 +11,11 @@ import SwiftyMocky
 import Hamcrest
 import SwiftDate
 @testable import Introspective
+@testable import Attributes
+@testable import Common
+@testable import Persistence
+@testable import SampleGroupInformation
+@testable import Samples
 
 final class ResultsViewControllerUnitTests: UnitTest {
 

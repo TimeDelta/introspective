@@ -10,6 +10,9 @@ import XCTest
 import SwiftDate
 import Hamcrest
 @testable import Introspective
+@testable import AttributeRestrictions
+@testable import Attributes
+@testable import Queries
 
 class InCurrentTimeUnitDateAttributeRestrictionFunctionalTests: FunctionalTest {
 

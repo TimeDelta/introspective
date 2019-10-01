@@ -10,6 +10,7 @@
 import Foundation
 import Hamcrest
 @testable import Introspective
+@testable import Queries
 
 func equals(_ expected: SubQueryMatcher) -> Matcher<SubQueryMatcher> {
 	return Matcher(expected.description) { actual -> Bool in

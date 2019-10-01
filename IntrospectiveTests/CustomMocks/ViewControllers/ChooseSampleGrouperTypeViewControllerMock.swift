@@ -10,6 +10,7 @@ import Foundation
 import SwiftyMocky
 import UIKit
 @testable import Introspective
+@testable import SampleGroupers
 
 // sourcery: mock = "ChooseSampleGrouperTypeViewController"
 class ChooseSampleGrouperTypeViewControllerMock: UIViewController, ChooseSampleGrouperTypeViewController, Mock {

@@ -8,6 +8,10 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+import Samples
+
 final class QueryResultsGraphSetupViewController: UIViewController {
 
 	// MARK: - Static Variables
@@ -44,7 +48,7 @@ final class QueryResultsGraphSetupViewController: UIViewController {
 		let controller: ChooseGraphTypeViewController = viewController(named: "chooseGraphType")
 		controller.currentValue = graphType
 		controller.notificationToSendOnAccept = Me.setGraphType
-		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
+		customPresentViewController(DependencyInjector.get(UiUtil.self).defaultPresenter, viewController: controller, animated: false)
 	}
 
 	// MARK: - Received Notifications

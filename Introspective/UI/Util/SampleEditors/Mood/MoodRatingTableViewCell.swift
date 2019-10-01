@@ -8,6 +8,11 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+import Settings
+import UIExtensions
+
 public final class MoodRatingTableViewCell: UITableViewCell {
 
 	// MARK: - IBOutlets
@@ -21,10 +26,10 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 	public final var rating: Double = 0 {
 		didSet { updateUI() }
 	}
-	public final var minRating: Double = DependencyInjector.settings.minMood {
+	public final var minRating: Double = DependencyInjector.get(Settings.self).minMood {
 		didSet { updateUI() }
 	}
-	public final var maxRating: Double = DependencyInjector.settings.maxMood {
+	public final var maxRating: Double = DependencyInjector.get(Settings.self).maxMood {
 		didSet { updateUI() }
 	}
 
@@ -43,10 +48,10 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 				self.rating = rating
 			} else if rating > maxRating {
 				self.rating = maxRating
-				ratingTextField.text = MoodUiUtil.valueToString(maxRating)
+				ratingTextField.text = DependencyInjector.get(MoodUiUtil.self).valueToString(maxRating)
 			} else {
 				self.rating = minRating
-				ratingTextField.text = MoodUiUtil.valueToString(minRating)
+				ratingTextField.text = DependencyInjector.get(MoodUiUtil.self).valueToString(minRating)
 			}
 			sendRatingChangedNotification()
 		}
@@ -56,9 +61,9 @@ public final class MoodRatingTableViewCell: UITableViewCell {
 
 	private final func updateUI() {
 		ratingSlider.setValue(Float(rating / maxRating), animated: false)
-		ratingSlider.thumbTintColor = MoodUiUtil.colorForMood(rating: rating, minRating: minRating, maxRating: maxRating)
-		ratingTextField.text = MoodUiUtil.valueToString(rating)
-		ratingRangeLabel.text = "(\(MoodUiUtil.valueToString(minRating))-\(MoodUiUtil.valueToString(maxRating)))"
+		ratingSlider.thumbTintColor = DependencyInjector.get(MoodUiUtil.self).colorForMood(rating: rating, minRating: minRating, maxRating: maxRating)
+		ratingTextField.text = DependencyInjector.get(MoodUiUtil.self).valueToString(rating)
+		ratingRangeLabel.text = "(\(DependencyInjector.get(MoodUiUtil.self).valueToString(minRating))-\(DependencyInjector.get(MoodUiUtil.self).valueToString(maxRating)))"
 	}
 
 	private final func sendRatingChangedNotification() {

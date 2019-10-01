@@ -8,6 +8,7 @@
 
 import XCTest
 @testable import Introspective
+@testable import Common
 
 final class DosageUnitTests: UnitTest {
 

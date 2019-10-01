@@ -53,7 +53,7 @@ fileprivate func buttonDescription(_ button: UIButton) -> String {
 	return buttonDescriber(button)
 }
 
-extension UIButton {
+public extension UIButton {
 	open override var description: String {
 		return buttonDescription(self)
 	}

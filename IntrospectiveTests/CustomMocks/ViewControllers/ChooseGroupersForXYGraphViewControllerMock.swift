@@ -9,6 +9,9 @@
 import Foundation
 import SwiftyMocky
 @testable import Introspective
+@testable import Common
+@testable import SampleGroupers
+@testable import Samples
 
 // sourcery: mock = "ChooseGroupersForXYGraphViewController"
 class ChooseGroupersForXYGraphViewControllerMock: UIViewController, ChooseGroupersForXYGraphViewController, Mock {

@@ -9,6 +9,9 @@
 import Foundation
 import SwiftyMocky
 @testable import Introspective
+@testable import Attributes
+@testable import SampleGroupers
+@testable import Samples
 
 // sourcery: mock = "SampleGrouper"
 class SampleGrouperMock: SampleGrouper, Mock {

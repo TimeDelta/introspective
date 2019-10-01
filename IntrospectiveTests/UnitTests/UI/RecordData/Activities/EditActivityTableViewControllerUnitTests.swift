@@ -12,6 +12,8 @@ import SwiftyMocky
 import Hamcrest
 import Presentr
 @testable import Introspective
+@testable import Common
+@testable import Samples
 
 class EditActivityTableViewControllerUnitTests: UnitTest {
 
@@ -38,7 +40,7 @@ class EditActivityTableViewControllerUnitTests: UnitTest {
 		controller = (storyboard.instantiateViewController(withIdentifier: "editActivity") as! EditActivityTableViewControllerImpl)
 
 		mockActivityDao = ActivityDaoMock()
-		Given(mockDaoFactory, .activityDao(willReturn: mockActivityDao))
+		Given(injectionProvider, .get(.value(ActivityDao.self), willReturn: mockActivityDao))
 		Given(mockActivityDao, .getMostRecentActivityDate(willReturn: nil))
 	}
 

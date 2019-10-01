@@ -8,6 +8,8 @@
 
 import Foundation
 @testable import Introspective
+@testable import BooleanAlgebra
+@testable import Common
 
 final class ExpressionStub: BooleanExpression {
 

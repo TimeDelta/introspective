@@ -8,6 +8,10 @@
 
 import UIKit
 
+import Attributes
+import Common
+import DependencyInjection
+
 public protocol ChooseAttributesToGraphTableViewController: UITableViewController {
 
 	var notificationToSendWhenFinished: NotificationName! { get set }
@@ -80,7 +84,7 @@ final class ChooseAttributesToGraphTableViewControllerImpl: UITableViewControlle
 		}
 		unselectedAttributes.append(selectedAttributes[editIndex])
 		controller.attributes = unselectedAttributes
-		customPresentViewController(DependencyInjector.util.ui.defaultPresenter, viewController: controller, animated: false)
+		customPresentViewController(DependencyInjector.get(UiUtil.self).defaultPresenter, viewController: controller, animated: false)
 	}
 
 	// MARK: - TableView Editing

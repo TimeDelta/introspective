@@ -8,6 +8,9 @@
 
 import UIKit
 
+import Attributes
+import Common
+
 final class HorizontalMultiSelectAttributeValueViewController: UIViewController, MultiSelectSegmentedControlDelegate {
 
 	// MARK: - IBOutlets

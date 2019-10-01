@@ -8,6 +8,9 @@
 
 import UIKit
 
+import Common
+import UIExtensions
+
 public protocol SelectDurationViewController: UIViewController {
 
 	var initialDuration: Duration? { get set }

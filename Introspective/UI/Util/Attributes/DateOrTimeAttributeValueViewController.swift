@@ -8,6 +8,10 @@
 
 import UIKit
 
+import Attributes
+import Common
+import DependencyInjection
+
 public final class DateOrTimeAttributeValueViewController: AttributeValueTypeViewController {
 
 	// MARK: - IBOutlets
@@ -60,7 +64,7 @@ public final class DateOrTimeAttributeValueViewController: AttributeValueTypeVie
 		} else if dateAttribute.includeTime {
 			currentValue = datePicker.date
 		} else {
-			currentValue = DependencyInjector.util.calendar.start(of: .day, in: datePicker.date)
+			currentValue = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: datePicker.date)
 		}
 	}
 }

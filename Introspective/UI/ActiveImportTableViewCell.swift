@@ -8,6 +8,10 @@
 
 import UIKit
 
+import Common
+import DataImport
+import DependencyInjection
+
 public final class ActiveImportTableViewCell: UITableViewCell {
 
 	// MARK: - IBOutlets
@@ -35,13 +39,13 @@ public final class ActiveImportTableViewCell: UITableViewCell {
 	// MARK: - UITableViewCell Overrides
 
 	public final override func prepareForReuse() {
-		DependencyInjector.util.ui.setButton(self.cancelButton, enabled: true, hidden: false)
+		DependencyInjector.get(UiUtil.self).setButton(self.cancelButton, enabled: true, hidden: false)
 	}
 
 	// MARK: - Actions
 
 	@IBAction final func cancelImport(_ sender: Any) {
-		DependencyInjector.util.ui.setButton(cancelButton, enabled: false, hidden: false)
+		DependencyInjector.get(UiUtil.self).setButton(cancelButton, enabled: false, hidden: false)
 		let alert = UIAlertController(
 			title: "Cancel \(descriptionLabel.text!) import?",
 			message: nil,
@@ -51,7 +55,7 @@ public final class ActiveImportTableViewCell: UITableViewCell {
 			self.post(.cancelBackgroundTask, userInfo: [.backgroundTaskId: String(self.backgroundTaskId.rawValue)])
 		})
 		alert.addAction(UIAlertAction(title: "No", style: .cancel) { _ in
-			DependencyInjector.util.ui.setButton(self.cancelButton, enabled: true, hidden: false)
+			DependencyInjector.get(UiUtil.self).setButton(self.cancelButton, enabled: true, hidden: false)
 		})
 		post(.presentView, object: importer, userInfo: [.controller: alert])
 	}

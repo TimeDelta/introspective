@@ -10,6 +10,9 @@ import XCTest
 import Hamcrest
 import CoreData
 @testable import Introspective
+@testable import AttributeRestrictions
+@testable import Attributes
+@testable import Samples
 
 final class DoesNotHaveOneOfTagAttributeRestrictionFunctionalTests: FunctionalTest {
 

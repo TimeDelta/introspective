@@ -9,6 +9,7 @@
 import Foundation
 import Hamcrest
 @testable import Introspective
+@testable import Common
 
 typealias UserInfo = [AnyHashable: Any]
 

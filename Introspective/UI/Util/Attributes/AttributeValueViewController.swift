@@ -8,6 +8,10 @@
 
 import UIKit
 
+import Attributes
+import Common
+import UIExtensions
+
 final class AttributeValueViewController: UIViewController {
 
 	// MARK: - Static Variables

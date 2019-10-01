@@ -8,6 +8,10 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+import Samples
+
 public protocol MoodTableViewCell: UITableViewCell {
 
 	var mood: Mood! { get set }
@@ -18,16 +22,16 @@ final class MoodTableViewCellImpl: UITableViewCell, MoodTableViewCell {
 	public final var mood: Mood! {
 		didSet {
 			guard let mood = mood else { return }
-			moodRatingColorLabel.backgroundColor = MoodUiUtil.colorForMood(
+			moodRatingColorLabel.backgroundColor = DependencyInjector.get(MoodUiUtil.self).colorForMood(
 				rating: mood.rating,
 				minRating: mood.minRating,
 				maxRating: mood.maxRating)
 			moodRatingColorLabel.text = nil
-			let ratingText = MoodUiUtil.valueToString(mood.rating)
-			let minText = MoodUiUtil.valueToString(mood.minRating)
-			let maxText = MoodUiUtil.valueToString(mood.maxRating)
+			let ratingText = DependencyInjector.get(MoodUiUtil.self).valueToString(mood.rating)
+			let minText = DependencyInjector.get(MoodUiUtil.self).valueToString(mood.minRating)
+			let maxText = DependencyInjector.get(MoodUiUtil.self).valueToString(mood.maxRating)
 			moodRatingLabel.text = ratingText + " (\(minText)-\(maxText))"
-			timestampLabel.text = DependencyInjector.util.calendar.string(for: mood.date, dateStyle: .medium, timeStyle: .short)
+			timestampLabel.text = DependencyInjector.get(CalendarUtil.self).string(for: mood.date, dateStyle: .medium, timeStyle: .short)
 			if let note = mood.note {
 				if !note.isEmpty {
 					noteLabel.text = mood.note

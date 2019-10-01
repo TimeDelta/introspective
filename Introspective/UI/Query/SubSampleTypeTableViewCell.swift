@@ -8,6 +8,9 @@
 
 import UIKit
 
+import Queries
+import Samples
+
 final class SubSampleTypeTableViewCell: UITableViewCell {
 
 	public final var matcher: SubQueryMatcher! {

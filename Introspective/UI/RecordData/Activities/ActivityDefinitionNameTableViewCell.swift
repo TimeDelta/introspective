@@ -9,6 +9,12 @@
 import UIKit
 import CoreData
 
+import Common
+import DependencyInjection
+import Persistence
+import Samples
+import UIExtensions
+
 public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
 
 	// MARK: - IBOutlets
@@ -67,7 +73,7 @@ public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
 			let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 			fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 			do {
-				let results = try DependencyInjector.db.query(fetchRequest)
+				let results = try DependencyInjector.get(Database.self).query(fetchRequest)
 				return results.count > 0
 			} catch {
 				log.error("Failed to check for activity name duplication")

@@ -8,6 +8,10 @@
 
 import UIKit
 
+import DependencyInjection
+import Settings
+import UIExtensions
+
 public final class ActivityAutoIgnoreTableViewCell: ActivitySettingTableViewCell {
 
 	// MARK: - IBOutlets
@@ -73,12 +77,12 @@ public final class ActivityAutoIgnoreTableViewCell: ActivitySettingTableViewCell
 
 	private final func resetToggleSwitch() {
 		guard let toggleSwitch = toggleSwitch else { return }
-		toggleSwitch.isOn = DependencyInjector.settings.autoIgnoreEnabled
+		toggleSwitch.isOn = DependencyInjector.get(Settings.self).autoIgnoreEnabled
 		updateUiPerToggleSwitch()
 	}
 
 	private final func resetTextField() {
 		guard let numberOfSecondsTextField = numberOfSecondsTextField else { return }
-		numberOfSecondsTextField.text = String(DependencyInjector.settings.autoIgnoreSeconds)
+		numberOfSecondsTextField.text = String(DependencyInjector.get(Settings.self).autoIgnoreSeconds)
 	}
 }

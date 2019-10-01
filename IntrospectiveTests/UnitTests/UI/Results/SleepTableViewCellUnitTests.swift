@@ -10,6 +10,7 @@ import XCTest
 import SwiftDate
 import SwiftyMocky
 @testable import Introspective
+@testable import Samples
 
 final class SleepTableViewCellUnitTests: UnitTest {
 

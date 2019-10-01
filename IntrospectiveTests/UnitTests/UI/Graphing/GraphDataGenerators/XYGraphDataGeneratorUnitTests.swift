@@ -11,6 +11,8 @@ import SwiftyMocky
 import Hamcrest
 import SwiftDate
 @testable import Introspective
+@testable import Common
+@testable import Samples
 
 final class XYGraphDataGeneratorUnitTests: UnitTest {
 
@@ -381,7 +383,7 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 		let transformedValues = try generator.transform(sampleGroups: groups, information: information)
 
 		// then
-		XCTFail()
+		XCTFail("uncomment this when swift compiler error is fixed")
 		#warning("uncomment this when swift compiler error is fixed")
 //		assertThat(
 //			transformedValues,

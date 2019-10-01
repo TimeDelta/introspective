@@ -10,6 +10,11 @@ import XCTest
 import SwiftyMocky
 import Hamcrest
 @testable import Introspective
+@testable import AttributeRestrictions
+@testable import BooleanAlgebra
+@testable import Common
+@testable import Samples
+@testable import SampleGroupers
 
 class GroupDefinitionTableViewControllerUnitTests: UnitTest {
 

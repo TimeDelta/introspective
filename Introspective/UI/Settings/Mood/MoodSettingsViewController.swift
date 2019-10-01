@@ -10,12 +10,17 @@ import UIKit
 import Presentr
 import NotificationBannerSwift
 
+import Common
+import DependencyInjection
+import Samples
+import Settings
+
 final class MoodSettingsViewController: UIViewController {
 
 	// MARK: - Static Variables
 
 	private typealias Me = MoodSettingsViewController
-	public static let descriptionPresenter = DependencyInjector.util.ui.customPresenter(
+	public static let descriptionPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center)
@@ -38,7 +43,7 @@ final class MoodSettingsViewController: UIViewController {
 		updateUI()
 		navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector(reset))
 
-		DependencyInjector.util.ui.setBackButton(for: self, title: "Settings", action: #selector(done))
+		DependencyInjector.get(UiUtil.self).setBackButton(for: self, title: "Settings", action: #selector(done))
 	}
 
 	// MARK: - Actions
@@ -56,7 +61,7 @@ final class MoodSettingsViewController: UIViewController {
 	}
 
 	@objc private func reset(_ sender: Any) {
-		DependencyInjector.settings.reset()
+		DependencyInjector.get(Settings.self).reset()
 		updateUI()
 	}
 
@@ -76,21 +81,21 @@ final class MoodSettingsViewController: UIViewController {
 			return
 		}
 
-		DependencyInjector.settings.setMinMood(minRating)
-		DependencyInjector.settings.setMaxMood(maxRating)
-		DependencyInjector.settings.setScaleMoodsOnImport(scaleMoodsOnImportSwitch.isOn)
-		DependencyInjector.settings.setDiscreteMoods(useDiscreteMoodsSwitch.isOn)
+		DependencyInjector.get(Settings.self).setMinMood(minRating)
+		DependencyInjector.get(Settings.self).setMaxMood(maxRating)
+		DependencyInjector.get(Settings.self).setScaleMoodsOnImport(scaleMoodsOnImportSwitch.isOn)
+		DependencyInjector.get(Settings.self).setDiscreteMoods(useDiscreteMoodsSwitch.isOn)
 
-		if DependencyInjector.settings.changed(.discreteMoods) {
-			post(MoodUiUtil.useDiscreteMoodChanged)
+		if DependencyInjector.get(Settings.self).changed(.discreteMoods) {
+			post(MoodUiUtilImpl.useDiscreteMoodChanged)
 		}
 
-		if DependencyInjector.settings.changed(.maxMood) || DependencyInjector.settings.changed(.minMood) {
-			if DependencyInjector.settings.changed(.minMood) {
-				post(MoodUiUtil.minRatingChanged)
+		if DependencyInjector.get(Settings.self).changed(.maxMood) || DependencyInjector.get(Settings.self).changed(.minMood) {
+			if DependencyInjector.get(Settings.self).changed(.minMood) {
+				post(MoodUiUtilImpl.minRatingChanged)
 			}
-			if DependencyInjector.settings.changed(.maxMood) {
-				post(MoodUiUtil.maxRatingChanged)
+			if DependencyInjector.get(Settings.self).changed(.maxMood) {
+				post(MoodUiUtilImpl.maxRatingChanged)
 			}
 			presentScaleMoodsAlert()
 		}
@@ -101,7 +106,7 @@ final class MoodSettingsViewController: UIViewController {
 
 	private final func saveAndGoBackToSettings() {
 		do {
-			try retryOnFail({ try DependencyInjector.settings.save() }, maxRetries: 2)
+			try retryOnFail({ try DependencyInjector.get(Settings.self).save() }, maxRetries: 2)
 			self.navigationController?.popViewController(animated: false)
 		} catch {
 			log.error("Failed to save mood settings: %@", errorInfo(error))
@@ -110,10 +115,10 @@ final class MoodSettingsViewController: UIViewController {
 	}
 
 	private final func updateUI() {
-		minMoodField.text = MoodUiUtil.valueToString(DependencyInjector.settings.minMood)
-		maxMoodField.text = MoodUiUtil.valueToString(DependencyInjector.settings.maxMood)
-		scaleMoodsOnImportSwitch.isOn = DependencyInjector.settings.scaleMoodsOnImport
-		useDiscreteMoodsSwitch.isOn = DependencyInjector.settings.discreteMoods
+		minMoodField.text = DependencyInjector.get(MoodUiUtil.self).valueToString(DependencyInjector.get(Settings.self).minMood)
+		maxMoodField.text = DependencyInjector.get(MoodUiUtil.self).valueToString(DependencyInjector.get(Settings.self).maxMood)
+		scaleMoodsOnImportSwitch.isOn = DependencyInjector.get(Settings.self).scaleMoodsOnImport
+		useDiscreteMoodsSwitch.isOn = DependencyInjector.get(Settings.self).discreteMoods
 	}
 
 	private final func presentScaleMoodsAlert() {
@@ -124,7 +129,7 @@ final class MoodSettingsViewController: UIViewController {
 		scaleOldMoodsController.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 			DispatchQueue.global(qos: .userInitiated).async {
 				do {
-					try DependencyInjector.util.mood.scaleMoods()
+					try DependencyInjector.get(MoodUtil.self).scaleMoods()
 				} catch {
 					self.log.error("Failed to scale existing moods: %@", errorInfo(error))
 					StatusBarNotificationBanner(title: "Failed to scale existing moods", style: .danger).show()
@@ -139,9 +144,9 @@ final class MoodSettingsViewController: UIViewController {
 	}
 
 	private final func minAndOrMax() -> String {
-		if DependencyInjector.settings.changed(.maxMood) && DependencyInjector.settings.changed(.minMood) {
+		if DependencyInjector.get(Settings.self).changed(.maxMood) && DependencyInjector.get(Settings.self).changed(.minMood) {
 			return "minimum and maximum"
-		} else if DependencyInjector.settings.changed(.maxMood) {
+		} else if DependencyInjector.get(Settings.self).changed(.maxMood) {
 			return "maximum"
 		}
 		return "minimum"

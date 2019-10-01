@@ -10,6 +10,9 @@ import XCTest
 import SwiftyMocky
 import SwiftDate
 @testable import Introspective
+@testable import Attributes
+@testable import Queries
+@testable import Samples
 
 class WithinXCalendarUnitsSubQueryMatcherUnitTests: UnitTest {
 

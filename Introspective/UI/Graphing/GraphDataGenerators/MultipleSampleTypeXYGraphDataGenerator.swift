@@ -10,6 +10,11 @@ import Foundation
 import os
 import AAInfographics
 
+import Common
+import SampleGroupers
+import SampleGroupInformation
+import Samples
+
 public final class MultipleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator {
 
 	// MARK: - Structs

@@ -8,6 +8,11 @@
 
 import UIKit
 
+import Attributes
+import Common
+import DependencyInjection
+import SampleGroupInformation
+
 protocol SelectExtraInformationViewController: UIViewController {
 
 	var attributes: [Attribute]! { get set }
@@ -86,9 +91,9 @@ final class SelectExtraInformationViewControllerImpl: UIViewController, SelectEx
 
 	private final func getApplicableInformationTypesForSelectedAttribute() -> [ExtraInformation.Type] {
 		if limitToNumericInformation {
-			return DependencyInjector.extraInformation.getApplicableNumericInformationTypes(forAttribute: selectedAttribute)
+			return DependencyInjector.get(ExtraInformationFactory.self).getApplicableNumericInformationTypes(forAttribute: selectedAttribute)
 		} else {
-			return DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: selectedAttribute)
+			return DependencyInjector.get(ExtraInformationFactory.self).getApplicableInformationTypes(forAttribute: selectedAttribute)
 		}
 	}
 

@@ -462,6 +462,7 @@ final class GraphSetupScreenUITests: UITest {
 
 	private final func populateQueryScreen() {
 		addAttributeRestrictionToQuery()
+		addAndToQuery()
 		addAttributeRestrictionToQuery()
 		app.tables.cells.element(boundBy: 1).tap()
 		setPicker("restricted attribute", to: "Name")

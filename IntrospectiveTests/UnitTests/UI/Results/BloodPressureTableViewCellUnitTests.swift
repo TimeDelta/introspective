@@ -9,6 +9,7 @@
 import XCTest
 import SwiftyMocky
 @testable import Introspective
+@testable import Samples
 
 final class BloodPressureTableViewCellUnitTests: UnitTest {
 

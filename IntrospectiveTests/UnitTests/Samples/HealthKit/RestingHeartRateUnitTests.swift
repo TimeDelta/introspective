@@ -9,6 +9,9 @@
 import XCTest
 import SwiftDate
 @testable import Introspective
+@testable import AttributeRestrictions
+@testable import Attributes
+@testable import Samples
 
 final class RestingHeartRateUnitTests: UnitTest {
 

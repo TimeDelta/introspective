@@ -5,6 +5,54 @@
       location = "group:Introspective.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:DependencyInjection/DependencyInjection.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Common/Common.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Notifications/Notifications.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Persistence/Persistence.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Settings/Settings.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Attributes/Attributes.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:AttributeRestrictions/AttributeRestrictions.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Samples/Samples.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:SampleGroupers/SampleGroupers.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:SampleGroupInformation/SampleGroupInformation.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Queries/Queries.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:BooleanAlgebra/BooleanAlgebra.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:DataImport/DataImport.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:DataExport/DataExport.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Globals/Globals.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:UIExtensions/UIExtensions.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
 </Workspace>

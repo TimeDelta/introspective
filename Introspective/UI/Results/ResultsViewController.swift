@@ -11,6 +11,15 @@ import Presentr
 import NotificationBannerSwift
 import CoreData
 
+import Attributes
+import Common
+import DependencyInjection
+import Persistence
+import Queries
+import SampleGroupInformation
+import Samples
+import UIExtensions
+
 public protocol ResultsViewController: UITableViewController {
 
 	var query: Query! { get set }
@@ -58,7 +67,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 					self.viewIsReady()
 					return
 				}
-				DependencyInjector.util.async.run(qos: .userInteractive) {
+				DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
 					let dateAttributes = self.samples[0].attributes.filter{ $0 is DateAttribute }
 					guard dateAttributes.count > 0 else {
 						self.viewIsReady()
@@ -110,7 +119,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 		navigationItem.setRightBarButton(actionsButton, animated: false)
 
-		DependencyInjector.util.ui.setBackButton(for: self, title: backButtonTitle ?? "Query", action: #selector(done))
+		DependencyInjector.get(UiUtil.self).setBackButton(for: self, title: backButtonTitle ?? "Query", action: #selector(done))
 
 		extendedLayoutIncludesOpaqueBars = true
 
@@ -287,19 +296,19 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		if indexPath.section == 0 {
-			return [DependencyInjector.util.ui.tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
+			return [DependencyInjector.get(UiUtil.self).tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
 				self.extraInformation.remove(at: indexPath.row)
 				self.extraInformationValues.remove(at: indexPath.row)
 				tableView.deleteRows(at: [indexPath], with: .fade)
 			}]
 		}
 		guard let managedSample = self.samples[indexPath.row] as? CoreDataSample else { return [] }
-		let delete = DependencyInjector.util.ui.tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
+		let delete = DependencyInjector.get(UiUtil.self).tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
 			let alert = UIAlertController(title: "Are you sure you want to delete this?", message: nil, preferredStyle: .alert)
-			alert.addAction(DependencyInjector.util.ui.alertAction(title: "Yes", style: .destructive) { _ in
+			alert.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Yes", style: .destructive) { _ in
 				let goBackAfterDelete = self.samples.count == 1
 				do {
-					let transaction = DependencyInjector.db.transaction()
+					let transaction = DependencyInjector.get(Database.self).transaction()
 					try retryOnFail({ try transaction.delete(managedSample) }, maxRetries: 2)
 					if goBackAfterDelete {
 						self.navigationController?.popViewController(animated: false)
@@ -332,7 +341,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				extraInformation[editIndex] = selectedInformation!
 				extraInformationValues[editIndex] = nil
 				tableView.reloadRows(at: [IndexPath(row: editIndex, section: 0)], with: .automatic)
-				DependencyInjector.util.async.run(qos: .userInteractive) {
+				DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
 					do {
 						self.extraInformationValues[editIndex] =
 							try self.extraInformation[editIndex].compute(forSamples: self.samples)
@@ -365,7 +374,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				extraInformationValues[i] = nil
 			}
 			tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .automatic)
-			DependencyInjector.util.async.run(qos: .userInteractive) {
+			DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
 				self.recomputeExtraInformation()
 				DispatchQueue.main.async {
 					self.tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .automatic)
@@ -375,8 +384,6 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	@objc private final func sortSamplesBy(notification: Notification) {
-		sortController?.dismiss(animated: false, completion: nil)
-
 		guard let attribute: Attribute? = value(for: .attribute, from: notification) else { return }
 		guard let order: ComparisonResult? = value(for: .comparisonResult, from: notification) else { return }
 		self.sortOrder = order
@@ -388,55 +395,58 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			self.sortTask = nil
 			self.tableView.reloadData()
 		})
-		self.present(self.sortActionSheet!, animated: false, completion: nil)
+		sortController?.dismiss(animated: false, completion: {
+			self.present(self.sortActionSheet!, animated: false, completion: nil)
 
-		self.sortTask = DispatchWorkItem {
-			switch (self.sortAttribute) {
-				case is DoubleAttribute: self.sort(by: Double.self); break
-				case is IntegerAttribute: self.sort(by: Int.self); break
-				case is TextAttribute: self.sort(by: String.self); break
-				case is DateAttribute: self.sort(by: Date.self); break
-				case is DayOfWeekAttribute: self.sort(by: DayOfWeek.self); break
-				case is TimeOfDayAttribute: self.sort(by: TimeOfDay.self); break
-				case is DurationAttribute: self.sort(by: Duration.self); break
-				case is FrequencyAttribute: self.sort(by: Frequency.self); break
-				case is DosageAttribute: self.sort(by: Dosage.self); break
-				default:
-					self.log.error("Unknown sort attribute type: %@", String(describing: type(of: self.sortAttribute)))
+			self.sortTask = DispatchWorkItem {
+				switch (self.sortAttribute) {
+					case is DoubleAttribute: self.sort(by: Double.self); break
+					case is IntegerAttribute: self.sort(by: Int.self); break
+					case is TextAttribute: self.sort(by: String.self); break
+					case is DateAttribute: self.sort(by: Date.self); break
+					case is DayOfWeekAttribute: self.sort(by: DayOfWeek.self); break
+					case is TimeOfDayAttribute: self.sort(by: TimeOfDay.self); break
+					case is DurationAttribute: self.sort(by: Duration.self); break
+					case is FrequencyAttribute: self.sort(by: Frequency.self); break
+					case is DosageAttribute: self.sort(by: Dosage.self); break
+					default:
+						self.log.error("Unknown sort attribute type: %@", String(describing: type(of: self.sortAttribute)))
+				}
+				self.sortTask = nil
+				DispatchQueue.main.async{
+					self.sortActionSheet?.dismiss(animated: false, completion: nil)
+					self.sortActionSheet = nil
+					self.tableView.reloadData()
+				}
 			}
-			self.sortTask = nil
-			DispatchQueue.main.async{
-				self.sortActionSheet?.dismiss(animated: false, completion: nil)
-				self.tableView.reloadData()
-			}
-		}
-		DispatchQueue.global(qos: .userInteractive).async(execute: self.sortTask!)
+			DispatchQueue.global(qos: .userInteractive).async(execute: self.sortTask!)
+		})
 	}
 
 	// MARK: - Button Actions
 
 	@objc private final func presentActions() {
 		actionsController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-		actionsController?.addAction(DependencyInjector.util.ui.alertAction(
+		actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(
 			title: "Graph",
 			style: .default,
 			handler: { _ in self.graph() }))
 		if samplesAreSortable() {
-			actionsController?.addAction(DependencyInjector.util.ui.alertAction(
+			actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(
 				title: "Sort",
 				style: .default,
 				handler: { _ in self.setSampleSort() }))
 		}
-		actionsController?.addAction(DependencyInjector.util.ui.alertAction(title: "Add Information", style: .default) { _ in
-			DependencyInjector.util.async.run(qos: .userInteractive) { self.addInformation() }
+		actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Add Information", style: .default) { _ in
+			DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) { self.addInformation() }
 		})
 		if samplesAreDeletable() {
-			actionsController?.addAction(DependencyInjector.util.ui.alertAction(
+			actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(
 				title: "Delete these " + samples[0].attributedName.localizedLowercase + " entries",
 				style: .default,
 				handler: { _ in self.deleteAllSamples() }))
 		}
-		actionsController?.addAction(DependencyInjector.util.ui.alertAction(title: "Cancel", style: .cancel, handler: nil))
+		actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Cancel", style: .cancel, handler: nil))
 		present(actionsController!, animated: false, completion: nil)
 	}
 
@@ -452,19 +462,19 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	@objc private final func setSampleSort() {
-		let controller: SortResultsViewController = viewController(named: "sortResults")
-		controller.attributes = self.sortableAttributes()
-		controller.sortAttribute = self.sortAttribute
-		controller.sortOrder = self.sortOrder
-		controller.notificationToSendOnAccept = Me.sortSamples
-		self.customPresentViewController(Me.sortPresenter, viewController: controller, animated: false)
+		sortController = viewController(named: "sortResults")
+		sortController?.attributes = self.sortableAttributes()
+		sortController?.sortAttribute = self.sortAttribute
+		sortController?.sortOrder = self.sortOrder
+		sortController?.notificationToSendOnAccept = Me.sortSamples
+		self.customPresentViewController(Me.sortPresenter, viewController: sortController!, animated: false)
 	}
 
 	@objc private final func addInformation() {
 		do {
 			let attribute = type(of: samples[0]).defaultDependentAttribute
-			let applicableTypes = DependencyInjector.extraInformation.getApplicableInformationTypes(forAttribute: attribute)
-			let information = DependencyInjector.extraInformation.initInformation(applicableTypes[0], attribute)
+			let applicableTypes = DependencyInjector.get(ExtraInformationFactory.self).getApplicableInformationTypes(forAttribute: attribute)
+			let information = DependencyInjector.get(ExtraInformationFactory.self).initInformation(applicableTypes[0], attribute)
 			extraInformation.append(information)
 			extraInformationValues.append(nil)
 			DispatchQueue.main.async {
@@ -491,7 +501,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 			DispatchQueue.global(qos: .userInitiated).async {
 				do {
-					let transaction = DependencyInjector.db.transaction()
+					let transaction = DependencyInjector.get(Database.self).transaction()
 					try transaction.deleteAll(self.samples as! [NSManagedObject])
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 					DispatchQueue.main.async {
@@ -576,7 +586,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		DispatchQueue.main.async {
 			self.enableActionsButton()
 		}
-		DependencyInjector.util.async.run(qos: .userInteractive) {
+		DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
 			self.recomputeExtraInformation()
 			DispatchQueue.main.async { self.tableView.reloadData() }
 		}

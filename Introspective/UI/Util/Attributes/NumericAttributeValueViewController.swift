@@ -8,6 +8,10 @@
 
 import UIKit
 
+import Attributes
+import Common
+import DependencyInjection
+
 final class NumericAttributeValueViewController: UIViewController {
 
 	// MARK: - IBOutlets
@@ -72,12 +76,12 @@ final class NumericAttributeValueViewController: UIViewController {
 	}
 
 	private final func disableSaveButton() {
-		DependencyInjector.util.ui.setButton(saveButton, enabled: false, hidden: false)
+		DependencyInjector.get(UiUtil.self).setButton(saveButton, enabled: false, hidden: false)
 		saveButton.backgroundColor = UIColor.gray
 	}
 
 	private final func enableSaveButton() {
-		DependencyInjector.util.ui.setButton(saveButton, enabled: true, hidden: false)
+		DependencyInjector.get(UiUtil.self).setButton(saveButton, enabled: true, hidden: false)
 		saveButton.backgroundColor = UIColor.black
 	}
 }

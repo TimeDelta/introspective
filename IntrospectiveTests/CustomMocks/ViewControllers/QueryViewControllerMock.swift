@@ -9,6 +9,9 @@
 import Foundation
 import SwiftyMocky
 @testable import Introspective
+@testable import Common
+@testable import Queries
+@testable import Samples
 
 // sourcery: mock = "QueryViewController"
 class QueryViewControllerMock: UITableViewController, QueryViewController, Mock {

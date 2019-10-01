@@ -10,6 +10,8 @@ import Foundation
 import XCTest
 import SwiftyMocky
 @testable import Introspective
+@testable import Attributes
+@testable import Samples
 
 // sourcery: mock = "Sample"
 class SampleMock: Sample, Mock {

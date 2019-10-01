@@ -10,6 +10,12 @@ import XCTest
 import SwiftyMocky
 import Hamcrest
 @testable import Introspective
+@testable import Attributes
+@testable import Common
+@testable import Queries
+@testable import SampleGroupers
+@testable import SampleGroupInformation
+@testable import Samples
 
 final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: UnitTest {
 

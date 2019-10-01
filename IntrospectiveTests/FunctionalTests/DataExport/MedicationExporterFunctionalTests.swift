@@ -10,6 +10,9 @@ import XCTest
 import Hamcrest
 import SwiftDate
 @testable import Introspective
+@testable import Common
+@testable import DependencyInjection
+@testable import Samples
 
 final class MedicationExporterFunctionalTests: ExporterFunctionalTest {
 
@@ -435,7 +438,7 @@ final class MedicationExporterFunctionalTests: ExporterFunctionalTest {
 	private final func expectedFields(for medication: Medication) -> [String] {
 		var startedOnText = ""
 		if let startedOn = medication.startedOn {
-			startedOnText = DependencyInjector.util.calendar.string(for: startedOn, dateStyle: .full, timeStyle: .full)
+			startedOnText = DependencyInjector.get(CalendarUtil.self).string(for: startedOn, dateStyle: .full, timeStyle: .full)
 		}
 		return [
 			medication.name,
@@ -453,7 +456,7 @@ final class MedicationExporterFunctionalTests: ExporterFunctionalTest {
 	}
 
 	private final func expectedFields(for dose: MedicationDose) -> [String] {
-		let dateText = DependencyInjector.util.calendar.string(for: dose.date, dateStyle: .full, timeStyle: .full)
+		let dateText = DependencyInjector.get(CalendarUtil.self).string(for: dose.date, dateStyle: .full, timeStyle: .full)
 		var fieldValues = expectedFields(for: dose.medication)
 		fieldValues.append(contentsOf: [
 			dose.dosage?.description ?? "",

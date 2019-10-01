@@ -10,6 +10,10 @@ import UIKit
 import SwiftDate
 import Instructions
 
+import Common
+import DependencyInjection
+import UIExtensions
+
 public protocol SelectDateViewController: UIViewController {
 
 	var initialDate: Date? { get set }
@@ -48,7 +52,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 
 	private final let log = Log()
 
-	private final var coachMarksController = DependencyInjector.coachMarks.controller()
+	private final var coachMarksController = DependencyInjector.get(CoachMarkFactory.self).controller()
 	private final var coachMarksDataSourceAndDelegate: CoachMarksDataSourceAndDelegate!
 	private final lazy var coachMarksInfo: [CoachMarkInfo] = [
 		CoachMarkInfo(
@@ -107,12 +111,11 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
 			UIBarButtonItem(title: "Now", style: .plain, target: self, action: #selector(nowButtonPressed)),
 		], animated: false)
-
 	}
 
 	public final override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		if !DependencyInjector.util.userDefaults.bool(forKey: .selectDateViewInstructionsShown) {
+		if !DependencyInjector.get(UserDefaultsUtil.self).bool(forKey: .selectDateViewInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
 	}
@@ -177,9 +180,9 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 	@IBAction final func acceptButtonPressed(_ sender: Any) {
 		var date = datePicker.date
 		if datePickerMode == .date {
-			date = DependencyInjector.util.calendar.start(of: .day, in: date)
+			date = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: date)
 		} else if limitDateToStartOfMinute {
-			date = DependencyInjector.util.calendar.start(of: .minute, in: date)
+			date = DependencyInjector.get(CalendarUtil.self).start(of: .minute, in: date)
 		}
 		post(notificationToSendOnAccept, userInfo: [.date: date])
 		dismiss(animated: false, completion: nil)

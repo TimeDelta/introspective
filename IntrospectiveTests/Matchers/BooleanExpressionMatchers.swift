@@ -9,6 +9,7 @@
 import Foundation
 import Hamcrest
 @testable import Introspective
+@testable import BooleanAlgebra
 
 func equals(_ expected: BooleanExpression) -> Matcher<BooleanExpression?> {
 	return Matcher("\(expected.description)") { (actual: BooleanExpression?) -> MatchResult in

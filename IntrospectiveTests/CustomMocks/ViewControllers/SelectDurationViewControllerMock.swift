@@ -9,6 +9,7 @@
 import Foundation
 import SwiftyMocky
 @testable import Introspective
+@testable import Common
 
 // sourcery: mock = "SelectDurationViewController"
 class SelectDurationViewControllerMock: UIViewController, SelectDurationViewController, Mock {

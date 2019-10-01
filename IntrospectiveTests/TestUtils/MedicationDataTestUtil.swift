@@ -8,6 +8,10 @@
 
 import Foundation
 @testable import Introspective
+@testable import Common
+@testable import DependencyInjection
+@testable import Persistence
+@testable import Samples
 
 public class MedicationDataTestUtil {
 
@@ -21,7 +25,7 @@ public class MedicationDataTestUtil {
 		source: Sources.MedicationSourceNum = .introspective,
 		recordScreenIndex: Int16 = 0)
 	-> Medication {
-		let transaction = DependencyInjector.db.transaction()
+		let transaction = DependencyInjector.get(Database.self).transaction()
 		let medication = try! transaction.new(Medication.self)
 		medication.name = name
 		medication.frequency = frequency
@@ -31,7 +35,7 @@ public class MedicationDataTestUtil {
 		medication.recordScreenIndex = recordScreenIndex
 		medication.setSource(source)
 		try! transaction.commit()
-		return try! DependencyInjector.db.pull(savedObject: medication)
+		return try! DependencyInjector.get(Database.self).pull(savedObject: medication)
 	}
 
 	@discardableResult
@@ -41,7 +45,7 @@ public class MedicationDataTestUtil {
 		timestamp: Date = Date(),
 		source: Sources.MedicationSourceNum = .introspective)
 	-> MedicationDose {
-		let transaction = DependencyInjector.db.transaction()
+		let transaction = DependencyInjector.get(Database.self).transaction()
 		let dose = try! transaction.new(MedicationDose.self)
 		let sameContextMedication = try! transaction.pull(savedObject: medication)
 		dose.medication = sameContextMedication
@@ -50,7 +54,7 @@ public class MedicationDataTestUtil {
 		dose.setSource(source)
 		sameContextMedication.addToDoses(dose)
 		try! transaction.commit()
-		return try! DependencyInjector.db.pull(savedObject: dose)
+		return try! DependencyInjector.get(Database.self).pull(savedObject: dose)
 	}
 
 	@discardableResult

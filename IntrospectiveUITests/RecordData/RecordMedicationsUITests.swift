@@ -33,7 +33,7 @@ final class RecordMedicationsUITests: UITest {
 		filterMedications(by: medicationName)
 
 		// when
-		app.buttons["Add"].tap()
+		app.buttons["+"].tap()
 
 		// then
 		XCTAssertEqual(app.textFields["medication name"].value as? String, medicationName)

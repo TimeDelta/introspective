@@ -11,6 +11,8 @@ import HealthKit
 import SwiftyMocky
 import SwiftDate
 @testable import Introspective
+@testable import Common
+@testable import Samples
 
 final class SampleUtilUnitTests: UnitTest {
 

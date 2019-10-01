@@ -10,6 +10,10 @@ import XCTest
 import Hamcrest
 import SwiftDate
 @testable import Introspective
+@testable import Common
+@testable import DataExport
+@testable import DependencyInjection
+@testable import Samples
 
 final class MoodExporterFunctionalTest: ExporterFunctionalTest {
 
@@ -334,7 +338,7 @@ final class MoodExporterFunctionalTest: ExporterFunctionalTest {
 	}
 
 	private final func expectedFields(for mood: MoodImpl) -> [String] {
-		let dateText = DependencyInjector.util.calendar.string(for: mood.date, dateStyle: .full, timeStyle: .full)
+		let dateText = DependencyInjector.get(CalendarUtil.self).string(for: mood.date, dateStyle: .full, timeStyle: .full)
 		return [
 			dateText,
 			TimeZone.autoupdatingCurrent.identifier,

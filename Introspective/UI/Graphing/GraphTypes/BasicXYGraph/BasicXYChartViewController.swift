@@ -10,6 +10,11 @@ import UIKit
 import AAInfographics
 import SwiftDate
 
+import Common
+import DependencyInjection
+import Queries
+import UIExtensions
+
 public protocol BasicXYChartViewController: UIViewController {
 
 	var queries: [Query]? { get set }
@@ -52,7 +57,7 @@ public final class BasicXYChartViewControllerImpl: UIViewController, BasicXYChar
 
 		chartModel = chartModel.chartType(chartType)
 
-		DependencyInjector.util.ui.setBackButton(for: self, title: "Graph Setup", action: #selector(back))
+		DependencyInjector.get(UiUtil.self).setBackButton(for: self, title: "Graph Setup", action: #selector(back))
 
 		finishedSetup = true
 	}

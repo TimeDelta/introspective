@@ -10,6 +10,8 @@ import Foundation
 import SwiftyMocky
 import CSV
 @testable import Introspective
+@testable import Attributes
+@testable import Samples
 
 // sourcery: mock = "CoreDataSample"
 class CoreDataSampleMock: CoreDataSample, Mock, StaticMock {

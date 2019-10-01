@@ -12,6 +12,11 @@ import SwiftyMocky
 import SwiftDate
 import CSV
 @testable import Introspective
+@testable import DataImport
+@testable import DependencyInjection
+@testable import Persistence
+@testable import Samples
+@testable import Settings
 
 final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 
@@ -27,7 +32,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 
 	func testGivenMultipleActivitiesRuning_stopAllButtonPressed_stopsAllRunningActivities() {
 		// given
-		DependencyInjector.settings.setAutoIgnoreEnabled(false)
+		DependencyInjector.get(Settings.self).setAutoIgnoreEnabled(false)
 		let definition1 = ActivityDataTestUtil.createActivityDefinition(name: "1")
 		let activity1a = ActivityDataTestUtil.createActivity(
 			definition: definition1,
@@ -50,8 +55,8 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 
 	func testGivenAutoIgnoreEnabledWithActivityRunningLessThanMinTime_stopAllButtonPressed_deletesThatActivity() {
 		// given
-		DependencyInjector.settings.setAutoIgnoreEnabled(true)
-		DependencyInjector.settings.setAutoIgnoreSeconds(15)
+		DependencyInjector.get(Settings.self).setAutoIgnoreEnabled(true)
+		DependencyInjector.get(Settings.self).setAutoIgnoreSeconds(15)
 		let activity = ActivityDataTestUtil.createActivity(name: "a", startDate: Date())
 
 		// when
@@ -258,7 +263,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		let existingDefinition1 = ActivityDataTestUtil.createActivityDefinition(name: "definition 1", recordScreenIndex: 0)
 		let existingDefinition2 = ActivityDataTestUtil.createActivityDefinition(name: "definition 2", recordScreenIndex: 1)
 
-		let importer = try DependencyInjector.importer.aTrackerActivityImporter() as! ATrackerActivityImporterImpl
+		let importer = try DependencyInjector.get(ImporterFactory.self).aTrackerActivityImporter() as! ATrackerActivityImporterImpl
 		let importedName1 = "imported definition 1"
 		let importedName2 = "imported definition 2"
 		setUpActivityImportFileContents([importedName1, importedName2])
@@ -285,7 +290,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		let existingDefinition1 = ActivityDataTestUtil.createActivityDefinition(name: "definition 1", recordScreenIndex: 0)
 		let existingDefinition2 = ActivityDataTestUtil.createActivityDefinition(name: "definition 2", recordScreenIndex: 1)
 
-		let importer = try DependencyInjector.importer.aTrackerActivityImporter() as! ATrackerActivityImporterImpl
+		let importer = try DependencyInjector.get(ImporterFactory.self).aTrackerActivityImporter() as! ATrackerActivityImporterImpl
 		let importedName1 = "imported definition 1"
 		let importedName2 = "imported definition 2"
 		setUpActivityImportFileContents([importedName1, importedName2])
@@ -314,7 +319,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		let existingDefinition1 = ActivityDataTestUtil.createActivityDefinition(name: filterString, recordScreenIndex: 0)
 		let existingDefinition2 = ActivityDataTestUtil.createActivityDefinition(name: "definition 2", recordScreenIndex: 1)
 
-		let importer = try DependencyInjector.importer.aTrackerActivityImporter() as! ATrackerActivityImporterImpl
+		let importer = try DependencyInjector.get(ImporterFactory.self).aTrackerActivityImporter() as! ATrackerActivityImporterImpl
 		let importedName1 = "imported definition 1 \(filterString)"
 		let importedName2 = "\(filterString) imported definition 2"
 		setUpActivityImportFileContents([importedName1, importedName2])
@@ -343,7 +348,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		let existingDefinition1 = ActivityDataTestUtil.createActivityDefinition(name: filterString, recordScreenIndex: 0)
 		let existingDefinition2 = ActivityDataTestUtil.createActivityDefinition(name: "definition 2", recordScreenIndex: 1)
 
-		let importer = try DependencyInjector.importer.aTrackerActivityImporter() as! ATrackerActivityImporterImpl
+		let importer = try DependencyInjector.get(ImporterFactory.self).aTrackerActivityImporter() as! ATrackerActivityImporterImpl
 		let importedName1 = "imported definition 1 \(filterString)"
 		let importedName2 = "\(filterString) imported definition 2"
 		setUpActivityImportFileContents([importedName1, importedName2])
@@ -370,7 +375,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		let existingDefinition1 = ActivityDataTestUtil.createActivityDefinition(name: "definition 1", recordScreenIndex: 0)
 		let existingDefinition2 = ActivityDataTestUtil.createActivityDefinition(name: "definition 2", recordScreenIndex: 1)
 
-		let importer = try DependencyInjector.importer.aTrackerActivityImporter() as! ATrackerActivityImporterImpl
+		let importer = try DependencyInjector.get(ImporterFactory.self).aTrackerActivityImporter() as! ATrackerActivityImporterImpl
 		importer.pauseOnRecord = 2
 
 		let importedName1 = "imported definition 1"
@@ -410,7 +415,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 		let existingDefinition1 = ActivityDataTestUtil.createActivityDefinition(name: "definition 1", recordScreenIndex: 0)
 		let existingDefinition2 = ActivityDataTestUtil.createActivityDefinition(name: "definition 2", recordScreenIndex: 1)
 
-		let importer = try DependencyInjector.importer.aTrackerActivityImporter() as! ATrackerActivityImporterImpl
+		let importer = try DependencyInjector.get(ImporterFactory.self).aTrackerActivityImporter() as! ATrackerActivityImporterImpl
 		importer.pauseOnRecord = 2
 
 		let importedName1 = "imported definition 1"
@@ -473,7 +478,7 @@ final class RecordActivityTableViewControllerFunctionalTests: FunctionalTest {
 	}
 
 	private final func stopActivity(_ activity: Activity) throws {
-		let transaction = DependencyInjector.db.transaction()
+		let transaction = DependencyInjector.get(Database.self).transaction()
 		let transactionActivity = try transaction.pull(savedObject: activity)
 		transactionActivity.end = Date()
 		try transaction.commit()

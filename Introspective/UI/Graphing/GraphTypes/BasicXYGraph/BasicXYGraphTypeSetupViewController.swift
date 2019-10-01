@@ -9,6 +9,8 @@
 import UIKit
 import AAInfographics
 
+import Common
+
 public class BasicXYGraphTypeSetupViewController: GraphTypeSetupViewController {
 
 	public final var chartType: AAChartType! { didSet { chartTypeSet() } }

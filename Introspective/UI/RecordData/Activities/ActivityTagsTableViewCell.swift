@@ -10,6 +10,11 @@ import UIKit
 import WSTagsField
 import CoreData
 
+import Common
+import DependencyInjection
+import Persistence
+import Samples
+
 public protocol ActivityTagsTableViewCell: UITableViewCell {
 
 	var notificationToSendOnChange: Notification.Name! { get set }
@@ -34,7 +39,7 @@ public final class ActivityTagsTableViewCellImpl: UITableViewCell, ActivityTagsT
 			tagsField.maxHeight = 109
 
 			do {
-				let tags = try DependencyInjector.db.query(Tag.fetchRequest() as NSFetchRequest<Tag>)
+				let tags = try DependencyInjector.get(Database.self).query(Tag.fetchRequest() as NSFetchRequest<Tag>)
 				tagsField.textField.filterStrings(tags.map{ $0.name })
 			} catch {
 				log.error("Auto complete failure: %@", errorInfo(error))

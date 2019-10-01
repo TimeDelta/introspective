@@ -8,6 +8,8 @@
 
 import UIKit
 
+import Common
+
 public final class ContainerView<T: UIViewController>: UIView {
 
 	unowned final var parentController: UIViewController

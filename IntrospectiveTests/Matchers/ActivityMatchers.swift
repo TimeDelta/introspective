@@ -9,10 +9,13 @@
 import Foundation
 import Hamcrest
 @testable import Introspective
+@testable import DependencyInjection
+@testable import Persistence
+@testable import Samples
 
 func equivalentDoesNotExistInDatabase() -> Matcher<Activity> {
 	return Matcher("does not exist") { activity -> MatchResult in
-		let activities = try! DependencyInjector.db.query(Activity.fetchRequest())
+		let activities = try! DependencyInjector.get(Database.self).query(Activity.fetchRequest())
 		if activities.contains(where: { $0.equalTo(activity) }) {
 			return .mismatch("\(activity.debugDescription) exists in database")
 		}

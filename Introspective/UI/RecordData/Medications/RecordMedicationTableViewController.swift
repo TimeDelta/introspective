@@ -9,9 +9,14 @@
 import UIKit
 import Presentr
 import Instructions
-
 import CoreData
 import os
+
+import Common
+import DependencyInjection
+import Persistence
+import Samples
+import UIExtensions
 
 public final class RecordMedicationTableViewController: UITableViewController {
 
@@ -125,7 +130,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 
 	public final override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		if !DependencyInjector.util.userDefaults.bool(forKey: .recordMedicationsInstructionsShown) {
+		if !DependencyInjector.get(UserDefaultsUtil.self).bool(forKey: .recordMedicationsInstructionsShown) {
 			coachMarksController.start(in: .window(over: self))
 		}
 	}
@@ -193,7 +198,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 				preferredStyle: .alert)
 			alert.addAction(UIAlertAction(title: "Yes", style: .destructive) { _ in
 				do {
-					let transaction = DependencyInjector.db.transaction()
+					let transaction = DependencyInjector.get(Database.self).transaction()
 					try transaction.delete(medication)
 					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 					self.loadMedications()
@@ -216,7 +221,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		searchController.searchBar.text = ""
 		resetFetchedResultsController()
 		do {
-			let transaction = DependencyInjector.db.transaction()
+			let transaction = DependencyInjector.get(Database.self).transaction()
 			if medicationsFromIndex < medicationsToIndex {
 				for i in medicationsFromIndex + 1 ... medicationsToIndex {
 					if let medication = fetchedResultsController.fetchedObjects?[i] {
@@ -305,7 +310,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	private final func resetFetchedResultsController() {
 		do {
 			signpost.begin(name: "resetting fetched results controller")
-			fetchedResultsController = DependencyInjector.db.fetchedResultsController(
+			fetchedResultsController = DependencyInjector.get(Database.self).fetchedResultsController(
 				type: Medication.self,
 				sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
 				cacheName: "medications")
@@ -337,12 +342,12 @@ public final class RecordMedicationTableViewController: UITableViewController {
 					showError(title: "Activity named '\(searchText)' already exists.")
 					return
 				}
-				let transaction = DependencyInjector.db.transaction()
+				let transaction = DependencyInjector.get(Database.self).transaction()
 
 				let medication = try transaction.new(Medication.self)
 				medication.name = searchText
 				medication.setSource(.introspective)
-				medication.recordScreenIndex = Int16(try DependencyInjector.db.query(Medication.fetchRequest()).count)
+				medication.recordScreenIndex = Int16(try DependencyInjector.get(Database.self).query(Medication.fetchRequest()).count)
 				let dose = try transaction.new(MedicationDose.self)
 				dose.medication = medication
 				dose.date = Date()
@@ -363,7 +368,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	private final func medicationWithNameExists(_ name: String) throws -> Bool {
 		let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
-		let results = try DependencyInjector.db.query(fetchRequest)
+		let results = try DependencyInjector.get(Database.self).query(fetchRequest)
 		return results.count > 0
 	}
 
@@ -382,9 +387,9 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		let medicationFetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 		medicationFetchRequest.predicate = NSPredicate(format: "name == %@", Me.exampleMedicationName)
 		do {
-			let medications = try DependencyInjector.db.query(medicationFetchRequest)
+			let medications = try DependencyInjector.get(Database.self).query(medicationFetchRequest)
 			for medication in medications {
-				let transaction = DependencyInjector.db.transaction()
+				let transaction = DependencyInjector.get(Database.self).transaction()
 				try transaction.delete(medication)
 				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 				loadMedications()

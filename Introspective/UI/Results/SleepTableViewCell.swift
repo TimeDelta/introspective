@@ -8,6 +8,10 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+import Samples
+
 class SleepTableViewCell: UITableViewCell {
 
 	// MARK: - IBOutlets
@@ -23,9 +27,9 @@ class SleepTableViewCell: UITableViewCell {
 
 			valueLabel.text = sleep.state.description
 
-			var dateString = DependencyInjector.util.calendar.string(for: sleep.startDate, dateStyle: .medium, timeStyle: .short)
+			var dateString = DependencyInjector.get(CalendarUtil.self).string(for: sleep.startDate, dateStyle: .medium, timeStyle: .short)
 			dateString += " to "
-			dateString += DependencyInjector.util.calendar.string(for: sleep.endDate, dateStyle: .medium, timeStyle: .short)
+			dateString += DependencyInjector.get(CalendarUtil.self).string(for: sleep.endDate, dateStyle: .medium, timeStyle: .short)
 			timestampLabel.text = dateString
 
 			setConstraints()

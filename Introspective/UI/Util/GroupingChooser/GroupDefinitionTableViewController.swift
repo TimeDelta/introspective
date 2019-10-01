@@ -8,6 +8,13 @@
 
 import UIKit
 
+import AttributeRestrictions
+import BooleanAlgebra
+import Common
+import DependencyInjection
+import SampleGroupers
+import Samples
+
 public final class GroupDefinitionTableViewController: UITableViewController {
 
 	// MARK: - IBOutlets
@@ -24,7 +31,7 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 	// and edits carry through even if cancelled.
 	public final var groupDefinition: GroupDefinition! {
 		get {
-			var definition = DependencyInjector.sampleGrouper.groupDefinition(sampleType)
+			var definition = DependencyInjector.get(SampleGrouperFactory.self).groupDefinition(sampleType)
 			definition.name = groupName
 			definition.expressionParts = expressionParts
 			return definition
@@ -124,7 +131,7 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 
 	public final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		guard indexPath.section == 1 else { return [] }
-		let delete = DependencyInjector.util.ui.tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
+		let delete = DependencyInjector.get(UiUtil.self).tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
 			self.expressionParts.remove(at: indexPath.row)
 			self.validate()
 			tableView.deleteRows(at: [indexPath], with: .fade)
@@ -178,7 +185,7 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 		if indexPath != nil {
 			title = "What would you like to change this to?"
 		}
-		let actionSheet = DependencyInjector.util.ui.alert(title: title, message: nil, preferredStyle: .actionSheet)
+		let actionSheet = DependencyInjector.get(UiUtil.self).alert(title: title, message: nil, preferredStyle: .actionSheet)
 		actionSheet.addAction(UIAlertAction(title: "Attribute Restriction", style: .default) { _ in
 			self.addOrUpdateAttributeRestrictionFor(indexPath)
 		})
@@ -243,9 +250,9 @@ public final class GroupDefinitionTableViewController: UITableViewController {
 		let availableAttributes = sampleType.attributes
 		var restriction: AttributeRestriction?
 		for attribute in availableAttributes {
-			let availableRestrictionTypes = DependencyInjector.restriction.typesFor(attribute)
+			let availableRestrictionTypes = DependencyInjector.get(AttributeRestrictionFactory.self).typesFor(attribute)
 			if availableRestrictionTypes.count > 0 {
-				restriction = DependencyInjector.restriction.initialize(type: availableRestrictionTypes[0], forAttribute: attribute)
+				restriction = DependencyInjector.get(AttributeRestrictionFactory.self).initialize(type: availableRestrictionTypes[0], forAttribute: attribute)
 				break
 			}
 		}

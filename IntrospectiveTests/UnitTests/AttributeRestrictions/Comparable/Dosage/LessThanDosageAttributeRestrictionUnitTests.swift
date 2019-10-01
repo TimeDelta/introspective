@@ -10,6 +10,10 @@ import XCTest
 import Hamcrest
 import SwiftyMocky
 @testable import Introspective
+@testable import AttributeRestrictions
+@testable import Attributes
+@testable import Common
+@testable import Queries
 
 final class LessThanDosageAttributeRestrictionUnitTests: UnitTest {
 

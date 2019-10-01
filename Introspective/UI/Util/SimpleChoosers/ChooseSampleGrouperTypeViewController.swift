@@ -8,6 +8,10 @@
 
 import UIKit
 
+import Common
+import SampleGroupers
+import UIExtensions
+
 public protocol ChooseSampleGrouperTypeViewController: UIViewController {
 	var grouperTypes: [SampleGrouper.Type]! { get set }
 	var selectedGrouperType: SampleGrouper.Type? { get set }

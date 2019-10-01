@@ -12,6 +12,9 @@ import Hamcrest
 import SwiftDate
 import Presentr
 @testable import Introspective
+@testable import Common
+@testable import DependencyInjection
+@testable import Persistence
 
 class EditActivityTableViewControllerFunctionalTests: FunctionalTest {
 
@@ -300,12 +303,12 @@ class EditActivityTableViewControllerFunctionalTests: FunctionalTest {
 		controller.saveButtonPressed(self)
 
 		// then
-		assertThat(DependencyInjector.db, activityExists(hasDefinition(definition)))
-		assertThat(DependencyInjector.db, activityExists(hasStartDate(startDate)))
-		assertThat(DependencyInjector.db, activityExists(hasEndDate(endDate)))
-		assertThat(DependencyInjector.db, activityExists(hasNote(note)))
-		assertThat(DependencyInjector.db, activityExists(hasTags(tagNames)))
-		assertThat(DependencyInjector.db, activityExists(allOf(
+		assertThat(DependencyInjector.get(Database.self), activityExists(hasDefinition(definition)))
+		assertThat(DependencyInjector.get(Database.self), activityExists(hasStartDate(startDate)))
+		assertThat(DependencyInjector.get(Database.self), activityExists(hasEndDate(endDate)))
+		assertThat(DependencyInjector.get(Database.self), activityExists(hasNote(note)))
+		assertThat(DependencyInjector.get(Database.self), activityExists(hasTags(tagNames)))
+		assertThat(DependencyInjector.get(Database.self), activityExists(allOf(
 			hasDefinition(definition),
 			hasStartDate(startDate),
 			hasEndDate(endDate),

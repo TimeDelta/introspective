@@ -9,6 +9,9 @@
 import Foundation
 import SwiftyMocky
 @testable import Introspective
+@testable import Attributes
+@testable import Queries
+@testable import Samples
 
 // sourcery: mock = "SubQueryMatcher"
 class SubQueryMatcherMock: SubQueryMatcher, Mock {

@@ -10,6 +10,11 @@ import UIKit
 import WSTagsField
 import CoreData
 
+import Common
+import DependencyInjection
+import Persistence
+import Samples
+
 public final class ActivityDefinitionTagsTableViewCell: UITableViewCell {
 
 	// MARK: - IBOutlets
@@ -28,7 +33,7 @@ public final class ActivityDefinitionTagsTableViewCell: UITableViewCell {
 			tagsField.maxHeight = 109
 
 			do {
-				let tags = try DependencyInjector.db.query(Tag.fetchRequest() as NSFetchRequest<Tag>)
+				let tags = try DependencyInjector.get(Database.self).query(Tag.fetchRequest() as NSFetchRequest<Tag>)
 				tagsField.textField.filterStrings(tags.map{ $0.name })
 			} catch {
 				log.error("Auto complete failure: %@", errorInfo(error))

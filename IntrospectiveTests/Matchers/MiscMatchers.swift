@@ -10,10 +10,12 @@ import Foundation
 import Hamcrest
 import CoreData
 @testable import Introspective
+@testable import DependencyInjection
+@testable import Persistence
 
 func noneStoredInDatabase<Type: NSManagedObject & CoreDataObject>() -> Matcher<Type.Type> {
 	return Matcher("No \(Type.entityName) exists") { _ -> MatchResult in
-		let count = try! DependencyInjector.db.query(Type.fetchRequest() as! NSFetchRequest<Type>).count
+		let count = try! DependencyInjector.get(Database.self).query(Type.fetchRequest() as! NSFetchRequest<Type>).count
 		if count == 0 { return .match }
 		return .mismatch("Found \(count) \(Type.entityName)")
 	}

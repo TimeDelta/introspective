@@ -9,6 +9,7 @@
 import Foundation
 import Hamcrest
 @testable import Introspective
+@testable import SampleGroupers
 
 func equals(_ expected: SampleGrouper.Type?) -> Matcher<SampleGrouper.Type?> {
 	return Matcher("Equal to \(expected?.userVisibleDescription ?? "nil")") { (actual: SampleGrouper.Type?) -> Bool in

@@ -8,17 +8,22 @@
 
 import UIKit
 
+import Attributes
+import Common
+
 final class ChooseAttributeViewController: UIViewController {
 
 	// MARK: - IBOutlets
 
 	@IBOutlet weak final var attributePicker: UIPickerView!
+	@IBOutlet weak final var acceptButton: UIButton!
 
 	// MARK: - Instance Variables
 
 	public final var attributes: [Attribute]!
 	public final var selectedAttribute: Attribute?
 	public final var notificationToSendOnAccept: NotificationName!
+	public final var acceptButtonTitle = "Save"
 
 	private final let log = Log()
 
@@ -28,6 +33,7 @@ final class ChooseAttributeViewController: UIViewController {
 		super.viewDidLoad()
 		attributePicker.dataSource = self
 		attributePicker.delegate = self
+		acceptButton.setTitle(acceptButtonTitle, for: .normal)
 		if selectedAttribute != nil {
 			if let selectedIndex = attributes.index(where: { $0.equalTo(selectedAttribute!) }) {
 				attributePicker.selectRow(selectedIndex, inComponent: 0, animated: false)

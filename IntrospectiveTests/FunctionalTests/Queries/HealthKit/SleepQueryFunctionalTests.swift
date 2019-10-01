@@ -8,7 +8,11 @@
 
 import XCTest
 import SwiftDate
+import Hamcrest
 @testable import Introspective
+@testable import AttributeRestrictions
+@testable import Queries
+@testable import Samples
 
 class SleepQueryFunctionalTests: QueryFunctionalTest {
 
@@ -55,7 +59,7 @@ class SleepQueryFunctionalTests: QueryFunctionalTest {
 		// then
 		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
+				assertThat(self.samples, onlyHasExpectedSamples(expectedSamples))
 			}
 		}
 	}
@@ -76,7 +80,7 @@ class SleepQueryFunctionalTests: QueryFunctionalTest {
 		// then
 		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
+				assertThat(self.samples, onlyHasExpectedSamples(expectedSamples))
 			}
 		}
 	}
@@ -108,7 +112,7 @@ class SleepQueryFunctionalTests: QueryFunctionalTest {
 		// then
 		waitForExpectations(timeout: 0.1) { waitError in
 			if self.assertNoErrors(waitError) {
-				self.assertOnlyExpectedSamples(expectedSamples: expectedSamples)
+				assertThat(self.samples, onlyHasExpectedSamples(expectedSamples))
 			}
 		}
 	}

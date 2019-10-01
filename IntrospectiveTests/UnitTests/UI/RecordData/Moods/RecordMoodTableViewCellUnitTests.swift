@@ -10,6 +10,7 @@ import XCTest
 import SwiftyMocky
 import UIKit
 @testable import Introspective
+@testable import Samples
 
 final class RecordMoodTableViewCellUnitTests: UnitTest {
 
@@ -27,6 +28,9 @@ final class RecordMoodTableViewCellUnitTests: UnitTest {
 
 	override func setUp() {
 		super.setUp()
+
+		Given(mockMoodUiUtil, .colorForMood(rating: .any, minRating: .any, maxRating: .any, willReturn: UIColor.white))
+		Given(mockMoodUiUtil, .valueToString(.any, willReturn: ""))
 
 		mockTransaction = TransactionMock()
 		Given(mockDatabase, .transaction(willReturn: mockTransaction))

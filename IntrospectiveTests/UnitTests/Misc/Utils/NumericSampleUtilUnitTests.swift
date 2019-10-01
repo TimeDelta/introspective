@@ -10,6 +10,7 @@ import XCTest
 import HealthKit
 import SwiftyMocky
 @testable import Introspective
+@testable import Samples
 
 class NumericSampleUtilUnitTests: UnitTest {
 

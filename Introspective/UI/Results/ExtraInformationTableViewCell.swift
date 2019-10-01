@@ -8,6 +8,8 @@
 
 import UIKit
 
+import SampleGroupInformation
+
 final class ExtraInformationTableViewCell: UITableViewCell {
 
 	public final var extraInformation: ExtraInformation! { didSet { updateText() } }

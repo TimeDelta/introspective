@@ -9,6 +9,12 @@
 import UIKit
 import CoreData
 
+import Common
+import DependencyInjection
+import Persistence
+import Samples
+import UIExtensions
+
 public protocol ChooseActivityDefinitionViewController: UIViewController {
 
 	var notificationToSendOnAccept: Notification.Name! { get set }
@@ -42,7 +48,7 @@ public final class ChooseActivityDefinitionViewControllerImpl: UIViewController,
 			do {
 				let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 				fetchRequest.sortDescriptors = [NSSortDescriptor(key: "recordScreenIndex", ascending: true)]
-				availableDefinitions = try DependencyInjector.db.query(fetchRequest)
+				availableDefinitions = try DependencyInjector.get(Database.self).query(fetchRequest)
 			} catch {
 				log.error("Failed to load activities: %@", errorInfo(error))
 				parent?.showError(title: "Failed to load activities", error: error)

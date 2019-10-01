@@ -10,6 +10,7 @@ import Foundation
 import SwiftyMocky
 import UIKit
 @testable import Introspective
+@testable import Common
 
 // sourcery: mock = "ChooseTextViewController"
 class ChooseTextViewControllerMock: UIViewController, ChooseTextViewController, Mock {

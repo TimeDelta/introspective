@@ -12,12 +12,18 @@ import HealthKit
 import CoreData
 import SwiftDate
 
+import Common
+import DependencyInjection
+import Persistence
+import SampleGroupInformation
+import Samples
+
 public final class UnifiedDayViewController: DayViewController {
 
 	private final var stopQueryFunctions = [()->()]()
 
 	private final let log = Log()
-	private final let healthKitUtil = DependencyInjector.util.healthKit
+	private final let healthKitUtil = DependencyInjector.get(HealthKitUtil.self)
 
 	// MARK: - DayViewController Overrides
 
@@ -65,7 +71,7 @@ public final class UnifiedDayViewController: DayViewController {
 			NSPredicate(format: "timestamp > %@", startDate as NSDate),
 			NSPredicate(format: "timestamp < %@", endDate as NSDate)])
 		do {
-			let moods = try DependencyInjector.db.query(fetchRequest)
+			let moods = try DependencyInjector.get(Database.self).query(fetchRequest)
 			if moods.count == 0 {
 				showError(title: "You have no mood ratings during this time period")
 				return
@@ -80,7 +86,7 @@ public final class UnifiedDayViewController: DayViewController {
 
 	private final func calculateAndDisplay(_ operation: HKStatisticsOptions, for type: HealthKitQuantitySample.Type, during eventView: EventView) {
 		let (startDate, endDate) = getStartAndEndDatesFrom(eventView)
-		DependencyInjector.util.healthKit.calculate(operation, type, from: startDate, to: endDate) { value, error in
+		healthKitUtil.calculate(operation, type, from: startDate, to: endDate) { value, error in
 			let operationName: String = self.getOperationName(for: operation)
 			let stringValue: String? = value == nil ? nil : String(value!)
 			self.display("\(operationName) \(type.name.localizedLowercase)", stringValue, error, startDate, endDate)
@@ -97,8 +103,8 @@ public final class UnifiedDayViewController: DayViewController {
 			self.showError(title: "Could not calculate \(description)")
 			return
 		}
-		let startDateText = DependencyInjector.util.calendar.string(for: startDate, dateStyle: .none, timeStyle: .short)
-		let endDateText = DependencyInjector.util.calendar.string(for: endDate, dateStyle: .none, timeStyle: .short)
+		let startDateText = DependencyInjector.get(CalendarUtil.self).string(for: startDate, dateStyle: .none, timeStyle: .short)
+		let endDateText = DependencyInjector.get(CalendarUtil.self).string(for: endDate, dateStyle: .none, timeStyle: .short)
 		let message = "Your \(description) from \(startDateText) to \(endDateText) was \(value!)"
 		let alert = UIAlertController(title: "\(description.localizedCapitalized)", message: message, preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
@@ -120,8 +126,8 @@ public final class UnifiedDayViewController: DayViewController {
 		let startDateKey = CommonSampleAttributes.startDate.variableName!
 		let endDateKey = CommonSampleAttributes.endDate.variableName!
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
-		let startOfDate = DependencyInjector.util.calendar.start(of: .day, in: date)
-		let endOfDate = DependencyInjector.util.calendar.end(of: .day, in: date)
+		let startOfDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: date)
+		let endOfDate = DependencyInjector.get(CalendarUtil.self).end(of: .day, in: date)
 		fetchRequest.predicate = NSPredicate(
 			format: "(%K >= %@ AND %K <= %@) OR (%K >= %@ AND %K <= %@)",
 			startDateKey, startOfDate as NSDate,
@@ -129,7 +135,7 @@ public final class UnifiedDayViewController: DayViewController {
 			endDateKey, startOfDate as NSDate,
 			endDateKey, endOfDate as NSDate)
 		do {
-			return try DependencyInjector.db.query(fetchRequest)
+			return try DependencyInjector.get(Database.self).query(fetchRequest)
 		} catch {
 			log.error("Failed to query for activities on %@: %@", String(describing: date), errorInfo(error))
 			showError(title: "Something went wrong while loading your activity data", error: error)
@@ -193,8 +199,8 @@ public final class UnifiedDayViewController: DayViewController {
 	}
 
 	private final func getTimeTextFor(_ event: Event) -> String {
-		let startText = DependencyInjector.util.calendar.string(for: event.startDate, dateStyle: .none, timeStyle: .short)
-		let endText = DependencyInjector.util.calendar.string(for: event.endDate, dateStyle: .none, timeStyle: .short)
+		let startText = DependencyInjector.get(CalendarUtil.self).string(for: event.startDate, dateStyle: .none, timeStyle: .short)
+		let endText = DependencyInjector.get(CalendarUtil.self).string(for: event.endDate, dateStyle: .none, timeStyle: .short)
 		let duration = Duration(start: event.startDate, end: event.endDate)
 		return startText + " - " + endText + " (\(duration.description)))"
 	}

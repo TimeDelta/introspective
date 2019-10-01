@@ -8,6 +8,9 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+
 public final class SetMedicationDosageViewController: UIViewController {
 
 	// MARK: - IBOutlets
@@ -48,10 +51,10 @@ public final class SetMedicationDosageViewController: UIViewController {
 	@IBAction final func dosageTextChanged(_ sender: Any) {
 		if dosageIsValid() {
 			saveButton.backgroundColor = .black
-			DependencyInjector.util.ui.setButton(saveButton, enabled: true, hidden: false)
+			DependencyInjector.get(UiUtil.self).setButton(saveButton, enabled: true, hidden: false)
 		} else {
 			saveButton.backgroundColor = .lightGray
-			DependencyInjector.util.ui.setButton(saveButton, enabled: false, hidden: false)
+			DependencyInjector.get(UiUtil.self).setButton(saveButton, enabled: false, hidden: false)
 		}
 	}
 

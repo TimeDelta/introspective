@@ -8,16 +8,19 @@
 
 import Foundation
 @testable import Introspective
+@testable import DependencyInjection
+@testable import Persistence
+@testable import Samples
 
 public final class TagDataTestUtil {
 
 	@discardableResult
 	public static func createTag(name: String = "") -> Tag {
-		let transaction = DependencyInjector.db.transaction()
+		let transaction = DependencyInjector.get(Database.self).transaction()
 		let tag = try! transaction.new(Tag.self)
 		tag.name = name
 		try! transaction.commit()
-		return try! DependencyInjector.db.pull(savedObject: tag)
+		return try! DependencyInjector.get(Database.self).pull(savedObject: tag)
 	}
 
 	@discardableResult

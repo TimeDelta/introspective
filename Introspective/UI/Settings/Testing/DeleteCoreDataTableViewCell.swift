@@ -9,9 +9,12 @@
 import UIKit
 import CoreData
 
+import DependencyInjection
+import Persistence
+
 public final class DeleteCoreDataTableViewCell: UITableViewCell {
 
 	@IBAction final func deleteCoreDataButtonPressed() {
-		try! DependencyInjector.db.deleteEverything()
+		try! DependencyInjector.get(Database.self).deleteEverything()
 	}
 }

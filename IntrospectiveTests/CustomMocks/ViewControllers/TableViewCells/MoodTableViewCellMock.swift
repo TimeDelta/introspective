@@ -9,6 +9,7 @@
 import Foundation
 import SwiftyMocky
 @testable import Introspective
+@testable import Samples
 
 // sourcery: mock = "MoodTableViewCell"
 public class MoodTableViewCellMock: UITableViewCell, MoodTableViewCell, Mock {

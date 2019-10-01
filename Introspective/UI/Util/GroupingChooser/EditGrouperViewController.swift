@@ -8,6 +8,9 @@
 
 import UIKit
 
+import Common
+import SampleGroupers
+
 public protocol EditGrouperViewController: UIViewController {
 
 	var currentGrouper: SampleGrouper! { get set }

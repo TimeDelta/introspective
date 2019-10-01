@@ -10,6 +10,8 @@ import Foundation
 import SwiftyMocky
 import UIKit
 @testable import Introspective
+@testable import Common
+@testable import SampleGroupers
 
 // sourcery: mock = "EditGrouperViewController"
 class EditGrouperViewControllerMock: UIViewController, EditGrouperViewController, Mock {

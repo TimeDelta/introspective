@@ -8,6 +8,13 @@
 
 import UIKit
 
+import Attributes
+import Common
+import DependencyInjection
+import SampleGroupers
+import Samples
+import UIExtensions
+
 public protocol ChooseGroupersForXYGraphViewController: UIViewController {
 	var xSampleType: Sample.Type! { get set }
 	var ySampleType: Sample.Type! { get set }
@@ -98,7 +105,7 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 		controller.availableChoices = commonAttributeTypes
 		controller.selectedText = currentAttributeType
 		controller.notificationToSendOnAccept = .attributeTypeEdited
-		present(controller, using: DependencyInjector.util.ui.defaultPresenter)
+		present(controller, using: DependencyInjector.get(UiUtil.self).defaultPresenter)
 	}
 
 	@IBAction final func chooseGrouperTypeButtonPressed(_ sender: Any) {
@@ -109,9 +116,9 @@ public final class ChooseGroupersForXYGraphViewControllerImpl: UIViewController,
 			log.error("No attributes of chosen type found for x-axis")
 			return
 		}
-		controller.grouperTypes = DependencyInjector.sampleGrouper.typesFor(attributes: attributes)
+		controller.grouperTypes = DependencyInjector.get(SampleGrouperFactory.self).typesFor(attributes: attributes)
 		controller.selectedGrouperType = chosenGrouperType
-		present(controller, using: DependencyInjector.util.ui.defaultPresenter)
+		present(controller, using: DependencyInjector.get(UiUtil.self).defaultPresenter)
 	}
 
 	@IBAction final func chooseXAxisGrouperButtonPressed(_ sender: Any) {

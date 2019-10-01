@@ -8,6 +8,10 @@
 
 import UIKit
 
+import Common
+import DependencyInjection
+import Samples
+
 public final class MedicationDoseTableTableViewCell: UITableViewCell {
 
 	// MARK: - IBOutlets
@@ -26,7 +30,7 @@ public final class MedicationDoseTableTableViewCell: UITableViewCell {
 			if let dosage = medicationDose.dosage {
 				doseText += dosage.description + " on "
 			}
-			doseText += DependencyInjector.util.calendar.string(for: medicationDose.date, dateStyle: .medium, timeStyle: .short)
+			doseText += DependencyInjector.get(CalendarUtil.self).string(for: medicationDose.date, dateStyle: .medium, timeStyle: .short)
 			doseAndTimestampLabel.text = doseText
 		}
 	}

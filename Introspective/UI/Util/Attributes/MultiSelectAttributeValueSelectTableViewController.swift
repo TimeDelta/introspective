@@ -8,6 +8,9 @@
 
 import UIKit
 
+import Attributes
+import Common
+
 public final class MultiSelectAttributeValueSelectTableViewController: UITableViewController {
 
 	// MARK: - Instance Variables

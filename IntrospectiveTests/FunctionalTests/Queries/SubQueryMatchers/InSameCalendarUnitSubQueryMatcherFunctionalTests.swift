@@ -10,6 +10,8 @@ import Foundation
 import XCTest
 import SwiftDate
 @testable import Introspective
+@testable import Queries
+@testable import Samples
 
 final class InSameCalendarUnitSubQueryMatcherFunctionalTests: FunctionalTest {
 

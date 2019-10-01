@@ -9,6 +9,7 @@
 import Foundation
 import Hamcrest
 @testable import Introspective
+@testable import Queries
 
 func equals(_ expected: Query) -> Matcher<Query?> {
 	return Matcher("\(String(describing: expected))") { (actual: Query?) -> MatchResult in

@@ -11,6 +11,10 @@ import Hamcrest
 import SwiftyMocky
 import SwiftDate
 @testable import Introspective
+@testable import AttributeRestrictions
+@testable import Attributes
+@testable import Common
+@testable import Queries
 
 final class GreaterThanDurationAttributeRestrictionUnitTests: UnitTest {
 

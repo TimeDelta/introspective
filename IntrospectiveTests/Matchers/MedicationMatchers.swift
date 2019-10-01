@@ -9,6 +9,7 @@
 import Foundation
 import Hamcrest
 @testable import Introspective
+@testable import Samples
 
 func equals(_ expectedMedication: Medication) -> Matcher<Medication?> {
 	return Matcher(expectedMedication.debugDescription) { actual -> MatchResult in

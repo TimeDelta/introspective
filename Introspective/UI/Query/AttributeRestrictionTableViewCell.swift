@@ -8,6 +8,8 @@
 
 import UIKit
 
+import AttributeRestrictions
+
 final class AttributeRestrictionTableViewCell: UITableViewCell {
 
 	public final var attributeRestriction: AttributeRestriction! {

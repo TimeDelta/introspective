@@ -10,6 +10,7 @@ import XCTest
 import Hamcrest
 import SwiftDate
 @testable import Introspective
+@testable import Common
 
 final class DurationUnitTests: UnitTest {
 

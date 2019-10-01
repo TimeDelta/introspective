@@ -8,6 +8,9 @@
 
 import UIKit
 
+import Attributes
+import UIExtensions
+
 final class SortResultsViewController: UIViewController {
 
 	// MARK: - IBOutlets
@@ -57,6 +60,7 @@ final class SortResultsViewController: UIViewController {
 		chooseAttributeController.attributes = attributes
 		chooseAttributeController.selectedAttribute = sortAttribute
 		chooseAttributeController.notificationToSendOnAccept = .attributeChosen
+		chooseAttributeController.acceptButtonTitle = "Sort"
 		let containerView = ContainerView<ChooseAttributeViewController>(parentController: self)
 		containerView.install(chooseAttributeController)
 		chooseAttributeView.addArrangedSubview(containerView)

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UIExtensions
 
 public final class ActivityDefinitionDescriptionTableViewCell: UITableViewCell {
 

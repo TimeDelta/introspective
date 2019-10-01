@@ -11,13 +11,20 @@ import Presentr
 import AAInfographics
 import os
 
+import Attributes
+import Common
+import DependencyInjection
+import SampleGroupers
+import SampleGroupInformation
+import Samples
+
 final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTypeSetupViewController, QueryResultsGraphCustomizationViewController {
 
 	// MARK: - Static Variables
 
 	private typealias Me = QueryResultsBasicXYGraphCustomizationViewController
 	private static let aggregationChanged = Notification.Name("aggregationChanged")
-	private static let presenter: Presentr = DependencyInjector.util.ui.customPresenter(
+	private static let presenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
 		center: .center)
@@ -63,10 +70,18 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	final override func viewDidLoad() {
 		super.viewDidLoad()
 
+		NotificationCenter.default.removeObserver(self)
+
 		observe(selector: #selector(xAxisChanged), name: .xAxisInformationChanged)
 		observe(selector: #selector(yAxisChanged), name: .yAxisInformationChanged)
+		observe(selector: #selector(seriesGrouperEdited), name: .seriesGrouperEdited)
+		observe(selector: #selector(pointGrouperEdited), name: .pointGrouperEdited)
 
 		updateShowGraphButtonState()
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	// MARK: - Button Actions
@@ -80,7 +95,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	@IBAction final func chooseSeriesGroupingButtonPressed(_ sender: Any) {
 		showGrouperEditController(
 			grouper: seriesGrouper,
-			editedCallback: #selector(seriesGrouperEdited),
+			notificationToSendOnAccept: .seriesGrouperEdited,
 			grouperName: "Series Grouping")
 	}
 
@@ -97,7 +112,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	@IBAction final func choosePointGroupingButtonPressed(_ sender: Any) {
 		showGrouperEditController(
 			grouper: pointGrouper,
-			editedCallback: #selector(pointGrouperEdited),
+			notificationToSendOnAccept: .pointGrouperEdited,
 			grouperName: "Point Grouping")
 	}
 
@@ -154,7 +169,6 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	// MARK: - Received Notifications
 
 	@objc private final func seriesGrouperEdited(notification: Notification) {
-		stopObserving(.grouperEdited)
 		if let grouper: SampleGrouper = value(for: .sampleGrouper, from: notification) {
 			guard seriesGrouper != nil else {
 				seriesGrouper = grouper
@@ -167,7 +181,6 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	}
 
 	@objc private final func pointGrouperEdited(notification: Notification) {
-		stopObserving(.grouperEdited)
 		if let grouper: SampleGrouper = value(for: .sampleGrouper, from: notification) {
 			guard pointGrouper != nil else {
 				pointGrouper = grouper
@@ -235,14 +248,13 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 
 	private final func showGrouperEditController(
 		grouper: SampleGrouper?,
-		editedCallback: Selector,
+		notificationToSendOnAccept: NotificationName,
 		grouperName: String)
 	{
-		observe(selector: editedCallback, name: .grouperEdited)
-
 		let controller = viewController(named: "chooseGrouper", fromStoryboard: "Util") as! GroupingChooserTableViewController
 		controller.sampleType = type(of: samples[0])
 		controller.currentGrouper = grouper?.copy()
+		controller.notificationToSendOnAccept = notificationToSendOnAccept
 		controller.title = grouperName
 		pushToNavigationController(controller)
 	}
@@ -288,17 +300,17 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	private final func seriesGrouperSet() {
 		if seriesGrouper != nil {
 			chooseSeriesGrouperButton.setTitle("Series grouping chosen", for: .normal)
-			DependencyInjector.util.ui.setButton(clearSeriesGrouperButton, enabled: true, hidden: false)
+			DependencyInjector.get(UiUtil.self).setButton(clearSeriesGrouperButton, enabled: true, hidden: false)
 		} else {
 			chooseSeriesGrouperButton.setTitle("Choose series grouping (optional)", for: .normal)
-			DependencyInjector.util.ui.setButton(clearSeriesGrouperButton, enabled: false, hidden: true)
+			DependencyInjector.get(UiUtil.self).setButton(clearSeriesGrouperButton, enabled: false, hidden: true)
 		}
 	}
 
 	private final func pointGrouperSet() {
 		if pointGrouper != nil {
 			choosePointGrouperButton.setTitle("Point grouping chosen", for: .normal)
-			DependencyInjector.util.ui.setButton(clearPointGrouperButton, enabled: true, hidden: false)
+			DependencyInjector.get(UiUtil.self).setButton(clearPointGrouperButton, enabled: true, hidden: false)
 			if pointGrouperWasNil {
 				// old value of yAxis (if it exists) will be [Attribute] but [Information]
 				// is needed when pointGrouper is provided
@@ -309,7 +321,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 			}
 		} else {
 			choosePointGrouperButton.setTitle("Choose point grouping (optional)", for: .normal)
-			DependencyInjector.util.ui.setButton(clearPointGrouperButton, enabled: false, hidden: true)
+			DependencyInjector.get(UiUtil.self).setButton(clearPointGrouperButton, enabled: false, hidden: true)
 			if !pointGrouperWasNil {
 				// old value of yAxis (if it exists) will be [Information] but [Attribute]
 				// is needed when pointGrouper is not provided

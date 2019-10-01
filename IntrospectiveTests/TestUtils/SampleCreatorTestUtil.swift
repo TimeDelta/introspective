@@ -8,6 +8,8 @@
 
 import Foundation
 @testable import Introspective
+@testable import Attributes
+@testable import Samples
 
 public class SampleCreatorTestUtil {
 

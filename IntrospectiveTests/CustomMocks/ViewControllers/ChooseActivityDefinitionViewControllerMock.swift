@@ -9,6 +9,7 @@
 import Foundation
 import SwiftyMocky
 @testable import Introspective
+@testable import Samples
 
 // sourcery: mock = "ChooseActivityDefinitionViewController"
 class ChooseActivityDefinitionViewControllerMock: UIViewController, ChooseActivityDefinitionViewController, Mock {

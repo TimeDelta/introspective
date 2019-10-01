@@ -11,6 +11,7 @@ import SwiftyMocky
 import Hamcrest
 import SwiftDate
 @testable import Introspective
+@testable import Common
 
 final class SelectDateViewControllerUnitTests: UnitTest {
 

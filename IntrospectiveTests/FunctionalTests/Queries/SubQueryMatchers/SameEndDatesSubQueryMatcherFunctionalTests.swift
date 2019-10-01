@@ -9,6 +9,8 @@
 import XCTest
 import SwiftDate
 @testable import Introspective
+@testable import Queries
+@testable import Samples
 
 class SameEndDatesSubQueryMatcherFunctionalTests: FunctionalTest {
 

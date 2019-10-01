@@ -10,6 +10,10 @@ import Foundation
 import SwiftyMocky
 import UIKit
 @testable import Introspective
+@testable import Attributes
+@testable import Common
+@testable import SampleGroupers
+@testable import Samples
 
 // sourcery: mock = "GroupingChooserTableViewController"
 class GroupingChooserTableViewControllerMock: UITableViewController, GroupingChooserTableViewController, Mock {

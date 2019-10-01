@@ -10,6 +10,7 @@ import Foundation
 import SwiftyMocky
 import AAInfographics
 @testable import Introspective
+@testable import Queries
 
 // sourcery: mock = "BasicXYChartViewController"
 class BasicXYChartViewControllerMock: UIViewController, BasicXYChartViewController, Mock {
