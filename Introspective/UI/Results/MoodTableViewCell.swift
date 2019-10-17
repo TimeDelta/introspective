@@ -47,4 +47,12 @@ final class MoodTableViewCellImpl: UITableViewCell, MoodTableViewCell {
 	@IBOutlet weak final var moodRatingLabel: UILabel!
 	@IBOutlet weak final var timestampLabel: UILabel!
 	@IBOutlet weak final var noteLabel: UILabel!
+
+	override func prepareForReuse() {
+		mood = nil
+		moodRatingColorLabel.text = nil
+		moodRatingLabel.text = nil
+		timestampLabel.text = nil
+		noteLabel.text = nil
+	}
 }
