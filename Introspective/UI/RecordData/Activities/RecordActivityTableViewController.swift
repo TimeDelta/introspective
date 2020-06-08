@@ -509,88 +509,6 @@ public final class RecordActivityTableViewController: UITableViewController {
 		self.tableView.reloadData()
 	}
 
-	// MARK: FetchedResultsController Helpers
-
-	private final func resetFetchedResultsControllers() {
-		resetActiveActivitiesFetchedResultsController()
-		resetInactiveActivitiesFetchedResultsController()
-	}
-
-	private final func resetActiveActivitiesFetchedResultsController() {
-		do {
-			signpost.begin(name: "resetting active fetched results controller")
-			activeActivitiesFetchedResultsController = DependencyInjector.get(Database.self).fetchedResultsController(
-				type: ActivityDefinition.self,
-				sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
-				cacheName: "activeDefinitions")
-			let fetchRequest = activeActivitiesFetchedResultsController.fetchRequest
-
-			let isActivePredicate = NSPredicate(format: "SUBQUERY(activities, $activity, $activity.endDate == nil) .@count > 0")
-			fetchRequest.predicate = isActivePredicate
-
-			let searchText: String = self.getSearchText()
-			if !searchText.isEmpty {
-				fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
-					isActivePredicate,
-					getSearchTextPredicate(searchText),
-				])
-			}
-
-			try activeActivitiesFetchedResultsController.performFetch()
-			signpost.end(name: "resetting active fetched results controller")
-		} catch {
-			log.error("Failed to fetch active activities: %@", errorInfo(error))
-			showError(
-				title: "Failed to retrieve activities",
-				message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.",
-				error: error,
-				tryAgain: loadActivitiyDefinitions)
-		}
-	}
-
-	private final func resetInactiveActivitiesFetchedResultsController() {
-		do {
-			signpost.begin(name: "resetting inactive fetched results controller")
-			inactiveActivitiesFetchedResultsController = DependencyInjector.get(Database.self).fetchedResultsController(
-				type: ActivityDefinition.self,
-				sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
-				cacheName: "definitions")
-			let fetchRequest = inactiveActivitiesFetchedResultsController.fetchRequest
-
-			let isInactivePredicate = NSPredicate(format: "SUBQUERY(activities, $activity, $activity.endDate == nil) .@count == 0")
-			fetchRequest.predicate = isInactivePredicate
-
-			let searchText: String = self.getSearchText()
-			if !searchText.isEmpty {
-				fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
-					isInactivePredicate,
-					getSearchTextPredicate(searchText),
-				])
-			}
-
-			try inactiveActivitiesFetchedResultsController.performFetch()
-			signpost.end(name: "resetting inactive fetched results controller")
-		} catch {
-			log.error("Failed to fetch activities: %@", errorInfo(error))
-			showError(
-				title: "Failed to retrieve activities",
-				message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.",
-				error: error,
-				tryAgain: loadActivitiyDefinitions)
-		}
-	}
-
-	private final func getAllFetchedResultsController() throws -> NSFetchedResultsController<ActivityDefinition> {
-		signpost.begin(name: "getting all fetched results controller")
-		let controller = DependencyInjector.get(Database.self).fetchedResultsController(
-			type: ActivityDefinition.self,
-			sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
-			cacheName: "definitions")
-		try controller.performFetch()
-		signpost.end(name: "getting all fetched results controller")
-		return controller
-	}
-
 	private final func getSearchTextPredicate(_ searchText: String) -> NSPredicate {
 		return NSPredicate(
 			format: "name CONTAINS[cd] %@ OR activityDescription CONTAINS[cd] %@ OR SUBQUERY(tags, $tag, $tag.name CONTAINS[cd] %@) .@count > 0",
@@ -794,6 +712,88 @@ public final class RecordActivityTableViewController: UITableViewController {
 			}
 		}
 		return nil
+	}
+
+	// MARK: FetchedResultsController Helpers
+
+	private final func resetFetchedResultsControllers() {
+		resetActiveActivitiesFetchedResultsController()
+		resetInactiveActivitiesFetchedResultsController()
+	}
+
+	private final func resetActiveActivitiesFetchedResultsController() {
+		do {
+			signpost.begin(name: "resetting active fetched results controller")
+			activeActivitiesFetchedResultsController = DependencyInjector.get(Database.self).fetchedResultsController(
+				type: ActivityDefinition.self,
+				sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
+				cacheName: "activeDefinitions")
+			let fetchRequest = activeActivitiesFetchedResultsController.fetchRequest
+
+			let isActivePredicate = NSPredicate(format: "SUBQUERY(activities, $activity, $activity.endDate == nil) .@count > 0")
+			fetchRequest.predicate = isActivePredicate
+
+			let searchText: String = self.getSearchText()
+			if !searchText.isEmpty {
+				fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+					isActivePredicate,
+					getSearchTextPredicate(searchText),
+				])
+			}
+
+			try activeActivitiesFetchedResultsController.performFetch()
+			signpost.end(name: "resetting active fetched results controller")
+		} catch {
+			log.error("Failed to fetch active activities: %@", errorInfo(error))
+			showError(
+				title: "Failed to retrieve activities",
+				message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.",
+				error: error,
+				tryAgain: loadActivitiyDefinitions)
+		}
+	}
+
+	private final func resetInactiveActivitiesFetchedResultsController() {
+		do {
+			signpost.begin(name: "resetting inactive fetched results controller")
+			inactiveActivitiesFetchedResultsController = DependencyInjector.get(Database.self).fetchedResultsController(
+				type: ActivityDefinition.self,
+				sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
+				cacheName: "definitions")
+			let fetchRequest = inactiveActivitiesFetchedResultsController.fetchRequest
+
+			let isInactivePredicate = NSPredicate(format: "SUBQUERY(activities, $activity, $activity.endDate == nil) .@count == 0")
+			fetchRequest.predicate = isInactivePredicate
+
+			let searchText: String = self.getSearchText()
+			if !searchText.isEmpty {
+				fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+					isInactivePredicate,
+					getSearchTextPredicate(searchText),
+				])
+			}
+
+			try inactiveActivitiesFetchedResultsController.performFetch()
+			signpost.end(name: "resetting inactive fetched results controller")
+		} catch {
+			log.error("Failed to fetch activities: %@", errorInfo(error))
+			showError(
+				title: "Failed to retrieve activities",
+				message: "Something went wrong while trying to retrieve the list of your activities. Sorry for the inconvenience.",
+				error: error,
+				tryAgain: loadActivitiyDefinitions)
+		}
+	}
+
+	private final func getAllFetchedResultsController() throws -> NSFetchedResultsController<ActivityDefinition> {
+		signpost.begin(name: "getting all fetched results controller")
+		let controller = DependencyInjector.get(Database.self).fetchedResultsController(
+			type: ActivityDefinition.self,
+			sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
+			cacheName: "definitions")
+		try controller.performFetch()
+		signpost.end(name: "getting all fetched results controller")
+		return controller
 	}
 }
 
