@@ -44,6 +44,7 @@
 		1741495F829B086EB5116D3808ACCA14 /* MinimumInformationFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECCB7BC00D30097B7C115F4B53031EB /* MinimumInformationFunctionalTests.swift */; };
 		195B17E101C8A528FB3552C16EF2CA86 /* TagDataTestUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E23DDAB53D374AF00DB590D0F003528 /* TagDataTestUtil.swift */; };
 		1B2AAD3F051969F3078719516D0330BB /* MoodUtilFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BBAE2678495436E072341E9CE15BBF /* MoodUtilFunctionalTests.swift */; };
+		1B63E31B39C26BA9D988E260AF7B1C3D /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		1B95BA6F039768CFF4FB399FFF64C6DB /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D07AEE11F19D253896AE3E97D55A7A1A /* MainInterface.storyboard */; };
 		1BD34B02F9BCC94C743E61C3733214D5 /* SelectExtraInformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C48C0A78EAE8B7D6AF90F69063C1A32 /* SelectExtraInformationViewController.swift */; };
 		1BF17FAB8FC5713E75D29AC7C8748A86 /* BooleanExpressionMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8683E615563C98D23B8BA404CE9652A6 /* BooleanExpressionMatchers.swift */; };
@@ -112,6 +113,7 @@
 		419D65D4AA99B43F718FD47A53F025E4 /* Pods_DiscreteMoodWidget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 735311D8769F386D18F7F446E8C30424 /* Pods_DiscreteMoodWidget.framework */; };
 		41A0D796680A140EBC7CDE8839807D21 /* BooleanExpressionParserUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E734C41E32250030F973F7C5C65902 /* BooleanExpressionParserUnitTests.swift */; };
 		430920C59B29C0AE2D20F76553F5DE92 /* HeartRateQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB900441A58470DF6731F6B7F737641 /* HeartRateQueryFunctionalTests.swift */; };
+		45B75B139CFE82D75940FDCBEFB10777 /* XCUIElementExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF27D6C1A5802F20C4A18B2E8E74930D /* XCUIElementExtensions.swift */; };
 		475E2F5BC738FD9E494532469FA9FF51 /* ChooseActivityDefinitionViewControllerFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC746684AD2C5785AF22747E8FE80A10 /* ChooseActivityDefinitionViewControllerFunctionalTests.swift */; };
 		480658ECD8C614C6FD8B993E343A0BD2 /* ExpressionStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD78A4D44304EC27B7F52F9C8367326 /* ExpressionStub.swift */; };
 		4865035F8E4B42843B8B83C2F5A73B6F /* UIEventTestStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F6610281D3D8ADE5515450045B947C /* UIEventTestStub.swift */; };
@@ -184,7 +186,7 @@
 		6F873B083B8A1C886F22C9F1CF19F718 /* DiscreteRatingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D99FC22FE431D12AEFC09036DB3185 /* DiscreteRatingTableViewCell.swift */; };
 		6F90C7DFED5E34346EF8C3635F46D94E /* ContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFCB36B18C64CA9C305527217C2B36D /* ContainerView.swift */; };
 		6FE12584510A2E073283F8A80F72764B /* ChooseSampleGrouperTypeViewControllerUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E8ADDDE9BED06A839DEEDFFF1D98D8 /* ChooseSampleGrouperTypeViewControllerUnitTests.swift */; };
-		6FF15879DA1EC01FFB50A5B6076AD63B /* WellnessMoodImporterFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D838B6B11F5A3BA6D237A1803C7A7CC /* WellnessMoodImporterFunctionalTests.swift */; };
+		D555DD334BBA964CF20DFB3F964C7666 /* WellnessMoodImporterFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55B9CF58B3B6F2B7A69D3C37E82A87B /* WellnessMoodImporterFunctionalTests.swift */; };
 		70146D3AA67C8249E8AC24D4E717FB8C /* DeleteCoreDataTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487BCD6FFB5D7F9BAB7231595CDB000A /* DeleteCoreDataTableViewCell.swift */; };
 		7017E4FA64867F3DA5114DBF3DA6C481 /* EditMoodTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4118E24C8BE54565A8B23E5F0B1F271 /* EditMoodTableViewController.swift */; };
 		701D07080483E8B3207E2878B55FF82D /* EndsWithStringAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E0A93AAA9776F795153CBC94B78F92 /* EndsWithStringAttributeRestrictionUnitTests.swift */; };
@@ -283,10 +285,13 @@
 		A093F349E7B2A92A9A9684B3CDED0566 /* ActivityDefinitionAutoNoteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE068B8CC403C7E3CBD6C1623FA36359 /* ActivityDefinitionAutoNoteTableViewCell.swift */; };
 		A0ACDA46E85F2ECEFBDA115171002AEF /* MoodMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE301C2F2247DBBEDE6822A654DD4F1 /* MoodMock.swift */; };
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
-		45B75B139CFE82D75940FDCBEFB10777 /* XCUIElementExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF27D6C1A5802F20C4A18B2E8E74930D /* XCUIElementExtensions.swift */; };
+		38B1135D93C8270F64AFD653A8B710D9 /* IntrospectiveMoodImporterFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71CB8B01CADD913D4ED9F4F9A0B8538E /* IntrospectiveMoodImporterFunctionalTests.swift */; };
+		92F22A93AEFD4ADD659FD25FABE59F1F /* DateMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E0E7B6B93D6CDC76861440BD22B929 /* DateMatchers.swift */; };
+		2BD2A34E947772149EB310C6AB9586D0 /* IntrospectiveMedicationImporterFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D112B235982CF591327A55FA391415 /* IntrospectiveMedicationImporterFunctionalTests.swift */; };
+		EAFB09F17EE9E3F5A72E8736879CD707 /* CoreDataMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A139AF0363C3776B210F9D516546B7E /* CoreDataMatchers.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
+		52C25EC5F0823CCA1A3A6AABC83DC5DE /* IntrospectiveActivityImporterFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7FEAF6E9CB2BFCE652262AE957D217 /* IntrospectiveActivityImporterFunctionalTests.swift */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
-		1B63E31B39C26BA9D988E260AF7B1C3D /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
 		A2DF8D22C94D6F91A865D337C0730F03 /* DurationUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA96F5DDD263FD0D99095EBADBA4AACC /* DurationUnitTests.swift */; };
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
@@ -305,7 +310,7 @@
 		A8111F3EE080B3B80770DF9CDBB41BE2 /* AttributeRestrictions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B562EA2D16F2E4CBBFAF1B479FCC36FB /* AttributeRestrictions.framework */; };
 		A86BC8022C8A9609CB684D9C7A84834D /* MedicationDosesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7444AC5D66189089E795FDA573C627C0 /* MedicationDosesTableViewController.swift */; };
 		A9077F5891A802754C04F1A31BFF7E99 /* Pods_Introspective.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 986884D0B7A67014C025F61A3D09B791 /* Pods_Introspective.framework */; };
-		A9B635D7898BCE04ED402B538FB5CDE7 /* ATrackerActivityImporterFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A04040AA8826A81ECE76D6E9657F1C0 /* ATrackerActivityImporterFunctionalTests.swift */; };
+		D2E26B90CE22CFB719E865A255B5FFEC /* ATrackerActivityImporterFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA692AA7A0FA0C6C3428F1836BBFE31 /* ATrackerActivityImporterFunctionalTests.swift */; };
 		AA5810844860C6E50B597700A8C856C7 /* BeforeDateAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855216BE391B0FBCF3FEAD4513711C3B /* BeforeDateAttributeRestrictionUnitTests.swift */; };
 		AB83E2E983650B72ACEA0D8D50FF6A0F /* SelectDateViewControllerUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B8C7658E5B7E329DFB88897C433916 /* SelectDateViewControllerUnitTests.swift */; };
 		AC6D7FC86C296D056DDF25BAEA2D3ABD /* NotEqualToDosageAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531BDC125E94AB364E2195D004FFFEAD /* NotEqualToDosageAttributeRestrictionUnitTests.swift */; };
@@ -345,7 +350,7 @@
 		C47E802963A18E06B587E18196E2BB04 /* ImportDataTableViewControllerUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D4F7A20D65B7D8B57AD3C509F9BC16 /* ImportDataTableViewControllerUnitTests.swift */; };
 		C4917A9AD3CA933EDB53D0522B60F369 /* ExporterFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D406C0345FEE99F902BF2002B52FCC /* ExporterFunctionalTest.swift */; };
 		C4F983E50346CCAE8AF92704743E52E1 /* BodyMassIndexQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D942EE3699FEE557365EE1AD198A3F2B /* BodyMassIndexQueryFunctionalTests.swift */; };
-		C6F2BBA13A45D425C42BA556083F43C9 /* EasyPillMedicationImporterFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34B7C4140F7355557E0BD1FBB6FFE94 /* EasyPillMedicationImporterFunctionalTests.swift */; };
+		7549856CD3099EC9AC819FD02628C888 /* EasyPillMedicationImporterFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78FADAC07D9E98E737F6785B57A805B /* EasyPillMedicationImporterFunctionalTests.swift */; };
 		C7B023002B41B873E635E7DD4497E63B /* NotEqualToDurationAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AA8F0E93AA909714E8388F0FA5A2CB8 /* NotEqualToDurationAttributeRestrictionUnitTests.swift */; };
 		C82FE0C2157E79F67378E37E721A48C5 /* MultiSelectAttributeValueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28E324370F11F9B9AB9B97193F8F26D8 /* MultiSelectAttributeValueViewController.swift */; };
 		C87B919700D4CB99417F1983D497F110 /* EditActivityDefinitionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F902645318CE3CA20F195D285592D48 /* EditActivityDefinitionTableViewController.swift */; };
@@ -400,7 +405,7 @@
 		E2737CC2052D91AA05DFB6B47D359068 /* WeightUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202E12E8BC50D2BB819B9122AE7A60A /* WeightUnitTests.swift */; };
 		E2CA9C3AABFCB06D3555FDF4A66144DA /* ActiveExportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD59D0ACA2B51D77F7F11B0C8BB6586 /* ActiveExportTableViewCell.swift */; };
 		E2F1E302D908B16CDEDDEDF184AD9C41 /* ResultsViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4800D5095BFFFC1E396F90AE4E588E2E /* ResultsViewControllerMock.swift */; };
-		E33F36B8CD78180C5B70E05BE1CD9667 /* EasyPillMedicationDoseImporterFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07DAC563920620D990A708494B9BBBB3 /* EasyPillMedicationDoseImporterFunctionalTests.swift */; };
+		4C405BAA88889A858F683C251492CCE0 /* EasyPillMedicationDoseImporterFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C49E8EABD423628282C80ED5AE814F0 /* EasyPillMedicationDoseImporterFunctionalTests.swift */; };
 		E5DDE96F82BA1B8C908DCB7C10F27CBB /* ArrayMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = E594A03644B2F1E00B55036D424A6D40 /* ArrayMatchers.swift */; };
 		E7F68DBE50C23B09C9A64417CC8DB4AA /* ActivitySettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F29CA254A65DA3A13529455F95B00D /* ActivitySettingTableViewCell.swift */; };
 		E82C2B66601BF7E2A088AE1017887B31 /* RecordActivityDefinitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EAFE7DB5AA63EC61ED4EA1F5225B71 /* RecordActivityDefinitionTableViewCell.swift */; };
@@ -494,7 +499,7 @@
 		0572FF4B2FCFB80EA55E103A46953D67 /* Pods-Introspective-DiscreteMoodWidget.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Introspective-DiscreteMoodWidget.release.xcconfig"; path = "Pods/Target Support Files/Pods-Introspective-DiscreteMoodWidget/Pods-Introspective-DiscreteMoodWidget.release.xcconfig"; sourceTree = "<group>"; };
 		0740508A6FD914BE190754E72F9087DD /* NavigationItemMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationItemMatchers.swift; sourceTree = "<group>"; };
 		078A8DD8CAC31A080A793D4251395E47 /* EmptyStringAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStringAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
-		07DAC563920620D990A708494B9BBBB3 /* EasyPillMedicationDoseImporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyPillMedicationDoseImporterFunctionalTests.swift; sourceTree = "<group>"; };
+		5C49E8EABD423628282C80ED5AE814F0 /* EasyPillMedicationDoseImporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyPillMedicationDoseImporterFunctionalTests.swift; sourceTree = "<group>"; };
 		07EC1D488D28B929CF2C0CDC15D8ED2D /* AfterDateAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterDateAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		0899E7701B18079DAF762ECE262BCFE1 /* Mocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
 		0AC075582EF72418ECFC8915CC45CA9E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -526,7 +531,7 @@
 		192AEAC095591D2156D2C1C6D7B79989 /* RecordMedicationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordMedicationTableViewCell.swift; sourceTree = "<group>"; };
 		1969B992090C203B02DB85EB1005D9F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		19BD2C5FCC3DA79FCD58742DCAC8122A /* QueryResultsGraphCustomizationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryResultsGraphCustomizationViewController.swift; sourceTree = "<group>"; };
-		1A04040AA8826A81ECE76D6E9657F1C0 /* ATrackerActivityImporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATrackerActivityImporterFunctionalTests.swift; sourceTree = "<group>"; };
+		6AA692AA7A0FA0C6C3428F1836BBFE31 /* ATrackerActivityImporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATrackerActivityImporterFunctionalTests.swift; sourceTree = "<group>"; };
 		1BBA5C806D2CB850992E9E1E60A8E687 /* RecordActivityTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordActivityTableViewController.swift; sourceTree = "<group>"; };
 		1BE45F44E63A95907474965403C38F72 /* DateOnlyAttributeUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOnlyAttributeUnitTests.swift; sourceTree = "<group>"; };
 		1C48C0A78EAE8B7D6AF90F69063C1A32 /* SelectExtraInformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectExtraInformationViewController.swift; sourceTree = "<group>"; };
@@ -720,7 +725,7 @@
 		7CCC5B52B7763BF96CDC97A91B6F9A0F /* ActiveExportTableViewCellUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveExportTableViewCellUnitTests.swift; sourceTree = "<group>"; };
 		7CCE5C625CFFE60BDD95D4EB82375FBA /* MedianInformationFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedianInformationFunctionalTests.swift; sourceTree = "<group>"; };
 		7CD59D0ACA2B51D77F7F11B0C8BB6586 /* ActiveExportTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveExportTableViewCell.swift; sourceTree = "<group>"; };
-		7D838B6B11F5A3BA6D237A1803C7A7CC /* WellnessMoodImporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WellnessMoodImporterFunctionalTests.swift; sourceTree = "<group>"; };
+		E55B9CF58B3B6F2B7A69D3C37E82A87B /* WellnessMoodImporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WellnessMoodImporterFunctionalTests.swift; sourceTree = "<group>"; };
 		7DAE3275E008400544CB2EB1FD59CF6C /* FrequencyEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequencyEditorViewController.swift; sourceTree = "<group>"; };
 		7DF12E0E1923C8E864C89BCABDEB6AD5 /* SearchUtilUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUtilUnitTests.swift; sourceTree = "<group>"; };
 		7E71A40F4AA2C10AB0C507C48A1C983D /* AutoLenses.stencil */ = {isa = PBXFileReference; lastKnownFileType = text; path = AutoLenses.stencil; sourceTree = "<group>"; };
@@ -791,12 +796,14 @@
 		A1776B090DE0D9396B6A50F70152A55C /* EqualToFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1B93F7FE435E06819E4BF152382DAA9 /* EqualToDurationAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToDurationAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
-		EF27D6C1A5802F20C4A18B2E8E74930D /* XCUIElementExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCUIElementExtensions.swift; sourceTree = "<group>"; };
+		71CB8B01CADD913D4ED9F4F9A0B8538E /* IntrospectiveMoodImporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrospectiveMoodImporterFunctionalTests.swift; sourceTree = "<group>"; };
+		F6E0E7B6B93D6CDC76861440BD22B929 /* DateMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateMatchers.swift; sourceTree = "<group>"; };
+		84D112B235982CF591327A55FA391415 /* IntrospectiveMedicationImporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrospectiveMedicationImporterFunctionalTests.swift; sourceTree = "<group>"; };
+		9A139AF0363C3776B210F9D516546B7E /* CoreDataMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataMatchers.swift; sourceTree = "<group>"; };
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
-		A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = UIExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = UIExtensions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FD7FEAF6E9CB2BFCE652262AE957D217 /* IntrospectiveActivityImporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrospectiveActivityImporterFunctionalTests.swift; sourceTree = "<group>"; };
 		A455D3386BC23DDD4E8C89EF40475474 /* LessThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A587847063126DF5519DD8FC08BD1F43 /* SubQueryMatcherMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubQueryMatcherMatchers.swift; sourceTree = "<group>"; };
@@ -920,6 +927,7 @@
 		ED13DE7520008338A54AB159D6ACEFC7 /* CalendarComponentAttributeUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarComponentAttributeUnitTests.swift; sourceTree = "<group>"; };
 		EE068B8CC403C7E3CBD6C1623FA36359 /* ActivityDefinitionAutoNoteTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDefinitionAutoNoteTableViewCell.swift; sourceTree = "<group>"; };
 		EE7C56F13AF43DCE40380200AE879483 /* GroupNameTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupNameTableViewCell.swift; sourceTree = "<group>"; };
+		EF27D6C1A5802F20C4A18B2E8E74930D /* XCUIElementExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCUIElementExtensions.swift; sourceTree = "<group>"; };
 		EF57616F98A85DBDC46BEF8B014A0AE0 /* Notifications.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Notifications.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F00DE3A8CC4C204EC257C34A20769422 /* EditSubDataTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSubDataTypeViewController.swift; sourceTree = "<group>"; };
 		F05CBCFDEE7DE4256945244FB471CC50 /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
@@ -928,7 +936,7 @@
 		F2410974EED9054C1C38F79B00B85110 /* ActivityTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityTableViewCell.swift; sourceTree = "<group>"; };
 		F27F09F477565933D494B233C440FB0B /* ContainsStringAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainsStringAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPressureTableViewCell.swift; sourceTree = "<group>"; };
-		F34B7C4140F7355557E0BD1FBB6FFE94 /* EasyPillMedicationImporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyPillMedicationImporterFunctionalTests.swift; sourceTree = "<group>"; };
+		C78FADAC07D9E98E737F6785B57A805B /* EasyPillMedicationImporterFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyPillMedicationImporterFunctionalTests.swift; sourceTree = "<group>"; };
 		F35DAF8DD9386CDAD26BEB4FED6C597C /* DescriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionViewController.swift; sourceTree = "<group>"; };
 		F4561BD03766F0702430A2C4F89B36E9 /* ActivityTagsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityTagsTableViewCell.swift; sourceTree = "<group>"; };
 		F49FDC841BC67626719128AB437E57F9 /* Util.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Util.storyboard; sourceTree = "<group>"; };
@@ -1200,8 +1208,6 @@
 		1AF62CA606F9BCE4BA6BF9F957AE714C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */,
-				A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */,
 				A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */,
 				0AC075582EF72418ECFC8915CC45CA9E /* CoreData.framework */,
 				3E50DED083FFB132103568F46659DC53 /* Settings.framework */,
@@ -1763,6 +1769,8 @@
 				106E2D96B7D206B2D75C71BC9160D3FE /* MedicationDoseMatchers.swift */,
 				AD649F21554A0D18B6AF682BF8423966 /* MedicationMatchers.swift */,
 				A0BDA2EA9068B9491F870C052E0B7252 /* SampleMatchers.swift */,
+				F6E0E7B6B93D6CDC76861440BD22B929 /* DateMatchers.swift */,
+				9A139AF0363C3776B210F9D516546B7E /* CoreDataMatchers.swift */,
 			);
 			path = Matchers;
 			sourceTree = "<group>";
@@ -1936,6 +1944,34 @@
 				BB3F3239D5DA24E154657AC2EC4C6F16 /* TestDataCreationSampleTypeTableViewCell.swift */,
 			);
 			path = Testing;
+			sourceTree = "<group>";
+		};
+		3F66E6DA8ADA3A2E2AEB1144DC85A97D /* Medications */ = {
+			isa = PBXGroup;
+			children = (
+				C78FADAC07D9E98E737F6785B57A805B /* EasyPillMedicationImporterFunctionalTests.swift */,
+				5C49E8EABD423628282C80ED5AE814F0 /* EasyPillMedicationDoseImporterFunctionalTests.swift */,
+				84D112B235982CF591327A55FA391415 /* IntrospectiveMedicationImporterFunctionalTests.swift */,
+			);
+			path = Medications;
+			sourceTree = "<group>";
+		};
+		8F07BEBE3EEEDA551FD5E23D62F0ED51 /* Moods */ = {
+			isa = PBXGroup;
+			children = (
+				E55B9CF58B3B6F2B7A69D3C37E82A87B /* WellnessMoodImporterFunctionalTests.swift */,
+				71CB8B01CADD913D4ED9F4F9A0B8538E /* IntrospectiveMoodImporterFunctionalTests.swift */,
+			);
+			path = Moods;
+			sourceTree = "<group>";
+		};
+		28F4BF93355A858A11E48F0DB6BD5128 /* Activities */ = {
+			isa = PBXGroup;
+			children = (
+				6AA692AA7A0FA0C6C3428F1836BBFE31 /* ATrackerActivityImporterFunctionalTests.swift */,
+				FD7FEAF6E9CB2BFCE652262AE957D217 /* IntrospectiveActivityImporterFunctionalTests.swift */,
+			);
+			path = Activities;
 			sourceTree = "<group>";
 		};
 		A42A3755C14DFA73187CC83B596D96EF /* RecordData */ = {
@@ -2330,10 +2366,9 @@
 			isa = PBXGroup;
 			children = (
 				FA1D0A28FCAA782F2BA7246F2454707D /* ImporterTest.swift */,
-				7D838B6B11F5A3BA6D237A1803C7A7CC /* WellnessMoodImporterFunctionalTests.swift */,
-				F34B7C4140F7355557E0BD1FBB6FFE94 /* EasyPillMedicationImporterFunctionalTests.swift */,
-				07DAC563920620D990A708494B9BBBB3 /* EasyPillMedicationDoseImporterFunctionalTests.swift */,
-				1A04040AA8826A81ECE76D6E9657F1C0 /* ATrackerActivityImporterFunctionalTests.swift */,
+				28F4BF93355A858A11E48F0DB6BD5128 /* Activities */,
+				3F66E6DA8ADA3A2E2AEB1144DC85A97D /* Medications */,
+				8F07BEBE3EEEDA551FD5E23D62F0ED51 /* Moods */,
 			);
 			path = DataImport;
 			sourceTree = "<group>";
@@ -2920,7 +2955,7 @@
 				6562D64BBF0C02087333E01375FBCFDF /* LessThanDurationAttributeRestrictionUnitTests.swift in Sources */,
 				11520C0039066C381096F585ECE636BB /* BodyMassIndexUnitTests.swift in Sources */,
 				76BBADE3F86C68EAFCC13AF5252A0518 /* ArgumentCaptor.swift in Sources */,
-				E33F36B8CD78180C5B70E05BE1CD9667 /* EasyPillMedicationDoseImporterFunctionalTests.swift in Sources */,
+				4C405BAA88889A858F683C251492CCE0 /* EasyPillMedicationDoseImporterFunctionalTests.swift in Sources */,
 				1E346082339D057B347593D145E01A2E /* SampleMatchers.swift in Sources */,
 				9F85A240B18CEF9A4E1F0BE8D881E8D0 /* CoreDataSampleMock.swift in Sources */,
 				4B4819F1A9E64ACEE6C044ECB96C82F7 /* AttributeMatchers.swift in Sources */,
@@ -2992,10 +3027,11 @@
 				358C93D2833F31337F420FEC678A9CB1 /* SampleCreatorTestUtil.swift in Sources */,
 				4865035F8E4B42843B8B83C2F5A73B6F /* UIEventTestStub.swift in Sources */,
 				9566F3816B674A138587C16368B929DB /* NotEqualToIntegerAttributeRestrictionUnitTests.swift in Sources */,
+				52C25EC5F0823CCA1A3A6AABC83DC5DE /* IntrospectiveActivityImporterFunctionalTests.swift in Sources */,
 				8AE178371D718F21EDE3CCA3CB3F9CCA /* AttributeErrorsUnitTests.swift in Sources */,
 				8AFE7F4E753D66B91EA3C7B855DC7107 /* DaysOfWeekAttributeUnitTests.swift in Sources */,
 				2B4870F0A1F76D540BB7EB6F7A6DCF78 /* GlobalFunctionsUnitTests.swift in Sources */,
-				C6F2BBA13A45D425C42BA556083F43C9 /* EasyPillMedicationImporterFunctionalTests.swift in Sources */,
+				7549856CD3099EC9AC819FD02628C888 /* EasyPillMedicationImporterFunctionalTests.swift in Sources */,
 				9E462DD9C048DCCA4D8B041FE1107A29 /* NonRunningSampleQueryStub.swift in Sources */,
 				430920C59B29C0AE2D20F76553F5DE92 /* HeartRateQueryFunctionalTests.swift in Sources */,
 				8342D608B77176551392FD5BD22DDA1D /* QueryViewControllerUnitTests.swift in Sources */,
@@ -3006,7 +3042,7 @@
 				EE34F9304BC477C1EA7AC4A8D1F90382 /* CSVMatchers.swift in Sources */,
 				FB39BD79543AAECF12AE74CD2230C8DB /* Test.swift in Sources */,
 				13F57B079A07676B52B6760AFD40256D /* OldestDateInformationFunctionalTests.swift in Sources */,
-				A9B635D7898BCE04ED402B538FB5CDE7 /* ATrackerActivityImporterFunctionalTests.swift in Sources */,
+				D2E26B90CE22CFB719E865A255B5FFEC /* ATrackerActivityImporterFunctionalTests.swift in Sources */,
 				5124DE4D6B559023CB485CAB9C77CFCC /* BeforeDateAndTimeAttributeRestrictionUnitTests.swift in Sources */,
 				F593CB462E222A021656D8CC9E62C75C /* MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests.swift in Sources */,
 				510361123DEDB125FFD03B9DD87B960D /* PerTagSampleGrouperUnitTests.swift in Sources */,
@@ -3020,9 +3056,10 @@
 				25A3E78A940B447D4469B9C43943A4B9 /* DoesNotHaveOneOfTagAttributeRestrictionFunctionalTests.swift in Sources */,
 				3C44A2639670EED03EB2FC00DFCD2E8A /* NotEqualToDoubleAttributeRestrictionUnitTests.swift in Sources */,
 				71904E5303C1D1B75A8634115043F052 /* InCurrentTimeUnitDateAttributeRestrictionFunctionalTests.swift in Sources */,
-				6FF15879DA1EC01FFB50A5B6076AD63B /* WellnessMoodImporterFunctionalTests.swift in Sources */,
+				D555DD334BBA964CF20DFB3F964C7666 /* WellnessMoodImporterFunctionalTests.swift in Sources */,
 				FC84066061291F60AC8E7D2280F20428 /* EqualToDurationAttributeRestrictionUnitTests.swift in Sources */,
 				CAC1FC3F658FDF6A952505D51EBECE10 /* DoubleAttributeUnitTests.swift in Sources */,
+				92F22A93AEFD4ADD659FD25FABE59F1F /* DateMatchers.swift in Sources */,
 				A4DB11637F7D4C8EFE5993031C8D4308 /* MoodDataTestUtil.swift in Sources */,
 				8944ECBF0825543CFB034C918C799804 /* ActivityNoteTableViewCellMock.swift in Sources */,
 				AFFCAAA8FB52717DC1B741DECF4230D6 /* SettingsFunctionalTests.swift in Sources */,
@@ -3035,6 +3072,7 @@
 				7CF0B4F2129C733B592E1CA8F0083172 /* MedicationMatchers.swift in Sources */,
 				ECDBB353289565A1433B22EFA567A29C /* SampleUtilUnitTests.swift in Sources */,
 				3DE592D7BA6A1E1191718D3BA8F779A7 /* GroupDefinitionUnitTests.swift in Sources */,
+				38B1135D93C8270F64AFD653A8B710D9 /* IntrospectiveMoodImporterFunctionalTests.swift in Sources */,
 				91EEF80CC55487A4B79D859E78C90529 /* SameDatesSubQueryMatcherUnitTests.swift in Sources */,
 				5031202BB0ABEFFFE511CC0EA9DA2D9A /* GenericUIMatchers.swift in Sources */,
 				5865D15FA1A4516DFAB83D0F40F876CE /* TimeOfDayAttributeFunctionalTests.swift in Sources */,
@@ -3071,6 +3109,7 @@
 				C7B023002B41B873E635E7DD4497E63B /* NotEqualToDurationAttributeRestrictionUnitTests.swift in Sources */,
 				6175E22C40F537C911409371F0984D9F /* FrequencyAttributeUnitTests.swift in Sources */,
 				C47E802963A18E06B587E18196E2BB04 /* ImportDataTableViewControllerUnitTests.swift in Sources */,
+				EAFB09F17EE9E3F5A72E8736879CD707 /* CoreDataMatchers.swift in Sources */,
 				A402CAE8659D3752C19384E59FB213DD /* QueryMatchers.swift in Sources */,
 				77AA8DA138798243DC4A989D9AE6889E /* MedicationDoseEditorViewControllerMock.swift in Sources */,
 				7BDC54ADC99BF92F6D0D5B26F0A21305 /* MedicationDoseQueryFunctionalTest.swift in Sources */,
@@ -3083,6 +3122,7 @@
 				B2E3F8F0CE6013587C54BDFE33FD99FA /* UIAlertControllerExtension.swift in Sources */,
 				88AD94B2040110C7D40C66B21ECA5F32 /* SexualActivityQueryFunctionalTests.swift in Sources */,
 				DD536BA8B33319ED9E5EF71F5A734532 /* SameDatesSubQueryMatcherFunctionalTests.swift in Sources */,
+				2BD2A34E947772149EB310C6AB9586D0 /* IntrospectiveMedicationImporterFunctionalTests.swift in Sources */,
 				A4EFE5EFE5E482A7E834A91DEC1A4613 /* AfterTimeOfDayAttributeRestrictionUnitTests.swift in Sources */,
 				EF7E6725682111D894E907E6BC7CA755 /* GroupNameTableViewCellUnitTests.swift in Sources */,
 				FAFC70DA9F3EEF6339F86BF0E5D679D7 /* ActivityHasOneOfTagAttributeRestrictionFunctionalTests.swift in Sources */,

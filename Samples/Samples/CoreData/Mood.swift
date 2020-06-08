@@ -91,6 +91,15 @@ public final class MoodImpl: NSManagedObject, Mood {
 			}
 		}
 	}
+	public final var timeZone: TimeZone? {
+		get {
+			if let timeZoneId = timestampTimeZoneId {
+				return TimeZone(identifier: timeZoneId)
+			}
+			return nil
+		}
+		set { timestampTimeZoneId = newValue?.identifier }
+	}
 
 	// MARK: - Sample Functions
 
@@ -102,16 +111,28 @@ public final class MoodImpl: NSManagedObject, Mood {
 
 	public static let exportFileDescription: String = "Moods"
 
+	// MARK: Export Column Names
+
+	public static let timestampColumn = "Timestamp"
+	public static let timeZoneColumn = "Time Zone"
+	public static let ratingColumn = "Rating"
+	public static let minRatingColumn = "Minimum Allowed Rating"
+	public static let maxRatingColumn = "Maximum Allowed Rating"
+	public static let noteColumn = "Note"
+	public static let sourceColumn = "Source"
+
+	// MARK: Export Functions
+
 	public static func exportHeaderRow(to csv: CSVWriter) throws {
 		try csv.write(
 			row: [
-				"Timestamp",
-				"Time Zone",
-				"Rating",
-				"Minimum Allowed Rating",
-				"Maximum Allowed Rating",
-				"Note",
-				"Source",
+				timestampColumn,
+				timeZoneColumn,
+				ratingColumn,
+				minRatingColumn,
+				maxRatingColumn,
+				noteColumn,
+				sourceColumn,
 			],
 			quotedAtIndex: { _ in true })
 	}

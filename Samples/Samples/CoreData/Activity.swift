@@ -101,6 +101,14 @@ public class Activity: NSManagedObject, CoreDataSample {
 		return Duration(start: startDate, end: endDate)
 	}
 
+	public final var startDateTimeZone: String? { return startDateTimeZoneId }
+	public final var endDateTimeZone: String? { return endDateTimeZoneId }
+
+	// MARK: - Testing Purposes
+
+	public final var storedStartDate: Date { return startDate }
+	public final var storedEndDate: Date? { return endDate }
+
 	// MARK: - Sample Functions
 
 	public func dates() -> [DateType : Date] {
@@ -123,15 +131,27 @@ public class Activity: NSManagedObject, CoreDataSample {
 
 	public static let exportFileDescription: String = "Activities"
 
+	// MARK: Export Column Names
+
+	public static let startColumn = "Start"
+	public static let startTimeZoneColumn = "Start Time Zone"
+	public static let endColumn = "End"
+	public static let endTimeZoneColumn = "End Time Zone"
+	public static let noteColumn = "Note"
+	public static let tagsColumn = "Extra Tags"
+	public static let sourceColumn = "Instance Source"
+
+	// MARK: Export Functions
+
 	public static func exportHeaderRow(to csv: CSVWriter) throws {
 		try ActivityDefinition.exportHeaderRow(to: csv)
-		try csv.write(field: "Start", quoted: true)
-		try csv.write(field: "Start Time Zone", quoted: true)
-		try csv.write(field: "End", quoted: true)
-		try csv.write(field: "End Time Zone", quoted: true)
-		try csv.write(field: "Note", quoted: true)
-		try csv.write(field: "Extra Tags", quoted: true)
-		try csv.write(field: "Instance Source", quoted: true)
+		try csv.write(field: startColumn, quoted: true)
+		try csv.write(field: startTimeZoneColumn, quoted: true)
+		try csv.write(field: endColumn, quoted: true)
+		try csv.write(field: endTimeZoneColumn, quoted: true)
+		try csv.write(field: noteColumn, quoted: true)
+		try csv.write(field: tagsColumn, quoted: true)
+		try csv.write(field: sourceColumn, quoted: true)
 	}
 
 	public final func export(to csv: CSVWriter) throws {
@@ -248,6 +268,14 @@ public class Activity: NSManagedObject, CoreDataSample {
 	}
 
 	// MARK: - Other
+
+	public final func setStartTimeZone(_ timeZone: TimeZone?) {
+		startDateTimeZoneId = timeZone?.identifier
+	}
+
+	public final func setEndTimeZone(_ timeZone: TimeZone?) {
+		endDateTimeZoneId = timeZone?.identifier
+	}
 
 	public final func getSource() -> Sources.ActivitySourceNum {
 		return Sources.resolveActivitySource(source)

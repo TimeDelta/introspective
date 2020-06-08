@@ -59,6 +59,15 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 			}
 		}
 	}
+	public final var timeZone: TimeZone? {
+		get {
+			if let timeZoneId = timestampTimeZoneId {
+				return TimeZone.init(identifier: timeZoneId)
+			}
+			return nil
+		}
+		set { timestampTimeZoneId = newValue?.identifier }
+	}
 
 	// MARK: - Sample Functions
 
@@ -70,22 +79,32 @@ public final class MedicationDose: NSManagedObject, CoreDataSample {
 
 	public static let exportFileDescription: String = "Medication Dosage History"
 
+	public static let dosageColumn = "Dosage"
+	public static let timestampColumn = "Timestamp"
+	public static let timeZoneColumn = "Time Zone"
+	public static let sourceColumn = "Instance Source"
+
 	public static func exportHeaderRow(to csv: CSVWriter) throws {
-		try Medication.exportHeaderRow(to: csv)
-		try csv.write(field: "Dosage", quoted: true)
-		try csv.write(field: "Timestamp", quoted: true)
-		try csv.write(field: "Time Zone", quoted: true)
-		try csv.write(field: "Instance Source", quoted: true)
+		var columns =  Medication.exportColumns
+		columns.append(dosageColumn)
+		columns.append(timestampColumn)
+		columns.append(timeZoneColumn)
+		columns.append(sourceColumn)
+		try csv.write(row: columns, quotedAtIndex: { _ in true })
 	}
 
 	public func export(to csv: CSVWriter) throws {
 		try medication.export(to: csv)
+
 		let dose = dosage?.description ?? ""
 		try csv.write(field: dose, quoted: true)
+
 		let timestampText = DependencyInjector.get(CalendarUtil.self).string(for: timestamp, dateStyle: .full, timeStyle: .full)
 		try csv.write(field: timestampText, quoted: true)
+
 		let timeZone = timestampTimeZoneId ?? ""
 		try csv.write(field: timeZone, quoted: true)
+
 		let sourceText = Sources.resolveMedicationSource(source).description
 		try csv.write(field: sourceText, quoted: true)
 	}

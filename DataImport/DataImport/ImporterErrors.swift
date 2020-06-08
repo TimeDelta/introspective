@@ -23,3 +23,13 @@ public final class AmbiguousUpdateToExistingDataError: GenericDisplayableError {
 		super.init(title: "Ambiguous update requested", description: specificError)
 	}
 }
+
+public final class MissingRequiredFieldError: GenericDisplayableError {
+
+	public init(_ missingFieldName: String, recordNumber: Int) {
+		super.init(
+			title: "Missing \(missingFieldName)",
+			description: "There is no \(missingFieldName) value for record \(recordNumber)"
+		)
+	}
+}

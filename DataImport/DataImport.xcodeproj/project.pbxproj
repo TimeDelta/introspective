@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		8B55569BE02DB201B0453706 /* Pods_DataImport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9021DC26445653205C2F137 /* Pods_DataImport.framework */; };
+		A20BABA82486BD94008949A1 /* IntrospectiveMoodImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20BABA72486BD93008949A1 /* IntrospectiveMoodImporter.swift */; };
+		A20BABB024881A7C008949A1 /* IntrospectiveMedicationImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20BABAF24881A7C008949A1 /* IntrospectiveMedicationImporter.swift */; };
 		A24E2EE823451EBB00A7707D /* DataImport.h in Headers */ = {isa = PBXBuildFile; fileRef = A24E2EE623451EBB00A7707D /* DataImport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A24E2EFF23451EFE00A7707D /* MoodImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24E2EEF23451EFD00A7707D /* MoodImporter.swift */; };
 		A24E2F0023451EFE00A7707D /* WellnessMoodImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24E2EF023451EFD00A7707D /* WellnessMoodImporter.swift */; };
@@ -27,10 +29,13 @@
 		A24E2F1123451F5F00A7707D /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A24E2F1023451F5F00A7707D /* DependencyInjection.framework */; };
 		A24E2F1323451F6300A7707D /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A24E2F1223451F6300A7707D /* Common.framework */; };
 		A24E2F1523451F6A00A7707D /* Samples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A24E2F1423451F6A00A7707D /* Samples.framework */; };
+		A260EACC235A1206007D94D8 /* IntrospectiveActivityImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A260EACB235A1206007D94D8 /* IntrospectiveActivityImporter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		61075FCE73854D729C9B98D7 /* Pods-DataImport.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DataImport.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-DataImport/Pods-DataImport.debug.xcconfig"; sourceTree = "<group>"; };
+		A20BABA72486BD93008949A1 /* IntrospectiveMoodImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrospectiveMoodImporter.swift; sourceTree = "<group>"; };
+		A20BABAF24881A7C008949A1 /* IntrospectiveMedicationImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrospectiveMedicationImporter.swift; sourceTree = "<group>"; };
 		A24E2EE323451EBB00A7707D /* DataImport.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DataImport.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A24E2EE623451EBB00A7707D /* DataImport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataImport.h; sourceTree = "<group>"; };
 		A24E2EE723451EBB00A7707D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -52,6 +57,7 @@
 		A24E2F1023451F5F00A7707D /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A24E2F1223451F6300A7707D /* Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A24E2F1423451F6A00A7707D /* Samples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Samples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A260EACB235A1206007D94D8 /* IntrospectiveActivityImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrospectiveActivityImporter.swift; sourceTree = "<group>"; };
 		D1853AB7B9E5D0C214EE2197 /* Pods-DataImport.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DataImport.release.xcconfig"; path = "../Pods/Target Support Files/Pods-DataImport/Pods-DataImport.release.xcconfig"; sourceTree = "<group>"; };
 		F9021DC26445653205C2F137 /* Pods_DataImport.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DataImport.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -111,6 +117,7 @@
 				A24E2EEF23451EFD00A7707D /* MoodImporter.swift */,
 				A24E2EF023451EFD00A7707D /* WellnessMoodImporter.swift */,
 				A24E2EF123451EFD00A7707D /* WellnessMoodImporter+CoreDataProperties.swift */,
+				A20BABA72486BD93008949A1 /* IntrospectiveMoodImporter.swift */,
 			);
 			path = Moods;
 			sourceTree = "<group>";
@@ -121,6 +128,7 @@
 				A24E2EF323451EFD00A7707D /* ActivityImporter.swift */,
 				A24E2EF423451EFD00A7707D /* ATrackerActivityImporter+CoreDataProperties.swift */,
 				A24E2EF523451EFD00A7707D /* ATrackerActivityImporter.swift */,
+				A260EACB235A1206007D94D8 /* IntrospectiveActivityImporter.swift */,
 			);
 			path = Activities;
 			sourceTree = "<group>";
@@ -133,6 +141,7 @@
 				A24E2EFB23451EFD00A7707D /* EasyPillMedicationImporter+CoreDataProperties.swift */,
 				A24E2EFD23451EFD00A7707D /* EasyPillMedicationDoseImporter.swift */,
 				A24E2EFC23451EFD00A7707D /* EasyPillMedicationDoseImporter+CoreDataProperties.swift */,
+				A20BABAF24881A7C008949A1 /* IntrospectiveMedicationImporter.swift */,
 			);
 			path = Medications;
 			sourceTree = "<group>";
@@ -261,15 +270,18 @@
 				A24E2F0223451EFE00A7707D /* ActivityImporter.swift in Sources */,
 				A24E2EFF23451EFE00A7707D /* MoodImporter.swift in Sources */,
 				A24E2F0A23451EFE00A7707D /* EasyPillMedicationDoseImporter+CoreDataProperties.swift in Sources */,
+				A20BABA82486BD94008949A1 /* IntrospectiveMoodImporter.swift in Sources */,
 				A24E2F0B23451EFE00A7707D /* EasyPillMedicationDoseImporter.swift in Sources */,
 				A24E2F0723451EFE00A7707D /* Importer.swift in Sources */,
 				A24E2F0023451EFE00A7707D /* WellnessMoodImporter.swift in Sources */,
 				A24E2F0823451EFE00A7707D /* MedicationImporter.swift in Sources */,
 				A24E2F0923451EFE00A7707D /* EasyPillMedicationImporter+CoreDataProperties.swift in Sources */,
 				A24E2F0C23451EFE00A7707D /* EasyPillMedicationImporter.swift in Sources */,
+				A20BABB024881A7C008949A1 /* IntrospectiveMedicationImporter.swift in Sources */,
 				A24E2F0423451EFE00A7707D /* ATrackerActivityImporter.swift in Sources */,
 				A24E2F0123451EFE00A7707D /* WellnessMoodImporter+CoreDataProperties.swift in Sources */,
 				A24E2F0323451EFE00A7707D /* ATrackerActivityImporter+CoreDataProperties.swift in Sources */,
+				A260EACC235A1206007D94D8 /* IntrospectiveActivityImporter.swift in Sources */,
 				A24E2F0623451EFE00A7707D /* ImporterErrors.swift in Sources */,
 				A24E2F0E23451F4F00A7707D /* DataImportInjectionProvider.swift in Sources */,
 				A24E2F0523451EFE00A7707D /* ImporterFactory.swift in Sources */,

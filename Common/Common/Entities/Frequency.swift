@@ -8,7 +8,10 @@
 
 import Foundation
 
-public final class Frequency: NSObject, NSCoding, Codable, Comparable {
+import Common
+import DependencyInjection
+
+public final class Frequency: NSObject, NSSecureCoding, Codable, Comparable {
 
 	// MARK: - Enums
 
@@ -22,7 +25,9 @@ public final class Frequency: NSObject, NSCoding, Codable, Comparable {
 	}
 
 	// MARK: - Static Variables
+
 	private typealias Me = Frequency
+
 	private static let nanosecondsPerMinute: Double = 6000000000
 	private static let minutesPerSecond: Double = 1 / 60
 	private static let minutesPerHour: Double = 60
@@ -32,6 +37,9 @@ public final class Frequency: NSObject, NSCoding, Codable, Comparable {
 	private static let minutesPerQuarter: Double = minutesPerYear / 4
 	private static let minutesPerMonth: Double = minutesPerYear / 12
 
+	private static let nonNumbersRegex = try! NSRegularExpression(pattern: "[^0-9.]+", options: [])
+
+	public static let supportsSecureCoding = true
 	public static let supportedTimeUnits: [Calendar.Component] = [
 		.nanosecond,
 		.second,
@@ -65,6 +73,21 @@ public final class Frequency: NSObject, NSCoding, Codable, Comparable {
 	private final let log = Log()
 
 	// MARK: - Initializers
+
+	public init?(_ text: String) {
+		guard let unit = Me.getTimeUnit(text) else { return nil }
+		timeUnit = unit
+		let numbersOnly = Me.nonNumbersRegex.stringByReplacingMatches(
+			in: text,
+			options: [],
+			range: NSMakeRange(0, text.count),
+			withTemplate: "")
+		if DependencyInjector.get(StringUtil.self).isNumber(numbersOnly) {
+			timesPerTimeUnit = Double(numbersOnly)!
+		} else {
+			return nil
+		}
+	}
 
 	public init?(_ timesPerTimeUnit: Double, _ timeUnit: Calendar.Component) {
 		guard Me.supportedTimeUnits.contains(timeUnit) else {
@@ -140,6 +163,15 @@ public final class Frequency: NSObject, NSCoding, Codable, Comparable {
 			case .year: return timesPerTimeUnit / Me.minutesPerYear
 			default: fatalError("Missing conversion for supported time unit: " + timeUnit.description)
 		}
+	}
+
+	private static func getTimeUnit(_ text: String) -> Calendar.Component? {
+		for unit in Me.supportedTimeUnits {
+			if text.localizedCaseInsensitiveContains(unit.description) {
+				return unit
+			}
+		}
+		return nil
 	}
 
 	// MARK: - Comparable

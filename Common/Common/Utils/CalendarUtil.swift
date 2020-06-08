@@ -22,6 +22,7 @@ public protocol CalendarUtil {
 	func end(of component: Calendar.Component, in date: Date) -> Date
 	func string(for date: Date, inFormat format: String) -> String
 	func string(for date: Date, dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> String
+	func date(from dateString: String, dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> Date?
 	func date(_ date1: Date, occursOnSame component: Calendar.Component, as date2: Date) -> Bool
 	func compare(_ date1: Date?, _ date2: Date?) -> ComparisonResult
 	func date<CollectionType: Collection>(_ date: Date, isOnOneOf daysOfWeek: CollectionType) -> Bool where CollectionType.Element == DayOfWeek
@@ -93,9 +94,16 @@ public final class CalendarUtilImpl: CalendarUtil {
 		let formatter = DateFormatter()
 		formatter.dateStyle = dateStyle
 		formatter.timeStyle = timeStyle
-		#warning("this needs access to the timezone for the activity dates, etc.")
-		formatter.timeZone = TimeZone.autoupdatingCurrent
+		formatter.timeZone = nil
 		return formatter.string(from: date)
+	}
+
+	public final func date(from dateString: String, dateStyle: DateFormatter.Style, timeStyle: DateFormatter.Style) -> Date? {
+		let formatter = DateFormatter()
+		formatter.dateStyle = dateStyle
+		formatter.timeStyle = timeStyle
+		formatter.timeZone = nil
+		return formatter.date(from: dateString)
 	}
 
 	public final func date(_ date1: Date, occursOnSame component: Calendar.Component, as date2: Date) -> Bool {

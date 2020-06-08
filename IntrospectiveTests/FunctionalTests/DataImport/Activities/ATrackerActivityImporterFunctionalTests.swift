@@ -403,11 +403,6 @@ not enough columns
 
 	// MARK: - Helper Functions
 
-	final override func useInput(_ input: String) {
-		Given(ioUtil, .csvReader(url: .value(url), hasHeaderRow: .value(true), willReturn: try! CSVReader(string: input, hasHeaderRow: true)))
-		Given(ioUtil, .contentsOf(.value(url), willReturn: input))
-	}
-
 	private final func activity1WasImported() throws -> Bool {
 		return try activityExists(Me.activityInfo1)
 	}

@@ -8,7 +8,12 @@
 
 import Foundation
 import Hamcrest
+import CoreData
+
+@testable import Common
+@testable import DependencyInjection
 @testable import Introspective
+@testable import Persistence
 @testable import Samples
 
 func equals(_ expected: Sample) -> Matcher<Sample?> {

@@ -20,7 +20,8 @@ public final class ActivityDataTestUtil {
 		description: String? = nil,
 		tags: [Tag] = [],
 		source: Sources.ActivitySourceNum = .introspective,
-		recordScreenIndex: Int16 = 0)
+		recordScreenIndex: Int16 = 0,
+		autoNote: Bool = false)
 	-> ActivityDefinition {
 		let transaction = DependencyInjector.get(Database.self).transaction()
 		let definition = try! transaction.new(ActivityDefinition.self)
@@ -30,6 +31,7 @@ public final class ActivityDataTestUtil {
 			definition.addToTags(try! transaction.pull(savedObject: tag))
 		}
 		definition.recordScreenIndex = recordScreenIndex
+		definition.autoNote = autoNote
 		try! transaction.commit()
 		return try! DependencyInjector.get(Database.self).pull(savedObject: definition)
 	}
@@ -38,7 +40,9 @@ public final class ActivityDataTestUtil {
 	public static func createActivity(
 		definition: ActivityDefinition = createActivityDefinition(),
 		startDate: Date = Date(),
+		startTimeZone: TimeZone? = nil,
 		endDate: Date? = nil,
+		endTimeZone: TimeZone? = nil,
 		note: String? = nil,
 		source: Sources.ActivitySourceNum = .introspective,
 		tags: [Tag] = [])
@@ -47,7 +51,9 @@ public final class ActivityDataTestUtil {
 		let activity = try! transaction.new(Activity.self)
 		activity.definition = try! transaction.pull(savedObject: definition)
 		activity.start = startDate
+		activity.setStartTimeZone(startTimeZone)
 		activity.end = endDate
+		activity.setEndTimeZone(endTimeZone)
 		activity.note = note
 		for tag in tags {
 			activity.addToTags(try! transaction.pull(savedObject: tag))

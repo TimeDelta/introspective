@@ -65,22 +65,42 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 		}
 	}
 
+	public final var startedOnTimeZone: TimeZone? {
+		get {
+			if let timeZoneId = startedOnTimeZoneId {
+				return TimeZone.init(identifier: timeZoneId)
+			}
+			return nil
+		}
+		set { startedOnTimeZoneId = newValue?.identifier }
+	}
+
 	// MARK: - Export
 
 	public static let exportFileDescription: String = "Medications"
 
+	public static let nameColumn = "Name"
+	public static let dosageColumn = "Normal Dosage"
+	public static let frequencyColumn = "Frequency"
+	public static let startedOnColumn = "Started On"
+	public static let startedOnTimeZoneColumn = "Started On Time Zone"
+	public static let notesColumn = "Notes"
+	public static let sourceColumn = "Definition Source"
+	public static let recordScreenIndexColumn = "Record Screen Index"
+
+	public static let exportColumns = [
+		nameColumn,
+		dosageColumn,
+		frequencyColumn,
+		startedOnColumn,
+		startedOnTimeZoneColumn,
+		notesColumn,
+		sourceColumn,
+		recordScreenIndexColumn,
+	]
+
 	public static func exportHeaderRow(to csv: CSVWriter) throws {
-		try csv.write(
-			row: [
-				"Name",
-				"Normal Dosage",
-				"Frequency",
-				"Started On",
-				"Started On Time Zone",
-				"Notes",
-				"Definition Source",
-			],
-			quotedAtIndex: { _ in true })
+		try csv.write(row: exportColumns, quotedAtIndex: { _ in true })
 	}
 
 	public func export(to csv: CSVWriter) throws {
@@ -189,6 +209,13 @@ public final class Medication: NSManagedObject, CoreDataObject, Attributed, Expo
 		if source == Sources.MedicationSourceNum.introspective && startedOnTimeZoneId == nil {
 			startedOnTimeZoneId = DependencyInjector.get(CalendarUtil.self).currentTimeZone().identifier
 		}
+	}
+
+	public final func getStartedOnTimeZone() -> TimeZone? {
+		if let timeZoneId = startedOnTimeZoneId {
+			return TimeZone.init(identifier: timeZoneId)
+		}
+		return nil
 	}
 
 	// MARK: - Equatable

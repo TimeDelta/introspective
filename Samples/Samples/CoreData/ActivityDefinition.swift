@@ -27,14 +27,26 @@ public class ActivityDefinition: NSManagedObject, CoreDataObject, Exportable {
 
 	public static let exportFileDescription: String = "Activity Definitions"
 
+	// MARK: Export Column Names
+
+	public static let nameColumn = "Name"
+	public static let descriptionColumn = "Description"
+	public static let tagsColumn = "Definition Tags"
+	public static let sourceColumn = "Definition Source"
+	public static let autoNoteColumn = "Auto Note"
+	public static let recordScreenIndexColumn = "Record Screen Index"
+
+	// MARK: Export Functions
+
 	public static func exportHeaderRow(to csv: CSVWriter) throws {
 		try csv.write(
 			row: [
-				"Name",
-				"Description",
-				"Definition Tags",
-				"Definition Source",
-				"Auto Note",
+				nameColumn,
+				descriptionColumn,
+				tagsColumn,
+				sourceColumn,
+				autoNoteColumn,
+				recordScreenIndexColumn,
 			],
 			quotedAtIndex: { _ in true })
 	}
@@ -51,6 +63,8 @@ public class ActivityDefinition: NSManagedObject, CoreDataObject, Exportable {
 		try csv.write(field: sourceText, quoted: true)
 
 		try csv.write(field: autoNote ? "true" : "false", quoted: true)
+
+		try csv.write(field: String(recordScreenIndex), quoted: true)
 	}
 
 	// MARK: - Other

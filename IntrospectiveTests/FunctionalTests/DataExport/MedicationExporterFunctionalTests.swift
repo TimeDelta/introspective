@@ -18,17 +18,18 @@ final class MedicationExporterFunctionalTests: ExporterFunctionalTest {
 
 	private typealias Me = MedicationExporterFunctionalTests
 	private static let expectedDoseHeaderFields = [
-		"Name",
-		"Normal Dosage",
-		"Frequency",
-		"Started On",
-		"Started On Time Zone",
-		"Notes",
-		"Definition Source",
-		"Dosage",
-		"Timestamp",
-		"Time Zone",
-		"Instance Source",
+		Medication.nameColumn,
+		Medication.dosageColumn,
+		Medication.frequencyColumn,
+		Medication.startedOnColumn,
+		Medication.startedOnTimeZoneColumn,
+		Medication.notesColumn,
+		Medication.sourceColumn,
+		Medication.recordScreenIndexColumn,
+		MedicationDose.dosageColumn,
+		MedicationDose.timestampColumn,
+		MedicationDose.timeZoneColumn,
+		MedicationDose.sourceColumn,
 	]
 	private static let expectedDoseHeaderRow = headerRowFor(fields: expectedDoseHeaderFields)
 

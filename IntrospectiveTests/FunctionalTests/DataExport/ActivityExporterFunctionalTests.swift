@@ -25,6 +25,7 @@ final class ActivityExporterFunctionalTests: ExporterFunctionalTest {
 		"Definition Tags",
 		"Definition Source",
 		"Auto Note",
+		"Record Screen Index",
 		"Start",
 		"Start Time Zone",
 		"End",
@@ -257,6 +258,7 @@ final class ActivityExporterFunctionalTests: ExporterFunctionalTest {
 		let activity2 = ActivityDataTestUtil.createActivity(
 			definition: definition2,
 			startDate: Date() - 1.hours,
+			startTimeZone: TimeZone.init(abbreviation: "GMT"),
 			endDate: Date() + 3.hours,
 			note: "activity 2 note",
 			source: .introspective,
@@ -491,6 +493,7 @@ final class ActivityExporterFunctionalTests: ExporterFunctionalTest {
 			tagsText,
 			definition.getSource().description,
 			definition.autoNote ? "true" : "false",
+			String(definition.recordScreenIndex),
 		]
 	}
 
@@ -508,9 +511,9 @@ final class ActivityExporterFunctionalTests: ExporterFunctionalTest {
 		var fieldValues = expectedFields(for: activity.definition)
 		fieldValues.append(contentsOf: [
 			startText,
-			TimeZone.autoupdatingCurrent.identifier,
+			activity.startDateTimeZone ?? "",
 			endText,
-			endText.isEmpty ? "" : TimeZone.autoupdatingCurrent.identifier,
+			activity.endDateTimeZone ?? "",
 			activity.note ?? "",
 			tagsText,
 			activity.getSource().description,

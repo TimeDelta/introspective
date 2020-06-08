@@ -9,7 +9,7 @@
 import Foundation
 import os
 
-public final class Dosage: NSObject, NSCoding, Codable, Comparable {
+public final class Dosage: NSObject, NSSecureCoding, Codable, Comparable {
 
 	// MARK: - Enums
 
@@ -22,6 +22,8 @@ public final class Dosage: NSObject, NSCoding, Codable, Comparable {
 
 	private typealias Me = Dosage
 	private static let amountRegex = "^[0-9]*\\.?[0-9]+"
+
+	public static let supportsSecureCoding = true
 
 	// MARK: - Comparable
 

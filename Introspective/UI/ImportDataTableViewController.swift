@@ -29,30 +29,36 @@ public final class ImportDataTableViewController: UITableViewController {
 		(section: "Activity",
 		rows: [
 			"ATracker",
+			"Introspective",
 		]),
 		(section: "Medication",
 		rows: [
 			"EasyPill Medications",
 			"EasyPill Doses",
+			"Introspective",
 		]),
 		(section: "Mood",
 		rows: [
 			"Wellness",
+			"Introspective",
 		]),
 	]
 
 	// MARK: activities
 	private static let activitiesSection = 0
 	private static let aTrackerActivityIndex = IndexPath(row: 0, section: activitiesSection)
+	private static let introspectiveActivityIndex = IndexPath(row: 1, section: activitiesSection)
 
 	// MARK: medications
 	private static let medicationSection = 1
 	private static let easyPillMedicationIndex = IndexPath(row: 0, section: medicationSection)
 	private static let easyPillDoseIndex = IndexPath(row: 1, section: medicationSection)
+	private static let introspectiveMedicationIndex = IndexPath(row: 2, section: medicationSection)
 
 	// MARK: moods
 	private static let moodSection = 2
 	private static let wellnessMoodIndex = IndexPath(row: 0, section: moodSection)
+	private static let introspectiveMoodIndex = IndexPath(row: 1, section: moodSection)
 
 	// MARK: - Instance Variables
 
@@ -293,12 +299,18 @@ public final class ImportDataTableViewController: UITableViewController {
 	private final func getImporterFor(_ indexPath: IndexPath) throws -> Importer {
 		if indexPath == Me.aTrackerActivityIndex {
 			return try DependencyInjector.get(ImporterFactory.self).aTrackerActivityImporter()
+		} else if indexPath == Me.introspectiveActivityIndex {
+			return try DependencyInjector.get(ImporterFactory.self).introspectiveActivityImporter()
 		} else if indexPath == Me.wellnessMoodIndex {
 			return try DependencyInjector.get(ImporterFactory.self).wellnessMoodImporter()
+		} else if indexPath == Me.introspectiveMoodIndex {
+			return try DependencyInjector.get(ImporterFactory.self).introspectiveMoodImporter()
 		} else if indexPath == Me.easyPillMedicationIndex {
 			return try DependencyInjector.get(ImporterFactory.self).easyPillMedicationImporter()
 		} else if indexPath == Me.easyPillDoseIndex {
 			return try DependencyInjector.get(ImporterFactory.self).easyPillMedicationDoseImporter()
+		} else if indexPath == Me.introspectiveMedicationIndex {
+			return try DependencyInjector.get(ImporterFactory.self).introspectiveMedicationImporter()
 		} else {
 			log.error("Unknown index path: (section: %d, row: %d)", indexPath.section, indexPath.row)
 			throw Errors.unknownIndexPath

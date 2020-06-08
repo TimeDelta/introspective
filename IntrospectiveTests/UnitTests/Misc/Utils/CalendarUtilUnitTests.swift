@@ -479,6 +479,37 @@ final class CalendarUtilUnitTests: UnitTest {
 		XCTAssertEqual(dateString, "2 of January, 2018 at 3:04:05")
 	}
 
+	// MARK: - dateFromStringWithDateAndTimeStyles
+
+	func testGivenStringInFullDateAndTimeStyle_dateFromStringWithDateAndTimeStyles_returnsCorrectString() {
+		// given
+		let expectedDate = Date(year: 2018, month: 1, day: 2, hour: 3, minute: 4, second: 5, nanosecond: 6, region: defaultRegion())
+		let formatter = DateFormatter()
+		let dateStyle: DateFormatter.Style = .full
+		let timeStyle: DateFormatter.Style = .full
+		formatter.dateStyle = dateStyle
+		formatter.timeStyle = timeStyle
+		formatter.timeZone = nil
+		let dateString = formatter.string(from: expectedDate)
+
+		// when
+		let actualDate = util.date(from: dateString, dateStyle: dateStyle, timeStyle: timeStyle)
+
+		// then
+		assertThat(actualDate, equalTo(expectedDate))
+	}
+
+	func testGivenInvalidDateString_dateFromStringWithDateAndTimeStyles_returnsNil() {
+		// given
+		let inputString = "not a date"
+
+		// when
+		let date = util.date(from: inputString, dateStyle: .full, timeStyle: .full)
+
+		// then
+		assertThat(date, nilValue())
+	}
+
 	// MARK: - dateOccursOnSameAs
 
 	func testGivenYearComponentAndTwoDatesInSameYear_dateOccursOnSameAs_returnsTrue() {
