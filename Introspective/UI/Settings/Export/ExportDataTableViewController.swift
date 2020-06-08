@@ -261,7 +261,7 @@ public final class ExportDataTableViewController: UITableViewController {
 		if type == MedicationDose.self || type == Medication.self {
 			return DependencyInjector.get(MedicationExporter.self)
 		}
-		if type == Mood.self {
+		if type == MoodImpl.self {
 			return DependencyInjector.get(MoodExporter.self)
 		}
 		log.error("Unknown index path: (section: %d, row: %d)", indexPath.section, indexPath.row)
