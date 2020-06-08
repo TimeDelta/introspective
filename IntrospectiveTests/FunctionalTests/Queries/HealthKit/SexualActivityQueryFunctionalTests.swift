@@ -48,7 +48,7 @@ class SexualActivityQueryFunctionalTests: QueryFunctionalTest {
 		}
 	}
 
-	func testGivenOneSexualActivityInHealthKitWithUnrestrictedQuery_runQuery_returnsThatSexualActivities() {
+	func testGivenOneSexualActivityInHealthKitWithUnrestrictedQuery_runQuery_returnsThatSexualActivity() {
 		// given
 		let expectedSamples = [SexualActivity()]
 		HealthKitDataTestUtil.save(expectedSamples)
