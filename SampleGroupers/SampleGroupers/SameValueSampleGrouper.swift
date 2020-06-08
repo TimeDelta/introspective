@@ -60,7 +60,7 @@ public final class SameValueSampleGrouper: SampleGrouper {
 		let groupByAttribute = try getGroupByAttribute(methodName: "group(samples:)")
 		guard samples.count > 0 else { return [] }
 		// grouping by hashable value is better time complexity
-		if try samples[0].value(of: groupByAttribute) is Hashable {
+		if try samples[0].value(of: groupByAttribute) is AnyHashable {
 			return try getGroupsForHashableValues(samples)
 		}
 		return try getGroupsForNonHashableValues(samples)
