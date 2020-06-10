@@ -73,6 +73,11 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 		datePicker.maximumDate = latestPossibleDate
 		datePicker.datePickerMode = datePickerMode
 
+		var nowButtonTitle = "Now"
+		if datePickerMode == .date {
+			nowButtonTitle = "Today"
+		}
+
 		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
 			coachMarksInfo,
 			instructionsShownKey: .selectDateViewInstructionsShown,
@@ -109,7 +114,7 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 				quickPress: #selector(quickPressIncrementByThirty),
 				longPress: #selector(longPressIncrementByThirty)),
 			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
-			UIBarButtonItem(title: "Now", style: .plain, target: self, action: #selector(nowButtonPressed)),
+			UIBarButtonItem(title: nowButtonTitle, style: .plain, target: self, action: #selector(nowButtonPressed)),
 		], animated: false)
 	}
 
