@@ -196,7 +196,11 @@ public final class SelectDateViewControllerImpl: UIViewController, SelectDateVie
 	// MARK: - Helper Functions
 
 	private final func quickPressIncrementOrDecrement(amountToAdd: Int) {
-		datePicker.date = datePicker.date + amountToAdd.minutes
+		if datePickerMode == .date {
+			datePicker.date = datePicker.date + amountToAdd.days
+		} else {
+			datePicker.date = datePicker.date + amountToAdd.minutes
+		}
 	}
 
 	private final func showChooseTimeUnitActionSheet(amountToAdd: Int) {
