@@ -310,6 +310,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 				do {
 					let transaction = DependencyInjector.get(Database.self).transaction()
 					try retryOnFail({ try transaction.delete(managedSample) }, maxRetries: 2)
+					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 					if goBackAfterDelete {
 						self.navigationController?.popViewController(animated: false)
 					} else {
