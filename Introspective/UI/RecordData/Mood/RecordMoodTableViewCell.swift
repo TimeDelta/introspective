@@ -32,6 +32,7 @@ final class RecordMoodTableViewCell: UITableViewCell {
 	@IBOutlet weak final var doneButton: UIButton!
 	@IBOutlet weak final var addNoteButton: UIButton!
 	@IBOutlet weak final var ratingButton: UIButton!
+	@IBOutlet weak final var feedbackLabel: UILabel!
 
 	// MARK: - Instance Variables
 
@@ -104,6 +105,15 @@ final class RecordMoodTableViewCell: UITableViewCell {
 			mood.setSource(.introspective)
 			try transaction.commit()
 
+			feedbackLabel.text = "Got it. You're at a " + DependencyInjector.get(MoodUiUtil.self).valueToString(rating)
+			feedbackLabel.isHidden = false
+			Timer.scheduledTimer(
+				timeInterval: 5,
+				target: self,
+				selector: #selector(hideFeedbackLabel),
+				userInfo: nil,
+				repeats: false)
+
 			reset()
 		} catch {
 			log.error("Failed to create or save mood: %@", errorInfo(error))
@@ -140,6 +150,10 @@ final class RecordMoodTableViewCell: UITableViewCell {
 		let min = DependencyInjector.get(Settings.self).minMood
 		let max = DependencyInjector.get(Settings.self).maxMood
 		rating = (max - min) / 2 + min
+	}
+
+	@objc private final func hideFeedbackLabel() {
+		feedbackLabel.isHidden = true
 	}
 
 	@objc private final func updateUI() {

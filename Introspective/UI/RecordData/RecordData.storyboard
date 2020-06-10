@@ -68,11 +68,20 @@
                                                 <action selector="setRating:" destination="fJm-WJ-Cyf" eventType="touchUpInside" id="1sg-U4-E6L"/>
                                             </connections>
                                         </button>
+                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="veS-8S-glT">
+                                            <rect key="frame" x="16" y="11" width="343" height="123"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="24"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="addNoteButton" destination="ho7-yT-Grz" id="oNp-aw-s1j"/>
                                     <outlet property="doneButton" destination="LbB-hc-tae" id="pmV-gd-zkR"/>
+                                    <outlet property="feedbackLabel" destination="veS-8S-glT" id="uN7-pL-cHO"/>
                                     <outlet property="ratingButton" destination="lfL-qr-4hB" id="nRB-tt-CVD"/>
                                     <outlet property="ratingRangeLabel" destination="aJJ-MQ-2tK" id="heJ-Vq-Q05"/>
                                     <outlet property="ratingSlider" destination="ymG-KL-FCQ" id="X88-2h-GKl"/>
@@ -127,6 +136,14 @@
                                                 <constraint firstItem="AP7-3C-e06" firstAttribute="bottom" secondItem="gFO-JW-crE" secondAttribute="bottom" id="oDT-Ie-Vq3"/>
                                             </constraints>
                                         </scrollView>
+                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qh3-Pz-Qpq">
+                                            <rect key="frame" x="16" y="11" width="343" height="123"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <fontDescription key="fontDescription" name="Noteworthy-Bold" family="Noteworthy" pointSize="24"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="gFO-JW-crE" firstAttribute="top" secondItem="kQs-XG-QPP" secondAttribute="bottom" constant="8" symbolic="YES" id="99f-Wj-Yk9"/>
@@ -143,6 +160,7 @@
                                 <connections>
                                     <outlet property="addNoteButton" destination="kTS-5Q-5j2" id="2Uz-81-xpf"/>
                                     <outlet property="doneButton" destination="kQs-XG-QPP" id="f1N-iO-NTq"/>
+                                    <outlet property="feedbackLabel" destination="Qh3-Pz-Qpq" id="mdW-ok-grz"/>
                                     <outlet property="moodContentView" destination="AP7-3C-e06" id="djS-TK-z8s"/>
                                     <outlet property="scrollView" destination="gFO-JW-crE" id="Jhh-xa-JSb"/>
                                 </connections>
@@ -470,21 +488,21 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="end" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="end" id="vQH-6v-H84" customClass="ActivityEndDateTableViewCellImpl" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="115" width="375" height="22.5"/>
+                                <rect key="frame" x="0.0" y="115" width="375" height="23"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vQH-6v-H84" id="lpK-7v-4DY">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="22.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="23"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="End" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d8c-pP-hHr">
-                                            <rect key="frame" x="20" y="12" width="30" height="0.0"/>
+                                            <rect key="frame" x="20" y="12" width="30" height="1"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="End Date" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eGD-aA-PrV">
-                                            <rect key="frame" x="88" y="12" width="266" height="0.0"/>
+                                            <rect key="frame" x="88" y="12" width="266" height="1"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <accessibility key="accessibilityConfiguration" identifier="end date" label="end date"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -492,7 +510,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OW5-3Q-kwx">
-                                            <rect key="frame" x="58" y="11" width="22" height="2"/>
+                                            <rect key="frame" x="58" y="11" width="22" height="3"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                                             <accessibility key="accessibilityConfiguration" hint="This will remove the end date from this instance of the activity." identifier="clear end date button" label="clear end date button"/>
                                             <state key="normal" title="x"/>
@@ -509,7 +527,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="duration" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="duration" textLabel="PwE-rG-ulE" detailTextLabel="WHm-5s-Usz" style="IBUITableViewCellStyleValue1" id="aYC-Ee-32F">
-                                <rect key="frame" x="0.0" y="137.5" width="375" height="43.5"/>
+                                <rect key="frame" x="0.0" y="138" width="375" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="aYC-Ee-32F" id="J9j-pz-D4h">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -533,7 +551,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="note" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="note" rowHeight="131" id="Djz-l3-c9V" customClass="ActivityNoteTableViewCellImpl" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="181" width="375" height="131"/>
+                                <rect key="frame" x="0.0" y="181.5" width="375" height="131"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Djz-l3-c9V" id="tHJ-mt-4dQ">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="131"/>
@@ -554,7 +572,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="tags" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="tags" rowHeight="131" id="Iwe-n6-Zgr" customClass="ActivityTagsTableViewCellImpl" customModule="Introspective" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="312" width="375" height="131"/>
+                                <rect key="frame" x="0.0" y="312.5" width="375" height="131"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Iwe-n6-Zgr" id="GQE-gD-Kp9">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="131"/>

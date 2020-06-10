@@ -14,13 +14,12 @@ import UIKit
 
 final class RecordMoodTableViewCellUnitTests: UnitTest {
 
-	private typealias Me = RecordMoodTableViewCellUnitTests
-	private static let frame = CGRect(x: 0, y: 0, width: 100, height: 30)
-	private static let ratingSlider = UISlider(frame: frame)
-	private static let addNoteButton = UIButton(type: .system)
-	private static let doneButton = UIButton(type: .system)
-	private static let ratingRangeLabel = UILabel(frame: frame)
-	private static let ratingButton = UIButton()
+	private var ratingSlider: UISlider!
+	private var addNoteButton: UIButton!
+	private var doneButton: UIButton!
+	private var ratingRangeLabel: UILabel!
+	private var ratingButton: UIButton!
+	private var feedbackLabel: UILabel!
 
 	private var cell: RecordMoodTableViewCell!
 	private var mockMood: MoodMock!
@@ -41,12 +40,20 @@ final class RecordMoodTableViewCellUnitTests: UnitTest {
 		Given(mockSettings, .minMood(getter: 0.0))
 		Given(mockSettings, .maxMood(getter: 7.0))
 
+		ratingSlider = UISlider()
+		addNoteButton = UIButton()
+		doneButton = UIButton()
+		ratingRangeLabel = UILabel()
+		ratingButton = UIButton()
+		feedbackLabel = UILabel()
+
 		cell = RecordMoodTableViewCell()
-		cell.ratingSlider = Me.ratingSlider
-		cell.addNoteButton = Me.addNoteButton
-		cell.doneButton = Me.doneButton
-		cell.ratingRangeLabel = Me.ratingRangeLabel
-		cell.ratingButton = Me.ratingButton
+		cell.ratingSlider = ratingSlider
+		cell.addNoteButton = addNoteButton
+		cell.doneButton = doneButton
+		cell.ratingRangeLabel = ratingRangeLabel
+		cell.ratingButton = ratingButton
+		cell.feedbackLabel = feedbackLabel
 	}
 
 	func testNoteGetsClearedOnSave() {

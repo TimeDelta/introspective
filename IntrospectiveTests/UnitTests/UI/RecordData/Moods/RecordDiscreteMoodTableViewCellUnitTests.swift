@@ -13,12 +13,11 @@ import SwiftyMocky
 
 class RecordDiscreteMoodTableViewCellUnitTests: UnitTest {
 
-	private typealias Me = RecordDiscreteMoodTableViewCellUnitTests
-	private static let frame = CGRect(x: 0, y: 0, width: 100, height: 30)
-	private static let scrollView = UIScrollView(frame: frame)
-	private static let moodContentView = UIView(frame: frame)
-	private static let addNoteButton = UIButton(type: .system)
-	private static let doneButton = UIButton(type: .system)
+	private var scrollView: UIScrollView!
+	private var moodContentView: UIView!
+	private var addNoteButton: UIButton!
+	private var doneButton: UIButton!
+	private var feedbackLabel: UILabel!
 
 	private var cell: RecordDiscreteMoodTableViewCell!
 	private var mockMood: MoodMock!
@@ -38,11 +37,18 @@ class RecordDiscreteMoodTableViewCellUnitTests: UnitTest {
 		Given(mockSettings, .minMood(getter: 0.0))
 		Given(mockSettings, .maxMood(getter: 7.0))
 
+		scrollView = UIScrollView()
+		moodContentView = UIView()
+		addNoteButton = UIButton()
+		doneButton = UIButton()
+		feedbackLabel = UILabel()
+
 		cell = RecordDiscreteMoodTableViewCell()
-		cell.scrollView = Me.scrollView
-		cell.moodContentView = Me.moodContentView
-		cell.addNoteButton = Me.addNoteButton
-		cell.doneButton = Me.doneButton
+		cell.scrollView = scrollView
+		cell.moodContentView = moodContentView
+		cell.addNoteButton = addNoteButton
+		cell.doneButton = doneButton
+		cell.feedbackLabel = feedbackLabel
 	}
 
 	func testNoteGetsClearedOnSave() {

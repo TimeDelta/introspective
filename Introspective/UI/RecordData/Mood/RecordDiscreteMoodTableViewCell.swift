@@ -31,6 +31,7 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 	@IBOutlet weak final var addNoteButton: UIButton!
 	@IBOutlet weak final var scrollView: UIScrollView!
 	@IBOutlet weak final var moodContentView: UIView!
+	@IBOutlet weak final var feedbackLabel: UILabel!
 
 	// MARK: - Instance Variables
 
@@ -85,6 +86,15 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 			mood.maxRating = DependencyInjector.get(Settings.self).maxMood
 			mood.setSource(.introspective)
 			try transaction.commit()
+
+			feedbackLabel.text = "Got it. You're at a \(rating)"
+			feedbackLabel.isHidden = false
+			Timer.scheduledTimer(
+				timeInterval: 5,
+				target: self,
+				selector: #selector(hideFeedbackLabel),
+				userInfo: nil,
+				repeats: false)
 
 			reset()
 			updateUI()
@@ -143,6 +153,10 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 		let min = DependencyInjector.get(Settings.self).minMood
 		let max = DependencyInjector.get(Settings.self).maxMood
 		rating = Int((max - min) / 2 + min)
+	}
+
+	@objc private final func hideFeedbackLabel() {
+		feedbackLabel.isHidden = true
 	}
 
 	private final func updateUI() {
