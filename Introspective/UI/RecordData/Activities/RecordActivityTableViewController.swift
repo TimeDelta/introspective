@@ -306,48 +306,6 @@ public final class RecordActivityTableViewController: UITableViewController {
 		tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
 	}
 
-	@objc private final func sortByRecentCount(notification: Notification) {
-		guard let numTimeUnits: Int = value(for: .number, from: notification) else { return }
-		guard let timeUnit: Calendar.Component = value(for: .calendarComponent, from: notification) else { return }
-		do {
-			let transaction = DependencyInjector.get(Database.self).transaction()
-			let allDefinitions = try transaction.query(ActivityDefinition.fetchRequest())
-			var counts = [String: Int]()
-			for definition in allDefinitions {
-				let recentActivities: NSFetchRequest<NSFetchRequestResult> = Activity.fetchRequest()
-				let minStartDate = DependencyInjector.get(CalendarUtil.self).ago(numTimeUnits, timeUnit)
-				recentActivities.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
-					NSPredicate(format: "startDate > %@", minStartDate as NSDate),
-					NSPredicate(format: "definition == %@", definition),
-				])
-				counts[definition.name] = try transaction.count(recentActivities)
-			}
-			let sortedDefinitions = try allDefinitions.sorted{ (definition1, definition2) throws -> Bool in
-				if counts[definition1.name]! > counts[definition2.name]! {
-					return true
-				}
-				if counts[definition1.name]! < counts[definition2.name]! {
-					return false
-				}
-
-				guard let mostRecent1 = self.getMostRecentActivity(definition1) else { return false }
-				guard let mostRecent2 = self.getMostRecentActivity(definition2) else { return true }
-				return mostRecent1.start.isAfterDate(mostRecent2.start, orEqual: true, granularity: .second)
-			}
-			var i: Int16 = 0
-			for definition in sortedDefinitions {
-				definition.recordScreenIndex = i
-				i += 1
-			}
-			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-
-			self.currentSort = nil
-			self.loadActivitiyDefinitions()
-		} catch {
-			self.showError(title: "Failed to sort by recent count. Sorry for thee inconvenience.")
-		}
-	}
-
 	// MARK: - Swipe Actions
 
 	public final override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -514,6 +472,48 @@ public final class RecordActivityTableViewController: UITableViewController {
 		} else {
 			log.error("Failed to find activity definition in original set. Resorting to reload of activity definitions.")
 			loadActivitiyDefinitions()
+		}
+	}
+
+	@objc private final func sortByRecentCount(notification: Notification) {
+		guard let numTimeUnits: Int = value(for: .number, from: notification) else { return }
+		guard let timeUnit: Calendar.Component = value(for: .calendarComponent, from: notification) else { return }
+		do {
+			let transaction = DependencyInjector.get(Database.self).transaction()
+			let allDefinitions = try transaction.query(ActivityDefinition.fetchRequest())
+			var counts = [String: Int]()
+			for definition in allDefinitions {
+				let recentActivities: NSFetchRequest<NSFetchRequestResult> = Activity.fetchRequest()
+				let minStartDate = DependencyInjector.get(CalendarUtil.self).ago(numTimeUnits, timeUnit)
+				recentActivities.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+					NSPredicate(format: "startDate > %@", minStartDate as NSDate),
+					NSPredicate(format: "definition == %@", definition),
+				])
+				counts[definition.name] = try transaction.count(recentActivities)
+			}
+			let sortedDefinitions = try allDefinitions.sorted{ (definition1, definition2) throws -> Bool in
+				if counts[definition1.name]! > counts[definition2.name]! {
+					return true
+				}
+				if counts[definition1.name]! < counts[definition2.name]! {
+					return false
+				}
+
+				guard let mostRecent1 = self.getMostRecentActivity(definition1) else { return false }
+				guard let mostRecent2 = self.getMostRecentActivity(definition2) else { return true }
+				return mostRecent1.start.isAfterDate(mostRecent2.start, orEqual: true, granularity: .second)
+			}
+			var i: Int16 = 0
+			for definition in sortedDefinitions {
+				definition.recordScreenIndex = i
+				i += 1
+			}
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+
+			self.currentSort = nil
+			self.loadActivitiyDefinitions()
+		} catch {
+			self.showError(title: "Failed to sort by recent count. Sorry for thee inconvenience.")
 		}
 	}
 
