@@ -35,6 +35,7 @@ public protocol CalendarUtil {
 	func distance(from date1: Date, to date2: Date, in unit: Calendar.Component) throws -> Int
 	// need to inject this dependency for testing
 	func currentTimeZone() -> TimeZone
+	func ago(_ numUnits: Int, _ timeUnit: Calendar.Component) -> Date
 }
 
 public extension CalendarUtil {
@@ -181,5 +182,20 @@ public final class CalendarUtilImpl: CalendarUtil {
 	/// This is used only for testing
 	public final func setTimeZone(_ timeZone: TimeZone) {
 		self.timeZone = timeZone
+	}
+
+	public final func ago(_ numUnits: Int, _ timeUnit: Calendar.Component) -> Date {
+		switch (timeUnit) {
+			case .year: return Date() - numUnits.years
+			case .month: return Date() - numUnits.months
+			case .weekOfYear: return Date() - numUnits.weeks
+			case .day: return Date() - numUnits.days
+			case .hour: return Date() - numUnits.hours
+			case .minute: return Date() - numUnits.minutes
+			case .second: return Date() - numUnits.seconds
+			default:
+				log.error("Unsupported time unit: ", timeUnit.description)
+				return Date()
+		}
 	}
 }

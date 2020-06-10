@@ -21,6 +21,7 @@ public protocol Database {
 
 	func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, sortDescriptors: [NSSortDescriptor], cacheName: String?) -> NSFetchedResultsController<Type>
 	func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type]
+	func count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>) throws -> Int
 	/// Need to call this for any newly objects created after transaction is committed
 	func pull<Type: NSManagedObject>(savedObject: Type) throws -> Type
 	/// This method needs to be called when trying to establish a relationship between two objects in different contexts.
@@ -100,6 +101,18 @@ internal class DatabaseImpl: Database {
 			return result
 		} catch {
 			signpost.end(name: "Database Query", idObject: fetchRequest)
+			throw error
+		}
+	}
+
+	public final func count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>) throws -> Int {
+		signpost.begin(name: "Database Count Query", idObject: fetchRequest, "%@", fetchRequest.debugDescription)
+		do {
+			let result = try persistentContainer.viewContext.count(for: fetchRequest)
+			signpost.end(name: "Database Count Query", idObject: fetchRequest)
+			return result
+		} catch {
+			signpost.end(name: "Database Count Query", idObject: fetchRequest)
 			throw error
 		}
 	}

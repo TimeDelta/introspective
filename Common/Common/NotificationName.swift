@@ -69,6 +69,9 @@ public enum NotificationName: StringLiteralType {
 	// MARK: - Information
 	case editedInformation = "editedInformation"
 
+	// MARK: - Other
+	case timePeriodChosen = "timePeriodChosen"
+
 	// MARK: - Functions
 
 	public func toName() -> Notification.Name {

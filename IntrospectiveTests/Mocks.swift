@@ -2865,6 +2865,20 @@ open class CalendarUtilMock: CalendarUtil, Mock {
 		return __value
     }
 
+    open func ago(_ numUnits: Int, _ timeUnit: Calendar.Component) -> Date {
+        addInvocation(.m_ago__numUnits_timeUnit(Parameter<Int>.value(`numUnits`), Parameter<Calendar.Component>.value(`timeUnit`)))
+		let perform = methodPerformValue(.m_ago__numUnits_timeUnit(Parameter<Int>.value(`numUnits`), Parameter<Calendar.Component>.value(`timeUnit`))) as? (Int, Calendar.Component) -> Void
+		perform?(`numUnits`, `timeUnit`)
+		var __value: Date
+		do {
+		    __value = try methodReturnValue(.m_ago__numUnits_timeUnit(Parameter<Int>.value(`numUnits`), Parameter<Calendar.Component>.value(`timeUnit`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for ago(_ numUnits: Int, _ timeUnit: Calendar.Component). Use given")
+			Failure("Stub return value not specified for ago(_ numUnits: Int, _ timeUnit: Calendar.Component). Use given")
+		}
+		return __value
+    }
+
 
     fileprivate enum MethodType {
         case m_convert__datefrom_fromTimeZoneto_toTimeZone(Parameter<Date>, Parameter<TimeZone>, Parameter<TimeZone>)
@@ -2881,6 +2895,7 @@ open class CalendarUtilMock: CalendarUtil, Mock {
         case m_dayOfWeek__forDate_date(Parameter<Date>)
         case m_distance__from_date1to_date2in_unit(Parameter<Date>, Parameter<Date>, Parameter<Calendar.Component>)
         case m_currentTimeZone
+        case m_ago__numUnits_timeUnit(Parameter<Int>, Parameter<Calendar.Component>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -2942,6 +2957,10 @@ open class CalendarUtilMock: CalendarUtil, Mock {
                 return true 
             case (.m_currentTimeZone, .m_currentTimeZone):
                 return true 
+            case (.m_ago__numUnits_timeUnit(let lhsNumunits, let lhsTimeunit), .m_ago__numUnits_timeUnit(let rhsNumunits, let rhsTimeunit)):
+                guard Parameter.compare(lhs: lhsNumunits, rhs: rhsNumunits, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsTimeunit, rhs: rhsTimeunit, with: matcher) else { return false } 
+                return true 
             default: return false
             }
         }
@@ -2962,6 +2981,7 @@ open class CalendarUtilMock: CalendarUtil, Mock {
             case let .m_dayOfWeek__forDate_date(p0): return p0.intValue
             case let .m_distance__from_date1to_date2in_unit(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case .m_currentTimeZone: return 0
+            case let .m_ago__numUnits_timeUnit(p0, p1): return p0.intValue + p1.intValue
             }
         }
     }
@@ -3016,6 +3036,9 @@ open class CalendarUtilMock: CalendarUtil, Mock {
         }
         public static func currentTimeZone(willReturn: TimeZone...) -> MethodStub {
             return Given(method: .m_currentTimeZone, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func ago(_ numUnits: Parameter<Int>, _ timeUnit: Parameter<Calendar.Component>, willReturn: Date...) -> MethodStub {
+            return Given(method: .m_ago__numUnits_timeUnit(`numUnits`, `timeUnit`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func convert(_ date: Parameter<Date>, from fromTimeZone: Parameter<TimeZone>, to toTimeZone: Parameter<TimeZone>, willProduce: (Stubber<Date>) -> Void) -> MethodStub {
             let willReturn: [Date] = []
@@ -3108,6 +3131,13 @@ open class CalendarUtilMock: CalendarUtil, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func ago(_ numUnits: Parameter<Int>, _ timeUnit: Parameter<Calendar.Component>, willProduce: (Stubber<Date>) -> Void) -> MethodStub {
+            let willReturn: [Date] = []
+			let given: Given = { return Given(method: .m_ago__numUnits_timeUnit(`numUnits`, `timeUnit`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Date).self)
+			willProduce(stubber)
+			return given
+        }
         public static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`), products: willThrow.map({ StubProduct.throw($0) }))
         }
@@ -3137,6 +3167,7 @@ open class CalendarUtilMock: CalendarUtil, Mock {
         public static func dayOfWeek(forDate date: Parameter<Date>) -> Verify { return Verify(method: .m_dayOfWeek__forDate_date(`date`))}
         public static func distance(from date1: Parameter<Date>, to date2: Parameter<Date>, in unit: Parameter<Calendar.Component>) -> Verify { return Verify(method: .m_distance__from_date1to_date2in_unit(`date1`, `date2`, `unit`))}
         public static func currentTimeZone() -> Verify { return Verify(method: .m_currentTimeZone)}
+        public static func ago(_ numUnits: Parameter<Int>, _ timeUnit: Parameter<Calendar.Component>) -> Verify { return Verify(method: .m_ago__numUnits_timeUnit(`numUnits`, `timeUnit`))}
     }
 
     public struct Perform {
@@ -3184,6 +3215,9 @@ open class CalendarUtilMock: CalendarUtil, Mock {
         }
         public static func currentTimeZone(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_currentTimeZone, performs: perform)
+        }
+        public static func ago(_ numUnits: Parameter<Int>, _ timeUnit: Parameter<Calendar.Component>, perform: @escaping (Int, Calendar.Component) -> Void) -> Perform {
+            return Perform(method: .m_ago__numUnits_timeUnit(`numUnits`, `timeUnit`), performs: perform)
         }
     }
 
@@ -4092,6 +4126,22 @@ open class DatabaseMock: Database, Mock {
 		return __value
     }
 
+    open func count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>) throws -> Int {
+        addInvocation(.m_count__fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_count__fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric())) as? (NSFetchRequest<Type>) -> Void
+		perform?(`fetchRequest`)
+		var __value: Int
+		do {
+		    __value = try methodReturnValue(.m_count__fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>). Use given")
+			Failure("Stub return value not specified for count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     open func pull<Type: NSManagedObject>(savedObject: Type) throws -> Type {
         addInvocation(.m_pull__savedObject_savedObject(Parameter<Type>.value(`savedObject`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_pull__savedObject_savedObject(Parameter<Type>.value(`savedObject`).wrapAsGeneric())) as? (Type) -> Void
@@ -4158,6 +4208,7 @@ open class DatabaseMock: Database, Mock {
         case m_transaction
         case m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(Parameter<GenericAttribute>, Parameter<[NSSortDescriptor]>, Parameter<String?>)
         case m_query__fetchRequest(Parameter<GenericAttribute>)
+        case m_count__fetchRequest(Parameter<GenericAttribute>)
         case m_pull__savedObject_savedObject(Parameter<GenericAttribute>)
         case m_pull__savedObject_savedObjectfromSameContextAs_otherObject(Parameter<GenericAttribute>, Parameter<NSManagedObject>)
         case m_pull__savedObject_savedObjectfromContext_context(Parameter<GenericAttribute>, Parameter<NSManagedObjectContext>)
@@ -4173,6 +4224,9 @@ open class DatabaseMock: Database, Mock {
                 guard Parameter.compare(lhs: lhsCachename, rhs: rhsCachename, with: matcher) else { return false } 
                 return true 
             case (.m_query__fetchRequest(let lhsFetchrequest), .m_query__fetchRequest(let rhsFetchrequest)):
+                guard Parameter.compare(lhs: lhsFetchrequest, rhs: rhsFetchrequest, with: matcher) else { return false } 
+                return true 
+            case (.m_count__fetchRequest(let lhsFetchrequest), .m_count__fetchRequest(let rhsFetchrequest)):
                 guard Parameter.compare(lhs: lhsFetchrequest, rhs: rhsFetchrequest, with: matcher) else { return false } 
                 return true 
             case (.m_pull__savedObject_savedObject(let lhsSavedobject), .m_pull__savedObject_savedObject(let rhsSavedobject)):
@@ -4197,6 +4251,7 @@ open class DatabaseMock: Database, Mock {
             case .m_transaction: return 0
             case let .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_query__fetchRequest(p0): return p0.intValue
+            case let .m_count__fetchRequest(p0): return p0.intValue
             case let .m_pull__savedObject_savedObject(p0): return p0.intValue
             case let .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(p0, p1): return p0.intValue + p1.intValue
             case let .m_pull__savedObject_savedObjectfromContext_context(p0, p1): return p0.intValue + p1.intValue
@@ -4222,6 +4277,9 @@ open class DatabaseMock: Database, Mock {
         }
         public static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: [Type]...) -> MethodStub {
             return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func count<Type: NSFetchRequestResult>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: Int...) -> MethodStub {
+            return Given(method: .m_count__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func pull<Type: NSManagedObject>(savedObject: Parameter<Type>, willReturn: Type...) -> MethodStub {
             return Given(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -4253,6 +4311,16 @@ open class DatabaseMock: Database, Mock {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: ([Type]).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func count<Type: NSFetchRequestResult>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_count__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func count<Type: NSFetchRequestResult>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willProduce: (StubberThrows<Int>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_count__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Int).self)
 			willProduce(stubber)
 			return given
         }
@@ -4304,6 +4372,7 @@ open class DatabaseMock: Database, Mock {
         public static func transaction() -> Verify { return Verify(method: .m_transaction)}
         public static func fetchedResultsController<Type>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>) -> Verify where Type:NSManagedObject { return Verify(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`))}
         public static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify where Type:NSManagedObject { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
+        public static func count<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify where Type:NSFetchRequestResult { return Verify(method: .m_count__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
         public static func pull<Type>(savedObject: Parameter<Type>) -> Verify where Type:NSManagedObject { return Verify(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()))}
         public static func pull<Type>(savedObject: Parameter<Type>, fromSameContextAs otherObject: Parameter<NSManagedObject>) -> Verify where Type:NSManagedObject { return Verify(method: .m_pull__savedObject_savedObjectfromSameContextAs_otherObject(`savedObject`.wrapAsGeneric(), `otherObject`))}
         public static func pull<Type>(savedObject: Parameter<Type>, fromContext context: Parameter<NSManagedObjectContext>) -> Verify where Type:NSManagedObject { return Verify(method: .m_pull__savedObject_savedObjectfromContext_context(`savedObject`.wrapAsGeneric(), `context`))}
@@ -4322,6 +4391,9 @@ open class DatabaseMock: Database, Mock {
         }
         public static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform where Type:NSManagedObject {
             return Perform(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), performs: perform)
+        }
+        public static func count<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform where Type:NSFetchRequestResult {
+            return Perform(method: .m_count__fetchRequest(`fetchRequest`.wrapAsGeneric()), performs: perform)
         }
         public static func pull<Type>(savedObject: Parameter<Type>, perform: @escaping (Type) -> Void) -> Perform where Type:NSManagedObject {
             return Perform(method: .m_pull__savedObject_savedObject(`savedObject`.wrapAsGeneric()), performs: perform)
@@ -16512,6 +16584,22 @@ open class TransactionMock: Transaction, Mock {
 		return __value
     }
 
+    open func count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>) throws -> Int {
+        addInvocation(.m_count__fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric()))
+		let perform = methodPerformValue(.m_count__fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric())) as? (NSFetchRequest<Type>) -> Void
+		perform?(`fetchRequest`)
+		var __value: Int
+		do {
+		    __value = try methodReturnValue(.m_count__fetchRequest(Parameter<NSFetchRequest<Type>>.value(`fetchRequest`).wrapAsGeneric())).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>). Use given")
+			Failure("Stub return value not specified for count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     open func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type) throws -> Type {
         addInvocation(.m_new__objectType(Parameter<Type.Type>.value(`objectType`).wrapAsGeneric()))
 		let perform = methodPerformValue(.m_new__objectType(Parameter<Type.Type>.value(`objectType`).wrapAsGeneric())) as? (Type.Type) -> Void
@@ -16632,6 +16720,7 @@ open class TransactionMock: Transaction, Mock {
         case m_commit
         case m_reset
         case m_query__fetchRequest(Parameter<GenericAttribute>)
+        case m_count__fetchRequest(Parameter<GenericAttribute>)
         case m_new__objectType(Parameter<GenericAttribute>)
         case m_batchUpdateRequest__for_type(Parameter<GenericAttribute>)
         case m_batchUpdate__request(Parameter<NSBatchUpdateRequest>)
@@ -16650,6 +16739,9 @@ open class TransactionMock: Transaction, Mock {
             case (.m_reset, .m_reset):
                 return true 
             case (.m_query__fetchRequest(let lhsFetchrequest), .m_query__fetchRequest(let rhsFetchrequest)):
+                guard Parameter.compare(lhs: lhsFetchrequest, rhs: rhsFetchrequest, with: matcher) else { return false } 
+                return true 
+            case (.m_count__fetchRequest(let lhsFetchrequest), .m_count__fetchRequest(let rhsFetchrequest)):
                 guard Parameter.compare(lhs: lhsFetchrequest, rhs: rhsFetchrequest, with: matcher) else { return false } 
                 return true 
             case (.m_new__objectType(let lhsObjecttype), .m_new__objectType(let rhsObjecttype)):
@@ -16686,6 +16778,7 @@ open class TransactionMock: Transaction, Mock {
             case .m_commit: return 0
             case .m_reset: return 0
             case let .m_query__fetchRequest(p0): return p0.intValue
+            case let .m_count__fetchRequest(p0): return p0.intValue
             case let .m_new__objectType(p0): return p0.intValue
             case let .m_batchUpdateRequest__for_type(p0): return p0.intValue
             case let .m_batchUpdate__request(p0): return p0.intValue
@@ -16712,6 +16805,9 @@ open class TransactionMock: Transaction, Mock {
         }
         public static func query<Type: NSManagedObject>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: [Type]...) -> MethodStub {
             return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func count<Type: NSFetchRequestResult>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willReturn: Int...) -> MethodStub {
+            return Given(method: .m_count__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Parameter<Type.Type>, willReturn: Type...) -> MethodStub {
             return Given(method: .m_new__objectType(`objectType`.wrapAsGeneric()), products: willReturn.map({ StubProduct.return($0 as Any) }))
@@ -16756,6 +16852,16 @@ open class TransactionMock: Transaction, Mock {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: ([Type]).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func count<Type: NSFetchRequestResult>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_count__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func count<Type: NSFetchRequestResult>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, willProduce: (StubberThrows<Int>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_count__fetchRequest(`fetchRequest`.wrapAsGeneric()), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Int).self)
 			willProduce(stubber)
 			return given
         }
@@ -16838,6 +16944,7 @@ open class TransactionMock: Transaction, Mock {
         public static func commit() -> Verify { return Verify(method: .m_commit)}
         public static func reset() -> Verify { return Verify(method: .m_reset)}
         public static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify where Type:NSManagedObject { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
+        public static func count<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify where Type:NSFetchRequestResult { return Verify(method: .m_count__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
         public static func new<Type>(_ objectType: Parameter<Type.Type>) -> Verify where Type:NSManagedObject&CoreDataObject { return Verify(method: .m_new__objectType(`objectType`.wrapAsGeneric()))}
         public static func batchUpdateRequest<Type>(for type: Parameter<Type.Type>) -> Verify where Type:CoreDataObject { return Verify(method: .m_batchUpdateRequest__for_type(`type`.wrapAsGeneric()))}
         public static func batchUpdate(_ request: Parameter<NSBatchUpdateRequest>) -> Verify { return Verify(method: .m_batchUpdate__request(`request`))}
@@ -16863,6 +16970,9 @@ open class TransactionMock: Transaction, Mock {
         }
         public static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform where Type:NSManagedObject {
             return Perform(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()), performs: perform)
+        }
+        public static func count<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>, perform: @escaping (NSFetchRequest<Type>) -> Void) -> Perform where Type:NSFetchRequestResult {
+            return Perform(method: .m_count__fetchRequest(`fetchRequest`.wrapAsGeneric()), performs: perform)
         }
         public static func new<Type>(_ objectType: Parameter<Type.Type>, perform: @escaping (Type.Type) -> Void) -> Perform where Type:NSManagedObject&CoreDataObject {
             return Perform(method: .m_new__objectType(`objectType`.wrapAsGeneric()), performs: perform)

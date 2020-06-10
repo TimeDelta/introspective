@@ -153,6 +153,10 @@ public extension UIViewController {
 		DependencyInjector.get(UiUtil.self).sendUserNotification(withContent: content, id: id, repeats: repeats, interval: interval)
 	}
 
+	final func barButton(title: String, action: Selector) -> UIBarButtonItem {
+		return UIBarButtonItem(title: title, style: .plain, target: self, action: action)
+	}
+
 	final func barButton(title: String, quickPress: Selector, longPress: Selector) -> UIBarButtonItem {
 		let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: longPress)
 		let button = UIButton(type: .custom)

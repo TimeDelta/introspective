@@ -9,6 +9,7 @@
 import UIKit
 import Instructions
 import CoreData
+import Presentr
 import os
 
 import AttributeRestrictions
@@ -25,21 +26,33 @@ public final class RecordActivityTableViewController: UITableViewController {
 	// MARK: - Static Variables
 
 	private typealias Me = RecordActivityTableViewController
+
 	private static let activityDefinitionCreated = Notification.Name("activityDefinitionCreated")
 	private static let activityEditedOrCreated = Notification.Name("activityEdited")
 	private static let activityDefinitionEdited = Notification.Name("activityDefinitionEdited")
 	private static let exampleActivityName = "Example activity"
 
+	private static let presenter = DependencyInjector.get(UiUtil.self).customPresenter(
+		width: .full,
+		height: .custom(size: 300),
+		center: .topCenter)
+
 	// MARK: - Instance Variables
 
 	private final let searchController = UISearchController(searchResultsController: nil)
+
 	private final var finishedLoading = false {
 		didSet {
 			searchController.searchBar.isUserInteractionEnabled = finishedLoading
 			tableView.reloadData()
 		}
 	}
+
 	private final var definitionEditIndex: IndexPath?
+
+	private final var currentSort: NSSortDescriptor?
+	private final let defaultSort = NSSortDescriptor(key: "recordScreenIndex", ascending: true)
+
 	private final var activeActivitiesFetchedResultsController: NSFetchedResultsController<ActivityDefinition>!
 	private final var inactiveActivitiesFetchedResultsController: NSFetchedResultsController<ActivityDefinition>!
 
@@ -141,7 +154,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 			style: .plain,
 			target: self,
 			action: #selector(stopAllButtonPressed))
-		navigationItem.rightBarButtonItems = [addButton, stopAllButton]
+		let sortButton = barButton(title: "⇅", action: #selector(sortButtonPressed))
+		navigationItem.rightBarButtonItems = [addButton, stopAllButton, sortButton]
 
 		searchController.searchResultsUpdater = self
 		searchController.obscuresBackgroundDuringPresentation = false
@@ -156,6 +170,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		observe(selector: #selector(activityDefinitionCreated), name: Me.activityDefinitionCreated, object: nil)
 		observe(selector: #selector(activityEditedOrCreated), name: Me.activityEditedOrCreated, object: nil)
 		observe(selector: #selector(activityDefinitionEdited), name: Me.activityDefinitionEdited, object: nil)
+		observe(selector: #selector(sortByRecentCount), name: .timePeriodChosen)
 
 		reorderOnLongPress(allowReorder: { $0.section == 1 && ($1 == nil || $1?.section == 1) })
 
@@ -289,6 +304,48 @@ public final class RecordActivityTableViewController: UITableViewController {
 		}
 		resetInactiveActivitiesFetchedResultsController()
 		tableView.reloadSections(IndexSet(arrayLiteral: 1), with: .automatic)
+	}
+
+	@objc private final func sortByRecentCount(notification: Notification) {
+		guard let numTimeUnits: Int = value(for: .number, from: notification) else { return }
+		guard let timeUnit: Calendar.Component = value(for: .calendarComponent, from: notification) else { return }
+		do {
+			let transaction = DependencyInjector.get(Database.self).transaction()
+			let allDefinitions = try transaction.query(ActivityDefinition.fetchRequest())
+			var counts = [String: Int]()
+			for definition in allDefinitions {
+				let recentActivities: NSFetchRequest<NSFetchRequestResult> = Activity.fetchRequest()
+				let minStartDate = DependencyInjector.get(CalendarUtil.self).ago(numTimeUnits, timeUnit)
+				recentActivities.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+					NSPredicate(format: "startDate > %@", minStartDate as NSDate),
+					NSPredicate(format: "definition == %@", definition),
+				])
+				counts[definition.name] = try transaction.count(recentActivities)
+			}
+			let sortedDefinitions = try allDefinitions.sorted{ (definition1, definition2) throws -> Bool in
+				if counts[definition1.name]! > counts[definition2.name]! {
+					return true
+				}
+				if counts[definition1.name]! < counts[definition2.name]! {
+					return false
+				}
+
+				guard let mostRecent1 = self.getMostRecentActivity(definition1) else { return false }
+				guard let mostRecent2 = self.getMostRecentActivity(definition2) else { return true }
+				return mostRecent1.start.isAfterDate(mostRecent2.start, orEqual: true, granularity: .second)
+			}
+			var i: Int16 = 0
+			for definition in sortedDefinitions {
+				definition.recordScreenIndex = i
+				i += 1
+			}
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+
+			self.currentSort = nil
+			self.loadActivitiyDefinitions()
+		} catch {
+			self.showError(title: "Failed to sort by recent count. Sorry for thee inconvenience.")
+		}
 	}
 
 	// MARK: - Swipe Actions
@@ -501,7 +558,64 @@ public final class RecordActivityTableViewController: UITableViewController {
 		}
 	}
 
+	@IBAction final func sortButtonPressed() {
+		let actionsController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+		actionsController.addAction(getSortAlphabeticallyAction())
+		actionsController.addAction(getSortZetabeticallyAction())
+		actionsController.addAction(getManualSortAction())
+		actionsController.addAction(getSortByRecentCountAction())
+		actionsController.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+			title: "Cancel",
+			style: .cancel,
+			handler: nil))
+		present(actionsController, animated: false, completion: nil)
+	}
+
+	private final func getSortAlphabeticallyAction() -> UIAlertAction {
+		return DependencyInjector.get(UiUtil.self).alertAction(
+			title: "Sort Alphabetically",
+			style: .default,
+			handler: { _ in
+				self.currentSort = NSSortDescriptor(key: "name", ascending: true)
+				self.loadActivitiyDefinitions()
+			})
+	}
+
+	private final func getSortZetabeticallyAction() -> UIAlertAction {
+		return DependencyInjector.get(UiUtil.self).alertAction(
+			title: "Sort Zetabetically",
+			style: .default,
+			handler: { _ in
+				self.currentSort = NSSortDescriptor(key: "name", ascending: false)
+				self.loadActivitiyDefinitions()
+			})
+	}
+
+	private final func getManualSortAction() -> UIAlertAction {
+		return DependencyInjector.get(UiUtil.self).alertAction(
+			title: "Manual Sort",
+			style: .default,
+			handler: { _ in
+				self.currentSort = nil
+				self.loadActivitiyDefinitions()
+			})
+	}
+
+	private final func getSortByRecentCountAction() -> UIAlertAction {
+		return DependencyInjector.get(UiUtil.self).alertAction(
+			title: "Sort by Recent Count",
+			style: .default,
+			handler: { _ in self.presentSortByRecentCountOptions() })
+	}
+
 	// MARK: - Helper Functions
+
+	private final func presentSortByRecentCountOptions() {
+		let controller = viewController(named: "chooseRecentTimePeriod") as! ChooseRecentTimePeriodViewController
+		controller.initialTimeUnit = .weekOfYear
+		controller.initialNumTimeUnits = 2
+		present(controller, using: Me.presenter)
+	}
 
 	private final func loadActivitiyDefinitions() {
 		self.resetFetchedResultsControllers()
@@ -726,7 +840,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 			signpost.begin(name: "resetting active fetched results controller")
 			activeActivitiesFetchedResultsController = DependencyInjector.get(Database.self).fetchedResultsController(
 				type: ActivityDefinition.self,
-				sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
+				sortDescriptors: [currentSort ?? defaultSort],
 				cacheName: "activeDefinitions")
 			let fetchRequest = activeActivitiesFetchedResultsController.fetchRequest
 
@@ -758,7 +872,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 			signpost.begin(name: "resetting inactive fetched results controller")
 			inactiveActivitiesFetchedResultsController = DependencyInjector.get(Database.self).fetchedResultsController(
 				type: ActivityDefinition.self,
-				sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
+				sortDescriptors: [currentSort ?? defaultSort],
 				cacheName: "definitions")
 			let fetchRequest = inactiveActivitiesFetchedResultsController.fetchRequest
 

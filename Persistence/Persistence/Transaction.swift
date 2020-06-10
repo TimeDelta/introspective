@@ -26,6 +26,7 @@ public protocol Transaction {
 
 	/// - Note: Use this query method over `Database.query(...)` when you want to include updates within this `Transaction` in the query results.
 	func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type]
+	func count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>) throws -> Int
 
 	/// Create a new instance of the specified object type that will not be permanently persisted until calling `commit()` on this `Transaction`
 	func new<Type: NSManagedObject & CoreDataObject>(_ objectType: Type.Type) throws -> Type
@@ -93,13 +94,25 @@ internal final class TransactionImpl: Transaction {
 	// MARK: - Fetching
 
 	public final func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type] {
-		signpost.begin(name: "Database Query", idObject: fetchRequest, "%@", fetchRequest.debugDescription)
+		signpost.begin(name: "Transaction Query", idObject: fetchRequest, "%@", fetchRequest.debugDescription)
 		do {
 			let result = try myContext.fetch(fetchRequest)
-			signpost.end(name: "Database Query", idObject: fetchRequest)
+			signpost.end(name: "Transaction Query", idObject: fetchRequest)
 			return result
 		} catch {
-			signpost.end(name: "Database Query", idObject: fetchRequest)
+			signpost.end(name: "Transaction Query", idObject: fetchRequest)
+			throw error
+		}
+	}
+
+	public final func count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>) throws -> Int {
+		signpost.begin(name: "Transaction Count Query", idObject: fetchRequest, "%@", fetchRequest.debugDescription)
+		do {
+			let result = try myContext.count(for: fetchRequest)
+			signpost.end(name: "Transaction Count Query", idObject: fetchRequest)
+			return result
+		} catch {
+			signpost.end(name: "Transaction Count Query", idObject: fetchRequest)
 			throw error
 		}
 	}
