@@ -96,9 +96,8 @@ public final class OnDateAttributeRestriction: DateAttributeRestriction, Equatab
 	public override func predicate() -> NSPredicate? {
 		guard !DependencyInjector.get(Settings.self).convertTimeZones else { return nil }
 		guard let variableName = restrictedAttribute.variableName else { return nil }
-		let now = Date()
-		let minDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: now)
-		let maxDate = DependencyInjector.get(CalendarUtil.self).end(of: .day, in: now)
+		let minDate = DependencyInjector.get(CalendarUtil.self).start(of: .day, in: date)
+		let maxDate = DependencyInjector.get(CalendarUtil.self).end(of: .day, in: date)
 		return NSPredicate(
 			format: "%K >= %@ && %K <= %@",
 			variableName,
