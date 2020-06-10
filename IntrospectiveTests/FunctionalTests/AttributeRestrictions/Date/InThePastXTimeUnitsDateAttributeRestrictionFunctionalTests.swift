@@ -14,9 +14,9 @@ import SwiftDate
 @testable import Attributes
 @testable import Queries
 
-final class InThePastXTimeUnitsDateAttributeRestrictionUnitTests: FunctionalTest {
+final class InThePastXTimeUnitsDateAttributeRestrictionFunctionalTests: FunctionalTest {
 
-	private typealias Me = InThePastXTimeUnitsDateAttributeRestrictionUnitTests
+	private typealias Me = InThePastXTimeUnitsDateAttributeRestrictionFunctionalTests
 	private static let restrictedAttribute = DateTimeAttribute(name: "restricted attribute")
 	private static let timeUnitAttribute = InThePastXTimeUnitsDateAttributeRestriction.timeUnitAttribute
 	private static let numberOfTimeUnitsAttribute = InThePastXTimeUnitsDateAttributeRestriction.numberOfTimeUnitsAttribute
