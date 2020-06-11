@@ -441,6 +441,14 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(title: "Add Information", style: .default) { _ in
 			DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) { self.addInformation() }
 		})
+		if let _ = query {
+			actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+				title: "Refresh",
+				style: .default,
+				handler: { _ in
+					self.refreshQuery()
+				}))
+		}
 		if samplesAreDeletable() {
 			actionsController?.addAction(DependencyInjector.get(UiUtil.self).alertAction(
 				title: "Delete these " + samples[0].attributedName.localizedLowercase + " entries",
@@ -518,6 +526,15 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		})
 		alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
 		self.present(alert, animated: false, completion: nil)
+	}
+
+	private final func refreshQuery() {
+		query?.runQuery { (result, error) in
+			if let error = error {
+				self.log.error("Refresh query failed: %@", errorInfo(error))
+			}
+			self.samples = result?.samples
+		}
 	}
 
 	// MARK: - Display Edit Screen Functions
