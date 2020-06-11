@@ -213,8 +213,15 @@ final class AttributedChooserViewController: UIViewController {
 	private final func createAndAddAcceptButton(lastView: UIView?) {
 		acceptButton = UIButton(type: .custom)
 		acceptButton.addTarget(self, action: #selector(saveButtonPressed), for: .touchUpInside)
-		acceptButton.setTitleColor(.white, for: .normal)
-		acceptButton.setTitleColor(.black, for: .disabled)
+
+		if #available(iOS 13.0, *) {
+			acceptButton.setTitleColor(.systemBackground, for: .normal)
+			acceptButton.setTitleColor(.label, for: .disabled)
+		} else {
+			acceptButton.setTitleColor(.white, for: .normal)
+			acceptButton.setTitleColor(.black, for: .disabled)
+		}
+		
 		acceptButton.setTitle("Save", for: .normal)
 		updateAcceptButtonStatus()
 		acceptButton.translatesAutoresizingMaskIntoConstraints = false
@@ -239,10 +246,10 @@ final class AttributedChooserViewController: UIViewController {
 
 	private final func updateAcceptButtonStatus() {
 		acceptButton.isEnabled = currentValue.attributeValuesAreValid()
-		if acceptButton.isEnabled {
-			acceptButton.backgroundColor = .black
+		if #available(iOS 13.0, *) {
+			acceptButton.backgroundColor = acceptButton.isEnabled ? .label : .systemGray
 		} else {
-			acceptButton.backgroundColor = .gray
+			acceptButton.backgroundColor = acceptButton.isEnabled ? .black : .gray
 		}
 	}
 

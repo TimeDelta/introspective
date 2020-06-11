@@ -37,6 +37,9 @@ public final class ActivityTagsTableViewCellImpl: UITableViewCell, ActivityTagsT
 			tagsField.textField.accessibilityLabel = "activity tags"
 			tagsField.textDelegate = self
 			tagsField.maxHeight = 109
+			if #available(iOS 13.0, *) {
+				tagsField.textField.textColor = .label
+			} // only reason to change is for Dark Mode so not necessary before iOS 13
 
 			do {
 				let tags = try DependencyInjector.get(Database.self).query(Tag.fetchRequest() as NSFetchRequest<Tag>)

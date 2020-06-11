@@ -254,7 +254,11 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGrap
 			(xAxis?.attribute != nil || xAxis?.information != nil || usePointGroupValueForXAxis) &&
 			yAxis != nil &&
 			!yAxis.isEmpty
-		showGraphButton.backgroundColor = showGraphButton.isEnabled ? .black : .gray
+		if #available(iOS 13.0, *) {
+			showGraphButton.backgroundColor = showGraphButton.isEnabled ? .label : .systemGray
+		} else {
+			showGraphButton.backgroundColor = showGraphButton.isEnabled ? .black : .gray
+		}
 	}
 
 	private final func runQuery() {

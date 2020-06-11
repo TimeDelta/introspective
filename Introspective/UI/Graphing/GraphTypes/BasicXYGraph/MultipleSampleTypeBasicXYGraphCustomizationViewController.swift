@@ -306,7 +306,11 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 			(xAxisInformation != nil || usePointGroupValueForXAxis) &&
 			yAxisInformation != nil &&
 			pointGroupers != nil
-		showGraphButton.backgroundColor = showGraphButton.isEnabled ? .black : .gray
+		if #available(iOS 13.0, *) {
+			showGraphButton.backgroundColor = showGraphButton.isEnabled ? .label : .systemGray
+		} else {
+			showGraphButton.backgroundColor = showGraphButton.isEnabled ? .black : .gray
+		}
 	}
 
 	private final func runQueries() {

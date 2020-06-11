@@ -104,7 +104,11 @@ public final class ChooseRecentTimePeriodViewControllerImpl: UIViewController, C
 
 	private final func validate() {
 		if (numberIsValid()) {
-			sortByLabel.textColor = .black
+			if #available(iOS 13.0, *) {
+				sortByLabel.textColor = .label
+			} else {
+				sortByLabel.textColor = .black
+			}
 			DependencyInjector.get(UiUtil.self).setButton(sortButton, enabled: true, hidden: false)
 		} else {
 			sortByLabel.textColor = .red

@@ -42,7 +42,11 @@ public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
 			nameLabel.textColor = .red
 			sendInvalidNameNotification()
 		} else {
-			nameLabel.textColor = .black
+			if #available(iOS 13.0, *) { // for Dark Mode
+				nameLabel.textColor = .label
+			} else {
+				nameLabel.textColor = .black
+			}
 			// only need to notify when the name is changed to something valid because user can't save when invalid
 			sendNameChangeNotification()
 		}

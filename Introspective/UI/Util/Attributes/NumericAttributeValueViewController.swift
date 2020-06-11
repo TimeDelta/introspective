@@ -77,11 +77,19 @@ final class NumericAttributeValueViewController: UIViewController {
 
 	private final func disableSaveButton() {
 		DependencyInjector.get(UiUtil.self).setButton(saveButton, enabled: false, hidden: false)
-		saveButton.backgroundColor = UIColor.gray
+		if #available(iOS 13.0, *) {
+			saveButton.backgroundColor = .systemGray
+		} else {
+			saveButton.backgroundColor = .gray
+		}
 	}
 
 	private final func enableSaveButton() {
 		DependencyInjector.get(UiUtil.self).setButton(saveButton, enabled: true, hidden: false)
-		saveButton.backgroundColor = UIColor.black
+		if #available(iOS 13.0, *) {
+			saveButton.backgroundColor = .label
+		} else {
+			saveButton.backgroundColor = .black
+		}
 	}
 }

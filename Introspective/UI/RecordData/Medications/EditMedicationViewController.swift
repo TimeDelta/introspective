@@ -254,7 +254,11 @@ public final class EditMedicationViewController: UIViewController {
 
 	private final func markFieldAsValid(_ valid: Bool, _ label: UILabel) -> Bool {
 		if valid {
-			label.textColor = .black
+			if #available(iOS 13.0, *) {
+				label.textColor = .label
+			} else {
+				label.textColor = .black
+			}
 		} else {
 			label.textColor = .red
 			saveButton.isEnabled = false

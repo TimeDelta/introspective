@@ -109,10 +109,18 @@ public final class DateRangeViewControllerImpl: UIViewController, DateRangeViewC
 	@objc private final func dateChanged() {
 		if let fromDate = getFromDate(), let toDate = getToDate() {
 			DependencyInjector.get(UiUtil.self).setButton(saveButton, enabled: fromDate <= toDate, hidden: false)
-			saveButton.backgroundColor = saveButton.isEnabled ? .black : .gray
+			if #available(iOS 13.0, *) {
+				saveButton.backgroundColor = saveButton.isEnabled ? .label : .systemGray
+			} else {
+				saveButton.backgroundColor = saveButton.isEnabled ? .black : .gray
+			}
 		} else {
 			DependencyInjector.get(UiUtil.self).setButton(saveButton, enabled: true, hidden: false)
-			saveButton.backgroundColor = .black
+			if #available(iOS 13.0, *) {
+				saveButton.backgroundColor = .label
+			} else {
+				saveButton.backgroundColor = .black
+			}
 		}
 	}
 

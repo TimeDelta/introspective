@@ -97,12 +97,20 @@ final class AttributeValueViewController: UIViewController {
 	@objc private final func disableSaveButton() {
 		acceptButton.isEnabled = false
 		acceptButton.isUserInteractionEnabled = false
-		acceptButton.backgroundColor = UIColor.gray
+		if #available(iOS 13.0, *) {
+			acceptButton.backgroundColor = .systemGray
+		} else {
+			acceptButton.backgroundColor = .gray
+		}
 	}
 
 	@objc private final func enableSaveButton() {
 		acceptButton.isEnabled = true
 		acceptButton.isUserInteractionEnabled = true
-		acceptButton.backgroundColor = UIColor.black
+		if #available(iOS 13.0, *) {
+			acceptButton.backgroundColor = .label
+		} else {
+			acceptButton.backgroundColor = .black
+		}
 	}
 }

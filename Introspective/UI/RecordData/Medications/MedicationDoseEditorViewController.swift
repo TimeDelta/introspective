@@ -95,12 +95,21 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 
 	private final func validate() {
 		if dosageIsValid() {
-			dosageLabel.textColor = .black
-			saveButton.backgroundColor = .black
+			if #available(iOS 13.0, *) {
+				dosageLabel.textColor = .label
+				saveButton.backgroundColor = .label
+			} else {
+				dosageLabel.textColor = .black
+				saveButton.backgroundColor = .black
+			}
 			DependencyInjector.get(UiUtil.self).setButton(saveButton, enabled: true, hidden: false)
 		} else {
 			dosageLabel.textColor = .red
-			saveButton.backgroundColor = .lightGray
+			if #available(iOS 13.0, *) {
+				saveButton.backgroundColor = .systemGray
+			} else {
+				saveButton.backgroundColor = .gray
+			}
 			DependencyInjector.get(UiUtil.self).setButton(saveButton, enabled: false, hidden: false)
 		}
 	}
