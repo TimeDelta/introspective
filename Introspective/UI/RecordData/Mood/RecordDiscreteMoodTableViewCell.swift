@@ -87,7 +87,10 @@ public final class RecordDiscreteMoodTableViewCell: UITableViewCell {
 			mood.setSource(.introspective)
 			try transaction.commit()
 
-			feedbackLabel.text = "Got it. You're at a \(rating)"
+			feedbackLabel.text = DependencyInjector.get(MoodUiUtil.self).feedbackMessage(
+				for: Double(rating),
+				min: mood.minRating,
+				max: mood.maxRating)
 			feedbackLabel.isHidden = false
 			Timer.scheduledTimer(
 				timeInterval: 5,
