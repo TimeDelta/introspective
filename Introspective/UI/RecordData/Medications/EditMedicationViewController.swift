@@ -22,13 +22,14 @@ public final class EditMedicationViewController: UIViewController {
 	private typealias Me = EditMedicationViewController
 	private static let frequencyChanged = Notification.Name("medicationFrequencyChanged")
 	private static let startedOnChanged = Notification.Name("medicationStartedOnChanged")
-	private static let frequencyPresenter: Presentr = {
-		let customType = PresentationType.custom(width: .custom(size: 250), height: .custom(size: 250), center: .topCenter)
-		let customPresenter = Presentr(presentationType: customType)
-		customPresenter.dismissTransitionType = .crossDissolve
-		customPresenter.roundCorners = true
-		return customPresenter
-	}()
+	private static let frequencyPresenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
+		width: .custom(size: 250),
+		height: .custom(size: 250),
+		center: .topCenter)
+	private static let startedOnPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
+		width: .custom(size: 300),
+		height: .custom(size: 200),
+		center: .center)
 	private static let descriptionPresenter = DependencyInjector.get(UiUtil.self).customPresenter(
 		width: .custom(size: 300),
 		height: .custom(size: 200),
@@ -175,7 +176,7 @@ public final class EditMedicationViewController: UIViewController {
 		controller.initialDate = startedOnDate
 		controller.notificationToSendOnAccept = Me.startedOnChanged
 		controller.datePickerMode = .date
-		customPresentViewController(DependencyInjector.get(UiUtil.self).defaultPresenter, viewController: controller, animated: false)
+		customPresentViewController(Me.startedOnPresenter, viewController: controller, animated: false)
 	}
 
 	@IBAction final func resetStartedOnButtonPressed(_ sender: Any) {
