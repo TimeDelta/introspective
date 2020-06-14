@@ -76,10 +76,13 @@ public final class OnDayOfWeekAttributeRestriction: DateAttributeRestriction, Eq
 		if !attribute.equalTo(Me.daysOfWeekAttribute) {
 			throw UnknownAttributeError(attribute: attribute, for: self)
 		}
-		guard let castedValue = value as? Set<DayOfWeek> else {
+		if let castedValue = value as? [DayOfWeek] {
+			daysOfWeek = Set(castedValue)
+		} else if let castedValue = value as? Set<DayOfWeek> {
+			daysOfWeek = castedValue
+		} else {
 			throw TypeMismatchError(attribute: attribute, of: self, wasA: type(of: value))
 		}
-		daysOfWeek = castedValue
 	}
 
 	// MARK: - Attribute Restriction Functions

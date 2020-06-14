@@ -19,7 +19,6 @@ final class AttributeViewController: UIViewController {
 	// MARK: - Static Variables
 
 	private typealias Me = AttributeViewController
-	private static let horizontalMultiSelectPresenter = DependencyInjector.get(UiUtil.self).customPresenter(height: .custom(size: 100), center: .topCenter)
 	private static let numericPresenter = DependencyInjector.get(UiUtil.self).customPresenter(width: .full, height: .custom(size: 100), center: .topCenter)
 	private static let dosagePresenter = DependencyInjector.get(UiUtil.self).customPresenter(height: .custom(size: 100), center: .topCenter)
 	private static let frequencyPresenter = DependencyInjector.get(UiUtil.self).customPresenter(width: .custom(size: 250), height: .custom(size: 250), center: .topCenter)
@@ -76,11 +75,9 @@ final class AttributeViewController: UIViewController {
 	}
 
 	public final override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.destination is AttributeDescriptionViewController {
-			let controller = segue.destination as! AttributeDescriptionViewController
+		if let controller = segue.destination as? AttributeDescriptionViewController {
 			controller.descriptionText = attribute.extendedDescription
-		} else if segue.destination is AttributeValueViewController {
-			let controller = segue.destination as! AttributeValueViewController
+		} else if let controller = segue.destination as? AttributeValueViewController {
 			controller.attribute = attribute
 			controller.attributeValue = attributeValue
 		}
@@ -95,9 +92,7 @@ final class AttributeViewController: UIViewController {
 	}
 
 	@IBAction final func valueButtonPressed(_ sender: Any) {
-		if attribute is DaysOfWeekAttribute {
-			showDaysOfWeekView()
-		} else if attribute is MultiSelectAttribute {
+		if attribute is MultiSelectAttribute {
 			showMultiSelectView()
 		} else if attribute is NumericAttribute {
 			showNumericView()
@@ -136,14 +131,6 @@ final class AttributeViewController: UIViewController {
 	}
 
 	// MARK: - Show View Functions
-
-	private final func showDaysOfWeekView() {
-		let controller: HorizontalMultiSelectAttributeValueViewController = viewController(named: "horizontalMultiSelectAttribute")
-		controller.multiSelectAttribute = (attribute as! MultiSelectAttribute)
-		controller.currentValue = attributeValue
-		controller.notificationToSendOnAccept = notificationToSendOnValueChange
-		customPresentViewController(Me.horizontalMultiSelectPresenter, viewController: controller, animated: false)
-	}
 
 	private final func showMultiSelectView() {
 		let controller: MultiSelectAttributeValueViewController = viewController(named: "multiSelectAttribute")
