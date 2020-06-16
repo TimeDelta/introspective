@@ -1,0 +1,135 @@
+{
+  "configurations" : [
+    {
+      "id" : "E0BD0D2E-8C1A-4A1A-879D-EF5431E46156",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:Introspective.xcodeproj",
+          "identifier" : "BB0A1DC399A7E3FFC11219EB8C00C163",
+          "name" : "Introspective"
+        },
+        {
+          "containerPath" : "container:AttributeRestrictions\/AttributeRestrictions.xcodeproj",
+          "identifier" : "A29701082344FEE3004B97E6",
+          "name" : "AttributeRestrictions"
+        },
+        {
+          "containerPath" : "container:Attributes\/Attributes.xcodeproj",
+          "identifier" : "A231CED12342539400CCE625",
+          "name" : "Attributes"
+        },
+        {
+          "containerPath" : "container:BooleanAlgebra\/BooleanAlgebra.xcodeproj",
+          "identifier" : "A231CF232342557B00CCE625",
+          "name" : "BooleanAlgebra"
+        },
+        {
+          "containerPath" : "container:Common\/Common.xcodeproj",
+          "identifier" : "A2B88B53233EA02A00E37728",
+          "name" : "Common"
+        },
+        {
+          "containerPath" : "container:DataExport\/DataExport.xcodeproj",
+          "identifier" : "A29F68BF233EAAAB00B8DFDB",
+          "name" : "DataExport"
+        },
+        {
+          "containerPath" : "container:DataImport\/DataImport.xcodeproj",
+          "identifier" : "A24E2EE223451EBB00A7707D",
+          "name" : "DataImport"
+        },
+        {
+          "containerPath" : "container:DependencyInjection\/DependencyInjection.xcodeproj",
+          "identifier" : "A231CEAC23415BFE00CCE625",
+          "name" : "DependencyInjection"
+        },
+        {
+          "containerPath" : "container:Globals\/Globals.xcodeproj",
+          "identifier" : "A2A8B0042343E70D00E883CE",
+          "name" : "Globals"
+        },
+        {
+          "containerPath" : "container:Introspective.xcodeproj",
+          "identifier" : "863443B57A8C8D8D1AE1C8636F9821BB",
+          "name" : "DiscreteMoodWidget"
+        },
+        {
+          "containerPath" : "container:Notifications\/Notifications.xcodeproj",
+          "identifier" : "A24F908C234647A70047A11C",
+          "name" : "Notifications"
+        },
+        {
+          "containerPath" : "container:Persistence\/Persistence.xcodeproj",
+          "identifier" : "A231CF49234259B100CCE625",
+          "name" : "Persistence"
+        },
+        {
+          "containerPath" : "container:Queries\/Queries.xcodeproj",
+          "identifier" : "A24E2E8923451CE500A7707D",
+          "name" : "Queries"
+        },
+        {
+          "containerPath" : "container:SampleGroupInformation\/SampleGroupInformation.xcodeproj",
+          "identifier" : "A29700C42344F95F004B97E6",
+          "name" : "SampleGroupInformation"
+        },
+        {
+          "containerPath" : "container:SampleGroupers\/SampleGroupers.xcodeproj",
+          "identifier" : "A297703923451959004E2C35",
+          "name" : "SampleGroupers"
+        },
+        {
+          "containerPath" : "container:Samples\/Samples.xcodeproj",
+          "identifier" : "A22D622D2343983E0023470F",
+          "name" : "Samples"
+        },
+        {
+          "containerPath" : "container:Settings\/Settings.xcodeproj",
+          "identifier" : "A2AF200E2343C7D500E04517",
+          "name" : "Settings"
+        },
+        {
+          "containerPath" : "container:UIExtensions\/UIExtensions.xcodeproj",
+          "identifier" : "A2E2C4A8234799BD00840BEA",
+          "name" : "UIExtensions"
+        }
+      ]
+    },
+    "commandLineArgumentEntries" : [
+      {
+        "argument" : "--functional-testing"
+      }
+    ],
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Introspective.xcodeproj",
+      "identifier" : "BB0A1DC399A7E3FFC11219EB8C00C163",
+      "name" : "Introspective"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Introspective.xcodeproj",
+        "identifier" : "C52F3CA73E4CEB90C2AC84DD7AFF5550",
+        "name" : "IntrospectiveTests"
+      }
+    },
+    {
+      "enabled" : false,
+      "target" : {
+        "containerPath" : "container:Introspective.xcodeproj",
+        "identifier" : "9730A3626FFFA7D8968C54443F136632",
+        "name" : "IntrospectiveUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

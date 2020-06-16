@@ -55,4 +55,7 @@
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:Non-UI Testing.xctestplan">
+   </FileRef>
 </Workspace>
