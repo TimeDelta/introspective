@@ -73,7 +73,7 @@ public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
 
 	private final func isDuplicate() -> Bool {
 		if let name = nameTextField.text {
-			guard name.localizedLowercase != initialName.localizedLowercase else { return false }
+			guard name.localizedLowercase != initialName.localizedLowercase else { return true }
 			let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
 			fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 			do {
