@@ -7,9 +7,11 @@
 //
 
 import UIKit
+
+import NotificationBannerSwift
+import Presentr
 import SwiftDate
 import UserNotifications
-import NotificationBannerSwift
 
 import Common
 import DataImport
@@ -43,6 +45,11 @@ public final class ImportDataTableViewController: UITableViewController {
 			"Introspective",
 		]),
 	]
+
+	private static let dateRangePresenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
+		width: .default,
+		height: .custom(size: 438),
+		center: .center)
 
 	// MARK: activities
 	private static let activitiesSection = 0
@@ -88,6 +95,7 @@ public final class ImportDataTableViewController: UITableViewController {
 	public final override func viewDidLoad() {
 		observe(selector: #selector(extendTime), name: .extendBackgroundTaskTime)
 		observe(selector: #selector(cancelBackgroundImport), name: .cancelBackgroundTask)
+		obsreve(selector: #selector(importFromDateRange), name: .importDateRangeChosen)
 	}
 
 	deinit {
@@ -156,8 +164,11 @@ public final class ImportDataTableViewController: UITableViewController {
 				lastImportedText = "Never imported"
 			}
 			let actionSheet = UIAlertController(title: lastImportedText, message: nil, preferredStyle: .actionSheet)
-			actionSheet.addAction(UIAlertAction(title: "Import", style: .default){ _ in
+			actionSheet.addAction(UIAlertAction(title: "Import", style: .default) { _ in
 				self.promptForDataImport(indexPath)
+			})
+			actionSheet.addAction(UIAlertAction(title: "Date Range Import", style: .default) { _ in
+				self.promptForDateRangeImport(indexPath)
 			})
 			actionSheet.addAction(UIAlertAction(title: "Reset Last Import Date", style: .default){ _ in
 				do {
@@ -221,7 +232,25 @@ public final class ImportDataTableViewController: UITableViewController {
 		}
 	}
 
+	@objc private final func importFromDateRange(notification: Notification) {
+		let minDate: Date? = value(for: .fromDate, from: notification)
+		let maxDate: Date? = value(for: .toDate, from: notification)
+
+		let documentPickerController = getDocumentPicker()
+		importer.importOnlyNewData = false
+		importer.minDate = minDate
+		importer.minDate = maxDate
+		presentView(documentPickerController)
+	}
+
 	// MARK: - Helper Functions
+
+	private final func getDocumentPicker() -> UIDocumentPickerViewController {
+		let controller = DependencyInjector.get(UiUtil.self).documentPicker(docTypes: ["public.data"], in: .import)
+		controller.allowsMultipleSelection = false
+		controller.delegate = self
+		return controller
+	}
 
 	private final func promptForDataImport(_ indexPath: IndexPath) {
 		let message = importer.customImportMessage ??
@@ -236,10 +265,16 @@ public final class ImportDataTableViewController: UITableViewController {
 		presentView(prompt)
 	}
 
+	private final func promptForDateRangeImport(_ indexPath: IndexPath) {
+		let dateRangeController = viewController(named: "dateRangeChooser", fromStoryboard: "Util") as! DateRangeViewController
+		dateRangeController.datePickerMode = .dateAndTime
+		dateRangeController.initialFromDate = importer.lastImport
+		dateRangeController.initialToDate = nil
+		dateRangeController.notificationToSendOnAccept = NotificationName.importDateRangeChosen.toName()
+	}
+
 	private final func importData(newDataOnly: Bool) {
-		let documentPickerController = DependencyInjector.get(UiUtil.self).documentPicker(docTypes: ["public.data"], in: .import)
-		documentPickerController.allowsMultipleSelection = false
-		documentPickerController.delegate = self
+		let documentPickerController = getDocumentPicker()
 		importer.importOnlyNewData = newDataOnly
 		presentView(documentPickerController)
 	}

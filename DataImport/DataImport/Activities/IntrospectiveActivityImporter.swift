@@ -36,6 +36,9 @@ public final class IntrospectiveActivityImporterImpl: NSManagedObject, Introspec
 	public final var isPaused: Bool = false
 	public final var isCancelled: Bool = false
 
+	public final var minDate: Date?
+	public final var maxDate: Date?
+
 	/// for testing purposes only
 	public final var pauseOnRecord: Int?
 
@@ -123,9 +126,16 @@ public final class IntrospectiveActivityImporterImpl: NSManagedObject, Introspec
 	private final func shouldImport(_ date: Date) -> Bool {
 		return !importOnlyNewData || // user doesn't care about data duplication -> import everything
 			lastImport == nil || (   // never imported before -> import everything
-				importOnlyNewData &&
+				importOnlyNewData && // only import data since the latest import
 				lastImport != nil &&
 				date.isAfterDate(lastImport!, granularity: .nanosecond)
+			) || ( // both minDate and maxDate were provided
+				minDate != nil &&
+				maxDate != nil &&
+				minDate! <= date &&
+				maxDate! >= date
+			) || ( // only minDate was provided
+				
 			)
 	}
 

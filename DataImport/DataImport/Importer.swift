@@ -19,6 +19,8 @@ public protocol Importer {
 	var isPaused: Bool { get }
 	var isCancelled: Bool { get }
 	var importOnlyNewData: Bool { get set }
+	var minDate: Date? { get set }
+	var maxDate: Date? { get set }
 
 	func importData(from url: URL) throws
 	func resetLastImportDate() throws

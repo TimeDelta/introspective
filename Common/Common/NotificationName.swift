@@ -19,6 +19,9 @@ public enum NotificationName: StringLiteralType {
 	case extendBackgroundTaskTime = "extendBackgroundTaskTime"
 	case cancelBackgroundTask = "cancelBackgroundTask"
 
+	// MARK: - Import
+	case importDateRangeChosen = "importDateRangeChosen"
+
 	// MARK: - Export
 	case backgroundExportFinished = "backgroundExportFinished"
 	case shareExportFile = "shareExportFile"
