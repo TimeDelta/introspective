@@ -27,13 +27,15 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	private static let medicationCreated = Notification.Name("medicationCreatedFromRecordScreen")
 	private static let medicationEdited = Notification.Name("medicationEditedFromRecordScreen")
 	private static let medicationDoseCreated = Notification.Name("medicationDoseCreated")
-	private static let setDosePresenter: Presentr = {
-		let customType = PresentationType.custom(width: .custom(size: 300), height: .custom(size: 250), center: .center)
-		let customPresenter = Presentr(presentationType: customType)
-		customPresenter.dismissTransitionType = .crossDissolve
-		customPresenter.roundCorners = true
-		return customPresenter
-	}()
+	private static let setDosePresenter: Presentr = DependencyInjector.get(UiUtil.self).customPresenter(
+		width: .custom(size: 300),
+		height: .custom(size: 250),
+		center: .center)
+	private static let presenter = DependencyInjector.get(UiUtil.self).customPresenter(
+		width: .full,
+		height: .custom(size: 300),
+		center: .topCenter)
+
 	private static let exampleMedicationName = "Example Medication"
 
 	// MARK: - Instance Variables
@@ -46,6 +48,9 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		}
 	}
 	private final var fetchedResultsController: NSFetchedResultsController<Medication>!
+
+	private final var currentSort: NSSortDescriptor?
+	private final let defaultSort = NSSortDescriptor(key: "recordScreenIndex", ascending: true)
 
 	private final let coachMarksController = CoachMarksController()
 	private final var coachMarksDataSourceAndDelegate: DefaultCoachMarksDataSourceAndDelegate!
@@ -95,10 +100,12 @@ public final class RecordMedicationTableViewController: UITableViewController {
 	public final override func viewDidLoad() {
 		super.viewDidLoad()
 
-		navigationItem.rightBarButtonItem = barButton(
+		let addButton = barButton(
 			title: "+",
 			quickPress: #selector(quickPressAddButton),
 			longPress: #selector(longPressAddButton))
+		let sortButton = barButton(title: "⇅", action: #selector(sortButtonPressed))
+		navigationItem.rightBarButtonItems = [addButton, sortButton]
 
 		searchController.searchResultsUpdater = self
 		searchController.obscuresBackgroundDuringPresentation = false
@@ -115,8 +122,6 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		observe(selector: #selector(errorOccurred), name: RecordMedicationTableViewCell.errorOccurred)
 		observe(selector: #selector(presentMedicationDosesTableView), name: RecordMedicationTableViewCell.shouldPresentDosesView)
 		observe(selector: #selector(medicationEdited), name: Me.medicationEdited)
-
-		reorderOnLongPress()
 
 		coachMarksDataSourceAndDelegate = DefaultCoachMarksDataSourceAndDelegate(
 			coachMarksInfo,
@@ -299,7 +304,78 @@ public final class RecordMedicationTableViewController: UITableViewController {
 		quickCreateAndTake()
 	}
 
+	@IBAction final func sortButtonPressed() {
+		let actionsController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+		actionsController.addAction(getSortAlphabeticallyAction())
+		actionsController.addAction(getSortZetabeticallyAction())
+		if currentSort != nil {
+			actionsController.addAction(getUseDefaultSortAction())
+		}
+		actionsController.addAction(getEditDefaultSortAction())
+		actionsController.addAction(getSortByRecentCountAction())
+		actionsController.addAction(DependencyInjector.get(UiUtil.self).alertAction(
+			title: "Cancel",
+			style: .cancel,
+			handler: nil))
+		present(actionsController, animated: false, completion: nil)
+	}
+
+	private final func getSortAlphabeticallyAction() -> UIAlertAction {
+		return DependencyInjector.get(UiUtil.self).alertAction(
+			title: "Sort Alphabetically",
+			style: .default,
+			handler: { _ in
+				self.currentSort = NSSortDescriptor(key: "name", ascending: true)
+				self.loadMedications()
+			})
+	}
+
+	private final func getSortZetabeticallyAction() -> UIAlertAction {
+		return DependencyInjector.get(UiUtil.self).alertAction(
+			title: "Sort Zetabetically",
+			style: .default,
+			handler: { _ in
+				self.currentSort = NSSortDescriptor(key: "name", ascending: false)
+				self.loadMedications()
+			})
+	}
+
+	private final func getUseDefaultSortAction() -> UIAlertAction {
+		return DependencyInjector.get(UiUtil.self).alertAction(
+			title: "Use Default Sort Order",
+			style: .default,
+			handler: { _ in
+				self.currentSort = nil
+				self.loadMedications()
+			})
+	}
+
+	private final func getEditDefaultSortAction() -> UIAlertAction {
+		return DependencyInjector.get(UiUtil.self).alertAction(
+			title: isEditing ? "Done Editing Default Sort Order" : "Edit Default Sort Order",
+			style: .default,
+			handler: { _ in
+				self.currentSort = nil
+				let _ = self.editButtonItem.target?.perform(self.editButtonItem.action)
+				self.loadMedications()
+			})
+	}
+
+	private final func getSortByRecentCountAction() -> UIAlertAction {
+		return DependencyInjector.get(UiUtil.self).alertAction(
+			title: "Permanent Sort by Recent Count",
+			style: .default,
+			handler: { _ in self.presentSortByRecentCountOptions() })
+	}
+
 	// MARK: - Helper Functions
+
+	private final func presentSortByRecentCountOptions() {
+		let controller = viewController(named: "chooseRecentTimePeriod") as! ChooseRecentTimePeriodViewController
+		controller.initialTimeUnit = .weekOfYear
+		controller.initialNumTimeUnits = 2
+		present(controller, using: Me.presenter)
+	}
 
 	private final func loadMedications() {
 		resetFetchedResultsController()
@@ -312,7 +388,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 			signpost.begin(name: "resetting fetched results controller")
 			fetchedResultsController = DependencyInjector.get(Database.self).fetchedResultsController(
 				type: Medication.self,
-				sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
+				sortDescriptors: [currentSort ?? defaultSort],
 				cacheName: "medications")
 			let fetchRequest = fetchedResultsController.fetchRequest
 			let searchText: String = getSearchText()
