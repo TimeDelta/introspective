@@ -603,7 +603,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func getSortByRecentCountAction() -> UIAlertAction {
 		return DependencyInjector.get(UiUtil.self).alertAction(
-			title: "Sort by Recent Count",
+			title: "Permanent Sort by Recent Count",
 			style: .default,
 			handler: { _ in self.presentSortByRecentCountOptions() })
 	}
