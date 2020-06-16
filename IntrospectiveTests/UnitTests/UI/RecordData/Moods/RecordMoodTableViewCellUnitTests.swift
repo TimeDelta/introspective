@@ -30,6 +30,7 @@ final class RecordMoodTableViewCellUnitTests: UnitTest {
 
 		Given(mockMoodUiUtil, .colorForMood(rating: .any, minRating: .any, maxRating: .any, willReturn: UIColor.white))
 		Given(mockMoodUiUtil, .valueToString(.any, willReturn: ""))
+		Given(mockMoodUiUtil, .feedbackMessage(for: .any, min: .any, max: .any, willReturn: "not nil"))
 
 		mockTransaction = TransactionMock()
 		Given(mockDatabase, .transaction(willReturn: mockTransaction))

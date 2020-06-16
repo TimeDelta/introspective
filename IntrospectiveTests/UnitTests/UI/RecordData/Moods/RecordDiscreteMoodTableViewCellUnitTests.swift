@@ -27,6 +27,7 @@ class RecordDiscreteMoodTableViewCellUnitTests: UnitTest {
 		super.setUp()
 
 		Given(mockMoodUiUtil, .colorForMood(rating: .any, minRating: .any, maxRating: .any, willReturn: UIColor.white))
+		Given(mockMoodUiUtil, .feedbackMessage(for: .any, min: .any, max: .any, willReturn: "not nil"))
 
 		mockTransaction = TransactionMock()
 		Given(mockDatabase, .transaction(willReturn: mockTransaction))
