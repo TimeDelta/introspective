@@ -72,17 +72,16 @@ public final class ActivityDefinitionNameTableViewCell: UITableViewCell {
 	}
 
 	private final func isDuplicate() -> Bool {
-		if let name = nameTextField.text {
-			guard name.localizedLowercase != initialName.localizedLowercase else { return true }
-			let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
-			fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
-			do {
-				let results = try DependencyInjector.get(Database.self).query(fetchRequest)
-				return results.count > 0
-			} catch {
-				log.error("Failed to check for activity name duplication")
-			}
+		guard let name = nameTextField.text else { return false }
+		guard name.localizedLowercase != initialName.localizedLowercase else { return true }
+		let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
+		do {
+			let results = try DependencyInjector.get(Database.self).query(fetchRequest)
+			return results.count > 0
+		} catch {
+			log.error("Failed to check for activity name duplication")
+			return true
 		}
-		return false
 	}
 }

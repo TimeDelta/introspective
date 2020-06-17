@@ -284,8 +284,8 @@ public final class EditMedicationViewController: UIViewController {
 			return medicationsWithSameName.count > 0
 		} catch {
 			log.error("Failed to check for medication name duplication: %@", errorInfo(error))
+			return true
 		}
-		return false
 	}
 
 	private final func dosageIsValid() -> Bool {
