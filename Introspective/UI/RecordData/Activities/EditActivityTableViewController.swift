@@ -101,7 +101,11 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 		observe(selector: #selector(tagsChanged), name: Me.tagsChanged)
 
 		if activity == nil {
-			startDate = DependencyInjector.get(ActivityDao.self).getMostRecentActivityDate() ?? Date()
+			do {
+				startDate = try DependencyInjector.get(ActivityDao.self).getMostRecentActivityEndDate() ?? Date()
+			} catch {
+				startDate = Date()
+			}
 		}
 
 		hideKeyboardOnTapNonTextInput()
@@ -203,13 +207,13 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			let controller = viewController(named: "datePicker", fromStoryboard: "Util") as! SelectDateViewController
 			controller.initialDate = startDate
 			controller.notificationToSendOnAccept = Me.startDateChanged
-			controller.lastDate = DependencyInjector.get(ActivityDao.self).getMostRecentActivityDate()
+			controller.lastDate = (try? DependencyInjector.get(ActivityDao.self).getMostRecentActivityEndDate()) ?? nil
 			customPresentViewController(Me.presenter, viewController: controller, animated: false)
 		} else if indexPath == Me.endIndex {
 			let controller = viewController(named: "datePicker", fromStoryboard: "Util") as! SelectDateViewController
 			controller.initialDate = endDate
 			controller.notificationToSendOnAccept = Me.endDateChanged
-			controller.lastDate = DependencyInjector.get(ActivityDao.self).getMostRecentActivityDate()
+			controller.lastDate = (try? DependencyInjector.get(ActivityDao.self).getMostRecentActivityEndDate()) ?? nil
 			customPresentViewController(Me.presenter, viewController: controller, animated: false)
 		} else if indexPath == Me.durationIndex {
 			let controller = viewController(named: "durationChooser", fromStoryboard: "Util") as! SelectDurationViewController

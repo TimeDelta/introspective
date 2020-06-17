@@ -41,7 +41,7 @@ class EditActivityTableViewControllerUnitTests: UnitTest {
 
 		mockActivityDao = ActivityDaoMock()
 		Given(injectionProvider, .get(.value(ActivityDao.self), willReturn: mockActivityDao))
-		Given(mockActivityDao, .getMostRecentActivityDate(willReturn: nil))
+		Given(mockActivityDao, .getMostRecentActivityEndDate(willReturn: nil))
 	}
 
 	// MARK: - numberOfSections()

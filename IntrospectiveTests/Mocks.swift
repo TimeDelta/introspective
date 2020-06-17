@@ -557,33 +557,170 @@ open class ActivityDaoMock: ActivityDao, Mock {
 
 
 
-    open func getMostRecentActivityDate() -> Date? {
-        addInvocation(.m_getMostRecentActivityDate)
-		let perform = methodPerformValue(.m_getMostRecentActivityDate) as? () -> Void
+    open func getMostRecentActivityEndDate() throws -> Date? {
+        addInvocation(.m_getMostRecentActivityEndDate)
+		let perform = methodPerformValue(.m_getMostRecentActivityEndDate) as? () -> Void
 		perform?()
 		var __value: Date? = nil
 		do {
-		    __value = try methodReturnValue(.m_getMostRecentActivityDate).casted()
-		} catch {
+		    __value = try methodReturnValue(.m_getMostRecentActivityEndDate).casted()
+		} catch MockError.notStubed {
 			// do nothing
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func getMostRecentActivity(_ activityDefinition: ActivityDefinition) throws -> Activity? {
+        addInvocation(.m_getMostRecentActivity__activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`)))
+		let perform = methodPerformValue(.m_getMostRecentActivity__activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`))) as? (ActivityDefinition) -> Void
+		perform?(`activityDefinition`)
+		var __value: Activity? = nil
+		do {
+		    __value = try methodReturnValue(.m_getMostRecentActivity__activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`))).casted()
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func getMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws -> Activity? {
+        addInvocation(.m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`)))
+		let perform = methodPerformValue(.m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`))) as? (ActivityDefinition) -> Void
+		perform?(`activityDefinition`)
+		var __value: Activity? = nil
+		do {
+		    __value = try methodReturnValue(.m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`))).casted()
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func activityDefinitionWithNameExists(_ name: String) throws -> Bool {
+        addInvocation(.m_activityDefinitionWithNameExists__name(Parameter<String>.value(`name`)))
+		let perform = methodPerformValue(.m_activityDefinitionWithNameExists__name(Parameter<String>.value(`name`))) as? (String) -> Void
+		perform?(`name`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_activityDefinitionWithNameExists__name(Parameter<String>.value(`name`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for activityDefinitionWithNameExists(_ name: String). Use given")
+			Failure("Stub return value not specified for activityDefinitionWithNameExists(_ name: String). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func startActivity(_ definition: ActivityDefinition) throws -> Activity {
+        addInvocation(.m_startActivity__definition(Parameter<ActivityDefinition>.value(`definition`)))
+		let perform = methodPerformValue(.m_startActivity__definition(Parameter<ActivityDefinition>.value(`definition`))) as? (ActivityDefinition) -> Void
+		perform?(`definition`)
+		var __value: Activity
+		do {
+		    __value = try methodReturnValue(.m_startActivity__definition(Parameter<ActivityDefinition>.value(`definition`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for startActivity(_ definition: ActivityDefinition). Use given")
+			Failure("Stub return value not specified for startActivity(_ definition: ActivityDefinition). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func createDefinition(		name: String,		description: String?,		source: Sources.ActivitySourceNum,		recordScreenIndex: Int16?,		autoNote: Bool?,		using transaction: Transaction?	) throws -> ActivityDefinition {
+        addInvocation(.m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(Parameter<String>.value(`name`), Parameter<String?>.value(`description`), Parameter<Sources.ActivitySourceNum>.value(`source`), Parameter<Int16?>.value(`recordScreenIndex`), Parameter<Bool?>.value(`autoNote`), Parameter<Transaction?>.value(`transaction`)))
+		let perform = methodPerformValue(.m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(Parameter<String>.value(`name`), Parameter<String?>.value(`description`), Parameter<Sources.ActivitySourceNum>.value(`source`), Parameter<Int16?>.value(`recordScreenIndex`), Parameter<Bool?>.value(`autoNote`), Parameter<Transaction?>.value(`transaction`))) as? (String, String?, Sources.ActivitySourceNum, Int16?, Bool?, Transaction?) -> Void
+		perform?(`name`, `description`, `source`, `recordScreenIndex`, `autoNote`, `transaction`)
+		var __value: ActivityDefinition
+		do {
+		    __value = try methodReturnValue(.m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(Parameter<String>.value(`name`), Parameter<String?>.value(`description`), Parameter<Sources.ActivitySourceNum>.value(`source`), Parameter<Int16?>.value(`recordScreenIndex`), Parameter<Bool?>.value(`autoNote`), Parameter<Transaction?>.value(`transaction`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for createDefinition(  name: String,  description: String?,  source: Sources.ActivitySourceNum,  recordScreenIndex: Int16?,  autoNote: Bool?,  using transaction: Transaction? ). Use given")
+			Failure("Stub return value not specified for createDefinition(  name: String,  description: String?,  source: Sources.ActivitySourceNum,  recordScreenIndex: Int16?,  autoNote: Bool?,  using transaction: Transaction? ). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func createActivity(		definition: ActivityDefinition,		startDate: Date,		source: Sources.ActivitySourceNum,		endDate: Date?,		note: String?,		using transaction: Transaction?	) throws -> Activity {
+        addInvocation(.m_createActivity__definition_definitionstartDate_startDatesource_sourceendDate_endDatenote_noteusing_transaction(Parameter<ActivityDefinition>.value(`definition`), Parameter<Date>.value(`startDate`), Parameter<Sources.ActivitySourceNum>.value(`source`), Parameter<Date?>.value(`endDate`), Parameter<String?>.value(`note`), Parameter<Transaction?>.value(`transaction`)))
+		let perform = methodPerformValue(.m_createActivity__definition_definitionstartDate_startDatesource_sourceendDate_endDatenote_noteusing_transaction(Parameter<ActivityDefinition>.value(`definition`), Parameter<Date>.value(`startDate`), Parameter<Sources.ActivitySourceNum>.value(`source`), Parameter<Date?>.value(`endDate`), Parameter<String?>.value(`note`), Parameter<Transaction?>.value(`transaction`))) as? (ActivityDefinition, Date, Sources.ActivitySourceNum, Date?, String?, Transaction?) -> Void
+		perform?(`definition`, `startDate`, `source`, `endDate`, `note`, `transaction`)
+		var __value: Activity
+		do {
+		    __value = try methodReturnValue(.m_createActivity__definition_definitionstartDate_startDatesource_sourceendDate_endDatenote_noteusing_transaction(Parameter<ActivityDefinition>.value(`definition`), Parameter<Date>.value(`startDate`), Parameter<Sources.ActivitySourceNum>.value(`source`), Parameter<Date?>.value(`endDate`), Parameter<String?>.value(`note`), Parameter<Transaction?>.value(`transaction`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for createActivity(  definition: ActivityDefinition,  startDate: Date,  source: Sources.ActivitySourceNum,  endDate: Date?,  note: String?,  using transaction: Transaction? ). Use given")
+			Failure("Stub return value not specified for createActivity(  definition: ActivityDefinition,  startDate: Date,  source: Sources.ActivitySourceNum,  endDate: Date?,  note: String?,  using transaction: Transaction? ). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
 
 
     fileprivate enum MethodType {
-        case m_getMostRecentActivityDate
+        case m_getMostRecentActivityEndDate
+        case m_getMostRecentActivity__activityDefinition(Parameter<ActivityDefinition>)
+        case m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(Parameter<ActivityDefinition>)
+        case m_activityDefinitionWithNameExists__name(Parameter<String>)
+        case m_startActivity__definition(Parameter<ActivityDefinition>)
+        case m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(Parameter<String>, Parameter<String?>, Parameter<Sources.ActivitySourceNum>, Parameter<Int16?>, Parameter<Bool?>, Parameter<Transaction?>)
+        case m_createActivity__definition_definitionstartDate_startDatesource_sourceendDate_endDatenote_noteusing_transaction(Parameter<ActivityDefinition>, Parameter<Date>, Parameter<Sources.ActivitySourceNum>, Parameter<Date?>, Parameter<String?>, Parameter<Transaction?>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
-            case (.m_getMostRecentActivityDate, .m_getMostRecentActivityDate):
+            case (.m_getMostRecentActivityEndDate, .m_getMostRecentActivityEndDate):
                 return true 
+            case (.m_getMostRecentActivity__activityDefinition(let lhsActivitydefinition), .m_getMostRecentActivity__activityDefinition(let rhsActivitydefinition)):
+                guard Parameter.compare(lhs: lhsActivitydefinition, rhs: rhsActivitydefinition, with: matcher) else { return false } 
+                return true 
+            case (.m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(let lhsActivitydefinition), .m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(let rhsActivitydefinition)):
+                guard Parameter.compare(lhs: lhsActivitydefinition, rhs: rhsActivitydefinition, with: matcher) else { return false } 
+                return true 
+            case (.m_activityDefinitionWithNameExists__name(let lhsName), .m_activityDefinitionWithNameExists__name(let rhsName)):
+                guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
+                return true 
+            case (.m_startActivity__definition(let lhsDefinition), .m_startActivity__definition(let rhsDefinition)):
+                guard Parameter.compare(lhs: lhsDefinition, rhs: rhsDefinition, with: matcher) else { return false } 
+                return true 
+            case (.m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(let lhsName, let lhsDescription, let lhsSource, let lhsRecordscreenindex, let lhsAutonote, let lhsTransaction), .m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(let rhsName, let rhsDescription, let rhsSource, let rhsRecordscreenindex, let rhsAutonote, let rhsTransaction)):
+                guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsDescription, rhs: rhsDescription, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsSource, rhs: rhsSource, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsRecordscreenindex, rhs: rhsRecordscreenindex, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsAutonote, rhs: rhsAutonote, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsTransaction, rhs: rhsTransaction, with: matcher) else { return false } 
+                return true 
+            case (.m_createActivity__definition_definitionstartDate_startDatesource_sourceendDate_endDatenote_noteusing_transaction(let lhsDefinition, let lhsStartdate, let lhsSource, let lhsEnddate, let lhsNote, let lhsTransaction), .m_createActivity__definition_definitionstartDate_startDatesource_sourceendDate_endDatenote_noteusing_transaction(let rhsDefinition, let rhsStartdate, let rhsSource, let rhsEnddate, let rhsNote, let rhsTransaction)):
+                guard Parameter.compare(lhs: lhsDefinition, rhs: rhsDefinition, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsStartdate, rhs: rhsStartdate, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsSource, rhs: rhsSource, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsEnddate, rhs: rhsEnddate, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsNote, rhs: rhsNote, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsTransaction, rhs: rhsTransaction, with: matcher) else { return false } 
+                return true 
+            default: return false
             }
         }
 
         func intValue() -> Int {
             switch self {
-            case .m_getMostRecentActivityDate: return 0
+            case .m_getMostRecentActivityEndDate: return 0
+            case let .m_getMostRecentActivity__activityDefinition(p0): return p0.intValue
+            case let .m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(p0): return p0.intValue
+            case let .m_activityDefinitionWithNameExists__name(p0): return p0.intValue
+            case let .m_startActivity__definition(p0): return p0.intValue
+            case let .m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(p0, p1, p2, p3, p4, p5): return p0.intValue + p1.intValue + p2.intValue + p3.intValue + p4.intValue + p5.intValue
+            case let .m_createActivity__definition_definitionstartDate_startDatesource_sourceendDate_endDatenote_noteusing_transaction(p0, p1, p2, p3, p4, p5): return p0.intValue + p1.intValue + p2.intValue + p3.intValue + p4.intValue + p5.intValue
             }
         }
     }
@@ -597,13 +734,94 @@ open class ActivityDaoMock: ActivityDao, Mock {
         }
 
 
-        public static func getMostRecentActivityDate(willReturn: Date?...) -> MethodStub {
-            return Given(method: .m_getMostRecentActivityDate, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        public static func getMostRecentActivityEndDate(willReturn: Date?...) -> MethodStub {
+            return Given(method: .m_getMostRecentActivityEndDate, products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
-        public static func getMostRecentActivityDate(willProduce: (Stubber<Date?>) -> Void) -> MethodStub {
-            let willReturn: [Date?] = []
-			let given: Given = { return Given(method: .m_getMostRecentActivityDate, products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (Date?).self)
+        public static func getMostRecentActivity(_ activityDefinition: Parameter<ActivityDefinition>, willReturn: Activity?...) -> MethodStub {
+            return Given(method: .m_getMostRecentActivity__activityDefinition(`activityDefinition`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func getMostRecentlyStartedIncompleteActivity(for activityDefinition: Parameter<ActivityDefinition>, willReturn: Activity?...) -> MethodStub {
+            return Given(method: .m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(`activityDefinition`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func activityDefinitionWithNameExists(_ name: Parameter<String>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_activityDefinitionWithNameExists__name(`name`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func startActivity(_ definition: Parameter<ActivityDefinition>, willReturn: Activity...) -> MethodStub {
+            return Given(method: .m_startActivity__definition(`definition`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func createDefinition(name: Parameter<String>, description: Parameter<String?>, source: Parameter<Sources.ActivitySourceNum>, recordScreenIndex: Parameter<Int16?>, autoNote: Parameter<Bool?>, using transaction: Parameter<Transaction?>, willReturn: ActivityDefinition...) -> MethodStub {
+            return Given(method: .m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(`name`, `description`, `source`, `recordScreenIndex`, `autoNote`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func createActivity(definition: Parameter<ActivityDefinition>, startDate: Parameter<Date>, source: Parameter<Sources.ActivitySourceNum>, endDate: Parameter<Date?>, note: Parameter<String?>, using transaction: Parameter<Transaction?>, willReturn: Activity...) -> MethodStub {
+            return Given(method: .m_createActivity__definition_definitionstartDate_startDatesource_sourceendDate_endDatenote_noteusing_transaction(`definition`, `startDate`, `source`, `endDate`, `note`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func getMostRecentActivityEndDate(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_getMostRecentActivityEndDate, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func getMostRecentActivityEndDate(willProduce: (StubberThrows<Date?>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_getMostRecentActivityEndDate, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Date?).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func getMostRecentActivity(_ activityDefinition: Parameter<ActivityDefinition>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_getMostRecentActivity__activityDefinition(`activityDefinition`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func getMostRecentActivity(_ activityDefinition: Parameter<ActivityDefinition>, willProduce: (StubberThrows<Activity?>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_getMostRecentActivity__activityDefinition(`activityDefinition`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Activity?).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func getMostRecentlyStartedIncompleteActivity(for activityDefinition: Parameter<ActivityDefinition>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(`activityDefinition`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func getMostRecentlyStartedIncompleteActivity(for activityDefinition: Parameter<ActivityDefinition>, willProduce: (StubberThrows<Activity?>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(`activityDefinition`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Activity?).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func activityDefinitionWithNameExists(_ name: Parameter<String>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_activityDefinitionWithNameExists__name(`name`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func activityDefinitionWithNameExists(_ name: Parameter<String>, willProduce: (StubberThrows<Bool>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_activityDefinitionWithNameExists__name(`name`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func startActivity(_ definition: Parameter<ActivityDefinition>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_startActivity__definition(`definition`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func startActivity(_ definition: Parameter<ActivityDefinition>, willProduce: (StubberThrows<Activity>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_startActivity__definition(`definition`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Activity).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func createDefinition(name: Parameter<String>, description: Parameter<String?>, source: Parameter<Sources.ActivitySourceNum>, recordScreenIndex: Parameter<Int16?>, autoNote: Parameter<Bool?>, using transaction: Parameter<Transaction?>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(`name`, `description`, `source`, `recordScreenIndex`, `autoNote`, `transaction`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func createDefinition(name: Parameter<String>, description: Parameter<String?>, source: Parameter<Sources.ActivitySourceNum>, recordScreenIndex: Parameter<Int16?>, autoNote: Parameter<Bool?>, using transaction: Parameter<Transaction?>, willProduce: (StubberThrows<ActivityDefinition>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(`name`, `description`, `source`, `recordScreenIndex`, `autoNote`, `transaction`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (ActivityDefinition).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func createActivity(definition: Parameter<ActivityDefinition>, startDate: Parameter<Date>, source: Parameter<Sources.ActivitySourceNum>, endDate: Parameter<Date?>, note: Parameter<String?>, using transaction: Parameter<Transaction?>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_createActivity__definition_definitionstartDate_startDatesource_sourceendDate_endDatenote_noteusing_transaction(`definition`, `startDate`, `source`, `endDate`, `note`, `transaction`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func createActivity(definition: Parameter<ActivityDefinition>, startDate: Parameter<Date>, source: Parameter<Sources.ActivitySourceNum>, endDate: Parameter<Date?>, note: Parameter<String?>, using transaction: Parameter<Transaction?>, willProduce: (StubberThrows<Activity>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_createActivity__definition_definitionstartDate_startDatesource_sourceendDate_endDatenote_noteusing_transaction(`definition`, `startDate`, `source`, `endDate`, `note`, `transaction`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Activity).self)
 			willProduce(stubber)
 			return given
         }
@@ -612,15 +830,39 @@ open class ActivityDaoMock: ActivityDao, Mock {
     public struct Verify {
         fileprivate var method: MethodType
 
-        public static func getMostRecentActivityDate() -> Verify { return Verify(method: .m_getMostRecentActivityDate)}
+        public static func getMostRecentActivityEndDate() -> Verify { return Verify(method: .m_getMostRecentActivityEndDate)}
+        public static func getMostRecentActivity(_ activityDefinition: Parameter<ActivityDefinition>) -> Verify { return Verify(method: .m_getMostRecentActivity__activityDefinition(`activityDefinition`))}
+        public static func getMostRecentlyStartedIncompleteActivity(for activityDefinition: Parameter<ActivityDefinition>) -> Verify { return Verify(method: .m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(`activityDefinition`))}
+        public static func activityDefinitionWithNameExists(_ name: Parameter<String>) -> Verify { return Verify(method: .m_activityDefinitionWithNameExists__name(`name`))}
+        public static func startActivity(_ definition: Parameter<ActivityDefinition>) -> Verify { return Verify(method: .m_startActivity__definition(`definition`))}
+        public static func createDefinition(name: Parameter<String>, description: Parameter<String?>, source: Parameter<Sources.ActivitySourceNum>, recordScreenIndex: Parameter<Int16?>, autoNote: Parameter<Bool?>, using transaction: Parameter<Transaction?>) -> Verify { return Verify(method: .m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(`name`, `description`, `source`, `recordScreenIndex`, `autoNote`, `transaction`))}
+        public static func createActivity(definition: Parameter<ActivityDefinition>, startDate: Parameter<Date>, source: Parameter<Sources.ActivitySourceNum>, endDate: Parameter<Date?>, note: Parameter<String?>, using transaction: Parameter<Transaction?>) -> Verify { return Verify(method: .m_createActivity__definition_definitionstartDate_startDatesource_sourceendDate_endDatenote_noteusing_transaction(`definition`, `startDate`, `source`, `endDate`, `note`, `transaction`))}
     }
 
     public struct Perform {
         fileprivate var method: MethodType
         var performs: Any
 
-        public static func getMostRecentActivityDate(perform: @escaping () -> Void) -> Perform {
-            return Perform(method: .m_getMostRecentActivityDate, performs: perform)
+        public static func getMostRecentActivityEndDate(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_getMostRecentActivityEndDate, performs: perform)
+        }
+        public static func getMostRecentActivity(_ activityDefinition: Parameter<ActivityDefinition>, perform: @escaping (ActivityDefinition) -> Void) -> Perform {
+            return Perform(method: .m_getMostRecentActivity__activityDefinition(`activityDefinition`), performs: perform)
+        }
+        public static func getMostRecentlyStartedIncompleteActivity(for activityDefinition: Parameter<ActivityDefinition>, perform: @escaping (ActivityDefinition) -> Void) -> Perform {
+            return Perform(method: .m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(`activityDefinition`), performs: perform)
+        }
+        public static func activityDefinitionWithNameExists(_ name: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_activityDefinitionWithNameExists__name(`name`), performs: perform)
+        }
+        public static func startActivity(_ definition: Parameter<ActivityDefinition>, perform: @escaping (ActivityDefinition) -> Void) -> Perform {
+            return Perform(method: .m_startActivity__definition(`definition`), performs: perform)
+        }
+        public static func createDefinition(name: Parameter<String>, description: Parameter<String?>, source: Parameter<Sources.ActivitySourceNum>, recordScreenIndex: Parameter<Int16?>, autoNote: Parameter<Bool?>, using transaction: Parameter<Transaction?>, perform: @escaping (String, String?, Sources.ActivitySourceNum, Int16?, Bool?, Transaction?) -> Void) -> Perform {
+            return Perform(method: .m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(`name`, `description`, `source`, `recordScreenIndex`, `autoNote`, `transaction`), performs: perform)
+        }
+        public static func createActivity(definition: Parameter<ActivityDefinition>, startDate: Parameter<Date>, source: Parameter<Sources.ActivitySourceNum>, endDate: Parameter<Date?>, note: Parameter<String?>, using transaction: Parameter<Transaction?>, perform: @escaping (ActivityDefinition, Date, Sources.ActivitySourceNum, Date?, String?, Transaction?) -> Void) -> Perform {
+            return Perform(method: .m_createActivity__definition_definitionstartDate_startDatesource_sourceendDate_endDatenote_noteusing_transaction(`definition`, `startDate`, `source`, `endDate`, `note`, `transaction`), performs: perform)
         }
     }
 

@@ -639,16 +639,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 					showError(title: "Activity named '\(searchText)' already exists.")
 					return
 				}
-				let transaction = DependencyInjector.get(Database.self).transaction()
-
-				let activityDefinition = try transaction.new(ActivityDefinition.self)
-				activityDefinition.name = searchText
-				activityDefinition.setSource(.introspective)
-				activityDefinition.recordScreenIndex = Int16(try DependencyInjector.get(Database.self).query(ActivityDefinition.fetchRequest()).count)
-				let activity = try transaction.new(Activity.self)
-				activity.definition = activityDefinition
-				activity.start = Date()
-				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+				let activityDefinition = try DependencyInjector.get(ActivityDao.self).createDefinition(name: searchText)
+				try DependencyInjector.get(ActivityDao.self).createActivity(definition: activityDefinition)
 				searchController.searchBar.text = ""
 				loadActivitiyDefinitions()
 			} catch {
@@ -663,16 +655,9 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func startActivity(for activityDefinition: ActivityDefinition, cell: RecordActivityDefinitionTableViewCell) {
 		do {
-			let transaction = DependencyInjector.get(Database.self).transaction()
-			let activity = try transaction.new(Activity.self)
-			activity.setSource(.introspective)
-			let definition = try DependencyInjector.get(Database.self).pull(savedObject: activityDefinition, fromSameContextAs: activity)
-			activity.definition = definition
-			activity.start = Date()
-			definition.addToActivities(activity)
-			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+			try DependencyInjector.get(ActivityDao.self).startActivity(activityDefinition)
 			// just calling updateUiElements here doesn't display the progress indicator for some reason
-			cell.activityDefinition = try DependencyInjector.get(Database.self).pull(savedObject: definition)
+			cell.activityDefinition = try DependencyInjector.get(Database.self).pull(savedObject: activityDefinition)
 		} catch {
 			log.error("Failed to start activity: %@", errorInfo(error))
 			showError(title: "Failed to start activity", error: error)
@@ -698,7 +683,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		}
 	}
 
-	/// - Parameter now: If provided, use this as the stop date / time.
+	/// - Parameter end: If provided, use this as the stop date / time.
 	/// - Returns: Whether or not the activity was ignored
 	private final func autoIgnoreIfAppropriate(_ activity: Activity, end: Date = Date()) -> Bool {
 		if DependencyInjector.get(Settings.self).autoIgnoreEnabled {
@@ -756,30 +741,23 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func getMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) -> Activity? {
-		let endDateVariableName = CommonSampleAttributes.endDate.variableName!
-		let incompleteActivities = activityDefinition.activities.filtered(using: NSPredicate(format: "%K == nil", endDateVariableName)) as! Set<Activity>
-
-		if incompleteActivities.count > 0 {
-			let sortedIncompleteActivities = incompleteActivities.sorted(by: { $0.start > $1.start })
-			return sortedIncompleteActivities[0]
+		do {
+			return try DependencyInjector.get(ActivityDao.self)
+				.getMostRecentlyStartedIncompleteActivity(for: activityDefinition)
+		} catch {
+			log.error("Failed to fetch most recent activity: %@", errorInfo(error))
+			return nil
 		}
-		return nil
 	}
 
 	private final func getMostRecentActivity(_ activityDefinition: ActivityDefinition) -> Activity? {
-		let keyName = CommonSampleAttributes.startDate.variableName!
-		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
-		fetchRequest.predicate = NSPredicate(format: "definition.name == %@", activityDefinition.name)
-		fetchRequest.sortDescriptors = [NSSortDescriptor(key: keyName, ascending: false)]
 		do {
-			let activities = try DependencyInjector.get(Database.self).query(fetchRequest)
-			if activities.count > 0 {
-				return activities[0]
-			}
+			return try DependencyInjector.get(ActivityDao.self)
+				.getMostRecentActivity(activityDefinition)
 		} catch {
 			log.error("Failed to fetch activities while retrieving most recent: %@", errorInfo(error))
+			return nil
 		}
-		return nil
 	}
 
 	private final func getSearchText() -> String {
@@ -787,10 +765,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func activityDefinitionWithNameExists(_ name: String) throws -> Bool {
-		let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
-		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
-		let results = try DependencyInjector.get(Database.self).query(fetchRequest)
-		return results.count > 0
+		return try DependencyInjector.get(ActivityDao.self).activityDefinitionWithNameExists(name)
 	}
 
 	private final func deleteExampleActivity() {
@@ -903,7 +878,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 		signpost.begin(name: "getting all fetched results controller")
 		let controller = DependencyInjector.get(Database.self).fetchedResultsController(
 			type: ActivityDefinition.self,
-			sortDescriptors: [NSSortDescriptor(key: "recordScreenIndex", ascending: true)],
+			sortDescriptors: [currentSort ?? defaultSort],
 			cacheName: "definitions")
 		try controller.performFetch()
 		signpost.end(name: "getting all fetched results controller")
