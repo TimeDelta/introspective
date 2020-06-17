@@ -276,7 +276,7 @@ public final class EditMedicationViewController: UIViewController {
 
 	private final func isDuplicate(_ name: String) -> Bool {
 		let originalName = medication?.name ?? initialName ?? ""
-		guard name.localizedLowercase != originalName.localizedLowercase else { return false }
+		guard name.localizedLowercase != originalName.localizedLowercase else { return true }
 		let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		do {
