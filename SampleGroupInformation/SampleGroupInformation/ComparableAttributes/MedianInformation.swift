@@ -42,7 +42,7 @@ public final class MedianInformation<AttributeType: Comparable>: AnyInformation 
 
 	// MARK: - Equality
 
-	public final override func equalTo(_ other: ExtraInformation) -> Bool {
+	public final override func equalTo(_ other: SampleGroupInformation) -> Bool {
 		return other is MedianInformation<AttributeType> && attribute.equalTo(other.attribute)
 	}
 

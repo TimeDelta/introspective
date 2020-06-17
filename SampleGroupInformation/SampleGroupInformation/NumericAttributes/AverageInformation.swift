@@ -86,7 +86,7 @@ public final class AverageInformation: AnyInformation {
 
 	// MARK: - Equality
 
-	public final override func equalTo(_ other: ExtraInformation) -> Bool {
+	public final override func equalTo(_ other: SampleGroupInformation) -> Bool {
 		return other is AverageInformation && attribute.equalTo(other.attribute)
 	}
 

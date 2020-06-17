@@ -33,8 +33,8 @@ public final class MultipleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator 
 
 	private final let seriesGroupers: Groupers?
 	private final let pointGroupers: Groupers
-	private final let xInformation: ExtraInformation?
-	private final let yInformation: [ExtraInformation]
+	private final let xInformation: SampleGroupInformation?
+	private final let yInformation: [SampleGroupInformation]
 	// leaving this as public only for testing purposes
 	public final var usePointGroupValueForXAxis: Bool
 
@@ -46,8 +46,8 @@ public final class MultipleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator 
 	public init(
 		seriesGroupers: Groupers?,
 		pointGroupers: Groupers,
-		xInformation: ExtraInformation?,
-		yInformation: [ExtraInformation],
+		xInformation: SampleGroupInformation?,
+		yInformation: [SampleGroupInformation],
 		usePointGroupValueForXAxis: Bool)
 	{
 		self.seriesGroupers = seriesGroupers

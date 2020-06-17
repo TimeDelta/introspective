@@ -1,5 +1,5 @@
 //
-//  SelectExtraInformationViewController.swift
+//  SelectSampleGroupInformationViewController.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 8/7/18.
@@ -13,18 +13,18 @@ import Common
 import DependencyInjection
 import SampleGroupInformation
 
-protocol SelectExtraInformationViewController: UIViewController {
+protocol SelectSampleGroupInformationViewController: UIViewController {
 
 	var attributes: [Attribute]! { get set }
 	var selectedAttribute: Attribute! { get set }
-	var selectedInformation: ExtraInformation! { get set }
+	var selectedInformation: SampleGroupInformation! { get set }
 	var limitToNumericInformation: Bool { get set }
 	var notificationToSendWhenFinished: NotificationName! { get set }
 	/// Setting this allows to filter sent notifications
 	var notificationFilter: Any? { get set }
 }
 
-final class SelectExtraInformationViewControllerImpl: UIViewController, SelectExtraInformationViewController {
+final class SelectSampleGroupInformationViewControllerImpl: UIViewController, SelectSampleGroupInformationViewController {
 
 	// MARK: - IBOutlets
 
@@ -35,7 +35,7 @@ final class SelectExtraInformationViewControllerImpl: UIViewController, SelectEx
 
 	public final var attributes: [Attribute]!
 	public final var selectedAttribute: Attribute!
-	public final var selectedInformation: ExtraInformation!
+	public final var selectedInformation: SampleGroupInformation!
 	public final var limitToNumericInformation: Bool = false
 	public final var notificationToSendWhenFinished: NotificationName!
 	public final var notificationFilter: Any?
@@ -89,11 +89,11 @@ final class SelectExtraInformationViewControllerImpl: UIViewController, SelectEx
 
 	// MARK: - Helper Functions
 
-	private final func getApplicableInformationTypesForSelectedAttribute() -> [ExtraInformation.Type] {
+	private final func getApplicableInformationTypesForSelectedAttribute() -> [SampleGroupInformation.Type] {
 		if limitToNumericInformation {
-			return DependencyInjector.get(ExtraInformationFactory.self).getApplicableNumericInformationTypes(forAttribute: selectedAttribute)
+			return DependencyInjector.get(SampleGroupInformationFactory.self).getApplicableNumericInformationTypes(forAttribute: selectedAttribute)
 		} else {
-			return DependencyInjector.get(ExtraInformationFactory.self).getApplicableInformationTypes(forAttribute: selectedAttribute)
+			return DependencyInjector.get(SampleGroupInformationFactory.self).getApplicableInformationTypes(forAttribute: selectedAttribute)
 		}
 	}
 
@@ -109,7 +109,7 @@ final class SelectExtraInformationViewControllerImpl: UIViewController, SelectEx
 
 // MARK: - UIPickerViewDataSource
 
-extension SelectExtraInformationViewControllerImpl: UIPickerViewDataSource {
+extension SelectSampleGroupInformationViewControllerImpl: UIPickerViewDataSource {
 
 	public final func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
@@ -129,7 +129,7 @@ extension SelectExtraInformationViewControllerImpl: UIPickerViewDataSource {
 
 // MARK: - UIPickerViewDelegate
 
-extension SelectExtraInformationViewControllerImpl: UIPickerViewDelegate {
+extension SelectSampleGroupInformationViewControllerImpl: UIPickerViewDelegate {
 
 	public final func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		if pickerView == attributePicker {

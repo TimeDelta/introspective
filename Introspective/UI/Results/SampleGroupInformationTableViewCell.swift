@@ -10,16 +10,16 @@ import UIKit
 
 import SampleGroupInformation
 
-final class ExtraInformationTableViewCell: UITableViewCell {
+final class SampleGroupInformationTableViewCell: UITableViewCell {
 
-	public final var extraInformation: ExtraInformation! { didSet { updateText() } }
+	public final var sampleGroupInformation: SampleGroupInformation! { didSet { updateText() } }
 
 	public final var value: String! { didSet { updateText() } }
 
 	@IBOutlet weak final var keyValueLabel: UILabel!
 
 	private final func updateText() {
-		if value == nil || extraInformation == nil { return }
-		keyValueLabel.text = extraInformation.description.localizedCapitalized + ": " + value
+		if value == nil || sampleGroupInformation == nil { return }
+		keyValueLabel.text = sampleGroupInformation.description.localizedCapitalized + ": " + value
 	}
 }

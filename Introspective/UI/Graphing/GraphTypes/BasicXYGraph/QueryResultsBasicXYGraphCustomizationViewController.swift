@@ -196,7 +196,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 		if let attribute: Attribute? = value(for: .attribute, from: notification, keyIsOptional: true) {
 			usePointGroupValueForXAxis = false
 			xAxis = SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(attribute: attribute)
-		} else if let information: ExtraInformation = value(for: .information, from: notification, keyIsOptional: true) {
+		} else if let information: SampleGroupInformation = value(for: .information, from: notification, keyIsOptional: true) {
 			usePointGroupValueForXAxis = false
 			xAxis = SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(information: information)
 		} else if let usePointGroupValue: Bool = value(for: .usePointGroupValue, from: notification) {
@@ -210,7 +210,7 @@ final class QueryResultsBasicXYGraphCustomizationViewController: BasicXYGraphTyp
 	@objc private final func yAxisChanged(notification: Notification) {
 		if let attributes: [Attribute] = value(for: .attributes, from: notification, keyIsOptional: true) {
 			yAxis = attributes.map{ SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(attribute: $0) }
-		} else if let information: [ExtraInformation] = value(for: .information, from: notification, keyIsOptional: true) {
+		} else if let information: [SampleGroupInformation] = value(for: .information, from: notification, keyIsOptional: true) {
 			yAxis = information.map{ SingleSampleTypeXYGraphDataGenerator.AttributeOrInformation(information: $0) }
 		} else {
 			yAxis = nil

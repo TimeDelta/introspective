@@ -42,7 +42,7 @@ public final class ModeInformation: AnyInformation {
 
 	// MARK: - Equality
 
-	public final override func equalTo(_ other: ExtraInformation) -> Bool {
+	public final override func equalTo(_ other: SampleGroupInformation) -> Bool {
 		return other is ModeInformation && attribute.equalTo(other.attribute)
 	}
 

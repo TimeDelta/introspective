@@ -34,7 +34,7 @@ class FunctionalTest: Test {
 	final var settings: SettingsImpl!
 
 	final var attributeRestrictionFactory: AttributeRestrictionFactoryImpl!
-	final var extraInformationFactory: ExtraInformationFactoryImpl!
+	final var sampleGroupInformationFactory: SampleGroupInformationFactoryImpl!
 	final var importerFactory: ImporterFactoryImpl!
 	final var queryFactory: QueryFactoryImpl!
 	final var sampleFactory: SampleFactoryImpl!
@@ -64,12 +64,12 @@ class FunctionalTest: Test {
 		queryFactory = QueryFactoryImpl()
 		sampleFactory = SampleFactoryImpl()
 		subQueryMatcherFactory = SubQueryMatcherFactoryImpl()
-		extraInformationFactory = ExtraInformationFactoryImpl()
+		sampleGroupInformationFactory = SampleGroupInformationFactoryImpl()
 		sampleGrouperFactory = SampleGrouperFactoryImpl()
 		importerFactory = ImporterFactoryImpl()
 
 		Given(injectionProvider, .get(.value(AttributeRestrictionFactory.self), willReturn: attributeRestrictionFactory))
-		Given(injectionProvider, .get(.value(ExtraInformationFactory.self), willReturn: extraInformationFactory))
+		Given(injectionProvider, .get(.value(SampleGroupInformationFactory.self), willReturn: sampleGroupInformationFactory))
 		Given(injectionProvider, .get(.value(ImporterFactory.self), willReturn: importerFactory))
 		Given(injectionProvider, .get(.value(QueryFactory.self), willReturn: queryFactory))
 		Given(injectionProvider, .get(.value(SampleFactory.self), willReturn: sampleFactory))

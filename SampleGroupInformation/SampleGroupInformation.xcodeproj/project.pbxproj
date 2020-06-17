@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		A29700CA2344F95F004B97E6 /* SampleGroupInformation.h in Headers */ = {isa = PBXBuildFile; fileRef = A29700C82344F95F004B97E6 /* SampleGroupInformation.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A29700DF2344F9AD004B97E6 /* ExtraInformationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29700D02344F9AC004B97E6 /* ExtraInformationFactory.swift */; };
+		A29700DF2344F9AD004B97E6 /* SampleGroupInformationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29700D02344F9AC004B97E6 /* SampleGroupInformationFactory.swift */; };
 		A29700E02344F9AD004B97E6 /* MostRecentDateInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29700D22344F9AC004B97E6 /* MostRecentDateInformation.swift */; };
 		A29700E12344F9AD004B97E6 /* OldestDateInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29700D32344F9AC004B97E6 /* OldestDateInformation.swift */; };
 		A29700E22344F9AD004B97E6 /* CountInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29700D52344F9AC004B97E6 /* CountInformation.swift */; };
 		A29700E32344F9AD004B97E6 /* ModeInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29700D62344F9AC004B97E6 /* ModeInformation.swift */; };
-		A29700E42344F9AD004B97E6 /* ExtraInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29700D72344F9AC004B97E6 /* ExtraInformation.swift */; };
+		A29700E42344F9AD004B97E6 /* SampleGroupInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29700D72344F9AC004B97E6 /* SampleGroupInformation.swift */; };
 		A29700E52344F9AD004B97E6 /* MaximumInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29700D92344F9AD004B97E6 /* MaximumInformation.swift */; };
 		A29700E62344F9AD004B97E6 /* MinimumInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29700DA2344F9AD004B97E6 /* MinimumInformation.swift */; };
 		A29700E72344F9AD004B97E6 /* MedianInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29700DB2344F9AD004B97E6 /* MedianInformation.swift */; };
@@ -33,12 +33,12 @@
 		A29700C52344F95F004B97E6 /* SampleGroupInformation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SampleGroupInformation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A29700C82344F95F004B97E6 /* SampleGroupInformation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SampleGroupInformation.h; sourceTree = "<group>"; };
 		A29700C92344F95F004B97E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A29700D02344F9AC004B97E6 /* ExtraInformationFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtraInformationFactory.swift; sourceTree = "<group>"; };
+		A29700D02344F9AC004B97E6 /* SampleGroupInformationFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleGroupInformationFactory.swift; sourceTree = "<group>"; };
 		A29700D22344F9AC004B97E6 /* MostRecentDateInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MostRecentDateInformation.swift; sourceTree = "<group>"; };
 		A29700D32344F9AC004B97E6 /* OldestDateInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OldestDateInformation.swift; sourceTree = "<group>"; };
 		A29700D52344F9AC004B97E6 /* CountInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountInformation.swift; sourceTree = "<group>"; };
 		A29700D62344F9AC004B97E6 /* ModeInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModeInformation.swift; sourceTree = "<group>"; };
-		A29700D72344F9AC004B97E6 /* ExtraInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtraInformation.swift; sourceTree = "<group>"; };
+		A29700D72344F9AC004B97E6 /* SampleGroupInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleGroupInformation.swift; sourceTree = "<group>"; };
 		A29700D92344F9AD004B97E6 /* MaximumInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaximumInformation.swift; sourceTree = "<group>"; };
 		A29700DA2344F9AD004B97E6 /* MinimumInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MinimumInformation.swift; sourceTree = "<group>"; };
 		A29700DB2344F9AD004B97E6 /* MedianInformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MedianInformation.swift; sourceTree = "<group>"; };
@@ -99,8 +99,8 @@
 			isa = PBXGroup;
 			children = (
 				A29700EA2344FB57004B97E6 /* SampleGroupInformationInjectionProvider.swift */,
-				A29700D02344F9AC004B97E6 /* ExtraInformationFactory.swift */,
-				A29700D72344F9AC004B97E6 /* ExtraInformation.swift */,
+				A29700D02344F9AC004B97E6 /* SampleGroupInformationFactory.swift */,
+				A29700D72344F9AC004B97E6 /* SampleGroupInformation.swift */,
 				A29700D42344F9AC004B97E6 /* Generic */,
 				A29700D82344F9AD004B97E6 /* ComparableAttributes */,
 				A29700D12344F9AC004B97E6 /* DateAttributes */,
@@ -263,14 +263,14 @@
 			files = (
 				A29700E72344F9AD004B97E6 /* MedianInformation.swift in Sources */,
 				A29700E22344F9AD004B97E6 /* CountInformation.swift in Sources */,
-				A29700E42344F9AD004B97E6 /* ExtraInformation.swift in Sources */,
+				A29700E42344F9AD004B97E6 /* SampleGroupInformation.swift in Sources */,
 				A29700EB2344FB57004B97E6 /* SampleGroupInformationInjectionProvider.swift in Sources */,
 				A29700E92344F9AD004B97E6 /* SumInformation.swift in Sources */,
 				A29700E02344F9AD004B97E6 /* MostRecentDateInformation.swift in Sources */,
 				A29700E52344F9AD004B97E6 /* MaximumInformation.swift in Sources */,
 				A29700E12344F9AD004B97E6 /* OldestDateInformation.swift in Sources */,
 				A29700E62344F9AD004B97E6 /* MinimumInformation.swift in Sources */,
-				A29700DF2344F9AD004B97E6 /* ExtraInformationFactory.swift in Sources */,
+				A29700DF2344F9AD004B97E6 /* SampleGroupInformationFactory.swift in Sources */,
 				A29700E82344F9AD004B97E6 /* AverageInformation.swift in Sources */,
 				A29700E32344F9AD004B97E6 /* ModeInformation.swift in Sources */,
 			);

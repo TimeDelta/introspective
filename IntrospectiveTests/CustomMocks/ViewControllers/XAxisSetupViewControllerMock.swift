@@ -65,11 +65,11 @@ public class XAxisSetupViewControllerMock: UIViewController, XAxisSetupViewContr
 	private var __p_selectedAttribute: (Attribute)?
 
 
-    public var selectedInformation: ExtraInformation! {
+    public var selectedInformation: SampleGroupInformation! {
 		get {	invocations.append(.p_selectedInformation_get); return __p_selectedInformation ?? optionalGivenGetterValue(.p_selectedInformation_get, "XAxisSetupViewControllerMock - stub value for selectedInformation was not defined") }
 		set {	invocations.append(.p_selectedInformation_set(.value(newValue))); __p_selectedInformation = newValue }
 	}
-	private var __p_selectedInformation: (ExtraInformation)?
+	private var __p_selectedInformation: (SampleGroupInformation)?
 
 
     public var notificationToSendWhenFinished: NotificationName! {
@@ -94,7 +94,7 @@ public class XAxisSetupViewControllerMock: UIViewController, XAxisSetupViewContr
         case p_selectedAttribute_get
 		case p_selectedAttribute_set(Parameter<Attribute?>)
         case p_selectedInformation_get
-		case p_selectedInformation_set(Parameter<ExtraInformation?>)
+		case p_selectedInformation_set(Parameter<SampleGroupInformation?>)
         case p_notificationToSendWhenFinished_get
 		case p_notificationToSendWhenFinished_set(Parameter<NotificationName?>)
 
@@ -109,7 +109,7 @@ public class XAxisSetupViewControllerMock: UIViewController, XAxisSetupViewContr
             case (.p_selectedAttribute_get,.p_selectedAttribute_get): return true
 			case (.p_selectedAttribute_set(let left),.p_selectedAttribute_set(let right)): return Parameter<Attribute?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_selectedInformation_get,.p_selectedInformation_get): return true
-			case (.p_selectedInformation_set(let left),.p_selectedInformation_set(let right)): return Parameter<ExtraInformation?>.compare(lhs: left, rhs: right, with: matcher)
+			case (.p_selectedInformation_set(let left),.p_selectedInformation_set(let right)): return Parameter<SampleGroupInformation?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_notificationToSendWhenFinished_get,.p_notificationToSendWhenFinished_get): return true
 			case (.p_notificationToSendWhenFinished_set(let left),.p_notificationToSendWhenFinished_set(let right)): return Parameter<NotificationName?>.compare(lhs: left, rhs: right, with: matcher)
             default: return false
@@ -154,7 +154,7 @@ public class XAxisSetupViewControllerMock: UIViewController, XAxisSetupViewContr
         public static func selectedAttribute(getter defaultValue: Attribute?...) -> PropertyStub {
             return Given(method: .p_selectedAttribute_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func selectedInformation(getter defaultValue: ExtraInformation?...) -> PropertyStub {
+        public static func selectedInformation(getter defaultValue: SampleGroupInformation?...) -> PropertyStub {
             return Given(method: .p_selectedInformation_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func notificationToSendWhenFinished(getter defaultValue: NotificationName?...) -> PropertyStub {
@@ -175,7 +175,7 @@ public class XAxisSetupViewControllerMock: UIViewController, XAxisSetupViewContr
         public static var selectedAttribute: Verify { return Verify(method: .p_selectedAttribute_get) }
 		public static func selectedAttribute(set newValue: Parameter<Attribute?>) -> Verify { return Verify(method: .p_selectedAttribute_set(newValue)) }
         public static var selectedInformation: Verify { return Verify(method: .p_selectedInformation_get) }
-		public static func selectedInformation(set newValue: Parameter<ExtraInformation?>) -> Verify { return Verify(method: .p_selectedInformation_set(newValue)) }
+		public static func selectedInformation(set newValue: Parameter<SampleGroupInformation?>) -> Verify { return Verify(method: .p_selectedInformation_set(newValue)) }
         public static var notificationToSendWhenFinished: Verify { return Verify(method: .p_notificationToSendWhenFinished_get) }
 		public static func notificationToSendWhenFinished(set newValue: Parameter<NotificationName?>) -> Verify { return Verify(method: .p_notificationToSendWhenFinished_set(newValue)) }
     }

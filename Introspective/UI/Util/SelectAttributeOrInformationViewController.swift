@@ -28,7 +28,7 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 	/// This will never be nil. If the user chooses a piece of information, it will contain the attribute associated with that information.
 	public final var attribute: Attribute!
 	/// If the user chooses an attribute, this will be nil
-	public final var information: ExtraInformation?
+	public final var information: SampleGroupInformation?
 	public final var notificationToSendOnAccept: Notification.Name!
 
 	private final let log = Log()
@@ -96,8 +96,8 @@ final class SelectAttributeOrInformationViewController: UIViewController {
 		view.isUserInteractionEnabled = enabled
 	}
 
-	private final func getApplicableInformationTypesForSelectedAttribute() -> [ExtraInformation.Type] {
-		return DependencyInjector.get(ExtraInformationFactory.self).getApplicableInformationTypes(forAttribute: attribute)
+	private final func getApplicableInformationTypesForSelectedAttribute() -> [SampleGroupInformation.Type] {
+		return DependencyInjector.get(SampleGroupInformationFactory.self).getApplicableInformationTypes(forAttribute: attribute)
 	}
 }
 

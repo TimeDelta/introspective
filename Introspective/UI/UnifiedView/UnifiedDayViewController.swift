@@ -63,7 +63,7 @@ public final class UnifiedDayViewController: DayViewController {
 
 	// MARK: - Helper Functions
 
-	private final func calculateAndDisplayForMood(_ operation: ExtraInformation, during eventView: EventView) {
+	private final func calculateAndDisplayForMood(_ operation: SampleGroupInformation, during eventView: EventView) {
 		let valueDescription = "\(operation.name.localizedLowercase) mood"
 		let (startDate, endDate) = getStartAndEndDatesFrom(eventView)
 		let fetchRequest: NSFetchRequest<MoodImpl> = MoodImpl.fetchRequest()

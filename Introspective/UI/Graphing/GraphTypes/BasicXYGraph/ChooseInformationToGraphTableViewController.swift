@@ -19,7 +19,7 @@ protocol ChooseInformationToGraphTableViewController: UITableViewController {
 	var limitToNumericInformation: Bool { get set }
 	var notificationToSendWhenFinished: NotificationName! { get set }
 	var attributes: [Attribute]! { get set }
-	var chosenInformation: [ExtraInformation] { get set }
+	var chosenInformation: [SampleGroupInformation] { get set }
 }
 
 final class ChooseInformationToGraphTableViewControllerImpl: UITableViewController, ChooseInformationToGraphTableViewController {
@@ -29,7 +29,7 @@ final class ChooseInformationToGraphTableViewControllerImpl: UITableViewControll
 	public final var limitToNumericInformation: Bool = false
 	public final var notificationToSendWhenFinished: NotificationName!
 	public final var attributes: [Attribute]!
-	public final var chosenInformation = [ExtraInformation]()
+	public final var chosenInformation = [SampleGroupInformation]()
 
 	private final var informationEditIndex: Int!
 
@@ -59,7 +59,7 @@ final class ChooseInformationToGraphTableViewControllerImpl: UITableViewControll
 		informationEditIndex = indexPath.row
 		let selectedInformation = chosenInformation[informationEditIndex]
 
-		let controller = viewController(named: "editExtraInformation", fromStoryboard: "Util") as! SelectExtraInformationViewController
+		let controller = viewController(named: "editSampleGroupInformation", fromStoryboard: "Util") as! SelectSampleGroupInformationViewController
 		controller.notificationToSendWhenFinished = .editedInformation
 		controller.attributes = attributes
 		controller.limitToNumericInformation = limitToNumericInformation
@@ -82,11 +82,11 @@ final class ChooseInformationToGraphTableViewControllerImpl: UITableViewControll
 
 	@IBAction final func addButtonPressed(_ sender: Any) {
 		let attribute = attributes[0]
-		var newInformation: ExtraInformation
+		var newInformation: SampleGroupInformation
 		if limitToNumericInformation {
-			newInformation = DependencyInjector.get(ExtraInformationFactory.self).getApplicableNumericInformationTypes(forAttribute: attribute)[0].init(attribute)
+			newInformation = DependencyInjector.get(SampleGroupInformationFactory.self).getApplicableNumericInformationTypes(forAttribute: attribute)[0].init(attribute)
 		} else {
-			newInformation = DependencyInjector.get(ExtraInformationFactory.self).getApplicableInformationTypes(forAttribute: attribute)[0].init(attribute)
+			newInformation = DependencyInjector.get(SampleGroupInformationFactory.self).getApplicableInformationTypes(forAttribute: attribute)[0].init(attribute)
 		}
 		self.chosenInformation.append(newInformation)
 		self.tableView.reloadData()
@@ -114,7 +114,7 @@ final class ChooseInformationToGraphTableViewControllerImpl: UITableViewControll
 	// MARK: - Received Notifications
 
 	@objc private final func saveEditedInformation(notification: Notification) {
-		if let information: ExtraInformation? = value(for: .information, from: notification) {
+		if let information: SampleGroupInformation? = value(for: .information, from: notification) {
 			chosenInformation[informationEditIndex] = information!
 			tableView.reloadData()
 		}

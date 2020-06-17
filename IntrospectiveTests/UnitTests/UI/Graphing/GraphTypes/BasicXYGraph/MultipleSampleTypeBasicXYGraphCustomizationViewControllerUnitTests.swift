@@ -713,7 +713,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 			userInfo: [UserInfoKey.query: query])
 	}
 
-	private final func setXAxisInformation(_ information: ExtraInformation) {
+	private final func setXAxisInformation(_ information: SampleGroupInformation) {
 		controller.viewDidLoad()
 		Given(mockUiUtil, .value(for: .value(.information), from: .any, keyIsOptional: .any, willReturn: information))
 		NotificationCenter.default.post(
@@ -722,7 +722,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 			userInfo: [UserInfoKey.information: information])
 	}
 
-	private final func setYAxisInformation(_ information: [ExtraInformation]) {
+	private final func setYAxisInformation(_ information: [SampleGroupInformation]) {
 		controller.viewDidLoad()
 		Given(mockUiUtil, .value(for: .value(.information), from: .any, keyIsOptional: .any, willReturn: information))
 		NotificationCenter.default.post(
@@ -773,10 +773,10 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: 
 	}
 
 	@discardableResult
-	private final func mockSelectInformationViewController() -> SelectExtraInformationViewControllerMock {
-		let controller = SelectExtraInformationViewControllerMock()
+	private final func mockSelectInformationViewController() -> SelectSampleGroupInformationViewControllerMock {
+		let controller = SelectSampleGroupInformationViewControllerMock()
 		Given(mockUiUtil, .controller(
-			named: .value("editExtraInformation"),
+			named: .value("editSampleGroupInformation"),
 			from: .value("Util"),
 			as: .value(UIViewController.self),
 			willReturn: controller))

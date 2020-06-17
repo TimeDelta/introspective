@@ -1,5 +1,5 @@
 //
-//  editExtraInformationMock.swift
+//  SelectSampleGroupInformationViewControllerMock.swift
 //  IntrospectiveTests
 //
 //  Created by Bryan Nova on 7/23/19.
@@ -13,10 +13,10 @@ import SwiftyMocky
 @testable import Common
 @testable import SampleGroupInformation
 
-// sourcery: mock = "SelectExtraInformationViewController"
-class SelectExtraInformationViewControllerMock: UIViewController, SelectExtraInformationViewController, Mock {
+// sourcery: mock = "SelectSampleGroupInformationViewController"
+class SelectSampleGroupInformationViewControllerMock: UIViewController, SelectSampleGroupInformationViewController, Mock {
 
-// sourcery:inline:auto:SelectExtraInformationViewControllerMock.autoMocked
+// sourcery:inline:auto:SelectSampleGroupInformationViewControllerMock.autoMocked
     var matcher: Matcher = Matcher.default
     var stubbingPolicy: StubbingPolicy = .wrap
     var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
@@ -38,42 +38,42 @@ class SelectExtraInformationViewControllerMock: UIViewController, SelectExtraInf
 
 
     public var attributes: [Attribute]! {
-		get {	invocations.append(.p_attributes_get); return __p_attributes ?? optionalGivenGetterValue(.p_attributes_get, "SelectExtraInformationViewControllerMock - stub value for attributes was not defined") }
+		get {	invocations.append(.p_attributes_get); return __p_attributes ?? optionalGivenGetterValue(.p_attributes_get, "SelectSampleGroupInformationViewControllerMock - stub value for attributes was not defined") }
 		set {	invocations.append(.p_attributes_set(.value(newValue))); __p_attributes = newValue }
 	}
 	private var __p_attributes: ([Attribute])?
 
 
     public var selectedAttribute: Attribute! {
-		get {	invocations.append(.p_selectedAttribute_get); return __p_selectedAttribute ?? optionalGivenGetterValue(.p_selectedAttribute_get, "SelectExtraInformationViewControllerMock - stub value for selectedAttribute was not defined") }
+		get {	invocations.append(.p_selectedAttribute_get); return __p_selectedAttribute ?? optionalGivenGetterValue(.p_selectedAttribute_get, "SelectSampleGroupInformationViewControllerMock - stub value for selectedAttribute was not defined") }
 		set {	invocations.append(.p_selectedAttribute_set(.value(newValue))); __p_selectedAttribute = newValue }
 	}
 	private var __p_selectedAttribute: (Attribute)?
 
 
-    public var selectedInformation: ExtraInformation! {
-		get {	invocations.append(.p_selectedInformation_get); return __p_selectedInformation ?? optionalGivenGetterValue(.p_selectedInformation_get, "SelectExtraInformationViewControllerMock - stub value for selectedInformation was not defined") }
+    public var selectedInformation: SampleGroupInformation! {
+		get {	invocations.append(.p_selectedInformation_get); return __p_selectedInformation ?? optionalGivenGetterValue(.p_selectedInformation_get, "SelectSampleGroupInformationViewControllerMock - stub value for selectedInformation was not defined") }
 		set {	invocations.append(.p_selectedInformation_set(.value(newValue))); __p_selectedInformation = newValue }
 	}
-	private var __p_selectedInformation: (ExtraInformation)?
+	private var __p_selectedInformation: (SampleGroupInformation)?
 
 
     public var limitToNumericInformation: Bool {
-		get {	invocations.append(.p_limitToNumericInformation_get); return __p_limitToNumericInformation ?? givenGetterValue(.p_limitToNumericInformation_get, "SelectExtraInformationViewControllerMock - stub value for limitToNumericInformation was not defined") }
+		get {	invocations.append(.p_limitToNumericInformation_get); return __p_limitToNumericInformation ?? givenGetterValue(.p_limitToNumericInformation_get, "SelectSampleGroupInformationViewControllerMock - stub value for limitToNumericInformation was not defined") }
 		set {	invocations.append(.p_limitToNumericInformation_set(.value(newValue))); __p_limitToNumericInformation = newValue }
 	}
 	private var __p_limitToNumericInformation: (Bool)?
 
 
     public var notificationToSendWhenFinished: NotificationName! {
-		get {	invocations.append(.p_notificationToSendWhenFinished_get); return __p_notificationToSendWhenFinished ?? optionalGivenGetterValue(.p_notificationToSendWhenFinished_get, "SelectExtraInformationViewControllerMock - stub value for notificationToSendWhenFinished was not defined") }
+		get {	invocations.append(.p_notificationToSendWhenFinished_get); return __p_notificationToSendWhenFinished ?? optionalGivenGetterValue(.p_notificationToSendWhenFinished_get, "SelectSampleGroupInformationViewControllerMock - stub value for notificationToSendWhenFinished was not defined") }
 		set {	invocations.append(.p_notificationToSendWhenFinished_set(.value(newValue))); __p_notificationToSendWhenFinished = newValue }
 	}
 	private var __p_notificationToSendWhenFinished: (NotificationName)?
 
 
     public var notificationFilter: Any? {
-		get {	invocations.append(.p_notificationFilter_get); return __p_notificationFilter ?? optionalGivenGetterValue(.p_notificationFilter_get, "SelectExtraInformationViewControllerMock - stub value for notificationFilter was not defined") }
+		get {	invocations.append(.p_notificationFilter_get); return __p_notificationFilter ?? optionalGivenGetterValue(.p_notificationFilter_get, "SelectSampleGroupInformationViewControllerMock - stub value for notificationFilter was not defined") }
 		set {	invocations.append(.p_notificationFilter_set(.value(newValue))); __p_notificationFilter = newValue }
 	}
 	private var __p_notificationFilter: (Any)?
@@ -90,7 +90,7 @@ class SelectExtraInformationViewControllerMock: UIViewController, SelectExtraInf
         case p_selectedAttribute_get
 		case p_selectedAttribute_set(Parameter<Attribute?>)
         case p_selectedInformation_get
-		case p_selectedInformation_set(Parameter<ExtraInformation?>)
+		case p_selectedInformation_set(Parameter<SampleGroupInformation?>)
         case p_limitToNumericInformation_get
 		case p_limitToNumericInformation_set(Parameter<Bool>)
         case p_notificationToSendWhenFinished_get
@@ -105,7 +105,7 @@ class SelectExtraInformationViewControllerMock: UIViewController, SelectExtraInf
             case (.p_selectedAttribute_get,.p_selectedAttribute_get): return true
 			case (.p_selectedAttribute_set(let left),.p_selectedAttribute_set(let right)): return Parameter<Attribute?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_selectedInformation_get,.p_selectedInformation_get): return true
-			case (.p_selectedInformation_set(let left),.p_selectedInformation_set(let right)): return Parameter<ExtraInformation?>.compare(lhs: left, rhs: right, with: matcher)
+			case (.p_selectedInformation_set(let left),.p_selectedInformation_set(let right)): return Parameter<SampleGroupInformation?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_limitToNumericInformation_get,.p_limitToNumericInformation_get): return true
 			case (.p_limitToNumericInformation_set(let left),.p_limitToNumericInformation_set(let right)): return Parameter<Bool>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_notificationToSendWhenFinished_get,.p_notificationToSendWhenFinished_get): return true
@@ -148,7 +148,7 @@ class SelectExtraInformationViewControllerMock: UIViewController, SelectExtraInf
         public static func selectedAttribute(getter defaultValue: Attribute?...) -> PropertyStub {
             return Given(method: .p_selectedAttribute_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func selectedInformation(getter defaultValue: ExtraInformation?...) -> PropertyStub {
+        public static func selectedInformation(getter defaultValue: SampleGroupInformation?...) -> PropertyStub {
             return Given(method: .p_selectedInformation_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
         public static func limitToNumericInformation(getter defaultValue: Bool...) -> PropertyStub {
@@ -171,7 +171,7 @@ class SelectExtraInformationViewControllerMock: UIViewController, SelectExtraInf
         public static var selectedAttribute: Verify { return Verify(method: .p_selectedAttribute_get) }
 		public static func selectedAttribute(set newValue: Parameter<Attribute?>) -> Verify { return Verify(method: .p_selectedAttribute_set(newValue)) }
         public static var selectedInformation: Verify { return Verify(method: .p_selectedInformation_get) }
-		public static func selectedInformation(set newValue: Parameter<ExtraInformation?>) -> Verify { return Verify(method: .p_selectedInformation_set(newValue)) }
+		public static func selectedInformation(set newValue: Parameter<SampleGroupInformation?>) -> Verify { return Verify(method: .p_selectedInformation_set(newValue)) }
         public static var limitToNumericInformation: Verify { return Verify(method: .p_limitToNumericInformation_get) }
 		public static func limitToNumericInformation(set newValue: Parameter<Bool>) -> Verify { return Verify(method: .p_limitToNumericInformation_set(newValue)) }
         public static var notificationToSendWhenFinished: Verify { return Verify(method: .p_notificationToSendWhenFinished_get) }

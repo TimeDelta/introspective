@@ -14,10 +14,10 @@ import DependencyInjection
 public class SampleGroupInformationInjectionProvider: InjectionProvider {
 
 	private typealias Me = SampleGroupInformationInjectionProvider
-	private static let extraInformationFactory = ExtraInformationFactoryImpl()
+	private static let sampleGroupInformationFactory = SampleGroupInformationFactoryImpl()
 
 	public final let types: [Any.Type] = [
-		ExtraInformationFactory.self,
+		SampleGroupInformationFactory.self,
 	]
 
 	public init() {
@@ -25,8 +25,8 @@ public class SampleGroupInformationInjectionProvider: InjectionProvider {
 
 	public func get<Type>(_ type: Type.Type) throws -> Type {
 		switch type {
-			case is ExtraInformationFactory.Protocol:
-				return Me.extraInformationFactory as! Type
+			case is SampleGroupInformationFactory.Protocol:
+				return Me.sampleGroupInformationFactory as! Type
 			default:
 				throw GenericError("Unknown type: " + String(describing: type))
 		}

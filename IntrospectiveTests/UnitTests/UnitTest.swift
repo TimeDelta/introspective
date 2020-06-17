@@ -51,7 +51,7 @@ class UnitTest: Test {
 	var mockCoachMarkFactory: CoachMarkFactoryMock!
 	var mockSampleGrouperFactory: SampleGrouperFactoryMock!
 	var mockAttributeRestrictionFactory: AttributeRestrictionFactoryMock!
-	var mockExtraInformationFactory: ExtraInformationFactoryMock!
+	var mockSampleGroupInformationFactory: SampleGroupInformationFactoryMock!
 
 	override func setUp() {
 		super.setUp()
@@ -98,8 +98,8 @@ class UnitTest: Test {
 		mockAttributeRestrictionFactory = AttributeRestrictionFactoryMock()
 		Given(injectionProvider, .get(.value(AttributeRestrictionFactory.self), willReturn: mockAttributeRestrictionFactory))
 
-		mockExtraInformationFactory = ExtraInformationFactoryMock()
-		Given(injectionProvider, .get(.value(ExtraInformationFactory.self), willReturn: mockExtraInformationFactory))
+		mockSampleGroupInformationFactory = SampleGroupInformationFactoryMock()
+		Given(injectionProvider, .get(.value(SampleGroupInformationFactory.self), willReturn: mockSampleGroupInformationFactory))
 
 		setUpUtilMocks()
 	}

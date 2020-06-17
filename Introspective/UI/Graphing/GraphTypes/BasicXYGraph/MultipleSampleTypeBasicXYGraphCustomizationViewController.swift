@@ -71,10 +71,10 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 		didSet { pointGrouperSet() }
 	}
 	private final var usePointGroupValueForXAxis = false
-	private final var xAxisInformation: ExtraInformation? {
+	private final var xAxisInformation: SampleGroupInformation? {
 		didSet { xAxisInformationSet() }
 	}
-	private final var yAxisInformation: [ExtraInformation]? {
+	private final var yAxisInformation: [SampleGroupInformation]? {
 		didSet { yAxisInformationSet() }
 	}
 	private final var xAxisSamples: [Sample]! { didSet { samplesAssigned() } }
@@ -282,7 +282,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	}
 
 	@objc private final func xAxisInformationChanged(notification: Notification) {
-		if let information: ExtraInformation? = value(for: .information, from: notification, keyIsOptional: true) {
+		if let information: SampleGroupInformation? = value(for: .information, from: notification, keyIsOptional: true) {
 			usePointGroupValueForXAxis = false
 			xAxisInformation = information
 		} else if let _: Bool = value(for: .usePointGroupValue, from: notification) {
@@ -292,7 +292,7 @@ final class MultipleSampleTypeBasicXYGraphCustomizationViewController: BasicXYGr
 	}
 
 	@objc private final func yAxisInformationChanged(notification: Notification) {
-		if let information: [ExtraInformation] = value(for: .information, from: notification) {
+		if let information: [SampleGroupInformation] = value(for: .information, from: notification) {
 			yAxisInformation = information
 		}
 	}

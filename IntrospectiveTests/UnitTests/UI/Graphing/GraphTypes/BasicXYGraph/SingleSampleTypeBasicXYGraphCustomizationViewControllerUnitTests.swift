@@ -389,7 +389,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 	func testGivenPointGrouperSetAndYAxisSet_editYAxis_setsChosenInformationOnPresentedController() {
 		// given
 		setPointGrouper(mockSampleGrouper())
-		let information: [ExtraInformation] = [
+		let information: [SampleGroupInformation] = [
 			AverageInformation(HeartRate.heartRate),
 			SumInformation(Weight.weight),
 		]
@@ -975,7 +975,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 		Given(mockUiUtil, .value(for: .value(.attribute), from: .any, keyIsOptional: .any, willReturn: attribute))
 		Given(
 			mockUiUtil,
-			.value(for: .value(.information), from: .any, keyIsOptional: .any, willReturn: nil as ExtraInformation?))
+			.value(for: .value(.information), from: .any, keyIsOptional: .any, willReturn: nil as SampleGroupInformation?))
 		Given(
 			mockUiUtil,
 			.value(for: .value(.usePointGroupValue), from: .any, keyIsOptional: .any, willReturn: nil as Bool?))
@@ -987,7 +987,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 			])
 	}
 
-	private final func setXAxis(_ information: ExtraInformation) {
+	private final func setXAxis(_ information: SampleGroupInformation) {
 		Given(mockUiUtil, .value(for: .value(.information), from: .any, keyIsOptional: .any, willReturn: information))
 		Given(mockUiUtil, .value(for: .value(.attribute), from: .any, keyIsOptional: .any, willReturn: nil as Attribute?))
 		Given(
@@ -1004,7 +1004,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 	private final func setXAxis(usePointGroupValue: Bool) {
 		Given(
 			mockUiUtil,
-			.value(for: .value(.information), from: .any, keyIsOptional: .any, willReturn: nil as ExtraInformation?))
+			.value(for: .value(.information), from: .any, keyIsOptional: .any, willReturn: nil as SampleGroupInformation?))
 		Given(mockUiUtil, .value(for: .value(.attribute), from: .any, keyIsOptional: .any, willReturn: nil as Attribute?))
 		Given(
 			mockUiUtil,
@@ -1021,7 +1021,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 		Given(mockUiUtil, .value(for: .value(.attributes), from: .any, keyIsOptional: .any, willReturn: attributes))
 		Given(
 			mockUiUtil,
-			.value(for: .value(.information), from: .any, keyIsOptional: .any, willReturn: nil as [ExtraInformation]?))
+			.value(for: .value(.information), from: .any, keyIsOptional: .any, willReturn: nil as [SampleGroupInformation]?))
 		NotificationCenter.default.post(
 			name: NotificationName.yAxisInformationChanged.toName(),
 			object: nil,
@@ -1030,7 +1030,7 @@ final class SingleSampleTypeBasicXYGraphCustomizationViewControllerUnitTests: Un
 			])
 	}
 
-	private final func setYAxis(_ information: [ExtraInformation]) {
+	private final func setYAxis(_ information: [SampleGroupInformation]) {
 		Given(
 			mockUiUtil,
 			.value(for: .value(.attributes), from: .any, keyIsOptional: .any, willReturn: nil as [Attribute]?))

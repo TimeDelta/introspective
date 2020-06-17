@@ -22,9 +22,9 @@ public final class SingleSampleTypeXYGraphDataGenerator: XYGraphDataGenerator {
 
 	public struct AttributeOrInformation {
 		public var attribute: Attribute?
-		public var information: ExtraInformation?
+		public var information: SampleGroupInformation?
 
-		public init(attribute: Attribute? = nil, information: ExtraInformation? = nil) {
+		public init(attribute: Attribute? = nil, information: SampleGroupInformation? = nil) {
 			self.attribute = attribute
 			self.information = information
 		}

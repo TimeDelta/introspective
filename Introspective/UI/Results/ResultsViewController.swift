@@ -90,7 +90,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 	private final var filteredSamples: [Sample]! {
 		didSet {
-			recomputeExtraInformation()
+			recomputeInformation()
 			DispatchQueue.main.async { self.tableView.reloadData() }
 		}
 	}
@@ -99,11 +99,11 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	public final var backButtonTitle: String?
 
 	// public for testing purposes
-	public final var extraInformation = [ExtraInformation]()
-	private final var extraInformationValues = [String?]()
+	public final var information = [SampleGroupInformation]()
+	private final var informationValues = [String?]()
 	private final var lastSelectedRowIndex: Int!
 	private final var lastSelectedUnfilteredRowIndex: Int!
-	private final var extraInformationEditIndex: Int!
+	private final var informationEditIndex: Int!
 	private final var finishedLoading = false {
 		didSet { searchController.searchBar.isUserInteractionEnabled = finishedLoading }
 	}
@@ -141,7 +141,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			searchController.searchBar.isHidden = true
 		}
 
-		observe(selector: #selector(saveEditedExtraInformation), name: .editedInformation, object: self)
+		observe(selector: #selector(saveEditedInformation), name: .editedInformation, object: self)
 		observe(selector: #selector(sortSamplesBy), name: Me.sortSamples)
 		observe(selector: #selector(editedSample), name: Me.editedSample)
 
@@ -221,7 +221,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		}
 
 		if section == 0 {
-			return extraInformation.count
+			return information.count
 		}
 
 		if section == 1 {
@@ -243,11 +243,11 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 		}
 
 		if section == 0 {
-			guard let value = extraInformationValues[row] else {
+			guard let value = informationValues[row] else {
 				return tableView.dequeueReusableCell(withIdentifier: "waitingCell", for: indexPath)
 			}
-			let cell = (tableView.dequeueReusableCell(withIdentifier: "informationCell", for: indexPath) as! ExtraInformationTableViewCell)
-			cell.extraInformation = extraInformation[row]
+			let cell = (tableView.dequeueReusableCell(withIdentifier: "informationCell", for: indexPath) as! SampleGroupInformationTableViewCell)
+			cell.sampleGroupInformation = information[row]
 			cell.value = value
 			return cell
 		}
@@ -329,15 +329,15 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	final override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
 		guard fromIndexPath.section == 0 && to.section == 0 else { return }
-		extraInformation.swapAt(fromIndexPath.row, to.row)
-		extraInformationValues.swapAt(fromIndexPath.row, to.row)
+		information.swapAt(fromIndexPath.row, to.row)
+		informationValues.swapAt(fromIndexPath.row, to.row)
 	}
 
 	final override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 		if indexPath.section == 0 {
 			return [DependencyInjector.get(UiUtil.self).tableViewRowAction(style: .destructive, title: "🗑️") { _, indexPath in
-				self.extraInformation.remove(at: indexPath.row)
-				self.extraInformationValues.remove(at: indexPath.row)
+				self.information.remove(at: indexPath.row)
+				self.informationValues.remove(at: indexPath.row)
 				tableView.deleteRows(at: [indexPath], with: .fade)
 			}]
 		}
@@ -356,7 +356,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 						let toRemove = self.filteredSamples.remove(at: indexPath.row)
 						self.samples.removeAll(where: { $0 === toRemove })
 						tableView.deleteRows(at: [indexPath], with: .fade)
-						self.recomputeExtraInformation()
+						self.recomputeInformation()
 						tableView.reloadData()
 					}
 				} catch {
@@ -375,17 +375,17 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 
 	// MARK: - Received Notifications
 
-	@objc private final func saveEditedExtraInformation(notification: Notification) {
-		if let selectedInformation: ExtraInformation? = value(for: .information, from: notification) {
-			if let editIndex = extraInformationEditIndex {
+	@objc private final func saveEditedInformation(notification: Notification) {
+		if let selectedInformation: SampleGroupInformation? = value(for: .information, from: notification) {
+			if let editIndex = informationEditIndex {
 				// selectedInformation can no longer be nil even though it's type is Optional
-				extraInformation[editIndex] = selectedInformation!
-				extraInformationValues[editIndex] = nil
+				information[editIndex] = selectedInformation!
+				informationValues[editIndex] = nil
 				tableView.reloadRows(at: [IndexPath(row: editIndex, section: 0)], with: .automatic)
 				DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
 					do {
-						self.extraInformationValues[editIndex] =
-							try self.extraInformation[editIndex].compute(forSamples: self.filteredSamples)
+						self.informationValues[editIndex] =
+							try self.information[editIndex].compute(forSamples: self.filteredSamples)
 						DispatchQueue.main.async {
 							self.tableView.reloadRows(at: [IndexPath(row: editIndex, section: 0)], with: .automatic)
 						}
@@ -411,12 +411,12 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			}
 			samples[lastSelectedUnfilteredRowIndex] = sample!
 			tableView.reloadRows(at: [IndexPath(row: editIndex, section: 1)], with: .automatic)
-			for i in 0 ..< extraInformationValues.count {
-				extraInformationValues[i] = nil
+			for i in 0 ..< informationValues.count {
+				informationValues[i] = nil
 			}
 			tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .automatic)
 			DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
-				self.recomputeExtraInformation()
+				self.recomputeInformation()
 				DispatchQueue.main.async {
 					self.tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .automatic)
 				}
@@ -522,17 +522,18 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	@objc private final func addInformation() {
 		do {
 			let attribute = type(of: samples[0]).defaultDependentAttribute
-			let applicableTypes = DependencyInjector.get(ExtraInformationFactory.self).getApplicableInformationTypes(forAttribute: attribute)
-			let information = DependencyInjector.get(ExtraInformationFactory.self).initInformation(applicableTypes[0], attribute)
-			extraInformation.append(information)
-			extraInformationValues.append(nil)
+			let applicableTypes = DependencyInjector.get(SampleGroupInformationFactory.self).getApplicableInformationTypes(forAttribute: attribute)
+			let newInformation = DependencyInjector.get(SampleGroupInformationFactory.self)
+				.initInformation(applicableTypes[0], attribute)
+			information.append(newInformation)
+			informationValues.append(nil)
 			DispatchQueue.main.async {
 				self.tableView.reloadSections(IndexSet(arrayLiteral: 0), with: .automatic)
 			}
-			extraInformationValues[extraInformation.count - 1] = try extraInformation.last!.compute(forSamples: filteredSamples)
+			informationValues[information.count - 1] = try information.last!.compute(forSamples: filteredSamples)
 			DispatchQueue.main.async {
 				self.tableView.reloadRows(
-					at: [IndexPath(row: self.extraInformation.count - 1, section: 0)],
+					at: [IndexPath(row: self.information.count - 1, section: 0)],
 					with: .automatic)
 			}
 		} catch {
@@ -582,10 +583,10 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	// MARK: - Display Edit Screen Functions
 
 	private final func showEditInformationView(_ indexPath: IndexPath) {
-		extraInformationEditIndex = indexPath.row
-		let selectedInformation = extraInformation[extraInformationEditIndex]
+		informationEditIndex = indexPath.row
+		let selectedInformation = information[informationEditIndex]
 
-		let controller = viewController(named: "editExtraInformation", fromStoryboard: "Util") as! SelectExtraInformationViewController
+		let controller = viewController(named: "editSampleGroupInformation", fromStoryboard: "Util") as! SelectSampleGroupInformationViewController
 		controller.notificationToSendWhenFinished = .editedInformation
 		controller.attributes = samples[0].attributes
 		controller.selectedAttribute = selectedInformation.attribute
@@ -658,7 +659,7 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 			self.enableActionsButton()
 		}
 		DependencyInjector.get(AsyncUtil.self).run(qos: .userInteractive) {
-			self.recomputeExtraInformation()
+			self.recomputeInformation()
 			DispatchQueue.main.async { self.tableView.reloadData() }
 		}
 	}
@@ -668,14 +669,14 @@ final class ResultsViewControllerImpl: UITableViewController, ResultsViewControl
 	}
 
 	// leave non-private for testing
-	final func recomputeExtraInformation() {
-		extraInformationValues = [String]()
-		for index in 0 ..< extraInformation.count {
+	final func recomputeInformation() {
+		informationValues = [String]()
+		for index in 0 ..< information.count {
 			do {
-				extraInformationValues.append(try extraInformation[index].compute(forSamples: filteredSamples))
+				informationValues.append(try information[index].compute(forSamples: filteredSamples))
 			} catch {
-				log.error("Failed to compute %@ information: %@", extraInformation[index].name, errorInfo(error))
-				extraInformationValues.append("") // avoid any index out of bounds errors
+				log.error("Failed to compute %@ information: %@", information[index].name, errorInfo(error))
+				informationValues.append("") // avoid any index out of bounds errors
 			}
 		}
 	}

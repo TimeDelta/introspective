@@ -139,7 +139,7 @@ public class XYGraphDataGenerator {
 	// MARK: - Misc.
 
 	final func getSeriesDataForYInformation(
-		_ yInformation: [ExtraInformation],
+		_ yInformation: [SampleGroupInformation],
 		fromGroups groups: [(Any, [Sample])],
 		groupedBy grouper: SampleGrouper,
 		withGroupName groupName: String?,
@@ -185,7 +185,7 @@ public class XYGraphDataGenerator {
 		return DependencyInjector.get(CalendarUtil.self).date(from: value)
 	}
 
-	final func transform(sampleGroups: [(Any, [Sample])], information: ExtraInformation)
+	final func transform(sampleGroups: [(Any, [Sample])], information: SampleGroupInformation)
 	throws -> [(groupValue: Any, sampleValue: String)] {
 		signpost?.begin(name: "Transform", "Number of sample groups: %d", sampleGroups.count)
 		var values = [(groupValue: Any, sampleValue: String)]()

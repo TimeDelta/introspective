@@ -1,5 +1,5 @@
 //
-//  ExtraInformation.swift
+//  SampleGroupInformation.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 7/14/18.
@@ -14,7 +14,7 @@ import DependencyInjection
 import Samples
 
 //sourcery: AutoMockable
-public protocol ExtraInformation: CustomStringConvertible {
+public protocol SampleGroupInformation: CustomStringConvertible {
 
 	var name: String { get }
 	var startDate: Date? { get set }
@@ -26,11 +26,11 @@ public protocol ExtraInformation: CustomStringConvertible {
 
 	func compute(forSamples samples: [Sample]) throws -> String
 	func computeGraphable(forSamples samples: [Sample]) throws -> String
-	func equalTo(_ other: ExtraInformation) -> Bool
+	func equalTo(_ other: SampleGroupInformation) -> Bool
 }
 
-// An abstract base class for everything that implements ExtraInformation
-public class AnyInformation: ExtraInformation {
+// An abstract base class for everything that implements SampleGroupInformation
+public class AnyInformation: SampleGroupInformation {
 
 	public var name: String {
 		get {
@@ -64,7 +64,7 @@ public class AnyInformation: ExtraInformation {
 		return ""
 	}
 
-	public func equalTo(_ other: ExtraInformation) -> Bool {
+	public func equalTo(_ other: SampleGroupInformation) -> Bool {
 		log.error("Must override equalTo()")
 		return type(of: self) == type(of: other)
 	}

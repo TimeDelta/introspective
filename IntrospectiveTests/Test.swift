@@ -60,7 +60,7 @@ class Test: XCTestCase {
 		Matcher.default.register(Any.self) { self.anyMatcher($0, $1) }
 		Matcher.default.register(AnySample.self) { $0.equalTo($1) }
 		Matcher.default.register(Array<Attribute>.self) { $0.elementsEqual($1, by: { $0.equalTo($1) }) }
-		Matcher.default.register(Array<ExtraInformation>.self) { $0.elementsEqual($1, by: { $0.equalTo($1) }) }
+		Matcher.default.register(Array<SampleGroupInformation>.self) { $0.elementsEqual($1, by: { $0.equalTo($1) }) }
 		Matcher.default.register(AsyncUtil.Protocol.self) { _,_ in true }
 		Matcher.default.register(Attribute.self) { $0.equalTo($1) }
 		Matcher.default.register(AttributeRestriction.self) { $0.equalTo($1) }
@@ -75,8 +75,8 @@ class Test: XCTestCase {
 		Matcher.default.register(DayOfWeek.self)
 		Matcher.default.register(Exportable.Type.self) { $0 == $1 }
 		Matcher.default.register(ExporterUtil.Protocol.self) { _,_ in true }
-		Matcher.default.register(ExtraInformation.self) { $0.equalTo($1) }
-		Matcher.default.register(ExtraInformationFactory.Protocol.self) { _,_ in true }
+		Matcher.default.register(SampleGroupInformation.self) { $0.equalTo($1) }
+		Matcher.default.register(SampleGroupInformationFactory.Protocol.self) { _,_ in true }
 		Matcher.default.register(GroupDefinition.self) {
 			if let first = $0 as? GroupDefinitionMock, let second = $1 as? GroupDefinitionMock {
 				return first === second
@@ -97,11 +97,11 @@ class Test: XCTestCase {
 		Matcher.default.register(Optional<Array<Attribute>>.self) {
 			self.optionalEqualTo($0, $1, { $0.elementsEqual($1, by: { $0.equalTo($1) }) })
 		}
-		Matcher.default.register(Optional<Array<ExtraInformation>>.self) {
+		Matcher.default.register(Optional<Array<SampleGroupInformation>>.self) {
 			self.optionalEqualTo($0, $1, { $0.elementsEqual($1, by: { $0.equalTo($1) }) })
 		}
 		Matcher.default.register(Optional<Attribute>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
-		Matcher.default.register(Optional<ExtraInformation>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
+		Matcher.default.register(Optional<SampleGroupInformation>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
 		Matcher.default.register(Optional<Query>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
 		Matcher.default.register(Optional<SampleGrouper>.self) { self.optionalEqualTo($0, $1, { $0.equalTo($1) }) }
 		Matcher.default.register(QueryFactory.Protocol.self) { _,_ in true }

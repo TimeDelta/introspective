@@ -354,7 +354,7 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 
 	func testGivenEmptyGroupsArray_transform_returnsEmptyArray() throws {
 		// given
-		let information = ExtraInformationMock()
+		let information = SampleGroupInformationMock()
 
 		// when
 		let transformedValues = try generator.transform(sampleGroups: [], information: information)
@@ -365,7 +365,7 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 
 	func testGivenMultipleGroups_transform_returnsCorrectlyTransformedArray() throws {
 		// given
-		let information = ExtraInformationMock()
+		let information = SampleGroupInformationMock()
 		let group1Samples = [SampleCreatorTestUtil.createSample()]
 		let group2Samples = [SampleCreatorTestUtil.createSample()]
 		let group1Value = "1"
@@ -516,8 +516,8 @@ final class XYGraphDataGeneratorUnitTests: UnitTest {
 
 	// MARK: Other
 
-	private final func mockInformation(description: String = "information") -> ExtraInformationMock {
-		let information = ExtraInformationMock(AttributeMock())
+	private final func mockInformation(description: String = "information") -> SampleGroupInformationMock {
+		let information = SampleGroupInformationMock(AttributeMock())
 		Given(information, .description(getter: description))
 		return information
 	}

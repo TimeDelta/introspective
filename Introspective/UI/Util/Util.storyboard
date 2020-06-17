@@ -153,10 +153,10 @@
             </objects>
             <point key="canvasLocation" x="3175" y="-1390"/>
         </scene>
-        <!--Select Extra Information View Controller Impl-->
+        <!--Select Sample Group Information View Controller Impl-->
         <scene sceneID="6Bd-2O-Dyb">
             <objects>
-                <viewController storyboardIdentifier="editExtraInformation" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7bf-1I-Qe9" customClass="SelectExtraInformationViewControllerImpl" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="editSampleGroupInformation" useStoryboardIdentifierAsRestorationIdentifier="YES" id="7bf-1I-Qe9" customClass="SelectSampleGroupInformationViewControllerImpl" customModule="Introspective" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="53e-q4-6ZI">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

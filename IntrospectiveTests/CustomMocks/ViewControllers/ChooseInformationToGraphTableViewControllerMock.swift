@@ -58,11 +58,11 @@ class ChooseInformationToGraphTableViewControllerMock: UITableViewController, Ch
 	private var __p_attributes: ([Attribute])?
 
 
-    public var chosenInformation: [ExtraInformation] {
+    public var chosenInformation: [SampleGroupInformation] {
 		get {	invocations.append(.p_chosenInformation_get); return __p_chosenInformation ?? givenGetterValue(.p_chosenInformation_get, "ChooseInformationToGraphTableViewControllerMock - stub value for chosenInformation was not defined") }
 		set {	invocations.append(.p_chosenInformation_set(.value(newValue))); __p_chosenInformation = newValue }
 	}
-	private var __p_chosenInformation: ([ExtraInformation])?
+	private var __p_chosenInformation: ([SampleGroupInformation])?
 
 
 
@@ -78,7 +78,7 @@ class ChooseInformationToGraphTableViewControllerMock: UITableViewController, Ch
         case p_attributes_get
 		case p_attributes_set(Parameter<[Attribute]?>)
         case p_chosenInformation_get
-		case p_chosenInformation_set(Parameter<[ExtraInformation]>)
+		case p_chosenInformation_set(Parameter<[SampleGroupInformation]>)
 
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
@@ -89,7 +89,7 @@ class ChooseInformationToGraphTableViewControllerMock: UITableViewController, Ch
             case (.p_attributes_get,.p_attributes_get): return true
 			case (.p_attributes_set(let left),.p_attributes_set(let right)): return Parameter<[Attribute]?>.compare(lhs: left, rhs: right, with: matcher)
             case (.p_chosenInformation_get,.p_chosenInformation_get): return true
-			case (.p_chosenInformation_set(let left),.p_chosenInformation_set(let right)): return Parameter<[ExtraInformation]>.compare(lhs: left, rhs: right, with: matcher)
+			case (.p_chosenInformation_set(let left),.p_chosenInformation_set(let right)): return Parameter<[SampleGroupInformation]>.compare(lhs: left, rhs: right, with: matcher)
             default: return false
             }
         }
@@ -125,7 +125,7 @@ class ChooseInformationToGraphTableViewControllerMock: UITableViewController, Ch
         public static func attributes(getter defaultValue: [Attribute]?...) -> PropertyStub {
             return Given(method: .p_attributes_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
-        public static func chosenInformation(getter defaultValue: [ExtraInformation]...) -> PropertyStub {
+        public static func chosenInformation(getter defaultValue: [SampleGroupInformation]...) -> PropertyStub {
             return Given(method: .p_chosenInformation_get, products: defaultValue.map({ StubProduct.return($0 as Any) }))
         }
 
@@ -141,7 +141,7 @@ class ChooseInformationToGraphTableViewControllerMock: UITableViewController, Ch
         public static var attributes: Verify { return Verify(method: .p_attributes_get) }
 		public static func attributes(set newValue: Parameter<[Attribute]?>) -> Verify { return Verify(method: .p_attributes_set(newValue)) }
         public static var chosenInformation: Verify { return Verify(method: .p_chosenInformation_get) }
-		public static func chosenInformation(set newValue: Parameter<[ExtraInformation]>) -> Verify { return Verify(method: .p_chosenInformation_set(newValue)) }
+		public static func chosenInformation(set newValue: Parameter<[SampleGroupInformation]>) -> Verify { return Verify(method: .p_chosenInformation_set(newValue)) }
     }
 
     public struct Perform {

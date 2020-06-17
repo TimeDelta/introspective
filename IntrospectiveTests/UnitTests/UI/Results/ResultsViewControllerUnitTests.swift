@@ -224,7 +224,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 	// MARK: - tableViewCellForRowAt()
 
-	func testGivenSection0_tableViewCellForRowAt_returnsExtraInformationTableViewCellWithCorrectInformation() {
+	func testGivenSection0_tableViewCellForRowAt_returnsSampleGroupInformationTableViewCellWithCorrectInformation() {
 		// given
 		controller.samples = SampleCreatorTestUtil.createSamples(count: 1)
 		controller.viewDidLoad()
@@ -234,14 +234,14 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		let cell = controller.tableView(tableView, cellForRowAt: IndexPath(row: 0, section: 0))
 
 		// then
-		guard let informationCell = cell as? ExtraInformationTableViewCell else {
+		guard let informationCell = cell as? SampleGroupInformationTableViewCell else {
 			XCTFail("Wrong cell type")
 			return
 		}
-		assertThat(informationCell.extraInformation, sameObject(information))
+		assertThat(informationCell.sampleGroupInformation, sameObject(information))
 	}
 
-	func testGivenSection0_tableViewCellForRowAt_returnsExtraInformationTableViewCellWithCorrectValue() {
+	func testGivenSection0_tableViewCellForRowAt_returnsSampleGroupInformationTableViewCellWithCorrectValue() {
 		// given
 		controller.samples = SampleCreatorTestUtil.createSamples(count: 1)
 		controller.viewDidLoad()
@@ -252,7 +252,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		let cell = controller.tableView(tableView, cellForRowAt: IndexPath(row: 0, section: 0))
 
 		// then
-		guard let informationCell = cell as? ExtraInformationTableViewCell else {
+		guard let informationCell = cell as? SampleGroupInformationTableViewCell else {
 			XCTFail("Wrong cell type")
 			return
 		}
@@ -287,7 +287,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		let information = setInformation(count: informationIndex + 1)
 		let attribute = HeartRate.heartRate
 		Given(information[informationIndex], .attribute(getter: attribute))
-		let presentedController = mockSelectExtraInformationViewController()
+		let presentedController = mockSelectSampleGroupInformationViewController()
 
 		// when
 		controller.tableView(tableView, didSelectRowAt: IndexPath(row: informationIndex, section: 0))
@@ -304,7 +304,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		let information = setInformation(count: informationIndex + 1)
 		let attribute = HeartRate.heartRate
 		Given(information[informationIndex], .attribute(getter: attribute))
-		let presentedController = mockSelectExtraInformationViewController()
+		let presentedController = mockSelectSampleGroupInformationViewController()
 
 		// when
 		controller.tableView(tableView, didSelectRowAt: IndexPath(row: informationIndex, section: 0))
@@ -421,7 +421,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		controller.tableView(tableView, moveRowAt: IndexPath(row: 0, section: 0), to: IndexPath(row: 1, section: 0))
 
 		// then
-		assertThat(controller.extraInformation, contains(equals(information[1]), equals(information[0])))
+		assertThat(controller.information, contains(equals(information[1]), equals(information[0])))
 	}
 
 	// MARK: - tableViewEditActionsForRowAt()
@@ -451,7 +451,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 
 		// then
 		assertThat(
-			controller.extraInformation,
+			controller.information,
 			allOf(contains(equals(information[0])), not(contains(equals(information[1])))))
 	}
 
@@ -611,16 +611,16 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		assertThat(deletedObjectCaptor.allValues, not(hasItem(sameObject(otherSample2))))
 	}
 
-	// MARK: - saveEditedExtraInformation()
+	// MARK: - saveEditedSampleGroupInformation()
 
-	func testGivenInformationEditedNotification_saveEditedExtraInformation_editsCorrectInformation() {
+	func testGivenInformationEditedNotification_saveEditedSampleGroupInformation_editsCorrectInformation() {
 		// given
 		controller.samples = SampleCreatorTestUtil.createSamples(count: 1)
 		controller.viewDidLoad()
 		let originalInformation = setInformation(count: 2)
 		let newInformation = mockInformation(count: 1)[0]
 		let expectedInformation = [originalInformation[0], newInformation]
-		mockSelectExtraInformationViewController()
+		mockSelectSampleGroupInformationViewController()
 		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 1, section: 0))
 		Given(mockUiUtil, .value(for: .value(.information), from: .any, keyIsOptional: .any, willReturn: newInformation))
 		tableView.reloadData()
@@ -634,16 +634,16 @@ final class ResultsViewControllerUnitTests: UnitTest {
 			])
 
 		// then
-		assertThat(controller.extraInformation, contains(sameObject(expectedInformation[0]), sameObject(expectedInformation[1])))
+		assertThat(controller.information, contains(sameObject(expectedInformation[0]), sameObject(expectedInformation[1])))
 	}
 
-	func testGivenInformationEditedNotification_saveEditedExtraInformation_computesValueForNewInformation() {
+	func testGivenInformationEditedNotification_saveEditedSampleGroupInformation_computesValueForNewInformation() {
 		// given
 		controller.samples = SampleCreatorTestUtil.createSamples(count: 1)
 		controller.viewDidLoad()
 		setInformation(count: 2)
 		let newInformation = mockInformation(count: 1)[0]
-		mockSelectExtraInformationViewController()
+		mockSelectSampleGroupInformationViewController()
 		controller.tableView(tableView, didSelectRowAt: IndexPath(row: 1, section: 0))
 		Given(mockUiUtil, .value(for: .value(.information), from: .any, keyIsOptional: .any, willReturn: newInformation))
 		tableView.reloadData()
@@ -694,7 +694,7 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		assertThat(controller.samples, contains(sameObject(samples[0]), sameObject(newSample)))
 	}
 
-	func testGivenSampleEditedNotification_editedSample_recomputesExtraInformationValues() {
+	func testGivenSampleEditedNotification_editedSample_recomputesSampleGroupInformationValues() {
 		// given
 		let samples = [moodMock(), moodMock()]
 		let newSample = moodMock()
@@ -765,25 +765,25 @@ final class ResultsViewControllerUnitTests: UnitTest {
 	}
 
 	@discardableResult
-	private final func setInformation(count: Int) -> [ExtraInformationMock] {
+	private final func setInformation(count: Int) -> [SampleGroupInformationMock] {
 		let information = mockInformation(count: count)
 		setInformation(information)
 		return information
 	}
 
 	@discardableResult
-	private final func setInformation(withValues values: [String]) -> [ExtraInformationMock] {
+	private final func setInformation(withValues values: [String]) -> [SampleGroupInformationMock] {
 		let information = mockInformation(computedValues: values)
 		setInformation(information)
 		return information
 	}
 
-	private final func setInformation(_ information: [ExtraInformation]) {
-		controller.extraInformation = information
-		controller.recomputeExtraInformation()
+	private final func setInformation(_ information: [SampleGroupInformation]) {
+		controller.information = information
+		controller.recomputeInformation()
 	}
 
-	private final func mockInformation(count: Int = 1) -> [ExtraInformationMock] {
+	private final func mockInformation(count: Int = 1) -> [SampleGroupInformationMock] {
 		var computedValues = [String]()
 		for _ in 0 ..< count {
 			computedValues.append("")
@@ -791,12 +791,12 @@ final class ResultsViewControllerUnitTests: UnitTest {
 		return mockInformation(computedValues: computedValues)
 	}
 
-	private final func mockInformation(computedValues: [String]) -> [ExtraInformationMock] {
-		let applicableTypes = [ExtraInformationMock.self]
-		Given(mockExtraInformationFactory, .getApplicableInformationTypes(forAttribute: .any, willReturn: applicableTypes))
-		var information = [ExtraInformationMock]()
+	private final func mockInformation(computedValues: [String]) -> [SampleGroupInformationMock] {
+		let applicableTypes = [SampleGroupInformationMock.self]
+		Given(mockSampleGroupInformationFactory, .getApplicableInformationTypes(forAttribute: .any, willReturn: applicableTypes))
+		var information = [SampleGroupInformationMock]()
 		for value in computedValues {
-			let mock = ExtraInformationMock()
+			let mock = SampleGroupInformationMock()
 			Given(mock, .compute(forSamples: .any, willReturn: value))
 			Given(mock, .description(getter: value))
 			Given(mock, .attribute(getter: AttributeMock()))
@@ -830,10 +830,10 @@ final class ResultsViewControllerUnitTests: UnitTest {
 	}
 
 	@discardableResult
-	private final func mockSelectExtraInformationViewController() -> SelectExtraInformationViewControllerMock {
-		let controller = SelectExtraInformationViewControllerMock()
+	private final func mockSelectSampleGroupInformationViewController() -> SelectSampleGroupInformationViewControllerMock {
+		let controller = SelectSampleGroupInformationViewControllerMock()
 		Given(mockUiUtil, .controller(
-			named: .value("editExtraInformation"),
+			named: .value("editSampleGroupInformation"),
 			from: .value("Util"),
 			as: .value(UIViewController.self),
 			willReturn: controller))

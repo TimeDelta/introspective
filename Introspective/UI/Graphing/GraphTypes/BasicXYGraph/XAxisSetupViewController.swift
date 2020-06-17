@@ -20,7 +20,7 @@ public protocol XAxisSetupViewController: UIViewController {
 	var grouped: Bool { get set }
 	var attributes: [Attribute]! { get set }
 	var selectedAttribute: Attribute! { get set }
-	var selectedInformation: ExtraInformation! { get set }
+	var selectedInformation: SampleGroupInformation! { get set }
 	var notificationToSendWhenFinished: NotificationName! { get set }
 }
 
@@ -64,7 +64,7 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 			}
 		}
 	}
-	public final var selectedInformation: ExtraInformation!
+	public final var selectedInformation: SampleGroupInformation!
 	public final var notificationToSendWhenFinished: NotificationName!
 	private final var finishedLoading = false
 
@@ -151,8 +151,8 @@ final class XAxisSetupViewControllerImpl: UIViewController, XAxisSetupViewContro
 
 	// MARK: - Helper Functions
 
-	private final func getApplicableInformationTypesForSelectedAttribute() -> [ExtraInformation.Type] {
-		return DependencyInjector.get(ExtraInformationFactory.self).getApplicableInformationTypes(forAttribute: selectedAttribute)
+	private final func getApplicableInformationTypesForSelectedAttribute() -> [SampleGroupInformation.Type] {
+		return DependencyInjector.get(SampleGroupInformationFactory.self).getApplicableInformationTypes(forAttribute: selectedAttribute)
 	}
 
 	private final func indexOfSelectedInformation() -> Int? {

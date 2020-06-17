@@ -47,7 +47,7 @@ public final class MinimumInformation<AttributeType: Comparable>: AnyInformation
 
 	// MARK: - Equality
 
-	public final override func equalTo(_ other: ExtraInformation) -> Bool {
+	public final override func equalTo(_ other: SampleGroupInformation) -> Bool {
 		return other is MinimumInformation<AttributeType> && attribute.equalTo(other.attribute)
 	}
 }

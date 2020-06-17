@@ -1,5 +1,5 @@
 //
-//  ExtraInformationTableViewCellUnitTests.swift
+//  SampleGroupInformationTableViewCellUnitTests.swift
 //  IntrospectiveTests
 //
 //  Created by Bryan Nova on 4/16/19.
@@ -10,12 +10,12 @@ import XCTest
 import SwiftyMocky
 @testable import Introspective
 
-final class ExtraInformationTableViewCellUnitTests: UnitTest {
+final class SampleGroupInformationTableViewCellUnitTests: UnitTest {
 
-	private final var cell: ExtraInformationTableViewCell!
+	private final var cell: SampleGroupInformationTableViewCell!
 	private final var keyValueLabel: UILabel!
 
-	private final var information: ExtraInformationMock!
+	private final var information: SampleGroupInformationMock!
 	private final let informationDescription = "description of information"
 	private final let value = "value of information"
 
@@ -24,35 +24,35 @@ final class ExtraInformationTableViewCellUnitTests: UnitTest {
 
 		keyValueLabel = UILabel()
 
-		cell = ExtraInformationTableViewCell()
+		cell = SampleGroupInformationTableViewCell()
 		cell.keyValueLabel = keyValueLabel
 
-		information = ExtraInformationMock()
+		information = SampleGroupInformationMock()
 		Given(information, .description(getter: informationDescription))
 	}
 
-	// MARK: - extraInformationDidSet
+	// MARK: - sampleGroupInformationDidSet
 
-	func testGivenNilInformation_extraInformationDidSet_doesNotThrowError() {
+	func testGivenNilInformation_sampleGroupInformationDidSet_doesNotThrowError() {
 		// when
-		cell.extraInformation = nil
+		cell.sampleGroupInformation = nil
 
 		// then - no errors thrown
 	}
 
-	func testGivenNonNilInformationAndNilValue_extraInformationDidSet_doesNotThrowError() {
+	func testGivenNonNilInformationAndNilValue_sampleGroupInformationDidSet_doesNotThrowError() {
 		// when
-		cell.extraInformation = information
+		cell.sampleGroupInformation = information
 
 		// then - no errors thrown
 	}
 
-	func testGivenNonNilInformationAndNonNilValue_extraInformationDidSet_correctlySetsLabelText() {
+	func testGivenNonNilInformationAndNonNilValue_sampleGroupInformationDidSet_correctlySetsLabelText() {
 		// given
 		cell.value = value
 
 		// when
-		cell.extraInformation = information
+		cell.sampleGroupInformation = information
 
 		// then
 		XCTAssertEqual(keyValueLabel.text, informationDescription.localizedCapitalized + ": " + value)
@@ -76,7 +76,7 @@ final class ExtraInformationTableViewCellUnitTests: UnitTest {
 
 	func testGivenNonNilInformationAndNonNilValue_valueDidSet_correctlySetsLabelText() {
 		// given
-		cell.extraInformation = information
+		cell.sampleGroupInformation = information
 
 		// when
 		cell.value = value

@@ -1,5 +1,5 @@
 //
-//  ExtraInformationFactory.swift
+//  SampleGroupInformationFactory.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 8/7/18.
@@ -12,37 +12,37 @@ import Attributes
 import Common
 
 //sourcery: AutoMockable
-public protocol ExtraInformationFactory {
+public protocol SampleGroupInformationFactory {
 
-	func getApplicableInformationTypes(forAttribute attribute: Attribute) -> [ExtraInformation.Type]
-	func getApplicableNumericInformationTypes(forAttribute attribute: Attribute) -> [ExtraInformation.Type]
+	func getApplicableInformationTypes(forAttribute attribute: Attribute) -> [SampleGroupInformation.Type]
+	func getApplicableNumericInformationTypes(forAttribute attribute: Attribute) -> [SampleGroupInformation.Type]
 	func initInformation(
-		_ informationType: ExtraInformation.Type,
+		_ informationType: SampleGroupInformation.Type,
 		_ attribute: Attribute)
-	-> ExtraInformation
+	-> SampleGroupInformation
 }
 
-public final class ExtraInformationFactoryImpl: ExtraInformationFactory {
+public final class SampleGroupInformationFactoryImpl: SampleGroupInformationFactory {
 
-	private typealias Me = ExtraInformationFactoryImpl
+	private typealias Me = SampleGroupInformationFactoryImpl
 
-	private static let genericInformationTypes: [ExtraInformation.Type] = [
+	private static let genericInformationTypes: [SampleGroupInformation.Type] = [
 		ModeInformation.self,
 		CountInformation.self,
 	]
 
-	private static let numericInformationTypes: [ExtraInformation.Type] = [
+	private static let numericInformationTypes: [SampleGroupInformation.Type] = [
 		AverageInformation.self,
 		SumInformation.self,
 	]
 
-	private static let dateInformationTypes: [ExtraInformation.Type] = [
+	private static let dateInformationTypes: [SampleGroupInformation.Type] = [
 		OldestDateInformation.self,
 		MostRecentDateInformation.self,
 	]
 
-	public final func getApplicableInformationTypes(forAttribute attribute: Attribute) -> [ExtraInformation.Type] {
-		var applicableInformationTypes = [ExtraInformation.Type]()
+	public final func getApplicableInformationTypes(forAttribute attribute: Attribute) -> [SampleGroupInformation.Type] {
+		var applicableInformationTypes = [SampleGroupInformation.Type]()
 		if attribute is DoubleAttribute {
 			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
 			applicableInformationTypes.append(MaximumInformation<Double>.self)
@@ -77,8 +77,8 @@ public final class ExtraInformationFactoryImpl: ExtraInformationFactory {
 		return applicableInformationTypes
 	}
 
-	public final func getApplicableNumericInformationTypes(forAttribute attribute: Attribute) -> [ExtraInformation.Type] {
-		var applicableInformationTypes = [ExtraInformation.Type]()
+	public final func getApplicableNumericInformationTypes(forAttribute attribute: Attribute) -> [SampleGroupInformation.Type] {
+		var applicableInformationTypes = [SampleGroupInformation.Type]()
 		if attribute is DoubleAttribute {
 			applicableInformationTypes.append(contentsOf: Me.numericInformationTypes)
 			applicableInformationTypes.append(MaximumInformation<Double>.self)
@@ -103,9 +103,9 @@ public final class ExtraInformationFactoryImpl: ExtraInformationFactory {
 	}
 
 	public final func initInformation(
-		_ informationType: ExtraInformation.Type,
+		_ informationType: SampleGroupInformation.Type,
 		_ attribute: Attribute)
-	-> ExtraInformation {
+	-> SampleGroupInformation {
 		return informationType.init(attribute)
 	}
 }
