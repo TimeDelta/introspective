@@ -99,7 +99,8 @@ class FunctionalTest: Test {
 		Given(injectionProvider, .get(.value(TextNormalizationUtil.self), willReturn: TextNormalizationUtilImpl()))
 		Given(injectionProvider, .get(.value(UserDefaultsUtil.self), willReturn: UserDefaultsUtilImpl()))
 
-		Given(injectionProvider, .get(.value(ActivityDao.self), willReturn: ActivityDaoImpl()))
+		Given(injectionProvider, .get(.value(ActivityDAO.self), willReturn: ActivityDAOImpl()))
+		Given(injectionProvider, .get(.value(MedicationDAO.self), willReturn: MedicationDAOImpl()))
 
 		HamcrestReportFunction = {message, file, line in XCTFail(message, file: file, line: line)}
 	}

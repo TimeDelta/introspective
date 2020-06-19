@@ -277,11 +277,8 @@ public final class EditMedicationViewController: UIViewController {
 	private final func isDuplicate(_ name: String) -> Bool {
 		let originalName = medication?.name ?? initialName ?? ""
 		guard name.localizedLowercase != originalName.localizedLowercase else { return true }
-		let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
-		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		do {
-			let medicationsWithSameName = try DependencyInjector.get(Database.self).query(fetchRequest)
-			return medicationsWithSameName.count > 0
+			return try DependencyInjector.get(MedicationDAO.self).medicationExists(withName: name)
 		} catch {
 			log.error("Failed to check for medication name duplication: %@", errorInfo(error))
 			return true

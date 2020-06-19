@@ -102,7 +102,7 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 
 		if activity == nil {
 			do {
-				startDate = try DependencyInjector.get(ActivityDao.self).getMostRecentActivityEndDate() ?? Date()
+				startDate = try DependencyInjector.get(ActivityDAO.self).getMostRecentActivityEndDate() ?? Date()
 			} catch {
 				startDate = Date()
 			}
@@ -207,13 +207,13 @@ public final class EditActivityTableViewControllerImpl: UITableViewController, E
 			let controller = viewController(named: "datePicker", fromStoryboard: "Util") as! SelectDateViewController
 			controller.initialDate = startDate
 			controller.notificationToSendOnAccept = Me.startDateChanged
-			controller.lastDate = (try? DependencyInjector.get(ActivityDao.self).getMostRecentActivityEndDate()) ?? nil
+			controller.lastDate = (try? DependencyInjector.get(ActivityDAO.self).getMostRecentActivityEndDate()) ?? nil
 			customPresentViewController(Me.presenter, viewController: controller, animated: false)
 		} else if indexPath == Me.endIndex {
 			let controller = viewController(named: "datePicker", fromStoryboard: "Util") as! SelectDateViewController
 			controller.initialDate = endDate
 			controller.notificationToSendOnAccept = Me.endDateChanged
-			controller.lastDate = (try? DependencyInjector.get(ActivityDao.self).getMostRecentActivityEndDate()) ?? nil
+			controller.lastDate = (try? DependencyInjector.get(ActivityDAO.self).getMostRecentActivityEndDate()) ?? nil
 			customPresentViewController(Me.presenter, viewController: controller, animated: false)
 		} else if indexPath == Me.durationIndex {
 			let controller = viewController(named: "durationChooser", fromStoryboard: "Util") as! SelectDurationViewController

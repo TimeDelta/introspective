@@ -1,5 +1,5 @@
 //
-//  ActivityDao.swift
+//  ActivityDAO.swift
 //  Introspective
 //
 //  Created by Bryan Nova on 8/20/19.
@@ -14,7 +14,7 @@ import DependencyInjection
 import Persistence
 
 //sourcery: AutoMockable
-public protocol ActivityDao {
+public protocol ActivityDAO {
 
 	func getMostRecentActivityEndDate() throws -> Date?
 	func getMostRecentActivity(_ activityDefinition: ActivityDefinition) throws -> Activity?
@@ -46,7 +46,7 @@ public protocol ActivityDao {
 	) throws -> Activity
 }
 
-extension ActivityDao {
+extension ActivityDAO {
 
 	public func createDefinition(
 		name: String,
@@ -83,7 +83,7 @@ extension ActivityDao {
 	}
 }
 
-public class ActivityDaoImpl: ActivityDao {
+public class ActivityDAOImpl: ActivityDAO {
 
 	private final let log = Log()
 
@@ -185,10 +185,14 @@ public class ActivityDaoImpl: ActivityDao {
 	) throws -> Activity {
 		let transaction = transaction ?? DependencyInjector.get(Database.self).transaction()
 		let activity = try transaction.new(Activity.self)
+
 		activity.definition = definition
+		activity.note = note
+		activity.start = startDate
+		activity.end = endDate
+		activity.setSource(source)
 
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-
 		return activity
 	}
 }

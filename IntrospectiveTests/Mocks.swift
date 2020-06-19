@@ -525,8 +525,8 @@ open class ATrackerActivityImporterMock: ATrackerActivityImporter, Mock {
     }
 }
 
-// MARK: - ActivityDao
-open class ActivityDaoMock: ActivityDao, Mock {
+// MARK: - ActivityDAO
+open class ActivityDAOMock: ActivityDAO, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
         self.sequencingPolicy = sequencingPolicy
         self.stubbingPolicy = stubbingPolicy
@@ -9512,6 +9512,247 @@ open class LeanBodyMassQueryMock: LeanBodyMassQuery, Mock {
         }
         public static func equalTo(_ otherQuery: Parameter<Query>, perform: @escaping (Query) -> Void) -> Perform {
             return Perform(method: .m_equalTo__otherQuery(`otherQuery`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
+// MARK: - MedicationDAO
+open class MedicationDAOMock: MedicationDAO, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    open func medicationExists(withName name: String, using transaction: Transaction?) throws -> Bool {
+        addInvocation(.m_medicationExists__withName_nameusing_transaction(Parameter<String>.value(`name`), Parameter<Transaction?>.value(`transaction`)))
+		let perform = methodPerformValue(.m_medicationExists__withName_nameusing_transaction(Parameter<String>.value(`name`), Parameter<Transaction?>.value(`transaction`))) as? (String, Transaction?) -> Void
+		perform?(`name`, `transaction`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_medicationExists__withName_nameusing_transaction(Parameter<String>.value(`name`), Parameter<Transaction?>.value(`transaction`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for medicationExists(withName name: String, using transaction: Transaction?). Use given")
+			Failure("Stub return value not specified for medicationExists(withName name: String, using transaction: Transaction?). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func createMedication(		name: String,		frequency: Frequency?,		dosage: Dosage?,		startedOn: Date?,		note: String?,		source: Sources.MedicationSourceNum,		recordScreenIndex: Int16?,		using transaction: Transaction?	) -> Medication {
+        addInvocation(.m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(Parameter<String>.value(`name`), Parameter<Frequency?>.value(`frequency`), Parameter<Dosage?>.value(`dosage`), Parameter<Date?>.value(`startedOn`), Parameter<String?>.value(`note`), Parameter<Sources.MedicationSourceNum>.value(`source`), Parameter<Int16?>.value(`recordScreenIndex`), Parameter<Transaction?>.value(`transaction`)))
+		let perform = methodPerformValue(.m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(Parameter<String>.value(`name`), Parameter<Frequency?>.value(`frequency`), Parameter<Dosage?>.value(`dosage`), Parameter<Date?>.value(`startedOn`), Parameter<String?>.value(`note`), Parameter<Sources.MedicationSourceNum>.value(`source`), Parameter<Int16?>.value(`recordScreenIndex`), Parameter<Transaction?>.value(`transaction`))) as? (String, Frequency?, Dosage?, Date?, String?, Sources.MedicationSourceNum, Int16?, Transaction?) -> Void
+		perform?(`name`, `frequency`, `dosage`, `startedOn`, `note`, `source`, `recordScreenIndex`, `transaction`)
+		var __value: Medication
+		do {
+		    __value = try methodReturnValue(.m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(Parameter<String>.value(`name`), Parameter<Frequency?>.value(`frequency`), Parameter<Dosage?>.value(`dosage`), Parameter<Date?>.value(`startedOn`), Parameter<String?>.value(`note`), Parameter<Sources.MedicationSourceNum>.value(`source`), Parameter<Int16?>.value(`recordScreenIndex`), Parameter<Transaction?>.value(`transaction`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for createMedication(  name: String,  frequency: Frequency?,  dosage: Dosage?,  startedOn: Date?,  note: String?,  source: Sources.MedicationSourceNum,  recordScreenIndex: Int16?,  using transaction: Transaction? ). Use given")
+			Failure("Stub return value not specified for createMedication(  name: String,  frequency: Frequency?,  dosage: Dosage?,  startedOn: Date?,  note: String?,  source: Sources.MedicationSourceNum,  recordScreenIndex: Int16?,  using transaction: Transaction? ). Use given")
+		}
+		return __value
+    }
+
+    open func createDose(		medication: Medication,		dosage: Dosage?,		timestamp: Date,		source: Sources.MedicationSourceNum,		using transaction: Transaction?	) -> MedicationDose {
+        addInvocation(.m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(Parameter<Medication>.value(`medication`), Parameter<Dosage?>.value(`dosage`), Parameter<Date>.value(`timestamp`), Parameter<Sources.MedicationSourceNum>.value(`source`), Parameter<Transaction?>.value(`transaction`)))
+		let perform = methodPerformValue(.m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(Parameter<Medication>.value(`medication`), Parameter<Dosage?>.value(`dosage`), Parameter<Date>.value(`timestamp`), Parameter<Sources.MedicationSourceNum>.value(`source`), Parameter<Transaction?>.value(`transaction`))) as? (Medication, Dosage?, Date, Sources.MedicationSourceNum, Transaction?) -> Void
+		perform?(`medication`, `dosage`, `timestamp`, `source`, `transaction`)
+		var __value: MedicationDose
+		do {
+		    __value = try methodReturnValue(.m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(Parameter<Medication>.value(`medication`), Parameter<Dosage?>.value(`dosage`), Parameter<Date>.value(`timestamp`), Parameter<Sources.MedicationSourceNum>.value(`source`), Parameter<Transaction?>.value(`transaction`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for createDose(  medication: Medication,  dosage: Dosage?,  timestamp: Date,  source: Sources.MedicationSourceNum,  using transaction: Transaction? ). Use given")
+			Failure("Stub return value not specified for createDose(  medication: Medication,  dosage: Dosage?,  timestamp: Date,  source: Sources.MedicationSourceNum,  using transaction: Transaction? ). Use given")
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_medicationExists__withName_nameusing_transaction(Parameter<String>, Parameter<Transaction?>)
+        case m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(Parameter<String>, Parameter<Frequency?>, Parameter<Dosage?>, Parameter<Date?>, Parameter<String?>, Parameter<Sources.MedicationSourceNum>, Parameter<Int16?>, Parameter<Transaction?>)
+        case m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(Parameter<Medication>, Parameter<Dosage?>, Parameter<Date>, Parameter<Sources.MedicationSourceNum>, Parameter<Transaction?>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_medicationExists__withName_nameusing_transaction(let lhsName, let lhsTransaction), .m_medicationExists__withName_nameusing_transaction(let rhsName, let rhsTransaction)):
+                guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsTransaction, rhs: rhsTransaction, with: matcher) else { return false } 
+                return true 
+            case (.m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(let lhsName, let lhsFrequency, let lhsDosage, let lhsStartedon, let lhsNote, let lhsSource, let lhsRecordscreenindex, let lhsTransaction), .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(let rhsName, let rhsFrequency, let rhsDosage, let rhsStartedon, let rhsNote, let rhsSource, let rhsRecordscreenindex, let rhsTransaction)):
+                guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsFrequency, rhs: rhsFrequency, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsDosage, rhs: rhsDosage, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsStartedon, rhs: rhsStartedon, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsNote, rhs: rhsNote, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsSource, rhs: rhsSource, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsRecordscreenindex, rhs: rhsRecordscreenindex, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsTransaction, rhs: rhsTransaction, with: matcher) else { return false } 
+                return true 
+            case (.m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(let lhsMedication, let lhsDosage, let lhsTimestamp, let lhsSource, let lhsTransaction), .m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(let rhsMedication, let rhsDosage, let rhsTimestamp, let rhsSource, let rhsTransaction)):
+                guard Parameter.compare(lhs: lhsMedication, rhs: rhsMedication, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsDosage, rhs: rhsDosage, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsTimestamp, rhs: rhsTimestamp, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsSource, rhs: rhsSource, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsTransaction, rhs: rhsTransaction, with: matcher) else { return false } 
+                return true 
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_medicationExists__withName_nameusing_transaction(p0, p1): return p0.intValue + p1.intValue
+            case let .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(p0, p1, p2, p3, p4, p5, p6, p7): return p0.intValue + p1.intValue + p2.intValue + p3.intValue + p4.intValue + p5.intValue + p6.intValue + p7.intValue
+            case let .m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(p0, p1, p2, p3, p4): return p0.intValue + p1.intValue + p2.intValue + p3.intValue + p4.intValue
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func medicationExists(withName name: Parameter<String>, using transaction: Parameter<Transaction?>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_medicationExists__withName_nameusing_transaction(`name`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func createMedication(name: Parameter<String>, frequency: Parameter<Frequency?>, dosage: Parameter<Dosage?>, startedOn: Parameter<Date?>, note: Parameter<String?>, source: Parameter<Sources.MedicationSourceNum>, recordScreenIndex: Parameter<Int16?>, using transaction: Parameter<Transaction?>, willReturn: Medication...) -> MethodStub {
+            return Given(method: .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(`name`, `frequency`, `dosage`, `startedOn`, `note`, `source`, `recordScreenIndex`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func createDose(medication: Parameter<Medication>, dosage: Parameter<Dosage?>, timestamp: Parameter<Date>, source: Parameter<Sources.MedicationSourceNum>, using transaction: Parameter<Transaction?>, willReturn: MedicationDose...) -> MethodStub {
+            return Given(method: .m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(`medication`, `dosage`, `timestamp`, `source`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func createMedication(name: Parameter<String>, frequency: Parameter<Frequency?>, dosage: Parameter<Dosage?>, startedOn: Parameter<Date?>, note: Parameter<String?>, source: Parameter<Sources.MedicationSourceNum>, recordScreenIndex: Parameter<Int16?>, using transaction: Parameter<Transaction?>, willProduce: (Stubber<Medication>) -> Void) -> MethodStub {
+            let willReturn: [Medication] = []
+			let given: Given = { return Given(method: .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(`name`, `frequency`, `dosage`, `startedOn`, `note`, `source`, `recordScreenIndex`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Medication).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func createDose(medication: Parameter<Medication>, dosage: Parameter<Dosage?>, timestamp: Parameter<Date>, source: Parameter<Sources.MedicationSourceNum>, using transaction: Parameter<Transaction?>, willProduce: (Stubber<MedicationDose>) -> Void) -> MethodStub {
+            let willReturn: [MedicationDose] = []
+			let given: Given = { return Given(method: .m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(`medication`, `dosage`, `timestamp`, `source`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (MedicationDose).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func medicationExists(withName name: Parameter<String>, using transaction: Parameter<Transaction?>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_medicationExists__withName_nameusing_transaction(`name`, `transaction`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func medicationExists(withName name: Parameter<String>, using transaction: Parameter<Transaction?>, willProduce: (StubberThrows<Bool>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_medicationExists__withName_nameusing_transaction(`name`, `transaction`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Bool).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func medicationExists(withName name: Parameter<String>, using transaction: Parameter<Transaction?>) -> Verify { return Verify(method: .m_medicationExists__withName_nameusing_transaction(`name`, `transaction`))}
+        public static func createMedication(name: Parameter<String>, frequency: Parameter<Frequency?>, dosage: Parameter<Dosage?>, startedOn: Parameter<Date?>, note: Parameter<String?>, source: Parameter<Sources.MedicationSourceNum>, recordScreenIndex: Parameter<Int16?>, using transaction: Parameter<Transaction?>) -> Verify { return Verify(method: .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(`name`, `frequency`, `dosage`, `startedOn`, `note`, `source`, `recordScreenIndex`, `transaction`))}
+        public static func createDose(medication: Parameter<Medication>, dosage: Parameter<Dosage?>, timestamp: Parameter<Date>, source: Parameter<Sources.MedicationSourceNum>, using transaction: Parameter<Transaction?>) -> Verify { return Verify(method: .m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(`medication`, `dosage`, `timestamp`, `source`, `transaction`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func medicationExists(withName name: Parameter<String>, using transaction: Parameter<Transaction?>, perform: @escaping (String, Transaction?) -> Void) -> Perform {
+            return Perform(method: .m_medicationExists__withName_nameusing_transaction(`name`, `transaction`), performs: perform)
+        }
+        public static func createMedication(name: Parameter<String>, frequency: Parameter<Frequency?>, dosage: Parameter<Dosage?>, startedOn: Parameter<Date?>, note: Parameter<String?>, source: Parameter<Sources.MedicationSourceNum>, recordScreenIndex: Parameter<Int16?>, using transaction: Parameter<Transaction?>, perform: @escaping (String, Frequency?, Dosage?, Date?, String?, Sources.MedicationSourceNum, Int16?, Transaction?) -> Void) -> Perform {
+            return Perform(method: .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(`name`, `frequency`, `dosage`, `startedOn`, `note`, `source`, `recordScreenIndex`, `transaction`), performs: perform)
+        }
+        public static func createDose(medication: Parameter<Medication>, dosage: Parameter<Dosage?>, timestamp: Parameter<Date>, source: Parameter<Sources.MedicationSourceNum>, using transaction: Parameter<Transaction?>, perform: @escaping (Medication, Dosage?, Date, Sources.MedicationSourceNum, Transaction?) -> Void) -> Perform {
+            return Perform(method: .m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(`medication`, `dosage`, `timestamp`, `source`, `transaction`), performs: perform)
         }
     }
 

@@ -639,8 +639,8 @@ public final class RecordActivityTableViewController: UITableViewController {
 					showError(title: "Activity named '\(searchText)' already exists.")
 					return
 				}
-				let activityDefinition = try DependencyInjector.get(ActivityDao.self).createDefinition(name: searchText)
-				try DependencyInjector.get(ActivityDao.self).createActivity(definition: activityDefinition)
+				let activityDefinition = try DependencyInjector.get(ActivityDAO.self).createDefinition(name: searchText)
+				try DependencyInjector.get(ActivityDAO.self).createActivity(definition: activityDefinition)
 				searchController.searchBar.text = ""
 				loadActivitiyDefinitions()
 			} catch {
@@ -655,7 +655,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func startActivity(for activityDefinition: ActivityDefinition, cell: RecordActivityDefinitionTableViewCell) {
 		do {
-			try DependencyInjector.get(ActivityDao.self).startActivity(activityDefinition)
+			try DependencyInjector.get(ActivityDAO.self).startActivity(activityDefinition)
 			// just calling updateUiElements here doesn't display the progress indicator for some reason
 			cell.activityDefinition = try DependencyInjector.get(Database.self).pull(savedObject: activityDefinition)
 		} catch {
@@ -742,7 +742,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func getMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) -> Activity? {
 		do {
-			return try DependencyInjector.get(ActivityDao.self)
+			return try DependencyInjector.get(ActivityDAO.self)
 				.getMostRecentlyStartedIncompleteActivity(for: activityDefinition)
 		} catch {
 			log.error("Failed to fetch most recent activity: %@", errorInfo(error))
@@ -752,7 +752,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func getMostRecentActivity(_ activityDefinition: ActivityDefinition) -> Activity? {
 		do {
-			return try DependencyInjector.get(ActivityDao.self)
+			return try DependencyInjector.get(ActivityDAO.self)
 				.getMostRecentActivity(activityDefinition)
 		} catch {
 			log.error("Failed to fetch activities while retrieving most recent: %@", errorInfo(error))
@@ -765,7 +765,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 	}
 
 	private final func activityDefinitionWithNameExists(_ name: String) throws -> Bool {
-		return try DependencyInjector.get(ActivityDao.self).activityDefinitionWithNameExists(name)
+		return try DependencyInjector.get(ActivityDAO.self).activityDefinitionWithNameExists(name)
 	}
 
 	private final func deleteExampleActivity() {

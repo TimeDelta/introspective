@@ -35,7 +35,8 @@
 		A22D6277234398C40023470F /* SamplesInjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22D6276234398C40023470F /* SamplesInjectionProvider.swift */; };
 		A22D627A234398D90023470F /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A22D6279234398D90023470F /* Common.framework */; };
 		A22D627C234398DD0023470F /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A22D627B234398DD0023470F /* DependencyInjection.framework */; };
-		A29700FD2344FE42004B97E6 /* ActivityDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29700FB2344FE41004B97E6 /* ActivityDao.swift */; };
+		A26BD7A2249D3DDD0083C9FC /* MedicationDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26BD7A1249D3DDD0083C9FC /* MedicationDAO.swift */; };
+		A29700FD2344FE42004B97E6 /* ActivityDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A29700FB2344FE41004B97E6 /* ActivityDAO.swift */; };
 		A29E1C452343AC6A008B4AE9 /* DataExport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A29E1C442343AC6A008B4AE9 /* DataExport.framework */; };
 		A29E1C472343AC73008B4AE9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A29E1C462343AC73008B4AE9 /* CoreData.framework */; };
 		A2A0E7552496969A006C0A6E /* SearchableSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2A0E7542496969A006C0A6E /* SearchableSample.swift */; };
@@ -94,7 +95,8 @@
 		A22D6276234398C40023470F /* SamplesInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplesInjectionProvider.swift; sourceTree = "<group>"; };
 		A22D6279234398D90023470F /* Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A22D627B234398DD0023470F /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A29700FB2344FE41004B97E6 /* ActivityDao.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityDao.swift; sourceTree = "<group>"; };
+		A26BD7A1249D3DDD0083C9FC /* MedicationDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDAO.swift; sourceTree = "<group>"; };
+		A29700FB2344FE41004B97E6 /* ActivityDAO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityDAO.swift; sourceTree = "<group>"; };
 		A29E1C442343AC6A008B4AE9 /* DataExport.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DataExport.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A29E1C462343AC73008B4AE9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		A2A0E7542496969A006C0A6E /* SearchableSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchableSample.swift; sourceTree = "<group>"; };
@@ -245,7 +247,8 @@
 		A29700F52344FE01004B97E6 /* DAOs */ = {
 			isa = PBXGroup;
 			children = (
-				A29700FB2344FE41004B97E6 /* ActivityDao.swift */,
+				A29700FB2344FE41004B97E6 /* ActivityDAO.swift */,
+				A26BD7A1249D3DDD0083C9FC /* MedicationDAO.swift */,
 			);
 			path = DAOs;
 			sourceTree = "<group>";
@@ -411,7 +414,8 @@
 				A2AF1FE32343C27C00E04517 /* MoodExporter.swift in Sources */,
 				A2A8AFF92343E59100E883CE /* NumericSampleUtil.swift in Sources */,
 				A2A8AFF72343E59100E883CE /* CoreDataSampleUtil.swift in Sources */,
-				A29700FD2344FE42004B97E6 /* ActivityDao.swift in Sources */,
+				A26BD7A2249D3DDD0083C9FC /* MedicationDAO.swift in Sources */,
+				A29700FD2344FE42004B97E6 /* ActivityDAO.swift in Sources */,
 				A2A0E7552496969A006C0A6E /* SearchableSample.swift in Sources */,
 				A22D625B234398AF0023470F /* MedicationDose.swift in Sources */,
 				A2AF1FF12343C63900E04517 /* Tag+CoreDataProperties.swift in Sources */,

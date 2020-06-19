@@ -27,7 +27,7 @@ class EditActivityTableViewControllerUnitTests: UnitTest {
 		return controller.navigationItem.rightBarButtonItem!
 	}
 
-	private final var mockActivityDao: ActivityDaoMock!
+	private final var mockActivityDao: ActivityDAOMock!
 
 	private final var controller: EditActivityTableViewControllerImpl!
 
@@ -39,8 +39,8 @@ class EditActivityTableViewControllerUnitTests: UnitTest {
 		let storyboard = UIStoryboard(name: "RecordData", bundle: nil)
 		controller = (storyboard.instantiateViewController(withIdentifier: "editActivity") as! EditActivityTableViewControllerImpl)
 
-		mockActivityDao = ActivityDaoMock()
-		Given(injectionProvider, .get(.value(ActivityDao.self), willReturn: mockActivityDao))
+		mockActivityDao = ActivityDAOMock()
+		Given(injectionProvider, .get(.value(ActivityDAO.self), willReturn: mockActivityDao))
 		Given(mockActivityDao, .getMostRecentActivityEndDate(willReturn: nil))
 	}
 

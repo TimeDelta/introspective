@@ -14,19 +14,21 @@ import DependencyInjection
 public class SamplesInjectionProvider: InjectionProvider {
 
 	private typealias Me = SamplesInjectionProvider
-	private static let activityDao = ActivityDaoImpl()
+	private static let activityDAO = ActivityDAOImpl()
 	private static let coreDataSampleUtil = CoreDataSampleUtilImpl()
 	private static let healthKitUtil = HealthKitUtilImpl()
 	private static let moodUtil = MoodUtilImpl()
+	private static let medicationDAO = MedicationDAOImpl()
 	private static let numericSampleUtil = NumericSampleUtilImpl()
 	private static let sampleFactory = SampleFactoryImpl()
 	private static let sampleUtil = SampleUtilImpl()
 
 	public final let types: [Any.Type] = [
-		ActivityDao.self,
+		ActivityDAO.self,
 		ActivityExporter.self,
 		CoreDataSampleUtil.self,
 		HealthKitUtil.self,
+		MedicationDAO.self,
 		MedicationExporter.self,
 		MoodExporter.self,
 		MoodUtil.self,
@@ -40,14 +42,16 @@ public class SamplesInjectionProvider: InjectionProvider {
 
 	public final func get<Type>(_ type: Type.Type) throws -> Type {
 		switch type {
-			case is ActivityDao.Protocol:
-				return Me.activityDao as! Type
+			case is ActivityDAO.Protocol:
+				return Me.activityDAO as! Type
 			case is ActivityExporter.Protocol:
 				return try ActivityExporterImpl() as! Type
 			case is CoreDataSampleUtil.Protocol:
 				return Me.coreDataSampleUtil as! Type
 			case is HealthKitUtil.Protocol:
 				return Me.healthKitUtil as! Type
+			case is MedicationDAO.Protocol:
+				return Me.medicationDAO as! Type
 			case is MedicationExporter.Protocol:
 				return try MedicationExporterImpl() as! Type
 			case is MoodExporter.Protocol:

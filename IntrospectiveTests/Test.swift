@@ -37,7 +37,8 @@ class Test: XCTestCase {
 
 	final func registerTypesWithDependencyInjection() {
 		injectionProvider = InjectionProviderMock()
-		var types: [Any.Type] = AttributeRestrictionsInjectionProvider().types
+		var types: [Any.Type] = []
+		types.append(contentsOf: AttributeRestrictionsInjectionProvider().types)
 		types.append(contentsOf: BooleanAlgebraInjectionProvider().types)
 		types.append(contentsOf: CommonInjectionProvider().types)
 		types.append(contentsOf: DataExportInjectionProvider().types)
@@ -55,7 +56,7 @@ class Test: XCTestCase {
 	}
 
 	final func registerMatchers() {
-		Matcher.default.register(ActivityDao.Protocol.self) { _,_ in true }
+		Matcher.default.register(ActivityDAO.Protocol.self) { _,_ in true }
 		Matcher.default.register(ActivityExporter.Protocol.self) { _,_ in true }
 		Matcher.default.register(Any.self) { self.anyMatcher($0, $1) }
 		Matcher.default.register(AnySample.self) { $0.equalTo($1) }
@@ -87,6 +88,7 @@ class Test: XCTestCase {
 		Matcher.default.register(HeartRate.Type.self) { _,_ in true }
 		Matcher.default.register(ImporterFactory.Protocol.self) { _,_ in true }
 		Matcher.default.register(IOUtil.Protocol.self) { _,_ in true }
+		Matcher.default.register(MedicationDAO.Protocol.self) { _,_ in true }
 		Matcher.default.register(MedicationExporter.Protocol.self) { _,_ in true }
 		Matcher.default.register(MoodExporter.Protocol.self) { _,_ in true }
 		Matcher.default.register(MoodUiUtil.Protocol.self) { _,_ in true }
