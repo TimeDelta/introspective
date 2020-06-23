@@ -143,7 +143,7 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 		medicationsWithCurrentNameFetchRequest.predicate = NSPredicate(format: "%K ==[cd] %@", "name", name)
 		let medicationsWithCurrentName: [Medication]
 		do {
-			medicationsWithCurrentName = try DependencyInjector.get(Database.self).query(medicationsWithCurrentNameFetchRequest)
+			medicationsWithCurrentName = try transaction.query(medicationsWithCurrentNameFetchRequest)
 			if medicationsWithCurrentName.count == 0 {
 				return nil
 			} else if medicationsWithCurrentName.count == 1 {
@@ -206,13 +206,10 @@ public final class IntrospectiveMedicationImporterImpl: NSManagedObject, Introsp
 				title: "Unable to create new medication",
 				description: "Failed to create new medication.")
 		}
-		guard let name = csv[Medication.nameColumn] else {
-			throw MissingRequiredFieldError(Medication.nameColumn, recordNumber: recordNumber)
-		}
-		medication.name = name
+
+		medication.name = try getName()
 		medication.notes = csv[Medication.notesColumn]
 		medication.recordScreenIndex = try getRecordScreenIndex(using: childTransaction)
-
 		medication.setSource(try getSource(columnName: Medication.sourceColumn))
 		medication.startedOn = try getStartedOnDate()
 		medication.startedOnTimeZone = getTimeZone(for: Medication.startedOnTimeZoneColumn)
