@@ -276,7 +276,7 @@ public final class EditMedicationViewController: UIViewController {
 
 	private final func isDuplicate(_ name: String) -> Bool {
 		let originalName = medication?.name ?? initialName ?? ""
-		guard name.localizedLowercase != originalName.localizedLowercase else { return true }
+		guard name.localizedLowercase != originalName.localizedLowercase else { return false }
 		do {
 			return try DependencyInjector.get(MedicationDAO.self).medicationExists(withName: name)
 		} catch {
