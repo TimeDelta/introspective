@@ -529,22 +529,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	@IBAction final func stopAllButtonPressed(_ sender: Any) {
 		do {
-			let endDateVariableName = CommonSampleAttributes.endDate.variableName!
-			let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
-			fetchRequest.predicate = NSPredicate(format: "%K == nil", endDateVariableName)
-			let activitiesToStop = try DependencyInjector.get(Database.self).query(fetchRequest)
-			let now = Date()
-			var activitiesToAutoNote = [Activity]()
-			for activity in activitiesToStop {
-				if !autoIgnoreIfAppropriate(activity, end: now) {
-					let transaction = DependencyInjector.get(Database.self).transaction()
-					activity.end = now
-					try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-					if activity.definition.autoNote {
-						activitiesToAutoNote.append(activity)
-					}
-				}
-			}
+			let activitiesToAutoNote = try DependencyInjector.get(ActivityDAO.self).stopAllActivities()
 			loadActivitiyDefinitions()
 			for activity in activitiesToAutoNote {
 				showEditScreenForActivity(activity, autoFocusNote: true)
@@ -666,7 +651,7 @@ public final class RecordActivityTableViewController: UITableViewController {
 
 	private final func stopActivity(_ activity: Activity, associatedCell: RecordActivityDefinitionTableViewCell) {
 		let now = Date()
-		if autoIgnoreIfAppropriate(activity, end: now) {
+		if DependencyInjector.get(ActivityDAO.self).autoIgnoreIfAppropriate(activity, end: now) {
 			associatedCell.updateUiElements()
 			return
 		}
@@ -681,26 +666,6 @@ public final class RecordActivityTableViewController: UITableViewController {
 		} catch {
 			showError(title: "Failed to stop activity", error: error)
 		}
-	}
-
-	/// - Parameter end: If provided, use this as the stop date / time.
-	/// - Returns: Whether or not the activity was ignored
-	private final func autoIgnoreIfAppropriate(_ activity: Activity, end: Date = Date()) -> Bool {
-		if DependencyInjector.get(Settings.self).autoIgnoreEnabled {
-			let minSeconds = DependencyInjector.get(Settings.self).autoIgnoreSeconds
-			if Duration(start: activity.start, end: end).inUnit(.second) < Double(minSeconds) {
-				do {
-					let transaction = DependencyInjector.get(Database.self).transaction()
-					// can't really explain this to the user
-					try retryOnFail({ try transaction.delete(activity) }, maxRetries: 2)
-					try transaction.commit()
-					return true
-				} catch {
-					log.error("Failed to delete activity that should be auto-ignored: %@", errorInfo(error))
-				}
-			}
-		}
-		return false
 	}
 
 	private final func getTimeTextFor(_ activity: Activity) -> String {

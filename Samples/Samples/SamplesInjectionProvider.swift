@@ -17,8 +17,9 @@ public class SamplesInjectionProvider: InjectionProvider {
 	private static let activityDAO = ActivityDAOImpl()
 	private static let coreDataSampleUtil = CoreDataSampleUtilImpl()
 	private static let healthKitUtil = HealthKitUtilImpl()
-	private static let moodUtil = MoodUtilImpl()
 	private static let medicationDAO = MedicationDAOImpl()
+	private static let moodDAO = MoodDAOImpl()
+	private static let moodUtil = MoodUtilImpl()
 	private static let numericSampleUtil = NumericSampleUtilImpl()
 	private static let sampleFactory = SampleFactoryImpl()
 	private static let sampleUtil = SampleUtilImpl()
@@ -30,6 +31,7 @@ public class SamplesInjectionProvider: InjectionProvider {
 		HealthKitUtil.self,
 		MedicationDAO.self,
 		MedicationExporter.self,
+		MoodDAO.self,
 		MoodExporter.self,
 		MoodUtil.self,
 		NumericSampleUtil.self,
@@ -54,6 +56,8 @@ public class SamplesInjectionProvider: InjectionProvider {
 				return Me.medicationDAO as! Type
 			case is MedicationExporter.Protocol:
 				return try MedicationExporterImpl() as! Type
+			case is MoodDAO.Protocol:
+				return Me.moodDAO as! Type
 			case is MoodExporter.Protocol:
 				return try MoodExporterImpl() as! Type
 			case is MoodUtil.Protocol:

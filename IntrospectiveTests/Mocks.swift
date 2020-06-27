@@ -602,6 +602,21 @@ open class ActivityDAOMock: ActivityDAO, Mock {
 		return __value
     }
 
+    open func getDefinitionWith(name: String) throws -> ActivityDefinition? {
+        addInvocation(.m_getDefinitionWith__name_name(Parameter<String>.value(`name`)))
+		let perform = methodPerformValue(.m_getDefinitionWith__name_name(Parameter<String>.value(`name`))) as? (String) -> Void
+		perform?(`name`)
+		var __value: ActivityDefinition? = nil
+		do {
+		    __value = try methodReturnValue(.m_getDefinitionWith__name_name(Parameter<String>.value(`name`))).casted()
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
     open func activityDefinitionWithNameExists(_ name: String) throws -> Bool {
         addInvocation(.m_activityDefinitionWithNameExists__name(Parameter<String>.value(`name`)))
 		let perform = methodPerformValue(.m_activityDefinitionWithNameExists__name(Parameter<String>.value(`name`))) as? (String) -> Void
@@ -630,6 +645,62 @@ open class ActivityDAOMock: ActivityDAO, Mock {
 			Failure("Stub return value not specified for startActivity(_ definition: ActivityDefinition). Use given")
 		} catch {
 		    throw error
+		}
+		return __value
+    }
+
+    open func stopMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws {
+        addInvocation(.m_stopMostRecentlyStartedIncompleteActivity__for_activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`)))
+		let perform = methodPerformValue(.m_stopMostRecentlyStartedIncompleteActivity__for_activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`))) as? (ActivityDefinition) -> Void
+		perform?(`activityDefinition`)
+		do {
+		    _ = try methodReturnValue(.m_stopMostRecentlyStartedIncompleteActivity__for_activityDefinition(Parameter<ActivityDefinition>.value(`activityDefinition`))).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func stopMostRecentlyStartedIncompleteActivity() throws {
+        addInvocation(.m_stopMostRecentlyStartedIncompleteActivity)
+		let perform = methodPerformValue(.m_stopMostRecentlyStartedIncompleteActivity) as? () -> Void
+		perform?()
+		do {
+		    _ = try methodReturnValue(.m_stopMostRecentlyStartedIncompleteActivity).casted() as Void
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+    }
+
+    open func stopAllActivities() throws -> [Activity] {
+        addInvocation(.m_stopAllActivities)
+		let perform = methodPerformValue(.m_stopAllActivities) as? () -> Void
+		perform?()
+		var __value: [Activity]
+		do {
+		    __value = try methodReturnValue(.m_stopAllActivities).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for stopAllActivities(). Use given")
+			Failure("Stub return value not specified for stopAllActivities(). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func autoIgnoreIfAppropriate(_ activity: Activity, end: Date) -> Bool {
+        addInvocation(.m_autoIgnoreIfAppropriate__activityend_end(Parameter<Activity>.value(`activity`), Parameter<Date>.value(`end`)))
+		let perform = methodPerformValue(.m_autoIgnoreIfAppropriate__activityend_end(Parameter<Activity>.value(`activity`), Parameter<Date>.value(`end`))) as? (Activity, Date) -> Void
+		perform?(`activity`, `end`)
+		var __value: Bool
+		do {
+		    __value = try methodReturnValue(.m_autoIgnoreIfAppropriate__activityend_end(Parameter<Activity>.value(`activity`), Parameter<Date>.value(`end`))).casted()
+		} catch {
+			onFatalFailure("Stub return value not specified for autoIgnoreIfAppropriate(_ activity: Activity, end: Date). Use given")
+			Failure("Stub return value not specified for autoIgnoreIfAppropriate(_ activity: Activity, end: Date). Use given")
 		}
 		return __value
     }
@@ -671,8 +742,13 @@ open class ActivityDAOMock: ActivityDAO, Mock {
         case m_getMostRecentActivityEndDate
         case m_getMostRecentActivity__activityDefinition(Parameter<ActivityDefinition>)
         case m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(Parameter<ActivityDefinition>)
+        case m_getDefinitionWith__name_name(Parameter<String>)
         case m_activityDefinitionWithNameExists__name(Parameter<String>)
         case m_startActivity__definition(Parameter<ActivityDefinition>)
+        case m_stopMostRecentlyStartedIncompleteActivity__for_activityDefinition(Parameter<ActivityDefinition>)
+        case m_stopMostRecentlyStartedIncompleteActivity
+        case m_stopAllActivities
+        case m_autoIgnoreIfAppropriate__activityend_end(Parameter<Activity>, Parameter<Date>)
         case m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(Parameter<String>, Parameter<String?>, Parameter<Sources.ActivitySourceNum>, Parameter<Int16?>, Parameter<Bool?>, Parameter<Transaction?>)
         case m_createActivity__definition_definitionstartDate_startDatesource_sourceendDate_endDatenote_noteusing_transaction(Parameter<ActivityDefinition>, Parameter<Date>, Parameter<Sources.ActivitySourceNum>, Parameter<Date?>, Parameter<String?>, Parameter<Transaction?>)
 
@@ -686,11 +762,25 @@ open class ActivityDAOMock: ActivityDAO, Mock {
             case (.m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(let lhsActivitydefinition), .m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(let rhsActivitydefinition)):
                 guard Parameter.compare(lhs: lhsActivitydefinition, rhs: rhsActivitydefinition, with: matcher) else { return false } 
                 return true 
+            case (.m_getDefinitionWith__name_name(let lhsName), .m_getDefinitionWith__name_name(let rhsName)):
+                guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
+                return true 
             case (.m_activityDefinitionWithNameExists__name(let lhsName), .m_activityDefinitionWithNameExists__name(let rhsName)):
                 guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
                 return true 
             case (.m_startActivity__definition(let lhsDefinition), .m_startActivity__definition(let rhsDefinition)):
                 guard Parameter.compare(lhs: lhsDefinition, rhs: rhsDefinition, with: matcher) else { return false } 
+                return true 
+            case (.m_stopMostRecentlyStartedIncompleteActivity__for_activityDefinition(let lhsActivitydefinition), .m_stopMostRecentlyStartedIncompleteActivity__for_activityDefinition(let rhsActivitydefinition)):
+                guard Parameter.compare(lhs: lhsActivitydefinition, rhs: rhsActivitydefinition, with: matcher) else { return false } 
+                return true 
+            case (.m_stopMostRecentlyStartedIncompleteActivity, .m_stopMostRecentlyStartedIncompleteActivity):
+                return true 
+            case (.m_stopAllActivities, .m_stopAllActivities):
+                return true 
+            case (.m_autoIgnoreIfAppropriate__activityend_end(let lhsActivity, let lhsEnd), .m_autoIgnoreIfAppropriate__activityend_end(let rhsActivity, let rhsEnd)):
+                guard Parameter.compare(lhs: lhsActivity, rhs: rhsActivity, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsEnd, rhs: rhsEnd, with: matcher) else { return false } 
                 return true 
             case (.m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(let lhsName, let lhsDescription, let lhsSource, let lhsRecordscreenindex, let lhsAutonote, let lhsTransaction), .m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(let rhsName, let rhsDescription, let rhsSource, let rhsRecordscreenindex, let rhsAutonote, let rhsTransaction)):
                 guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
@@ -717,8 +807,13 @@ open class ActivityDAOMock: ActivityDAO, Mock {
             case .m_getMostRecentActivityEndDate: return 0
             case let .m_getMostRecentActivity__activityDefinition(p0): return p0.intValue
             case let .m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(p0): return p0.intValue
+            case let .m_getDefinitionWith__name_name(p0): return p0.intValue
             case let .m_activityDefinitionWithNameExists__name(p0): return p0.intValue
             case let .m_startActivity__definition(p0): return p0.intValue
+            case let .m_stopMostRecentlyStartedIncompleteActivity__for_activityDefinition(p0): return p0.intValue
+            case .m_stopMostRecentlyStartedIncompleteActivity: return 0
+            case .m_stopAllActivities: return 0
+            case let .m_autoIgnoreIfAppropriate__activityend_end(p0, p1): return p0.intValue + p1.intValue
             case let .m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(p0, p1, p2, p3, p4, p5): return p0.intValue + p1.intValue + p2.intValue + p3.intValue + p4.intValue + p5.intValue
             case let .m_createActivity__definition_definitionstartDate_startDatesource_sourceendDate_endDatenote_noteusing_transaction(p0, p1, p2, p3, p4, p5): return p0.intValue + p1.intValue + p2.intValue + p3.intValue + p4.intValue + p5.intValue
             }
@@ -743,17 +838,33 @@ open class ActivityDAOMock: ActivityDAO, Mock {
         public static func getMostRecentlyStartedIncompleteActivity(for activityDefinition: Parameter<ActivityDefinition>, willReturn: Activity?...) -> MethodStub {
             return Given(method: .m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(`activityDefinition`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func getDefinitionWith(name: Parameter<String>, willReturn: ActivityDefinition?...) -> MethodStub {
+            return Given(method: .m_getDefinitionWith__name_name(`name`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func activityDefinitionWithNameExists(_ name: Parameter<String>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_activityDefinitionWithNameExists__name(`name`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func startActivity(_ definition: Parameter<ActivityDefinition>, willReturn: Activity...) -> MethodStub {
             return Given(method: .m_startActivity__definition(`definition`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func stopAllActivities(willReturn: [Activity]...) -> MethodStub {
+            return Given(method: .m_stopAllActivities, products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func autoIgnoreIfAppropriate(_ activity: Parameter<Activity>, end: Parameter<Date>, willReturn: Bool...) -> MethodStub {
+            return Given(method: .m_autoIgnoreIfAppropriate__activityend_end(`activity`, `end`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func createDefinition(name: Parameter<String>, description: Parameter<String?>, source: Parameter<Sources.ActivitySourceNum>, recordScreenIndex: Parameter<Int16?>, autoNote: Parameter<Bool?>, using transaction: Parameter<Transaction?>, willReturn: ActivityDefinition...) -> MethodStub {
             return Given(method: .m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(`name`, `description`, `source`, `recordScreenIndex`, `autoNote`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func createActivity(definition: Parameter<ActivityDefinition>, startDate: Parameter<Date>, source: Parameter<Sources.ActivitySourceNum>, endDate: Parameter<Date?>, note: Parameter<String?>, using transaction: Parameter<Transaction?>, willReturn: Activity...) -> MethodStub {
             return Given(method: .m_createActivity__definition_definitionstartDate_startDatesource_sourceendDate_endDatenote_noteusing_transaction(`definition`, `startDate`, `source`, `endDate`, `note`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func autoIgnoreIfAppropriate(_ activity: Parameter<Activity>, end: Parameter<Date>, willProduce: (Stubber<Bool>) -> Void) -> MethodStub {
+            let willReturn: [Bool] = []
+			let given: Given = { return Given(method: .m_autoIgnoreIfAppropriate__activityend_end(`activity`, `end`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
+			let stubber = given.stub(for: (Bool).self)
+			willProduce(stubber)
+			return given
         }
         public static func getMostRecentActivityEndDate(willThrow: Error...) -> MethodStub {
             return Given(method: .m_getMostRecentActivityEndDate, products: willThrow.map({ StubProduct.throw($0) }))
@@ -785,6 +896,16 @@ open class ActivityDAOMock: ActivityDAO, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func getDefinitionWith(name: Parameter<String>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_getDefinitionWith__name_name(`name`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func getDefinitionWith(name: Parameter<String>, willProduce: (StubberThrows<ActivityDefinition?>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_getDefinitionWith__name_name(`name`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (ActivityDefinition?).self)
+			willProduce(stubber)
+			return given
+        }
         public static func activityDefinitionWithNameExists(_ name: Parameter<String>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_activityDefinitionWithNameExists__name(`name`), products: willThrow.map({ StubProduct.throw($0) }))
         }
@@ -802,6 +923,36 @@ open class ActivityDAOMock: ActivityDAO, Mock {
             let willThrow: [Error] = []
 			let given: Given = { return Given(method: .m_startActivity__definition(`definition`), products: willThrow.map({ StubProduct.throw($0) })) }()
 			let stubber = given.stubThrows(for: (Activity).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func stopMostRecentlyStartedIncompleteActivity(for activityDefinition: Parameter<ActivityDefinition>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_stopMostRecentlyStartedIncompleteActivity__for_activityDefinition(`activityDefinition`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func stopMostRecentlyStartedIncompleteActivity(for activityDefinition: Parameter<ActivityDefinition>, willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_stopMostRecentlyStartedIncompleteActivity__for_activityDefinition(`activityDefinition`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func stopMostRecentlyStartedIncompleteActivity(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_stopMostRecentlyStartedIncompleteActivity, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func stopMostRecentlyStartedIncompleteActivity(willProduce: (StubberThrows<Void>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_stopMostRecentlyStartedIncompleteActivity, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Void).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func stopAllActivities(willThrow: Error...) -> MethodStub {
+            return Given(method: .m_stopAllActivities, products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func stopAllActivities(willProduce: (StubberThrows<[Activity]>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_stopAllActivities, products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: ([Activity]).self)
 			willProduce(stubber)
 			return given
         }
@@ -833,8 +984,13 @@ open class ActivityDAOMock: ActivityDAO, Mock {
         public static func getMostRecentActivityEndDate() -> Verify { return Verify(method: .m_getMostRecentActivityEndDate)}
         public static func getMostRecentActivity(_ activityDefinition: Parameter<ActivityDefinition>) -> Verify { return Verify(method: .m_getMostRecentActivity__activityDefinition(`activityDefinition`))}
         public static func getMostRecentlyStartedIncompleteActivity(for activityDefinition: Parameter<ActivityDefinition>) -> Verify { return Verify(method: .m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(`activityDefinition`))}
+        public static func getDefinitionWith(name: Parameter<String>) -> Verify { return Verify(method: .m_getDefinitionWith__name_name(`name`))}
         public static func activityDefinitionWithNameExists(_ name: Parameter<String>) -> Verify { return Verify(method: .m_activityDefinitionWithNameExists__name(`name`))}
         public static func startActivity(_ definition: Parameter<ActivityDefinition>) -> Verify { return Verify(method: .m_startActivity__definition(`definition`))}
+        public static func stopMostRecentlyStartedIncompleteActivity(for activityDefinition: Parameter<ActivityDefinition>) -> Verify { return Verify(method: .m_stopMostRecentlyStartedIncompleteActivity__for_activityDefinition(`activityDefinition`))}
+        public static func stopMostRecentlyStartedIncompleteActivity() -> Verify { return Verify(method: .m_stopMostRecentlyStartedIncompleteActivity)}
+        public static func stopAllActivities() -> Verify { return Verify(method: .m_stopAllActivities)}
+        public static func autoIgnoreIfAppropriate(_ activity: Parameter<Activity>, end: Parameter<Date>) -> Verify { return Verify(method: .m_autoIgnoreIfAppropriate__activityend_end(`activity`, `end`))}
         public static func createDefinition(name: Parameter<String>, description: Parameter<String?>, source: Parameter<Sources.ActivitySourceNum>, recordScreenIndex: Parameter<Int16?>, autoNote: Parameter<Bool?>, using transaction: Parameter<Transaction?>) -> Verify { return Verify(method: .m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(`name`, `description`, `source`, `recordScreenIndex`, `autoNote`, `transaction`))}
         public static func createActivity(definition: Parameter<ActivityDefinition>, startDate: Parameter<Date>, source: Parameter<Sources.ActivitySourceNum>, endDate: Parameter<Date?>, note: Parameter<String?>, using transaction: Parameter<Transaction?>) -> Verify { return Verify(method: .m_createActivity__definition_definitionstartDate_startDatesource_sourceendDate_endDatenote_noteusing_transaction(`definition`, `startDate`, `source`, `endDate`, `note`, `transaction`))}
     }
@@ -852,11 +1008,26 @@ open class ActivityDAOMock: ActivityDAO, Mock {
         public static func getMostRecentlyStartedIncompleteActivity(for activityDefinition: Parameter<ActivityDefinition>, perform: @escaping (ActivityDefinition) -> Void) -> Perform {
             return Perform(method: .m_getMostRecentlyStartedIncompleteActivity__for_activityDefinition(`activityDefinition`), performs: perform)
         }
+        public static func getDefinitionWith(name: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_getDefinitionWith__name_name(`name`), performs: perform)
+        }
         public static func activityDefinitionWithNameExists(_ name: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
             return Perform(method: .m_activityDefinitionWithNameExists__name(`name`), performs: perform)
         }
         public static func startActivity(_ definition: Parameter<ActivityDefinition>, perform: @escaping (ActivityDefinition) -> Void) -> Perform {
             return Perform(method: .m_startActivity__definition(`definition`), performs: perform)
+        }
+        public static func stopMostRecentlyStartedIncompleteActivity(for activityDefinition: Parameter<ActivityDefinition>, perform: @escaping (ActivityDefinition) -> Void) -> Perform {
+            return Perform(method: .m_stopMostRecentlyStartedIncompleteActivity__for_activityDefinition(`activityDefinition`), performs: perform)
+        }
+        public static func stopMostRecentlyStartedIncompleteActivity(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_stopMostRecentlyStartedIncompleteActivity, performs: perform)
+        }
+        public static func stopAllActivities(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_stopAllActivities, performs: perform)
+        }
+        public static func autoIgnoreIfAppropriate(_ activity: Parameter<Activity>, end: Parameter<Date>, perform: @escaping (Activity, Date) -> Void) -> Perform {
+            return Perform(method: .m_autoIgnoreIfAppropriate__activityend_end(`activity`, `end`), performs: perform)
         }
         public static func createDefinition(name: Parameter<String>, description: Parameter<String?>, source: Parameter<Sources.ActivitySourceNum>, recordScreenIndex: Parameter<Int16?>, autoNote: Parameter<Bool?>, using transaction: Parameter<Transaction?>, perform: @escaping (String, String?, Sources.ActivitySourceNum, Int16?, Bool?, Transaction?) -> Void) -> Perform {
             return Perform(method: .m_createDefinition__name_namedescription_descriptionsource_sourcerecordScreenIndex_recordScreenIndexautoNote_autoNoteusing_transaction(`name`, `description`, `source`, `recordScreenIndex`, `autoNote`, `transaction`), performs: perform)
@@ -9619,30 +9790,65 @@ open class MedicationDAOMock: MedicationDAO, Mock {
 		return __value
     }
 
-    open func createMedication(		name: String,		frequency: Frequency?,		dosage: Dosage?,		startedOn: Date?,		note: String?,		source: Sources.MedicationSourceNum,		recordScreenIndex: Int16?,		using transaction: Transaction?	) -> Medication {
+    open func medicationNamed(_ name: String) throws -> Medication? {
+        addInvocation(.m_medicationNamed__name(Parameter<String>.value(`name`)))
+		let perform = methodPerformValue(.m_medicationNamed__name(Parameter<String>.value(`name`))) as? (String) -> Void
+		perform?(`name`)
+		var __value: Medication? = nil
+		do {
+		    __value = try methodReturnValue(.m_medicationNamed__name(Parameter<String>.value(`name`))).casted()
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func takeMedicationUsingDefaultDosage(_ medication: Medication) throws -> MedicationDose {
+        addInvocation(.m_takeMedicationUsingDefaultDosage__medication(Parameter<Medication>.value(`medication`)))
+		let perform = methodPerformValue(.m_takeMedicationUsingDefaultDosage__medication(Parameter<Medication>.value(`medication`))) as? (Medication) -> Void
+		perform?(`medication`)
+		var __value: MedicationDose
+		do {
+		    __value = try methodReturnValue(.m_takeMedicationUsingDefaultDosage__medication(Parameter<Medication>.value(`medication`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for takeMedicationUsingDefaultDosage(_ medication: Medication). Use given")
+			Failure("Stub return value not specified for takeMedicationUsingDefaultDosage(_ medication: Medication). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func createMedication(		name: String,		frequency: Frequency?,		dosage: Dosage?,		startedOn: Date?,		note: String?,		source: Sources.MedicationSourceNum,		recordScreenIndex: Int16?,		using transaction: Transaction?	) throws -> Medication {
         addInvocation(.m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(Parameter<String>.value(`name`), Parameter<Frequency?>.value(`frequency`), Parameter<Dosage?>.value(`dosage`), Parameter<Date?>.value(`startedOn`), Parameter<String?>.value(`note`), Parameter<Sources.MedicationSourceNum>.value(`source`), Parameter<Int16?>.value(`recordScreenIndex`), Parameter<Transaction?>.value(`transaction`)))
 		let perform = methodPerformValue(.m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(Parameter<String>.value(`name`), Parameter<Frequency?>.value(`frequency`), Parameter<Dosage?>.value(`dosage`), Parameter<Date?>.value(`startedOn`), Parameter<String?>.value(`note`), Parameter<Sources.MedicationSourceNum>.value(`source`), Parameter<Int16?>.value(`recordScreenIndex`), Parameter<Transaction?>.value(`transaction`))) as? (String, Frequency?, Dosage?, Date?, String?, Sources.MedicationSourceNum, Int16?, Transaction?) -> Void
 		perform?(`name`, `frequency`, `dosage`, `startedOn`, `note`, `source`, `recordScreenIndex`, `transaction`)
 		var __value: Medication
 		do {
 		    __value = try methodReturnValue(.m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(Parameter<String>.value(`name`), Parameter<Frequency?>.value(`frequency`), Parameter<Dosage?>.value(`dosage`), Parameter<Date?>.value(`startedOn`), Parameter<String?>.value(`note`), Parameter<Sources.MedicationSourceNum>.value(`source`), Parameter<Int16?>.value(`recordScreenIndex`), Parameter<Transaction?>.value(`transaction`))).casted()
-		} catch {
+		} catch MockError.notStubed {
 			onFatalFailure("Stub return value not specified for createMedication(  name: String,  frequency: Frequency?,  dosage: Dosage?,  startedOn: Date?,  note: String?,  source: Sources.MedicationSourceNum,  recordScreenIndex: Int16?,  using transaction: Transaction? ). Use given")
 			Failure("Stub return value not specified for createMedication(  name: String,  frequency: Frequency?,  dosage: Dosage?,  startedOn: Date?,  note: String?,  source: Sources.MedicationSourceNum,  recordScreenIndex: Int16?,  using transaction: Transaction? ). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
 
-    open func createDose(		medication: Medication,		dosage: Dosage?,		timestamp: Date,		source: Sources.MedicationSourceNum,		using transaction: Transaction?	) -> MedicationDose {
+    open func createDose(		medication: Medication,		dosage: Dosage?,		timestamp: Date,		source: Sources.MedicationSourceNum,		using transaction: Transaction?	) throws -> MedicationDose {
         addInvocation(.m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(Parameter<Medication>.value(`medication`), Parameter<Dosage?>.value(`dosage`), Parameter<Date>.value(`timestamp`), Parameter<Sources.MedicationSourceNum>.value(`source`), Parameter<Transaction?>.value(`transaction`)))
 		let perform = methodPerformValue(.m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(Parameter<Medication>.value(`medication`), Parameter<Dosage?>.value(`dosage`), Parameter<Date>.value(`timestamp`), Parameter<Sources.MedicationSourceNum>.value(`source`), Parameter<Transaction?>.value(`transaction`))) as? (Medication, Dosage?, Date, Sources.MedicationSourceNum, Transaction?) -> Void
 		perform?(`medication`, `dosage`, `timestamp`, `source`, `transaction`)
 		var __value: MedicationDose
 		do {
 		    __value = try methodReturnValue(.m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(Parameter<Medication>.value(`medication`), Parameter<Dosage?>.value(`dosage`), Parameter<Date>.value(`timestamp`), Parameter<Sources.MedicationSourceNum>.value(`source`), Parameter<Transaction?>.value(`transaction`))).casted()
-		} catch {
+		} catch MockError.notStubed {
 			onFatalFailure("Stub return value not specified for createDose(  medication: Medication,  dosage: Dosage?,  timestamp: Date,  source: Sources.MedicationSourceNum,  using transaction: Transaction? ). Use given")
 			Failure("Stub return value not specified for createDose(  medication: Medication,  dosage: Dosage?,  timestamp: Date,  source: Sources.MedicationSourceNum,  using transaction: Transaction? ). Use given")
+		} catch {
+		    throw error
 		}
 		return __value
     }
@@ -9650,6 +9856,8 @@ open class MedicationDAOMock: MedicationDAO, Mock {
 
     fileprivate enum MethodType {
         case m_medicationExists__withName_nameusing_transaction(Parameter<String>, Parameter<Transaction?>)
+        case m_medicationNamed__name(Parameter<String>)
+        case m_takeMedicationUsingDefaultDosage__medication(Parameter<Medication>)
         case m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(Parameter<String>, Parameter<Frequency?>, Parameter<Dosage?>, Parameter<Date?>, Parameter<String?>, Parameter<Sources.MedicationSourceNum>, Parameter<Int16?>, Parameter<Transaction?>)
         case m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(Parameter<Medication>, Parameter<Dosage?>, Parameter<Date>, Parameter<Sources.MedicationSourceNum>, Parameter<Transaction?>)
 
@@ -9658,6 +9866,12 @@ open class MedicationDAOMock: MedicationDAO, Mock {
             case (.m_medicationExists__withName_nameusing_transaction(let lhsName, let lhsTransaction), .m_medicationExists__withName_nameusing_transaction(let rhsName, let rhsTransaction)):
                 guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
                 guard Parameter.compare(lhs: lhsTransaction, rhs: rhsTransaction, with: matcher) else { return false } 
+                return true 
+            case (.m_medicationNamed__name(let lhsName), .m_medicationNamed__name(let rhsName)):
+                guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
+                return true 
+            case (.m_takeMedicationUsingDefaultDosage__medication(let lhsMedication), .m_takeMedicationUsingDefaultDosage__medication(let rhsMedication)):
+                guard Parameter.compare(lhs: lhsMedication, rhs: rhsMedication, with: matcher) else { return false } 
                 return true 
             case (.m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(let lhsName, let lhsFrequency, let lhsDosage, let lhsStartedon, let lhsNote, let lhsSource, let lhsRecordscreenindex, let lhsTransaction), .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(let rhsName, let rhsFrequency, let rhsDosage, let rhsStartedon, let rhsNote, let rhsSource, let rhsRecordscreenindex, let rhsTransaction)):
                 guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
@@ -9683,6 +9897,8 @@ open class MedicationDAOMock: MedicationDAO, Mock {
         func intValue() -> Int {
             switch self {
             case let .m_medicationExists__withName_nameusing_transaction(p0, p1): return p0.intValue + p1.intValue
+            case let .m_medicationNamed__name(p0): return p0.intValue
+            case let .m_takeMedicationUsingDefaultDosage__medication(p0): return p0.intValue
             case let .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(p0, p1, p2, p3, p4, p5, p6, p7): return p0.intValue + p1.intValue + p2.intValue + p3.intValue + p4.intValue + p5.intValue + p6.intValue + p7.intValue
             case let .m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(p0, p1, p2, p3, p4): return p0.intValue + p1.intValue + p2.intValue + p3.intValue + p4.intValue
             }
@@ -9701,25 +9917,17 @@ open class MedicationDAOMock: MedicationDAO, Mock {
         public static func medicationExists(withName name: Parameter<String>, using transaction: Parameter<Transaction?>, willReturn: Bool...) -> MethodStub {
             return Given(method: .m_medicationExists__withName_nameusing_transaction(`name`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
+        public static func medicationNamed(_ name: Parameter<String>, willReturn: Medication?...) -> MethodStub {
+            return Given(method: .m_medicationNamed__name(`name`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func takeMedicationUsingDefaultDosage(_ medication: Parameter<Medication>, willReturn: MedicationDose...) -> MethodStub {
+            return Given(method: .m_takeMedicationUsingDefaultDosage__medication(`medication`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
         public static func createMedication(name: Parameter<String>, frequency: Parameter<Frequency?>, dosage: Parameter<Dosage?>, startedOn: Parameter<Date?>, note: Parameter<String?>, source: Parameter<Sources.MedicationSourceNum>, recordScreenIndex: Parameter<Int16?>, using transaction: Parameter<Transaction?>, willReturn: Medication...) -> MethodStub {
             return Given(method: .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(`name`, `frequency`, `dosage`, `startedOn`, `note`, `source`, `recordScreenIndex`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) }))
         }
         public static func createDose(medication: Parameter<Medication>, dosage: Parameter<Dosage?>, timestamp: Parameter<Date>, source: Parameter<Sources.MedicationSourceNum>, using transaction: Parameter<Transaction?>, willReturn: MedicationDose...) -> MethodStub {
             return Given(method: .m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(`medication`, `dosage`, `timestamp`, `source`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) }))
-        }
-        public static func createMedication(name: Parameter<String>, frequency: Parameter<Frequency?>, dosage: Parameter<Dosage?>, startedOn: Parameter<Date?>, note: Parameter<String?>, source: Parameter<Sources.MedicationSourceNum>, recordScreenIndex: Parameter<Int16?>, using transaction: Parameter<Transaction?>, willProduce: (Stubber<Medication>) -> Void) -> MethodStub {
-            let willReturn: [Medication] = []
-			let given: Given = { return Given(method: .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(`name`, `frequency`, `dosage`, `startedOn`, `note`, `source`, `recordScreenIndex`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (Medication).self)
-			willProduce(stubber)
-			return given
-        }
-        public static func createDose(medication: Parameter<Medication>, dosage: Parameter<Dosage?>, timestamp: Parameter<Date>, source: Parameter<Sources.MedicationSourceNum>, using transaction: Parameter<Transaction?>, willProduce: (Stubber<MedicationDose>) -> Void) -> MethodStub {
-            let willReturn: [MedicationDose] = []
-			let given: Given = { return Given(method: .m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(`medication`, `dosage`, `timestamp`, `source`, `transaction`), products: willReturn.map({ StubProduct.return($0 as Any) })) }()
-			let stubber = given.stub(for: (MedicationDose).self)
-			willProduce(stubber)
-			return given
         }
         public static func medicationExists(withName name: Parameter<String>, using transaction: Parameter<Transaction?>, willThrow: Error...) -> MethodStub {
             return Given(method: .m_medicationExists__withName_nameusing_transaction(`name`, `transaction`), products: willThrow.map({ StubProduct.throw($0) }))
@@ -9731,12 +9939,54 @@ open class MedicationDAOMock: MedicationDAO, Mock {
 			willProduce(stubber)
 			return given
         }
+        public static func medicationNamed(_ name: Parameter<String>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_medicationNamed__name(`name`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func medicationNamed(_ name: Parameter<String>, willProduce: (StubberThrows<Medication?>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_medicationNamed__name(`name`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Medication?).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func takeMedicationUsingDefaultDosage(_ medication: Parameter<Medication>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_takeMedicationUsingDefaultDosage__medication(`medication`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func takeMedicationUsingDefaultDosage(_ medication: Parameter<Medication>, willProduce: (StubberThrows<MedicationDose>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_takeMedicationUsingDefaultDosage__medication(`medication`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (MedicationDose).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func createMedication(name: Parameter<String>, frequency: Parameter<Frequency?>, dosage: Parameter<Dosage?>, startedOn: Parameter<Date?>, note: Parameter<String?>, source: Parameter<Sources.MedicationSourceNum>, recordScreenIndex: Parameter<Int16?>, using transaction: Parameter<Transaction?>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(`name`, `frequency`, `dosage`, `startedOn`, `note`, `source`, `recordScreenIndex`, `transaction`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func createMedication(name: Parameter<String>, frequency: Parameter<Frequency?>, dosage: Parameter<Dosage?>, startedOn: Parameter<Date?>, note: Parameter<String?>, source: Parameter<Sources.MedicationSourceNum>, recordScreenIndex: Parameter<Int16?>, using transaction: Parameter<Transaction?>, willProduce: (StubberThrows<Medication>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(`name`, `frequency`, `dosage`, `startedOn`, `note`, `source`, `recordScreenIndex`, `transaction`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Medication).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func createDose(medication: Parameter<Medication>, dosage: Parameter<Dosage?>, timestamp: Parameter<Date>, source: Parameter<Sources.MedicationSourceNum>, using transaction: Parameter<Transaction?>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(`medication`, `dosage`, `timestamp`, `source`, `transaction`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func createDose(medication: Parameter<Medication>, dosage: Parameter<Dosage?>, timestamp: Parameter<Date>, source: Parameter<Sources.MedicationSourceNum>, using transaction: Parameter<Transaction?>, willProduce: (StubberThrows<MedicationDose>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(`medication`, `dosage`, `timestamp`, `source`, `transaction`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (MedicationDose).self)
+			willProduce(stubber)
+			return given
+        }
     }
 
     public struct Verify {
         fileprivate var method: MethodType
 
         public static func medicationExists(withName name: Parameter<String>, using transaction: Parameter<Transaction?>) -> Verify { return Verify(method: .m_medicationExists__withName_nameusing_transaction(`name`, `transaction`))}
+        public static func medicationNamed(_ name: Parameter<String>) -> Verify { return Verify(method: .m_medicationNamed__name(`name`))}
+        public static func takeMedicationUsingDefaultDosage(_ medication: Parameter<Medication>) -> Verify { return Verify(method: .m_takeMedicationUsingDefaultDosage__medication(`medication`))}
         public static func createMedication(name: Parameter<String>, frequency: Parameter<Frequency?>, dosage: Parameter<Dosage?>, startedOn: Parameter<Date?>, note: Parameter<String?>, source: Parameter<Sources.MedicationSourceNum>, recordScreenIndex: Parameter<Int16?>, using transaction: Parameter<Transaction?>) -> Verify { return Verify(method: .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(`name`, `frequency`, `dosage`, `startedOn`, `note`, `source`, `recordScreenIndex`, `transaction`))}
         public static func createDose(medication: Parameter<Medication>, dosage: Parameter<Dosage?>, timestamp: Parameter<Date>, source: Parameter<Sources.MedicationSourceNum>, using transaction: Parameter<Transaction?>) -> Verify { return Verify(method: .m_createDose__medication_medicationdosage_dosagetimestamp_timestampsource_sourceusing_transaction(`medication`, `dosage`, `timestamp`, `source`, `transaction`))}
     }
@@ -9747,6 +9997,12 @@ open class MedicationDAOMock: MedicationDAO, Mock {
 
         public static func medicationExists(withName name: Parameter<String>, using transaction: Parameter<Transaction?>, perform: @escaping (String, Transaction?) -> Void) -> Perform {
             return Perform(method: .m_medicationExists__withName_nameusing_transaction(`name`, `transaction`), performs: perform)
+        }
+        public static func medicationNamed(_ name: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_medicationNamed__name(`name`), performs: perform)
+        }
+        public static func takeMedicationUsingDefaultDosage(_ medication: Parameter<Medication>, perform: @escaping (Medication) -> Void) -> Perform {
+            return Perform(method: .m_takeMedicationUsingDefaultDosage__medication(`medication`), performs: perform)
         }
         public static func createMedication(name: Parameter<String>, frequency: Parameter<Frequency?>, dosage: Parameter<Dosage?>, startedOn: Parameter<Date?>, note: Parameter<String?>, source: Parameter<Sources.MedicationSourceNum>, recordScreenIndex: Parameter<Int16?>, using transaction: Parameter<Transaction?>, perform: @escaping (String, Frequency?, Dosage?, Date?, String?, Sources.MedicationSourceNum, Int16?, Transaction?) -> Void) -> Perform {
             return Perform(method: .m_createMedication__name_namefrequency_frequencydosage_dosagestartedOn_startedOnnote_notesource_sourcerecordScreenIndex_recordScreenIndexusing_transaction(`name`, `frequency`, `dosage`, `startedOn`, `note`, `source`, `recordScreenIndex`, `transaction`), performs: perform)
@@ -10343,6 +10599,170 @@ open class MedicationExporterMock: MedicationExporter, Mock {
         }
         public static func equalTo(_ other: Parameter<Exporter>, perform: @escaping (Exporter) -> Void) -> Perform {
             return Perform(method: .m_equalTo__other(`other`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
+// MARK: - MoodDAO
+open class MoodDAOMock: MoodDAO, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    open func createMood(timestamp: Date, rating: Double, note: String?) throws -> Mood {
+        addInvocation(.m_createMood__timestamp_timestamprating_ratingnote_note(Parameter<Date>.value(`timestamp`), Parameter<Double>.value(`rating`), Parameter<String?>.value(`note`)))
+		let perform = methodPerformValue(.m_createMood__timestamp_timestamprating_ratingnote_note(Parameter<Date>.value(`timestamp`), Parameter<Double>.value(`rating`), Parameter<String?>.value(`note`))) as? (Date, Double, String?) -> Void
+		perform?(`timestamp`, `rating`, `note`)
+		var __value: Mood
+		do {
+		    __value = try methodReturnValue(.m_createMood__timestamp_timestamprating_ratingnote_note(Parameter<Date>.value(`timestamp`), Parameter<Double>.value(`rating`), Parameter<String?>.value(`note`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for createMood(timestamp: Date, rating: Double, note: String?). Use given")
+			Failure("Stub return value not specified for createMood(timestamp: Date, rating: Double, note: String?). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_createMood__timestamp_timestamprating_ratingnote_note(Parameter<Date>, Parameter<Double>, Parameter<String?>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_createMood__timestamp_timestamprating_ratingnote_note(let lhsTimestamp, let lhsRating, let lhsNote), .m_createMood__timestamp_timestamprating_ratingnote_note(let rhsTimestamp, let rhsRating, let rhsNote)):
+                guard Parameter.compare(lhs: lhsTimestamp, rhs: rhsTimestamp, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsRating, rhs: rhsRating, with: matcher) else { return false } 
+                guard Parameter.compare(lhs: lhsNote, rhs: rhsNote, with: matcher) else { return false } 
+                return true 
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_createMood__timestamp_timestamprating_ratingnote_note(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, note: Parameter<String?>, willReturn: Mood...) -> MethodStub {
+            return Given(method: .m_createMood__timestamp_timestamprating_ratingnote_note(`timestamp`, `rating`, `note`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, note: Parameter<String?>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_createMood__timestamp_timestamprating_ratingnote_note(`timestamp`, `rating`, `note`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, note: Parameter<String?>, willProduce: (StubberThrows<Mood>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_createMood__timestamp_timestamprating_ratingnote_note(`timestamp`, `rating`, `note`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Mood).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, note: Parameter<String?>) -> Verify { return Verify(method: .m_createMood__timestamp_timestamprating_ratingnote_note(`timestamp`, `rating`, `note`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func createMood(timestamp: Parameter<Date>, rating: Parameter<Double>, note: Parameter<String?>, perform: @escaping (Date, Double, String?) -> Void) -> Perform {
+            return Perform(method: .m_createMood__timestamp_timestamprating_ratingnote_note(`timestamp`, `rating`, `note`), performs: perform)
         }
     }
 

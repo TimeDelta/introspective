@@ -383,7 +383,7 @@ class IntrospectiveMedicationImporterFunctionalTests: ImporterTest {
 			self.recordScreenIndex = recordScreenIndex
 		}
 
-		public override func getPredicates() -> [String: NSPredicate] {
+		public func getPredicates() -> [String: NSPredicate] {
 			return [
 				"name": NSPredicate(format: "name ==[cd] %@", name),
 				"storedStartedOn": self.datePredicateFor(fieldName: "storedStartedOn", withinOneSecondOf: startedOn),
@@ -432,7 +432,7 @@ class IntrospectiveMedicationImporterFunctionalTests: ImporterTest {
 			self.source = source
 		}
 
-		public override func getPredicates() -> [String: NSPredicate] {
+		public func getPredicates() -> [String: NSPredicate] {
 			return [
 				"medication.name": NSPredicate(format: "medication.name ==[cd] %@", medication.name),
 				"medication.storedStartedOn": self.datePredicateFor(

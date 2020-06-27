@@ -120,11 +120,13 @@ fileprivate func mapToActualValues(fieldNames: [String], managedObject: NSManage
 
 // MARK: - Classes
 
-class Info {
+protocol Info {
 
-	public func getPredicates() -> [String: NSPredicate] {
-		fatalError("abstract method not implemented")
-	}
+	func getPredicates() -> [String: NSPredicate]
+}
+
+
+extension Info {
 
 	public func datePredicateFor(fieldName: String, withinOneSecondOf date: Date?) -> NSPredicate {
 		if let date = date {
@@ -148,7 +150,7 @@ class Info {
 		return NSPredicate(format: "%K == nil", field)
 	}
 
-	public final func optionalStringPredicate(for note: String?, fieldName: String) -> NSPredicate {
+	public func optionalStringPredicate(for note: String?, fieldName: String) -> NSPredicate {
 		if let note = note {
 			let unescapedNote = note.replacingOccurrences(of: "\"\"", with: "\"")
 			return NSPredicate(format: "%K == %@", fieldName, unescapedNote)
@@ -156,21 +158,21 @@ class Info {
 		return NSPredicate(format: "%K == nil || %K == %@", fieldName, fieldName, "")
 	}
 
-	public final func dosagePredicate(for dosage: Dosage?, fieldName: String) -> NSPredicate {
+	public func dosagePredicate(for dosage: Dosage?, fieldName: String) -> NSPredicate {
 		if let dosage = dosage {
 			return NSPredicate(format: "%K == %@", fieldName, dosage)
 		}
 		return NSPredicate(format: "%K == nil", fieldName)
 	}
 
-	public final func frequencyPredicate(for frequency: Frequency?, fieldName: String) -> NSPredicate {
+	public func frequencyPredicate(for frequency: Frequency?, fieldName: String) -> NSPredicate {
 		if let frequency = frequency {
 			return NSPredicate(format: "%K == %@", fieldName, frequency)
 		}
 		return NSPredicate(format: "%K == nil", fieldName)
 	}
 
-	public final func tagsPredicate(for tags: [String]?, fieldName: String) -> NSPredicate {
+	public func tagsPredicate(for tags: [String]?, fieldName: String) -> NSPredicate {
 		if let tags = tags {
 			var predicates = [NSPredicate]()
 			for tag in tags {

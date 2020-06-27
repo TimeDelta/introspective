@@ -109,7 +109,7 @@ class IntrospectiveMoodImporterFunctionalTests: ImporterTest {
 		try importer.importData(from: url)
 
 		// then
-		assertThat(Me.moodInfo1, exists())
+		assertThat(Me.moodInfo1, exists(MoodImpl.self))
 	}
 
 	func testGivenValidDataWithMoodNoteThatContainsQuote_importData_correctlyImportsData() throws {
@@ -120,7 +120,7 @@ class IntrospectiveMoodImporterFunctionalTests: ImporterTest {
 		try importer.importData(from: url)
 
 		// then
-		assertThat(Me.moodInfo2, exists())
+		assertThat(Me.moodInfo2, exists(MoodImpl.self))
 	}
 
 	func testGivenValidDataWithMoodNoteThatContainsNewline_importData_correctlyImportsData() throws {
@@ -131,7 +131,7 @@ class IntrospectiveMoodImporterFunctionalTests: ImporterTest {
 		try importer.importData(from: url)
 
 		// then
-		assertThat(Me.moodInfo3, exists())
+		assertThat(Me.moodInfo3, exists(MoodImpl.self))
 	}
 
 	func testGivenValidDataWithPreviousImportAndImportNewDataOnlyEqualToFalse_importData_correctlyImportsData() throws {
@@ -144,9 +144,9 @@ class IntrospectiveMoodImporterFunctionalTests: ImporterTest {
 		try importer.importData(from: url)
 
 		// then
-		assertThat(Me.moodInfo1, exists())
-		assertThat(Me.moodInfo2, exists())
-		assertThat(Me.moodInfo3, exists())
+		assertThat(Me.moodInfo1, exists(MoodImpl.self))
+		assertThat(Me.moodInfo2, exists(MoodImpl.self))
+		assertThat(Me.moodInfo3, exists(MoodImpl.self))
 	}
 
 	func testGivenValidDataWithPreviousImportAndImportNewDataOnlyEqualToTrue_importData_correctlyImportsData() throws {
@@ -159,9 +159,9 @@ class IntrospectiveMoodImporterFunctionalTests: ImporterTest {
 		try importer.importData(from: url)
 
 		// then
-		assertThat(Me.moodInfo1, exists())
-		assertThat(Me.moodInfo2, not(exists()))
-		assertThat(Me.moodInfo3, exists())
+		assertThat(Me.moodInfo1, exists(MoodImpl.self))
+		assertThat(Me.moodInfo2, not(exists(MoodImpl.self)))
+		assertThat(Me.moodInfo3, exists(MoodImpl.self))
 	}
 
 	func testGivenNeverImportedBeforeAndImportOnlyNewDataEqualsTrue_importData_correctlyImportsData() throws {
@@ -174,9 +174,9 @@ class IntrospectiveMoodImporterFunctionalTests: ImporterTest {
 		try importer.importData(from: url)
 
 		// then
-		assertThat(Me.moodInfo1, exists())
-		assertThat(Me.moodInfo2, exists())
-		assertThat(Me.moodInfo3, exists())
+		assertThat(Me.moodInfo1, exists(MoodImpl.self))
+		assertThat(Me.moodInfo2, exists(MoodImpl.self))
+		assertThat(Me.moodInfo3, exists(MoodImpl.self))
 	}
 
 	func testGivenNeverImportedBeforeAndImportOnlyNewDataEqualsFalse_importData_correctlyImportsData() throws {
@@ -189,9 +189,9 @@ class IntrospectiveMoodImporterFunctionalTests: ImporterTest {
 		try importer.importData(from: url)
 
 		// then
-		assertThat(Me.moodInfo1, exists())
-		assertThat(Me.moodInfo2, exists())
-		assertThat(Me.moodInfo3, exists())
+		assertThat(Me.moodInfo1, exists(MoodImpl.self))
+		assertThat(Me.moodInfo2, exists(MoodImpl.self))
+		assertThat(Me.moodInfo3, exists(MoodImpl.self))
 	}
 
 	func testGivenImportCancelled_importData_startsNewImport() throws {
@@ -226,9 +226,9 @@ class IntrospectiveMoodImporterFunctionalTests: ImporterTest {
 		try importer.importData(from: url)
 
 		// then
-		assertThat(scaledMood(Me.moodInfo1), exists())
-		assertThat(scaledMood(Me.moodInfo2), exists())
-		assertThat(scaledMood(Me.moodInfo3), exists())
+		assertThat(scaledMood(Me.moodInfo1), exists(MoodImpl.self))
+		assertThat(scaledMood(Me.moodInfo2), exists(MoodImpl.self))
+		assertThat(scaledMood(Me.moodInfo3), exists(MoodImpl.self))
 	}
 
 	// MARK: Invalid Data
@@ -305,71 +305,11 @@ class IntrospectiveMoodImporterFunctionalTests: ImporterTest {
 	// MARK: - Helper Functions
 
 	private final func scaledMood(_ mood: MoodInfo) -> MoodInfo {
-		var newMoodInfo = mood
+		let newMoodInfo = mood
 		newMoodInfo.rating = (maxMood - minMood) * (mood.rating - mood.minRating) / (mood.maxRating - mood.minRating) + minMood
 		newMoodInfo.minRating = minMood
 		newMoodInfo.maxRating = maxMood
 		return newMoodInfo
-	}
-
-	// MARK: Matchers
-
-	private final func exists() -> Hamcrest.Matcher<MoodInfo> {
-		return Matcher("") { moodInfo -> MatchResult in
-			let fetchRequest: NSFetchRequest<MoodImpl> = MoodImpl.fetchRequest()
-			var predicates = [NSPredicate]()
-			predicates.append(self.datePredicateFor(fieldName: "timestamp", withinOneSecondOf: moodInfo.timestamp))
-			predicates.append(NSPredicate(format: "rating == %f", moodInfo.rating))
-			predicates.append(NSPredicate(format: "minRating == %f", moodInfo.minRating))
-			predicates.append(NSPredicate(format: "maxRating == %f", moodInfo.maxRating))
-			predicates.append(self.timeZonePredicate(for: moodInfo.timeZone, field: "timestampTimeZoneId"))
-			predicates.append(self.notePredicate(for: moodInfo.note))
-			predicates.append(NSPredicate(format: "source == %i", moodInfo.source.rawValue))
-			fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-			do {
-				let moods = try DependencyInjector.get(Database.self).query(MoodImpl.fetchRequest())
-				if moods.count == 0 {
-					return .mismatch("No moods exist")
-				}
-				let matchingMoods = try DependencyInjector.get(Database.self).query(fetchRequest)
-				if matchingMoods.count == 0 {
-					return .mismatch("No matching moods found")
-				}
-				if matchingMoods.count == 1 {
-					return .match
-				}
-				return .mismatch("Found \(matchingMoods.count) matching mood entries")
-			} catch {
-				return .mismatch("FetchRequest failed: " + error.localizedDescription)
-			}
-		}
-	}
-
-	private final func datePredicateFor(fieldName: String, withinOneSecondOf date: Date) -> NSPredicate {
-		// within a second of the input start date
-		// can't use == expected date because it always fails for some unknown reason
-		return NSPredicate(
-			format: "%K >= %@ AND %K <= %@",
-			fieldName,
-			date.addingTimeInterval(-1) as NSDate,
-			fieldName,
-			date.addingTimeInterval(1) as NSDate
-		)
-	}
-
-	private final func timeZonePredicate(for timeZone: TimeZone?, field: String) -> NSPredicate {
-		if let timeZone = timeZone {
-			return NSPredicate(format: "%K ==[cd] %@", field, timeZone.identifier)
-		}
-		return NSPredicate(format: "%K == nil", field)
-	}
-
-	private final func notePredicate(for note: String?) -> NSPredicate {
-		if let note = note {
-			let unescapedNote = note.replacingOccurrences(of: "\"\"", with: "\"")
-			return NSPredicate(format: "note == %@", unescapedNote)
-		}
-		return NSPredicate(format: "note == nil || note == %@", "")
 	}
 
 	// MARK: Input
@@ -395,35 +335,5 @@ class IntrospectiveMoodImporterFunctionalTests: ImporterTest {
 
 	private static func getSourceString(_ source: Sources.MoodSourceNum) -> String {
 		return "\"" + source.description + "\""
-	}
-
-	// MARK: - Structs
-
-	private struct MoodInfo {
-		var timestamp: Date
-		var timeZone: TimeZone?
-		var note: String?
-		var rating: Double
-		var minRating: Double
-		var maxRating: Double
-		var source: Sources.MoodSourceNum
-
-		public init(
-			timestamp: Date,
-			timeZone: TimeZone? = nil,
-			rating: Double,
-			minRating: Double,
-			maxRating: Double,
-			note: String? = nil,
-			source: Sources.MoodSourceNum
-		) {
-			self.timestamp = timestamp
-			self.timeZone = timeZone
-			self.rating = rating
-			self.minRating = minRating
-			self.maxRating = maxRating
-			self.note = note
-			self.source = source
-		}
 	}
 }

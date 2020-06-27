@@ -28,6 +28,16 @@
 	<string>This is used to allow you to simply ask a question out loud.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>This is used to allow you to simply ask a question out loud.</string>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>RecordDecimalMoodIntent</string>
+		<string>RecordIntegerMoodIntent</string>
+		<string>StartActivityIntent</string>
+		<string>StopActivityIntent</string>
+		<string>StopAllActivitiesIntent</string>
+		<string>StopLastStartedActivityIntent</string>
+		<string>TakeMedicationIntent</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

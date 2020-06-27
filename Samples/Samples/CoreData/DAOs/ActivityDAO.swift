@@ -12,6 +12,7 @@ import CoreData
 import Common
 import DependencyInjection
 import Persistence
+import Settings
 
 //sourcery: AutoMockable
 public protocol ActivityDAO {
@@ -19,12 +20,23 @@ public protocol ActivityDAO {
 	func getMostRecentActivityEndDate() throws -> Date?
 	func getMostRecentActivity(_ activityDefinition: ActivityDefinition) throws -> Activity?
 	func getMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws -> Activity?
-
+	/// Get the activity definition with the specified name (if it exists).
+	/// - Throws: If there is more than one activity definition with the given name.
+	/// - Returns: The matching activity definition if it exists. Otherwise, `nil`.
+	func getDefinitionWith(name: String) throws -> ActivityDefinition?
 	/// - Parameter name: case-insensitive activity name for which to search
 	func activityDefinitionWithNameExists(_ name: String) throws -> Bool
 
 	@discardableResult
 	func startActivity(_ definition: ActivityDefinition) throws -> Activity
+	func stopMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws
+	func stopMostRecentlyStartedIncompleteActivity() throws
+	/// - Returns: Any activities that are eligible for auto-note
+	@discardableResult
+	func stopAllActivities() throws -> [Activity]
+	/// - Parameter end: If provided, use this as the stop date / time.
+	/// - Returns: Whether or not the activity was ignored
+	func autoIgnoreIfAppropriate(_ activity: Activity, end: Date) -> Bool
 
 	@discardableResult
 	func createDefinition(
@@ -47,6 +59,12 @@ public protocol ActivityDAO {
 }
 
 extension ActivityDAO {
+
+	/// - Parameter end: If provided, use this as the stop date / time.
+	/// - Returns: Whether or not the activity was ignored
+	public func autoIgnoreIfAppropriate(_ activity: Activity, end: Date = Date()) -> Bool {
+		return autoIgnoreIfAppropriate(activity, end: end)
+	}
 
 	public func createDefinition(
 		name: String,
@@ -86,6 +104,8 @@ extension ActivityDAO {
 public class ActivityDAOImpl: ActivityDAO {
 
 	private final let log = Log()
+
+	// MARK: - Getters
 
 	public final func getMostRecentActivityEndDate() throws -> Date? {
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
@@ -130,6 +150,23 @@ public class ActivityDAOImpl: ActivityDAO {
 		return results.count > 0
 	}
 
+	/// Get the activity definition with the specified name (if it exists).
+	/// - Throws: If there is more than one activity definition with the given name.
+	/// - Returns: The matching activity definition if it exists. Otherwise, `nil`.
+	public final func getDefinitionWith(name: String) throws -> ActivityDefinition? {
+		let fetchRequest: NSFetchRequest<ActivityDefinition> = ActivityDefinition.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
+		let results = try DependencyInjector.get(Database.self).query(fetchRequest)
+		if results.count == 0 {
+			return nil
+		}
+		if results.count == 1 {
+			return results[0]
+		}
+		let errorMessage = String(format: "Found %d activity definitions with the same name: %{private}@", results.count, name)
+		throw GenericError(errorMessage)
+	}
+
 	@discardableResult
 	public final func startActivity(_ definition: ActivityDefinition) throws -> Activity {
 		let transaction = DependencyInjector.get(Database.self).transaction()
@@ -142,6 +179,90 @@ public class ActivityDAOImpl: ActivityDAO {
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		return try DependencyInjector.get(Database.self).pull(savedObject: activity)
 	}
+
+	public final func stopMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws {
+		let endDateVariableName = CommonSampleAttributes.endDate.variableName!
+		let incompleteActivities = activityDefinition.activities.filtered(
+			using: NSPredicate(format: "%K == nil", endDateVariableName)
+		) as! Set<Activity>
+
+		if incompleteActivities.count > 0 {
+			let sortedIncompleteActivities = incompleteActivities.sorted(by: { $0.start > $1.start })
+			let transaction = DependencyInjector.get(Database.self).transaction()
+			let activity = try transaction.pull(savedObject: sortedIncompleteActivities[0])
+			let now = Date()
+			if !autoIgnoreIfAppropriate(activity, end: now) {
+				activity.end = now
+				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+			}
+		}
+		let message = String(format: "Activity named %{private}@ has never been started", activityDefinition.name)
+		throw GenericDisplayableError(title: message)
+	}
+
+	public final func stopMostRecentlyStartedIncompleteActivity() throws {
+		let endDateVariableName = CommonSampleAttributes.endDate.variableName!
+		let startDateVariableName = CommonSampleAttributes.startDate.variableName!
+		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "%K == nil", endDateVariableName)
+		fetchRequest.sortDescriptors = [NSSortDescriptor(key: startDateVariableName, ascending: false)]
+		fetchRequest.fetchLimit = 1
+
+		let transaction = DependencyInjector.get(Database.self).transaction()
+		let activities = try transaction.query(fetchRequest)
+		if activities.count == 0 {
+			throw GenericDisplayableError(title: "No activities currently running")
+		}
+		let now = Date()
+		let activity = activities[0]
+		if !autoIgnoreIfAppropriate(activity, end: now) {
+			activity.end = now
+			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+		}
+	}
+
+	@discardableResult
+	public final func stopAllActivities() throws -> [Activity] {
+		let endDateVariableName = CommonSampleAttributes.endDate.variableName!
+		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "%K == nil", endDateVariableName)
+		let activitiesToStop = try DependencyInjector.get(Database.self).query(fetchRequest)
+		let now = Date()
+		var activitiesToAutoNote = [Activity]()
+		for activity in activitiesToStop {
+			if !autoIgnoreIfAppropriate(activity, end: now) {
+				let transaction = DependencyInjector.get(Database.self).transaction()
+				activity.end = now
+				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
+				if activity.definition.autoNote {
+					activitiesToAutoNote.append(activity)
+				}
+			}
+		}
+		return activitiesToAutoNote
+	}
+
+	/// - Parameter end: If provided, use this as the stop date / time.
+	/// - Returns: Whether or not the activity was ignored
+	public final func autoIgnoreIfAppropriate(_ activity: Activity, end: Date = Date()) -> Bool {
+		if DependencyInjector.get(Settings.self).autoIgnoreEnabled {
+			let minSeconds = DependencyInjector.get(Settings.self).autoIgnoreSeconds
+			if Duration(start: activity.start, end: end).inUnit(.second) < Double(minSeconds) {
+				do {
+					let transaction = DependencyInjector.get(Database.self).transaction()
+					// can't really explain this to the user
+					try retryOnFail({ try transaction.delete(activity) }, maxRetries: 2)
+					try transaction.commit()
+					return true
+				} catch {
+					log.error("Failed to delete activity that should be auto-ignored: %@", errorInfo(error))
+				}
+			}
+		}
+		return false
+	}
+
+	// MARK: - Creators
 
 	@discardableResult
 	public final func createDefinition(

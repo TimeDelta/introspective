@@ -33,6 +33,11 @@ target 'Introspective' do
     inherit! :search_paths
     pod 'SwiftDate', '6.0.3'
   end
+
+  target 'SiriIntents' do
+    inherit! :search_paths
+    pod 'SwiftDate', '6.0.3'
+  end
 end
 
 target 'AttributeRestrictions' do

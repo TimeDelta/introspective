@@ -13,6 +13,7 @@ import Samples
 
 public protocol SampleGrouper: Attributed {
 
+	/// Keep this short so that it fits in the display
 	static var userVisibleDescription: String { get }
 
 	init(sampleType: Sample.Type)

@@ -17,6 +17,10 @@ import Persistence
 public protocol MedicationDAO {
 
 	func medicationExists(withName name: String, using transaction: Transaction?) throws -> Bool
+	/// - Returns: The medication with the provided name if it exists. Otherwise, nil.
+	func medicationNamed(_ name: String) throws -> Medication?
+	@discardableResult
+	func takeMedicationUsingDefaultDosage(_ medication: Medication) throws -> MedicationDose
 
 	@discardableResult
 	func createMedication(
@@ -28,7 +32,7 @@ public protocol MedicationDAO {
 		source: Sources.MedicationSourceNum,
 		recordScreenIndex: Int16?,
 		using transaction: Transaction?
-	) -> Medication
+	) throws -> Medication
 	@discardableResult
 	func createDose(
 		medication: Medication,
@@ -36,7 +40,7 @@ public protocol MedicationDAO {
 		timestamp: Date,
 		source: Sources.MedicationSourceNum,
 		using transaction: Transaction?
-	) -> MedicationDose
+	) throws -> MedicationDose
 }
 
 extension MedicationDAO {
@@ -45,6 +49,7 @@ extension MedicationDAO {
 		return try medicationExists(withName: name, using: transaction)
 	}
 
+	@discardableResult
 	public func createMedication(
 		name: String,
 		frequency: Frequency? = nil,
@@ -54,8 +59,8 @@ extension MedicationDAO {
 		source: Sources.MedicationSourceNum = .introspective,
 		recordScreenIndex: Int16? = nil,
 		using transaction: Transaction? = nil
-	) -> Medication {
-		return createMedication(
+	) throws -> Medication {
+		return try createMedication(
 			name: name,
 			frequency: frequency,
 			dosage: dosage,
@@ -67,14 +72,15 @@ extension MedicationDAO {
 		)
 	}
 
+	@discardableResult
 	public func createDose(
 		medication: Medication,
 		dosage: Dosage? = nil,
 		timestamp: Date = Date(),
 		source: Sources.MedicationSourceNum = .introspective,
 		using transaction: Transaction? = nil
-	) -> MedicationDose {
-		return createDose(
+	) throws -> MedicationDose {
+		return try createDose(
 			medication: medication,
 			dosage: dosage,
 			timestamp: timestamp,
@@ -94,6 +100,23 @@ public final class MedicationDAOImpl: MedicationDAO {
 		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
 		let medicationsWithSameName = try transaction.query(fetchRequest)
 		return medicationsWithSameName.count > 0
+	}
+
+	public final func medicationNamed(_ name: String) throws -> Medication? {
+		let fetchRequest: NSFetchRequest<Medication> = Medication.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "name ==[cd] %@", name)
+		let medicationsWithSameName = try DependencyInjector.get(Database.self).query(fetchRequest)
+		guard medicationsWithSameName.count > 0 else { return nil }
+		return medicationsWithSameName[0]
+	}
+
+	@discardableResult
+	public final func takeMedicationUsingDefaultDosage(_ medication: Medication) throws -> MedicationDose {
+		return try createDose(
+			medication: medication,
+			dosage: medication.dosage,
+			timestamp: Date(),
+			source: .introspective)
 	}
 
 	@discardableResult

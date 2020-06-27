@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A2034F1724A700F200557F69 /* MoodDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2034F1624A700F200557F69 /* MoodDAO.swift */; };
 		A22D62332343983E0023470F /* Samples.h in Headers */ = {isa = PBXBuildFile; fileRef = A22D62312343983E0023470F /* Samples.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A22D625A234398AF0023470F /* AnySample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22D623B234398AE0023470F /* AnySample.swift */; };
 		A22D625B234398AF0023470F /* MedicationDose.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22D623D234398AE0023470F /* MedicationDose.swift */; };
@@ -65,6 +66,7 @@
 		0FD9205055C3D47CACA310F2 /* Pods_Samples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Samples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		398DBEC9CC741AD39131D0DA /* Pods-Samples.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Samples.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-Samples/Pods-Samples.debug.xcconfig"; sourceTree = "<group>"; };
 		9A03171CF18F3FF66913B6CC /* Pods-Samples.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Samples.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Samples/Pods-Samples.release.xcconfig"; sourceTree = "<group>"; };
+		A2034F1624A700F200557F69 /* MoodDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodDAO.swift; sourceTree = "<group>"; };
 		A22D622E2343983E0023470F /* Samples.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Samples.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A22D62312343983E0023470F /* Samples.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Samples.h; sourceTree = "<group>"; };
 		A22D62322343983E0023470F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 			children = (
 				A29700FB2344FE41004B97E6 /* ActivityDAO.swift */,
 				A26BD7A1249D3DDD0083C9FC /* MedicationDAO.swift */,
+				A2034F1624A700F200557F69 /* MoodDAO.swift */,
 			);
 			path = DAOs;
 			sourceTree = "<group>";
@@ -388,6 +391,7 @@
 				A22D6263234398AF0023470F /* Mood.swift in Sources */,
 				A2A8AFF62343E59100E883CE /* MoodUtil.swift in Sources */,
 				A2AF1FF22343C63900E04517 /* Tag.swift in Sources */,
+				A2034F1724A700F200557F69 /* MoodDAO.swift in Sources */,
 				A22D625C234398AF0023470F /* ActivityDefinition.swift in Sources */,
 				A22D626A234398AF0023470F /* Weight.swift in Sources */,
 				A2A82E032345358D005D295D /* Samples.xcdatamodeld in Sources */,

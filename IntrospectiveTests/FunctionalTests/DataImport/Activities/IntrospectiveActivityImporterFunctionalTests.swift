@@ -451,7 +451,7 @@ class IntrospectiveActivityImporterFunctionalTests: ImporterTest {
 			self.recordScreenIndex = recordScreenIndex
 		}
 
-		public override func getPredicates() -> [String : NSPredicate] {
+		public func getPredicates() -> [String : NSPredicate] {
 			let descriptionKey = "activityDescription"
 			return [
 				"name": NSPredicate(format: "name ==[cd] %@", name),
@@ -504,7 +504,7 @@ class IntrospectiveActivityImporterFunctionalTests: ImporterTest {
 			self.source = source
 		}
 
-		public override func getPredicates() -> [String : NSPredicate] {
+		public func getPredicates() -> [String : NSPredicate] {
 			let descriptionKey = "definition.activityDescription"
 			return [
 				"definition.name": NSPredicate(format: "definition.name ==[cd] %@", definition.name),
