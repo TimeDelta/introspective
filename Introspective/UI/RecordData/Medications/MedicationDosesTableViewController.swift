@@ -135,7 +135,7 @@ public final class MedicationDosesTableViewController: UITableViewController {
 
 	public final override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		let controller = viewController(named: "medicationDoseEditor") as! MedicationDoseEditorViewController
-		controller.medicationDose = medication.doses.object(at: indexPath.row) as? MedicationDose
+		controller.medicationDose = filteredDoses[indexPath.row]
 		controller.notificationToSendOnAccept = Me.medicationDoseEdited
 		controller.medication = medication
 		lastClickedIndex = medication.doses.index(of: filteredDoses[indexPath.row])
