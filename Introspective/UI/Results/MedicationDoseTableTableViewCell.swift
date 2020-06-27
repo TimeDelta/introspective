@@ -34,4 +34,10 @@ public final class MedicationDoseTableTableViewCell: UITableViewCell {
 			doseAndTimestampLabel.text = doseText
 		}
 	}
+
+	public final override func prepareForReuse() {
+		medicationDose = nil
+		medicationNameLabel.text = nil
+		doseAndTimestampLabel.text = nil
+	}
 }
