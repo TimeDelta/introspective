@@ -4510,6 +4510,12 @@ open class DatabaseMock: Database, Mock {
 		return __value
     }
 
+    open func refreshContext() {
+        addInvocation(.m_refreshContext)
+		let perform = methodPerformValue(.m_refreshContext) as? () -> Void
+		perform?()
+    }
+
     open func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, sortDescriptors: [NSSortDescriptor], cacheName: String?) -> NSFetchedResultsController<Type> {
         addInvocation(.m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(Parameter<Type.Type>.value(`type`).wrapAsGeneric(), Parameter<[NSSortDescriptor]>.value(`sortDescriptors`), Parameter<String?>.value(`cacheName`)))
 		let perform = methodPerformValue(.m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(Parameter<Type.Type>.value(`type`).wrapAsGeneric(), Parameter<[NSSortDescriptor]>.value(`sortDescriptors`), Parameter<String?>.value(`cacheName`))) as? (Type.Type, [NSSortDescriptor], String?) -> Void
@@ -4620,6 +4626,7 @@ open class DatabaseMock: Database, Mock {
 
     fileprivate enum MethodType {
         case m_transaction
+        case m_refreshContext
         case m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(Parameter<GenericAttribute>, Parameter<[NSSortDescriptor]>, Parameter<String?>)
         case m_query__fetchRequest(Parameter<GenericAttribute>)
         case m_count__fetchRequest(Parameter<GenericAttribute>)
@@ -4631,6 +4638,8 @@ open class DatabaseMock: Database, Mock {
         static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
             switch (lhs, rhs) {
             case (.m_transaction, .m_transaction):
+                return true 
+            case (.m_refreshContext, .m_refreshContext):
                 return true 
             case (.m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(let lhsType, let lhsSortdescriptors, let lhsCachename), .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(let rhsType, let rhsSortdescriptors, let rhsCachename)):
                 guard Parameter.compare(lhs: lhsType, rhs: rhsType, with: matcher) else { return false } 
@@ -4663,6 +4672,7 @@ open class DatabaseMock: Database, Mock {
         func intValue() -> Int {
             switch self {
             case .m_transaction: return 0
+            case .m_refreshContext: return 0
             case let .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(p0, p1, p2): return p0.intValue + p1.intValue + p2.intValue
             case let .m_query__fetchRequest(p0): return p0.intValue
             case let .m_count__fetchRequest(p0): return p0.intValue
@@ -4784,6 +4794,7 @@ open class DatabaseMock: Database, Mock {
         fileprivate var method: MethodType
 
         public static func transaction() -> Verify { return Verify(method: .m_transaction)}
+        public static func refreshContext() -> Verify { return Verify(method: .m_refreshContext)}
         public static func fetchedResultsController<Type>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>) -> Verify where Type:NSManagedObject { return Verify(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`))}
         public static func query<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify where Type:NSManagedObject { return Verify(method: .m_query__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
         public static func count<Type>(_ fetchRequest: Parameter<NSFetchRequest<Type>>) -> Verify where Type:NSFetchRequestResult { return Verify(method: .m_count__fetchRequest(`fetchRequest`.wrapAsGeneric()))}
@@ -4799,6 +4810,9 @@ open class DatabaseMock: Database, Mock {
 
         public static func transaction(perform: @escaping () -> Void) -> Perform {
             return Perform(method: .m_transaction, performs: perform)
+        }
+        public static func refreshContext(perform: @escaping () -> Void) -> Perform {
+            return Perform(method: .m_refreshContext, performs: perform)
         }
         public static func fetchedResultsController<Type>(type: Parameter<Type.Type>, sortDescriptors: Parameter<[NSSortDescriptor]>, cacheName: Parameter<String?>, perform: @escaping (Type.Type, [NSSortDescriptor], String?) -> Void) -> Perform where Type:NSManagedObject {
             return Perform(method: .m_fetchedResultsController__type_typesortDescriptors_sortDescriptorscacheName_cacheName(`type`.wrapAsGeneric(), `sortDescriptors`, `cacheName`), performs: perform)

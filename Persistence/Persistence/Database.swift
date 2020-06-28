@@ -19,6 +19,8 @@ public protocol Database {
 	/// - Note: `Transaction` objects are only needed for modifications to the database.
 	func transaction() -> Transaction
 
+	func refreshContext()
+
 	func fetchedResultsController<Type: NSManagedObject>(type: Type.Type, sortDescriptors: [NSSortDescriptor], cacheName: String?) -> NSFetchedResultsController<Type>
 	func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type]
 	func count<Type: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<Type>) throws -> Int
@@ -156,6 +158,10 @@ internal class DatabaseImpl: Database {
 		backgroundContext.automaticallyMergesChangesFromParent = true
 		backgroundContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
 		return TransactionImpl(context: backgroundContext, mainContext: persistentContainer.viewContext)
+	}
+
+	public final func refreshContext() {
+		persistentContainer.viewContext.refreshAllObjects()
 	}
 
 	public final func deleteEverything() throws {

@@ -2724,7 +2724,7 @@
 			buildConfigurationList = D63E90AF276550132DB77384E58E04DA /* Build configuration list for PBXNativeTarget "Introspective" */;
 			buildPhases = (
 				75E20E1CC157703ADA5941E98FF972D1 /* [CP] Check Pods Manifest.lock */,
-				31CE597F982D65B544466EE583F692CE /* ShellScript */,
+				522AA9233CDD1E5214398525EF5C82B4 /* ShellScript */,
 				BF6DA2C10FFDD3FB4515D3A60FA139E2 /* Sources */,
 				C51BB4D038DED40DD32EC47510ABCC76 /* Frameworks */,
 				98059E3C1A4EB06EC76869AA9E6318CC /* Resources */,
@@ -2895,7 +2895,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		31CE597F982D65B544466EE583F692CE /* ShellScript */ = {
+		522AA9233CDD1E5214398525EF5C82B4 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
