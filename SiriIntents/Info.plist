@@ -30,6 +30,7 @@
 			<array/>
 			<key>IntentsSupported</key>
 			<array>
+				<string>IsWeekdayIntent</string>
 				<string>RecordDecimalMoodIntent</string>
 				<string>RecordIntegerMoodIntent</string>
 				<string>StartActivityIntent</string>

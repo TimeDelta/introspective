@@ -30,6 +30,7 @@
 	<string>This is used to allow you to simply ask a question out loud.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
+		<string>IsWeekdayIntent</string>
 		<string>RecordDecimalMoodIntent</string>
 		<string>RecordIntegerMoodIntent</string>
 		<string>StartActivityIntent</string>

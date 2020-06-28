@@ -26,6 +26,8 @@ class IntentHandler: INExtension {
 			Me.registerDependencies()
 		}
 		switch intent {
+			case is IsWeekdayIntent:
+				return IsWeekdayIntentHandler()
 			case is RecordDecimalMoodIntent:
 				return RecordDecimalMoodIntentHandler()
 			case is RecordIntegerMoodIntent:
