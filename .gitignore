@@ -4,6 +4,7 @@
 **/*.xcsettings
 **/xcuserdata/
 **/xcdebugger/
+**/GitVersion.swift
 *.framework/
 *.png
 *.xcf
