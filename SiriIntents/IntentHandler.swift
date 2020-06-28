@@ -36,6 +36,8 @@ class IntentHandler: INExtension {
 				return StopActivityIntentHandler()
 			case is StopAllActivitiesIntent:
 				return StopAllActivitiesIntentHandler()
+			case is StopLastStartedActivityIntent:
+				return StopLastStartedActivityIntentHandler()
 			case is TakeMedicationIntent:
 				return TakeMedicationIntentHandler()
 			default:
