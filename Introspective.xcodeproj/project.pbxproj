@@ -224,6 +224,7 @@
 		7518858DE8A33EEB9A279DBA323DBECF /* ActivityDefinitionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7276FA554BC13D0D8259911C339B4F76 /* ActivityDefinitionFunctionalTests.swift */; };
 		7544EB454D37F100EC383F4CE480E34C /* SingleSampleTypeXYGraphDataGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFD646AFB07A1852F3B1602AB3F5619B /* SingleSampleTypeXYGraphDataGenerator.swift */; };
 		7549856CD3099EC9AC819FD02628C888 /* EasyPillMedicationImporterFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78FADAC07D9E98E737F6785B57A805B /* EasyPillMedicationImporterFunctionalTests.swift */; };
+		754E4858B1BC2A46537CA603F26B0F11 /* VersionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A958A24D33360AFB07C50E8312A454A /* VersionTableViewCell.swift */; };
 		755B0E488FF66A3DFF658CB2B9D71AD7 /* ResultsViewControllerUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAB42BEA8A4D67CD5177EC2A509610F8 /* ResultsViewControllerUnitTests.swift */; };
 		758C1C7C797F448FEADD3951EFEAF553 /* MoodNoteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 131FBF4684DE5AF7E2016067B85C3936 /* MoodNoteTableViewCell.swift */; };
 		75E5834894536821228DED5FF926A881 /* ActivityDefinitionNameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AA1DCF95D6A08D5DE00DAE32A56471 /* ActivityDefinitionNameTableViewCell.swift */; };
@@ -314,7 +315,6 @@
 		A0ACDA46E85F2ECEFBDA115171002AEF /* MoodMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE301C2F2247DBBEDE6822A654DD4F1 /* MoodMock.swift */; };
 		A108D51984F45F433488927376B4A95A /* RecordDecimalMoodIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C624D2A8E2DF0D653F2E4CF507F9BC09 /* RecordDecimalMoodIntentHandler.swift */; };
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
-		754E4858B1BC2A46537CA603F26B0F11 /* VersionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A958A24D33360AFB07C50E8312A454A /* VersionTableViewCell.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -596,6 +596,7 @@
 		192AEAC095591D2156D2C1C6D7B79989 /* RecordMedicationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordMedicationTableViewCell.swift; sourceTree = "<group>"; };
 		1969B992090C203B02DB85EB1005D9F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		19BD2C5FCC3DA79FCD58742DCAC8122A /* QueryResultsGraphCustomizationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryResultsGraphCustomizationViewController.swift; sourceTree = "<group>"; };
+		1A958A24D33360AFB07C50E8312A454A /* VersionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionTableViewCell.swift; sourceTree = "<group>"; };
 		1BBA5C806D2CB850992E9E1E60A8E687 /* RecordActivityTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordActivityTableViewController.swift; sourceTree = "<group>"; };
 		1BE45F44E63A95907474965403C38F72 /* DateOnlyAttributeUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateOnlyAttributeUnitTests.swift; sourceTree = "<group>"; };
 		1C8B5AE7A83209B865D6BC8170C1A09A /* EditActivityTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditActivityTableViewController.swift; sourceTree = "<group>"; };
@@ -872,7 +873,6 @@
 		A1776B090DE0D9396B6A50F70152A55C /* EqualToFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1B93F7FE435E06819E4BF152382DAA9 /* EqualToDurationAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToDurationAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
-		1A958A24D33360AFB07C50E8312A454A /* VersionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionTableViewCell.swift; sourceTree = "<group>"; };
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
@@ -2917,23 +2917,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F0FB89F745BB6CFF964B314ECF77BAAF /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nversion=$(git rev-parse --verify HEAD | cut -c 1-7)\ncurdate=$(date +\"%Y-%m-%d\")\n\nfilesource=\"//  DO NOT EDIT - GENERATED FILE\\n//  GitVersion.swift\\n//  Created on $curdate.\\n//\\n\\npublic let GIT_SHA_VERSION = \\\"$version\\\"\"\n\ncd ${SOURCE_ROOT}/Common/Common\necho \"$filesource\" > GitVersion.swift\ntouch GitVersion.swift\n";
-		};
 		5B623C22BA43232A2D68D8DA95A51BD8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3070,6 +3053,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "rake mock";
+		};
+		F0FB89F745BB6CFF964B314ECF77BAAF /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nversion=$(git rev-parse --verify HEAD | cut -c 1-7)\ncurdate=$(date +\"%Y-%m-%d\")\n\nfilesource=\"//  DO NOT EDIT - GENERATED FILE\\n//  GitVersion.swift\\n//  Created on $curdate.\\n//\\n\\npublic let GIT_SHA_VERSION = \\\"$version\\\"\"\n\ncd ${SOURCE_ROOT}/Common/Common\necho \"$filesource\" > GitVersion.swift\ntouch GitVersion.swift\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
