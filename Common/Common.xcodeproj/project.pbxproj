@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		783F1CE4A185E3B4FB2AB76F /* Pods_Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A825662DDC9FD7206084851 /* Pods_Common.framework */; };
+		A2034F2C24A909AA00557F69 /* GitVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2034F2B24A909A900557F69 /* GitVersion.swift */; };
 		A22CF09B23464A11003751E1 /* MoodUiUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22CF09A23464A11003751E1 /* MoodUiUtil.swift */; };
 		A231CEBD23415CE500CCE625 /* DependencyInjection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A231CEBC23415CE500CCE625 /* DependencyInjection.framework */; };
 		A231CEC523424F2F00CCE625 /* CommonInjectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A231CEC423424F2F00CCE625 /* CommonInjectionProvider.swift */; };
@@ -39,6 +40,7 @@
 
 /* Begin PBXFileReference section */
 		4A825662DDC9FD7206084851 /* Pods_Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2034F2B24A909A900557F69 /* GitVersion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitVersion.swift; sourceTree = "<group>"; };
 		A22CF09A23464A11003751E1 /* MoodUiUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodUiUtil.swift; sourceTree = "<group>"; };
 		A231CEBC23415CE500CCE625 /* DependencyInjection.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DependencyInjection.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A231CEC423424F2F00CCE625 /* CommonInjectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonInjectionProvider.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				A231CEC423424F2F00CCE625 /* CommonInjectionProvider.swift */,
+				A2034F2B24A909A900557F69 /* GitVersion.swift */,
 				A2AF1FCB2343AFEE00E04517 /* Entities */,
 				A29F6893233EA48E00B8DFDB /* Utils */,
 				A2B88B7A233EA15A00E37728 /* Extensions */,
@@ -293,6 +296,7 @@
 				A2AF1FD52343AFEE00E04517 /* Duration.swift in Sources */,
 				A29F68A1233EA4B700B8DFDB /* UserDefaultsUtil.swift in Sources */,
 				A29F689C233EA4B700B8DFDB /* SearchUtil.swift in Sources */,
+				A2034F2C24A909AA00557F69 /* GitVersion.swift in Sources */,
 				A2AF1FD12343AFEE00E04517 /* TimeOfDay.swift in Sources */,
 				A29F68A3233EA4B700B8DFDB /* StringUtil.swift in Sources */,
 				A29F68B1233EA8D400B8DFDB /* NotificationName.swift in Sources */,

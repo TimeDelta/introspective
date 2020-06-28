@@ -166,7 +166,6 @@
 		5A0971F6C2758B25C1F44D16EAC23218 /* ChooseAttributesToGraphTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809BEB786B6E3A771CFFA8A7ED5FA2D2 /* ChooseAttributesToGraphTableViewController.swift */; };
 		5AED1D5D01B12ED92124E82E862230D7 /* ChooseSampleGrouperTypeViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300D4F8BE0F8A6887FFC487D32098274 /* ChooseSampleGrouperTypeViewControllerMock.swift */; };
 		5B869E4825C3616ED3C250C311D4EC1A /* PickerMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD71FA3FAB9E75505AA5F1F382EBF59 /* PickerMatchers.swift */; };
-		5B8AD151C37C7403B417A590D5CF1067 /* GitVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2827012A662F6D64DC4BA1EDC514E78 /* GitVersion.swift */; };
 		5BE2D38612042D7874C22A05A3221ABD /* RestingHeartRateQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC35BA576759FA61B15F904C42335C0 /* RestingHeartRateQueryFunctionalTests.swift */; };
 		5C98E0B7A29297921CA9E5E8A1C5D3BD /* SexualActivityUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB78CB6A69BA21B3A5B7DD707CD88EA /* SexualActivityUnitTests.swift */; };
 		5D910ABBDE3929E728E8669A9E5E2F4B /* SampleGrouperMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488FBBEAC0EF9616AF94F766921C210B /* SampleGrouperMock.swift */; };
@@ -315,6 +314,7 @@
 		A0ACDA46E85F2ECEFBDA115171002AEF /* MoodMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE301C2F2247DBBEDE6822A654DD4F1 /* MoodMock.swift */; };
 		A108D51984F45F433488927376B4A95A /* RecordDecimalMoodIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C624D2A8E2DF0D653F2E4CF507F9BC09 /* RecordDecimalMoodIntentHandler.swift */; };
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
+		754E4858B1BC2A46537CA603F26B0F11 /* VersionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A958A24D33360AFB07C50E8312A454A /* VersionTableViewCell.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -872,6 +872,7 @@
 		A1776B090DE0D9396B6A50F70152A55C /* EqualToFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1B93F7FE435E06819E4BF152382DAA9 /* EqualToDurationAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToDurationAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
+		1A958A24D33360AFB07C50E8312A454A /* VersionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionTableViewCell.swift; sourceTree = "<group>"; };
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
@@ -897,7 +898,6 @@
 		B0368D1DF231C9DCB97EF42A2B8065D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B115DB016120DBDE20823406A34EA731 /* Attributes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Attributes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1A3009B868D953A72240F4A1DC9D85B /* ActivityEndDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityEndDateTableViewCell.swift; sourceTree = "<group>"; };
-		B2827012A662F6D64DC4BA1EDC514E78 /* GitVersion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitVersion.swift; sourceTree = "<group>"; };
 		B2BC77E471ED30A9E26075105F8308EA /* EditAttributeRestrictionViewControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewControllerMock.swift; sourceTree = "<group>"; };
 		B352593233D386789DBDDC0A2ECC8A14 /* GroupNameTableViewCellUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupNameTableViewCellUnitTests.swift; sourceTree = "<group>"; };
 		B4118E24C8BE54565A8B23E5F0B1F271 /* EditMoodTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMoodTableViewController.swift; sourceTree = "<group>"; };
@@ -1341,7 +1341,6 @@
 		1D6729AED1C18D51FA6CE4FF09B8DF09 /* Introspective */ = {
 			isa = PBXGroup;
 			children = (
-				B2827012A662F6D64DC4BA1EDC514E78 /* GitVersion.swift */,
 				C683BBCDB3E662CB0DF8F2CF85C05A9A /* UI */,
 				FD87AA202B7637751640AFF7ABC50E8B /* AppDelegate.swift */,
 				52B5D834E4836EEA97F1DCE94B5D1248 /* IntrospectiveInjectionProvider.swift */,
@@ -2120,6 +2119,7 @@
 				F05CBCFDEE7DE4256945244FB471CC50 /* Settings.storyboard */,
 				8AEC843A9367FDB05CCACB0F6454E178 /* SettingsTableViewController.swift */,
 				D9E64A5766AA8993DADE6612AD9C3D0D /* GeneralSettingsViewController.swift */,
+				1A958A24D33360AFB07C50E8312A454A /* VersionTableViewCell.swift */,
 				A1C3BA50256120CCFACDB2D1FEE43656 /* Testing */,
 				0F45F75F4B0E27A298765AFDA0E9CED4 /* Mood */,
 				F9AB63B1F298037E8D52463C642E3483 /* Activity */,
@@ -2724,7 +2724,7 @@
 			buildConfigurationList = D63E90AF276550132DB77384E58E04DA /* Build configuration list for PBXNativeTarget "Introspective" */;
 			buildPhases = (
 				75E20E1CC157703ADA5941E98FF972D1 /* [CP] Check Pods Manifest.lock */,
-				522AA9233CDD1E5214398525EF5C82B4 /* ShellScript */,
+				F0FB89F745BB6CFF964B314ECF77BAAF /* ShellScript */,
 				BF6DA2C10FFDD3FB4515D3A60FA139E2 /* Sources */,
 				C51BB4D038DED40DD32EC47510ABCC76 /* Frameworks */,
 				98059E3C1A4EB06EC76869AA9E6318CC /* Resources */,
@@ -2895,23 +2895,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		522AA9233CDD1E5214398525EF5C82B4 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nversion=$(git rev-parse --verify HEAD | cut -c 1-7)\ncurdate=$(date +\"%Y-%m-%d\")\n\nfilesource=\"//  DO NOT EDIT - GENERATED FILE\\n//  GitVersion.swift\\n//  Created on $curdate.\\n//\\n\\npublic let GIT_SHA_VERSION = \\\"$version\\\"\"\n\ncd ${SOURCE_ROOT}/${PROJECT_NAME}\necho \"$filesource\" > GitVersion.swift\ntouch GitVersion.swift\n";
-		};
 		38CB7D3BE010AA2048ABC975FE5D735A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2933,6 +2916,23 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		F0FB89F745BB6CFF964B314ECF77BAAF /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nversion=$(git rev-parse --verify HEAD | cut -c 1-7)\ncurdate=$(date +\"%Y-%m-%d\")\n\nfilesource=\"//  DO NOT EDIT - GENERATED FILE\\n//  GitVersion.swift\\n//  Created on $curdate.\\n//\\n\\npublic let GIT_SHA_VERSION = \\\"$version\\\"\"\n\ncd ${SOURCE_ROOT}/Common/Common\necho \"$filesource\" > GitVersion.swift\ntouch GitVersion.swift\n";
 		};
 		5B623C22BA43232A2D68D8DA95A51BD8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3427,7 +3427,6 @@
 				142EA63AF16C836155F95133B7B01503 /* RecordMedicationTableViewController.swift in Sources */,
 				3F7D4AA266B91FA7471A2FC2DFB7FE25 /* ChooseCalendarComponentViewController.swift in Sources */,
 				768B8F1173AEDD0A157DC79F83D0AFBC /* AttributedChooserViewController.swift in Sources */,
-				5B8AD151C37C7403B417A590D5CF1067 /* GitVersion.swift in Sources */,
 				D4AF7A49F4DD55CE7B3C38F5EC1AB3EF /* RecordDataTableViewController.swift in Sources */,
 				69EA6E223717DB166F5CB977A5DDCEFF /* BasicXYGraphSetupViewController.swift in Sources */,
 				7E29FF9C028B4B97C0E72AF9B4D1AD58 /* RecordActivityTableViewController.swift in Sources */,
@@ -3451,6 +3450,7 @@
 				C8C7EA5082F78C5B404EFDF5B6DD381D /* TakeMedicationIntentHandler.swift in Sources */,
 				812CD34A2A29C422CBD71B8C26AD15B6 /* IntentHandler.swift in Sources */,
 				06FF10E422A2B6F2CADF8CABAC9F86DC /* DateOrTimeAttributeValueViewController.swift in Sources */,
+				754E4858B1BC2A46537CA603F26B0F11 /* VersionTableViewCell.swift in Sources */,
 				9B1F01C84B1A10CAE4EEAADAC9B4C122 /* FrequencyEditorViewController.swift in Sources */,
 				02E5AD13C3696C1EA620CB3A7F1DF173 /* CoachMarkFactory.swift in Sources */,
 				B557DEF3D36B803ED13A955F68E6B7E3 /* StopActivityIntentHandler.swift in Sources */,

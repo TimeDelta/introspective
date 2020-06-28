@@ -63,3 +63,11 @@ public func copyArray<Type>(_ array: [Type]) -> [Type] {
 	copy.append(contentsOf: array)
 	return copy
 }
+
+public func versionString() -> String {
+	if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+		return version + " " + GIT_SHA_VERSION
+	} else {
+		return GIT_SHA_VERSION
+	}
+}

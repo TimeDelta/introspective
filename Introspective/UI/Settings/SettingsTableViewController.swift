@@ -20,6 +20,7 @@ public final class SettingsTableViewController: UITableViewController {
 	public static let disableGenerateTestData = Notification.Name("disableGenerateTestData")
 	public static let enableGenerateTestData = Notification.Name("enableGenerateTestData")
 	private static let resetInstructionPromptsCellIdentifier = "resetInstructionPrompts"
+	private static let versionCellIdentifier = "version"
 	private static let identifiers = [
 		(
 			section: "Settings",
@@ -34,6 +35,7 @@ public final class SettingsTableViewController: UITableViewController {
 			rows: [
 				"export",
 				resetInstructionPromptsCellIdentifier,
+				versionCellIdentifier,
 			]
 		),
 	]
@@ -98,6 +100,10 @@ public final class SettingsTableViewController: UITableViewController {
 			DependencyInjector.get(UserDefaultsUtil.self).resetInstructionPrompts()
 			tableView.deselectRow(at: _indexPath, animated: false)
 		} else if Globals.testing && disableGenerateTestDataCell && _indexPath.section == 0 && _indexPath.row == 0 {
+			tableView.deselectRow(at: _indexPath, animated: false)
+		} else if indexPath(_indexPath, isNonTestOnlySectionRowNamed: Me.versionCellIdentifier) {
+			let pasteboard = UIPasteboard.general
+			pasteboard.string = versionString()
 			tableView.deselectRow(at: _indexPath, animated: false)
 		}
 	}
