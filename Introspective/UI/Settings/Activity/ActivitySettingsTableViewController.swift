@@ -111,7 +111,9 @@ public final class ActivitySettingsTableViewController: UITableViewController {
 
 	@objc private final func done() {
 		DependencyInjector.get(Settings.self).setAutoIgnoreEnabled(autoIgnoreEnabled)
-		DependencyInjector.get(Settings.self).setAutoIgnoreSeconds(numberOfSeconds)
+		if autoIgnoreEnabled {
+			DependencyInjector.get(Settings.self).setAutoIgnoreSeconds(numberOfSeconds)
+		}
 		saveAndGoBackToSettings()
 	}
 
