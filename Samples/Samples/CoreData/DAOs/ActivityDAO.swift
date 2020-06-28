@@ -28,7 +28,7 @@ public protocol ActivityDAO {
 	func activityDefinitionWithNameExists(_ name: String) throws -> Bool
 
 	@discardableResult
-	func startActivity(_ definition: ActivityDefinition) throws -> Activity
+	func startActivity(_ definition: ActivityDefinition, withNote note: String?) throws -> Activity
 	func stopMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws
 	func stopMostRecentlyStartedIncompleteActivity() throws
 	/// - Returns: Any activities that are eligible for auto-note
@@ -64,6 +64,11 @@ extension ActivityDAO {
 	/// - Returns: Whether or not the activity was ignored
 	public func autoIgnoreIfAppropriate(_ activity: Activity, end: Date = Date()) -> Bool {
 		return autoIgnoreIfAppropriate(activity, end: end)
+	}
+
+	@discardableResult
+	public func startActivity(_ definition: ActivityDefinition, withNote note: String? = nil) throws -> Activity {
+		return try startActivity(definition, withNote: note)
 	}
 
 	public func createDefinition(
@@ -168,13 +173,14 @@ public class ActivityDAOImpl: ActivityDAO {
 	}
 
 	@discardableResult
-	public final func startActivity(_ definition: ActivityDefinition) throws -> Activity {
+	public final func startActivity(_ definition: ActivityDefinition, withNote note: String?) throws -> Activity {
 		let transaction = DependencyInjector.get(Database.self).transaction()
 		let activity = try transaction.new(Activity.self)
 		activity.setSource(.introspective)
 		let definition = try DependencyInjector.get(Database.self).pull(savedObject: definition, fromSameContextAs: activity)
 		activity.definition = definition
 		activity.start = Date()
+		activity.note = note
 		definition.addToActivities(activity)
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		return try DependencyInjector.get(Database.self).pull(savedObject: activity)

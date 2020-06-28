@@ -50,7 +50,7 @@ public final class StartActivityIntentHandler : NSObject, StartActivityIntentHan
 			for name in activityNames {
 				guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: name) else {
 					Me.log.error("Activity named %{private}@ does not exist.", name)
-					completion(StartActivityIntentResponse(code: .failure, userActivity: nil))
+					completion(StartActivityIntentResponse.failure(activityNames: activityNames))
 					return
 				}
 				try DependencyInjector.get(ActivityDAO.self).startActivity(definition)
@@ -58,6 +58,7 @@ public final class StartActivityIntentHandler : NSObject, StartActivityIntentHan
 			completion(StartActivityIntentResponse.success(activityNames: activityNames))
 		} catch {
 			Me.log.error("Failed StartActivityIntent: %@", errorInfo(error))
+			completion(StartActivityIntentResponse.failure(activityNames: activityNames))
 		}
 	}
 }

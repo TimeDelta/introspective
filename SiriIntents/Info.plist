@@ -34,6 +34,7 @@
 				<string>RecordDecimalMoodIntent</string>
 				<string>RecordIntegerMoodIntent</string>
 				<string>StartActivityIntent</string>
+				<string>StartActivityWithNoteIntent</string>
 				<string>StopActivityIntent</string>
 				<string>StopAllActivitiesIntent</string>
 				<string>StopLastStartedActivityIntent</string>

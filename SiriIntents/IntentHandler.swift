@@ -34,6 +34,8 @@ class IntentHandler: INExtension {
 				return RecordIntegerMoodIntentHandler()
 			case is StartActivityIntent:
 				return StartActivityIntentHandler()
+			case is StartActivityWithNoteIntent:
+				return StartActivityWithNoteIntentHandler()
 			case is StopActivityIntent:
 				return StopActivityIntentHandler()
 			case is StopAllActivitiesIntent:
