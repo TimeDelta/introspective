@@ -34,7 +34,7 @@ This project uses [SwiftyMocky](https://github.com/MakeAWishFoundation/SwiftyMoc
 
 
 ### Test Pre-requisites
-Any time you need to run some of the FunctionalTest classes on a new simulator, you will first need to:
+Any time you need to run a FunctionalTest class that requires Health App integration on a new simulator, you will first need to:
 1. Run the "Testing" target on the target iPhone simulator
 1. Go to the "Explore" tab in the app
 1. Choose "Query"
