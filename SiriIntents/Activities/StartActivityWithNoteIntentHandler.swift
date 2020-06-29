@@ -49,10 +49,6 @@ public final class StartActivityWithNoteIntentHandler: NSObject, StartActivityWi
 			completion(StartActivityWithNoteIntentResponse(code: .failure, userActivity: nil))
 			return
 		}
-		guard let note = intent.note else {
-			completion(StartActivityWithNoteIntentResponse.init(code: .failure, userActivity: nil))
-			return
-		}
 
 		do {
 			guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: activityName) else {
@@ -60,7 +56,8 @@ public final class StartActivityWithNoteIntentHandler: NSObject, StartActivityWi
 				completion(StartActivityWithNoteIntentResponse(code: .failure, userActivity: nil))
 				return
 			}
-			try DependencyInjector.get(ActivityDAO.self).startActivity(definition, withNote: note)
+			try DependencyInjector.get(ActivityDAO.self).startActivity(definition, withNote: intent.note ?? "")
+			completion(StartActivityWithNoteIntentResponse(code: .success, userActivity: nil))
 		} catch {
 			Me.log.error("Failed StartActivityWithNoteIntent: %@", errorInfo(error))
 		}

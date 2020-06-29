@@ -165,6 +165,7 @@
 		58D11B40202C767ED3EA580F58160CC0 /* GroupingChooserTableViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B53C5523046A6A47AAAA78B0BBC9177 /* GroupingChooserTableViewControllerMock.swift */; };
 		59A33964A17373688CD5ACF23E72D6EF /* EditAttributeRestrictionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */; };
 		5A0971F6C2758B25C1F44D16EAC23218 /* ChooseAttributesToGraphTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809BEB786B6E3A771CFFA8A7ED5FA2D2 /* ChooseAttributesToGraphTableViewController.swift */; };
+		5A7C9952C940C6E5F4E40F7CF5053610 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 2FF2B5DE5BC01F2C87D469E2E2098E62 /* README.md */; };
 		5AED1D5D01B12ED92124E82E862230D7 /* ChooseSampleGrouperTypeViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300D4F8BE0F8A6887FFC487D32098274 /* ChooseSampleGrouperTypeViewControllerMock.swift */; };
 		5B869E4825C3616ED3C250C311D4EC1A /* PickerMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD71FA3FAB9E75505AA5F1F382EBF59 /* PickerMatchers.swift */; };
 		5BE2D38612042D7874C22A05A3221ABD /* RestingHeartRateQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC35BA576759FA61B15F904C42335C0 /* RestingHeartRateQueryFunctionalTests.swift */; };
@@ -318,7 +319,6 @@
 		A0ACDA46E85F2ECEFBDA115171002AEF /* MoodMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE301C2F2247DBBEDE6822A654DD4F1 /* MoodMock.swift */; };
 		A108D51984F45F433488927376B4A95A /* RecordDecimalMoodIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C624D2A8E2DF0D653F2E4CF507F9BC09 /* RecordDecimalMoodIntentHandler.swift */; };
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
-		5A7C9952C940C6E5F4E40F7CF5053610 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 2FF2B5DE5BC01F2C87D469E2E2098E62 /* README.md */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -643,6 +643,7 @@
 		2EA3FA81CDAC0ECC9A79B3206DD77C51 /* GreaterThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreaterThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		2F4D1022C090AF57366EAF3AC8B2380B /* WeightQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightQueryFunctionalTests.swift; sourceTree = "<group>"; };
 		2F90FC6425F0C9320B7530C921783569 /* DaysOfWeekAttributeUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaysOfWeekAttributeUnitTests.swift; sourceTree = "<group>"; };
+		2FF2B5DE5BC01F2C87D469E2E2098E62 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		300D4F8BE0F8A6887FFC487D32098274 /* ChooseSampleGrouperTypeViewControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseSampleGrouperTypeViewControllerMock.swift; sourceTree = "<group>"; };
 		309E5D0D463F26860DCDBB12873716DB /* LeanBodyMassQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeanBodyMassQueryFunctionalTests.swift; sourceTree = "<group>"; };
 		30D75B1F3F9E51EEAA10F32547F2D642 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -879,8 +880,6 @@
 		A1776B090DE0D9396B6A50F70152A55C /* EqualToFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1B93F7FE435E06819E4BF152382DAA9 /* EqualToDurationAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToDurationAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
-		FC481D5CCBB697201AC5457CEC3B142D /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		2FF2B5DE5BC01F2C87D469E2E2098E62 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
@@ -1044,6 +1043,7 @@
 		FBE6ECD78EA5462C958834A9308F15FD /* ActivityHasOneOfTagAttributeRestrictionFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityHasOneOfTagAttributeRestrictionFunctionalTests.swift; sourceTree = "<group>"; };
 		FBFE73AE2BEF10935B5E9528BCDF8D33 /* HasOneOfTagAttributeRestrictionFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasOneOfTagAttributeRestrictionFunctionalTests.swift; sourceTree = "<group>"; };
 		FC087CBF28C36F34570292903B6A6A62 /* ArgumentCaptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgumentCaptor.swift; sourceTree = "<group>"; };
+		FC481D5CCBB697201AC5457CEC3B142D /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		FCC1F87C400CE195DE27C92FCD07710E /* SexualActivityQueryFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SexualActivityQueryFunctionalTests.swift; sourceTree = "<group>"; };
 		FCD8471D67B4548F1EF7099E359D512B /* SelectDateViewControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDateViewControllerMock.swift; sourceTree = "<group>"; };
 		FD11265C9DAA9056DF7178FA9A243B67 /* OnDateAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDateAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
