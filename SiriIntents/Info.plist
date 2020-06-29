@@ -39,6 +39,7 @@
 				<string>StopAllActivitiesIntent</string>
 				<string>StopLastStartedActivityIntent</string>
 				<string>TakeMedicationIntent</string>
+				<string>TakeMedicationWithDosageIntent</string>
 			</array>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>

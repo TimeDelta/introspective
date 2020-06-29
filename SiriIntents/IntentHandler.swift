@@ -44,6 +44,8 @@ class IntentHandler: INExtension {
 				return StopLastStartedActivityIntentHandler()
 			case is TakeMedicationIntent:
 				return TakeMedicationIntentHandler()
+			case is TakeMedicationWithDosageIntent:
+				return TakeMedicationWithDosageIntentHandler()
 			default:
 				Me.log.error("Received unknown intent: %@ (%@)", intent.identifier ?? "no name", intent.intentDescription ?? "no description")
 				return self

@@ -40,8 +40,12 @@ public final class StartActivityWithNoteIntentHandler: NSObject, StartActivityWi
 	}
 
 	public func resolveNote(for intent: StartActivityWithNoteIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
-		// allow note to be empty or not provided
-		completion(INStringResolutionResult.success(with: intent.note ?? ""))
+		// note is optional
+		guard let note = intent.note else {
+			completion(INStringResolutionResult.notRequired())
+			return
+		}
+		completion(INStringResolutionResult.success(with: note))
 	}
 
 	public func handle(intent: StartActivityWithNoteIntent, completion: @escaping (StartActivityWithNoteIntentResponse) -> Void) {

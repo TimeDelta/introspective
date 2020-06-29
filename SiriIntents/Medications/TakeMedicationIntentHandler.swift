@@ -43,6 +43,7 @@ public final class TakeMedicationIntentHandler: NSObject, TakeMedicationIntentHa
 		Me.log.info("Handling TakeMedicationIntent")
 		guard let medicationNames = intent.medications else {
 			Me.log.error("Medication names were not provided for TakeMedicationIntentHandler")
+			completion(TakeMedicationIntentResponse(code: .failure, userActivity: nil))
 			return
 		}
 
@@ -50,7 +51,7 @@ public final class TakeMedicationIntentHandler: NSObject, TakeMedicationIntentHa
 			for name in medicationNames {
 				guard let medication = try DependencyInjector.get(MedicationDAO.self).medicationNamed(name) else {
 					Me.log.error("Medication named %{private}@ does not exist.", name)
-					completion(TakeMedicationIntentResponse(code: .failure, userActivity: nil))
+					completion(TakeMedicationIntentResponse.failure(medications: medicationNames))
 					return
 				}
 				try DependencyInjector.get(MedicationDAO.self).takeMedicationUsingDefaultDosage(medication)
