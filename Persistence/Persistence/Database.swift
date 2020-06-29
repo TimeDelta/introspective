@@ -88,6 +88,7 @@ internal class DatabaseImpl: Database {
 	-> NSFetchedResultsController<Type> {
 		let fetchRequest = type.fetchRequest() as! NSFetchRequest<Type>
 		fetchRequest.sortDescriptors = sortDescriptors
+		fetchRequest.shouldRefreshRefetchedObjects = true
 		return NSFetchedResultsController<Type>(
 			fetchRequest: fetchRequest,
 			managedObjectContext: persistentContainer.viewContext,
@@ -97,6 +98,7 @@ internal class DatabaseImpl: Database {
 
 	public final func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type] {
 		signpost.begin(name: "Database Query", idObject: fetchRequest, "%@", fetchRequest.debugDescription)
+		fetchRequest.shouldRefreshRefetchedObjects = true
 		do {
 			let result = try persistentContainer.viewContext.fetch(fetchRequest)
 			signpost.end(name: "Database Query", idObject: fetchRequest)

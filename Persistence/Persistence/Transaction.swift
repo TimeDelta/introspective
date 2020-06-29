@@ -95,6 +95,7 @@ internal final class TransactionImpl: Transaction {
 
 	public final func query<Type: NSManagedObject>(_ fetchRequest: NSFetchRequest<Type>) throws -> [Type] {
 		signpost.begin(name: "Transaction Query", idObject: fetchRequest, "%@", fetchRequest.debugDescription)
+		fetchRequest.shouldRefreshRefetchedObjects = true
 		do {
 			let result = try myContext.fetch(fetchRequest)
 			signpost.end(name: "Transaction Query", idObject: fetchRequest)

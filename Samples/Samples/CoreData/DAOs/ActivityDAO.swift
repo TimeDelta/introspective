@@ -137,9 +137,12 @@ public class ActivityDAOImpl: ActivityDAO {
 
 	public final func getMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws -> Activity? {
 		let endDateVariableName = CommonSampleAttributes.endDate.variableName!
-		let incompleteActivities = activityDefinition.activities.filtered(
-			using: NSPredicate(format: "%K == nil", endDateVariableName)
-		) as! Set<Activity>
+		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
+		fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+			NSPredicate(format: "definition ==[cd] %@", activityDefinition),
+			NSPredicate(format: "%K == nil", endDateVariableName),
+		])
+		let incompleteActivities = try DependencyInjector.get(Database.self).query(fetchRequest)
 
 		if incompleteActivities.count > 0 {
 			let sortedIncompleteActivities = incompleteActivities.sorted(by: { $0.start > $1.start })
