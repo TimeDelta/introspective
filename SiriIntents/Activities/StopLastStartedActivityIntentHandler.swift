@@ -23,7 +23,8 @@ public final class StopLastStartedActivityIntentHandler : NSObject, StopLastStar
 	public func handle(intent: StopLastStartedActivityIntent, completion: @escaping (StopLastStartedActivityIntentResponse) -> Void) {
 		do {
 			let activity = try DependencyInjector.get(ActivityDAO.self).stopMostRecentlyStartedIncompleteActivity()
-			completion(StopLastStartedActivityIntentResponse.success(activityName: activity.definition.name))
+			let definition = try DependencyInjector.get(Database.self).pull(savedObject: activity.definition)
+			completion(StopLastStartedActivityIntentResponse.success(activityName: definition.name))
 		} catch {
 			Me.log.error("Error during StopLastStartedActivityIntent: %@", errorInfo(error))
 			guard let error = error as? DisplayableError else {
