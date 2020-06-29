@@ -495,11 +495,11 @@
 				<array>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>Stopped the most recently started activity.</string>
+						<string>Stopped "${activityName}"</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>X5Z2ZT</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>Stopped the most recently started activity.</string>
+						<string>Stopped ${activityName}</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>P8Flxv</string>
 						<key>INIntentResponseCodeName</key>
@@ -522,17 +522,19 @@
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
 				<integer>6</integer>
+				<key>INIntentResponseOutput</key>
+				<string>activityName</string>
 				<key>INIntentResponseParameters</key>
 				<array>
 					<dict>
 						<key>INIntentResponseParameterDisplayName</key>
-						<string>Property</string>
+						<string>Activity Name</string>
 						<key>INIntentResponseParameterDisplayNameID</key>
 						<string>j7NP1j</string>
 						<key>INIntentResponseParameterDisplayPriority</key>
 						<integer>1</integer>
 						<key>INIntentResponseParameterName</key>
-						<string>property</string>
+						<string>activityName</string>
 						<key>INIntentResponseParameterTag</key>
 						<integer>6</integer>
 						<key>INIntentResponseParameterType</key>

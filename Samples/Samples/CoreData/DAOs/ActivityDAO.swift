@@ -30,7 +30,8 @@ public protocol ActivityDAO {
 	@discardableResult
 	func startActivity(_ definition: ActivityDefinition, withNote note: String?) throws -> Activity
 	func stopMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws
-	func stopMostRecentlyStartedIncompleteActivity() throws
+	@discardableResult
+	func stopMostRecentlyStartedIncompleteActivity() throws -> Activity
 	/// - Returns: Any activities that are eligible for auto-note
 	@discardableResult
 	func stopAllActivities() throws -> [Activity]
@@ -209,7 +210,8 @@ public class ActivityDAOImpl: ActivityDAO {
 		throw GenericDisplayableError(title: message)
 	}
 
-	public final func stopMostRecentlyStartedIncompleteActivity() throws {
+	@discardableResult
+	public final func stopMostRecentlyStartedIncompleteActivity() throws -> Activity {
 		let endDateVariableName = CommonSampleAttributes.endDate.variableName!
 		let startDateVariableName = CommonSampleAttributes.startDate.variableName!
 		let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest()
@@ -228,6 +230,7 @@ public class ActivityDAOImpl: ActivityDAO {
 			activity.end = now
 			try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 		}
+		return activity
 	}
 
 	@discardableResult

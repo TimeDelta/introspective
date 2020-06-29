@@ -22,10 +22,11 @@ public final class StopLastStartedActivityIntentHandler : NSObject, StopLastStar
 
 	public func handle(intent: StopLastStartedActivityIntent, completion: @escaping (StopLastStartedActivityIntentResponse) -> Void) {
 		do {
-			try DependencyInjector.get(ActivityDAO.self).stopMostRecentlyStartedIncompleteActivity()
-			completion(StopLastStartedActivityIntentResponse(code: .success, userActivity: nil))
+			let activity = try DependencyInjector.get(ActivityDAO.self).stopMostRecentlyStartedIncompleteActivity()
+			completion(StopLastStartedActivityIntentResponse.success(activityName: activity.definition.name))
 		} catch {
 			Me.log.error("Error during StopLastStartedActivityIntent: %@", errorInfo(error))
+			completion(StopLastStartedActivityIntentResponse(code: .failure, userActivity: nil))
 		}
 	}
 }
