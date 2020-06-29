@@ -56,7 +56,7 @@ public final class StartActivityWithNoteIntentHandler: NSObject, StartActivityWi
 				completion(StartActivityWithNoteIntentResponse(code: .failure, userActivity: nil))
 				return
 			}
-			try DependencyInjector.get(ActivityDAO.self).startActivity(definition, withNote: intent.note ?? "")
+			try DependencyInjector.get(ActivityDAO.self).startActivity(definition, withNote: intent.note)
 			completion(StartActivityWithNoteIntentResponse(code: .success, userActivity: nil))
 		} catch {
 			Me.log.error("Failed StartActivityWithNoteIntent: %@", errorInfo(error))
