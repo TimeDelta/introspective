@@ -263,6 +263,7 @@
 		8626B85D1ED7BFDB07346830E450B00F /* ActivityDefinitionMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C4CBED4E7AD59189AFAAADBD817142 /* ActivityDefinitionMatchers.swift */; };
 		8645C306298BBD7799140DD29D14C929 /* Samples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0010DEF24F98D6EFC8B867ED2212CD1 /* Samples.framework */; };
 		86E1DD3CAF3C785C528D358A67180381 /* ActiveImportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 802CB6CF4E1BAF53ED07F6C5FAA9ACB9 /* ActiveImportTableViewCell.swift */; };
+		86F34D7B4378C5B434828D568A812441 /* StartActivityWithNoteIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41FE66508DDBF30A24246A283985712 /* StartActivityWithNoteIntentHandler.swift */; };
 		88AD94B2040110C7D40C66B21ECA5F32 /* SexualActivityQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCC1F87C400CE195DE27C92FCD07710E /* SexualActivityQueryFunctionalTests.swift */; };
 		89291EB333490BA8A44A72ADF44089C4 /* ActivitySettingsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ECA7C820330FEC844B4184615FA9250 /* ActivitySettingsUITests.swift */; };
 		893610D80E807998757D881644AB39F2 /* EditMoodTableViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1A4D5DAF327B9717F8592A371CAF93 /* EditMoodTableViewControllerMock.swift */; };
@@ -310,14 +311,14 @@
 		9E462DD9C048DCCA4D8B041FE1107A29 /* NonRunningSampleQueryStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA33093DEA9B1E5BFCA4E7CB7D824D31 /* NonRunningSampleQueryStub.swift */; };
 		9E88B65A7C67EA879D33D5F2E4E17302 /* SameValueSampleGrouperUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF4DE799B44CCE1F36CA673829CA7DF /* SameValueSampleGrouperUnitTests.swift */; };
 		9F85A240B18CEF9A4E1F0BE8D881E8D0 /* CoreDataSampleMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */; };
+		9FB0248A09AC06D2CB4E194FE915FABF /* StartActivityWithNoteIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41FE66508DDBF30A24246A283985712 /* StartActivityWithNoteIntentHandler.swift */; };
 		9FD61F97F4C68990D2BBD4543AB5A505 /* HasOneOfTagAttributeRestrictionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBFE73AE2BEF10935B5E9528BCDF8D33 /* HasOneOfTagAttributeRestrictionFunctionalTests.swift */; };
 		A08654FF220A45264E187D9A3613D966 /* LessThanOrEqualToIntegerAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B7F6C91CD78EDFFC3613DB8D78F679 /* LessThanOrEqualToIntegerAttributeRestrictionUnitTests.swift */; };
 		A093F349E7B2A92A9A9684B3CDED0566 /* ActivityDefinitionAutoNoteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE068B8CC403C7E3CBD6C1623FA36359 /* ActivityDefinitionAutoNoteTableViewCell.swift */; };
 		A0ACDA46E85F2ECEFBDA115171002AEF /* MoodMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE301C2F2247DBBEDE6822A654DD4F1 /* MoodMock.swift */; };
 		A108D51984F45F433488927376B4A95A /* RecordDecimalMoodIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C624D2A8E2DF0D653F2E4CF507F9BC09 /* RecordDecimalMoodIntentHandler.swift */; };
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
-		9FB0248A09AC06D2CB4E194FE915FABF /* StartActivityWithNoteIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41FE66508DDBF30A24246A283985712 /* StartActivityWithNoteIntentHandler.swift */; };
-		86F34D7B4378C5B434828D568A812441 /* StartActivityWithNoteIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41FE66508DDBF30A24246A283985712 /* StartActivityWithNoteIntentHandler.swift */; };
+		5A7C9952C940C6E5F4E40F7CF5053610 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 2FF2B5DE5BC01F2C87D469E2E2098E62 /* README.md */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -878,10 +879,12 @@
 		A1776B090DE0D9396B6A50F70152A55C /* EqualToFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1B93F7FE435E06819E4BF152382DAA9 /* EqualToDurationAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToDurationAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
-		A41FE66508DDBF30A24246A283985712 /* StartActivityWithNoteIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartActivityWithNoteIntentHandler.swift; sourceTree = "<group>"; };
+		FC481D5CCBB697201AC5457CEC3B142D /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		2FF2B5DE5BC01F2C87D469E2E2098E62 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
+		A41FE66508DDBF30A24246A283985712 /* StartActivityWithNoteIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartActivityWithNoteIntentHandler.swift; sourceTree = "<group>"; };
 		A455D3386BC23DDD4E8C89EF40475474 /* LessThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A587847063126DF5519DD8FC08BD1F43 /* SubQueryMatcherMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubQueryMatcherMatchers.swift; sourceTree = "<group>"; };
@@ -1166,6 +1169,7 @@
 		07FFA7DCCD8CF7FDBC603A33AF75DFAB = {
 			isa = PBXGroup;
 			children = (
+				2FF2B5DE5BC01F2C87D469E2E2098E62 /* README.md */,
 				6A9C4768001305C9B2B52AFA9E8F4FB6 /* AAJSFiles.bundle */,
 				1D6729AED1C18D51FA6CE4FF09B8DF09 /* Introspective */,
 				58BD37EC80F79459E495ADD5F7FE3129 /* IntrospectiveTests */,
@@ -1356,6 +1360,7 @@
 				3304AC4E4C3B7DBD5C7AC53D48561D59 /* Assets.xcassets */,
 				5B0232D84BF6CE1C7F6C9D4074D07106 /* Introspective.entitlements */,
 				B0368D1DF231C9DCB97EF42A2B8065D5 /* Info.plist */,
+				FC481D5CCBB697201AC5457CEC3B142D /* README.md */,
 			);
 			path = Introspective;
 			sourceTree = "<group>";
@@ -2873,6 +2878,7 @@
 				FE379E19C55F9ACB8F4C784ACA5841F9 /* Settings.storyboard in Resources */,
 				F28A9D568E1DFEE15D1702F7D4A16251 /* Explore.storyboard in Resources */,
 				4E341209069E387D6D6C1BBFCB93ED83 /* Introspective.xcdatamodeld in Resources */,
+				5A7C9952C940C6E5F4E40F7CF5053610 /* README.md in Resources */,
 				8A5BC76AC5ED5D6F546F0C76FEC5D7BC /* UnifiedView.storyboard in Resources */,
 				D55B7362364725866C3F95441C9E36FB /* AttributeList.storyboard in Resources */,
 				4EC14123C9DA435FA66458C7725FD7E7 /* LaunchScreen.storyboard in Resources */,
