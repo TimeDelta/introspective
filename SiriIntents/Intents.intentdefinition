@@ -509,11 +509,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>Failed to stop last started activity.</string>
+						<string>${error}</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>8WJ16m</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>Failed to stop last started activity.</string>
+						<string>${error}</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>WlcHiM</string>
 						<key>INIntentResponseCodeName</key>
@@ -521,7 +521,7 @@
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
-				<integer>6</integer>
+				<integer>8</integer>
 				<key>INIntentResponseOutput</key>
 				<string>activityName</string>
 				<key>INIntentResponseParameters</key>
@@ -537,6 +537,20 @@
 						<string>activityName</string>
 						<key>INIntentResponseParameterTag</key>
 						<integer>6</integer>
+						<key>INIntentResponseParameterType</key>
+						<string>String</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseParameterDisplayName</key>
+						<string>Error</string>
+						<key>INIntentResponseParameterDisplayNameID</key>
+						<string>4tlJ2o</string>
+						<key>INIntentResponseParameterDisplayPriority</key>
+						<integer>2</integer>
+						<key>INIntentResponseParameterName</key>
+						<string>error</string>
+						<key>INIntentResponseParameterTag</key>
+						<integer>7</integer>
 						<key>INIntentResponseParameterType</key>
 						<string>String</string>
 					</dict>

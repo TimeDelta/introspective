@@ -26,7 +26,19 @@ public final class StopLastStartedActivityIntentHandler : NSObject, StopLastStar
 			completion(StopLastStartedActivityIntentResponse.success(activityName: activity.definition.name))
 		} catch {
 			Me.log.error("Error during StopLastStartedActivityIntent: %@", errorInfo(error))
-			completion(StopLastStartedActivityIntentResponse(code: .failure, userActivity: nil))
+			guard let error = error as? DisplayableError else {
+				completion(StopLastStartedActivityIntentResponse(code: .failure, userActivity: nil))
+				return
+			}
+			completion(StopLastStartedActivityIntentResponse.failure(error: errorDescription(error)))
 		}
+	}
+
+	private final func errorDescription(_ error: DisplayableError) -> String {
+		var result = error.displayableTitle
+		if let description = error.displayableDescription {
+			result += ": " + description
+		}
+		return result
 	}
 }
