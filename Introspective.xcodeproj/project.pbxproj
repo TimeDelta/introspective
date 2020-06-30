@@ -321,6 +321,8 @@
 		A0ACDA46E85F2ECEFBDA115171002AEF /* MoodMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE301C2F2247DBBEDE6822A654DD4F1 /* MoodMock.swift */; };
 		A108D51984F45F433488927376B4A95A /* RecordDecimalMoodIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C624D2A8E2DF0D653F2E4CF507F9BC09 /* RecordDecimalMoodIntentHandler.swift */; };
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
+		6C26724E3168DD26A1335B38E1C17B0A /* StartActivityFromEndOfLastIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97D626EC97945D4C7491D67B0AA1CA9A /* StartActivityFromEndOfLastIntentHandler.swift */; };
+		63969B989A38DD1F91A6B2DEABAEF845 /* StartActivityFromEndOfLastIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97D626EC97945D4C7491D67B0AA1CA9A /* StartActivityFromEndOfLastIntentHandler.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -882,6 +884,7 @@
 		A1776B090DE0D9396B6A50F70152A55C /* EqualToFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1B93F7FE435E06819E4BF152382DAA9 /* EqualToDurationAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToDurationAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
+		97D626EC97945D4C7491D67B0AA1CA9A /* StartActivityFromEndOfLastIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartActivityFromEndOfLastIntentHandler.swift; sourceTree = "<group>"; };
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
@@ -2605,6 +2608,7 @@
 				E4178BC066D97C3EC749CF6502E6E3E0 /* StopAllActivitiesIntentHandler.swift */,
 				A9E14F35A335DF8CEEA73A4AFA00E491 /* StopLastStartedActivityIntentHandler.swift */,
 				A41FE66508DDBF30A24246A283985712 /* StartActivityWithNoteIntentHandler.swift */,
+				97D626EC97945D4C7491D67B0AA1CA9A /* StartActivityFromEndOfLastIntentHandler.swift */,
 			);
 			path = Activities;
 			sourceTree = "<group>";
@@ -3128,6 +3132,7 @@
 				D38CB7B1AC0C2EC4A659CDE56CB904B7 /* RecordIntegerMoodIntentHandler.swift in Sources */,
 				A108D51984F45F433488927376B4A95A /* RecordDecimalMoodIntentHandler.swift in Sources */,
 				5FB1E5572E94EBF07A5DF61CBEE9D116 /* StartActivityIntentHandler.swift in Sources */,
+				6C26724E3168DD26A1335B38E1C17B0A /* StartActivityFromEndOfLastIntentHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3523,6 +3528,7 @@
 				4E8C20B10861F76B9F2210919746C6F6 /* DefaultCoachMarksDataSourceAndDelegate.swift in Sources */,
 				A76E2BCC850DFC4E2F8BD3FE0B86C73B /* SingleSampleTypeBasicXYGraphCustomizationViewController.swift in Sources */,
 				08C9E3FFCDA2C30A6096EF48895EC91A /* EditMedicationViewController.swift in Sources */,
+				63969B989A38DD1F91A6B2DEABAEF845 /* StartActivityFromEndOfLastIntentHandler.swift in Sources */,
 				336E51858A076185B497AC9EAB446AB4 /* SelectAttributeOrInformationViewController.swift in Sources */,
 				68A53581AFBD70BA773C25D20C89A674 /* SleepTableViewCell.swift in Sources */,
 				A34600A18766AE66F0324FF5AB10E114 /* GraphType.swift in Sources */,

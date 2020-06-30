@@ -32,6 +32,8 @@ class IntentHandler: INExtension {
 				return RecordDecimalMoodIntentHandler()
 			case is RecordIntegerMoodIntent:
 				return RecordIntegerMoodIntentHandler()
+			case is StartActivityFromEndOfLastIntent:
+				return StartActivityFromEndOfLastIntentHandler()
 			case is StartActivityIntent:
 				return StartActivityIntentHandler()
 			case is StartActivityWithNoteIntent:
