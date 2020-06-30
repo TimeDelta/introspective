@@ -25,12 +25,14 @@
 		09E306F8AFB29011596F5E34397F4C8C /* SleepUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AC50A6EF0C19FCD8A7BB4801D797D0 /* SleepUnitTests.swift */; };
 		0AAA22863596D1E2219B4B3CDC96FE50 /* TakeMedicationWithDosageIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC817588423A73C80D3A14A0E5C1D795 /* TakeMedicationWithDosageIntentHandler.swift */; };
 		0C0D5CCD8C5FB706CBA1BF0C1C3CB19F /* QueryResultsGraphCustomizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BD2C5FCC3DA79FCD58742DCAC8122A /* QueryResultsGraphCustomizationViewController.swift */; };
+		0D4AE1BE1CA60B4222237147B881A71F /* StartActivityXAgoIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651305A9FAA19727F58B2C7FBA74FE98 /* StartActivityXAgoIntentHandler.swift */; };
 		0DCBCCC1E6F4B4875B47CDBB843C6E50 /* NotEqualToSelectOneAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21029124796EC8D773632EEAB364606 /* NotEqualToSelectOneAttributeRestrictionUnitTests.swift */; };
 		0E13B7B3BC8E44CC6412A07D98A0FF2C /* MedicationDataTestUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9451E1AA09418EAC6898BA3FA4C596 /* MedicationDataTestUtil.swift */; };
 		0ECFA8AE617D0BFB750C9E879D380498 /* ObjectModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D063C2E0D27A1D0716B69A501909AAE /* ObjectModelContainer.swift */; };
 		0F1C21D04A02E914425EAF43F226FF3E /* XYGraphDataGeneratorUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACD271A7BDC5DC6B9C33EDCABB45B3A3 /* XYGraphDataGeneratorUnitTests.swift */; };
 		0F5AF793A9CE3ECC77E0C2CA861D00BA /* AttributeRestrictionMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617C6BCCF0165B9473761AEFDD8AD1CF /* AttributeRestrictionMock.swift */; };
 		0F9BC9D427412BABD17891D1E8FE21CB /* MultipleSampleTypeBasicXYGraphCustomizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2355F2BADF3EA05A8C326AC2665B82B /* MultipleSampleTypeBasicXYGraphCustomizationViewController.swift */; };
+		103A6FF5826B1DA4CB0A7E3DF7C81A19 /* MiscIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = BC4DFC7C975B3C0C0814EBC970049B5B /* MiscIntents.intentdefinition */; };
 		106B28C2CFDD698885FD17F966CDDBCD /* PerTagSampleGrouperFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CDEBEE5D2E8C37621E9816D5297CF2D /* PerTagSampleGrouperFunctionalTests.swift */; };
 		1098F028A6B910CDD949D742C4580B53 /* RecordMoodRatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6633BB94153F634280855EAA4F06319A /* RecordMoodRatingViewController.swift */; };
 		1126C1ECC8DCED954C70FF38E97D04E9 /* EqualToDoubleAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8C96BB1559619CC12D3FCBE6A9053F /* EqualToDoubleAttributeRestrictionUnitTests.swift */; };
@@ -41,6 +43,7 @@
 		1337A86D5E54A20790FA69D2C69070D6 /* DiscreteMoodWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3A6634A34568C30BE11E80E436160010 /* DiscreteMoodWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		13F57B079A07676B52B6760AFD40256D /* OldestDateInformationFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43BF1CA2FF714B444BE2D1EEC05DB435 /* OldestDateInformationFunctionalTests.swift */; };
 		142EA63AF16C836155F95133B7B01503 /* RecordMedicationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACCDB2BD28C6ADB5A2956FFCAF74BC3B /* RecordMedicationTableViewController.swift */; };
+		14654FBB63856AA97C34468E03E4C713 /* MoodIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 95283CE739AA64CB16BBDA5FD37EDA53 /* MoodIntents.intentdefinition */; };
 		16EC18B8606BB88FF2D732F3158D39B3 /* Settings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E50DED083FFB132103568F46659DC53 /* Settings.framework */; };
 		1741495F829B086EB5116D3808ACCA14 /* MinimumInformationFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECCB7BC00D30097B7C115F4B53031EB /* MinimumInformationFunctionalTests.swift */; };
 		17B75FE368EBBA6548E29D9BE395012F /* ChooseRecentTimePeriodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D536FF84E1CAFC03BFE42AD8AA330C /* ChooseRecentTimePeriodViewController.swift */; };
@@ -68,6 +71,7 @@
 		23DB73F0C227D34F906B5C41BCF2488F /* WithinXCalendarUnitsSubQueryMatcherFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7F97A39AEA0840C5D843F3C299499F5 /* WithinXCalendarUnitsSubQueryMatcherFunctionalTests.swift */; };
 		2446823AE5CD4C30A027191872C096DA /* NotEqualToStringAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E9C5C41EFB93132B44FD512586FA0C /* NotEqualToStringAttributeRestrictionUnitTests.swift */; };
 		249B9FA65A51BC6CD7D22C5A034C70A2 /* ActivityHasTagAttributeRestrictionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBC3067A33C516E81A890260DF309B1 /* ActivityHasTagAttributeRestrictionFunctionalTests.swift */; };
+		259047F3208DA13CD36A61DE4A2A440C /* MoodIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 95283CE739AA64CB16BBDA5FD37EDA53 /* MoodIntents.intentdefinition */; };
 		25A3E78A940B447D4469B9C43943A4B9 /* DoesNotHaveOneOfTagAttributeRestrictionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD8BF5A5F1719BF4277004275C82ECB /* DoesNotHaveOneOfTagAttributeRestrictionFunctionalTests.swift */; };
 		25DCB7D6FC9C6D0332DAA96D0FBFA81D /* StopAllActivitiesIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4178BC066D97C3EC749CF6502E6E3E0 /* StopAllActivitiesIntentHandler.swift */; };
 		263EA09B45E3A4A0682B04A80588F288 /* DataExport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3240661B79AB4FF69D5D569E161F5C8 /* DataExport.framework */; };
@@ -123,6 +127,7 @@
 		414BAEA79FE4C0594FA618DD33CD9FDF /* ActivityDoesNotHaveOneOfTagAttributeRestrictionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E874A5F76C5E178B1BCA608294CA4A /* ActivityDoesNotHaveOneOfTagAttributeRestrictionFunctionalTests.swift */; };
 		419D65D4AA99B43F718FD47A53F025E4 /* Pods_DiscreteMoodWidget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 735311D8769F386D18F7F446E8C30424 /* Pods_DiscreteMoodWidget.framework */; };
 		41A0D796680A140EBC7CDE8839807D21 /* BooleanExpressionParserUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E734C41E32250030F973F7C5C65902 /* BooleanExpressionParserUnitTests.swift */; };
+		41DC9C684812C471964201874A6E1279 /* MiscIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = BC4DFC7C975B3C0C0814EBC970049B5B /* MiscIntents.intentdefinition */; };
 		4285BDF609DFAEE57477ED7B99FF8E3A /* Introspective.xcdatamodeld in Resources */ = {isa = PBXBuildFile; fileRef = A7581418039FB6FD454DA7AA8C114E56 /* Introspective.xcdatamodeld */; };
 		430920C59B29C0AE2D20F76553F5DE92 /* HeartRateQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB900441A58470DF6731F6B7F737641 /* HeartRateQueryFunctionalTests.swift */; };
 		43ABA9B3115C47152BDFD828FCF8E5AE /* Samples.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A0010DEF24F98D6EFC8B867ED2212CD1 /* Samples.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -306,6 +311,7 @@
 		9BC0764B82FB28528E5644A6DBD47A91 /* ButtonMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBBC36B04BB2B8A05D7B14B9DD9B727 /* ButtonMatchers.swift */; };
 		9BD24B20D7A41B9F5984914AA4530D9C /* DateOnlyAttributeUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE45F44E63A95907474965403C38F72 /* DateOnlyAttributeUnitTests.swift */; };
 		9C6207AA5B6CDC32BEF35C7F402FB733 /* Common.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BCD120AFB3D2858AE4607749992A55B2 /* Common.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9D916061E1351CAAC8A370A17C6ECE3C /* MedicationIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 45E7133D436B51B1ABA03EAF212B9C6A /* MedicationIntents.intentdefinition */; };
 		9DAE727B9626003CA91A34A32CDC7640 /* EmptyStringAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078A8DD8CAC31A080A793D4251395E47 /* EmptyStringAttributeRestrictionUnitTests.swift */; };
 		9DAF15EFB25DA658900D2B26FD6558B0 /* MaximumInformationFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2159810D8189590206E083E9804FA562 /* MaximumInformationFunctionalTests.swift */; };
 		9DDA93EBA84690C7EE6459B7669260A6 /* XAxisSetupViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47002991B9B68CC4BE3E33F94E480AE9 /* XAxisSetupViewControllerMock.swift */; };
@@ -321,14 +327,6 @@
 		A0ACDA46E85F2ECEFBDA115171002AEF /* MoodMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE301C2F2247DBBEDE6822A654DD4F1 /* MoodMock.swift */; };
 		A108D51984F45F433488927376B4A95A /* RecordDecimalMoodIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C624D2A8E2DF0D653F2E4CF507F9BC09 /* RecordDecimalMoodIntentHandler.swift */; };
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
-		41DC9C684812C471964201874A6E1279 /* MiscIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = BC4DFC7C975B3C0C0814EBC970049B5B /* MiscIntents.intentdefinition */; };
-		E18B0F3B6691DAFF427653B35DF3D925 /* ActivityIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = CA1066414F1FB2E6885B9D28335C00EE /* ActivityIntents.intentdefinition */; };
-		9D916061E1351CAAC8A370A17C6ECE3C /* MedicationIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 45E7133D436B51B1ABA03EAF212B9C6A /* MedicationIntents.intentdefinition */; };
-		259047F3208DA13CD36A61DE4A2A440C /* MoodIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 95283CE739AA64CB16BBDA5FD37EDA53 /* MoodIntents.intentdefinition */; };
-		103A6FF5826B1DA4CB0A7E3DF7C81A19 /* MiscIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = BC4DFC7C975B3C0C0814EBC970049B5B /* MiscIntents.intentdefinition */; };
-		A9FFD1AAD593E9B1CB1D8D922F4F1FF2 /* ActivityIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = CA1066414F1FB2E6885B9D28335C00EE /* ActivityIntents.intentdefinition */; };
-		E7002A4ED8C8F069DED31A086B6239DF /* MedicationIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 45E7133D436B51B1ABA03EAF212B9C6A /* MedicationIntents.intentdefinition */; };
-		14654FBB63856AA97C34468E03E4C713 /* MoodIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 95283CE739AA64CB16BBDA5FD37EDA53 /* MoodIntents.intentdefinition */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -341,12 +339,14 @@
 		A4EFE5EFE5E482A7E834A91DEC1A4613 /* AfterTimeOfDayAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1974841C3FAED8CCB335897DD2238BD /* AfterTimeOfDayAttributeRestrictionUnitTests.swift */; };
 		A5304066A03992C69B8A4302583041F7 /* Notifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF57616F98A85DBDC46BEF8B014A0AE0 /* Notifications.framework */; };
 		A6B74ACFC3139C1FA97BBF7C9F823751 /* GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A321ECF1B127744ECF718A98472A04 /* GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests.swift */; };
+		A71F840A85CB141680C881B690DEA48F /* StartActivityXAgoIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651305A9FAA19727F58B2C7FBA74FE98 /* StartActivityXAgoIntentHandler.swift */; };
 		A7264B95F89DE776D6F6657107FBEA3A /* MoodSettingsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C35532A23B2E9003BCE045F29E3CAA /* MoodSettingsUITests.swift */; };
 		A732AB5D49EAFA3F55AD64C140B95D78 /* TagsAttributeFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */; };
 		A76E2BCC850DFC4E2F8BD3FE0B86C73B /* SingleSampleTypeBasicXYGraphCustomizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C39B9670236F22FD6A149E225571E7 /* SingleSampleTypeBasicXYGraphCustomizationViewController.swift */; };
 		A8111F3EE080B3B80770DF9CDBB41BE2 /* AttributeRestrictions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B562EA2D16F2E4CBBFAF1B479FCC36FB /* AttributeRestrictions.framework */; };
 		A86BC8022C8A9609CB684D9C7A84834D /* MedicationDosesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7444AC5D66189089E795FDA573C627C0 /* MedicationDosesTableViewController.swift */; };
 		A9077F5891A802754C04F1A31BFF7E99 /* Pods_Introspective.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 986884D0B7A67014C025F61A3D09B791 /* Pods_Introspective.framework */; };
+		A9FFD1AAD593E9B1CB1D8D922F4F1FF2 /* ActivityIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = CA1066414F1FB2E6885B9D28335C00EE /* ActivityIntents.intentdefinition */; };
 		AA5810844860C6E50B597700A8C856C7 /* BeforeDateAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855216BE391B0FBCF3FEAD4513711C3B /* BeforeDateAttributeRestrictionUnitTests.swift */; };
 		AB83E2E983650B72ACEA0D8D50FF6A0F /* SelectDateViewControllerUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B8C7658E5B7E329DFB88897C433916 /* SelectDateViewControllerUnitTests.swift */; };
 		AC6D7FC86C296D056DDF25BAEA2D3ABD /* NotEqualToDosageAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531BDC125E94AB364E2195D004FFFEAD /* NotEqualToDosageAttributeRestrictionUnitTests.swift */; };
@@ -449,12 +449,14 @@
 		DF7D1F3E86F26032005D542504A64D0D /* BasicXYGraphTypeSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3459BF8F561B8FCE604634D207F9624E /* BasicXYGraphTypeSetupViewController.swift */; };
 		E00ED2E47A19A0C9163F3E79A8691601 /* DosageAttributeUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1422D0BDE920936336B9909B62CB444D /* DosageAttributeUnitTests.swift */; };
 		E06C786CD859F817FEB95A590EF19A46 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA0DE771DB3EBFA53437856B04F70772 /* Persistence.framework */; };
+		E18B0F3B6691DAFF427653B35DF3D925 /* ActivityIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = CA1066414F1FB2E6885B9D28335C00EE /* ActivityIntents.intentdefinition */; };
 		E1DF53311A9202FDB7EE3B5289877D5B /* MultiSelectAttributeValueSelectTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A2708AFAC376E92063E612010071A1 /* MultiSelectAttributeValueSelectTableViewController.swift */; };
 		E2737CC2052D91AA05DFB6B47D359068 /* WeightUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202E12E8BC50D2BB819B9122AE7A60A /* WeightUnitTests.swift */; };
 		E2CA9C3AABFCB06D3555FDF4A66144DA /* ActiveExportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD59D0ACA2B51D77F7F11B0C8BB6586 /* ActiveExportTableViewCell.swift */; };
 		E2F1E302D908B16CDEDDEDF184AD9C41 /* ResultsViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4800D5095BFFFC1E396F90AE4E588E2E /* ResultsViewControllerMock.swift */; };
 		E596F4B8CD4E862C6534A015ACB43C06 /* Settings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E50DED083FFB132103568F46659DC53 /* Settings.framework */; };
 		E5DDE96F82BA1B8C908DCB7C10F27CBB /* ArrayMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = E594A03644B2F1E00B55036D424A6D40 /* ArrayMatchers.swift */; };
+		E7002A4ED8C8F069DED31A086B6239DF /* MedicationIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 45E7133D436B51B1ABA03EAF212B9C6A /* MedicationIntents.intentdefinition */; };
 		E7F68DBE50C23B09C9A64417CC8DB4AA /* ActivitySettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03F29CA254A65DA3A13529455F95B00D /* ActivitySettingTableViewCell.swift */; };
 		E82C2B66601BF7E2A088AE1017887B31 /* RecordActivityDefinitionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EAFE7DB5AA63EC61ED4EA1F5225B71 /* RecordActivityDefinitionTableViewCell.swift */; };
 		E8EF870495DBFB8A22168A7847BA6A1F /* SampleTypeMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F263EEF577FAD968D2B821D9D182F70 /* SampleTypeMatchers.swift */; };
@@ -701,6 +703,7 @@
 		44EA415D4FDF6BCEB08A26171EA3CAF5 /* MoodSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodSettingsViewController.swift; sourceTree = "<group>"; };
 		45023704FA7C502C319AF5A352B3389E /* GreaterThanDosageAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreaterThanDosageAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		451F116B5B58B058DC0FBB3F6E84CF81 /* GroupDefinitionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDefinitionTableViewController.swift; sourceTree = "<group>"; };
+		45E7133D436B51B1ABA03EAF212B9C6A /* MedicationIntents.intentdefinition */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.intentdefinition; path = MedicationIntents.intentdefinition; sourceTree = "<group>"; };
 		47002991B9B68CC4BE3E33F94E480AE9 /* XAxisSetupViewControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XAxisSetupViewControllerMock.swift; sourceTree = "<group>"; };
 		47A75FCA4271226F0AFD72BDD5FB7AE1 /* Pods-Introspective-DiscreteMoodWidget.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Introspective-DiscreteMoodWidget.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Introspective-DiscreteMoodWidget/Pods-Introspective-DiscreteMoodWidget.debug.xcconfig"; sourceTree = "<group>"; };
 		47EAB79F3DB0274FACAD7A068E89F8FC /* GroupingChooserTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupingChooserTableViewController.swift; sourceTree = "<group>"; };
@@ -756,6 +759,7 @@
 		635C4A92895883F5681A8C2D3E8E2C2B /* questionLabelsTrainingData.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = questionLabelsTrainingData.txt; sourceTree = "<group>"; };
 		636D04B8536DCB3C1948BCAA2B9CCC5B /* GreaterThanOrEqualToDosageAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreaterThanOrEqualToDosageAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		6398AFDA58929068E278D1DE13C2AD49 /* Pods-Introspective.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Introspective.release.xcconfig"; path = "Pods/Target Support Files/Pods-Introspective/Pods-Introspective.release.xcconfig"; sourceTree = "<group>"; };
+		651305A9FAA19727F58B2C7FBA74FE98 /* StartActivityXAgoIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartActivityXAgoIntentHandler.swift; sourceTree = "<group>"; };
 		65209A8E8DF56DC2926BADB9F9E3C012 /* QueryResultsGraphSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryResultsGraphSetupViewController.swift; sourceTree = "<group>"; };
 		6633BB94153F634280855EAA4F06319A /* RecordMoodRatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordMoodRatingViewController.swift; sourceTree = "<group>"; };
 		66897C3ADF41EF898E771F8D4A2F86DA /* StartActivityIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartActivityIntentHandler.swift; sourceTree = "<group>"; };
@@ -857,6 +861,7 @@
 		93E970C328E676E9787A0DADF8B9644E /* QueryMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryMatchers.swift; sourceTree = "<group>"; };
 		945E8797DDA6505CB341D70B46229032 /* LessThanOrEqualToFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanOrEqualToFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		949F55BA108C7F3F9253144543B9DA85 /* EditMedicationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMedicationViewController.swift; sourceTree = "<group>"; };
+		95283CE739AA64CB16BBDA5FD37EDA53 /* MoodIntents.intentdefinition */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.intentdefinition; path = MoodIntents.intentdefinition; sourceTree = "<group>"; };
 		958F8FB544B7E47057AA85820ADA8B32 /* RecordMedicationsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordMedicationsUITests.swift; sourceTree = "<group>"; };
 		95B296BEB641FFA31D0E3A5AB97E040D /* MoodResultsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodResultsUITests.swift; sourceTree = "<group>"; };
 		95CBC6BFB30927C64AD76644FD14B257 /* AttributeRestrictionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributeRestrictionTableViewCell.swift; sourceTree = "<group>"; };
@@ -890,10 +895,6 @@
 		A1776B090DE0D9396B6A50F70152A55C /* EqualToFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1B93F7FE435E06819E4BF152382DAA9 /* EqualToDurationAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToDurationAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
-		BC4DFC7C975B3C0C0814EBC970049B5B /* MiscIntents.intentdefinition */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.intentdefinition; path = MiscIntents.intentdefinition; sourceTree = "<group>"; };
-		CA1066414F1FB2E6885B9D28335C00EE /* ActivityIntents.intentdefinition */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.intentdefinition; path = ActivityIntents.intentdefinition; sourceTree = "<group>"; };
-		45E7133D436B51B1ABA03EAF212B9C6A /* MedicationIntents.intentdefinition */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.intentdefinition; path = MedicationIntents.intentdefinition; sourceTree = "<group>"; };
-		95283CE739AA64CB16BBDA5FD37EDA53 /* MoodIntents.intentdefinition */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.intentdefinition; path = MoodIntents.intentdefinition; sourceTree = "<group>"; };
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
@@ -941,6 +942,7 @@
 		BAADA04F2DD532B1A44AC29DC92B8D6A /* LessThanDosageAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDosageAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		BAB42BEA8A4D67CD5177EC2A509610F8 /* ResultsViewControllerUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsViewControllerUnitTests.swift; sourceTree = "<group>"; };
 		BB3F3239D5DA24E154657AC2EC4C6F16 /* TestDataCreationSampleTypeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDataCreationSampleTypeTableViewCell.swift; sourceTree = "<group>"; };
+		BC4DFC7C975B3C0C0814EBC970049B5B /* MiscIntents.intentdefinition */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.intentdefinition; path = MiscIntents.intentdefinition; sourceTree = "<group>"; };
 		BCD120AFB3D2858AE4607749992A55B2 /* Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BED216FBE6FC6C762B1F22832EF2AE50 /* SortResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortResultsViewController.swift; sourceTree = "<group>"; };
 		BF8F2708C611072AFF28428DBB7A7C7B /* TextAttributeUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextAttributeUnitTests.swift; sourceTree = "<group>"; };
@@ -965,6 +967,7 @@
 		C8B8C7658E5B7E329DFB88897C433916 /* SelectDateViewControllerUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDateViewControllerUnitTests.swift; sourceTree = "<group>"; };
 		C93F285EA1182B34FB4431C83C36D363 /* QueryResultsBasicXYGraphCustomizationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryResultsBasicXYGraphCustomizationViewController.swift; sourceTree = "<group>"; };
 		C9A321ECF1B127744ECF718A98472A04 /* GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GreaterThanOrEqualToIntegerAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
+		CA1066414F1FB2E6885B9D28335C00EE /* ActivityIntents.intentdefinition */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.intentdefinition; path = ActivityIntents.intentdefinition; sourceTree = "<group>"; };
 		CA585E50CB6114AECD49F1097D847B21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CAAE274BC7A170EE9671A26A46E7A918 /* BeforeTimeOfDayAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeforeTimeOfDayAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		CAB12E350B98D0DF2C31E849016EADCA /* SampleGrouperMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleGrouperMatchers.swift; sourceTree = "<group>"; };
@@ -2621,6 +2624,7 @@
 				A9E14F35A335DF8CEEA73A4AFA00E491 /* StopLastStartedActivityIntentHandler.swift */,
 				A41FE66508DDBF30A24246A283985712 /* StartActivityWithNoteIntentHandler.swift */,
 				97D626EC97945D4C7491D67B0AA1CA9A /* StartActivityFromEndOfLastIntentHandler.swift */,
+				651305A9FAA19727F58B2C7FBA74FE98 /* StartActivityXAgoIntentHandler.swift */,
 			);
 			path = Activities;
 			sourceTree = "<group>";
@@ -3138,6 +3142,7 @@
 				45CB94BA9AFB34665A6FA02A17A6A824 /* TakeMedicationIntentHandler.swift in Sources */,
 				2E3E089615581A7102A18B3B03FB03CC /* StopLastStartedActivityIntentHandler.swift in Sources */,
 				E18B0F3B6691DAFF427653B35DF3D925 /* ActivityIntents.intentdefinition in Sources */,
+				A71F840A85CB141680C881B690DEA48F /* StartActivityXAgoIntentHandler.swift in Sources */,
 				AC8E5257DE1ACCBD9493668881B231D8 /* StopActivityIntentHandler.swift in Sources */,
 				259047F3208DA13CD36A61DE4A2A440C /* MoodIntents.intentdefinition in Sources */,
 				4047B414227801C18D068D8A9198DF3A /* TakeMedicationWithDosageIntentHandler.swift in Sources */,
@@ -3569,6 +3574,7 @@
 				2C6C58F800E7821FB668286A4BD07160 /* SubSampleTypeTableViewCell.swift in Sources */,
 				70146D3AA67C8249E8AC24D4E717FB8C /* DeleteCoreDataTableViewCell.swift in Sources */,
 				ACFCF53578B134546DA16D4D9A3661EA /* StartActivityIntentHandler.swift in Sources */,
+				0D4AE1BE1CA60B4222237147B881A71F /* StartActivityXAgoIntentHandler.swift in Sources */,
 				8D5B424A3C7812271F4504AE72FA6EF8 /* RecordMedicationTableViewCell.swift in Sources */,
 				4C50061EBAAE4569B1932CA64E15A093 /* RecordDiscreteMoodTableViewCell.swift in Sources */,
 				53278F207E68BD7AC1887096D1362666 /* MedicationDoseTableTableViewCell.swift in Sources */,

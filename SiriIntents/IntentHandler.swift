@@ -38,6 +38,8 @@ class IntentHandler: INExtension {
 				return StartActivityIntentHandler()
 			case is StartActivityWithNoteIntent:
 				return StartActivityWithNoteIntentHandler()
+			case is StartActivityXAgoIntent:
+				return StartActivityXAgoIntentHandler()
 			case is StopActivityIntent:
 				return StopActivityIntentHandler()
 			case is StopAllActivitiesIntent:

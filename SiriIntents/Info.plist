@@ -36,6 +36,7 @@
 				<string>StartActivityFromEndOfLastIntent</string>
 				<string>StartActivityIntent</string>
 				<string>StartActivityWithNoteIntent</string>
+				<string>StartActivityXAgoIntent</string>
 				<string>StopActivityIntent</string>
 				<string>StopAllActivitiesIntent</string>
 				<string>StopLastStartedActivityIntent</string>

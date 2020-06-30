@@ -34,7 +34,7 @@ public extension Calendar.Component {
 	]
 
 	static func fromInt(_ i: Int) -> Calendar.Component {
-		switch (i) {
+		switch (i) { // changing this ordering could break things
 			case 0: return .era
 			case 1: return .year
 			case 2: return .month
@@ -58,7 +58,7 @@ public extension Calendar.Component {
 	}
 
 	func intValue() -> Int {
-		switch (self) {
+		switch (self) { // changing this ordering could break things
 			case .era: return 0
 			case .year: return 1
 			case .month: return 2
@@ -75,6 +75,27 @@ public extension Calendar.Component {
 			case .nanosecond: return 13
 			case .calendar: return 14
 			case .timeZone: return 15
+		}
+	}
+
+	var pluralDescription: String {
+		switch (self) {
+			case .calendar: return "Calendars"
+			case .era: return "Eras"
+			case .year: return "Years"
+			case .yearForWeekOfYear: return "Years for Week of Year"
+			case .quarter: return "Quarters"
+			case .month: return "Months"
+			case .weekOfMonth: return "Weeks of Month"
+			case .weekOfYear: return "Weeks"
+			case .weekday: return "Days of Week"
+			case .weekdayOrdinal: return "Weekday Ordinals"
+			case .timeZone: return "Time Zones"
+			case .day: return "Days"
+			case .hour: return "Hours"
+			case .minute: return "Minutes"
+			case .second: return "Seconds"
+			case .nanosecond: return "Nanoseconds"
 		}
 	}
 
