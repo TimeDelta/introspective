@@ -91,7 +91,7 @@ public final class HealthKitUtilImpl: HealthKitUtil {
 				value = result?.maximumQuantity()?.doubleValue(for: type.unit)
 			} else if calculation == .discreteMin {
 				value = result?.minimumQuantity()?.doubleValue(for: type.unit)
-			} else if #available(iOS 12.0, *), calculation == .discreteMostRecent {
+			} else if calculation == .discreteMostRecent {
 				value = result?.mostRecentQuantity()?.doubleValue(for: type.unit)
 			} else {
 				self.log.error("Unsupported calculation parameter passed")
