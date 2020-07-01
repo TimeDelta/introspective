@@ -432,7 +432,7 @@ public final class RecordMedicationTableViewController: UITableViewController {
 				searchController.searchBar.text = ""
 				loadMedications()
 			} catch {
-				log.error("Failed to quick create / start medication: %@", errorInfo(error))
+				log.error("Failed to quick create & take medication: %@", errorInfo(error))
 				showError(
 					title: "Failed to create and start",
 					message: "Something went wrong while trying to save this medication. Sorry for the inconvenience.",

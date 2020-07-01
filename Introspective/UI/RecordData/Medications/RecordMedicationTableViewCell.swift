@@ -141,7 +141,7 @@ public final class RecordMedicationTableViewCell: UITableViewCell {
 	}
 
 	private final func failedToMarkAsTaken(_ error: Error) {
-		log.error("Failed to mark medication (%@) as taken: %@", medication.name, errorInfo(error))
+		log.error("Failed to mark medication (%{private}@) as taken: %@", medication.name, errorInfo(error))
 		var title = "Failed to mark \(medication.name) as taken."
 		var message = "Sorry for the inconvenience"
 		if let error = error as? DisplayableError {

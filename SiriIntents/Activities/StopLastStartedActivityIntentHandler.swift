@@ -25,7 +25,7 @@ public final class StopLastStartedActivityIntentHandler : NSObject, StopLastStar
 		do {
 			let activity = try DependencyInjector.get(ActivityDAO.self).stopMostRecentlyStartedIncompleteActivity()
 			let definition = try DependencyInjector.get(Database.self).pull(savedObject: activity.definition)
-			Me.log.debug("Found last started activity: %@", definition.name)
+			Me.log.debug("Found last started activity: %{private}@", definition.name)
 			completion(StopLastStartedActivityIntentResponse.success(activityName: definition.name))
 		} catch {
 			Me.log.error("Error during StopLastStartedActivityIntent: %@", errorInfo(error))

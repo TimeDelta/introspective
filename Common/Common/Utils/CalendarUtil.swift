@@ -194,7 +194,7 @@ public final class CalendarUtilImpl: CalendarUtil {
 			case .minute: return Date() - numUnits.minutes
 			case .second: return Date() - numUnits.seconds
 			default:
-				log.error("Unsupported time unit: ", timeUnit.description)
+				log.error("Unsupported time unit %@: ", timeUnit.description)
 				return Date()
 		}
 	}
