@@ -14,7 +14,7 @@ import DependencyInjection
 import Persistence
 import Samples
 
-public final class StopActivitiesIntentHandler : NSObject, StopActivitiesIntentHandling {
+public final class StopActivitiesIntentHandler: ActivityIntentHandler<StopActivitiesIntent>, StopActivitiesIntentHandling {
 
 	private typealias Me = StopActivitiesIntentHandler
 
@@ -30,13 +30,7 @@ public final class StopActivitiesIntentHandler : NSObject, StopActivitiesIntentH
 	}
 
 	public func provideActivityNamesOptions(for intent: StopActivitiesIntent, with completion: @escaping ([String]?, Error?) -> Void) {
-		Me.log.info("Providing valid activity names")
-		do {
-			let definitions = try DependencyInjector.get(Database.self).query(ActivityDefinition.fetchRequest())
-			completion(definitions.map{ definition in definition.name }, nil)
-		} catch {
-			completion(nil, error)
-		}
+		super.provideActivityNameOptions(for: intent, with: completion)
 	}
 
 	public func handle(intent: StopActivitiesIntent, completion: @escaping (StopActivitiesIntentResponse) -> Void) {

@@ -14,7 +14,7 @@ import DependencyInjection
 import Persistence
 import Samples
 
-public final class StartActivityIntentHandler: NSObject, StartActivityIntentHandling {
+public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivityIntent>, StartActivityIntentHandling {
 
 	private typealias Me = StartActivityIntentHandler
 
@@ -29,14 +29,8 @@ public final class StartActivityIntentHandler: NSObject, StartActivityIntentHand
 		completion(INStringResolutionResult.success(with: activityName))
 	}
 
-	public func provideActivityNameOptions(for intent: StartActivityIntent, with completion: @escaping ([String]?, Error?) -> Void) {
-		Me.log.info("Providing valid activity names")
-		do {
-			let definitions = try DependencyInjector.get(Database.self).query(ActivityDefinition.fetchRequest())
-			completion(definitions.map{ definition in definition.name }, nil)
-		} catch {
-			completion(nil, error)
-		}
+	public override func provideActivityNameOptions(for intent: StartActivityIntent, with completion: @escaping ([String]?, Error?) -> Void) {
+		super.provideActivityNameOptions(for: intent, with: completion)
 	}
 
 	public func resolveStartDate(for intent: StartActivityIntent, with completion: @escaping (INDateComponentsResolutionResult) -> Swift.Void) {

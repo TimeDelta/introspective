@@ -15,7 +15,7 @@ import DependencyInjection
 import Persistence
 import Samples
 
-public final class StartActivityFromEndOfLastIntentHandler: NSObject, StartActivityFromEndOfLastIntentHandling {
+public final class StartActivityFromEndOfLastIntentHandler: ActivityIntentHandler<StartActivityFromEndOfLastIntent>, StartActivityFromEndOfLastIntentHandling {
 
 	private typealias Me = StartActivityFromEndOfLastIntentHandler
 
@@ -30,14 +30,8 @@ public final class StartActivityFromEndOfLastIntentHandler: NSObject, StartActiv
 		completion(INStringResolutionResult.success(with: activityName))
 	}
 
-	public func provideActivityNameOptions(for intent: StartActivityFromEndOfLastIntent, with completion: @escaping ([String]?, Error?) -> Void) {
-		Me.log.info("Providing valid activity names")
-		do {
-			let definitions = try DependencyInjector.get(Database.self).query(ActivityDefinition.fetchRequest())
-			completion(definitions.map{ definition in definition.name }, nil)
-		} catch {
-			completion(nil, error)
-		}
+	public override func provideActivityNameOptions(for intent: StartActivityFromEndOfLastIntent, with completion: @escaping ([String]?, Error?) -> Void) {
+		super.provideActivityNameOptions(for: intent, with: completion)
 	}
 
 	public func handle(intent: StartActivityFromEndOfLastIntent, completion: @escaping (StartActivityFromEndOfLastIntentResponse) -> Void) {

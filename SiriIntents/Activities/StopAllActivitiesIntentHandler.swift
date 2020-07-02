@@ -14,7 +14,7 @@ import DependencyInjection
 import Persistence
 import Samples
 
-public final class StopAllActivitiesIntentHandler : NSObject, StopAllActivitiesIntentHandling {
+public final class StopAllActivitiesIntentHandler: ActivityIntentHandler<StopAllActivitiesIntent>, StopAllActivitiesIntentHandling {
 
 	private typealias Me = StopAllActivitiesIntentHandler
 

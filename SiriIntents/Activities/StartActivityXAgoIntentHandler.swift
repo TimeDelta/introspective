@@ -14,7 +14,7 @@ import DependencyInjection
 import Persistence
 import Samples
 
-public final class StartActivityXAgoIntentHandler: NSObject, StartActivityXAgoIntentHandling {
+public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartActivityXAgoIntent>, StartActivityXAgoIntentHandling {
 
 	private typealias Me = StartActivityXAgoIntentHandler
 
@@ -60,14 +60,8 @@ public final class StartActivityXAgoIntentHandler: NSObject, StartActivityXAgoIn
 		completion(INStringResolutionResult.success(with: timeUnitString))
 	}
 
-	public func provideActivityNameOptions(for intent: StartActivityXAgoIntent, with completion: @escaping ([String]?, Error?) -> Void) {
-		Me.log.info("Providing valid activity names")
-		do {
-			let definitions = try DependencyInjector.get(Database.self).query(ActivityDefinition.fetchRequest())
-			completion(definitions.map{ definition in definition.name }, nil)
-		} catch {
-			completion(nil, error)
-		}
+	public override func provideActivityNameOptions(for intent: StartActivityXAgoIntent, with completion: @escaping ([String]?, Error?) -> Void) {
+		super.provideActivityNameOptions(for: intent, with: completion)
 	}
 
 	public func provideTimeUnitOptions(for intent: StartActivityXAgoIntent, with completion: @escaping ([String]?, Error?) -> Void) {

@@ -14,7 +14,7 @@ import DependencyInjection
 import Persistence
 import Samples
 
-public final class StopLastStartedActivityIntentHandler : NSObject, StopLastStartedActivityIntentHandling {
+public final class StopLastStartedActivityIntentHandler: ActivityIntentHandler<StopLastStartedActivityIntent>, StopLastStartedActivityIntentHandling {
 
 	private typealias Me = StopLastStartedActivityIntentHandler
 
