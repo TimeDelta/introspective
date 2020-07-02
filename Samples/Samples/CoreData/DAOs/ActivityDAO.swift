@@ -55,6 +55,7 @@ public protocol ActivityDAO {
 		source: Sources.ActivitySourceNum,
 		endDate: Date?,
 		note: String?,
+		extraTags: [Tag],
 		using transaction: Transaction?
 	) throws -> Activity
 }
@@ -95,6 +96,7 @@ extension ActivityDAO {
 		source: Sources.ActivitySourceNum = .introspective,
 		endDate: Date? = nil,
 		note: String? = nil,
+		extraTags: [Tag] = [],
 		using transaction: Transaction? = nil
 	) throws -> Activity {
 		return try createActivity(
@@ -103,6 +105,7 @@ extension ActivityDAO {
 			source: source,
 			endDate: endDate,
 			note: note,
+			extraTags: extraTags,
 			using: transaction)
 	}
 }
@@ -314,18 +317,23 @@ public class ActivityDAOImpl: ActivityDAO {
 		source: Sources.ActivitySourceNum,
 		endDate: Date?,
 		note: String?,
+		extraTags: [Tag],
 		using transaction: Transaction?
 	) throws -> Activity {
 		let transaction = transaction ?? DependencyInjector.get(Database.self).transaction()
 		let activity = try transaction.new(Activity.self)
+		let sameContextDefinition = try transaction.pull(savedObject: definition)
 
-		activity.definition = definition
+		activity.definition = sameContextDefinition
 		activity.note = note
 		activity.start = startDate
 		activity.end = endDate
 		activity.setSource(source)
+		extraTags.forEach(activity.addToTags(_:))
+
+		sameContextDefinition.addToActivities(activity)
 
 		try retryOnFail({ try transaction.commit() }, maxRetries: 2)
-		return activity
+		return try DependencyInjector.get(Database.self).pull(savedObject: activity)
 	}
 }

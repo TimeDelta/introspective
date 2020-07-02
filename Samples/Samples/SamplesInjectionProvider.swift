@@ -23,6 +23,7 @@ public class SamplesInjectionProvider: InjectionProvider {
 	private static let numericSampleUtil = NumericSampleUtilImpl()
 	private static let sampleFactory = SampleFactoryImpl()
 	private static let sampleUtil = SampleUtilImpl()
+	private static let tagDAO = TagDAOImpl()
 
 	public final let types: [Any.Type] = [
 		ActivityDAO.self,
@@ -37,6 +38,7 @@ public class SamplesInjectionProvider: InjectionProvider {
 		NumericSampleUtil.self,
 		SampleFactory.self,
 		SampleUtil.self,
+		TagDAO.self,
 	]
 
 	public init() {
@@ -68,6 +70,8 @@ public class SamplesInjectionProvider: InjectionProvider {
 				return Me.sampleFactory as! Type
 			case is SampleUtil.Protocol:
 				return Me.sampleUtil as! Type
+			case is TagDAO.Protocol:
+				return Me.tagDAO as! Type
 			default:
 				throw GenericError("Unknown type: " + String(describing: type))
 		}

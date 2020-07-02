@@ -179,7 +179,7 @@
 		5D9111AF67D78FB88A5DC0DEE852A6A1 /* MedicationDoseFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D7B96C629BC275FD91AFB33B62F02 /* MedicationDoseFunctionalTests.swift */; };
 		5E04B4851FB658F187F351BCB48F9A57 /* FunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D554D3E58E4A62D8C898FB06FC15EF /* FunctionalTest.swift */; };
 		5E87224B9A8960FA2FCAD4D125312D14 /* EditGrouperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71FB4896E40ECB4B2203A1A5C9572F14 /* EditGrouperViewController.swift */; };
-		5FB1E5572E94EBF07A5DF61CBEE9D116 /* StartActivityIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66897C3ADF41EF898E771F8D4A2F86DA /* StartActivityIntentHandler.swift */; };
+		CA6DA9A9F0E6EE5D02879E6F1A722680 /* StartActivitiesIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCC7D51571DF3EF3E1EFFDE32ABEA3B /* StartActivitiesIntentHandler.swift */; };
 		601C295100BA7BD1EE74DC0C72CD4E90 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCD120AFB3D2858AE4607749992A55B2 /* Common.framework */; };
 		60BB883A4C32A7725DD72D3927634621 /* ChooseSampleGrouperTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64E0788E27B3B4FE185D06F3F454E46 /* ChooseSampleGrouperTypeViewController.swift */; };
 		6175E22C40F537C911409371F0984D9F /* FrequencyAttributeUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC2CA192FCDA203493CCBCF0A55FF03 /* FrequencyAttributeUnitTests.swift */; };
@@ -271,7 +271,6 @@
 		8626B85D1ED7BFDB07346830E450B00F /* ActivityDefinitionMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C4CBED4E7AD59189AFAAADBD817142 /* ActivityDefinitionMatchers.swift */; };
 		8645C306298BBD7799140DD29D14C929 /* Samples.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0010DEF24F98D6EFC8B867ED2212CD1 /* Samples.framework */; };
 		86E1DD3CAF3C785C528D358A67180381 /* ActiveImportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 802CB6CF4E1BAF53ED07F6C5FAA9ACB9 /* ActiveImportTableViewCell.swift */; };
-		86F34D7B4378C5B434828D568A812441 /* StartActivityWithNoteIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41FE66508DDBF30A24246A283985712 /* StartActivityWithNoteIntentHandler.swift */; };
 		88AD94B2040110C7D40C66B21ECA5F32 /* SexualActivityQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCC1F87C400CE195DE27C92FCD07710E /* SexualActivityQueryFunctionalTests.swift */; };
 		89291EB333490BA8A44A72ADF44089C4 /* ActivitySettingsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ECA7C820330FEC844B4184615FA9250 /* ActivitySettingsUITests.swift */; };
 		893610D80E807998757D881644AB39F2 /* EditMoodTableViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1A4D5DAF327B9717F8592A371CAF93 /* EditMoodTableViewControllerMock.swift */; };
@@ -320,13 +319,16 @@
 		9E462DD9C048DCCA4D8B041FE1107A29 /* NonRunningSampleQueryStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA33093DEA9B1E5BFCA4E7CB7D824D31 /* NonRunningSampleQueryStub.swift */; };
 		9E88B65A7C67EA879D33D5F2E4E17302 /* SameValueSampleGrouperUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF4DE799B44CCE1F36CA673829CA7DF /* SameValueSampleGrouperUnitTests.swift */; };
 		9F85A240B18CEF9A4E1F0BE8D881E8D0 /* CoreDataSampleMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */; };
-		9FB0248A09AC06D2CB4E194FE915FABF /* StartActivityWithNoteIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41FE66508DDBF30A24246A283985712 /* StartActivityWithNoteIntentHandler.swift */; };
 		9FD61F97F4C68990D2BBD4543AB5A505 /* HasOneOfTagAttributeRestrictionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBFE73AE2BEF10935B5E9528BCDF8D33 /* HasOneOfTagAttributeRestrictionFunctionalTests.swift */; };
 		A08654FF220A45264E187D9A3613D966 /* LessThanOrEqualToIntegerAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B7F6C91CD78EDFFC3613DB8D78F679 /* LessThanOrEqualToIntegerAttributeRestrictionUnitTests.swift */; };
 		A093F349E7B2A92A9A9684B3CDED0566 /* ActivityDefinitionAutoNoteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE068B8CC403C7E3CBD6C1623FA36359 /* ActivityDefinitionAutoNoteTableViewCell.swift */; };
 		A0ACDA46E85F2ECEFBDA115171002AEF /* MoodMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE301C2F2247DBBEDE6822A654DD4F1 /* MoodMock.swift */; };
 		A108D51984F45F433488927376B4A95A /* RecordDecimalMoodIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C624D2A8E2DF0D653F2E4CF507F9BC09 /* RecordDecimalMoodIntentHandler.swift */; };
 		A132F934C21C112CC21D22FE033DE69B /* UITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FC569196ECE6B2231D16543528A687 /* UITest.swift */; };
+		5FB1E5572E94EBF07A5DF61CBEE9D116 /* StartActivityIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66897C3ADF41EF898E771F8D4A2F86DA /* StartActivityIntentHandler.swift */; };
+		ACFCF53578B134546DA16D4D9A3661EA /* StartActivityIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66897C3ADF41EF898E771F8D4A2F86DA /* StartActivityIntentHandler.swift */; };
+		5024208B0188584343B191165893E693 /* ActivityIntentInfoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883AF7B3D70D7B7E29CAF8D1FC9BC22A /* ActivityIntentInfoHelper.swift */; };
+		CA67758753096D177B324A041B342B9D /* ActivityIntentInfoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883AF7B3D70D7B7E29CAF8D1FC9BC22A /* ActivityIntentInfoHelper.swift */; };
 		A2512146AC339E0074329562AF91750F /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D65238B5DA02CD3BCD07732620BE5666 /* HealthKit.framework */; };
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
@@ -350,8 +352,8 @@
 		AA5810844860C6E50B597700A8C856C7 /* BeforeDateAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 855216BE391B0FBCF3FEAD4513711C3B /* BeforeDateAttributeRestrictionUnitTests.swift */; };
 		AB83E2E983650B72ACEA0D8D50FF6A0F /* SelectDateViewControllerUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B8C7658E5B7E329DFB88897C433916 /* SelectDateViewControllerUnitTests.swift */; };
 		AC6D7FC86C296D056DDF25BAEA2D3ABD /* NotEqualToDosageAttributeRestrictionUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 531BDC125E94AB364E2195D004FFFEAD /* NotEqualToDosageAttributeRestrictionUnitTests.swift */; };
-		AC8E5257DE1ACCBD9493668881B231D8 /* StopActivityIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83083F62CA96463EE6BFCAB5E2DB8542 /* StopActivityIntentHandler.swift */; };
-		ACFCF53578B134546DA16D4D9A3661EA /* StartActivityIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66897C3ADF41EF898E771F8D4A2F86DA /* StartActivityIntentHandler.swift */; };
+		F538A0E427419CB4065BB8F4D20DCF39 /* StopActivitiesIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E7476D1B4E59505820313A4BE8FFEE /* StopActivitiesIntentHandler.swift */; };
+		D5459D797160C212388A94AAA651AF77 /* StartActivitiesIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCC7D51571DF3EF3E1EFFDE32ABEA3B /* StartActivitiesIntentHandler.swift */; };
 		AD1F2D8F380682512CC3B77A3E794665 /* LeanBodyMassQueryFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 309E5D0D463F26860DCDBB12873716DB /* LeanBodyMassQueryFunctionalTests.swift */; };
 		AFFCAAA8FB52717DC1B741DECF4230D6 /* SettingsFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59D6A26340B6C691CDE39575FE26FC28 /* SettingsFunctionalTests.swift */; };
 		B05AF5BF43D0BEFE530278433255B6BC /* SampleQueryMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9AD32F1EE1369EDE699A6AAF6B8A98 /* SampleQueryMock.swift */; };
@@ -363,7 +365,7 @@
 		B4A860AFE8B28F0380F655836F0E0982 /* RecordMoodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FA6947CC316B6EDEA4B1CCFDB806676 /* RecordMoodTableViewCell.swift */; };
 		B5301CC0118538B5ADAD785DC7A6C5C7 /* MedicationDoseTableViewCellFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAD0EC332DCE67EB23993FC2A33E884 /* MedicationDoseTableViewCellFunctionalTests.swift */; };
 		B5527FE91D571D962E2E5B45FA73BAE5 /* Queries.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FB6E7430A6E227C82E0BBD7B3D85FB5 /* Queries.framework */; };
-		B557DEF3D36B803ED13A955F68E6B7E3 /* StopActivityIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83083F62CA96463EE6BFCAB5E2DB8542 /* StopActivityIntentHandler.swift */; };
+		0BC3C58EE48EB339C523FD62F5E1B894 /* StopActivitiesIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E7476D1B4E59505820313A4BE8FFEE /* StopActivitiesIntentHandler.swift */; };
 		B55DC05F794C486BD9032FB6E9C1EB4D /* MedicationDosesTableViewControllerFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0B381A7908DEA4F6CDE227CBC385B49 /* MedicationDosesTableViewControllerFunctionalTests.swift */; };
 		B5619E99F241DAA0EBD43552D1A8D31C /* SelectDurationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342626649D8D131D950BE20CA0F9957E /* SelectDurationViewController.swift */; };
 		B5862A8794194FE167CB5B19D6207008 /* DurationAttributeUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482F954CDF0EF3ED2F2A564599090A4B /* DurationAttributeUnitTests.swift */; };
@@ -762,7 +764,7 @@
 		651305A9FAA19727F58B2C7FBA74FE98 /* StartActivityXAgoIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartActivityXAgoIntentHandler.swift; sourceTree = "<group>"; };
 		65209A8E8DF56DC2926BADB9F9E3C012 /* QueryResultsGraphSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryResultsGraphSetupViewController.swift; sourceTree = "<group>"; };
 		6633BB94153F634280855EAA4F06319A /* RecordMoodRatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordMoodRatingViewController.swift; sourceTree = "<group>"; };
-		66897C3ADF41EF898E771F8D4A2F86DA /* StartActivityIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartActivityIntentHandler.swift; sourceTree = "<group>"; };
+		CDCC7D51571DF3EF3E1EFFDE32ABEA3B /* StartActivitiesIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartActivitiesIntentHandler.swift; sourceTree = "<group>"; };
 		669505CB6D449CC0496E1B897F9A453C /* GraphTypeSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphTypeSetupViewController.swift; sourceTree = "<group>"; };
 		674B09FF74E10645BCAE0A9BAF1D94BA /* ActivityDefinitionTagsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDefinitionTagsTableViewCell.swift; sourceTree = "<group>"; };
 		67DE9D31516B68C3DC254B112DD5CE26 /* RecordActivityTableViewControllerFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordActivityTableViewControllerFunctionalTests.swift; sourceTree = "<group>"; };
@@ -826,7 +828,7 @@
 		802CB6CF4E1BAF53ED07F6C5FAA9ACB9 /* ActiveImportTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveImportTableViewCell.swift; sourceTree = "<group>"; };
 		809BEB786B6E3A771CFFA8A7ED5FA2D2 /* ChooseAttributesToGraphTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseAttributesToGraphTableViewController.swift; sourceTree = "<group>"; };
 		82ABDC6C0A5DBC029BDDB6843C8D825F /* ChooseGraphTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseGraphTypeViewController.swift; sourceTree = "<group>"; };
-		83083F62CA96463EE6BFCAB5E2DB8542 /* StopActivityIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopActivityIntentHandler.swift; sourceTree = "<group>"; };
+		F1E7476D1B4E59505820313A4BE8FFEE /* StopActivitiesIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopActivitiesIntentHandler.swift; sourceTree = "<group>"; };
 		8355BAB21ED6865EE904FE18B793428B /* ActivityMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityMatchers.swift; sourceTree = "<group>"; };
 		83731893CC837B1AD79D0E58DF4E66EC /* NumericSampleUtilUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericSampleUtilUnitTests.swift; sourceTree = "<group>"; };
 		84AA1DCF95D6A08D5DE00DAE32A56471 /* ActivityDefinitionNameTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDefinitionNameTableViewCell.swift; sourceTree = "<group>"; };
@@ -895,10 +897,11 @@
 		A1776B090DE0D9396B6A50F70152A55C /* EqualToFrequencyAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToFrequencyAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1B93F7FE435E06819E4BF152382DAA9 /* EqualToDurationAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualToDurationAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphType.swift; sourceTree = "<group>"; };
+		66897C3ADF41EF898E771F8D4A2F86DA /* StartActivityIntentHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartActivityIntentHandler.swift; sourceTree = "<group>"; };
+		883AF7B3D70D7B7E29CAF8D1FC9BC22A /* ActivityIntentInfoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIntentInfoHelper.swift; sourceTree = "<group>"; };
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
-		A41FE66508DDBF30A24246A283985712 /* StartActivityWithNoteIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartActivityWithNoteIntentHandler.swift; sourceTree = "<group>"; };
 		A455D3386BC23DDD4E8C89EF40475474 /* LessThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A587847063126DF5519DD8FC08BD1F43 /* SubQueryMatcherMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubQueryMatcherMatchers.swift; sourceTree = "<group>"; };
@@ -2618,13 +2621,14 @@
 			isa = PBXGroup;
 			children = (
 				CA1066414F1FB2E6885B9D28335C00EE /* ActivityIntents.intentdefinition */,
+				CDCC7D51571DF3EF3E1EFFDE32ABEA3B /* StartActivitiesIntentHandler.swift */,
+				97D626EC97945D4C7491D67B0AA1CA9A /* StartActivityFromEndOfLastIntentHandler.swift */,
 				66897C3ADF41EF898E771F8D4A2F86DA /* StartActivityIntentHandler.swift */,
-				83083F62CA96463EE6BFCAB5E2DB8542 /* StopActivityIntentHandler.swift */,
+				651305A9FAA19727F58B2C7FBA74FE98 /* StartActivityXAgoIntentHandler.swift */,
+				F1E7476D1B4E59505820313A4BE8FFEE /* StopActivitiesIntentHandler.swift */,
 				E4178BC066D97C3EC749CF6502E6E3E0 /* StopAllActivitiesIntentHandler.swift */,
 				A9E14F35A335DF8CEEA73A4AFA00E491 /* StopLastStartedActivityIntentHandler.swift */,
-				A41FE66508DDBF30A24246A283985712 /* StartActivityWithNoteIntentHandler.swift */,
-				97D626EC97945D4C7491D67B0AA1CA9A /* StartActivityFromEndOfLastIntentHandler.swift */,
-				651305A9FAA19727F58B2C7FBA74FE98 /* StartActivityXAgoIntentHandler.swift */,
+				883AF7B3D70D7B7E29CAF8D1FC9BC22A /* ActivityIntentInfoHelper.swift */,
 			);
 			path = Activities;
 			sourceTree = "<group>";
@@ -3136,6 +3140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				41DC9C684812C471964201874A6E1279 /* MiscIntents.intentdefinition in Sources */,
+				5024208B0188584343B191165893E693 /* ActivityIntentInfoHelper.swift in Sources */,
 				C6980F5EEAE97C916FB443659956ACB2 /* IsWeekdayIntentHandler.swift in Sources */,
 				9D916061E1351CAAC8A370A17C6ECE3C /* MedicationIntents.intentdefinition in Sources */,
 				8480BB64B855F49C82024A9B6E6000F1 /* StopAllActivitiesIntentHandler.swift in Sources */,
@@ -3143,15 +3148,15 @@
 				2E3E089615581A7102A18B3B03FB03CC /* StopLastStartedActivityIntentHandler.swift in Sources */,
 				E18B0F3B6691DAFF427653B35DF3D925 /* ActivityIntents.intentdefinition in Sources */,
 				A71F840A85CB141680C881B690DEA48F /* StartActivityXAgoIntentHandler.swift in Sources */,
-				AC8E5257DE1ACCBD9493668881B231D8 /* StopActivityIntentHandler.swift in Sources */,
+				5FB1E5572E94EBF07A5DF61CBEE9D116 /* StartActivityIntentHandler.swift in Sources */,
+				F538A0E427419CB4065BB8F4D20DCF39 /* StopActivitiesIntentHandler.swift in Sources */,
 				259047F3208DA13CD36A61DE4A2A440C /* MoodIntents.intentdefinition in Sources */,
 				4047B414227801C18D068D8A9198DF3A /* TakeMedicationWithDosageIntentHandler.swift in Sources */,
 				F7FE8601CE47B849FFB96EACCFD5E4E8 /* IntentHandler.swift in Sources */,
 				B0613F92F645982D50060D3C2EF657AB /* ObjectModelContainer.swift in Sources */,
-				86F34D7B4378C5B434828D568A812441 /* StartActivityWithNoteIntentHandler.swift in Sources */,
 				D38CB7B1AC0C2EC4A659CDE56CB904B7 /* RecordIntegerMoodIntentHandler.swift in Sources */,
 				A108D51984F45F433488927376B4A95A /* RecordDecimalMoodIntentHandler.swift in Sources */,
-				5FB1E5572E94EBF07A5DF61CBEE9D116 /* StartActivityIntentHandler.swift in Sources */,
+				CA6DA9A9F0E6EE5D02879E6F1A722680 /* StartActivitiesIntentHandler.swift in Sources */,
 				6C26724E3168DD26A1335B38E1C17B0A /* StartActivityFromEndOfLastIntentHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3469,7 +3474,6 @@
 				4D97132298C095C1A9A98A914EB7D810 /* SortResultsViewController.swift in Sources */,
 				1D18EAED02072F435D338692AC791669 /* AttributeRestrictionTableViewCell.swift in Sources */,
 				7544EB454D37F100EC383F4CE480E34C /* SingleSampleTypeXYGraphDataGenerator.swift in Sources */,
-				9FB0248A09AC06D2CB4E194FE915FABF /* StartActivityWithNoteIntentHandler.swift in Sources */,
 				23AA61F265C423120A50BE18ABC24C26 /* SettingsTableViewController.swift in Sources */,
 				7FA482E7DD0A87C01B3B24722BC7837E /* AttributeValueTypeViewController.swift in Sources */,
 				9949B348DD76B32B3DC00B93A4189843 /* AttributeValueViewController.swift in Sources */,
@@ -3512,7 +3516,7 @@
 				754E4858B1BC2A46537CA603F26B0F11 /* VersionTableViewCell.swift in Sources */,
 				9B1F01C84B1A10CAE4EEAADAC9B4C122 /* FrequencyEditorViewController.swift in Sources */,
 				02E5AD13C3696C1EA620CB3A7F1DF173 /* CoachMarkFactory.swift in Sources */,
-				B557DEF3D36B803ED13A955F68E6B7E3 /* StopActivityIntentHandler.swift in Sources */,
+				0BC3C58EE48EB339C523FD62F5E1B894 /* StopActivitiesIntentHandler.swift in Sources */,
 				A093F349E7B2A92A9A9684B3CDED0566 /* ActivityDefinitionAutoNoteTableViewCell.swift in Sources */,
 				59A33964A17373688CD5ACF23E72D6EF /* EditAttributeRestrictionViewController.swift in Sources */,
 				FF89D114869814445AE1A9FE91402BAB /* ChooseSampleTypeViewController.swift in Sources */,
@@ -3540,6 +3544,7 @@
 				A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */,
 				9E3D919F128FA9751F097C327FFD3638 /* NumericAttributeValueViewController.swift in Sources */,
 				CC30E45D60B928BCC111DF8D8E332A62 /* SetMedicationDosageViewController.swift in Sources */,
+				CA67758753096D177B324A041B342B9D /* ActivityIntentInfoHelper.swift in Sources */,
 				C82FE0C2157E79F67378E37E721A48C5 /* MultiSelectAttributeValueViewController.swift in Sources */,
 				2D45C222CEA3CE55123AF26537E4D7FC /* GraphSetupViewController.swift in Sources */,
 				CCFD1A7BEB758C0EA9553D0AFDAF4F4A /* QueryViewController.swift in Sources */,
@@ -3573,11 +3578,12 @@
 				14654FBB63856AA97C34468E03E4C713 /* MoodIntents.intentdefinition in Sources */,
 				2C6C58F800E7821FB668286A4BD07160 /* SubSampleTypeTableViewCell.swift in Sources */,
 				70146D3AA67C8249E8AC24D4E717FB8C /* DeleteCoreDataTableViewCell.swift in Sources */,
-				ACFCF53578B134546DA16D4D9A3661EA /* StartActivityIntentHandler.swift in Sources */,
+				D5459D797160C212388A94AAA651AF77 /* StartActivitiesIntentHandler.swift in Sources */,
 				0D4AE1BE1CA60B4222237147B881A71F /* StartActivityXAgoIntentHandler.swift in Sources */,
 				8D5B424A3C7812271F4504AE72FA6EF8 /* RecordMedicationTableViewCell.swift in Sources */,
 				4C50061EBAAE4569B1932CA64E15A093 /* RecordDiscreteMoodTableViewCell.swift in Sources */,
 				53278F207E68BD7AC1887096D1362666 /* MedicationDoseTableTableViewCell.swift in Sources */,
+				ACFCF53578B134546DA16D4D9A3661EA /* StartActivityIntentHandler.swift in Sources */,
 				03E65E9C63968EF2CA7DB075E0974D91 /* TextAttributeValueViewController.swift in Sources */,
 				D6996940FED41C8EBE3D6E785F6E053B /* ChooseGraphTypeViewController.swift in Sources */,
 				B886DC0AF989EC1E90D469B9205410AB /* ChooseAttributeViewController.swift in Sources */,

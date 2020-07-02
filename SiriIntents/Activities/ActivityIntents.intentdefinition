@@ -22,7 +22,7 @@
 			<key>INIntentConfigurable</key>
 			<true/>
 			<key>INIntentDescription</key>
-			<string>Start a specific activity</string>
+			<string>Start specific activities</string>
 			<key>INIntentDescriptionID</key>
 			<string>AhTSAV</string>
 			<key>INIntentInput</key>
@@ -44,7 +44,7 @@
 				</dict>
 			</dict>
 			<key>INIntentName</key>
-			<string>StartActivity</string>
+			<string>StartActivities</string>
 			<key>INIntentParameterCombinations</key>
 			<dict>
 				<key>activityNames</key>
@@ -186,7 +186,7 @@
 				</array>
 			</dict>
 			<key>INIntentTitle</key>
-			<string>Start Activity</string>
+			<string>Start Multiple Activities</string>
 			<key>INIntentTitleID</key>
 			<string>oO2bhB</string>
 			<key>INIntentType</key>
@@ -222,7 +222,7 @@
 				</dict>
 			</dict>
 			<key>INIntentName</key>
-			<string>StopActivity</string>
+			<string>StopActivities</string>
 			<key>INIntentParameterCombinations</key>
 			<dict>
 				<key>activityNames</key>
@@ -577,37 +577,58 @@
 			<key>INIntentKeyParameter</key>
 			<string>activityName</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>2</integer>
+			<integer>10</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>activityName,note</key>
+				<key>activityName,note,startDate,extraTags</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>Start Activity With Note</string>
+					<string>Start ${activityName} </string>
 					<key>INIntentParameterCombinationTitleID</key>
 					<string>5nXGzR</string>
-					<key>INIntentParameterCombinationUpdatesLinked</key>
-					<true/>
 				</dict>
 			</dict>
 			<key>INIntentName</key>
-			<string>StartActivityWithNote</string>
+			<string>StartActivity</string>
 			<key>INIntentParameterCombinations</key>
 			<dict>
-				<key>activityName,note</key>
+				<key>activityName</key>
 				<dict>
-					<key>INIntentParameterCombinationSubtitle</key>
-					<string>Start ${activityName} with the note "${note}"</string>
-					<key>INIntentParameterCombinationSubtitleID</key>
-					<string>IXmOfE</string>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>Start Activity With Note</string>
+					<string>Start ${activityName}</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>wxkCQ2</string>
+				</dict>
+				<key>activityName,note</key>
+				<dict>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>Start ${activityName} with note "${note}"</string>
 					<key>INIntentParameterCombinationTitleID</key>
 					<string>mjk6oS</string>
+				</dict>
+				<key>extraTags,activityName</key>
+				<dict>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>Start ${activityName} with tags: ${extraTags}</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>IxAMnK</string>
+				</dict>
+				<key>extraTags,note,activityName</key>
+				<dict>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>Start ${activityName} with note "${note}" and tags: ${extraTags}</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>p8DGjK</string>
 				</dict>
 			</dict>
 			<key>INIntentParameters</key>
@@ -676,11 +697,117 @@
 				</dict>
 				<dict>
 					<key>INIntentParameterDisplayName</key>
+					<string>Start Date</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>plgHyw</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>2</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataDateStyle</key>
+						<string>Full</string>
+						<key>INIntentParameterMetadataFormat</key>
+						<string>Style</string>
+						<key>INIntentParameterMetadataTimeStyle</key>
+						<string>Full</string>
+						<key>INIntentParameterMetadataType</key>
+						<string>DateTime</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>startDate</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>When did you start ${activityName}?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>l3Jp0c</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>5</integer>
+					<key>INIntentParameterType</key>
+					<string>DateComponents</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterCustomDisambiguation</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
+					<string>Extra Tags</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>A8cwPS</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>3</integer>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataCapitalization</key>
+						<string>Sentences</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>extraTags</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Would you like to add any additional tags?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>sdq2rG</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>There are ${count} options matching ‘${extraTags}’.</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>uSStkK</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationIntroduction</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Which one?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>syO4U4</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>DisambiguationSelection</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>Just to confirm, you wanted ‘${extraTags}’?</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>xgnT6d</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Confirmation</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsMultipleValues</key>
+					<true/>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>9</integer>
+					<key>INIntentParameterType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterDisplayName</key>
 					<string>Note</string>
 					<key>INIntentParameterDisplayNameID</key>
 					<string>P3NCZf</string>
 					<key>INIntentParameterDisplayPriority</key>
-					<integer>2</integer>
+					<integer>4</integer>
 					<key>INIntentParameterMetadata</key>
 					<dict>
 						<key>INIntentParameterMetadataCapitalization</key>
@@ -716,19 +843,74 @@
 				<key>INIntentResponseCodes</key>
 				<array>
 					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Started ${activity} on ${activity.startDate}</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>GdrpZp</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Started ${activity} on ${activity.startDate}</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>CWCQTC</string>
 						<key>INIntentResponseCodeName</key>
 						<string>success</string>
 						<key>INIntentResponseCodeSuccess</key>
 						<true/>
 					</dict>
 					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>${error}</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>nGuD1o</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>${error}</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>6wwGKh</string>
 						<key>INIntentResponseCodeName</key>
 						<string>failure</string>
 					</dict>
 				</array>
+				<key>INIntentResponseLastParameterTag</key>
+				<integer>9</integer>
+				<key>INIntentResponseOutput</key>
+				<string>activity</string>
+				<key>INIntentResponseParameters</key>
+				<array>
+					<dict>
+						<key>INIntentResponseParameterDisplayName</key>
+						<string>Activity</string>
+						<key>INIntentResponseParameterDisplayNameID</key>
+						<string>KxKIr2</string>
+						<key>INIntentResponseParameterDisplayPriority</key>
+						<integer>1</integer>
+						<key>INIntentResponseParameterName</key>
+						<string>activity</string>
+						<key>INIntentResponseParameterObjectType</key>
+						<string>ActivityIntentInfo</string>
+						<key>INIntentResponseParameterObjectTypeNamespace</key>
+						<string>uZ6G0w</string>
+						<key>INIntentResponseParameterTag</key>
+						<integer>9</integer>
+						<key>INIntentResponseParameterType</key>
+						<string>Object</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseParameterDisplayName</key>
+						<string>Error</string>
+						<key>INIntentResponseParameterDisplayNameID</key>
+						<string>QE3RLt</string>
+						<key>INIntentResponseParameterDisplayPriority</key>
+						<integer>2</integer>
+						<key>INIntentResponseParameterName</key>
+						<string>error</string>
+						<key>INIntentResponseParameterTag</key>
+						<integer>3</integer>
+						<key>INIntentResponseParameterType</key>
+						<string>String</string>
+					</dict>
+				</array>
 			</dict>
 			<key>INIntentTitle</key>
-			<string>Start Activity With Note</string>
+			<string>Start Activity</string>
 			<key>INIntentTitleID</key>
 			<string>U07eKN</string>
 			<key>INIntentType</key>
@@ -1279,6 +1461,192 @@
 		</dict>
 	</array>
 	<key>INTypes</key>
-	<array/>
+	<array>
+		<dict>
+			<key>INTypeDisplayName</key>
+			<string>Activity</string>
+			<key>INTypeDisplayNameID</key>
+			<string>lzYFuv</string>
+			<key>INTypeLastPropertyTag</key>
+			<integer>110</integer>
+			<key>INTypeName</key>
+			<string>ActivityIntentInfo</string>
+			<key>INTypeProperties</key>
+			<array>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>1</integer>
+					<key>INTypePropertyName</key>
+					<string>identifier</string>
+					<key>INTypePropertyTag</key>
+					<integer>1</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>2</integer>
+					<key>INTypePropertyName</key>
+					<string>displayString</string>
+					<key>INTypePropertyTag</key>
+					<integer>2</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Start Date</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>qVv4gO</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>3</integer>
+					<key>INTypePropertyMetadata</key>
+					<dict>
+						<key>INTypePropertyMetadataDateStyle</key>
+						<string>Full</string>
+						<key>INTypePropertyMetadataFormat</key>
+						<string>Style</string>
+						<key>INTypePropertyMetadataTimeStyle</key>
+						<string>Full</string>
+						<key>INTypePropertyMetadataType</key>
+						<string>DateTime</string>
+					</dict>
+					<key>INTypePropertyName</key>
+					<string>startDate</string>
+					<key>INTypePropertyTag</key>
+					<integer>104</integer>
+					<key>INTypePropertyType</key>
+					<string>DateComponents</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>4</integer>
+					<key>INTypePropertyName</key>
+					<string>pronunciationHint</string>
+					<key>INTypePropertyTag</key>
+					<integer>3</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Start Time Zone</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>unJRJe</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>5</integer>
+					<key>INTypePropertyName</key>
+					<string>startTimeZone</string>
+					<key>INTypePropertyTag</key>
+					<integer>106</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>End Date</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>MSW6ly</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>6</integer>
+					<key>INTypePropertyMetadata</key>
+					<dict>
+						<key>INTypePropertyMetadataDateStyle</key>
+						<string>Full</string>
+						<key>INTypePropertyMetadataFormat</key>
+						<string>Style</string>
+						<key>INTypePropertyMetadataTimeStyle</key>
+						<string>Full</string>
+						<key>INTypePropertyMetadataType</key>
+						<string>DateTime</string>
+					</dict>
+					<key>INTypePropertyName</key>
+					<string>endDate</string>
+					<key>INTypePropertyTag</key>
+					<integer>103</integer>
+					<key>INTypePropertyType</key>
+					<string>DateComponents</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>End Time Zone</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>xG6r5V</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>7</integer>
+					<key>INTypePropertyName</key>
+					<string>endTimeZone</string>
+					<key>INTypePropertyTag</key>
+					<integer>107</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Duration</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>VYCVuE</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>8</integer>
+					<key>INTypePropertyName</key>
+					<string>duration</string>
+					<key>INTypePropertyTag</key>
+					<integer>110</integer>
+					<key>INTypePropertyType</key>
+					<string>TimeInterval</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>9</integer>
+					<key>INTypePropertyName</key>
+					<string>alternativeSpeakableMatches</string>
+					<key>INTypePropertySupportsMultipleValues</key>
+					<true/>
+					<key>INTypePropertyTag</key>
+					<integer>4</integer>
+					<key>INTypePropertyType</key>
+					<string>SpeakableString</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Note</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>ySj69V</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>10</integer>
+					<key>INTypePropertyName</key>
+					<string>note</string>
+					<key>INTypePropertyTag</key>
+					<integer>100</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>Extra Tags</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>8SSWUz</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>11</integer>
+					<key>INTypePropertyName</key>
+					<string>extraTags</string>
+					<key>INTypePropertySupportsMultipleValues</key>
+					<true/>
+					<key>INTypePropertyTag</key>
+					<integer>108</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

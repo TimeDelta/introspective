@@ -33,11 +33,11 @@
 		<string>IsWeekdayIntent</string>
 		<string>RecordDecimalMoodIntent</string>
 		<string>RecordIntegerMoodIntent</string>
+		<string>StartActivitiesIntent</string>
 		<string>StartActivityFromEndOfLastIntent</string>
 		<string>StartActivityIntent</string>
-		<string>StartActivityWithNoteIntent</string>
 		<string>StartActivityXAgoIntent</string>
-		<string>StopActivityIntent</string>
+		<string>StopActivitiesIntent</string>
 		<string>StopAllActivitiesIntent</string>
 		<string>StopLastStartedActivityIntent</string>
 		<string>TakeMedicationIntent</string>

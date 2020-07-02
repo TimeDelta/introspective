@@ -1,5 +1,5 @@
 //
-//  StopActivityIntentHandler.swift
+//  StartActivitiesIntentHandler.swift
 //  SiriIntents
 //
 //  Created by Bryan Nova on 6/24/20.
@@ -14,13 +14,13 @@ import DependencyInjection
 import Persistence
 import Samples
 
-public final class StopActivityIntentHandler : NSObject, StopActivityIntentHandling {
+public final class StartActivitiesIntentHandler : NSObject, StartActivitiesIntentHandling {
 
-	private typealias Me = StopActivityIntentHandler
+	private typealias Me = StartActivitiesIntentHandler
 
 	private static let log = Log()
 
-	public func resolveActivityNames(for intent: StopActivityIntent, with completion: @escaping ([INStringResolutionResult]) -> Void) {
+	public func resolveActivityNames(for intent: StartActivitiesIntent, with completion: @escaping ([INStringResolutionResult]) -> Void) {
 		Me.log.info("Resolving activity names")
 		guard let activityNames = intent.activityNames else {
 			completion([INStringResolutionResult.needsValue()])
@@ -29,7 +29,7 @@ public final class StopActivityIntentHandler : NSObject, StopActivityIntentHandl
 		completion(activityNames.map{ n in INStringResolutionResult.success(with: n) })
 	}
 
-	public func provideActivityNamesOptions(for intent: StopActivityIntent, with completion: @escaping ([String]?, Error?) -> Void) {
+	public func provideActivityNamesOptions(for intent: StartActivitiesIntent, with completion: @escaping ([String]?, Error?) -> Void) {
 		Me.log.info("Providing valid activity names")
 		do {
 			let definitions = try DependencyInjector.get(Database.self).query(ActivityDefinition.fetchRequest())
@@ -39,10 +39,10 @@ public final class StopActivityIntentHandler : NSObject, StopActivityIntentHandl
 		}
 	}
 
-	public func handle(intent: StopActivityIntent, completion: @escaping (StopActivityIntentResponse) -> Void) {
-		Me.log.info("Handling StopActivityIntent")
+	public func handle(intent: StartActivitiesIntent, completion: @escaping (StartActivitiesIntentResponse) -> Void) {
+		Me.log.info("Handling StartActivitiesIntent")
 		guard let activityNames = intent.activityNames else {
-			Me.log.error("Activity names were not provided for StopActivityIntentHandler")
+			Me.log.error("Activity names were not provided for StartActivitiesIntentHandler")
 			return
 		}
 
@@ -50,14 +50,15 @@ public final class StopActivityIntentHandler : NSObject, StopActivityIntentHandl
 			for name in activityNames {
 				guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: name) else {
 					Me.log.error("Activity named %{private}@ does not exist.", name)
-					completion(StopActivityIntentResponse(code: .failure, userActivity: nil))
+					completion(StartActivitiesIntentResponse.failure(activityNames: activityNames))
 					return
 				}
-				try DependencyInjector.get(ActivityDAO.self).stopMostRecentlyStartedIncompleteActivity(for: definition)
+				try DependencyInjector.get(ActivityDAO.self).startActivity(definition)
 			}
-			completion(StopActivityIntentResponse.success(activityNames: activityNames))
+			completion(StartActivitiesIntentResponse.success(activityNames: activityNames))
 		} catch {
-			Me.log.error("Failed StopActivityIntent: %@", errorInfo(error))
+			Me.log.error("Failed StartActivitiesIntent: %@", errorInfo(error))
+			completion(StartActivitiesIntentResponse.failure(activityNames: activityNames))
 		}
 	}
 }
