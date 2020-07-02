@@ -24,9 +24,7 @@ public final class StopLastStartedActivityIntentHandler: ActivityIntentHandler<S
 		Me.log.info("Handling StopLastStartedActivityIntent")
 		do {
 			let activity = try DependencyInjector.get(ActivityDAO.self).stopMostRecentlyStartedIncompleteActivity()
-			let definition = try DependencyInjector.get(Database.self).pull(savedObject: activity.definition)
-			Me.log.debug("Found last started activity: %{private}@", definition.name)
-			completion(StopLastStartedActivityIntentResponse.success(activityName: definition.name))
+			completion(StopLastStartedActivityIntentResponse.success(activity: ActivityIntentInfo(activity)))
 		} catch {
 			Me.log.error("Error during StopLastStartedActivityIntent: %@", errorInfo(error))
 			guard let error = error as? DisplayableError else {
@@ -35,13 +33,5 @@ public final class StopLastStartedActivityIntentHandler: ActivityIntentHandler<S
 			}
 			completion(StopLastStartedActivityIntentResponse.failure(error: errorDescription(error)))
 		}
-	}
-
-	private final func errorDescription(_ error: DisplayableError) -> String {
-		var result = error.displayableTitle
-		if let description = error.displayableDescription {
-			result += ": " + description
-		}
-		return result
 	}
 }

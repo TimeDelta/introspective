@@ -41,18 +41,25 @@ public final class StartActivitiesIntentHandler: ActivityIntentHandler<StartActi
 		}
 
 		do {
+			var startedActivities = [Activity]()
 			for name in activityNames {
 				guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: name) else {
 					Me.log.error("Activity named %{private}@ does not exist.", name)
-					completion(StartActivitiesIntentResponse.failure(activityNames: activityNames))
+					completion(StartActivitiesIntentResponse.failure(error: "Activity named \"\(name)\" does not exist."))
 					return
 				}
-				try DependencyInjector.get(ActivityDAO.self).startActivity(definition)
+				let activity = try DependencyInjector.get(ActivityDAO.self).startActivity(definition)
+				startedActivities.append(activity)
 			}
-			completion(StartActivitiesIntentResponse.success(activityNames: activityNames))
+			let activitiesInfo = startedActivities.map{ a in ActivityIntentInfo(a) }
+			completion(StartActivitiesIntentResponse.success(activities: activitiesInfo))
 		} catch {
 			Me.log.error("Failed StartActivitiesIntent: %@", errorInfo(error))
-			completion(StartActivitiesIntentResponse.failure(activityNames: activityNames))
+			guard let error = error as? DisplayableError else {
+				completion(StartActivitiesIntentResponse(code: .failure, userActivity: nil))
+				return
+			}
+			completion(StartActivitiesIntentResponse.failure(error: errorDescription(error)))
 		}
 	}
 }

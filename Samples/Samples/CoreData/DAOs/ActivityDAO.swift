@@ -29,7 +29,8 @@ public protocol ActivityDAO {
 
 	@discardableResult
 	func startActivity(_ definition: ActivityDefinition, withNote note: String?) throws -> Activity
-	func stopMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws
+	@discardableResult
+	func stopMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws -> Activity
 	@discardableResult
 	func stopMostRecentlyStartedIncompleteActivity() throws -> Activity
 	/// - Returns: Any activities that are eligible for auto-note
@@ -193,7 +194,8 @@ public class ActivityDAOImpl: ActivityDAO {
 		return try DependencyInjector.get(Database.self).pull(savedObject: activity)
 	}
 
-	public final func stopMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws {
+	@discardableResult
+	public final func stopMostRecentlyStartedIncompleteActivity(for activityDefinition: ActivityDefinition) throws -> Activity {
 		let endDateVariableName = CommonSampleAttributes.endDate.variableName!
 		let incompleteActivities = activityDefinition.activities.filtered(
 			using: NSPredicate(format: "%K == nil", endDateVariableName)
@@ -208,8 +210,9 @@ public class ActivityDAOImpl: ActivityDAO {
 				activity.end = now
 				try retryOnFail({ try transaction.commit() }, maxRetries: 2)
 			}
+			return try DependencyInjector.get(Database.self).pull(savedObject: activity)
 		}
-		let message = String(format: "Activity named %{private}@ has never been started", activityDefinition.name)
+		let message = String(format: "Activity named %{private}@ is not currently active", activityDefinition.name)
 		throw GenericDisplayableError(title: message)
 	}
 

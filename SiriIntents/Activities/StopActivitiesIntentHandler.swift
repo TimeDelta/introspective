@@ -41,17 +41,25 @@ public final class StopActivitiesIntentHandler: ActivityIntentHandler<StopActivi
 		}
 
 		do {
+			var stoppedActivities = [Activity]()
 			for name in activityNames {
 				guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: name) else {
 					Me.log.error("Activity named %{private}@ does not exist.", name)
-					completion(StopActivitiesIntentResponse(code: .failure, userActivity: nil))
+					completion(StopActivitiesIntentResponse.failure(error: "Activity named \"\(name)\" does not exist."))
 					return
 				}
-				try DependencyInjector.get(ActivityDAO.self).stopMostRecentlyStartedIncompleteActivity(for: definition)
+				let activity = try DependencyInjector.get(ActivityDAO.self).stopMostRecentlyStartedIncompleteActivity(for: definition)
+				stoppedActivities.append(activity)
 			}
-			completion(StopActivitiesIntentResponse.success(activityNames: activityNames))
+			let activitiesInfo = stoppedActivities.map{ a in ActivityIntentInfo(a) }
+			completion(StopActivitiesIntentResponse.success(activities: activitiesInfo))
 		} catch {
 			Me.log.error("Failed StopActivitiesIntent: %@", errorInfo(error))
+			guard let error = error as? DisplayableError else {
+				completion(StopActivitiesIntentResponse(code: .failure, userActivity: nil))
+				return
+			}
+			completion(StopActivitiesIntentResponse.failure(error: errorDescription(error)))
 		}
 	}
 }

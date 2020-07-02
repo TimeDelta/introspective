@@ -43,17 +43,21 @@ public final class StartActivityFromEndOfLastIntentHandler: ActivityIntentHandle
 		do {
 			guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: activityName) else {
 				Me.log.error("Activity named %{private}@ does not exist.", activityName)
-				completion(StartActivityFromEndOfLastIntentResponse(code: .failure, userActivity: nil))
+				completion(StartActivityFromEndOfLastIntentResponse.failure(error: "Activity named \"\(activityName)\" does not exist."))
 				return
 			}
 			let start = try DependencyInjector.get(ActivityDAO.self).getMostRecentActivityEndDate() ?? Date()
-			try DependencyInjector.get(ActivityDAO.self).createActivity(definition: definition, startDate: start)
-			completion(StartActivityFromEndOfLastIntentResponse.success(
-				activityName: activityName,
-				start: getStartDateText(start)
-			))
+			let activity = try DependencyInjector.get(ActivityDAO.self).createActivity(
+				definition: definition,
+				startDate: start)
+			completion(StartActivityFromEndOfLastIntentResponse.success(activity: ActivityIntentInfo(activity)))
 		} catch {
 			Me.log.error("Failed StartActivityFromEndOfLastIntent: %@", errorInfo(error))
+			guard let error = error as? DisplayableError else {
+				completion(StartActivityFromEndOfLastIntentResponse(code: .failure, userActivity: nil))
+				return
+			}
+			completion(StartActivityFromEndOfLastIntentResponse.failure(error: errorDescription(error)))
 		}
 	}
 

@@ -15,7 +15,7 @@ import DependencyInjection
 import Persistence
 import Samples
 
-public class ActivityIntentHandler<IntentType: INIntent>: NSObject {
+public class ActivityIntentHandler<IntentType: INIntent>: IntentHandler {
 
 	private typealias Me = ActivityIntentHandler
 

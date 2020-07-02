@@ -26,6 +26,11 @@ public final class StopAllActivitiesIntentHandler: ActivityIntentHandler<StopAll
 			completion(StopAllActivitiesIntentResponse(code: .success, userActivity: nil))
 		} catch {
 			Me.log.error("Failed to retrieve ActivityDefinition for StopAllActivitiesIntent: %@", errorInfo(error))
+			guard let error = error as? DisplayableError else {
+				completion(StopAllActivitiesIntentResponse(code: .failure, userActivity: nil))
+				return
+			}
+			completion(StopAllActivitiesIntentResponse.failure(error: errorDescription(error)))
 		}
 	}
 }

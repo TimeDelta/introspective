@@ -136,11 +136,11 @@
 				<array>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>I've started ${activityNames}.</string>
+						<string>I've started ${activities}.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>N51xRb</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>I've started ${activityNames}.</string>
+						<string>I've started ${activities}.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>62640F</string>
 						<key>INIntentResponseCodeName</key>
@@ -150,11 +150,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>Unable to start ${activityNames}</string>
+						<string>${error}</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>nuOHaw</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>Unable to start ${activityNames}</string>
+						<string>${error}</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>j6YloT</string>
 						<key>INIntentResponseCodeName</key>
@@ -162,24 +162,42 @@
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
-				<integer>2</integer>
+				<integer>4</integer>
 				<key>INIntentResponseOutput</key>
-				<string>activityNames</string>
+				<string>activities</string>
 				<key>INIntentResponseParameters</key>
 				<array>
 					<dict>
 						<key>INIntentResponseParameterDisplayName</key>
-						<string>Activity Names</string>
+						<string>Activities</string>
 						<key>INIntentResponseParameterDisplayNameID</key>
 						<string>MfyDdr</string>
 						<key>INIntentResponseParameterDisplayPriority</key>
 						<integer>1</integer>
 						<key>INIntentResponseParameterName</key>
-						<string>activityNames</string>
+						<string>activities</string>
+						<key>INIntentResponseParameterObjectType</key>
+						<string>ActivityIntentInfo</string>
+						<key>INIntentResponseParameterObjectTypeNamespace</key>
+						<string>uZ6G0w</string>
 						<key>INIntentResponseParameterSupportsMultipleValues</key>
 						<true/>
 						<key>INIntentResponseParameterTag</key>
+						<integer>3</integer>
+						<key>INIntentResponseParameterType</key>
+						<string>Object</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseParameterDisplayName</key>
+						<string>Error</string>
+						<key>INIntentResponseParameterDisplayNameID</key>
+						<string>NOkwDn</string>
+						<key>INIntentResponseParameterDisplayPriority</key>
 						<integer>2</integer>
+						<key>INIntentResponseParameterName</key>
+						<string>error</string>
+						<key>INIntentResponseParameterTag</key>
+						<integer>4</integer>
 						<key>INIntentResponseParameterType</key>
 						<string>String</string>
 					</dict>
@@ -312,11 +330,11 @@
 				<array>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>I've stopped ${activityNames}.</string>
+						<string>I've stopped ${activities}.</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>JhExI5</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>I've stopped ${activityNames}.</string>
+						<string>I've stopped ${activities}.</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>GAYeAl</string>
 						<key>INIntentResponseCodeName</key>
@@ -326,11 +344,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>Unable to stop ${activityNames}</string>
+						<string>${error}</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>U7SFMp</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>Unable to stop ${activityNames}</string>
+						<string>${error}</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>N7M25u</string>
 						<key>INIntentResponseCodeName</key>
@@ -338,24 +356,42 @@
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
-				<integer>2</integer>
+				<integer>4</integer>
 				<key>INIntentResponseOutput</key>
-				<string>activityNames</string>
+				<string>activities</string>
 				<key>INIntentResponseParameters</key>
 				<array>
 					<dict>
 						<key>INIntentResponseParameterDisplayName</key>
-						<string>Activity Names</string>
+						<string>Activities</string>
 						<key>INIntentResponseParameterDisplayNameID</key>
 						<string>1mMlI5</string>
 						<key>INIntentResponseParameterDisplayPriority</key>
 						<integer>1</integer>
 						<key>INIntentResponseParameterName</key>
-						<string>activityNames</string>
+						<string>activities</string>
+						<key>INIntentResponseParameterObjectType</key>
+						<string>ActivityIntentInfo</string>
+						<key>INIntentResponseParameterObjectTypeNamespace</key>
+						<string>uZ6G0w</string>
 						<key>INIntentResponseParameterSupportsMultipleValues</key>
 						<true/>
 						<key>INIntentResponseParameterTag</key>
+						<integer>3</integer>
+						<key>INIntentResponseParameterType</key>
+						<string>Object</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseParameterDisplayName</key>
+						<string>Error</string>
+						<key>INIntentResponseParameterDisplayNameID</key>
+						<string>DDp2xa</string>
+						<key>INIntentResponseParameterDisplayPriority</key>
 						<integer>2</integer>
+						<key>INIntentResponseParameterName</key>
+						<string>error</string>
+						<key>INIntentResponseParameterTag</key>
+						<integer>4</integer>
 						<key>INIntentResponseParameterType</key>
 						<string>String</string>
 					</dict>
@@ -432,12 +468,37 @@
 						<true/>
 					</dict>
 					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>${error}</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>0QIhPm</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>${error}</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>60YbTP</string>
 						<key>INIntentResponseCodeName</key>
 						<string>failure</string>
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
-				<integer>2</integer>
+				<integer>3</integer>
+				<key>INIntentResponseParameters</key>
+				<array>
+					<dict>
+						<key>INIntentResponseParameterDisplayName</key>
+						<string>Error</string>
+						<key>INIntentResponseParameterDisplayNameID</key>
+						<string>AXu7VW</string>
+						<key>INIntentResponseParameterDisplayPriority</key>
+						<integer>1</integer>
+						<key>INIntentResponseParameterName</key>
+						<string>error</string>
+						<key>INIntentResponseParameterTag</key>
+						<integer>3</integer>
+						<key>INIntentResponseParameterType</key>
+						<string>String</string>
+					</dict>
+				</array>
 			</dict>
 			<key>INIntentTitle</key>
 			<string>Stop All Activities</string>
@@ -495,11 +556,11 @@
 				<array>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>Stopped "${activityName}"</string>
+						<string>Stopped "${activity}"</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>X5Z2ZT</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>Stopped ${activityName}</string>
+						<string>Stopped ${activity}</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>P8Flxv</string>
 						<key>INIntentResponseCodeName</key>
@@ -521,24 +582,26 @@
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
-				<integer>8</integer>
-				<key>INIntentResponseOutput</key>
-				<string>activityName</string>
+				<integer>9</integer>
 				<key>INIntentResponseParameters</key>
 				<array>
 					<dict>
 						<key>INIntentResponseParameterDisplayName</key>
-						<string>Activity Name</string>
+						<string>Activity</string>
 						<key>INIntentResponseParameterDisplayNameID</key>
 						<string>j7NP1j</string>
 						<key>INIntentResponseParameterDisplayPriority</key>
 						<integer>1</integer>
 						<key>INIntentResponseParameterName</key>
-						<string>activityName</string>
+						<string>activity</string>
+						<key>INIntentResponseParameterObjectType</key>
+						<string>ActivityIntentInfo</string>
+						<key>INIntentResponseParameterObjectTypeNamespace</key>
+						<string>uZ6G0w</string>
 						<key>INIntentResponseParameterTag</key>
-						<integer>6</integer>
+						<integer>9</integer>
 						<key>INIntentResponseParameterType</key>
-						<string>String</string>
+						<string>Object</string>
 					</dict>
 					<dict>
 						<key>INIntentResponseParameterDisplayName</key>
@@ -1034,11 +1097,11 @@
 				<array>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>Started "${activityName}" at ${start}</string>
+						<string>Started "${activity}" at ${activity.startDate}</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>AytULR</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>Started "${activityName}" at ${start}</string>
+						<string>Started "${activity}" at ${activity.startDate}</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>YEszYD</string>
 						<key>INIntentResponseCodeName</key>
@@ -1048,11 +1111,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>error</string>
+						<string>${error}</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>gFFnAv</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>error</string>
+						<string>${error}</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>Y3pJ5U</string>
 						<key>INIntentResponseCodeName</key>
@@ -1060,36 +1123,28 @@
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
-				<integer>3</integer>
+				<integer>4</integer>
+				<key>INIntentResponseOutput</key>
+				<string>activity</string>
 				<key>INIntentResponseParameters</key>
 				<array>
 					<dict>
 						<key>INIntentResponseParameterDisplayName</key>
-						<string>Activity Name</string>
+						<string>Activity</string>
 						<key>INIntentResponseParameterDisplayNameID</key>
 						<string>oTx6Lu</string>
 						<key>INIntentResponseParameterDisplayPriority</key>
 						<integer>1</integer>
 						<key>INIntentResponseParameterName</key>
-						<string>activityName</string>
+						<string>activity</string>
+						<key>INIntentResponseParameterObjectType</key>
+						<string>ActivityIntentInfo</string>
+						<key>INIntentResponseParameterObjectTypeNamespace</key>
+						<string>uZ6G0w</string>
 						<key>INIntentResponseParameterTag</key>
-						<integer>1</integer>
+						<integer>4</integer>
 						<key>INIntentResponseParameterType</key>
-						<string>String</string>
-					</dict>
-					<dict>
-						<key>INIntentResponseParameterDisplayName</key>
-						<string>Start</string>
-						<key>INIntentResponseParameterDisplayNameID</key>
-						<string>TA9MjT</string>
-						<key>INIntentResponseParameterDisplayPriority</key>
-						<integer>2</integer>
-						<key>INIntentResponseParameterName</key>
-						<string>start</string>
-						<key>INIntentResponseParameterTag</key>
-						<integer>2</integer>
-						<key>INIntentResponseParameterType</key>
-						<string>String</string>
+						<string>Object</string>
 					</dict>
 					<dict>
 						<key>INIntentResponseParameterDisplayName</key>
@@ -1097,7 +1152,7 @@
 						<key>INIntentResponseParameterDisplayNameID</key>
 						<string>Pgijcu</string>
 						<key>INIntentResponseParameterDisplayPriority</key>
-						<integer>3</integer>
+						<integer>2</integer>
 						<key>INIntentResponseParameterName</key>
 						<string>error</string>
 						<key>INIntentResponseParameterTag</key>
@@ -1363,11 +1418,11 @@
 				<array>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>Started ${activityName} ${numTimeUnits} ${timeUnit} ago</string>
+						<string>Started ${activity} ${numTimeUnits} ${timeUnit} ago</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>evpvPJ</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>Started ${activityName} ${numTimeUnits} ${timeUnit} ago</string>
+						<string>Started ${activity} ${numTimeUnits} ${timeUnit} ago</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>KgNihd</string>
 						<key>INIntentResponseCodeName</key>
@@ -1389,22 +1444,28 @@
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
-				<integer>6</integer>
+				<integer>7</integer>
+				<key>INIntentResponseOutput</key>
+				<string>activity</string>
 				<key>INIntentResponseParameters</key>
 				<array>
 					<dict>
 						<key>INIntentResponseParameterDisplayName</key>
-						<string>Activity Name</string>
+						<string>Activity</string>
 						<key>INIntentResponseParameterDisplayNameID</key>
 						<string>ocvx2J</string>
 						<key>INIntentResponseParameterDisplayPriority</key>
 						<integer>1</integer>
 						<key>INIntentResponseParameterName</key>
-						<string>activityName</string>
+						<string>activity</string>
+						<key>INIntentResponseParameterObjectType</key>
+						<string>ActivityIntentInfo</string>
+						<key>INIntentResponseParameterObjectTypeNamespace</key>
+						<string>uZ6G0w</string>
 						<key>INIntentResponseParameterTag</key>
-						<integer>1</integer>
+						<integer>7</integer>
 						<key>INIntentResponseParameterType</key>
-						<string>String</string>
+						<string>Object</string>
 					</dict>
 					<dict>
 						<key>INIntentResponseParameterDisplayName</key>

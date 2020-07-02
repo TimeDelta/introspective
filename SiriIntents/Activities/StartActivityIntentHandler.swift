@@ -80,10 +80,14 @@ public final class StartActivityIntentHandler: ActivityIntentHandler<StartActivi
 				startDate: startDate,
 				note: intent.note,
 				extraTags: try parseTags(intent.extraTags ?? []))
-			let activityInfo = ActivityIntentInfo(activity)
-			completion(StartActivityIntentResponse.success(activity: activityInfo))
+			completion(StartActivityIntentResponse.success(activity: ActivityIntentInfo(activity)))
 		} catch {
 			Me.log.error("Failed StartActivityIntent: %@", errorInfo(error))
+			guard let error = error as? DisplayableError else {
+				completion(StartActivityIntentResponse.failure(error: ""))
+				return
+			}
+			completion(StartActivityIntentResponse.failure(error: errorDescription(error)))
 		}
 	}
 

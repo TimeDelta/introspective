@@ -69,6 +69,7 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 	}
 
 	public func handle(intent: StartActivityXAgoIntent, completion: @escaping (StartActivityXAgoIntentResponse) -> Void) {
+		Me.log.info("Handling StartActivityXAgoIntent")
 		guard let activityName = intent.activityName else {
 			completion(StartActivityXAgoIntentResponse.failure(error: "You must provide a valid activity name"))
 			return
@@ -85,17 +86,22 @@ public final class StartActivityXAgoIntentHandler: ActivityIntentHandler<StartAc
 		do {
 			guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: activityName) else {
 				Me.log.error("Activity named %{private}@ does not exist.", activityName)
-				completion(StartActivityXAgoIntentResponse(code: .failure, userActivity: nil))
+				completion(StartActivityXAgoIntentResponse.failure(error: "Activity named \"\(activityName)\" does not exist."))
 				return
 			}
 			let start = try DependencyInjector.get(ActivityDAO.self).getMostRecentActivityEndDate() ?? Date()
-			try DependencyInjector.get(ActivityDAO.self).createActivity(definition: definition, startDate: start)
+			let activity = try DependencyInjector.get(ActivityDAO.self).createActivity(definition: definition, startDate: start)
 			completion(StartActivityXAgoIntentResponse.success(
-				activityName: activityName,
+				activity: ActivityIntentInfo(activity),
 				numTimeUnits: numTimeUnits,
 				timeUnit: timeUnit))
 		} catch {
-			Me.log.error("Failed StartActivityFromEndOfLastIntent: %@", errorInfo(error))
+			Me.log.error("Failed StartActivityXAgoIntentResponse: %@", errorInfo(error))
+			guard let error = error as? DisplayableError else {
+				completion(StartActivityXAgoIntentResponse(code: .failure, userActivity: nil))
+				return
+			}
+			completion(StartActivityXAgoIntentResponse.failure(error: errorDescription(error)))
 		}
 	}
 }
