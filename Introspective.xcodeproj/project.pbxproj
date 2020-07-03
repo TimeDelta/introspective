@@ -261,6 +261,7 @@
 		7FCF9FFD97577621B7F8FC90E775C080 /* ActiveImportTableViewCellUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7066135BC062E2C8B24B7C2F24FE6819 /* ActiveImportTableViewCellUnitTests.swift */; };
 		7FF93C6EF0DC215606DD44BC5630D2F7 /* RecordDiscreteMoodTableViewCellUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861CAB7684845C51F0DB43BF3F92232E /* RecordDiscreteMoodTableViewCellUnitTests.swift */; };
 		8101C5AB9EA3299D4CF48060766700F6 /* ActivityDataTestUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA6ED1D1053994BE68045C67442C4AC /* ActivityDataTestUtil.swift */; };
+		812CD34A2A29C422CBD71B8C26AD15B6 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4325DED2EAFF86050E1F748EC15C7C50 /* IntentHandler.swift */; };
 		8284A14FA7E5DD8263104F966950FD0E /* GroupDefinitionTableViewControllerUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E3DB3196823710DF9C6F82F0438225 /* GroupDefinitionTableViewControllerUnitTests.swift */; };
 		82A0C1C49F12566659DCF4B02C8201D2 /* MoodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1EDA1CC83C2700BA49DE41A5757F26 /* MoodTableViewCell.swift */; };
 		8342D608B77176551392FD5BD22DDA1D /* QueryViewControllerUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4C81828C305C246818B11C2F6BFE3A /* QueryViewControllerUnitTests.swift */; };
@@ -330,10 +331,6 @@
 		A26589F32BFC0527881D20D03E4CB48C /* UIExtensions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A115667E708B491AD581D06E7B860EEA /* UIExtensions.framework */; };
 		A2C91DC15989D8F9CC4D98ECAFAF14AC /* ActivityResultsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE94D10C9DF14EF55F21EC10340D194 /* ActivityResultsUITests.swift */; };
 		A2DF8D22C94D6F91A865D337C0730F03 /* DurationUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA96F5DDD263FD0D99095EBADBA4AACC /* DurationUnitTests.swift */; };
-		E24A9340261B6F5B692A09FCDDC69400 /* MainIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1D3F988DDAA76360E07D67EEFDDCAE /* MainIntentHandler.swift */; };
-		A7BFFBE3202EFF942F88C5C1890FFF0F /* MainIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1D3F988DDAA76360E07D67EEFDDCAE /* MainIntentHandler.swift */; };
-		812CD34A2A29C422CBD71B8C26AD15B6 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4325DED2EAFF86050E1F748EC15C7C50 /* IntentHandler.swift */; };
-		F7FE8601CE47B849FFB96EACCFD5E4E8 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4325DED2EAFF86050E1F748EC15C7C50 /* IntentHandler.swift */; };
 		A307D44D6721A760E637CEAE90AFED42 /* BloodPressureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F312D49748BD5F763B6D8463E6112C45 /* BloodPressureTableViewCell.swift */; };
 		A34600A18766AE66F0324FF5AB10E114 /* GraphType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E6D399D9DE3ECA553CD2FAACB774FF /* GraphType.swift */; };
 		A402CAE8659D3752C19384E59FB213DD /* QueryMatchers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E970C328E676E9787A0DADF8B9644E /* QueryMatchers.swift */; };
@@ -346,6 +343,7 @@
 		A7264B95F89DE776D6F6657107FBEA3A /* MoodSettingsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C35532A23B2E9003BCE045F29E3CAA /* MoodSettingsUITests.swift */; };
 		A732AB5D49EAFA3F55AD64C140B95D78 /* TagsAttributeFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */; };
 		A76E2BCC850DFC4E2F8BD3FE0B86C73B /* SingleSampleTypeBasicXYGraphCustomizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C39B9670236F22FD6A149E225571E7 /* SingleSampleTypeBasicXYGraphCustomizationViewController.swift */; };
+		A7BFFBE3202EFF942F88C5C1890FFF0F /* MainIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1D3F988DDAA76360E07D67EEFDDCAE /* MainIntentHandler.swift */; };
 		A8111F3EE080B3B80770DF9CDBB41BE2 /* AttributeRestrictions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B562EA2D16F2E4CBBFAF1B479FCC36FB /* AttributeRestrictions.framework */; };
 		A86BC8022C8A9609CB684D9C7A84834D /* MedicationDosesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7444AC5D66189089E795FDA573C627C0 /* MedicationDosesTableViewController.swift */; };
 		A9077F5891A802754C04F1A31BFF7E99 /* Pods_Introspective.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 986884D0B7A67014C025F61A3D09B791 /* Pods_Introspective.framework */; };
@@ -457,6 +455,7 @@
 		E06C786CD859F817FEB95A590EF19A46 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA0DE771DB3EBFA53437856B04F70772 /* Persistence.framework */; };
 		E18B0F3B6691DAFF427653B35DF3D925 /* ActivityIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = CA1066414F1FB2E6885B9D28335C00EE /* ActivityIntents.intentdefinition */; };
 		E1DF53311A9202FDB7EE3B5289877D5B /* MultiSelectAttributeValueSelectTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A2708AFAC376E92063E612010071A1 /* MultiSelectAttributeValueSelectTableViewController.swift */; };
+		E24A9340261B6F5B692A09FCDDC69400 /* MainIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB1D3F988DDAA76360E07D67EEFDDCAE /* MainIntentHandler.swift */; };
 		E2737CC2052D91AA05DFB6B47D359068 /* WeightUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C202E12E8BC50D2BB819B9122AE7A60A /* WeightUnitTests.swift */; };
 		E2CA9C3AABFCB06D3555FDF4A66144DA /* ActiveExportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD59D0ACA2B51D77F7F11B0C8BB6586 /* ActiveExportTableViewCell.swift */; };
 		E2F1E302D908B16CDEDDEDF184AD9C41 /* ResultsViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4800D5095BFFFC1E396F90AE4E588E2E /* ResultsViewControllerMock.swift */; };
@@ -495,6 +494,7 @@
 		F641368F9AE3497038F98FCE941FE5C8 /* MultipleSampleTypeXYGraphDataGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617F2149749520F9F2CC16D4D62CBCEA /* MultipleSampleTypeXYGraphDataGenerator.swift */; };
 		F64C63191C6A32E74344114A3A0B85EB /* ChooseActivityDefinitionViewControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DB92D624DE5C36603AD4927E56B6F0 /* ChooseActivityDefinitionViewControllerMock.swift */; };
 		F6B9FE3D7A2C303234ED43EA2CC36638 /* GroupNameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7C56F13AF43DCE40380200AE879483 /* GroupNameTableViewCell.swift */; };
+		F7FE8601CE47B849FFB96EACCFD5E4E8 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4325DED2EAFF86050E1F748EC15C7C50 /* IntentHandler.swift */; };
 		F81C80395A04E18AC1DFCC6103A13D53 /* CoachMarkInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EB714E335842B677F8979FDF725CF6 /* CoachMarkInfo.swift */; };
 		FAFC70DA9F3EEF6339F86BF0E5D679D7 /* ActivityHasOneOfTagAttributeRestrictionFunctionalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE6ECD78EA5462C958834A9308F15FD /* ActivityHasOneOfTagAttributeRestrictionFunctionalTests.swift */; };
 		FB39BD79543AAECF12AE74CD2230C8DB /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3147EE7C740BD165D4C9602E988DE5B8 /* Test.swift */; };
@@ -702,6 +702,7 @@
 		41F9E79038690A6E79F32EC5F1CDFAEE /* Pods_IntrospectiveUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IntrospectiveUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42C35532A23B2E9003BCE045F29E3CAA /* MoodSettingsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodSettingsUITests.swift; sourceTree = "<group>"; };
 		42F6610281D3D8ADE5515450045B947C /* UIEventTestStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIEventTestStub.swift; sourceTree = "<group>"; };
+		4325DED2EAFF86050E1F748EC15C7C50 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
 		43BF1CA2FF714B444BE2D1EEC05DB435 /* OldestDateInformationFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldestDateInformationFunctionalTests.swift; sourceTree = "<group>"; };
 		43EB84FC7B68F09B0A3B25EEA218F373 /* CountInformationFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountInformationFunctionalTests.swift; sourceTree = "<group>"; };
 		44927324548AE3E4295C206AAFC1BBC8 /* WithinXCalendarUnitsSubQueryMatcherUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithinXCalendarUnitsSubQueryMatcherUnitTests.swift; sourceTree = "<group>"; };
@@ -904,8 +905,6 @@
 		A2464ECE1A21FAEB77343A884E2511B3 /* TagsAttributeFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsAttributeFunctionalTests.swift; sourceTree = "<group>"; };
 		A24822DD132CAA1486926D2F2D79924E /* MoodQueryFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQueryFunctionalTest.swift; sourceTree = "<group>"; };
 		A2505FFD3F0233815468AA6A0A4B96FE /* CoreDataSampleMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataSampleMock.swift; sourceTree = "<group>"; };
-		FB1D3F988DDAA76360E07D67EEFDDCAE /* MainIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainIntentHandler.swift; sourceTree = "<group>"; };
-		4325DED2EAFF86050E1F748EC15C7C50 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
 		A455D3386BC23DDD4E8C89EF40475474 /* LessThanDoubleAttributeRestrictionUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessThanDoubleAttributeRestrictionUnitTests.swift; sourceTree = "<group>"; };
 		A4CBB7B41499754C5234A1BC949DD2AC /* EditAttributeRestrictionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAttributeRestrictionViewController.swift; sourceTree = "<group>"; };
 		A587847063126DF5519DD8FC08BD1F43 /* SubQueryMatcherMatchers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubQueryMatcherMatchers.swift; sourceTree = "<group>"; };
@@ -1067,6 +1066,7 @@
 		FA7AEBB3359242ADA7C38F53D2168509 /* ChooseSampleTypeViewControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseSampleTypeViewControllerMock.swift; sourceTree = "<group>"; };
 		FA9BDBBE86B58A0695737C9DFE09315D /* Explore.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Explore.storyboard; sourceTree = "<group>"; };
 		FAD8BF5A5F1719BF4277004275C82ECB /* DoesNotHaveOneOfTagAttributeRestrictionFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoesNotHaveOneOfTagAttributeRestrictionFunctionalTests.swift; sourceTree = "<group>"; };
+		FB1D3F988DDAA76360E07D67EEFDDCAE /* MainIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainIntentHandler.swift; sourceTree = "<group>"; };
 		FBE6ECD78EA5462C958834A9308F15FD /* ActivityHasOneOfTagAttributeRestrictionFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityHasOneOfTagAttributeRestrictionFunctionalTests.swift; sourceTree = "<group>"; };
 		FBFE73AE2BEF10935B5E9528BCDF8D33 /* HasOneOfTagAttributeRestrictionFunctionalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasOneOfTagAttributeRestrictionFunctionalTests.swift; sourceTree = "<group>"; };
 		FC087CBF28C36F34570292903B6A6A62 /* ArgumentCaptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgumentCaptor.swift; sourceTree = "<group>"; };
@@ -3903,7 +3903,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = IntrospectiveTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -3930,7 +3930,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = IntrospectiveTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
