@@ -53,6 +53,11 @@ class UnitTest: Test {
 	var mockAttributeRestrictionFactory: AttributeRestrictionFactoryMock!
 	var mockSampleGroupInformationFactory: SampleGroupInformationFactoryMock!
 
+	var mockActivityDAO: ActivityDAOMock!
+	var mockMedicationDAO: MedicationDAOMock!
+	var mockMoodDAO: MoodDAOMock!
+	var mockTagDAO: TagDAOMock!
+
 	override func setUp() {
 		super.setUp()
 		setMocks()
@@ -102,6 +107,7 @@ class UnitTest: Test {
 		Given(injectionProvider, .get(.value(SampleGroupInformationFactory.self), willReturn: mockSampleGroupInformationFactory))
 
 		setUpUtilMocks()
+		setUpDAOMocks()
 	}
 
 	// MARK: - Helper Functions
@@ -142,5 +148,16 @@ class UnitTest: Test {
 
 		mockUserDefaultsUtil = UserDefaultsUtilMock()
 		Given(injectionProvider, .get(.value(UserDefaultsUtil.self), willReturn: mockUserDefaultsUtil))
+	}
+
+	private final func setUpDAOMocks() {
+		mockActivityDAO = ActivityDAOMock()
+		Given(injectionProvider, .get(.value(ActivityDAO.self), willReturn: mockActivityDAO))
+		mockMedicationDAO = MedicationDAOMock()
+		Given(injectionProvider, .get(.value(MedicationDAO.self), willReturn: mockMedicationDAO))
+		mockMoodDAO = MoodDAOMock()
+		Given(injectionProvider, .get(.value(MoodDAO.self), willReturn: mockMoodDAO))
+		mockTagDAO = TagDAOMock()
+		Given(injectionProvider, .get(.value(TagDAO.self), willReturn: mockTagDAO))
 	}
 }

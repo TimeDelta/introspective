@@ -13,6 +13,7 @@ import Common
 import DependencyInjection
 import Persistence
 
+//sourcery: AutoMockable
 public protocol TagDAO {
 
 	func getTag(named name: String) throws -> Tag?

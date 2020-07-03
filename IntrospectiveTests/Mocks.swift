@@ -17246,6 +17246,206 @@ open class SubQueryMatcherFactoryMock: SubQueryMatcherFactory, Mock {
     }
 }
 
+// MARK: - TagDAO
+open class TagDAOMock: TagDAO, Mock {
+    init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
+        self.sequencingPolicy = sequencingPolicy
+        self.stubbingPolicy = stubbingPolicy
+        self.file = file
+        self.line = line
+    }
+
+    var matcher: Matcher = Matcher.default
+    var stubbingPolicy: StubbingPolicy = .wrap
+    var sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst
+    private var invocations: [MethodType] = []
+    private var methodReturnValues: [Given] = []
+    private var methodPerformValues: [Perform] = []
+    private var file: StaticString?
+    private var line: UInt?
+
+    public typealias PropertyStub = Given
+    public typealias MethodStub = Given
+    public typealias SubscriptStub = Given
+
+    /// Convenience method - call setupMock() to extend debug information when failure occurs
+    public func setupMock(file: StaticString = #file, line: UInt = #line) {
+        self.file = file
+        self.line = line
+    }
+
+
+
+
+
+    open func getTag(named name: String) throws -> Tag? {
+        addInvocation(.m_getTag__named_name(Parameter<String>.value(`name`)))
+		let perform = methodPerformValue(.m_getTag__named_name(Parameter<String>.value(`name`))) as? (String) -> Void
+		perform?(`name`)
+		var __value: Tag? = nil
+		do {
+		    __value = try methodReturnValue(.m_getTag__named_name(Parameter<String>.value(`name`))).casted()
+		} catch MockError.notStubed {
+			// do nothing
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+    open func getOrCreateTag(named name: String) throws -> Tag {
+        addInvocation(.m_getOrCreateTag__named_name(Parameter<String>.value(`name`)))
+		let perform = methodPerformValue(.m_getOrCreateTag__named_name(Parameter<String>.value(`name`))) as? (String) -> Void
+		perform?(`name`)
+		var __value: Tag
+		do {
+		    __value = try methodReturnValue(.m_getOrCreateTag__named_name(Parameter<String>.value(`name`))).casted()
+		} catch MockError.notStubed {
+			onFatalFailure("Stub return value not specified for getOrCreateTag(named name: String). Use given")
+			Failure("Stub return value not specified for getOrCreateTag(named name: String). Use given")
+		} catch {
+		    throw error
+		}
+		return __value
+    }
+
+
+    fileprivate enum MethodType {
+        case m_getTag__named_name(Parameter<String>)
+        case m_getOrCreateTag__named_name(Parameter<String>)
+
+        static func compareParameters(lhs: MethodType, rhs: MethodType, matcher: Matcher) -> Bool {
+            switch (lhs, rhs) {
+            case (.m_getTag__named_name(let lhsName), .m_getTag__named_name(let rhsName)):
+                guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
+                return true 
+            case (.m_getOrCreateTag__named_name(let lhsName), .m_getOrCreateTag__named_name(let rhsName)):
+                guard Parameter.compare(lhs: lhsName, rhs: rhsName, with: matcher) else { return false } 
+                return true 
+            default: return false
+            }
+        }
+
+        func intValue() -> Int {
+            switch self {
+            case let .m_getTag__named_name(p0): return p0.intValue
+            case let .m_getOrCreateTag__named_name(p0): return p0.intValue
+            }
+        }
+    }
+
+    open class Given: StubbedMethod {
+        fileprivate var method: MethodType
+
+        private init(method: MethodType, products: [StubProduct]) {
+            self.method = method
+            super.init(products)
+        }
+
+
+        public static func getTag(named name: Parameter<String>, willReturn: Tag?...) -> MethodStub {
+            return Given(method: .m_getTag__named_name(`name`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func getOrCreateTag(named name: Parameter<String>, willReturn: Tag...) -> MethodStub {
+            return Given(method: .m_getOrCreateTag__named_name(`name`), products: willReturn.map({ StubProduct.return($0 as Any) }))
+        }
+        public static func getTag(named name: Parameter<String>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_getTag__named_name(`name`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func getTag(named name: Parameter<String>, willProduce: (StubberThrows<Tag?>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_getTag__named_name(`name`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Tag?).self)
+			willProduce(stubber)
+			return given
+        }
+        public static func getOrCreateTag(named name: Parameter<String>, willThrow: Error...) -> MethodStub {
+            return Given(method: .m_getOrCreateTag__named_name(`name`), products: willThrow.map({ StubProduct.throw($0) }))
+        }
+        public static func getOrCreateTag(named name: Parameter<String>, willProduce: (StubberThrows<Tag>) -> Void) -> MethodStub {
+            let willThrow: [Error] = []
+			let given: Given = { return Given(method: .m_getOrCreateTag__named_name(`name`), products: willThrow.map({ StubProduct.throw($0) })) }()
+			let stubber = given.stubThrows(for: (Tag).self)
+			willProduce(stubber)
+			return given
+        }
+    }
+
+    public struct Verify {
+        fileprivate var method: MethodType
+
+        public static func getTag(named name: Parameter<String>) -> Verify { return Verify(method: .m_getTag__named_name(`name`))}
+        public static func getOrCreateTag(named name: Parameter<String>) -> Verify { return Verify(method: .m_getOrCreateTag__named_name(`name`))}
+    }
+
+    public struct Perform {
+        fileprivate var method: MethodType
+        var performs: Any
+
+        public static func getTag(named name: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_getTag__named_name(`name`), performs: perform)
+        }
+        public static func getOrCreateTag(named name: Parameter<String>, perform: @escaping (String) -> Void) -> Perform {
+            return Perform(method: .m_getOrCreateTag__named_name(`name`), performs: perform)
+        }
+    }
+
+    public func given(_ method: Given) {
+        methodReturnValues.append(method)
+    }
+
+    public func perform(_ method: Perform) {
+        methodPerformValues.append(method)
+        methodPerformValues.sort { $0.method.intValue() < $1.method.intValue() }
+    }
+
+    public func verify(_ method: Verify, count: Count = Count.moreOrEqual(to: 1), file: StaticString = #file, line: UInt = #line) {
+        let invocations = matchingCalls(method.method)
+        MockyAssert(count.matches(invocations.count), "Expected: \(count) invocations of `\(method.method)`, but was: \(invocations.count)", file: file, line: line)
+    }
+
+    private func addInvocation(_ call: MethodType) {
+        invocations.append(call)
+    }
+    private func methodReturnValue(_ method: MethodType) throws -> StubProduct {
+        let candidates = sequencingPolicy.sorted(methodReturnValues, by: { $0.method.intValue() > $1.method.intValue() })
+        let matched = candidates.first(where: { $0.isValid && MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) })
+        guard let product = matched?.getProduct(policy: self.stubbingPolicy) else { throw MockError.notStubed }
+        return product
+    }
+    private func methodPerformValue(_ method: MethodType) -> Any? {
+        let matched = methodPerformValues.reversed().first { MethodType.compareParameters(lhs: $0.method, rhs: method, matcher: matcher) }
+        return matched?.performs
+    }
+    private func matchingCalls(_ method: MethodType) -> [MethodType] {
+        return invocations.filter { MethodType.compareParameters(lhs: $0, rhs: method, matcher: matcher) }
+    }
+    private func matchingCalls(_ method: Verify) -> Int {
+        return matchingCalls(method.method).count
+    }
+    private func givenGetterValue<T>(_ method: MethodType, _ message: String) -> T {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            onFatalFailure(message)
+            Failure(message)
+        }
+    }
+    private func optionalGivenGetterValue<T>(_ method: MethodType, _ message: String) -> T? {
+        do {
+            return try methodReturnValue(method).casted()
+        } catch {
+            return nil
+        }
+    }
+    private func onFatalFailure(_ message: String) {
+        #if Mocky
+        guard let file = self.file, let line = self.line else { return } // Let if fail if cannot handle gratefully
+        SwiftyMockyTestObserver.handleMissingStubError(message: message, file: file, line: line)
+        #endif
+    }
+}
+
 // MARK: - TextNormalizationUtil
 open class TextNormalizationUtilMock: TextNormalizationUtil, Mock {
     init(sequencing sequencingPolicy: SequencingPolicy = .lastWrittenResolvedFirst, stubbing stubbingPolicy: StubbingPolicy = .wrap, file: StaticString = #file, line: UInt = #line) {
