@@ -13,11 +13,16 @@ import CoreData
 @testable import DependencyInjection
 @testable import Persistence
 
-func noneStoredInDatabase<Type: NSManagedObject & CoreDataObject>() -> Matcher<Type.Type> {
+func numberStoredInDatabase<Type: NSManagedObject & CoreDataObject>(_ expectedCount: Int) -> Matcher<Type.Type> {
+	return numberStoredInDatabase(equalTo(expectedCount))
+}
+
+func numberStoredInDatabase<Type: NSManagedObject & CoreDataObject>(
+	_ expectedCountMatcher: Matcher<Int>
+) -> Matcher<Type.Type> {
 	return Matcher("No \(Type.entityName) exists") { _ -> MatchResult in
 		let count = try! DependencyInjector.get(Database.self).query(Type.fetchRequest() as! NSFetchRequest<Type>).count
-		if count == 0 { return .match }
-		return .mismatch("Found \(count) \(Type.entityName)")
+		return expectedCountMatcher.matches(count)
 	}
 }
 

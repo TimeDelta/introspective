@@ -55,7 +55,6 @@
 		A2AF1FE12343C27C00E04517 /* ActivityExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AF1FDE2343C27C00E04517 /* ActivityExporter.swift */; };
 		A2AF1FE22343C27C00E04517 /* MedicationExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AF1FDF2343C27C00E04517 /* MedicationExporter.swift */; };
 		A2AF1FE32343C27C00E04517 /* MoodExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AF1FE02343C27C00E04517 /* MoodExporter.swift */; };
-		A2AF1FF12343C63900E04517 /* Tag+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AF1FEF2343C63900E04517 /* Tag+CoreDataProperties.swift */; };
 		A2AF1FF22343C63900E04517 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2AF1FF02343C63900E04517 /* Tag.swift */; };
 		A2AF201F2343C85300E04517 /* Settings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2AF201E2343C85300E04517 /* Settings.framework */; };
 		A2DEB93223439D5200551E0B /* Attributes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2DEB93123439D5200551E0B /* Attributes.framework */; };
@@ -118,7 +117,6 @@
 		A2AF1FDE2343C27C00E04517 /* ActivityExporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityExporter.swift; sourceTree = "<group>"; };
 		A2AF1FDF2343C27C00E04517 /* MedicationExporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MedicationExporter.swift; sourceTree = "<group>"; };
 		A2AF1FE02343C27C00E04517 /* MoodExporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoodExporter.swift; sourceTree = "<group>"; };
-		A2AF1FEF2343C63900E04517 /* Tag+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Tag+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A2AF1FF02343C63900E04517 /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		A2AF201E2343C85300E04517 /* Settings.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Settings.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2DEB93123439D5200551E0B /* Attributes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Attributes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -206,7 +204,6 @@
 				A22D623D234398AE0023470F /* MedicationDose.swift */,
 				A22D6246234398AE0023470F /* Mood.swift */,
 				A2AF1FF02343C63900E04517 /* Tag.swift */,
-				A2AF1FEF2343C63900E04517 /* Tag+CoreDataProperties.swift */,
 				A2A0E75A2498FF24006C0A6E /* SearchableCoreDataSample.swift */,
 			);
 			path = CoreData;
@@ -425,7 +422,6 @@
 				A29700FD2344FE42004B97E6 /* ActivityDAO.swift in Sources */,
 				A2A0E7552496969A006C0A6E /* SearchableSample.swift in Sources */,
 				A22D625B234398AF0023470F /* MedicationDose.swift in Sources */,
-				A2AF1FF12343C63900E04517 /* Tag+CoreDataProperties.swift in Sources */,
 				A22D626B234398AF0023470F /* BodyMassIndex.swift in Sources */,
 				A22D626C234398AF0023470F /* BloodPressure.swift in Sources */,
 				A2AF1FE12343C27C00E04517 /* ActivityExporter.swift in Sources */,
