@@ -1568,11 +1568,11 @@
 					<key>INTypePropertyMetadata</key>
 					<dict>
 						<key>INTypePropertyMetadataDateStyle</key>
-						<string>Full</string>
+						<string>Short</string>
 						<key>INTypePropertyMetadataFormat</key>
 						<string>Style</string>
 						<key>INTypePropertyMetadataTimeStyle</key>
-						<string>Full</string>
+						<string>Long</string>
 						<key>INTypePropertyMetadataType</key>
 						<string>DateTime</string>
 					</dict>

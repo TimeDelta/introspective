@@ -52,8 +52,7 @@ public final class StopActivitiesIntentHandler: ActivityIntentHandler<StopActivi
 				guard let definition = try DependencyInjector.get(ActivityDAO.self).getDefinitionWith(name: name) else {
 					Me.log.error("Activity named %{private}@ does not exist.", name)
 					completion(
-						StopActivitiesIntentResponse
-							.failure(error: "Activity named \"\(name)\" does not exist.")
+						StopActivitiesIntentResponse.failure(error: "Activity named \"\(name)\" does not exist.")
 					)
 					return
 				}

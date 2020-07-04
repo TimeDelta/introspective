@@ -219,7 +219,7 @@ public class ActivityDAOImpl: ActivityDAO {
 				}
 				return try DependencyInjector.get(Database.self).pull(savedObject: activity)
 			}
-			let message = String(format: "Activity named %{private}@ is not currently active", activityDefinition.name)
+			let message = String(format: "Activity named %@ is not currently active", activityDefinition.name)
 			throw GenericDisplayableError(title: message)
 		}
 

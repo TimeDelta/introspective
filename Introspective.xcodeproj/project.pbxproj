@@ -2954,6 +2954,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		28B15F5E37FCE875874620B8D8FED2F6 /* SwiftyMocky - Generate Mocks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "SwiftyMocky - Generate Mocks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "rake mock\n";
+		};
 		38CB7D3BE010AA2048ABC975FE5D735A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3081,24 +3095,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Introspective/Pods-Introspective-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DBD33D6162DA610FB7ABBE212ED872C0 /* Run Script - format code */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script - format code";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nswiftformat --swiftversion `swift --version | awk '{print $4}'` --tabwidth 4 --disable andOperator,redundantFileprivate,redundantExtensionACL,redundantBreak --maxwidth 120 --wraparguments before-first --wrapparameters before-first --wrapcollections before-first --closingparen balanced --commas always --shortoptionals always --indent tab --enable strongOutlets,specifiers,spaceInsideParens,spaceInsideGenerics,sortedImports,anyObjectProtocol,typeSugar,trailingCommas,blankLinesAroundMark,blankLinesAtEndOfScope,blankLinesAtEndOfScope,blankLinesBetweenScopes,consecutiveBlankLines,consecutiveSpaces,duplicateImports,emptyBraces,hoistPatternLet,leadingDelimiters,linebreakAtEndOfFile,linebreaks,redundantGet --linebreaks lf --header ignore `find . -type d -maxdepth 1 -print | egrep -v '^\\.$' | grep -v Pods | egrep -v '.*\\.xc(workspace|odeproj)' | grep -v .git | grep -v Carthage | egrep -v 'Tests$' | tr '\\n' ' '`\n";
-		};
 		CB9A470863FA06650F751757EBDE58AA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3117,19 +3113,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		28B15F5E37FCE875874620B8D8FED2F6 /* SwiftyMocky - Generate Mocks */ = {
+		DBD33D6162DA610FB7ABBE212ED872C0 /* Run Script - format code */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputFileListPaths = (
+			);
 			inputPaths = (
 			);
-			name = "SwiftyMocky - Generate Mocks";
+			name = "Run Script - format code";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "rake mock\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nswiftformat --swiftversion `swift --version | awk '{print $4}'` --tabwidth 4 --disable andOperator,redundantFileprivate,redundantExtensionACL,redundantBreak --maxwidth 120 --wraparguments before-first --wrapparameters before-first --wrapcollections before-first --closingparen balanced --commas always --shortoptionals always --indent tab --enable strongOutlets,specifiers,spaceInsideParens,spaceInsideGenerics,sortedImports,anyObjectProtocol,typeSugar,trailingCommas,blankLinesAroundMark,blankLinesAtEndOfScope,blankLinesAtEndOfScope,blankLinesBetweenScopes,consecutiveBlankLines,consecutiveSpaces,duplicateImports,emptyBraces,hoistPatternLet,leadingDelimiters,linebreakAtEndOfFile,linebreaks,redundantGet --linebreaks lf --header ignore `find . -type d -maxdepth 1 -print | egrep -v '^\\.$' | grep -v Pods | egrep -v '.*\\.xc(workspace|odeproj)' | grep -v .git | grep -v Carthage | egrep -v 'Tests$' | tr '\\n' ' '`\n";
 		};
 		F0FB89F745BB6CFF964B314ECF77BAAF /* Run Script - Create GitVersion.swift */ = {
 			isa = PBXShellScriptBuildPhase;
