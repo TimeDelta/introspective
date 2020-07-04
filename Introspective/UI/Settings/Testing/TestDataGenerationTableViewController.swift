@@ -279,7 +279,7 @@ final class TestDataGenerationTableViewController: UITableViewController {
 
 	private final func createRandomActivityDefinitions(using transaction: Transaction) -> [ActivityDefinition] {
 		var activityDefinitions = try! DependencyInjector.get(Database.self).query(ActivityDefinition.fetchRequest())
-		let numberOfDefinitionsToCreate = Me.names.count - activityDefinitions.count
+		let numberOfDefinitionsToCreate = max(0, Me.names.count - activityDefinitions.count)
 		for i in 0 ..< numberOfDefinitionsToCreate {
 			let definition = try! transaction.new(ActivityDefinition.self)
 			definition.name = Me.names[i]
