@@ -43,7 +43,11 @@ public final class MedicationDoseEditorViewControllerImpl: UIViewController, Med
 
 	override public final func viewDidLoad() {
 		super.viewDidLoad()
-		dosageTextField.text = medicationDose?.dosage?.description ?? medication.dosage?.description
+		if let medicationDose = medicationDose {
+			dosageTextField.text = medicationDose.dosage?.description
+		} else {
+			dosageTextField.text = medication.dosage?.description
+		}
 		if let date = medicationDose?.date {
 			datePicker.date = date
 		}
