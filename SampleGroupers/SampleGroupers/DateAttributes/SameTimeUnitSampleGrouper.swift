@@ -110,7 +110,9 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 		let sortedSamplesByTimeUnit = samplesByTimeUnit
 			.sorted(by: { entry1, entry2 in entry1.key.isBeforeDate(entry2.key, granularity: timeUnit) })
 		signpost.end(name: "Sort aggregated samples")
-		return sortedSamplesByTimeUnit.map { key, value in (key, value) }
+
+		let finalGroupings = addMissingTimeUnits(sortedSamplesByTimeUnit)
+		return finalGroupings.map { key, value in (key, value) }
 	}
 
 	public final func groupNameFor(value: Any) throws -> String {
@@ -183,5 +185,26 @@ public final class SameTimeUnitSampleGrouper: SampleGrouper {
 			groupByAttributesEqual = false
 		}
 		return sameTimeUnitGrouper.timeUnit == timeUnit && groupByAttributesEqual
+	}
+
+	// MARK: - Helper Functions
+
+	private final func addMissingTimeUnits(_ sortedSamplesByTimeUnit: [(key: Date, value: [Sample])])
+		-> [(key: Date, value: [Sample])] {
+		var results = sortedSamplesByTimeUnit
+		let minDate = sortedSamplesByTimeUnit[0].key
+		let maxDate = sortedSamplesByTimeUnit[sortedSamplesByTimeUnit.count].key
+
+		var currentDate = minDate
+		var index = 0
+		while currentDate.isBeforeDate(maxDate, granularity: timeUnit) {
+			if results[index].key != currentDate {
+				results.insert((key: currentDate, value: []), at: index)
+			}
+			currentDate = currentDate.dateByAdding(1, timeUnit).date
+			index += 1
+		}
+
+		return results
 	}
 }
