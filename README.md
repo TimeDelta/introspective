@@ -10,7 +10,7 @@
 
 
 ## Dependencies
-For dependency management, [CocoaPods](https://cocoapods.org) is used.
+For dependency management, [CocoaPods](https://cocoapods.org) is used. See [Podfile](./Podfile) for configuration.
 
 
 ## Build Targets
